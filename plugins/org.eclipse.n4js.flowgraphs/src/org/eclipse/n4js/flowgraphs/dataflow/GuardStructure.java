@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -39,9 +40,10 @@ public class GuardStructure {
 		Map<Symbol, List<Guard>> guardsMap = new HashMap<>();
 		List<Expression> allExpressions = EcoreUtil2.getAllContentsOfType(condition, Expression.class);
 		allExpressions.add(condition);
+		EObject conditionContainer = condition.eContainer();
 
 		for (Expression expr : allExpressions) {
-			Guard guard = guardFactory.create(condition, expr, negate);
+			Guard guard = guardFactory.create(conditionContainer, expr, negate);
 			if (guard != null) {
 				if (!guardsMap.containsKey(guard.symbol)) {
 					guardsMap.put(guard.symbol, new LinkedList<>());

@@ -19,8 +19,8 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
-import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -108,34 +108,36 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 			if (effect.type == EffectType.MethodCall) {
 				Collection<String> postStates = getDeclaredStates(container, ANNOTATION_POSTSTATE);
 				if (!postStates.isEmpty()) {
 					deactivate(); // deactivate this assumption since the predecessor was found here
 					postStates.removeAll(preStates);
 					boolean allPostStatesAreValidPreStates = postStates.isEmpty();
-					return allPostStatesAreValidPreStates;
+					if (allPostStatesAreValidPreStates) {
+						return HoldAssertion.AlwaysHolds;
+					}
 				}
 			}
-			return true;
+			return HoldAssertion.MayHold;
 		}
 
 		@Override
-		public GuardAssertion holdsOnGuard(Guard guard) {
+		public HoldAssertion holdsOnGuard(Guard guard) {
 			if (guard.type == GuardType.InState) {
 				Collection<String> inStates = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
 				if (!inStates.isEmpty()) {
-					if (guard.asserts == GuardAssertion.AlwaysHolds) {
+					if (guard.asserts == HoldAssertion.AlwaysHolds) {
 						preStates.addAll(inStates);
 					}
-					if (guard.asserts == GuardAssertion.NeverHolds) {
+					if (guard.asserts == HoldAssertion.NeverHolds) {
 						preStates.clear();
 						preStates.addAll(inStates);
 					}
 				}
 			}
-			return GuardAssertion.MayHold;
+			return HoldAssertion.MayHold;
 		}
 	}
 
@@ -172,27 +174,28 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 			if (effect.type == EffectType.MethodCall) {
 				Collection<String> postStatesOfMethodCall = getDeclaredStates(container, ANNOTATION_POSTSTATE);
 				if (!postStates.isEmpty()) {
 					postStates.addAll(postStatesOfMethodCall);
 					deactivate();
+					return HoldAssertion.AlwaysHolds;
 				}
 			}
-			return true;
+			return HoldAssertion.MayHold;
 		}
 
 		@Override
-		public GuardAssertion holdsOnGuard(Guard guard) {
-			if (guard.type == GuardType.InState && guard.asserts == GuardAssertion.AlwaysHolds) {
+		public HoldAssertion holdsOnGuard(Guard guard) {
+			if (guard.type == GuardType.InState && guard.asserts == HoldAssertion.AlwaysHolds) {
 				Collection<String> inStatesAfterGuard = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
 				if (!inStatesAfterGuard.isEmpty()) {
 					postStates.addAll(inStatesAfterGuard);
 					deactivate();
 				}
 			}
-			return GuardAssertion.MayHold;
+			return HoldAssertion.MayHold;
 		}
 
 		@Override

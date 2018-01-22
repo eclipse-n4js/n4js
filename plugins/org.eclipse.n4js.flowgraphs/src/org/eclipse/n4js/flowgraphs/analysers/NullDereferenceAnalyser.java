@@ -20,8 +20,8 @@ import org.eclipse.n4js.flowgraphs.dataflow.DestructUtils;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
-import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -110,21 +110,21 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 			if (effect.type == EffectType.Write) {
 				nullOrUndefinedSymbol = getNullOrUndefinedAssignee(effect, cfe);
 
 				if (nullOrUndefinedSymbol != null) {
 					if (nullOrUndefinedSymbol.isNullLiteral()) {
-						return false;
+						return HoldAssertion.NeverHolds;
 					} else if (nullOrUndefinedSymbol.isUndefinedLiteral()) {
-						return false;
+						return HoldAssertion.NeverHolds;
 					}
 				} else {
-					aliasPassed(effect.symbol);
+					return HoldAssertion.AlwaysHolds;
 				}
 			}
-			return true;
+			return HoldAssertion.MayHold;
 		}
 
 		private Symbol getNullOrUndefinedAssignee(EffectInfo effect, ControlFlowElement cfe) {
@@ -164,16 +164,16 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public GuardAssertion holdsOnGuard(Guard guard) {
-			if (guard.type.IsNullOrUndefined() && guard.asserts == GuardAssertion.AlwaysHolds) {
+		public HoldAssertion holdsOnGuard(Guard guard) {
+			if (guard.type.IsNullOrUndefined() && guard.asserts == HoldAssertion.AlwaysHolds) {
 				nullOrUndefinedSymbol = guard.symbol;
-				return GuardAssertion.NeverHolds;
+				return HoldAssertion.NeverHolds;
 			}
 			if (guard.type == GuardType.IsTruthy) {
 				return guard.asserts;
 			}
 
-			return GuardAssertion.MayHold;
+			return HoldAssertion.MayHold;
 		}
 	}
 
@@ -214,7 +214,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 			if (effect.type == EffectType.Write && cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
 				if (ae.getRhs() instanceof NullLiteral) {
@@ -222,24 +222,24 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 				} else {
 					neverNullBefore = true;
 				}
-				deactivate();
+				return HoldAssertion.AlwaysHolds;
 			}
-			return true;
+			return HoldAssertion.MayHold;
 		}
 
 		@Override
-		public GuardAssertion holdsOnGuard(Guard guard) {
+		public HoldAssertion holdsOnGuard(Guard guard) {
 			if (guard.type == GuardType.IsTruthy) {
-				if (guard.asserts == GuardAssertion.AlwaysHolds) {
+				if (guard.asserts == HoldAssertion.AlwaysHolds) {
 					neverNullBefore = true;
 					this.aliasPassed(guard.symbol);
 
-				} else if (guard.asserts == GuardAssertion.NeverHolds) {
+				} else if (guard.asserts == HoldAssertion.NeverHolds) {
 					return guard.asserts;
 				}
 			}
 
-			return GuardAssertion.MayHold;
+			return HoldAssertion.MayHold;
 		}
 
 		@Override

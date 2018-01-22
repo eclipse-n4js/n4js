@@ -17,8 +17,8 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
-import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -74,22 +74,24 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 			if (effect.type == EffectType.Write && cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
 				Expression rhs = ae.getRhs();
-				return isZeroLiteral(rhs);
+				if (isZeroLiteral(rhs)) {
+					return HoldAssertion.AlwaysHolds;
+				}
 			}
-			return true;
+			return HoldAssertion.MayHold;
 		}
 
 		@Override
-		public GuardAssertion holdsOnGuard(Guard guard) {
+		public HoldAssertion holdsOnGuard(Guard guard) {
 			if (guard.type == GuardType.IsZero && guard.asserts.canHold()) {
 				this.aliasPassed(guard.symbol);
 				return guard.asserts;
 			}
-			return GuardAssertion.MayHold;
+			return HoldAssertion.MayHold;
 		}
 	}
 }

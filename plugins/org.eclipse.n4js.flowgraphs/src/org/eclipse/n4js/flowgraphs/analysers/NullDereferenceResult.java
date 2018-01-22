@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.IsNotNull;
+import org.eclipse.n4js.flowgraphs.dataflow.Guard;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -24,6 +25,8 @@ public class NullDereferenceResult {
 	public final Symbol causingSymbol;
 	/** Undefined or Null {@link Symbol} that was assigned to {@link #causingSymbol} */
 	public final Symbol nullOrUndefinedSymbol;
+	/** One of the failed {@link Guard}s */
+	public final Guard failedGuard;
 	/** True iff the symbol must be null or undefined. False iff it can be null or undefined. */
 	public final boolean must;
 
@@ -32,7 +35,8 @@ public class NullDereferenceResult {
 		this.checkedSymbol = inn.symbol;
 		this.causingSymbol = inn.failedSymbol;
 		this.nullOrUndefinedSymbol = inn.nullOrUndefinedSymbol;
-		this.must = inn.allFailed();
+		this.failedGuard = inn.failedGuard;
+		this.must = inn.noAliasPassed();
 	}
 
 	@Override

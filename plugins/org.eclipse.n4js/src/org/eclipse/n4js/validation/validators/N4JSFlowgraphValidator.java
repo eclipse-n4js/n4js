@@ -23,6 +23,8 @@ import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
+import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -98,8 +100,6 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		UsedBeforeDeclaredAnalyser cvgv1 = new UsedBeforeDeclaredAnalyser();
 		NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
 
-		System.out.println("start validation");
-
 		flowAnalyzer.createGraphs(script);
 		flowAnalyzer.accept(dcv, nda, cvgv1);
 
@@ -163,16 +163,30 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 				continue; // ignore these warnings in test related source
 			}
 
-			Symbol nus = ndr.nullOrUndefinedSymbol;
-
 			String isOrMaybe = ndr.must && !isLeakingToClosure ? "is" : "may be";
-			String nullOrUndefined = "null or undefined";
-			nullOrUndefined = nus != null && nus.isNullLiteral() ? "null" : nullOrUndefined;
-			nullOrUndefined = nus != null && nus.isUndefinedLiteral() ? "undefined" : nullOrUndefined;
+			String nullOrUndefined = getNullOrUndefinedString(ndr);
 			String reason = getReason(ndr);
 			String msg = IssueCodes.getMessageForDFG_NULL_DEREFERENCE(varName, isOrMaybe, nullOrUndefined, reason);
 			addIssue(msg, ndr.cfe, IssueCodes.DFG_NULL_DEREFERENCE); // deactivated during tests
 		}
+	}
+
+	private String getNullOrUndefinedString(NullDereferenceResult ndr) {
+		Symbol nus = ndr.nullOrUndefinedSymbol;
+		Guard fg = ndr.failedGuard;
+		String nullOrUndefined = null;
+		if (nus != null) {
+			nullOrUndefined = nus.isNullLiteral() ? "null" : nullOrUndefined;
+			nullOrUndefined = nus.isUndefinedLiteral() ? "undefined" : nullOrUndefined;
+		}
+		if (nullOrUndefined == null && fg != null) {
+			nullOrUndefined = fg.type == GuardType.IsNull ? "null" : nullOrUndefined;
+			nullOrUndefined = fg.type == GuardType.IsUndefined ? "undefined" : nullOrUndefined;
+		}
+		if (nullOrUndefined == null) {
+			nullOrUndefined = "null or undefined";
+		}
+		return nullOrUndefined;
 	}
 
 	private String getReason(NullDereferenceResult ndr) {

@@ -18,15 +18,15 @@ import org.eclipse.n4js.n4JS.Expression;
 public class Guard {
 	final public Expression condition;
 	final public GuardType type;
-	final public GuardAssertion asserts;
+	final public HoldAssertion asserts;
 	final public Symbol symbol;
 	final public Expression context;
 
-	public Guard(Expression condition, GuardType type, GuardAssertion asserts, Symbol symbol) {
+	public Guard(Expression condition, GuardType type, HoldAssertion asserts, Symbol symbol) {
 		this(condition, type, asserts, symbol, null);
 	}
 
-	public Guard(Expression condition, GuardType type, GuardAssertion asserts, Symbol symbol,
+	public Guard(Expression condition, GuardType type, HoldAssertion asserts, Symbol symbol,
 			Expression context) {
 
 		this.condition = condition;

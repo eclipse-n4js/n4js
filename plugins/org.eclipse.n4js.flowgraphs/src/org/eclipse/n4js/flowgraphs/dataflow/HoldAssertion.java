@@ -16,14 +16,13 @@ import java.util.HashSet;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.EqualityExpression;
-import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
 
 /**
  *
  */
-public enum GuardAssertion {
+public enum HoldAssertion {
 	AlwaysHolds, NeverHolds, MayHold;
 
 	public boolean canHold() {
@@ -34,16 +33,17 @@ public enum GuardAssertion {
 		or, and, not, eq, neq
 	}
 
-	static GuardAssertion get(Expression topContainer, Expression condition, boolean negateTree,
+	static HoldAssertion getGuard(EObject topContainer, EObject condition, boolean negateTree,
 			boolean negateCondition) {
 
-		ArrayList<BooleanExpression> beList = getBooleanExpressions(topContainer, condition, negateCondition);
+		EObject conditionParent = condition.eContainer();
+		ArrayList<BooleanExpression> beList = getBooleanExpressions(topContainer, conditionParent, negateCondition);
 		HashSet<BooleanExpression> beSet = new HashSet<>(beList);
 		boolean mayHolds = false;
 		mayHolds |= beSet.contains(BooleanExpression.eq);
 		mayHolds |= beSet.contains(BooleanExpression.neq);
 		if (mayHolds) {
-			return GuardAssertion.MayHold;
+			return HoldAssertion.MayHold;
 		}
 
 		simplify(beList, 0);
@@ -57,7 +57,7 @@ public enum GuardAssertion {
 		return get(beList);
 	}
 
-	static private ArrayList<BooleanExpression> getBooleanExpressions(Expression topContainer, Expression condition,
+	static private ArrayList<BooleanExpression> getBooleanExpressions(EObject topContainer, EObject condition,
 			boolean negateCondition) {
 
 		ArrayList<BooleanExpression> bExprs = new ArrayList<>();
@@ -69,8 +69,12 @@ public enum GuardAssertion {
 		return bExprs;
 	}
 
-	static private void addBooleanExpressions(Expression topContainer, ArrayList<BooleanExpression> bExprs,
-			Expression condition) {
+	static private void addBooleanExpressions(EObject topContainer, ArrayList<BooleanExpression> bExprs,
+			EObject condition) {
+
+		if (topContainer == condition) {
+			return;
+		}
 
 		BooleanExpression nextValue = null;
 		if (condition instanceof UnaryExpression) {
@@ -105,16 +109,13 @@ public enum GuardAssertion {
 			bExprs.add(nextValue);
 		}
 
-		if (topContainer != condition) {
-			EObject parent = condition.eContainer();
-			addBooleanExpressions(topContainer, bExprs, (Expression) parent); // tail recursion
-		}
+		EObject parent = condition.eContainer();
+		addBooleanExpressions(topContainer, bExprs, parent); // tail recursion
 	}
 
 	static private void simplify(ArrayList<BooleanExpression> bExpressions, int startIdx) {
 		BooleanExpression be0 = (bExpressions.size() > startIdx + 0) ? bExpressions.get(startIdx + 0) : null;
 		BooleanExpression be1 = (bExpressions.size() > startIdx + 1) ? bExpressions.get(startIdx + 1) : null;
-		BooleanExpression be2 = (bExpressions.size() > startIdx + 2) ? bExpressions.get(startIdx + 2) : null;
 
 		int reverseStartIdx = Math.max(0, startIdx - 2);
 		if (be0 == BooleanExpression.and) {
@@ -128,9 +129,12 @@ public enum GuardAssertion {
 			simplify(bExpressions, reverseStartIdx); // tail recursion
 			return;
 		}
-		if (be0 == BooleanExpression.not && be1 == BooleanExpression.or && be2 == BooleanExpression.not) {
-			bExpressions.remove(startIdx);
-			bExpressions.remove(startIdx);
+		if (be0 == BooleanExpression.not && be1 == BooleanExpression.or) {
+			bExpressions.remove(startIdx + 1);
+			simplify(bExpressions, reverseStartIdx); // tail recursion
+			return;
+		}
+		if (be0 == BooleanExpression.or && be1 == BooleanExpression.not) {
 			bExpressions.remove(startIdx);
 			simplify(bExpressions, reverseStartIdx); // tail recursion
 			return;
@@ -141,7 +145,7 @@ public enum GuardAssertion {
 		}
 	}
 
-	static private GuardAssertion get(ArrayList<BooleanExpression> beList) {
+	static private HoldAssertion get(ArrayList<BooleanExpression> beList) {
 		int notCount = 0;
 		for (BooleanExpression be : beList) {
 			if (be == BooleanExpression.or) {

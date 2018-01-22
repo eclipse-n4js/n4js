@@ -36,7 +36,7 @@ public class GuardFactory {
 		this.symbolFactory = symbolFactory;
 	}
 
-	Guard create(Expression topContainer, Expression expr, boolean negateTree) {
+	Guard create(EObject topContainer, Expression expr, boolean negateTree) {
 		if (expr instanceof EqualityExpression) {
 			EqualityExpression eqe = (EqualityExpression) expr;
 			EqualityOperator operation = eqe.getOp();
@@ -68,7 +68,7 @@ public class GuardFactory {
 		return null;
 	}
 
-	private Guard createGuardForInstanceof(Expression topContainer, boolean negateTree, RelationalExpression re) {
+	private Guard createGuardForInstanceof(EObject topContainer, boolean negateTree, RelationalExpression re) {
 		Expression lhs = re.getLhs();
 		Expression rhs = re.getRhs();
 		Symbol symbol = symbolFactory.create(lhs);
@@ -80,12 +80,12 @@ public class GuardFactory {
 		if (symbol == null) {
 			return null;
 		}
-		GuardAssertion asserts = GuardAssertion.get(topContainer, re, negateTree, false);
-		Guard guard = new Guard(re, GuardType.IsUndefined, asserts, symbol, context);
+		HoldAssertion asserts = HoldAssertion.getGuard(topContainer, re, negateTree, false);
+		Guard guard = new Guard(re, GuardType.InstanceOf, asserts, symbol, context);
 		return guard;
 	}
 
-	private Guard createGuardForTruthy(Expression topContainer, Expression expr, boolean negateTree, Symbol symbol) {
+	private Guard createGuardForTruthy(EObject topContainer, Expression expr, boolean negateTree, Symbol symbol) {
 		EObject parent = expr.eContainer();
 		boolean isTruthy = false;
 		isTruthy |= parent instanceof Statement;
@@ -94,14 +94,14 @@ public class GuardFactory {
 		isTruthy |= parent instanceof BinaryLogicalExpression;
 		isTruthy |= parent instanceof UnaryExpression && ((UnaryExpression) parent).getOp() == UnaryOperator.NOT;
 		if (isTruthy) {
-			GuardAssertion asserts = GuardAssertion.get(topContainer, expr, negateTree, false);
+			HoldAssertion asserts = HoldAssertion.getGuard(topContainer, expr, negateTree, false);
 			Guard guard = new Guard(expr, GuardType.IsTruthy, asserts, symbol);
 			return guard;
 		}
 		return null;
 	}
 
-	private Guard createGuardForEquality(Expression topContainer, boolean negateTree, EqualityExpression eqe,
+	private Guard createGuardForEquality(EObject topContainer, boolean negateTree, EqualityExpression eqe,
 			boolean sameEqualNot) {
 
 		Expression lhs = eqe.getLhs();
@@ -146,7 +146,7 @@ public class GuardFactory {
 		return null;
 	}
 
-	private Guard createGuardForNUZ(Expression topContainer, Expression eqe, boolean negateTree, boolean negateEqe,
+	private Guard createGuardForNUZ(EObject topContainer, Expression eqe, boolean negateTree, boolean negateEqe,
 			Symbol nuz, Symbol symbol) {
 
 		GuardType type = null;
@@ -159,12 +159,12 @@ public class GuardFactory {
 		if (nuz.isZeroLiteral()) {
 			type = GuardType.IsZero;
 		}
-		GuardAssertion asserts = GuardAssertion.get(topContainer, eqe, negateTree, negateEqe);
+		HoldAssertion asserts = HoldAssertion.getGuard(topContainer, eqe, negateTree, negateEqe);
 		Guard guard = new Guard(eqe, type, asserts, symbol);
 		return guard;
 	}
 
-	private Guard createGuardForTypeof(Expression topContainer, UnaryExpression ue, boolean negateTree,
+	private Guard createGuardForTypeof(EObject topContainer, UnaryExpression ue, boolean negateTree,
 			boolean negateEqe, Expression rhs) {
 
 		if (rhs instanceof StringLiteral) {
@@ -179,12 +179,12 @@ public class GuardFactory {
 		if (typeofSymbol == null) {
 			return null;
 		}
-		GuardAssertion asserts = GuardAssertion.get(topContainer, (Expression) ue.eContainer(), negateTree, negateEqe);
+		HoldAssertion asserts = HoldAssertion.getGuard(topContainer, ue.eContainer(), negateTree, negateEqe);
 		Guard guard = new Guard(ue, GuardType.IsUndefined, asserts, typeofSymbol);
 		return guard;
 	}
 
-	private Guard createGuardForVoid(Expression topContainer, UnaryExpression ue, boolean negateTree, boolean negateEqe,
+	private Guard createGuardForVoid(EObject topContainer, UnaryExpression ue, boolean negateTree, boolean negateEqe,
 			Symbol symbol) {
 
 		Expression voidExpr = ue.getExpression();
@@ -195,7 +195,8 @@ public class GuardFactory {
 				return null;
 			}
 		}
-		GuardAssertion asserts = GuardAssertion.get(topContainer, (Expression) ue.eContainer(), negateTree, negateEqe);
+		HoldAssertion asserts = HoldAssertion.getGuard(topContainer, ue.eContainer(), negateTree,
+				negateEqe);
 		Guard guard = new Guard(ue, GuardType.IsUndefined, asserts, symbol);
 		return guard;
 	}

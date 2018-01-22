@@ -56,6 +56,7 @@ abstract public class Assumption {
 	private DataFlowVisitor dataFlowVisitor;
 	private final Assumption originalAssumption;
 	private int aliasPassedCount = 0;
+	private int guardPassedCount = 0;
 	private int copyCount = 0;
 
 	/** Constructor */
@@ -161,12 +162,12 @@ abstract public class Assumption {
 
 	void callHoldsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
 		if (failingStructuralAliases.contains(rhs)) {
-			handleHolds(rhs, false);
+			handleHolds(rhs, HoldAssertion.NeverHolds);
 		} else if (failingStructuralAliases.contains(lhs)) {
 			failingStructuralAliases.remove(lhs);
 			failingStructuralAliases.add(rhs);
 		} else {
-			boolean holds = holdsOnDataflow(lhs, rhs, cfe);
+			HoldAssertion holds = holdsOnDataflow(lhs, rhs, cfe);
 			handleHolds(rhs, holds);
 			aliases.remove(lhs);
 			aliases.add(rhs);
@@ -185,12 +186,12 @@ abstract public class Assumption {
 	 *            the {@link ControlFlowElement} that triggers the dataflow
 	 * @return true iff the assumption holds on the given dataflow
 	 */
-	public boolean holdsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
-		return true;
+	public HoldAssertion holdsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
+		return HoldAssertion.MayHold;
 	}
 
 	void callHoldsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
-		boolean holds = holdsOnEffect(effect, cfe);
+		HoldAssertion holds = holdsOnEffect(effect, cfe);
 		handleHolds(effect.symbol, holds);
 	}
 
@@ -203,12 +204,12 @@ abstract public class Assumption {
 	 *            the {@link ControlFlowElement} that contains the given alias
 	 * @return true iff the assumption holds on the given alias symbol and its container
 	 */
-	public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
-		return true;
+	public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		return HoldAssertion.MayHold;
 	}
 
 	void callHoldsOnGuard(Guard guard) {
-		GuardAssertion holds = holdsOnGuard(guard);
+		HoldAssertion holds = holdsOnGuard(guard);
 		handleHolds(guard, holds);
 	}
 
@@ -221,16 +222,16 @@ abstract public class Assumption {
 	 *
 	 * @return true iff the assumption holds
 	 */
-	public GuardAssertion holdsOnGuard(Guard guard) {
-		return GuardAssertion.MayHold;
+	public HoldAssertion holdsOnGuard(Guard guard) {
+		return HoldAssertion.MayHold;
 	}
 
 	void callHoldsAfterall() {
 		boolean holds = holdsAfterall();
 		if (failedSymbol != null) {
-			handleHolds(failedSymbol, false);
+			handleHolds(failedSymbol, HoldAssertion.NeverHolds);
 		} else if (failedGuard != null) {
-			handleHolds(failedGuard, GuardAssertion.NeverHolds);
+			handleHolds(failedGuard, HoldAssertion.NeverHolds);
 		} else {
 			handleHolds(holds);
 		}
@@ -252,31 +253,35 @@ abstract public class Assumption {
 		deactivate();
 	}
 
-	private void handleHolds(Symbol pFailedSymbol, boolean holds) {
-		if (!holds) {
-			if (aliases.contains(pFailedSymbol)) {
+	private void handleHolds(Symbol pSymbol, HoldAssertion holds) {
+		if (holds == HoldAssertion.NeverHolds) {
+			if (aliases.contains(pSymbol)) {
 				failed();
-				failedSymbol = pFailedSymbol;
+				failedSymbol = pSymbol;
 			} else {
 				// assume pFailedSymbol is a structural alias to one of the aliases, i.e.:
 				// aliases.stream().anyMatch(a -> pFailedSymbol.isStrucuralAlias(a));
-				failingStructuralAliases.add(pFailedSymbol);
+				failingStructuralAliases.add(pSymbol);
 			}
 			return;
+		}
+		if (holds == HoldAssertion.AlwaysHolds) {
+			aliasPassed(pSymbol);
 		}
 		if (aliases.isEmpty()) {
 			deactivate();
 		}
 	}
 
-	private void handleHolds(Guard guard, GuardAssertion holds) {
-		if (holds == GuardAssertion.NeverHolds) {
+	private void handleHolds(Guard guard, HoldAssertion holds) {
+		if (holds == HoldAssertion.NeverHolds) {
 			failedGuard = guard;
-			if (noCopies()) {
+			if (noCopies() && noGuardPassed()) {
 				failed();
 			}
 		}
-		if (holds == GuardAssertion.AlwaysHolds) {
+		if (holds == HoldAssertion.AlwaysHolds) {
+			originalAssumption.guardPassedCount++;
 			deactivate();
 		}
 
@@ -295,9 +300,14 @@ abstract public class Assumption {
 		}
 	}
 
-	/** @return true iff all {@link Assumption}s failed that were copies from each other */
-	public boolean allFailed() {
+	/** @return true iff all {@link Assumption}s failed */
+	public boolean noAliasPassed() {
 		return originalAssumption.aliasPassedCount == 0;
+	}
+
+	/** @return true iff all {@link Guard}s failed */
+	public boolean noGuardPassed() {
+		return originalAssumption.guardPassedCount == 0;
 	}
 
 	/** @return true iff there are no copies of this {@link Assumption} on other {@link DataFlowBranchWalker}s */
