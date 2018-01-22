@@ -671,7 +671,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
 						+ leftArg.getClass().getName());
 			}
-			// due to the assumption of the method, we always have: leftArg >: rightArg
+			// due to the assumption of the method, we always have: leftArg :> rightArg
 			// (so for def-site variance we just look at the left side in this case, i.e. leftParam)
 			final Variance leftDefSiteVarianceRaw = leftParam.getVariance();
 			final Variance leftDefSiteVariance = leftDefSiteVarianceRaw != null ? leftDefSiteVarianceRaw : INV;
