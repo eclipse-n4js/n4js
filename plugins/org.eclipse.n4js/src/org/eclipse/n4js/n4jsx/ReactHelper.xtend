@@ -55,7 +55,7 @@ class ReactHelper {
 	 * Check if a module is a React module.
 	 */
 	def public boolean isReactModule(TModule module) {
-		return (module !== null && REACT_PROJECT_ID.equals(module.projectId))
+		return (module !== null && module.isMainModule && REACT_PROJECT_ID.equals(module.projectId))
 	}
 
 	/**

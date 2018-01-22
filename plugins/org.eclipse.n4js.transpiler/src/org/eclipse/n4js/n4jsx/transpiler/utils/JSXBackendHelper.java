@@ -34,7 +34,6 @@ import com.google.inject.Inject;
  * work for other backends once their support is added.
  */
 public final class JSXBackendHelper {
-	private final static String JSX_BACKEND_FACADE_NAME = "React";
 	private final static String JSX_BACKEND_ELEMENT_FACTORY_NAME = "createElement";
 
 	/**
@@ -54,7 +53,7 @@ public final class JSXBackendHelper {
 
 	/** @return name of the JSX backend facade, i.e "React" */
 	public String getBackendFacadeName() {
-		return JSX_BACKEND_FACADE_NAME;
+		return ReactHelper.REACT_NAMESPACE;
 	}
 
 	/** @return name of the JSX element factory name, i.e "createElement" */
@@ -163,7 +162,6 @@ public final class JSXBackendHelper {
 	/**
 	 * Provides URI for JSX Backend. URI is cached in local map {@link JSXBackendHelper#jsxBackends}. If there is no URI
 	 * for given QN, performs lookup via scope of the provided resource. and returned.
-	 *
 	 */
 	private URI getOrFindJSXBackend(Resource resource, String qualifiedName) {
 		if (jsxBackends.isEmpty()) {
