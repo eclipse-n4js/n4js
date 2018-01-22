@@ -12,15 +12,12 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import java.util.ArrayList
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.misc.DestructNode
+import org.eclipse.n4js.misc.DestructureHelper
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
-import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -28,14 +25,8 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.RelationalExpression
-import org.eclipse.n4js.n4JS.VariableBinding
-import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -72,6 +63,10 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+
+	@Inject
+	private DestructureHelper destructureHelper;
+
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -159,23 +154,13 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			infCtx.addConstraint(TypeConstraint.FALSE);
 		}
 
-		// In case of destructure pattern, we can calculate the expected type based on the structure of the destructure pattern.
-		val rootDestructNode = if (rootPoly.eContainer instanceof VariableBinding) {
-				DestructNode.unify(rootPoly.eContainer as VariableBinding)
-			} else if (rootPoly.eContainer instanceof AssignmentExpression) {
-				DestructNode.unify(rootPoly.eContainer as AssignmentExpression)
-			} else if (rootPoly.eContainer instanceof ForStatement) {
-				DestructNode.unify(rootPoly.eContainer as ForStatement)
-			} else {
-				null
-			};
-
+		val expectedTypeOfPoly = destructureHelper.calculateExpectedType(rootPoly, G);
 		// we have to pass the expected type to the #getType() method, so retrieve it first
 		// (until the expectedType judgment is integrated into AST traversal, we have to invoke this judgment here;
 		// in case of not-well-behaving expectedType rules, we use 'null' as expected type, i.e. no expectation)
 		// TODO integrate expectedType judgment into AST traversal and remove #isProblematicCaseOfExpectedType()
-		val expectedTypeRef = if (rootDestructNode !== null) {
-				calculateExpectedType(rootDestructNode, G)
+		val expectedTypeRef = if (expectedTypeOfPoly !== null) {
+				expectedTypeOfPoly
 			} else if (!rootPoly.isProblematicCaseOfExpectedType) {
 				ts.expectedTypeIn(G, rootPoly.eContainer(), rootPoly).getValue();
 			};
@@ -197,72 +182,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		infCtx.solve;
 	}
 
-	/** Calculate expected type of a destructure pattern based on its structure */
-	private def TypeRef calculateExpectedType(DestructNode destructNode, RuleEnvironment G) {
-		val elementTypes = new ArrayList<TypeArgument>();
-		val elementMembers = new ArrayList<TStructMember>();
-		val elemCount = destructNode.nestedNodes.size
-		for (nestedNode : destructNode.nestedNodes) {
-			val elemExpectedType = if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
-				// Recursively calculate the expected type of the nested child
-				calculateExpectedType(nestedNode, G)
-			} else {
-				// Extract type of leaf node
-				nestedNode.createTypeFromLeafDestructNode(G)
-			}
 
-			if (nestedNode.propName !== null) {
-				// We are dealing with object literals, hence create TStructMembers to construct a ParameterizedTypeRefStructural
-				val field = TypesFactory.eINSTANCE.createTStructField
-				field.name = nestedNode.propName;
-				field.typeRef = elemExpectedType
-				elementMembers.add(field)
-			} else {
-				elementTypes.add(elemExpectedType)
-			}
-		}
-
-		var retTypeRef = if (elementMembers.size > 0) {
-			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, elementMembers)
-		} else if (elementTypes.size > 0) {
-			if (elemCount == 1) {
-				 G.arrayTypeRef(elementTypes.get(0))
-			} else if (elemCount > 1){
-				G.iterableNTypeRef(elemCount, elementTypes);
-			} else {
-				null
-			}
-		} else {
-			throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
-		}
-		// Wrap the expected type in an Iterable type in case of ForStatement
-		// Note that we wrap the type into an Iterable type so that when a constraint G<out IV> <: Iterable<...> is created,
-		// we would like to reduce it to IV <:..
-		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
-			retTypeRef = G.iterableTypeRef(retTypeRef)
-		}
-		return retTypeRef;
-	}
-
-	/** Create expected type for a leaf DestructNode */
-	private def createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
-		val varDecl = leafNode.varDecl
-		val varRef = leafNode.varRef
-		if (varDecl !== null) {
-			// If it is a variable declaration, simply retrieve the declared type
-			var declaredTypeRef = varDecl.declaredTypeRef;
-			if (declaredTypeRef !== null) {
-				return declaredTypeRef
-			}
-		} else if (varRef !== null) {
-			// It is a variable reference, retrieve the declared type of the variable
-			if (varRef.id instanceof VariableDeclaration && (varRef.id as VariableDeclaration).declaredTypeRef !== null) {
-				return (varRef.id as VariableDeclaration).declaredTypeRef
-			}
-		}
-		// In case the expected type does not exist, simply return 'any' type (top type)
-		return G.topTypeRef
-	}
 
 	/**
 	 * Key method for handling poly expressions.
