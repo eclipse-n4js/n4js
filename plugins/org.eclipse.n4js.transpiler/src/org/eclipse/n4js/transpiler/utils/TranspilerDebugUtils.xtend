@@ -10,18 +10,15 @@
  */
 package org.eclipse.n4js.transpiler.utils
 
-import com.google.inject.Inject
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.io.Writer
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.transpiler.InformationRegistry
 import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.im.Script_IM
@@ -29,7 +26,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.EcoreUtil2
 
@@ -37,9 +33,6 @@ import org.eclipse.xtext.EcoreUtil2
  * Some utilities for transpiler debugging, mainly dumping a {@link TranspilerState} to {@code stdout}, etc.
  */
 class TranspilerDebugUtils {
-
-	@Inject
-	private JSXBackendHelper JSXBackendHelper;
 
 	/**
 	 * Perform some consistency checks on the transpiler state. For example, this asserts that no node in the
@@ -89,12 +82,8 @@ class TranspilerDebugUtils {
 	}
 
 	def private allowedCrossRefToOutside(EObject eobj, InformationRegistry info) {
-		//TODO IDE-2416 added for JSX workarounds, if possible remove, only SymbolTableEntry should be allowed
 		switch eobj {
 			SymbolTableEntry: true
-			TModule: JSXBackendHelper.isJsxBackendModule(eobj)
-			ImportDeclaration: JSXBackendHelper.isJsxBackendImportDeclaration(eobj, info)
-			ImportSpecifier: JSXBackendHelper.isJsxBackendImportSpecifier(eobj, info)
 			default: false
 		}
 	}

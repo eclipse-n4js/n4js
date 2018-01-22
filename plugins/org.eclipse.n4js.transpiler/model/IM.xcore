@@ -37,8 +37,8 @@ import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.Type
 
 
 
@@ -135,7 +135,7 @@ class SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * </ul>
 	 * This value must never be <code>null</code>.
 	 * <p>
-	 * <b>WARNING: via this reference, you are leaving <strike>the american sector</strike> the intermediate model and
+	 * <b>WARNING: via this reference, you are leaving <strike>the American sector</strike> the intermediate model and
 	 * enter the original AST or TModule.</b>
 	 */
 	refers IdentifiableElement originalTarget

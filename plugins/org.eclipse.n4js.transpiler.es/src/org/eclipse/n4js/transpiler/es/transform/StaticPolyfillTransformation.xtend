@@ -177,9 +177,9 @@ class StaticPolyfillTransformation extends Transformation {
 			val impSpec = if(isNamespace) {
 				_NamespaceImportSpecifier(alias, true)
 			} else {
-				_NamedImportSpecifier(null, alias, true)
+				_NamedImportSpecifier(alias, true)
 			};
-			val impDecl = _ImportDecl(null, impSpec);
+			val impDecl = _ImportDecl(impSpec);
 			state.im.scriptElements.add(0, impDecl);
 			ste.name = alias;
 			ste.importSpecifier = impSpec;

@@ -56,7 +56,7 @@ public interface SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * </ul>
 	 * This value must never be <code>null</code>.
 	 * <p>
-	 * <b>WARNING: via this reference, you are leaving <strike>the american sector</strike> the intermediate model and
+	 * <b>WARNING: via this reference, you are leaving <strike>the American sector</strike> the intermediate model and
 	 * enter the original AST or TModule.</b>
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Original Target</em>' reference.
