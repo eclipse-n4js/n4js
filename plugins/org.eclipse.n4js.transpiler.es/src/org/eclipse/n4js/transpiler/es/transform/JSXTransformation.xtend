@@ -86,8 +86,9 @@ class JSXTransformation extends Transformation {
 	 * </pre>
 	 */
 	override void transform() {
-		val inN4JSX = ResourceType.getResourceType(state.resource) === ResourceType.N4JSX;
-		if(!inN4JSX) {
+		val resourceType = ResourceType.getResourceType(state.resource);
+		val inJSX = resourceType === ResourceType.JSX || resourceType === ResourceType.N4JSX;
+		if(!inJSX) {
 			return; // this transformation is not applicable
 		}
 		val jsxElements = collectNodes(state.im, JSXElement, true);
