@@ -32,8 +32,10 @@ import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -512,9 +514,17 @@ public final class InferenceContext {
 		final Type nullType = RuleEnvironmentExtensions.nullType(G);
 		for (int i = 0; i < typeRefs.length; i++) {
 			final TypeRef curr = typeRefs[i];
-			final Type currDeclType = curr != null ? curr.getDeclaredType() : null;
-			if (currDeclType != null && currDeclType != undefinedType && currDeclType != nullType) {
-				return true; // wow, that bound is interesting!
+			if (curr instanceof ParameterizedTypeRef) {
+				// for ParameterizedTypeRefs, it depends on the declared type:
+				final Type currDeclType = curr.getDeclaredType();
+				if (currDeclType != null && currDeclType != undefinedType && currDeclType != nullType) {
+					return true; // wow, that bound is interesting!
+				}
+			} else {
+				// all non-ParameterizedTypeRefs are interesting, except UnknownTypeRef:
+				if (!(curr instanceof UnknownTypeRef)) {
+					return true; // wow, that bound looks intriguing!
+				}
 			}
 		}
 		return false; // no interesting bounds encountered
