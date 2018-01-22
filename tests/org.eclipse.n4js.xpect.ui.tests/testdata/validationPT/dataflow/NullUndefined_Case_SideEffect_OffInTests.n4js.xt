@@ -20,6 +20,9 @@
 			File "manifest.n4mf" { from="manifest.n4mf" }
 		}
 	}
+	IssueConfiguration {
+		IssueCode "DFG_NULL_DEREFERENCE" {enabled=true}
+	}
 	END_SETUP
  */
 
