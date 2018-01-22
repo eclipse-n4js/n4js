@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
+import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
@@ -355,30 +356,25 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Check if there is any attribute in spread operator that is not declared in props
-	 * Notes: this is commented out but not deleted for now since the Stdlib team is still arguing about if this check makes sense
+	 * Check that a named element is not named React in N4JSX file to avoid naming clash.
 	 */
-//	def private checkUnknownAttributeInSpreadOperator(JSXSpreadAttribute spreadAttribute, JSXElement jsxElem, Iterable<TMember> attributesInSpreadOperatorType, Iterable<TMember> fieldsOrGettersInProps) {
-//		attributesInSpreadOperatorType.forEach [ attributeInSpreadOperator |
-//			//Look for the field/getter in props that corresponding the spread operator's attribute
-//			val fieldOrGetterInProps = fieldsOrGettersInProps.findFirst[fieldOrGetter | attributeInSpreadOperator.name == fieldOrGetter.name];
-//			if (fieldOrGetterInProps === null) {
-//				val message = IssueCodes.getMessageForJSXSPREADATTRIBUTE_NOT_DECLARED_IN_PROPS(attributeInSpreadOperator.name,
-//					 	jsxElem?.jsxElementName?.expression?.refName
-//					 );
-//						addIssue(
-//							message,
-//							spreadAttribute,
-//							N4JSXPackage.Literals.JSX_SPREAD_ATTRIBUTE__EXPRESSION,
-//							IssueCodes.JSXSPREADATTRIBUTE_NOT_DECLARED_IN_PROPS
-//						);
-//			}
-//
-//		];
-//
-//	}
+	@Check
+	def void checkNamedElementNotNamedReact(NamedElement elem) {
+		val resourceType = ResourceType.getResourceType(elem)
+		// This check is only applicable to N4JSX/JSX file
+		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
+			return;
 
-
+ 		if (elem.name == ReactHelper.REACT_NAMESPACE) {
+			val message = IssueCodes.getMessageForJSX_NAME_CANNOT_BE_REACT();
+					addIssue(
+						message,
+						elem,
+						findNameFeature(elem).value,
+						IssueCodes.JSX_NAME_CANNOT_BE_REACT
+					);
+		}
+	}
 
 	/**
 	 * Check that non-optional fields of "props" should be specified in JSX element

@@ -20,6 +20,7 @@ include::{find}config.adoc[]
 
 
 
+
 [[gsec:spec_A.A.foo]]
 [role=memberdoc]
 === ++Method foo++
@@ -28,11 +29,12 @@ include::{find}config.adoc[]
 
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample3_RedundantLines:src/A:A#foo++[``++public foo(): string++``]
 
+
 ==== Semantics
 
 . *++Foo++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample3_RedundantLines:test/ATests:BaseTests#testFoo++[Test]#)
 +
-[.requirementConstraint]
+[.generatedApiConstraint]
 ====
 
 Text.

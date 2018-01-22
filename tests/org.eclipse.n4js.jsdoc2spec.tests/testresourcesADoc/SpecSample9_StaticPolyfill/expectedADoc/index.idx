@@ -13,12 +13,12 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 	SpecSample9_StaticPolyfill#src
 		NO_PACKAGE
 			X.n4js
-				X::14::21::21
-				X#bar::16::22::35::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample9_StaticPolyfill:testresourcesADoc.SpecSample9_StaticPolyfill.poly
-				X#foo::17::36::52::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample9_StaticPolyfill:testresourcesADoc.SpecSample9_StaticPolyfill.poly
-				X#my::15::53::68
+				X::14::21::22
+				X#bar::16::23::37::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample9_StaticPolyfill:testresourcesADoc.SpecSample9_StaticPolyfill.poly
+				X#foo::17::38::55::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample9_StaticPolyfill:testresourcesADoc.SpecSample9_StaticPolyfill.poly
+				X#my::15::56::72
 	SpecSample9_StaticPolyfill#tests
 		NO_PACKAGE
 			XTest.n4js
-				XTest::12::21::21
-				XTest#test::18::22::37
+				XTest::12::21::22
+				XTest#test::18::23::39

@@ -83,6 +83,8 @@ class ADocSerializer {
 	}
 
 	private def StringBuilder appendSpec(StringBuilder strb, SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
+		strb.append("\n");
+
 		var addedTaskLinks = false;
 		val taskTags = spec.getDoclet.lineTags(TAG_TASK.title);
 		for (tag : taskTags) {
@@ -117,7 +119,7 @@ class ADocSerializer {
 			strb.append("==== Description\n\n");
 
 		if (!reqID.isEmpty) {
-			strb.append("See req:"+reqID +"[].");
+			strb.append("See req:"+reqID +"[].\n");
 		}
 
 		strb.appendContents(doclet);
@@ -488,7 +490,7 @@ class ADocSerializer {
 			strbTmp.appendSpecDescriptions(doclets);
 			if (strbTmp.length > 0) {
 				strb.append("+\n");
-				strb.append("[.requirementConstraint]\n");
+				strb.append("[.generatedApiConstraint]\n");
 				strb.append("====\n\n");
 				strb.append(strbTmp);
 				strb.append("\n====\n");
