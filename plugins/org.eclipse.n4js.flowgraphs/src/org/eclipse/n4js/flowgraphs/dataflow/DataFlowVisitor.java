@@ -71,7 +71,6 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 	 * @param inverse
 	 *            is true iff the expression is negated (due to negation or due to the else branch)
 	 */
-	@Deprecated // not implemented yet
 	protected void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		// overwrite me
 	}

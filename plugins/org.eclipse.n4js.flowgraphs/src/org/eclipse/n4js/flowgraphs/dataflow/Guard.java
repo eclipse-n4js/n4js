@@ -17,15 +17,31 @@ import org.eclipse.n4js.n4JS.Expression;
  */
 public class Guard {
 	final public Expression condition;
-	final public Symbol symbol;
 	final public GuardType type;
 	final public GuardAssertion asserts;
+	final public Symbol symbol;
+	final public Expression context;
 
-	public Guard(Expression condition, GuardType type, Symbol symbol, GuardAssertion asserts) {
-		this.condition = condition;
-		this.type = type;
-		this.symbol = symbol;
-		this.asserts = asserts;
+	public Guard(Expression condition, GuardType type, GuardAssertion asserts, Symbol symbol) {
+		this(condition, type, asserts, symbol, null);
 	}
 
+	public Guard(Expression condition, GuardType type, GuardAssertion asserts, Symbol symbol,
+			Expression context) {
+
+		this.condition = condition;
+		this.type = type;
+		this.asserts = asserts;
+		this.symbol = symbol;
+		this.context = context;
+	}
+
+	@Override
+	public String toString() {
+		String str = "";
+		str += type.toString();
+		str += " " + asserts.toString();
+		str += " on " + symbol.getName();
+		return str;
+	}
 }

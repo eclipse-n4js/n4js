@@ -23,6 +23,7 @@ import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
+import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
@@ -97,6 +98,8 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		UsedBeforeDeclaredAnalyser cvgv1 = new UsedBeforeDeclaredAnalyser();
 		NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
 
+		System.out.println("start validation");
+
 		flowAnalyzer.createGraphs(script);
 		flowAnalyzer.accept(dcv, nda, cvgv1);
 
@@ -160,10 +163,12 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 				continue; // ignore these warnings in test related source
 			}
 
+			Symbol nus = ndr.nullOrUndefinedSymbol;
+
 			String isOrMaybe = ndr.must && !isLeakingToClosure ? "is" : "may be";
 			String nullOrUndefined = "null or undefined";
-			nullOrUndefined = ndr.nullOrUndefinedSymbol.isNullLiteral() ? "null" : nullOrUndefined;
-			nullOrUndefined = ndr.nullOrUndefinedSymbol.isUndefinedLiteral() ? "undefined" : nullOrUndefined;
+			nullOrUndefined = nus != null && nus.isNullLiteral() ? "null" : nullOrUndefined;
+			nullOrUndefined = nus != null && nus.isUndefinedLiteral() ? "undefined" : nullOrUndefined;
 			String reason = getReason(ndr);
 			String msg = IssueCodes.getMessageForDFG_NULL_DEREFERENCE(varName, isOrMaybe, nullOrUndefined, reason);
 			addIssue(msg, ndr.cfe, IssueCodes.DFG_NULL_DEREFERENCE); // deactivated during tests
@@ -171,7 +176,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private String getReason(NullDereferenceResult ndr) {
-		if (!ndr.checkedSymbol.is(ndr.causingSymbol)) {
+		if (ndr.causingSymbol != null && !ndr.checkedSymbol.is(ndr.causingSymbol)) {
 			return " due to previous variable " + ndr.causingSymbol.getName();
 		}
 		return "";

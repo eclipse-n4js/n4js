@@ -41,7 +41,7 @@ public class GuardStructure {
 		allExpressions.add(condition);
 
 		for (Expression expr : allExpressions) {
-			Guard guard = guardFactory.create(expr, negate);
+			Guard guard = guardFactory.create(condition, expr, negate);
 			if (guard != null) {
 				if (!guardsMap.containsKey(guard.symbol)) {
 					guardsMap.put(guard.symbol, new LinkedList<>());

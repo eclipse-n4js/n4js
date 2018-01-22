@@ -17,12 +17,11 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.EqualityExpression;
-import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.NumericLiteral;
@@ -49,20 +48,6 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 			}
 		}
 		return false;
-	}
-
-	static private EqualityOperator getZeroCheckOperator(Symbol alias, ControlFlowElement readOperation) {
-		if (readOperation instanceof EqualityExpression) {
-			EqualityExpression eqExpr = (EqualityExpression) readOperation;
-			EqualityOperator equalityOperator = eqExpr.getOp();
-			if (equalityOperator == EqualityOperator.EQ || equalityOperator == EqualityOperator.NEQ) {
-				Expression otherExpr = alias.is(eqExpr.getLhs()) ? eqExpr.getRhs() : eqExpr.getLhs();
-				if (isZeroLiteral(otherExpr)) {
-					return equalityOperator;
-				}
-			}
-		}
-		return null;
 	}
 
 	static private boolean isZeroLiteral(Expression expr) {
@@ -98,14 +83,13 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 			return true;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(Guard guard) {
+		public GuardAssertion holdsOnGuard(Guard guard) {
 			if (guard.type == GuardType.IsZero && guard.asserts.canHold()) {
-				this.deactivateAlias(guard.symbol);
-				return false;
+				this.aliasPassed(guard.symbol);
+				return guard.asserts;
 			}
-			return true;
+			return GuardAssertion.MayHold;
 		}
 	}
 }

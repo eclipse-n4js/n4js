@@ -26,8 +26,6 @@ import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
-import org.eclipse.n4js.n4JS.EqualityExpression;
-import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
@@ -55,7 +53,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		if (must && isDereferencing(cfe)) {
@@ -85,20 +82,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			nullDerefs.add(ndr);
 		}
 		return nullDerefs;
-	}
-
-	static private EqualityOperator getNullCheckOperator(Symbol alias, ControlFlowElement readOperation) {
-		if (readOperation instanceof EqualityExpression) {
-			EqualityExpression eqExpr = (EqualityExpression) readOperation;
-			EqualityOperator equalityOperator = eqExpr.getOp();
-			if (equalityOperator == EqualityOperator.EQ || equalityOperator == EqualityOperator.NEQ) {
-				Expression otherExpr = alias.is(eqExpr.getLhs()) ? eqExpr.getRhs() : eqExpr.getLhs();
-				if (otherExpr instanceof NullLiteral) {
-					return equalityOperator;
-				}
-			}
-		}
-		return null;
 	}
 
 	private Symbol getSymbolForExpression(EObject value) {
@@ -138,7 +121,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 						return false;
 					}
 				} else {
-					deactivateAlias(effect.symbol);
+					aliasPassed(effect.symbol);
 				}
 			}
 			return true;
@@ -180,17 +163,17 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			return nullOrUndefined;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(Guard guard) {
-			if (guard.type.IsNullOrUndefined() && guard.asserts.canHold()) {
-				return false;
+		public GuardAssertion holdsOnGuard(Guard guard) {
+			if (guard.type.IsNullOrUndefined() && guard.asserts == GuardAssertion.AlwaysHolds) {
+				nullOrUndefinedSymbol = guard.symbol;
+				return GuardAssertion.NeverHolds;
 			}
-			if (guard.type == GuardType.IsTruthy && guard.asserts == GuardAssertion.AlwaysHolds) {
-				this.deactivateAlias(guard.symbol);
+			if (guard.type == GuardType.IsTruthy) {
+				return guard.asserts;
 			}
 
-			return true;
+			return GuardAssertion.MayHold;
 		}
 	}
 
@@ -244,21 +227,19 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			return true;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(Guard guard) {
+		public GuardAssertion holdsOnGuard(Guard guard) {
 			if (guard.type == GuardType.IsTruthy) {
 				if (guard.asserts == GuardAssertion.AlwaysHolds) {
 					neverNullBefore = true;
-					this.deactivateAlias(guard.symbol);
-				}
-				if (guard.asserts == GuardAssertion.NeverHolds) {
-					alwaysNullBefore = true;
-					this.deactivateAlias(guard.symbol);
+					this.aliasPassed(guard.symbol);
+
+				} else if (guard.asserts == GuardAssertion.NeverHolds) {
+					return guard.asserts;
 				}
 			}
 
-			return true;
+			return GuardAssertion.MayHold;
 		}
 
 		@Override

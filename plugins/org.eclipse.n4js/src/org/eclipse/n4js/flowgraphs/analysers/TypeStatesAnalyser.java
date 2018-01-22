@@ -55,7 +55,6 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		if (must && effect.type == EffectType.MethodCall) {
@@ -122,9 +121,8 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 			return true;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(Guard guard) {
+		public GuardAssertion holdsOnGuard(Guard guard) {
 			if (guard.type == GuardType.InState) {
 				Collection<String> inStates = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
 				if (!inStates.isEmpty()) {
@@ -137,7 +135,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 					}
 				}
 			}
-			return true;
+			return GuardAssertion.MayHold;
 		}
 	}
 
@@ -185,9 +183,8 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 			return true;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(Guard guard) {
+		public GuardAssertion holdsOnGuard(Guard guard) {
 			if (guard.type == GuardType.InState && guard.asserts == GuardAssertion.AlwaysHolds) {
 				Collection<String> inStatesAfterGuard = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
 				if (!inStatesAfterGuard.isEmpty()) {
@@ -195,7 +192,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 					deactivate();
 				}
 			}
-			return true;
+			return GuardAssertion.MayHold;
 		}
 
 		@Override

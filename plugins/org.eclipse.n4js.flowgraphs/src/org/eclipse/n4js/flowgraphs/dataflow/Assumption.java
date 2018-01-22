@@ -41,17 +41,22 @@ abstract public class Assumption {
 	/** Set of all symbols that are transitively assigned to {@link #symbol} */
 	public final Set<Symbol> aliases = new HashSet<>();
 	/***/
+	@Deprecated
 	public final Set<Symbol> failingStructuralAliases = new HashSet<>();
 	/** Set of all symbols that might be indirectly assigned to {@link #symbol} through receiver change */
+	@Deprecated
 	public final Map<EObject, Symbol> symbolForDeclaration = new HashMap<>();
-	/** The {@link Symbol} that caused this {@link Assumption} to fail */
+	/** The {@link Symbol} that caused this {@link Assumption} to fail. Can be null. */
 	public Symbol failedSymbol;
+	/** The {@link Guard} that caused this {@link Assumption} to fail. Can be null. */
+	public Guard failedGuard;
 
 	private boolean active = true;
 	private boolean failed = false;
 	private DataFlowVisitor dataFlowVisitor;
 	private final Assumption originalAssumption;
-	private int meetCount = 0;
+	private int aliasPassedCount = 0;
+	private int copyCount = 0;
 
 	/** Constructor */
 	public Assumption(ControlFlowElement cfe, Symbol symbol) {
@@ -75,6 +80,9 @@ abstract public class Assumption {
 		this.symbolForDeclaration.putAll(assumption.symbolForDeclaration);
 		this.dataFlowVisitor = assumption.dataFlowVisitor;
 		this.originalAssumption = assumption.originalAssumption;
+		this.failedSymbol = assumption.failedSymbol;
+		this.failedGuard = assumption.failedGuard;
+		this.originalAssumption.copyCount++;
 	}
 
 	/** @return a key that is based on the given objects */
@@ -97,6 +105,13 @@ abstract public class Assumption {
 		this.aliases.addAll(assumption.aliases);
 		this.failingStructuralAliases.addAll(assumption.failingStructuralAliases);
 		this.symbolForDeclaration.putAll(assumption.symbolForDeclaration);
+		if (this.failedSymbol == null) {
+			this.failedSymbol = assumption.failedSymbol;
+		}
+		if (this.failedGuard == null || assumption.failedGuard == null) {
+			this.failedGuard = null;
+		}
+		this.originalAssumption.copyCount--;
 	}
 
 	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
@@ -118,14 +133,15 @@ abstract public class Assumption {
 	}
 
 	/** Deactivates the given {@link Symbol}, i.e. further aliases of this {@link Symbol} are ignored */
-	public void deactivateAlias(Symbol ignoreSymbol) {
+	public void aliasPassed(Symbol ignoreSymbol) {
 		this.aliases.remove(ignoreSymbol);
-		this.originalAssumption.meetCount++;
+		this.originalAssumption.aliasPassedCount++;
 	}
 
 	/** Deactivates this {@link Assumption} */
 	protected void deactivate() {
 		active = false;
+		originalAssumption.copyCount--;
 	}
 
 	/** @return true iff this assumption failed */
@@ -192,8 +208,8 @@ abstract public class Assumption {
 	}
 
 	void callHoldsOnGuard(Guard guard) {
-		boolean holds = holdsOnGuard(guard);
-		handleHolds(guard.symbol, holds);
+		GuardAssertion holds = holdsOnGuard(guard);
+		handleHolds(guard, holds);
 	}
 
 	/**
@@ -205,14 +221,19 @@ abstract public class Assumption {
 	 *
 	 * @return true iff the assumption holds
 	 */
-	@Deprecated // not implemented yet
-	public boolean holdsOnGuard(Guard guard) {
-		return true;
+	public GuardAssertion holdsOnGuard(Guard guard) {
+		return GuardAssertion.MayHold;
 	}
 
 	void callHoldsAfterall() {
 		boolean holds = holdsAfterall();
-		handleHolds(null, holds);
+		if (failedSymbol != null) {
+			handleHolds(failedSymbol, false);
+		} else if (failedGuard != null) {
+			handleHolds(failedGuard, GuardAssertion.NeverHolds);
+		} else {
+			handleHolds(holds);
+		}
 	}
 
 	/**
@@ -227,16 +248,15 @@ abstract public class Assumption {
 	/** Deactivates this {@link Assumption} */
 	private void failed() {
 		failed = true;
+		getDataFlowVisitor().failedAssumptions.add(this);
+		deactivate();
 	}
 
-	/** Handles behavior of the assumption based on the result of the holdOn methods */
-	protected void handleHolds(Symbol pFailedSymbol, boolean holds) {
+	private void handleHolds(Symbol pFailedSymbol, boolean holds) {
 		if (!holds) {
 			if (aliases.contains(pFailedSymbol)) {
-				getDataFlowVisitor().failedAssumptions.add(this);
 				failed();
 				failedSymbol = pFailedSymbol;
-				deactivate();
 			} else {
 				// assume pFailedSymbol is a structural alias to one of the aliases, i.e.:
 				// aliases.stream().anyMatch(a -> pFailedSymbol.isStrucuralAlias(a));
@@ -246,13 +266,43 @@ abstract public class Assumption {
 		}
 		if (aliases.isEmpty()) {
 			deactivate();
+		}
+	}
+
+	private void handleHolds(Guard guard, GuardAssertion holds) {
+		if (holds == GuardAssertion.NeverHolds) {
+			failedGuard = guard;
+			if (noCopies()) {
+				failed();
+			}
+		}
+		if (holds == GuardAssertion.AlwaysHolds) {
+			deactivate();
+		}
+
+		if (aliases.isEmpty()) {
+			deactivate();
+		}
+	}
+
+	private void handleHolds(boolean holds) {
+		if (!holds) {
+			failed();
 			return;
+		}
+		if (aliases.isEmpty()) {
+			deactivate();
 		}
 	}
 
 	/** @return true iff all {@link Assumption}s failed that were copies from each other */
 	public boolean allFailed() {
-		return originalAssumption.meetCount == 0;
+		return originalAssumption.aliasPassedCount == 0;
+	}
+
+	/** @return true iff there are no copies of this {@link Assumption} on other {@link DataFlowBranchWalker}s */
+	private boolean noCopies() {
+		return originalAssumption.copyCount == 0;
 	}
 
 	@Override
@@ -263,9 +313,7 @@ abstract public class Assumption {
 	/**
 	 */
 	public void failOnStructuralAlias(Symbol lSymbol) {
-		getDataFlowVisitor().failedAssumptions.add(this);
 		failed();
 		failedSymbol = lSymbol;
-		deactivate();
 	}
 }

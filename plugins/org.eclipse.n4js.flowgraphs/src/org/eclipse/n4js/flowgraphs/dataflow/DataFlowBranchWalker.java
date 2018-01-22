@@ -74,26 +74,33 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 	@Override
 	protected void visit(Node lastVisitNodes, Node end, ControlFlowEdge edge) {
 		GuardStructure guardStructure = new GuardStructureFactory(getSymbolFactory()).create(edge);
-		if (guardStructure != null) {
-			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
-				Assumption ass = assIter.next();
-				if (ass.isActive()) {
-					for (Symbol alias : ass.aliases) {
-						if (guardStructure.guards.entrySet().contains(alias)) {
-							List<Guard> conditions = guardStructure.guards.get(alias);
-							ass.callHoldsOnGuard(null);
+		if (guardStructure == null) {
+			return;
+		}
+
+		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
+			Assumption ass = assIter.next();
+			if (ass.isActive()) {
+				for (Symbol alias : ass.aliases) {
+					if (guardStructure.guards.containsKey(alias)) {
+						List<Guard> guards = guardStructure.guards.get(alias);
+						for (Guard guard : guards) {
+							ass.callHoldsOnGuard(guard);
 						}
 					}
 				}
-				if (ass.isFailed()) {
-					assIter.remove();
-				}
+			}
+			if (!ass.isActive()) {
+				assIter.remove();
 			}
 		}
 	}
 
 	@Override
 	protected void switchedToDeadBranch() {
+		for (Assumption ass : assumptions.values()) {
+			ass.deactivate();
+		}
 		assumptions.clear();
 	}
 
@@ -188,7 +195,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 					}
 				}
 			}
-			if (ass.isFailed()) {
+			if (!ass.isActive()) {
 				assIter.remove();
 			}
 		}
@@ -212,7 +219,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 					}
 					// if still (!callPerformed): not important
 				}
-				if (ass.isFailed()) {
+				if (!ass.isActive()) {
 					assIter.remove();
 				}
 			}
