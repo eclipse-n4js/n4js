@@ -50,7 +50,7 @@ public class RunnerFrontEnd {
 	private IN4JSCore in4jscore;
 
 	@Inject
-	private ResourceNameComputer compilerHelper;
+	private ResourceNameComputer resourceNameComputer;
 
 	@Inject
 	private RunnerHelper runnerHelper;
@@ -270,7 +270,8 @@ public class RunnerFrontEnd {
 	private void configureExecutionData(RunConfiguration config) {
 		final URI userSelection = config.getUserSelection();
 		if (userSelection != null && (hasValidFileExtension(userSelection.toString()))) {
-			final String userSelection_targetFileName = compilerHelper.generateFileDescriptor(userSelection, null);
+			final String userSelection_targetFileName = resourceNameComputer.generateFileDescriptor(userSelection,
+					null);
 			IN4JSProject project = resolveProject(userSelection);
 			String base = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
 			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
