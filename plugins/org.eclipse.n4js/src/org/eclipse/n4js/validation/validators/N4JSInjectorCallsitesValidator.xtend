@@ -47,7 +47,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 
 	@Inject
-	ResourceNameComputer qualifiedNameComputer;
+	private ResourceNameComputer resourceNameComputer;
 
 	/**
 	 * NEEEDED
@@ -258,7 +258,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 		if (!(type.name == 'N4Injector')) {
 			return false
 		}
-		val fqn = qualifiedNameComputer.getFullyQualifiedTypeName(type)
+		val fqn = resourceNameComputer.getFullyQualifiedTypeName(type)
 		return (fqn == 'runtime.n4.N4Injector.N4Injector');
 	}
 

@@ -42,7 +42,7 @@ public class QualifiedNameComputerTest {
 	private Type type;
 
 	@Inject
-	ResourceNameComputer qnc;
+	private ResourceNameComputer resourceNameComputer;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -60,8 +60,8 @@ public class QualifiedNameComputerTest {
 	 */
 	@Test
 	public void testGetQualifiedModuleName() {
-		assertEquals("p/C", qnc.getQualifiedModuleName(module));
-		assertEquals("p/C", qnc.getQualifiedModuleName(script));
+		assertEquals("p/C", resourceNameComputer.getQualifiedModuleName(module));
+		assertEquals("p/C", resourceNameComputer.getQualifiedModuleName(script));
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class QualifiedNameComputerTest {
 	 */
 	@Test
 	public void testGetSimpleTypeName() {
-		assertEquals("C", qnc.getSimpleTypeName(type));
+		assertEquals("C", resourceNameComputer.getSimpleTypeName(type));
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class QualifiedNameComputerTest {
 	 */
 	@Test
 	public void testGetQualifiedTypeName() {
-		assertEquals("p/C/C", qnc.getFullyQualifiedTypeName(type));
+		assertEquals("p/C/C", resourceNameComputer.getFullyQualifiedTypeName(type));
 	}
 
 	/**
@@ -85,8 +85,8 @@ public class QualifiedNameComputerTest {
 	 */
 	@Test
 	public void testGetModuleSpecifier() {
-		assertEquals("p/C", qnc.getModuleSpecifier(script));
-		assertEquals("p/C", qnc.getModuleSpecifier(module));
+		assertEquals("p/C", resourceNameComputer.getModuleSpecifier(script));
+		assertEquals("p/C", resourceNameComputer.getModuleSpecifier(module));
 
 	}
 
@@ -95,7 +95,7 @@ public class QualifiedNameComputerTest {
 	 */
 	@Test
 	public void testGetCompleteModuleSpecifier() {
-		assertEquals("p/C", qnc.getCompleteModuleSpecifier(module));
+		assertEquals("p/C", resourceNameComputer.getCompleteModuleSpecifier(module));
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class QualifiedNameComputerTest {
 	@Test
 	public void testGetCompleteModuleSpecifierAsIdentifier() {
 		assertEquals("p_u002fC",
-				qnc.getCompleteModuleSpecifierAsIdentifier(module));
+				resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module));
 	}
 
 	/**
@@ -113,6 +113,6 @@ public class QualifiedNameComputerTest {
 	 */
 	@Test
 	public void testGetCompleteTypeSpecifier() {
-		assertEquals("p/C/C", qnc.getCompleteTypeSpecifier(type));
+		assertEquals("p/C/C", resourceNameComputer.getCompleteTypeSpecifier(type));
 	}
 }
