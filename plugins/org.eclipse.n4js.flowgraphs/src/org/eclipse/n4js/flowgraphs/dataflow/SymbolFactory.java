@@ -25,6 +25,8 @@ import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.n4JS.ThisLiteral;
+import org.eclipse.n4js.n4JS.UnaryExpression;
+import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypesFactory;
@@ -59,6 +61,7 @@ public class SymbolFactory {
 		Symbol newSymbol = null;
 		if (expr instanceof IdentifierRef) {
 			newSymbol = new SymbolOfIdentifierRef((IdentifierRef) expr);
+
 		} else if (expr instanceof ParameterizedPropertyAccessExpression) {
 			// Deactivated.
 			// Not necessary at the moment. Causes serious performance issues in
@@ -69,12 +72,22 @@ public class SymbolFactory {
 
 		} else if (expr instanceof IndexedAccessExpression) {
 			newSymbol = new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
+
 		} else if (expr instanceof NullLiteral) {
 			newSymbol = new SymbolOfNullLiteral((NullLiteral) expr);
+
+		} else if (expr instanceof UnaryExpression) {
+			UnaryExpression ue = (UnaryExpression) expr;
+			if (ue.getOp() == UnaryOperator.VOID) {
+				newSymbol = new SymbolOfUndefined(expr);
+			}
+
 		} else if (expr instanceof ThisLiteral) {
 			newSymbol = new SymbolOfThisLiteral((ThisLiteral) expr);
+
 		} else if (expr instanceof SuperLiteral) {
 			newSymbol = new SymbolOfSuperLiteral((SuperLiteral) expr);
+
 		} else if (expr instanceof NumericLiteral && new Integer(0).equals(((NumericLiteral) expr).getValue())) {
 			newSymbol = new SymbolOfZeroLiteral((NumericLiteral) expr);
 		}
