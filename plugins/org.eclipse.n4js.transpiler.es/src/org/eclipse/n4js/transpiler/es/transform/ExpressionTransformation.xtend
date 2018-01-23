@@ -49,7 +49,7 @@ import org.eclipse.n4js.projectModel.ResourceNameComputer
 @ExcludesBefore(AsyncAwaitTransformation)
 class ExpressionTransformation extends Transformation {
 
-	@Inject private ResourceNameComputer qualifiedNameComputer;
+	@Inject private ResourceNameComputer resourceNameComputer;
 	@Inject private PromisifyHelper promisifyHelper;
 
 
@@ -87,7 +87,7 @@ class ExpressionTransformation extends Transformation {
 			val replacement = if(rhsType instanceof TInterface) {
 				// case 1: direct reference to an interface on RHS -> can directly use own $implements function
 				val $implementsSTE = steFor_$implements;
-				val fqn = qualifiedNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(rhsType)
+				val fqn = resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(rhsType)
 				_CallExpr(_IdentRef($implementsSTE), relExpr.lhs, _StringLiteral(fqn))
 			} else if(rhsType instanceof TClass) {
 				// case 2: direct reference to a class on RHS -> can use native Javascript 'instanceof' operator

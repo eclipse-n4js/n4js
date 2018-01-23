@@ -48,8 +48,6 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	@Accessors
 	private CompilerDescriptor compilerDescriptor = null
 
-	@Inject protected ResourceNameComputer projectUtils
-	
 	@Inject protected StaticPolyfillHelper staticPolyfillHelper
 
 	@Inject protected IN4JSCore n4jsCore
@@ -232,9 +230,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	/** Adjust output-path of the generator to match the N4JS projects-settings. */
 	def void updateOutputPath(IFileSystemAccess fsa, String compilerID, Resource input) {
-		var outputPath = n4jsCore.getOutputPath(input.URI)
-		if(outputPath === null)
-			outputPath = N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
+		val outputPath = n4jsCore.getOutputPath(input.URI) ?: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 		if (fsa instanceof AbstractFileSystemAccess) {
 			val conf = fsa.outputConfigurations.get(compilerID)
 			if (conf !== null) {
@@ -290,7 +286,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 */
 	private def Path getOutputRelativeLocation(N4JSResource input){
 		// Project/a/b/c/Input.XX
-		val localOutputFilePath = Paths.get(projectUtils.generateFileDescriptor(input.URI, ".XX"))
+		val localOutputFilePath = Paths.get(resourceNameComputer.generateFileDescriptor(input.URI, ".XX"))
 
 		// if calculated path  has just one element, e.g. "Input.XX"
 		// then local path segment is empty

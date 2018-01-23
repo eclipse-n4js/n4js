@@ -20,7 +20,7 @@ import com.google.inject.Singleton;
 
 /**
  * Helper for finding artifacts in the projects. Delegates to the
- * {@link IN4JSSourceContainer#findArtifact(QualifiedName, Optional)} but exposes more convinient API.
+ * {@link IN4JSSourceContainer#findArtifact(QualifiedName, Optional)} but exposes more convenient API.
  */
 @Singleton
 public final class FindArtifactHelper {

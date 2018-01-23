@@ -95,7 +95,7 @@ public class TestDiscoveryHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private ResourceNameComputer qualifiedNameComputer;
+	private ResourceNameComputer resourceNameComputer;
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 
@@ -376,7 +376,7 @@ public class TestDiscoveryHelper {
 	 * this purpose.
 	 */
 	private String getClassName(final TClass clazz) {
-		return qualifiedNameComputer.getFullyQualifiedTypeName(clazz);
+		return resourceNameComputer.getFullyQualifiedTypeName(clazz);
 	}
 
 	private Map<URI, TModule> loadModules(final Iterable<URI> moduleUris, final IResourceDescriptions index,

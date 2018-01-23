@@ -57,7 +57,7 @@ public abstract class AbstractTranspiler {
 	private ScopeManager scopeManager;
 
 	@Inject
-	private ResourceNameComputer qnComputer;
+	private ResourceNameComputer resourceNameComputer;
 
 	@Inject
 	private TranspilerDebugUtils transpilerDebugUtils;
@@ -115,7 +115,7 @@ public abstract class AbstractTranspiler {
 		public String resolve(N4JSResource eResource) {
 			if (isExplicitSourceRef) {
 				//
-				String completeSpecifier = qnComputer.getCompleteModuleSpecifier(eResource.getModule());
+				String completeSpecifier = resourceNameComputer.getCompleteModuleSpecifier(eResource.getModule());
 				String fileExtension = eResource.getURI().fileExtension();
 				String specifierAsFile = fileExtension == null ? completeSpecifier
 						: completeSpecifier + "." + fileExtension;

@@ -30,7 +30,7 @@ import org.eclipse.xtext.resource.IResourceDescription
  * Client code should usually use {@code TModule.getName()} or {@code Script.getModule().getName()} to access the
  * module's name.
  */
- @Singleton
+@Singleton
 class ModuleNameComputer {
 
 	@Inject
