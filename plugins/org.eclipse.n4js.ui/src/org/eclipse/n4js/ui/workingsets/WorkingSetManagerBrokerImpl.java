@@ -14,12 +14,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
-import static org.eclipse.n4js.ui.workingsets.WorkingSetManager.EXTENSION_POINT_ID;
 import static java.util.Collections.emptyMap;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.core.runtime.Platform.isRunning;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
+import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
+import static org.eclipse.n4js.ui.workingsets.WorkingSetManager.EXTENSION_POINT_ID;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 
 import java.util.Collection;
@@ -42,6 +42,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.ui.workingsets.WorkingSetManagerStateChangedListener.WorkingSetManagerChangeEvent;
+import org.eclipse.n4js.utils.Diff;
+import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewPart;
@@ -63,13 +69,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.ui.workingsets.WorkingSetManagerStateChangedListener.WorkingSetManagerChangeEvent;
-import org.eclipse.n4js.utils.Diff;
-import org.eclipse.n4js.utils.StatusHelper;
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Implementation of a working set manager broker.
@@ -301,10 +300,12 @@ public class WorkingSetManagerBrokerImpl implements WorkingSetManagerBroker {
 	 * viewer.
 	 */
 	private void refreshNavigator(final boolean resetInput) {
+		System.out.println(">>>>>> #refreshNavigator(boolean)");
 		UIUtils.getDisplay().asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
+				System.out.println(">>>>>>> #run()");
 				final IWorkbench workbench = getWorkbench();
 				final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 				if (window != null) {
@@ -358,11 +359,19 @@ public class WorkingSetManagerBrokerImpl implements WorkingSetManagerBroker {
 		if (!d.isDisposed()) {
 			if (resetInput) {
 				d.asyncExec(() -> {
+					System.out.println(">>>>>>>>>>>>>>> lambda in #asyncRefreshCommonViewer()  resetInput==true");
+					// final WorkingSetManager activeManager = getActiveManager();
+					// if (activeManager != null)
+					// activeManager.discardWorkingSetCaches();
 					if (!viewer.getTree().isDisposed())
 						viewer.setInput(viewer.getInput());
 				});
 			} else {
 				d.asyncExec(() -> {
+					System.out.println(">>>>>>>>>>>>>>> lambda in #asyncRefreshCommonViewer()  resetInput==false");
+					// final WorkingSetManager activeManager = getActiveManager();
+					// if (activeManager != null)
+					// activeManager.discardWorkingSetCaches();
 					if (!viewer.getTree().isDisposed())
 						viewer.refresh(true);
 				});

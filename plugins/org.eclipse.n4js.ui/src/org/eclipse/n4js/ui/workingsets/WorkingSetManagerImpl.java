@@ -276,6 +276,8 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 		Collections.sort(workingSets, this);
 
 		allWorkingSets = workingSets;
+		// visibleWorkingSets = null; // changed allWorkingSets, so need to invalidate derived property
+		// visibleWorkingSets
 
 		return allWorkingSets;
 	}
@@ -291,6 +293,15 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 		if (visibleWorkingSets != null) {
 			return visibleWorkingSets;
 		}
+
+		// final List<WorkingSet> workingSets = getOrCreateAllWorkingSets();
+		//
+		// if (visibleWorkingSetIds.isEmpty()) {
+		// visibleWorkingSets = newArrayList(workingSets);
+		// } else {
+		// visibleWorkingSets = from(workingSets).filter(ws -> visibleWorkingSetIds.contains(ws.getId()))
+		// .toList();
+		// }
 
 		if (allWorkingSets == null) {
 			allWorkingSets = getOrCreateAllWorkingSets();
