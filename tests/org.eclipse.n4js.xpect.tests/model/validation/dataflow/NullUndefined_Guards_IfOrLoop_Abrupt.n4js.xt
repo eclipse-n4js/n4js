@@ -58,7 +58,7 @@ function f4() {
 		a.toString();
 		return;
 	}
-	// XPECT nowarnings -->
+	// XPECT warnings --> "Variable a is undefined" at "a"
 	a.toString();
 }
 
