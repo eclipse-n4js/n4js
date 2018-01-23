@@ -78,6 +78,19 @@ public class NodeEngineCommandBuilder {
 	/**
 	 * Generates JS code to the this that will be configured with data for execution.
 	 *
+	 * This method uses provided working dir to transform it into nodejs-project-like structure, to allow proper
+	 * configuration of the executions. In particular:
+	 * 
+	 * <pre>
+	 * <ol>
+	 * <li> add node module to the folder</li>
+	 * <li> generate startup script</li>
+	 * <li> return path to the startup script</li>
+	 * </ol>
+	 * </pre>
+	 * 
+	 * Note that some configuration will be performed by the startup script when it is executed.
+	 *
 	 * @param nodeRunOptions
 	 *            options used to generate boot code
 	 * @return path to the script that has to be called by node
@@ -85,12 +98,12 @@ public class NodeEngineCommandBuilder {
 	 *             for IO operations
 	 */
 	private String generateBootCode(NodeRunOptions nodeRunOptions, Path workDir) throws IOException {
-		// 1 generate fake node project / folder
+		// 1 generate fake node project
 		Path projectRootPath = workDir;
-		// 3 create 'node_modules' to the #1
+		// 2 create 'node_modules' to the #1
 		final File node_modules = new File(projectRootPath.toFile(), "node_modules");
 		node_modules.mkdirs();
-		// 4 generate elf script in #1
+		// 3 generate elf script in #1
 		final Path elf = Files.createTempFile(projectRootPath, "N4JSNodeELF",
 				"." + N4JSGlobals.JS_FILE_EXTENSION);
 		String[] paths = nodeRunOptions.getCoreProjectPaths().split(NODE_PATH_SEP);
