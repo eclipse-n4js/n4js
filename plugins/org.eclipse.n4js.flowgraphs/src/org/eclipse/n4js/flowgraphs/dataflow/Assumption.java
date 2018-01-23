@@ -52,7 +52,6 @@ abstract public class Assumption {
 	public Guard failedGuard;
 
 	private boolean active = true;
-	private boolean failed = false;
 	private DataFlowVisitor dataFlowVisitor;
 	private final Assumption originalAssumption;
 	private int aliasPassedCount = 0;
@@ -112,7 +111,10 @@ abstract public class Assumption {
 		if (this.failedGuard == null || assumption.failedGuard == null) {
 			this.failedGuard = null;
 		}
-		this.originalAssumption.copyCount--;
+		if (this.active && assumption.active) {
+			this.originalAssumption.copyCount--;
+		}
+		this.active = this.active || assumption.active;
 	}
 
 	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
@@ -145,11 +147,6 @@ abstract public class Assumption {
 		originalAssumption.copyCount--;
 	}
 
-	/** @return true iff this assumption failed */
-	public boolean isFailed() {
-		return failed;
-	}
-
 	/**
 	 * By default, {@link Assumption}s are active, i.e. the holdOn methods get called. In case the method
 	 * {@link #deactivate()} was called, this {@link Assumption} is inactive.
@@ -160,17 +157,21 @@ abstract public class Assumption {
 		return active;
 	}
 
-	void callHoldsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
+	void callHoldsOnDataflow(AssignmentRelation assignRelation) {
+		Symbol lhs = assignRelation.leftSymbol;
+		Symbol rhs = assignRelation.rightSymbol;
 		if (failingStructuralAliases.contains(rhs)) {
 			handleHolds(rhs, HoldAssertion.NeverHolds);
 		} else if (failingStructuralAliases.contains(lhs)) {
 			failingStructuralAliases.remove(lhs);
 			failingStructuralAliases.add(rhs);
 		} else {
-			HoldAssertion holds = holdsOnDataflow(lhs, rhs, cfe);
-			handleHolds(rhs, holds);
-			aliases.remove(lhs);
-			aliases.add(rhs);
+			HoldAssertion holds = holdsOnDataflow(assignRelation);
+			handleHolds(lhs, holds);
+			if (rhs != null && rhs.isVariableSymbol()) {
+				aliases.remove(lhs);
+				aliases.add(rhs);
+			}
 		}
 	}
 
@@ -178,15 +179,12 @@ abstract public class Assumption {
 	 * This method gets called on {@link Expression}s that trigger the value of {@code rhs} to be assigned to
 	 * {@code lhs}. For instance, an {@link AssignmentExpression} can trigger such a dataflow.
 	 *
-	 * @param lhs
-	 *            the {@link Symbol} whose value is overwritten
-	 * @param rhs
-	 *            the {@link Symbol} that provides the new value
-	 * @param cfe
-	 *            the {@link ControlFlowElement} that triggers the dataflow
+	 * @param assignRelation
+	 *            TODO
+	 *
 	 * @return true iff the assumption holds on the given dataflow
 	 */
-	public HoldAssertion holdsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
+	public HoldAssertion holdsOnDataflow(AssignmentRelation assignRelation) {
 		return HoldAssertion.MayHold;
 	}
 
@@ -248,7 +246,6 @@ abstract public class Assumption {
 
 	/** Deactivates this {@link Assumption} */
 	private void failed() {
-		failed = true;
 		getDataFlowVisitor().failedAssumptions.add(this);
 		deactivate();
 	}

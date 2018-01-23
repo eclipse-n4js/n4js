@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.dataflow.AssignmentRelation;
 import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
-import org.eclipse.n4js.flowgraphs.dataflow.DestructUtils;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
@@ -25,16 +25,9 @@ import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.ForStatement;
-import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
-import org.eclipse.n4js.n4JS.Statement;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
-import org.eclipse.n4js.n4JS.WhileStatement;
-import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * This analysis computes all cases where an implicit assumption of a variable being not null conflicts either with an
@@ -84,15 +77,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		return nullDerefs;
 	}
 
-	private Symbol getSymbolForExpression(EObject value) {
-		if (value == null) {
-			return getSymbolFactory().getUndefined();
-		} else {
-			Expression canCrash = (Expression) value;
-			return getSymbolFactory().create(canCrash);
-		}
-	}
-
 	class IsNotNull extends Assumption {
 		Symbol nullOrUndefinedSymbol;
 
@@ -110,57 +94,16 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
-			if (effect.type == EffectType.Write) {
-				nullOrUndefinedSymbol = getNullOrUndefinedAssignee(effect, cfe);
-
-				if (nullOrUndefinedSymbol != null) {
-					if (nullOrUndefinedSymbol.isNullLiteral()) {
-						return HoldAssertion.NeverHolds;
-					} else if (nullOrUndefinedSymbol.isUndefinedLiteral()) {
-						return HoldAssertion.NeverHolds;
-					}
-				} else {
-					return HoldAssertion.AlwaysHolds;
+		public HoldAssertion holdsOnDataflow(AssignmentRelation ar) {
+			if (ar.rightSymbol != null) {
+				if (ar.rightSymbol.isNullLiteral() || ar.rightSymbol.isUndefinedLiteral()) {
+					nullOrUndefinedSymbol = ar.rightSymbol;
+					return HoldAssertion.NeverHolds;
 				}
+			} else if (ar.assignedValue != null) {
+				return HoldAssertion.AlwaysHolds;
 			}
 			return HoldAssertion.MayHold;
-		}
-
-		private Symbol getNullOrUndefinedAssignee(EffectInfo effect, ControlFlowElement cfe) {
-			Symbol nullOrUndefined = null;
-
-			if (cfe instanceof AssignmentExpression) {
-				AssignmentExpression ae = (AssignmentExpression) cfe;
-				EObject value = null;
-
-				if (N4JSASTUtils.isDestructuringAssignment(ae)) {
-					value = DestructUtils.getValueFromDestructuring(getSymbolFactory(), effect.location);
-				} else {
-					value = ae.getRhs();
-				}
-				nullOrUndefined = getSymbolForExpression(value);
-			}
-			if (cfe instanceof VariableDeclaration) {
-				VariableDeclaration vd = (VariableDeclaration) cfe;
-				Statement stmt = EcoreUtil2.getContainerOfType(cfe, Statement.class);
-				boolean parentIsLoop = false;
-				parentIsLoop |= parentIsLoop || stmt instanceof ForStatement;
-				parentIsLoop |= parentIsLoop || stmt instanceof WhileStatement;
-				parentIsLoop |= parentIsLoop || stmt instanceof DoStatement;
-
-				if (!parentIsLoop) {
-					EObject value = null;
-					if (N4JSASTUtils.isInDestructuringPattern(vd)) {
-						value = DestructUtils.getValueFromDestructuring(getSymbolFactory(), effect.location);
-					} else {
-						value = vd.getExpression();
-					}
-					nullOrUndefined = getSymbolForExpression(value);
-				}
-			}
-
-			return nullOrUndefined;
 		}
 
 		@Override

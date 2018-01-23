@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 public class DataFlowVisitorHost extends GraphVisitorInternal {
 	final Collection<DataFlowVisitor> dfVisitors;
 	private DataFlowGraphExplorer dfExplorer;
+	private AssignmentRelationFactory assignmentFactory;
 
 	static private TraverseDirection[] getDirections(Collection<DataFlowVisitor> dfVisitors) {
 		Set<TraverseDirection> directions = new HashSet<>();
@@ -51,12 +52,18 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		return flowAnalyzer.getSymbolFactory();
 	}
 
+	/** @return reference to the {@link SymbolFactory} */
+	final protected AssignmentRelationFactory getAssignmentRelationFactory() {
+		return assignmentFactory;
+	}
+
 	@Override
 	protected void initializeModeInternal(TraverseDirection curDirection, ControlFlowElement curContainer) {
 		for (DataFlowVisitor dfVisitor : dfVisitors) {
 			dfVisitor.setSymbolFactory(getSymbolFactory());
 		}
 		dfExplorer = new DataFlowGraphExplorer(this);
+		assignmentFactory = new AssignmentRelationFactory(getSymbolFactory());
 		requestActivation(dfExplorer);
 	}
 

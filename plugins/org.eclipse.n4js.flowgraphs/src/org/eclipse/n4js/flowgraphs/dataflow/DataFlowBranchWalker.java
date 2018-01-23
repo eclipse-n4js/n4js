@@ -14,22 +14,17 @@ import static org.eclipse.n4js.flowgraphs.dataflow.SymbolContextUtils.getContext
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
-import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
-import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
-import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -56,16 +51,22 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 
 	@Override
 	protected void visit(Node node) {
+		if (node.effectInfos.isEmpty()) {
+			return;
+		}
+
 		ControlFlowElement cfe = node.getControlFlowElement();
+		List<AssignmentRelation> ars = getDataFlowVisitorHost().getAssignmentRelationFactory().findAssignments(cfe);
+
+		Set<Symbol> handledDataFlowSymbols = new HashSet<>();
+		for (AssignmentRelation ar : ars) {
+			boolean handledDataFlow = handleDataflow(ar);
+			if (handledDataFlow) {
+				handledDataFlowSymbols.add(ar.leftSymbol);
+			}
+		}
 		for (EffectInfo effect : node.effectInfos) {
-			boolean handledDataFlow = false;
-			if (cfe instanceof AssignmentExpression) {
-				handledDataFlow |= handleDataFlow((AssignmentExpression) cfe);
-			}
-			if (cfe instanceof VariableDeclaration) {
-				handledDataFlow |= handleDataFlow((VariableDeclaration) cfe);
-			}
-			if (!handledDataFlow) {
+			if (!handledDataFlowSymbols.contains(effect.symbol)) {
 				handleVisitEffect(cfe, effect);
 			}
 		}
@@ -80,18 +81,20 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
-			if (ass.isActive()) {
-				for (Symbol alias : ass.aliases) {
-					if (guardStructure.guards.containsKey(alias)) {
-						List<Guard> guards = guardStructure.guards.get(alias);
-						for (Guard guard : guards) {
-							ass.callHoldsOnGuard(guard);
-						}
-					}
-				}
-			}
 			if (!ass.isActive()) {
 				assIter.remove();
+				continue;
+			}
+
+			for (Symbol alias : ass.aliases) {
+				if (!guardStructure.guards.containsKey(alias)) {
+					continue;
+				}
+
+				List<Guard> guards = guardStructure.guards.get(alias);
+				for (Guard guard : guards) {
+					ass.callHoldsOnGuard(guard);
+				}
 			}
 		}
 	}
@@ -112,62 +115,30 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		return getDataFlowVisitorHost().getSymbolFactory();
 	}
 
-	private boolean handleDataFlow(AssignmentExpression ae) {
-		boolean dataFlow = false;
-
-		if (N4JSASTUtils.isDestructuringAssignment(ae)) {
-			DestructNode dNode = DestructNode.unify(ae);
-			dataFlow = callHoldOnDataflowForDestructuring(dataFlow, ae, dNode);
-		} else {
-			Expression lhs = ae.getLhs();
-			Expression rhs = ae.getRhs();
-			dataFlow = callHoldOnDataflow(ae, lhs, rhs);
-		}
-
-		return dataFlow;
-	}
-
-	private boolean handleDataFlow(VariableDeclaration vd) {
-		boolean dataFlow = false;
-		EObject parent = vd.eContainer();
-
-		if (N4JSASTUtils.isInDestructuringPattern(vd)) {
-			DestructNode dNode = N4JSASTUtils.getCorrespondingDestructNode(vd);
-			if (dNode != null) {
-				dataFlow = callHoldOnDataflowForDestructuring(dataFlow, vd, dNode);
+	private boolean handleDataflow(AssignmentRelation ar) {
+		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
+			Assumption ass = assIter.next();
+			if (!ass.isActive()) {
+				assIter.remove();
+				continue;
 			}
 
-		} else if (parent instanceof VariableStatement) {
-			VariableStatement vs = (VariableStatement) parent;
-			for (VariableDeclarationOrBinding varDeclOrBind : vs.getVarDeclsOrBindings()) {
-				if (varDeclOrBind instanceof VariableDeclaration) {
-					VariableDeclaration varDecl = (VariableDeclaration) varDeclOrBind;
-					Expression rhs = varDecl.getExpression();
-					dataFlow = callHoldOnDataflow(varDecl, varDecl, rhs);
-				}
+			boolean callPerformed = callHoldOnDataflowOnAliases(ass, ar);
+			if (!callPerformed) {
+				callPerformed = callHoldOnDataflowOnFailedStructuralAliases(ass, ar);
 			}
-		}
-
-		return dataFlow;
-	}
-
-	private boolean callHoldOnDataflowForDestructuring(boolean dataFlow, ControlFlowElement cfe,
-			DestructNode dNode) {
-
-		for (Iterator<DestructNode> dnIter = dNode.stream().iterator(); dnIter.hasNext();) {
-			DestructNode dnChild = dnIter.next();
-			ControlFlowElement lhs = dnChild.getVarRef() != null ? dnChild.getVarRef() : dnChild.getVarDecl();
-			EObject rhs = DestructUtils.getValueFromDestructuring(getSymbolFactory(), dnChild);
-			if (rhs instanceof Expression) {
-				dataFlow |= callHoldOnDataflow(cfe, lhs, (Expression) rhs);
+			if (!callPerformed) {
+				callPerformed = callHoldOnDataflowOnStructuralAliases(ass, ar);
 			}
+			// if still (!callPerformed): not important
 		}
-		return dataFlow;
+		return true;
 	}
 
 	private void handleVisitEffect(ControlFlowElement cfe, EffectInfo effect) {
+		callHoldsOnEffect(cfe, effect);
+
 		for (DataFlowVisitor dfv : getDataFlowVisitorHost().dfVisitors) {
-			callHoldsOnEffect(cfe, effect);
 			dfv.visitEffect(effect, cfe);
 
 			Collection<Assumption> newAssumptions = dfv.moveNewAssumptions();
@@ -182,86 +153,59 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 	private void callHoldsOnEffect(ControlFlowElement cfe, EffectInfo effect) {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
-			if (ass.isActive()) {
-				if (ass.aliases.contains(effect.symbol)) {
-					ass.callHoldsOnEffect(effect, cfe); // call for plain aliases
-
-				} else {
-					for (Symbol alias : ass.aliases) {
-						if (effect.symbol.isStrucuralAlias(alias)) {
-							ass.callHoldsOnEffect(effect, cfe); // also called for structural aliases
-							break;
-						}
-					}
-				}
-			}
 			if (!ass.isActive()) {
 				assIter.remove();
+				continue;
+			}
+
+			if (ass.aliases.contains(effect.symbol)) {
+				ass.callHoldsOnEffect(effect, cfe); // call for plain aliases
+
+			} else {
+				for (Symbol alias : ass.aliases) {
+					if (effect.symbol.isStrucuralAlias(alias)) {
+						ass.callHoldsOnEffect(effect, cfe); // also called for structural aliases
+						break;
+					}
+				}
 			}
 		}
 	}
 
-	private boolean callHoldOnDataflow(ControlFlowElement cfe, ControlFlowElement lhs, Expression rhs) {
-		Symbol lSymbol = getSymbolFactory().create(lhs);
-		Symbol rSymbol = getSymbolFactory().create(rhs);
-
-		if (lSymbol != null && rSymbol != null && rSymbol.isVariableSymbol()) {
-			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
-				Assumption ass = assIter.next();
-
-				if (ass.isActive()) {
-					boolean callPerformed = callHoldOnDataflowOnAliases(ass, cfe, lSymbol, rSymbol);
-					if (!callPerformed) {
-						callPerformed = callHoldOnDataflowOnFailedStructuralAliases(ass, lSymbol, rSymbol);
-					}
-					if (!callPerformed) {
-						callPerformed = callHoldOnDataflowOnStructuralAliases(ass, cfe, rhs, lSymbol);
-					}
-					// if still (!callPerformed): not important
-				}
-				if (!ass.isActive()) {
-					assIter.remove();
-				}
-			}
+	private boolean callHoldOnDataflowOnAliases(Assumption ass, AssignmentRelation ar) {
+		if (ass.aliases.contains(ar.leftSymbol)) {
+			ass.callHoldsOnDataflow(ar);
 			return true;
 		}
 		return false;
 	}
 
-	private boolean callHoldOnDataflowOnAliases(Assumption ass, ControlFlowElement cfe, Symbol lSymbol,
-			Symbol rSymbol) {
-
-		if (ass.aliases.contains(lSymbol)) {
-			ass.callHoldsOnDataflow(lSymbol, rSymbol, cfe);
-			return true;
-		}
-		return false;
-	}
-
-	private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, ControlFlowElement cfe,
-			Expression rhs, Symbol lSymbol) {
-
-		Pair<Symbol, Symbol> cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.aliases, lSymbol, rhs);
+	private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, AssignmentRelation ar) {
+		Symbol lSymbol = ar.leftSymbol;
+		Expression assgnExpr = ar.assignedValue;
+		Pair<Symbol, Symbol> cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.aliases, lSymbol, assgnExpr);
 		Symbol newLSymbol = cSymbols.getKey();
 		Symbol newRSymbol = cSymbols.getValue();
 		if (newRSymbol != null) {
-			ass.callHoldsOnDataflow(newLSymbol, newRSymbol, cfe);
+			AssignmentRelation newAR = new AssignmentRelation(newLSymbol, newRSymbol, null);
+			ass.callHoldsOnDataflow(newAR);
 			return true;
 		}
 
-		cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.failingStructuralAliases, lSymbol, rhs);
+		cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.failingStructuralAliases, lSymbol, assgnExpr);
 		newLSymbol = cSymbols.getKey();
 		newRSymbol = cSymbols.getValue();
 		if (newRSymbol != null) {
-			ass.callHoldsOnDataflow(newLSymbol, newRSymbol, cfe);
+			AssignmentRelation newAR = new AssignmentRelation(newLSymbol, newRSymbol, null);
+			ass.callHoldsOnDataflow(newAR);
 			return true;
 		}
 		return false;
 	}
 
-	private boolean callHoldOnDataflowOnFailedStructuralAliases(Assumption ass, Symbol lSymbol, Symbol rSymbol) {
+	private boolean callHoldOnDataflowOnFailedStructuralAliases(Assumption ass, AssignmentRelation ar) {
 		Pair<Symbol, List<Symbol>> lSCA = SymbolContextUtils
-				.getSymbolAndContextsToAlias(ass.failingStructuralAliases, lSymbol);
+				.getSymbolAndContextsToAlias(ass.failingStructuralAliases, ar.leftSymbol);
 
 		if (lSCA.getKey() != null) {
 			ass.failOnStructuralAlias(lSCA.getKey());
@@ -269,7 +213,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		}
 
 		Pair<Symbol, List<Symbol>> rCSA = SymbolContextUtils
-				.getSymbolAndContextsToAlias(ass.failingStructuralAliases, rSymbol);
+				.getSymbolAndContextsToAlias(ass.failingStructuralAliases, ar.rightSymbol);
 
 		if (rCSA.getKey() != null) {
 			ass.failOnStructuralAlias(rCSA.getKey());

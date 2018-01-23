@@ -18,7 +18,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 /**
  * Utilities for working with destructuring patterns
  */
-public class DestructUtils {
+public class DestructureUtils {
 
 	/** @return the {@link EObject} that is assigned to the given lhs element in the pattern. Defaults are respected. */
 	public static EObject getValueFromDestructuring(SymbolFactory symbolFactory, EObject nodeElem) {
@@ -51,9 +51,15 @@ public class DestructUtils {
 	private static EObject respectDefaultValue(SymbolFactory symbolFactory, EObject assignedValue,
 			EObject defaultValue) {
 
-		if (assignedValue == null
-				|| (assignedValue instanceof Expression && symbolFactory.isUndefined((Expression) assignedValue))) {
+		if (assignedValue == null) {
 			return defaultValue;
+		}
+		if (assignedValue instanceof Expression && symbolFactory.isUndefined((Expression) assignedValue)) {
+			if (defaultValue != null) {
+				return defaultValue;
+			} else {
+				return assignedValue;
+			}
 		}
 		return assignedValue;
 	}
