@@ -20,7 +20,6 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
  org.eclipse.n4js.model
 Export-Package: org.eclipse.n4js.n4idl.transpiler.utils,
- org.eclipse.n4js.n4jsx.transpiler.utils,
  org.eclipse.n4js.transpiler,
  org.eclipse.n4js.transpiler.assistants,
  org.eclipse.n4js.transpiler.im,
