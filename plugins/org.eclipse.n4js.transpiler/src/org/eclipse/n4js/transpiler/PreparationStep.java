@@ -297,24 +297,18 @@ public class PreparationStep {
 				copyEObject.setRewiredTarget(rewiredTarget);
 			} else {
 				// special case: unresolved proxy
-				// -> this is usually an error, except in case of a property access to an any+ type
+				// -> this is usually an error, except in the following special cases:
 				if (eObject instanceof ParameterizedPropertyAccessExpression) {
+					// property access to an any+ type
 					// -> because we know the transpiler is never invoked for resources that contain errors, we can
 					// simply assume that we have the any+ case without actually checking the type of the receiver
 					final String propName = getPropertyAsString((ParameterizedPropertyAccessExpression) eObject);
 					((ParameterizedPropertyAccessExpression_IM) copyEObject).setAnyPlusAccess(true);
 					((ParameterizedPropertyAccessExpression_IM) copyEObject).setNameOfAnyPlusProperty(propName);
-				} else if (eObject.eContainer() instanceof JSXElementName) { // TODO IDE-2416 remove this
-					if (eObject instanceof IdentifierRef) {
-						IdentifierRef_IM acc = ((IdentifierRef_IM) copyEObject);
-						String name = ((IdentifierRef) eObject).getIdAsText();
-						final SymbolTableEntryOriginal entry = ImFactory.eINSTANCE.createSymbolTableEntryOriginal();
-						entry.setName(name);
-						entry.setOriginalTarget(((IdentifierRef) eObject).getId());
-						acc.setIdAsText(name);
-					} else {
-						throw new IllegalStateException("Unsupported JSX element " + eObject);
-					}
+				} else if (eObject instanceof IdentifierRef && eObject.eContainer() instanceof JSXElementName) {
+					// name of a JSX element, e.g. the "div" in something like: <div prop='value'></div>
+					String tagName = ((IdentifierRef) eObject).getIdAsText();
+					((IdentifierRef_IM) copyEObject).setIdAsText(tagName);
 				} else {
 					throw new IllegalStateException("Rewire() called for a proxified original target. IM-eobject = "
 							+ eObject + "   origTarget is "

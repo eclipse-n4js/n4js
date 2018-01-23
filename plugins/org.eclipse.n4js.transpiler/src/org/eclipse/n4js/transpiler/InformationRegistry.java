@@ -10,11 +10,8 @@
  */
 package org.eclipse.n4js.transpiler;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
@@ -184,14 +181,6 @@ public class InformationRegistry {
 	 */
 	public void setImportedModule_internal(ImportDeclaration importDeclInIM, TModule module) {
 		importedModules.put(importDeclInIM, module);
-	}
-
-	/**
-	 * {@link Collections#unmodifiableSet} of imports from ORIGINAL ast.
-	 */
-	public Set<Entry<ImportDeclaration, TModule>> browseOriginalImports_internal() {
-		// TODO IDE-2416 added for JSX workarounds, if possible remove
-		return Collections.unmodifiableSet(importedModules.entrySet());
 	}
 
 	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(N4TypeDeclaration)}. */

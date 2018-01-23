@@ -325,13 +325,22 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
 
 	/**
+	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
+
+	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
+	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -340,7 +349,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
+	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 19;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -12068,6 +12077,17 @@ public interface TypesPackage extends EPackage {
 	EReference getTModule_ComposedMemberCaches();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getTemporaryTypes <em>Temporary Types</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Temporary Types</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getTemporaryTypes()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EReference getTModule_TemporaryTypes();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getModuleSpecifier <em>Module Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14851,6 +14871,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TMODULE__COMPOSED_MEMBER_CACHES = eINSTANCE.getTModule_ComposedMemberCaches();
+
+		/**
+		 * The meta object literal for the '<em><b>Temporary Types</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMODULE__TEMPORARY_TYPES = eINSTANCE.getTModule_TemporaryTypes();
 
 		/**
 		 * The meta object literal for the '<em><b>Module Specifier</b></em>' attribute feature.
