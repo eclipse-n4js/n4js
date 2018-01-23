@@ -59,29 +59,7 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl {
 	protected List<WorkingSet> initializeWorkingSets() {
 		final Collection<Repository> repositories = repositoriesProvider.getWorkspaceRepositories();
 
-		System.out.println(repositories);
-		System.out.println(Thread.currentThread());
-		new Exception().printStackTrace(System.out);
-
-		if (repositories.isEmpty()) {
-			boolean sleep = true;
-			if (sleep) {
-				System.out.println("START SLEEP 2 sec");
-				try {
-					Thread.sleep(2000);
-					System.out.println("END SLEEP 2 sec");
-				} catch (InterruptedException e) {
-					// ignore
-				}
-			}
-		}
-		if (!repositories.isEmpty()) {
-			System.out.print("");
-		}
-
 		repositories.add(null); // For 'Other Projects'.
-
-		System.out.println("!!!");
 
 		return repositories.stream().map(r -> new GitRepositoryWorkingSet(r, this)).collect(Collectors.toList());
 	}

@@ -220,11 +220,8 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void getPipelinedElements(final Object anInput, final Set theCurrentElements) {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> #getPipelinedElements()");
 		theCurrentElements.addAll(newHashSet(getElements(anInput)));
-		System.out.println("theCurrentElements (PRE  filtering): " + theCurrentElements);
 		filterProjectsOnDemand(anInput, theCurrentElements);
-		System.out.println("theCurrentElements (POST filtering): " + theCurrentElements);
 	}
 
 	@Override

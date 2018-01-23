@@ -41,7 +41,7 @@ import com.google.inject.Singleton;
  *
  * It is also possible to register listeners to listen for changes regarding git repositories.
  *
- * This is different from {@link RepositoryCache} in that it is always in sync with the (open) workspace projects,
+ * This is different fromm {@link RepositoryCache} in that it is always in sync with the (open) workspace projects,
  * whereas {@link RepositoryCache} might also contain repositories that have already been removed. It also allows to
  * listen for changes.
  */
@@ -98,11 +98,7 @@ public class WorkspaceRepositoriesProvider {
 	 * Sends a workspace repositories changed event to all {@link #changeListeners}.
 	 */
 	private void fireWorkspaceRepositoriesChanged() {
-		System.out.println(">>>>> #fireWorkspaceRepositoriesChanged()");
 		Set<Repository> newValue = getWorkspaceRepositories();
-		if (!newValue.isEmpty()) {
-			System.out.print("");
-		}
 		changeListeners.forEach(listener -> listener.workspaceRepositoriesChanged(newValue));
 	}
 
