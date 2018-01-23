@@ -51,6 +51,7 @@ import org.eclipse.xtext.scoping.IScope
 
 import static extension org.eclipse.n4js.misc.DestructNode.arePositional
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 
 /**
  * Helper for dealing with destructuring patterns. For more details on destructuring patterns,
@@ -364,7 +365,11 @@ class DestructureHelper {
 				field.typeRef = elemExpectedType
 				elementMembers.add(field)
 			} else {
-				elementTypes.add(elemExpectedType)
+				if (elemExpectedType !== null) {
+					elementTypes.add(elemExpectedType)
+				} else {
+					elementTypes.add(TypeRefsFactory.eINSTANCE.createWildcard)
+				}
 			}
 		}
 
@@ -406,8 +411,8 @@ class DestructureHelper {
 				return (varRef.id as VariableDeclaration).declaredTypeRef
 			}
 		}
-		// In case the expected type does not exist, simply return 'any' type (top type)
-		return G.topTypeRef
+		// In case the expected type does not exist, simply return null
+		return null
 	}
 
 	private def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef, boolean includeIterableN) {
