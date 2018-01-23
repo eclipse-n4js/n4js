@@ -121,6 +121,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val inputUri = input.URI
 
 		return (autobuildEnabled
+			&& hasOutput(inputUri)
 			&& isSource(inputUri)
 			&& (isNoValidate(inputUri)
 				|| isExternal(inputUri)
@@ -132,6 +133,9 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			&& hasNoPolyfillErrors(input,monitor)
 	}
 
+	private def hasOutput(URI n4jsSourceURI){
+		return n4jsCore.getOutputPath(n4jsSourceURI) !== null;
+	}
 	private def isSource(URI n4jsSourceURI) {
 		return n4jsCore.findN4JSSourceContainer(n4jsSourceURI).present;
 	}
