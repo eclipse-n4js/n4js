@@ -81,6 +81,12 @@ public interface WorkingSetManager extends Comparator<WorkingSet>, MementoAware 
 	WorkingSet[] getAllWorkingSets();
 
 	/**
+	 * Discard cached information about existing working sets, forcing a re-computation of working sets the next time
+	 * the list of working sets is requested via {@link #getAllWorkingSets()}.
+	 */
+	public void discardWorkingSetCaches();
+
+	/**
 	 * Updates its internal state based on the {@link Diff diff} argument. Clients should call
 	 * {@link #saveState(IProgressMonitor)} if they want to persist the updated state.
 	 *
@@ -165,5 +171,4 @@ public interface WorkingSetManager extends Comparator<WorkingSet>, MementoAware 
 	 */
 	WorkingSetManagerBroker getWorkingSetManagerBroker();
 
-	public void discardWorkingSetCaches();
 }
