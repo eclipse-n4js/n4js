@@ -13,13 +13,17 @@ package org.eclipse.n4js.flowgraphs.dataflow;
 import org.eclipse.n4js.n4JS.Expression;
 
 /**
- *
+ * Hold information about an assignment regarding exactly one {@link Symbol} whose value gets written.
  */
 public class AssignmentRelation {
+	/** {@link Symbol} whose value is changed */
 	final public Symbol leftSymbol;
+	/** {@link Symbol} whose value is assigned. Iff null {@link #assignedValue} is not null. */
 	final public Symbol rightSymbol;
+	/** {@link Expression} whose return value is assigned. Iff null {@link #rightSymbol} is not null. */
 	final public Expression assignedValue;
 
+	/** Constructor */
 	AssignmentRelation(Symbol leftSymbol, Symbol rightSymbol, Expression assignedValue) {
 		this.leftSymbol = leftSymbol;
 		this.rightSymbol = rightSymbol;
@@ -28,6 +32,10 @@ public class AssignmentRelation {
 
 	@Override
 	public String toString() {
-		return leftSymbol.toString() + " := " + rightSymbol.toString();
+		String str = "";
+		str += leftSymbol.toString() + " := ";
+		str += rightSymbol != null ? rightSymbol.toString() : assignedValue;
+		return str;
 	}
+
 }

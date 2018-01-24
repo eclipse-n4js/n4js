@@ -27,15 +27,17 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
 
 /**
- *
+ * Creates {@link Guard}s from given {@link Expression}s that are used as conditions.
  */
 public class GuardFactory {
 	final private SymbolFactory symbolFactory;
 
+	/** Constructor */
 	GuardFactory(SymbolFactory symbolFactory) {
 		this.symbolFactory = symbolFactory;
 	}
 
+	/** @return a {@link Guard} from a given {@link Expression} that is used as condition. */
 	Guard create(EObject topContainer, Expression expr, boolean negateTree) {
 		if (expr instanceof EqualityExpression) {
 			EqualityExpression eqe = (EqualityExpression) expr;
@@ -65,6 +67,10 @@ public class GuardFactory {
 				return createGuardForTruthy(topContainer, expr, negateTree, symbol);
 			}
 		}
+
+		// "v" in window
+		// not supported
+
 		return null;
 	}
 
@@ -80,7 +86,7 @@ public class GuardFactory {
 		if (symbol == null) {
 			return null;
 		}
-		HoldAssertion asserts = HoldAssertion.getGuard(topContainer, re, negateTree, false);
+		HoldAssertion asserts = HoldAssertionFactory.getGuard(topContainer, re, negateTree, false);
 		Guard guard = new Guard(re, GuardType.InstanceOf, asserts, symbol, context);
 		return guard;
 	}
@@ -94,7 +100,7 @@ public class GuardFactory {
 		isTruthy |= parent instanceof BinaryLogicalExpression;
 		isTruthy |= parent instanceof UnaryExpression && ((UnaryExpression) parent).getOp() == UnaryOperator.NOT;
 		if (isTruthy) {
-			HoldAssertion asserts = HoldAssertion.getGuard(topContainer, expr, negateTree, false);
+			HoldAssertion asserts = HoldAssertionFactory.getGuard(topContainer, expr, negateTree, false);
 			Guard guard = new Guard(expr, GuardType.IsTruthy, asserts, symbol);
 			return guard;
 		}
@@ -140,9 +146,6 @@ public class GuardFactory {
 			return createGuardForVoid(topContainer, (UnaryExpression) rhs, negateTree, sameEqualNot, ls);
 		}
 
-		// "v" in window
-		// not supported
-
 		return null;
 	}
 
@@ -159,7 +162,7 @@ public class GuardFactory {
 		if (nuz.isZeroLiteral()) {
 			type = GuardType.IsZero;
 		}
-		HoldAssertion asserts = HoldAssertion.getGuard(topContainer, eqe, negateTree, negateEqe);
+		HoldAssertion asserts = HoldAssertionFactory.getGuard(topContainer, eqe, negateTree, negateEqe);
 		Guard guard = new Guard(eqe, type, asserts, symbol);
 		return guard;
 	}
@@ -179,7 +182,7 @@ public class GuardFactory {
 		if (typeofSymbol == null) {
 			return null;
 		}
-		HoldAssertion asserts = HoldAssertion.getGuard(topContainer, ue.eContainer(), negateTree, negateEqe);
+		HoldAssertion asserts = HoldAssertionFactory.getGuard(topContainer, ue.eContainer(), negateTree, negateEqe);
 		Guard guard = new Guard(ue, GuardType.IsUndefined, asserts, typeofSymbol);
 		return guard;
 	}
@@ -195,7 +198,7 @@ public class GuardFactory {
 				return null;
 			}
 		}
-		HoldAssertion asserts = HoldAssertion.getGuard(topContainer, ue.eContainer(), negateTree,
+		HoldAssertion asserts = HoldAssertionFactory.getGuard(topContainer, ue.eContainer(), negateTree,
 				negateEqe);
 		Guard guard = new Guard(ue, GuardType.IsUndefined, asserts, symbol);
 		return guard;

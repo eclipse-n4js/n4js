@@ -10,12 +10,44 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
+import org.eclipse.n4js.n4JS.Expression;
+
 /**
- *
+ * Type of a guard.
  */
 public enum GuardType {
-	IsTruthy, IsUndefined, IsNull, IsZero, InstanceOf, InState;
+	/**
+	 * For {@link Expression}s that check for truthy:<br/>
+	 * {@code if (a)}
+	 */
+	IsTruthy,
+	/**
+	 * For {@link Expression}s that check for undefined:<br/>
+	 * {@code if (a == undefined || a == void 0 || typeof a == "undefined")}
+	 */
+	IsUndefined,
+	/**
+	 * For {@link Expression}s that check for null:<br/>
+	 * {@code if (a == null)}
+	 */
+	IsNull,
+	/**
+	 * For {@link Expression}s that check for 0:<br/>
+	 * {@code if (a == 0)}
+	 */
+	IsZero,
+	/**
+	 * For {@link Expression}s that check for a type:<br/>
+	 * {@code if (a instanceof AType)}
+	 */
+	InstanceOf,
+	/**
+	 * For {@link Expression}s that check for state:<br/>
+	 * {@code if (a.inState())}
+	 */
+	InState;
 
+	/** @return true iff this is {@link #IsNull} or {@link #IsUndefined} */
 	public boolean IsNullOrUndefined() {
 		return this == IsNull || this == IsUndefined;
 	}

@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
-import static org.eclipse.n4js.flowgraphs.dataflow.SymbolContextUtils.getContextChangedSymbol;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,8 +22,6 @@ import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * {@link BranchWalkerInternal} that is used only in data flow analyses.
@@ -119,13 +115,21 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
 
-			boolean callPerformed = callHoldOnDataflowOnAliases(ass, ar);
-			if (!callPerformed) {
-				callPerformed = callHoldOnDataflowOnFailedStructuralAliases(ass, ar);
-			}
-			if (!callPerformed) {
-				callPerformed = callHoldOnDataflowOnStructuralAliases(ass, ar);
-			}
+			callHoldOnDataflowOnAliases(ass, ar);
+
+			// ******************************************************************************************
+			// The following supports intra-procedural aliases.
+			// It is disabled since its use is unsound because side effects of other aliases are ignored.
+			// It is revisited when implementing TypeSta
+			// ******************************************************************************************
+			//
+			// boolean callPerformed = callHoldOnDataflowOnAliases(ass, ar);
+			// if (!callPerformed) {
+			// callPerformed = callHoldOnDataflowOnFailedStructuralAliases(ass, ar);
+			// }
+			// if (!callPerformed) {
+			// callPerformed = callHoldOnDataflowOnStructuralAliases(ass, ar);
+			// }
 			// if still (!callPerformed): not important
 
 			if (!ass.isActive()) {
@@ -180,46 +184,53 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		return false;
 	}
 
-	private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, AssignmentRelation ar) {
-		Symbol lSymbol = ar.leftSymbol;
-		Expression assgnExpr = ar.assignedValue;
-		Pair<Symbol, Symbol> cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.aliases, lSymbol, assgnExpr);
-		Symbol newLSymbol = cSymbols.getKey();
-		Symbol newRSymbol = cSymbols.getValue();
-		if (newRSymbol != null) {
-			AssignmentRelation newAR = new AssignmentRelation(newLSymbol, newRSymbol, null);
-			ass.callHoldsOnDataflow(newAR);
-			return true;
-		}
+	// ******************************************************************************************
+	// The following supports intra-procedural aliases.
+	// It is disabled since its use is unsound because side effects of other aliases are ignored.
+	// It is revisited when implementing TypeStates.
+	// ******************************************************************************************
+	//
+	// private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, AssignmentRelation ar) {
+	// Symbol lSymbol = ar.leftSymbol;
+	// Expression assgnExpr = ar.assignedValue;
+	// Pair<Symbol, Symbol> cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.aliases, lSymbol, assgnExpr);
+	// Symbol newLSymbol = cSymbols.getKey();
+	// Symbol newRSymbol = cSymbols.getValue();
+	// if (newRSymbol != null) {
+	// AssignmentRelation newAR = new AssignmentRelation(newLSymbol, newRSymbol, null);
+	// ass.callHoldsOnDataflow(newAR);
+	// return true;
+	// }
+	//
+	// cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.failingStructuralAliases, lSymbol, assgnExpr);
+	// newLSymbol = cSymbols.getKey();
+	// newRSymbol = cSymbols.getValue();
+	// if (newRSymbol != null) {
+	// AssignmentRelation newAR = new AssignmentRelation(newLSymbol, newRSymbol, null);
+	// ass.callHoldsOnDataflow(newAR);
+	// return true;
+	// }
+	// return false;
+	// }
+	//
+	// private boolean callHoldOnDataflowOnFailedStructuralAliases(Assumption ass, AssignmentRelation ar) {
+	// Pair<Symbol, List<Symbol>> lSCA = SymbolContextUtils
+	// .getSymbolAndContextsToAlias(ass.failingStructuralAliases, ar.leftSymbol);
+	//
+	// if (lSCA.getKey() != null) {
+	// ass.failOnStructuralAlias(lSCA.getKey());
+	// return true;
+	// }
+	//
+	// Pair<Symbol, List<Symbol>> rCSA = SymbolContextUtils
+	// .getSymbolAndContextsToAlias(ass.failingStructuralAliases, ar.rightSymbol);
+	//
+	// if (rCSA.getKey() != null) {
+	// ass.failOnStructuralAlias(rCSA.getKey());
+	// return true;
+	// }
+	//
+	// return false;
+	// }
 
-		cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.failingStructuralAliases, lSymbol, assgnExpr);
-		newLSymbol = cSymbols.getKey();
-		newRSymbol = cSymbols.getValue();
-		if (newRSymbol != null) {
-			AssignmentRelation newAR = new AssignmentRelation(newLSymbol, newRSymbol, null);
-			ass.callHoldsOnDataflow(newAR);
-			return true;
-		}
-		return false;
-	}
-
-	private boolean callHoldOnDataflowOnFailedStructuralAliases(Assumption ass, AssignmentRelation ar) {
-		Pair<Symbol, List<Symbol>> lSCA = SymbolContextUtils
-				.getSymbolAndContextsToAlias(ass.failingStructuralAliases, ar.leftSymbol);
-
-		if (lSCA.getKey() != null) {
-			ass.failOnStructuralAlias(lSCA.getKey());
-			return true;
-		}
-
-		Pair<Symbol, List<Symbol>> rCSA = SymbolContextUtils
-				.getSymbolAndContextsToAlias(ass.failingStructuralAliases, ar.rightSymbol);
-
-		if (rCSA.getKey() != null) {
-			ass.failOnStructuralAlias(rCSA.getKey());
-			return true;
-		}
-
-		return false;
-	}
 }

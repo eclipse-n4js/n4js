@@ -11,21 +11,31 @@
 package org.eclipse.n4js.flowgraphs.dataflow;
 
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.IfStatement;
 
 /**
- *
+ * {@link Guard} hold information about {@link Expression}s that are used as a precondition of a control flow branch,
+ * e.g. in an {@link IfStatement}:<br/>
+ * {@code if (guard) ...}
  */
 public class Guard {
+	/** The {@link Expression} that is used as a condition of the guard */
 	final public Expression condition;
+	/** The type of the guard */
 	final public GuardType type;
+	/** The guarantee of the guard */
 	final public HoldAssertion asserts;
+	/** The symbol that is guarded */
 	final public Symbol symbol;
+	/** The context that is guaranteed, such as the right hand side of an {@code instanceof} {@link Expression} */
 	final public Expression context;
 
+	/** Constructor */
 	public Guard(Expression condition, GuardType type, HoldAssertion asserts, Symbol symbol) {
 		this(condition, type, asserts, symbol, null);
 	}
 
+	/** Constructor */
 	public Guard(Expression condition, GuardType type, HoldAssertion asserts, Symbol symbol,
 			Expression context) {
 
