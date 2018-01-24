@@ -15,6 +15,7 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.AnnotationDefinition.RetentionPolicy
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.Expression
@@ -62,8 +63,8 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.util.Strings
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -71,7 +72,6 @@ import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * An {@link TransformationAssistant assistant} to create call expressions for invoking <code>$makeClass</code>,

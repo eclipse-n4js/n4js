@@ -8,12 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel
+package org.eclipse.n4js.utils
 
+import com.google.common.base.Strings
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4mf.DeclaredVersion
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
@@ -23,13 +25,12 @@ import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.n4js.utils.ProjectResolveHelper
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
-import com.google.common.base.Strings
-import org.eclipse.emf.ecore.resource.Resource
 
 /**
  * Helper class for computing descriptors for compiled files. Descriptors are used for file names and paths of generated files,
@@ -176,7 +177,7 @@ public final class ResourceNameComputer {
 	 * 
 	 * @module {@link TModule} for which we generate descriptor
 	 */
-	def String getCompleteModuleSpecifier(IN4JSProject project, TModule module) {
+	def String getCompleteModuleSpecifier(org.eclipse.n4js.projectModel.IN4JSProject project, TModule module) {
 		val unitPath = module.getModuleSpecifier()
 		return formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR);
 	}
@@ -213,7 +214,7 @@ public final class ResourceNameComputer {
 	 * 
 	 * @module {@link TModule} for which we generate descriptor
 	 */
-	def String getCompleteModuleSpecifierAsIdentifier(IN4JSProject project, TModule module) {
+	def String getCompleteModuleSpecifierAsIdentifier(org.eclipse.n4js.projectModel.IN4JSProject project, TModule module) {
 		val unitPath = module.getModuleSpecifier()
 		return getValidJavascriptIdentifierName(
 			formatDescriptor(project, unitPath, "_", "_", "_", !USE_PROJECT_VERSION, AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR));
@@ -273,7 +274,7 @@ public final class ResourceNameComputer {
 	 * 
 	 * @n4jsSourceURI URI from file resource
 	 */
-	def generateProjectDescriptor(IN4JSProject project) {
+	def generateProjectDescriptor(org.eclipse.n4js.projectModel.IN4JSProject project) {
 		val unitPath = ""
 		formatDescriptor(project, unitPath, "-", ".", "", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, !MAKE_SIMPLE_DESCRIPTOR);
 	}
@@ -316,13 +317,13 @@ public final class ResourceNameComputer {
 	 * @n4jsSourceURI URI from file resource
 	 * @fileExtension String containing desired extensions, should include dot
 	 */
-	def generateFileDescriptor(IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
+	def generateFileDescriptor(org.eclipse.n4js.projectModel.IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
 		val unitPath = projectResolver.resolvePackageAndFileName(n4jsSourceURI, project)
 		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
 			normalizeFileExtension(fileExtension);
 	}
 
-	def private IN4JSProject resolveProject(TModule module) {
+	def private org.eclipse.n4js.projectModel.IN4JSProject resolveProject(TModule module) {
 		return projectResolver.resolveProject(module.eResource().getURI());
 	}
 
@@ -354,7 +355,7 @@ public final class ResourceNameComputer {
 	 * @param asJsIdentifier  tells if segments must be in form of a valid JS identifier.
 	 * @param makeSimpleDescriptor  tells if simple form of descriptor is to be used.
 	 */
-	def private static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
+	def private static String formatDescriptor(org.eclipse.n4js.projectModel.IN4JSProject project, String unitPath, String sep1, String sep2,
 		String sep3, boolean useProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
 
 		var projectID = project.projectId

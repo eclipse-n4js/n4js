@@ -32,16 +32,16 @@ import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.projectModel.FindArtifactHelper;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
-import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.utils.FindArtifactHelper;
 import org.eclipse.n4js.utils.RecursionGuard;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;

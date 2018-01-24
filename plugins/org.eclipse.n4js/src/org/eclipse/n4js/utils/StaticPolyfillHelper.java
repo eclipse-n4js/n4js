@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel;
+package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillAware;
 
@@ -18,6 +18,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.TClass;

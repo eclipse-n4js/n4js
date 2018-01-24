@@ -20,7 +20,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
-import org.eclipse.n4js.projectModel.StaticPolyfillHelper
+import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM

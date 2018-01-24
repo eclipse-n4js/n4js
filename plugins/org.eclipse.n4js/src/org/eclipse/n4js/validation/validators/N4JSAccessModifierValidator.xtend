@@ -31,7 +31,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.projectModel.StaticPolyfillHelper
+import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef

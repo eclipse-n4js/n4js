@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.ResourceNameComputer
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
@@ -54,6 +53,7 @@ import org.eclipse.n4js.transpiler.es.transform.internal.NamespaceImportAssignme
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
 import static org.eclipse.n4js.n4JS.EqualityOperator.*

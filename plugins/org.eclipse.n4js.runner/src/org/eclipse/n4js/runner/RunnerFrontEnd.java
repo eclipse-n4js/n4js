@@ -28,11 +28,11 @@ import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;

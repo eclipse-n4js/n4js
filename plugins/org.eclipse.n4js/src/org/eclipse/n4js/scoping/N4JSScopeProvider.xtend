@@ -86,7 +86,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.projectModel.EObjectDescriptionHelper
+import org.eclipse.n4js.utils.EObjectDescriptionHelper
 
 /**
  * This class contains custom scoping description.

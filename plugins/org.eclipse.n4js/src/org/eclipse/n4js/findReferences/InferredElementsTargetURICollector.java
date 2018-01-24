@@ -15,10 +15,10 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.projectModel.StaticPolyfillHelper;
 import org.eclipse.n4js.resource.InferredElements;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.utils.StaticPolyfillHelper;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
 

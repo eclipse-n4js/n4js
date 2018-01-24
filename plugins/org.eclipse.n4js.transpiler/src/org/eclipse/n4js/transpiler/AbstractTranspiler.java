@@ -15,11 +15,11 @@ import java.nio.file.Path;
 
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.print.PrettyPrinter;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 

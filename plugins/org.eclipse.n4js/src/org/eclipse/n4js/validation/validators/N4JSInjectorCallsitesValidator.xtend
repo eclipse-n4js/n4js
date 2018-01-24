@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.validation.Check
@@ -34,7 +35,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.AnnotationDefinition.*
 import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static org.eclipse.n4js.validation.IssueCodes.*
-import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * Validations related to callsites targeting N4Injector methods.

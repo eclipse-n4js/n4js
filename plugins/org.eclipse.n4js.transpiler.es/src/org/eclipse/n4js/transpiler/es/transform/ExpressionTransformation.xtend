@@ -30,11 +30,11 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.PromisifyHelper
+import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * Some expressions need special handling, this is done in this transformation.

@@ -8,11 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel;
+package org.eclipse.n4js.utils;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;

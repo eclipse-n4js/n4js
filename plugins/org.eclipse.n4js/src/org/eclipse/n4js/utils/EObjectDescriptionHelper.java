@@ -8,10 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel;
+package org.eclipse.n4js.utils;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.EcoreUtil2;
