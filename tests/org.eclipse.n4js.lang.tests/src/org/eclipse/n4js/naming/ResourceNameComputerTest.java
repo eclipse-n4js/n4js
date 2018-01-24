@@ -33,7 +33,7 @@ import com.google.inject.Provider;
  */
 @InjectWith(N4JSInjectorProviderWithMockProject.class)
 @RunWith(XtextRunner.class)
-public class QualifiedNameComputerTest {
+public class ResourceNameComputerTest {
 
 	@Inject
 	ParseHelper<Script> parserHelper;
