@@ -38,3 +38,20 @@ enum ES {
 o = ES.bar;
 // XPECT errors --> "ES is not a subtype of ~Object." at "ES.bar"
 so = ES.bar;
+
+
+
+
+// not really part of GH-467, but for completeness:
+
+let a: any;
+let sa: ~any;
+
+// XPECT noerrors -->
+a = E.bar;
+// XPECT noerrors -->
+sa = E.bar;
+// XPECT noerrors -->
+a = ES.bar;
+// XPECT noerrors -->
+sa = ES.bar;
