@@ -81,10 +81,6 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
-			if (!ass.isActive()) {
-				assIter.remove();
-				continue;
-			}
 
 			for (Symbol alias : ass.aliases) {
 				if (!guardStructure.guards.containsKey(alias)) {
@@ -95,6 +91,10 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 				for (Guard guard : guards) {
 					ass.callHoldsOnGuard(guard);
 				}
+			}
+
+			if (!ass.isActive()) {
+				assIter.remove();
 			}
 		}
 	}
@@ -118,10 +118,6 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 	private boolean handleDataflow(AssignmentRelation ar) {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
-			if (!ass.isActive()) {
-				assIter.remove();
-				continue;
-			}
 
 			boolean callPerformed = callHoldOnDataflowOnAliases(ass, ar);
 			if (!callPerformed) {
@@ -131,6 +127,10 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 				callPerformed = callHoldOnDataflowOnStructuralAliases(ass, ar);
 			}
 			// if still (!callPerformed): not important
+
+			if (!ass.isActive()) {
+				assIter.remove();
+			}
 		}
 		return true;
 	}
@@ -153,10 +153,6 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 	private void callHoldsOnEffect(ControlFlowElement cfe, EffectInfo effect) {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
-			if (!ass.isActive()) {
-				assIter.remove();
-				continue;
-			}
 
 			if (ass.aliases.contains(effect.symbol)) {
 				ass.callHoldsOnEffect(effect, cfe); // call for plain aliases
@@ -168,6 +164,10 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 						break;
 					}
 				}
+			}
+
+			if (!ass.isActive()) {
+				assIter.remove();
 			}
 		}
 	}

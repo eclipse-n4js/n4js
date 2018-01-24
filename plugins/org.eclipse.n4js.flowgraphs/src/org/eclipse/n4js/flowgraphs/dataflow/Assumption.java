@@ -72,6 +72,8 @@ abstract public class Assumption {
 
 	/** Constructor to create a copy */
 	public Assumption(Assumption assumption) {
+		checkState(assumption.active);
+
 		this.key = assumption.key;
 		this.creationSite = assumption.creationSite;
 		this.symbol = assumption.symbol;
@@ -158,6 +160,8 @@ abstract public class Assumption {
 	}
 
 	void callHoldsOnDataflow(AssignmentRelation assignRelation) {
+		checkState(isActive());
+
 		Symbol lhs = assignRelation.leftSymbol;
 		Symbol rhs = assignRelation.rightSymbol;
 		if (failingStructuralAliases.contains(rhs)) {
@@ -189,6 +193,8 @@ abstract public class Assumption {
 	}
 
 	void callHoldsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+		checkState(isActive());
+
 		HoldAssertion holds = holdsOnEffect(effect, cfe);
 		handleHolds(effect.symbol, holds);
 	}
@@ -207,6 +213,8 @@ abstract public class Assumption {
 	}
 
 	void callHoldsOnGuard(Guard guard) {
+		checkState(isActive());
+
 		HoldAssertion holds = holdsOnGuard(guard);
 		handleHolds(guard, holds);
 	}
@@ -225,6 +233,8 @@ abstract public class Assumption {
 	}
 
 	void callHoldsAfterall() {
+		checkState(isActive());
+
 		boolean holds = holdsAfterall();
 		if (failedSymbol != null) {
 			handleHolds(failedSymbol, HoldAssertion.NeverHolds);

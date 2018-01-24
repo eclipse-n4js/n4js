@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/*	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
+/*	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
 	IssueConfiguration {
 		IssueCode "DFG_NULL_DEREFERENCE" {enabled=true}
 	}
@@ -47,7 +47,7 @@ function f3() {
 		a.toString();
 		return;
 	}
-	// XPECT warnings --> "Variable a is null or undefined" at "a"
+	// XPECT warnings --> "Variable a is undefined" at "a"
 	a.toString();
 }
 
@@ -76,7 +76,7 @@ function f5() {
 function f6() {
 	let a : int;
 	if (!a || 1) {
-		// XPECT warnings --> "Variable a is null or undefined" at "a"
+		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 		return;
 	}
@@ -114,7 +114,7 @@ function f13() {
 		a.toString();
 		return;
 	}
-	// XPECT warnings --> "Variable a is null or undefined" at "a"
+	// XPECT nowarnings -->
 	a.toString();
 }
 
@@ -143,7 +143,7 @@ function f15() {
 function f16() {
 	let a : int = 0;
 	if (!a || 1) {
-		// XPECT warnings --> "Variable a is null or undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 		return;
 	}

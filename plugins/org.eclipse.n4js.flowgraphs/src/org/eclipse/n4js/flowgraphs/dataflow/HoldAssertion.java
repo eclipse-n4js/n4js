@@ -46,15 +46,7 @@ public enum HoldAssertion {
 			return HoldAssertion.MayHold;
 		}
 
-		simplify(beList, 0);
-
-		if (negateTree) {
-			beSet = new HashSet<>(beList);
-			beList.add(BooleanExpression.not);
-			simplify(beList, 0);
-		}
-
-		return get(beList);
+		return get(beList, negateTree);
 	}
 
 	static private ArrayList<BooleanExpression> getBooleanExpressions(EObject topContainer, EObject condition,
@@ -118,7 +110,7 @@ public enum HoldAssertion {
 		BooleanExpression be1 = (bExpressions.size() > startIdx + 1) ? bExpressions.get(startIdx + 1) : null;
 
 		int reverseStartIdx = Math.max(0, startIdx - 2);
-		if (be0 == BooleanExpression.and) {
+		if (be0 == BooleanExpression.and && be1 == BooleanExpression.and) {
 			bExpressions.remove(startIdx);
 			simplify(bExpressions, reverseStartIdx); // tail recursion
 			return;
@@ -129,13 +121,20 @@ public enum HoldAssertion {
 			simplify(bExpressions, reverseStartIdx); // tail recursion
 			return;
 		}
-		if (be0 == BooleanExpression.not && be1 == BooleanExpression.or) {
-			bExpressions.remove(startIdx + 1);
+		if (be0 == BooleanExpression.or && be1 == BooleanExpression.or) {
+			bExpressions.remove(startIdx);
 			simplify(bExpressions, reverseStartIdx); // tail recursion
 			return;
 		}
-		if (be0 == BooleanExpression.or && be1 == BooleanExpression.not) {
-			bExpressions.remove(startIdx);
+		if (be0 == BooleanExpression.not && be1 == BooleanExpression.or) {
+			bExpressions.remove(startIdx + 1);
+			bExpressions.add(startIdx, BooleanExpression.and);
+			simplify(bExpressions, reverseStartIdx); // tail recursion
+			return;
+		}
+		if (be0 == BooleanExpression.not && be1 == BooleanExpression.and) {
+			bExpressions.remove(startIdx + 1);
+			bExpressions.add(startIdx, BooleanExpression.or);
 			simplify(bExpressions, reverseStartIdx); // tail recursion
 			return;
 		}
@@ -145,21 +144,44 @@ public enum HoldAssertion {
 		}
 	}
 
-	static private HoldAssertion get(ArrayList<BooleanExpression> beList) {
-		int notCount = 0;
-		for (BooleanExpression be : beList) {
-			if (be == BooleanExpression.or) {
+	static private HoldAssertion get(ArrayList<BooleanExpression> beList, boolean negateTree) {
+		if (negateTree) {
+			beList.add(BooleanExpression.not);
+		}
+		simplify(beList, 0);
+
+		if (beList.size() == 0) {
+			return AlwaysHolds;
+		}
+		if (beList.size() == 1) {
+			switch (beList.get(0)) {
+			case not:
+				return NeverHolds;
+			case and:
+				return AlwaysHolds;
+			case or:
+				return MayHold;
+			default:
+				return null;
+			}
+		}
+		if (beList.size() == 2) {
+			BooleanExpression be0 = beList.get(0);
+			BooleanExpression be1 = beList.get(1);
+
+			if (be0 == BooleanExpression.and && be1 == BooleanExpression.not) {
 				return MayHold;
 			}
-			if (be == BooleanExpression.not) {
-				notCount++;
+
+			if (be0 == BooleanExpression.or && be1 == BooleanExpression.not) {
+				return NeverHolds;
 			}
 		}
-
-		if (notCount % 2 == 0) {
-			return AlwaysHolds;
-		} else {
-			return NeverHolds;
+		if (beList.size() > 2) {
+			return null;
 		}
+
+		return null;
 	}
+
 }

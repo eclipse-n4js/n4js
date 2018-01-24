@@ -116,7 +116,7 @@ function f10() {
 		// XPECT nowarnings -->
 		a.toString();
 	} else {
-		// XPECT warnings --> "Variable a is null or undefined" at "a"
+		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
@@ -152,7 +152,7 @@ function f12() {
 function f13() {
 	let a : int;
 	if (!a || 1) {
-		// XPECT warnings --> "Variable a is null or undefined" at "a"
+		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	} else {
 		// XPECT nowarnings -->
@@ -181,7 +181,7 @@ function f15() {
 		// XPECT nowarnings -->
 		a.toString();
 	} else {
-		// XPECT warnings --> "Variable a is null or undefined" at "a"
+		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
