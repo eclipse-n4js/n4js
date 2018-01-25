@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.scoping.UsageAwareObjectDescription;
+import org.eclipse.n4js.scoping.IUsageAwareEObjectDescription;
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -103,8 +103,8 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 				}
 
 				// if supported, mark object description as used
-				if (eObjectDescription instanceof UsageAwareObjectDescription<?>) {
-					((UsageAwareObjectDescription<?>) eObjectDescription).markAsUsed();
+				if (eObjectDescription instanceof IUsageAwareEObjectDescription) {
+					((IUsageAwareEObjectDescription) eObjectDescription).markAsUsed();
 				}
 
 				return Collections.singletonList(candidate);

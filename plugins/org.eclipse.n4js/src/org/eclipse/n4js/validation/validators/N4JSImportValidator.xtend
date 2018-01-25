@@ -152,7 +152,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	 * @param spec
 	 * @return name from NamedImportSpecifier or AST-text if unresolved.
 	 */
-	protected def String computeImportSpecifierName(NamedImportSpecifier spec) {
+	private def String computeImportSpecifierName(NamedImportSpecifier spec) {
 		if (spec.isBrokenImport) {
 			// find AST for Message:
 			NodeModelUtils.findActualNodeFor(spec).text.trim
@@ -362,7 +362,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	 * @param duplicateImportDeclaration The import declaration of the duplicated import
 	 * @param eObjectToIssueCode A map to keep track of all added issues
 	 */
-	protected def addIssueDuplicateNamedImportDeclaration(NamedImportSpecifier specifier,
+	private def addIssueDuplicateNamedImportDeclaration(NamedImportSpecifier specifier,
 		NamedImportSpecifier duplicate, ImportDeclaration duplicateImportDeclaration,
 		Map<EObject, String> eObjectToIssueCode) {
 			val String issueCode = IssueCodes.IMP_STMT_DUPLICATE_NAMED

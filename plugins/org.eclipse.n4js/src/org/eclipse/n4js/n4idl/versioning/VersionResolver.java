@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem;
+package org.eclipse.n4js.n4idl.versioning;
 
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 

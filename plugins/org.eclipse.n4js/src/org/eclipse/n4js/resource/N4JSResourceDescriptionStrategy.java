@@ -128,7 +128,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 *            The {@link TClass} element to create user data for.
 	 * @returns An immutable user-data map
 	 */
-	protected Map<String, String> createClassUserData(final Map<String, String> immutableUserData,
+	private Map<String, String> createClassUserData(final Map<String, String> immutableUserData,
 			final TClass tClass) {
 		Map<String, String> userData = newHashMap();
 		if (tClass.isExported()) {
@@ -144,18 +144,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 						.filter(m -> m instanceof TMethod)
 						.anyMatch(m -> AnnotationDefinition.TEST_METHOD.hasAnnotation(m))));
 		return userData;
-	}
-
-	/**
-	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
-	 * of <code>null</code> (currently all non-exported variables) will be ignored.
-	 */
-	private void internalCreateEObjectDescription(TVariable type, IAcceptor<IEObjectDescription> acceptor) {
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
-		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
-			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type);
-			acceptor.accept(eod);
-		}
 	}
 
 	private void internalCreateEObjectDescriptionForRoot(final TModule module,
@@ -218,6 +206,18 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, type, userData);
 				acceptor.accept(eod);
 			}
+		}
+	}
+
+	/**
+	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
+	 * of <code>null</code> (currently all non-exported variables) will be ignored.
+	 */
+	private void internalCreateEObjectDescription(TVariable type, IAcceptor<IEObjectDescription> acceptor) {
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
+		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type);
+			acceptor.accept(eod);
 		}
 	}
 

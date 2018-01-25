@@ -598,7 +598,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * returns null in other cases.
 	 * Does not check value of the returned name, so it can be null or empty string.
 	 */
-	def protected String getDeclaredName(EObject eo) {
+	def private String getDeclaredName(EObject eo) {
 		if (VersionUtils.isVersioned(eo) && eo instanceof NamedElement) {
 			return (eo as NamedElement).name + "#" + (eo as VersionedElement).declaredVersion;
 		}
@@ -631,7 +631,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		return null
 	}
 
-	def protected String getDeclaredNameForGlobalScopeComparision(EObject eo) {
+	def private String getDeclaredNameForGlobalScopeComparision(EObject eo) {
 		switch (eo) {
 			N4ClassDeclaration    : eo.name
 			N4InterfaceDeclaration: eo.name

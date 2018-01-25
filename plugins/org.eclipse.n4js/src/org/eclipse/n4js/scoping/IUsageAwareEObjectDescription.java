@@ -13,9 +13,11 @@ package org.eclipse.n4js.scoping;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
+ * An {@link IEObjectDescription} that is aware of usage.
  *
+ * Descriptions that implement this interface are notified, when the scoping actually binds the description to a name.
  */
-public interface UsageAwareEObjectDescription extends IEObjectDescription {
+public interface IUsageAwareEObjectDescription extends IEObjectDescription {
 	/**
 	 * This method is invoked when this {@link IEObjectDescription} used to bind a name.
 	 */

@@ -57,6 +57,7 @@ import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4idl.versioning.VersionResolver
 
 /**
  * Utility methods used in the XSemantics type system. Must be injected.
@@ -136,7 +137,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def TypeRef createUnionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createUnionType(G,elements)
 	}
-	
+
 	def TypeRef createIntersectionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createIntersectionType(G,elements)
 	}

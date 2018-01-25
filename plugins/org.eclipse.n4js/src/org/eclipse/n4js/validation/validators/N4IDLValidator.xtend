@@ -23,11 +23,15 @@ import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
+import org.eclipse.n4js.n4JS.Statement
+import org.eclipse.n4js.n4JS.ScriptElement
+import org.eclipse.n4js.validation.JavaScriptVariant
+import org.eclipse.n4js.n4JS.Script
 
 /**
  * Validate the use of version in N4IDL
  */
-class N4IDLVersionValidator extends AbstractN4JSDeclarativeValidator {
+class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private VersionHelper versionHelper;
 
@@ -130,5 +134,35 @@ class N4IDLVersionValidator extends AbstractN4JSDeclarativeValidator {
 				IssueCodes.IDL_MIGRATIONS_NOT_SUPPORTED
 			);
 		}
+	}
+
+
+	/**
+	 * Checks whether the current {@link JavaScriptVariant} allows for top-level statements and issues errors
+	 * accordingly.
+	 */
+	@Check
+	public def void checkTopLevelElements(Script script) {
+		if (!variantHelper.allowTopLevelStatements(script)) {
+			script.getScriptElements().stream().forEach[handleScriptElement(it)];
+		}
+	}
+
+	/**
+	 * Adds an issue for the given element if it is considered a top-level statement (also see {@link #isStatement}).
+	 */
+	private def void handleScriptElement(ScriptElement element) {
+		if (isStatement(element) && element.eContainer().eContainer() === null) {
+			val variantName = variantHelper.getVariantName(element);
+			addIssue(IssueCodes.getMessageForAST_TOP_LEVEL_STATEMENTS(variantName), element,
+					IssueCodes.AST_TOP_LEVEL_STATEMENTS);
+		}
+	}
+
+	/**
+	 * Returns {@code true} if the given element is a considered a statement.
+	 */
+	private def boolean isStatement(EObject element) {
+		return element instanceof Statement && !(element instanceof FunctionDeclaration);
 	}
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.typesystem
+package org.eclipse.n4js.n4idl.versioning
 
 import com.google.inject.Inject
 import java.math.BigDecimal
@@ -35,7 +35,6 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.VersionResolver
 
 /**
  * An implementation of {@link VersionResolver} that performs actual resolving of versions against the given context

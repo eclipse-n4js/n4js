@@ -17,10 +17,11 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
- * An {@link IEObjectDescription} that has the callback-method {@link #markAsUsed()} that is invoked when this object
- * description is used to bind a name.
+ * Delegate implementation of {@link IUsageAwareEObjectDescription} that notifies the description when it is bound to a
+ * name by the scoping.
  */
-public abstract class UsageAwareObjectDescription<T extends IEObjectDescription> implements IEObjectDescription {
+public abstract class UsageAwareObjectDescription<T extends IEObjectDescription>
+		implements IUsageAwareEObjectDescription {
 
 	private final T delegate;
 
@@ -76,5 +77,6 @@ public abstract class UsageAwareObjectDescription<T extends IEObjectDescription>
 	/**
 	 * This method is invoked when this {@link IEObjectDescription} used to bind a name.
 	 */
+	@Override
 	public abstract void markAsUsed();
 }
