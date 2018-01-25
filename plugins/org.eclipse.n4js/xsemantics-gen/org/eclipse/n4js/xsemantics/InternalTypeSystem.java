@@ -99,7 +99,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
-import org.eclipse.n4js.n4idl.versioning.VersionResolver;
+import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver;
 import org.eclipse.n4js.n4jsx.ReactHelper;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.scoping.members.MemberScopingHelper;
@@ -518,7 +518,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   private JavaScriptVariantHelper jsVariantHelper;
   
   @Inject
-  private VersionResolver versionResolver;
+  private N4IDLVersionResolver versionResolver;
   
   @Inject
   private IQualifiedNameConverter qualifiedNameConverter;
@@ -633,11 +633,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     this.jsVariantHelper = jsVariantHelper;
   }
   
-  public VersionResolver getVersionResolver() {
+  public N4IDLVersionResolver getVersionResolver() {
     return this.versionResolver;
   }
   
-  public void setVersionResolver(final VersionResolver versionResolver) {
+  public void setVersionResolver(final N4IDLVersionResolver versionResolver) {
     this.versionResolver = versionResolver;
   }
   

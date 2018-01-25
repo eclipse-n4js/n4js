@@ -209,7 +209,7 @@ import static extension org.eclipse.n4js.ts.utils.TypeExtensions.*
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.typesystem.TypeSystemErrorExtensions.*
-import org.eclipse.n4js.n4idl.versioning.VersionResolver
+import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 
 inject TypeSystemHelper typeSystemHelper
 inject N4JSFunctionDefinitionTypesBuilder functionDefinitionTypesBuilder
@@ -219,7 +219,7 @@ inject DestructureHelper destructureHelper
 inject MemberScopingHelper memberScopingHelper
 inject PromisifyHelper promisifyHelper
 inject JavaScriptVariantHelper jsVariantHelper
-inject VersionResolver versionResolver
+inject N4IDLVersionResolver versionResolver
 inject IQualifiedNameConverter qualifiedNameConverter
 inject ReactHelper reactHelper
 

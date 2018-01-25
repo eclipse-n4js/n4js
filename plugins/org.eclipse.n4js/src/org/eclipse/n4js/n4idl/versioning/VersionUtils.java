@@ -16,7 +16,7 @@ import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.TVersionable;
 
 /**
- * Static utility class with regard to versioned elements.
+ * Static utility class with regard to versioned and versionable elements.
  */
 public class VersionUtils {
 	/**

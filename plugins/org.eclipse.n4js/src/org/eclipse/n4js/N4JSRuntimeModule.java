@@ -27,8 +27,6 @@ import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider;
 import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider;
-import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver;
-import org.eclipse.n4js.n4idl.versioning.VersionResolver;
 import org.eclipse.n4js.naming.N4JSImportedNamesAdapter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
@@ -540,14 +538,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	@SingletonBinding
 	public Class<? extends JavaScriptVariantHelper> bindJavaScriptVariantHelper() {
 		return N4JSJavaScriptVariantHelper.class;
-	}
-
-	/**
-	 * Bind type version resolver (used in N4JS.xsemantics). This customization point is used in N4IDL to support
-	 * versions in the type system.
-	 */
-	public Class<? extends VersionResolver> bindVersionResolver() {
-		return N4IDLVersionResolver.class;
 	}
 
 	/**

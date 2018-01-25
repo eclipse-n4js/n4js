@@ -15,7 +15,6 @@ import java.math.BigDecimal
 import java.util.List
 import java.util.ListIterator
 import org.eclipse.n4js.n4JS.VersionedElement
-import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
@@ -37,8 +36,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeUtils
 
 /**
- * An implementation of {@link VersionResolver} that performs actual resolving of versions against the given context
- * version.
+ * Resolver for the actual version of a type referenced by a given type reference.
  *
  * Generally, when resolving an actual version of a versioned type, this implementation will delegate to
  * {@link VersionHelper#findClassifierWithVersion(TClassifier, int)}.
@@ -46,11 +44,20 @@ import org.eclipse.n4js.ts.utils.TypeUtils
  * This resolver does not resolve any non-versionable/non-versioned elements and
  * thus has no effect, when applied to any non-N4IDL-specific AST elements.
  */
-class N4IDLVersionResolver implements VersionResolver {
+public class N4IDLVersionResolver {
 	@Inject
 	private VersionHelper versionHelper;
 
-	override <T extends TypeArgument, S> T resolveVersion(T typeRef, S versionedReference) {
+	/**
+	 * Returns a type reference referencing the requested version of the type referenced by the given type reference.
+	 *
+	 * @param typeRef
+	 *            the type reference to resolve
+	 * @param versionedReference
+	 *            the versioned reference to obtain the context version from
+	 * @return a reference to the resolved version of the type
+	 */
+	def <T extends TypeArgument, S> T resolveVersion(T typeRef, S versionedReference) {
 		if (versionedReference instanceof VersionedReference) {
 			return resolveVersion(typeRef, versionedReference as VersionedReference);
 		} else {
@@ -66,7 +73,19 @@ class N4IDLVersionResolver implements VersionResolver {
 		}
 	}
 
-	override <T extends TypeArgument> T resolveVersion(T typeArg, int contextVersion) {
+	/**
+	 * Returns a type reference referencing the requested version of the type referenced by the given type reference.
+	 * May return the given type argument or a different instance that is assignable to <code>T</code>. Type arguments
+	 * are also allowed to allow easier use of this method.
+	 *
+	 * @param typeRef
+	 *            the type reference to resolve
+	 * @param contextVersion
+	 *            the context version to use when determining the actual version of the type referenced by the actual
+	 *            parameter
+	 * @return a reference to the resolved version of the type
+	 */
+	def <T extends TypeArgument> T resolveVersion(T typeArg, int contextVersion) {
 		if (contextVersion === 0)
 			return typeArg;
 
