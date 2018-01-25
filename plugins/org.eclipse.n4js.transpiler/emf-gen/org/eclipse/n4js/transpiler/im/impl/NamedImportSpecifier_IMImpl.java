@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl;
 
+import org.eclipse.n4js.n4idl.versioning.VersionUtils;
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM;
 
@@ -97,8 +98,8 @@ public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implem
 	 * @generated
 	 */
 	public boolean isVersionedTypeImport() {
-		int _size = this.getImportedTypeVersions().size();
-		return (_size > 1);
+		return ((this.getImportedTypeVersions().size() > 0) && ((this.getImportedTypeVersions().size() > 1) || 
+			VersionUtils.isTVersionable(this.getImportedTypeVersions().get(0).getOriginalTarget())));
 	}
 
 	/**

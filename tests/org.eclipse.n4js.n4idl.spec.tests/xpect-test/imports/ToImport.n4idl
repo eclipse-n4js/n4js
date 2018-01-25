@@ -21,3 +21,6 @@ export public class R#3 {}
 export public class S#1 {}
 export public class S#2 {}
 export public class S#3 {}
+
+export public class T#1 {}
+export public class T#2 {}

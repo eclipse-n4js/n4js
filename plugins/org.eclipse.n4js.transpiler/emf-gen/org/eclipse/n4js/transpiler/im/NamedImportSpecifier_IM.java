@@ -65,7 +65,7 @@ public interface NamedImportSpecifier_IM extends NamedImportSpecifier {
 	 * @return the value of the '<em>Versioned Type Import</em>' attribute.
 	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getNamedImportSpecifier_IM_VersionedTypeImport()
 	 * @model unique="false" transient="true" changeable="false" volatile="true" derived="true"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel get='int _size = this.getImportedTypeVersions().size();\nreturn (_size > 1);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel get='return ((this.getImportedTypeVersions().size() > 0) && ((this.getImportedTypeVersions().size() > 1) || \n\t<%org.eclipse.n4js.n4idl.versioning.VersionUtils%>.isTVersionable(this.getImportedTypeVersions().get(0).getOriginalTarget())));'"
 	 * @generated
 	 */
 	boolean isVersionedTypeImport();

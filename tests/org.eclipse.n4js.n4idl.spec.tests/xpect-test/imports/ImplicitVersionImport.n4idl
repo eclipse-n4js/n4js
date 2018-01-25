@@ -19,6 +19,7 @@
 import {R} from "imports/ToImport";
 import {P as PU} from "imports/ToImport";
 import {S as AliasS} from "imports/ToImport";
+import {T} from "imports/ToImport";
 
 /**
  * Checks for the existence of the given given identifier
@@ -42,6 +43,8 @@ export public function f() {
 	var s2 = new AliasS#2();
 	var s3 = new AliasS#3();
 
+	var t1 = new T#1();
+
 	console.log("R#1:", globalIdentifier("R$1"));
 	console.log("R#2:", globalIdentifier("R$2"));
 	console.log("R#3:", globalIdentifier("R$3"));
@@ -52,4 +55,7 @@ export public function f() {
 	console.log("AliasS#1:", globalIdentifier("AliasS$1"));
 	console.log("AliasS#2:", globalIdentifier("AliasS$2"));
 	console.log("AliasS#3:", globalIdentifier("AliasS$3"));
+
+	console.log("T#1:", globalIdentifier("T$1"));
+	console.log("T#2:", globalIdentifier("T$2"));
 }

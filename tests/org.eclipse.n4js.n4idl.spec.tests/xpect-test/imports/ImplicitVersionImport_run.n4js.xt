@@ -38,6 +38,8 @@ PU#2: undefined
 AliasS#1: function S$1() {}
 AliasS#2: function S$2() {}
 AliasS#3: function S$3() {}
+T#1: function T$1() {}
+T#2: undefined
 stderr:
 ==>
 ---
