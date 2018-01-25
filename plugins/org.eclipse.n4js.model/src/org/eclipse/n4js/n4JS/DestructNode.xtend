@@ -160,20 +160,28 @@ public class DestructNode {
 	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
-	public static def DestructNode unify(VariableBinding binding) {
-		if (binding !== null && binding.pattern !== null // note: binding.expression is mandatory in variable statements but optional in for..in/of statements
-		&& (binding.expression !== null || binding.eContainer instanceof ForStatement)) {
-
+	public static def DestructNode unify(EObject lhs, Expression rhs) {
 			new DestructNode(
-				binding.pattern, // astElement
+				lhs, // astElement
 				null, // propName
 				null, // varRef
 				null, // varDecl
-				toEntries(binding.pattern, binding.expression), // nestedNodes
-				binding.expression, // defaultExpr
-				binding.expression, // assignedExpr
+				toEntries(lhs, rhs), // nestedNodes
+				rhs, // defaultExpr
+				rhs, // assignedExpr
 				false // rest
 			)
+	}
+
+	/**
+	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
+	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
+	 */
+	public static def DestructNode unify(VariableBinding binding) {
+		if (binding !== null && binding.pattern !== null // note: binding.expression is mandatory in variable statements but optional in for..in/of statements
+			&& (binding.expression !== null || binding.eContainer instanceof ForStatement
+		)) {
+			unify(binding.pattern, binding.expression);
 		}
 	}
 
@@ -182,17 +190,10 @@ public class DestructNode {
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
 	public static def DestructNode unify(AssignmentExpression expr) {
-		if (expr !== null && expr.lhs !== null && expr.rhs !== null && N4JSASTUtils.isDestructuringAssignment(expr)) {
-			new DestructNode(
-				expr.lhs, // astElement
-				null, // propName
-				null, // varRef
-				null, // varDecl
-				toEntries(expr.lhs, expr.rhs), // nestedNodes
-				expr.rhs, // defaultExpr
-				expr.rhs, // assignedExpr
-				false // rest
-			)
+		if (expr !== null && expr.lhs !== null && expr.rhs !== null
+			&& DestructureUtils.isTopOfAssignment(expr)
+		) {
+			unify(expr.lhs, expr.rhs);
 		}
 	}
 
@@ -201,7 +202,7 @@ public class DestructNode {
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
 	public static def DestructNode unify(ForStatement stmnt) {
-		if (stmnt !== null && N4JSASTUtils.isDestructuringForStatement(stmnt)) {
+		if (stmnt !== null && DestructureUtils.isTopOfForStatement(stmnt)) {
 			val valueToBeDestructured = if (stmnt.forOf) {
 					stmnt.expression
 				} else if (stmnt.forIn) {
@@ -211,7 +212,7 @@ public class DestructNode {
 					throw new IllegalStateException
 				};
 
-			if (N4JSASTUtils.containsDestructuringPattern(stmnt)) {
+			if (DestructureUtils.containsDestructuringPattern(stmnt)) {
 				// case: for(var [a,b] of arr) {}
 				val binding = stmnt.varDeclsOrBindings.filter(VariableBinding).head;
 				new DestructNode(
@@ -221,10 +222,10 @@ public class DestructNode {
 					null, // varDecl
 					toEntries(binding.pattern, stmnt.expression), // nestedNodes
 					valueToBeDestructured, // defaultExpr
-					null, // assignedExpr
+					valueToBeDestructured, // assignedExpr
 					false // rest
 				)
-			} else if (N4JSASTUtils.isLeftHandSideDestructuringPattern(stmnt.getInitExpr())) {
+			} else if (DestructureUtils.isObjectOrArrayLiteral(stmnt.getInitExpr())) {
 				// case: for([a,b] of arr) {}
 				new DestructNode(
 					stmnt.initExpr, // astElement
@@ -233,7 +234,7 @@ public class DestructNode {
 					null, // varDecl
 					toEntries(stmnt.initExpr, null), // nestedNodes
 					valueToBeDestructured, // defaultExpr
-					null, // assignedExpr
+					valueToBeDestructured, // assignedExpr
 					false // rest
 				)
 			}
@@ -322,7 +323,8 @@ public class DestructNode {
 			toEntry(prop, prop.name, prop.value.varDecl, prop.value.varDecl.expression, false, expr)
 
 		} else if (prop.value?.nestedPattern !== null) {
-			toEntry(prop, prop.name, prop.value.nestedPattern, prop.value.expression, false, rhs)
+			val expr = getPropertyAssignmentExpression(rhs);
+			toEntry(prop, prop.name, prop.value.nestedPattern, prop.value.expression, false, expr)
 
 		} else {
 			toEntry(prop, null, null, null, false, rhs)
@@ -349,7 +351,7 @@ public class DestructNode {
 
 		} else if (bindingTarget instanceof ArrayLiteral || bindingTarget instanceof ObjectLiteral ||
 			bindingTarget instanceof BindingPattern) {
-			new DestructNode(astElement, propName, null, null, toEntries(bindingTarget, rhs), defaultExpr, null, rest)
+			new DestructNode(astElement, propName, null, null, toEntries(bindingTarget, rhs), defaultExpr, rhs, rest)
 
 		} else {
 			// invalid binding target (probably a corrupt AST) -> create a padding node

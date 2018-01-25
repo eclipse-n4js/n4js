@@ -46,7 +46,7 @@ import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
+import static extension org.eclipse.n4js.n4JS.DestructureUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
@@ -81,9 +81,9 @@ class DestructuringTransformation extends Transformation {
 		val destructBindings = collectNodes(state.im, VariableStatement, true)
 			.filter[containsDestructuringPattern].toList;
 		val destructAssignments = collectNodes(state.im, AssignmentExpression, true)
-			.filter[isDestructuringAssignment].filter[isRootOfDestructuringPattern].toList;
+			.filter[isTopOfAssignment].filter[isRoot].toList;
 		val destructForStmnts = collectNodes(state.im, ForStatement, true)
-			.filter[containsDestructuringPattern || isDestructuringForStatement].toList;
+			.filter[containsDestructuringPattern || isTopOfForStatement].toList;
 
 		// now perform the changes
 		destructBindings.forEach[transformDestructuringBindings];

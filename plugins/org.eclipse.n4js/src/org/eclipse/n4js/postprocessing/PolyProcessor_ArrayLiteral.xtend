@@ -13,9 +13,11 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.n4js.utils.DestructureHelper
+import java.util.Arrays
+import java.util.List
+import java.util.Map
 import org.eclipse.n4js.n4JS.ArrayLiteral
-import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.InferenceVariable
@@ -25,10 +27,8 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.xsemantics.runtime.RuleEnvironment
-import java.util.Arrays
-import java.util.List
-import java.util.Map
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -70,7 +70,7 @@ package class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 
 // hack: faking an expectation of IterableN<...> here
 // TODO instead we should get such an expectation in these cases from expectedType judgment!
-val isValueToBeDestructured = N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit);
+val isValueToBeDestructured = DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit);
 if(isValueToBeDestructured) {
 	while(expectedElemTypeRefs.size < numOfElems)
 		expectedElemTypeRefs.add(G.anyTypeRef);

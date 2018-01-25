@@ -210,6 +210,7 @@ import static extension org.eclipse.n4js.ts.utils.TypeExtensions.*
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.typesystem.TypeSystemErrorExtensions.*
+import org.eclipse.n4js.n4JS.DestructureUtils
 
 inject TypeSystemHelper typeSystemHelper
 inject N4JSFunctionDefinitionTypesBuilder functionDefinitionTypesBuilder
@@ -2124,7 +2125,7 @@ from {
 	}
 	or
 	{
-		N4JSASTUtils.isDestructuringAssignment(expr)
+		DestructureUtils.isTopOfAssignment(expr)
 		if (operand===expr.lhs) {
 			// left-hand side:
 			T = G.bottomTypeRef // no expectation
@@ -2277,7 +2278,7 @@ from {
 
 		val wildThing = TypeRefsFactory.eINSTANCE.createWildcard;
 
-		if(N4JSASTUtils.isDestructuringForStatement(forStmnt)) {
+		if(DestructureUtils.isTopOfForStatement(forStmnt)) {
 			// special case: destructuring pattern in for..of
 			// e.g. for(var [a,b] of myListOfArrays) {}
 			// -> do nothing (keep wildThing on the default)

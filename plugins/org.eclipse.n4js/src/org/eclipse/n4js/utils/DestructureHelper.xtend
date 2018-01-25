@@ -18,9 +18,9 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.DestructNode
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
-import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
@@ -74,7 +74,7 @@ class DestructureHelper {
 		if(vdecl.declaredTypeRef!==null)
 			return null;
 
-		val root = N4JSASTUtils.getRootOfDestructuringPattern(vdecl.eContainer);
+		val root = DestructureUtils.getRoot(vdecl.eContainer);
 		if(root===null)
 			return null;
 
@@ -83,7 +83,7 @@ class DestructureHelper {
 
 			val rootParent2 = rootParent.eContainer;
 			val isLocatedUnderForInOf = rootParent2 instanceof ForStatement
-					&& N4JSASTUtils.isDestructuringForStatement(rootParent2 as ForStatement);
+					&& DestructureUtils.isTopOfForStatement(rootParent2);
 
 			val rootNode = if(isLocatedUnderForInOf) {
 				DestructNode.unify(rootParent2 as ForStatement)

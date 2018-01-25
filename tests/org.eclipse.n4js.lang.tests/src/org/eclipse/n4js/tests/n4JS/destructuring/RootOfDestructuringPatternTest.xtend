@@ -14,7 +14,7 @@ import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
@@ -54,7 +54,7 @@ class RootOfDestructuringPatternTest {
 		assertNotNull(pattern);
 		assertNotNull(d);
 
-		assertSame(pattern, N4JSASTUtils.getRootOfDestructuringPattern(d));
+		assertSame(pattern, DestructureUtils.getRoot(d));
 	}
 
 	@Test
@@ -70,7 +70,7 @@ class RootOfDestructuringPatternTest {
 		assertNotNull(pattern);
 		assertNotNull(d);
 
-		assertSame(pattern, N4JSASTUtils.getRootOfDestructuringPattern(d));
+		assertSame(pattern, DestructureUtils.getRoot(d));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ class RootOfDestructuringPatternTest {
 		val strLit = script.eAllContents.filter(StringLiteral).head;
 		assertNotNull(strLit);
 
-		assertNull(N4JSASTUtils.getRootOfDestructuringPattern(strLit));
+		assertNull(DestructureUtils.getRoot(strLit));
 	}
 
 	@Test
@@ -103,7 +103,7 @@ class RootOfDestructuringPatternTest {
 		assertNotNull(innerPattern);
 		assertEquals("y", y.id.name);
 
-		val rootOfY = N4JSASTUtils.getRootOfDestructuringPattern(y);
+		val rootOfY = DestructureUtils.getRoot(y);
 		assertNotSame(outerPattern, rootOfY); // important: inner pattern is not part of the outer pattern, so getRoot() should not proceed from y to outer pattern
 		assertSame(innerPattern, rootOfY);
 	}
@@ -121,7 +121,7 @@ class RootOfDestructuringPatternTest {
 		assertNotNull(pattern);
 		assertNotNull(d);
 
-		assertSame(pattern, N4JSASTUtils.getRootOfDestructuringPattern(d));
+		assertSame(pattern, DestructureUtils.getRoot(d));
 	}
 
 	@Test
@@ -137,7 +137,7 @@ class RootOfDestructuringPatternTest {
 		assertNotNull(pattern);
 		assertNotNull(d);
 
-		assertSame(pattern, N4JSASTUtils.getRootOfDestructuringPattern(d));
+		assertSame(pattern, DestructureUtils.getRoot(d));
 	}
 
 	@Test
@@ -151,7 +151,7 @@ class RootOfDestructuringPatternTest {
 		val strLit = script.eAllContents.filter(StringLiteral).head;
 		assertNotNull(strLit);
 
-		assertNull(N4JSASTUtils.getRootOfDestructuringPattern(strLit));
+		assertNull(DestructureUtils.getRoot(strLit));
 	}
 
 	@Test
@@ -170,7 +170,7 @@ class RootOfDestructuringPatternTest {
 		assertNotNull(innerPattern);
 		assertEquals("y", y.id.name);
 
-		val rootOfY = N4JSASTUtils.getRootOfDestructuringPattern(y);
+		val rootOfY = DestructureUtils.getRoot(y);
 		assertNotSame(outerPattern, rootOfY); // important: inner pattern is not part of the outer pattern, so getRoot() should not proceed from y to outer pattern
 		assertSame(innerPattern, rootOfY);
 	}

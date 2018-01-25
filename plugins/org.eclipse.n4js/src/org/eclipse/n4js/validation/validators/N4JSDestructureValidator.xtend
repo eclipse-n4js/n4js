@@ -22,7 +22,7 @@ import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.BindingProperty
 import org.eclipse.n4js.n4JS.ForStatement
-import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -85,7 +85,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def public void checkNoEmptyPattern_Assignment(AssignmentExpression expr) {
-		if(N4JSASTUtils.isDestructuringAssignment(expr)) {
+		if(DestructureUtils.isTopOfAssignment(expr)) {
 			val lhs = expr.lhs;
 			val empty = switch(lhs) {
 			ArrayLiteral: lhs.elements.empty

@@ -18,7 +18,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 /**
  * Utilities for working with destructuring patterns
  */
-public class DestructureUtils {
+public class DestructureUtilsForSymbols {
 
 	/** @return the {@link EObject} that is assigned to the given lhs element in the pattern. Defaults are respected. */
 	public static EObject getValueFromDestructuring(SymbolFactory symbolFactory, EObject nodeElem) {

@@ -15,7 +15,7 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.N4JSValidationTestHelper
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.ForStatement
-import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.validation.IssueCodes
@@ -60,13 +60,13 @@ class IsDestructuringPatternTest {
 		assertNotNull(arrLit1);
 		assertNotNull(arrLit2);
 
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit1));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit2));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit1));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit2));
 
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit0));
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit1));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit2));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit0));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit1));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit2));
 	}
 
 	@Test
@@ -86,11 +86,11 @@ class IsDestructuringPatternTest {
 		assertNotNull(arrLit0);
 		assertNotNull(arrLit1);
 
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit1));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit1));
 
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit0));
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit1));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit0));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit1));
 	}
 
 	@Test
@@ -112,13 +112,13 @@ class IsDestructuringPatternTest {
 		assertNotNull(arrLit1);
 		assertNotNull(arrLit2);
 
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit1));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit2));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit1));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit2));
 
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit1)); // NOTE: this must return false!!!
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit2)); // TODO unclear; see API doc of method
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit1)); // NOTE: this must return false!!!
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit2)); // TODO unclear; see API doc of method
 	}
 
 	@Test
@@ -142,13 +142,13 @@ class IsDestructuringPatternTest {
 		assertNotNull(objLit1);
 		assertNotNull(objLit2);
 
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit1));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit2));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit1));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit2));
 
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(objLit0));
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(objLit1));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(objLit2));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(objLit0));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(objLit1));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(objLit2));
 	}
 
 	@Test
@@ -168,11 +168,11 @@ class IsDestructuringPatternTest {
 		assertNotNull(objLit0);
 		assertNotNull(objLit1);
 
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit1));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit1));
 
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(objLit0));
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(objLit1));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(objLit0));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(objLit1));
 	}
 
 	@Test
@@ -194,13 +194,13 @@ class IsDestructuringPatternTest {
 		assertNotNull(arrLit0);
 		assertNotNull(objLit1);
 
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit1));
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(objLit1));
 
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(objLit0));
-		assertFalse(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(arrLit0)); // NOTE: this must return false!!!
-		assertTrue(N4JSASTUtils.isArrayOrObjectLiteralBeingDestructured(objLit1)); // TODO unclear; see API doc of method
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(objLit0));
+		assertFalse(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit0)); // NOTE: this must return false!!!
+		assertTrue(DestructureUtils.isArrayOrObjectLiteralBeingDestructured(objLit1)); // TODO unclear; see API doc of method
 	}
 
 
