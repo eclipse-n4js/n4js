@@ -159,23 +159,20 @@ public class N4JSModel {
 
 	protected Optional<? extends IN4JSSourceContainer> findN4JSSourceContainerInProject(IN4JSProject project,
 			URI nestedLocation) {
-		Optional<? extends IN4JSSourceContainer> foundN4JSSourceContainer = Optional.absent();
 		if (project != null) {
 			for (IN4JSSourceContainer n4jsSourceContainer : project.getSourceContainers()) {
-				if (matchPaths(nestedLocation, n4jsSourceContainer)) {
+				if (pathStartsWithFolder(nestedLocation, n4jsSourceContainer)) {
 					return Optional.of(n4jsSourceContainer);
 				}
 			}
 		}
-		return foundN4JSSourceContainer;
+		return Optional.absent();
 	}
 
-	private boolean matchPaths(URI nestedLocation, IN4JSSourceContainer container) {
-		URI location = container.getLocation();
-		return pathStartsWithFolder(nestedLocation, location);
-	}
-
-	private boolean pathStartsWithFolder(URI nestedLocation, URI containerLocation) {
+	private boolean pathStartsWithFolder(URI nestedLocation, IN4JSSourceContainer container) {
+		URI containerLocation = container.getLocation();
+		if (containerLocation == null)
+			return false;
 		int maxSegments = containerLocation.segmentCount();
 		if (nestedLocation.segmentCount() >= maxSegments) {
 			for (int i = 0; i < maxSegments; i++) {
