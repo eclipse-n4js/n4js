@@ -34,9 +34,9 @@ public class NullDereferenceResult {
 		this.cfe = cfe;
 		this.checkedSymbol = inn.symbol;
 		this.causingSymbol = inn.failedSymbol;
-		this.nullOrUndefinedSymbol = inn.nullOrUndefinedSymbol;
+		this.nullOrUndefinedSymbol = inn.failedSymbol;
 		this.failedGuard = inn.failedGuard;
-		this.must = inn.noAliasPassed();
+		this.must = inn.noAliasPassed() && !inn.failedAssignment.mayHappen;
 	}
 
 	@Override

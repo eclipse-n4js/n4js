@@ -78,7 +78,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	}
 
 	class IsNotNull extends Assumption {
-		Symbol nullOrUndefinedSymbol;
+		AssignmentRelation failedAssignment;
 
 		IsNotNull(ControlFlowElement cfe, Symbol symbol) {
 			super(cfe, symbol);
@@ -97,7 +97,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		public HoldAssertion holdsOnDataflow(AssignmentRelation ar) {
 			if (ar.rightSymbol != null) {
 				if (ar.rightSymbol.isNullLiteral() || ar.rightSymbol.isUndefinedLiteral()) {
-					nullOrUndefinedSymbol = ar.rightSymbol;
+					failedAssignment = ar;
 					return HoldAssertion.NeverHolds;
 				}
 			} else if (ar.assignedValue != null) {
@@ -109,7 +109,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		@Override
 		public HoldAssertion holdsOnGuard(Guard guard) {
 			if (guard.type.IsNullOrUndefined() && guard.asserts == HoldAssertion.AlwaysHolds) {
-				nullOrUndefinedSymbol = guard.symbol;
 				return HoldAssertion.NeverHolds;
 			}
 			if (guard.type == GuardType.IsTruthy) {

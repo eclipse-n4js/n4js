@@ -23,10 +23,11 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
+import org.eclipse.n4js.n4JS.DestructureUtils;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
-import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PostfixExpression;
@@ -58,8 +59,8 @@ class CFEEffectInfos {
 
 		@Override
 		public Void caseVariableDeclaration(VariableDeclaration feature) {
-			Node entryNode = cNode.getNode(NodeNames.ENTRY);
-			Node exitNode = cNode.getNode(NodeNames.EXIT);
+			Node entryNode = cNode.getEntry();
+			Node exitNode = cNode.getExit();
 
 			addEffect(EffectType.Declaration, feature, entryNode);
 			addEffect(EffectType.Write, feature, exitNode);
@@ -75,17 +76,32 @@ class CFEEffectInfos {
 			}
 
 			List<Expression> idRefs = new LinkedList<>();
-			if (N4JSASTUtils.isDestructuringAssignment(feature)) {
+			if (DestructureUtils.isTopOfAssignment(feature)) {
 				idRefs.addAll(DestructNode.getAllDeclaredIdRefs(feature));
 			} else {
 				idRefs.add(lhs);
 			}
 
-			Node exitNode = cNode.getNode(NodeNames.EXIT);
+			Node exitNode = cNode.getExit();
 			for (Expression assignedVar : idRefs) {
 				clearEffectsOfExitNode(assignedVar);
 				addEffect(EffectType.Write, assignedVar, exitNode);
 			}
+			return null;
+		}
+
+		@Override
+		public Void caseForStatement(ForStatement feature) {
+			if (feature.isForOf()) {
+				Expression initExpr = feature.getInitExpr();
+				if (initExpr instanceof IdentifierRef) {
+					clearEffectsOfExitNode(initExpr);
+					ComplexNode cn = cnMap.get(initExpr);
+					Node exitNode = cn.getExit();
+					addEffect(EffectType.Write, initExpr, exitNode);
+				}
+			}
+
 			return null;
 		}
 
@@ -96,7 +112,7 @@ class CFEEffectInfos {
 			}
 
 			clearEffectsOfExitNode(feature.getExpression());
-			Node exitNode = cNode.getNode(NodeNames.EXIT);
+			Node exitNode = cNode.getExit();
 			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 
 			addEffect(EffectType.Read, feature.getExpression(), expressionNode);
@@ -119,7 +135,7 @@ class CFEEffectInfos {
 			}
 
 			clearEffectsOfExitNode(feature.getExpression());
-			Node exitNode = cNode.getNode(NodeNames.EXIT);
+			Node exitNode = cNode.getExit();
 			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 
 			addEffect(EffectType.Write, feature.getExpression(), expressionNode);
@@ -135,7 +151,7 @@ class CFEEffectInfos {
 				return null;
 			}
 
-			Node exitNode = cNode.getNode(NodeNames.EXIT);
+			Node exitNode = cNode.getExit();
 			addEffect(EffectType.MethodCall, targetExpr, exitNode);
 
 			return null;

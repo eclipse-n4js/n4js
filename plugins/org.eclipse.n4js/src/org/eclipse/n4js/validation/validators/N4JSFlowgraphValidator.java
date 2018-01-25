@@ -29,10 +29,11 @@ import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.DestructureUtils;
+import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -235,14 +236,15 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 			AssignmentExpression ae = (AssignmentExpression) parent;
 			return ae.getLhs() == reference;
 		}
+		if (parent instanceof ForStatement) {
+			ForStatement fs = (ForStatement) parent;
+			return fs.getInitExpr() == reference;
+		}
 
-		AssignmentExpression ae = EcoreUtil2.getContainerOfType(reference, AssignmentExpression.class);
-		if (N4JSASTUtils.isDestructuringAssignment(ae)) {
-			DestructNode dNode = DestructNode.unify(ae);
-			if (dNode != null) {
-				dNode = dNode.findNodeForElement(parent);
-				return dNode != null;
-			}
+		DestructNode dNode = DestructureUtils.getCorrespondingDestructNode(reference);
+		if (dNode != null) {
+			dNode = dNode.findNodeForElement(parent);
+			return dNode != null;
 		}
 
 		return false;
@@ -252,7 +254,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		Iterable<EObject> containers = EcoreUtil2.getAllContainers(eobj);
 		for (EObject container : containers) {
 			boolean isScopeParent = false;
-			isScopeParent |= container instanceof FunctionDeclaration;
+			isScopeParent |= container instanceof FunctionDefinition;
 			isScopeParent |= container instanceof FunctionExpression;
 			if (isScopeParent) {
 				return container;

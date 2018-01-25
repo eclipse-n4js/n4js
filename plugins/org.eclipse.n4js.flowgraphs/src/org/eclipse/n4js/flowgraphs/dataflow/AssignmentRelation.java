@@ -22,12 +22,20 @@ public class AssignmentRelation {
 	final public Symbol rightSymbol;
 	/** {@link Expression} whose return value is assigned. Iff null {@link #rightSymbol} is not null. */
 	final public Expression assignedValue;
+	/** true iff this {@link AssignmentRelation} is on a one of more possible branches, e.g. v=p? 1 : 2; */
+	final public boolean mayHappen;
 
 	/** Constructor */
 	AssignmentRelation(Symbol leftSymbol, Symbol rightSymbol, Expression assignedValue) {
+		this(leftSymbol, rightSymbol, assignedValue, false);
+	}
+
+	/** Constructor */
+	AssignmentRelation(Symbol leftSymbol, Symbol rightSymbol, Expression assignedValue, boolean mayHappen) {
 		this.leftSymbol = leftSymbol;
 		this.rightSymbol = rightSymbol;
 		this.assignedValue = assignedValue;
+		this.mayHappen = mayHappen;
 	}
 
 	@Override
