@@ -55,3 +55,22 @@ function f3() {
 	a.toString();
 }
 
+function f4() {
+	let a : int;
+
+	let f = () => { for (a of [0]) {} }
+	f;
+
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
+
+function f5() {
+	let a : int;
+
+	let f = () => { for ([a] of [[0]]) {} }
+	f;
+
+	// XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
