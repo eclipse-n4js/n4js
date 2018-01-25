@@ -28,6 +28,7 @@ import org.eclipse.n4js.transpiler.im.DelegatingSetterDeclaration;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.ImFactory;
 import org.eclipse.n4js.transpiler.im.ImPackage;
+import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM;
@@ -202,6 +203,13 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	private EClass versionedIdentifierRef_IMEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass namedImportSpecifier_IMEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -794,6 +802,33 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getNamedImportSpecifier_IM() {
+		return namedImportSpecifier_IMEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNamedImportSpecifier_IM_ImportedTypeVersions() {
+		return (EReference)namedImportSpecifier_IMEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNamedImportSpecifier_IM_VersionedTypeImport() {
+		return (EAttribute)namedImportSpecifier_IMEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ImFactory getImFactory() {
 		return (ImFactory)getEFactoryInstance();
 	}
@@ -895,6 +930,10 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		versionedParameterizedTypeRefStructural_IMEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM);
 
 		versionedIdentifierRef_IMEClass = createEClass(VERSIONED_IDENTIFIER_REF_IM);
+
+		namedImportSpecifier_IMEClass = createEClass(NAMED_IMPORT_SPECIFIER_IM);
+		createEReference(namedImportSpecifier_IMEClass, NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS);
+		createEAttribute(namedImportSpecifier_IMEClass, NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT);
 	}
 
 	/**
@@ -961,6 +1000,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		versionedParameterizedTypeRefStructural_IMEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedParameterizedTypeRefStructural());
 		versionedIdentifierRef_IMEClass.getESuperTypes().add(this.getIdentifierRef_IM());
 		versionedIdentifierRef_IMEClass.getESuperTypes().add(theN4JSPackage.getVersionedIdentifierRef());
+		namedImportSpecifier_IMEClass.getESuperTypes().add(theN4JSPackage.getNamedImportSpecifier());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(script_IMEClass, Script_IM.class, "Script_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1069,6 +1109,10 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		initEClass(versionedParameterizedTypeRefStructural_IMEClass, VersionedParameterizedTypeRefStructural_IM.class, "VersionedParameterizedTypeRefStructural_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(versionedIdentifierRef_IMEClass, VersionedIdentifierRef_IM.class, "VersionedIdentifierRef_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(namedImportSpecifier_IMEClass, NamedImportSpecifier_IM.class, "NamedImportSpecifier_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getNamedImportSpecifier_IM_ImportedTypeVersions(), this.getSymbolTableEntryOriginal(), null, "importedTypeVersions", null, 0, -1, NamedImportSpecifier_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNamedImportSpecifier_IM_VersionedTypeImport(), theEcorePackage.getEBoolean(), "versionedTypeImport", null, 0, 1, NamedImportSpecifier_IM.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

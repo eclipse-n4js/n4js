@@ -3956,6 +3956,97 @@ public interface ImPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.NamedImportSpecifier_IMImpl <em>Named Import Specifier IM</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.NamedImportSpecifier_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getNamedImportSpecifier_IM()
+	 * @generated
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM = 21;
+
+	/**
+	 * The feature id for the '<em><b>Flagged Used In Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM__FLAGGED_USED_IN_CODE = N4JSPackage.NAMED_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
+
+	/**
+	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM__IMPORTED_ELEMENT = N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Imported Element As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM__IMPORTED_ELEMENT_AS_TEXT = N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT_AS_TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Alias</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM__ALIAS = N4JSPackage.NAMED_IMPORT_SPECIFIER__ALIAS;
+
+	/**
+	 * The feature id for the '<em><b>Imported Type Versions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS = N4JSPackage.NAMED_IMPORT_SPECIFIER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Versioned Type Import</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT = N4JSPackage.NAMED_IMPORT_SPECIFIER_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Named Import Specifier IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM_FEATURE_COUNT = N4JSPackage.NAMED_IMPORT_SPECIFIER_FEATURE_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Is Default Import</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM___IS_DEFAULT_IMPORT = N4JSPackage.NAMED_IMPORT_SPECIFIER___IS_DEFAULT_IMPORT;
+
+	/**
+	 * The number of operations of the '<em>Named Import Specifier IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER_IM_OPERATION_COUNT = N4JSPackage.NAMED_IMPORT_SPECIFIER_OPERATION_COUNT + 0;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.Script_IM <em>Script IM</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4553,6 +4644,38 @@ public interface ImPackage extends EPackage {
 	EClass getVersionedIdentifierRef_IM();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM <em>Named Import Specifier IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Named Import Specifier IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM
+	 * @generated
+	 */
+	EClass getNamedImportSpecifier_IM();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM#getImportedTypeVersions <em>Imported Type Versions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Imported Type Versions</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM#getImportedTypeVersions()
+	 * @see #getNamedImportSpecifier_IM()
+	 * @generated
+	 */
+	EReference getNamedImportSpecifier_IM_ImportedTypeVersions();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM#isVersionedTypeImport <em>Versioned Type Import</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Versioned Type Import</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM#isVersionedTypeImport()
+	 * @see #getNamedImportSpecifier_IM()
+	 * @generated
+	 */
+	EAttribute getNamedImportSpecifier_IM_VersionedTypeImport();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5080,6 +5203,32 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EClass VERSIONED_IDENTIFIER_REF_IM = eINSTANCE.getVersionedIdentifierRef_IM();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.NamedImportSpecifier_IMImpl <em>Named Import Specifier IM</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.NamedImportSpecifier_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getNamedImportSpecifier_IM()
+		 * @generated
+		 */
+		EClass NAMED_IMPORT_SPECIFIER_IM = eINSTANCE.getNamedImportSpecifier_IM();
+
+		/**
+		 * The meta object literal for the '<em><b>Imported Type Versions</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS = eINSTANCE.getNamedImportSpecifier_IM_ImportedTypeVersions();
+
+		/**
+		 * The meta object literal for the '<em><b>Versioned Type Import</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT = eINSTANCE.getNamedImportSpecifier_IM_VersionedTypeImport();
 
 	}
 

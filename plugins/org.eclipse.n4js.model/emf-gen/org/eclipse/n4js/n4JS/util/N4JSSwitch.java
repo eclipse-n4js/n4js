@@ -1852,15 +1852,6 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4JSPackage.VERSIONED_NAMED_IMPORT_SPECIFIER: {
-				VersionedNamedImportSpecifier versionedNamedImportSpecifier = (VersionedNamedImportSpecifier)theEObject;
-				T result = caseVersionedNamedImportSpecifier(versionedNamedImportSpecifier);
-				if (result == null) result = caseNamedImportSpecifier(versionedNamedImportSpecifier);
-				if (result == null) result = caseVersionedReference(versionedNamedImportSpecifier);
-				if (result == null) result = caseImportSpecifier(versionedNamedImportSpecifier);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -4427,21 +4418,6 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseVersionedIdentifierRef(VersionedIdentifierRef object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Versioned Named Import Specifier</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Versioned Named Import Specifier</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseVersionedNamedImportSpecifier(VersionedNamedImportSpecifier object) {
 		return null;
 	}
 

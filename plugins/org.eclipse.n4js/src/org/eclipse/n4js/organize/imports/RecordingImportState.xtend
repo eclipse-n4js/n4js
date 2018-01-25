@@ -79,7 +79,7 @@ class RecordingImportState {
 	def removeDuplicatedImportsOfSameelement(List<ImportDeclaration> declarations, Adapter nodelessMarker ) {
 		duplicateImportsOfSameElement.forEach[e|
 			e.value.forEach[e2|
-				newArrayList(e2.importSpec).removeFrom(declarations, nodelessMarker)
+				newArrayList(e2.importSpecifier).removeFrom(declarations, nodelessMarker)
 			]
 		]
 	}
@@ -87,7 +87,7 @@ class RecordingImportState {
 	def removeLocalNameCollisions(List<ImportDeclaration> declarations, Adapter nodelessMarker ) {
 		localNameCollision.forEach[e|
 			e.value.forEach[e2|
-				newArrayList(e2.importSpec).removeFrom(declarations, nodelessMarker)
+				newArrayList(e2.importSpecifier).removeFrom(declarations, nodelessMarker)
 			]
 		]
 		return
@@ -138,7 +138,7 @@ class RecordingImportState {
 	def Set<String> calcRemovedImportedNames() {
 		var ret = newHashSet()
 		for (e : allUsedTypeNameToSpecifierTuples) {
-			if (e.used && e.importSpec.eContainer === null) {
+			if (e.used && e.importSpecifier.eContainer === null) {
 				ret.add(e.getLocalName())
 			}
 		}

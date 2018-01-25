@@ -37,11 +37,14 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
+import org.eclipse.n4js.n4idl.versioning.VersionHelper;
+import org.eclipse.n4js.n4idl.versioning.VersionUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.ImFactory;
 import org.eclipse.n4js.transpiler.im.ImPackage;
+import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
@@ -52,7 +55,10 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVersionable;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
@@ -66,8 +72,38 @@ import com.google.inject.Inject;
  */
 public class PreparationStep {
 
+	private static final ImmutableMap<EClass, EClass> ECLASS_REPLACEMENT = ImmutableMap.<EClass, EClass> builder()
+			.put(N4JSPackage.eINSTANCE.getScript(),
+					ImPackage.eINSTANCE.getScript_IM())
+			.put(N4JSPackage.eINSTANCE.getIdentifierRef(),
+					ImPackage.eINSTANCE.getIdentifierRef_IM())
+			.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
+					ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
+			.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
+					ImPackage.eINSTANCE.getVersionedIdentifierRef_IM())
+			.put(N4JSPackage.eINSTANCE.getNamedImportSpecifier(),
+					ImPackage.eINSTANCE.getNamedImportSpecifier_IM())
+			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
+					ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
+			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
+					ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
+			.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRef(),
+					ImPackage.eINSTANCE.getVersionedParameterizedTypeRef_IM())
+			.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural(),
+					ImPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural_IM())
+			.build();
+
+	private static final EReference[] REWIRED_REFERENCES = {
+			N4JSPackage.eINSTANCE.getIdentifierRef_Id(),
+			N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property(),
+			TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(),
+	};
+
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
+
+	@Inject
+	private VersionHelper versionHelper;
 
 	/**
 	 * Creates and initializes the transpiler state. In particular, this will create the intermediate model as a copy of
@@ -115,32 +151,7 @@ public class PreparationStep {
 	 * A custom implementation of {@link org.eclipse.emf.ecore.util.EcoreUtil.Copier} that copies the N4JS AST model to
 	 * the N4JS transpiler intermediate representation.
 	 */
-	private static final class AST2IMCopier extends EcoreUtil.Copier {
-
-		private static final ImmutableMap<EClass, EClass> ECLASS_REPLACEMENT = ImmutableMap.<EClass, EClass> builder()
-				.put(N4JSPackage.eINSTANCE.getScript(),
-						ImPackage.eINSTANCE.getScript_IM())
-				.put(N4JSPackage.eINSTANCE.getIdentifierRef(),
-						ImPackage.eINSTANCE.getIdentifierRef_IM())
-				.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
-						ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
-				.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
-						ImPackage.eINSTANCE.getVersionedIdentifierRef_IM())
-				.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
-						ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
-				.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
-						ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
-				.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRef(),
-						ImPackage.eINSTANCE.getVersionedParameterizedTypeRef_IM())
-				.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural(),
-						ImPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural_IM())
-				.build();
-
-		private static final EReference[] REWIRED_REFERENCES = {
-				N4JSPackage.eINSTANCE.getIdentifierRef_Id(),
-				N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property(),
-				TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(),
-		};
+	private final class AST2IMCopier extends EcoreUtil.Copier {
 
 		private final Tracer tracer;
 		private final InformationRegistry info;
@@ -202,8 +213,8 @@ public class PreparationStep {
 			} else if (copy instanceof ImportSpecifier) {
 				// remember which TModule elements were imported via ImportSpecifiers
 				if (copy instanceof NamedImportSpecifier)
-					importedElements.put(((NamedImportSpecifier) eObject).getImportedElement(),
-							(NamedImportSpecifier) eObject);
+					// cast to IM-specific class is safe due to ECLASS_REPLACEMENT
+					handleCopyNamedImportSpecifier((NamedImportSpecifier) eObject);
 				else if (copy instanceof NamespaceImportSpecifier)
 					importedModules.put(((ImportDeclaration) eObject.eContainer()).getModule(),
 							(NamespaceImportSpecifier) eObject);
@@ -217,6 +228,25 @@ public class PreparationStep {
 						((N4MemberDeclaration) eObject).getDefinedTypeElement());
 			}
 			return copy;
+		}
+
+		/**
+		 * Handler for when a {@link NamedImportSpecifier} is encountered in the copying process.
+		 */
+		private void handleCopyNamedImportSpecifier(NamedImportSpecifier namedImportSpecifier) {
+			TExportableElement importedElement = namedImportSpecifier.getImportedElement();
+
+			if (importedElement instanceof Type) {
+				// Add all versions of the type to the importedElements map as well as
+				// to the IM element of the NamedImportSpecifier.
+				Iterable<? extends Type> versions = versionHelper.findTypeVersions((Type) importedElement);
+				versions.forEach(v -> {
+					importedElements.put(v, namedImportSpecifier);
+				});
+			} else {
+				importedElements.put(importedElement,
+						namedImportSpecifier);
+			}
 		}
 
 		@Override
@@ -365,7 +395,18 @@ public class PreparationStep {
 				if (impSpec instanceof NamedImportSpecifier) {
 					String alias = ((NamedImportSpecifier) impSpec).getAlias();
 					if (null != alias) {
-						entry.setName(alias); // exported name is visible via operation entry#exportedName()
+						entry.setName(alias); // exported name is visible via operation entry#exportedName())
+					}
+					if (VersionUtils.isTVersionable(entry.getOriginalTarget())) {
+						// Add referenced type version to list of imported type versions of the import specifier.
+						// This is executed once per type version, as the returned STE of this method is cached.
+						((NamedImportSpecifier_IM) copy).getImportedTypeVersions().add(entry);
+
+						if (null != alias) {
+							// Make sure to compute the versioned internal name based on the alias
+							entry.setName(N4IDLTranspilerUtils.getVersionedInternalAlias(entry.getName(),
+									(TVersionable) entry.getOriginalTarget()));
+						}
 					}
 				}
 			}
@@ -428,19 +469,19 @@ public class PreparationStep {
 				throw new IllegalStateException("copy of given object has not been created yet: " + obj);
 			return copy;
 		}
+	}
 
-		/**
-		 * For a given AST node in the original AST that refers to some other element and requires re-wiring of its
-		 * cross reference, this method will return the <b>original</b> target of the cross reference to rewire.
-		 */
-		private static final IdentifiableElement getOriginalTargetOfNodeToRewire(EObject nodeInOriginalAST) {
-			if (nodeInOriginalAST instanceof IdentifierRef)
-				return ((IdentifierRef) nodeInOriginalAST).getId();
-			if (nodeInOriginalAST instanceof ParameterizedPropertyAccessExpression)
-				return ((ParameterizedPropertyAccessExpression) nodeInOriginalAST).getProperty();
-			if (nodeInOriginalAST instanceof ParameterizedTypeRef)
-				return ((ParameterizedTypeRef) nodeInOriginalAST).getDeclaredType();
-			throw new IllegalArgumentException("not an AST node that requires rewiring: " + nodeInOriginalAST);
-		}
+	/**
+	 * For a given AST node in the original AST that refers to some other element and requires re-wiring of its cross
+	 * reference, this method will return the <b>original</b> target of the cross reference to rewire.
+	 */
+	private static final IdentifiableElement getOriginalTargetOfNodeToRewire(EObject nodeInOriginalAST) {
+		if (nodeInOriginalAST instanceof IdentifierRef)
+			return ((IdentifierRef) nodeInOriginalAST).getId();
+		if (nodeInOriginalAST instanceof ParameterizedPropertyAccessExpression)
+			return ((ParameterizedPropertyAccessExpression) nodeInOriginalAST).getProperty();
+		if (nodeInOriginalAST instanceof ParameterizedTypeRef)
+			return ((ParameterizedTypeRef) nodeInOriginalAST).getDeclaredType();
+		throw new IllegalArgumentException("not an AST node that requires rewiring: " + nodeInOriginalAST);
 	}
 }

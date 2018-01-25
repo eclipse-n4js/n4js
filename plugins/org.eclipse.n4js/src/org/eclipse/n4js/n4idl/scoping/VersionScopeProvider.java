@@ -10,9 +10,8 @@
  */
 package org.eclipse.n4js.n4idl.scoping;
 
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xtext.scoping.IScope;
-
-import org.eclipse.n4js.ts.types.TClassifier;
 
 /**
  * Provides scopes that can be used to find different versions of versionable objects.
@@ -25,5 +24,5 @@ public interface VersionScopeProvider {
 	 *            the classifier
 	 * @return the scope
 	 */
-	public IScope getVersionScope(TClassifier classifier);
+	public IScope getVersionScope(Type classifier);
 }

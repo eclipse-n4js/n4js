@@ -67,6 +67,8 @@ import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM
+import java.util.Collections
 
 /**
  * Module/Script wrapping transformation.
@@ -305,10 +307,18 @@ class ModuleWrappingTransformation extends Transformation {
 							val nisSTE = findSymbolTableEntryForNamespaceImport(it);
 							finalModuleEntry.variableSTE_actualName += new NamespaceImportAssignment(nisSTE, it);
 						}
-						NamedImportSpecifier: {
-							val ste = findSymbolTableEntryForNamedImport( it );
-							if (ste !== null) {
-								finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
+						NamedImportSpecifier_IM: {
+							if (it.versionedTypeImport) {
+								// For imports of multiple type versions, add a NamedImportAssignment for each
+								// version that is referenced in the module.
+								findSymbolTableEntriesForVersionedTypeImport(it).forEach[ ste |
+									finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
+								]
+							} else {
+								val ste = findSymbolTableEntryForNamedImport( it );
+								if (ste !== null) {
+									finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
+								}
 							}
 						}
 					}
@@ -486,19 +496,28 @@ class ModuleWrappingTransformation extends Transformation {
 		return importDecl.importSpecifiers.map[
 			switch(it) {
 				NamespaceImportSpecifier:
-					namespaceToHoistDeclaration(it)
+					Collections.singleton(namespaceToHoistDeclaration(it))
 				NamedImportSpecifier:
 					namedImportsToHoistDeclaration(it)
 			}
-		];
+		].flatten;
 	}
 
 	/** Creates a single VariableDeclaration without initialiser. */
-	private def VariableDeclaration namedImportsToHoistDeclaration(NamedImportSpecifier nis) {
-		_VariableDeclaration( findSymbolTableEntryForNamedImport(nis).name )=>[
+	private def Iterable<VariableDeclaration> namedImportsToHoistDeclaration(NamedImportSpecifier nis) {
+		// determine corresponding SymbolTableEntries
+		val entries = if (nis instanceof NamedImportSpecifier_IM &&
+			(nis as NamedImportSpecifier_IM).isVersionedTypeImport
+		) {
+			findSymbolTableEntriesForVersionedTypeImport(nis as NamedImportSpecifier_IM)
+		} else {
+			Collections.singleton(findSymbolTableEntryForNamedImport(nis));
+		}
+
+		return entries.map[entry | return _VariableDeclaration( entry.name )=>[
 			// tracing:
 			state.tracer.copyTrace(nis,it);
-		]
+		]];
 	}
 
 	/** Creates a single VariableDeclaration without initialiser. */

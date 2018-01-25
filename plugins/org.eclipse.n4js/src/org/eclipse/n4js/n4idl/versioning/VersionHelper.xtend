@@ -11,6 +11,7 @@
 package org.eclipse.n4js.n4idl.versioning
 
 import com.google.inject.Inject
+import java.util.Collections
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
@@ -24,6 +25,7 @@ import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TObjectPrototype
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -121,6 +123,26 @@ class VersionHelper {
 	}
 
 	/**
+	 * Finds the {@link IEObjectDescription} of all versions of the given TClassifier.
+	 */
+	def <T extends Type> Iterable<? extends T> findTypeVersions(T type) {
+		if (type instanceof TObjectPrototype || // TObjectPrototypes are unversioned -> there exists only a single version
+			!VersionUtils.isTVersionable(type) // There are no other versions for an unversioned classifier
+		) {
+			return Collections.singleton(type);
+		}
+
+		val IScope scope = scopeProvider.getVersionScope(type);
+		val QualifiedName name = nameConverter.toQualifiedName(type.name);
+		val Iterable<IEObjectDescription> elements = scope.getElements(name);
+
+		return elements
+			.map[d | d.EObjectOrProxy]
+			.filter[o | type.class.isInstance(o)]
+			.map[t | type.class.cast(t) as T];
+	}
+
+	/**
 	 * Finds the latest version of the given classifier that is not greater than the given version.
 	 *
 	 * @param classifier
@@ -129,18 +151,14 @@ class VersionHelper {
 	 *            the maximum version to return
 	 * @return the requested version of the given classifier, or <code>null</code> if no such version exists
 	 */
-	def TClassifier findClassifierWithVersion(TClassifier classifier, int version) {
-		if (classifier instanceof TObjectPrototype) {
-			return classifier; // TObjectPrototypes are unversioned -> there exists only a single version
+	def <T extends Type> T findTypeWithVersion(T type, int version) {
+		if (type instanceof TObjectPrototype) {
+			return type; // TObjectPrototypes are unversioned -> there exists only a single version
 		}
 
-		val IScope scope = scopeProvider.getVersionScope(classifier);
-		val QualifiedName name = nameConverter.toQualifiedName(classifier.name);
-		val Iterable<IEObjectDescription> elements = scope.getElements(name);
+		val elements = findTypeVersions(type);
 
 		return elements
-			.map[EObjectOrProxy] // map to the described objects
-			.filter(TClassifier) // only consider non-null classifiers
 			.filter[it.version <= version] // filter by the given version limit
 			.reduce[l, c | if (l.version > c.version) l else c]; // select an element with maximal version
 	}
@@ -160,7 +178,7 @@ class VersionHelper {
 	def <T extends TMember> T findMemberWithVersion(T member, int version) {
 		val ContainerType<?> container = member.containingType;
 		if (container instanceof TClassifier) {
-			val TClassifier containerInRequestedVersion = findClassifierWithVersion(container, version);
+			val TClassifier containerInRequestedVersion = findTypeWithVersion(container, version);
 			val MemberCollector memberCollector = containerTypesHelper.fromContext(containerInRequestedVersion);
 			val TMember result = memberCollector.findMember(containerInRequestedVersion, member.name, false, member.static);
 

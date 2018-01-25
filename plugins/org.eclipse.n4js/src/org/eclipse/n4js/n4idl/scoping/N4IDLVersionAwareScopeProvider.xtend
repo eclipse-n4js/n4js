@@ -14,14 +14,12 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.NamedImportSpecifier
-import org.eclipse.n4js.n4JS.VersionedNamedImportSpecifier
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
+import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
-import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.xtext.scoping.IScope
-import org.eclipse.n4js.naming.QualifiedNameComputer
 
 /**
  * Adapts {@link N4JSScopeProvider} by wrapping the created scopes inside an instance of {@link N4IDLVersionAwareScope}.
@@ -34,7 +32,7 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 	@Inject
 	private QualifiedNameComputer qualifiedNameComputer;
 
-	override getVersionScope(TClassifier classifier) {
+	override getVersionScope(Type classifier) {
 		var EObject context = classifier;
 
 		// If present, use containing module as scoping context.
@@ -66,14 +64,6 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 		}
 
 		return scope;
-	}
-
-	override protected scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
-		if (specifier instanceof VersionedNamedImportSpecifier) {
-			return new N4IDLVersionAwareScope(super.scope_ImportedElement(specifier, reference), specifier.requestedVersion.intValue, qualifiedNameComputer);
-		} else {
-			super.scope_ImportedElement(specifier, reference)
-		}
 	}
 
 }

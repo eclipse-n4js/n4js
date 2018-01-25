@@ -1128,15 +1128,6 @@ public interface N4JSFactory extends EFactory {
 	VersionedIdentifierRef createVersionedIdentifierRef();
 
 	/**
-	 * Returns a new object of class '<em>Versioned Named Import Specifier</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Versioned Named Import Specifier</em>'.
-	 * @generated
-	 */
-	VersionedNamedImportSpecifier createVersionedNamedImportSpecifier();
-
-	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

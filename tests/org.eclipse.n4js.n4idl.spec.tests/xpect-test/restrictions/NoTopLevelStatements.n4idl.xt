@@ -21,7 +21,7 @@ END_SETUP
 */
 
 // XPECT noerrors
-import {Something#1} from "restrictions/Somewhere"
+import {Something} from "restrictions/Somewhere"
 
 // XPECT noerrors
 class AllowedClass#1 extends Something#1 {}

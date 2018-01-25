@@ -8372,31 +8372,6 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleVersionedImportIdentifier
-entryRuleVersionedImportIdentifier
-:
-{ before(grammarAccess.getVersionedImportIdentifierRule()); }
-	 ruleVersionedImportIdentifier
-{ after(grammarAccess.getVersionedImportIdentifierRule()); } 
-	 EOF 
-;
-
-// Rule VersionedImportIdentifier
-ruleVersionedImportIdentifier 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getVersionedImportIdentifierAccess().getAlternatives()); }
-		(rule__VersionedImportIdentifier__Alternatives)
-		{ after(grammarAccess.getVersionedImportIdentifierAccess().getAlternatives()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
 // Entry rule entryRuleTypeRef
 entryRuleTypeRef
 :
@@ -9879,12 +9854,6 @@ rule__NamedImportSpecifier__Alternatives
 		{ before(grammarAccess.getNamedImportSpecifierAccess().getGroup_1()); }
 		(rule__NamedImportSpecifier__Group_1__0)
 		{ after(grammarAccess.getNamedImportSpecifierAccess().getGroup_1()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getNamedImportSpecifierAccess().getVersionedImportIdentifierParserRuleCall_2()); }
-		ruleVersionedImportIdentifier
-		{ after(grammarAccess.getNamedImportSpecifierAccess().getVersionedImportIdentifierParserRuleCall_2()); }
 	)
 ;
 finally {
@@ -13311,27 +13280,6 @@ rule__JSXPropertyAttribute__Alternatives_1_1
 		{ before(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1_1_1()); }
 		(rule__JSXPropertyAttribute__Group_1_1_1__0)
 		{ after(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1_1_1()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Alternatives
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getVersionedImportIdentifierAccess().getGroup_0()); }
-		(rule__VersionedImportIdentifier__Group_0__0)
-		{ after(grammarAccess.getVersionedImportIdentifierAccess().getGroup_0()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getVersionedImportIdentifierAccess().getGroup_1()); }
-		(rule__VersionedImportIdentifier__Group_1__0)
-		{ after(grammarAccess.getVersionedImportIdentifierAccess().getGroup_1()); }
 	)
 ;
 finally {
@@ -67854,168 +67802,6 @@ finally {
 }
 
 
-rule__VersionedImportIdentifier__Group_0__0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionedImportIdentifier__Group_0__0__Impl
-	rule__VersionedImportIdentifier__Group_0__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_0__0__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_0_0()); }
-	(rule__VersionedImportIdentifier__ImportedElementAssignment_0_0)
-	{ after(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_0_0()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_0__1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionedImportIdentifier__Group_0__1__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_0__1__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionedImportIdentifierAccess().getVersionRequestParserRuleCall_0_1()); }
-	ruleVersionRequest
-	{ after(grammarAccess.getVersionedImportIdentifierAccess().getVersionRequestParserRuleCall_0_1()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__VersionedImportIdentifier__Group_1__0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionedImportIdentifier__Group_1__0__Impl
-	rule__VersionedImportIdentifier__Group_1__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_1__0__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_1_0()); }
-	(rule__VersionedImportIdentifier__ImportedElementAssignment_1_0)
-	{ after(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_1_0()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_1__1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionedImportIdentifier__Group_1__1__Impl
-	rule__VersionedImportIdentifier__Group_1__2
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_1__1__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionedImportIdentifierAccess().getVersionRequestParserRuleCall_1_1()); }
-	ruleVersionRequest
-	{ after(grammarAccess.getVersionedImportIdentifierAccess().getVersionRequestParserRuleCall_1_1()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_1__2
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionedImportIdentifier__Group_1__2__Impl
-	rule__VersionedImportIdentifier__Group_1__3
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_1__2__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionedImportIdentifierAccess().getAsKeyword_1_2()); }
-	As
-	{ after(grammarAccess.getVersionedImportIdentifierAccess().getAsKeyword_1_2()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_1__3
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionedImportIdentifier__Group_1__3__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__Group_1__3__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionedImportIdentifierAccess().getAliasAssignment_1_3()); }
-	(rule__VersionedImportIdentifier__AliasAssignment_1_3)
-	{ after(grammarAccess.getVersionedImportIdentifierAccess().getAliasAssignment_1_3()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
 rule__TypeRef__Group__0
 	@init {
 		int stackSize = keepStackSize();
@@ -83515,59 +83301,6 @@ rule__VersionDeclaration__DeclaredVersionAssignment
 		{ before(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSIONTerminalRuleCall_0()); }
 		RULE_VERSION
 		{ after(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSIONTerminalRuleCall_0()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__ImportedElementAssignment_0_0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementCrossReference_0_0_0()); }
-		(
-			{ before(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1()); }
-			ruleBindingIdentifier
-			{ after(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1()); }
-		)
-		{ after(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementCrossReference_0_0_0()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__ImportedElementAssignment_1_0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementCrossReference_1_0_0()); }
-		(
-			{ before(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1()); }
-			ruleIdentifierName
-			{ after(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1()); }
-		)
-		{ after(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementCrossReference_1_0_0()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionedImportIdentifier__AliasAssignment_1_3
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getVersionedImportIdentifierAccess().getAliasBindingIdentifierParserRuleCall_1_3_0()); }
-		ruleBindingIdentifier
-		{ after(grammarAccess.getVersionedImportIdentifierAccess().getAliasBindingIdentifierParserRuleCall_1_3_0()); }
 	)
 ;
 finally {

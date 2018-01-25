@@ -15,7 +15,6 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.n4JS.VersionedNamedImportSpecifier
 import org.eclipse.n4js.ts.types.TExportableElement
 
 /**
@@ -32,10 +31,6 @@ class ImportSpecifiersUtil {
 				switch (specifier) {
 					NamespaceImportSpecifier:
 						return namespaceToProvidedElements(specifier)
-					VersionedNamedImportSpecifier:
-						return newArrayList(
-							new ImportProvidedElement(specifier.usedName, specifier.importedElementName,
-								specifier as ImportSpecifier, specifier.requestedVersionOrZero))
 					NamedImportSpecifier:
 						return newArrayList(
 							new ImportProvidedElement(specifier.usedName, specifier.importedElementName,

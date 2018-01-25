@@ -9,9 +9,15 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export public class A#1 {
-	field1 : int
-}
-export public class A#2 {
-	field2 : string
-}
+export public class P#1 {}
+export public class P#2 {}
+
+export public class Q#2 {}
+
+export public class R#1 {}
+export public class R#2 {}
+export public class R#3 {}
+
+export public class S#1 {}
+export public class S#2 {}
+export public class S#3 {}

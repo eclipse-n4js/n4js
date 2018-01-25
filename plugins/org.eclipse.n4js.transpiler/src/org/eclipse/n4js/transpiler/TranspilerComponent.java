@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -35,6 +36,7 @@ import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
+import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.ReferencingElementExpression_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
@@ -277,6 +279,12 @@ public abstract class TranspilerComponent {
 	@SuppressWarnings("javadoc")
 	protected SymbolTableEntryOriginal findSymbolTableEntryForNamedImport(NamedImportSpecifier importspec) {
 		return SymbolTableManagement.findSymbolTableEntryForNamedImport(state, importspec);
+	}
+
+	@SuppressWarnings("javadoc")
+	protected Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(
+			NamedImportSpecifier_IM importspec) {
+		return SymbolTableManagement.findSymbolTableEntriesForVersionedTypeImport(state, importspec);
 	}
 
 	@SuppressWarnings("javadoc")

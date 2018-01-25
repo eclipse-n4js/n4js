@@ -1186,17 +1186,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cAsKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Assignment cAliasAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
 		private final RuleCall cAliasBindingIdentifierParserRuleCall_1_2_0 = (RuleCall)cAliasAssignment_1_2.eContents().get(0);
-		private final RuleCall cVersionedImportIdentifierParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//NamedImportSpecifier:
 		//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] |
-		//	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false> |
-		//	VersionedImportIdentifier;
+		//	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] |
-		//importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false> |
-		//VersionedImportIdentifier
+		//importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
@@ -1228,9 +1225,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//BindingIdentifier<Yield=false>
 		public RuleCall getAliasBindingIdentifierParserRuleCall_1_2_0() { return cAliasBindingIdentifierParserRuleCall_1_2_0; }
-		
-		//VersionedImportIdentifier
-		public RuleCall getVersionedImportIdentifierParserRuleCall_2() { return cVersionedImportIdentifierParserRuleCall_2; }
 	}
 	public class DefaultImportSpecifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.DefaultImportSpecifier");
@@ -9673,71 +9667,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//VERSION
 		public RuleCall getDeclaredVersionVERSIONTerminalRuleCall_0() { return cDeclaredVersionVERSIONTerminalRuleCall_0; }
 	}
-	public class VersionedImportIdentifierElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VersionedImportIdentifier");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Assignment cImportedElementAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
-		private final CrossReference cImportedElementTExportableElementCrossReference_0_0_0 = (CrossReference)cImportedElementAssignment_0_0.eContents().get(0);
-		private final RuleCall cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1 = (RuleCall)cImportedElementTExportableElementCrossReference_0_0_0.eContents().get(1);
-		private final RuleCall cVersionRequestParserRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
-		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final Assignment cImportedElementAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
-		private final CrossReference cImportedElementTExportableElementCrossReference_1_0_0 = (CrossReference)cImportedElementAssignment_1_0.eContents().get(0);
-		private final RuleCall cImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1 = (RuleCall)cImportedElementTExportableElementCrossReference_1_0_0.eContents().get(1);
-		private final RuleCall cVersionRequestParserRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
-		private final Keyword cAsKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
-		private final Assignment cAliasAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
-		private final RuleCall cAliasBindingIdentifierParserRuleCall_1_3_0 = (RuleCall)cAliasAssignment_1_3.eContents().get(0);
-		
-		//VersionedImportIdentifier VersionedNamedImportSpecifier:
-		//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] VersionRequest
-		//	| importedElement=[types::TExportableElement|IdentifierName] VersionRequest 'as' alias=BindingIdentifier<Yield=false>;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] VersionRequest |
-		//importedElement=[types::TExportableElement|IdentifierName] VersionRequest 'as' alias=BindingIdentifier<Yield=false>
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] VersionRequest
-		public Group getGroup_0() { return cGroup_0; }
-		
-		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
-		public Assignment getImportedElementAssignment_0_0() { return cImportedElementAssignment_0_0; }
-		
-		//[types::TExportableElement|BindingIdentifier<Yield=false>]
-		public CrossReference getImportedElementTExportableElementCrossReference_0_0_0() { return cImportedElementTExportableElementCrossReference_0_0_0; }
-		
-		//BindingIdentifier<Yield=false>
-		public RuleCall getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1() { return cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1; }
-		
-		//VersionRequest
-		public RuleCall getVersionRequestParserRuleCall_0_1() { return cVersionRequestParserRuleCall_0_1; }
-		
-		//importedElement=[types::TExportableElement|IdentifierName] VersionRequest 'as' alias=BindingIdentifier<Yield=false>
-		public Group getGroup_1() { return cGroup_1; }
-		
-		//importedElement=[types::TExportableElement|IdentifierName]
-		public Assignment getImportedElementAssignment_1_0() { return cImportedElementAssignment_1_0; }
-		
-		//[types::TExportableElement|IdentifierName]
-		public CrossReference getImportedElementTExportableElementCrossReference_1_0_0() { return cImportedElementTExportableElementCrossReference_1_0_0; }
-		
-		//IdentifierName
-		public RuleCall getImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1() { return cImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1; }
-		
-		//VersionRequest
-		public RuleCall getVersionRequestParserRuleCall_1_1() { return cVersionRequestParserRuleCall_1_1; }
-		
-		//'as'
-		public Keyword getAsKeyword_1_2() { return cAsKeyword_1_2; }
-		
-		//alias=BindingIdentifier<Yield=false>
-		public Assignment getAliasAssignment_1_3() { return cAliasAssignment_1_3; }
-		
-		//BindingIdentifier<Yield=false>
-		public RuleCall getAliasBindingIdentifierParserRuleCall_1_3_0() { return cAliasBindingIdentifierParserRuleCall_1_3_0; }
-	}
 	
 	public class VariableStatementKeywordElements extends AbstractEnumRuleElementFinder {
 		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VariableStatementKeyword");
@@ -10305,7 +10234,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final JSXSpreadAttributeElements pJSXSpreadAttribute;
 	private final JSXPropertyAttributeElements pJSXPropertyAttribute;
 	private final VersionDeclarationElements pVersionDeclaration;
-	private final VersionedImportIdentifierElements pVersionedImportIdentifier;
 	
 	private final Grammar grammar;
 	
@@ -10560,7 +10488,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pJSXSpreadAttribute = new JSXSpreadAttributeElements();
 		this.pJSXPropertyAttribute = new JSXPropertyAttributeElements();
 		this.pVersionDeclaration = new VersionDeclarationElements();
-		this.pVersionedImportIdentifier = new VersionedImportIdentifierElements();
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -10800,8 +10727,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//NamedImportSpecifier:
 	//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] |
-	//	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false> |
-	//	VersionedImportIdentifier;
+	//	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>;
 	public NamedImportSpecifierElements getNamedImportSpecifierAccess() {
 		return pNamedImportSpecifier;
 	}
@@ -13320,17 +13246,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getVersionDeclarationRule() {
 		return getVersionDeclarationAccess().getRule();
-	}
-	
-	//VersionedImportIdentifier VersionedNamedImportSpecifier:
-	//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] VersionRequest
-	//	| importedElement=[types::TExportableElement|IdentifierName] VersionRequest 'as' alias=BindingIdentifier<Yield=false>;
-	public VersionedImportIdentifierElements getVersionedImportIdentifierAccess() {
-		return pVersionedImportIdentifier;
-	}
-	
-	public ParserRule getVersionedImportIdentifierRule() {
-		return getVersionedImportIdentifierAccess().getRule();
 	}
 	
 	//// ****************************************************************************************************

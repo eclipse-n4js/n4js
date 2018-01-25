@@ -81,6 +81,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_IM: return createVersionedParameterizedTypeRef_IM();
 			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM: return createVersionedParameterizedTypeRefStructural_IM();
 			case ImPackage.VERSIONED_IDENTIFIER_REF_IM: return createVersionedIdentifierRef_IM();
+			case ImPackage.NAMED_IMPORT_SPECIFIER_IM: return createNamedImportSpecifier_IM();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -254,6 +255,16 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	public VersionedIdentifierRef_IM createVersionedIdentifierRef_IM() {
 		VersionedIdentifierRef_IMImpl versionedIdentifierRef_IM = new VersionedIdentifierRef_IMImpl();
 		return versionedIdentifierRef_IM;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NamedImportSpecifier_IM createNamedImportSpecifier_IM() {
+		NamedImportSpecifier_IMImpl namedImportSpecifier_IM = new NamedImportSpecifier_IMImpl();
+		return namedImportSpecifier_IM;
 	}
 
 	/**

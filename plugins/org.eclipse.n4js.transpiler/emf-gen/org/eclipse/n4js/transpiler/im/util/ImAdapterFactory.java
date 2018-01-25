@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
@@ -37,6 +38,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedAccess;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PrimaryExpression;
@@ -207,6 +209,10 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseVersionedIdentifierRef_IM(VersionedIdentifierRef_IM object) {
 				return createVersionedIdentifierRef_IMAdapter();
+			}
+			@Override
+			public Adapter caseNamedImportSpecifier_IM(NamedImportSpecifier_IM object) {
+				return createNamedImportSpecifier_IMAdapter();
 			}
 			@Override
 			public Adapter caseVariableEnvironmentElement(VariableEnvironmentElement object) {
@@ -391,6 +397,14 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseVersionedIdentifierRef(VersionedIdentifierRef object) {
 				return createVersionedIdentifierRefAdapter();
+			}
+			@Override
+			public Adapter caseImportSpecifier(ImportSpecifier object) {
+				return createImportSpecifierAdapter();
+			}
+			@Override
+			public Adapter caseNamedImportSpecifier(NamedImportSpecifier object) {
+				return createNamedImportSpecifierAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -703,6 +717,20 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createVersionedIdentifierRef_IMAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM <em>Named Import Specifier IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM
+	 * @generated
+	 */
+	public Adapter createNamedImportSpecifier_IMAdapter() {
 		return null;
 	}
 
@@ -1347,6 +1375,34 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createVersionedIdentifierRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ImportSpecifier <em>Import Specifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.ImportSpecifier
+	 * @generated
+	 */
+	public Adapter createImportSpecifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.NamedImportSpecifier <em>Named Import Specifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.NamedImportSpecifier
+	 * @generated
+	 */
+	public Adapter createNamedImportSpecifierAdapter() {
 		return null;
 	}
 

@@ -2278,5 +2278,3 @@ class VersionedIdentifierRef extends IdentifierRef, VersionedReference {
 		return requestedVersionOrZero
 	}
 }
-
-class VersionedNamedImportSpecifier extends NamedImportSpecifier, VersionedReference {}

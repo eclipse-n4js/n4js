@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import java.util.List
+import java.util.Map
+import javax.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -27,10 +31,6 @@ import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import java.util.List
-import java.util.Map
-import javax.inject.Inject
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -40,8 +40,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 
-/**
- */
+/** Validations for the import statements. */
 @Log
 class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
@@ -147,7 +146,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Computes a user-faced name for the given {@link NamedImportSpecifier}
+	 * Computes a user-facing name for the given {@link NamedImportSpecifier}
 	 * that can be used in error/warning messages.
 	 *
 	 * @param spec
@@ -224,7 +223,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			val name = pair.key
 			val providers = pair.value
 			// assuming they came in order
-			val first = providers.head.importSpec
+			val first = providers.head.importSpecifier
 			val name2reason = switch (first) {
 				NamespaceImportSpecifier: {
 					name -> "namespace name for " + first.importedModule.qualifiedName.toString
@@ -243,12 +242,9 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 					throw new RuntimeException("Cannot validate local name collisions");
 				}
 			}
-			providers.tail
-				// filter name collisions with itself
-				.filter[duplicate | first !== duplicate.importSpec]
-				.forEach [ duplicate |
-				addLocalNameCollision(first, duplicate.importSpec, name2reason.key, name2reason.value,
-					eObjectToIssueCode)
+			providers.tail.forEach [ importProvidedElement |
+				addLocalNameCollision(importProvidedElement.importSpecifier, name2reason.key, name2reason.value,
+					eObjectToIssueCode);
 			]
 		]
 	}
@@ -260,7 +256,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			val entryName = entry.key
 			val entryModule = entry.value
 			val imports = duplicateEntry.value
-			val firstImportSpecifier = imports.head.importSpec
+			val firstImportSpecifier = imports.head.importSpecifier
 			val firstImportName = switch (firstImportSpecifier) {
 				NamespaceImportSpecifier: {
 					firstImportSpecifier.alias + "." + entryName
@@ -273,22 +269,19 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 				firstImportSpecifier.isDefaultImport
 			};
 
-			imports.tail
-				// do not add issues for self-collisions
-				.filter[ importSpec !== firstImportSpecifier]
-				.forEach [ dupe |
-					val duplicateImportSpecifier = dupe.importSpec
-					if (firstImportIsDefault && duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
-						addIssueDuplicate(firstImportSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
-					}
-					if (firstImportSpecifier instanceof NamespaceImportSpecifier &&
-						duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
-						addIssueDuplicateNamespace(duplicateImportSpecifier as NamespaceImportSpecifier,
-							firstImportSpecifier as NamespaceImportSpecifier, eObjectToIssueCode)
-					} else {
-						addIssueDuplicate(dupe.importSpec, entryName, entryModule, firstImportName, eObjectToIssueCode)
-					}
-				]
+			imports.tail.forEach [ dupe |
+				val duplicateImportSpecifier = dupe.importSpecifier
+				if (firstImportIsDefault && duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
+					addIssueDuplicate(firstImportSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
+				}
+				if (firstImportSpecifier instanceof NamespaceImportSpecifier &&
+					duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
+					addIssueDuplicateNamespace(duplicateImportSpecifier as NamespaceImportSpecifier,
+						firstImportSpecifier as NamespaceImportSpecifier, eObjectToIssueCode)
+				} else {
+					addIssueDuplicate(dupe.importSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
+				}
+			]
 		]
 	}
 
@@ -300,10 +293,10 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private handleNotImportedTypeRefs(Script script, List<ImportSpecifier> specifiersWithIssues,
+	private def handleNotImportedTypeRefs(Script script, List<ImportSpecifier> specifiersWithIssues,
 		Map<EObject, String> eObjectToIssueCode) {
 		val importedProvidedElementsWithIssuesByModule = specifiersWithIssues.mapToImportProvidedElements.groupBy [
-			tmodule
+			importedModule
 		]
 		val potentiallyAffectedTypeRefs = script.eAllContents.filter(ParameterizedTypeRef).filter [
 			declaredType !== null && declaredType.containingModule !== null
@@ -336,7 +329,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		addIssue(message, importDecl, issueCode)
 	}
 
-	private def addLocalNameCollision(ImportSpecifier specifier, ImportSpecifier duplicate, String name, String reason,
+	private def addLocalNameCollision(ImportSpecifier duplicate, String name, String reason,
 		Map<EObject, String> eObjectToIssueCode) {
 		val issueCode = IssueCodes.IMP_LOCAL_NAME_CONFLICT
 		if (eObjectToIssueCode.get(duplicate) === null) {
@@ -349,16 +342,16 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	private def addIssueDuplicateNamespaceImportDeclaration(NamespaceImportSpecifier specifier,
 		NamespaceImportSpecifier duplicate, ImportDeclaration duplicateImportDeclaration,
 		Map<EObject, String> eObjectToIssueCode) {
-			val String issueCode = IssueCodes.IMP_STMT_DUPLICATE_NAMESPACE
-			if (eObjectToIssueCode.get(specifier) === null) {
-				val message = IssueCodes.getMessageForIMP_STMT_DUPLICATE_NAMESPACE(specifier.alias,
-					duplicate.importedModule.qualifiedName)
-				addIssue(message, duplicateImportDeclaration, issueCode)
-			}
+		val String issueCode = IssueCodes.IMP_STMT_DUPLICATE_NAMESPACE
+		if (eObjectToIssueCode.get(specifier) === null) {
+			val message = IssueCodes.getMessageForIMP_STMT_DUPLICATE_NAMESPACE(specifier.alias,
+				duplicate.importedModule.qualifiedName)
+			addIssue(message, duplicateImportDeclaration, issueCode)
+		}
 
-			duplicateImportDeclaration.importSpecifiers.forEach [ is |
-				eObjectToIssueCode.put(specifier, issueCode)
-			]
+		duplicateImportDeclaration.importSpecifiers.forEach [ is |
+			eObjectToIssueCode.put(specifier, issueCode)
+		]
 	}
 
 	/**
@@ -382,7 +375,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			duplicateImportDeclaration.importSpecifiers.forEach [ is |
 				eObjectToIssueCode.put(specifier, issueCode)
 			]
-		}
+	}
 
 	private def addIssueDuplicateNamespace(NamespaceImportSpecifier duplicateImportSpecifier,
 		NamespaceImportSpecifier firstImportSpecifier, Map<EObject, String> eObjectToIssueCode) {

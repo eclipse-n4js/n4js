@@ -1048,8 +1048,6 @@ ruleNamedImportSpecifier
 			)
 		)
 	)
-	    |
-	VersionedImportIdentifierParserRuleCall_2=ruleVersionedImportIdentifier{ announce($VersionedImportIdentifierParserRuleCall_2.start, $VersionedImportIdentifierParserRuleCall_2.stop, grammarAccess.getNamedImportSpecifierAccess().getVersionedImportIdentifierParserRuleCall_2()); }
 )
 ;
 
@@ -19162,52 +19160,6 @@ ruleVersionDeclaration
 		DeclaredVersionVERSIONTerminalRuleCall_0=RULE_VERSION{
 			announce($DeclaredVersionVERSIONTerminalRuleCall_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment());
 		}
-	)
-)
-;
-
-// Entry rule entryRuleVersionedImportIdentifier
-entryRuleVersionedImportIdentifier
-	:
-	ruleVersionedImportIdentifier
-	EOF;
-
-// Rule VersionedImportIdentifier
-ruleVersionedImportIdentifier
-@init {
-}:
-(
-	(
-		(
-			(
-				ImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1=ruleBindingIdentifier{
-					announce($ImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1.start, $ImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1.stop, grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_0_0());
-				}
-			)
-		)
-		VersionRequestParserRuleCall_0_1=ruleVersionRequest{ announce($VersionRequestParserRuleCall_0_1.start, $VersionRequestParserRuleCall_0_1.stop, grammarAccess.getVersionedImportIdentifierAccess().getVersionRequestParserRuleCall_0_1()); }
-	)
-	    |
-	(
-		(
-			(
-				ImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1=ruleIdentifierName{
-					announce($ImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1.start, $ImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1.stop, grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_1_0());
-				}
-			)
-		)
-		VersionRequestParserRuleCall_1_1=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_1.start, $VersionRequestParserRuleCall_1_1.stop, grammarAccess.getVersionedImportIdentifierAccess().getVersionRequestParserRuleCall_1_1()); }
-		AsKeyword_1_2=As
-		 {
-			announce($AsKeyword_1_2, grammarAccess.getVersionedImportIdentifierAccess().getAsKeyword_1_2());
-		}
-		(
-			(
-				AliasBindingIdentifierParserRuleCall_1_3_0=ruleBindingIdentifier{
-					announce($AliasBindingIdentifierParserRuleCall_1_3_0.start, $AliasBindingIdentifierParserRuleCall_1_3_0.stop, grammarAccess.getVersionedImportIdentifierAccess().getAliasAssignment_1_3());
-				}
-			)
-		)
 	)
 )
 ;

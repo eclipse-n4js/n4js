@@ -25,16 +25,17 @@ package org.eclipse.n4js.transpiler.im
 
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.VersionedIdentifierRef
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
+import org.eclipse.n4js.n4JS.VersionedIdentifierRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
@@ -393,3 +394,18 @@ class VersionedParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM
  * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
  */
 class VersionedIdentifierRef_IM extends IdentifierRef_IM, VersionedIdentifierRef {}
+
+/**
+ * Import specifier that is aware of multiple versions of the imported type.
+ */
+class NamedImportSpecifier_IM extends NamedImportSpecifier {
+	refers SymbolTableEntryOriginal[] importedTypeVersions
+
+	/**
+	 * Returns {@code true} if this import specifiers imports a
+	 * versioned type.
+	 */
+	boolean versionedTypeImport get {
+		return importedTypeVersions.size > 1;
+	}
+}

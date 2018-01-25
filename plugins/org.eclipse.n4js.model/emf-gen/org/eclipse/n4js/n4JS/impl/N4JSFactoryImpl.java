@@ -189,7 +189,6 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: return createJSXSpreadAttribute();
 			case N4JSPackage.JSX_ELEMENT: return createJSXElement();
 			case N4JSPackage.VERSIONED_IDENTIFIER_REF: return createVersionedIdentifierRef();
-			case N4JSPackage.VERSIONED_NAMED_IMPORT_SPECIFIER: return createVersionedNamedImportSpecifier();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -1507,16 +1506,6 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public VersionedIdentifierRef createVersionedIdentifierRef() {
 		VersionedIdentifierRefImpl versionedIdentifierRef = new VersionedIdentifierRefImpl();
 		return versionedIdentifierRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VersionedNamedImportSpecifier createVersionedNamedImportSpecifier() {
-		VersionedNamedImportSpecifierImpl versionedNamedImportSpecifier = new VersionedNamedImportSpecifierImpl();
-		return versionedNamedImportSpecifier;
 	}
 
 	/**

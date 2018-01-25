@@ -203,7 +203,6 @@ fragment ImportSpecifiersExceptDefault returns ImportDeclaration:
 NamedImportSpecifier:
 		importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
 	|	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
-	|	VersionedImportIdentifier
 ;
 
 DefaultImportSpecifier:
@@ -1541,8 +1540,3 @@ JSXPropertyAttribute:
 
 
 fragment VersionDeclaration*: declaredVersion=VERSION;
-
-VersionedImportIdentifier returns VersionedNamedImportSpecifier:
-		importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] VersionRequest
-	|	importedElement=[types::TExportableElement|IdentifierName] VersionRequest 'as' alias=BindingIdentifier<Yield=false>
-;

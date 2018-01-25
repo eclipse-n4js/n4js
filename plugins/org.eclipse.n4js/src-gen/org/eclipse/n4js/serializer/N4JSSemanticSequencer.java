@@ -127,7 +127,6 @@ import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VersionedIdentifierRef;
-import org.eclipse.n4js.n4JS.VersionedNamedImportSpecifier;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.n4js.n4JS.YieldExpression;
@@ -1285,9 +1284,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.VERSIONED_IDENTIFIER_REF:
 				sequence_IdentifierRef_VersionRequest(context, (VersionedIdentifierRef) semanticObject); 
-				return; 
-			case N4JSPackage.VERSIONED_NAMED_IMPORT_SPECIFIER:
-				sequence_VersionRequest_VersionedImportIdentifier(context, (VersionedNamedImportSpecifier) semanticObject); 
 				return; 
 			case N4JSPackage.WHILE_STATEMENT:
 				sequence_WhileStatement(context, (WhileStatement) semanticObject); 
@@ -3436,13 +3432,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             )
+	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -24433,23 +24429,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (varStmtKeyword=VariableStatementKeyword varDeclsOrBindings+=VariableDeclarationOrBinding varDeclsOrBindings+=VariableDeclarationOrBinding*)
 	 */
 	protected void sequence_VariableStatement(ISerializationContext context, VariableStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     NamedImportSpecifier returns VersionedNamedImportSpecifier
-	 *     VersionedImportIdentifier returns VersionedNamedImportSpecifier
-	 *
-	 * Constraint:
-	 *     (
-	 *         (importedElement=[TExportableElement|BindingIdentifier] | importedElement=[TExportableElement|IdentifierName]) 
-	 *         requestedVersion=VERSION 
-	 *         alias=BindingIdentifier?
-	 *     )
-	 */
-	protected void sequence_VersionRequest_VersionedImportIdentifier(ISerializationContext context, VersionedNamedImportSpecifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

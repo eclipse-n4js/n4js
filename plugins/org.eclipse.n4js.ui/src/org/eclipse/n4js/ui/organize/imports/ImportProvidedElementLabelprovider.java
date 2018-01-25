@@ -70,7 +70,7 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 		}
 		if (element instanceof ImportProvidedElement) {
 			ImportProvidedElement ele = ((ImportProvidedElement) element);
-			TModule tm = ((ImportDeclaration) ele.importSpec.eContainer()).getModule();
+			TModule tm = ((ImportDeclaration) ele.getImportSpecifier().eContainer()).getModule();
 			return ele.getLocalName() + " from " + findLocation(tm);
 		}
 		if (element instanceof IEObjectDescription) {

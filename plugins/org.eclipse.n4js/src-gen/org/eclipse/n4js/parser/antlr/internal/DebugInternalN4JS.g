@@ -398,8 +398,6 @@ ruleNamedImportSpecifier:
 		ruleIdentifierName
 		'as'
 		ruleBindingIdentifier
-		    |
-		ruleVersionedImportIdentifier
 	)
 ;
 
@@ -8209,19 +8207,6 @@ ruleJSXPropertyAttribute:
 // Rule VersionDeclaration
 ruleVersionDeclaration:
 	RULE_VERSION
-;
-
-// Rule VersionedImportIdentifier
-ruleVersionedImportIdentifier:
-	(
-		ruleBindingIdentifier
-		ruleVersionRequest
-		    |
-		ruleIdentifierName
-		ruleVersionRequest
-		'as'
-		ruleBindingIdentifier
-	)
 ;
 
 // Rule TypeRef

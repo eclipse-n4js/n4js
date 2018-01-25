@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+ /* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest
+
+	ResourceSet {
+		ThisFile {}
+		Resource "ImplicitVersionImport.n4idl" {from="ImplicitVersionImport.n4idl"}
+		Resource "ToImport.n4idl" {from="ToImport.n4idl"}
+	}
+
+   END_SETUP
+ */
+
+/*
+ * See ImplicitVersionImport.n4idl for the actual implementation of this test.
+ * This is just a runner file that includes the N4IDL implementation.
+ */
+
+import {f} from "imports/ImplicitVersionImport";
+
+/* Check the availability of used type versions vs. unused versions XPECT output ---
+<==
+stdout:
+R#1: function R$1() {}
+R#2: undefined
+R#3: function R$3() {}
+PU#1: function P$1() {}
+PU#2: undefined
+AliasS#1: function S$1() {}
+AliasS#2: function S$2() {}
+AliasS#3: function S$3() {}
+stderr:
+==>
+---
+ */
+f();

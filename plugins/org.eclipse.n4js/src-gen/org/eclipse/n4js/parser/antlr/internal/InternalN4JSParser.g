@@ -2159,15 +2159,6 @@ ruleNamedImportSpecifier returns [EObject current=null]
 				)
 			)
 		)
-		    |
-		{
-			newCompositeNode(grammarAccess.getNamedImportSpecifierAccess().getVersionedImportIdentifierParserRuleCall_2());
-		}
-		this_VersionedImportIdentifier_4=ruleVersionedImportIdentifier
-		{
-			$current = $this_VersionedImportIdentifier_4.current;
-			afterParserOrEnumRuleCall();
-		}
 	)
 ;
 
@@ -33688,107 +33679,6 @@ ruleVersionDeclaration[EObject in_current]  returns [EObject current=in_current]
 					lv_declaredVersion_0_0,
 					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
 			}
-		)
-	)
-;
-
-// Entry rule entryRuleVersionedImportIdentifier
-entryRuleVersionedImportIdentifier returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getVersionedImportIdentifierRule()); }
-	iv_ruleVersionedImportIdentifier=ruleVersionedImportIdentifier
-	{ $current=$iv_ruleVersionedImportIdentifier.current; }
-	EOF;
-
-// Rule VersionedImportIdentifier
-ruleVersionedImportIdentifier returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			(
-				(
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getVersionedImportIdentifierRule());
-						}
-					}
-					{
-						newCompositeNode(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementCrossReference_0_0_0());
-					}
-					ruleBindingIdentifier
-					{
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getVersionedImportIdentifierRule());
-				}
-				newCompositeNode(grammarAccess.getVersionedImportIdentifierAccess().getVersionRequestParserRuleCall_0_1());
-			}
-			this_VersionRequest_1=ruleVersionRequest[$current]
-			{
-				$current = $this_VersionRequest_1.current;
-				afterParserOrEnumRuleCall();
-			}
-		)
-		    |
-		(
-			(
-				(
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getVersionedImportIdentifierRule());
-						}
-					}
-					{
-						newCompositeNode(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementTExportableElementCrossReference_1_0_0());
-					}
-					ruleIdentifierName
-					{
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getVersionedImportIdentifierRule());
-				}
-				newCompositeNode(grammarAccess.getVersionedImportIdentifierAccess().getVersionRequestParserRuleCall_1_1());
-			}
-			this_VersionRequest_3=ruleVersionRequest[$current]
-			{
-				$current = $this_VersionRequest_3.current;
-				afterParserOrEnumRuleCall();
-			}
-			otherlv_4=As
-			{
-				newLeafNode(otherlv_4, grammarAccess.getVersionedImportIdentifierAccess().getAsKeyword_1_2());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getVersionedImportIdentifierAccess().getAliasBindingIdentifierParserRuleCall_1_3_0());
-					}
-					lv_alias_5_0=ruleBindingIdentifier
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getVersionedImportIdentifierRule());
-						}
-						set(
-							$current,
-							"alias",
-							lv_alias_5_0,
-							"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
 		)
 	)
 ;

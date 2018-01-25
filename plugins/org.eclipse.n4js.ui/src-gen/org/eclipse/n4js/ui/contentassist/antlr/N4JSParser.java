@@ -115,7 +115,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getJSXChildAccess().getAlternatives(), "rule__JSXChild__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getJSXAttributeAccess().getAlternatives(), "rule__JSXAttribute__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getAlternatives_1_1(), "rule__JSXPropertyAttribute__Alternatives_1_1");
-			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getAlternatives(), "rule__VersionedImportIdentifier__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getPrimaryTypeExpressionAccess().getAlternatives(), "rule__PrimaryTypeExpression__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithoutModifiersAccess().getAlternatives(), "rule__TypeRefWithoutModifiers__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithoutModifiersAccess().getAlternatives_0_0(), "rule__TypeRefWithoutModifiers__Alternatives_0_0");
@@ -535,8 +534,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup(), "rule__JSXPropertyAttribute__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1(), "rule__JSXPropertyAttribute__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1_1_1(), "rule__JSXPropertyAttribute__Group_1_1_1__0");
-			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getGroup_0(), "rule__VersionedImportIdentifier__Group_0__0");
-			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getGroup_1(), "rule__VersionedImportIdentifier__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getGroup(), "rule__TypeRef__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getGroup_1(), "rule__TypeRef__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getGroup_1_1(), "rule__TypeRef__Group_1_1__0");
@@ -964,9 +961,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_0(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1_1(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_1_1");
 			nameMappingsBuilder.put(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment(), "rule__VersionDeclaration__DeclaredVersionAssignment");
-			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_0_0(), "rule__VersionedImportIdentifier__ImportedElementAssignment_0_0");
-			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_1_0(), "rule__VersionedImportIdentifier__ImportedElementAssignment_1_0");
-			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getAliasAssignment_1_3(), "rule__VersionedImportIdentifier__AliasAssignment_1_3");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getTypeRefsAssignment_1_1_1(), "rule__TypeRef__TypeRefsAssignment_1_1_1");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionAccess().getTypeRefsAssignment_1_1_1(), "rule__IntersectionTypeExpression__TypeRefsAssignment_1_1_1");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithModifiersAccess().getFollowedByQuestionMarkAssignment_1(), "rule__TypeRefWithModifiers__FollowedByQuestionMarkAssignment_1");

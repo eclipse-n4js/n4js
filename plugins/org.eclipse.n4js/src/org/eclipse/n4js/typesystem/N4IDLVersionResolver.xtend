@@ -117,7 +117,7 @@ class N4IDLVersionResolver implements VersionResolver {
 
 		val Type declaredType = typeRef.declaredType;
 		if (declaredType instanceof TClassifier) {
-			propTypeRefWithVersion.declaredType = versionHelper.findClassifierWithVersion(declaredType,
+			propTypeRefWithVersion.declaredType = versionHelper.findTypeWithVersion(declaredType,
 				contextVersion);
 		}
 

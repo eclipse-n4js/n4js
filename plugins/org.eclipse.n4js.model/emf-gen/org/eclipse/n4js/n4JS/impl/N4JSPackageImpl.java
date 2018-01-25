@@ -206,7 +206,6 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4JS.VersionedIdentifierRef;
-import org.eclipse.n4js.n4JS.VersionedNamedImportSpecifier;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.n4js.n4JS.YieldExpression;
@@ -1418,13 +1417,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass versionedIdentifierRefEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionedNamedImportSpecifierEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -6426,15 +6418,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getVersionedNamedImportSpecifier() {
-		return versionedNamedImportSpecifierEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EEnum getVariableStatementKeyword() {
 		return variableStatementKeywordEEnum;
 	}
@@ -7317,8 +7300,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		versionedIdentifierRefEClass = createEClass(VERSIONED_IDENTIFIER_REF);
 		createEOperation(versionedIdentifierRefEClass, VERSIONED_IDENTIFIER_REF___GET_VERSION);
 
-		versionedNamedImportSpecifierEClass = createEClass(VERSIONED_NAMED_IMPORT_SPECIFIER);
-
 		// Create enums
 		variableStatementKeywordEEnum = createEEnum(VARIABLE_STATEMENT_KEYWORD);
 		propertyNameKindEEnum = createEEnum(PROPERTY_NAME_KIND);
@@ -7624,8 +7605,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
 		versionedIdentifierRefEClass.getESuperTypes().add(this.getIdentifierRef());
 		versionedIdentifierRefEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
-		versionedNamedImportSpecifierEClass.getESuperTypes().add(this.getNamedImportSpecifier());
-		versionedNamedImportSpecifierEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(namedElementEClass, NamedElement.class, "NamedElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -8493,8 +8472,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(versionedIdentifierRefEClass, VersionedIdentifierRef.class, "VersionedIdentifierRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getVersionedIdentifierRef__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(versionedNamedImportSpecifierEClass, VersionedNamedImportSpecifier.class, "VersionedNamedImportSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
 		initEEnum(variableStatementKeywordEEnum, VariableStatementKeyword.class, "VariableStatementKeyword");
