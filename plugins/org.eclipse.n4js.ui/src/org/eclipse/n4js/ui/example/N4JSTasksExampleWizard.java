@@ -14,9 +14,9 @@ import static com.google.common.collect.FluentIterable.from;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,14 +25,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.ui.statushandlers.StatusManager;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.NpmManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.ui.statushandlers.StatusManager;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 
 /**
  * Wizard for the {@code N4JS Tasks Example} projects.
@@ -56,14 +56,21 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	@Override
 	public boolean performFinish() {
 		if (super.performFinish()) {
-			installDependencies("mongodb", "express");
+			installDependencies(ImmutableMap.of(
+					"mongodb", "@\">=2.0.0 <3.0.0\"",
+					"express", ""));
 			return true;
 		}
 		return false;
 	}
 
-	private void installDependencies(String... names) {
-		Set<String> toInstall = new HashSet<>(Arrays.asList(names));
+	/**
+	 * @param namesAndVersions
+	 *            a map from NPM package names to NPM version constraints; use an empty string as version constraint to
+	 *            install the newest version.
+	 */
+	private void installDependencies(Map<String, String> namesAndVersions) {
+		Set<String> toInstall = new HashSet<>(namesAndVersions.keySet());
 		toInstall.removeAll(getInstalledNpmPackages());
 
 		try {
@@ -72,8 +79,15 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					for (String name : toInstall) {
 						try {
-							monitor.subTask("Installing dependency '" + name + "'");
-							IStatus status = npmManager.installDependency(name, monitor);
+							String version = namesAndVersions.get(name).trim();
+							IStatus status;
+							if (!version.isEmpty()) {
+								monitor.subTask("Installing dependency '" + name + "' in version " + version);
+								status = npmManager.installDependency(name, version, monitor);
+							} else {
+								monitor.subTask("Installing dependency '" + name + "'");
+								status = npmManager.installDependency(name, monitor);
+							}
 							if (status.matches(IStatus.ERROR))
 								throw status.getException();
 						} catch (Throwable e) {

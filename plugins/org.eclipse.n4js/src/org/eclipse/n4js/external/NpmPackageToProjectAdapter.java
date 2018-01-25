@@ -64,6 +64,9 @@ public class NpmPackageToProjectAdapter {
 	private static Logger LOGGER = Logger.getLogger(NpmPackageToProjectAdapter.class);
 
 	@Inject
+	private NpmLogger logger;
+
+	@Inject
 	private N4JSNpmManifestContentProvider manifestContentProvider;
 
 	@Inject
@@ -282,16 +285,16 @@ public class NpmPackageToProjectAdapter {
 
 		Version closestMatchingVersion = Version.findClosestMatching(availableTypeDefinitionsVersions, packageVersion);
 		if (Version.MISSING.equals(closestMatchingVersion)) {
-			LOGGER.info("No proper versions can be found for '" + packageName + "' npm package.");
-			LOGGER.info("Desired version was: " + packageVersion + ".");
+			logger.logInfo("Type definitions for '" + packageName + "' npm package in version " + packageVersion
+					+ " are not available.");
 			if (availableTypeDefinitionsVersions.isEmpty()) {
-				LOGGER.info("No versions were available.");
+				logger.logInfo("Cannot find any type definitions for  '" + packageName + "'.");
 			} else if (1 == availableTypeDefinitionsVersions.size()) {
 				final Version head = availableTypeDefinitionsVersions.iterator().next();
-				LOGGER.info("The following version was available for '" + packageName + "': " + head + ".");
+				logger.logInfo("Type definitions are available only in version : " + head + ".");
 			} else {
 				final String versions = Iterables.toString(availableTypeDefinitionsVersions);
-				LOGGER.info("The following versions were available for '" + packageName + "': " + versions + ".");
+				logger.logInfo("Type definitions are available only in versions : " + versions + ".");
 			}
 			return statusHelper.OK();
 		}
