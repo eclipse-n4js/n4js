@@ -12,10 +12,12 @@ package org.eclipse.n4js.misc
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import java.util.ArrayList
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.n4JS.AssignmentExpression
+import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.VariableBinding
@@ -29,17 +31,23 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TStructMember
+import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 
@@ -313,6 +321,105 @@ class DestructureHelper {
 	 */
 	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef) {
 		return extractIterableElementTypes(G, typeRef, false).head;
+	}
+
+	/**
+	 * Return the expected type of a poly expression if it is used in a destructure pattern and null otherwise.
+	 */
+	public def TypeRef calculateExpectedType(Expression rootPoly, RuleEnvironment G, InferenceContext infCtx) {
+		// In case of destructure pattern, we can calculate the expected type based on the structure of the destructure pattern.
+		val rootDestructNode = if (rootPoly.eContainer instanceof VariableBinding) {
+				DestructNode.unify(rootPoly.eContainer as VariableBinding)
+			} else if (rootPoly.eContainer instanceof AssignmentExpression) {
+				DestructNode.unify(rootPoly.eContainer as AssignmentExpression)
+			} else if (rootPoly.eContainer instanceof ForStatement) {
+				DestructNode.unify(rootPoly.eContainer as ForStatement)
+			} else {
+				null
+			};
+		if (rootDestructNode === null) {
+			return null;
+		}
+		return rootDestructNode.calculateExpectedType(G, infCtx);
+	}
+
+	/**
+	 * Calculate expected type of a destructure pattern based on its structure.
+	 */
+	private def TypeRef calculateExpectedType(DestructNode destructNode, RuleEnvironment G, InferenceContext infCtx) {
+		val elementTypes = new ArrayList<TypeArgument>();
+		val elementMembers = new ArrayList<TStructMember>();
+		val elemCount = destructNode.nestedNodes.size
+		for (nestedNode : destructNode.nestedNodes) {
+			val elemExpectedType = if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
+				// Recursively calculate the expected type of the nested child
+				calculateExpectedType(nestedNode, G, infCtx)
+			} else {
+				// Extract type of leaf node
+				nestedNode.createTypeFromLeafDestructNode(G)
+			}
+
+			if (nestedNode.propName !== null) {
+				// We are dealing with object literals, hence create TStructMembers to construct a ParameterizedTypeRefStructural.
+				val field = TypesFactory.eINSTANCE.createTStructField
+				field.name = nestedNode.propName;
+				field.typeRef = if (elemExpectedType !== null) {
+					elemExpectedType
+				} else {
+					// If the expected type is not specified, the expected type is arbitrary hence return a new inference variable.
+					val iv = infCtx.newInferenceVariable;
+					TypeUtils.createTypeRef(iv)
+				}
+				elementMembers.add(field)
+			} else {
+				if (elemExpectedType !== null) {
+					elementTypes.add(elemExpectedType)
+				} else {
+					elementTypes.add(TypeRefsFactory.eINSTANCE.createWildcard)
+				}
+			}
+		}
+
+		var retTypeRef = if (elementMembers.size > 0) {
+			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, elementMembers)
+		} else if (elementTypes.size > 0) {
+			if (elemCount == 1) {
+				 G.arrayTypeRef(elementTypes.get(0))
+			} else if (elemCount > 1){
+				G.iterableNTypeRef(elemCount, elementTypes);
+			} else {
+				null
+			}
+		} else {
+			throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
+		}
+		// Wrap the expected type in an Iterable type in case of ForStatement
+		// Note that we wrap the type into an Iterable type so that when a constraint G<out IV> <: Iterable<...> is created,
+		// we would like to reduce it to IV <:..
+		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
+			retTypeRef = G.iterableTypeRef(retTypeRef)
+		}
+		return retTypeRef;
+	}
+
+	/** Create expected type for a leaf DestructNode */
+	private def createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
+		val varDecl = leafNode.varDecl
+		val varRef = leafNode.varRef
+		if (varDecl !== null) {
+			// If it is a variable declaration, simply retrieve the declared type
+			var declaredTypeRef = varDecl.declaredTypeRef;
+			if (declaredTypeRef !== null) {
+				return declaredTypeRef
+			}
+		} else if (varRef !== null) {
+			// It is a variable reference, retrieve the declared type of the variable
+			if (varRef.id instanceof VariableDeclaration && (varRef.id as VariableDeclaration).declaredTypeRef !== null) {
+				return (varRef.id as VariableDeclaration).declaredTypeRef
+			}
+		}
+		// In case the expected type does not exist, simply return null
+		return null
 	}
 
 	private def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef, boolean includeIterableN) {
