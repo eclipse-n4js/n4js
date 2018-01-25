@@ -1169,7 +1169,7 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 		}
 		return typeVar.declaredUpperBound;
 	}
-	// TODO extract FormalParameterContainer 
+	// TODO extract FormalParameterContainer
 	/*
 	 * Formal parameters declared in the FunctionTypeExpression in the AST or
 	 * a copy of the formal parameters of the 'declaredType' or original FunctionTypeExpression.
@@ -1210,6 +1210,10 @@ class TypeVariableMapping {
 	refers TypeVariable typeVar
 	contains TypeArgument typeArg
 }
+
+// ****************************************************************************************************
+// N4IDL related model elements
+// ****************************************************************************************************
 
 /*
  * This is a base class for all AST nodes that represent a reference to a versioned object and where the user can

@@ -38,8 +38,13 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 
 /**
  * An implementation of {@link VersionResolver} that performs actual resolving of versions against the given context
- * version. Generally, when resolving an actual version of a versioned type, this implementation will delegate to
+ * version.
+ *
+ * Generally, when resolving an actual version of a versioned type, this implementation will delegate to
  * {@link VersionHelper#findClassifierWithVersion(TClassifier, int)}.
+ *
+ * This resolver does not resolve any non-versionable/non-versioned elements and
+ * thus has no effect, when applied to any non-N4IDL-specific AST elements.
  */
 class N4IDLVersionResolver implements VersionResolver {
 	@Inject

@@ -2888,12 +2888,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getVersionRequestAccess().getRule();
 	}
 	
-	//terminal VERSION returns ecore::EBigDecimal:
-	//	'#' WS* INT;
-	public TerminalRule getVERSIONRule() {
-		return gaTypeExpressions.getVERSIONRule();
-	}
-	
 	//fragment TypeArguments *:
 	//	'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>';
 	public TypeExpressionsGrammarAccess.TypeArgumentsElements getTypeArgumentsAccess() {
@@ -3237,6 +3231,12 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	'..';
 	public TerminalRule getDOT_DOTRule() {
 		return gaTypeExpressions.getDOT_DOTRule();
+	}
+	
+	//terminal VERSION returns ecore::EBigDecimal:
+	//	'#' WS* INT;
+	public TerminalRule getVERSIONRule() {
+		return gaTypeExpressions.getVERSIONRule();
 	}
 	
 	//terminal fragment HEX_DIGIT:

@@ -152,23 +152,23 @@ ArrayTypeRef returns ParameterizedTypeRef:
 	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
 
 ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
-	(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName]
-	| {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-	declaredType=[Type|TypeReferenceName] VersionRequest)
+	(
+		definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName]
+	  | {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
+		 declaredType=[Type|TypeReferenceName] VersionRequest
+	)
 	(-> TypeArguments)?
 	('with' TStructMemberList)?;
 
 TypeAndTypeArguments returns ParameterizedTypeRef:
-	(declaredType=[Type|TypeReferenceName]
-	 | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName] VersionRequest)
+	(
+		declaredType=[Type|TypeReferenceName]
+	  | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName] VersionRequest
+	)
 	(->TypeArguments)?
 ;
 
 fragment VersionRequest*: requestedVersion=VERSION;
-
-terminal VERSION returns ecore::EBigDecimal:
-	'#' WS* INT
-;
 
 fragment TypeArguments *:
 	'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>'
@@ -359,4 +359,8 @@ terminal fragment IDENTIFIER_PART:
 // the input contains an incomplete variadic?='...' keyword, e.g. ..)
 terminal DOT_DOT:
 	'..'
+;
+
+terminal VERSION returns ecore::EBigDecimal:
+	'#' WS* INT
 ;

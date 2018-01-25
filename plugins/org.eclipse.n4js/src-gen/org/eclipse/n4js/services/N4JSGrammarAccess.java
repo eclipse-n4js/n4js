@@ -9654,10 +9654,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cDeclaredVersionAssignment = (Assignment)rule.eContents().get(0);
 		private final RuleCall cDeclaredVersionVERSIONTerminalRuleCall_0 = (RuleCall)cDeclaredVersionAssignment.eContents().get(0);
 		
-		//// ****************************************************************************************************
-		//// N4IDL related rules
-		//// ****************************************************************************************************
-		///* Version related rules */ fragment VersionDeclaration *:
+		///* Version (N4IDL) related rules */ fragment VersionDeclaration *:
 		//	declaredVersion=VERSION;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -13235,10 +13232,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getJSXPropertyAttributeAccess().getRule();
 	}
 	
-	//// ****************************************************************************************************
-	//// N4IDL related rules
-	//// ****************************************************************************************************
-	///* Version related rules */ fragment VersionDeclaration *:
+	///* Version (N4IDL) related rules */ fragment VersionDeclaration *:
 	//	declaredVersion=VERSION;
 	public VersionDeclarationElements getVersionDeclarationAccess() {
 		return pVersionDeclaration;
@@ -13544,12 +13538,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getVersionRequestRule() {
 		return getVersionRequestAccess().getRule();
-	}
-	
-	//terminal VERSION returns ecore::EBigDecimal:
-	//	'#' WS* INT;
-	public TerminalRule getVERSIONRule() {
-		return gaTypeExpressions.getVERSIONRule();
 	}
 	
 	//fragment TypeArguments *:
@@ -13883,6 +13871,12 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	'..';
 	public TerminalRule getDOT_DOTRule() {
 		return gaTypeExpressions.getDOT_DOTRule();
+	}
+	
+	//terminal VERSION returns ecore::EBigDecimal:
+	//	'#' WS* INT;
+	public TerminalRule getVERSIONRule() {
+		return gaTypeExpressions.getVERSIONRule();
 	}
 	
 	//terminal fragment HEX_DIGIT:

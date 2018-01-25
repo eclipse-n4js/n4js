@@ -377,6 +377,10 @@ class StringLiteralForSTE extends StringLiteral {
 	}
 }
 
+// ****************************************************************************************************
+// N4IDL related model elements
+// ****************************************************************************************************
+
 /*
  * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRef}.
  * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.

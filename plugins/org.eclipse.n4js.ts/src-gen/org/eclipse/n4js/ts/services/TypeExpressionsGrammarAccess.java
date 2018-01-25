@@ -2177,7 +2177,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final ParameterizedTypeRefStructuralElements pParameterizedTypeRefStructural;
 	private final TypeAndTypeArgumentsElements pTypeAndTypeArguments;
 	private final VersionRequestElements pVersionRequest;
-	private final TerminalRule tVERSION;
 	private final TypeArgumentsElements pTypeArguments;
 	private final TStructMemberListElements pTStructMemberList;
 	private final TStructMemberElements pTStructMember;
@@ -2212,6 +2211,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final TerminalRule tIDENTIFIER_START;
 	private final TerminalRule tIDENTIFIER_PART;
 	private final TerminalRule tDOT_DOT;
+	private final TerminalRule tVERSION;
 	
 	private final Grammar grammar;
 	
@@ -2246,7 +2246,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pParameterizedTypeRefStructural = new ParameterizedTypeRefStructuralElements();
 		this.pTypeAndTypeArguments = new TypeAndTypeArgumentsElements();
 		this.pVersionRequest = new VersionRequestElements();
-		this.tVERSION = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.VERSION");
 		this.pTypeArguments = new TypeArgumentsElements();
 		this.pTStructMemberList = new TStructMemberListElements();
 		this.pTStructMember = new TStructMemberElements();
@@ -2281,6 +2280,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.tIDENTIFIER_START = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER_START");
 		this.tIDENTIFIER_PART = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER_PART");
 		this.tDOT_DOT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.DOT_DOT");
+		this.tVERSION = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.VERSION");
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -2606,12 +2606,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getVersionRequestRule() {
 		return getVersionRequestAccess().getRule();
-	}
-	
-	//terminal VERSION returns ecore::EBigDecimal:
-	//	'#' WS* INT;
-	public TerminalRule getVERSIONRule() {
-		return tVERSION;
 	}
 	
 	//fragment TypeArguments *:
@@ -2966,6 +2960,12 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	//	'..';
 	public TerminalRule getDOT_DOTRule() {
 		return tDOT_DOT;
+	}
+	
+	//terminal VERSION returns ecore::EBigDecimal:
+	//	'#' WS* INT;
+	public TerminalRule getVERSIONRule() {
+		return tVERSION;
 	}
 	
 	//terminal fragment HEX_DIGIT:
