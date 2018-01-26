@@ -161,7 +161,7 @@ public class N4JSModel {
 			URI nestedLocation) {
 		if (project != null) {
 			for (IN4JSSourceContainer n4jsSourceContainer : project.getSourceContainers()) {
-				if (pathStartsWithFolder(nestedLocation, n4jsSourceContainer)) {
+				if (isLocationInNestedInContainer(nestedLocation, n4jsSourceContainer)) {
 					return Optional.of(n4jsSourceContainer);
 				}
 			}
@@ -169,9 +169,9 @@ public class N4JSModel {
 		return Optional.absent();
 	}
 
-	private boolean pathStartsWithFolder(URI nestedLocation, IN4JSSourceContainer container) {
+	private boolean isLocationInNestedInContainer(URI nestedLocation, IN4JSSourceContainer container) {
 		URI containerLocation = container.getLocation();
-		if (containerLocation == null)
+		if (containerLocation == null || nestedLocation == null)
 			return false;
 		int maxSegments = containerLocation.segmentCount();
 		if (nestedLocation.segmentCount() >= maxSegments) {
