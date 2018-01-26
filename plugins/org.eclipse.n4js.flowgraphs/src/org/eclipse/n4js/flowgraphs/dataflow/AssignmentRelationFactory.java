@@ -11,8 +11,6 @@
 package org.eclipse.n4js.flowgraphs.dataflow;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.factories.ASTUtils;
@@ -28,6 +26,9 @@ import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 /**
  *
  */
@@ -38,92 +39,91 @@ public class AssignmentRelationFactory {
 		this.symbolFactory = symbolFactory;
 	}
 
-	List<AssignmentRelation> findAssignments(ControlFlowElement cfe) {
-		List<AssignmentRelation> ars = new LinkedList<>();
+	Multimap<Symbol, Object> findAssignments(ControlFlowElement cfe) {
+		Multimap<Symbol, Object> assgns = HashMultimap.create();
 
 		if (DestructureUtils.isTop(cfe)) {
-			findInAllDestructNodes(ars, cfe);
+			findInAllDestructNodes(assgns, cfe);
 
 		} else if (DestructureUtils.isInDestructuringPattern(cfe)) {
-			findInCorrespondingDestructNodes(ars, cfe);
+			findInCorrespondingDestructNodes(assgns, cfe);
 
 		} else if (cfe instanceof AssignmentExpression) {
-			findInAssignmentExpression(ars, (AssignmentExpression) cfe);
+			findInAssignmentExpression(assgns, (AssignmentExpression) cfe);
 
 		} else if (cfe instanceof VariableDeclaration) {
-			findInVariableDeclaration(ars, (VariableDeclaration) cfe);
+			findInVariableDeclaration(assgns, (VariableDeclaration) cfe);
 
 		} else if (cfe instanceof IdentifierRef) {
 			EObject parent = cfe.eContainer();
 			if (parent instanceof ForStatement) {
 				ForStatement fs = (ForStatement) parent;
 				if (fs.getInitExpr() == cfe && fs.isForOf()) {
-					findInForStatementInOf(ars, cfe, fs);
+					findInForStatementInOf(assgns, cfe, fs);
 				}
 			}
 		}
 
-		return ars;
+		return assgns;
 	}
 
-	private void findInAssignmentExpression(List<AssignmentRelation> ars, AssignmentExpression ae) {
+	private void findInAssignmentExpression(Multimap<Symbol, Object> assgns, AssignmentExpression ae) {
 		Expression lhs = ae.getLhs();
 		Expression rhs = ae.getRhs();
-		handleSubexpressions(ars, lhs, rhs, false);
+		handleSubexpressions(assgns, lhs, rhs);
 	}
 
-	private void findInVariableDeclaration(List<AssignmentRelation> ars, VariableDeclaration vd) {
+	private void findInVariableDeclaration(Multimap<Symbol, Object> assgns, VariableDeclaration vd) {
 		EObject parent = vd.eContainer();
 
 		if (parent instanceof ForStatement && ((ForStatement) parent).isForOf()) {
-			findInForStatementInOf(ars, vd, (ForStatement) parent);
+			findInForStatementInOf(assgns, vd, (ForStatement) parent);
 			return;
 		}
 
 		Expression rhs = vd.getExpression();
 		if (rhs == null) {
 			Symbol undefinedSymbol = symbolFactory.getUndefined();
-			createRelation(ars, vd, undefinedSymbol, null, false);
+			createRelation(assgns, vd, undefinedSymbol, null);
 		} else {
-			handleSubexpressions(ars, vd, rhs, false);
+			handleSubexpressions(assgns, vd, rhs);
 		}
 	}
 
-	private void findInForStatementInOf(List<AssignmentRelation> ars, ControlFlowElement cfe, ForStatement fs) {
+	private void findInForStatementInOf(Multimap<Symbol, Object> assgns, ControlFlowElement cfe, ForStatement fs) {
 		Expression rhs = fs.getExpression();
 		if (rhs instanceof ArrayLiteral) {
 			ArrayLiteral al = (ArrayLiteral) rhs;
 			for (ArrayElement arElem : al.getElements()) {
-				handleSubexpressions(ars, cfe, arElem.getExpression(), true);
+				handleSubexpressions(assgns, cfe, arElem.getExpression());
 			}
 		}
 	}
 
-	private void handleSubexpressions(List<AssignmentRelation> ars, ControlFlowElement lhs, Expression rhs,
-			boolean mayHappen) {
-
+	private void handleSubexpressions(Multimap<Symbol, Object> assgns, ControlFlowElement lhs, Expression rhs) {
 		rhs = ASTUtils.unwrapParentheses(rhs);
 
 		if (rhs instanceof AssignmentExpression) {
 			AssignmentExpression ae = (AssignmentExpression) rhs;
 			Expression innerRhs = ae.getRhs();
-			Expression innerLhs = ae.getLhs();
-			handleSubexpressions(ars, innerLhs, innerRhs, false);
-			handleSubexpressions(ars, lhs, innerRhs, mayHappen);
+			// The inner assignment is handled already.
+			// Expression innerLhs = ae.getLhs();
+			// handleSubexpressions(assgns, innerLhs, innerRhs, false);
+			handleSubexpressions(assgns, lhs, innerRhs);
 
 		} else if (rhs instanceof ConditionalExpression) {
 			ConditionalExpression ce = (ConditionalExpression) rhs;
 			Expression trueExpr = ce.getTrueExpression();
 			Expression falseExpr = ce.getFalseExpression();
-			handleSubexpressions(ars, lhs, trueExpr, true);
-			handleSubexpressions(ars, lhs, falseExpr, true);
+			handleSubexpressions(assgns, lhs, trueExpr);
+			handleSubexpressions(assgns, lhs, falseExpr);
 
 		} else {
-			createRelation(ars, lhs, rhs, mayHappen);
+			createRelation(assgns, lhs, rhs);
 		}
 	}
 
-	private void findInAllDestructNodes(List<AssignmentRelation> ars, ControlFlowElement cfe) {
+	private void findInAllDestructNodes(Multimap<Symbol, Object> assgns, ControlFlowElement cfe) {
 		EObject top = DestructureUtils.getTop(cfe);
 		DestructNode dNode = DestructNode.unify(top);
 		if (dNode == null) {
@@ -138,16 +138,16 @@ public class AssignmentRelationFactory {
 				EObject rootOfDestrNode = DestructureUtils.getRoot(cfe);
 				for (ArrayElement arrElem : al.getElements()) {
 					dNode = DestructNode.unify(rootOfDestrNode, arrElem.getExpression());
-					findInDestructNodes(ars, dNode, true);
+					findInDestructNodes(assgns, dNode);
 				}
 			}
 
 		} else {
-			findInDestructNodes(ars, dNode, false);
+			findInDestructNodes(assgns, dNode);
 		}
 	}
 
-	private void findInCorrespondingDestructNodes(List<AssignmentRelation> ars, ControlFlowElement cfe) {
+	private void findInCorrespondingDestructNodes(Multimap<Symbol, Object> assgns, ControlFlowElement cfe) {
 		DestructNode dNode = DestructureUtils.getCorrespondingDestructNode(cfe);
 		if (dNode == null) {
 			return;
@@ -162,42 +162,44 @@ public class AssignmentRelationFactory {
 				EObject rootOfDestrNode = DestructureUtils.getRoot(cfe);
 				for (ArrayElement arrElem : al.getElements()) {
 					dNode = DestructNode.unify(rootOfDestrNode, arrElem.getExpression());
-					findInDestructNodes(ars, dNode, true);
+					findInDestructNodes(assgns, dNode);
 				}
 			}
 
 		} else {
-			findInDestructNodes(ars, dNode, false);
+			findInDestructNodes(assgns, dNode);
 		}
 	}
 
-	private void findInDestructNodes(List<AssignmentRelation> ars, DestructNode dNode, boolean mayHappen) {
+	private void findInDestructNodes(Multimap<Symbol, Object> assgns, DestructNode dNode) {
 		for (Iterator<DestructNode> dnIter = dNode.stream().iterator(); dnIter.hasNext();) {
 			DestructNode dnChild = dnIter.next();
 			ControlFlowElement lhs = dnChild.getVarRef() != null ? dnChild.getVarRef() : dnChild.getVarDecl();
 			EObject rhs = DestructureUtilsForSymbols.getValueFromDestructuring(symbolFactory, dnChild);
 			if (rhs == null) {
 				Symbol undefinedSymbol = symbolFactory.getUndefined();
-				createRelation(ars, lhs, undefinedSymbol, null, mayHappen);
+				createRelation(assgns, lhs, undefinedSymbol, null);
 			} else {
-				createRelation(ars, lhs, (Expression) rhs, mayHappen);
+				createRelation(assgns, lhs, (Expression) rhs);
 			}
 		}
 	}
 
-	private void createRelation(List<AssignmentRelation> ars, ControlFlowElement lhs, Expression rhs,
-			boolean mayHappen) {
-
+	private void createRelation(Multimap<Symbol, Object> assgns, ControlFlowElement lhs, Expression rhs) {
 		Symbol rSymbol = symbolFactory.create(rhs);
-		createRelation(ars, lhs, rSymbol, rhs, mayHappen);
+		createRelation(assgns, lhs, rSymbol, rhs);
 	}
 
-	private void createRelation(List<AssignmentRelation> ars, ControlFlowElement lhs, Symbol rSymbol, Expression rhs,
-			boolean mayHappen) {
+	private void createRelation(Multimap<Symbol, Object> assgns, ControlFlowElement lhs, Symbol rSymbol,
+			Expression rhs) {
 
 		Symbol lSymbol = symbolFactory.create(lhs);
 		if (lSymbol != null) {
-			ars.add(new AssignmentRelation(lSymbol, rSymbol, rhs, mayHappen));
+			if (rSymbol != null) {
+				assgns.put(lSymbol, rSymbol);
+			} else if (rhs != null) {
+				assgns.put(lSymbol, rhs);
+			}
 		}
 	}
 

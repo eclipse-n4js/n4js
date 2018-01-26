@@ -23,6 +23,8 @@ import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
+import com.google.common.collect.Multimap;
+
 /**
  * {@link BranchWalkerInternal} that is used only in data flow analyses.
  */
@@ -52,13 +54,14 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		}
 
 		ControlFlowElement cfe = node.getControlFlowElement();
-		List<AssignmentRelation> ars = getDataFlowVisitorHost().getAssignmentRelationFactory().findAssignments(cfe);
+		Multimap<Symbol, Object> assgns = getDataFlowVisitorHost().getAssignmentRelationFactory().findAssignments(cfe);
 
 		Set<Symbol> handledDataFlowSymbols = new HashSet<>();
-		for (AssignmentRelation ar : ars) {
-			boolean handledDataFlow = handleDataflow(ar);
+		for (Symbol lhs : assgns.keySet()) {
+			Collection<Object> rhss = assgns.get(lhs);
+			boolean handledDataFlow = handleDataflow(lhs, rhss);
 			if (handledDataFlow) {
-				handledDataFlowSymbols.add(ar.leftSymbol);
+				handledDataFlowSymbols.add(lhs);
 			}
 		}
 		for (EffectInfo effect : node.effectInfos) {
@@ -111,11 +114,11 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		return getDataFlowVisitorHost().getSymbolFactory();
 	}
 
-	private boolean handleDataflow(AssignmentRelation ar) {
+	private boolean handleDataflow(Symbol lhs, Collection<Object> rhss) {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
 
-			callHoldOnDataflowOnAliases(ass, ar);
+			callHoldOnDataflowOnAliases(ass, lhs, rhss);
 
 			// ******************************************************************************************
 			// The following supports intra-procedural aliases.
@@ -176,9 +179,9 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		}
 	}
 
-	private boolean callHoldOnDataflowOnAliases(Assumption ass, AssignmentRelation ar) {
-		if (ass.aliases.contains(ar.leftSymbol)) {
-			ass.callHoldsOnDataflow(ar);
+	private boolean callHoldOnDataflowOnAliases(Assumption ass, Symbol lhs, Collection<Object> rhss) {
+		if (ass.aliases.contains(lhs)) {
+			ass.callHoldsOnDataflow(lhs, rhss);
 			return true;
 		}
 		return false;

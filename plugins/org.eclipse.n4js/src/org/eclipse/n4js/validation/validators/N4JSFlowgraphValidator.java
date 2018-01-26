@@ -23,9 +23,7 @@ import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
-import org.eclipse.n4js.flowgraphs.dataflow.Guard;
-import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
-import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
@@ -164,7 +162,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 				continue; // ignore these warnings in test related source
 			}
 
-			String isOrMaybe = ndr.must && !isLeakingToClosure ? "is" : "may be";
+			String isOrMaybe = getAssertionString(ndr, isLeakingToClosure);
 			String nullOrUndefined = getNullOrUndefinedString(ndr);
 			String reason = getReason(ndr);
 			String msg = IssueCodes.getMessageForDFG_NULL_DEREFERENCE(varName, isOrMaybe, nullOrUndefined, reason);
@@ -172,27 +170,27 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	private String getAssertionString(NullDereferenceResult ndr, boolean isLeakingToClosure) {
+		if (ndr.assertion == HoldAssertion.AlwaysHolds && !isLeakingToClosure) {
+			return "is";
+		}
+		return "may be";
+	}
+
 	private String getNullOrUndefinedString(NullDereferenceResult ndr) {
-		Symbol nus = ndr.nullOrUndefinedSymbol;
-		Guard fg = ndr.failedGuard;
-		String nullOrUndefined = null;
-		if (nus != null) {
-			nullOrUndefined = nus.isNullLiteral() ? "null" : nullOrUndefined;
-			nullOrUndefined = nus.isUndefinedLiteral() ? "undefined" : nullOrUndefined;
+		switch (ndr.type) {
+		case IsNull:
+			return "null";
+		case IsUndefined:
+			return "undefined";
+		default:
+			return "falsy";
 		}
-		if (nullOrUndefined == null && fg != null) {
-			nullOrUndefined = fg.type == GuardType.IsNull ? "null" : nullOrUndefined;
-			nullOrUndefined = fg.type == GuardType.IsUndefined ? "undefined" : nullOrUndefined;
-		}
-		if (nullOrUndefined == null) {
-			nullOrUndefined = "null or undefined";
-		}
-		return nullOrUndefined;
 	}
 
 	private String getReason(NullDereferenceResult ndr) {
-		if (ndr.causingSymbol != null && !ndr.checkedSymbol.is(ndr.causingSymbol)) {
-			return " due to previous variable " + ndr.causingSymbol.getName();
+		if (ndr.failedAlias != null && !ndr.checkedSymbol.is(ndr.failedAlias)) {
+			return " due to previous variable " + ndr.failedAlias.getName();
 		}
 		return "";
 	}

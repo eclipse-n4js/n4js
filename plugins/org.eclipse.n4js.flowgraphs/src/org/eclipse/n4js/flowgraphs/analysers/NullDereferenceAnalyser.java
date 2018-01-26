@@ -11,10 +11,11 @@
 package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.flowgraphs.dataflow.AssignmentRelation;
 import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
@@ -78,7 +79,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	}
 
 	class IsNotNull extends Assumption {
-		AssignmentRelation failedAssignment;
+		List<Symbol> nullOrUndefinedSymbols = new LinkedList<>();
 
 		IsNotNull(ControlFlowElement cfe, Symbol symbol) {
 			super(cfe, symbol);
@@ -94,13 +95,13 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnDataflow(AssignmentRelation ar) {
-			if (ar.rightSymbol != null) {
-				if (ar.rightSymbol.isNullLiteral() || ar.rightSymbol.isUndefinedLiteral()) {
-					failedAssignment = ar;
+		public HoldAssertion holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
+			if (rSymbol != null) {
+				if (rSymbol.isNullLiteral() || rSymbol.isUndefinedLiteral()) {
+					nullOrUndefinedSymbols.add(rSymbol);
 					return HoldAssertion.NeverHolds;
 				}
-			} else if (ar.assignedValue != null) {
+			} else if (rValue != null) {
 				return HoldAssertion.AlwaysHolds;
 			}
 			return HoldAssertion.MayHold;

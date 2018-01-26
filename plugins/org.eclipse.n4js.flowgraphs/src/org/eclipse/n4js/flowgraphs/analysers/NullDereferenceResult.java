@@ -11,7 +11,8 @@
 package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.IsNotNull;
-import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -22,21 +23,41 @@ public class NullDereferenceResult {
 	/** {@link Symbol} that was checked for null or undefined */
 	public final Symbol checkedSymbol;
 	/** Aliased {@link Symbol} that failed a check */
-	public final Symbol causingSymbol;
-	/** Undefined or Null {@link Symbol} that was assigned to {@link #causingSymbol} */
-	public final Symbol nullOrUndefinedSymbol;
-	/** One of the failed {@link Guard}s */
-	public final Guard failedGuard;
-	/** True iff the symbol must be null or undefined. False iff it can be null or undefined. */
-	public final boolean must;
+	public final Symbol failedAlias;
+	/** Assigned null or undefined */
+	public final GuardType type;
+	/** Either {@link HoldAssertion#AlwaysHolds} or {@link HoldAssertion#MayHold}. */
+	public final HoldAssertion assertion;
 
 	NullDereferenceResult(ControlFlowElement cfe, IsNotNull inn) {
 		this.cfe = cfe;
 		this.checkedSymbol = inn.symbol;
-		this.causingSymbol = inn.failedSymbol;
-		this.nullOrUndefinedSymbol = inn.failedSymbol;
-		this.failedGuard = inn.failedGuard;
-		this.must = inn.noAliasPassed() && !inn.failedAssignment.mayHappen;
+		this.failedAlias = inn.failedSymbol;
+		this.type = getType(inn);
+		this.assertion = getAssertion(inn);
+	}
+
+	private GuardType getType(IsNotNull inn) {
+		if (inn.nullOrUndefinedSymbols.size() == 0) {
+			return inn.failedGuard.type;
+
+		} else if (inn.nullOrUndefinedSymbols.size() == 1) {
+			Symbol symbol = inn.nullOrUndefinedSymbols.get(0);
+			if (symbol.isNullLiteral()) {
+				return GuardType.IsNull;
+			}
+			if (symbol.isUndefinedLiteral()) {
+				return GuardType.IsUndefined;
+			}
+		}
+		return GuardType.IsTruthy;
+	}
+
+	private HoldAssertion getAssertion(IsNotNull inn) {
+		if (inn.noAliasPassed()) {
+			return HoldAssertion.AlwaysHolds;
+		}
+		return HoldAssertion.MayHold;
 	}
 
 	@Override

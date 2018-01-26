@@ -10,39 +10,40 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.n4JS.Expression;
 
 /**
- * Hold information about an assignment regarding exactly one {@link Symbol} whose value gets written.
+ * Holds information about an assignment regarding exactly one {@link Symbol} whose value gets written.
  */
 public class AssignmentRelation {
 	/** {@link Symbol} whose value is changed */
 	final public Symbol leftSymbol;
-	/** {@link Symbol} whose value is assigned. Iff null {@link #assignedValue} is not null. */
-	final public Symbol rightSymbol;
-	/** {@link Expression} whose return value is assigned. Iff null {@link #rightSymbol} is not null. */
-	final public Expression assignedValue;
-	/** true iff this {@link AssignmentRelation} is on a one of more possible branches, e.g. v=p? 1 : 2; */
-	final public boolean mayHappen;
+	/**
+	 * List of all possible right hand sides that are assigned to the {@link #leftSymbol}.<br/>
+	 * Either of type {@link Symbol} or {@link Expression}.
+	 */
+	final public Object[] rhsObjects;
 
 	/** Constructor */
-	AssignmentRelation(Symbol leftSymbol, Symbol rightSymbol, Expression assignedValue) {
-		this(leftSymbol, rightSymbol, assignedValue, false);
-	}
-
-	/** Constructor */
-	AssignmentRelation(Symbol leftSymbol, Symbol rightSymbol, Expression assignedValue, boolean mayHappen) {
+	AssignmentRelation(Symbol leftSymbol, Object... rhsObjects) {
 		this.leftSymbol = leftSymbol;
-		this.rightSymbol = rightSymbol;
-		this.assignedValue = assignedValue;
-		this.mayHappen = mayHappen;
+		this.rhsObjects = rhsObjects;
 	}
 
 	@Override
 	public String toString() {
 		String str = "";
 		str += leftSymbol.toString() + " := ";
-		str += rightSymbol != null ? rightSymbol.toString() : assignedValue;
+
+		int count = 0;
+		for (Object obj : rhsObjects) {
+			if (count++ > 0) {
+				str += " | ";
+			}
+			str += (obj instanceof Expression) ? FGUtils.getSourceText((EObject) obj) : obj;
+		}
 		return str;
 	}
 

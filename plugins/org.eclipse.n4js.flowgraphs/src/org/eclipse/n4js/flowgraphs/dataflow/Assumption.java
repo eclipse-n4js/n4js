@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.dataflow;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -145,6 +146,8 @@ abstract public class Assumption {
 
 	/** Deactivates this {@link Assumption} */
 	protected void deactivate() {
+		checkState(active);
+
 		active = false;
 		originalAssumption.copyCount--;
 	}
@@ -159,22 +162,53 @@ abstract public class Assumption {
 		return active;
 	}
 
-	void callHoldsOnDataflow(AssignmentRelation assignRelation) {
+	void callHoldsOnDataflow(Symbol lhs, Collection<Object> rhss) {
 		checkState(isActive());
 
-		Symbol lhs = assignRelation.leftSymbol;
-		Symbol rhs = assignRelation.rightSymbol;
-		if (failingStructuralAliases.contains(rhs)) {
-			handleHolds(rhs, HoldAssertion.NeverHolds);
-		} else if (failingStructuralAliases.contains(lhs)) {
-			failingStructuralAliases.remove(lhs);
-			failingStructuralAliases.add(rhs);
+		Set<HoldAssertion> allHolds = new HashSet<>();
+		for (Object rhs : rhss) {
+			Symbol rSymbol = null;
+
+			if (rhs instanceof Symbol) {
+				rSymbol = (Symbol) rhs;
+				if (failingStructuralAliases.contains(rSymbol)) {
+					handleHolds(rSymbol, HoldAssertion.NeverHolds);
+				} else if (failingStructuralAliases.contains(lhs)) {
+					failingStructuralAliases.remove(lhs);
+					failingStructuralAliases.add(rSymbol);
+				} else {
+					HoldAssertion holds = holdsOnDataflow(lhs, rSymbol, null);
+					allHolds.add(holds);
+				}
+
+			} else if (rhs instanceof Expression) {
+				Expression rValue = (Expression) rhs;
+				HoldAssertion holds = holdsOnDataflow(lhs, null, rValue);
+				allHolds.add(holds);
+			}
+		}
+		HoldAssertion holds = null;
+		if (allHolds.size() == 1) {
+			holds = allHolds.iterator().next();
 		} else {
-			HoldAssertion holds = holdsOnDataflow(assignRelation);
+			holds = HoldAssertion.MayHold;
+			if (allHolds.contains(HoldAssertion.NeverHolds)) {
+				holds = HoldAssertion.NeverHolds;
+				if (allHolds.size() > 1) {
+					originalAssumption.aliasPassedCount++;
+				}
+			}
+		}
+		if (holds != null) {
 			handleHolds(lhs, holds);
-			if (rhs != null && rhs.isVariableSymbol()) {
-				aliases.remove(lhs);
-				aliases.add(rhs);
+			aliases.remove(lhs);
+			for (Object rhs : rhss) {
+				if (rhs instanceof Symbol) {
+					Symbol rSymbol = (Symbol) rhs;
+					if (rSymbol.isVariableSymbol()) {
+						aliases.add(rSymbol);
+					}
+				}
 			}
 		}
 	}
@@ -183,12 +217,16 @@ abstract public class Assumption {
 	 * This method gets called on {@link Expression}s that trigger the value of {@code rhs} to be assigned to
 	 * {@code lhs}. For instance, an {@link AssignmentExpression} can trigger such a dataflow.
 	 *
-	 * @param assignRelation
-	 *            TODO
+	 * @param lhs
+	 *            {@link Symbol} on the left hand side of the assignment
+	 * @param rSymbol
+	 *            {@link Symbol} whose value is assigned. Either rSymbol xor rValue is null.
+	 * @param rValue
+	 *            {@link Expression} whose return value is assigned. Either rSymbol xor rValue is null.
 	 *
 	 * @return true iff the assumption holds on the given dataflow
 	 */
-	public HoldAssertion holdsOnDataflow(AssignmentRelation assignRelation) {
+	public HoldAssertion holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
 		return HoldAssertion.MayHold;
 	}
 
@@ -283,7 +321,7 @@ abstract public class Assumption {
 	private void handleHolds(Guard guard, HoldAssertion holds) {
 		if (holds == HoldAssertion.NeverHolds) {
 			failedGuard = guard;
-			if (noCopies() && noGuardPassed()) {
+			if (noCopies() && noGuardPassed() && noAliasPassed()) {
 				failed();
 			}
 		}
