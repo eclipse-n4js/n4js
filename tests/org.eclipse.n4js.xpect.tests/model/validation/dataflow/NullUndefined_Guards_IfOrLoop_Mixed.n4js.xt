@@ -52,7 +52,7 @@ function f4() {
 	} else {
 		a = 0;
 	}
-	// XPECT warnings -->"Variable a may be null or undefined" at "a"
+	// XPECT nowarnings -->
 	a.toString();
 }
 

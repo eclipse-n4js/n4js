@@ -32,13 +32,13 @@ function f2() {
 
 function f3() {
 	let a : int;
-	// XPECT warnings --> "Variable a is null or undefined" at "a"
+	// XPECT warnings --> "Variable a is falsy" at "a"
 	let b = a ? 1 : a.toString();
 }
 
 function f4() {
 	let a : int = 0;
-	// XPECT warnings --> "Variable a is null or undefined" at "a"
+	// XPECT warnings --> "Variable a is falsy" at "a"
 	let b = a ? 1 : a.toString();
 }
 
@@ -56,13 +56,13 @@ function f6() {
 
 function f7() {
 	let a : int;
-	// XPECT warnings --> "Variable a is null or undefined" at "a"
+	// XPECT warnings --> "Variable a is falsy" at "a"
 	let b = !a ? a.toString() : 1;
 }
 
 function f8() {
 	let a : int = 0;
-	// XPECT warnings --> "Variable a is null or undefined" at "a"
+	// XPECT warnings --> "Variable a is falsy" at "a"
 	let b = !a ? a.toString() : 1;
 }
 

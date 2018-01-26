@@ -269,10 +269,10 @@ function f25a() {
 }
 function f25b() {
 	for (var a : int of [undefined, 1]) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT warnings --> "Variable a may be undefined" at "a"
 		a.toString();
 	}
-    // XPECT warnings --> "Variable a is undefined" at "a"
+    // XPECT warnings --> "Variable a may be undefined" at "a"
 	a.toString();
 }
 function f25c() {
@@ -287,13 +287,21 @@ function f25c() {
 function f25d() {
 	let a : int;
 	for (a of [undefined, 1]) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT warnings --> "Variable a may be undefined" at "a"
 		a.toString();
 	}
-    // XPECT warnings --> "Variable a is undefined" at "a"
+    // XPECT warnings --> "Variable a may be undefined" at "a"
 	a.toString();
 }
-
+function f25e() {
+	let a : int;
+	for (a of [1, undefined]) {
+		// XPECT warnings --> "Variable a may be undefined" at "a"
+		a.toString();
+	}
+    // XPECT warnings --> "Variable a may be undefined" at "a"
+	a.toString();
+}
 
 function f26a() {
 	for (var [a:int] of [[0], [1]]) {
@@ -305,10 +313,10 @@ function f26a() {
 }
 function f26b() {
 	for (var [a:int] of [[undefined], [1]]) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT warnings --> "Variable a may be undefined" at "a"
 		a.toString();
 	}
-    // XPECT warnings --> "Variable a is undefined" at "a"
+    // XPECT warnings --> "Variable a may be undefined" at "a"
 	a.toString();
 }
 function f26c() {
@@ -323,19 +331,19 @@ function f26c() {
 function f26d() {
 	let a : int;
 	for ([a] of [[undefined], [1]]) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT warnings --> "Variable a may be undefined" at "a"
 		a.toString();
 	}
-    // XPECT warnings --> "Variable a is undefined" at "a"
+    // XPECT warnings --> "Variable a may be undefined" at "a"
 	a.toString();
 }
 function f26e() {
 	let a : int;
 	for ([a] of [[], [1]]) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT warnings --> "Variable a may be undefined" at "a"
 		a.toString();
 	}
-    // XPECT warnings --> "Variable a is undefined" at "a"
+    // XPECT warnings --> "Variable a may be undefined" at "a"
 	a.toString();
 }
 
