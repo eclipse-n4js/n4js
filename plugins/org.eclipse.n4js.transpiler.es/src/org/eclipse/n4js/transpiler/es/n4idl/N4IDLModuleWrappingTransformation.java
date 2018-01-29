@@ -24,6 +24,10 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
  * Module/Script wrapping transformation for transpiling N4IDL modules to ECMAScript.
+ *
+ * This subclass of the original {@link ModuleWrappingTransformation} implements custom behavior for exporting versioned
+ * types in N4IDL. To avoid name conflicts at runtime, different versions are exported under their versioned internal
+ * names (cf. {@link N4IDLTranspilerUtils#getVersionedInternalName}).
  */
 public class N4IDLModuleWrappingTransformation extends ModuleWrappingTransformation {
 

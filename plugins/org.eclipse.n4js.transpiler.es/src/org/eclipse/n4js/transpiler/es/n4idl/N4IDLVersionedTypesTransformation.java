@@ -16,7 +16,7 @@ import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
- * Simple transformation which renames versioned types to prevent naming conflicts between versioned types at runtime.
+ * Simple transformation which renames versioned types to prevent name conflicts between versioned types at runtime.
  */
 public class N4IDLVersionedTypesTransformation extends Transformation {
 
@@ -32,7 +32,7 @@ public class N4IDLVersionedTypesTransformation extends Transformation {
 	}
 
 	/**
-	 * Updates the name of versioned type declarations so that there are not naming conflicts between different type
+	 * Updates the name of versioned type declarations so that there are not name conflicts between different type
 	 * versions.
 	 */
 	private void transformTypeDeclaration(N4TypeDeclaration typeDeclaration) {

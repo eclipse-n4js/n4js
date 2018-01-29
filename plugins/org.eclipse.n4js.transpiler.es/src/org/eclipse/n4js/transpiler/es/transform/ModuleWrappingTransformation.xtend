@@ -614,7 +614,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 * Only applicable if {@code expr1} evaluates (while actually setting) to the new value of x.
 	 * This is true to Assignment- and Unary-Expressions <b>but not</b> for PostfixExprssion
 	 *
-	 * <p>
+	 * <p> 
 	 * Note: only <pre>++x</pre> and <pre>--x</pre> are setting the value of <pre>x</pre>.
 	 * other Unary-Expressions are not setting the value. Caller needs to take care of this, as
 	 * expression operator is not checked in this method.
@@ -629,7 +629,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 *
 	 */
 	private final def void exprReplacement(Expression expr, SymbolTableEntry ste) {
-
+		
 		// The new code snippet, the ObjectLiteral will be replaced by init-function
 		val replaceExp =
 			_Parenthesis(
