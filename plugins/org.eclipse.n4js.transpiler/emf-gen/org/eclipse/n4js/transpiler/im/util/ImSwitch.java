@@ -397,11 +397,11 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ImPackage.NAMED_IMPORT_SPECIFIER_IM: {
-				NamedImportSpecifier_IM namedImportSpecifier_IM = (NamedImportSpecifier_IM)theEObject;
-				T result = caseNamedImportSpecifier_IM(namedImportSpecifier_IM);
-				if (result == null) result = caseNamedImportSpecifier(namedImportSpecifier_IM);
-				if (result == null) result = caseImportSpecifier(namedImportSpecifier_IM);
+			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM: {
+				VersionedNamedImportSpecifier_IM versionedNamedImportSpecifier_IM = (VersionedNamedImportSpecifier_IM)theEObject;
+				T result = caseVersionedNamedImportSpecifier_IM(versionedNamedImportSpecifier_IM);
+				if (result == null) result = caseNamedImportSpecifier(versionedNamedImportSpecifier_IM);
+				if (result == null) result = caseImportSpecifier(versionedNamedImportSpecifier_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -725,17 +725,17 @@ public class ImSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Named Import Specifier IM</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Named Import Specifier IM</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Named Import Specifier IM</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Named Import Specifier IM</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNamedImportSpecifier_IM(NamedImportSpecifier_IM object) {
+	public T caseVersionedNamedImportSpecifier_IM(VersionedNamedImportSpecifier_IM object) {
 		return null;
 	}
 

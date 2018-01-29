@@ -18,5 +18,5 @@ Require-Bundle: org.eclipse.n4js,
  com.google.guava,
  org.eclipse.n4js.smith,
  org.eclipse.n4js.external.libraries
-Export-Package: org.eclipse.n4js.n4idl.transpiler,
+Export-Package: org.eclipse.n4js.transpiler.es.n4idl,
  org.eclipse.n4js.transpiler.es

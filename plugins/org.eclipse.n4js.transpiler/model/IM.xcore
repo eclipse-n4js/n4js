@@ -403,7 +403,7 @@ class VersionedIdentifierRef_IM extends IdentifierRef_IM, VersionedIdentifierRef
 /**
  * Import specifier that is aware of multiple versions of the imported type.
  */
-class NamedImportSpecifier_IM extends NamedImportSpecifier {
+class VersionedNamedImportSpecifier_IM extends NamedImportSpecifier {
 	refers SymbolTableEntryOriginal[] importedTypeVersions
 
 	/**

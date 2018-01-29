@@ -38,18 +38,17 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
 import org.eclipse.n4js.n4idl.versioning.VersionHelper;
-import org.eclipse.n4js.n4idl.versioning.VersionUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.ImFactory;
 import org.eclipse.n4js.transpiler.im.ImPackage;
-import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -81,8 +80,6 @@ public class PreparationStep {
 					ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
 			.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
 					ImPackage.eINSTANCE.getVersionedIdentifierRef_IM())
-			.put(N4JSPackage.eINSTANCE.getNamedImportSpecifier(),
-					ImPackage.eINSTANCE.getNamedImportSpecifier_IM())
 			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
 					ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
 			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
@@ -230,25 +227,6 @@ public class PreparationStep {
 			return copy;
 		}
 
-		/**
-		 * Handler for when a {@link NamedImportSpecifier} is encountered in the copying process.
-		 */
-		private void handleCopyNamedImportSpecifier(NamedImportSpecifier namedImportSpecifier) {
-			TExportableElement importedElement = namedImportSpecifier.getImportedElement();
-
-			if (importedElement instanceof Type) {
-				// Add all versions of the type to the importedElements map as well as
-				// to the IM element of the NamedImportSpecifier.
-				Iterable<? extends Type> versions = versionHelper.findTypeVersions((Type) importedElement);
-				versions.forEach(v -> {
-					importedElements.put(v, namedImportSpecifier);
-				});
-			} else {
-				importedElements.put(importedElement,
-						namedImportSpecifier);
-			}
-		}
-
 		@Override
 		protected EClass getTarget(EClass eClass) {
 			final EClass replacement = ECLASS_REPLACEMENT.get(eClass);
@@ -256,17 +234,13 @@ public class PreparationStep {
 		}
 
 		@Override
-		public EObject copy(EObject originalObject) {
-			final EObject copy = super.copy(originalObject);
-
-			if (copy instanceof N4TypeDeclaration) {
-				// set name to internal versioned variant (e.g. A -> A$2)
-				((N4TypeDeclaration) copy)
-						.setName(N4IDLTranspilerUtils
-								.getVersionedInternalName((N4TypeDeclaration) originalObject));
+		protected EClass getTarget(EObject eObject) {
+			// special-handling for named import specifiers of versioned types
+			if (eObject instanceof NamedImportSpecifier &&
+					N4IDLTranspilerUtils.isVersionedImportSpecifier((NamedImportSpecifier) eObject)) {
+				return ImPackage.eINSTANCE.getVersionedNamedImportSpecifier_IM();
 			}
-
-			return copy;
+			return super.getTarget(eObject);
 		}
 
 		@Override
@@ -310,6 +284,25 @@ public class PreparationStep {
 						getSymbolTableEntry((Variable) obj, true);
 					}
 				}
+			}
+		}
+
+		/**
+		 * Handler for when a {@link NamedImportSpecifier} is encountered in the copying process.
+		 */
+		private void handleCopyNamedImportSpecifier(NamedImportSpecifier namedImportSpecifier) {
+			TExportableElement importedElement = namedImportSpecifier.getImportedElement();
+
+			if (importedElement instanceof Type) {
+				// add all versions of the type to the importedElements map.
+				Iterable<? extends Type> versions = versionHelper.findTypeVersions((Type) importedElement);
+				versions.forEach(v -> {
+					importedElements.put(v, namedImportSpecifier);
+				});
+			} else {
+				// for non-type imports, there is no versions
+				importedElements.put(importedElement,
+						namedImportSpecifier);
 			}
 		}
 
@@ -397,10 +390,14 @@ public class PreparationStep {
 					if (null != alias) {
 						entry.setName(alias); // exported name is visible via operation entry#exportedName())
 					}
-					if (VersionUtils.isTVersionable(entry.getOriginalTarget())) {
-						// Add referenced type version to list of imported type versions of the import specifier.
-						// This is executed once per type version, as the returned STE of this method is cached.
-						((NamedImportSpecifier_IM) copy).getImportedTypeVersions().add(entry);
+					if (N4IDLTranspilerUtils.refersToVersionedType(entry)) {
+						// In this block, we may now assume that 'entry' is actually of type {@link
+						// VersionedNamedImportSpecifier_IM} (cf. {@link #getTarget(EObject)}).
+
+						// Add referenced type version to the list of imported type versions of the import specifier
+						// copy. This is only executed once per type version, as the returned STE of this method is
+						// cached.
+						((VersionedNamedImportSpecifier_IM) copy).getImportedTypeVersions().add(entry);
 
 						if (null != alias) {
 							// Make sure to compute the versioned internal name based on the alias

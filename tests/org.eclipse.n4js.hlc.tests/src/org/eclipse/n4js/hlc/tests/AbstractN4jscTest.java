@@ -152,6 +152,61 @@ public abstract class AbstractN4jscTest {
 	}
 
 	/**
+	 * Runs N4JSC with the given arguments.
+	 *
+	 * Captures the output (stdout + stderr) of the executed runner and returns it as a string.
+	 *
+	 * This does not include the output of N4JSC itself.
+	 *
+	 * @param arguments
+	 *            The arguments to pass to {@link N4jscBase#doMain(String...)}
+	 *
+	 * @return The command output. stderr + stdout concatenated in that order.
+	 *
+	 * @throws ExitCodeException
+	 *             If N4JSC exists with a non-zero exist code
+	 * @throws IOException
+	 *             If the creation of intermediate log files fails.
+	 */
+	protected static String runAndCaptureOutput(String[] arguments) throws ExitCodeException, IOException {
+
+		boolean keepOutputForDebug = true;
+
+		File errorFile = File.createTempFile("run_err", null);
+		File outputFile = File.createTempFile("run_out", null);
+
+		if (!keepOutputForDebug) {
+			errorFile.deleteOnExit();
+			outputFile.deleteOnExit();
+		} else {
+			System.out.println("Errors: " + errorFile + "    Ouput: " + outputFile);
+		}
+
+		setOutputfileSystemProperties(errorFile.getAbsolutePath(), outputFile.getAbsolutePath());
+
+		new N4jscBase().doMain(arguments);
+
+		// cleanup properties.
+		setOutputfileSystemProperties("", "");
+
+		// read the files, concat & return string.
+		return N4CliHelper.readLogfile(errorFile) + N4CliHelper.readLogfile(outputFile);
+	}
+
+	/**
+	 * Set system-properties for the Runner.
+	 *
+	 * @param errorFile
+	 *            File to write errror-stream to
+	 * @param outputFile
+	 *            File to write output-stream to
+	 */
+	private static void setOutputfileSystemProperties(String errorFile, String outputFile) {
+		System.setProperty("org.eclipse.n4js.runner.RunnerFrontEnd.ERRORFILE", errorFile);
+		System.setProperty("org.eclipse.n4js.runner.RunnerFrontEnd.OUTPUTFILE", outputFile);
+	}
+
+	/**
 	 * Flush outputs after tests.
 	 */
 	@After

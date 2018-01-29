@@ -17,9 +17,10 @@
  */
 
 import {R} from "imports/ToImport";
-import {P as PU} from "imports/ToImport";
-import {S as AliasS} from "imports/ToImport";
+import {P as PU, S as AliasS} from "imports/ToImport";
 import {T} from "imports/ToImport";
+
+import {Q} from "imports/ToImport";
 
 /**
  * Checks for the existence of the given given identifier
@@ -58,4 +59,6 @@ export public function f() {
 
 	console.log("T#1:", globalIdentifier("T$1"));
 	console.log("T#2:", globalIdentifier("T$2"));
+	
+	console.log("Q#1:", globalIdentifier("Q$1"));
 }

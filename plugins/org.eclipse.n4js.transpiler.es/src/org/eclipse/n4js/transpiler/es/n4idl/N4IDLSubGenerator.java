@@ -1,4 +1,4 @@
-package org.eclipse.n4js.n4idl.transpiler;
+package org.eclipse.n4js.transpiler.es.n4idl;
 
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.projectModel.ProjectUtils;

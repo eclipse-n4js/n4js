@@ -72,7 +72,7 @@ public abstract class AbstractTranspiler {
 	 * To customize the transpilation process, subclasses should here provide the concrete AST transformations to be
 	 * executed for the given initial transpiler state in the order they should be executed.
 	 */
-	protected abstract Iterable<Transformation> computeTransformationsToBeExecuted(TranspilerState state);
+	protected abstract Transformation[] computeTransformationsToBeExecuted(TranspilerState state);
 
 	/**
 	 * Internal class for providing all necessary information about source-map generation.
@@ -191,8 +191,8 @@ public abstract class AbstractTranspiler {
 			}
 
 			// step 1: ask transformation manager for transformations to execute
-			final Iterable<Transformation> transformationsPreFiler = computeTransformationsToBeExecuted(state);
-			final Iterable<Transformation> transformations = TransformationDependency
+			final Transformation[] transformationsPreFiler = computeTransformationsToBeExecuted(state);
+			final Transformation[] transformations = TransformationDependency
 					.filterByTranspilerOptions(transformationsPreFiler, state.options);
 			TransformationDependency.assertDependencies(transformations);
 

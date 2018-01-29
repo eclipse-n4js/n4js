@@ -16,7 +16,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Named Import Specifier IM</b></em>'.
+ * A representation of the model object '<em><b>Versioned Named Import Specifier</b></em>'.
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
@@ -28,15 +28,15 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM#getImportedTypeVersions <em>Imported Type Versions</em>}</li>
- *   <li>{@link org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM#isVersionedTypeImport <em>Versioned Type Import</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier#getImportedTypeVersions <em>Imported Type Versions</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier#isVersionedTypeImport <em>Versioned Type Import</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.transpiler.im.ImPackage#getNamedImportSpecifier_IM()
+ * @see org.eclipse.n4js.transpiler.im.ImPackage#getVersionedNamedImportSpecifier()
  * @model
  * @generated
  */
-public interface NamedImportSpecifier_IM extends NamedImportSpecifier {
+public interface VersionedNamedImportSpecifier extends NamedImportSpecifier {
 	/**
 	 * Returns the value of the '<em><b>Imported Type Versions</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal}.
@@ -47,7 +47,7 @@ public interface NamedImportSpecifier_IM extends NamedImportSpecifier {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Imported Type Versions</em>' reference list.
-	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getNamedImportSpecifier_IM_ImportedTypeVersions()
+	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getVersionedNamedImportSpecifier_ImportedTypeVersions()
 	 * @model
 	 * @generated
 	 */
@@ -63,11 +63,11 @@ public interface NamedImportSpecifier_IM extends NamedImportSpecifier {
 	 * versioned type.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Versioned Type Import</em>' attribute.
-	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getNamedImportSpecifier_IM_VersionedTypeImport()
+	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getVersionedNamedImportSpecifier_VersionedTypeImport()
 	 * @model unique="false" transient="true" changeable="false" volatile="true" derived="true"
 	 *        annotation="http://www.eclipse.org/emf/2002/GenModel get='return ((this.getImportedTypeVersions().size() > 0) && ((this.getImportedTypeVersions().size() > 1) || \n\t<%org.eclipse.n4js.n4idl.versioning.VersionUtils%>.isTVersionable(this.getImportedTypeVersions().get(0).getOriginalTarget())));'"
 	 * @generated
 	 */
 	boolean isVersionedTypeImport();
 
-} // NamedImportSpecifier_IM
+} // VersionedNamedImportSpecifier

@@ -36,13 +36,13 @@ import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
-import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.ReferencingElementExpression_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
 import org.eclipse.n4js.transpiler.operations.TranspilerStateOperations;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
@@ -283,7 +283,7 @@ public abstract class TranspilerComponent {
 
 	@SuppressWarnings("javadoc")
 	protected Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(
-			NamedImportSpecifier_IM importspec) {
+			VersionedNamedImportSpecifier_IM importspec) {
 		return SymbolTableManagement.findSymbolTableEntriesForVersionedTypeImport(state, importspec);
 	}
 

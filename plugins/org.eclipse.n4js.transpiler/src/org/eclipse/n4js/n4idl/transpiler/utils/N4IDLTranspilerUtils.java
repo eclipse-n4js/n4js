@@ -5,6 +5,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.n4idl.versioning.VersionUtils;
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
@@ -91,6 +92,20 @@ public class N4IDLTranspilerUtils {
 
 	private N4IDLTranspilerUtils() {
 		// non-instantiable utility class
+	}
+
+	/**
+	 * Returns {@code true} iff the given import specifier imports a versioned type.
+	 */
+	public static boolean isVersionedImportSpecifier(NamedImportSpecifier specifier) {
+		return VersionUtils.isTVersionable(specifier.getImportedElement());
+	}
+
+	/**
+	 * Returns {@code true} iff the given {@link SymbolTableEntryOriginal} represents a versioned type.
+	 */
+	public static boolean refersToVersionedType(SymbolTableEntryOriginal entry) {
+		return VersionUtils.isTVersionable(entry.getOriginalTarget());
 	}
 
 }

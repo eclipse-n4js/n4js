@@ -23,12 +23,12 @@ import org.eclipse.n4js.transpiler.PreparationStep
 import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.ImPackage
-import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.NameAndAccess
@@ -367,12 +367,12 @@ class SymbolTableManagement {
 	}
 
 	/**
-	 * Finds and returns all STEs that hold a reference to the given {@link NamedImportSpecifier_IM}
+	 * Finds and returns all STEs that hold a reference to the given {@link VersionedNamedImportSpecifier_IM}
 	 *
 	 * In case of the import of an unversioned type, this method defaults
 	 * to {@link SymbolTableManagement.findSymbolTableEntryForNamedImport(TranspilerState, NamedImportSpecifier)}.
 	 */
-	def static public Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(TranspilerState state, NamedImportSpecifier_IM importspec) {
+	def static public Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(TranspilerState state, VersionedNamedImportSpecifier_IM importspec) {
 		// avoid expensive computation for unversioned imports
 		if (!importspec.isVersionedTypeImport) {
 			return #[findSymbolTableEntryForNamedImport(state, importspec)];

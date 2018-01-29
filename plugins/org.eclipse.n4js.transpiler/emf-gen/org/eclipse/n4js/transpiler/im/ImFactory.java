@@ -183,13 +183,13 @@ public interface ImFactory extends EFactory {
 	VersionedIdentifierRef_IM createVersionedIdentifierRef_IM();
 
 	/**
-	 * Returns a new object of class '<em>Named Import Specifier IM</em>'.
+	 * Returns a new object of class '<em>Versioned Named Import Specifier IM</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Named Import Specifier IM</em>'.
+	 * @return a new object of class '<em>Versioned Named Import Specifier IM</em>'.
 	 * @generated
 	 */
-	NamedImportSpecifier_IM createNamedImportSpecifier_IM();
+	VersionedNamedImportSpecifier_IM createVersionedNamedImportSpecifier_IM();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -15,10 +15,8 @@ import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
 import java.util.Set
-import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.AdditiveOperator
-import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -48,7 +46,6 @@ import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
-import org.eclipse.n4js.transpiler.TranspilerBuilderBlocks
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
 import org.eclipse.n4js.transpiler.es.transform.internal.ImportAssignment
 import org.eclipse.n4js.transpiler.es.transform.internal.ImportEntry
@@ -67,8 +64,6 @@ import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM
-import java.util.Collections
 
 /**
  * Module/Script wrapping transformation.
@@ -307,18 +302,10 @@ class ModuleWrappingTransformation extends Transformation {
 							val nisSTE = findSymbolTableEntryForNamespaceImport(it);
 							finalModuleEntry.variableSTE_actualName += new NamespaceImportAssignment(nisSTE, it);
 						}
-						NamedImportSpecifier_IM: {
-							if (it.versionedTypeImport) {
-								// For imports of multiple type versions, add a NamedImportAssignment for each
-								// version that is referenced in the module.
-								findSymbolTableEntriesForVersionedTypeImport(it).forEach[ ste |
-									finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
-								]
-							} else {
-								val ste = findSymbolTableEntryForNamedImport( it );
-								if (ste !== null) {
-									finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
-								}
+						NamedImportSpecifier: {
+							val ste = findSymbolTableEntryForNamedImport( it );
+							if (ste !== null) {
+								finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
 							}
 						}
 					}
@@ -496,28 +483,19 @@ class ModuleWrappingTransformation extends Transformation {
 		return importDecl.importSpecifiers.map[
 			switch(it) {
 				NamespaceImportSpecifier:
-					Collections.singleton(namespaceToHoistDeclaration(it))
+					namespaceToHoistDeclaration(it)
 				NamedImportSpecifier:
 					namedImportsToHoistDeclaration(it)
 			}
-		].flatten;
+		];
 	}
 
 	/** Creates a single VariableDeclaration without initialiser. */
-	private def Iterable<VariableDeclaration> namedImportsToHoistDeclaration(NamedImportSpecifier nis) {
-		// determine corresponding SymbolTableEntries
-		val entries = if (nis instanceof NamedImportSpecifier_IM &&
-			(nis as NamedImportSpecifier_IM).isVersionedTypeImport
-		) {
-			findSymbolTableEntriesForVersionedTypeImport(nis as NamedImportSpecifier_IM)
-		} else {
-			Collections.singleton(findSymbolTableEntryForNamedImport(nis));
-		}
-
-		return entries.map[entry | return _VariableDeclaration( entry.name )=>[
+	private def VariableDeclaration namedImportsToHoistDeclaration(NamedImportSpecifier nis) {
+		_VariableDeclaration( findSymbolTableEntryForNamedImport(nis).name )=>[
 			// tracing:
 			state.tracer.copyTrace(nis,it);
-		]];
+		]
 	}
 
 	/** Creates a single VariableDeclaration without initialiser. */
@@ -781,50 +759,13 @@ class ModuleWrappingTransformation extends Transformation {
 		return assignmentStmnt;
 	}
 
-	protected def ParameterizedCallExpression createExportExpression(SymbolTableEntry entry, Expression expression) {
-		// check if the entry points to a versionable element
-		if (entry instanceof SymbolTableEntryOriginal) {
-			val IdentifiableElement originalTarget = entry.originalTarget;
-
-			if (VersionUtils.isTVersionable(originalTarget)) {
-				return createVersionedExportExpression(originalTarget, expression);
-			}
-		}
+	/**
+	 * Creates an export expression by the name of the given symbol table entry which exports a simple (identifier) reference
+	 * to the symbol table entry.
+	 *
+	 */
+	def protected ParameterizedCallExpression createExportExpression(SymbolTableEntry entry) {
 		// otherwise create a default export expression
-		return _N4ExportExpr(entry, expression, steFor_$n4Export);
-	}
-
-	/**
-	 * Creates an export expression that exports an versioned element under
-	 * its versioned internal name.
-	 *
-	 * @param element The versioned internal name
-	 * @param expression The expression to export.
-	 */
-	protected def ParameterizedCallExpression createVersionedExportExpression(IdentifiableElement element, Expression expression) {
-		if (!VersionUtils.isTVersionable(element)) {
-			throw new IllegalArgumentException("Cannot export non-versionable element " + element + " as versionable.");
-		}
-
-		val ParameterizedCallExpression callExpression = TranspilerBuilderBlocks._CallExpr();
-
-		callExpression.setTarget(TranspilerBuilderBlocks._IdentRef(steFor_$n4Export()));
-		val EList<Argument> arguments = callExpression.getArguments();
-
-		arguments.add(TranspilerBuilderBlocks._Argument(TranspilerBuilderBlocks._StringLiteral(N4IDLTranspilerUtils.getVersionedInternalName(element))));
-		arguments.add(TranspilerBuilderBlocks._Argument(expression));
-
-		return callExpression;
-	}
-
-	/**
-	 * Creates an export expression by the name of the given symbol table entry that exports a simple (identifier) reference
-	 * to the entry.
-	 *
-	 * Delegates to #createExportExpression(SymbolTableEntry, Expression).
-	 *
-	 */
-	final def protected ParameterizedCallExpression createExportExpression(SymbolTableEntry entry) {
-		return createExportExpression(entry, _IdentRef( entry ));
+		return _N4ExportExpr(entry, _IdentRef(entry), steFor_$n4Export);
 	}
 }

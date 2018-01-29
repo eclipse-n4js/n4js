@@ -21,26 +21,26 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl;
 
 import org.eclipse.n4js.n4idl.versioning.VersionUtils;
-import org.eclipse.n4js.transpiler.im.ImPackage;
-import org.eclipse.n4js.transpiler.im.NamedImportSpecifier_IM;
 
+import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Named Import Specifier IM</b></em>'.
+ * An implementation of the model object '<em><b>Versioned Named Import Specifier IM</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.transpiler.im.impl.NamedImportSpecifier_IMImpl#getImportedTypeVersions <em>Imported Type Versions</em>}</li>
- *   <li>{@link org.eclipse.n4js.transpiler.im.impl.NamedImportSpecifier_IMImpl#isVersionedTypeImport <em>Versioned Type Import</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl#getImportedTypeVersions <em>Imported Type Versions</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl#isVersionedTypeImport <em>Versioned Type Import</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implements NamedImportSpecifier_IM {
+public class VersionedNamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implements VersionedNamedImportSpecifier_IM {
 	/**
 	 * The cached value of the '{@link #getImportedTypeVersions() <em>Imported Type Versions</em>}' reference list.
 	 * <!-- begin-user-doc -->
@@ -66,7 +66,7 @@ public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected NamedImportSpecifier_IMImpl() {
+	protected VersionedNamedImportSpecifier_IMImpl() {
 		super();
 	}
 
@@ -77,7 +77,7 @@ public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implem
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ImPackage.Literals.NAMED_IMPORT_SPECIFIER_IM;
+		return ImPackage.Literals.VERSIONED_NAMED_IMPORT_SPECIFIER_IM;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implem
 	 */
 	public EList<SymbolTableEntryOriginal> getImportedTypeVersions() {
 		if (importedTypeVersions == null) {
-			importedTypeVersions = new EObjectResolvingEList<SymbolTableEntryOriginal>(SymbolTableEntryOriginal.class, this, ImPackage.NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS);
+			importedTypeVersions = new EObjectResolvingEList<SymbolTableEntryOriginal>(SymbolTableEntryOriginal.class, this, ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS);
 		}
 		return importedTypeVersions;
 	}
@@ -110,9 +110,9 @@ public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implem
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ImPackage.NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS:
+			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS:
 				return getImportedTypeVersions();
-			case ImPackage.NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT:
+			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT:
 				return isVersionedTypeImport();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -127,7 +127,7 @@ public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implem
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ImPackage.NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS:
+			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS:
 				getImportedTypeVersions().clear();
 				getImportedTypeVersions().addAll((Collection<? extends SymbolTableEntryOriginal>)newValue);
 				return;
@@ -143,7 +143,7 @@ public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implem
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ImPackage.NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS:
+			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS:
 				getImportedTypeVersions().clear();
 				return;
 		}
@@ -158,12 +158,12 @@ public class NamedImportSpecifier_IMImpl extends NamedImportSpecifierImpl implem
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ImPackage.NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS:
+			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS:
 				return importedTypeVersions != null && !importedTypeVersions.isEmpty();
-			case ImPackage.NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT:
+			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT:
 				return isVersionedTypeImport() != VERSIONED_TYPE_IMPORT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //NamedImportSpecifier_IMImpl
+} //VersionedNamedImportSpecifier_IMImpl

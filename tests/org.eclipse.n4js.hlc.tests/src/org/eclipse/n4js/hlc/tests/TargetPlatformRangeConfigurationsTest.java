@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static java.util.Collections.singletonMap;
-import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
@@ -66,7 +65,7 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()
 		};
-		final String out = runCaptureOut(args);
+		final String out = runAndCaptureOutput(args);
 		// note: express version 4.16.0 introduced more properties, so by checking for the following properties we can
 		// assert that the version range ">=4.0.0 <4.16.0" specified above was taken into account during installation:
 		N4CliHelper.assertExpectedOutput(
