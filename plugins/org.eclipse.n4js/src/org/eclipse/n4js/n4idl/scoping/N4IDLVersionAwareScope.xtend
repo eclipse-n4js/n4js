@@ -15,14 +15,12 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TVersionable
-import org.eclipse.n4js.ts.types.Type
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 
 /**
  * An implementation of {@link IScope} that considers versioned objects.
- *
  */
 class N4IDLVersionAwareScope implements IScope {
 
@@ -99,44 +97,11 @@ class N4IDLVersionAwareScope implements IScope {
 		val element = description.EObjectOrProxy;
 		if (element instanceof TVersionable) {
 			if (element.version != filter.contextVersion) {
-				return wrapVirtualVersion(description);
+				return description;
 			}
 		}
 
 		return description;
-	}
-
-	private def IEObjectDescription wrapVirtualVersion(IEObjectDescription virtualVersionDescription) {
-		val allElements = this.delegate.allElements;
-		val element = virtualVersionDescription.EObjectOrProxy;
-
-		if (element instanceof TVersionable && element instanceof Type) {
-			val virtualElementVersion = (element as TVersionable).version;
-			val virtualElementFQN = getScopingFullyQualifiedName(element as Type);
-			// If the global scope contains a better-fitting (less or equal than but closer to contextVersion)
-			// version of the type, return an error-description.
-			// Be aware that this query for allElement is expensive
-			val matchingFQNVersions = allElements
-				.filter[d | d.qualifiedName.equals(virtualElementFQN)]
-				.filter[d | d.EObjectOrProxy instanceof TVersionable]
-				.map[d | (d.EObjectOrProxy as TVersionable).version]
-				.filter[v | v <= filter.contextVersion];
-
-			val higherVersionExists = matchingFQNVersions
-				.exists[v | v > virtualElementVersion]
-			if (higherVersionExists) {
-				return new RequiredVersionNotImportedDescription(virtualVersionDescription.name, virtualVersionDescription);
-			}
-		}
-
-		return virtualVersionDescription;
-	}
-
-	private def QualifiedName getScopingFullyQualifiedName(Type type) {
-		// compute '/'-delimited FQN
-		val fullyQualifiedName = qualifiedNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(type);
-		// convert to QualifiedName
-		return QualifiedName.create(fullyQualifiedName.split("\\.").toList);
 	}
 
 	override toString() {

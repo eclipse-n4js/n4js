@@ -18,7 +18,7 @@ import org.eclipse.xtext.resource.IEObjectDescription
 
 /**
  * An {@link N4IDLVersionableFilter} can be used to filter versionable elements
- * according to N4IDL versioning rules.
+ * according to the N4IDL versioning rules.
  *
  * The filter ignores any non-versionable elements and will never filter them out.
  */

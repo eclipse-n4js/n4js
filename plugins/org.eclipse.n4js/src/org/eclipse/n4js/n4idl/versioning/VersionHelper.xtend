@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider
 import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TClass
@@ -34,6 +33,7 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 
 import static org.eclipse.n4js.n4idl.versioning.VersionUtils.isVersioned
+import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider
 
 /**
  * Contains helper methods to determine version related information of objects as well as to find a specific version
@@ -42,7 +42,7 @@ import static org.eclipse.n4js.n4idl.versioning.VersionUtils.isVersioned
 class VersionHelper {
 
 	@Inject
-	VersionScopeProvider scopeProvider;
+	VersionScopeProvider versionScopeProvider;
 
 	@Inject
 	IQualifiedNameConverter nameConverter;
@@ -111,7 +111,7 @@ class VersionHelper {
 	 * </p>
 	 */
 	private def int computeUpperLimit(TClassifier classifier, int lowerLimit) {
-		val IScope scope = scopeProvider.getVersionScope(classifier);
+		val IScope scope = versionScopeProvider.getVersionScope(classifier);
 		val QualifiedName name = nameConverter.toQualifiedName(classifier.name);
 		val Iterable<IEObjectDescription> elements = scope.getElements(name);
 
@@ -132,7 +132,7 @@ class VersionHelper {
 			return Collections.singleton(type);
 		}
 
-		val IScope scope = scopeProvider.getVersionScope(type);
+		val IScope scope = versionScopeProvider.getVersionScope(type);
 		val QualifiedName name = nameConverter.toQualifiedName(type.name);
 		val Iterable<IEObjectDescription> elements = scope.getElements(name);
 

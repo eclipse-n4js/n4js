@@ -25,8 +25,6 @@ import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
-import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider;
-import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider;
 import org.eclipse.n4js.naming.N4JSImportedNamesAdapter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
@@ -553,13 +551,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	}
 
 	//// N4IDL specific bindings
-
-	/**
-	 * Binds a scope provider for version scopes.
-	 */
-	public Class<? extends VersionScopeProvider> bindVersionScopeProvider() {
-		return N4IDLVersionAwareScopeProvider.class;
-	}
 
 	/**
 	 */

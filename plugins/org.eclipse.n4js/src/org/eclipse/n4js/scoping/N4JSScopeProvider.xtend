@@ -43,8 +43,10 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
-import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider
+import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScope
+import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4jsx.ReactHelper
+import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSResource
@@ -59,6 +61,7 @@ import org.eclipse.n4js.scoping.utils.N4JSTypesScopeFilter
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
 import org.eclipse.n4js.scoping.utils.ScopesHelper
 import org.eclipse.n4js.ts.scoping.ValidatingScope
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
@@ -86,7 +89,6 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 
 /**
  * This class contains custom scoping description.
@@ -140,9 +142,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject TopLevelElementsCollector topLevelElementCollector
 
-	@Inject N4IDLVersionAwareScopeProvider n4idlVersionAwareScopeProvider
-
 	@Inject ScopesHelper scopesHelper
+
+	@Inject private VersionHelper versionHelper;
+
+	@Inject private QualifiedNameComputer qualifiedNameComputer;
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -167,7 +171,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		} catch (Error ex) {
 			if (context !== null && context.eResource.errors.empty) {
 				throw ex;
-			}else{
+			} else {
 				// swallow exception, we got a parse error anyway
 			}
 		}
@@ -175,7 +179,13 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return IScope.NULLSCOPE;
 	}
 
-	protected def getN4JSScope(EObject context, EReference reference) {
+	/**
+	 * Returns the N4JS scope for the given context and reference.
+	 *
+	 * The returned scope is not sensitive to any of the language variants of N4JS. In order
+	 * to obtain a variant-specific scope, please use {@link N4JSScopeProvider#getScope(EObject, EReference)}.
+	 */
+	public def getN4JSScope(EObject context, EReference reference) {
 		// maybe can use scope shortcut
 		val maybeScopeShortcut = getScopeByShortcut(context, reference);
 		if (maybeScopeShortcut !== IScope.NULLSCOPE)
@@ -548,7 +558,22 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	private def getN4IDLScope(EObject context, EReference reference) {
-		return n4idlVersionAwareScopeProvider.getScope(context, reference);
+		val IScope scope = getN4JSScope(context, reference);
+
+		// If the N4JS scope is a NULLSCOPE there
+		// is nothing to filter for a context version.
+		if (scope == IScope.NULLSCOPE) {
+			return scope;
+		}
+
+		if (reference === TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE ||
+			reference === N4JSPackage.Literals.IDENTIFIER_REF__ID
+		) {
+			val int contextVersion = versionHelper.computeMaximumVersion(context);
+			return new N4IDLVersionAwareScope(scope, contextVersion, qualifiedNameComputer);
+		}
+
+		return scope;
 	}
 
 	private def getN4JSXScope(EObject context, EReference reference) {
