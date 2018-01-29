@@ -2491,7 +2491,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt23) {
                 case 1 :
                     {
-                    otherlv_1=(Token)match(input,As,FOLLOW_25); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,As,FOLLOW_14); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getExportSpecifierAccess().getAsKeyword_1_0());
@@ -2881,7 +2881,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               				newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getAnnotationListParserRuleCall_0());
               			
             }
-            pushFollow(FOLLOW_26);
+            pushFollow(FOLLOW_25);
             this_AnnotationList_0=ruleAnnotationList();
 
             state._fsp--;
@@ -3029,7 +3029,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_1_1_0());
                     	      						
                     	    }
-                    	    pushFollow(FOLLOW_27);
+                    	    pushFollow(FOLLOW_26);
                     	    lv_declaredModifiers_6_0=ruleN4Modifier();
 
                     	    state._fsp--;
@@ -3065,7 +3065,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getVarStmtKeywordVariableStatementKeywordEnumRuleCall_1_1_2_0());
                       						
                     }
-                    pushFollow(FOLLOW_28);
+                    pushFollow(FOLLOW_27);
                     lv_varStmtKeyword_7_0=ruleVariableStatementKeyword();
 
                     state._fsp--;
@@ -3095,7 +3095,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getVarDeclsOrBindingsExportedVariableDeclarationOrBindingParserRuleCall_1_1_3_0());
                       						
                     }
-                    pushFollow(FOLLOW_29);
+                    pushFollow(FOLLOW_28);
                     lv_varDeclsOrBindings_8_0=ruleExportedVariableDeclarationOrBinding();
 
                     state._fsp--;
@@ -3131,7 +3131,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt27) {
                     	case 1 :
                     	    {
-                    	    otherlv_9=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return current;
+                    	    otherlv_9=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      						newLeafNode(otherlv_9, grammarAccess.getAnnotatedExportableElementAccess().getCommaKeyword_1_1_4_0());
@@ -3144,7 +3144,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getVarDeclsOrBindingsExportedVariableDeclarationOrBindingParserRuleCall_1_1_4_1_0());
                     	      							
                     	    }
-                    	    pushFollow(FOLLOW_29);
+                    	    pushFollow(FOLLOW_28);
                     	    lv_varDeclsOrBindings_10_0=ruleExportedVariableDeclarationOrBinding();
 
                     	    state._fsp--;
@@ -3996,7 +3996,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Import,FOLLOW_30); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Import,FOLLOW_29); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getImportDeclarationImplAccess().getImportKeyword_0());
@@ -4166,7 +4166,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getImportClauseAccess().getImportSpecifiersDefaultImportSpecifierParserRuleCall_0_0_0());
                       					
                     }
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     lv_importSpecifiers_0_0=ruleDefaultImportSpecifier();
 
                     state._fsp--;
@@ -4198,7 +4198,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     switch (alt41) {
                         case 1 :
                             {
-                            otherlv_1=(Token)match(input,Comma,FOLLOW_32); if (state.failed) return current;
+                            otherlv_1=(Token)match(input,Comma,FOLLOW_31); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               					newLeafNode(otherlv_1, grammarAccess.getImportClauseAccess().getCommaKeyword_0_1_0());
@@ -4355,7 +4355,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 2 :
                     {
                     {
-                    otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_33); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_32); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getImportSpecifiersExceptDefaultAccess().getLeftCurlyBracketKeyword_1_0());
@@ -4419,7 +4419,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                 switch (alt43) {
                             	case 1 :
                             	    {
-                            	    otherlv_3=(Token)match(input,Comma,FOLLOW_25); if (state.failed) return current;
+                            	    otherlv_3=(Token)match(input,Comma,FOLLOW_14); if (state.failed) return current;
                             	    if ( state.backtracking==0 ) {
 
                             	      						newLeafNode(otherlv_3, grammarAccess.getImportSpecifiersExceptDefaultAccess().getCommaKeyword_1_1_1_0());
@@ -4624,7 +4624,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getNamedImportSpecifierAccess().getImportedElementTExportableElementCrossReference_1_0_0());
                       					
                     }
-                    pushFollow(FOLLOW_34);
+                    pushFollow(FOLLOW_33);
                     ruleIdentifierName();
 
                     state._fsp--;
@@ -4852,7 +4852,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Asterisk,FOLLOW_34); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Asterisk,FOLLOW_33); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getNamespaceImportSpecifierAccess().getAsteriskKeyword_1());
@@ -4871,7 +4871,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getNamespaceImportSpecifierAccess().getAliasBindingIdentifierParserRuleCall_3_0());
               				
             }
-            pushFollow(FOLLOW_35);
+            pushFollow(FOLLOW_34);
             lv_alias_3_0=ruleBindingIdentifier();
 
             state._fsp--;
@@ -5158,7 +5158,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						newCompositeNode(grammarAccess.getFunctionDeclarationAccess().getFunctionImplParserRuleCall_0_0_3());
               					
             }
-            pushFollow(FOLLOW_36);
+            pushFollow(FOLLOW_35);
             this_FunctionImpl_3=ruleFunctionImpl(current);
 
             state._fsp--;
@@ -5309,7 +5309,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getFunctionDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_2());
               				
             }
-            pushFollow(FOLLOW_37);
+            pushFollow(FOLLOW_36);
             this_AsyncNoTrailingLineBreak_2=ruleAsyncNoTrailingLineBreak(current);
 
             state._fsp--;
@@ -5329,7 +5329,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						newCompositeNode(grammarAccess.getFunctionDeclarationAccess().getFunctionImplParserRuleCall_0_0_3());
               					
             }
-            pushFollow(FOLLOW_36);
+            pushFollow(FOLLOW_35);
             this_FunctionImpl_3=norm3_FunctionImpl(current);
 
             state._fsp--;
@@ -5440,7 +5440,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_declaredAsync_0_0=(Token)match(input,Async,FOLLOW_38); if (state.failed) return current;
+                    lv_declaredAsync_0_0=(Token)match(input,Async,FOLLOW_37); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredAsync_0_0, grammarAccess.getAsyncNoTrailingLineBreakAccess().getDeclaredAsyncAsyncKeyword_0_0());
@@ -5523,7 +5523,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Function,FOLLOW_39); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Function,FOLLOW_38); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
@@ -5551,7 +5551,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_generator_1_0=(Token)match(input,Asterisk,FOLLOW_40); if (state.failed) return current;
+                    lv_generator_1_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(lv_generator_1_0, grammarAccess.getFunctionImplAccess().getGeneratorAsteriskKeyword_1_0_0_0());
@@ -5706,7 +5706,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Function,FOLLOW_39); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Function,FOLLOW_38); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
@@ -5734,7 +5734,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_generator_1_0=(Token)match(input,Asterisk,FOLLOW_40); if (state.failed) return current;
+                    lv_generator_1_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(lv_generator_1_0, grammarAccess.getFunctionImplAccess().getGeneratorAsteriskKeyword_1_0_0_0());
@@ -5889,7 +5889,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Function,FOLLOW_39); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Function,FOLLOW_38); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
@@ -5917,7 +5917,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_generator_1_0=(Token)match(input,Asterisk,FOLLOW_40); if (state.failed) return current;
+                    lv_generator_1_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(lv_generator_1_0, grammarAccess.getFunctionImplAccess().getGeneratorAsteriskKeyword_1_0_0_0());
@@ -6087,7 +6087,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeVariablesParserRuleCall_0());
                       			
                     }
-                    pushFollow(FOLLOW_41);
+                    pushFollow(FOLLOW_40);
                     this_TypeVariables_0=ruleTypeVariables(current);
 
                     state._fsp--;
@@ -6118,7 +6118,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					newCompositeNode(grammarAccess.getFunctionHeaderAccess().getNameBindingIdentifierParserRuleCall_1_0());
                       				
                     }
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     lv_name_1_0=ruleBindingIdentifier();
 
                     state._fsp--;
@@ -6153,7 +6153,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2());
               		
             }
-            pushFollow(FOLLOW_43);
+            pushFollow(FOLLOW_42);
             this_StrictFormalParameters_2=ruleStrictFormalParameters(current);
 
             state._fsp--;
@@ -6254,7 +6254,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeVariablesParserRuleCall_0());
                       			
                     }
-                    pushFollow(FOLLOW_41);
+                    pushFollow(FOLLOW_40);
                     this_TypeVariables_0=ruleTypeVariables(current);
 
                     state._fsp--;
@@ -6285,7 +6285,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					newCompositeNode(grammarAccess.getFunctionHeaderAccess().getNameBindingIdentifierParserRuleCall_1_0());
                       				
                     }
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     lv_name_1_0=norm1_BindingIdentifier();
 
                     state._fsp--;
@@ -6320,7 +6320,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2());
               		
             }
-            pushFollow(FOLLOW_43);
+            pushFollow(FOLLOW_42);
             this_StrictFormalParameters_2=ruleStrictFormalParameters(current);
 
             state._fsp--;
@@ -6421,7 +6421,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeVariablesParserRuleCall_0());
                       			
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     this_TypeVariables_0=ruleTypeVariables(current);
 
                     state._fsp--;
@@ -6452,7 +6452,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					newCompositeNode(grammarAccess.getFunctionHeaderAccess().getNameBindingIdentifierParserRuleCall_1_0());
                       				
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     lv_name_1_0=ruleBindingIdentifier();
 
                     state._fsp--;
@@ -6487,7 +6487,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2());
               		
             }
-            pushFollow(FOLLOW_43);
+            pushFollow(FOLLOW_42);
             this_StrictFormalParameters_2=norm1_StrictFormalParameters(current);
 
             state._fsp--;
@@ -6588,7 +6588,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeVariablesParserRuleCall_0());
                       			
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     this_TypeVariables_0=ruleTypeVariables(current);
 
                     state._fsp--;
@@ -6619,7 +6619,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					newCompositeNode(grammarAccess.getFunctionHeaderAccess().getNameBindingIdentifierParserRuleCall_1_0());
                       				
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     lv_name_1_0=norm1_BindingIdentifier();
 
                     state._fsp--;
@@ -6654,7 +6654,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2());
               		
             }
-            pushFollow(FOLLOW_43);
+            pushFollow(FOLLOW_42);
             this_StrictFormalParameters_2=norm1_StrictFormalParameters(current);
 
             state._fsp--;
@@ -7268,7 +7268,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getAnnotatedFunctionDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_2());
               		
             }
-            pushFollow(FOLLOW_37);
+            pushFollow(FOLLOW_36);
             this_AsyncNoTrailingLineBreak_2=ruleAsyncNoTrailingLineBreak(current);
 
             state._fsp--;
@@ -7470,7 +7470,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             {
-            lv_declaredAsync_0_0=(Token)match(input,Async,FOLLOW_44); if (state.failed) return current;
+            lv_declaredAsync_0_0=(Token)match(input,Async,FOLLOW_43); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               							newLeafNode(lv_declaredAsync_0_0, grammarAccess.getAsyncFunctionExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_0());
@@ -7498,7 +7498,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getAsyncFunctionExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_1());
               				
             }
-            pushFollow(FOLLOW_45);
+            pushFollow(FOLLOW_44);
             this_NoLineTerminator_1=ruleNoLineTerminator(current);
 
             state._fsp--;
@@ -7509,7 +7509,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					afterParserOrEnumRuleCall();
               				
             }
-            otherlv_2=(Token)match(input,Function,FOLLOW_39); if (state.failed) return current;
+            otherlv_2=(Token)match(input,Function,FOLLOW_38); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_2, grammarAccess.getAsyncFunctionExpressionAccess().getFunctionKeyword_0_0_2());
@@ -7724,7 +7724,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getArrowExpressionAccess().getStrictFormalParametersParserRuleCall_0_0_0_0_0());
                       						
                     }
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     this_StrictFormalParameters_0=ruleStrictFormalParameters(current);
 
                     state._fsp--;
@@ -7752,7 +7752,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_0_1());
                               							
                             }
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef(current);
 
                             state._fsp--;
@@ -7782,7 +7782,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_declaredAsync_2_0=(Token)match(input,Async,FOLLOW_48); if (state.failed) return current;
+                    lv_declaredAsync_2_0=(Token)match(input,Async,FOLLOW_47); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       											newLeafNode(lv_declaredAsync_2_0, grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0());
@@ -7810,7 +7810,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getArrowExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_0_1_0_0_1());
                       								
                     }
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     this_NoLineTerminator_3=ruleNoLineTerminator(current);
 
                     state._fsp--;
@@ -7830,7 +7830,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       										newCompositeNode(grammarAccess.getArrowExpressionAccess().getStrictFormalParametersParserRuleCall_0_0_0_1_0_0_2());
                       									
                     }
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     this_StrictFormalParameters_4=ruleStrictFormalParameters(current);
 
                     state._fsp--;
@@ -7866,7 +7866,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_1_1());
                               							
                             }
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             this_ColonSepReturnTypeRef_5=ruleColonSepReturnTypeRef(current);
 
                             state._fsp--;
@@ -7898,7 +7898,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								newCompositeNode(grammarAccess.getArrowExpressionAccess().getFparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0());
                       							
                     }
-                    pushFollow(FOLLOW_47);
+                    pushFollow(FOLLOW_46);
                     lv_fpars_6_0=ruleBindingIdentifierAsFormalParameter();
 
                     state._fsp--;
@@ -7928,7 +7928,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_7=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_7, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
@@ -7947,7 +7947,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_hasBracesAroundBody_8_0=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return current;
+                    lv_hasBracesAroundBody_8_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(lv_hasBracesAroundBody_8_0, grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0());
@@ -8180,7 +8180,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getArrowExpressionAccess().getStrictFormalParametersParserRuleCall_0_0_0_0_0());
                       						
                     }
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     this_StrictFormalParameters_0=ruleStrictFormalParameters(current);
 
                     state._fsp--;
@@ -8208,7 +8208,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_0_1());
                               							
                             }
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef(current);
 
                             state._fsp--;
@@ -8238,7 +8238,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_declaredAsync_2_0=(Token)match(input,Async,FOLLOW_48); if (state.failed) return current;
+                    lv_declaredAsync_2_0=(Token)match(input,Async,FOLLOW_47); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       											newLeafNode(lv_declaredAsync_2_0, grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0());
@@ -8266,7 +8266,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getArrowExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_0_1_0_0_1());
                       								
                     }
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     this_NoLineTerminator_3=ruleNoLineTerminator(current);
 
                     state._fsp--;
@@ -8286,7 +8286,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       										newCompositeNode(grammarAccess.getArrowExpressionAccess().getStrictFormalParametersParserRuleCall_0_0_0_1_0_0_2());
                       									
                     }
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     this_StrictFormalParameters_4=ruleStrictFormalParameters(current);
 
                     state._fsp--;
@@ -8322,7 +8322,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_1_1());
                               							
                             }
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             this_ColonSepReturnTypeRef_5=ruleColonSepReturnTypeRef(current);
 
                             state._fsp--;
@@ -8354,7 +8354,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								newCompositeNode(grammarAccess.getArrowExpressionAccess().getFparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0());
                       							
                     }
-                    pushFollow(FOLLOW_47);
+                    pushFollow(FOLLOW_46);
                     lv_fpars_6_0=ruleBindingIdentifierAsFormalParameter();
 
                     state._fsp--;
@@ -8384,7 +8384,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_7=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_7, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
@@ -8403,7 +8403,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_hasBracesAroundBody_8_0=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return current;
+                    lv_hasBracesAroundBody_8_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(lv_hasBracesAroundBody_8_0, grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0());
@@ -8635,7 +8635,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getArrowExpressionAccess().getStrictFormalParametersParserRuleCall_0_0_0_0_0());
                       						
                     }
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     this_StrictFormalParameters_0=norm1_StrictFormalParameters(current);
 
                     state._fsp--;
@@ -8663,7 +8663,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_0_1());
                               							
                             }
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef(current);
 
                             state._fsp--;
@@ -8693,7 +8693,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_declaredAsync_2_0=(Token)match(input,Async,FOLLOW_51); if (state.failed) return current;
+                    lv_declaredAsync_2_0=(Token)match(input,Async,FOLLOW_50); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       											newLeafNode(lv_declaredAsync_2_0, grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0());
@@ -8721,7 +8721,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getArrowExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_0_1_0_0_1());
                       								
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     this_NoLineTerminator_3=ruleNoLineTerminator(current);
 
                     state._fsp--;
@@ -8741,7 +8741,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       										newCompositeNode(grammarAccess.getArrowExpressionAccess().getStrictFormalParametersParserRuleCall_0_0_0_1_0_0_2());
                       									
                     }
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     this_StrictFormalParameters_4=norm1_StrictFormalParameters(current);
 
                     state._fsp--;
@@ -8777,7 +8777,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_1_1());
                               							
                             }
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             this_ColonSepReturnTypeRef_5=ruleColonSepReturnTypeRef(current);
 
                             state._fsp--;
@@ -8809,7 +8809,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								newCompositeNode(grammarAccess.getArrowExpressionAccess().getFparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0());
                       							
                     }
-                    pushFollow(FOLLOW_47);
+                    pushFollow(FOLLOW_46);
                     lv_fpars_6_0=norm1_BindingIdentifierAsFormalParameter();
 
                     state._fsp--;
@@ -8839,7 +8839,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_7=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_7, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
@@ -8858,7 +8858,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_hasBracesAroundBody_8_0=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return current;
+                    lv_hasBracesAroundBody_8_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(lv_hasBracesAroundBody_8_0, grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0());
@@ -9090,7 +9090,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getArrowExpressionAccess().getStrictFormalParametersParserRuleCall_0_0_0_0_0());
                       						
                     }
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     this_StrictFormalParameters_0=norm1_StrictFormalParameters(current);
 
                     state._fsp--;
@@ -9118,7 +9118,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_0_1());
                               							
                             }
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef(current);
 
                             state._fsp--;
@@ -9148,7 +9148,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_declaredAsync_2_0=(Token)match(input,Async,FOLLOW_51); if (state.failed) return current;
+                    lv_declaredAsync_2_0=(Token)match(input,Async,FOLLOW_50); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       											newLeafNode(lv_declaredAsync_2_0, grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0());
@@ -9176,7 +9176,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getArrowExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_0_1_0_0_1());
                       								
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     this_NoLineTerminator_3=ruleNoLineTerminator(current);
 
                     state._fsp--;
@@ -9196,7 +9196,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       										newCompositeNode(grammarAccess.getArrowExpressionAccess().getStrictFormalParametersParserRuleCall_0_0_0_1_0_0_2());
                       									
                     }
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     this_StrictFormalParameters_4=norm1_StrictFormalParameters(current);
 
                     state._fsp--;
@@ -9232,7 +9232,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_1_1());
                               							
                             }
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             this_ColonSepReturnTypeRef_5=ruleColonSepReturnTypeRef(current);
 
                             state._fsp--;
@@ -9264,7 +9264,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								newCompositeNode(grammarAccess.getArrowExpressionAccess().getFparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0());
                       							
                     }
-                    pushFollow(FOLLOW_47);
+                    pushFollow(FOLLOW_46);
                     lv_fpars_6_0=norm1_BindingIdentifierAsFormalParameter();
 
                     state._fsp--;
@@ -9294,7 +9294,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_7=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_7, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
@@ -9313,7 +9313,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_hasBracesAroundBody_8_0=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return current;
+                    lv_hasBracesAroundBody_8_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(lv_hasBracesAroundBody_8_0, grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0());
@@ -9452,7 +9452,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftParenthesis,FOLLOW_52); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftParenthesis,FOLLOW_51); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getStrictFormalParametersAccess().getLeftParenthesisKeyword_0());
@@ -9474,7 +9474,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getStrictFormalParametersAccess().getFparsFormalParameterParserRuleCall_1_0_0());
                       					
                     }
-                    pushFollow(FOLLOW_53);
+                    pushFollow(FOLLOW_52);
                     lv_fpars_1_0=ruleFormalParameter();
 
                     state._fsp--;
@@ -9510,7 +9510,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt89) {
                     	case 1 :
                     	    {
-                    	    otherlv_2=(Token)match(input,Comma,FOLLOW_54); if (state.failed) return current;
+                    	    otherlv_2=(Token)match(input,Comma,FOLLOW_53); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_2, grammarAccess.getStrictFormalParametersAccess().getCommaKeyword_1_1_0());
@@ -9523,7 +9523,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							newCompositeNode(grammarAccess.getStrictFormalParametersAccess().getFparsFormalParameterParserRuleCall_1_1_1_0());
                     	      						
                     	    }
-                    	    pushFollow(FOLLOW_53);
+                    	    pushFollow(FOLLOW_52);
                     	    lv_fpars_3_0=ruleFormalParameter();
 
                     	    state._fsp--;
@@ -9606,7 +9606,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftParenthesis,FOLLOW_52); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftParenthesis,FOLLOW_51); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getStrictFormalParametersAccess().getLeftParenthesisKeyword_0());
@@ -9628,7 +9628,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getStrictFormalParametersAccess().getFparsFormalParameterParserRuleCall_1_0_0());
                       					
                     }
-                    pushFollow(FOLLOW_53);
+                    pushFollow(FOLLOW_52);
                     lv_fpars_1_0=norm1_FormalParameter();
 
                     state._fsp--;
@@ -9664,7 +9664,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt91) {
                     	case 1 :
                     	    {
-                    	    otherlv_2=(Token)match(input,Comma,FOLLOW_54); if (state.failed) return current;
+                    	    otherlv_2=(Token)match(input,Comma,FOLLOW_53); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_2, grammarAccess.getStrictFormalParametersAccess().getCommaKeyword_1_1_0());
@@ -9677,7 +9677,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							newCompositeNode(grammarAccess.getStrictFormalParametersAccess().getFparsFormalParameterParserRuleCall_1_1_1_0());
                     	      						
                     	    }
-                    	    pushFollow(FOLLOW_53);
+                    	    pushFollow(FOLLOW_52);
                     	    lv_fpars_3_0=norm1_FormalParameter();
 
                     	    state._fsp--;
@@ -10508,7 +10508,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getExpressionAnnotationListParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_55);
+            pushFollow(FOLLOW_54);
             this_ExpressionAnnotationList_0=ruleExpressionAnnotationList();
 
             state._fsp--;
@@ -10550,7 +10550,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,Class,FOLLOW_56); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,Class,FOLLOW_55); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_2, grammarAccess.getAnnotatedExpressionAccess().getClassKeyword_1_0_1());
@@ -10685,7 +10685,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getAsyncNoTrailingLineBreakParserRuleCall_1_1_1());
                       				
                     }
-                    pushFollow(FOLLOW_45);
+                    pushFollow(FOLLOW_44);
                     this_AsyncNoTrailingLineBreak_7=ruleAsyncNoTrailingLineBreak(current);
 
                     state._fsp--;
@@ -10773,7 +10773,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getExpressionAnnotationListParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_55);
+            pushFollow(FOLLOW_54);
             this_ExpressionAnnotationList_0=ruleExpressionAnnotationList();
 
             state._fsp--;
@@ -10815,7 +10815,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,Class,FOLLOW_57); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,Class,FOLLOW_56); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_2, grammarAccess.getAnnotatedExpressionAccess().getClassKeyword_1_0_1());
@@ -10843,7 +10843,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getNameBindingIdentifierParserRuleCall_1_0_2_0());
                               						
                             }
-                            pushFollow(FOLLOW_57);
+                            pushFollow(FOLLOW_56);
                             lv_name_3_0=norm1_BindingIdentifier();
 
                             state._fsp--;
@@ -10886,7 +10886,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               						newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getClassExtendsClauseParserRuleCall_1_0_3());
                               					
                             }
-                            pushFollow(FOLLOW_57);
+                            pushFollow(FOLLOW_56);
                             this_ClassExtendsClause_4=norm1_ClassExtendsClause(current);
 
                             state._fsp--;
@@ -10950,7 +10950,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getAsyncNoTrailingLineBreakParserRuleCall_1_1_1());
                       				
                     }
-                    pushFollow(FOLLOW_45);
+                    pushFollow(FOLLOW_44);
                     this_AsyncNoTrailingLineBreak_7=ruleAsyncNoTrailingLineBreak(current);
 
                     state._fsp--;
@@ -11074,7 +11074,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_declaredCovariant_0_0=(Token)match(input,Out,FOLLOW_14); if (state.failed) return current;
+                    lv_declaredCovariant_0_0=(Token)match(input,Out,FOLLOW_57); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(lv_declaredCovariant_0_0, grammarAccess.getTypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
@@ -11101,7 +11101,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_declaredContravariant_1_0=(Token)match(input,In,FOLLOW_14); if (state.failed) return current;
+                    lv_declaredContravariant_1_0=(Token)match(input,In,FOLLOW_57); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(lv_declaredContravariant_1_0, grammarAccess.getTypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
@@ -12200,7 +12200,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getBlockAccess().getLeftCurlyBracketKeyword_0_0_1());
@@ -12230,7 +12230,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      					newCompositeNode(grammarAccess.getBlockAccess().getStatementsStatementParserRuleCall_1_0());
             	      				
             	    }
-            	    pushFollow(FOLLOW_50);
+            	    pushFollow(FOLLOW_49);
             	    lv_statements_2_0=ruleStatement();
 
             	    state._fsp--;
@@ -12314,7 +12314,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getBlockAccess().getLeftCurlyBracketKeyword_0_0_1());
@@ -12344,7 +12344,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      					newCompositeNode(grammarAccess.getBlockAccess().getStatementsStatementParserRuleCall_1_0());
             	      				
             	    }
-            	    pushFollow(FOLLOW_50);
+            	    pushFollow(FOLLOW_49);
             	    lv_statements_2_0=norm1_Statement();
 
             	    state._fsp--;
@@ -13503,7 +13503,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               							newCompositeNode(grammarAccess.getVariableStatementAccess().getVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_1_0());
               						
             }
-            pushFollow(FOLLOW_28);
+            pushFollow(FOLLOW_27);
             lv_varStmtKeyword_1_0=ruleVariableStatementKeyword();
 
             state._fsp--;
@@ -13539,7 +13539,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getVariableStatementAccess().getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_1_0());
               				
             }
-            pushFollow(FOLLOW_29);
+            pushFollow(FOLLOW_28);
             lv_varDeclsOrBindings_2_0=norm1_VariableDeclarationOrBinding();
 
             state._fsp--;
@@ -13575,7 +13575,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt123) {
             	case 1 :
             	    {
-            	    otherlv_3=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return current;
+            	    otherlv_3=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				newLeafNode(otherlv_3, grammarAccess.getVariableStatementAccess().getCommaKeyword_2_0());
@@ -13588,7 +13588,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      						newCompositeNode(grammarAccess.getVariableStatementAccess().getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_2_1_0());
             	      					
             	    }
-            	    pushFollow(FOLLOW_29);
+            	    pushFollow(FOLLOW_28);
             	    lv_varDeclsOrBindings_4_0=norm1_VariableDeclarationOrBinding();
 
             	    state._fsp--;
@@ -13693,7 +13693,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               							newCompositeNode(grammarAccess.getVariableStatementAccess().getVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_1_0());
               						
             }
-            pushFollow(FOLLOW_28);
+            pushFollow(FOLLOW_27);
             lv_varStmtKeyword_1_0=ruleVariableStatementKeyword();
 
             state._fsp--;
@@ -13729,7 +13729,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getVariableStatementAccess().getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_1_0());
               				
             }
-            pushFollow(FOLLOW_29);
+            pushFollow(FOLLOW_28);
             lv_varDeclsOrBindings_2_0=norm3_VariableDeclarationOrBinding();
 
             state._fsp--;
@@ -13765,7 +13765,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt124) {
             	case 1 :
             	    {
-            	    otherlv_3=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return current;
+            	    otherlv_3=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				newLeafNode(otherlv_3, grammarAccess.getVariableStatementAccess().getCommaKeyword_2_0());
@@ -13778,7 +13778,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      						newCompositeNode(grammarAccess.getVariableStatementAccess().getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_2_1_0());
             	      					
             	    }
-            	    pushFollow(FOLLOW_29);
+            	    pushFollow(FOLLOW_28);
             	    lv_varDeclsOrBindings_4_0=norm3_VariableDeclarationOrBinding();
 
             	    state._fsp--;
@@ -13922,7 +13922,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      					newCompositeNode(grammarAccess.getExportedVariableStatementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_0());
             	      				
             	    }
-            	    pushFollow(FOLLOW_27);
+            	    pushFollow(FOLLOW_26);
             	    lv_declaredModifiers_1_0=ruleN4Modifier();
 
             	    state._fsp--;
@@ -13958,7 +13958,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getExportedVariableStatementAccess().getVarStmtKeywordVariableStatementKeywordEnumRuleCall_2_0());
               				
             }
-            pushFollow(FOLLOW_28);
+            pushFollow(FOLLOW_27);
             lv_varStmtKeyword_2_0=ruleVariableStatementKeyword();
 
             state._fsp--;
@@ -13988,7 +13988,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getExportedVariableStatementAccess().getVarDeclsOrBindingsExportedVariableDeclarationOrBindingParserRuleCall_3_0());
               				
             }
-            pushFollow(FOLLOW_29);
+            pushFollow(FOLLOW_28);
             lv_varDeclsOrBindings_3_0=ruleExportedVariableDeclarationOrBinding();
 
             state._fsp--;
@@ -14024,7 +14024,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt126) {
             	case 1 :
             	    {
-            	    otherlv_4=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return current;
+            	    otherlv_4=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				newLeafNode(otherlv_4, grammarAccess.getExportedVariableStatementAccess().getCommaKeyword_4_0());
@@ -14037,7 +14037,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      						newCompositeNode(grammarAccess.getExportedVariableStatementAccess().getVarDeclsOrBindingsExportedVariableDeclarationOrBindingParserRuleCall_4_1_0());
             	      					
             	    }
-            	    pushFollow(FOLLOW_29);
+            	    pushFollow(FOLLOW_28);
             	    lv_varDeclsOrBindings_5_0=ruleExportedVariableDeclarationOrBinding();
 
             	    state._fsp--;
@@ -14818,7 +14818,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
             {
-            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               				newLeafNode(otherlv_1, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_1_0());
@@ -14925,7 +14925,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
             {
-            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               				newLeafNode(otherlv_1, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_1_0());
@@ -15032,7 +15032,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
             {
-            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               				newLeafNode(otherlv_1, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_1_0());
@@ -15139,7 +15139,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
             {
-            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               				newLeafNode(otherlv_1, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_1_0());
@@ -15254,7 +15254,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt133) {
                 case 1 :
                     {
-                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_0_0_0());
@@ -15372,7 +15372,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt134) {
                 case 1 :
                     {
-                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_0_0_0());
@@ -15490,7 +15490,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt135) {
                 case 1 :
                     {
-                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_0_0_0());
@@ -15608,7 +15608,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt136) {
                 case 1 :
                     {
-                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_0_0_0());
@@ -16153,7 +16153,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt138) {
                 case 1 :
                     {
-                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_2, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_1_1_0());
@@ -16323,7 +16323,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt140) {
                 case 1 :
                     {
-                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_2, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_1_1_0());
@@ -16493,7 +16493,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt142) {
                 case 1 :
                     {
-                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_2, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_1_1_0());
@@ -16663,7 +16663,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt144) {
                 case 1 :
                     {
-                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_2, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_1_1_0());
@@ -16872,7 +16872,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt147) {
                 case 1 :
                     {
-                    otherlv_3=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_3, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_0_1_0());
@@ -17081,7 +17081,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt150) {
                 case 1 :
                     {
-                    otherlv_3=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_3, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_0_1_0());
@@ -17290,7 +17290,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt153) {
                 case 1 :
                     {
-                    otherlv_3=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_3, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_0_1_0());
@@ -17499,7 +17499,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt156) {
                 case 1 :
                     {
-                    otherlv_3=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_3, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_0_1_0());
@@ -17878,7 +17878,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getExportedVariableBindingAccess().getEqualsSignKeyword_1());
@@ -17982,7 +17982,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getExportedVariableBindingAccess().getEqualsSignKeyword_1());
@@ -18525,13 +18525,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,If,FOLLOW_42); if (state.failed) return current;
+            otherlv_0=(Token)match(input,If,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getIfStatementAccess().getIfKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getIfStatementAccess().getLeftParenthesisKeyword_1());
@@ -18704,13 +18704,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,If,FOLLOW_42); if (state.failed) return current;
+            otherlv_0=(Token)match(input,If,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getIfStatementAccess().getIfKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getIfStatementAccess().getLeftParenthesisKeyword_1());
@@ -19234,13 +19234,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_2=(Token)match(input,While,FOLLOW_42); if (state.failed) return current;
+            otherlv_2=(Token)match(input,While,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_2, grammarAccess.getDoStatementAccess().getWhileKeyword_2());
               		
             }
-            otherlv_3=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_3=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_3, grammarAccess.getDoStatementAccess().getLeftParenthesisKeyword_3());
@@ -19277,7 +19277,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_36); if (state.failed) return current;
+            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_35); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_5, grammarAccess.getDoStatementAccess().getRightParenthesisKeyword_5());
@@ -19385,13 +19385,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_2=(Token)match(input,While,FOLLOW_42); if (state.failed) return current;
+            otherlv_2=(Token)match(input,While,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_2, grammarAccess.getDoStatementAccess().getWhileKeyword_2());
               		
             }
-            otherlv_3=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_3=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_3, grammarAccess.getDoStatementAccess().getLeftParenthesisKeyword_3());
@@ -19428,7 +19428,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_36); if (state.failed) return current;
+            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_35); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_5, grammarAccess.getDoStatementAccess().getRightParenthesisKeyword_5());
@@ -19549,13 +19549,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,While,FOLLOW_42); if (state.failed) return current;
+            otherlv_0=(Token)match(input,While,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getWhileStatementAccess().getWhileKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getWhileStatementAccess().getLeftParenthesisKeyword_1());
@@ -19667,13 +19667,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,While,FOLLOW_42); if (state.failed) return current;
+            otherlv_0=(Token)match(input,While,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getWhileStatementAccess().getWhileKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getWhileStatementAccess().getLeftParenthesisKeyword_1());
@@ -19878,7 +19878,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,For,FOLLOW_42); if (state.failed) return current;
+            otherlv_1=(Token)match(input,For,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getForStatementAccess().getForKeyword_1());
@@ -19929,7 +19929,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     }
                     {
                     {
-                    lv_forIn_4_0=(Token)match(input,In,FOLLOW_49); if (state.failed) return current;
+                    lv_forIn_4_0=(Token)match(input,In,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       								newLeafNode(lv_forIn_4_0, grammarAccess.getForStatementAccess().getForInInKeyword_3_0_0_1_0());
@@ -20010,7 +20010,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               									newCompositeNode(grammarAccess.getForStatementAccess().getVarStmtKeywordVariableStatementKeywordEnumRuleCall_3_1_0_0_0_0());
                               								
                             }
-                            pushFollow(FOLLOW_28);
+                            pushFollow(FOLLOW_27);
                             lv_varStmtKeyword_7_0=ruleVariableStatementKeyword();
 
                             state._fsp--;
@@ -20266,7 +20266,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                                 switch (alt167) {
                                             	case 1 :
                                             	    {
-                                            	    otherlv_13=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return current;
+                                            	    otherlv_13=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return current;
                                             	    if ( state.backtracking==0 ) {
 
                                             	      												newLeafNode(otherlv_13, grammarAccess.getForStatementAccess().getCommaKeyword_3_1_0_0_1_1_1_0_0_0());
@@ -21144,7 +21144,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,For,FOLLOW_42); if (state.failed) return current;
+            otherlv_1=(Token)match(input,For,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getForStatementAccess().getForKeyword_1());
@@ -21195,7 +21195,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     }
                     {
                     {
-                    lv_forIn_4_0=(Token)match(input,In,FOLLOW_49); if (state.failed) return current;
+                    lv_forIn_4_0=(Token)match(input,In,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       								newLeafNode(lv_forIn_4_0, grammarAccess.getForStatementAccess().getForInInKeyword_3_0_0_1_0());
@@ -21276,7 +21276,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               									newCompositeNode(grammarAccess.getForStatementAccess().getVarStmtKeywordVariableStatementKeywordEnumRuleCall_3_1_0_0_0_0());
                               								
                             }
-                            pushFollow(FOLLOW_28);
+                            pushFollow(FOLLOW_27);
                             lv_varStmtKeyword_7_0=ruleVariableStatementKeyword();
 
                             state._fsp--;
@@ -21532,7 +21532,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                                 switch (alt185) {
                                             	case 1 :
                                             	    {
-                                            	    otherlv_13=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return current;
+                                            	    otherlv_13=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return current;
                                             	    if ( state.backtracking==0 ) {
 
                                             	      												newLeafNode(otherlv_13, grammarAccess.getForStatementAccess().getCommaKeyword_3_1_0_0_1_1_1_0_0_0());
@@ -23446,13 +23446,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,With,FOLLOW_42); if (state.failed) return current;
+            otherlv_0=(Token)match(input,With,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getWithStatementAccess().getWithKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getWithStatementAccess().getLeftParenthesisKeyword_1());
@@ -23564,13 +23564,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,With,FOLLOW_42); if (state.failed) return current;
+            otherlv_0=(Token)match(input,With,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getWithStatementAccess().getWithKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getWithStatementAccess().getLeftParenthesisKeyword_1());
@@ -23721,13 +23721,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Switch,FOLLOW_42); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Switch,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getSwitchStatementAccess().getSwitchKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getSwitchStatementAccess().getLeftParenthesisKeyword_1());
@@ -23968,13 +23968,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Switch,FOLLOW_42); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Switch,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getSwitchStatementAccess().getSwitchKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getSwitchStatementAccess().getLeftParenthesisKeyword_1());
@@ -24241,7 +24241,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Case,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Case,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getCaseClauseAccess().getCaseKeyword_0());
@@ -24370,7 +24370,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Case,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Case,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getCaseClauseAccess().getCaseKeyword_0());
@@ -25031,7 +25031,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Throw,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Throw,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
                promoteEOL(); 
             }
@@ -25120,7 +25120,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,Throw,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,Throw,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
                promoteEOL(); 
             }
@@ -25716,7 +25716,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Catch,FOLLOW_42); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Catch,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getCatchBlockAccess().getCatchKeyword_1());
@@ -25845,7 +25845,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Catch,FOLLOW_42); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Catch,FOLLOW_41); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getCatchBlockAccess().getCatchKeyword_1());
@@ -27505,7 +27505,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getParenExpressionAccess().getLeftParenthesisKeyword_0());
@@ -27583,7 +27583,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getParenExpressionAccess().getLeftParenthesisKeyword_0());
@@ -28829,7 +28829,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_spread_1_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return current;
+                    lv_spread_1_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_spread_1_0, grammarAccess.getArrayElementAccess().getSpreadFullStopFullStopFullStopKeyword_1_0());
@@ -28936,7 +28936,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_spread_1_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return current;
+                    lv_spread_1_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_spread_1_0, grammarAccess.getArrayElementAccess().getSpreadFullStopFullStopFullStopKeyword_1_0());
@@ -30023,7 +30023,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(otherlv_4, grammarAccess.getAnnotatedPropertyAssignmentAccess().getColonKeyword_1_0_0_0_3());
@@ -30216,7 +30216,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         case 1 :
                             {
                             {
-                            lv_declaredOptional_12_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                            lv_declaredOptional_12_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               							newLeafNode(lv_declaredOptional_12_0, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredOptionalQuestionMarkKeyword_1_2_1_0());
@@ -30239,7 +30239,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_13=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return current;
+                    otherlv_13=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_13, grammarAccess.getAnnotatedPropertyAssignmentAccess().getLeftParenthesisKeyword_1_2_2());
@@ -30452,7 +30452,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_3_0_0_3_0_1_0());
                               										
                             }
-                            pushFollow(FOLLOW_40);
+                            pushFollow(FOLLOW_39);
                             lv_declaredName_21_0=ruleLiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -30514,7 +30514,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_3_0_0_3_1_0_0());
                               										
                             }
-                            pushFollow(FOLLOW_42);
+                            pushFollow(FOLLOW_41);
                             lv_declaredName_23_0=ruleLiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -30690,7 +30690,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     switch (alt256) {
                         case 1 :
                             {
-                            otherlv_29=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                            otherlv_29=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               						newLeafNode(otherlv_29, grammarAccess.getAnnotatedPropertyAssignmentAccess().getEqualsSignKeyword_1_4_3_0());
@@ -30919,7 +30919,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       							newLeafNode(otherlv_4, grammarAccess.getAnnotatedPropertyAssignmentAccess().getColonKeyword_1_0_0_0_3());
@@ -31112,7 +31112,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         case 1 :
                             {
                             {
-                            lv_declaredOptional_12_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                            lv_declaredOptional_12_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               							newLeafNode(lv_declaredOptional_12_0, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredOptionalQuestionMarkKeyword_1_2_1_0());
@@ -31135,7 +31135,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_13=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return current;
+                    otherlv_13=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_13, grammarAccess.getAnnotatedPropertyAssignmentAccess().getLeftParenthesisKeyword_1_2_2());
@@ -31348,7 +31348,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_3_0_0_3_0_1_0());
                               										
                             }
-                            pushFollow(FOLLOW_40);
+                            pushFollow(FOLLOW_39);
                             lv_declaredName_21_0=norm1_LiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -31410,7 +31410,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_3_0_0_3_1_0_0());
                               										
                             }
-                            pushFollow(FOLLOW_42);
+                            pushFollow(FOLLOW_41);
                             lv_declaredName_23_0=norm1_LiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -31586,7 +31586,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     switch (alt265) {
                         case 1 :
                             {
-                            otherlv_29=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                            otherlv_29=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               						newLeafNode(otherlv_29, grammarAccess.getAnnotatedPropertyAssignmentAccess().getEqualsSignKeyword_1_4_3_0());
@@ -31846,7 +31846,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0());
                       								
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     lv_declaredName_4_0=ruleLiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -31908,7 +31908,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0());
                       								
                     }
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     lv_declaredName_6_0=ruleLiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -32164,7 +32164,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0());
                       								
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     lv_declaredName_4_0=norm1_LiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -32226,7 +32226,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0());
                       								
                     }
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     lv_declaredName_6_0=norm1_LiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -32491,7 +32491,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return current;
+            otherlv_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_4, grammarAccess.getPropertyNameValuePairAccess().getColonKeyword_0_0_4());
@@ -32684,7 +32684,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return current;
+            otherlv_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_4, grammarAccess.getPropertyNameValuePairAccess().getColonKeyword_0_0_4());
@@ -32873,7 +32873,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt280) {
                 case 1 :
                     {
-                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_2, grammarAccess.getPropertyNameValuePairSingleNameAccess().getEqualsSignKeyword_2_0());
@@ -33030,7 +33030,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt282) {
                 case 1 :
                     {
-                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_2, grammarAccess.getPropertyNameValuePairSingleNameAccess().getEqualsSignKeyword_2_0());
@@ -33451,7 +33451,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredOptional_3_0, grammarAccess.getPropertySetterDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_0());
@@ -33474,7 +33474,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_4=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return current;
+            otherlv_4=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_4, grammarAccess.getPropertySetterDeclarationAccess().getLeftParenthesisKeyword_2());
@@ -33654,7 +33654,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredOptional_3_0, grammarAccess.getPropertySetterDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_0());
@@ -33677,7 +33677,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_4=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return current;
+            otherlv_4=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_4, grammarAccess.getPropertySetterDeclarationAccess().getLeftParenthesisKeyword_2());
@@ -33847,7 +33847,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getParameterizedCallExpressionAccess().getTargetIdentifierRefParserRuleCall_1_0());
               				
             }
-            pushFollow(FOLLOW_42);
+            pushFollow(FOLLOW_41);
             lv_target_1_0=ruleIdentifierRef();
 
             state._fsp--;
@@ -33953,7 +33953,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getParameterizedCallExpressionAccess().getTargetIdentifierRefParserRuleCall_1_0());
               				
             }
-            pushFollow(FOLLOW_42);
+            pushFollow(FOLLOW_41);
             lv_target_1_0=norm1_IdentifierRef();
 
             state._fsp--;
@@ -34981,7 +34981,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getArgumentsAccess().getArgumentsArgumentParserRuleCall_0_0());
               				
             }
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             lv_arguments_0_0=ruleArgument();
 
             state._fsp--;
@@ -35030,7 +35030,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      						newCompositeNode(grammarAccess.getArgumentsAccess().getArgumentsArgumentParserRuleCall_1_1_0());
             	      					
             	    }
-            	    pushFollow(FOLLOW_31);
+            	    pushFollow(FOLLOW_30);
             	    lv_arguments_2_0=ruleArgument();
 
             	    state._fsp--;
@@ -35106,7 +35106,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getArgumentsAccess().getArgumentsArgumentParserRuleCall_0_0());
               				
             }
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             lv_arguments_0_0=norm1_Argument();
 
             state._fsp--;
@@ -35155,7 +35155,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      						newCompositeNode(grammarAccess.getArgumentsAccess().getArgumentsArgumentParserRuleCall_1_1_0());
             	      					
             	    }
-            	    pushFollow(FOLLOW_31);
+            	    pushFollow(FOLLOW_30);
             	    lv_arguments_2_0=norm1_Argument();
 
             	    state._fsp--;
@@ -35265,7 +35265,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_spread_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return current;
+                    lv_spread_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_spread_0_0, grammarAccess.getArgumentAccess().getSpreadFullStopFullStopFullStopKeyword_0_0());
@@ -35362,7 +35362,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_spread_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return current;
+                    lv_spread_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_spread_0_0, grammarAccess.getArgumentAccess().getSpreadFullStopFullStopFullStopKeyword_0_0());
@@ -36735,7 +36735,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftSquareBracket,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftSquareBracket,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getIndexedAccessExpressionTailAccess().getLeftSquareBracketKeyword_0());
@@ -36813,7 +36813,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftSquareBracket,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftSquareBracket,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getIndexedAccessExpressionTailAccess().getLeftSquareBracketKeyword_0());
@@ -36913,7 +36913,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getConcreteTypeArgumentsParserRuleCall_1());
                       			
                     }
-                    pushFollow(FOLLOW_25);
+                    pushFollow(FOLLOW_14);
                     this_ConcreteTypeArguments_1=ruleConcreteTypeArguments(current);
 
                     state._fsp--;
@@ -37016,7 +37016,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getConcreteTypeArgumentsParserRuleCall_1());
                       			
                     }
-                    pushFollow(FOLLOW_25);
+                    pushFollow(FOLLOW_14);
                     this_ConcreteTypeArguments_1=ruleConcreteTypeArguments(current);
 
                     state._fsp--;
@@ -37730,7 +37730,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getUnaryExpressionAccess().getOpUnaryOperatorEnumRuleCall_1_1_0());
                       					
                     }
-                    pushFollow(FOLLOW_49);
+                    pushFollow(FOLLOW_48);
                     lv_op_2_0=ruleUnaryOperator();
 
                     state._fsp--;
@@ -37884,7 +37884,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getUnaryExpressionAccess().getOpUnaryOperatorEnumRuleCall_1_1_0());
                       					
                     }
-                    pushFollow(FOLLOW_49);
+                    pushFollow(FOLLOW_48);
                     lv_op_2_0=ruleUnaryOperator();
 
                     state._fsp--;
@@ -38068,7 +38068,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getMultiplicativeExpressionAccess().getOpMultiplicativeOperatorEnumRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleMultiplicativeOperator();
 
             	    state._fsp--;
@@ -38228,7 +38228,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getMultiplicativeExpressionAccess().getOpMultiplicativeOperatorEnumRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleMultiplicativeOperator();
 
             	    state._fsp--;
@@ -38418,7 +38418,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getAdditiveExpressionAccess().getOpAdditiveOperatorEnumRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleAdditiveOperator();
 
             	    state._fsp--;
@@ -38575,7 +38575,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getAdditiveExpressionAccess().getOpAdditiveOperatorEnumRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleAdditiveOperator();
 
             	    state._fsp--;
@@ -38755,7 +38755,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getShiftExpressionAccess().getOpShiftOperatorParserRuleCall_1_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleShiftOperator();
 
             	    state._fsp--;
@@ -38899,7 +38899,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getShiftExpressionAccess().getOpShiftOperatorParserRuleCall_1_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleShiftOperator();
 
             	    state._fsp--;
@@ -39214,7 +39214,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getRelationalExpressionAccess().getOpRelationalOperatorParserRuleCall_1_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleRelationalOperator();
 
             	    state._fsp--;
@@ -39358,7 +39358,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getRelationalExpressionAccess().getOpRelationalOperatorParserRuleCall_1_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=norm1_RelationalOperator();
 
             	    state._fsp--;
@@ -39502,7 +39502,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getRelationalExpressionAccess().getOpRelationalOperatorParserRuleCall_1_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleRelationalOperator();
 
             	    state._fsp--;
@@ -39646,7 +39646,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getRelationalExpressionAccess().getOpRelationalOperatorParserRuleCall_1_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=norm1_RelationalOperator();
 
             	    state._fsp--;
@@ -40143,7 +40143,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getEqualityExpressionAccess().getOpEqualityOperatorEnumRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleEqualityOperator();
 
             	    state._fsp--;
@@ -40306,7 +40306,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getEqualityExpressionAccess().getOpEqualityOperatorEnumRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleEqualityOperator();
 
             	    state._fsp--;
@@ -40469,7 +40469,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getEqualityExpressionAccess().getOpEqualityOperatorEnumRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleEqualityOperator();
 
             	    state._fsp--;
@@ -40632,7 +40632,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getEqualityExpressionAccess().getOpEqualityOperatorEnumRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleEqualityOperator();
 
             	    state._fsp--;
@@ -40819,7 +40819,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseANDExpressionAccess().getOpBitwiseANDOperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseANDOperator();
 
             	    state._fsp--;
@@ -40973,7 +40973,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseANDExpressionAccess().getOpBitwiseANDOperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseANDOperator();
 
             	    state._fsp--;
@@ -41127,7 +41127,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseANDExpressionAccess().getOpBitwiseANDOperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseANDOperator();
 
             	    state._fsp--;
@@ -41281,7 +41281,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseANDExpressionAccess().getOpBitwiseANDOperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseANDOperator();
 
             	    state._fsp--;
@@ -41536,7 +41536,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseXORExpressionAccess().getOpBitwiseXOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseXOROperator();
 
             	    state._fsp--;
@@ -41690,7 +41690,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseXORExpressionAccess().getOpBitwiseXOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseXOROperator();
 
             	    state._fsp--;
@@ -41844,7 +41844,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseXORExpressionAccess().getOpBitwiseXOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseXOROperator();
 
             	    state._fsp--;
@@ -41998,7 +41998,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseXORExpressionAccess().getOpBitwiseXOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseXOROperator();
 
             	    state._fsp--;
@@ -42253,7 +42253,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseORExpressionAccess().getOpBitwiseOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseOROperator();
 
             	    state._fsp--;
@@ -42407,7 +42407,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseORExpressionAccess().getOpBitwiseOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseOROperator();
 
             	    state._fsp--;
@@ -42561,7 +42561,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseORExpressionAccess().getOpBitwiseOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseOROperator();
 
             	    state._fsp--;
@@ -42715,7 +42715,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getBitwiseORExpressionAccess().getOpBitwiseOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleBitwiseOROperator();
 
             	    state._fsp--;
@@ -42970,7 +42970,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getLogicalANDExpressionAccess().getOpLogicalANDOperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleLogicalANDOperator();
 
             	    state._fsp--;
@@ -43124,7 +43124,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getLogicalANDExpressionAccess().getOpLogicalANDOperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleLogicalANDOperator();
 
             	    state._fsp--;
@@ -43278,7 +43278,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getLogicalANDExpressionAccess().getOpLogicalANDOperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleLogicalANDOperator();
 
             	    state._fsp--;
@@ -43432,7 +43432,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getLogicalANDExpressionAccess().getOpLogicalANDOperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleLogicalANDOperator();
 
             	    state._fsp--;
@@ -43687,7 +43687,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getLogicalORExpressionAccess().getOpLogicalOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleLogicalOROperator();
 
             	    state._fsp--;
@@ -43841,7 +43841,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getLogicalORExpressionAccess().getOpLogicalOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleLogicalOROperator();
 
             	    state._fsp--;
@@ -43995,7 +43995,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getLogicalORExpressionAccess().getOpLogicalOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleLogicalOROperator();
 
             	    state._fsp--;
@@ -44149,7 +44149,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      								newCompositeNode(grammarAccess.getLogicalORExpressionAccess().getOpLogicalOROperatorParserRuleCall_1_0_0_1_0());
             	      							
             	    }
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    lv_op_2_0=ruleLogicalOROperator();
 
             	    state._fsp--;
@@ -44396,7 +44396,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,QuestionMark,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,QuestionMark,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(otherlv_2, grammarAccess.getConditionalExpressionAccess().getQuestionMarkKeyword_1_0_0_1());
@@ -44438,7 +44438,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_4, grammarAccess.getConditionalExpressionAccess().getColonKeyword_1_2());
@@ -44558,7 +44558,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,QuestionMark,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,QuestionMark,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(otherlv_2, grammarAccess.getConditionalExpressionAccess().getQuestionMarkKeyword_1_0_0_1());
@@ -44600,7 +44600,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_4, grammarAccess.getConditionalExpressionAccess().getColonKeyword_1_2());
@@ -44720,7 +44720,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,QuestionMark,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,QuestionMark,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(otherlv_2, grammarAccess.getConditionalExpressionAccess().getQuestionMarkKeyword_1_0_0_1());
@@ -44762,7 +44762,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_4, grammarAccess.getConditionalExpressionAccess().getColonKeyword_1_2());
@@ -44882,7 +44882,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,QuestionMark,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,QuestionMark,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(otherlv_2, grammarAccess.getConditionalExpressionAccess().getQuestionMarkKeyword_1_0_0_1());
@@ -44924,7 +44924,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_4, grammarAccess.getConditionalExpressionAccess().getColonKeyword_1_2());
@@ -45163,7 +45163,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               									newCompositeNode(grammarAccess.getAssignmentExpressionAccess().getOpAssignmentOperatorParserRuleCall_4_1_0_0_1_0());
                               								
                             }
-                            pushFollow(FOLLOW_49);
+                            pushFollow(FOLLOW_48);
                             lv_op_5_0=ruleAssignmentOperator();
 
                             state._fsp--;
@@ -45398,7 +45398,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               									newCompositeNode(grammarAccess.getAssignmentExpressionAccess().getOpAssignmentOperatorParserRuleCall_4_1_0_0_1_0());
                               								
                             }
-                            pushFollow(FOLLOW_49);
+                            pushFollow(FOLLOW_48);
                             lv_op_5_0=ruleAssignmentOperator();
 
                             state._fsp--;
@@ -45656,7 +45656,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               									newCompositeNode(grammarAccess.getAssignmentExpressionAccess().getOpAssignmentOperatorParserRuleCall_4_1_0_0_1_0());
                               								
                             }
-                            pushFollow(FOLLOW_49);
+                            pushFollow(FOLLOW_48);
                             lv_op_6_0=ruleAssignmentOperator();
 
                             state._fsp--;
@@ -45914,7 +45914,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               									newCompositeNode(grammarAccess.getAssignmentExpressionAccess().getOpAssignmentOperatorParserRuleCall_4_1_0_0_1_0());
                               								
                             }
-                            pushFollow(FOLLOW_49);
+                            pushFollow(FOLLOW_48);
                             lv_op_6_0=ruleAssignmentOperator();
 
                             state._fsp--;
@@ -46644,7 +46644,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Await,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Await,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getAwaitExpressionAccess().getAwaitKeyword_0_0_1());
@@ -46733,7 +46733,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Await,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Await,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getAwaitExpressionAccess().getAwaitKeyword_0_0_1());
@@ -46822,7 +46822,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Await,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Await,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getAwaitExpressionAccess().getAwaitKeyword_0_0_1());
@@ -46911,7 +46911,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Await,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Await,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getAwaitExpressionAccess().getAwaitKeyword_0_0_1());
@@ -47040,7 +47040,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newLeafNode(otherlv_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
               				
             }
-            otherlv_2=(Token)match(input,Promisify,FOLLOW_49); if (state.failed) return current;
+            otherlv_2=(Token)match(input,Promisify,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
@@ -47136,7 +47136,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newLeafNode(otherlv_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
               				
             }
-            otherlv_2=(Token)match(input,Promisify,FOLLOW_49); if (state.failed) return current;
+            otherlv_2=(Token)match(input,Promisify,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
@@ -47232,7 +47232,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newLeafNode(otherlv_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
               				
             }
-            otherlv_2=(Token)match(input,Promisify,FOLLOW_49); if (state.failed) return current;
+            otherlv_2=(Token)match(input,Promisify,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
@@ -47328,7 +47328,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newLeafNode(otherlv_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
               				
             }
-            otherlv_2=(Token)match(input,Promisify,FOLLOW_49); if (state.failed) return current;
+            otherlv_2=(Token)match(input,Promisify,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
@@ -47447,7 +47447,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getExpressionAccess().getAssignmentExpressionParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             this_AssignmentExpression_0=ruleAssignmentExpression();
 
             state._fsp--;
@@ -47478,7 +47478,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_2, grammarAccess.getExpressionAccess().getCommaKeyword_1_1());
@@ -47491,7 +47491,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getExpressionAccess().getExprsAssignmentExpressionParserRuleCall_1_2_0());
                       					
                     }
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     lv_exprs_3_0=ruleAssignmentExpression();
 
                     state._fsp--;
@@ -47527,7 +47527,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt372) {
                     	case 1 :
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return current;
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_4, grammarAccess.getExpressionAccess().getCommaKeyword_1_3_0());
@@ -47540,7 +47540,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							newCompositeNode(grammarAccess.getExpressionAccess().getExprsAssignmentExpressionParserRuleCall_1_3_1_0());
                     	      						
                     	    }
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    lv_exprs_5_0=ruleAssignmentExpression();
 
                     	    state._fsp--;
@@ -47623,7 +47623,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getExpressionAccess().getAssignmentExpressionParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             this_AssignmentExpression_0=norm1_AssignmentExpression();
 
             state._fsp--;
@@ -47654,7 +47654,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_2, grammarAccess.getExpressionAccess().getCommaKeyword_1_1());
@@ -47667,7 +47667,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getExpressionAccess().getExprsAssignmentExpressionParserRuleCall_1_2_0());
                       					
                     }
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     lv_exprs_3_0=norm1_AssignmentExpression();
 
                     state._fsp--;
@@ -47703,7 +47703,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt374) {
                     	case 1 :
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return current;
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_4, grammarAccess.getExpressionAccess().getCommaKeyword_1_3_0());
@@ -47716,7 +47716,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							newCompositeNode(grammarAccess.getExpressionAccess().getExprsAssignmentExpressionParserRuleCall_1_3_1_0());
                     	      						
                     	    }
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    lv_exprs_5_0=norm1_AssignmentExpression();
 
                     	    state._fsp--;
@@ -47799,7 +47799,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getExpressionAccess().getAssignmentExpressionParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             this_AssignmentExpression_0=norm2_AssignmentExpression();
 
             state._fsp--;
@@ -47830,7 +47830,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_2, grammarAccess.getExpressionAccess().getCommaKeyword_1_1());
@@ -47843,7 +47843,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getExpressionAccess().getExprsAssignmentExpressionParserRuleCall_1_2_0());
                       					
                     }
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     lv_exprs_3_0=norm2_AssignmentExpression();
 
                     state._fsp--;
@@ -47879,7 +47879,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt376) {
                     	case 1 :
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return current;
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_4, grammarAccess.getExpressionAccess().getCommaKeyword_1_3_0());
@@ -47892,7 +47892,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							newCompositeNode(grammarAccess.getExpressionAccess().getExprsAssignmentExpressionParserRuleCall_1_3_1_0());
                     	      						
                     	    }
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    lv_exprs_5_0=norm2_AssignmentExpression();
 
                     	    state._fsp--;
@@ -47975,7 +47975,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getExpressionAccess().getAssignmentExpressionParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             this_AssignmentExpression_0=norm3_AssignmentExpression();
 
             state._fsp--;
@@ -48006,7 +48006,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_2=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_2, grammarAccess.getExpressionAccess().getCommaKeyword_1_1());
@@ -48019,7 +48019,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getExpressionAccess().getExprsAssignmentExpressionParserRuleCall_1_2_0());
                       					
                     }
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     lv_exprs_3_0=norm3_AssignmentExpression();
 
                     state._fsp--;
@@ -48055,7 +48055,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt378) {
                     	case 1 :
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return current;
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_4, grammarAccess.getExpressionAccess().getCommaKeyword_1_3_0());
@@ -48068,7 +48068,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							newCompositeNode(grammarAccess.getExpressionAccess().getExprsAssignmentExpressionParserRuleCall_1_3_1_0());
                     	      						
                     	    }
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    lv_exprs_5_0=norm3_AssignmentExpression();
 
                     	    state._fsp--;
@@ -52026,7 +52026,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getArgsAnnotationArgumentParserRuleCall_1_1_0_0());
                               						
                             }
-                            pushFollow(FOLLOW_53);
+                            pushFollow(FOLLOW_52);
                             lv_args_2_0=ruleAnnotationArgument();
 
                             state._fsp--;
@@ -52075,7 +52075,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                             	      								newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getArgsAnnotationArgumentParserRuleCall_1_1_1_1_0());
                             	      							
                             	    }
-                            	    pushFollow(FOLLOW_53);
+                            	    pushFollow(FOLLOW_52);
                             	    lv_args_4_0=ruleAnnotationArgument();
 
                             	    state._fsp--;
@@ -53757,7 +53757,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getN4ClassDeclarationAccess().getTypingStrategyTypingStrategyDefSiteOperatorParserRuleCall_0_0_3_0());
                       						
                     }
-                    pushFollow(FOLLOW_56);
+                    pushFollow(FOLLOW_55);
                     lv_typingStrategy_3_0=ruleTypingStrategyDefSiteOperator();
 
                     state._fsp--;
@@ -55107,7 +55107,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Class,FOLLOW_56); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Class,FOLLOW_55); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getN4ClassExpressionAccess().getClassKeyword_1());
@@ -55263,7 +55263,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Class,FOLLOW_57); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Class,FOLLOW_56); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getN4ClassExpressionAccess().getClassKeyword_1());
@@ -55291,7 +55291,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					newCompositeNode(grammarAccess.getN4ClassExpressionAccess().getNameBindingIdentifierParserRuleCall_2_0());
                       				
                     }
-                    pushFollow(FOLLOW_57);
+                    pushFollow(FOLLOW_56);
                     lv_name_2_0=norm1_BindingIdentifier();
 
                     state._fsp--;
@@ -55334,7 +55334,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getN4ClassExpressionAccess().getClassExtendsClauseParserRuleCall_3());
                       			
                     }
-                    pushFollow(FOLLOW_57);
+                    pushFollow(FOLLOW_56);
                     this_ClassExtendsClause_3=norm1_ClassExtendsClause(current);
 
                     state._fsp--;
@@ -55529,7 +55529,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getN4InterfaceDeclarationAccess().getTypingStrategyTypingStrategyDefSiteOperatorParserRuleCall_0_0_3_0());
                       						
                     }
-                    pushFollow(FOLLOW_56);
+                    pushFollow(FOLLOW_55);
                     lv_typingStrategy_3_0=ruleTypingStrategyDefSiteOperator();
 
                     state._fsp--;
@@ -56111,7 +56111,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_4=(Token)match(input,LeftCurlyBracket,FOLLOW_145); if (state.failed) return current;
+            otherlv_4=(Token)match(input,LeftCurlyBracket,FOLLOW_32); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_4, grammarAccess.getN4EnumDeclarationAccess().getLeftCurlyBracketKeyword_1());
@@ -56120,7 +56120,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             int alt443=2;
             int LA443_0 = input.LA(1);
 
-            if ( (LA443_0==Promisify||LA443_0==Target||LA443_0==This||LA443_0==RULE_IDENTIFIER) ) {
+            if ( ((LA443_0>=Intersection && LA443_0<=With)||(LA443_0>=For && LA443_0<=Var)||(LA443_0>=As && LA443_0<=Of)||LA443_0==RULE_IDENTIFIER) ) {
                 alt443=1;
             }
             switch (alt443) {
@@ -56299,11 +56299,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             if ( state.backtracking==0 ) {
 
-              					newCompositeNode(grammarAccess.getN4EnumLiteralAccess().getNameIdentifierOrThisParserRuleCall_0_0());
+              					newCompositeNode(grammarAccess.getN4EnumLiteralAccess().getNameIdentifierNameParserRuleCall_0_0());
               				
             }
-            pushFollow(FOLLOW_43);
-            lv_name_0_0=ruleIdentifierOrThis();
+            pushFollow(FOLLOW_42);
+            lv_name_0_0=ruleIdentifierName();
 
             state._fsp--;
             if (state.failed) return current;
@@ -56316,7 +56316,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"name",
               						lv_name_0_0,
-              						"org.eclipse.n4js.N4JS.IdentifierOrThis");
+              						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
               					afterParserOrEnumRuleCall();
               				
             }
@@ -56882,7 +56882,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getN4MemberAnnotationListParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_146);
+            pushFollow(FOLLOW_145);
             this_N4MemberAnnotationList_0=ruleN4MemberAnnotationList();
 
             state._fsp--;
@@ -56930,7 +56930,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      									newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_0_0_0_1_0());
                     	      								
                     	    }
-                    	    pushFollow(FOLLOW_147);
+                    	    pushFollow(FOLLOW_146);
                     	    lv_declaredModifiers_2_0=ruleN4Modifier();
 
                     	    state._fsp--;
@@ -56968,7 +56968,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getGetterHeaderParserRuleCall_1_0_0_0_2());
                       						
                     }
-                    pushFollow(FOLLOW_148);
+                    pushFollow(FOLLOW_147);
                     this_GetterHeader_3=ruleGetterHeader(current);
 
                     state._fsp--;
@@ -57082,7 +57082,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      									newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_1_0_0_1_0());
                     	      								
                     	    }
-                    	    pushFollow(FOLLOW_149);
+                    	    pushFollow(FOLLOW_148);
                     	    lv_declaredModifiers_7_0=ruleN4Modifier();
 
                     	    state._fsp--;
@@ -57164,7 +57164,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         case 1 :
                             {
                             {
-                            lv_declaredOptional_10_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                            lv_declaredOptional_10_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               							newLeafNode(lv_declaredOptional_10_0, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_1_1_0());
@@ -57187,7 +57187,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_11=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return current;
+                    otherlv_11=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_11, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getLeftParenthesisKeyword_1_1_2());
@@ -57224,7 +57224,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_13=(Token)match(input,RightParenthesis,FOLLOW_148); if (state.failed) return current;
+                    otherlv_13=(Token)match(input,RightParenthesis,FOLLOW_147); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_13, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getRightParenthesisKeyword_1_1_4());
@@ -57322,7 +57322,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      									newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_2_0_0_1_0());
                     	      								
                     	    }
-                    	    pushFollow(FOLLOW_146);
+                    	    pushFollow(FOLLOW_145);
                     	    lv_declaredModifiers_17_0=ruleN4Modifier();
 
                     	    state._fsp--;
@@ -57461,7 +57461,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_4_0_1_0());
                               										
                             }
-                            pushFollow(FOLLOW_40);
+                            pushFollow(FOLLOW_39);
                             lv_declaredName_21_0=ruleLiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -57749,7 +57749,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getN4MemberAnnotationListParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_146);
+            pushFollow(FOLLOW_145);
             this_N4MemberAnnotationList_0=ruleN4MemberAnnotationList();
 
             state._fsp--;
@@ -57797,7 +57797,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      									newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_0_0_0_1_0());
                     	      								
                     	    }
-                    	    pushFollow(FOLLOW_147);
+                    	    pushFollow(FOLLOW_146);
                     	    lv_declaredModifiers_2_0=ruleN4Modifier();
 
                     	    state._fsp--;
@@ -57835,7 +57835,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getGetterHeaderParserRuleCall_1_0_0_0_2());
                       						
                     }
-                    pushFollow(FOLLOW_148);
+                    pushFollow(FOLLOW_147);
                     this_GetterHeader_3=norm1_GetterHeader(current);
 
                     state._fsp--;
@@ -57949,7 +57949,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      									newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_1_0_0_1_0());
                     	      								
                     	    }
-                    	    pushFollow(FOLLOW_149);
+                    	    pushFollow(FOLLOW_148);
                     	    lv_declaredModifiers_7_0=ruleN4Modifier();
 
                     	    state._fsp--;
@@ -58031,7 +58031,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         case 1 :
                             {
                             {
-                            lv_declaredOptional_10_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                            lv_declaredOptional_10_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               							newLeafNode(lv_declaredOptional_10_0, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_1_1_0());
@@ -58054,7 +58054,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_11=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return current;
+                    otherlv_11=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_11, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getLeftParenthesisKeyword_1_1_2());
@@ -58091,7 +58091,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_13=(Token)match(input,RightParenthesis,FOLLOW_148); if (state.failed) return current;
+                    otherlv_13=(Token)match(input,RightParenthesis,FOLLOW_147); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_13, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getRightParenthesisKeyword_1_1_4());
@@ -58189,7 +58189,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      									newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_2_0_0_1_0());
                     	      								
                     	    }
-                    	    pushFollow(FOLLOW_146);
+                    	    pushFollow(FOLLOW_145);
                     	    lv_declaredModifiers_17_0=ruleN4Modifier();
 
                     	    state._fsp--;
@@ -58328,7 +58328,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_4_0_1_0());
                               										
                             }
-                            pushFollow(FOLLOW_40);
+                            pushFollow(FOLLOW_39);
                             lv_declaredName_21_0=norm1_LiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -58659,7 +58659,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getFieldDeclarationImplAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0());
               				
             }
-            pushFollow(FOLLOW_150);
+            pushFollow(FOLLOW_149);
             lv_declaredName_2_0=ruleLiteralOrComputedPropertyName();
 
             state._fsp--;
@@ -58692,7 +58692,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_151); if (state.failed) return current;
+                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_150); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredOptional_3_0, grammarAccess.getFieldDeclarationImplAccess().getDeclaredOptionalQuestionMarkKeyword_3_0());
@@ -58731,7 +58731,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getFieldDeclarationImplAccess().getColonSepDeclaredTypeRefParserRuleCall_4());
                       			
                     }
-                    pushFollow(FOLLOW_152);
+                    pushFollow(FOLLOW_151);
                     this_ColonSepDeclaredTypeRef_4=ruleColonSepDeclaredTypeRef(current);
 
                     state._fsp--;
@@ -58756,7 +58756,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt477) {
                 case 1 :
                     {
-                    otherlv_5=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_5=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_5, grammarAccess.getFieldDeclarationImplAccess().getEqualsSignKeyword_5_0());
@@ -58935,7 +58935,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getFieldDeclarationImplAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0());
               				
             }
-            pushFollow(FOLLOW_150);
+            pushFollow(FOLLOW_149);
             lv_declaredName_2_0=norm1_LiteralOrComputedPropertyName();
 
             state._fsp--;
@@ -58968,7 +58968,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_151); if (state.failed) return current;
+                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_150); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredOptional_3_0, grammarAccess.getFieldDeclarationImplAccess().getDeclaredOptionalQuestionMarkKeyword_3_0());
@@ -59007,7 +59007,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getFieldDeclarationImplAccess().getColonSepDeclaredTypeRefParserRuleCall_4());
                       			
                     }
-                    pushFollow(FOLLOW_152);
+                    pushFollow(FOLLOW_151);
                     this_ColonSepDeclaredTypeRef_4=ruleColonSepDeclaredTypeRef(current);
 
                     state._fsp--;
@@ -59032,7 +59032,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt482) {
                 case 1 :
                     {
-                    otherlv_5=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                    otherlv_5=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_5, grammarAccess.getFieldDeclarationImplAccess().getEqualsSignKeyword_5_0());
@@ -59356,7 +59356,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_146);
+            	    pushFollow(FOLLOW_145);
             	    lv_declaredModifiers_1_0=ruleN4Modifier();
 
             	    state._fsp--;
@@ -59495,7 +59495,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_0_1_0());
                       								
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     lv_declaredName_5_0=ruleLiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -59731,7 +59731,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_146);
+            	    pushFollow(FOLLOW_145);
             	    lv_declaredModifiers_1_0=ruleN4Modifier();
 
             	    state._fsp--;
@@ -59870,7 +59870,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_0_1_0());
                       								
                     }
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     lv_declaredName_5_0=norm1_LiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -60256,7 +60256,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getMethodParamsAndBodyAccess().getStrictFormalParametersParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_153);
+            pushFollow(FOLLOW_152);
             this_StrictFormalParameters_0=ruleStrictFormalParameters(current);
 
             state._fsp--;
@@ -60352,7 +60352,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getMethodParamsAndBodyAccess().getStrictFormalParametersParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_153);
+            pushFollow(FOLLOW_152);
             this_StrictFormalParameters_0=norm1_StrictFormalParameters(current);
 
             state._fsp--;
@@ -60450,7 +60450,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getMethodParamsReturnAndBodyAccess().getStrictFormalParametersParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_154);
+            pushFollow(FOLLOW_153);
             this_StrictFormalParameters_0=ruleStrictFormalParameters(current);
 
             state._fsp--;
@@ -60478,7 +60478,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getMethodParamsReturnAndBodyAccess().getColonSepReturnTypeRefParserRuleCall_1());
                       			
                     }
-                    pushFollow(FOLLOW_153);
+                    pushFollow(FOLLOW_152);
                     this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef(current);
 
                     state._fsp--;
@@ -60577,7 +60577,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getMethodParamsReturnAndBodyAccess().getStrictFormalParametersParserRuleCall_0());
               		
             }
-            pushFollow(FOLLOW_154);
+            pushFollow(FOLLOW_153);
             this_StrictFormalParameters_0=norm1_StrictFormalParameters(current);
 
             state._fsp--;
@@ -60605,7 +60605,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getMethodParamsReturnAndBodyAccess().getColonSepReturnTypeRefParserRuleCall_1());
                       			
                     }
-                    pushFollow(FOLLOW_153);
+                    pushFollow(FOLLOW_152);
                     this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef(current);
 
                     state._fsp--;
@@ -60761,7 +60761,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getN4GetterDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_147);
+            	    pushFollow(FOLLOW_146);
             	    lv_declaredModifiers_1_0=ruleN4Modifier();
 
             	    state._fsp--;
@@ -60799,7 +60799,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getN4GetterDeclarationAccess().getGetterHeaderParserRuleCall_0_0_2());
               				
             }
-            pushFollow(FOLLOW_148);
+            pushFollow(FOLLOW_147);
             this_GetterHeader_2=ruleGetterHeader(current);
 
             state._fsp--;
@@ -60942,7 +60942,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getN4GetterDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_147);
+            	    pushFollow(FOLLOW_146);
             	    lv_declaredModifiers_1_0=ruleN4Modifier();
 
             	    state._fsp--;
@@ -60980,7 +60980,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getN4GetterDeclarationAccess().getGetterHeaderParserRuleCall_0_0_2());
               				
             }
-            pushFollow(FOLLOW_148);
+            pushFollow(FOLLOW_147);
             this_GetterHeader_2=norm1_GetterHeader(current);
 
             state._fsp--;
@@ -61112,7 +61112,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getGetterHeaderAccess().getBogusTypeRefFragmentParserRuleCall_0());
                       			
                     }
-                    pushFollow(FOLLOW_155);
+                    pushFollow(FOLLOW_154);
                     this_BogusTypeRefFragment_0=ruleBogusTypeRefFragment(current);
 
                     state._fsp--;
@@ -61175,7 +61175,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredOptional_3_0, grammarAccess.getGetterHeaderAccess().getDeclaredOptionalQuestionMarkKeyword_3_0());
@@ -61204,7 +61204,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newLeafNode(otherlv_4, grammarAccess.getGetterHeaderAccess().getLeftParenthesisKeyword_4());
               		
             }
-            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_43); if (state.failed) return current;
+            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_42); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_5, grammarAccess.getGetterHeaderAccess().getRightParenthesisKeyword_5());
@@ -61302,7 +61302,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				newCompositeNode(grammarAccess.getGetterHeaderAccess().getBogusTypeRefFragmentParserRuleCall_0());
                       			
                     }
-                    pushFollow(FOLLOW_155);
+                    pushFollow(FOLLOW_154);
                     this_BogusTypeRefFragment_0=ruleBogusTypeRefFragment(current);
 
                     state._fsp--;
@@ -61365,7 +61365,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                    lv_declaredOptional_3_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredOptional_3_0, grammarAccess.getGetterHeaderAccess().getDeclaredOptionalQuestionMarkKeyword_3_0());
@@ -61394,7 +61394,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newLeafNode(otherlv_4, grammarAccess.getGetterHeaderAccess().getLeftParenthesisKeyword_4());
               		
             }
-            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_43); if (state.failed) return current;
+            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_42); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_5, grammarAccess.getGetterHeaderAccess().getRightParenthesisKeyword_5());
@@ -61542,7 +61542,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getN4SetterDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_149);
+            	    pushFollow(FOLLOW_148);
             	    lv_declaredModifiers_1_0=ruleN4Modifier();
 
             	    state._fsp--;
@@ -61624,7 +61624,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_declaredOptional_4_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                    lv_declaredOptional_4_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredOptional_4_0, grammarAccess.getN4SetterDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_0());
@@ -61647,7 +61647,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_5=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return current;
+            otherlv_5=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_5, grammarAccess.getN4SetterDeclarationAccess().getLeftParenthesisKeyword_2());
@@ -61684,7 +61684,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,RightParenthesis,FOLLOW_148); if (state.failed) return current;
+            otherlv_7=(Token)match(input,RightParenthesis,FOLLOW_147); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_7, grammarAccess.getN4SetterDeclarationAccess().getRightParenthesisKeyword_4());
@@ -61823,7 +61823,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							newCompositeNode(grammarAccess.getN4SetterDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
             	      						
             	    }
-            	    pushFollow(FOLLOW_149);
+            	    pushFollow(FOLLOW_148);
             	    lv_declaredModifiers_1_0=ruleN4Modifier();
 
             	    state._fsp--;
@@ -61905,7 +61905,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_declaredOptional_4_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                    lv_declaredOptional_4_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_declaredOptional_4_0, grammarAccess.getN4SetterDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_0());
@@ -61928,7 +61928,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_5=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return current;
+            otherlv_5=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_5, grammarAccess.getN4SetterDeclarationAccess().getLeftParenthesisKeyword_2());
@@ -61965,7 +61965,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,RightParenthesis,FOLLOW_148); if (state.failed) return current;
+            otherlv_7=(Token)match(input,RightParenthesis,FOLLOW_147); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_7, grammarAccess.getN4SetterDeclarationAccess().getRightParenthesisKeyword_4());
@@ -62330,7 +62330,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_156); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_155); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getObjectBindingPatternAccess().getLeftCurlyBracketKeyword_1());
@@ -62388,7 +62388,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt523) {
                     	case 1 :
                     	    {
-                    	    otherlv_3=(Token)match(input,Comma,FOLLOW_157); if (state.failed) return current;
+                    	    otherlv_3=(Token)match(input,Comma,FOLLOW_156); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_3, grammarAccess.getObjectBindingPatternAccess().getCommaKeyword_2_1_0());
@@ -62495,7 +62495,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_156); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_155); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getObjectBindingPatternAccess().getLeftCurlyBracketKeyword_1());
@@ -62553,7 +62553,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt525) {
                     	case 1 :
                     	    {
-                    	    otherlv_3=(Token)match(input,Comma,FOLLOW_157); if (state.failed) return current;
+                    	    otherlv_3=(Token)match(input,Comma,FOLLOW_156); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_3, grammarAccess.getObjectBindingPatternAccess().getCommaKeyword_2_1_0());
@@ -62700,7 +62700,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_158); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_157); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getArrayBindingPatternAccess().getLeftSquareBracketKeyword_1());
@@ -62725,7 +62725,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      					newCompositeNode(grammarAccess.getArrayBindingPatternAccess().getElementsElisionParserRuleCall_2_0());
             	      				
             	    }
-            	    pushFollow(FOLLOW_158);
+            	    pushFollow(FOLLOW_157);
             	    lv_elements_2_0=ruleElision();
 
             	    state._fsp--;
@@ -62800,7 +62800,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt529) {
                     	case 1 :
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_159); if (state.failed) return current;
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_158); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_4, grammarAccess.getArrayBindingPatternAccess().getCommaKeyword_3_1_0());
@@ -62825,7 +62825,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	    	      							newCompositeNode(grammarAccess.getArrayBindingPatternAccess().getElementsElisionParserRuleCall_3_1_1_0());
                     	    	      						
                     	    	    }
-                    	    	    pushFollow(FOLLOW_159);
+                    	    	    pushFollow(FOLLOW_158);
                     	    	    lv_elements_5_0=ruleElision();
 
                     	    	    state._fsp--;
@@ -63031,7 +63031,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_158); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_157); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getArrayBindingPatternAccess().getLeftSquareBracketKeyword_1());
@@ -63056,7 +63056,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      					newCompositeNode(grammarAccess.getArrayBindingPatternAccess().getElementsElisionParserRuleCall_2_0());
             	      				
             	    }
-            	    pushFollow(FOLLOW_158);
+            	    pushFollow(FOLLOW_157);
             	    lv_elements_2_0=ruleElision();
 
             	    state._fsp--;
@@ -63131,7 +63131,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt535) {
                     	case 1 :
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_159); if (state.failed) return current;
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_158); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_4, grammarAccess.getArrayBindingPatternAccess().getCommaKeyword_3_1_0());
@@ -63156,7 +63156,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	    	      							newCompositeNode(grammarAccess.getArrayBindingPatternAccess().getElementsElisionParserRuleCall_3_1_1_0());
                     	    	      						
                     	    	    }
-                    	    	    pushFollow(FOLLOW_159);
+                    	    	    pushFollow(FOLLOW_158);
                     	    	    lv_elements_5_0=ruleElision();
 
                     	    	    state._fsp--;
@@ -63415,7 +63415,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_1=(Token)match(input,Colon,FOLLOW_160); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,Colon,FOLLOW_159); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(otherlv_1, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
@@ -63575,7 +63575,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_1=(Token)match(input,Colon,FOLLOW_160); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,Colon,FOLLOW_159); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       						newLeafNode(otherlv_1, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
@@ -64138,7 +64138,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_rest_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_160); if (state.failed) return current;
+                    lv_rest_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_159); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_rest_0_0, grammarAccess.getBindingRestElementAccess().getRestFullStopFullStopFullStopKeyword_0_0());
@@ -64224,7 +64224,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_rest_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_160); if (state.failed) return current;
+                    lv_rest_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_159); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_rest_0_0, grammarAccess.getBindingRestElementAccess().getRestFullStopFullStopFullStopKeyword_0_0());
@@ -64369,7 +64369,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     switch (alt543) {
                         case 1 :
                             {
-                            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               					newLeafNode(otherlv_1, grammarAccess.getBindingElementImplAccess().getEqualsSignKeyword_0_1_0());
@@ -64557,7 +64557,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     switch (alt545) {
                         case 1 :
                             {
-                            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return current;
+                            otherlv_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               					newLeafNode(otherlv_1, grammarAccess.getBindingElementImplAccess().getEqualsSignKeyword_0_1_0());
@@ -64999,7 +64999,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 4 :
                     {
                     {
-                    otherlv_3=(Token)match(input,LeftSquareBracket,FOLLOW_49); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,LeftSquareBracket,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_3, grammarAccess.getLiteralOrComputedPropertyNameAccess().getLeftSquareBracketKeyword_3_0());
@@ -65290,7 +65290,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 4 :
                     {
                     {
-                    otherlv_3=(Token)match(input,LeftSquareBracket,FOLLOW_49); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,LeftSquareBracket,FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_3, grammarAccess.getLiteralOrComputedPropertyNameAccess().getLeftSquareBracketKeyword_3_0());
@@ -65428,7 +65428,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getJSXElementAccess().getJsxElementNameJSXElementNameParserRuleCall_1_0());
               				
             }
-            pushFollow(FOLLOW_161);
+            pushFollow(FOLLOW_160);
             lv_jsxElementName_1_0=ruleJSXElementName();
 
             state._fsp--;
@@ -65460,7 +65460,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getJSXElementAccess().getJSXAttributesParserRuleCall_2());
               		
             }
-            pushFollow(FOLLOW_162);
+            pushFollow(FOLLOW_161);
             this_JSXAttributes_2=ruleJSXAttributes(current);
 
             state._fsp--;
@@ -65491,7 +65491,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    otherlv_3=(Token)match(input,GreaterThanSign,FOLLOW_163); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,GreaterThanSign,FOLLOW_162); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(otherlv_3, grammarAccess.getJSXElementAccess().getGreaterThanSignKeyword_3_0_0());
@@ -65525,7 +65525,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							newCompositeNode(grammarAccess.getJSXElementAccess().getJsxChildrenJSXChildParserRuleCall_3_0_1_0());
                     	      						
                     	    }
-                    	    pushFollow(FOLLOW_163);
+                    	    pushFollow(FOLLOW_162);
                     	    lv_jsxChildren_4_0=ruleJSXChild();
 
                     	    state._fsp--;
@@ -65640,7 +65640,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LessThanSign,FOLLOW_164); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LessThanSign,FOLLOW_163); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getJSXClosingElementAccess().getLessThanSignKeyword_0());
@@ -65883,7 +65883,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftCurlyBracket,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getJSXExpressionAccess().getLeftCurlyBracketKeyword_0());
@@ -66206,7 +66206,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      				newCompositeNode(grammarAccess.getJSXAttributesAccess().getJsxAttributesJSXAttributeParserRuleCall_0());
             	      			
             	    }
-            	    pushFollow(FOLLOW_165);
+            	    pushFollow(FOLLOW_164);
             	    lv_jsxAttributes_0_0=ruleJSXAttribute();
 
             	    state._fsp--;
@@ -66428,13 +66428,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftCurlyBracket,FOLLOW_166); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftCurlyBracket,FOLLOW_165); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getJSXSpreadAttributeAccess().getLeftCurlyBracketKeyword_0());
               		
             }
-            otherlv_1=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return current;
+            otherlv_1=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getJSXSpreadAttributeAccess().getFullStopFullStopFullStopKeyword_1());
@@ -66586,7 +66586,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt556) {
                 case 1 :
                     {
-                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_167); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,EqualsSign,FOLLOW_166); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_1, grammarAccess.getJSXPropertyAttributeAccess().getEqualsSignKeyword_1_0());
@@ -66648,7 +66648,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         case 2 :
                             {
                             {
-                            otherlv_3=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return current;
+                            otherlv_3=(Token)match(input,LeftCurlyBracket,FOLLOW_48); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
                               						newLeafNode(otherlv_3, grammarAccess.getJSXPropertyAttributeAccess().getLeftCurlyBracketKeyword_1_1_1_0());
@@ -67570,7 +67570,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               					newCompositeNode(grammarAccess.getTypeRefWithoutModifiersAccess().getParameterizedTypeRefParserRuleCall_0_0_0());
                               				
                             }
-                            pushFollow(FOLLOW_35);
+                            pushFollow(FOLLOW_34);
                             this_ParameterizedTypeRef_0=ruleParameterizedTypeRef();
 
                             state._fsp--;
@@ -67591,7 +67591,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               					newCompositeNode(grammarAccess.getTypeRefWithoutModifiersAccess().getThisTypeRefParserRuleCall_0_0_1());
                               				
                             }
-                            pushFollow(FOLLOW_35);
+                            pushFollow(FOLLOW_34);
                             this_ThisTypeRef_1=ruleThisTypeRef();
 
                             state._fsp--;
@@ -68388,7 +68388,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getThisTypeRefStructuralAccess().getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0());
               				
             }
-            pushFollow(FOLLOW_168);
+            pushFollow(FOLLOW_167);
             lv_definedTypingStrategy_0_0=ruleTypingStrategyUseSiteOperator();
 
             state._fsp--;
@@ -68412,7 +68412,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,This_1,FOLLOW_169); if (state.failed) return current;
+            otherlv_1=(Token)match(input,This_1,FOLLOW_168); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getThisTypeRefStructuralAccess().getThisKeyword_1());
@@ -68559,7 +68559,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_170); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftCurlyBracket,FOLLOW_169); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_1, grammarAccess.getFunctionTypeExpressionOLDAccess().getLeftCurlyBracketKeyword_1());
@@ -68574,19 +68574,19 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt570) {
                 case 1 :
                     {
-                    otherlv_2=(Token)match(input,CommercialAt,FOLLOW_171); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,CommercialAt,FOLLOW_170); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_2, grammarAccess.getFunctionTypeExpressionOLDAccess().getCommercialAtKeyword_2_0());
                       			
                     }
-                    otherlv_3=(Token)match(input,This,FOLLOW_42); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,This,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_3, grammarAccess.getFunctionTypeExpressionOLDAccess().getThisKeyword_2_1());
                       			
                     }
-                    otherlv_4=(Token)match(input,LeftParenthesis,FOLLOW_172); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,LeftParenthesis,FOLLOW_171); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_4, grammarAccess.getFunctionTypeExpressionOLDAccess().getLeftParenthesisKeyword_2_2());
@@ -68623,7 +68623,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_6=(Token)match(input,RightParenthesis,FOLLOW_45); if (state.failed) return current;
+                    otherlv_6=(Token)match(input,RightParenthesis,FOLLOW_44); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_6, grammarAccess.getFunctionTypeExpressionOLDAccess().getRightParenthesisKeyword_2_4());
@@ -68635,7 +68635,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,Function,FOLLOW_173); if (state.failed) return current;
+            otherlv_7=(Token)match(input,Function,FOLLOW_172); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_7, grammarAccess.getFunctionTypeExpressionOLDAccess().getFunctionKeyword_3());
@@ -68650,7 +68650,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             switch (alt572) {
                 case 1 :
                     {
-                    otherlv_8=(Token)match(input,LessThanSign,FOLLOW_174); if (state.failed) return current;
+                    otherlv_8=(Token)match(input,LessThanSign,FOLLOW_173); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_8, grammarAccess.getFunctionTypeExpressionOLDAccess().getLessThanSignKeyword_4_0());
@@ -68699,7 +68699,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt571) {
                     	case 1 :
                     	    {
-                    	    otherlv_10=(Token)match(input,Comma,FOLLOW_174); if (state.failed) return current;
+                    	    otherlv_10=(Token)match(input,Comma,FOLLOW_173); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      					newLeafNode(otherlv_10, grammarAccess.getFunctionTypeExpressionOLDAccess().getCommaKeyword_4_2_0());
@@ -68745,7 +68745,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    otherlv_12=(Token)match(input,GreaterThanSign,FOLLOW_42); if (state.failed) return current;
+                    otherlv_12=(Token)match(input,GreaterThanSign,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       				newLeafNode(otherlv_12, grammarAccess.getFunctionTypeExpressionOLDAccess().getGreaterThanSignKeyword_4_3());
@@ -68757,7 +68757,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_13=(Token)match(input,LeftParenthesis,FOLLOW_175); if (state.failed) return current;
+            otherlv_13=(Token)match(input,LeftParenthesis,FOLLOW_174); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_13, grammarAccess.getFunctionTypeExpressionOLDAccess().getLeftParenthesisKeyword_5());
@@ -68782,7 +68782,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			afterParserOrEnumRuleCall();
               		
             }
-            otherlv_15=(Token)match(input,RightParenthesis,FOLLOW_176); if (state.failed) return current;
+            otherlv_15=(Token)match(input,RightParenthesis,FOLLOW_175); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_15, grammarAccess.getFunctionTypeExpressionOLDAccess().getRightParenthesisKeyword_7());
@@ -68912,7 +68912,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_175); if (state.failed) return current;
+            otherlv_1=(Token)match(input,LeftParenthesis,FOLLOW_174); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_1());
@@ -68937,7 +68937,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					afterParserOrEnumRuleCall();
               				
             }
-            otherlv_3=(Token)match(input,RightParenthesis,FOLLOW_47); if (state.failed) return current;
+            otherlv_3=(Token)match(input,RightParenthesis,FOLLOW_46); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_3, grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_3());
@@ -69036,7 +69036,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					newCompositeNode(grammarAccess.getTAnonymousFormalParameterListAccess().getFparsTAnonymousFormalParameterParserRuleCall_0_0());
                       				
                     }
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     lv_fpars_0_0=ruleTAnonymousFormalParameter();
 
                     state._fsp--;
@@ -69072,7 +69072,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         switch (alt574) {
                     	case 1 :
                     	    {
-                    	    otherlv_1=(Token)match(input,Comma,FOLLOW_177); if (state.failed) return current;
+                    	    otherlv_1=(Token)match(input,Comma,FOLLOW_176); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      				newLeafNode(otherlv_1, grammarAccess.getTAnonymousFormalParameterListAccess().getCommaKeyword_1_0());
@@ -69085,7 +69085,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      						newCompositeNode(grammarAccess.getTAnonymousFormalParameterListAccess().getFparsTAnonymousFormalParameterParserRuleCall_1_1_0());
                     	      					
                     	    }
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    lv_fpars_2_0=ruleTAnonymousFormalParameter();
 
                     	    state._fsp--;
@@ -69204,7 +69204,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_variadic_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_178); if (state.failed) return current;
+                    lv_variadic_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_177); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_variadic_0_0, grammarAccess.getTAnonymousFormalParameterAccess().getVariadicFullStopFullStopFullStopKeyword_0_0());
@@ -69397,7 +69397,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_hasInitializerAssignment_0_0=(Token)match(input,EqualsSign,FOLLOW_179); if (state.failed) return current;
+                    lv_hasInitializerAssignment_0_0=(Token)match(input,EqualsSign,FOLLOW_178); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_hasInitializerAssignment_0_0, grammarAccess.getDefaultFormalParameterAccess().getHasInitializerAssignmentEqualsSignKeyword_0_0());
@@ -69550,7 +69550,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newLeafNode(otherlv_1, grammarAccess.getUnionTypeExpressionOLDAccess().getUnionKeyword_1());
               		
             }
-            otherlv_2=(Token)match(input,LeftCurlyBracket,FOLLOW_180); if (state.failed) return current;
+            otherlv_2=(Token)match(input,LeftCurlyBracket,FOLLOW_179); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_2, grammarAccess.getUnionTypeExpressionOLDAccess().getLeftCurlyBracketKeyword_2());
@@ -69599,7 +69599,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt580) {
             	case 1 :
             	    {
-            	    otherlv_4=(Token)match(input,Comma,FOLLOW_180); if (state.failed) return current;
+            	    otherlv_4=(Token)match(input,Comma,FOLLOW_179); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				newLeafNode(otherlv_4, grammarAccess.getUnionTypeExpressionOLDAccess().getCommaKeyword_4_0());
@@ -69740,7 +69740,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newLeafNode(otherlv_1, grammarAccess.getIntersectionTypeExpressionOLDAccess().getIntersectionKeyword_1());
               		
             }
-            otherlv_2=(Token)match(input,LeftCurlyBracket,FOLLOW_180); if (state.failed) return current;
+            otherlv_2=(Token)match(input,LeftCurlyBracket,FOLLOW_179); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_2, grammarAccess.getIntersectionTypeExpressionOLDAccess().getLeftCurlyBracketKeyword_2());
@@ -69789,7 +69789,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt581) {
             	case 1 :
             	    {
-            	    otherlv_4=(Token)match(input,Comma,FOLLOW_180); if (state.failed) return current;
+            	    otherlv_4=(Token)match(input,Comma,FOLLOW_179); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				newLeafNode(otherlv_4, grammarAccess.getIntersectionTypeExpressionOLDAccess().getCommaKeyword_4_0());
@@ -70118,7 +70118,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             {
-            lv_arrayTypeLiteral_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_181); if (state.failed) return current;
+            lv_arrayTypeLiteral_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_180); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(lv_arrayTypeLiteral_0_0, grammarAccess.getArrayTypeRefAccess().getArrayTypeLiteralLeftSquareBracketKeyword_0_0());
@@ -70284,7 +70284,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getTypeAndTypeArgumentsParserRuleCall_1());
               		
             }
-            pushFollow(FOLLOW_169);
+            pushFollow(FOLLOW_168);
             this_TypeAndTypeArguments_1=ruleTypeAndTypeArguments(current);
 
             state._fsp--;
@@ -70386,7 +70386,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeTypeCrossReference_0_0());
               				
             }
-            pushFollow(FOLLOW_182);
+            pushFollow(FOLLOW_181);
             ruleTypeReferenceName();
 
             state._fsp--;
@@ -70469,7 +70469,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LessThanSign,FOLLOW_181); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LessThanSign,FOLLOW_180); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getTypeArgumentsAccess().getLessThanSignKeyword_0());
@@ -70518,7 +70518,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt585) {
             	case 1 :
             	    {
-            	    otherlv_2=(Token)match(input,Comma,FOLLOW_181); if (state.failed) return current;
+            	    otherlv_2=(Token)match(input,Comma,FOLLOW_180); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				newLeafNode(otherlv_2, grammarAccess.getTypeArgumentsAccess().getCommaKeyword_2_0());
@@ -70607,7 +70607,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LeftCurlyBracket,FOLLOW_183); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LeftCurlyBracket,FOLLOW_182); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getTStructMemberListAccess().getLeftCurlyBracketKeyword_0());
@@ -70633,7 +70633,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      						newCompositeNode(grammarAccess.getTStructMemberListAccess().getAstStructuralMembersTStructMemberParserRuleCall_1_0_0());
             	      					
             	    }
-            	    pushFollow(FOLLOW_184);
+            	    pushFollow(FOLLOW_183);
             	    lv_astStructuralMembers_1_0=ruleTStructMember();
 
             	    state._fsp--;
@@ -70668,7 +70668,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	    switch (alt586) {
             	        case 1 :
             	            {
-            	            otherlv_2=(Token)match(input,Semicolon,FOLLOW_183); if (state.failed) return current;
+            	            otherlv_2=(Token)match(input,Semicolon,FOLLOW_182); if (state.failed) return current;
             	            if ( state.backtracking==0 ) {
 
             	              					newLeafNode(otherlv_2, grammarAccess.getTStructMemberListAccess().getSemicolonKeyword_1_1_0());
@@ -70679,7 +70679,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	            break;
             	        case 2 :
             	            {
-            	            otherlv_3=(Token)match(input,Comma,FOLLOW_183); if (state.failed) return current;
+            	            otherlv_3=(Token)match(input,Comma,FOLLOW_182); if (state.failed) return current;
             	            if ( state.backtracking==0 ) {
 
             	              					newLeafNode(otherlv_3, grammarAccess.getTStructMemberListAccess().getCommaKeyword_1_1_1());
@@ -70979,7 +70979,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						newCompositeNode(grammarAccess.getTStructMethodAccess().getTypeVariablesParserRuleCall_0_0_1());
                       					
                     }
-                    pushFollow(FOLLOW_25);
+                    pushFollow(FOLLOW_14);
                     this_TypeVariables_1=ruleTypeVariables(current);
 
                     state._fsp--;
@@ -71002,7 +71002,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               							newCompositeNode(grammarAccess.getTStructMethodAccess().getNameIdentifierNameParserRuleCall_0_0_2_0());
               						
             }
-            pushFollow(FOLLOW_42);
+            pushFollow(FOLLOW_41);
             lv_name_2_0=ruleIdentifierName();
 
             state._fsp--;
@@ -71026,7 +71026,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_3=(Token)match(input,LeftParenthesis,FOLLOW_175); if (state.failed) return current;
+            otherlv_3=(Token)match(input,LeftParenthesis,FOLLOW_174); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_3, grammarAccess.getTStructMethodAccess().getLeftParenthesisKeyword_0_0_3());
@@ -71057,7 +71057,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			afterParserOrEnumRuleCall();
               		
             }
-            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_43); if (state.failed) return current;
+            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_42); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_5, grammarAccess.getTStructMethodAccess().getRightParenthesisKeyword_2());
@@ -71135,7 +71135,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            otherlv_0=(Token)match(input,LessThanSign,FOLLOW_174); if (state.failed) return current;
+            otherlv_0=(Token)match(input,LessThanSign,FOLLOW_173); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_0, grammarAccess.getTypeVariablesAccess().getLessThanSignKeyword_0());
@@ -71184,7 +71184,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt591) {
             	case 1 :
             	    {
-            	    otherlv_2=(Token)match(input,Comma,FOLLOW_174); if (state.failed) return current;
+            	    otherlv_2=(Token)match(input,Comma,FOLLOW_173); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      				newLeafNode(otherlv_2, grammarAccess.getTypeVariablesAccess().getCommaKeyword_2_0());
@@ -71525,7 +71525,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					newCompositeNode(grammarAccess.getTStructFieldAccess().getNameIdentifierNameParserRuleCall_0_0());
               				
             }
-            pushFollow(FOLLOW_185);
+            pushFollow(FOLLOW_184);
             lv_name_0_0=ruleIdentifierName();
 
             state._fsp--;
@@ -71558,7 +71558,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_optional_1_0=(Token)match(input,QuestionMark,FOLLOW_43); if (state.failed) return current;
+                    lv_optional_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_optional_1_0, grammarAccess.getTStructFieldAccess().getOptionalQuestionMarkKeyword_1_0());
@@ -71699,7 +71699,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Get,FOLLOW_25); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Get,FOLLOW_14); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getTStructGetterAccess().getGetKeyword_0_0_1());
@@ -71751,7 +71751,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_optional_3_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                    lv_optional_3_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_optional_3_0, grammarAccess.getTStructGetterAccess().getOptionalQuestionMarkKeyword_1_0());
@@ -71780,7 +71780,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               			newLeafNode(otherlv_4, grammarAccess.getTStructGetterAccess().getLeftParenthesisKeyword_2());
               		
             }
-            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_43); if (state.failed) return current;
+            otherlv_5=(Token)match(input,RightParenthesis,FOLLOW_42); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_5, grammarAccess.getTStructGetterAccess().getRightParenthesisKeyword_3());
@@ -71905,7 +71905,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Set,FOLLOW_25); if (state.failed) return current;
+            otherlv_1=(Token)match(input,Set,FOLLOW_14); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getTStructSetterAccess().getSetKeyword_0_0_1());
@@ -71957,7 +71957,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 1 :
                     {
                     {
-                    lv_optional_3_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return current;
+                    lv_optional_3_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       					newLeafNode(lv_optional_3_0, grammarAccess.getTStructSetterAccess().getOptionalQuestionMarkKeyword_1_0());
@@ -71980,7 +71980,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_4=(Token)match(input,LeftParenthesis,FOLLOW_177); if (state.failed) return current;
+            otherlv_4=(Token)match(input,LeftParenthesis,FOLLOW_176); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_4, grammarAccess.getTStructSetterAccess().getLeftParenthesisKeyword_2());
@@ -72089,7 +72089,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         try {
             {
             {
-            kw=(Token)match(input,Tilde,FOLLOW_186); if (state.failed) return current;
+            kw=(Token)match(input,Tilde,FOLLOW_185); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			current.merge(kw);
@@ -72343,7 +72343,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_3=(Token)match(input,LeftCurlyBracket,FOLLOW_187); if (state.failed) return current;
+            otherlv_3=(Token)match(input,LeftCurlyBracket,FOLLOW_186); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(otherlv_3, grammarAccess.getTypeTypeRefAccess().getLeftCurlyBracketKeyword_2());
@@ -72626,7 +72626,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,QuestionMark,FOLLOW_188); if (state.failed) return current;
+            otherlv_1=(Token)match(input,QuestionMark,FOLLOW_187); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               					newLeafNode(otherlv_1, grammarAccess.getWildcardAccess().getQuestionMarkKeyword_0_0_1());
@@ -75676,7 +75676,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Class,FOLLOW_189); if (state.failed) return ;
+        match(input,Class,FOLLOW_188); if (state.failed) return ;
         int alt615=2;
         int LA615_0 = input.LA(1);
 
@@ -75687,7 +75687,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_190);
+                pushFollow(FOLLOW_189);
                 ruleTypingStrategyDefSiteOperator();
 
                 state._fsp--;
@@ -75766,7 +75766,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Interface,FOLLOW_189); if (state.failed) return ;
+        match(input,Interface,FOLLOW_188); if (state.failed) return ;
         int alt618=2;
         int LA618_0 = input.LA(1);
 
@@ -75777,7 +75777,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_190);
+                pushFollow(FOLLOW_189);
                 ruleTypingStrategyDefSiteOperator();
 
                 state._fsp--;
@@ -75856,7 +75856,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Enum,FOLLOW_190); if (state.failed) return ;
+        match(input,Enum,FOLLOW_189); if (state.failed) return ;
         int alt621=2;
         int LA621_0 = input.LA(1);
 
@@ -75967,7 +75967,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Class,FOLLOW_189); if (state.failed) return ;
+        match(input,Class,FOLLOW_188); if (state.failed) return ;
         int alt624=2;
         int LA624_0 = input.LA(1);
 
@@ -75978,7 +75978,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_190);
+                pushFollow(FOLLOW_189);
                 ruleTypingStrategyDefSiteOperator();
 
                 state._fsp--;
@@ -76057,7 +76057,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Interface,FOLLOW_189); if (state.failed) return ;
+        match(input,Interface,FOLLOW_188); if (state.failed) return ;
         int alt627=2;
         int LA627_0 = input.LA(1);
 
@@ -76068,7 +76068,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_190);
+                pushFollow(FOLLOW_189);
                 ruleTypingStrategyDefSiteOperator();
 
                 state._fsp--;
@@ -76147,7 +76147,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Enum,FOLLOW_190); if (state.failed) return ;
+        match(input,Enum,FOLLOW_189); if (state.failed) return ;
         int alt630=2;
         int LA630_0 = input.LA(1);
 
@@ -76214,7 +76214,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleAsyncNoTrailingLineBreak(null);
 
         state._fsp--;
@@ -76301,14 +76301,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -76331,14 +76331,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -76361,14 +76361,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -76391,14 +76391,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -76493,7 +76493,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleAsyncNoTrailingLineBreak(null);
 
         state._fsp--;
@@ -76601,7 +76601,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleAsyncNoTrailingLineBreak(null);
 
         state._fsp--;
@@ -76867,7 +76867,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        pushFollow(FOLLOW_43);
+        pushFollow(FOLLOW_42);
         ruleBindingIdentifier();
 
         state._fsp--;
@@ -76908,7 +76908,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        pushFollow(FOLLOW_43);
+        pushFollow(FOLLOW_42);
         ruleBindingIdentifier();
 
         state._fsp--;
@@ -76949,7 +76949,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        pushFollow(FOLLOW_43);
+        pushFollow(FOLLOW_42);
         norm1_BindingIdentifier();
 
         state._fsp--;
@@ -76990,7 +76990,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        pushFollow(FOLLOW_43);
+        pushFollow(FOLLOW_42);
         norm1_BindingIdentifier();
 
         state._fsp--;
@@ -77103,7 +77103,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        match(input,In,FOLLOW_49); if (state.failed) return ;
+        match(input,In,FOLLOW_48); if (state.failed) return ;
 
         }
 
@@ -77269,7 +77269,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        match(input,In,FOLLOW_49); if (state.failed) return ;
+        match(input,In,FOLLOW_48); if (state.failed) return ;
 
         }
 
@@ -77497,14 +77497,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_44); if (state.failed) return ;
+        match(input,Async,FOLLOW_43); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -77521,14 +77521,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_44); if (state.failed) return ;
+        match(input,Async,FOLLOW_43); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -77626,7 +77626,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         }
 
-        match(input,Set,FOLLOW_191); if (state.failed) return ;
+        match(input,Set,FOLLOW_190); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -77716,7 +77716,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -77739,7 +77739,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -77852,7 +77852,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         }
 
-        match(input,Set,FOLLOW_191); if (state.failed) return ;
+        match(input,Set,FOLLOW_190); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -77942,7 +77942,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -77965,7 +77965,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -78059,7 +78059,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         }
 
-        match(input,Set,FOLLOW_191); if (state.failed) return ;
+        match(input,Set,FOLLOW_190); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -78149,7 +78149,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -78172,7 +78172,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -78266,7 +78266,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         }
 
-        match(input,Set,FOLLOW_191); if (state.failed) return ;
+        match(input,Set,FOLLOW_190); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -78356,7 +78356,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -78379,7 +78379,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -78699,7 +78699,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        pushFollow(FOLLOW_49);
+        pushFollow(FOLLOW_48);
         ruleShiftOperator();
 
         state._fsp--;
@@ -78735,7 +78735,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        pushFollow(FOLLOW_49);
+        pushFollow(FOLLOW_48);
         ruleShiftOperator();
 
         state._fsp--;
@@ -78771,7 +78771,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        pushFollow(FOLLOW_49);
+        pushFollow(FOLLOW_48);
         ruleRelationalOperator();
 
         state._fsp--;
@@ -78805,7 +78805,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        pushFollow(FOLLOW_49);
+        pushFollow(FOLLOW_48);
         norm1_RelationalOperator();
 
         state._fsp--;
@@ -78839,7 +78839,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        pushFollow(FOLLOW_192);
+        pushFollow(FOLLOW_191);
         ruleRelationalOperator();
 
         state._fsp--;
@@ -78873,7 +78873,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        pushFollow(FOLLOW_192);
+        pushFollow(FOLLOW_191);
         norm1_RelationalOperator();
 
         state._fsp--;
@@ -79560,14 +79560,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -79653,7 +79653,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 ruleStrictFormalParameters(null);
 
                 state._fsp--;
@@ -79667,7 +79667,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt684) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef(null);
 
                         state._fsp--;
@@ -79691,20 +79691,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                match(input,Async,FOLLOW_48); if (state.failed) return ;
+                match(input,Async,FOLLOW_47); if (state.failed) return ;
 
                 }
 
 
                 }
 
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleNoLineTerminator(null);
 
                 state._fsp--;
                 if (state.failed) return ;
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 ruleStrictFormalParameters(null);
 
                 state._fsp--;
@@ -79726,7 +79726,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt685) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef(null);
 
                         state._fsp--;
@@ -79747,7 +79747,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                pushFollow(FOLLOW_47);
+                pushFollow(FOLLOW_46);
                 ruleBindingIdentifierAsFormalParameter();
 
                 state._fsp--;
@@ -79827,14 +79827,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -79920,7 +79920,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 ruleStrictFormalParameters(null);
 
                 state._fsp--;
@@ -79934,7 +79934,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt687) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef(null);
 
                         state._fsp--;
@@ -79958,20 +79958,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                match(input,Async,FOLLOW_48); if (state.failed) return ;
+                match(input,Async,FOLLOW_47); if (state.failed) return ;
 
                 }
 
 
                 }
 
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleNoLineTerminator(null);
 
                 state._fsp--;
                 if (state.failed) return ;
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 ruleStrictFormalParameters(null);
 
                 state._fsp--;
@@ -79993,7 +79993,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt688) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef(null);
 
                         state._fsp--;
@@ -80014,7 +80014,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                pushFollow(FOLLOW_47);
+                pushFollow(FOLLOW_46);
                 ruleBindingIdentifierAsFormalParameter();
 
                 state._fsp--;
@@ -80094,14 +80094,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -80186,7 +80186,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 norm1_StrictFormalParameters(null);
 
                 state._fsp--;
@@ -80200,7 +80200,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt690) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef(null);
 
                         state._fsp--;
@@ -80224,20 +80224,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                match(input,Async,FOLLOW_51); if (state.failed) return ;
+                match(input,Async,FOLLOW_50); if (state.failed) return ;
 
                 }
 
 
                 }
 
-                pushFollow(FOLLOW_40);
+                pushFollow(FOLLOW_39);
                 ruleNoLineTerminator(null);
 
                 state._fsp--;
                 if (state.failed) return ;
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 norm1_StrictFormalParameters(null);
 
                 state._fsp--;
@@ -80259,7 +80259,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt691) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef(null);
 
                         state._fsp--;
@@ -80280,7 +80280,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                pushFollow(FOLLOW_47);
+                pushFollow(FOLLOW_46);
                 norm1_BindingIdentifierAsFormalParameter();
 
                 state._fsp--;
@@ -80360,14 +80360,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator(null);
 
         state._fsp--;
@@ -80452,7 +80452,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 norm1_StrictFormalParameters(null);
 
                 state._fsp--;
@@ -80466,7 +80466,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt693) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef(null);
 
                         state._fsp--;
@@ -80490,20 +80490,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                match(input,Async,FOLLOW_51); if (state.failed) return ;
+                match(input,Async,FOLLOW_50); if (state.failed) return ;
 
                 }
 
 
                 }
 
-                pushFollow(FOLLOW_40);
+                pushFollow(FOLLOW_39);
                 ruleNoLineTerminator(null);
 
                 state._fsp--;
                 if (state.failed) return ;
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 norm1_StrictFormalParameters(null);
 
                 state._fsp--;
@@ -80525,7 +80525,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 switch (alt694) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef(null);
 
                         state._fsp--;
@@ -80546,7 +80546,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 {
                 {
-                pushFollow(FOLLOW_47);
+                pushFollow(FOLLOW_46);
                 norm1_BindingIdentifierAsFormalParameter();
 
                 state._fsp--;
@@ -80656,13 +80656,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         }
 
-        match(input,LeftParenthesis,FOLLOW_175); if (state.failed) return ;
+        match(input,LeftParenthesis,FOLLOW_174); if (state.failed) return ;
         pushFollow(FOLLOW_67);
         ruleTAnonymousFormalParameterList(null);
 
         state._fsp--;
         if (state.failed) return ;
-        match(input,RightParenthesis,FOLLOW_47); if (state.failed) return ;
+        match(input,RightParenthesis,FOLLOW_46); if (state.failed) return ;
         match(input,EqualsSignGreaterThanSign,FOLLOW_2); if (state.failed) return ;
 
         }
@@ -80717,7 +80717,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_147);
+        	    pushFollow(FOLLOW_146);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -80764,7 +80764,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_149);
+        	    pushFollow(FOLLOW_148);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -80781,7 +80781,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Set,FOLLOW_191); if (state.failed) return ;
+        match(input,Set,FOLLOW_190); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -80811,7 +80811,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_146);
+        	    pushFollow(FOLLOW_145);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -80891,7 +80891,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -80919,7 +80919,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 if (state.failed) return ;
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -80965,7 +80965,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_147);
+        	    pushFollow(FOLLOW_146);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81012,7 +81012,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_149);
+        	    pushFollow(FOLLOW_148);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81029,7 +81029,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Set,FOLLOW_191); if (state.failed) return ;
+        match(input,Set,FOLLOW_190); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -81059,7 +81059,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_146);
+        	    pushFollow(FOLLOW_145);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81139,7 +81139,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -81167,7 +81167,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 if (state.failed) return ;
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -81213,7 +81213,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_147);
+        	    pushFollow(FOLLOW_146);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81273,7 +81273,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_149);
+        	    pushFollow(FOLLOW_148);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81290,7 +81290,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Set,FOLLOW_191); if (state.failed) return ;
+        match(input,Set,FOLLOW_190); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -81333,7 +81333,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_146);
+        	    pushFollow(FOLLOW_145);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81413,7 +81413,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -81441,7 +81441,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 if (state.failed) return ;
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -81487,7 +81487,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_147);
+        	    pushFollow(FOLLOW_146);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81547,7 +81547,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_149);
+        	    pushFollow(FOLLOW_148);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81564,7 +81564,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             }
         } while (true);
 
-        match(input,Set,FOLLOW_191); if (state.failed) return ;
+        match(input,Set,FOLLOW_190); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -81607,7 +81607,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_146);
+        	    pushFollow(FOLLOW_145);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -81687,7 +81687,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -81715,7 +81715,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 if (state.failed) return ;
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -81934,13 +81934,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         }
 
-        match(input,LeftParenthesis,FOLLOW_175); if (state.failed) return ;
+        match(input,LeftParenthesis,FOLLOW_174); if (state.failed) return ;
         pushFollow(FOLLOW_67);
         ruleTAnonymousFormalParameterList(null);
 
         state._fsp--;
         if (state.failed) return ;
-        match(input,RightParenthesis,FOLLOW_47); if (state.failed) return ;
+        match(input,RightParenthesis,FOLLOW_46); if (state.failed) return ;
         match(input,EqualsSignGreaterThanSign,FOLLOW_2); if (state.failed) return ;
 
         }
@@ -82016,7 +82016,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         }
 
-        match(input,Get,FOLLOW_25); if (state.failed) return ;
+        match(input,Get,FOLLOW_14); if (state.failed) return ;
         {
         {
         pushFollow(FOLLOW_2);
@@ -82042,7 +82042,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         {
         }
 
-        match(input,Set,FOLLOW_25); if (state.failed) return ;
+        match(input,Set,FOLLOW_14); if (state.failed) return ;
         {
         {
         pushFollow(FOLLOW_2);
@@ -82076,7 +82076,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         switch (alt740) {
             case 1 :
                 {
-                pushFollow(FOLLOW_25);
+                pushFollow(FOLLOW_14);
                 ruleTypeVariables(null);
 
                 state._fsp--;
@@ -82088,7 +82088,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         {
         {
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleIdentifierName();
 
         state._fsp--;
@@ -111449,7 +111449,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000805184E00L});
     public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000200805184C00L});
     public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000040010000100L,0x4000000000000000L});
+    public static final BitSet FOLLOW_14 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40000000007C0001L});
     public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000000000000000L,0x0001000100000000L});
     public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0800200C4519CE00L,0x0000440040000001L});
     public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000400000000000L});
@@ -111460,39 +111460,39 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x6C044680D5184F70L,0x4001000000440000L});
     public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0000000000000000L,0x0001000000000000L});
     public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x0000000000000002L,0x0000000000040000L});
-    public static final BitSet FOLLOW_25 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40000000007C0001L});
-    public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0800200C4518CE00L,0x0000000000000001L});
-    public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0800000805184C00L,0x0000000000000001L});
-    public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x6C044680D5184F70L,0x40004C0000440000L});
-    public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x0000000000000000L,0x0001002100000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400040440000L,0x0000000000000002L});
-    public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x0000000000000002L,0x0000000100000000L});
-    public static final BitSet FOLLOW_32 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400040440000L});
-    public static final BitSet FOLLOW_33 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010000007C0001L});
-    public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x0000000000000000L,0x0000000000040000L});
-    public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x0000000000000002L,0x0000000080000000L});
-    public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0000000000000002L,0x0001002000000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000000040008000L});
-    public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000020000L});
-    public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004050440000L});
-    public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004010440000L});
-    public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000000010440000L});
-    public static final BitSet FOLLOW_42 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L});
-    public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x0000000000000002L,0x0000001000000000L});
-    public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0000000000008000L,0x0000000000000000L,0x0000000000020000L});
-    public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0000000000000000L,0x0000001000004000L});
-    public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
-    public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L,0x0000000000020000L});
-    public static final BitSet FOLLOW_49 = new BitSet(new long[]{0x7C0FC6B4F538CF70L,0x57A24C4A92440540L,0x0000000000201802L});
-    public static final BitSet FOLLOW_50 = new BitSet(new long[]{0xFE1FE7FDFFF8FF70L,0x57A34C6A925C0541L,0x0000000000201802L});
-    public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004010440000L,0x0000000000020000L});
-    public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x40024C0020440000L});
-    public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x0000000000000000L,0x0000000120000000L});
-    public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x40024C0000440000L});
-    public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x0000000440008000L});
-    public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x6C044680D51A4F70L,0x4000404000440000L});
-    public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x6C044680D51A4F70L,0x4000400000440000L});
+    public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0800200C4518CE00L,0x0000000000000001L});
+    public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0800000805184C00L,0x0000000000000001L});
+    public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x6C044680D5184F70L,0x40004C0000440000L});
+    public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x0000000000000000L,0x0001002100000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400040440000L,0x0000000000000002L});
+    public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x0000000000000002L,0x0000000100000000L});
+    public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400040440000L});
+    public static final BitSet FOLLOW_32 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010000007C0001L});
+    public static final BitSet FOLLOW_33 = new BitSet(new long[]{0x0000000000000000L,0x0000000000040000L});
+    public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x0000000000000002L,0x0000000080000000L});
+    public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x0000000000000002L,0x0001002000000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0000000040008000L});
+    public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000020000L});
+    public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004050440000L});
+    public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004010440000L});
+    public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000000010440000L});
+    public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L});
+    public static final BitSet FOLLOW_42 = new BitSet(new long[]{0x0000000000000002L,0x0000001000000000L});
+    public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x0000000000008000L,0x0000000000000000L,0x0000000000020000L});
+    public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0000000000000000L,0x0000001000004000L});
+    public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
+    public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L,0x0000000000020000L});
+    public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x7C0FC6B4F538CF70L,0x57A24C4A92440540L,0x0000000000201802L});
+    public static final BitSet FOLLOW_49 = new BitSet(new long[]{0xFE1FE7FDFFF8FF70L,0x57A34C6A925C0541L,0x0000000000201802L});
+    public static final BitSet FOLLOW_50 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004010440000L,0x0000000000020000L});
+    public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x40024C0020440000L});
+    public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x0000000000000000L,0x0000000120000000L});
+    public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x40024C0000440000L});
+    public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x0000000440008000L});
+    public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x6C044680D51A4F70L,0x4000404000440000L});
+    public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x6C044680D51A4F70L,0x4000400000440000L});
+    public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x0000040010000100L,0x4000000000000000L});
     public static final BitSet FOLLOW_58 = new BitSet(new long[]{0x0000000000020002L});
     public static final BitSet FOLLOW_59 = new BitSet(new long[]{0x000D048090000130L,0x4002480010000000L});
     public static final BitSet FOLLOW_60 = new BitSet(new long[]{0x0000000000000002L,0x0000008000000000L});
@@ -111581,54 +111581,53 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_142 = new BitSet(new long[]{0x0008040090000100L,0x4000000000000000L});
     public static final BitSet FOLLOW_143 = new BitSet(new long[]{0x0000000000020042L,0x0000000100000000L});
     public static final BitSet FOLLOW_144 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400000440000L});
-    public static final BitSet FOLLOW_145 = new BitSet(new long[]{0x0000040010000100L,0x4001000000000000L});
-    public static final BitSet FOLLOW_146 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A24840407C0001L,0x0000000000200002L});
-    public static final BitSet FOLLOW_147 = new BitSet(new long[]{0x040D048895184D30L,0x4002400000000000L});
-    public static final BitSet FOLLOW_148 = new BitSet(new long[]{0x0000000000000002L,0x0000402000000000L});
-    public static final BitSet FOLLOW_149 = new BitSet(new long[]{0x4000000805184C00L});
-    public static final BitSet FOLLOW_150 = new BitSet(new long[]{0x0000000000000000L,0x000102B000000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_151 = new BitSet(new long[]{0x0000000000000000L,0x000100B000000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_152 = new BitSet(new long[]{0x0000000000000000L,0x000100A000000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_153 = new BitSet(new long[]{0x0000000000000002L,0x0000400000000000L});
-    public static final BitSet FOLLOW_154 = new BitSet(new long[]{0x0000000000000002L,0x0000401000000000L});
-    public static final BitSet FOLLOW_155 = new BitSet(new long[]{0x0400000000000000L});
-    public static final BitSet FOLLOW_156 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A34C00007C0001L,0x0000000000200002L});
-    public static final BitSet FOLLOW_157 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A24C00007C0001L,0x0000000000200002L});
-    public static final BitSet FOLLOW_158 = new BitSet(new long[]{0x6C444680D5184F70L,0x40005C0100440000L});
-    public static final BitSet FOLLOW_159 = new BitSet(new long[]{0x6C444680D5184F70L,0x40004C0100440000L});
-    public static final BitSet FOLLOW_160 = new BitSet(new long[]{0x6C444680D5184F70L,0x40004C0000440000L});
-    public static final BitSet FOLLOW_161 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40004108007C0001L});
-    public static final BitSet FOLLOW_162 = new BitSet(new long[]{0x0000000000000000L,0x0000010800000000L});
-    public static final BitSet FOLLOW_163 = new BitSet(new long[]{0x0000000000000000L,0x0000404000000000L});
-    public static final BitSet FOLLOW_164 = new BitSet(new long[]{0x0000000000000000L,0x0000000800000000L});
-    public static final BitSet FOLLOW_165 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF2L,0x40004000007C0001L});
-    public static final BitSet FOLLOW_166 = new BitSet(new long[]{0x0040000000000000L});
-    public static final BitSet FOLLOW_167 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L,0x0000000000000002L});
-    public static final BitSet FOLLOW_168 = new BitSet(new long[]{0x0001000000000000L});
-    public static final BitSet FOLLOW_169 = new BitSet(new long[]{0x0010000000000002L});
-    public static final BitSet FOLLOW_170 = new BitSet(new long[]{0x0000000000008000L,0x0000040000000000L});
-    public static final BitSet FOLLOW_171 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_172 = new BitSet(new long[]{0x000D048090000130L,0x4002480000000000L});
-    public static final BitSet FOLLOW_173 = new BitSet(new long[]{0x0000000000000000L,0x0000004010000000L});
-    public static final BitSet FOLLOW_174 = new BitSet(new long[]{0x2000040010000100L,0x4000000000200000L});
-    public static final BitSet FOLLOW_175 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x4002480030440000L});
-    public static final BitSet FOLLOW_176 = new BitSet(new long[]{0x0000000000000000L,0x0001001000000000L});
-    public static final BitSet FOLLOW_177 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x4002480010440000L});
-    public static final BitSet FOLLOW_178 = new BitSet(new long[]{0x6C0D4680D5184F70L,0x4002480010440000L});
-    public static final BitSet FOLLOW_179 = new BitSet(new long[]{0x0008040090000102L,0x4000000000000000L});
-    public static final BitSet FOLLOW_180 = new BitSet(new long[]{0x000D048090000130L,0x4002400000000000L});
-    public static final BitSet FOLLOW_181 = new BitSet(new long[]{0x200D048090000130L,0x40024A0010200000L});
-    public static final BitSet FOLLOW_182 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
-    public static final BitSet FOLLOW_183 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010040007C0001L});
-    public static final BitSet FOLLOW_184 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010061007C0001L});
-    public static final BitSet FOLLOW_185 = new BitSet(new long[]{0x0000000000000002L,0x0000021000000000L});
-    public static final BitSet FOLLOW_186 = new BitSet(new long[]{0x0000000000000002L,0x0002000000000000L,0x0000000000080000L});
-    public static final BitSet FOLLOW_187 = new BitSet(new long[]{0x0009040090000100L,0x4000020000000000L});
-    public static final BitSet FOLLOW_188 = new BitSet(new long[]{0x0000002000020002L});
-    public static final BitSet FOLLOW_189 = new BitSet(new long[]{0x6C044680D5184F72L,0x4002000000440000L});
-    public static final BitSet FOLLOW_190 = new BitSet(new long[]{0x6C044680D5184F72L,0x4000000000440000L});
-    public static final BitSet FOLLOW_191 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A00800007C0001L,0x0000000000200002L});
-    public static final BitSet FOLLOW_192 = new BitSet(new long[]{0x7C0FC4B4F538CF70L,0x57A24C4A92440540L,0x0000000000201802L});
+    public static final BitSet FOLLOW_145 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A24840407C0001L,0x0000000000200002L});
+    public static final BitSet FOLLOW_146 = new BitSet(new long[]{0x040D048895184D30L,0x4002400000000000L});
+    public static final BitSet FOLLOW_147 = new BitSet(new long[]{0x0000000000000002L,0x0000402000000000L});
+    public static final BitSet FOLLOW_148 = new BitSet(new long[]{0x4000000805184C00L});
+    public static final BitSet FOLLOW_149 = new BitSet(new long[]{0x0000000000000000L,0x000102B000000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_150 = new BitSet(new long[]{0x0000000000000000L,0x000100B000000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_151 = new BitSet(new long[]{0x0000000000000000L,0x000100A000000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_152 = new BitSet(new long[]{0x0000000000000002L,0x0000400000000000L});
+    public static final BitSet FOLLOW_153 = new BitSet(new long[]{0x0000000000000002L,0x0000401000000000L});
+    public static final BitSet FOLLOW_154 = new BitSet(new long[]{0x0400000000000000L});
+    public static final BitSet FOLLOW_155 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A34C00007C0001L,0x0000000000200002L});
+    public static final BitSet FOLLOW_156 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A24C00007C0001L,0x0000000000200002L});
+    public static final BitSet FOLLOW_157 = new BitSet(new long[]{0x6C444680D5184F70L,0x40005C0100440000L});
+    public static final BitSet FOLLOW_158 = new BitSet(new long[]{0x6C444680D5184F70L,0x40004C0100440000L});
+    public static final BitSet FOLLOW_159 = new BitSet(new long[]{0x6C444680D5184F70L,0x40004C0000440000L});
+    public static final BitSet FOLLOW_160 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40004108007C0001L});
+    public static final BitSet FOLLOW_161 = new BitSet(new long[]{0x0000000000000000L,0x0000010800000000L});
+    public static final BitSet FOLLOW_162 = new BitSet(new long[]{0x0000000000000000L,0x0000404000000000L});
+    public static final BitSet FOLLOW_163 = new BitSet(new long[]{0x0000000000000000L,0x0000000800000000L});
+    public static final BitSet FOLLOW_164 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF2L,0x40004000007C0001L});
+    public static final BitSet FOLLOW_165 = new BitSet(new long[]{0x0040000000000000L});
+    public static final BitSet FOLLOW_166 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L,0x0000000000000002L});
+    public static final BitSet FOLLOW_167 = new BitSet(new long[]{0x0001000000000000L});
+    public static final BitSet FOLLOW_168 = new BitSet(new long[]{0x0010000000000002L});
+    public static final BitSet FOLLOW_169 = new BitSet(new long[]{0x0000000000008000L,0x0000040000000000L});
+    public static final BitSet FOLLOW_170 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_171 = new BitSet(new long[]{0x000D048090000130L,0x4002480000000000L});
+    public static final BitSet FOLLOW_172 = new BitSet(new long[]{0x0000000000000000L,0x0000004010000000L});
+    public static final BitSet FOLLOW_173 = new BitSet(new long[]{0x2000040010000100L,0x4000000000200000L});
+    public static final BitSet FOLLOW_174 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x4002480030440000L});
+    public static final BitSet FOLLOW_175 = new BitSet(new long[]{0x0000000000000000L,0x0001001000000000L});
+    public static final BitSet FOLLOW_176 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x4002480010440000L});
+    public static final BitSet FOLLOW_177 = new BitSet(new long[]{0x6C0D4680D5184F70L,0x4002480010440000L});
+    public static final BitSet FOLLOW_178 = new BitSet(new long[]{0x0008040090000102L,0x4000000000000000L});
+    public static final BitSet FOLLOW_179 = new BitSet(new long[]{0x000D048090000130L,0x4002400000000000L});
+    public static final BitSet FOLLOW_180 = new BitSet(new long[]{0x200D048090000130L,0x40024A0010200000L});
+    public static final BitSet FOLLOW_181 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
+    public static final BitSet FOLLOW_182 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010040007C0001L});
+    public static final BitSet FOLLOW_183 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010061007C0001L});
+    public static final BitSet FOLLOW_184 = new BitSet(new long[]{0x0000000000000002L,0x0000021000000000L});
+    public static final BitSet FOLLOW_185 = new BitSet(new long[]{0x0000000000000002L,0x0002000000000000L,0x0000000000080000L});
+    public static final BitSet FOLLOW_186 = new BitSet(new long[]{0x0009040090000100L,0x4000020000000000L});
+    public static final BitSet FOLLOW_187 = new BitSet(new long[]{0x0000002000020002L});
+    public static final BitSet FOLLOW_188 = new BitSet(new long[]{0x6C044680D5184F72L,0x4002000000440000L});
+    public static final BitSet FOLLOW_189 = new BitSet(new long[]{0x6C044680D5184F72L,0x4000000000440000L});
+    public static final BitSet FOLLOW_190 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A00800007C0001L,0x0000000000200002L});
+    public static final BitSet FOLLOW_191 = new BitSet(new long[]{0x7C0FC4B4F538CF70L,0x57A24C4A92440540L,0x0000000000201802L});
 
 }
 
