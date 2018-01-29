@@ -21,11 +21,6 @@ public class N4IDLGlobals {
 	public static final String N4IDL_FILE_EXTENSION = "n4idl";
 
 	/**
-	 * Files extension of IDL source files (<b>not</b> including the separator dot).
-	 */
-	public static final String IDL_FILE_EXTENSION = "idl";
-
-	/**
 	 * The version separator is used to separate a type name from the declared/requested version. E.g. A#1
 	 */
 	public static final String VERSION_SEPARATOR = "#";

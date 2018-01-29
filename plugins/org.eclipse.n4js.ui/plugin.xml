@@ -585,21 +585,6 @@ Contributors:
         </resourceServiceProvider>
     </extension>
 
-    <extension
-        point="org.eclipse.emf.ecore.extension_parser">
-        <parser
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-            type="idl">
-        </parser>
-    </extension>
-    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
-        <resourceServiceProvider
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-            uriExtension="idl">
-        </resourceServiceProvider>
-    </extension>
-
-
     <!-- marker definitions for org.eclipse.n4js.N4JS -->
     <extension
             id="n4js.check.fast"
