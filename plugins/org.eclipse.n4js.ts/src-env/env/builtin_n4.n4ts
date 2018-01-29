@@ -291,10 +291,7 @@ public /* @Final */ class N4EnumType extends N4Type {
 /**
  * Base class for all enumerations, literals are assumed to be static constant fields of concrete subclasses with the type of these subclasses.
  */
-/*It is not clear how Enum should be implemented, how it will related to classes, reflection
- * and objectcts / primitives provided by runtime. Hence very general type definition.
- */
-public object N4Enum extends any {
+public object N4Enum {
 
 	/**
 	 * Returns the name of a concrete literal
