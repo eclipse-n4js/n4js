@@ -119,5 +119,5 @@ i !== ea;
 // XPECT warnings --> "Neither R is a subtype of Ea nor Ea is a subtype of R. The expression will always evaluate to true." at "r !== ea"
 r !== ea;
 
-// XPECT warnings --> "Neither { Object,  R2 } is a subtype of Ea nor Ea is a subtype of { Object,  R2 }. The expression will always evaluate to true." at "ur !==ea"
-ur !==ea;
+// OK
+ur !== ea;

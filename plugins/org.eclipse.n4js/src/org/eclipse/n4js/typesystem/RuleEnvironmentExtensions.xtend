@@ -941,7 +941,7 @@ class RuleEnvironmentExtensions {
 				if( TypeSystemHelper::isStringBasedEnumeration( declaredType ))
 					#[G.n4StringBasedEnumTypeRef /* ,  G.stringTypeRef*/]
 				else
-					emptyList
+					#[G.objectTypeRef]
 			default:
 				emptyList // quick exit
 		}
