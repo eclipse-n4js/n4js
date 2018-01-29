@@ -39,6 +39,7 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.resource.ManifestMerger;
 import org.eclipse.n4js.n4mf.utils.N4MFConstants;
+import org.eclipse.n4js.utils.LightweightException;
 import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.Version;
@@ -49,6 +50,7 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
@@ -136,7 +138,6 @@ public class NpmPackageToProjectAdapter {
 		for (File packageRoot : packageRoots) {
 			try {
 				PackageJson packageJson = getPackageJson(packageRoot);
-				String mainModule = computeMainModule(packageRoot);
 
 				final File manifest = new File(packageRoot, N4MF_MANIFEST);
 				// looks like n4js project skip adaptation
@@ -155,6 +156,7 @@ public class NpmPackageToProjectAdapter {
 					manifest.createNewFile();
 
 					try {
+						String mainModule = computeMainModule(packageRoot);
 						generateManifestContent(packageRoot, packageJson, mainModule, manifest);
 						if (!names.remove(packageRoot.getName())) {
 							throw new IOException("Unexpected error occurred while adapting '" + packageRoot.getName()
@@ -172,7 +174,7 @@ public class NpmPackageToProjectAdapter {
 					}
 				}
 
-				if (n4jsdsFolder != null) {
+				if (n4jsdsFolder != null && adaptedProjects.contains(packageRoot)) {
 					addTypeDefinitions(packageRoot, packageJson, manifest, n4jsdsFolder);
 				}
 			} catch (final Exception e) {
@@ -444,6 +446,11 @@ public class NpmPackageToProjectAdapter {
 			return mainModule;
 
 		File main = new File(mainModule);
+
+		if (!main.isFile()) {
+			throw Exceptions
+					.sneakyThrow(new LightweightException("Cannot locate main module with path " + main.toString()));
+		}
 
 		Path packagePath = projectFolder.toPath();
 		Path packageMainModulePath = main.toPath();

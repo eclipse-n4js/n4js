@@ -119,10 +119,10 @@ public class InferredElements {
 		@Override
 		public Void caseN4MemberDeclaration(N4MemberDeclaration memberDecl) {
 			TMember tmember = memberDecl.getDefinedTypeElement();
-			TClassifier tclassFilled = (TClassifier) tmember.getContainingType();
 			// If this member is replaced by a polyfill's member, we accept that polyfill'member as well.
 			// Note that we enable this for static polyfill. We may want to extend this to runtime polyfill as well.
-			if (tmember.getContainingModule().isStaticPolyfillAware()) {
+			if (tmember != null && tmember.getContainingModule().isStaticPolyfillAware()) {
+				TClassifier tclassFilled = (TClassifier) tmember.getContainingType();
 				N4ClassDeclaration filler = projectUtils.getStaticPolyfill(tclassFilled);
 				// Search for the polyfill's member
 				Optional<N4MemberDeclaration> fillerMember = filler.getOwnedMembers().stream()
