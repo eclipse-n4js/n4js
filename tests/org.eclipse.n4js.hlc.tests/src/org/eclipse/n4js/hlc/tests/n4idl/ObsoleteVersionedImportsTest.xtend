@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2018 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,41 +8,39 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc.tests.n4idl;
+package org.eclipse.n4js.hlc.tests.n4idl
 
-import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
+import com.google.common.base.Predicates
+import java.io.File
+import java.io.IOException
+import org.eclipse.n4js.hlc.base.BuildType
+import org.eclipse.n4js.hlc.base.ExitCodeException
+import org.eclipse.n4js.hlc.tests.AbstractN4jscTest
+import org.eclipse.n4js.hlc.tests.N4CliHelper
+import org.eclipse.n4js.utils.io.FileDeleter
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 
-import java.io.File;
-import java.io.IOException;
-
-import org.eclipse.n4js.hlc.base.BuildType;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.tests.BaseN4jscExternalTest;
-import org.eclipse.n4js.hlc.tests.N4CliHelper;
-import org.eclipse.n4js.utils.io.FileDeleter;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.base.Predicates;
+import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS
 
 /**
  * Compiles and runs a basic N4IDL project.
  *
  * Asserts that all used versions are imported correctly and that no obsolete versions are imported.
  */
-public class ObsoleteVersionedImportsTest extends BaseN4jscExternalTest {
+class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
 	@Before
-	public void setupWorkspace() throws IOException {
+	public def void setupWorkspace() throws IOException {
 		workspace = setupWorkspace("n4idl", Predicates.alwaysTrue());
 	}
 
 	/** Delete workspace. */
 	@After
-	public void deleteWorkspace() throws IOException {
+	public def void deleteWorkspace() throws IOException {
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
@@ -57,13 +55,13 @@ public class ObsoleteVersionedImportsTest extends BaseN4jscExternalTest {
 	 *            source folder 'src/' of the project.
 	 * @return The output of the runner
 	 */
-	private String compileAndRun(String projectName, String fileToRunFQN) throws ExitCodeException, IOException {
-		final String wsRoot = workspace.getAbsolutePath().toString();
+	private def String compileAndRun(String projectName, String fileToRunFQN) throws ExitCodeException, IOException {
+		val wsRoot = workspace.getAbsolutePath().toString();
 
-		final String fileToRun = wsRoot + "/" + projectName + "/src/" + fileToRunFQN;
-		final String projectToCompile = wsRoot + "/" + projectName;
+		val fileToRun = wsRoot + "/" + projectName + "/src/" + fileToRunFQN;
+		val projectToCompile = wsRoot + "/" + projectName;
 
-		final String[] args = {
+		val String[] args = #[
 				"--systemLoader", COMMON_JS.getId(),
 				"-rw", "nodejs",
 				"-r", fileToRun,
@@ -71,8 +69,8 @@ public class ObsoleteVersionedImportsTest extends BaseN4jscExternalTest {
 				"-t", BuildType.projects.toString(),
 				projectToCompile,
 				"-r",
-				fileToRun
-		};
+				fileToRun];
+		
 		return runAndCaptureOutput(args);
 	}
 
@@ -82,14 +80,21 @@ public class ObsoleteVersionedImportsTest extends BaseN4jscExternalTest {
 	 * Assert the output to be equal to 'ObsoleteVersionedImports/expectations.log'.
 	 */
 	@Test
-	public void testNoObsoleteVersionsImported() throws IOException, ExitCodeException {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String outputExpectationsFile = wsRoot + "/" + "ObsoleteVersionedImports" + "/expectations.log";
-
-		final String out = compileAndRun("ObsoleteVersionedImports", "imports/ImplicitVersionImport_run.n4js");
-		final String expectations = N4CliHelper.readLogfile(new File(outputExpectationsFile));
+	public def void testNoObsoleteVersionsImported() throws IOException, ExitCodeException {
+		val out = compileAndRun("ObsoleteVersionedImports", "imports/ImplicitVersionImport_run.n4js");
+		val expectations = '''
+		R#1: function R$1() {}
+		R#2: undefined
+		R#3: function R$3() {}
+		PU#1: function P$1() {}
+		PU#2: undefined
+		AliasS#1: function S$1() {}
+		AliasS#2: function S$2() {}
+		AliasS#3: function S$3() {}
+		T#1: function T$1() {}
+		T#2: undefined
+		Q#1: undefined''';
 
 		N4CliHelper.assertExpectedOutput(expectations, out);
 	}
-
 }
