@@ -33,7 +33,6 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnum;
-import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
@@ -144,7 +143,7 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 				// unnecessary duplicate error
 				return;
 			}
-			if (prop instanceof TEnumLiteral && prop.eContainer() == tEnum) {
+			if (tEnum.getLiterals().contains(prop)) {
 				// reference to one of tEnum's literals -> valid usage!
 				return;
 			}

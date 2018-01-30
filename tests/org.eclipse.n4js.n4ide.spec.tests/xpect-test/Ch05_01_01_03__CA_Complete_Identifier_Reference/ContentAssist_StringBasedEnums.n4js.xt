@@ -12,11 +12,11 @@
 /* XPECT_SETUP org.eclipse.n4js.n4ide.spec.tests.N4JSXpectPluginUITest
 
 	Workspace {
-		JavaProject "ProjectCA" {
+		Project "ProjectCA" {
 			SrcFolder {
 				ThisFile {}
 			}
-			File "manifest.n4mf" { from="./manifest.n4mf" }
+			File { from="manifest.n4mf" }
 		}
 	}
 
