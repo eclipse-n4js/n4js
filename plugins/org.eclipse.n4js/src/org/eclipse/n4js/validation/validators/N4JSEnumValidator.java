@@ -27,6 +27,7 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
@@ -133,7 +134,7 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		// we now have an IdentifierRef pointing to a string-based enum ...
-		final EObject parent = identRef.eContainer();
+		final EObject parent = N4JSASTUtils.skipParenExpressionUpward(identRef.eContainer());
 		final ParameterizedPropertyAccessExpression parentPAE = parent instanceof ParameterizedPropertyAccessExpression
 				? (ParameterizedPropertyAccessExpression) parent : null;
 		final IdentifiableElement prop = parentPAE != null ? parentPAE.getProperty() : null;

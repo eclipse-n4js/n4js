@@ -46,6 +46,12 @@ console.log(E.L);
 // XPECT noerrors -->
 console.log(E.literals);
 
+// XPECT noerrors -->
+console.log((((E))).L);
+
+// XPECT noerrors -->
+console.log((((E))).literals);
+
 
 
 // -----------------------------------------------------------------
