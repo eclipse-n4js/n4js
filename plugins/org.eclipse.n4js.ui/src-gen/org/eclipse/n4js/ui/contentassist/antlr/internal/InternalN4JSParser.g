@@ -80962,9 +80962,9 @@ rule__N4EnumLiteral__NameAssignment_0
 	}
 :
 	(
-		{ before(grammarAccess.getN4EnumLiteralAccess().getNameIdentifierOrThisParserRuleCall_0_0()); }
-		ruleIdentifierOrThis
-		{ after(grammarAccess.getN4EnumLiteralAccess().getNameIdentifierOrThisParserRuleCall_0_0()); }
+		{ before(grammarAccess.getN4EnumLiteralAccess().getNameIdentifierNameParserRuleCall_0_0()); }
+		ruleIdentifierName
+		{ after(grammarAccess.getN4EnumLiteralAccess().getNameIdentifierNameParserRuleCall_0_0()); }
 	)
 ;
 finally {
