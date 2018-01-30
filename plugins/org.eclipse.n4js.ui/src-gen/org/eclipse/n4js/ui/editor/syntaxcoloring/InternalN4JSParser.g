@@ -15414,8 +15414,8 @@ ruleN4EnumLiteral
 (
 	(
 		(
-			NameIdentifierOrThisParserRuleCall_0_0=ruleIdentifierOrThis{
-				announce($NameIdentifierOrThisParserRuleCall_0_0.start, $NameIdentifierOrThisParserRuleCall_0_0.stop, grammarAccess.getN4EnumLiteralAccess().getNameAssignment_0());
+			NameIdentifierNameParserRuleCall_0_0=ruleIdentifierName{
+				announce($NameIdentifierNameParserRuleCall_0_0.start, $NameIdentifierNameParserRuleCall_0_0.stop, grammarAccess.getN4EnumLiteralAccess().getNameAssignment_0());
 			}
 		)
 	)

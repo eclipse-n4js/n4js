@@ -27834,9 +27834,9 @@ ruleN4EnumLiteral returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getN4EnumLiteralAccess().getNameIdentifierOrThisParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getN4EnumLiteralAccess().getNameIdentifierNameParserRuleCall_0_0());
 				}
-				lv_name_0_0=ruleIdentifierOrThis
+				lv_name_0_0=ruleIdentifierName
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4EnumLiteralRule());
@@ -27845,7 +27845,7 @@ ruleN4EnumLiteral returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_0_0,
-						"org.eclipse.n4js.N4JS.IdentifierOrThis");
+						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
 					afterParserOrEnumRuleCall();
 				}
 			)

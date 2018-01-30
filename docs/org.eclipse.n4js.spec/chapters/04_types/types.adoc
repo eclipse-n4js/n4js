@@ -2684,16 +2684,15 @@ console.log(us.toString()); // --> 840
 
 [source,xtext]
 ----
-N4EnumDeclaration:
-        annotations+=Annotation*
-        (accessModifier=N4JSTypeAccessModifier)?
-        'enum' name=IDENTIFIER
-        '{'
-            literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
-        '}' ;
+N4EnumDeclaration <Yield>:
+	=>(	{N4EnumDeclaration}
+		(declaredModifiers+=N4Modifier)*
+		'enum' name=BindingIdentifier<Yield>? )
+	'{'
+		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
+	'}';
 
-N4EnumLiteral:
-        name=IDENTIFIER (':' value=StringLiteral)?
+N4EnumLiteral: name=IdentifierName (':' value=STRING)?;
 ----
 
 [.language-n4js]

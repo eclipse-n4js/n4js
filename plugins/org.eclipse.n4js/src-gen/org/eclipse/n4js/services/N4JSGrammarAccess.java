@@ -8095,7 +8095,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4EnumLiteral");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cNameIdentifierOrThisParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final RuleCall cNameIdentifierNameParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cColonKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Assignment cValueAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
@@ -8104,17 +8104,17 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		///*
 		// * Only upper case literals are allows, this is to be checked by the validator
 		// */ N4EnumLiteral:
-		//	name=IdentifierOrThis (':' value=STRING)?;
+		//	name=IdentifierName (':' value=STRING)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//name=IdentifierOrThis (':' value=STRING)?
+		//name=IdentifierName (':' value=STRING)?
 		public Group getGroup() { return cGroup; }
 		
-		//name=IdentifierOrThis
+		//name=IdentifierName
 		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
 		
-		//IdentifierOrThis
-		public RuleCall getNameIdentifierOrThisParserRuleCall_0_0() { return cNameIdentifierOrThisParserRuleCall_0_0; }
+		//IdentifierName
+		public RuleCall getNameIdentifierNameParserRuleCall_0_0() { return cNameIdentifierNameParserRuleCall_0_0; }
 		
 		//(':' value=STRING)?
 		public Group getGroup_1() { return cGroup_1; }
@@ -12773,7 +12773,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	///*
 	// * Only upper case literals are allows, this is to be checked by the validator
 	// */ N4EnumLiteral:
-	//	name=IdentifierOrThis (':' value=STRING)?;
+	//	name=IdentifierName (':' value=STRING)?;
 	public N4EnumLiteralElements getN4EnumLiteralAccess() {
 		return pN4EnumLiteral;
 	}
