@@ -154,7 +154,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			infCtx.addConstraint(TypeConstraint.FALSE);
 		}
 
-		val expectedTypeOfPoly = destructureHelper.calculateExpectedType(rootPoly, G);
+		val expectedTypeOfPoly = destructureHelper.calculateExpectedType(rootPoly, G, infCtx);
 		// we have to pass the expected type to the #getType() method, so retrieve it first
 		// (until the expectedType judgment is integrated into AST traversal, we have to invoke this judgment here;
 		// in case of not-well-behaving expectedType rules, we use 'null' as expected type, i.e. no expectation)

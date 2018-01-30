@@ -3788,7 +3788,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 sneakyThrowRuleFailedException("true");
               }
             } else {
-              if (((leftDeclType instanceof TEnum) && (rightDeclType == RuleEnvironmentExtensions.n4EnumType(G)))) {
+              if (((leftDeclType instanceof TEnum) && ((rightDeclType == RuleEnvironmentExtensions.n4EnumType(G)) || (rightDeclType == RuleEnvironmentExtensions.objectType(G))))) {
                 boolean _hasAnnotation = AnnotationDefinition.STRING_BASED.hasAnnotation(leftDeclType);
                 /* !AnnotationDefinition.STRING_BASED.hasAnnotation( leftDeclType ) */
                 if (!(!_hasAnnotation)) {

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils
+package org.eclipse.n4js.misc
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -17,10 +17,9 @@ import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.AssignmentExpression
-import org.eclipse.n4js.n4JS.DestructNode
-import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
@@ -32,6 +31,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -45,14 +45,14 @@ import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 
-import static extension org.eclipse.n4js.n4JS.DestructNode.arePositional
+import static extension org.eclipse.n4js.misc.DestructNode.arePositional
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.typesystem.constraints.InferenceContext
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 
 /**
  * Helper for dealing with destructuring patterns. For more details on destructuring patterns,
@@ -76,7 +76,7 @@ class DestructureHelper {
 		if(vdecl.declaredTypeRef!==null)
 			return null;
 
-		val root = DestructureUtils.getRoot(vdecl.eContainer);
+		val root = N4JSASTUtils.getRootOfDestructuringPattern(vdecl.eContainer);
 		if(root===null)
 			return null;
 
@@ -85,7 +85,7 @@ class DestructureHelper {
 
 			val rootParent2 = rootParent.eContainer;
 			val isLocatedUnderForInOf = rootParent2 instanceof ForStatement
-					&& DestructureUtils.isTopOfForStatement(rootParent2);
+					&& N4JSASTUtils.isDestructuringForStatement(rootParent2 as ForStatement);
 
 			val rootNode = if(isLocatedUnderForInOf) {
 				DestructNode.unify(rootParent2 as ForStatement)
@@ -323,8 +323,6 @@ class DestructureHelper {
 		return extractIterableElementTypes(G, typeRef, false).head;
 	}
 
-
-
 	/**
 	 * Return the expected type of a poly expression if it is used in a destructure pattern and null otherwise.
 	 */
@@ -404,76 +402,6 @@ class DestructureHelper {
 		return retTypeRef;
 	}
 
-
-	/**
-	 * Return the expected type of a poly expression if it is used in a destructure pattern and null otherwise.
-	 */
-	public def TypeRef calculateExpectedType(Expression rootPoly, RuleEnvironment G) {
-		// In case of destructure pattern, we can calculate the expected type based on the structure of the destructure pattern.
-		val rootDestructNode = if (rootPoly.eContainer instanceof VariableBinding) {
-				DestructNode.unify(rootPoly.eContainer as VariableBinding)
-			} else if (rootPoly.eContainer instanceof AssignmentExpression) {
-				DestructNode.unify(rootPoly.eContainer as AssignmentExpression)
-			} else if (rootPoly.eContainer instanceof ForStatement) {
-				DestructNode.unify(rootPoly.eContainer as ForStatement)
-			} else {
-				null
-			};
-		if (rootDestructNode === null) {
-			return null;
-		}
-		return rootDestructNode.calculateExpectedType(G);
-	}
-
-	/**
-	 * Calculate expected type of a destructure pattern based on its structure.
-	 */
-	private def TypeRef calculateExpectedType(DestructNode destructNode, RuleEnvironment G) {
-		val elementTypes = new ArrayList<TypeArgument>();
-		val elementMembers = new ArrayList<TStructMember>();
-		val elemCount = destructNode.nestedNodes.size
-		for (nestedNode : destructNode.nestedNodes) {
-			val elemExpectedType = if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
-				// Recursively calculate the expected type of the nested child
-				calculateExpectedType(nestedNode, G)
-			} else {
-				// Extract type of leaf node
-				nestedNode.createTypeFromLeafDestructNode(G)
-			}
-
-			if (nestedNode.propName !== null) {
-				// We are dealing with object literals, hence create TStructMembers to construct a ParameterizedTypeRefStructural
-				val field = TypesFactory.eINSTANCE.createTStructField
-				field.name = nestedNode.propName;
-				field.typeRef = elemExpectedType
-				elementMembers.add(field)
-			} else {
-				elementTypes.add(elemExpectedType)
-			}
-		}
-
-		var retTypeRef = if (elementMembers.size > 0) {
-			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, elementMembers)
-		} else if (elementTypes.size > 0) {
-			if (elemCount == 1) {
-				 G.arrayTypeRef(elementTypes.get(0))
-			} else if (elemCount > 1){
-				G.iterableNTypeRef(elemCount, elementTypes);
-			} else {
-				null
-			}
-		} else {
-			throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
-		}
-		// Wrap the expected type in an Iterable type in case of ForStatement
-		// Note that we wrap the type into an Iterable type so that when a constraint G<out IV> <: Iterable<...> is created,
-		// we would like to reduce it to IV <:..
-		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
-			retTypeRef = G.iterableTypeRef(retTypeRef)
-		}
-		return retTypeRef;
-	}
-
 	/** Create expected type for a leaf DestructNode */
 	private def createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
 		val varDecl = leafNode.varDecl
@@ -490,8 +418,8 @@ class DestructureHelper {
 				return (varRef.id as VariableDeclaration).declaredTypeRef
 			}
 		}
-		// In case the expected type does not exist, simply return 'any' type (top type)
-		return G.topTypeRef
+		// In case the expected type does not exist, simply return null
+		return null
 	}
 
 	private def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef, boolean includeIterableN) {

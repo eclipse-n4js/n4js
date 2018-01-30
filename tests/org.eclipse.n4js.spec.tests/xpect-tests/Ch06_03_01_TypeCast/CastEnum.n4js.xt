@@ -20,7 +20,7 @@ var e = E.L;
 e as string;
 // XPECT warnings --> "Unnecessary cast from E to any" at "e as any"
 e as any;
-// XPECT errors --> "Cannot cast from E to Object" at "e as Object"
+// XPECT warnings --> "Unnecessary cast from E to Object" at "e as Object"
 e as Object;
 // XPECT warnings --> "Unnecessary cast from E to E" at "e as E"
 e as E;

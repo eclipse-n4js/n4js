@@ -162,3 +162,22 @@ async function test() {
 	// XPECT noerrors
 	y = (await foo2(k));
 }
+
+
+// ======================================================================================================
+// Test cases when element's expected types are not specified
+
+function f1() {
+	let a : int = null;
+	// A constraint ⟨ Array<α> <: Array<?> ⟩ should be created
+	// XPECT type of 'b' --> int
+	let [b] = [a];
+	b.toString();
+}
+function f2() {
+	let a : int = null;
+	// A constraint ⟨ ~Object with { x: α } <: ~Object with { x: β} ⟩ should be created
+	// XPECT type of 'b' --> int
+	let {x:b} = {x:a};
+	b.toString()
+}

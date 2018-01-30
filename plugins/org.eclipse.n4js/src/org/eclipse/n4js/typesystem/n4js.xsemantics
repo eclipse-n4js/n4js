@@ -1324,7 +1324,7 @@ from {
 	} else if ((leftDeclType === G.intType && rightDeclType === G.numberType)
 				|| (leftDeclType === G.numberType && rightDeclType === G.intType)) {
 		true // int <: number AND number <: int (for now, int and number are synonymous)
-	} else if (leftDeclType instanceof TEnum && rightDeclType===G.n4EnumType) { // @see [N4JS] 4.13. Enums
+	} else if (leftDeclType instanceof TEnum && (rightDeclType===G.n4EnumType || rightDeclType===G.objectType)) { // @see [N4JS] 4.13. Enums
 		 !AnnotationDefinition.STRING_BASED.hasAnnotation( leftDeclType )
 	} else if (leftDeclType instanceof TEnum && (rightDeclType===G.n4StringBasedEnumType || rightDeclType===G.stringType || rightDeclType===G.stringObjectType)) { // @see [N4JS] 4.15.2 String based Enums, IDEBUG-294
 		 AnnotationDefinition.STRING_BASED.hasAnnotation( leftDeclType )
