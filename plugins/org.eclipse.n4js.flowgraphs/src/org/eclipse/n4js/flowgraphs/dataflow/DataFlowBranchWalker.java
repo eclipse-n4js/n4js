@@ -88,7 +88,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 
 				List<Guard> guards = guardStructure.guards.get(alias);
 				for (Guard guard : guards) {
-					ass.callHoldsOnGuard(guard);
+					ass.callHoldsOnGuards(guard);
 				}
 			}
 

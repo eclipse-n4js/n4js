@@ -17,6 +17,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardResultWithReason;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
@@ -25,6 +26,8 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.NumericLiteral;
+
+import com.google.common.collect.Multimap;
 
 /**
  * This analysis computes all cases where an implicit assumption of a variable being not zero conflicts either with an
@@ -86,12 +89,16 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnGuard(Guard guard) {
-			if (guard.type == GuardType.IsZero && guard.asserts.canHold()) {
-				this.aliasPassed(guard.symbol);
-				return guard.asserts;
+		public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+				Multimap<GuardType, Guard> alwaysHolding) {
+
+			if (alwaysHolding.containsKey(GuardType.IsZero)) {
+				return new GuardResultWithReason.Failed(GuardType.IsZero);
 			}
-			return HoldAssertion.MayHold;
+			if (neverHolding.containsKey(GuardType.IsZero)) {
+				return new GuardResultWithReason.Passed();
+			}
+			return GuardResultWithReason.MayHold;
 		}
 	}
 }

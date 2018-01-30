@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,18 @@ class DataFlowGraphExplorer extends GraphExplorerInternal {
 					ass.mergeWith(entry.getValue());
 				} else {
 					mergedDFB.assumptions.put(key, entry.getValue());
+				}
+			}
+		}
+
+		for (Iterator<Assumption> assIter = mergedDFB.assumptions.values().iterator(); assIter.hasNext();) {
+			Assumption ass = assIter.next();
+			if (!ass.isActive()) {
+				assIter.remove();
+			} else {
+				ass.callHoldsOnGuards();
+				if (!ass.isActive()) {
+					assIter.remove();
 				}
 			}
 		}

@@ -26,6 +26,9 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IfStatement;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 /**
  * {@link Assumption}s are used to check if a specific {@link Symbol} or its aliases are used in a specific way or not.
  * For this checking, the {@code hold} methods can be used.<br/>
@@ -49,14 +52,17 @@ abstract public class Assumption {
 	public final Map<EObject, Symbol> symbolForDeclaration = new HashMap<>();
 	/** The {@link Symbol} that caused this {@link Assumption} to fail. Can be null. */
 	public Symbol failedSymbol;
-	/** The {@link Guard} that caused this {@link Assumption} to fail. Can be null. */
-	public Guard failedGuard;
+	/**   */
+	public GuardResultWithReason failedGuard;
+	/** {@link GuardType}s that definitely hold for this {@link Assumption} */
+	public Multimap<GuardType, Guard> guardsThatNeverHold = HashMultimap.create();
+	/** {@link GuardType}s that definitely not hold for this {@link Assumption} */
+	public Multimap<GuardType, Guard> guardsThatAlwaysHold = HashMultimap.create();
 
 	private boolean active = true;
 	private DataFlowVisitor dataFlowVisitor;
 	private final Assumption originalAssumption;
 	private int aliasPassedCount = 0;
-	private int guardPassedCount = 0;
 	private int copyCount = 0;
 
 	/** Constructor */
@@ -84,7 +90,8 @@ abstract public class Assumption {
 		this.dataFlowVisitor = assumption.dataFlowVisitor;
 		this.originalAssumption = assumption.originalAssumption;
 		this.failedSymbol = assumption.failedSymbol;
-		this.failedGuard = assumption.failedGuard;
+		this.guardsThatNeverHold.putAll(assumption.guardsThatNeverHold);
+		this.guardsThatAlwaysHold.putAll(assumption.guardsThatAlwaysHold);
 		this.originalAssumption.copyCount++;
 	}
 
@@ -111,13 +118,15 @@ abstract public class Assumption {
 		if (this.failedSymbol == null) {
 			this.failedSymbol = assumption.failedSymbol;
 		}
-		if (this.failedGuard == null || assumption.failedGuard == null) {
-			this.failedGuard = null;
-		}
 		if (this.active && assumption.active) {
 			this.originalAssumption.copyCount--;
 		}
 		this.active = this.active || assumption.active;
+
+		this.guardsThatNeverHold.keySet().retainAll(assumption.guardsThatNeverHold.keySet());
+		this.guardsThatAlwaysHold.keySet().retainAll(assumption.guardsThatAlwaysHold.keySet());
+
+		callHoldsOnGuards();
 	}
 
 	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
@@ -250,24 +259,56 @@ abstract public class Assumption {
 		return HoldAssertion.MayHold;
 	}
 
-	void callHoldsOnGuard(Guard guard) {
+	void callHoldsOnGuards(Guard guard) {
 		checkState(isActive());
 
-		HoldAssertion holds = holdsOnGuard(guard);
-		handleHolds(guard, holds);
+		switch (guard.asserts) {
+		case AlwaysHolds:
+			guardsThatAlwaysHold.put(guard.type, guard);
+			break;
+		case NeverHolds:
+			guardsThatNeverHold.put(guard.type, guard);
+			break;
+		default:
+			break;
+		}
+
+		callHoldsOnGuards();
+	}
+
+	void callHoldsOnGuards() {
+		if (noCopies()) {
+			GuardResultWithReason holds = holdsOnGuards(guardsThatNeverHold, guardsThatAlwaysHold);
+
+			if (holds.result == HoldAssertion.AlwaysHolds) {
+				deactivate();
+			}
+			if (holds.result == HoldAssertion.NeverHolds && noAliasPassed()) {
+				failedGuard = holds;
+				failed();
+			}
+
+			if (aliases.isEmpty()) {
+				deactivate();
+			}
+		}
 	}
 
 	/**
 	 * This method gets called on {@link Expression}s that guard branches such as in {@link IfStatement},
 	 * {@link ConditionalExpression} and loops.
 	 *
-	 * @param guard
-	 *            the {@link Guard} that holds on one of the aliases of this {@link Assumption}
+	 * @param neverHolding
+	 *            {@link GuardType}s that definitely hold for this {@link Assumption}
+	 * @param alwaysHolding
+	 *            {@link GuardType}s that definitely not hold for this {@link Assumption}
 	 *
 	 * @return true iff the assumption holds
 	 */
-	public HoldAssertion holdsOnGuard(Guard guard) {
-		return HoldAssertion.MayHold;
+	public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+			Multimap<GuardType, Guard> alwaysHolding) {
+
+		return GuardResultWithReason.MayHold;
 	}
 
 	void callHoldsAfterall() {
@@ -276,8 +317,6 @@ abstract public class Assumption {
 		boolean holds = holdsAfterall();
 		if (failedSymbol != null) {
 			handleHolds(failedSymbol, HoldAssertion.NeverHolds);
-		} else if (failedGuard != null) {
-			handleHolds(failedGuard, HoldAssertion.NeverHolds);
 		} else {
 			handleHolds(holds);
 		}
@@ -318,23 +357,6 @@ abstract public class Assumption {
 		}
 	}
 
-	private void handleHolds(Guard guard, HoldAssertion holds) {
-		if (holds == HoldAssertion.NeverHolds) {
-			failedGuard = guard;
-			if (noCopies() && noGuardPassed() && noAliasPassed()) {
-				failed();
-			}
-		}
-		if (holds == HoldAssertion.AlwaysHolds) {
-			originalAssumption.guardPassedCount++;
-			deactivate();
-		}
-
-		if (aliases.isEmpty()) {
-			deactivate();
-		}
-	}
-
 	private void handleHolds(boolean holds) {
 		if (!holds) {
 			failed();
@@ -348,11 +370,6 @@ abstract public class Assumption {
 	/** @return true iff all {@link Assumption}s failed */
 	public boolean noAliasPassed() {
 		return originalAssumption.aliasPassedCount == 0;
-	}
-
-	/** @return true iff all {@link Guard}s failed */
-	public boolean noGuardPassed() {
-		return originalAssumption.guardPassedCount == 0;
 	}
 
 	/** @return true iff there are no copies of this {@link Assumption} on other {@link DataFlowBranchWalker}s */

@@ -19,6 +19,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardResultWithReason;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
@@ -28,6 +29,8 @@ import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TAnnotationArgument;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+
+import com.google.common.collect.Multimap;
 
 /**
  * This analysis computes all cases where succeeding and type state relevant method calls on the same receiver instance
@@ -124,20 +127,24 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnGuard(Guard guard) {
-			if (guard.type == GuardType.InState) {
-				Collection<String> inStates = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
-				if (!inStates.isEmpty()) {
-					if (guard.asserts == HoldAssertion.AlwaysHolds) {
-						preStates.addAll(inStates);
-					}
-					if (guard.asserts == HoldAssertion.NeverHolds) {
-						preStates.clear();
-						preStates.addAll(inStates);
-					}
-				}
+		public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+				Multimap<GuardType, Guard> alwaysHolding) {
+
+			if (alwaysHolding.containsKey(GuardType.InState)) {
+				// TODO: change from GuardType to Guard
+				// Guard guard = alwaysHolding.get(GuardType.InState);
+				// Collection<String> inStates = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
+				// if (!inStates.isEmpty()) {
+				// if (guard.asserts == HoldAssertion.AlwaysHolds) {
+				// preStates.addAll(inStates);
+				// }
+				// if (guard.asserts == HoldAssertion.NeverHolds) {
+				// preStates.clear();
+				// preStates.addAll(inStates);
+				// }
+				// }
 			}
-			return HoldAssertion.MayHold;
+			return GuardResultWithReason.MayHold;
 		}
 	}
 
@@ -187,15 +194,18 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnGuard(Guard guard) {
-			if (guard.type == GuardType.InState && guard.asserts == HoldAssertion.AlwaysHolds) {
-				Collection<String> inStatesAfterGuard = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
-				if (!inStatesAfterGuard.isEmpty()) {
-					postStates.addAll(inStatesAfterGuard);
-					deactivate();
-				}
+		public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+				Multimap<GuardType, Guard> alwaysHolding) {
+			if (alwaysHolding.containsKey(GuardType.InState)) {
+				// TODO: change from GuardType to Guard
+				// Guard guard = alwaysHolding.get(GuardType.InState);
+				// Collection<String> inStatesAfterGuard = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
+				// if (!inStatesAfterGuard.isEmpty()) {
+				// postStates.addAll(inStatesAfterGuard);
+				// deactivate();
+				// }
 			}
-			return HoldAssertion.MayHold;
+			return GuardResultWithReason.MayHold;
 		}
 
 		@Override

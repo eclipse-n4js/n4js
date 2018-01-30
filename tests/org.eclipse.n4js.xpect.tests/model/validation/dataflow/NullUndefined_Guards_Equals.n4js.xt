@@ -18,16 +18,29 @@
 
 
 
-function f1() {
+function f1a() {
 	let a : int;
 	if (typeof a === "undefined") {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	} else {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f1b() {
+	let a : int = null;
+	if (typeof a === "undefined") {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -44,16 +57,29 @@ function f2() {
 	a.toString();
 }
 
-function f3() {
+function f3a() {
 	let a : int;
 	if (typeof a == "undefined") {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	} else {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f3b() {
+	let a : int = null;
+	if (typeof a == "undefined") {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -70,16 +96,29 @@ function f4() {
 	a.toString();
 }
 
-function f5() {
+function f5a() {
 	let a : int;
 	if (typeof a !== "undefined") {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	} else {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f5b() {
+	let a : int = null;
+	if (typeof a !== "undefined") {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -96,16 +135,29 @@ function f6() {
 	a.toString();
 }
 
-function f7() {
+function f7a() {
 	let a : int;
 	if (typeof a !== "undefined") {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	} else {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f7b() {
+	let a : int = null;
+	if (typeof a !== "undefined") {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -123,16 +175,29 @@ function f8() {
 }
 
 
-function f11() {
+function f11a() {
 	let a : int;
 	if (void 0 === a) {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	} else {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f11b() {
+	let a : int = null;
+	if (void 0 === a) {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -149,16 +214,29 @@ function f12() {
 	a.toString();
 }
 
-function f13() {
+function f13a() {
 	let a : int;
 	if (void 0 == a) {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	} else {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f13b() {
+	let a : int = null;
+	if (void 0 == a) {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -175,16 +253,29 @@ function f14() {
 	a.toString();
 }
 
-function f15() {
+function f15a() {
 	let a : int;
 	if (void 0 !== a) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	} else {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f15b() {
+	let a : int = null;
+	if (void 0 !== a) {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -201,16 +292,29 @@ function f16() {
 	a.toString();
 }
 
-function f17() {
+function f17a() {
 	let a : int;
 	if (void 0 !== a) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	} else {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f17b() {
+	let a : int = null;
+	if (void 0 !== a) {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -228,16 +332,29 @@ function f18() {
 }
 
 
-function f21() {
+function f21a() {
 	let a : int;
 	if (undefined === a) {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	} else {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f21b() {
+	let a : int = null;
+	if (undefined === a) {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -254,16 +371,29 @@ function f22() {
 	a.toString();
 }
 
-function f23() {
+function f23a() {
 	let a : int;
 	if (undefined == a) {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	} else {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f23b() {
+	let a : int = null;
+	if (undefined == a) {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -280,16 +410,29 @@ function f24() {
 	a.toString();
 }
 
-function f25() {
+function f25a() {
 	let a : int;
 	if (undefined !== a) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	} else {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f25b() {
+	let a : int = null;
+	if (undefined !== a) {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -306,16 +449,29 @@ function f26() {
 	a.toString();
 }
 
-function f27() {
+function f27a() {
 	let a : int;
 	if (undefined !== a) {
-		// XPECT warnings --> "Variable a is undefined" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 	} else {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f27b() {
+	let a : int = null;
+	if (undefined !== a) {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -333,7 +489,7 @@ function f28() {
 }
 
 
-function f31() {
+function f31a() {
 	let a : int;
 	if (null === a) {
 		// XPECT warnings --> "Variable a is null" at "a"
@@ -343,6 +499,19 @@ function f31() {
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f31b() {
+	let a : int = null;
+	if (null === a) {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	} else {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -359,7 +528,7 @@ function f32() {
 	a.toString();
 }
 
-function f33() {
+function f33a() {
 	let a : int;
 	if (null == a) {
 		// XPECT warnings --> "Variable a is null" at "a"
@@ -369,6 +538,19 @@ function f33() {
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f33b() {
+	let a : int = null;
+	if (null == a) {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	} else {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -385,7 +567,7 @@ function f34() {
 	a.toString();
 }
 
-function f35() {
+function f35a() {
 	let a : int;
 	if (null !== a) {
 		// XPECT warnings --> "Variable a is undefined" at "a"
@@ -395,6 +577,19 @@ function f35() {
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f35b() {
+	let a : int = null;
+	if (null !== a) {
+		// XPECT nowarnings -->
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 
@@ -411,7 +606,7 @@ function f36() {
 	a.toString();
 }
 
-function f37() {
+function f37a() {
 	let a : int;
 	if (null !== a) {
 		// XPECT warnings --> "Variable a is undefined" at "a"
@@ -421,6 +616,19 @@ function f37() {
 		a.toString();
 	}
 	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f37b() {
+	let a : int = null;
+	if (null !== a) {
+		// XPECT nowarnings -->
+		a.toString();
+	} else {
+		// XPECT warnings --> "Variable a is null" at "a"
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
 	a.toString();
 }
 

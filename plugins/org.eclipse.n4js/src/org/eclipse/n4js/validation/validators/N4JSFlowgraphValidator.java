@@ -183,6 +183,8 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 			return "null";
 		case IsUndefined:
 			return "undefined";
+		case IsFalsy:
+			return "falsy";
 		default:
 			return "falsy";
 		}

@@ -21,6 +21,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardResultWithReason;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
@@ -29,6 +30,8 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+
+import com.google.common.collect.Multimap;
 
 /**
  * This analysis computes all cases where an implicit assumption of a variable being not null conflicts either with an
@@ -97,7 +100,11 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		@Override
 		public HoldAssertion holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
 			if (rSymbol != null) {
-				if (rSymbol.isNullLiteral() || rSymbol.isUndefinedLiteral()) {
+				if (rSymbol.isNullLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsNull)) {
+					nullOrUndefinedSymbols.add(rSymbol);
+					return HoldAssertion.NeverHolds;
+				}
+				if (rSymbol.isUndefinedLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsUndefined)) {
 					nullOrUndefinedSymbols.add(rSymbol);
 					return HoldAssertion.NeverHolds;
 				}
@@ -108,15 +115,26 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnGuard(Guard guard) {
-			if (guard.type.IsNullOrUndefined() && guard.asserts == HoldAssertion.AlwaysHolds) {
-				return HoldAssertion.NeverHolds;
+		public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+				Multimap<GuardType, Guard> alwaysHolding) {
+
+			if (alwaysHolding.containsKey(GuardType.IsTruthy)) {
+				return new GuardResultWithReason.Passed();
 			}
-			if (guard.type == GuardType.IsTruthy) {
-				return guard.asserts;
+			if (neverHolding.containsKey(GuardType.IsTruthy)) {
+				return new GuardResultWithReason.Failed(GuardType.IsFalsy);
+			}
+			if (neverHolding.containsKey(GuardType.IsNull) && neverHolding.containsKey(GuardType.IsUndefined)) {
+				return new GuardResultWithReason.Passed();
+			}
+			if (alwaysHolding.containsKey(GuardType.IsNull)) {
+				return new GuardResultWithReason.Failed(GuardType.IsNull);
+			}
+			if (alwaysHolding.containsKey(GuardType.IsUndefined)) {
+				return new GuardResultWithReason.Failed(GuardType.IsUndefined);
 			}
 
-			return HoldAssertion.MayHold;
+			return GuardResultWithReason.MayHold;
 		}
 	}
 
@@ -171,18 +189,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnGuard(Guard guard) {
-			if (guard.type == GuardType.IsTruthy) {
-				if (guard.asserts == HoldAssertion.AlwaysHolds) {
-					neverNullBefore = true;
-					this.aliasPassed(guard.symbol);
-
-				} else if (guard.asserts == HoldAssertion.NeverHolds) {
-					return guard.asserts;
-				}
-			}
-
-			return HoldAssertion.MayHold;
+		public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> guardThatNeverHold,
+				Multimap<GuardType, Guard> guardThatAlwaysHold) {
+			// TODO
+			return GuardResultWithReason.MayHold;
 		}
 
 		@Override

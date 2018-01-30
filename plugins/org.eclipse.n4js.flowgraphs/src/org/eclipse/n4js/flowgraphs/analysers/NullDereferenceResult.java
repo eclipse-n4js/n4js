@@ -38,8 +38,8 @@ public class NullDereferenceResult {
 	}
 
 	private GuardType getType(IsNotNull inn) {
-		if (inn.nullOrUndefinedSymbols.size() == 0) {
-			return inn.failedGuard.type;
+		if (inn.failedGuard != null) {
+			return inn.failedGuard.expectation;
 
 		} else if (inn.nullOrUndefinedSymbols.size() == 1) {
 			Symbol symbol = inn.nullOrUndefinedSymbols.get(0);
