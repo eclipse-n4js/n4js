@@ -113,6 +113,8 @@ class MemberScopingHelper {
 	 * Creates member scope via #members and decorates it via #decorate.
 	 */
 	private def IScope decoratedMemberScopeFor(TypeRef typeRef, MemberScopeRequest memberScopeRequest) {
+		if(typeRef === null)
+			return IScope.NULLSCOPE
 		var result = members(typeRef, memberScopeRequest);
 		return result;
 	}

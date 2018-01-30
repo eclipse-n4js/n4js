@@ -6465,7 +6465,7 @@ ruleN4EnumDeclaration:
 
 // Rule N4EnumLiteral
 ruleN4EnumLiteral:
-	ruleIdentifierOrThis
+	ruleIdentifierName
 	(
 		':'
 		RULE_STRING

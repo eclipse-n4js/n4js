@@ -1802,7 +1802,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt23) {
                 case 1 :
                     {
-                    AsKeyword_1_0=(Token)match(input,As,FOLLOW_25); if (state.failed) return retval;
+                    AsKeyword_1_0=(Token)match(input,As,FOLLOW_14); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(AsKeyword_1_0, grammarAccess.getExportSpecifierAccess().getAsKeyword_1_0());
@@ -2090,7 +2090,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            pushFollow(FOLLOW_26);
+            pushFollow(FOLLOW_25);
             AnnotationListParserRuleCall_0=ruleAnnotationList();
 
             state._fsp--;
@@ -2170,7 +2170,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	case 1 :
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_27);
+                    	    pushFollow(FOLLOW_26);
                     	    ruleN4Modifier();
 
                     	    state._fsp--;
@@ -2188,7 +2188,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     } while (true);
                     {
                     {
-                    pushFollow(FOLLOW_28);
+                    pushFollow(FOLLOW_27);
                     ruleVariableStatementKeyword();
 
                     state._fsp--;
@@ -2200,7 +2200,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_29);
+                    pushFollow(FOLLOW_28);
                     VarDeclsOrBindingsExportedVariableDeclarationOrBindingParserRuleCall_1_1_3_0=ruleExportedVariableDeclarationOrBinding();
 
                     state._fsp--;
@@ -2228,7 +2228,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt27) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_1_1_4_0=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return retval;
+                    	    CommaKeyword_1_1_4_0=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      					announce(CommaKeyword_1_1_4_0, grammarAccess.getAnnotatedExportableElementAccess().getCommaKeyword_1_1_4_0());
@@ -2236,7 +2236,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    }
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_29);
+                    	    pushFollow(FOLLOW_28);
                     	    VarDeclsOrBindingsExportedVariableDeclarationOrBindingParserRuleCall_1_1_4_1_0=ruleExportedVariableDeclarationOrBinding();
 
                     	    state._fsp--;
@@ -2811,7 +2811,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            ImportKeyword_0=(Token)match(input,Import,FOLLOW_30); if (state.failed) return retval;
+            ImportKeyword_0=(Token)match(input,Import,FOLLOW_29); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(ImportKeyword_0, grammarAccess.getImportDeclarationImplAccess().getImportKeyword_0());
@@ -2937,7 +2937,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     ImportSpecifiersDefaultImportSpecifierParserRuleCall_0_0_0=ruleDefaultImportSpecifier();
 
                     state._fsp--;
@@ -2961,7 +2961,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt41) {
                         case 1 :
                             {
-                            CommaKeyword_0_1_0=(Token)match(input,Comma,FOLLOW_32); if (state.failed) return retval;
+                            CommaKeyword_0_1_0=(Token)match(input,Comma,FOLLOW_31); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               				announce(CommaKeyword_0_1_0, grammarAccess.getImportClauseAccess().getCommaKeyword_0_1_0());
@@ -3082,7 +3082,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 2 :
                     {
                     {
-                    LeftCurlyBracketKeyword_1_0=(Token)match(input,LeftCurlyBracket,FOLLOW_33); if (state.failed) return retval;
+                    LeftCurlyBracketKeyword_1_0=(Token)match(input,LeftCurlyBracket,FOLLOW_32); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(LeftCurlyBracketKeyword_1_0, grammarAccess.getImportSpecifiersExceptDefaultAccess().getLeftCurlyBracketKeyword_1_0());
@@ -3133,7 +3133,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                                 switch (alt43) {
                             	case 1 :
                             	    {
-                            	    CommaKeyword_1_1_1_0=(Token)match(input,Comma,FOLLOW_25); if (state.failed) return retval;
+                            	    CommaKeyword_1_1_1_0=(Token)match(input,Comma,FOLLOW_14); if (state.failed) return retval;
                             	    if ( state.backtracking==0 ) {
 
                             	      					announce(CommaKeyword_1_1_1_0, grammarAccess.getImportSpecifiersExceptDefaultAccess().getCommaKeyword_1_1_1_0());
@@ -3292,7 +3292,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_34);
+                    pushFollow(FOLLOW_33);
                     ImportedElementTExportableElementIdentifierNameParserRuleCall_1_0_0_1=ruleIdentifierName();
 
                     state._fsp--;
@@ -3461,7 +3461,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            AsteriskKeyword_1=(Token)match(input,Asterisk,FOLLOW_34); if (state.failed) return retval;
+            AsteriskKeyword_1=(Token)match(input,Asterisk,FOLLOW_33); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(AsteriskKeyword_1, grammarAccess.getNamespaceImportSpecifierAccess().getAsteriskKeyword_1());
@@ -3475,7 +3475,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_35);
+            pushFollow(FOLLOW_34);
             AliasBindingIdentifierParserRuleCall_3_0=ruleBindingIdentifier();
 
             state._fsp--;
@@ -3661,7 +3661,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                announce((AsyncNoTrailingLineBreakParserRuleCall_0_0_2!=null?((Token)AsyncNoTrailingLineBreakParserRuleCall_0_0_2.start):null), (AsyncNoTrailingLineBreakParserRuleCall_0_0_2!=null?((Token)AsyncNoTrailingLineBreakParserRuleCall_0_0_2.stop):null), grammarAccess.getFunctionDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_2()); 
             }
             {
-            pushFollow(FOLLOW_36);
+            pushFollow(FOLLOW_35);
             FunctionImplParserRuleCall_0_0_3=ruleFunctionImpl();
 
             state._fsp--;
@@ -3765,7 +3765,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
             } while (true);
 
-            pushFollow(FOLLOW_37);
+            pushFollow(FOLLOW_36);
             AsyncNoTrailingLineBreakParserRuleCall_0_0_2=ruleAsyncNoTrailingLineBreak();
 
             state._fsp--;
@@ -3774,7 +3774,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                announce((AsyncNoTrailingLineBreakParserRuleCall_0_0_2!=null?((Token)AsyncNoTrailingLineBreakParserRuleCall_0_0_2.start):null), (AsyncNoTrailingLineBreakParserRuleCall_0_0_2!=null?((Token)AsyncNoTrailingLineBreakParserRuleCall_0_0_2.stop):null), grammarAccess.getFunctionDeclarationAccess().getAsyncNoTrailingLineBreakParserRuleCall_0_0_2()); 
             }
             {
-            pushFollow(FOLLOW_36);
+            pushFollow(FOLLOW_35);
             FunctionImplParserRuleCall_0_0_3=norm3_FunctionImpl();
 
             state._fsp--;
@@ -3880,7 +3880,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    DeclaredAsyncAsyncKeyword_0_0=(Token)match(input,Async,FOLLOW_38); if (state.failed) return retval;
+                    DeclaredAsyncAsyncKeyword_0_0=(Token)match(input,Async,FOLLOW_37); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredAsyncAsyncKeyword_0_0, grammarAccess.getAsyncNoTrailingLineBreakAccess().getDeclaredAsyncAsyncKeyword_0_0());
@@ -3943,7 +3943,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            FunctionKeyword_0=(Token)match(input,Function,FOLLOW_39); if (state.failed) return retval;
+            FunctionKeyword_0=(Token)match(input,Function,FOLLOW_38); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
@@ -3971,7 +3971,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    GeneratorAsteriskKeyword_1_0_0_0=(Token)match(input,Asterisk,FOLLOW_40); if (state.failed) return retval;
+                    GeneratorAsteriskKeyword_1_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(GeneratorAsteriskKeyword_1_0_0_0, grammarAccess.getFunctionImplAccess().getGeneratorAsteriskKeyword_1_0_0_0());
@@ -4073,7 +4073,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            FunctionKeyword_0=(Token)match(input,Function,FOLLOW_39); if (state.failed) return retval;
+            FunctionKeyword_0=(Token)match(input,Function,FOLLOW_38); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
@@ -4101,7 +4101,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    GeneratorAsteriskKeyword_1_0_0_0=(Token)match(input,Asterisk,FOLLOW_40); if (state.failed) return retval;
+                    GeneratorAsteriskKeyword_1_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(GeneratorAsteriskKeyword_1_0_0_0, grammarAccess.getFunctionImplAccess().getGeneratorAsteriskKeyword_1_0_0_0());
@@ -4203,7 +4203,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            FunctionKeyword_0=(Token)match(input,Function,FOLLOW_39); if (state.failed) return retval;
+            FunctionKeyword_0=(Token)match(input,Function,FOLLOW_38); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(FunctionKeyword_0, grammarAccess.getFunctionImplAccess().getFunctionKeyword_0());
@@ -4231,7 +4231,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    GeneratorAsteriskKeyword_1_0_0_0=(Token)match(input,Asterisk,FOLLOW_40); if (state.failed) return retval;
+                    GeneratorAsteriskKeyword_1_0_0_0=(Token)match(input,Asterisk,FOLLOW_39); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(GeneratorAsteriskKeyword_1_0_0_0, grammarAccess.getFunctionImplAccess().getGeneratorAsteriskKeyword_1_0_0_0());
@@ -4340,7 +4340,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt57) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_41);
+                    pushFollow(FOLLOW_40);
                     TypeVariablesParserRuleCall_0=ruleTypeVariables();
 
                     state._fsp--;
@@ -4363,7 +4363,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     NameBindingIdentifierParserRuleCall_1_0=ruleBindingIdentifier();
 
                     state._fsp--;
@@ -4382,7 +4382,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            pushFollow(FOLLOW_43);
+            pushFollow(FOLLOW_42);
             StrictFormalParametersParserRuleCall_2=ruleStrictFormalParameters();
 
             state._fsp--;
@@ -4460,7 +4460,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt60) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_41);
+                    pushFollow(FOLLOW_40);
                     TypeVariablesParserRuleCall_0=ruleTypeVariables();
 
                     state._fsp--;
@@ -4483,7 +4483,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     NameBindingIdentifierParserRuleCall_1_0=norm1_BindingIdentifier();
 
                     state._fsp--;
@@ -4502,7 +4502,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            pushFollow(FOLLOW_43);
+            pushFollow(FOLLOW_42);
             StrictFormalParametersParserRuleCall_2=ruleStrictFormalParameters();
 
             state._fsp--;
@@ -4580,7 +4580,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt63) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     TypeVariablesParserRuleCall_0=ruleTypeVariables();
 
                     state._fsp--;
@@ -4603,7 +4603,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     NameBindingIdentifierParserRuleCall_1_0=ruleBindingIdentifier();
 
                     state._fsp--;
@@ -4622,7 +4622,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            pushFollow(FOLLOW_43);
+            pushFollow(FOLLOW_42);
             StrictFormalParametersParserRuleCall_2=norm1_StrictFormalParameters();
 
             state._fsp--;
@@ -4700,7 +4700,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt66) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     TypeVariablesParserRuleCall_0=ruleTypeVariables();
 
                     state._fsp--;
@@ -4723,7 +4723,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     NameBindingIdentifierParserRuleCall_1_0=norm1_BindingIdentifier();
 
                     state._fsp--;
@@ -4742,7 +4742,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            pushFollow(FOLLOW_43);
+            pushFollow(FOLLOW_42);
             StrictFormalParametersParserRuleCall_2=norm1_StrictFormalParameters();
 
             state._fsp--;
@@ -5176,7 +5176,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
             } while (true);
 
-            pushFollow(FOLLOW_37);
+            pushFollow(FOLLOW_36);
             AsyncNoTrailingLineBreakParserRuleCall_2=ruleAsyncNoTrailingLineBreak();
 
             state._fsp--;
@@ -5316,7 +5316,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            DeclaredAsyncAsyncKeyword_0_0_0_0=(Token)match(input,Async,FOLLOW_44); if (state.failed) return retval;
+            DeclaredAsyncAsyncKeyword_0_0_0_0=(Token)match(input,Async,FOLLOW_43); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               						announce(DeclaredAsyncAsyncKeyword_0_0_0_0, grammarAccess.getAsyncFunctionExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_0());
@@ -5328,7 +5328,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            pushFollow(FOLLOW_45);
+            pushFollow(FOLLOW_44);
             NoLineTerminatorParserRuleCall_0_0_1=ruleNoLineTerminator();
 
             state._fsp--;
@@ -5336,7 +5336,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             if ( state.backtracking==0 ) {
                announce((NoLineTerminatorParserRuleCall_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_1.start):null), (NoLineTerminatorParserRuleCall_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_1.stop):null), grammarAccess.getAsyncFunctionExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_1()); 
             }
-            FunctionKeyword_0_0_2=(Token)match(input,Function,FOLLOW_39); if (state.failed) return retval;
+            FunctionKeyword_0_0_2=(Token)match(input,Function,FOLLOW_38); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(FunctionKeyword_0_0_2, grammarAccess.getAsyncFunctionExpressionAccess().getFunctionKeyword_0_0_2());
@@ -5508,7 +5508,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     StrictFormalParametersParserRuleCall_0_0_0_0_0=ruleStrictFormalParameters();
 
                     state._fsp--;
@@ -5525,7 +5525,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt73) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             ColonSepReturnTypeRefParserRuleCall_0_0_0_0_1=ruleColonSepReturnTypeRef();
 
                             state._fsp--;
@@ -5552,7 +5552,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0=(Token)match(input,Async,FOLLOW_48); if (state.failed) return retval;
+                    DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0=(Token)match(input,Async,FOLLOW_47); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       										announce(DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0, grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0());
@@ -5564,7 +5564,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1=ruleNoLineTerminator();
 
                     state._fsp--;
@@ -5573,7 +5573,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                        announce((NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1.start):null), (NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1.stop):null), grammarAccess.getArrowExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_0_1_0_0_1()); 
                     }
                     {
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     StrictFormalParametersParserRuleCall_0_0_0_1_0_0_2=ruleStrictFormalParameters();
 
                     state._fsp--;
@@ -5598,7 +5598,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt74) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             ColonSepReturnTypeRefParserRuleCall_0_0_0_1_1=ruleColonSepReturnTypeRef();
 
                             state._fsp--;
@@ -5622,7 +5622,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_47);
+                    pushFollow(FOLLOW_46);
                     FparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0=ruleBindingIdentifierAsFormalParameter();
 
                     state._fsp--;
@@ -5644,7 +5644,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            EqualsSignGreaterThanSignKeyword_0_0_1=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignGreaterThanSignKeyword_0_0_1=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(EqualsSignGreaterThanSignKeyword_0_0_1, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
@@ -5663,7 +5663,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return retval;
+                    HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0, grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0());
@@ -5853,7 +5853,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     StrictFormalParametersParserRuleCall_0_0_0_0_0=ruleStrictFormalParameters();
 
                     state._fsp--;
@@ -5870,7 +5870,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt77) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             ColonSepReturnTypeRefParserRuleCall_0_0_0_0_1=ruleColonSepReturnTypeRef();
 
                             state._fsp--;
@@ -5897,7 +5897,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0=(Token)match(input,Async,FOLLOW_48); if (state.failed) return retval;
+                    DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0=(Token)match(input,Async,FOLLOW_47); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       										announce(DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0, grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0());
@@ -5909,7 +5909,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1=ruleNoLineTerminator();
 
                     state._fsp--;
@@ -5918,7 +5918,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                        announce((NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1.start):null), (NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1.stop):null), grammarAccess.getArrowExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_0_1_0_0_1()); 
                     }
                     {
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     StrictFormalParametersParserRuleCall_0_0_0_1_0_0_2=ruleStrictFormalParameters();
 
                     state._fsp--;
@@ -5943,7 +5943,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt78) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             ColonSepReturnTypeRefParserRuleCall_0_0_0_1_1=ruleColonSepReturnTypeRef();
 
                             state._fsp--;
@@ -5967,7 +5967,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_47);
+                    pushFollow(FOLLOW_46);
                     FparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0=ruleBindingIdentifierAsFormalParameter();
 
                     state._fsp--;
@@ -5989,7 +5989,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            EqualsSignGreaterThanSignKeyword_0_0_1=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignGreaterThanSignKeyword_0_0_1=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(EqualsSignGreaterThanSignKeyword_0_0_1, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
@@ -6008,7 +6008,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return retval;
+                    HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0, grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0());
@@ -6197,7 +6197,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     StrictFormalParametersParserRuleCall_0_0_0_0_0=norm1_StrictFormalParameters();
 
                     state._fsp--;
@@ -6214,7 +6214,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt81) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             ColonSepReturnTypeRefParserRuleCall_0_0_0_0_1=ruleColonSepReturnTypeRef();
 
                             state._fsp--;
@@ -6241,7 +6241,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0=(Token)match(input,Async,FOLLOW_51); if (state.failed) return retval;
+                    DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0=(Token)match(input,Async,FOLLOW_50); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       										announce(DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0, grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0());
@@ -6253,7 +6253,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1=ruleNoLineTerminator();
 
                     state._fsp--;
@@ -6262,7 +6262,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                        announce((NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1.start):null), (NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1.stop):null), grammarAccess.getArrowExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_0_1_0_0_1()); 
                     }
                     {
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     StrictFormalParametersParserRuleCall_0_0_0_1_0_0_2=norm1_StrictFormalParameters();
 
                     state._fsp--;
@@ -6287,7 +6287,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt82) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             ColonSepReturnTypeRefParserRuleCall_0_0_0_1_1=ruleColonSepReturnTypeRef();
 
                             state._fsp--;
@@ -6311,7 +6311,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_47);
+                    pushFollow(FOLLOW_46);
                     FparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0=norm1_BindingIdentifierAsFormalParameter();
 
                     state._fsp--;
@@ -6333,7 +6333,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            EqualsSignGreaterThanSignKeyword_0_0_1=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignGreaterThanSignKeyword_0_0_1=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(EqualsSignGreaterThanSignKeyword_0_0_1, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
@@ -6352,7 +6352,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return retval;
+                    HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0, grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0());
@@ -6541,7 +6541,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     StrictFormalParametersParserRuleCall_0_0_0_0_0=norm1_StrictFormalParameters();
 
                     state._fsp--;
@@ -6558,7 +6558,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt85) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             ColonSepReturnTypeRefParserRuleCall_0_0_0_0_1=ruleColonSepReturnTypeRef();
 
                             state._fsp--;
@@ -6585,7 +6585,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0=(Token)match(input,Async,FOLLOW_51); if (state.failed) return retval;
+                    DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0=(Token)match(input,Async,FOLLOW_50); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       										announce(DeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0, grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAsyncKeyword_0_0_0_1_0_0_0_0());
@@ -6597,7 +6597,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1=ruleNoLineTerminator();
 
                     state._fsp--;
@@ -6606,7 +6606,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                        announce((NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1.start):null), (NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1!=null?((Token)NoLineTerminatorParserRuleCall_0_0_0_1_0_0_1.stop):null), grammarAccess.getArrowExpressionAccess().getNoLineTerminatorParserRuleCall_0_0_0_1_0_0_1()); 
                     }
                     {
-                    pushFollow(FOLLOW_46);
+                    pushFollow(FOLLOW_45);
                     StrictFormalParametersParserRuleCall_0_0_0_1_0_0_2=norm1_StrictFormalParameters();
 
                     state._fsp--;
@@ -6631,7 +6631,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt86) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_47);
+                            pushFollow(FOLLOW_46);
                             ColonSepReturnTypeRefParserRuleCall_0_0_0_1_1=ruleColonSepReturnTypeRef();
 
                             state._fsp--;
@@ -6655,7 +6655,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_47);
+                    pushFollow(FOLLOW_46);
                     FparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0=norm1_BindingIdentifierAsFormalParameter();
 
                     state._fsp--;
@@ -6677,7 +6677,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            EqualsSignGreaterThanSignKeyword_0_0_1=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignGreaterThanSignKeyword_0_0_1=(Token)match(input,EqualsSignGreaterThanSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(EqualsSignGreaterThanSignKeyword_0_0_1, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
@@ -6696,7 +6696,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return retval;
+                    HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(HasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0, grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyLeftCurlyBracketKeyword_1_0_0_0());
@@ -6800,7 +6800,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftParenthesisKeyword_0=(Token)match(input,LeftParenthesis,FOLLOW_52); if (state.failed) return retval;
+            LeftParenthesisKeyword_0=(Token)match(input,LeftParenthesis,FOLLOW_51); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_0, grammarAccess.getStrictFormalParametersAccess().getLeftParenthesisKeyword_0());
@@ -6817,7 +6817,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_53);
+                    pushFollow(FOLLOW_52);
                     FparsFormalParameterParserRuleCall_1_0_0=ruleFormalParameter();
 
                     state._fsp--;
@@ -6845,7 +6845,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt89) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_1_1_0=(Token)match(input,Comma,FOLLOW_54); if (state.failed) return retval;
+                    	    CommaKeyword_1_1_0=(Token)match(input,Comma,FOLLOW_53); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_1_1_0, grammarAccess.getStrictFormalParametersAccess().getCommaKeyword_1_1_0());
@@ -6853,7 +6853,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    }
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_53);
+                    	    pushFollow(FOLLOW_52);
                     	    FparsFormalParameterParserRuleCall_1_1_1_0=ruleFormalParameter();
 
                     	    state._fsp--;
@@ -6927,7 +6927,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftParenthesisKeyword_0=(Token)match(input,LeftParenthesis,FOLLOW_52); if (state.failed) return retval;
+            LeftParenthesisKeyword_0=(Token)match(input,LeftParenthesis,FOLLOW_51); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_0, grammarAccess.getStrictFormalParametersAccess().getLeftParenthesisKeyword_0());
@@ -6944,7 +6944,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_53);
+                    pushFollow(FOLLOW_52);
                     FparsFormalParameterParserRuleCall_1_0_0=norm1_FormalParameter();
 
                     state._fsp--;
@@ -6972,7 +6972,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt91) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_1_1_0=(Token)match(input,Comma,FOLLOW_54); if (state.failed) return retval;
+                    	    CommaKeyword_1_1_0=(Token)match(input,Comma,FOLLOW_53); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_1_1_0, grammarAccess.getStrictFormalParametersAccess().getCommaKeyword_1_1_0());
@@ -6980,7 +6980,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    }
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_53);
+                    	    pushFollow(FOLLOW_52);
                     	    FparsFormalParameterParserRuleCall_1_1_1_0=norm1_FormalParameter();
 
                     	    state._fsp--;
@@ -7585,7 +7585,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_55);
+            pushFollow(FOLLOW_54);
             ExpressionAnnotationListParserRuleCall_0=ruleExpressionAnnotationList();
 
             state._fsp--;
@@ -7613,7 +7613,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    ClassKeyword_1_0_1=(Token)match(input,Class,FOLLOW_56); if (state.failed) return retval;
+                    ClassKeyword_1_0_1=(Token)match(input,Class,FOLLOW_55); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(ClassKeyword_1_0_1, grammarAccess.getAnnotatedExpressionAccess().getClassKeyword_1_0_1());
@@ -7694,7 +7694,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 2 :
                     {
                     {
-                    pushFollow(FOLLOW_45);
+                    pushFollow(FOLLOW_44);
                     AsyncNoTrailingLineBreakParserRuleCall_1_1_1=ruleAsyncNoTrailingLineBreak();
 
                     state._fsp--;
@@ -7762,7 +7762,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_55);
+            pushFollow(FOLLOW_54);
             ExpressionAnnotationListParserRuleCall_0=ruleExpressionAnnotationList();
 
             state._fsp--;
@@ -7790,7 +7790,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    ClassKeyword_1_0_1=(Token)match(input,Class,FOLLOW_57); if (state.failed) return retval;
+                    ClassKeyword_1_0_1=(Token)match(input,Class,FOLLOW_56); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(ClassKeyword_1_0_1, grammarAccess.getAnnotatedExpressionAccess().getClassKeyword_1_0_1());
@@ -7813,7 +7813,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         case 1 :
                             {
                             {
-                            pushFollow(FOLLOW_57);
+                            pushFollow(FOLLOW_56);
                             NameBindingIdentifierParserRuleCall_1_0_2_0=norm1_BindingIdentifier();
 
                             state._fsp--;
@@ -7840,7 +7840,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt99) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_57);
+                            pushFollow(FOLLOW_56);
                             ClassExtendsClauseParserRuleCall_1_0_3=norm1_ClassExtendsClause();
 
                             state._fsp--;
@@ -7871,7 +7871,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 2 :
                     {
                     {
-                    pushFollow(FOLLOW_45);
+                    pushFollow(FOLLOW_44);
                     AsyncNoTrailingLineBreakParserRuleCall_1_1_1=ruleAsyncNoTrailingLineBreak();
 
                     state._fsp--;
@@ -7968,7 +7968,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    DeclaredCovariantOutKeyword_0_0_0=(Token)match(input,Out,FOLLOW_14); if (state.failed) return retval;
+                    DeclaredCovariantOutKeyword_0_0_0=(Token)match(input,Out,FOLLOW_57); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       					announce(DeclaredCovariantOutKeyword_0_0_0, grammarAccess.getTypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
@@ -7987,7 +7987,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    DeclaredContravariantInKeyword_0_1_0=(Token)match(input,In,FOLLOW_14); if (state.failed) return retval;
+                    DeclaredContravariantInKeyword_0_1_0=(Token)match(input,In,FOLLOW_57); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       					announce(DeclaredContravariantInKeyword_0_1_0, grammarAccess.getTypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
@@ -8774,7 +8774,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            LeftCurlyBracketKeyword_0_0_1=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_0_0_1=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(LeftCurlyBracketKeyword_0_0_1, grammarAccess.getBlockAccess().getLeftCurlyBracketKeyword_0_0_1());
@@ -8799,7 +8799,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_50);
+            	    pushFollow(FOLLOW_49);
             	    StatementsStatementParserRuleCall_1_0=ruleStatement();
 
             	    state._fsp--;
@@ -8863,7 +8863,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            LeftCurlyBracketKeyword_0_0_1=(Token)match(input,LeftCurlyBracket,FOLLOW_50); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_0_0_1=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(LeftCurlyBracketKeyword_0_0_1, grammarAccess.getBlockAccess().getLeftCurlyBracketKeyword_0_0_1());
@@ -8888,7 +8888,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_50);
+            	    pushFollow(FOLLOW_49);
             	    StatementsStatementParserRuleCall_1_0=norm1_Statement();
 
             	    state._fsp--;
@@ -9707,7 +9707,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            pushFollow(FOLLOW_28);
+            pushFollow(FOLLOW_27);
             ruleVariableStatementKeyword();
 
             state._fsp--;
@@ -9725,7 +9725,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_29);
+            pushFollow(FOLLOW_28);
             VarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_1_0=norm1_VariableDeclarationOrBinding();
 
             state._fsp--;
@@ -9753,7 +9753,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt123) {
             	case 1 :
             	    {
-            	    CommaKeyword_2_0=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return retval;
+            	    CommaKeyword_2_0=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
 
             	      			announce(CommaKeyword_2_0, grammarAccess.getVariableStatementAccess().getCommaKeyword_2_0());
@@ -9761,7 +9761,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    }
             	    {
             	    {
-            	    pushFollow(FOLLOW_29);
+            	    pushFollow(FOLLOW_28);
             	    VarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_2_1_0=norm1_VariableDeclarationOrBinding();
 
             	    state._fsp--;
@@ -9835,7 +9835,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            pushFollow(FOLLOW_28);
+            pushFollow(FOLLOW_27);
             ruleVariableStatementKeyword();
 
             state._fsp--;
@@ -9853,7 +9853,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_29);
+            pushFollow(FOLLOW_28);
             VarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_1_0=norm3_VariableDeclarationOrBinding();
 
             state._fsp--;
@@ -9881,7 +9881,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt124) {
             	case 1 :
             	    {
-            	    CommaKeyword_2_0=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return retval;
+            	    CommaKeyword_2_0=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
 
             	      			announce(CommaKeyword_2_0, grammarAccess.getVariableStatementAccess().getCommaKeyword_2_0());
@@ -9889,7 +9889,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    }
             	    {
             	    {
-            	    pushFollow(FOLLOW_29);
+            	    pushFollow(FOLLOW_28);
             	    VarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_2_1_0=norm3_VariableDeclarationOrBinding();
 
             	    state._fsp--;
@@ -9988,7 +9988,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_27);
+            	    pushFollow(FOLLOW_26);
             	    ruleN4Modifier();
 
             	    state._fsp--;
@@ -10006,7 +10006,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             } while (true);
             {
             {
-            pushFollow(FOLLOW_28);
+            pushFollow(FOLLOW_27);
             ruleVariableStatementKeyword();
 
             state._fsp--;
@@ -10018,7 +10018,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_29);
+            pushFollow(FOLLOW_28);
             VarDeclsOrBindingsExportedVariableDeclarationOrBindingParserRuleCall_3_0=ruleExportedVariableDeclarationOrBinding();
 
             state._fsp--;
@@ -10046,7 +10046,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt126) {
             	case 1 :
             	    {
-            	    CommaKeyword_4_0=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return retval;
+            	    CommaKeyword_4_0=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
 
             	      			announce(CommaKeyword_4_0, grammarAccess.getExportedVariableStatementAccess().getCommaKeyword_4_0());
@@ -10054,7 +10054,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    }
             	    {
             	    {
-            	    pushFollow(FOLLOW_29);
+            	    pushFollow(FOLLOW_28);
             	    VarDeclsOrBindingsExportedVariableDeclarationOrBindingParserRuleCall_4_1_0=ruleExportedVariableDeclarationOrBinding();
 
             	    state._fsp--;
@@ -10680,7 +10680,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
             {
-            EqualsSignKeyword_1_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignKeyword_1_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               			announce(EqualsSignKeyword_1_1_0, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_1_0());
@@ -10760,7 +10760,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
             {
-            EqualsSignKeyword_1_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignKeyword_1_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               			announce(EqualsSignKeyword_1_1_0, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_1_0());
@@ -10840,7 +10840,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
             {
-            EqualsSignKeyword_1_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignKeyword_1_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               			announce(EqualsSignKeyword_1_1_0, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_1_0());
@@ -10920,7 +10920,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
             {
-            EqualsSignKeyword_1_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignKeyword_1_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               			announce(EqualsSignKeyword_1_1_0, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_1_0());
@@ -11008,7 +11008,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt133) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0_0_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_1_0_0_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_1_0_0_0, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_0_0_0());
@@ -11093,7 +11093,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt134) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0_0_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return ;
+                    EqualsSignKeyword_1_0_0_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_1_0_0_0, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_0_0_0());
@@ -11182,7 +11182,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt135) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0_0_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_1_0_0_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_1_0_0_0, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_0_0_0());
@@ -11267,7 +11267,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt136) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0_0_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return ;
+                    EqualsSignKeyword_1_0_0_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_1_0_0_0, grammarAccess.getVariableBindingAccess().getEqualsSignKeyword_1_0_0_0());
@@ -11626,7 +11626,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt138) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_1_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return ;
+                    EqualsSignKeyword_1_1_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
 
                       				announce(EqualsSignKeyword_1_1_1_0, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_1_1_0());
@@ -11754,7 +11754,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt140) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_1_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_1_1_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(EqualsSignKeyword_1_1_1_0, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_1_1_0());
@@ -11878,7 +11878,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt142) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_1_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return ;
+                    EqualsSignKeyword_1_1_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
 
                       				announce(EqualsSignKeyword_1_1_1_0, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_1_1_0());
@@ -12006,7 +12006,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt144) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_1_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_1_1_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(EqualsSignKeyword_1_1_1_0, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_1_1_0());
@@ -12164,7 +12164,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt147) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_1_0_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(EqualsSignKeyword_1_0_1_0, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_0_1_0());
@@ -12322,7 +12322,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt150) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_1_0_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(EqualsSignKeyword_1_0_1_0, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_0_1_0());
@@ -12480,7 +12480,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt153) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_1_0_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(EqualsSignKeyword_1_0_1_0, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_0_1_0());
@@ -12638,7 +12638,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt156) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_1_0_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(EqualsSignKeyword_1_0_1_0, grammarAccess.getVariableDeclarationImplAccess().getEqualsSignKeyword_1_0_1_0());
@@ -12924,7 +12924,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            EqualsSignKeyword_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignKeyword_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(EqualsSignKeyword_1, grammarAccess.getExportedVariableBindingAccess().getEqualsSignKeyword_1());
@@ -13001,7 +13001,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            EqualsSignKeyword_1=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+            EqualsSignKeyword_1=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(EqualsSignKeyword_1, grammarAccess.getExportedVariableBindingAccess().getEqualsSignKeyword_1());
@@ -13386,13 +13386,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            IfKeyword_0=(Token)match(input,If,FOLLOW_42); if (state.failed) return retval;
+            IfKeyword_0=(Token)match(input,If,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(IfKeyword_0, grammarAccess.getIfStatementAccess().getIfKeyword_0());
               	
             }
-            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_1, grammarAccess.getIfStatementAccess().getLeftParenthesisKeyword_1());
@@ -13525,13 +13525,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            IfKeyword_0=(Token)match(input,If,FOLLOW_42); if (state.failed) return retval;
+            IfKeyword_0=(Token)match(input,If,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(IfKeyword_0, grammarAccess.getIfStatementAccess().getIfKeyword_0());
               	
             }
-            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_1, grammarAccess.getIfStatementAccess().getLeftParenthesisKeyword_1());
@@ -13930,13 +13930,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            WhileKeyword_2=(Token)match(input,While,FOLLOW_42); if (state.failed) return retval;
+            WhileKeyword_2=(Token)match(input,While,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(WhileKeyword_2, grammarAccess.getDoStatementAccess().getWhileKeyword_2());
               	
             }
-            LeftParenthesisKeyword_3=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_3=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_3, grammarAccess.getDoStatementAccess().getLeftParenthesisKeyword_3());
@@ -13960,7 +13960,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            RightParenthesisKeyword_5=(Token)match(input,RightParenthesis,FOLLOW_36); if (state.failed) return retval;
+            RightParenthesisKeyword_5=(Token)match(input,RightParenthesis,FOLLOW_35); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_5, grammarAccess.getDoStatementAccess().getRightParenthesisKeyword_5());
@@ -14049,13 +14049,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            WhileKeyword_2=(Token)match(input,While,FOLLOW_42); if (state.failed) return retval;
+            WhileKeyword_2=(Token)match(input,While,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(WhileKeyword_2, grammarAccess.getDoStatementAccess().getWhileKeyword_2());
               	
             }
-            LeftParenthesisKeyword_3=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_3=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_3, grammarAccess.getDoStatementAccess().getLeftParenthesisKeyword_3());
@@ -14079,7 +14079,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            RightParenthesisKeyword_5=(Token)match(input,RightParenthesis,FOLLOW_36); if (state.failed) return retval;
+            RightParenthesisKeyword_5=(Token)match(input,RightParenthesis,FOLLOW_35); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_5, grammarAccess.getDoStatementAccess().getRightParenthesisKeyword_5());
@@ -14186,13 +14186,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            WhileKeyword_0=(Token)match(input,While,FOLLOW_42); if (state.failed) return retval;
+            WhileKeyword_0=(Token)match(input,While,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(WhileKeyword_0, grammarAccess.getWhileStatementAccess().getWhileKeyword_0());
               	
             }
-            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_1, grammarAccess.getWhileStatementAccess().getLeftParenthesisKeyword_1());
@@ -14277,13 +14277,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            WhileKeyword_0=(Token)match(input,While,FOLLOW_42); if (state.failed) return retval;
+            WhileKeyword_0=(Token)match(input,While,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(WhileKeyword_0, grammarAccess.getWhileStatementAccess().getWhileKeyword_0());
               	
             }
-            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_1, grammarAccess.getWhileStatementAccess().getLeftParenthesisKeyword_1());
@@ -14436,7 +14436,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            ForKeyword_1=(Token)match(input,For,FOLLOW_42); if (state.failed) return retval;
+            ForKeyword_1=(Token)match(input,For,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(ForKeyword_1, grammarAccess.getForStatementAccess().getForKeyword_1());
@@ -14474,7 +14474,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    ForInInKeyword_3_0_0_1_0=(Token)match(input,In,FOLLOW_49); if (state.failed) return retval;
+                    ForInInKeyword_3_0_0_1_0=(Token)match(input,In,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       							announce(ForInInKeyword_3_0_0_1_0, grammarAccess.getForStatementAccess().getForInInKeyword_3_0_0_1_0());
@@ -14529,7 +14529,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_28);
+                            pushFollow(FOLLOW_27);
                             ruleVariableStatementKeyword();
 
                             state._fsp--;
@@ -14717,7 +14717,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                                                 switch (alt167) {
                                             	case 1 :
                                             	    {
-                                            	    CommaKeyword_3_1_0_0_1_1_1_0_0_0=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return retval;
+                                            	    CommaKeyword_3_1_0_0_1_1_1_0_0_0=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return retval;
                                             	    if ( state.backtracking==0 ) {
 
                                             	      											announce(CommaKeyword_3_1_0_0_1_1_1_0_0_0, grammarAccess.getForStatementAccess().getCommaKeyword_3_1_0_0_1_1_1_0_0_0());
@@ -15380,7 +15380,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            ForKeyword_1=(Token)match(input,For,FOLLOW_42); if (state.failed) return retval;
+            ForKeyword_1=(Token)match(input,For,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(ForKeyword_1, grammarAccess.getForStatementAccess().getForKeyword_1());
@@ -15418,7 +15418,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    ForInInKeyword_3_0_0_1_0=(Token)match(input,In,FOLLOW_49); if (state.failed) return retval;
+                    ForInInKeyword_3_0_0_1_0=(Token)match(input,In,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       							announce(ForInInKeyword_3_0_0_1_0, grammarAccess.getForStatementAccess().getForInInKeyword_3_0_0_1_0());
@@ -15473,7 +15473,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_28);
+                            pushFollow(FOLLOW_27);
                             ruleVariableStatementKeyword();
 
                             state._fsp--;
@@ -15661,7 +15661,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                                                 switch (alt185) {
                                             	case 1 :
                                             	    {
-                                            	    CommaKeyword_3_1_0_0_1_1_1_0_0_0=(Token)match(input,Comma,FOLLOW_28); if (state.failed) return retval;
+                                            	    CommaKeyword_3_1_0_0_1_1_1_0_0_0=(Token)match(input,Comma,FOLLOW_27); if (state.failed) return retval;
                                             	    if ( state.backtracking==0 ) {
 
                                             	      											announce(CommaKeyword_3_1_0_0_1_1_1_0_0_0, grammarAccess.getForStatementAccess().getCommaKeyword_3_1_0_0_1_1_1_0_0_0());
@@ -17069,13 +17069,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            WithKeyword_0=(Token)match(input,With,FOLLOW_42); if (state.failed) return retval;
+            WithKeyword_0=(Token)match(input,With,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(WithKeyword_0, grammarAccess.getWithStatementAccess().getWithKeyword_0());
               	
             }
-            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_1, grammarAccess.getWithStatementAccess().getLeftParenthesisKeyword_1());
@@ -17160,13 +17160,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            WithKeyword_0=(Token)match(input,With,FOLLOW_42); if (state.failed) return retval;
+            WithKeyword_0=(Token)match(input,With,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(WithKeyword_0, grammarAccess.getWithStatementAccess().getWithKeyword_0());
               	
             }
-            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_1, grammarAccess.getWithStatementAccess().getLeftParenthesisKeyword_1());
@@ -17278,13 +17278,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            SwitchKeyword_0=(Token)match(input,Switch,FOLLOW_42); if (state.failed) return retval;
+            SwitchKeyword_0=(Token)match(input,Switch,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(SwitchKeyword_0, grammarAccess.getSwitchStatementAccess().getSwitchKeyword_0());
               	
             }
-            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_1, grammarAccess.getSwitchStatementAccess().getLeftParenthesisKeyword_1());
@@ -17472,13 +17472,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            SwitchKeyword_0=(Token)match(input,Switch,FOLLOW_42); if (state.failed) return retval;
+            SwitchKeyword_0=(Token)match(input,Switch,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(SwitchKeyword_0, grammarAccess.getSwitchStatementAccess().getSwitchKeyword_0());
               	
             }
-            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_1=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_1, grammarAccess.getSwitchStatementAccess().getLeftParenthesisKeyword_1());
@@ -17680,7 +17680,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            CaseKeyword_0=(Token)match(input,Case,FOLLOW_49); if (state.failed) return retval;
+            CaseKeyword_0=(Token)match(input,Case,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(CaseKeyword_0, grammarAccess.getCaseClauseAccess().getCaseKeyword_0());
@@ -17782,7 +17782,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            CaseKeyword_0=(Token)match(input,Case,FOLLOW_49); if (state.failed) return retval;
+            CaseKeyword_0=(Token)match(input,Case,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(CaseKeyword_0, grammarAccess.getCaseClauseAccess().getCaseKeyword_0());
@@ -18278,7 +18278,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            ThrowKeyword_0=(Token)match(input,Throw,FOLLOW_49); if (state.failed) return retval;
+            ThrowKeyword_0=(Token)match(input,Throw,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		promoteEOL();
@@ -18346,7 +18346,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            ThrowKeyword_0=(Token)match(input,Throw,FOLLOW_49); if (state.failed) return retval;
+            ThrowKeyword_0=(Token)match(input,Throw,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		promoteEOL();
@@ -18778,7 +18778,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            CatchKeyword_1=(Token)match(input,Catch,FOLLOW_42); if (state.failed) return retval;
+            CatchKeyword_1=(Token)match(input,Catch,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(CatchKeyword_1, grammarAccess.getCatchBlockAccess().getCatchKeyword_1());
@@ -18869,7 +18869,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            CatchKeyword_1=(Token)match(input,Catch,FOLLOW_42); if (state.failed) return retval;
+            CatchKeyword_1=(Token)match(input,Catch,FOLLOW_41); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(CatchKeyword_1, grammarAccess.getCatchBlockAccess().getCatchKeyword_1());
@@ -20019,7 +20019,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftParenthesisKeyword_0=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_0=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_0, grammarAccess.getParenExpressionAccess().getLeftParenthesisKeyword_0());
@@ -20083,7 +20083,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftParenthesisKeyword_0=(Token)match(input,LeftParenthesis,FOLLOW_49); if (state.failed) return retval;
+            LeftParenthesisKeyword_0=(Token)match(input,LeftParenthesis,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_0, grammarAccess.getParenExpressionAccess().getLeftParenthesisKeyword_0());
@@ -21107,7 +21107,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    SpreadFullStopFullStopFullStopKeyword_1_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return retval;
+                    SpreadFullStopFullStopFullStopKeyword_1_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(SpreadFullStopFullStopFullStopKeyword_1_0, grammarAccess.getArrayElementAccess().getSpreadFullStopFullStopFullStopKeyword_1_0());
@@ -21182,7 +21182,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    SpreadFullStopFullStopFullStopKeyword_1_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return retval;
+                    SpreadFullStopFullStopFullStopKeyword_1_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(SpreadFullStopFullStopFullStopKeyword_1_0, grammarAccess.getArrayElementAccess().getSpreadFullStopFullStopFullStopKeyword_1_0());
@@ -21993,7 +21993,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    ColonKeyword_1_0_0_0_3=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return retval;
+                    ColonKeyword_1_0_0_0_3=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(ColonKeyword_1_0_0_0_3, grammarAccess.getAnnotatedPropertyAssignmentAccess().getColonKeyword_1_0_0_0_3());
@@ -22114,7 +22114,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         case 1 :
                             {
                             {
-                            DeclaredOptionalQuestionMarkKeyword_1_2_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                            DeclaredOptionalQuestionMarkKeyword_1_2_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               						announce(DeclaredOptionalQuestionMarkKeyword_1_2_1_0, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredOptionalQuestionMarkKeyword_1_2_1_0());
@@ -22129,7 +22129,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    LeftParenthesisKeyword_1_2_2=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return retval;
+                    LeftParenthesisKeyword_1_2_2=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(LeftParenthesisKeyword_1_2_2, grammarAccess.getAnnotatedPropertyAssignmentAccess().getLeftParenthesisKeyword_1_2_2());
@@ -22269,7 +22269,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             }
                             {
                             {
-                            pushFollow(FOLLOW_40);
+                            pushFollow(FOLLOW_39);
                             DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_3_0_0_3_0_1_0=ruleLiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -22307,7 +22307,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_42);
+                            pushFollow(FOLLOW_41);
                             DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_3_0_0_3_1_0_0=ruleLiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -22428,7 +22428,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt258) {
                         case 1 :
                             {
-                            EqualsSignKeyword_1_4_3_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                            EqualsSignKeyword_1_4_3_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               					announce(EqualsSignKeyword_1_4_3_0, grammarAccess.getAnnotatedPropertyAssignmentAccess().getEqualsSignKeyword_1_4_3_0());
@@ -22599,7 +22599,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    ColonKeyword_1_0_0_0_3=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return retval;
+                    ColonKeyword_1_0_0_0_3=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       						announce(ColonKeyword_1_0_0_0_3, grammarAccess.getAnnotatedPropertyAssignmentAccess().getColonKeyword_1_0_0_0_3());
@@ -22720,7 +22720,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         case 1 :
                             {
                             {
-                            DeclaredOptionalQuestionMarkKeyword_1_2_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                            DeclaredOptionalQuestionMarkKeyword_1_2_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               						announce(DeclaredOptionalQuestionMarkKeyword_1_2_1_0, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredOptionalQuestionMarkKeyword_1_2_1_0());
@@ -22735,7 +22735,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    LeftParenthesisKeyword_1_2_2=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return retval;
+                    LeftParenthesisKeyword_1_2_2=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(LeftParenthesisKeyword_1_2_2, grammarAccess.getAnnotatedPropertyAssignmentAccess().getLeftParenthesisKeyword_1_2_2());
@@ -22875,7 +22875,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             }
                             {
                             {
-                            pushFollow(FOLLOW_40);
+                            pushFollow(FOLLOW_39);
                             DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_3_0_0_3_0_1_0=norm1_LiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -22913,7 +22913,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_42);
+                            pushFollow(FOLLOW_41);
                             DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_3_0_0_3_1_0_0=norm1_LiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -23034,7 +23034,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt267) {
                         case 1 :
                             {
-                            EqualsSignKeyword_1_4_3_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                            EqualsSignKeyword_1_4_3_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               					announce(EqualsSignKeyword_1_4_3_0, grammarAccess.getAnnotatedPropertyAssignmentAccess().getEqualsSignKeyword_1_4_3_0());
@@ -23221,7 +23221,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0=ruleLiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -23259,7 +23259,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0=ruleLiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -23448,7 +23448,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0=norm1_LiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -23486,7 +23486,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_42);
+                    pushFollow(FOLLOW_41);
                     DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0=norm1_LiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -23675,7 +23675,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            ColonKeyword_0_0_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return retval;
+            ColonKeyword_0_0_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(ColonKeyword_0_0_4, grammarAccess.getPropertyNameValuePairAccess().getColonKeyword_0_0_4());
@@ -23810,7 +23810,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            ColonKeyword_0_0_4=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return retval;
+            ColonKeyword_0_0_4=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(ColonKeyword_0_0_4, grammarAccess.getPropertyNameValuePairAccess().getColonKeyword_0_0_4());
@@ -23947,7 +23947,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt282) {
                 case 1 :
                     {
-                    EqualsSignKeyword_2_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_2_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_2_0, grammarAccess.getPropertyNameValuePairSingleNameAccess().getEqualsSignKeyword_2_0());
@@ -24064,7 +24064,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt284) {
                 case 1 :
                     {
-                    EqualsSignKeyword_2_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_2_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_2_0, grammarAccess.getPropertyNameValuePairSingleNameAccess().getEqualsSignKeyword_2_0());
@@ -24351,7 +24351,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    DeclaredOptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                    DeclaredOptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredOptionalQuestionMarkKeyword_1_0, grammarAccess.getPropertySetterDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_0());
@@ -24366,7 +24366,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return retval;
+            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_2, grammarAccess.getPropertySetterDeclarationAccess().getLeftParenthesisKeyword_2());
@@ -24495,7 +24495,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    DeclaredOptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                    DeclaredOptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredOptionalQuestionMarkKeyword_1_0, grammarAccess.getPropertySetterDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_0());
@@ -24510,7 +24510,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return retval;
+            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_2, grammarAccess.getPropertySetterDeclarationAccess().getLeftParenthesisKeyword_2());
@@ -24625,7 +24625,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_42);
+            pushFollow(FOLLOW_41);
             TargetIdentifierRefParserRuleCall_1_0=ruleIdentifierRef();
 
             state._fsp--;
@@ -24695,7 +24695,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_42);
+            pushFollow(FOLLOW_41);
             TargetIdentifierRefParserRuleCall_1_0=norm1_IdentifierRef();
 
             state._fsp--;
@@ -25395,7 +25395,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             ArgumentsArgumentParserRuleCall_0_0=ruleArgument();
 
             state._fsp--;
@@ -25431,7 +25431,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    }
             	    {
             	    {
-            	    pushFollow(FOLLOW_31);
+            	    pushFollow(FOLLOW_30);
             	    ArgumentsArgumentParserRuleCall_1_1_0=ruleArgument();
 
             	    state._fsp--;
@@ -25493,7 +25493,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             ArgumentsArgumentParserRuleCall_0_0=norm1_Argument();
 
             state._fsp--;
@@ -25529,7 +25529,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    }
             	    {
             	    {
-            	    pushFollow(FOLLOW_31);
+            	    pushFollow(FOLLOW_30);
             	    ArgumentsArgumentParserRuleCall_1_1_0=norm1_Argument();
 
             	    state._fsp--;
@@ -25618,7 +25618,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    SpreadFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return retval;
+                    SpreadFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(SpreadFullStopFullStopFullStopKeyword_0_0, grammarAccess.getArgumentAccess().getSpreadFullStopFullStopFullStopKeyword_0_0());
@@ -25693,7 +25693,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    SpreadFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return retval;
+                    SpreadFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(SpreadFullStopFullStopFullStopKeyword_0_0, grammarAccess.getArgumentAccess().getSpreadFullStopFullStopFullStopKeyword_0_0());
@@ -26616,7 +26616,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftSquareBracketKeyword_0=(Token)match(input,LeftSquareBracket,FOLLOW_49); if (state.failed) return retval;
+            LeftSquareBracketKeyword_0=(Token)match(input,LeftSquareBracket,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftSquareBracketKeyword_0, grammarAccess.getIndexedAccessExpressionTailAccess().getLeftSquareBracketKeyword_0());
@@ -26680,7 +26680,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftSquareBracketKeyword_0=(Token)match(input,LeftSquareBracket,FOLLOW_49); if (state.failed) return retval;
+            LeftSquareBracketKeyword_0=(Token)match(input,LeftSquareBracket,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftSquareBracketKeyword_0, grammarAccess.getIndexedAccessExpressionTailAccess().getLeftSquareBracketKeyword_0());
@@ -26760,7 +26760,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt310) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_25);
+                    pushFollow(FOLLOW_14);
                     ConcreteTypeArgumentsParserRuleCall_1=ruleConcreteTypeArguments();
 
                     state._fsp--;
@@ -26841,7 +26841,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt311) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_25);
+                    pushFollow(FOLLOW_14);
                     ConcreteTypeArgumentsParserRuleCall_1=ruleConcreteTypeArguments();
 
                     state._fsp--;
@@ -27341,7 +27341,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_49);
+                    pushFollow(FOLLOW_48);
                     ruleUnaryOperator();
 
                     state._fsp--;
@@ -27443,7 +27443,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_49);
+                    pushFollow(FOLLOW_48);
                     ruleUnaryOperator();
 
                     state._fsp--;
@@ -27563,7 +27563,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    ruleMultiplicativeOperator();
 
             	    state._fsp--;
@@ -27671,7 +27671,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    ruleMultiplicativeOperator();
 
             	    state._fsp--;
@@ -27797,7 +27797,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    ruleAdditiveOperator();
 
             	    state._fsp--;
@@ -27902,7 +27902,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    ruleAdditiveOperator();
 
             	    state._fsp--;
@@ -28020,7 +28020,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpShiftOperatorParserRuleCall_1_0_1_0=ruleShiftOperator();
 
             	    state._fsp--;
@@ -28119,7 +28119,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpShiftOperatorParserRuleCall_1_0_1_0=ruleShiftOperator();
 
             	    state._fsp--;
@@ -28363,7 +28363,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpRelationalOperatorParserRuleCall_1_0_1_0=ruleRelationalOperator();
 
             	    state._fsp--;
@@ -28462,7 +28462,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpRelationalOperatorParserRuleCall_1_0_1_0=norm1_RelationalOperator();
 
             	    state._fsp--;
@@ -28561,7 +28561,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpRelationalOperatorParserRuleCall_1_0_1_0=ruleRelationalOperator();
 
             	    state._fsp--;
@@ -28660,7 +28660,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpRelationalOperatorParserRuleCall_1_0_1_0=norm1_RelationalOperator();
 
             	    state._fsp--;
@@ -29082,7 +29082,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    ruleEqualityOperator();
 
             	    state._fsp--;
@@ -29193,7 +29193,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    ruleEqualityOperator();
 
             	    state._fsp--;
@@ -29304,7 +29304,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    ruleEqualityOperator();
 
             	    state._fsp--;
@@ -29415,7 +29415,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    ruleEqualityOperator();
 
             	    state._fsp--;
@@ -29540,7 +29540,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseANDOperatorParserRuleCall_1_0_0_1_0=ruleBitwiseANDOperator();
 
             	    state._fsp--;
@@ -29649,7 +29649,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseANDOperatorParserRuleCall_1_0_0_1_0=ruleBitwiseANDOperator();
 
             	    state._fsp--;
@@ -29758,7 +29758,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseANDOperatorParserRuleCall_1_0_0_1_0=ruleBitwiseANDOperator();
 
             	    state._fsp--;
@@ -29867,7 +29867,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseANDOperatorParserRuleCall_1_0_0_1_0=ruleBitwiseANDOperator();
 
             	    state._fsp--;
@@ -30051,7 +30051,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseXOROperatorParserRuleCall_1_0_0_1_0=ruleBitwiseXOROperator();
 
             	    state._fsp--;
@@ -30160,7 +30160,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseXOROperatorParserRuleCall_1_0_0_1_0=ruleBitwiseXOROperator();
 
             	    state._fsp--;
@@ -30269,7 +30269,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseXOROperatorParserRuleCall_1_0_0_1_0=ruleBitwiseXOROperator();
 
             	    state._fsp--;
@@ -30378,7 +30378,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseXOROperatorParserRuleCall_1_0_0_1_0=ruleBitwiseXOROperator();
 
             	    state._fsp--;
@@ -30562,7 +30562,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseOROperatorParserRuleCall_1_0_0_1_0=ruleBitwiseOROperator();
 
             	    state._fsp--;
@@ -30671,7 +30671,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseOROperatorParserRuleCall_1_0_0_1_0=ruleBitwiseOROperator();
 
             	    state._fsp--;
@@ -30780,7 +30780,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseOROperatorParserRuleCall_1_0_0_1_0=ruleBitwiseOROperator();
 
             	    state._fsp--;
@@ -30889,7 +30889,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpBitwiseOROperatorParserRuleCall_1_0_0_1_0=ruleBitwiseOROperator();
 
             	    state._fsp--;
@@ -31073,7 +31073,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpLogicalANDOperatorParserRuleCall_1_0_0_1_0=ruleLogicalANDOperator();
 
             	    state._fsp--;
@@ -31182,7 +31182,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpLogicalANDOperatorParserRuleCall_1_0_0_1_0=ruleLogicalANDOperator();
 
             	    state._fsp--;
@@ -31291,7 +31291,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpLogicalANDOperatorParserRuleCall_1_0_0_1_0=ruleLogicalANDOperator();
 
             	    state._fsp--;
@@ -31400,7 +31400,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpLogicalANDOperatorParserRuleCall_1_0_0_1_0=ruleLogicalANDOperator();
 
             	    state._fsp--;
@@ -31584,7 +31584,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpLogicalOROperatorParserRuleCall_1_0_0_1_0=ruleLogicalOROperator();
 
             	    state._fsp--;
@@ -31693,7 +31693,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpLogicalOROperatorParserRuleCall_1_0_0_1_0=ruleLogicalOROperator();
 
             	    state._fsp--;
@@ -31802,7 +31802,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpLogicalOROperatorParserRuleCall_1_0_0_1_0=ruleLogicalOROperator();
 
             	    state._fsp--;
@@ -31911,7 +31911,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_49);
+            	    pushFollow(FOLLOW_48);
             	    OpLogicalOROperatorParserRuleCall_1_0_0_1_0=ruleLogicalOROperator();
 
             	    state._fsp--;
@@ -32091,7 +32091,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    QuestionMarkKeyword_1_0_0_1=(Token)match(input,QuestionMark,FOLLOW_49); if (state.failed) return retval;
+                    QuestionMarkKeyword_1_0_0_1=(Token)match(input,QuestionMark,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       					announce(QuestionMarkKeyword_1_0_0_1, grammarAccess.getConditionalExpressionAccess().getQuestionMarkKeyword_1_0_0_1());
@@ -32120,7 +32120,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    ColonKeyword_1_2=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return retval;
+                    ColonKeyword_1_2=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(ColonKeyword_1_2, grammarAccess.getConditionalExpressionAccess().getColonKeyword_1_2());
@@ -32207,7 +32207,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    QuestionMarkKeyword_1_0_0_1=(Token)match(input,QuestionMark,FOLLOW_49); if (state.failed) return retval;
+                    QuestionMarkKeyword_1_0_0_1=(Token)match(input,QuestionMark,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       					announce(QuestionMarkKeyword_1_0_0_1, grammarAccess.getConditionalExpressionAccess().getQuestionMarkKeyword_1_0_0_1());
@@ -32236,7 +32236,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    ColonKeyword_1_2=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return retval;
+                    ColonKeyword_1_2=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(ColonKeyword_1_2, grammarAccess.getConditionalExpressionAccess().getColonKeyword_1_2());
@@ -32323,7 +32323,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    QuestionMarkKeyword_1_0_0_1=(Token)match(input,QuestionMark,FOLLOW_49); if (state.failed) return retval;
+                    QuestionMarkKeyword_1_0_0_1=(Token)match(input,QuestionMark,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       					announce(QuestionMarkKeyword_1_0_0_1, grammarAccess.getConditionalExpressionAccess().getQuestionMarkKeyword_1_0_0_1());
@@ -32352,7 +32352,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    ColonKeyword_1_2=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return retval;
+                    ColonKeyword_1_2=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(ColonKeyword_1_2, grammarAccess.getConditionalExpressionAccess().getColonKeyword_1_2());
@@ -32439,7 +32439,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    QuestionMarkKeyword_1_0_0_1=(Token)match(input,QuestionMark,FOLLOW_49); if (state.failed) return retval;
+                    QuestionMarkKeyword_1_0_0_1=(Token)match(input,QuestionMark,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       					announce(QuestionMarkKeyword_1_0_0_1, grammarAccess.getConditionalExpressionAccess().getQuestionMarkKeyword_1_0_0_1());
@@ -32468,7 +32468,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    ColonKeyword_1_2=(Token)match(input,Colon,FOLLOW_49); if (state.failed) return retval;
+                    ColonKeyword_1_2=(Token)match(input,Colon,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(ColonKeyword_1_2, grammarAccess.getConditionalExpressionAccess().getColonKeyword_1_2());
@@ -32634,7 +32634,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_49);
+                            pushFollow(FOLLOW_48);
                             OpAssignmentOperatorParserRuleCall_4_1_0_0_1_0=ruleAssignmentOperator();
 
                             state._fsp--;
@@ -32800,7 +32800,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_49);
+                            pushFollow(FOLLOW_48);
                             OpAssignmentOperatorParserRuleCall_4_1_0_0_1_0=ruleAssignmentOperator();
 
                             state._fsp--;
@@ -32981,7 +32981,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_49);
+                            pushFollow(FOLLOW_48);
                             OpAssignmentOperatorParserRuleCall_4_1_0_0_1_0=ruleAssignmentOperator();
 
                             state._fsp--;
@@ -33162,7 +33162,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_49);
+                            pushFollow(FOLLOW_48);
                             OpAssignmentOperatorParserRuleCall_4_1_0_0_1_0=ruleAssignmentOperator();
 
                             state._fsp--;
@@ -33749,7 +33749,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            AwaitKeyword_0_0_1=(Token)match(input,Await,FOLLOW_49); if (state.failed) return retval;
+            AwaitKeyword_0_0_1=(Token)match(input,Await,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(AwaitKeyword_0_0_1, grammarAccess.getAwaitExpressionAccess().getAwaitKeyword_0_0_1());
@@ -33813,7 +33813,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            AwaitKeyword_0_0_1=(Token)match(input,Await,FOLLOW_49); if (state.failed) return retval;
+            AwaitKeyword_0_0_1=(Token)match(input,Await,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(AwaitKeyword_0_0_1, grammarAccess.getAwaitExpressionAccess().getAwaitKeyword_0_0_1());
@@ -33877,7 +33877,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            AwaitKeyword_0_0_1=(Token)match(input,Await,FOLLOW_49); if (state.failed) return retval;
+            AwaitKeyword_0_0_1=(Token)match(input,Await,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(AwaitKeyword_0_0_1, grammarAccess.getAwaitExpressionAccess().getAwaitKeyword_0_0_1());
@@ -33941,7 +33941,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            AwaitKeyword_0_0_1=(Token)match(input,Await,FOLLOW_49); if (state.failed) return retval;
+            AwaitKeyword_0_0_1=(Token)match(input,Await,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(AwaitKeyword_0_0_1, grammarAccess.getAwaitExpressionAccess().getAwaitKeyword_0_0_1());
@@ -34033,7 +34033,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               				announce(CommercialAtKeyword_0_0_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
               			
             }
-            PromisifyKeyword_0_0_2=(Token)match(input,Promisify,FOLLOW_49); if (state.failed) return retval;
+            PromisifyKeyword_0_0_2=(Token)match(input,Promisify,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(PromisifyKeyword_0_0_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
@@ -34104,7 +34104,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               				announce(CommercialAtKeyword_0_0_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
               			
             }
-            PromisifyKeyword_0_0_2=(Token)match(input,Promisify,FOLLOW_49); if (state.failed) return retval;
+            PromisifyKeyword_0_0_2=(Token)match(input,Promisify,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(PromisifyKeyword_0_0_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
@@ -34175,7 +34175,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               				announce(CommercialAtKeyword_0_0_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
               			
             }
-            PromisifyKeyword_0_0_2=(Token)match(input,Promisify,FOLLOW_49); if (state.failed) return retval;
+            PromisifyKeyword_0_0_2=(Token)match(input,Promisify,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(PromisifyKeyword_0_0_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
@@ -34246,7 +34246,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               				announce(CommercialAtKeyword_0_0_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
               			
             }
-            PromisifyKeyword_0_0_2=(Token)match(input,Promisify,FOLLOW_49); if (state.failed) return retval;
+            PromisifyKeyword_0_0_2=(Token)match(input,Promisify,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(PromisifyKeyword_0_0_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
@@ -34334,7 +34334,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             AssignmentExpressionParserRuleCall_0=ruleAssignmentExpression();
 
             state._fsp--;
@@ -34351,7 +34351,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt375) {
                 case 1 :
                     {
-                    CommaKeyword_1_1=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return retval;
+                    CommaKeyword_1_1=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(CommaKeyword_1_1, grammarAccess.getExpressionAccess().getCommaKeyword_1_1());
@@ -34359,7 +34359,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     ExprsAssignmentExpressionParserRuleCall_1_2_0=ruleAssignmentExpression();
 
                     state._fsp--;
@@ -34387,7 +34387,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt374) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_1_3_0=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return retval;
+                    	    CommaKeyword_1_3_0=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_1_3_0, grammarAccess.getExpressionAccess().getCommaKeyword_1_3_0());
@@ -34395,7 +34395,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    }
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    ExprsAssignmentExpressionParserRuleCall_1_3_1_0=ruleAssignmentExpression();
 
                     	    state._fsp--;
@@ -34464,7 +34464,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             AssignmentExpressionParserRuleCall_0=norm1_AssignmentExpression();
 
             state._fsp--;
@@ -34481,7 +34481,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt377) {
                 case 1 :
                     {
-                    CommaKeyword_1_1=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return retval;
+                    CommaKeyword_1_1=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(CommaKeyword_1_1, grammarAccess.getExpressionAccess().getCommaKeyword_1_1());
@@ -34489,7 +34489,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     ExprsAssignmentExpressionParserRuleCall_1_2_0=norm1_AssignmentExpression();
 
                     state._fsp--;
@@ -34517,7 +34517,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt376) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_1_3_0=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return retval;
+                    	    CommaKeyword_1_3_0=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_1_3_0, grammarAccess.getExpressionAccess().getCommaKeyword_1_3_0());
@@ -34525,7 +34525,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    }
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    ExprsAssignmentExpressionParserRuleCall_1_3_1_0=norm1_AssignmentExpression();
 
                     	    state._fsp--;
@@ -34594,7 +34594,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             AssignmentExpressionParserRuleCall_0=norm2_AssignmentExpression();
 
             state._fsp--;
@@ -34611,7 +34611,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt379) {
                 case 1 :
                     {
-                    CommaKeyword_1_1=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return retval;
+                    CommaKeyword_1_1=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(CommaKeyword_1_1, grammarAccess.getExpressionAccess().getCommaKeyword_1_1());
@@ -34619,7 +34619,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     ExprsAssignmentExpressionParserRuleCall_1_2_0=norm2_AssignmentExpression();
 
                     state._fsp--;
@@ -34647,7 +34647,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt378) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_1_3_0=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return retval;
+                    	    CommaKeyword_1_3_0=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_1_3_0, grammarAccess.getExpressionAccess().getCommaKeyword_1_3_0());
@@ -34655,7 +34655,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    }
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    ExprsAssignmentExpressionParserRuleCall_1_3_1_0=norm2_AssignmentExpression();
 
                     	    state._fsp--;
@@ -34724,7 +34724,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_31);
+            pushFollow(FOLLOW_30);
             AssignmentExpressionParserRuleCall_0=norm3_AssignmentExpression();
 
             state._fsp--;
@@ -34741,7 +34741,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt381) {
                 case 1 :
                     {
-                    CommaKeyword_1_1=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return retval;
+                    CommaKeyword_1_1=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(CommaKeyword_1_1, grammarAccess.getExpressionAccess().getCommaKeyword_1_1());
@@ -34749,7 +34749,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     ExprsAssignmentExpressionParserRuleCall_1_2_0=norm3_AssignmentExpression();
 
                     state._fsp--;
@@ -34777,7 +34777,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt380) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_1_3_0=(Token)match(input,Comma,FOLLOW_49); if (state.failed) return retval;
+                    	    CommaKeyword_1_3_0=(Token)match(input,Comma,FOLLOW_48); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_1_3_0, grammarAccess.getExpressionAccess().getCommaKeyword_1_3_0());
@@ -34785,7 +34785,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    }
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    ExprsAssignmentExpressionParserRuleCall_1_3_1_0=norm3_AssignmentExpression();
 
                     	    state._fsp--;
@@ -37662,7 +37662,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             {
                             {
                             {
-                            pushFollow(FOLLOW_53);
+                            pushFollow(FOLLOW_52);
                             ArgsAnnotationArgumentParserRuleCall_1_1_0_0=ruleAnnotationArgument();
 
                             state._fsp--;
@@ -37698,7 +37698,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             	    }
                             	    {
                             	    {
-                            	    pushFollow(FOLLOW_53);
+                            	    pushFollow(FOLLOW_52);
                             	    ArgsAnnotationArgumentParserRuleCall_1_1_1_1_0=ruleAnnotationArgument();
 
                             	    state._fsp--;
@@ -40076,7 +40076,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            ClassKeyword_1=(Token)match(input,Class,FOLLOW_56); if (state.failed) return retval;
+            ClassKeyword_1=(Token)match(input,Class,FOLLOW_55); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(ClassKeyword_1, grammarAccess.getN4ClassExpressionAccess().getClassKeyword_1());
@@ -40185,7 +40185,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            ClassKeyword_1=(Token)match(input,Class,FOLLOW_57); if (state.failed) return retval;
+            ClassKeyword_1=(Token)match(input,Class,FOLLOW_56); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(ClassKeyword_1, grammarAccess.getN4ClassExpressionAccess().getClassKeyword_1());
@@ -40208,7 +40208,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    pushFollow(FOLLOW_57);
+                    pushFollow(FOLLOW_56);
                     NameBindingIdentifierParserRuleCall_2_0=norm1_BindingIdentifier();
 
                     state._fsp--;
@@ -40235,7 +40235,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt433) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_57);
+                    pushFollow(FOLLOW_56);
                     ClassExtendsClauseParserRuleCall_3=norm1_ClassExtendsClause();
 
                     state._fsp--;
@@ -40861,7 +40861,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftCurlyBracketKeyword_1=(Token)match(input,LeftCurlyBracket,FOLLOW_149); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_1=(Token)match(input,LeftCurlyBracket,FOLLOW_32); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_1, grammarAccess.getN4EnumDeclarationAccess().getLeftCurlyBracketKeyword_1());
@@ -40870,7 +40870,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             int alt447=2;
             int LA447_0 = input.LA(1);
 
-            if ( (LA447_0==Promisify||LA447_0==Target||LA447_0==This||LA447_0==RULE_IDENTIFIER) ) {
+            if ( ((LA447_0>=Intersection && LA447_0<=With)||(LA447_0>=For && LA447_0<=Var)||(LA447_0>=As && LA447_0<=Of)||LA447_0==RULE_IDENTIFIER) ) {
                 alt447=1;
             }
             switch (alt447) {
@@ -40998,7 +40998,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
         Token ColonKeyword_1_0=null;
         Token ValueSTRINGTerminalRuleCall_1_1_0=null;
-        InternalN4JSParser.ruleIdentifierOrThis_return NameIdentifierOrThisParserRuleCall_0_0 = null;
+        InternalN4JSParser.ruleIdentifierName_return NameIdentifierNameParserRuleCall_0_0 = null;
 
 
 
@@ -41008,14 +41008,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            pushFollow(FOLLOW_43);
-            NameIdentifierOrThisParserRuleCall_0_0=ruleIdentifierOrThis();
+            pushFollow(FOLLOW_42);
+            NameIdentifierNameParserRuleCall_0_0=ruleIdentifierName();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
-              				announce((NameIdentifierOrThisParserRuleCall_0_0!=null?((Token)NameIdentifierOrThisParserRuleCall_0_0.start):null), (NameIdentifierOrThisParserRuleCall_0_0!=null?((Token)NameIdentifierOrThisParserRuleCall_0_0.stop):null), grammarAccess.getN4EnumLiteralAccess().getNameAssignment_0());
+              				announce((NameIdentifierNameParserRuleCall_0_0!=null?((Token)NameIdentifierNameParserRuleCall_0_0.start):null), (NameIdentifierNameParserRuleCall_0_0!=null?((Token)NameIdentifierNameParserRuleCall_0_0.stop):null), grammarAccess.getN4EnumLiteralAccess().getNameAssignment_0());
               			
             }
 
@@ -41434,7 +41434,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_150);
+            pushFollow(FOLLOW_149);
             N4MemberAnnotationListParserRuleCall_0=ruleN4MemberAnnotationList();
 
             state._fsp--;
@@ -41464,7 +41464,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	case 1 :
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_151);
+                    	    pushFollow(FOLLOW_150);
                     	    ruleN4Modifier();
 
                     	    state._fsp--;
@@ -41481,7 +41481,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         }
                     } while (true);
 
-                    pushFollow(FOLLOW_152);
+                    pushFollow(FOLLOW_151);
                     GetterHeaderParserRuleCall_1_0_0_0_2=ruleGetterHeader();
 
                     state._fsp--;
@@ -41564,7 +41564,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	case 1 :
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_153);
+                    	    pushFollow(FOLLOW_152);
                     	    ruleN4Modifier();
 
                     	    state._fsp--;
@@ -41620,7 +41620,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         case 1 :
                             {
                             {
-                            DeclaredOptionalQuestionMarkKeyword_1_1_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                            DeclaredOptionalQuestionMarkKeyword_1_1_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               						announce(DeclaredOptionalQuestionMarkKeyword_1_1_1_0, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_1_1_0());
@@ -41635,7 +41635,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    LeftParenthesisKeyword_1_1_2=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return retval;
+                    LeftParenthesisKeyword_1_1_2=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(LeftParenthesisKeyword_1_1_2, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getLeftParenthesisKeyword_1_1_2());
@@ -41659,7 +41659,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    RightParenthesisKeyword_1_1_4=(Token)match(input,RightParenthesis,FOLLOW_152); if (state.failed) return retval;
+                    RightParenthesisKeyword_1_1_4=(Token)match(input,RightParenthesis,FOLLOW_151); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(RightParenthesisKeyword_1_1_4, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getRightParenthesisKeyword_1_1_4());
@@ -41729,7 +41729,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	case 1 :
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_150);
+                    	    pushFollow(FOLLOW_149);
                     	    ruleN4Modifier();
 
                     	    state._fsp--;
@@ -41820,7 +41820,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             }
                             {
                             {
-                            pushFollow(FOLLOW_40);
+                            pushFollow(FOLLOW_39);
                             DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_4_0_1_0=ruleLiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -42020,7 +42020,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_150);
+            pushFollow(FOLLOW_149);
             N4MemberAnnotationListParserRuleCall_0=ruleN4MemberAnnotationList();
 
             state._fsp--;
@@ -42050,7 +42050,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	case 1 :
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_151);
+                    	    pushFollow(FOLLOW_150);
                     	    ruleN4Modifier();
 
                     	    state._fsp--;
@@ -42067,7 +42067,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         }
                     } while (true);
 
-                    pushFollow(FOLLOW_152);
+                    pushFollow(FOLLOW_151);
                     GetterHeaderParserRuleCall_1_0_0_0_2=norm1_GetterHeader();
 
                     state._fsp--;
@@ -42150,7 +42150,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	case 1 :
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_153);
+                    	    pushFollow(FOLLOW_152);
                     	    ruleN4Modifier();
 
                     	    state._fsp--;
@@ -42206,7 +42206,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         case 1 :
                             {
                             {
-                            DeclaredOptionalQuestionMarkKeyword_1_1_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                            DeclaredOptionalQuestionMarkKeyword_1_1_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               						announce(DeclaredOptionalQuestionMarkKeyword_1_1_1_0, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_1_1_0());
@@ -42221,7 +42221,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    LeftParenthesisKeyword_1_1_2=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return retval;
+                    LeftParenthesisKeyword_1_1_2=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(LeftParenthesisKeyword_1_1_2, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getLeftParenthesisKeyword_1_1_2());
@@ -42245,7 +42245,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    RightParenthesisKeyword_1_1_4=(Token)match(input,RightParenthesis,FOLLOW_152); if (state.failed) return retval;
+                    RightParenthesisKeyword_1_1_4=(Token)match(input,RightParenthesis,FOLLOW_151); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(RightParenthesisKeyword_1_1_4, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getRightParenthesisKeyword_1_1_4());
@@ -42315,7 +42315,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	case 1 :
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_150);
+                    	    pushFollow(FOLLOW_149);
                     	    ruleN4Modifier();
 
                     	    state._fsp--;
@@ -42406,7 +42406,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             }
                             {
                             {
-                            pushFollow(FOLLOW_40);
+                            pushFollow(FOLLOW_39);
                             DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_4_0_1_0=norm1_LiteralOrComputedPropertyName();
 
                             state._fsp--;
@@ -42626,7 +42626,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_154);
+            pushFollow(FOLLOW_153);
             DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0=ruleLiteralOrComputedPropertyName();
 
             state._fsp--;
@@ -42651,7 +42651,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    DeclaredOptionalQuestionMarkKeyword_3_0=(Token)match(input,QuestionMark,FOLLOW_155); if (state.failed) return retval;
+                    DeclaredOptionalQuestionMarkKeyword_3_0=(Token)match(input,QuestionMark,FOLLOW_154); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredOptionalQuestionMarkKeyword_3_0, grammarAccess.getFieldDeclarationImplAccess().getDeclaredOptionalQuestionMarkKeyword_3_0());
@@ -42674,7 +42674,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt480) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_156);
+                    pushFollow(FOLLOW_155);
                     ColonSepDeclaredTypeRefParserRuleCall_4=ruleColonSepDeclaredTypeRef();
 
                     state._fsp--;
@@ -42696,7 +42696,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt481) {
                 case 1 :
                     {
-                    EqualsSignKeyword_5_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_5_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_5_0, grammarAccess.getFieldDeclarationImplAccess().getEqualsSignKeyword_5_0());
@@ -42820,7 +42820,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_154);
+            pushFollow(FOLLOW_153);
             DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0=norm1_LiteralOrComputedPropertyName();
 
             state._fsp--;
@@ -42845,7 +42845,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    DeclaredOptionalQuestionMarkKeyword_3_0=(Token)match(input,QuestionMark,FOLLOW_155); if (state.failed) return retval;
+                    DeclaredOptionalQuestionMarkKeyword_3_0=(Token)match(input,QuestionMark,FOLLOW_154); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredOptionalQuestionMarkKeyword_3_0, grammarAccess.getFieldDeclarationImplAccess().getDeclaredOptionalQuestionMarkKeyword_3_0());
@@ -42868,7 +42868,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt485) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_156);
+                    pushFollow(FOLLOW_155);
                     ColonSepDeclaredTypeRefParserRuleCall_4=ruleColonSepDeclaredTypeRef();
 
                     state._fsp--;
@@ -42890,7 +42890,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt486) {
                 case 1 :
                     {
-                    EqualsSignKeyword_5_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                    EqualsSignKeyword_5_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_5_0, grammarAccess.getFieldDeclarationImplAccess().getEqualsSignKeyword_5_0());
@@ -43106,7 +43106,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_150);
+            	    pushFollow(FOLLOW_149);
             	    ruleN4Modifier();
 
             	    state._fsp--;
@@ -43197,7 +43197,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_0_1_0=ruleLiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -43361,7 +43361,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_150);
+            	    pushFollow(FOLLOW_149);
             	    ruleN4Modifier();
 
             	    state._fsp--;
@@ -43452,7 +43452,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_40);
+                    pushFollow(FOLLOW_39);
                     DeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_4_0_1_0=norm1_LiteralOrComputedPropertyName();
 
                     state._fsp--;
@@ -43739,7 +43739,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_157);
+            pushFollow(FOLLOW_156);
             StrictFormalParametersParserRuleCall_0=ruleStrictFormalParameters();
 
             state._fsp--;
@@ -43810,7 +43810,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_157);
+            pushFollow(FOLLOW_156);
             StrictFormalParametersParserRuleCall_0=norm1_StrictFormalParameters();
 
             state._fsp--;
@@ -43883,7 +43883,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_158);
+            pushFollow(FOLLOW_157);
             StrictFormalParametersParserRuleCall_0=ruleStrictFormalParameters();
 
             state._fsp--;
@@ -43900,7 +43900,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt501) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_157);
+                    pushFollow(FOLLOW_156);
                     ColonSepReturnTypeRefParserRuleCall_1=ruleColonSepReturnTypeRef();
 
                     state._fsp--;
@@ -43974,7 +43974,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            pushFollow(FOLLOW_158);
+            pushFollow(FOLLOW_157);
             StrictFormalParametersParserRuleCall_0=norm1_StrictFormalParameters();
 
             state._fsp--;
@@ -43991,7 +43991,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt503) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_157);
+                    pushFollow(FOLLOW_156);
                     ColonSepReturnTypeRefParserRuleCall_1=ruleColonSepReturnTypeRef();
 
                     state._fsp--;
@@ -44101,7 +44101,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_151);
+            	    pushFollow(FOLLOW_150);
             	    ruleN4Modifier();
 
             	    state._fsp--;
@@ -44118,7 +44118,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
             } while (true);
 
-            pushFollow(FOLLOW_152);
+            pushFollow(FOLLOW_151);
             GetterHeaderParserRuleCall_0_0_2=ruleGetterHeader();
 
             state._fsp--;
@@ -44227,7 +44227,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_151);
+            	    pushFollow(FOLLOW_150);
             	    ruleN4Modifier();
 
             	    state._fsp--;
@@ -44244,7 +44244,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
             } while (true);
 
-            pushFollow(FOLLOW_152);
+            pushFollow(FOLLOW_151);
             GetterHeaderParserRuleCall_0_0_2=norm1_GetterHeader();
 
             state._fsp--;
@@ -44351,7 +44351,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt511) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_159);
+                    pushFollow(FOLLOW_158);
                     BogusTypeRefFragmentParserRuleCall_0=ruleBogusTypeRefFragment();
 
                     state._fsp--;
@@ -44398,7 +44398,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    DeclaredOptionalQuestionMarkKeyword_3_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                    DeclaredOptionalQuestionMarkKeyword_3_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredOptionalQuestionMarkKeyword_3_0, grammarAccess.getGetterHeaderAccess().getDeclaredOptionalQuestionMarkKeyword_3_0());
@@ -44419,7 +44419,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               		announce(LeftParenthesisKeyword_4, grammarAccess.getGetterHeaderAccess().getLeftParenthesisKeyword_4());
               	
             }
-            RightParenthesisKeyword_5=(Token)match(input,RightParenthesis,FOLLOW_43); if (state.failed) return retval;
+            RightParenthesisKeyword_5=(Token)match(input,RightParenthesis,FOLLOW_42); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_5, grammarAccess.getGetterHeaderAccess().getRightParenthesisKeyword_5());
@@ -44497,7 +44497,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt514) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_159);
+                    pushFollow(FOLLOW_158);
                     BogusTypeRefFragmentParserRuleCall_0=ruleBogusTypeRefFragment();
 
                     state._fsp--;
@@ -44544,7 +44544,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    DeclaredOptionalQuestionMarkKeyword_3_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                    DeclaredOptionalQuestionMarkKeyword_3_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredOptionalQuestionMarkKeyword_3_0, grammarAccess.getGetterHeaderAccess().getDeclaredOptionalQuestionMarkKeyword_3_0());
@@ -44565,7 +44565,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               		announce(LeftParenthesisKeyword_4, grammarAccess.getGetterHeaderAccess().getLeftParenthesisKeyword_4());
               	
             }
-            RightParenthesisKeyword_5=(Token)match(input,RightParenthesis,FOLLOW_43); if (state.failed) return retval;
+            RightParenthesisKeyword_5=(Token)match(input,RightParenthesis,FOLLOW_42); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_5, grammarAccess.getGetterHeaderAccess().getRightParenthesisKeyword_5());
@@ -44672,7 +44672,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_153);
+            	    pushFollow(FOLLOW_152);
             	    ruleN4Modifier();
 
             	    state._fsp--;
@@ -44728,7 +44728,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    DeclaredOptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                    DeclaredOptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredOptionalQuestionMarkKeyword_1_0, grammarAccess.getN4SetterDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_0());
@@ -44743,7 +44743,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return retval;
+            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_2, grammarAccess.getN4SetterDeclarationAccess().getLeftParenthesisKeyword_2());
@@ -44767,7 +44767,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            RightParenthesisKeyword_4=(Token)match(input,RightParenthesis,FOLLOW_152); if (state.failed) return retval;
+            RightParenthesisKeyword_4=(Token)match(input,RightParenthesis,FOLLOW_151); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_4, grammarAccess.getN4SetterDeclarationAccess().getRightParenthesisKeyword_4());
@@ -44875,7 +44875,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_153);
+            	    pushFollow(FOLLOW_152);
             	    ruleN4Modifier();
 
             	    state._fsp--;
@@ -44931,7 +44931,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    DeclaredOptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                    DeclaredOptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(DeclaredOptionalQuestionMarkKeyword_1_0, grammarAccess.getN4SetterDeclarationAccess().getDeclaredOptionalQuestionMarkKeyword_1_0());
@@ -44946,7 +44946,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_54); if (state.failed) return retval;
+            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_53); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_2, grammarAccess.getN4SetterDeclarationAccess().getLeftParenthesisKeyword_2());
@@ -44970,7 +44970,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            RightParenthesisKeyword_4=(Token)match(input,RightParenthesis,FOLLOW_152); if (state.failed) return retval;
+            RightParenthesisKeyword_4=(Token)match(input,RightParenthesis,FOLLOW_151); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_4, grammarAccess.getN4SetterDeclarationAccess().getRightParenthesisKeyword_4());
@@ -45252,7 +45252,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftCurlyBracketKeyword_1=(Token)match(input,LeftCurlyBracket,FOLLOW_160); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_1=(Token)match(input,LeftCurlyBracket,FOLLOW_159); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_1, grammarAccess.getObjectBindingPatternAccess().getLeftCurlyBracketKeyword_1());
@@ -45297,7 +45297,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt527) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_2_1_0=(Token)match(input,Comma,FOLLOW_161); if (state.failed) return retval;
+                    	    CommaKeyword_2_1_0=(Token)match(input,Comma,FOLLOW_160); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_2_1_0, grammarAccess.getObjectBindingPatternAccess().getCommaKeyword_2_1_0());
@@ -45379,7 +45379,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftCurlyBracketKeyword_1=(Token)match(input,LeftCurlyBracket,FOLLOW_160); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_1=(Token)match(input,LeftCurlyBracket,FOLLOW_159); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_1, grammarAccess.getObjectBindingPatternAccess().getLeftCurlyBracketKeyword_1());
@@ -45424,7 +45424,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt529) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_2_1_0=(Token)match(input,Comma,FOLLOW_161); if (state.failed) return retval;
+                    	    CommaKeyword_2_1_0=(Token)match(input,Comma,FOLLOW_160); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_2_1_0, grammarAccess.getObjectBindingPatternAccess().getCommaKeyword_2_1_0());
@@ -45534,7 +45534,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftSquareBracketKeyword_1=(Token)match(input,LeftSquareBracket,FOLLOW_162); if (state.failed) return retval;
+            LeftSquareBracketKeyword_1=(Token)match(input,LeftSquareBracket,FOLLOW_161); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftSquareBracketKeyword_1, grammarAccess.getArrayBindingPatternAccess().getLeftSquareBracketKeyword_1());
@@ -45554,7 +45554,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_162);
+            	    pushFollow(FOLLOW_161);
             	    ElementsElisionParserRuleCall_2_0=ruleElision();
 
             	    state._fsp--;
@@ -45608,7 +45608,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt533) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_3_1_0=(Token)match(input,Comma,FOLLOW_163); if (state.failed) return retval;
+                    	    CommaKeyword_3_1_0=(Token)match(input,Comma,FOLLOW_162); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_3_1_0, grammarAccess.getArrayBindingPatternAccess().getCommaKeyword_3_1_0());
@@ -45628,7 +45628,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    	case 1 :
                     	    	    {
                     	    	    {
-                    	    	    pushFollow(FOLLOW_163);
+                    	    	    pushFollow(FOLLOW_162);
                     	    	    ElementsElisionParserRuleCall_3_1_1_0=ruleElision();
 
                     	    	    state._fsp--;
@@ -45788,7 +45788,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftSquareBracketKeyword_1=(Token)match(input,LeftSquareBracket,FOLLOW_162); if (state.failed) return retval;
+            LeftSquareBracketKeyword_1=(Token)match(input,LeftSquareBracket,FOLLOW_161); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftSquareBracketKeyword_1, grammarAccess.getArrayBindingPatternAccess().getLeftSquareBracketKeyword_1());
@@ -45808,7 +45808,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_162);
+            	    pushFollow(FOLLOW_161);
             	    ElementsElisionParserRuleCall_2_0=ruleElision();
 
             	    state._fsp--;
@@ -45862,7 +45862,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt539) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_3_1_0=(Token)match(input,Comma,FOLLOW_163); if (state.failed) return retval;
+                    	    CommaKeyword_3_1_0=(Token)match(input,Comma,FOLLOW_162); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_3_1_0, grammarAccess.getArrayBindingPatternAccess().getCommaKeyword_3_1_0());
@@ -45882,7 +45882,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    	case 1 :
                     	    	    {
                     	    	    {
-                    	    	    pushFollow(FOLLOW_163);
+                    	    	    pushFollow(FOLLOW_162);
                     	    	    ElementsElisionParserRuleCall_3_1_1_0=ruleElision();
 
                     	    	    state._fsp--;
@@ -46081,7 +46081,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    ColonKeyword_0_0_0_1=(Token)match(input,Colon,FOLLOW_164); if (state.failed) return retval;
+                    ColonKeyword_0_0_0_1=(Token)match(input,Colon,FOLLOW_163); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       					announce(ColonKeyword_0_0_0_1, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
@@ -46201,7 +46201,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    ColonKeyword_0_0_0_1=(Token)match(input,Colon,FOLLOW_164); if (state.failed) return retval;
+                    ColonKeyword_0_0_0_1=(Token)match(input,Colon,FOLLOW_163); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       					announce(ColonKeyword_0_0_0_1, grammarAccess.getBindingPropertyAccess().getColonKeyword_0_0_0_1());
@@ -46605,7 +46605,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    RestFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_164); if (state.failed) return retval;
+                    RestFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_163); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(RestFullStopFullStopFullStopKeyword_0_0, grammarAccess.getBindingRestElementAccess().getRestFullStopFullStopFullStopKeyword_0_0());
@@ -46671,7 +46671,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    RestFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_164); if (state.failed) return retval;
+                    RestFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_163); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(RestFullStopFullStopFullStopKeyword_0_0, grammarAccess.getBindingRestElementAccess().getRestFullStopFullStopFullStopKeyword_0_0());
@@ -46783,7 +46783,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt547) {
                         case 1 :
                             {
-                            EqualsSignKeyword_0_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                            EqualsSignKeyword_0_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               				announce(EqualsSignKeyword_0_1_0, grammarAccess.getBindingElementImplAccess().getEqualsSignKeyword_0_1_0());
@@ -46931,7 +46931,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt549) {
                         case 1 :
                             {
-                            EqualsSignKeyword_0_1_0=(Token)match(input,EqualsSign,FOLLOW_49); if (state.failed) return retval;
+                            EqualsSignKeyword_0_1_0=(Token)match(input,EqualsSign,FOLLOW_48); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               				announce(EqualsSignKeyword_0_1_0, grammarAccess.getBindingElementImplAccess().getEqualsSignKeyword_0_1_0());
@@ -47272,7 +47272,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 4 :
                     {
                     {
-                    LeftSquareBracketKeyword_3_0=(Token)match(input,LeftSquareBracket,FOLLOW_49); if (state.failed) return retval;
+                    LeftSquareBracketKeyword_3_0=(Token)match(input,LeftSquareBracket,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(LeftSquareBracketKeyword_3_0, grammarAccess.getLiteralOrComputedPropertyNameAccess().getLeftSquareBracketKeyword_3_0());
@@ -47511,7 +47511,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 4 :
                     {
                     {
-                    LeftSquareBracketKeyword_3_0=(Token)match(input,LeftSquareBracket,FOLLOW_49); if (state.failed) return retval;
+                    LeftSquareBracketKeyword_3_0=(Token)match(input,LeftSquareBracket,FOLLOW_48); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(LeftSquareBracketKeyword_3_0, grammarAccess.getLiteralOrComputedPropertyNameAccess().getLeftSquareBracketKeyword_3_0());
@@ -47618,7 +47618,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_165);
+            pushFollow(FOLLOW_164);
             JsxElementNameJSXElementNameParserRuleCall_1_0=ruleJSXElementName();
 
             state._fsp--;
@@ -47634,7 +47634,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            pushFollow(FOLLOW_166);
+            pushFollow(FOLLOW_165);
             JSXAttributesParserRuleCall_2=ruleJSXAttributes();
 
             state._fsp--;
@@ -47662,7 +47662,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    GreaterThanSignKeyword_3_0_0=(Token)match(input,GreaterThanSign,FOLLOW_167); if (state.failed) return retval;
+                    GreaterThanSignKeyword_3_0_0=(Token)match(input,GreaterThanSign,FOLLOW_166); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(GreaterThanSignKeyword_3_0_0, grammarAccess.getJSXElementAccess().getGreaterThanSignKeyword_3_0_0());
@@ -47691,7 +47691,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	case 1 :
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_167);
+                    	    pushFollow(FOLLOW_166);
                     	    JsxChildrenJSXChildParserRuleCall_3_0_1_0=ruleJSXChild();
 
                     	    state._fsp--;
@@ -47786,7 +47786,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LessThanSignKeyword_0=(Token)match(input,LessThanSign,FOLLOW_168); if (state.failed) return retval;
+            LessThanSignKeyword_0=(Token)match(input,LessThanSign,FOLLOW_167); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LessThanSignKeyword_0, grammarAccess.getJSXClosingElementAccess().getLessThanSignKeyword_0());
@@ -47974,7 +47974,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftCurlyBracketKeyword_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_0=(Token)match(input,LeftCurlyBracket,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_0, grammarAccess.getJSXExpressionAccess().getLeftCurlyBracketKeyword_0());
@@ -48209,7 +48209,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	case 1 :
             	    {
             	    {
-            	    pushFollow(FOLLOW_169);
+            	    pushFollow(FOLLOW_168);
             	    JsxAttributesJSXAttributeParserRuleCall_0=ruleJSXAttribute();
 
             	    state._fsp--;
@@ -48381,13 +48381,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftCurlyBracketKeyword_0=(Token)match(input,LeftCurlyBracket,FOLLOW_170); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_0=(Token)match(input,LeftCurlyBracket,FOLLOW_169); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_0, grammarAccess.getJSXSpreadAttributeAccess().getLeftCurlyBracketKeyword_0());
               	
             }
-            FullStopFullStopFullStopKeyword_1=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return retval;
+            FullStopFullStopFullStopKeyword_1=(Token)match(input,FullStopFullStopFullStop,FOLLOW_48); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(FullStopFullStopFullStopKeyword_1, grammarAccess.getJSXSpreadAttributeAccess().getFullStopFullStopFullStopKeyword_1());
@@ -48503,7 +48503,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt560) {
                 case 1 :
                     {
-                    EqualsSignKeyword_1_0=(Token)match(input,EqualsSign,FOLLOW_171); if (state.failed) return retval;
+                    EqualsSignKeyword_1_0=(Token)match(input,EqualsSign,FOLLOW_170); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(EqualsSignKeyword_1_0, grammarAccess.getJSXPropertyAttributeAccess().getEqualsSignKeyword_1_0());
@@ -48552,7 +48552,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         case 2 :
                             {
                             {
-                            LeftCurlyBracketKeyword_1_1_1_0=(Token)match(input,LeftCurlyBracket,FOLLOW_49); if (state.failed) return retval;
+                            LeftCurlyBracketKeyword_1_1_1_0=(Token)match(input,LeftCurlyBracket,FOLLOW_48); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
                               					announce(LeftCurlyBracketKeyword_1_1_1_0, grammarAccess.getJSXPropertyAttributeAccess().getLeftCurlyBracketKeyword_1_1_1_0());
@@ -49322,7 +49322,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     switch (alt567) {
                         case 1 :
                             {
-                            pushFollow(FOLLOW_35);
+                            pushFollow(FOLLOW_34);
                             ParameterizedTypeRefParserRuleCall_0_0_0=ruleParameterizedTypeRef();
 
                             state._fsp--;
@@ -49335,7 +49335,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                             break;
                         case 2 :
                             {
-                            pushFollow(FOLLOW_35);
+                            pushFollow(FOLLOW_34);
                             ThisTypeRefParserRuleCall_0_0_1=ruleThisTypeRef();
 
                             state._fsp--;
@@ -49928,7 +49928,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            pushFollow(FOLLOW_172);
+            pushFollow(FOLLOW_171);
             DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0=ruleTypingStrategyUseSiteOperator();
 
             state._fsp--;
@@ -49944,7 +49944,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            ThisKeyword_1=(Token)match(input,This_1,FOLLOW_173); if (state.failed) return retval;
+            ThisKeyword_1=(Token)match(input,This_1,FOLLOW_172); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(ThisKeyword_1, grammarAccess.getThisTypeRefStructuralAccess().getThisKeyword_1());
@@ -50056,7 +50056,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftCurlyBracketKeyword_1=(Token)match(input,LeftCurlyBracket,FOLLOW_174); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_1=(Token)match(input,LeftCurlyBracket,FOLLOW_173); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_1, grammarAccess.getFunctionTypeExpressionOLDAccess().getLeftCurlyBracketKeyword_1());
@@ -50071,19 +50071,19 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt574) {
                 case 1 :
                     {
-                    CommercialAtKeyword_2_0=(Token)match(input,CommercialAt,FOLLOW_175); if (state.failed) return retval;
+                    CommercialAtKeyword_2_0=(Token)match(input,CommercialAt,FOLLOW_174); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(CommercialAtKeyword_2_0, grammarAccess.getFunctionTypeExpressionOLDAccess().getCommercialAtKeyword_2_0());
                       		
                     }
-                    ThisKeyword_2_1=(Token)match(input,This,FOLLOW_42); if (state.failed) return retval;
+                    ThisKeyword_2_1=(Token)match(input,This,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(ThisKeyword_2_1, grammarAccess.getFunctionTypeExpressionOLDAccess().getThisKeyword_2_1());
                       		
                     }
-                    LeftParenthesisKeyword_2_2=(Token)match(input,LeftParenthesis,FOLLOW_176); if (state.failed) return retval;
+                    LeftParenthesisKeyword_2_2=(Token)match(input,LeftParenthesis,FOLLOW_175); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(LeftParenthesisKeyword_2_2, grammarAccess.getFunctionTypeExpressionOLDAccess().getLeftParenthesisKeyword_2_2());
@@ -50107,7 +50107,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    RightParenthesisKeyword_2_4=(Token)match(input,RightParenthesis,FOLLOW_45); if (state.failed) return retval;
+                    RightParenthesisKeyword_2_4=(Token)match(input,RightParenthesis,FOLLOW_44); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(RightParenthesisKeyword_2_4, grammarAccess.getFunctionTypeExpressionOLDAccess().getRightParenthesisKeyword_2_4());
@@ -50119,7 +50119,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            FunctionKeyword_3=(Token)match(input,Function,FOLLOW_177); if (state.failed) return retval;
+            FunctionKeyword_3=(Token)match(input,Function,FOLLOW_176); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(FunctionKeyword_3, grammarAccess.getFunctionTypeExpressionOLDAccess().getFunctionKeyword_3());
@@ -50134,7 +50134,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt576) {
                 case 1 :
                     {
-                    LessThanSignKeyword_4_0=(Token)match(input,LessThanSign,FOLLOW_178); if (state.failed) return retval;
+                    LessThanSignKeyword_4_0=(Token)match(input,LessThanSign,FOLLOW_177); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(LessThanSignKeyword_4_0, grammarAccess.getFunctionTypeExpressionOLDAccess().getLessThanSignKeyword_4_0());
@@ -50170,7 +50170,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt575) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_4_2_0=(Token)match(input,Comma,FOLLOW_178); if (state.failed) return retval;
+                    	    CommaKeyword_4_2_0=(Token)match(input,Comma,FOLLOW_177); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      				announce(CommaKeyword_4_2_0, grammarAccess.getFunctionTypeExpressionOLDAccess().getCommaKeyword_4_2_0());
@@ -50203,7 +50203,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         }
                     } while (true);
 
-                    GreaterThanSignKeyword_4_3=(Token)match(input,GreaterThanSign,FOLLOW_42); if (state.failed) return retval;
+                    GreaterThanSignKeyword_4_3=(Token)match(input,GreaterThanSign,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       			announce(GreaterThanSignKeyword_4_3, grammarAccess.getFunctionTypeExpressionOLDAccess().getGreaterThanSignKeyword_4_3());
@@ -50215,7 +50215,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftParenthesisKeyword_5=(Token)match(input,LeftParenthesis,FOLLOW_179); if (state.failed) return retval;
+            LeftParenthesisKeyword_5=(Token)match(input,LeftParenthesis,FOLLOW_178); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_5, grammarAccess.getFunctionTypeExpressionOLDAccess().getLeftParenthesisKeyword_5());
@@ -50229,7 +50229,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             if ( state.backtracking==0 ) {
                announce((TAnonymousFormalParameterListParserRuleCall_6!=null?((Token)TAnonymousFormalParameterListParserRuleCall_6.start):null), (TAnonymousFormalParameterListParserRuleCall_6!=null?((Token)TAnonymousFormalParameterListParserRuleCall_6.stop):null), grammarAccess.getFunctionTypeExpressionOLDAccess().getTAnonymousFormalParameterListParserRuleCall_6()); 
             }
-            RightParenthesisKeyword_7=(Token)match(input,RightParenthesis,FOLLOW_180); if (state.failed) return retval;
+            RightParenthesisKeyword_7=(Token)match(input,RightParenthesis,FOLLOW_179); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_7, grammarAccess.getFunctionTypeExpressionOLDAccess().getRightParenthesisKeyword_7());
@@ -50324,7 +50324,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            LeftParenthesisKeyword_0_0_1=(Token)match(input,LeftParenthesis,FOLLOW_179); if (state.failed) return retval;
+            LeftParenthesisKeyword_0_0_1=(Token)match(input,LeftParenthesis,FOLLOW_178); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(LeftParenthesisKeyword_0_0_1, grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_1());
@@ -50338,7 +50338,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             if ( state.backtracking==0 ) {
                announce((TAnonymousFormalParameterListParserRuleCall_0_0_2!=null?((Token)TAnonymousFormalParameterListParserRuleCall_0_0_2.start):null), (TAnonymousFormalParameterListParserRuleCall_0_0_2!=null?((Token)TAnonymousFormalParameterListParserRuleCall_0_0_2.stop):null), grammarAccess.getArrowFunctionTypeExpressionAccess().getTAnonymousFormalParameterListParserRuleCall_0_0_2()); 
             }
-            RightParenthesisKeyword_0_0_3=(Token)match(input,RightParenthesis,FOLLOW_47); if (state.failed) return retval;
+            RightParenthesisKeyword_0_0_3=(Token)match(input,RightParenthesis,FOLLOW_46); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(RightParenthesisKeyword_0_0_3, grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_3());
@@ -50418,7 +50418,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_31);
+                    pushFollow(FOLLOW_30);
                     FparsTAnonymousFormalParameterParserRuleCall_0_0=ruleTAnonymousFormalParameter();
 
                     state._fsp--;
@@ -50446,7 +50446,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         switch (alt578) {
                     	case 1 :
                     	    {
-                    	    CommaKeyword_1_0=(Token)match(input,Comma,FOLLOW_181); if (state.failed) return retval;
+                    	    CommaKeyword_1_0=(Token)match(input,Comma,FOLLOW_180); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
 
                     	      			announce(CommaKeyword_1_0, grammarAccess.getTAnonymousFormalParameterListAccess().getCommaKeyword_1_0());
@@ -50454,7 +50454,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     	    }
                     	    {
                     	    {
-                    	    pushFollow(FOLLOW_31);
+                    	    pushFollow(FOLLOW_30);
                     	    FparsTAnonymousFormalParameterParserRuleCall_1_1_0=ruleTAnonymousFormalParameter();
 
                     	    state._fsp--;
@@ -50552,7 +50552,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    VariadicFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_182); if (state.failed) return retval;
+                    VariadicFullStopFullStopFullStopKeyword_0_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_181); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(VariadicFullStopFullStopFullStopKeyword_0_0, grammarAccess.getTAnonymousFormalParameterAccess().getVariadicFullStopFullStopFullStopKeyword_0_0());
@@ -50688,7 +50688,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    HasInitializerAssignmentEqualsSignKeyword_0_0=(Token)match(input,EqualsSign,FOLLOW_183); if (state.failed) return retval;
+                    HasInitializerAssignmentEqualsSignKeyword_0_0=(Token)match(input,EqualsSign,FOLLOW_182); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(HasInitializerAssignmentEqualsSignKeyword_0_0, grammarAccess.getDefaultFormalParameterAccess().getHasInitializerAssignmentEqualsSignKeyword_0_0());
@@ -50796,7 +50796,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               		announce(UnionKeyword_1, grammarAccess.getUnionTypeExpressionOLDAccess().getUnionKeyword_1());
               	
             }
-            LeftCurlyBracketKeyword_2=(Token)match(input,LeftCurlyBracket,FOLLOW_184); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_2=(Token)match(input,LeftCurlyBracket,FOLLOW_183); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_2, grammarAccess.getUnionTypeExpressionOLDAccess().getLeftCurlyBracketKeyword_2());
@@ -50832,7 +50832,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt584) {
             	case 1 :
             	    {
-            	    CommaKeyword_4_0=(Token)match(input,Comma,FOLLOW_184); if (state.failed) return retval;
+            	    CommaKeyword_4_0=(Token)match(input,Comma,FOLLOW_183); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
 
             	      			announce(CommaKeyword_4_0, grammarAccess.getUnionTypeExpressionOLDAccess().getCommaKeyword_4_0());
@@ -50936,7 +50936,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               		announce(IntersectionKeyword_1, grammarAccess.getIntersectionTypeExpressionOLDAccess().getIntersectionKeyword_1());
               	
             }
-            LeftCurlyBracketKeyword_2=(Token)match(input,LeftCurlyBracket,FOLLOW_184); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_2=(Token)match(input,LeftCurlyBracket,FOLLOW_183); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_2, grammarAccess.getIntersectionTypeExpressionOLDAccess().getLeftCurlyBracketKeyword_2());
@@ -50972,7 +50972,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt585) {
             	case 1 :
             	    {
-            	    CommaKeyword_4_0=(Token)match(input,Comma,FOLLOW_184); if (state.failed) return retval;
+            	    CommaKeyword_4_0=(Token)match(input,Comma,FOLLOW_183); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
 
             	      			announce(CommaKeyword_4_0, grammarAccess.getIntersectionTypeExpressionOLDAccess().getCommaKeyword_4_0());
@@ -51222,7 +51222,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            ArrayTypeLiteralLeftSquareBracketKeyword_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_185); if (state.failed) return retval;
+            ArrayTypeLiteralLeftSquareBracketKeyword_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_184); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(ArrayTypeLiteralLeftSquareBracketKeyword_0_0, grammarAccess.getArrayTypeRefAccess().getArrayTypeLiteralLeftSquareBracketKeyword_0_0());
@@ -51348,7 +51348,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     }
                     {
                     {
-                    pushFollow(FOLLOW_186);
+                    pushFollow(FOLLOW_185);
                     DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1=ruleTypeReferenceName();
 
                     state._fsp--;
@@ -51408,7 +51408,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    pushFollow(FOLLOW_186);
+                    pushFollow(FOLLOW_185);
                     VersionRequestParserRuleCall_0_1_3=ruleVersionRequest();
 
                     state._fsp--;
@@ -51429,7 +51429,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt588) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_173);
+                    pushFollow(FOLLOW_172);
                     TypeArgumentsParserRuleCall_1=ruleTypeArguments();
 
                     state._fsp--;
@@ -51541,7 +51541,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     {
-                    pushFollow(FOLLOW_187);
+                    pushFollow(FOLLOW_186);
                     DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_0_1=ruleTypeReferenceName();
 
                     state._fsp--;
@@ -51581,7 +51581,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                     }
 
-                    pushFollow(FOLLOW_187);
+                    pushFollow(FOLLOW_186);
                     VersionRequestParserRuleCall_0_1_2=ruleVersionRequest();
 
                     state._fsp--;
@@ -51694,7 +51694,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LessThanSignKeyword_0=(Token)match(input,LessThanSign,FOLLOW_185); if (state.failed) return retval;
+            LessThanSignKeyword_0=(Token)match(input,LessThanSign,FOLLOW_184); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LessThanSignKeyword_0, grammarAccess.getTypeArgumentsAccess().getLessThanSignKeyword_0());
@@ -51730,7 +51730,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt592) {
             	case 1 :
             	    {
-            	    CommaKeyword_2_0=(Token)match(input,Comma,FOLLOW_185); if (state.failed) return retval;
+            	    CommaKeyword_2_0=(Token)match(input,Comma,FOLLOW_184); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
 
             	      			announce(CommaKeyword_2_0, grammarAccess.getTypeArgumentsAccess().getCommaKeyword_2_0());
@@ -51805,7 +51805,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LeftCurlyBracketKeyword_0=(Token)match(input,LeftCurlyBracket,FOLLOW_188); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_0=(Token)match(input,LeftCurlyBracket,FOLLOW_187); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_0, grammarAccess.getTStructMemberListAccess().getLeftCurlyBracketKeyword_0());
@@ -51826,7 +51826,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    {
             	    {
             	    {
-            	    pushFollow(FOLLOW_189);
+            	    pushFollow(FOLLOW_188);
             	    AstStructuralMembersTStructMemberParserRuleCall_1_0_0=ruleTStructMember();
 
             	    state._fsp--;
@@ -51853,7 +51853,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	    switch (alt593) {
             	        case 1 :
             	            {
-            	            SemicolonKeyword_1_1_0=(Token)match(input,Semicolon,FOLLOW_188); if (state.failed) return retval;
+            	            SemicolonKeyword_1_1_0=(Token)match(input,Semicolon,FOLLOW_187); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
 
             	              				announce(SemicolonKeyword_1_1_0, grammarAccess.getTStructMemberListAccess().getSemicolonKeyword_1_1_0());
@@ -51864,7 +51864,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             	            break;
             	        case 2 :
             	            {
-            	            CommaKeyword_1_1_1=(Token)match(input,Comma,FOLLOW_188); if (state.failed) return retval;
+            	            CommaKeyword_1_1_1=(Token)match(input,Comma,FOLLOW_187); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
 
             	              				announce(CommaKeyword_1_1_1, grammarAccess.getTStructMemberListAccess().getCommaKeyword_1_1_1());
@@ -52088,7 +52088,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             switch (alt596) {
                 case 1 :
                     {
-                    pushFollow(FOLLOW_25);
+                    pushFollow(FOLLOW_14);
                     TypeVariablesParserRuleCall_0_0_1=ruleTypeVariables();
 
                     state._fsp--;
@@ -52103,7 +52103,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
             {
             {
-            pushFollow(FOLLOW_42);
+            pushFollow(FOLLOW_41);
             NameIdentifierNameParserRuleCall_0_0_2_0=ruleIdentifierName();
 
             state._fsp--;
@@ -52119,7 +52119,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftParenthesisKeyword_0_0_3=(Token)match(input,LeftParenthesis,FOLLOW_179); if (state.failed) return retval;
+            LeftParenthesisKeyword_0_0_3=(Token)match(input,LeftParenthesis,FOLLOW_178); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(LeftParenthesisKeyword_0_0_3, grammarAccess.getTStructMethodAccess().getLeftParenthesisKeyword_0_0_3());
@@ -52139,7 +52139,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             if ( state.backtracking==0 ) {
                announce((TAnonymousFormalParameterListParserRuleCall_1!=null?((Token)TAnonymousFormalParameterListParserRuleCall_1.start):null), (TAnonymousFormalParameterListParserRuleCall_1!=null?((Token)TAnonymousFormalParameterListParserRuleCall_1.stop):null), grammarAccess.getTStructMethodAccess().getTAnonymousFormalParameterListParserRuleCall_1()); 
             }
-            RightParenthesisKeyword_2=(Token)match(input,RightParenthesis,FOLLOW_43); if (state.failed) return retval;
+            RightParenthesisKeyword_2=(Token)match(input,RightParenthesis,FOLLOW_42); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_2, grammarAccess.getTStructMethodAccess().getRightParenthesisKeyword_2());
@@ -52205,7 +52205,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            LessThanSignKeyword_0=(Token)match(input,LessThanSign,FOLLOW_178); if (state.failed) return retval;
+            LessThanSignKeyword_0=(Token)match(input,LessThanSign,FOLLOW_177); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LessThanSignKeyword_0, grammarAccess.getTypeVariablesAccess().getLessThanSignKeyword_0());
@@ -52241,7 +52241,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt598) {
             	case 1 :
             	    {
-            	    CommaKeyword_2_0=(Token)match(input,Comma,FOLLOW_178); if (state.failed) return retval;
+            	    CommaKeyword_2_0=(Token)match(input,Comma,FOLLOW_177); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
 
             	      			announce(CommaKeyword_2_0, grammarAccess.getTypeVariablesAccess().getCommaKeyword_2_0());
@@ -52509,7 +52509,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            pushFollow(FOLLOW_190);
+            pushFollow(FOLLOW_189);
             NameIdentifierNameParserRuleCall_0_0=ruleIdentifierName();
 
             state._fsp--;
@@ -52534,7 +52534,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    OptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_43); if (state.failed) return retval;
+                    OptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(OptionalQuestionMarkKeyword_1_0, grammarAccess.getTStructFieldAccess().getOptionalQuestionMarkKeyword_1_0());
@@ -52632,7 +52632,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            GetKeyword_0_0_1=(Token)match(input,Get,FOLLOW_25); if (state.failed) return retval;
+            GetKeyword_0_0_1=(Token)match(input,Get,FOLLOW_14); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(GetKeyword_0_0_1, grammarAccess.getTStructGetterAccess().getGetKeyword_0_0_1());
@@ -52671,7 +52671,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    OptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                    OptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(OptionalQuestionMarkKeyword_1_0, grammarAccess.getTStructGetterAccess().getOptionalQuestionMarkKeyword_1_0());
@@ -52692,7 +52692,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
               		announce(LeftParenthesisKeyword_2, grammarAccess.getTStructGetterAccess().getLeftParenthesisKeyword_2());
               	
             }
-            RightParenthesisKeyword_3=(Token)match(input,RightParenthesis,FOLLOW_43); if (state.failed) return retval;
+            RightParenthesisKeyword_3=(Token)match(input,RightParenthesis,FOLLOW_42); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(RightParenthesisKeyword_3, grammarAccess.getTStructGetterAccess().getRightParenthesisKeyword_3());
@@ -52782,7 +52782,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            SetKeyword_0_0_1=(Token)match(input,Set,FOLLOW_25); if (state.failed) return retval;
+            SetKeyword_0_0_1=(Token)match(input,Set,FOLLOW_14); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(SetKeyword_0_0_1, grammarAccess.getTStructSetterAccess().getSetKeyword_0_0_1());
@@ -52821,7 +52821,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     {
-                    OptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_42); if (state.failed) return retval;
+                    OptionalQuestionMarkKeyword_1_0=(Token)match(input,QuestionMark,FOLLOW_41); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
                       				announce(OptionalQuestionMarkKeyword_1_0, grammarAccess.getTStructSetterAccess().getOptionalQuestionMarkKeyword_1_0());
@@ -52836,7 +52836,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_181); if (state.failed) return retval;
+            LeftParenthesisKeyword_2=(Token)match(input,LeftParenthesis,FOLLOW_180); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftParenthesisKeyword_2, grammarAccess.getTStructSetterAccess().getLeftParenthesisKeyword_2());
@@ -52919,7 +52919,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         try {
             {
             {
-            TildeKeyword_0=(Token)match(input,Tilde,FOLLOW_191); if (state.failed) return retval;
+            TildeKeyword_0=(Token)match(input,Tilde,FOLLOW_190); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(TildeKeyword_0, grammarAccess.getTypingStrategyUseSiteOperatorAccess().getTildeKeyword_0());
@@ -53116,7 +53116,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
             }
 
-            LeftCurlyBracketKeyword_2=(Token)match(input,LeftCurlyBracket,FOLLOW_192); if (state.failed) return retval;
+            LeftCurlyBracketKeyword_2=(Token)match(input,LeftCurlyBracket,FOLLOW_191); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               		announce(LeftCurlyBracketKeyword_2, grammarAccess.getTypeTypeRefAccess().getLeftCurlyBracketKeyword_2());
@@ -53325,7 +53325,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            QuestionMarkKeyword_0_0_1=(Token)match(input,QuestionMark,FOLLOW_193); if (state.failed) return retval;
+            QuestionMarkKeyword_0_0_1=(Token)match(input,QuestionMark,FOLLOW_192); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
               				announce(QuestionMarkKeyword_0_0_1, grammarAccess.getWildcardAccess().getQuestionMarkKeyword_0_0_1());
@@ -56002,7 +56002,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Class,FOLLOW_194); if (state.failed) return ;
+        match(input,Class,FOLLOW_193); if (state.failed) return ;
         int alt622=2;
         int LA622_0 = input.LA(1);
 
@@ -56013,7 +56013,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_195);
+                pushFollow(FOLLOW_194);
                 ruleTypingStrategyDefSiteOperator();
 
                 state._fsp--;
@@ -56036,7 +56036,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_196);
+                pushFollow(FOLLOW_195);
                 ruleBindingIdentifier();
 
                 state._fsp--;
@@ -56109,7 +56109,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Interface,FOLLOW_194); if (state.failed) return ;
+        match(input,Interface,FOLLOW_193); if (state.failed) return ;
         int alt626=2;
         int LA626_0 = input.LA(1);
 
@@ -56120,7 +56120,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_195);
+                pushFollow(FOLLOW_194);
                 ruleTypingStrategyDefSiteOperator();
 
                 state._fsp--;
@@ -56143,7 +56143,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_196);
+                pushFollow(FOLLOW_195);
                 ruleBindingIdentifier();
 
                 state._fsp--;
@@ -56216,7 +56216,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Enum,FOLLOW_195); if (state.failed) return ;
+        match(input,Enum,FOLLOW_194); if (state.failed) return ;
         int alt630=2;
         int LA630_0 = input.LA(1);
 
@@ -56227,7 +56227,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_196);
+                pushFollow(FOLLOW_195);
                 ruleBindingIdentifier();
 
                 state._fsp--;
@@ -56300,7 +56300,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleAsyncNoTrailingLineBreak();
 
         state._fsp--;
@@ -56387,7 +56387,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Class,FOLLOW_194); if (state.failed) return ;
+        match(input,Class,FOLLOW_193); if (state.failed) return ;
         int alt634=2;
         int LA634_0 = input.LA(1);
 
@@ -56398,7 +56398,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_195);
+                pushFollow(FOLLOW_194);
                 ruleTypingStrategyDefSiteOperator();
 
                 state._fsp--;
@@ -56421,7 +56421,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_196);
+                pushFollow(FOLLOW_195);
                 ruleBindingIdentifier();
 
                 state._fsp--;
@@ -56494,7 +56494,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Interface,FOLLOW_194); if (state.failed) return ;
+        match(input,Interface,FOLLOW_193); if (state.failed) return ;
         int alt638=2;
         int LA638_0 = input.LA(1);
 
@@ -56505,7 +56505,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_195);
+                pushFollow(FOLLOW_194);
                 ruleTypingStrategyDefSiteOperator();
 
                 state._fsp--;
@@ -56528,7 +56528,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_196);
+                pushFollow(FOLLOW_195);
                 ruleBindingIdentifier();
 
                 state._fsp--;
@@ -56601,7 +56601,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Enum,FOLLOW_195); if (state.failed) return ;
+        match(input,Enum,FOLLOW_194); if (state.failed) return ;
         int alt642=2;
         int LA642_0 = input.LA(1);
 
@@ -56612,7 +56612,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_196);
+                pushFollow(FOLLOW_195);
                 ruleBindingIdentifier();
 
                 state._fsp--;
@@ -56685,7 +56685,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleAsyncNoTrailingLineBreak();
 
         state._fsp--;
@@ -56766,14 +56766,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -56796,14 +56796,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -56826,14 +56826,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -56856,14 +56856,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -56953,7 +56953,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleAsyncNoTrailingLineBreak();
 
         state._fsp--;
@@ -57054,7 +57054,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleAsyncNoTrailingLineBreak();
 
         state._fsp--;
@@ -57312,7 +57312,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_43);
+        pushFollow(FOLLOW_42);
         ruleBindingIdentifier();
 
         state._fsp--;
@@ -57353,7 +57353,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_43);
+        pushFollow(FOLLOW_42);
         ruleBindingIdentifier();
 
         state._fsp--;
@@ -57394,7 +57394,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_43);
+        pushFollow(FOLLOW_42);
         norm1_BindingIdentifier();
 
         state._fsp--;
@@ -57435,7 +57435,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_43);
+        pushFollow(FOLLOW_42);
         norm1_BindingIdentifier();
 
         state._fsp--;
@@ -57548,7 +57548,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         {
         {
-        match(input,In,FOLLOW_49); if (state.failed) return ;
+        match(input,In,FOLLOW_48); if (state.failed) return ;
 
         }
 
@@ -57714,7 +57714,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         {
         {
-        match(input,In,FOLLOW_49); if (state.failed) return ;
+        match(input,In,FOLLOW_48); if (state.failed) return ;
 
         }
 
@@ -57942,14 +57942,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_44); if (state.failed) return ;
+        match(input,Async,FOLLOW_43); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -57966,14 +57966,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_44); if (state.failed) return ;
+        match(input,Async,FOLLOW_43); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_45);
+        pushFollow(FOLLOW_44);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -58063,7 +58063,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final void synpred129_InternalN4JSParser_fragment() throws RecognitionException {   
         {
         {
-        match(input,Set,FOLLOW_197); if (state.failed) return ;
+        match(input,Set,FOLLOW_196); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -58151,7 +58151,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -58174,7 +58174,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -58279,7 +58279,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final void synpred133_InternalN4JSParser_fragment() throws RecognitionException {   
         {
         {
-        match(input,Set,FOLLOW_197); if (state.failed) return ;
+        match(input,Set,FOLLOW_196); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -58367,7 +58367,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -58390,7 +58390,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -58476,7 +58476,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final void synpred138_InternalN4JSParser_fragment() throws RecognitionException {   
         {
         {
-        match(input,Set,FOLLOW_197); if (state.failed) return ;
+        match(input,Set,FOLLOW_196); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -58564,7 +58564,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -58587,7 +58587,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -58673,7 +58673,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final void synpred147_InternalN4JSParser_fragment() throws RecognitionException {   
         {
         {
-        match(input,Set,FOLLOW_197); if (state.failed) return ;
+        match(input,Set,FOLLOW_196); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -58761,7 +58761,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -58784,7 +58784,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -59072,7 +59072,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_49);
+        pushFollow(FOLLOW_48);
         ruleShiftOperator();
 
         state._fsp--;
@@ -59106,7 +59106,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_49);
+        pushFollow(FOLLOW_48);
         ruleShiftOperator();
 
         state._fsp--;
@@ -59140,7 +59140,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_49);
+        pushFollow(FOLLOW_48);
         ruleRelationalOperator();
 
         state._fsp--;
@@ -59172,7 +59172,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_49);
+        pushFollow(FOLLOW_48);
         norm1_RelationalOperator();
 
         state._fsp--;
@@ -59204,7 +59204,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_198);
+        pushFollow(FOLLOW_197);
         ruleRelationalOperator();
 
         state._fsp--;
@@ -59236,7 +59236,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        pushFollow(FOLLOW_198);
+        pushFollow(FOLLOW_197);
         norm1_RelationalOperator();
 
         state._fsp--;
@@ -59857,14 +59857,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -59950,7 +59950,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 ruleStrictFormalParameters();
 
                 state._fsp--;
@@ -59964,7 +59964,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt697) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef();
 
                         state._fsp--;
@@ -59988,20 +59988,20 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                match(input,Async,FOLLOW_48); if (state.failed) return ;
+                match(input,Async,FOLLOW_47); if (state.failed) return ;
 
                 }
 
 
                 }
 
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleNoLineTerminator();
 
                 state._fsp--;
                 if (state.failed) return ;
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 ruleStrictFormalParameters();
 
                 state._fsp--;
@@ -60023,7 +60023,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt698) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef();
 
                         state._fsp--;
@@ -60044,7 +60044,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                pushFollow(FOLLOW_47);
+                pushFollow(FOLLOW_46);
                 ruleBindingIdentifierAsFormalParameter();
 
                 state._fsp--;
@@ -60116,14 +60116,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -60209,7 +60209,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 ruleStrictFormalParameters();
 
                 state._fsp--;
@@ -60223,7 +60223,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt700) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef();
 
                         state._fsp--;
@@ -60247,20 +60247,20 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                match(input,Async,FOLLOW_48); if (state.failed) return ;
+                match(input,Async,FOLLOW_47); if (state.failed) return ;
 
                 }
 
 
                 }
 
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleNoLineTerminator();
 
                 state._fsp--;
                 if (state.failed) return ;
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 ruleStrictFormalParameters();
 
                 state._fsp--;
@@ -60282,7 +60282,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt701) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef();
 
                         state._fsp--;
@@ -60303,7 +60303,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                pushFollow(FOLLOW_47);
+                pushFollow(FOLLOW_46);
                 ruleBindingIdentifierAsFormalParameter();
 
                 state._fsp--;
@@ -60375,14 +60375,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -60467,7 +60467,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 norm1_StrictFormalParameters();
 
                 state._fsp--;
@@ -60481,7 +60481,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt703) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef();
 
                         state._fsp--;
@@ -60505,20 +60505,20 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                match(input,Async,FOLLOW_51); if (state.failed) return ;
+                match(input,Async,FOLLOW_50); if (state.failed) return ;
 
                 }
 
 
                 }
 
-                pushFollow(FOLLOW_40);
+                pushFollow(FOLLOW_39);
                 ruleNoLineTerminator();
 
                 state._fsp--;
                 if (state.failed) return ;
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 norm1_StrictFormalParameters();
 
                 state._fsp--;
@@ -60540,7 +60540,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt704) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef();
 
                         state._fsp--;
@@ -60561,7 +60561,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                pushFollow(FOLLOW_47);
+                pushFollow(FOLLOW_46);
                 norm1_BindingIdentifierAsFormalParameter();
 
                 state._fsp--;
@@ -60633,14 +60633,14 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         {
         {
         {
-        match(input,Async,FOLLOW_48); if (state.failed) return ;
+        match(input,Async,FOLLOW_47); if (state.failed) return ;
 
         }
 
 
         }
 
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleNoLineTerminator();
 
         state._fsp--;
@@ -60725,7 +60725,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             case 1 :
                 {
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 norm1_StrictFormalParameters();
 
                 state._fsp--;
@@ -60739,7 +60739,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt706) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef();
 
                         state._fsp--;
@@ -60763,20 +60763,20 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                match(input,Async,FOLLOW_51); if (state.failed) return ;
+                match(input,Async,FOLLOW_50); if (state.failed) return ;
 
                 }
 
 
                 }
 
-                pushFollow(FOLLOW_40);
+                pushFollow(FOLLOW_39);
                 ruleNoLineTerminator();
 
                 state._fsp--;
                 if (state.failed) return ;
                 {
-                pushFollow(FOLLOW_46);
+                pushFollow(FOLLOW_45);
                 norm1_StrictFormalParameters();
 
                 state._fsp--;
@@ -60798,7 +60798,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 switch (alt707) {
                     case 1 :
                         {
-                        pushFollow(FOLLOW_47);
+                        pushFollow(FOLLOW_46);
                         ruleColonSepReturnTypeRef();
 
                         state._fsp--;
@@ -60819,7 +60819,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 {
                 {
                 {
-                pushFollow(FOLLOW_47);
+                pushFollow(FOLLOW_46);
                 norm1_BindingIdentifierAsFormalParameter();
 
                 state._fsp--;
@@ -60924,13 +60924,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final void synpred264_InternalN4JSParser_fragment() throws RecognitionException {   
         {
         {
-        match(input,LeftParenthesis,FOLLOW_179); if (state.failed) return ;
+        match(input,LeftParenthesis,FOLLOW_178); if (state.failed) return ;
         pushFollow(FOLLOW_67);
         ruleTAnonymousFormalParameterList();
 
         state._fsp--;
         if (state.failed) return ;
-        match(input,RightParenthesis,FOLLOW_47); if (state.failed) return ;
+        match(input,RightParenthesis,FOLLOW_46); if (state.failed) return ;
         match(input,EqualsSignGreaterThanSign,FOLLOW_2); if (state.failed) return ;
 
         }
@@ -60983,7 +60983,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_151);
+        	    pushFollow(FOLLOW_150);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61028,7 +61028,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_153);
+        	    pushFollow(FOLLOW_152);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61045,7 +61045,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Set,FOLLOW_197); if (state.failed) return ;
+        match(input,Set,FOLLOW_196); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -61073,7 +61073,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_150);
+        	    pushFollow(FOLLOW_149);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61153,7 +61153,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -61181,7 +61181,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 if (state.failed) return ;
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -61225,7 +61225,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_151);
+        	    pushFollow(FOLLOW_150);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61270,7 +61270,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_153);
+        	    pushFollow(FOLLOW_152);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61287,7 +61287,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Set,FOLLOW_197); if (state.failed) return ;
+        match(input,Set,FOLLOW_196); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -61315,7 +61315,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_150);
+        	    pushFollow(FOLLOW_149);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61395,7 +61395,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -61423,7 +61423,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 if (state.failed) return ;
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -61467,7 +61467,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_151);
+        	    pushFollow(FOLLOW_150);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61522,7 +61522,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_153);
+        	    pushFollow(FOLLOW_152);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61539,7 +61539,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Set,FOLLOW_197); if (state.failed) return ;
+        match(input,Set,FOLLOW_196); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -61577,7 +61577,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_150);
+        	    pushFollow(FOLLOW_149);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61657,7 +61657,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -61685,7 +61685,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 if (state.failed) return ;
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 ruleLiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -61729,7 +61729,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_151);
+        	    pushFollow(FOLLOW_150);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61784,7 +61784,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_153);
+        	    pushFollow(FOLLOW_152);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61801,7 +61801,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             }
         } while (true);
 
-        match(input,Set,FOLLOW_197); if (state.failed) return ;
+        match(input,Set,FOLLOW_196); if (state.failed) return ;
         if ( (input.LA(1)>=Intersection && input.LA(1)<=With)||(input.LA(1)>=For && input.LA(1)<=Var)||(input.LA(1)>=As && input.LA(1)<=Of)||input.LA(1)==LeftSquareBracket||input.LA(1)==RULE_DOUBLE||input.LA(1)==RULE_HEX_INT||input.LA(1)==RULE_OCTAL_INT||input.LA(1)==RULE_SCIENTIFIC_INT||input.LA(1)==RULE_IDENTIFIER||input.LA(1)==RULE_STRING||input.LA(1)==RULE_INT ) {
             input.consume();
             state.errorRecovery=false;state.failed=false;
@@ -61839,7 +61839,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         	case 1 :
         	    {
         	    {
-        	    pushFollow(FOLLOW_150);
+        	    pushFollow(FOLLOW_149);
         	    ruleN4Modifier();
 
         	    state._fsp--;
@@ -61919,7 +61919,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 }
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -61947,7 +61947,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 if (state.failed) return ;
                 {
                 {
-                pushFollow(FOLLOW_42);
+                pushFollow(FOLLOW_41);
                 norm1_LiteralOrComputedPropertyName();
 
                 state._fsp--;
@@ -62139,13 +62139,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final void synpred320_InternalN4JSParser_fragment() throws RecognitionException {   
         {
         {
-        match(input,LeftParenthesis,FOLLOW_179); if (state.failed) return ;
+        match(input,LeftParenthesis,FOLLOW_178); if (state.failed) return ;
         pushFollow(FOLLOW_67);
         ruleTAnonymousFormalParameterList();
 
         state._fsp--;
         if (state.failed) return ;
-        match(input,RightParenthesis,FOLLOW_47); if (state.failed) return ;
+        match(input,RightParenthesis,FOLLOW_46); if (state.failed) return ;
         match(input,EqualsSignGreaterThanSign,FOLLOW_2); if (state.failed) return ;
 
         }
@@ -62221,7 +62221,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final void synpred329_InternalN4JSParser_fragment() throws RecognitionException {   
         {
         {
-        match(input,Get,FOLLOW_25); if (state.failed) return ;
+        match(input,Get,FOLLOW_14); if (state.failed) return ;
         {
         {
         pushFollow(FOLLOW_2);
@@ -62244,7 +62244,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final void synpred330_InternalN4JSParser_fragment() throws RecognitionException {   
         {
         {
-        match(input,Set,FOLLOW_25); if (state.failed) return ;
+        match(input,Set,FOLLOW_14); if (state.failed) return ;
         {
         {
         pushFollow(FOLLOW_2);
@@ -62276,7 +62276,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         switch (alt756) {
             case 1 :
                 {
-                pushFollow(FOLLOW_25);
+                pushFollow(FOLLOW_14);
                 ruleTypeVariables();
 
                 state._fsp--;
@@ -62288,7 +62288,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         }
         {
         {
-        pushFollow(FOLLOW_42);
+        pushFollow(FOLLOW_41);
         ruleIdentifierName();
 
         state._fsp--;
@@ -91776,7 +91776,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000805184E00L});
     public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000200805184C00L});
     public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000040010000100L,0x4000000000000000L});
+    public static final BitSet FOLLOW_14 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40000000007C0001L});
     public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000000000000000L,0x0001000100000000L});
     public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0800200C4519CE00L,0x0000440040000001L});
     public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000400000000000L});
@@ -91787,39 +91787,39 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x6C044680D5184F70L,0x4001000000440000L});
     public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0000000000000000L,0x0001000000000000L});
     public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x0000000000000002L,0x0000000000040000L});
-    public static final BitSet FOLLOW_25 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40000000007C0001L});
-    public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0800200C4518CE00L,0x0000000000000001L});
-    public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0800000805184C00L,0x0000000000000001L});
-    public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x6C044680D5184F70L,0x40004C0000440000L});
-    public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x0000000000000000L,0x0001002100000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400040440000L,0x0000000000000002L});
-    public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x0000000000000002L,0x0000000100000000L});
-    public static final BitSet FOLLOW_32 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400040440000L});
-    public static final BitSet FOLLOW_33 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010000007C0001L});
-    public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x0000000000000000L,0x0000000000040000L});
-    public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x0000000000000002L,0x0000000080000000L});
-    public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0000000000000002L,0x0001002000000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000000040008000L});
-    public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000020000L});
-    public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004050440000L});
-    public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004010440000L});
-    public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000000010440000L});
-    public static final BitSet FOLLOW_42 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L});
-    public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x0000000000000002L,0x0000001000000000L});
-    public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0000000000008000L,0x0000000000000000L,0x0000000000020000L});
-    public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0000000000000000L,0x0000001000004000L});
-    public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
-    public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L,0x0000000000020000L});
-    public static final BitSet FOLLOW_49 = new BitSet(new long[]{0x7C0FC6B4F538CF70L,0x57A24C4A92440540L,0x0000000000201802L});
-    public static final BitSet FOLLOW_50 = new BitSet(new long[]{0xFE1FE7FDFFF8FF70L,0x57A34C6A925C0541L,0x0000000000201802L});
-    public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004010440000L,0x0000000000020000L});
-    public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x40024C0020440000L});
-    public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x0000000000000000L,0x0000000120000000L});
-    public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x40024C0000440000L});
-    public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x0000000440008000L});
-    public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x6C044680D51A4F70L,0x4000404000440000L});
-    public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x6C044680D51A4F70L,0x4000400000440000L});
+    public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0800200C4518CE00L,0x0000000000000001L});
+    public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0800000805184C00L,0x0000000000000001L});
+    public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x6C044680D5184F70L,0x40004C0000440000L});
+    public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x0000000000000000L,0x0001002100000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400040440000L,0x0000000000000002L});
+    public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x0000000000000002L,0x0000000100000000L});
+    public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400040440000L});
+    public static final BitSet FOLLOW_32 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010000007C0001L});
+    public static final BitSet FOLLOW_33 = new BitSet(new long[]{0x0000000000000000L,0x0000000000040000L});
+    public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x0000000000000002L,0x0000000080000000L});
+    public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x0000000000000002L,0x0001002000000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0000000040008000L});
+    public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000020000L});
+    public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004050440000L});
+    public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004010440000L});
+    public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000000010440000L});
+    public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L});
+    public static final BitSet FOLLOW_42 = new BitSet(new long[]{0x0000000000000002L,0x0000001000000000L});
+    public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x0000000000008000L,0x0000000000000000L,0x0000000000020000L});
+    public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0000000000000000L,0x0000001000004000L});
+    public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
+    public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L,0x0000000000020000L});
+    public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x7C0FC6B4F538CF70L,0x57A24C4A92440540L,0x0000000000201802L});
+    public static final BitSet FOLLOW_49 = new BitSet(new long[]{0xFE1FE7FDFFF8FF70L,0x57A34C6A925C0541L,0x0000000000201802L});
+    public static final BitSet FOLLOW_50 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000004010440000L,0x0000000000020000L});
+    public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x40024C0020440000L});
+    public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x0000000000000000L,0x0000000120000000L});
+    public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x40024C0000440000L});
+    public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x0000000440008000L});
+    public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x6C044680D51A4F70L,0x4000404000440000L});
+    public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x6C044680D51A4F70L,0x4000400000440000L});
+    public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x0000040010000100L,0x4000000000000000L});
     public static final BitSet FOLLOW_58 = new BitSet(new long[]{0x0000000000020002L});
     public static final BitSet FOLLOW_59 = new BitSet(new long[]{0x000D048090000130L,0x4002480010000000L});
     public static final BitSet FOLLOW_60 = new BitSet(new long[]{0x0000000000000002L,0x0000008000000000L});
@@ -91912,56 +91912,55 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public static final BitSet FOLLOW_146 = new BitSet(new long[]{0x0000000000020042L,0x0000000100000000L});
     public static final BitSet FOLLOW_147 = new BitSet(new long[]{0x6C044680D5184F70L,0x4000400000440000L,0x0000002000000000L});
     public static final BitSet FOLLOW_148 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L,0x0000002000000000L});
-    public static final BitSet FOLLOW_149 = new BitSet(new long[]{0x0000040010000100L,0x4001000000000000L});
-    public static final BitSet FOLLOW_150 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A24840407C0001L,0x0000000000200002L});
-    public static final BitSet FOLLOW_151 = new BitSet(new long[]{0x040D048895184D30L,0x4002400000000000L});
-    public static final BitSet FOLLOW_152 = new BitSet(new long[]{0x0000000000000002L,0x0000402000000000L});
-    public static final BitSet FOLLOW_153 = new BitSet(new long[]{0x4000000805184C00L});
-    public static final BitSet FOLLOW_154 = new BitSet(new long[]{0x0000000000000000L,0x000102B000000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_155 = new BitSet(new long[]{0x0000000000000000L,0x000100B000000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_156 = new BitSet(new long[]{0x0000000000000000L,0x000100A000000000L,0x0000000002800000L});
-    public static final BitSet FOLLOW_157 = new BitSet(new long[]{0x0000000000000002L,0x0000400000000000L});
-    public static final BitSet FOLLOW_158 = new BitSet(new long[]{0x0000000000000002L,0x0000401000000000L});
-    public static final BitSet FOLLOW_159 = new BitSet(new long[]{0x0400000000000000L});
-    public static final BitSet FOLLOW_160 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A34C00007C0001L,0x0000000000200002L});
-    public static final BitSet FOLLOW_161 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A24C00007C0001L,0x0000000000200002L});
-    public static final BitSet FOLLOW_162 = new BitSet(new long[]{0x6C444680D5184F70L,0x40005C0100440000L});
-    public static final BitSet FOLLOW_163 = new BitSet(new long[]{0x6C444680D5184F70L,0x40004C0100440000L});
-    public static final BitSet FOLLOW_164 = new BitSet(new long[]{0x6C444680D5184F70L,0x40004C0000440000L});
-    public static final BitSet FOLLOW_165 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40004108007C0001L});
-    public static final BitSet FOLLOW_166 = new BitSet(new long[]{0x0000000000000000L,0x0000010800000000L});
-    public static final BitSet FOLLOW_167 = new BitSet(new long[]{0x0000000000000000L,0x0000404000000000L});
-    public static final BitSet FOLLOW_168 = new BitSet(new long[]{0x0000000000000000L,0x0000000800000000L});
-    public static final BitSet FOLLOW_169 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF2L,0x40004000007C0001L});
-    public static final BitSet FOLLOW_170 = new BitSet(new long[]{0x0040000000000000L});
-    public static final BitSet FOLLOW_171 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L,0x0000000000000002L});
-    public static final BitSet FOLLOW_172 = new BitSet(new long[]{0x0001000000000000L});
-    public static final BitSet FOLLOW_173 = new BitSet(new long[]{0x0010000000000002L});
-    public static final BitSet FOLLOW_174 = new BitSet(new long[]{0x0000000000008000L,0x0000040000000000L});
-    public static final BitSet FOLLOW_175 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_176 = new BitSet(new long[]{0x000D048090000130L,0x4002480000000000L});
-    public static final BitSet FOLLOW_177 = new BitSet(new long[]{0x0000000000000000L,0x0000004010000000L});
-    public static final BitSet FOLLOW_178 = new BitSet(new long[]{0x2000040010000100L,0x4000000000200000L});
-    public static final BitSet FOLLOW_179 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x4002480030440000L});
-    public static final BitSet FOLLOW_180 = new BitSet(new long[]{0x0000000000000000L,0x0001001000000000L});
-    public static final BitSet FOLLOW_181 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x4002480010440000L});
-    public static final BitSet FOLLOW_182 = new BitSet(new long[]{0x6C0D4680D5184F70L,0x4002480010440000L});
-    public static final BitSet FOLLOW_183 = new BitSet(new long[]{0x0008040090000102L,0x4000000000000000L});
-    public static final BitSet FOLLOW_184 = new BitSet(new long[]{0x000D048090000130L,0x4002400000000000L});
-    public static final BitSet FOLLOW_185 = new BitSet(new long[]{0x200D048090000130L,0x40024A0010200000L});
-    public static final BitSet FOLLOW_186 = new BitSet(new long[]{0x0010000000000002L,0x0000004000000000L});
-    public static final BitSet FOLLOW_187 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
-    public static final BitSet FOLLOW_188 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010040007C0001L});
-    public static final BitSet FOLLOW_189 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010061007C0001L});
-    public static final BitSet FOLLOW_190 = new BitSet(new long[]{0x0000000000000002L,0x0000021000000000L});
-    public static final BitSet FOLLOW_191 = new BitSet(new long[]{0x0000000000000002L,0x0002000000000000L,0x0000000000080000L});
-    public static final BitSet FOLLOW_192 = new BitSet(new long[]{0x0009040090000100L,0x4000020000000000L});
-    public static final BitSet FOLLOW_193 = new BitSet(new long[]{0x0000002000020002L});
-    public static final BitSet FOLLOW_194 = new BitSet(new long[]{0x6C044680D5184F72L,0x4002000000440000L,0x0000002000000000L});
-    public static final BitSet FOLLOW_195 = new BitSet(new long[]{0x6C044680D5184F72L,0x4000000000440000L,0x0000002000000000L});
-    public static final BitSet FOLLOW_196 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000000L,0x0000002000000000L});
-    public static final BitSet FOLLOW_197 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A00800007C0001L,0x0000000000200002L});
-    public static final BitSet FOLLOW_198 = new BitSet(new long[]{0x7C0FC4B4F538CF70L,0x57A24C4A92440540L,0x0000000000201802L});
+    public static final BitSet FOLLOW_149 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A24840407C0001L,0x0000000000200002L});
+    public static final BitSet FOLLOW_150 = new BitSet(new long[]{0x040D048895184D30L,0x4002400000000000L});
+    public static final BitSet FOLLOW_151 = new BitSet(new long[]{0x0000000000000002L,0x0000402000000000L});
+    public static final BitSet FOLLOW_152 = new BitSet(new long[]{0x4000000805184C00L});
+    public static final BitSet FOLLOW_153 = new BitSet(new long[]{0x0000000000000000L,0x000102B000000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_154 = new BitSet(new long[]{0x0000000000000000L,0x000100B000000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_155 = new BitSet(new long[]{0x0000000000000000L,0x000100A000000000L,0x0000000002800000L});
+    public static final BitSet FOLLOW_156 = new BitSet(new long[]{0x0000000000000002L,0x0000400000000000L});
+    public static final BitSet FOLLOW_157 = new BitSet(new long[]{0x0000000000000002L,0x0000401000000000L});
+    public static final BitSet FOLLOW_158 = new BitSet(new long[]{0x0400000000000000L});
+    public static final BitSet FOLLOW_159 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A34C00007C0001L,0x0000000000200002L});
+    public static final BitSet FOLLOW_160 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A24C00007C0001L,0x0000000000200002L});
+    public static final BitSet FOLLOW_161 = new BitSet(new long[]{0x6C444680D5184F70L,0x40005C0100440000L});
+    public static final BitSet FOLLOW_162 = new BitSet(new long[]{0x6C444680D5184F70L,0x40004C0100440000L});
+    public static final BitSet FOLLOW_163 = new BitSet(new long[]{0x6C444680D5184F70L,0x40004C0000440000L});
+    public static final BitSet FOLLOW_164 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40004108007C0001L});
+    public static final BitSet FOLLOW_165 = new BitSet(new long[]{0x0000000000000000L,0x0000010800000000L});
+    public static final BitSet FOLLOW_166 = new BitSet(new long[]{0x0000000000000000L,0x0000404000000000L});
+    public static final BitSet FOLLOW_167 = new BitSet(new long[]{0x0000000000000000L,0x0000000800000000L});
+    public static final BitSet FOLLOW_168 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF2L,0x40004000007C0001L});
+    public static final BitSet FOLLOW_169 = new BitSet(new long[]{0x0040000000000000L});
+    public static final BitSet FOLLOW_170 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L,0x0000000000000002L});
+    public static final BitSet FOLLOW_171 = new BitSet(new long[]{0x0001000000000000L});
+    public static final BitSet FOLLOW_172 = new BitSet(new long[]{0x0010000000000002L});
+    public static final BitSet FOLLOW_173 = new BitSet(new long[]{0x0000000000008000L,0x0000040000000000L});
+    public static final BitSet FOLLOW_174 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_175 = new BitSet(new long[]{0x000D048090000130L,0x4002480000000000L});
+    public static final BitSet FOLLOW_176 = new BitSet(new long[]{0x0000000000000000L,0x0000004010000000L});
+    public static final BitSet FOLLOW_177 = new BitSet(new long[]{0x2000040010000100L,0x4000000000200000L});
+    public static final BitSet FOLLOW_178 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x4002480030440000L});
+    public static final BitSet FOLLOW_179 = new BitSet(new long[]{0x0000000000000000L,0x0001001000000000L});
+    public static final BitSet FOLLOW_180 = new BitSet(new long[]{0x6C4D4680D5184F70L,0x4002480010440000L});
+    public static final BitSet FOLLOW_181 = new BitSet(new long[]{0x6C0D4680D5184F70L,0x4002480010440000L});
+    public static final BitSet FOLLOW_182 = new BitSet(new long[]{0x0008040090000102L,0x4000000000000000L});
+    public static final BitSet FOLLOW_183 = new BitSet(new long[]{0x000D048090000130L,0x4002400000000000L});
+    public static final BitSet FOLLOW_184 = new BitSet(new long[]{0x200D048090000130L,0x40024A0010200000L});
+    public static final BitSet FOLLOW_185 = new BitSet(new long[]{0x0010000000000002L,0x0000004000000000L});
+    public static final BitSet FOLLOW_186 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
+    public static final BitSet FOLLOW_187 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010040007C0001L});
+    public static final BitSet FOLLOW_188 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x40010061007C0001L});
+    public static final BitSet FOLLOW_189 = new BitSet(new long[]{0x0000000000000002L,0x0000021000000000L});
+    public static final BitSet FOLLOW_190 = new BitSet(new long[]{0x0000000000000002L,0x0002000000000000L,0x0000000000080000L});
+    public static final BitSet FOLLOW_191 = new BitSet(new long[]{0x0009040090000100L,0x4000020000000000L});
+    public static final BitSet FOLLOW_192 = new BitSet(new long[]{0x0000002000020002L});
+    public static final BitSet FOLLOW_193 = new BitSet(new long[]{0x6C044680D5184F72L,0x4002000000440000L,0x0000002000000000L});
+    public static final BitSet FOLLOW_194 = new BitSet(new long[]{0x6C044680D5184F72L,0x4000000000440000L,0x0000002000000000L});
+    public static final BitSet FOLLOW_195 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000000L,0x0000002000000000L});
+    public static final BitSet FOLLOW_196 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x52A00800007C0001L,0x0000000000200002L});
+    public static final BitSet FOLLOW_197 = new BitSet(new long[]{0x7C0FC4B4F538CF70L,0x57A24C4A92440540L,0x0000000000201802L});
 
 }
 
