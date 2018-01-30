@@ -26,7 +26,6 @@ import java.util.List;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Splitter;
@@ -104,7 +103,7 @@ public class NodeEngineCommandBuilder {
 		// 2 create 'node_modules' to the #1
 		final File node_modules = new File(projectRootPath.toFile(), "node_modules");
 		node_modules.mkdirs();
-		addDeleteHook(node_modules);
+		addNodeModulesDeleteHook(node_modules);
 		// 3 generate elf script in #1
 		final File elf = Files.createTempFile(projectRootPath, "N4JSNodeELF",
 				"." + N4JSGlobals.JS_FILE_EXTENSION).toFile();
@@ -149,12 +148,21 @@ public class NodeEngineCommandBuilder {
 	/**
 	 * Since {@code node_modules} are linked at runtime, the links don't exist yet. We add shutdown hook to schedule
 	 * them for deletion, after JS was executed.
+	 *
+	 * Since we assume that contents are symlinks to other locations, we are not walking deep, just schedule to delete
+	 * immediate children.
 	 */
-	private static void addDeleteHook(File file) {
+	private static void addNodeModulesDeleteHook(File file) {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				FileUtils.onExitDeleteFileOrFolder(file);
+				file.deleteOnExit();
+				if (file.isDirectory()) {
+					File[] childFildes = file.listFiles();
+					for (int i = 0; i < childFildes.length; i++) {
+						childFildes[i].deleteOnExit();
+					}
+				}
 			}
 		});
 	}
