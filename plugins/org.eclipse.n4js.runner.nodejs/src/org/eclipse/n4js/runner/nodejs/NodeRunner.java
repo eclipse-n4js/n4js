@@ -16,7 +16,6 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -35,6 +34,7 @@ import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerDescriptorImpl;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Splitter;
@@ -120,7 +120,7 @@ public class NodeRunner implements IRunner {
 			runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
 			runOptions.setSystemLoader(SystemLoaderInfo.fromString(runConfig.getSystemLoader()));
 
-			Path workingDirectory = Files.createTempDirectory("N4JSNodeRun");
+			Path workingDirectory = FileUtils.createTempDirectory("N4JSNodeRun");
 
 			NodeEngineCommandBuilder cb = commandBuilderProvider.get();
 			cmds = cb.createCmds(runOptions, workingDirectory);

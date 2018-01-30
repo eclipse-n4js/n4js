@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
+import org.eclipse.n4js.utils.io.FileUtils;
 
 /**
  * Utility for setting up external libraries for HLC tests.
@@ -38,9 +39,9 @@ public class ExternalsUtiities {
 		checkState(null == platformFiles.targetPlatformInstallLocation);
 		checkState(null == platformFiles.targetPlatformFile);
 
-		final Path tempRoot = createTempDirectory();
-		final String tempFolderName = tmpPrefix + "-time-" + System.currentTimeMillis();
-		platformFiles.targetPlatformInstallLocation = createDirectory(tempRoot, tempFolderName).toFile();
+		final Path tempRoot = createTempDirectory("hlcTest-time-" + System.currentTimeMillis());
+		platformFiles.root = tempRoot.toFile();
+		platformFiles.targetPlatformInstallLocation = createDirectory(tempRoot, tmpPrefix).toFile();
 		final TargetPlatformModel model = new TargetPlatformModel();
 		for (final Entry<String, String> dependencyEntry : getNpmDependencies.entrySet()) {
 			model.addNpmDependency(dependencyEntry.getKey(), dependencyEntry.getValue());
@@ -60,12 +61,16 @@ public class ExternalsUtiities {
 	 */
 	public static void cleanupExternals(TargetPlatformFiles platformFiles) {
 		if (null != platformFiles.targetPlatformFile) {
-			platformFiles.targetPlatformFile.delete();
+			FileUtils.deleteFileOrFolder(platformFiles.targetPlatformFile);
 			platformFiles.targetPlatformFile = null;
 		}
 		if (null != platformFiles.targetPlatformInstallLocation) {
-			platformFiles.targetPlatformInstallLocation.delete();
+			FileUtils.deleteFileOrFolder(platformFiles.targetPlatformInstallLocation);
 			platformFiles.targetPlatformInstallLocation = null;
+		}
+		if (null != platformFiles.root) {
+			FileUtils.deleteFileOrFolder(platformFiles.root);
+			platformFiles.root = null;
 		}
 	}
 

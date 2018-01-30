@@ -26,6 +26,7 @@ import java.util.List;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Splitter;
@@ -80,7 +81,7 @@ public class NodeEngineCommandBuilder {
 	 *
 	 * This method uses provided working dir to transform it into nodejs-project-like structure, to allow proper
 	 * configuration of the executions. In particular:
-	 * 
+	 *
 	 * <pre>
 	 * <ol>
 	 * <li> add node module to the folder</li>
@@ -88,7 +89,7 @@ public class NodeEngineCommandBuilder {
 	 * <li> return path to the startup script</li>
 	 * </ol>
 	 * </pre>
-	 * 
+	 *
 	 * Note that some configuration will be performed by the startup script when it is executed.
 	 *
 	 * @param nodeRunOptions
@@ -103,9 +104,11 @@ public class NodeEngineCommandBuilder {
 		// 2 create 'node_modules' to the #1
 		final File node_modules = new File(projectRootPath.toFile(), "node_modules");
 		node_modules.mkdirs();
+		addDeleteHook(node_modules);
 		// 3 generate elf script in #1
-		final Path elf = Files.createTempFile(projectRootPath, "N4JSNodeELF",
-				"." + N4JSGlobals.JS_FILE_EXTENSION);
+		final File elf = Files.createTempFile(projectRootPath, "N4JSNodeELF",
+				"." + N4JSGlobals.JS_FILE_EXTENSION).toFile();
+		elf.deleteOnExit();
 		String[] paths = nodeRunOptions.getCoreProjectPaths().split(NODE_PATH_SEP);
 		List<Pair<String, String>> path2name = new ArrayList<>();
 		for (int i = 0; i < paths.length; i++) {
@@ -131,9 +134,9 @@ public class NodeEngineCommandBuilder {
 				initModules,
 				execModule,
 				path2name);
-		writeContentToFile(eflCode, elf.toFile());
+		writeContentToFile(eflCode, elf);
 
-		return elf.toAbsolutePath().toString();
+		return elf.getAbsolutePath();
 	}
 
 	/** Writes given content to a given file. */
@@ -142,4 +145,18 @@ public class NodeEngineCommandBuilder {
 			writer.write(content);
 		}
 	}
+
+	/**
+	 * Since {@code node_modules} are linked at runtime, the links don't exist yet. We add shutdown hook to schedule
+	 * them for deletion, after JS was executed.
+	 */
+	private static void addDeleteHook(File file) {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				FileUtils.onExitDeleteFileOrFolder(file);
+			}
+		});
+	}
+
 }

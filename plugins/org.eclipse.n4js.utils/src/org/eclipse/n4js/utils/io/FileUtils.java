@@ -131,13 +131,23 @@ public abstract class FileUtils {
 	 * @return the path to the new directory.
 	 */
 	public static Path createTempDirectory() {
+		return createTempDirectory(null);
+	}
+
+	/**
+	 * Creates a new temp directory in the java temp folder. The newly created folder will use provided prefix for name
+	 * and will be deleted on graceful VM shutdown.
+	 *
+	 * @return the path to the new directory.
+	 */
+	public static Path createTempDirectory(String prefix) {
 		final File parent = new File(getTempDirValue());
 		if (!parent.exists() || !parent.canWrite()) {
 			throw new RuntimeException("Cannot access temporary directory under: " + getTempDirValue());
 		}
 		File child;
 		try {
-			child = Files.createTempDirectory(parent.toPath(), null).toFile();
+			child = Files.createTempDirectory(parent.toPath(), prefix).toFile();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -264,6 +274,22 @@ public abstract class FileUtils {
 			}
 		}
 		file.delete();
+	}
+
+	/**
+	 * Delete a file or a possibly non-empty folder on JVM exit using {@link File#deleteOnExit()}
+	 *
+	 * @param file
+	 *            file or folder to be deleted
+	 */
+	public static void onExitDeleteFileOrFolder(File file) {
+		file.deleteOnExit();
+		if (file.isDirectory()) {
+			File[] childFildes = file.listFiles();
+			for (int i = 0; i < childFildes.length; i++) {
+				onExitDeleteFileOrFolder(childFildes[i]);
+			}
+		}
 	}
 
 	/**

@@ -16,6 +16,7 @@ import java.io.IOException;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -152,6 +153,11 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 						System.out.println(readLogfile);
 				}
 			}
+
+			if (outputFile.exists())
+				FileUtils.deleteFileOrFolder(outputFile);
+			if (errorFile.exists())
+				FileUtils.deleteFileOrFolder(errorFile);
 		}
 	}
 

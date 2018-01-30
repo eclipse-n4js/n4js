@@ -34,6 +34,7 @@ import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
@@ -95,10 +96,7 @@ public abstract class AbstractN4jscTest {
 	protected static File setupWorkspace(String testDataRoot, String testDataSet,
 			Predicate<String> n4jsLibrariesPredicate)
 			throws IOException {
-		File root = Files.createTempDirectory(testDataRoot + "_" + testDataSet + "_").toFile();
-		if (root == null || !root.exists()) {
-			throw new RuntimeException("Cannot create working directory;");
-		}
+		File root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_").toFile();
 
 		File wsp = new File(root, WSP);
 		File fixture = new File(testDataRoot, testDataSet);
