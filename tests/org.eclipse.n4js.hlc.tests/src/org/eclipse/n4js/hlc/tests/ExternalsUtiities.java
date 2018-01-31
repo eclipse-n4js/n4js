@@ -64,11 +64,19 @@ public class ExternalsUtiities {
 			FileUtils.deleteFileOrFolder(platformFiles.targetPlatformFile);
 			platformFiles.targetPlatformFile = null;
 		}
+		// Following commented files are related to discovered issue GH-521
+		// When uncommenting them every single test runs fine, but running
+		// all tests in org.eclipse.n4js.hlc.tests make some of them fail.
+		// Looks like there is issue with injection of TargetPlatformInstallLocationProvider,
+		// i.e. even in independent test classes Validators use the same instance of the provider
+		// (called from N4JSModel)/
+
 		if (null != platformFiles.targetPlatformInstallLocation) {
+			// TODO GH-521 location re-used between tests
 			// FileUtils.deleteFileOrFolder(platformFiles.targetPlatformInstallLocation);
-			platformFiles.targetPlatformInstallLocation.delete();
 			platformFiles.targetPlatformInstallLocation = null;
 		}
+		// TODO GH-521 location re-used between tests
 		// if (null != platformFiles.root) {
 		// FileUtils.deleteFileOrFolder(platformFiles.root);
 		// platformFiles.root = null;
