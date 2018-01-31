@@ -19,17 +19,26 @@ var red : Color = Color.RED;
 // XPECT scopeWithPosition at 'Country.|US' --> DE - T15, US - T15, TR - T15, ...
 var us : Country = Country.US;
 /* XPECT scopeWithPosition at 'us.|value' ---
-n4type - builtin_n4.n4ts:320, name - builtin_n4.n4ts:302,
-toString - builtin_n4.n4ts:314, value - builtin_n4.n4ts:308
+__proto__ - builtin_js.n4ts:44, constructor - builtin_js.n4ts:140, toLocaleString - builtin_js.n4ts:153,
+valueOf - builtin_js.n4ts:159, hasOwnProperty - builtin_js.n4ts:168, isPrototypeOf - builtin_js.n4ts:177,
+propertyIsEnumerable - builtin_js.n4ts:185,
+n4type - builtin_n4.n4ts:317, name - builtin_n4.n4ts:299,
+toString - builtin_n4.n4ts:311, value - builtin_n4.n4ts:305
 --- */
 var s : string = us.value;
 /* XPECT scopeWithPosition at 'red.|name' ---
-n4type - builtin_n4.n4ts:320, name - builtin_n4.n4ts:302,
-toString - builtin_n4.n4ts:314, value - builtin_n4.n4ts:308
+__proto__ - builtin_js.n4ts:44, constructor - builtin_js.n4ts:140, toLocaleString - builtin_js.n4ts:153,
+valueOf - builtin_js.n4ts:159, hasOwnProperty - builtin_js.n4ts:168, isPrototypeOf - builtin_js.n4ts:177,
+propertyIsEnumerable - builtin_js.n4ts:185,
+n4type - builtin_n4.n4ts:317, name - builtin_n4.n4ts:299,
+toString - builtin_n4.n4ts:311, value - builtin_n4.n4ts:305
 --- */
 var s2 : string = red.name;
 /* XPECT scopeWithPosition at 'DE.|value' ---
-n4type - builtin_n4.n4ts:320, name - builtin_n4.n4ts:302,
-toString - builtin_n4.n4ts:314, value - builtin_n4.n4ts:308
+__proto__ - builtin_js.n4ts:44, constructor - builtin_js.n4ts:140, toLocaleString - builtin_js.n4ts:153,
+valueOf - builtin_js.n4ts:159, hasOwnProperty - builtin_js.n4ts:168, isPrototypeOf - builtin_js.n4ts:177,
+propertyIsEnumerable - builtin_js.n4ts:185,
+n4type - builtin_n4.n4ts:317, name - builtin_n4.n4ts:299,
+toString - builtin_n4.n4ts:311, value - builtin_n4.n4ts:305
 --- */
 var s3 : string = Country.DE.value

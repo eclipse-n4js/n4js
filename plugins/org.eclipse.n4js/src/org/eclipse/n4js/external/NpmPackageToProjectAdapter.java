@@ -39,6 +39,7 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.resource.ManifestMerger;
 import org.eclipse.n4js.n4mf.utils.N4MFConstants;
+import org.eclipse.n4js.utils.LightweightException;
 import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.Version;
@@ -49,6 +50,7 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
@@ -62,6 +64,9 @@ import com.google.inject.Provider;
 public class NpmPackageToProjectAdapter {
 
 	private static Logger LOGGER = Logger.getLogger(NpmPackageToProjectAdapter.class);
+
+	@Inject
+	private NpmLogger logger;
 
 	@Inject
 	private N4JSNpmManifestContentProvider manifestContentProvider;
@@ -133,7 +138,6 @@ public class NpmPackageToProjectAdapter {
 		for (File packageRoot : packageRoots) {
 			try {
 				PackageJson packageJson = getPackageJson(packageRoot);
-				String mainModule = computeMainModule(packageRoot);
 
 				final File manifest = new File(packageRoot, N4MF_MANIFEST);
 				// looks like n4js project skip adaptation
@@ -152,6 +156,7 @@ public class NpmPackageToProjectAdapter {
 					manifest.createNewFile();
 
 					try {
+						String mainModule = computeMainModule(packageRoot);
 						generateManifestContent(packageRoot, packageJson, mainModule, manifest);
 						if (!names.remove(packageRoot.getName())) {
 							throw new IOException("Unexpected error occurred while adapting '" + packageRoot.getName()
@@ -169,7 +174,7 @@ public class NpmPackageToProjectAdapter {
 					}
 				}
 
-				if (n4jsdsFolder != null) {
+				if (n4jsdsFolder != null && adaptedProjects.contains(packageRoot)) {
 					addTypeDefinitions(packageRoot, packageJson, manifest, n4jsdsFolder);
 				}
 			} catch (final Exception e) {
@@ -282,16 +287,16 @@ public class NpmPackageToProjectAdapter {
 
 		Version closestMatchingVersion = Version.findClosestMatching(availableTypeDefinitionsVersions, packageVersion);
 		if (Version.MISSING.equals(closestMatchingVersion)) {
-			LOGGER.info("No proper versions can be found for '" + packageName + "' npm package.");
-			LOGGER.info("Desired version was: " + packageVersion + ".");
+			logger.logInfo("Type definitions for '" + packageName + "' npm package in version " + packageVersion
+					+ " are not available.");
 			if (availableTypeDefinitionsVersions.isEmpty()) {
-				LOGGER.info("No versions were available.");
+				logger.logInfo("Cannot find any type definitions for  '" + packageName + "'.");
 			} else if (1 == availableTypeDefinitionsVersions.size()) {
 				final Version head = availableTypeDefinitionsVersions.iterator().next();
-				LOGGER.info("The following version was available for '" + packageName + "': " + head + ".");
+				logger.logInfo("Type definitions are available only in version : " + head + ".");
 			} else {
 				final String versions = Iterables.toString(availableTypeDefinitionsVersions);
-				LOGGER.info("The following versions were available for '" + packageName + "': " + versions + ".");
+				logger.logInfo("Type definitions are available only in versions : " + versions + ".");
 			}
 			return statusHelper.OK();
 		}
@@ -441,6 +446,11 @@ public class NpmPackageToProjectAdapter {
 			return mainModule;
 
 		File main = new File(mainModule);
+
+		if (!main.isFile()) {
+			throw Exceptions
+					.sneakyThrow(new LightweightException("Cannot locate main module with path " + main.toString()));
+		}
 
 		Path packagePath = projectFolder.toPath();
 		Path packageMainModulePath = main.toPath();

@@ -93,7 +93,7 @@ import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
+import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.isDestructuringAssignment

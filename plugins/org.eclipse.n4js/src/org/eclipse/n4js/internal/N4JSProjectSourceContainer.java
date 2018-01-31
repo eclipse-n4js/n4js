@@ -14,15 +14,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.Strings;
 
 import com.google.common.base.Optional;
-
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
 
 /**
  */
@@ -65,6 +64,9 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	public URI getLocation() {
 		List<String> segmentList = Strings.split(getRelativeLocation(), '/');
 		String[] segments = segmentList.toArray(new String[segmentList.size()]);
+		if (!URI.validSegments(segments)) {
+			return null;
+		}
 		URI result = project.getLocation().appendSegments(segments);
 		return result;
 	}

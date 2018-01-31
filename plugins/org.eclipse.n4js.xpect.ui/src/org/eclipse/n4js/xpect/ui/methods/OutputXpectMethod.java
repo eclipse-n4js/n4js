@@ -18,6 +18,7 @@ import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
+import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5GeneratorHelper;
 import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.StringExpectation;
@@ -48,6 +49,9 @@ public class OutputXpectMethod {
 
 	@Inject
 	private XpectN4JSES5TranspilerHelper xpectN4JSES5TranpilerHelper;
+
+	@Inject
+	private XpectN4JSES5GeneratorHelper xpectGenerator;
 
 	/**
 	 * Compile provided then execute and compare execution output to provided expectation. During compilation
@@ -173,8 +177,8 @@ public class OutputXpectMethod {
 		Script root = (Script) resource.getContents().get(0);
 		StringBuilder compileResultSb = new StringBuilder();
 		StringBuilder errorResultSb = new StringBuilder();
-		if (xpectN4JSES5TranpilerHelper.isCompilable(resource, errorResultSb)) {
-			compileResultSb.append(xpectN4JSES5TranpilerHelper.compile(root, GeneratorOption.MAX_TRANSPILE_OPTIONS,
+		if (xpectGenerator.isCompilable(resource, errorResultSb)) {
+			compileResultSb.append(xpectGenerator.compile(root, GeneratorOption.MAX_TRANSPILE_OPTIONS,
 					replaceQuotes));
 		}
 		String compileResult = "";

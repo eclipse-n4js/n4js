@@ -2684,16 +2684,15 @@ console.log(us.toString()); // --> 840
 
 [source,xtext]
 ----
-N4EnumDeclaration:
-        annotations+=Annotation*
-        (accessModifier=N4JSTypeAccessModifier)?
-        'enum' name=IDENTIFIER
-        '{'
-            literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
-        '}' ;
+N4EnumDeclaration <Yield>:
+	=>(	{N4EnumDeclaration}
+		(declaredModifiers+=N4Modifier)*
+		'enum' name=BindingIdentifier<Yield>? )
+	'{'
+		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
+	'}';
 
-N4EnumLiteral:
-        name=IDENTIFIER (':' value=StringLiteral)?
+N4EnumLiteral: name=IdentifierName (':' value=STRING)?;
 ----
 
 [.language-n4js]
@@ -2713,7 +2712,14 @@ For a given enumeration declaration $E$ with literals $L$, the following type ru
 +
 [math]
 ++++
-\inferSup{\tee type\{E\} \subtype type\{N4Enum\}}{}
+\inferSup{\tee E \subtype N4Enum}{}
+++++
++
+which itself is a subtype of `Object`:
++
+[math]
+++++
+\infer{N4Enum \subtype Object}{}
 ++++
 2.  Every literal $L$ of an enumeration $E$ is
 of the type of the enumeration:
@@ -2722,28 +2728,20 @@ of the type of the enumeration:
 ++++
 \infer{\tee L: E}{L \in E.literals}
 ++++
-That means that every literal is a subtype of `N4Enum`:
-+
+
+This means that every literal is a subtype of `N4Enum` and `Object`:
 [math]
 ++++
-\infer{\tee L \subtype \type{N4Enum} }{L \in E.literals}
-++++
-3.  Since the implementation of enumerations may vary per runtime, enum
-literals are not objects:
-+
-[math]
-++++
-\infer{\tee L \notsubtype \type{Object}}{L \in E.literals}
+\infer{L \subtype N4Enum \land L \subtype Object}{L \in E.literals}
 ++++
 
-The base enumeration type `N4Enum` is defined as follows footnote:[This is pseudo N4JS code as it is not possible to infer from `any` or define abstract static methods.]
-
+The base enumeration type `N4Enum` is defined as follows:
 [source,n4js]
 ----
 /**
  * Base class for all enumeration, literals are assumed to be static constant fields of concrete subclasses.
  */
-public object N4Enum extends any {
+public object N4Enum {
 
     /**
      * Returns the name of a concrete literal
@@ -2791,14 +2789,6 @@ public object N4Enum extends any {
 
 --
 
-Enums do not define a type hierarchy except that they are subtypes of `N4Enum`.
-In particular, $E \notsubtype Object$ for all enums.
-Still, enums could be used similarly to objects:
-
-* enum types could be used on the right hand side of the `instanceof` operator.
-* enum variables could be used with the `typeof` operator, returning the simple name of the enumaration.
-* enum variables used with the `+` operator will always be converted to `string`.
-* enum variables must not be used in a context in which a boolean or number type is expected.
 
 .Unique literal names
 [req,id=IDE-39,version=1]
@@ -2817,6 +2807,8 @@ Enum literals are singletons:
 ++++
 \forall e_1,e_2, \mu(e_1)=\mu(e_2)=\type{N4EnumLiteral} \land \tee e_1 = \tee e_2: e_1==e_2 \iff e_1===e_2
 ++++
+--
+
 
 .Enumeration List
 [example]
@@ -2839,10 +2831,10 @@ var c: Color = colors.get();
 ----
 
 ====
---
+
+
 
 === String-Based Enums
-
 
 
 In current web standards cite:[W3C:Steen:14:XL], definitions of enumerations are often given in webIDL syntax.

@@ -47,7 +47,7 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.XtextResource
 
 import static org.eclipse.n4js.ui.organize.imports.XtextResourceUtils.*
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.EXPORT_DEFAULT_NAME
+import static org.eclipse.n4js.N4JSLanguageConstants.EXPORT_DEFAULT_NAME
 
 /**
  * Computes imports required by the given resource. In principle removes unused imports, adds missing imports, sorts imports - all in one go.

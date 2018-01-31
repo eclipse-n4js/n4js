@@ -20,7 +20,7 @@ import org.eclipse.n4js.n4JS.MethodDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -237,8 +237,6 @@ class FormalParameterTrafoTest extends AbstractTranspilerTest {
 		}
 
 	}
-
-
 
 	@Test
 	def void testVargs_InFunctionExpression_InsideAFunctionExpression_InsideOfMethod() {

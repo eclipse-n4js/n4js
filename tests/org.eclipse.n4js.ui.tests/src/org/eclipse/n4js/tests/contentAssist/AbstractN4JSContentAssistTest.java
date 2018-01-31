@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -108,7 +108,7 @@ public abstract class AbstractN4JSContentAssistTest extends Assert implements Re
 	@SuppressWarnings("resource")
 	@BeforeClass
 	public static void createTestProject() throws Exception {
-		staticProject = ProjectUtils.createJSProject(PROJECT_NAME);
+		staticProject = ProjectTestsUtils.createJSProject(PROJECT_NAME);
 		IFolder path = staticProject.getFolder("src").getFolder("path");
 		path.create(true, true, null);
 		IFile libFile = path.getFile("Libs.n4js");
@@ -122,7 +122,7 @@ public abstract class AbstractN4JSContentAssistTest extends Assert implements Re
 		IFile testFile = path.getFile("Test.n4js");
 		testFile.create(new StringInputStream("", testFile.getCharset()), true, monitor());
 		addNature(staticProject, XtextProjectHelper.NATURE_ID);
-		ProjectUtils.waitForAutoBuild();
+		ProjectTestsUtils.waitForAutoBuild();
 	}
 
 	/***/
@@ -139,7 +139,7 @@ public abstract class AbstractN4JSContentAssistTest extends Assert implements Re
 		IProject javaProject = findJSProject(PROJECT_NAME);
 		if (javaProject == null || !javaProject.exists()) {
 			try {
-				demandCreateProject = ProjectUtils.createJSProject(PROJECT_NAME);
+				demandCreateProject = ProjectTestsUtils.createJSProject(PROJECT_NAME);
 				javaProject = findJSProject(PROJECT_NAME);
 			} catch (CoreException e) {
 				fail("Cannot create project due to: " + e.getMessage() + " / " + e);

@@ -27,14 +27,14 @@ export interface ModuleTest {
         let n4type = this.constructor.n4type,
             parts = n4type.fqn.split(".");
         parts.pop();
-        return System._nodeRequire.resolve(n4type.origin + "/" + parts.join("/"));
+        return System._nodeRequire.resolve(n4type.origin + "/src-gen/" + parts.join("/"));
     }
     
     /**
      * Returns the project root directory.
      */
     protected getPrjRootDir(): string {
-        return resolve(this.getThisModulePath(), ".."/* es-module-tests */, ".." /* origin */, ".." /* es */, ".." /* src-gen */, "..");
+        return resolve(this.getThisModulePath(), ".."/* es-module-tests */, ".." /* src-gen */, ".."/* project root*/);
     }
     
     /**
@@ -44,6 +44,7 @@ export interface ModuleTest {
         let parts = this.constructor.n4type.fqn.split(".");
         parts.pop();
         parts.pop();
+        console.log("?!? ModuleTest.getRunnerModuleOf :: " + parts.join("/")  + "/" + exampleId + "/run")
         return parts.join("/")  + "/" + exampleId + "/run";
     }
     
@@ -51,7 +52,7 @@ export interface ModuleTest {
      * Returns the origin-prefixed module id.
      */
     protected getRunnerModuleIdOf(exampleId: string): string {
-        return this.constructor.n4type.origin + "/" + this.getRunnerModuleOf(exampleId);
+        return this.constructor.n4type.origin + "/src-gen/" + this.getRunnerModuleOf(exampleId);
     }
 
     protected abstract getNodeExecArgs(exampleId: string): Array<string>;

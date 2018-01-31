@@ -16,12 +16,15 @@ import java.io.IOException;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import com.google.common.base.Strings;
 
 /**
  */
@@ -114,28 +117,48 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	}
 
 	static String runCaptureOut(String[] args) throws ExitCodeException, IOException {
-
-		boolean keepOutputForDebug = true;
-
+		boolean errors = true;
 		File errorFile = File.createTempFile("run_err", null);
 		File outputFile = File.createTempFile("run_out", null);
+		try {
+			boolean keepOutputForDebug = true;
 
-		if (!keepOutputForDebug) {
-			errorFile.deleteOnExit();
-			outputFile.deleteOnExit();
-		} else {
-			System.out.println("Errors: " + errorFile + "    Ouput: " + outputFile);
+			if (!keepOutputForDebug) {
+				errorFile.deleteOnExit();
+				outputFile.deleteOnExit();
+			} else {
+				System.out.println("Errors: " + errorFile + "    Ouput: " + outputFile);
+			}
+
+			setOutputfileSystemProperties(errorFile.getAbsolutePath(), outputFile.getAbsolutePath());
+
+			new N4jscBase().doMain(args);
+			errors = false;
+
+			// cleanup properties.
+			setOutputfileSystemProperties("", "");
+
+			// read the files, concat & return string.
+			return N4CliHelper.readLogfile(errorFile) + N4CliHelper.readLogfile(outputFile);
+		} finally {
+			if (errors) {
+				if (outputFile.canRead()) {
+					String readLogfile = N4CliHelper.readLogfile(outputFile);
+					if (!Strings.isNullOrEmpty(readLogfile))
+						System.out.println(readLogfile);
+				}
+				if (errorFile.canRead()) {
+					String readLogfile = N4CliHelper.readLogfile(errorFile);
+					if (!Strings.isNullOrEmpty(readLogfile))
+						System.out.println(readLogfile);
+				}
+			}
+
+			if (outputFile.exists())
+				FileUtils.deleteFileOrFolder(outputFile);
+			if (errorFile.exists())
+				FileUtils.deleteFileOrFolder(errorFile);
 		}
-
-		setOutputfileSystemProperties(errorFile.getAbsolutePath(), outputFile.getAbsolutePath());
-
-		new N4jscBase().doMain(args);
-
-		// cleanup properties.
-		setOutputfileSystemProperties("", "");
-
-		// read the files, concat & return string.
-		return N4CliHelper.readLogfile(errorFile) + N4CliHelper.readLogfile(outputFile);
 	}
 
 	/**
