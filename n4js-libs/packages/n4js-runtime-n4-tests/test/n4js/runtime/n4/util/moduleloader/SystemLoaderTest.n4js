@@ -17,7 +17,7 @@ interface SystemLoaderTest_ {
     // The loader instance being used for the tests;
     // needs to be on instance level due to the way mangelhaft calls on the test methods.
     protected loader = System;
-    protected testModulePath = TestPromise.n4type.origin + "/runtime/n4/util/moduleloader/modules/TestModule";
+    protected testModulePath = TestPromise.n4type.origin + "/src-gen/runtime/n4/util/moduleloader/modules/TestModule";
 
     @Before
     async reset(): void {
@@ -108,7 +108,7 @@ export public class CommonJS implements SystemLoaderTest {
         } else { // load this same module as common JS:
             let fqn = CommonJS.n4type.fqn,
                 index = fqn.lastIndexOf(".");
-            let modPath = CommonJS.n4type.origin + "/" + fqn.substring(0, index).replace(/\./g, "/");
+            let modPath = CommonJS.n4type.origin + "/src-gen/" + fqn.substring(0, index).replace(/\./g, "/");
             let mod = System._nodeRequire(modPath) as Object;
             return new (mod[fqn.substring(index + 1)] as constructor{N4Object})();
         }

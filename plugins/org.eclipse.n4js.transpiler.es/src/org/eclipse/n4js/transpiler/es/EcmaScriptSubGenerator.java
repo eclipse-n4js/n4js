@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.GeneratorOption;
@@ -62,7 +63,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		result.setCompiledFileSourceMapExtension("map");
 		final OutputConfiguration outCfg = new OutputConfiguration(COMPILER_ID);
 		outCfg.setDescription("N4JS to ECMAScript transpiler");
-		outCfg.setOutputDirectory(calculateOutputDirectory("src-gen", COMPILER_ID));
+		outCfg.setOutputDirectory(N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT);
 		outCfg.setOverrideExistingResources(true);
 		outCfg.setCreateOutputDirectory(true);
 		outCfg.setCleanUpDerivedResources(true);

@@ -16,6 +16,8 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ModuleSpecifierAdjustment
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -40,7 +42,6 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
@@ -52,8 +53,7 @@ import org.eclipse.n4js.transpiler.es.transform.internal.NamespaceImportAssignme
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
+import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
 import static org.eclipse.n4js.n4JS.EqualityOperator.*
@@ -68,7 +68,7 @@ import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 class ModuleWrappingTransformation extends Transformation {
 
 	@Inject
-	extension QualifiedNameComputer qnameComputer
+	private ResourceNameComputer resourceNameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
@@ -253,21 +253,11 @@ class ModuleWrappingTransformation extends Transformation {
 				val module = state.info.getImportedModule(elementIM);
 
 				// calculate names in output
-				val completeModuleSpecifier = module.completeModuleSpecifier;
+				val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module)
 
-				val fparName = "$_import_"+module.completeModuleSpecifierAsIdentifier;
+				val fparName = "$_import_" + resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module)
 
-				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
-
-				var actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
-					if(moduleSpecifierAdjustment.usePlainModuleSpecifier) {
-						moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
-					} else {
-						moduleSpecifierAdjustment.prefix + '/' + completeModuleSpecifier
-					}
-				} else {
-					completeModuleSpecifier
-				};
+				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier)
 
 				var moduleEntry = map.get( completeModuleSpecifier )
 				if( moduleEntry === null ) {
@@ -315,6 +305,31 @@ class ModuleWrappingTransformation extends Transformation {
 		}
 
 		return map;
+	}
+
+	private def String computeActualModuleSpecifier(TModule module, String completeModuleSpecifier) {
+		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
+
+		if (moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier)
+			return moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
+
+		var specifier = completeModuleSpecifier
+		val depProject = n4jsCore.findProject(module.eResource.URI).orNull
+		if (depProject !== null) {
+			val projectRelativeSegment = depProject.outputPath
+			val depLocation = depProject.locationPath
+			if (depLocation !== null) {
+				val depLocationString = depLocation.toString
+				val depProjecOutputPath = depProject.locationPath.resolve(projectRelativeSegment).normalize.toString
+				val depRelativeSpecifier = depProjecOutputPath.substring(depLocationString.length -
+					depProject.projectId.length)
+				specifier = depRelativeSpecifier + '/' + completeModuleSpecifier
+			}
+		}
+		if (moduleSpecifierAdjustment !== null)
+			return moduleSpecifierAdjustment.prefix + '/' + specifier
+
+		return specifier
 	}
 
 	/**
@@ -664,7 +679,7 @@ class ModuleWrappingTransformation extends Transformation {
 			System.registerDynamic([], true, function(require, exports, module) {
 				«cs»
 			});
-		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
+		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
 		'''
 	}
 
@@ -673,7 +688,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 		// (function(System) {
 		//     < ... statement ...>
-		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(module) : global.System);
+		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(module) : global.System);
 
 		val ret = _ExprStmnt( _CallExpr (
 			_Parenthesis(
@@ -689,7 +704,7 @@ class ModuleWrappingTransformation extends Transformation {
 					steFor_module._PropertyAccessExpr( steFor_exports )
 				),
 					/*     TRUE-case 		*/
-			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node/index') ).
+			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node/src-gen/index') ).
 			    _PropertyAccessExpr( steFor_System )._CallExpr( _IdentRef(steFor_require), _IdentRef(steFor_module) ),
 			    	/*     FALSE-case 		*/
 				_IdentRef( steFor_System )

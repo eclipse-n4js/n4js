@@ -27,13 +27,14 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
@@ -47,11 +48,6 @@ import com.google.common.base.Predicates;
  */
 public abstract class AbstractN4jscTest {
 
-	/**
-	 * name of sub-directory of the compiled result. Used to count files having this string as directory name on it's
-	 * {@link #assertFilesCompiledToES(int, String)}
-	 */
-	private static final String SUBGENERATOR_PATH = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
 	/** name of package containing the test resources */
@@ -100,10 +96,7 @@ public abstract class AbstractN4jscTest {
 	protected static File setupWorkspace(String testDataRoot, String testDataSet,
 			Predicate<String> n4jsLibrariesPredicate)
 			throws IOException {
-		File root = Files.createTempDirectory(testDataRoot + "_" + testDataSet + "_").toFile();
-		if (root == null || !root.exists()) {
-			throw new RuntimeException("Cannot create working directory;");
-		}
+		File root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_").toFile();
 
 		File wsp = new File(root, WSP);
 		File fixture = new File(testDataRoot, testDataSet);
@@ -183,8 +176,11 @@ public abstract class AbstractN4jscTest {
 	};
 
 	/**
+	 * Asserts number of files generated to the {@code JS} files. Delegates to {@link #countFilesCompiledToES(String)}
+	 * to find the JS files.
+	 *
 	 * @param expectedCompiledModuleCount
-	 *            expected number of compiled '.js' files in the {@value #SUBGENERATOR_PATH} folder.
+	 *            expected number of compiled '.js' files found in the tree where root is the provided folder.
 	 * @param workspaceRootPath
 	 *            subtree to search in passed as argument to {@link File}
 	 */
@@ -193,7 +189,9 @@ public abstract class AbstractN4jscTest {
 	}
 
 	/**
-	 * Counts the number of files ending in .js in the {@value #SUBGENERATOR_PATH} folder.
+	 * Counts the number of files ending in .js in the provided folder. Assumes original sources are in
+	 * {@link N4JSLanguageConstants#DEFAULT_PROJECT_SRC} and output in
+	 * {@link N4JSLanguageConstants#DEFAULT_PROJECT_OUTPUT}.
 	 *
 	 * @param workspaceRootPath
 	 *            the directory to recursively search
@@ -214,7 +212,7 @@ public abstract class AbstractN4jscTest {
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 
 					// skip src
-					if ("src".equals(dir.getFileName())) {
+					if (N4JSLanguageConstants.DEFAULT_PROJECT_SRC.equals(dir.getFileName())) {
 						return FileVisitResult.SKIP_SUBTREE;
 					}
 
@@ -228,12 +226,8 @@ public abstract class AbstractN4jscTest {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					if (file.getFileName().toString().endsWith(".js")) {
-						for (int j = 0; j < file.getNameCount() - 1; j++) {
-							if (SUBGENERATOR_PATH.equals(file.getName(j).toString())) {
-								counter.incrementAndGet();
-								return FileVisitResult.CONTINUE;
-							}
-						}
+						counter.incrementAndGet();
+						return FileVisitResult.CONTINUE;
 					}
 					return FileVisitResult.CONTINUE;
 				}
@@ -245,7 +239,7 @@ public abstract class AbstractN4jscTest {
 
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-					if (SUBGENERATOR_PATH.equals(dir.getFileName()))
+					if (N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT.equals(dir.getFileName()))
 						return FileVisitResult.SKIP_SIBLINGS;
 					return FileVisitResult.CONTINUE;
 				}

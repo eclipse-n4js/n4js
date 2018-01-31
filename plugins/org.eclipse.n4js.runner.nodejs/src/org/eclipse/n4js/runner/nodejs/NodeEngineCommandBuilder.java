@@ -16,12 +16,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -37,6 +42,8 @@ public class NodeEngineCommandBuilder {
 	/** Command line option to signal COMMON_JS */
 	private static final String CJS_COMMAND = "cjs";
 
+	private final static String NODE_PATH_SEP = File.pathSeparator;
+
 	@Inject
 	private Provider<NodeJsBinary> nodeJsBinary;
 
@@ -44,7 +51,7 @@ public class NodeEngineCommandBuilder {
 	 * Creates commands for calling Node.js on command line. Data wrapped in passed parameter is used to configure node
 	 * itself, and to generate file that will be executed by Node.
 	 */
-	public String[] createCmds(NodeRunOptions nodeRunOptions) throws IOException {
+	public String[] createCmds(NodeRunOptions nodeRunOptions, Path workDir) throws IOException {
 
 		final ArrayList<String> commands = new ArrayList<>();
 
@@ -58,12 +65,8 @@ public class NodeEngineCommandBuilder {
 			}
 		}
 
-		final StringBuilder elfData = getELFCode(nodeRunOptions.getInitModules(),
-				nodeRunOptions.getExecModule(), nodeRunOptions.getExecutionData());
-
-		final File elf = createTempFileFor(elfData.toString());
-
-		commands.add(elf.getCanonicalPath());
+		final String bootScript = generateBootCode(nodeRunOptions, workDir);
+		commands.add(bootScript);
 
 		if (nodeRunOptions.getSystemLoader() == SystemLoaderInfo.COMMON_JS) {
 			commands.add(CJS_COMMAND);
@@ -73,71 +76,95 @@ public class NodeEngineCommandBuilder {
 	}
 
 	/**
-	 * generates ELF code, according to N4JSDesign document, chap. 15 : Execution, section 15.2 N4JS Execution And
-	 * Linking File
+	 * Generates JS code to the this that will be configured with data for execution.
 	 *
-	 * @param list
-	 *            of runtime modules to be bootstrapped
-	 * @param entryPoint
-	 *            of the code to be executed
-	 * @param executionData
-	 *            that is expected by execution module
-	 * @return elf data in format for used JS engine
-	 */
-	private StringBuilder getELFCode(List<String> list, String entryPoint, String executionData) {
-		final StringBuilder elfCode = new StringBuilder();
-		elfCode.append(generateExecutionData(executionData)).append("\n");
-		elfCode.append(generateNativeLoad(entryPoint)).append("\n");
-		return elfCode;
-	}
-
-	/**
-	 * This is contract between concrete execution environment and run/test environment.
-	 */
-	private String generateExecutionData(String data) {
-		/*
-		 * In this form execution module needs to read prop '_executionData' from global scope (also would be good idea
-		 * to remove it). It would be possible that execution module exports function that takes this data as parameter
-		 * but then we need to change order of things in ELF file, that is execution module has to be loaded, its export
-		 * function assigned to variable and called with this data below.
-		 *
-		 * keep it in sync
-		 */
-		return "global.$executionData = " + data + ";";
-	}
-
-	/**
-	 * Sets native load for execution module (e.g. entry point to the bootstrap code).
+	 * This method uses provided working dir to transform it into nodejs-project-like structure, to allow proper
+	 * configuration of the executions. In particular:
 	 *
-	 * @param moduleName
-	 *            value for native load pointing to the bootstrap code entry point
-	 * @return native code
-	 */
-	private String generateNativeLoad(String moduleName) {
-		if (Strings.isNullOrEmpty(moduleName))
-			throw new RuntimeException("Execution module not provided.");
-		return "require('" + moduleName + "');";
-	}
-
-	/**
-	 * Writes a file to a temporary file, returning the file path.
+	 * <pre>
+	 * <ol>
+	 * <li> add node module to the folder</li>
+	 * <li> generate startup script</li>
+	 * <li> return path to the startup script</li>
+	 * </ol>
+	 * </pre>
 	 *
-	 * @param content
-	 *            file content
-	 * @return file
+	 * Note that some configuration will be performed by the startup script when it is executed.
+	 *
+	 * @param nodeRunOptions
+	 *            options used to generate boot code
+	 * @return path to the script that has to be called by node
+	 * @throws IOException
+	 *             for IO operations
 	 */
-	private static File createTempFileFor(String content) throws IOException {
-		final File temp = File.createTempFile("n4jsnode", "." + N4JSGlobals.JS_FILE_EXTENSION);
-		final BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
-
-		try {
-			writer.write(content);
-		} finally {
-			writer.close();
+	private String generateBootCode(NodeRunOptions nodeRunOptions, Path workDir) throws IOException {
+		// 1 generate fake node project
+		Path projectRootPath = workDir;
+		// 2 create 'node_modules' to the #1
+		final File node_modules = new File(projectRootPath.toFile(), "node_modules");
+		node_modules.mkdirs();
+		addNodeModulesDeleteHook(node_modules);
+		// 3 generate elf script in #1
+		final File elf = Files.createTempFile(projectRootPath, "N4JSNodeELF",
+				"." + N4JSGlobals.JS_FILE_EXTENSION).toFile();
+		elf.deleteOnExit();
+		String[] paths = nodeRunOptions.getCoreProjectPaths().split(NODE_PATH_SEP);
+		List<Pair<String, String>> path2name = new ArrayList<>();
+		for (int i = 0; i < paths.length; i++) {
+			String string = paths[i];
+			Path p = Paths.get(string);
+			path2name.add(new Pair<>(string, p.getFileName().toString()));
 		}
+		// early throw, to prevent debugging runtime processes
+		String execModule = nodeRunOptions.getExecModule();
+		if (Strings.isNullOrEmpty(execModule))
+			throw new RuntimeException("Execution module not provided.");
+		List<String> initModules = nodeRunOptions.getInitModules();
+		// TODO-1932 redesign of the runners and testers pending
+		// some runtime environments (the N4JS projects) bootstrap execution
+		// is against Runners/Testers design. We want those to fix those runtime
+		// projects, but also there was redesign of the whole concept pending.
+		// For the time being we just patch data generated by the IDE to work
+		// with the user projects.
+		initModules = Arrays.asList();
+		String eflCode = NodeBootScriptTemplate.getRunScriptCore(
+				node_modules.getCanonicalPath(),
+				nodeRunOptions.getExecutionData(),
+				initModules,
+				execModule,
+				path2name);
+		writeContentToFile(eflCode, elf);
 
-		temp.deleteOnExit();
-
-		return temp;
+		return elf.getAbsolutePath();
 	}
+
+	/** Writes given content to a given file. */
+	private static void writeContentToFile(String content, File file) throws IOException {
+		try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file));) {
+			writer.write(content);
+		}
+	}
+
+	/**
+	 * Since {@code node_modules} are linked at runtime, the links don't exist yet. We add shutdown hook to schedule
+	 * them for deletion, after JS was executed.
+	 *
+	 * Since we assume that contents are symlinks to other locations, we are not walking deep, just schedule to delete
+	 * immediate children.
+	 */
+	private static void addNodeModulesDeleteHook(File file) {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				file.deleteOnExit();
+				if (file.isDirectory()) {
+					File[] childFildes = file.listFiles();
+					for (int i = 0; i < childFildes.length; i++) {
+						childFildes[i].deleteOnExit();
+					}
+				}
+			}
+		});
+	}
+
 }

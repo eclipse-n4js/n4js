@@ -40,16 +40,17 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	File workspace;
 
 	private final static String EXPECTED_TEST_CATALOG = "" +
-			"[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]}" +
-			",{\"origin\":\"DemoTest\",\"fqn\":\"BazTest/OsInspectorTest3\",\"testMethods\":[\"testIgnored\"]}" +
-			",{\"origin\":\"DemoTest\",\"fqn\":\"FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]}" +
-			",{\"origin\":\"DemoTest\",\"fqn\":\"subfolder/SubFolderModule/SubFolderTest\",\"testMethods\":[\"testPass\"]}"
+			"[{\"origin\":\"DemoTest/src-gen\",\"fqn\":\"BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]}" +
+			",{\"origin\":\"DemoTest/src-gen\",\"fqn\":\"BazTest/OsInspectorTest3\",\"testMethods\":[\"testIgnored\"]}"
 			+
-			",{\"origin\":\"SysProjectA\",\"fqn\":\"T/T\",\"testMethods\":[\"t\"]}" +
-			",{\"origin\":\"TestProjectA\",\"fqn\":\"A/A\",\"testMethods\":[\"a\"]}" +
-			",{\"origin\":\"TestProjectA\",\"fqn\":\"B/B\",\"testMethods\":[\"b1\",\"b2\"]}" +
-			",{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]}" +
-			",{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
+			",{\"origin\":\"DemoTest/src-gen\",\"fqn\":\"FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]}" +
+			",{\"origin\":\"DemoTest/src-gen\",\"fqn\":\"subfolder/SubFolderModule/SubFolderTest\",\"testMethods\":[\"testPass\"]}"
+			+
+			",{\"origin\":\"SysProjectA/src-gen\",\"fqn\":\"T/T\",\"testMethods\":[\"t\"]}" +
+			",{\"origin\":\"TestProjectA/src-gen\",\"fqn\":\"A/A\",\"testMethods\":[\"a\"]}" +
+			",{\"origin\":\"TestProjectA/src-gen\",\"fqn\":\"B/B\",\"testMethods\":[\"b1\",\"b2\"]}" +
+			",{\"origin\":\"TestProjectB/src-gen\",\"fqn\":\"CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]}" +
+			",{\"origin\":\"TestProjectB/src-gen\",\"fqn\":\"CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
 
 	private static Collection<String> REQUIRED_LIBS = ImmutableSet.<String> builder()
 			.add(N4JSGlobals.MANGELHAFT)

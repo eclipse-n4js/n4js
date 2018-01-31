@@ -11,7 +11,6 @@
 package org.eclipse.n4js;
 
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 import org.eclipse.xtext.validation.Issue;
