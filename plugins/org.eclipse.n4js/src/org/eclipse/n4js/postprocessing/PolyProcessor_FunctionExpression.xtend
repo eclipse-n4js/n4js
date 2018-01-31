@@ -267,16 +267,18 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			cache.storeType(fparAST, fparTw);
 		}
 		// store type of funExpr in cache ...
-		tweakReturnTypeOfSingleExpressionArrowFunction(G, cache, funExpr, resultSolved); // note: this requires the types of the fpars to be in the cache
+		if (funExpr instanceof ArrowFunction) {
+			tweakReturnTypeOfSingleExpressionArrowFunction(G, cache, funExpr, resultSolved); // note: requires types of fpars to be in cache!
+		}
 		cache.storeType(funExpr, resultSolved);
 	}
 
 	/**
 	 * Handling of a very specific special case of single-expression arrow functions.
 	 * <p>
-	 * If the given function expression is a single-expression arrow function, this method changes the return type of
-	 * the given function type reference from non-void to void if the non-void return type would lead to a type error
-	 * later on (for details see code of this method).
+	 * If the given arrow function is a single-expression arrow function, this method changes the return type of the
+	 * given function type reference from non-void to void if the non-void return type would lead to a type error later
+	 * on (for details see code of this method).
 	 * <p>
 	 * This tweak is only required because our poor man's return type inferencer in the types builder infers a wrong
 	 * non-void return type in some cases, which is corrected in this method.
@@ -289,58 +291,57 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	 * </pre>
 	 */
 	def private void tweakReturnTypeOfSingleExpressionArrowFunction(RuleEnvironment G, ASTMetaInfoCache cache,
-		FunctionExpression funExpr, FunctionTypeExprOrRef funExprTypeRef
+		ArrowFunction arrFun, FunctionTypeExprOrRef arrFunTypeRef
 	) {
-		if (funExpr instanceof ArrowFunction) {
-			if (funExpr.isSingleExprImplicitReturn) {
-				log(0, "===START of special handling of single-expression arrow function");
-				// 1) process funExpr's body, which was postponed according to ASTProcessor#isPostponedNode(EObject)
-				// Rationale: the body of a single-expression arrow function isn't a true block, so we do not have to
-				//            postpone it AND we need its types in the next step.
-				val block = cache.postponedSubTrees.last;
-				if (block !== funExpr.body) {
-					throw new IllegalStateException();
-				}
-				cache.postponedSubTrees.remove(block);
-				astProcessor.processSubtree(G, block, cache, 1);
-				// 2) adjust funExpr's return type stored in funExprTypeRef (if required)
-				var didTweakReturnType = false;
-				val expr = funExpr.getSingleExpression();
-				val exprTypeRef = cache.getType(expr).value; // must now be in cache, because we just processed node's body
-				if (TypeUtils.isVoid(exprTypeRef)) {
-					// the actual type of 'expr' is void
-					if (funExprTypeRef instanceof FunctionTypeExpression) {
-						if (!TypeUtils.isVoid(funExprTypeRef.returnTypeRef)) {
-							// the return type of the single-expression arrow function 'funExpr' is *not* void
-							// --> this would lead to a type error in N4JSTypeValidation, which we want to fix now
-							//     in case the outer type expectation for the containing arrow function has a
-							//     return type of 'void' OR there is no outer type expectation at all
-							val outerTypeExpectation = expectedTypeForArrowFunction(G, funExpr);
-							val outerReturnTypeExpectation = outerTypeExpectation?.returnTypeRef;
-							if (outerTypeExpectation === null
-								|| (outerReturnTypeExpectation !== null && TypeUtils.isVoid(outerReturnTypeExpectation))) {
-								// fix the future type error by changing the return type of the containing arrow function
-								// from non-void to void
-								if (isDEBUG_LOG) {
-									log(1, "tweaking return type from " + funExprTypeRef.returnTypeRef?.typeRefAsString + " to void");
-								}
-								EcoreUtilN4.doWithDeliver(false, [
-									funExprTypeRef.returnTypeRef = G.voidTypeRef;
-								], funExprTypeRef);
-								if (isDEBUG_LOG) {
-									log(1, "tweaked type of arrow function is: " + funExprTypeRef.typeRefAsString);
-								}
-								didTweakReturnType = true;
-							}
+		if (!arrFun.isSingleExprImplicitReturn) {
+			return; // not applicable
+		}
+		log(0, "===START of special handling of single-expression arrow function");
+		// Step 1) process arrFun's body, which was postponed earlier according to ASTProcessor#isPostponedNode(EObject)
+		// Rationale: the body of a single-expression arrow function isn't a true block, so we do not have to
+		//            postpone it AND we need its types in the next step.
+		val block = cache.postponedSubTrees.last;
+		if (block !== arrFun.body) {
+			throw new IllegalStateException();
+		}
+		cache.postponedSubTrees.remove(block);
+		astProcessor.processSubtree(G, block, cache, 1);
+		// Step 2) adjust arrFun's return type stored in arrFunTypeRef (if required)
+		var didTweakReturnType = false;
+		val expr = arrFun.getSingleExpression();
+		val exprTypeRef = cache.getType(expr).value; // must now be in cache, because we just processed arrFun's body
+		if (TypeUtils.isVoid(exprTypeRef)) {
+			// the actual type of 'expr' is void
+			if (arrFunTypeRef instanceof FunctionTypeExpression) {
+				if (!TypeUtils.isVoid(arrFunTypeRef.returnTypeRef)) {
+					// the return type of the single-expression arrow function 'arrFun' is *not* void
+					// --> this would lead to a type error in N4JSTypeValidation, which we want to fix now
+					//     in case the outer type expectation for the containing arrow function has a
+					//     return type of 'void' OR there is no outer type expectation at all
+					val outerTypeExpectation = expectedTypeForArrowFunction(G, arrFun);
+					val outerReturnTypeExpectation = outerTypeExpectation?.returnTypeRef;
+					if (outerTypeExpectation === null
+						|| (outerReturnTypeExpectation !== null && TypeUtils.isVoid(outerReturnTypeExpectation))) {
+						// fix the future type error by changing the return type of the containing arrow function
+						// from non-void to void
+						if (isDEBUG_LOG) {
+							log(1, "tweaking return type from " + arrFunTypeRef.returnTypeRef?.typeRefAsString + " to void");
 						}
+						EcoreUtilN4.doWithDeliver(false, [
+							arrFunTypeRef.returnTypeRef = G.voidTypeRef;
+						], arrFunTypeRef);
+						if (isDEBUG_LOG) {
+							log(1, "tweaked type of arrow function is: " + arrFunTypeRef.typeRefAsString);
+						}
+						didTweakReturnType = true;
 					}
 				}
-				if(!didTweakReturnType) {
-					log(1, "tweaking of return type not required");
-				}
-				log(0, "===END of special handling of single-expression arrow function");
 			}
 		}
+		if(!didTweakReturnType) {
+			log(1, "tweaking of return type not required");
+		}
+		log(0, "===END of special handling of single-expression arrow function");
 	}
 
 	/**
