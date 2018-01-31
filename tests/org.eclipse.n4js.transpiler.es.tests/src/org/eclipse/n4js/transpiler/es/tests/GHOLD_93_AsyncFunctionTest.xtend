@@ -97,12 +97,7 @@ class GHOLD_93_AsyncFunctionTest extends AbstractTranspilerTest {
 		val methodRef_IM = (bindCall_IM.target as ParameterizedPropertyAccessExpression_IM);
 		assertEquals("bind", methodRef_IM.rewiredTarget.name )
 
-
-
-
 	}
-
-
 
 	@Test
 	def void test_Compile() throws Throwable{

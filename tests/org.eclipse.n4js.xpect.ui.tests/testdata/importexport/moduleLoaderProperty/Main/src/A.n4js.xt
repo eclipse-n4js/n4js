@@ -64,9 +64,9 @@ C1, C2, C3, C4;
 
 /* XPECT compileResultContains ---
 System.register([
-	'@@cjs/Lib_cjs/M_cjs',
-	'Lib_default/M_default',
-	'Lib_n4js/M_n4js',
+	'@@cjs/Lib_cjs/src-gen/M_cjs',
+	'Lib_default/src-gen/M_default',
+	'Lib_n4js/src-gen/M_n4js',
 	'@node/M_node'
 ],
 --- */

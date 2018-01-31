@@ -46,9 +46,7 @@ import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
 import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScope
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4jsx.ReactHelper
-import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
@@ -72,6 +70,7 @@ import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.EObjectDescriptionHelper
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.FilteringScope
@@ -130,8 +129,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject extension SourceElementExtensions
 
-	@Inject extension ProjectUtils;
-
+	@Inject EObjectDescriptionHelper descriptionsHelper;
+	
 	@Inject extension ReactHelper;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
@@ -146,7 +145,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject private VersionHelper versionHelper;
 
-	@Inject private QualifiedNameComputer qualifiedNameComputer;
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -313,7 +311,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		// filter out clashing module name (can be main module with the same name but in different project)
 		return new FilteringScope(projectImportEnabledScope, [
-			if (it === null) false else !it.isDescriptionOfModuleWith(importDeclaration);
+			if (it === null) false else !descriptionsHelper.isDescriptionOfModuleWith(it, importDeclaration);
 		]);
 	}
 
@@ -570,7 +568,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			reference === N4JSPackage.Literals.IDENTIFIER_REF__ID
 		) {
 			val int contextVersion = versionHelper.computeMaximumVersion(context);
-			return new N4IDLVersionAwareScope(scope, contextVersion, qualifiedNameComputer);
+			return new N4IDLVersionAwareScope(scope, contextVersion);
 		}
 
 		return scope;

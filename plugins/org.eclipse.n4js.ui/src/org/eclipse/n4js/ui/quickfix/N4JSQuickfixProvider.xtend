@@ -62,7 +62,7 @@ import org.eclipse.n4js.ui.utils.UIUtils
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext

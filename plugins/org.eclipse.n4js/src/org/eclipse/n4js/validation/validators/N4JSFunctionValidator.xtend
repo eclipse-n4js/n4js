@@ -55,7 +55,7 @@ import org.eclipse.n4js.utils.nodemodel.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -67,7 +67,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
+import static org.eclipse.n4js.N4JSLanguageConstants.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
 import static org.eclipse.xtext.util.Strings.toFirstUpper
 

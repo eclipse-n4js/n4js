@@ -12,8 +12,6 @@ package org.eclipse.n4js.hlc.tests.jar;
 
 import java.io.File;
 
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
-
 /**
  * Constants for parameters used during testing.
  */
@@ -59,9 +57,5 @@ public class HlcTestingConstants {
 	 * Absolute path of the {@code n4jsc.jar}. Default in cases where {@link #N4_N4JSC_JAR_ENV} is not given.
 	 */
 	static final String N4JSC_PATH = new File(TARGET_FOLDER + N4JSC_JAR).getAbsolutePath();
-	/**
-	 * Value to use for {@link #N4_JSFORMAT_ENV} environment variable.
-	 */
-	static final String N4_JSFORMAT_VALUE = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 
 }

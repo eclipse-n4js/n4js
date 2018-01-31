@@ -238,7 +238,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	/**  */
 	@Test
 	public void testEnums_normal_existing_EnumSB() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_AT_IDE_1510_Enums_normal_existing_EnumSB.n4js")));
+		String out = runAndCaptureOutput(
+				runArgs(fileToExecute_direct("Exec_AT_IDE_1510_Enums_normal_existing_EnumSB.n4js")));
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined" + "\n" +
 				"OK: holds not undefined" + "\n" +
@@ -263,7 +264,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	/**  */
 	@Test
 	public void testInterfaces_provided_get() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_get.n4js")));
+		String out = runAndCaptureOutput(
+				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_get.n4js")));
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined";
 		N4CliHelper.assertExpectedOutput(expectedString, out);
@@ -282,7 +284,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	/**  */
 	@Test
 	public void testInterfaces_provided_method() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_method.n4js")));
+		String out = runAndCaptureOutput(
+				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_method.n4js")));
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined";
 		N4CliHelper.assertExpectedOutput(expectedString, out);
@@ -300,7 +303,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	/**  */
 	@Test
 	public void testInterfaces_provided_set() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_set.n4js")));
+		String out = runAndCaptureOutput(
+				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_set.n4js")));
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 		N4CliHelper.assertExpectedOutput(expectedString, out);
 	}
@@ -317,7 +321,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	/**  */
 	@Test
 	public void testInterfaces_static_method() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_method.n4js")));
+		String out = runAndCaptureOutput(
+				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_method.n4js")));
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined";
 		N4CliHelper.assertExpectedOutput(expectedString, out);
@@ -399,7 +404,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	/**  */
 	@Test
 	public void testSubclass_missing_inherited() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_routing("Exec_AT_IDE-1510_Subclass_missing_inherited.n4js")));
+		String out = runAndCaptureOutput(
+				runArgs(fileToExecute_routing("Exec_AT_IDE-1510_Subclass_missing_inherited.n4js")));
 		String expectedString = "Loaded Implementation one.x.impl::p.StubRoute.n4js";
 		N4CliHelper.assertExpectedOutput(expectedString, out);
 	}
@@ -407,7 +413,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	/** */
 	@Test
 	public void testSubclass_normal_inherited() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_routing("Exec_AT_IDE-1510_Subclass_normal_inherited.n4js")));
+		String out = runAndCaptureOutput(
+				runArgs(fileToExecute_routing("Exec_AT_IDE-1510_Subclass_normal_inherited.n4js")));
 		String expectedString = "Loaded Implementation one.x.impl::p.StubRoute.n4js";
 		N4CliHelper.assertExpectedOutput(expectedString, out);
 	}

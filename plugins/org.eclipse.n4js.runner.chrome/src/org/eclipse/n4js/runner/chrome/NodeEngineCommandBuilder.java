@@ -45,11 +45,6 @@ public class NodeEngineCommandBuilder {
 
 		commands.add(nodeJsBinary.get().getBinaryAbsolutePath());
 
-		// brute force harmony
-		// DISABLED, because 1) it is no longer required, and 2) it caused problems in nodejs 6.5.0
-		// for our async/await due to a bug in v8, see https://bugs.chromium.org/p/v8/issues/detail?id=5322
-		// commands.add("--harmony");
-
 		// allow user flags
 		final String nodeOptions = System.getProperty(NODE_OPTIONS);
 		if (nodeOptions != null) {

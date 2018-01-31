@@ -12,7 +12,6 @@ package org.eclipse.n4js.n4idl.scoping
 
 import java.util.Objects
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TVersionable
 import org.eclipse.xtext.naming.QualifiedName
@@ -26,7 +25,6 @@ class N4IDLVersionAwareScope implements IScope {
 
 	private final IScope delegate;
 	private final N4IDLVersionableFilter filter;
-	private final QualifiedNameComputer qualifiedNameComputer
 
 	/**
 	 * Creates a new instance that filters the elements from the given delegate scope using the given context version.
@@ -36,15 +34,13 @@ class N4IDLVersionAwareScope implements IScope {
 	 * @param contextVersion
 	 * 			  the context version to consider
 	 * @param qualifiedNameComputer
-	 * 			.. the QualifiedNameComputer implementatio to use
+	 * 			.. the QualifiedNameComputer implementation to use
 	 */
-	new(IScope delegate, int contextVersion, QualifiedNameComputer qualifiedNameComputer) {
+	new(IScope delegate, int contextVersion) {
 		if (contextVersion <= 0)
 			throw new IllegalArgumentException("Context version must be a positive integer");
 		this.delegate = Objects.requireNonNull(delegate);
 		this.filter = new N4IDLVersionableFilter(contextVersion);
-
-		this.qualifiedNameComputer = qualifiedNameComputer;
 	}
 
 	override getAllElements() {

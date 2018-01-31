@@ -24,7 +24,7 @@
         return json;
     }
 
-    var lib_run = require("n4js-node/run");
+    var lib_run = require("n4js-node/src-gen/run.js");
 
     var execData = global.$executionData;
     if (execData) {
@@ -33,7 +33,7 @@
             "ideExecData": execData,
             "test-catalog": tryJSON(execData.testTree),
             "test-mode": true,
-            "main": "org.eclipse.n4js.mangelhaft.runner.ide/org/eclipse/n4js/mangelhaft/runner/ide/IDENodeTestRunner"
+            "main": "org.eclipse.n4js.mangelhaft.runner.ide/src-gen/org/eclipse/n4js/mangelhaft/runner/ide/IDENodeTestRunner"
         }, true /* exitOnError */);
     } else {
         console.warn("No $executionData given.");

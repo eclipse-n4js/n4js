@@ -15,10 +15,10 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.InferredElements;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.utils.StaticPolyfillHelper;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
 
@@ -35,7 +35,7 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 	private InferredElements inferredElements;
 
 	@Inject
-	private ProjectUtils projectUtils;
+	private StaticPolyfillHelper staticPolyfillHelper;
 
 	@Override
 	protected void doAdd(EObject primaryTarget, TargetURIs targetURIsAddHere) {
@@ -66,7 +66,7 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 			if (object != null) {
 				super.doAdd(object, targetURIsAddHere);
 			}
-		}, projectUtils);
+		}, staticPolyfillHelper);
 	}
 
 }

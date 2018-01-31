@@ -42,9 +42,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
-import org.eclipse.n4js.naming.QualifiedNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -60,6 +60,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -95,7 +96,7 @@ public class TestDiscoveryHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private QualifiedNameComputer qualifiedNameComputer;
+	private ResourceNameComputer resourceNameComputer;
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 
@@ -357,8 +358,13 @@ public class TestDiscoveryHelper {
 	}
 
 	private TestCase createTestCase(final TMethod method, final TModule module, final String clazzFqnStr) {
+		String origin = module.getProjectId();
+		IN4JSProject project = n4jsCore.findProject(module.eResource().getURI()).orNull();
+		if (project != null) {
+			origin = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
+		}
 		final TestCase testCase = new TestCase(createTestCaseId(clazzFqnStr, method), clazzFqnStr,
-				module.getProjectId(), method.getName(), method.getName(), EcoreUtil.getURI(method));
+				origin, method.getName(), method.getName(), EcoreUtil.getURI(method));
 		return testCase;
 	}
 
@@ -372,10 +378,10 @@ public class TestDiscoveryHelper {
 	 */
 	private String getClassName(TClass clazz) {
 		if (clazz.getDeclaredVersion() > 0) {
-			return qualifiedNameComputer.getFullyQualifiedTypeName(clazz) + N4IDLGlobals.COMPILED_VERSION_SEPARATOR
+			return resourceNameComputer.getFullyQualifiedTypeName(clazz) + N4IDLGlobals.COMPILED_VERSION_SEPARATOR
 					+ clazz.getDeclaredVersion();
 		} else {
-			return qualifiedNameComputer.getFullyQualifiedTypeName(clazz);
+			return resourceNameComputer.getFullyQualifiedTypeName(clazz);
 		}
 	}
 
