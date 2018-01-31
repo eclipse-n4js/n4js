@@ -248,7 +248,6 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 	 */
 	@Override
 	public void discardWorkingSetCaches() {
-		log("#discardWorkingSetCaches()");
 		allWorkingSets = null;
 		visibleWorkingSets = null;
 	}
@@ -268,13 +267,11 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 	 * @return a list of all working sets.
 	 */
 	protected List<WorkingSet> getOrCreateAllWorkingSets() {
-		log("#getOrCreateAllWorkingSets()");
 
 		if (allWorkingSets != null) {
 			return allWorkingSets;
 		}
 
-		log("re-creating list of working sets");
 		final List<WorkingSet> workingSets = initializeWorkingSets();
 
 		Collections.sort(workingSets, this);
@@ -313,8 +310,6 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 	 * Reloads this working set manager by invalidating its cache and re-triggering the initialization logic.
 	 */
 	protected void reload() {
-		log("#reload()");
-
 		discardWorkingSetCaches();
 		saveState(new NullProgressMonitor());
 
@@ -328,8 +323,4 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 		}
 	}
 
-	private static final void log(String msg) {
-		final Thread thread = Thread.currentThread();
-		System.out.println("=%=%= " + msg + " " + thread + "(" + Integer.toHexString(thread.hashCode()) + ")");
-	}
 }
