@@ -48,6 +48,8 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	@Inject
 	private N4JSTypeSystem ts;
+	@Inject
+	private ArrowFunctionProcessor arrowFunctionProcessor;
 
 
 	/**
@@ -264,6 +266,8 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			val fparTw = TypeUtils.wrapIfVariadic(G.getPredefinedTypes().builtInTypeScope, fparT.typeRef, fparAST);
 			cache.storeType(fparAST, fparTw);
 		}
+		// tweak single-expression arrow functions
+		arrowFunctionProcessor.tweakArrowFunctions(G, funExpr, cache, 0);
 	}
 
 	/**
