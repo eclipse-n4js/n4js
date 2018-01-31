@@ -136,7 +136,6 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-
 	/**
 	 * Checks whether the current {@link JavaScriptVariant} allows for top-level statements and issues errors
 	 * accordingly.
