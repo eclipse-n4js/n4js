@@ -65,13 +65,14 @@ public class ExternalsUtiities {
 			platformFiles.targetPlatformFile = null;
 		}
 		if (null != platformFiles.targetPlatformInstallLocation) {
-			FileUtils.deleteFileOrFolder(platformFiles.targetPlatformInstallLocation);
+			// FileUtils.deleteFileOrFolder(platformFiles.targetPlatformInstallLocation);
+			platformFiles.targetPlatformInstallLocation.delete();
 			platformFiles.targetPlatformInstallLocation = null;
 		}
-		if (null != platformFiles.root) {
-			FileUtils.deleteFileOrFolder(platformFiles.root);
-			platformFiles.root = null;
-		}
+		// if (null != platformFiles.root) {
+		// FileUtils.deleteFileOrFolder(platformFiles.root);
+		// platformFiles.root = null;
+		// }
 	}
 
 }
