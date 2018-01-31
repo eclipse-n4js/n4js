@@ -13,6 +13,9 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.util.HashMap
+import java.util.Map
+import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -33,8 +36,6 @@ import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xsemantics.runtime.RuleEnvironment
-import java.util.HashMap
-import java.util.Map
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -49,7 +50,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	@Inject
 	private N4JSTypeSystem ts;
 	@Inject
-	private ArrowFunctionProcessor arrowFunctionProcessor;
+	private ASTProcessor astProcessor;
 
 
 	/**
@@ -249,7 +250,6 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	) {
 		val solution2 = if (solution.present) solution.get else infCtx.createPseudoSolution(G.anyTypeRef);
 		val resultSolved = resultTypeRef.applySolution(G, solution2) as FunctionTypeExprOrRef;
-		cache.storeType(funExpr, resultSolved);
 		// update the defined function in the TModule
 		val fun = funExpr.definedType as TFunction; // types builder will have created this already
 		fun.replaceDeferredTypeRefs(resultSolved);
@@ -266,8 +266,81 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			val fparTw = TypeUtils.wrapIfVariadic(G.getPredefinedTypes().builtInTypeScope, fparT.typeRef, fparAST);
 			cache.storeType(fparAST, fparTw);
 		}
-		// tweak single-expression arrow functions
-		arrowFunctionProcessor.tweakArrowFunctions(G, funExpr, cache, 0);
+		// store type of funExpr in cache ...
+		tweakReturnTypeOfSingleExpressionArrowFunction(G, cache, funExpr, resultSolved); // note: this requires the types of the fpars to be in the cache
+		cache.storeType(funExpr, resultSolved);
+	}
+
+	/**
+	 * Handling of a very specific special case of single-expression arrow functions.
+	 * <p>
+	 * If the given function expression is a single-expression arrow function, this method changes the return type of
+	 * the given function type reference from non-void to void if the non-void return type would lead to a type error
+	 * later on (for details see code of this method).
+	 * <p>
+	 * This tweak is only required because our poor man's return type inferencer in the types builder infers a wrong
+	 * non-void return type in some cases, which is corrected in this method.
+	 * <p>
+	 * Example:
+	 * <pre>
+	 * function foo(f : {function(): void}) {}
+	 * function none(): void {}
+	 * foo(() => none()); // will show bogus error when disabling this method
+	 * </pre>
+	 */
+	def private void tweakReturnTypeOfSingleExpressionArrowFunction(RuleEnvironment G, ASTMetaInfoCache cache,
+		FunctionExpression funExpr, FunctionTypeExprOrRef funExprTypeRef
+	) {
+		if (funExpr instanceof ArrowFunction) {
+			if (funExpr.isSingleExprImplicitReturn) {
+				log(0, "===START of special handling of single-expression arrow function");
+				// 1) process funExpr's body, which was postponed according to ASTProcessor#isPostponedNode(EObject)
+				// Rationale: the body of a single-expression arrow function isn't a true block, so we do not have to
+				//            postpone it AND we need its types in the next step.
+				val block = cache.postponedSubTrees.last;
+				if (block !== funExpr.body) {
+					throw new IllegalStateException();
+				}
+				cache.postponedSubTrees.remove(block);
+				astProcessor.processSubtree(G, block, cache, 1);
+				// 2) adjust funExpr's return type stored in funExprTypeRef (if required)
+				var didTweakReturnType = false;
+				val expr = funExpr.getSingleExpression();
+				val exprTypeRef = cache.getType(expr).value; // must now be in cache, because we just processed node's body
+				if (TypeUtils.isVoid(exprTypeRef)) {
+					// the actual type of 'expr' is void
+					if (funExprTypeRef instanceof FunctionTypeExpression) {
+						if (!TypeUtils.isVoid(funExprTypeRef.returnTypeRef)) {
+							// the return type of the single-expression arrow function 'funExpr' is *not* void
+							// --> this would lead to a type error in N4JSTypeValidation, which we want to fix now
+							//     in case the outer type expectation for the containing arrow function has a
+							//     return type of 'void' OR there is no outer type expectation at all
+							val outerTypeExpectation = expectedTypeForArrowFunction(G, funExpr);
+							val outerReturnTypeExpectation = outerTypeExpectation?.returnTypeRef;
+							if (outerTypeExpectation === null
+								|| (outerReturnTypeExpectation !== null && TypeUtils.isVoid(outerReturnTypeExpectation))) {
+								// fix the future type error by changing the return type of the containing arrow function
+								// from non-void to void
+								if (isDEBUG_LOG) {
+									log(1, "tweaking return type from " + funExprTypeRef.returnTypeRef?.typeRefAsString + " to void");
+								}
+								EcoreUtilN4.doWithDeliver(false, [
+									funExprTypeRef.returnTypeRef = G.voidTypeRef;
+								], funExprTypeRef);
+								if (isDEBUG_LOG) {
+									log(1, "tweaked type of arrow function is: " + funExprTypeRef.typeRefAsString);
+								}
+								didTweakReturnType = true;
+							}
+						}
+					}
+				}
+				if(!didTweakReturnType) {
+					log(1, "tweaking of return type not required");
+				}
+				log(0, "===END of special handling of single-expression arrow function");
+			}
+		}
 	}
 
 	/**
@@ -276,7 +349,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	 * when this method returns, also the given TFunction 'fun' won't contain DeferredTypeRefs anymore.
 	 * Will throw exception if 'fun' and 'result' do not match (e.g. 'result' has fewer fpars than 'fun').
 	 */
-	def protected void replaceDeferredTypeRefs(TFunction fun, FunctionTypeExprOrRef result) {
+	def private void replaceDeferredTypeRefs(TFunction fun, FunctionTypeExprOrRef result) {
 		val len = fun.fpars.length; // note: we do not take Math.min here (fail fast)
 		for (var i = 0; i < len; i++) {
 			val funFpar = fun.fpars.get(i);
@@ -294,4 +367,12 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		}
 	}
 
+	def private FunctionTypeExprOrRef expectedTypeForArrowFunction(RuleEnvironment G, ArrowFunction fe) {
+		val G_new = G.newRuleEnvironment;
+		val tr = ts.expectedTypeIn(G_new, fe.eContainer(), fe).value;
+		if (tr instanceof FunctionTypeExprOrRef) {
+			return tr;
+		}
+		return null;
+	}
 }
