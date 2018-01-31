@@ -1,7 +1,7 @@
 package org.eclipse.n4js.transpiler.es.n4idl;
 
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.generator.CompilerDescriptor;
-import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -9,15 +9,11 @@ import org.eclipse.xtext.generator.OutputConfiguration;
 import com.google.inject.Inject;
 
 /**
- * A sub-generator based on {@link EcmaScriptSubGenerator} that compiles
- * N4IDL to ECMAScript.
+ * A sub-generator based on {@link EcmaScriptSubGenerator} that compiles N4IDL to ECMAScript.
  */
 public class N4IDLSubGenerator extends EcmaScriptSubGenerator {
 	private static String COMPILER_ID = "es-n4idl";
 	private static CompilerDescriptor DEFAULT_DESCRIPTOR = createDescriptor();
-
-	@Inject
-	ProjectUtils projectUtils;
 
 	@Inject
 	N4IDLTranspiler n4idlTranspiler;
@@ -33,7 +29,7 @@ public class N4IDLSubGenerator extends EcmaScriptSubGenerator {
 		result.setCompiledFileSourceMapExtension("map");
 		final OutputConfiguration outCfg = new OutputConfiguration(COMPILER_ID);
 		outCfg.setDescription("N4IDL to ECMAScript transpiler");
-		outCfg.setOutputDirectory(calculateOutputDirectory("src-gen", COMPILER_ID));
+		outCfg.setOutputDirectory(N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT);
 		outCfg.setOverrideExistingResources(true);
 		outCfg.setCreateOutputDirectory(true);
 		outCfg.setCleanUpDerivedResources(true);
