@@ -139,7 +139,7 @@ public class TypeProcessor extends AbstractProcessor {
 				log(indentLevel, "asking Xsemantics ...");
 				val result = askXsemanticsForType(G, null, node);
 
-				val resultAdjusted = adjustResultForLocationInAST(G, result, N4JSASTUtils.ignoreParentheses(node));
+				val resultAdjusted = adjustResultForLocationInAST(G, result, N4JSASTUtils.skipParenExpressionDownward(node));
 
 				// in this case, we are responsible for storing the type in the cache
 				// (Xsemantics does not know of the cache)
