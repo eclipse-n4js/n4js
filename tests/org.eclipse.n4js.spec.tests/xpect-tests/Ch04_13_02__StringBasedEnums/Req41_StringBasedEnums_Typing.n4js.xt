@@ -16,18 +16,17 @@
 // XPECT noerrors -->
 var s : string = E.L;
 
-// XPECT noerrors --> "type{E} is not a subtype of type{N4StringBasedEnum}." at "E"
-var v1 : type{N4StringBasedEnum} = E;
-
-// Not a regular enum. XPECT errors --> "type{E} is not a subtype of type{N4Enum}." at "E"
-var v1a : type{N4Enum} = E;
-
+// Not a regular enum. XPECT errors --> "E is not a subtype of N4Enum." at "E.L"
+var v1 : N4Enum = E.L;
 
 // XPECT noerrors -->
-var v2 : type{E} = E;
+var v2 : E = E.L;
 
-// XPECT noerrors --> "type{E} is not a subtype of type{string}." at "E"
-var v3 : type{string} = E;
+// XPECT noerrors -->
+var v3a : String = E.L;
+
+// XPECT noerrors -->
+var v3b : string = E.L;
 
 // XPECT noerrors -->
 var v4 : N4StringBasedEnum = E.L;
