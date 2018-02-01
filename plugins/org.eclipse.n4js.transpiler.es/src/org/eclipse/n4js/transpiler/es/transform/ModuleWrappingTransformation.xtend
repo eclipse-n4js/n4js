@@ -264,7 +264,9 @@ class ModuleWrappingTransformation extends Transformation {
 
 		val LinkedHashMap<String,ImportEntry> map = newLinkedHashMap()
 
+		var i = 0;
 		for( val iter = contents_im.iterator; iter.hasNext;  ) {
+			i+=1;
 			val elementIM = iter.next();
 			if( elementIM instanceof ImportDeclaration ) {
 
@@ -276,11 +278,11 @@ class ModuleWrappingTransformation extends Transformation {
 				val fparName = "$_import_" + resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module)
 
 				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier)
-
-				var moduleEntry = map.get( completeModuleSpecifier )
+				
+				var moduleEntry = map.get( actualModuleSpecifier )
 				if( moduleEntry === null ) {
 					moduleEntry = new ImportEntry(completeModuleSpecifier, actualModuleSpecifier, fparName, newArrayList(), elementIM)
-					map.put( completeModuleSpecifier, moduleEntry )
+					map.put( actualModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry
 
