@@ -79,7 +79,6 @@ public class N4JSTypesBuilder {
 	@Inject private SpecifierConverter specifierConverter
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
 
-
 	/**
 	 * When demand-loading an AST for a resource that already has a TModule (usually retrieved from the index) by
 	 * calling SyntaxRelatedTElement#getAstElement(), we are facing a challenge: we could simply replace the original

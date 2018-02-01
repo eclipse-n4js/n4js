@@ -43,6 +43,7 @@ import org.junit.runner.Description;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.base.Strings;
 
 /**
  */
@@ -142,6 +143,80 @@ public abstract class AbstractN4jscTest {
 		}
 		fail("Compiler did not throw exception for " + String.join(",", args));
 		throw new RuntimeException("Should never be reached.");
+	}
+
+	/**
+	 * Runs N4JSC with the given arguments.
+	 *
+	 * Captures the output (stdout + stderr) of the executed runner and returns it as a string.
+	 *
+	 * This does not include the output of N4JSC itself.
+	 *
+	 * @param arguments
+	 *            The arguments to pass to {@link N4jscBase#doMain(String...)}
+	 *
+	 * @return The command output. stderr + stdout concatenated in that order.
+	 *
+	 * @throws ExitCodeException
+	 *             If N4JSC exists with a non-zero exist code
+	 * @throws IOException
+	 *             If the creation of intermediate log files fails.
+	 */
+	protected static String runAndCaptureOutput(String[] arguments) throws ExitCodeException, IOException {
+		boolean errors = true;
+		boolean keepOutputForDebug = true;
+
+		File errorFile = File.createTempFile("run_err", null);
+		File outputFile = File.createTempFile("run_out", null);
+		try {
+			if (!keepOutputForDebug) {
+				errorFile.deleteOnExit();
+				outputFile.deleteOnExit();
+			} else {
+				System.out.println("Errors: " + errorFile + "    Ouput: " + outputFile);
+			}
+
+			setOutputfileSystemProperties(errorFile.getAbsolutePath(), outputFile.getAbsolutePath());
+
+			new N4jscBase().doMain(arguments);
+
+			// cleanup properties.
+			setOutputfileSystemProperties("", "");
+
+			// read the files, concat & return string.
+			return N4CliHelper.readLogfile(errorFile) + N4CliHelper.readLogfile(outputFile);
+		} finally {
+			if (errors) {
+				if (outputFile.canRead()) {
+					String readLogfile = N4CliHelper.readLogfile(outputFile);
+					if (!Strings.isNullOrEmpty(readLogfile))
+						System.out.println(readLogfile);
+				}
+				if (errorFile.canRead()) {
+					String readLogfile = N4CliHelper.readLogfile(errorFile);
+					if (!Strings.isNullOrEmpty(readLogfile))
+						System.out.println(readLogfile);
+				}
+			}
+
+			if (outputFile.exists())
+				FileUtils.deleteFileOrFolder(outputFile);
+			if (errorFile.exists())
+				FileUtils.deleteFileOrFolder(errorFile);
+		}
+	}
+
+	/**
+	 * Set system-properties for the Runner.
+	 *
+	 * @param errorFile
+	 *            File to write errror-stream to
+	 * @param outputFile
+	 *            File to write output-stream to
+	 */
+	private static void setOutputfileSystemProperties(String errorFile, String outputFile) {
+		System.setProperty("org.eclipse.n4js.runner.RunnerFrontEnd.ERRORFILE", errorFile);
+		System.setProperty("org.eclipse.n4js.runner.RunnerFrontEnd.OUTPUTFILE", outputFile);
 	}
 
 	/**

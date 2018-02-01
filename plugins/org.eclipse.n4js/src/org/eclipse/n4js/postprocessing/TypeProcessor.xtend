@@ -396,7 +396,7 @@ public class TypeProcessor extends AbstractProcessor {
 		} else {
 			val msg = "*#*#*#*#*#* ILLEGAL FORWARD REFERENCE to " + node + " in " + node.eResource?.URI;
 			logErr(msg);
-			return new Result(new IllegalStateException(msg));
+			return new Result<TypeRef>(new RuleFailedException(msg));
 		}
 	}
 

@@ -15,12 +15,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 
 /**
  * This class provides the base implementation for {@link JavaScriptVariantHelper} following chain of responsibility
@@ -71,6 +70,12 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 			return (T) table.get(new FileExtensionValidationFeaturePair(extension, this));
 		}
 	}
+
+	/**
+	 * A user-faced name for this JavaScript variant.
+	 */
+	public static final ValidationFeature<String> VARIANT_NAME = new ValidationFeature<>(
+			"<Unknown JavaScript Variant>");
 
 	/**
 	 * Dynamic pseudo scope should be activated?
@@ -186,6 +191,22 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	 * String representation of variant mode, e.g. "n4js", "js"
 	 */
 	public static final ValidationFeature<String> VARIANT_MODE_STRINGREP = new ValidationFeature<>(EXT_JS);
+
+	/**
+	 * Variant allows for multiple elements with the same qualified name in one scope.
+	 */
+	public static final ValidationFeature<Boolean> MULTI_QN_SCOPE = new ValidationFeature<>(false);
+
+	/**
+	 * Variant allows for the declaration and reference of versioned types and the corresponding declaration of
+	 * migrations.
+	 */
+	public static final ValidationFeature<Boolean> VERSIONED_TYPES = new ValidationFeature<>(false);
+
+	/**
+	 * Variant allows for top-level statements in modules.
+	 */
+	public static final ValidationFeature<Boolean> TOP_LEVEL_STATEMENTS = new ValidationFeature<>(true);
 
 	/**
 	 * This class encapsulates a pair of file extension and validation feature and should serve as keys for
@@ -608,10 +629,41 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	}
 
 	/**
-	 * Return true if "use strict" is declared. Override this method for sub-languages!
+	 * Returns true if "use strict" is declared. Override this method for sub-languages!
 	 */
 	@Override
 	public boolean isStrictMode(EObject eobj) {
 		return JavaScriptVariant.isContainedInStrictFunctionOrScript(eobj);
+	}
+
+	/**
+	 * Returns {@code true} if the script allows for distinct elements with the same qualified name in a scope.
+	 */
+	@Override
+	public boolean isMultiQNScope(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), MULTI_QN_SCOPE);
+	}
+
+	/**
+	 * Returns {@code true} if the script allows for the declaration and reference of versioned types as well as
+	 * corresponding migrations.
+	 */
+	@Override
+	public boolean allowVersionedTypes(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), VERSIONED_TYPES);
+	}
+
+	/**
+	 * Returns {@code true} if the script allows for top-level statements as opposed to just type and function
+	 * declarations.
+	 */
+	@Override
+	public boolean allowTopLevelStatements(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), TOP_LEVEL_STATEMENTS);
+	}
+
+	@Override
+	public String getVariantName(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), VARIANT_NAME);
 	}
 }
