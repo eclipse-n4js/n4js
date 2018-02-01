@@ -10,11 +10,19 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.IsNotNull;
+import org.eclipse.n4js.flowgraphs.dataflow.FlowAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+
+import com.google.common.collect.Sets;
 
 /** Result of a null or undefined dereference */
 public class NullDereferenceResult {
@@ -25,39 +33,51 @@ public class NullDereferenceResult {
 	/** Aliased {@link Symbol} that failed a check */
 	public final Symbol failedAlias;
 	/** Assigned null or undefined */
-	public final GuardType type;
-	/** Either {@link HoldAssertion#AlwaysHolds} or {@link HoldAssertion#MayHold}. */
-	public final HoldAssertion assertion;
+	public final Set<GuardType> types;
+	/** Either {@link FlowAssertion#AlwaysHolds} or {@link FlowAssertion#MayHold}. */
+	public final FlowAssertion assertion;
 
 	NullDereferenceResult(ControlFlowElement cfe, IsNotNull inn) {
 		this.cfe = cfe;
 		this.checkedSymbol = inn.symbol;
-		this.failedAlias = inn.failedSymbol;
-		this.type = getType(inn);
+		this.failedAlias = getFailedSymbol(inn);
+		this.types = getTypes(inn);
 		this.assertion = getAssertion(inn);
 	}
 
-	private GuardType getType(IsNotNull inn) {
-		if (inn.failedGuard != null) {
-			return inn.failedGuard.expectation;
-
-		} else if (inn.nullOrUndefinedSymbols.size() == 1) {
-			Symbol symbol = inn.nullOrUndefinedSymbols.get(0);
-			if (symbol.isNullLiteral()) {
-				return GuardType.IsNull;
-			}
-			if (symbol.isUndefinedLiteral()) {
-				return GuardType.IsUndefined;
-			}
+	private Symbol getFailedSymbol(IsNotNull inn) {
+		if (inn.failedBranches.isEmpty()) {
+			return null;
 		}
-		return GuardType.IsTruthy;
+		Set<Symbol> failedSymbols = new HashSet<>();
+		for (HoldResult result : inn.failedBranches) {
+			failedSymbols.add(result.symbol);
+		}
+		if (failedSymbols.size() == 1) {
+			return failedSymbols.iterator().next();
+		}
+		return null;
 	}
 
-	private HoldAssertion getAssertion(IsNotNull inn) {
-		if (inn.noAliasPassed()) {
-			return HoldAssertion.AlwaysHolds;
+	private Set<GuardType> getTypes(IsNotNull inn) {
+		if (inn.terminatingGuard != null) {
+			return Sets.newHashSet(inn.terminatingGuard.expectation);
+
+		} else if (!inn.failedBranches.isEmpty()) {
+			Set<GuardType> results = new TreeSet<>();
+			for (HoldResult result : inn.failedBranches) {
+				results.add(result.expectation);
+			}
+			return results;
 		}
-		return HoldAssertion.MayHold;
+		return Collections.emptySet();
+	}
+
+	private FlowAssertion getAssertion(IsNotNull inn) {
+		if (inn.passedBranches.isEmpty()) {
+			return FlowAssertion.AlwaysHolds;
+		}
+		return FlowAssertion.MayHold;
 	}
 
 	@Override

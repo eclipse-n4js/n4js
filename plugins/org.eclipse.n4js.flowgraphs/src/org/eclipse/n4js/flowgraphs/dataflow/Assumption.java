@@ -13,13 +13,10 @@ package org.eclipse.n4js.flowgraphs.dataflow;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -36,72 +33,80 @@ import com.google.common.collect.Multimap;
  * {@link Assumption} is forked and with every merge, the method {@link #mergeWith(Assumption)} is called.
  */
 abstract public class Assumption {
-	/** Key for identification of this {@link Assumption}. Use {@link #getKey(ControlFlowElement, Symbol)} */
-	public final Object key;
+	private final AssumptionGroup assumptionGroup;
 	/** {@link ControlFlowElement} where this {@link Assumption} was created */
 	public final ControlFlowElement creationSite;
 	/** Initial symbol this assumption refers to */
 	public final Symbol symbol;
 	/** Set of all symbols that are transitively assigned to {@link #symbol} */
 	public final Set<Symbol> aliases = new HashSet<>();
-	/***/
-	@Deprecated
-	public final Set<Symbol> failingStructuralAliases = new HashSet<>();
-	/** Set of all symbols that might be indirectly assigned to {@link #symbol} through receiver change */
-	@Deprecated
-	public final Map<EObject, Symbol> symbolForDeclaration = new HashMap<>();
-	/** The {@link Symbol} that caused this {@link Assumption} to fail. Can be null. */
-	public Symbol failedSymbol;
-	/**   */
-	public GuardResultWithReason failedGuard;
-	/** {@link GuardType}s that definitely hold for this {@link Assumption} */
-	public Multimap<GuardType, Guard> guardsThatNeverHold = HashMultimap.create();
-	/** {@link GuardType}s that definitely not hold for this {@link Assumption} */
-	public Multimap<GuardType, Guard> guardsThatAlwaysHold = HashMultimap.create();
 
-	private boolean active = true;
+	/** {@link GuardType}s that definitely hold for this {@link Assumption} */
+	public final Multimap<GuardType, Guard> guardsThatNeverHold = HashMultimap.create();
+	/** {@link GuardType}s that definitely not hold for this {@link Assumption} */
+	public final Multimap<GuardType, Guard> guardsThatAlwaysHold = HashMultimap.create();
+	/**  */
+	public final Set<HoldResult> failedBranches = new HashSet<>();
+	/**  */
+	public final Set<HoldResult> passedBranches = new HashSet<>();
+
+	/**   */
+	public HoldResult terminatingGuard;
+
+	private boolean openBranch = true;
 	private DataFlowVisitor dataFlowVisitor;
-	private final Assumption originalAssumption;
-	private int aliasPassedCount = 0;
-	private int copyCount = 0;
+
+	private boolean FLAG_WAS_MERGED = false;
 
 	/** Constructor */
 	public Assumption(ControlFlowElement cfe, Symbol symbol) {
 		checkState(cfe != null);
 		checkState(symbol != null);
 
-		this.key = getKey(cfe, symbol);
+		this.assumptionGroup = new AssumptionGroup();
+		this.assumptionGroup.add(this);
+
 		this.creationSite = cfe;
 		this.symbol = symbol;
 		addAlias(symbol);
-		this.originalAssumption = this;
-	}
-
-	/** Constructor to create a copy */
-	public Assumption(Assumption assumption) {
-		checkState(assumption.active);
-
-		this.key = assumption.key;
-		this.creationSite = assumption.creationSite;
-		this.symbol = assumption.symbol;
-		this.aliases.addAll(assumption.aliases);
-		this.failingStructuralAliases.addAll(assumption.failingStructuralAliases);
-		this.symbolForDeclaration.putAll(assumption.symbolForDeclaration);
-		this.dataFlowVisitor = assumption.dataFlowVisitor;
-		this.originalAssumption = assumption.originalAssumption;
-		this.failedSymbol = assumption.failedSymbol;
-		this.guardsThatNeverHold.putAll(assumption.guardsThatNeverHold);
-		this.guardsThatAlwaysHold.putAll(assumption.guardsThatAlwaysHold);
-		this.originalAssumption.copyCount++;
-	}
-
-	/** @return a key that is based on the given objects */
-	protected Object getKey(ControlFlowElement cfe, Symbol pSymbol) {
-		return Objects.hash(cfe, pSymbol, getClass());
 	}
 
 	/** @return a copy of this instance */
 	abstract public Assumption copy();
+
+	/** Constructor to create a copy */
+	public Assumption(Assumption assumption) {
+		this.assumptionGroup = assumption.assumptionGroup;
+		this.assumptionGroup.add(this);
+
+		this.creationSite = assumption.creationSite;
+		this.symbol = assumption.symbol;
+		this.aliases.addAll(assumption.aliases);
+		this.dataFlowVisitor = assumption.dataFlowVisitor;
+		this.guardsThatNeverHold.putAll(assumption.guardsThatNeverHold);
+		this.guardsThatAlwaysHold.putAll(assumption.guardsThatAlwaysHold);
+
+		this.failedBranches.addAll(assumption.failedBranches);
+		this.passedBranches.addAll(assumption.passedBranches);
+		this.terminatingGuard = assumption.terminatingGuard;
+		this.openBranch = assumption.openBranch;
+	}
+
+	/** @return a key that is based on the given objects */
+	Object getKey() {
+		return assumptionGroup;
+	}
+
+	int getParallelHash() {
+		return Objects.hash(symbol, creationSite, this.getClass());
+	}
+
+	boolean isParallel(Assumption assumption) {
+		if (assumptionGroup == assumption.assumptionGroup) {
+			return true;
+		}
+		return getParallelHash() == assumption.getParallelHash();
+	}
 
 	/**
 	 * <b>Note:</b> Call this method when overwriting it.
@@ -110,23 +115,48 @@ abstract public class Assumption {
 	 *            the {@link Assumption} this {@link Assumption} will be merged with
 	 */
 	public void mergeWith(Assumption assumption) {
+		if (assumption.FLAG_WAS_MERGED) {
+			return;
+		}
 		checkState(this.symbol == assumption.symbol);
+		// checkState(!assumption.FLAG_WAS_MERGED);
 
+		mergeData(assumption);
+		this.assumptionGroup.remove(assumption);
+		this.assumptionGroup.assure(this);
+
+		assumption.FLAG_WAS_MERGED = true;
+
+		checkAndFinalize();
+	}
+
+	private void mergeData(Assumption assumption) {
 		this.aliases.addAll(assumption.aliases);
-		this.failingStructuralAliases.addAll(assumption.failingStructuralAliases);
-		this.symbolForDeclaration.putAll(assumption.symbolForDeclaration);
-		if (this.failedSymbol == null) {
-			this.failedSymbol = assumption.failedSymbol;
-		}
-		if (this.active && assumption.active) {
-			this.originalAssumption.copyCount--;
-		}
-		this.active = this.active || assumption.active;
+		this.failedBranches.addAll(assumption.failedBranches);
+		this.passedBranches.addAll(assumption.passedBranches);
 
-		this.guardsThatNeverHold.keySet().retainAll(assumption.guardsThatNeverHold.keySet());
-		this.guardsThatAlwaysHold.keySet().retainAll(assumption.guardsThatAlwaysHold.keySet());
+		if (openBranch && assumption.openBranch) {
+			this.guardsThatNeverHold.keySet().retainAll(assumption.guardsThatNeverHold.keySet());
+			this.guardsThatAlwaysHold.keySet().retainAll(assumption.guardsThatAlwaysHold.keySet());
+		} else if (assumption.openBranch) {
+			this.guardsThatNeverHold.clear();
+			this.guardsThatNeverHold.putAll(assumption.guardsThatNeverHold);
+			this.guardsThatAlwaysHold.clear();
+			this.guardsThatAlwaysHold.putAll(assumption.guardsThatAlwaysHold);
+		}
 
-		callHoldsOnGuards();
+		this.openBranch = this.openBranch || assumption.openBranch;
+	}
+
+	boolean isOpen() {
+		return openBranch;
+	}
+
+	boolean isApplicable(Symbol sym) {
+		if (isOpen()) {
+			return aliases.contains(sym);
+		}
+		return false;
 	}
 
 	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
@@ -137,9 +167,6 @@ abstract public class Assumption {
 	/** Adds a new {@link Symbol} that is aliases with this assumption */
 	protected void addAlias(Symbol alias) {
 		this.aliases.add(alias);
-		if (alias.getContext() != null) {
-			this.symbolForDeclaration.put(alias.getDeclaration(), alias);
-		}
 	}
 
 	/** @return the {@link DataFlowVisitor} this {@link Assumption} belongs to */
@@ -147,78 +174,62 @@ abstract public class Assumption {
 		return dataFlowVisitor;
 	}
 
-	/** Deactivates the given {@link Symbol}, i.e. further aliases of this {@link Symbol} are ignored */
-	public void aliasPassed(Symbol ignoreSymbol) {
-		this.aliases.remove(ignoreSymbol);
-		this.originalAssumption.aliasPassedCount++;
+	final void remove() {
+		assumptionGroup.remove(this);
 	}
 
-	/** Deactivates this {@link Assumption} */
-	protected void deactivate() {
-		checkState(active);
-
-		active = false;
-		originalAssumption.copyCount--;
+	final boolean isFailed() {
+		if (isDone()) {
+			boolean branchFailed = !failedBranches.isEmpty();
+			boolean guardsFailed = terminatingGuard != null && terminatingGuard.type == FlowAssertion.NeverHolds;
+			return branchFailed || guardsFailed;
+		}
+		return false;
 	}
 
-	/**
-	 * By default, {@link Assumption}s are active, i.e. the holdOn methods get called. In case the method
-	 * {@link #deactivate()} was called, this {@link Assumption} is inactive.
-	 *
-	 * @return true iff {@link #deactivate()} was never called before on this {@link Assumption}
-	 */
-	final public boolean isActive() {
-		return active;
+	final boolean isPassed() {
+		if (isDone()) {
+			boolean branchPassed = failedBranches.isEmpty();
+			boolean guardsPassed = terminatingGuard == null || terminatingGuard.type != FlowAssertion.NeverHolds;
+			return branchPassed && guardsPassed;
+		}
+		return false;
+	}
+
+	final boolean isDone() {
+		return assumptionGroup.noCopies() && !openBranch;
 	}
 
 	void callHoldsOnDataflow(Symbol lhs, Collection<Object> rhss) {
-		checkState(isActive());
+		checkState(isOpen());
 
-		Set<HoldAssertion> allHolds = new HashSet<>();
+		Set<FlowAssertion> resultSet = new HashSet<>();
+
 		for (Object rhs : rhss) {
 			Symbol rSymbol = null;
+			HoldResult result = null;
 
 			if (rhs instanceof Symbol) {
 				rSymbol = (Symbol) rhs;
-				if (failingStructuralAliases.contains(rSymbol)) {
-					handleHolds(rSymbol, HoldAssertion.NeverHolds);
-				} else if (failingStructuralAliases.contains(lhs)) {
-					failingStructuralAliases.remove(lhs);
-					failingStructuralAliases.add(rSymbol);
-				} else {
-					HoldAssertion holds = holdsOnDataflow(lhs, rSymbol, null);
-					allHolds.add(holds);
+				result = holdsOnDataflow(lhs, rSymbol, null);
+				aliases.remove(lhs);
+				if (rSymbol.isVariableSymbol()) {
+					aliases.add(rSymbol);
 				}
 
 			} else if (rhs instanceof Expression) {
 				Expression rValue = (Expression) rhs;
-				HoldAssertion holds = holdsOnDataflow(lhs, null, rValue);
-				allHolds.add(holds);
+				result = holdsOnDataflow(lhs, null, rValue);
+			}
+
+			if (result != null) {
+				resultSet.add(result.type);
+				handleHoldResult(result);
 			}
 		}
-		HoldAssertion holds = null;
-		if (allHolds.size() == 1) {
-			holds = allHolds.iterator().next();
-		} else {
-			holds = HoldAssertion.MayHold;
-			if (allHolds.contains(HoldAssertion.NeverHolds)) {
-				holds = HoldAssertion.NeverHolds;
-				if (allHolds.size() > 1) {
-					originalAssumption.aliasPassedCount++;
-				}
-			}
-		}
-		if (holds != null) {
-			handleHolds(lhs, holds);
-			aliases.remove(lhs);
-			for (Object rhs : rhss) {
-				if (rhs instanceof Symbol) {
-					Symbol rSymbol = (Symbol) rhs;
-					if (rSymbol.isVariableSymbol()) {
-						aliases.add(rSymbol);
-					}
-				}
-			}
+
+		if (resultSet.size() > 1 && resultSet.contains(FlowAssertion.MayHold)) {
+			openBranch = true;
 		}
 	}
 
@@ -235,15 +246,16 @@ abstract public class Assumption {
 	 *
 	 * @return true iff the assumption holds on the given dataflow
 	 */
-	public HoldAssertion holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
-		return HoldAssertion.MayHold;
+	public HoldResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
+		return HoldResult.MayHold;
 	}
 
 	void callHoldsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
-		checkState(isActive());
+		checkState(isOpen());
 
-		HoldAssertion holds = holdsOnEffect(effect, cfe);
-		handleHolds(effect.symbol, holds);
+		HoldResult holds = holdsOnEffect(effect, cfe);
+		handleHoldResult(holds);
+		checkAndFinalize();
 	}
 
 	/**
@@ -255,12 +267,12 @@ abstract public class Assumption {
 	 *            the {@link ControlFlowElement} that contains the given alias
 	 * @return true iff the assumption holds on the given alias symbol and its container
 	 */
-	public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
-		return HoldAssertion.MayHold;
+	public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		return HoldResult.MayHold;
 	}
 
 	void callHoldsOnGuards(Guard guard) {
-		checkState(isActive());
+		checkState(isOpen());
 
 		switch (guard.asserts) {
 		case AlwaysHolds:
@@ -271,26 +283,6 @@ abstract public class Assumption {
 			break;
 		default:
 			break;
-		}
-
-		callHoldsOnGuards();
-	}
-
-	void callHoldsOnGuards() {
-		if (noCopies()) {
-			GuardResultWithReason holds = holdsOnGuards(guardsThatNeverHold, guardsThatAlwaysHold);
-
-			if (holds.result == HoldAssertion.AlwaysHolds) {
-				deactivate();
-			}
-			if (holds.result == HoldAssertion.NeverHolds && noAliasPassed()) {
-				failedGuard = holds;
-				failed();
-			}
-
-			if (aliases.isEmpty()) {
-				deactivate();
-			}
 		}
 	}
 
@@ -305,25 +297,13 @@ abstract public class Assumption {
 	 *
 	 * @return true iff the assumption holds
 	 */
-	public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+	public HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 			Multimap<GuardType, Guard> alwaysHolding) {
 
-		return GuardResultWithReason.MayHold;
-	}
-
-	void callHoldsAfterall() {
-		checkState(isActive());
-
-		boolean holds = holdsAfterall();
-		if (failedSymbol != null) {
-			handleHolds(failedSymbol, HoldAssertion.NeverHolds);
-		} else {
-			handleHolds(holds);
-		}
+		return HoldResult.MayHold;
 	}
 
 	/**
-	 * Called finally after the last copy of this {@link Assumption} was deactivated. Ignores {@link #isActive()}.
 	 *
 	 * @return true iff the assumption holds
 	 */
@@ -331,50 +311,56 @@ abstract public class Assumption {
 		return true;
 	}
 
-	/** Deactivates this {@link Assumption} */
-	private void failed() {
-		getDataFlowVisitor().failedAssumptions.add(this);
-		deactivate();
+	private void handleHoldResult(HoldResult holds) {
+		if (holds.type == FlowAssertion.NeverHolds) {
+			failedBranches.add(holds);
+			openBranch = false;
+		}
+		if (holds.type == FlowAssertion.AlwaysHolds) {
+			passedBranches.add(holds);
+			openBranch = false;
+		}
+		if (aliases.isEmpty()) {
+			openBranch = false;
+		}
 	}
 
-	private void handleHolds(Symbol pSymbol, HoldAssertion holds) {
-		if (holds == HoldAssertion.NeverHolds) {
-			if (aliases.contains(pSymbol)) {
-				failed();
-				failedSymbol = pSymbol;
-			} else {
-				// assume pFailedSymbol is a structural alias to one of the aliases, i.e.:
-				// aliases.stream().anyMatch(a -> pFailedSymbol.isStrucuralAlias(a));
-				failingStructuralAliases.add(pSymbol);
+	void checkAndFinalize() {
+		if (assumptionGroup.noCopies()) {
+			if (isOpen()) {
+				finalizeGuards();
 			}
-			return;
-		}
-		if (holds == HoldAssertion.AlwaysHolds) {
-			aliasPassed(pSymbol);
-		}
-		if (aliases.isEmpty()) {
-			deactivate();
+			if (!isOpen() && isFailed()) {
+				propagateFailed();
+			}
 		}
 	}
 
-	private void handleHolds(boolean holds) {
-		if (!holds) {
-			failed();
-			return;
-		}
-		if (aliases.isEmpty()) {
-			deactivate();
+	void finalizeGuards() {
+		if (isOpen() && assumptionGroup.noCopies()) {
+			HoldResult holds = holdsOnGuards(guardsThatNeverHold, guardsThatAlwaysHold);
+
+			if (holds.type == FlowAssertion.AlwaysHolds) {
+				terminatingGuard = holds;
+				openBranch = false;
+			}
+			if (holds.type == FlowAssertion.NeverHolds) {
+				terminatingGuard = holds;
+				openBranch = false;
+			}
+			if (aliases.isEmpty()) {
+				openBranch = false;
+			}
 		}
 	}
 
-	/** @return true iff all {@link Assumption}s failed */
-	public boolean noAliasPassed() {
-		return originalAssumption.aliasPassedCount == 0;
-	}
-
-	/** @return true iff there are no copies of this {@link Assumption} on other {@link DataFlowBranchWalker}s */
-	private boolean noCopies() {
-		return originalAssumption.copyCount == 0;
+	void propagateFailed() {
+		if (getDataFlowVisitor().failedAssumptions.containsKey(this.getParallelHash())) {
+			Assumption failedParallel = getDataFlowVisitor().failedAssumptions.get(getParallelHash());
+			failedParallel.mergeData(this);
+		} else {
+			getDataFlowVisitor().failedAssumptions.put(this.getParallelHash(), this);
+		}
 	}
 
 	@Override
@@ -382,10 +368,4 @@ abstract public class Assumption {
 		return symbol.toString() + " " + getClass().getSimpleName();
 	}
 
-	/**
-	 */
-	public void failOnStructuralAlias(Symbol lSymbol) {
-		failed();
-		failedSymbol = lSymbol;
-	}
 }

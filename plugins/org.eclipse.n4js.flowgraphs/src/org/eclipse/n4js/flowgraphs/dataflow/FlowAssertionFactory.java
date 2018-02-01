@@ -21,16 +21,16 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
 
 /**
- * Creates {@link HoldAssertion}s from {@link Expression}s used as conditions in the source code.
+ * Creates {@link FlowAssertion}s from {@link Expression}s used as conditions in the source code.
  */
-public class HoldAssertionFactory {
+public class FlowAssertionFactory {
 
 	private static enum BooleanExpression {
 		or, and, not, eq, neq
 	}
 
-	/** @return an {@link HoldAssertion} derived from a condition. */
-	static HoldAssertion getGuard(EObject topContainer, EObject condition, boolean negateTree,
+	/** @return an {@link FlowAssertion} derived from a condition. */
+	static FlowAssertion getGuard(EObject topContainer, EObject condition, boolean negateTree,
 			boolean negateCondition) {
 
 		EObject conditionParent = condition.eContainer();
@@ -40,7 +40,7 @@ public class HoldAssertionFactory {
 		mayHolds |= beSet.contains(BooleanExpression.eq);
 		mayHolds |= beSet.contains(BooleanExpression.neq);
 		if (mayHolds) {
-			return HoldAssertion.MayHold;
+			return FlowAssertion.MayHold;
 		}
 
 		return get(beList, negateTree);
@@ -141,23 +141,23 @@ public class HoldAssertionFactory {
 		}
 	}
 
-	static private HoldAssertion get(ArrayList<BooleanExpression> beList, boolean negateTree) {
+	static private FlowAssertion get(ArrayList<BooleanExpression> beList, boolean negateTree) {
 		if (negateTree) {
 			beList.add(BooleanExpression.not);
 		}
 		simplify(beList, 0);
 
 		if (beList.size() == 0) {
-			return HoldAssertion.AlwaysHolds;
+			return FlowAssertion.AlwaysHolds;
 		}
 		if (beList.size() == 1) {
 			switch (beList.get(0)) {
 			case not:
-				return HoldAssertion.NeverHolds;
+				return FlowAssertion.NeverHolds;
 			case and:
-				return HoldAssertion.AlwaysHolds;
+				return FlowAssertion.AlwaysHolds;
 			case or:
-				return HoldAssertion.MayHold;
+				return FlowAssertion.MayHold;
 			default:
 				return null;
 			}
@@ -167,11 +167,11 @@ public class HoldAssertionFactory {
 			BooleanExpression be1 = beList.get(1);
 
 			if (be0 == BooleanExpression.and && be1 == BooleanExpression.not) {
-				return HoldAssertion.MayHold;
+				return FlowAssertion.MayHold;
 			}
 
 			if (be0 == BooleanExpression.or && be1 == BooleanExpression.not) {
-				return HoldAssertion.NeverHolds;
+				return FlowAssertion.NeverHolds;
 			}
 		}
 		if (beList.size() > 2) {

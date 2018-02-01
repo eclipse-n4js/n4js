@@ -17,6 +17,16 @@ import org.eclipse.n4js.n4JS.Expression;
  */
 public enum GuardType {
 	/**
+	 * For {@link Expression}s that check for null:<br/>
+	 * {@code if (a == null)}
+	 */
+	IsNull,
+	/**
+	 * For {@link Expression}s that check for undefined:<br/>
+	 * {@code if (a == undefined || a == void 0 || typeof a == "undefined")}
+	 */
+	IsUndefined,
+	/**
 	 * For {@link Expression}s that check for truthy:<br/>
 	 * {@code if (a)}
 	 */
@@ -28,16 +38,6 @@ public enum GuardType {
 	 * {@code if (!a)}
 	 */
 	IsFalsy,
-	/**
-	 * For {@link Expression}s that check for undefined:<br/>
-	 * {@code if (a == undefined || a == void 0 || typeof a == "undefined")}
-	 */
-	IsUndefined,
-	/**
-	 * For {@link Expression}s that check for null:<br/>
-	 * {@code if (a == null)}
-	 */
-	IsNull,
 	/**
 	 * For {@link Expression}s that check for 0:<br/>
 	 * {@code if (a == 0)}

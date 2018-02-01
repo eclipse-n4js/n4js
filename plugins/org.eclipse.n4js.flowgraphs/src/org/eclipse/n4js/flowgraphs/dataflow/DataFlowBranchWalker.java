@@ -38,7 +38,8 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		for (Map.Entry<Object, Assumption> entry : assumptions.entrySet()) {
 			Object key = entry.getKey();
 			Assumption ass = entry.getValue();
-			if (forkCount > 0) {
+
+			if (ass.isOpen() && forkCount > 0) {
 				ass = ass.copy();
 			}
 			dfb.assumptions.put(key, ass);
@@ -81,18 +82,27 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
 
-			for (Symbol alias : ass.aliases) {
-				if (!guardStructure.guards.containsKey(alias)) {
-					continue;
-				}
+			if (ass.isOpen()) {
+				for (Symbol alias : ass.aliases) {
+					if (!guardStructure.guards.containsKey(alias)) {
+						continue;
+					}
 
-				List<Guard> guards = guardStructure.guards.get(alias);
-				for (Guard guard : guards) {
-					ass.callHoldsOnGuards(guard);
+					List<Guard> guards = guardStructure.guards.get(alias);
+					for (Guard guard : guards) {
+						ass.callHoldsOnGuards(guard);
+					}
 				}
 			}
+		}
+	}
 
-			if (!ass.isActive()) {
+	@Override
+	protected void terminate() {
+		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
+			Assumption ass = assIter.next();
+			ass.checkAndFinalize();
+			if (ass.isDone()) {
 				assIter.remove();
 			}
 		}
@@ -101,7 +111,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 	@Override
 	protected void switchedToDeadBranch() {
 		for (Assumption ass : assumptions.values()) {
-			ass.deactivate();
+			ass.remove();
 		}
 		assumptions.clear();
 	}
@@ -117,27 +127,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 	private boolean handleDataflow(Symbol lhs, Collection<Object> rhss) {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
-
 			callHoldOnDataflowOnAliases(ass, lhs, rhss);
-
-			// ******************************************************************************************
-			// The following supports intra-procedural aliases.
-			// It is disabled since its use is unsound because side effects of other aliases are ignored.
-			// It is revisited when implementing TypeSta
-			// ******************************************************************************************
-			//
-			// boolean callPerformed = callHoldOnDataflowOnAliases(ass, ar);
-			// if (!callPerformed) {
-			// callPerformed = callHoldOnDataflowOnFailedStructuralAliases(ass, ar);
-			// }
-			// if (!callPerformed) {
-			// callPerformed = callHoldOnDataflowOnStructuralAliases(ass, ar);
-			// }
-			// if still (!callPerformed): not important
-
-			if (!ass.isActive()) {
-				assIter.remove();
-			}
 		}
 		return true;
 	}
@@ -152,7 +142,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 			Iterator<Assumption> assIter = newAssumptions.iterator();
 			while (assIter.hasNext()) {
 				Assumption ass = assIter.next();
-				assumptions.put(ass.key, ass);
+				assumptions.put(ass.getKey(), ass);
 			}
 		}
 	}
@@ -161,79 +151,18 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
 
-			if (ass.aliases.contains(effect.symbol)) {
-				ass.callHoldsOnEffect(effect, cfe); // call for plain aliases
-
-			} else {
-				for (Symbol alias : ass.aliases) {
-					if (effect.symbol.isStrucuralAlias(alias)) {
-						ass.callHoldsOnEffect(effect, cfe); // also called for structural aliases
-						break;
-					}
-				}
-			}
-
-			if (!ass.isActive()) {
-				assIter.remove();
+			if (ass.isApplicable(effect.symbol)) {
+				ass.callHoldsOnEffect(effect, cfe);
 			}
 		}
 	}
 
 	private boolean callHoldOnDataflowOnAliases(Assumption ass, Symbol lhs, Collection<Object> rhss) {
-		if (ass.aliases.contains(lhs)) {
+		if (ass.isApplicable(lhs)) {
 			ass.callHoldsOnDataflow(lhs, rhss);
 			return true;
 		}
 		return false;
 	}
-
-	// ******************************************************************************************
-	// The following supports intra-procedural aliases.
-	// It is disabled since its use is unsound because side effects of other aliases are ignored.
-	// It is revisited when implementing TypeStates.
-	// ******************************************************************************************
-	//
-	// private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, AssignmentRelation ar) {
-	// Symbol lSymbol = ar.leftSymbol;
-	// Expression assgnExpr = ar.assignedValue;
-	// Pair<Symbol, Symbol> cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.aliases, lSymbol, assgnExpr);
-	// Symbol newLSymbol = cSymbols.getKey();
-	// Symbol newRSymbol = cSymbols.getValue();
-	// if (newRSymbol != null) {
-	// AssignmentRelation newAR = new AssignmentRelation(newLSymbol, newRSymbol, null);
-	// ass.callHoldsOnDataflow(newAR);
-	// return true;
-	// }
-	//
-	// cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.failingStructuralAliases, lSymbol, assgnExpr);
-	// newLSymbol = cSymbols.getKey();
-	// newRSymbol = cSymbols.getValue();
-	// if (newRSymbol != null) {
-	// AssignmentRelation newAR = new AssignmentRelation(newLSymbol, newRSymbol, null);
-	// ass.callHoldsOnDataflow(newAR);
-	// return true;
-	// }
-	// return false;
-	// }
-	//
-	// private boolean callHoldOnDataflowOnFailedStructuralAliases(Assumption ass, AssignmentRelation ar) {
-	// Pair<Symbol, List<Symbol>> lSCA = SymbolContextUtils
-	// .getSymbolAndContextsToAlias(ass.failingStructuralAliases, ar.leftSymbol);
-	//
-	// if (lSCA.getKey() != null) {
-	// ass.failOnStructuralAlias(lSCA.getKey());
-	// return true;
-	// }
-	//
-	// Pair<Symbol, List<Symbol>> rCSA = SymbolContextUtils
-	// .getSymbolAndContextsToAlias(ass.failingStructuralAliases, ar.rightSymbol);
-	//
-	// if (rCSA.getKey() != null) {
-	// ass.failOnStructuralAlias(rCSA.getKey());
-	// return true;
-	// }
-	//
-	// return false;
-	// }
 
 }

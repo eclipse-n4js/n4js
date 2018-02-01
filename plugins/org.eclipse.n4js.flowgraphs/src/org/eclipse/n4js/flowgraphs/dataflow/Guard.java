@@ -24,19 +24,19 @@ public class Guard {
 	/** The type of the guard */
 	final public GuardType type;
 	/** The guarantee of the guard */
-	final public HoldAssertion asserts;
+	final public FlowAssertion asserts;
 	/** The symbol that is guarded */
 	final public Symbol symbol;
 	/** The context that is guaranteed, such as the right hand side of an {@code instanceof} {@link Expression} */
 	final public Expression context;
 
 	/** Constructor */
-	public Guard(Expression condition, GuardType type, HoldAssertion asserts, Symbol symbol) {
+	public Guard(Expression condition, GuardType type, FlowAssertion asserts, Symbol symbol) {
 		this(condition, type, asserts, symbol, null);
 	}
 
 	/** Constructor */
-	public Guard(Expression condition, GuardType type, HoldAssertion asserts, Symbol symbol,
+	public Guard(Expression condition, GuardType type, FlowAssertion asserts, Symbol symbol,
 			Expression context) {
 
 		this.condition = condition;

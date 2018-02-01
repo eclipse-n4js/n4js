@@ -15,7 +15,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -54,12 +54,12 @@ public class ValueNeverUsedAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 			if (symbol.is(effect.symbol)) {
 				isUsedSubsequently = true;
-				return HoldAssertion.AlwaysHolds;
+				return HoldResult.Passed;
 			}
-			return HoldAssertion.MayHold;
+			return HoldResult.MayHold;
 		}
 
 		@Override

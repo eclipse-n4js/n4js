@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.Argument;
@@ -118,12 +118,12 @@ public class TaintedValueAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
+		public HoldResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
 			if (!assignedSymbolIsAnnotatedWith(rSymbol, "Tainted")) {
-				return HoldAssertion.AlwaysHolds;
+				return HoldResult.Passed;
 			}
 
-			return HoldAssertion.MayHold;
+			return HoldResult.MayHold;
 		}
 
 	}

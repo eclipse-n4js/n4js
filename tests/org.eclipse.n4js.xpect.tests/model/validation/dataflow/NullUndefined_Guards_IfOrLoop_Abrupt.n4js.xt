@@ -25,14 +25,14 @@ function f1() {
 		a.toString();
 		return;
 	}
-	// XPECT warnings --> "Variable a is falsy" at "a"
+	// XPECT warnings --> "Variable a is undefined" at "a"
 	a.toString();
 }
 
 function f2() {
 	let a : int;
 	if (!a) {
-		// XPECT warnings --> "Variable a is falsy" at "a"
+		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 		return;
 	}
@@ -54,7 +54,7 @@ function f3() {
 function f4() {
 	let a : int;
 	if (!a && 1) {
-		// XPECT warnings --> "Variable a is falsy" at "a"
+		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 		return;
 	}
@@ -69,7 +69,7 @@ function f5() {
 		a.toString();
 		return;
 	}
-	// XPECT warnings --> "Variable a is falsy" at "a"
+	// XPECT warnings --> "Variable a is undefined" at "a"
 	a.toString();
 }
 
@@ -92,14 +92,14 @@ function f11() {
 		a.toString();
 		return;
 	}
-	// XPECT warnings --> "Variable a is falsy" at "a"
+	// XPECT nowarnings -->
 	a.toString();
 }
 
 function f12() {
 	let a : int = 0;
 	if (!a) {
-		// XPECT warnings --> "Variable a is falsy" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 		return;
 	}
@@ -121,7 +121,7 @@ function f13() {
 function f14() {
 	let a : int = 0;
 	if (!a && 1) {
-		// XPECT warnings --> "Variable a is falsy" at "a"
+		// XPECT nowarnings -->
 		a.toString();
 		return;
 	}
@@ -136,7 +136,7 @@ function f15() {
 		a.toString();
 		return;
 	}
-	// XPECT warnings --> "Variable a is falsy" at "a"
+	// XPECT nowarnings -->
 	a.toString();
 }
 

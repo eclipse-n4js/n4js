@@ -12,7 +12,9 @@ package org.eclipse.n4js.flowgraphs.dataflow;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
@@ -28,7 +30,7 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 	/** All {@link Assumption}s created by this {@link DataFlowVisitor} */
 	protected Collection<Assumption> allAssumptions = new LinkedList<>();
 	/** All {@link Assumption}s that failed */
-	protected Collection<Assumption> failedAssumptions = new LinkedList<>();
+	protected Map<Object, Assumption> failedAssumptions = new HashMap<>();
 	/** Reference to the {@link SymbolFactory} */
 	protected SymbolFactory symbolFactory;
 

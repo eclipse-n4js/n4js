@@ -19,9 +19,8 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
-import org.eclipse.n4js.flowgraphs.dataflow.GuardResultWithReason;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -111,23 +110,23 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 			if (effect.type == EffectType.MethodCall) {
 				Collection<String> postStates = getDeclaredStates(container, ANNOTATION_POSTSTATE);
 				if (!postStates.isEmpty()) {
-					deactivate(); // deactivate this assumption since the predecessor was found here
+					// deactivate(); // deactivate this assumption since the predecessor was found here
 					postStates.removeAll(preStates);
 					boolean allPostStatesAreValidPreStates = postStates.isEmpty();
 					if (allPostStatesAreValidPreStates) {
-						return HoldAssertion.AlwaysHolds;
+						return HoldResult.Passed;
 					}
 				}
 			}
-			return HoldAssertion.MayHold;
+			return HoldResult.MayHold;
 		}
 
 		@Override
-		public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+		public HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 				Multimap<GuardType, Guard> alwaysHolding) {
 
 			if (alwaysHolding.containsKey(GuardType.InState)) {
@@ -144,7 +143,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 				// }
 				// }
 			}
-			return GuardResultWithReason.MayHold;
+			return HoldResult.MayHold;
 		}
 	}
 
@@ -181,20 +180,20 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldAssertion holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 			if (effect.type == EffectType.MethodCall) {
 				Collection<String> postStatesOfMethodCall = getDeclaredStates(container, ANNOTATION_POSTSTATE);
 				if (!postStates.isEmpty()) {
 					postStates.addAll(postStatesOfMethodCall);
-					deactivate();
-					return HoldAssertion.AlwaysHolds;
+					// deactivate();
+					return HoldResult.Passed;
 				}
 			}
-			return HoldAssertion.MayHold;
+			return HoldResult.MayHold;
 		}
 
 		@Override
-		public GuardResultWithReason holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+		public HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 				Multimap<GuardType, Guard> alwaysHolding) {
 			if (alwaysHolding.containsKey(GuardType.InState)) {
 				// TODO: change from GuardType to Guard
@@ -205,7 +204,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 				// deactivate();
 				// }
 			}
-			return GuardResultWithReason.MayHold;
+			return HoldResult.MayHold;
 		}
 
 		@Override

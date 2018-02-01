@@ -23,7 +23,8 @@ import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.FlowAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
@@ -171,23 +172,31 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private String getAssertionString(NullDereferenceResult ndr, boolean isLeakingToClosure) {
-		if (ndr.assertion == HoldAssertion.AlwaysHolds && !isLeakingToClosure) {
+		if (ndr.assertion == FlowAssertion.AlwaysHolds && !isLeakingToClosure) {
 			return "is";
 		}
 		return "may be";
 	}
 
 	private String getNullOrUndefinedString(NullDereferenceResult ndr) {
-		switch (ndr.type) {
-		case IsNull:
-			return "null";
-		case IsUndefined:
-			return "undefined";
-		case IsFalsy:
-			return "falsy";
-		default:
-			return "falsy";
+		String problemType = "";
+		for (GuardType guardType : ndr.types) {
+			problemType += !problemType.isEmpty() ? " or " : "";
+			switch (guardType) {
+			case IsNull:
+				problemType += "null";
+				break;
+			case IsUndefined:
+				problemType += "undefined";
+				break;
+			case IsFalsy:
+				problemType += "falsy";
+				break;
+			default:
+				problemType += "unknown";
+			}
 		}
+		return problemType;
 	}
 
 	private String getReason(NullDereferenceResult ndr) {

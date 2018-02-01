@@ -39,7 +39,10 @@ class DataFlowGraphExplorer extends GraphExplorerInternal {
 		for (BranchWalkerInternal bwi : branchWalkers) {
 			DataFlowBranchWalker dfb = (DataFlowBranchWalker) bwi;
 
-			for (Map.Entry<Object, Assumption> entry : dfb.assumptions.entrySet()) {
+			for (Iterator<Map.Entry<Object, Assumption>> entryIter = dfb.assumptions.entrySet().iterator(); entryIter
+					.hasNext();) {
+
+				Map.Entry<Object, Assumption> entry = entryIter.next();
 				Object key = entry.getKey();
 				if (mergedDFB.assumptions.containsKey(key)) {
 					Assumption ass = mergedDFB.assumptions.get(key);
@@ -47,18 +50,15 @@ class DataFlowGraphExplorer extends GraphExplorerInternal {
 				} else {
 					mergedDFB.assumptions.put(key, entry.getValue());
 				}
+				entryIter.remove();
 			}
 		}
 
 		for (Iterator<Assumption> assIter = mergedDFB.assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
-			if (!ass.isActive()) {
+			ass.checkAndFinalize();
+			if (ass.isDone()) {
 				assIter.remove();
-			} else {
-				ass.callHoldsOnGuards();
-				if (!ass.isActive()) {
-					assIter.remove();
-				}
 			}
 		}
 		return mergedDFB;
