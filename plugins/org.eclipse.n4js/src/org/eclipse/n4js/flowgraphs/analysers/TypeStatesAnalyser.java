@@ -206,19 +206,6 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 			}
 			return HoldResult.MayHold;
 		}
-
-		@Override
-		public boolean holdsAfterall() {
-			Set<String> notInStates = new HashSet<>(postStates);
-			notInStates.removeAll(inStates);
-			Set<String> intersection = new HashSet<>(postStates);
-			intersection.retainAll(inStates);
-
-			boolean isReasonableGuard = true;
-			isReasonableGuard &= !intersection.isEmpty(); // not reachable patch
-			isReasonableGuard &= !notInStates.isEmpty(); // obsolete check
-			return isReasonableGuard;
-		}
 	}
 
 }

@@ -62,9 +62,5 @@ public class ValueNeverUsedAnalyser extends DataFlowVisitor {
 			return HoldResult.MayHold;
 		}
 
-		@Override
-		public boolean holdsAfterall() {
-			return isUsedSubsequently;
-		}
 	}
 }

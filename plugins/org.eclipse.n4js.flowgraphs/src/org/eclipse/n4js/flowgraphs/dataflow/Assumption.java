@@ -45,12 +45,11 @@ abstract public class Assumption {
 	public final Multimap<GuardType, Guard> guardsThatNeverHold = HashMultimap.create();
 	/** {@link GuardType}s that definitely not hold for this {@link Assumption} */
 	public final Multimap<GuardType, Guard> guardsThatAlwaysHold = HashMultimap.create();
-	/**  */
+	/** Contains all {@link HoldResult} that lead this {@link Assumption} to fail. */
 	public final Set<HoldResult> failedBranches = new HashSet<>();
-	/**  */
+	/** Contains all {@link HoldResult} that lead this {@link Assumption} to pass. */
 	public final Set<HoldResult> passedBranches = new HashSet<>();
-
-	/**   */
+	/** The {@link HoldResult} that terminated this {@link Assumption} (either passing or failing) */
 	public HoldResult terminatingGuard;
 
 	private boolean openBranch = true;
@@ -68,7 +67,12 @@ abstract public class Assumption {
 
 		this.creationSite = cfe;
 		this.symbol = symbol;
-		addAlias(symbol);
+		this.aliases.add(symbol);
+	}
+
+	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
+	void setDataFlowVisitor(DataFlowVisitor dataFlowVisitor) {
+		this.dataFlowVisitor = dataFlowVisitor;
 	}
 
 	/** @return a copy of this instance */
@@ -93,28 +97,17 @@ abstract public class Assumption {
 	}
 
 	/** @return a key that is based on the given objects */
-	Object getKey() {
+	final Object getKey() {
 		return assumptionGroup;
 	}
 
-	int getParallelHash() {
-		return Objects.hash(symbol, creationSite, this.getClass());
-	}
-
-	boolean isParallel(Assumption assumption) {
-		if (assumptionGroup == assumption.assumptionGroup) {
-			return true;
-		}
-		return getParallelHash() == assumption.getParallelHash();
-	}
-
 	/**
-	 * <b>Note:</b> Call this method when overwriting it.
+	 * <b>Important:</b> Call this method when overwriting it.
 	 *
 	 * @param assumption
 	 *            the {@link Assumption} this {@link Assumption} will be merged with
 	 */
-	public void mergeWith(Assumption assumption) {
+	protected void mergeWith(Assumption assumption) {
 		if (assumption.FLAG_WAS_MERGED) {
 			return;
 		}
@@ -130,7 +123,8 @@ abstract public class Assumption {
 		checkAndFinalize();
 	}
 
-	private void mergeData(Assumption assumption) {
+	/** Merges all data of the given {@link Assumption} into this. */
+	final private void mergeData(Assumption assumption) {
 		this.aliases.addAll(assumption.aliases);
 		this.failedBranches.addAll(assumption.failedBranches);
 		this.passedBranches.addAll(assumption.passedBranches);
@@ -148,36 +142,25 @@ abstract public class Assumption {
 		this.openBranch = this.openBranch || assumption.openBranch;
 	}
 
-	boolean isOpen() {
-		return openBranch;
+	/** @return true iff this {@link Assumption} is still being evaluated. */
+	final boolean isOpen() {
+		return !isDone();
 	}
 
-	boolean isApplicable(Symbol sym) {
+	/** @return true iff this {@link Assumption} is either passed or failed. */
+	final boolean isDone() {
+		return assumptionGroup.noCopies() && !openBranch;
+	}
+
+	/** @return true iff this {@link Assumption} is still evaluating the given {@link Symbol} */
+	final boolean isApplicable(Symbol sym) {
 		if (isOpen()) {
 			return aliases.contains(sym);
 		}
 		return false;
 	}
 
-	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
-	void setDataFlowVisitor(DataFlowVisitor dataFlowVisitor) {
-		this.dataFlowVisitor = dataFlowVisitor;
-	}
-
-	/** Adds a new {@link Symbol} that is aliases with this assumption */
-	protected void addAlias(Symbol alias) {
-		this.aliases.add(alias);
-	}
-
-	/** @return the {@link DataFlowVisitor} this {@link Assumption} belongs to */
-	public DataFlowVisitor getDataFlowVisitor() {
-		return dataFlowVisitor;
-	}
-
-	final void remove() {
-		assumptionGroup.remove(this);
-	}
-
+	/** @return true iff this {@link Assumption} failed. */
 	final boolean isFailed() {
 		if (isDone()) {
 			boolean branchFailed = !failedBranches.isEmpty();
@@ -187,6 +170,7 @@ abstract public class Assumption {
 		return false;
 	}
 
+	/** @return true iff this {@link Assumption} passed. */
 	final boolean isPassed() {
 		if (isDone()) {
 			boolean branchPassed = failedBranches.isEmpty();
@@ -196,11 +180,28 @@ abstract public class Assumption {
 		return false;
 	}
 
-	final boolean isDone() {
-		return assumptionGroup.noCopies() && !openBranch;
+	/**
+	 * Called from {@link DataFlowBranchWalker}. Will remove this {@link Assumption} from its {@link AssumptionGroup}.
+	 */
+	final void remove() {
+		assumptionGroup.remove(this);
 	}
 
-	void callHoldsOnDataflow(Symbol lhs, Collection<Object> rhss) {
+	/*
+	 * Called from {@link DataFlowBranchWalker} and {@link DataFlowGraphExplorer}
+	 */
+
+	/**
+	 * Called from {@link DataFlowBranchWalker}.
+	 * <p>
+	 * Method transforms multiple right hand sides into separate calls to
+	 * {@link #callHoldsOnDataflow(Symbol, Collection)}. Multiple right hand sides occur when either using
+	 * {@link ConditionalExpression}s <br/>
+	 * {@code let v = 1 ? null : undefined;} <br/>
+	 * or when using nested {@link AssignmentExpression}s <br/>
+	 * {@code let v = a = null;}.
+	 */
+	final void callHoldsOnDataflow(Symbol lhs, Collection<Object> rhss) {
 		checkState(isOpen());
 
 		Set<FlowAssertion> resultSet = new HashSet<>();
@@ -234,23 +235,9 @@ abstract public class Assumption {
 	}
 
 	/**
-	 * This method gets called on {@link Expression}s that trigger the value of {@code rhs} to be assigned to
-	 * {@code lhs}. For instance, an {@link AssignmentExpression} can trigger such a dataflow.
-	 *
-	 * @param lhs
-	 *            {@link Symbol} on the left hand side of the assignment
-	 * @param rSymbol
-	 *            {@link Symbol} whose value is assigned. Either rSymbol xor rValue is null.
-	 * @param rValue
-	 *            {@link Expression} whose return value is assigned. Either rSymbol xor rValue is null.
-	 *
-	 * @return true iff the assumption holds on the given dataflow
+	 * Called from {@link DataFlowBranchWalker} and delegates to {@link #holdsOnEffect(EffectInfo, ControlFlowElement)}.
 	 */
-	public HoldResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
-		return HoldResult.MayHold;
-	}
-
-	void callHoldsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+	final void callHoldsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 		checkState(isOpen());
 
 		HoldResult holds = holdsOnEffect(effect, cfe);
@@ -259,18 +246,8 @@ abstract public class Assumption {
 	}
 
 	/**
-	 * This method gets called on {@link Expression}s that have an effect on the given alias.
-	 *
-	 * @param effect
-	 *            the {@link EffectInfo} that is performed on the aliased symbol due to the container
-	 * @param container
-	 *            the {@link ControlFlowElement} that contains the given alias
-	 * @return true iff the assumption holds on the given alias symbol and its container
+	 * Called from {@link DataFlowBranchWalker}.
 	 */
-	public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
-		return HoldResult.MayHold;
-	}
-
 	void callHoldsOnGuards(Guard guard) {
 		checkState(isOpen());
 
@@ -287,6 +264,54 @@ abstract public class Assumption {
 	}
 
 	/**
+	 * Called from {@link DataFlowBranchWalker}.
+	 */
+	void checkAndFinalize() {
+		if (assumptionGroup.noCopies()) {
+			if (isOpen()) {
+				finalizeGuards();
+			}
+			if (!isOpen() && isFailed()) {
+				propagateFailed();
+			}
+		}
+	}
+
+	/*
+	 * Overwritable methods for client analyses
+	 */
+
+	/**
+	 * This method gets called on {@link Expression}s that trigger the value of {@code rhs} to be assigned to
+	 * {@code lhs}. For instance, an {@link AssignmentExpression} can trigger such a dataflow.
+	 *
+	 * @param lhs
+	 *            {@link Symbol} on the left hand side of the assignment
+	 * @param rSymbol
+	 *            {@link Symbol} whose value is assigned. Either rSymbol xor rValue is null.
+	 * @param rValue
+	 *            {@link Expression} whose return value is assigned. Either rSymbol xor rValue is null.
+	 *
+	 * @return true iff the assumption holds on the given dataflow
+	 */
+	protected HoldResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
+		return HoldResult.MayHold;
+	}
+
+	/**
+	 * This method gets called on {@link Expression}s that have an effect on the given alias.
+	 *
+	 * @param effect
+	 *            the {@link EffectInfo} that is performed on the aliased symbol due to the container
+	 * @param container
+	 *            the {@link ControlFlowElement} that contains the given alias
+	 * @return true iff the assumption holds on the given alias symbol and its container
+	 */
+	protected HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		return HoldResult.MayHold;
+	}
+
+	/**
 	 * This method gets called on {@link Expression}s that guard branches such as in {@link IfStatement},
 	 * {@link ConditionalExpression} and loops.
 	 *
@@ -297,18 +322,10 @@ abstract public class Assumption {
 	 *
 	 * @return true iff the assumption holds
 	 */
-	public HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+	protected HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 			Multimap<GuardType, Guard> alwaysHolding) {
 
 		return HoldResult.MayHold;
-	}
-
-	/**
-	 *
-	 * @return true iff the assumption holds
-	 */
-	public boolean holdsAfterall() {
-		return true;
 	}
 
 	private void handleHoldResult(HoldResult holds) {
@@ -325,18 +342,7 @@ abstract public class Assumption {
 		}
 	}
 
-	void checkAndFinalize() {
-		if (assumptionGroup.noCopies()) {
-			if (isOpen()) {
-				finalizeGuards();
-			}
-			if (!isOpen() && isFailed()) {
-				propagateFailed();
-			}
-		}
-	}
-
-	void finalizeGuards() {
+	private void finalizeGuards() {
 		if (isOpen() && assumptionGroup.noCopies()) {
 			HoldResult holds = holdsOnGuards(guardsThatNeverHold, guardsThatAlwaysHold);
 
@@ -354,13 +360,24 @@ abstract public class Assumption {
 		}
 	}
 
-	void propagateFailed() {
-		if (getDataFlowVisitor().failedAssumptions.containsKey(this.getParallelHash())) {
-			Assumption failedParallel = getDataFlowVisitor().failedAssumptions.get(getParallelHash());
+	private void propagateFailed() {
+		// In loop bodies, assumptions are created for the case that the body is executed once or twice. If both of
+		// these assumptions fail, they are merged here.
+		if (dataFlowVisitor.failedAssumptions.containsKey(this.getParallelHash())) {
+			Assumption failedParallel = dataFlowVisitor.failedAssumptions.get(getParallelHash());
 			failedParallel.mergeData(this);
 		} else {
-			getDataFlowVisitor().failedAssumptions.put(this.getParallelHash(), this);
+			dataFlowVisitor.failedAssumptions.put(this.getParallelHash(), this);
 		}
+	}
+
+	/**
+	 * In loop bodies, assumptions are created for the case that the body is executed once or twice. This methods
+	 * returns the same hash for both of these cases. In case two {@link Assumption}s fail that have the same
+	 * {@link #getParallelHash()} value, they are merged in {@link #propagateFailed()}.
+	 */
+	private int getParallelHash() {
+		return Objects.hash(symbol, creationSite, this.getClass());
 	}
 
 	@Override

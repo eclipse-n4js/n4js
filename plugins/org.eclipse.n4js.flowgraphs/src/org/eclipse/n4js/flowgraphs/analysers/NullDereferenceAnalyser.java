@@ -189,12 +189,5 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			return HoldResult.MayHold;
 		}
 
-		@Override
-		public boolean holdsAfterall() {
-			boolean isReasonableNullGuard = true;
-			isReasonableNullGuard &= !alwaysNullBefore;
-			isReasonableNullGuard &= !neverNullBefore;
-			return isReasonableNullGuard;
-		}
 	}
 }
