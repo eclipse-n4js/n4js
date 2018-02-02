@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
@@ -21,10 +18,22 @@ import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 
-@SuppressWarnings("javadoc")
+/**
+ * {@link Symbol}s provide variable binding. As a result, two different AST elements like {@link IdentifierRef}s that
+ * refer to the same variable (due to scoping), are abstracted by the same {@link Symbol} instance. Also, special
+ * variables such as {@code null}, {@code undefined} or {@code 0} refer to the same {@link Symbol} instance to simplify
+ * reasoning.
+ * <p>
+ * {@link Symbol}s are created by the {@link SymbolFactory}.
+ */
 abstract public class Symbol {
 	private Object cachedKey;
-	private Object cachedKeyContextFree;
+
+	/** @return the name of this {@link Symbol} */
+	abstract public String getName();
+
+	/** @return the location in the AST from which this {@link Symbol} was created */
+	abstract public ControlFlowElement getASTLocation();
 
 	/**
 	 * @param expression
@@ -90,25 +99,8 @@ abstract public class Symbol {
 		return null;
 	}
 
-	public List<Symbol> getAllContextSymbols() {
-		List<Symbol> contextSymbols = new LinkedList<>();
-
-		return contextSymbols;
-	}
-
-	/** @return the name of this {@link Symbol} */
-	abstract public String getName();
-
-	/** @return the location in the AST from which this {@link Symbol} was created */
-	abstract public ControlFlowElement getASTLocation();
-
 	/** @return the same key for {@link Symbol}s to the same variable. The key is cached. */
 	protected Object createSymbolKey() {
-		return createContextFreeSymbolKey();
-	}
-
-	/** @return the same key for {@link Symbol}s to the same variable. The key is cached. */
-	protected Object createContextFreeSymbolKey() {
 		Object key = getDeclaration();
 		if (key == null) {
 			key = getASTLocation();
@@ -116,18 +108,12 @@ abstract public class Symbol {
 		return key;
 	}
 
-	public final Object getSymbolKey() {
+	/** @return a unique key of this {@link Symbol} */
+	final public Object getSymbolKey() {
 		if (cachedKey == null) {
 			cachedKey = createSymbolKey();
 		}
 		return cachedKey;
-	}
-
-	public final Object getContextFreeSymbolKey() {
-		if (cachedKeyContextFree == null) {
-			cachedKeyContextFree = createContextFreeSymbolKey();
-		}
-		return cachedKeyContextFree;
 	}
 
 	@Override

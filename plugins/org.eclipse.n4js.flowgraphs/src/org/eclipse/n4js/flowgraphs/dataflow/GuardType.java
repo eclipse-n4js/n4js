@@ -32,13 +32,6 @@ public enum GuardType {
 	 */
 	IsTruthy,
 	/**
-	 * <b>Attention:</b> Use only to indicate reasons for failing {@link Assumption}s<br/>
-	 * <p>
-	 * For {@link Expression}s that check for falsy:<br/>
-	 * {@code if (!a)}
-	 */
-	IsFalsy,
-	/**
 	 * For {@link Expression}s that check for 0:<br/>
 	 * {@code if (a == 0)}
 	 */

@@ -40,4 +40,5 @@ public class EffectInfo {
 
 		return s;
 	}
+
 }

@@ -23,15 +23,23 @@ import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 
 /**
- *
+ * This factory creates {@link GuardStructure}s for given conditions. While doing this, also {@link Guard}s are created,
+ * which refer to their guarded {@link Symbol}s.
  */
 public class GuardStructureFactory {
 	final private GuardFactory guardFactory;
 
+	/** Constructor. */
 	GuardStructureFactory(SymbolFactory symbolFactory) {
 		this.guardFactory = new GuardFactory(symbolFactory);
 	}
 
+	/**
+	 * Creates {@link GuardStructure}s in case the given edge is connected to a {@link ControlFlowElement} that can
+	 * contain a {@link GuardStructure}.
+	 *
+	 * @return {@link GuardStructure} or null
+	 */
 	@SuppressWarnings("incomplete-switch")
 	GuardStructure create(ControlFlowEdge edge) {
 		boolean negate = false;
@@ -51,6 +59,7 @@ public class GuardStructureFactory {
 		return null;
 	}
 
+	/** @return the top {@link Expression} of a {@link GuardStructure}, or null. */
 	static private Expression getCondition(ControlFlowEdge edge) {
 		Expression condition = null;
 

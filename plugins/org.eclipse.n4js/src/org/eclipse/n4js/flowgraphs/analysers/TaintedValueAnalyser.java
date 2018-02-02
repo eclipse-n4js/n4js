@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
+import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.Argument;
@@ -34,6 +34,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
  * This analysis computes all cases where two explicitly declared annotations of type @Tainted and @Untainted conflict
  * with each other.
  */
+// TODO: not active/tested
 public class TaintedValueAnalyser extends DataFlowVisitor {
 	final N4JSTypeSystem ts;
 
@@ -118,12 +119,12 @@ public class TaintedValueAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
+		public PartialResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
 			if (!assignedSymbolIsAnnotatedWith(rSymbol, "Tainted")) {
-				return HoldResult.Passed;
+				return PartialResult.Passed;
 			}
 
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 
 	}

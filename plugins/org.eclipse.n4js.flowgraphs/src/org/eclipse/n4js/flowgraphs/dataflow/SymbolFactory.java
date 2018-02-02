@@ -64,7 +64,7 @@ public class SymbolFactory {
 
 		} else if (expr instanceof ParameterizedPropertyAccessExpression) {
 			// Deactivated.
-			// Not necessary at the moment. Causes serious performance issues in
+			// Not necessary at the moment. Causes performance issues in
 			// n4js-n4/tests/com.enfore.n4js.tests.libraryparsing/src/com/enfore/n4js/tests/libraryparsing/SmokeTestSuite
 
 			// ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) expr;

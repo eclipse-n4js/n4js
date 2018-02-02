@@ -20,7 +20,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
+import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -35,6 +35,7 @@ import com.google.common.collect.Multimap;
  * This analysis computes all cases where succeeding and type state relevant method calls on the same receiver instance
  * conflict with each other regarding their state conditions.
  */
+// TODO: not active/tested
 public class TypeStatesAnalyser extends DataFlowVisitor {
 	static final String ANNOTATION_INSTATE = "InState";
 	static final String ANNOTATION_PRESTATE = "PreState";
@@ -103,14 +104,13 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public void mergeWith(Assumption assumption) {
-			super.mergeWith(assumption);
+		public void mergeClientData(Assumption assumption) {
 			IsInPrestate iip = (IsInPrestate) assumption;
 			preStates.retainAll(iip.preStates);
 		}
 
 		@Override
-		public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		public PartialResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 			if (effect.type == EffectType.MethodCall) {
 				Collection<String> postStates = getDeclaredStates(container, ANNOTATION_POSTSTATE);
 				if (!postStates.isEmpty()) {
@@ -118,15 +118,15 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 					postStates.removeAll(preStates);
 					boolean allPostStatesAreValidPreStates = postStates.isEmpty();
 					if (allPostStatesAreValidPreStates) {
-						return HoldResult.Passed;
+						return PartialResult.Passed;
 					}
 				}
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 
 		@Override
-		public HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+		public PartialResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 				Multimap<GuardType, Guard> alwaysHolding) {
 
 			if (alwaysHolding.containsKey(GuardType.InState)) {
@@ -143,7 +143,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 				// }
 				// }
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 	}
 
@@ -173,27 +173,26 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public void mergeWith(Assumption assumption) {
-			super.mergeWith(assumption);
+		public void mergeClientData(Assumption assumption) {
 			IsReasonableStateGuard irg = (IsReasonableStateGuard) assumption;
 			postStates.addAll(irg.postStates);
 		}
 
 		@Override
-		public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		public PartialResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 			if (effect.type == EffectType.MethodCall) {
 				Collection<String> postStatesOfMethodCall = getDeclaredStates(container, ANNOTATION_POSTSTATE);
 				if (!postStates.isEmpty()) {
 					postStates.addAll(postStatesOfMethodCall);
 					// deactivate();
-					return HoldResult.Passed;
+					return PartialResult.Passed;
 				}
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 
 		@Override
-		public HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+		public PartialResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 				Multimap<GuardType, Guard> alwaysHolding) {
 			if (alwaysHolding.containsKey(GuardType.InState)) {
 				// TODO: change from GuardType to Guard
@@ -204,7 +203,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 				// deactivate();
 				// }
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 	}
 

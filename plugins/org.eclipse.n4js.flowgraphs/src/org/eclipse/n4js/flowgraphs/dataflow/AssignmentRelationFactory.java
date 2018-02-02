@@ -30,7 +30,25 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- *
+ * Creates {@link AssignmentRelation} from a given {@link ControlFlowElement}.
+ * <p>
+ * This factory deals with:
+ * <ul>
+ * <li/>plain {@link AssignmentExpression}: {@code a = b}
+ * <li/>plain {@link VariableDeclaration}: {@code let a = b}
+ * <li/>{@link ConditionalExpression} on the RHS: {@code a = b ? c : d}
+ * <li/>nested {@link AssignmentExpression} on the RHS: {@code a = b = c}
+ * <li/>assignments in {@code for-of} loops with declaration: <code>for (let a of [1,2,3]){}</code>
+ * <li/>assignments in {@code for-of} loops without declaration: <code>for (a of [1,2,3]){}</code>
+ * <li/>destructuring patterns in {@link AssignmentExpression}: {@code [a] = [b]} or <code>{p:a} = {p:b}}</code>
+ * <li/>destructuring patterns in {@link VariableDeclaration}: {@code let [a] = [b]} or <code>let {p:a} = {p:b}}</code>
+ * <li/>destructuring assignments in {@code for-of} loops with declaration:
+ * <code>for (let [a] of [[1],[2],[3]]){}</code>
+ * <li/>destructuring assignments in {@code for-of} loops without declaration: <code>for ([a] of [[1],[2],[3]]){}</code>
+ * <li/>nested destructuring patterns in the cases mentioned above
+ * <li/>multiple right hand sides that belong to the same left hand symbol (due to {@link ConditionalExpression})
+ * <li/>for missing initializers in {@link VariableDeclaration}s the RHS is set to {@code undefined}
+ * </ul>
  */
 public class AssignmentRelationFactory {
 	private final SymbolFactory symbolFactory;
@@ -107,8 +125,6 @@ public class AssignmentRelationFactory {
 			AssignmentExpression ae = (AssignmentExpression) rhs;
 			Expression innerRhs = ae.getRhs();
 			// The inner assignment is handled already.
-			// Expression innerLhs = ae.getLhs();
-			// handleSubexpressions(assgns, innerLhs, innerRhs, false);
 			handleSubexpressions(assgns, lhs, innerRhs);
 
 		} else if (rhs instanceof ConditionalExpression) {

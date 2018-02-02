@@ -21,7 +21,7 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
 
 /**
- * Creates {@link FlowAssertion}s from {@link Expression}s used as conditions in the source code.
+ * Creates {@link GuardAssertion}s from {@link Expression}s used as conditions in the source code.
  */
 public class FlowAssertionFactory {
 
@@ -29,8 +29,8 @@ public class FlowAssertionFactory {
 		or, and, not, eq, neq
 	}
 
-	/** @return an {@link FlowAssertion} derived from a condition. */
-	static FlowAssertion getGuard(EObject topContainer, EObject condition, boolean negateTree,
+	/** @return an {@link GuardAssertion} derived from a condition. */
+	static GuardAssertion getGuard(EObject topContainer, EObject condition, boolean negateTree,
 			boolean negateCondition) {
 
 		EObject conditionParent = condition.eContainer();
@@ -40,7 +40,7 @@ public class FlowAssertionFactory {
 		mayHolds |= beSet.contains(BooleanExpression.eq);
 		mayHolds |= beSet.contains(BooleanExpression.neq);
 		if (mayHolds) {
-			return FlowAssertion.MayHold;
+			return GuardAssertion.MayHold;
 		}
 
 		return get(beList, negateTree);
@@ -75,7 +75,7 @@ public class FlowAssertionFactory {
 			BinaryLogicalExpression ble = (BinaryLogicalExpression) condition;
 			switch (ble.getOp()) {
 			case AND:
-				nextValue = BooleanExpression.and; // can also be ignored since it's removed later anyway
+				nextValue = BooleanExpression.and;
 				break;
 			case OR:
 				nextValue = BooleanExpression.or;
@@ -141,23 +141,23 @@ public class FlowAssertionFactory {
 		}
 	}
 
-	static private FlowAssertion get(ArrayList<BooleanExpression> beList, boolean negateTree) {
+	static private GuardAssertion get(ArrayList<BooleanExpression> beList, boolean negateTree) {
 		if (negateTree) {
 			beList.add(BooleanExpression.not);
 		}
 		simplify(beList, 0);
 
 		if (beList.size() == 0) {
-			return FlowAssertion.AlwaysHolds;
+			return GuardAssertion.AlwaysHolds;
 		}
 		if (beList.size() == 1) {
 			switch (beList.get(0)) {
 			case not:
-				return FlowAssertion.NeverHolds;
+				return GuardAssertion.NeverHolds;
 			case and:
-				return FlowAssertion.AlwaysHolds;
+				return GuardAssertion.AlwaysHolds;
 			case or:
-				return FlowAssertion.MayHold;
+				return GuardAssertion.MayHold;
 			default:
 				return null;
 			}
@@ -167,11 +167,11 @@ public class FlowAssertionFactory {
 			BooleanExpression be1 = beList.get(1);
 
 			if (be0 == BooleanExpression.and && be1 == BooleanExpression.not) {
-				return FlowAssertion.MayHold;
+				return GuardAssertion.MayHold;
 			}
 
 			if (be0 == BooleanExpression.or && be1 == BooleanExpression.not) {
-				return FlowAssertion.NeverHolds;
+				return GuardAssertion.NeverHolds;
 			}
 		}
 		if (beList.size() > 2) {

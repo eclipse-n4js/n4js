@@ -20,7 +20,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
+import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -94,44 +94,42 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
+		public PartialResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
 			if (rSymbol != null) {
 				if (rSymbol.isNullLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsNull)) {
-					return new HoldResult.Failed(GuardType.IsNull, lhs);
+					return new PartialResult.Failed(GuardType.IsNull, lhs);
 				}
 				if (rSymbol.isUndefinedLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsUndefined)) {
-					return new HoldResult.Failed(GuardType.IsUndefined, lhs);
+					return new PartialResult.Failed(GuardType.IsUndefined, lhs);
 				}
 			} else if (rValue != null) {
-				return HoldResult.Passed;
+				return PartialResult.Passed;
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 
 		@Override
-		public HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+		public PartialResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 				Multimap<GuardType, Guard> alwaysHolding) {
 
 			if (alwaysHolding.containsKey(GuardType.IsTruthy)) {
-				return HoldResult.Passed;
-			}
-			if (neverHolding.containsKey(GuardType.IsTruthy)) {
-				// return new HoldResult.Failed(GuardType.IsFalsy);
+				return PartialResult.Passed;
 			}
 			if (neverHolding.containsKey(GuardType.IsNull) && neverHolding.containsKey(GuardType.IsUndefined)) {
-				return HoldResult.Passed;
+				return PartialResult.Passed;
 			}
 			if (alwaysHolding.containsKey(GuardType.IsNull)) {
-				return new HoldResult.Failed(GuardType.IsNull);
+				return new PartialResult.Failed(GuardType.IsNull);
 			}
 			if (alwaysHolding.containsKey(GuardType.IsUndefined)) {
-				return new HoldResult.Failed(GuardType.IsUndefined);
+				return new PartialResult.Failed(GuardType.IsUndefined);
 			}
 
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 	}
 
+	// TODO: not active/tested
 	// TODO: revisit and specify Null|Undefined|Truthy better
 	static class IsReasonableNullGuard extends Assumption {
 		private boolean alwaysNullBefore = false;
@@ -161,15 +159,14 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public void mergeWith(Assumption assumption) {
-			super.mergeWith(assumption);
+		public void mergeClientData(Assumption assumption) {
 			IsReasonableNullGuard irng = (IsReasonableNullGuard) assumption;
 			alwaysNullBefore |= irng.alwaysNullBefore;
 			neverNullBefore |= irng.neverNullBefore;
 		}
 
 		@Override
-		public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+		public PartialResult holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 			if (effect.type == EffectType.Write && cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
 				if (ae.getRhs() instanceof NullLiteral) {
@@ -177,16 +174,16 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 				} else {
 					neverNullBefore = true;
 				}
-				return HoldResult.Passed;
+				return PartialResult.Passed;
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 
 		@Override
-		public HoldResult holdsOnGuards(Multimap<GuardType, Guard> guardThatNeverHold,
+		public PartialResult holdsOnGuards(Multimap<GuardType, Guard> guardThatNeverHold,
 				Multimap<GuardType, Guard> guardThatAlwaysHold) {
 			// TODO
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 
 	}

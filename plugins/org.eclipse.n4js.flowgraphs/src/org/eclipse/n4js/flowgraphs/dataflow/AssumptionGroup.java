@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * {@link Assumption}s get forked and merged along the control flow branches they follow. This class tracks all copies
+ * (including the original {@link Assumption}) of an {@link Assumption}.
  */
 class AssumptionGroup {
 	private final Set<Assumption> copies = new HashSet<>();

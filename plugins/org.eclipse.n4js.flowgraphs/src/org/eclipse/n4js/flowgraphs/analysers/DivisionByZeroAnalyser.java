@@ -18,7 +18,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
+import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -32,6 +32,7 @@ import com.google.common.collect.Multimap;
  * This analysis computes all cases where an implicit assumption of a variable being not zero conflicts either with an
  * explicit guard that assures this variable to be zero or with an explicit assignment of zero.
  */
+// TODO: not active/tested
 public class DivisionByZeroAnalyser extends DataFlowVisitor {
 
 	@Override
@@ -76,28 +77,28 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+		public PartialResult holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 			if (effect.type == EffectType.Write && cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
 				Expression rhs = ae.getRhs();
 				if (isZeroLiteral(rhs)) {
-					return HoldResult.Passed;
+					return PartialResult.Passed;
 				}
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 
 		@Override
-		public HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+		public PartialResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 				Multimap<GuardType, Guard> alwaysHolding) {
 
 			if (alwaysHolding.containsKey(GuardType.IsZero)) {
-				return new HoldResult.Failed(GuardType.IsZero);
+				return new PartialResult.Failed(GuardType.IsZero);
 			}
 			if (neverHolding.containsKey(GuardType.IsZero)) {
-				return new HoldResult.Passed();
+				return PartialResult.Passed;
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 	}
 }

@@ -15,7 +15,8 @@ import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.n4JS.Expression;
 
 /**
- * Holds information about an assignment regarding exactly one {@link Symbol} whose value gets written.
+ * Holds information about an assignment regarding exactly one {@link Symbol} whose value gets written by one or more
+ * possible right hand side {@link Expression}s or {@link Symbol}s.
  */
 public class AssignmentRelation {
 	/** {@link Symbol} whose value is changed */

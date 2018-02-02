@@ -28,6 +28,7 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment;
 /**
  * Checks if all paths to a given a given node have a type constraint that is assignable from the given {@link TypeRef}.
  */
+// TODO: not active/tested
 public class TypeGuardVisitor extends GraphVisitor {
 	final N4JSTypeSystem ts;
 	final TypeRef reqTypeRef;

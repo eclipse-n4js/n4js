@@ -16,9 +16,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.IsNotNull;
-import org.eclipse.n4js.flowgraphs.dataflow.FlowAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
+import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -34,8 +34,8 @@ public class NullDereferenceResult {
 	public final Symbol failedAlias;
 	/** Assigned null or undefined */
 	public final Set<GuardType> types;
-	/** Either {@link FlowAssertion#AlwaysHolds} or {@link FlowAssertion#MayHold}. */
-	public final FlowAssertion assertion;
+	/** Either {@link GuardAssertion#AlwaysHolds} or {@link GuardAssertion#MayHold}. */
+	public final GuardAssertion assertion;
 
 	NullDereferenceResult(ControlFlowElement cfe, IsNotNull inn) {
 		this.cfe = cfe;
@@ -50,7 +50,7 @@ public class NullDereferenceResult {
 			return null;
 		}
 		Set<Symbol> failedSymbols = new HashSet<>();
-		for (HoldResult result : inn.failedBranches) {
+		for (PartialResult result : inn.failedBranches) {
 			failedSymbols.add(result.symbol);
 		}
 		if (failedSymbols.size() == 1) {
@@ -65,7 +65,7 @@ public class NullDereferenceResult {
 
 		} else if (!inn.failedBranches.isEmpty()) {
 			Set<GuardType> results = new TreeSet<>();
-			for (HoldResult result : inn.failedBranches) {
+			for (PartialResult result : inn.failedBranches) {
 				results.add(result.expectation);
 			}
 			return results;
@@ -73,11 +73,11 @@ public class NullDereferenceResult {
 		return Collections.emptySet();
 	}
 
-	private FlowAssertion getAssertion(IsNotNull inn) {
+	private GuardAssertion getAssertion(IsNotNull inn) {
 		if (inn.passedBranches.isEmpty()) {
-			return FlowAssertion.AlwaysHolds;
+			return GuardAssertion.AlwaysHolds;
 		}
-		return FlowAssertion.MayHold;
+		return GuardAssertion.MayHold;
 	}
 
 	@Override

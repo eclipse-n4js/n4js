@@ -15,7 +15,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
-import org.eclipse.n4js.flowgraphs.dataflow.HoldResult;
+import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  * Analysis to detect obsolete variable writes. In other words, the analysis detects variable definition sites that are
  * not followed by read sites of the same variable. In these cases, the defined value is never used.
  */
+// TODO: not active/tested
 public class ValueNeverUsedAnalyser extends DataFlowVisitor {
 
 	ValueNeverUsedAnalyser() {
@@ -37,7 +38,9 @@ public class ValueNeverUsedAnalyser extends DataFlowVisitor {
 		}
 	}
 
+	// TODO: make it work
 	static class IsUsedSubsequently extends Assumption {
+		@SuppressWarnings("unused")
 		private boolean isUsedSubsequently = false;
 
 		IsUsedSubsequently(ControlFlowElement cfe, Symbol symbol) {
@@ -54,12 +57,12 @@ public class ValueNeverUsedAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		public PartialResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 			if (symbol.is(effect.symbol)) {
 				isUsedSubsequently = true;
-				return HoldResult.Passed;
+				return PartialResult.Passed;
 			}
-			return HoldResult.MayHold;
+			return PartialResult.Unclear;
 		}
 
 	}

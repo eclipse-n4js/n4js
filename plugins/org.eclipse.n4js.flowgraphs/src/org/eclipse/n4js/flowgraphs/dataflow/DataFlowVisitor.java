@@ -21,7 +21,7 @@ import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * Base class for implementing data flow analyses.
  */
 abstract public class DataFlowVisitor implements FlowAnalyser {
 	/** {@link TraverseDirection} of this visitor */
@@ -44,9 +44,45 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 		this.direction = mode;
 	}
 
+	/*
+	 * Called from internal classes
+	 */
+
 	/** Called from {@link DataFlowVisitorHost} only */
 	final void setSymbolFactory(SymbolFactory symbolFactory) {
 		this.symbolFactory = symbolFactory;
+	}
+
+	/**
+	 * Moves {@link #newAssumptions} to {@link #allAssumptions}.
+	 *
+	 * @return new assumptions that were created during the last calls to
+	 *         {@link #visitEffect(EffectInfo, ControlFlowElement)} or
+	 *         {@link #visitGuard(EffectInfo, ControlFlowElement, boolean, boolean)}
+	 */
+	final Collection<Assumption> moveNewAssumptions() {
+		if (newAssumptions.isEmpty()) {
+			return Collections.emptyList();
+		}
+		allAssumptions.addAll(newAssumptions);
+		Collection<Assumption> newAssumptionsTmp = new LinkedList<>(newAssumptions);
+		newAssumptions.clear();
+		return newAssumptionsTmp;
+	}
+
+	/*
+	 * Methods for client analyses
+	 */
+
+	/** @return the {@link SymbolFactory} */
+	final protected SymbolFactory getSymbolFactory() {
+		return symbolFactory;
+	}
+
+	/** Adds an assumption to the data flow engine */
+	final protected void assume(Assumption assumption) {
+		assumption.setDataFlowVisitor(this);
+		newAssumptions.add(assumption);
 	}
 
 	/**
@@ -77,31 +113,4 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 		// overwrite me
 	}
 
-	/** Adds an assumption to the data flow engine */
-	final protected void assume(Assumption assumption) {
-		assumption.setDataFlowVisitor(this);
-		newAssumptions.add(assumption);
-	}
-
-	/** @return the {@link SymbolFactory} */
-	final protected SymbolFactory getSymbolFactory() {
-		return symbolFactory;
-	}
-
-	/**
-	 * Moves {@link #newAssumptions} to {@link #allAssumptions}.
-	 *
-	 * @return new assumptions that were created during the last calls to
-	 *         {@link #visitEffect(EffectInfo, ControlFlowElement)} or
-	 *         {@link #visitGuard(EffectInfo, ControlFlowElement, boolean, boolean)}
-	 */
-	public Collection<Assumption> moveNewAssumptions() {
-		if (newAssumptions.isEmpty()) {
-			return Collections.emptyList();
-		}
-		allAssumptions.addAll(newAssumptions);
-		Collection<Assumption> newAssumptionsTmp = new LinkedList<>(newAssumptions);
-		newAssumptions.clear();
-		return newAssumptionsTmp;
-	}
 }

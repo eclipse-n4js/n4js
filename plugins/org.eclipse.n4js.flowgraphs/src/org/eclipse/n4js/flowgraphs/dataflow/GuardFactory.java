@@ -86,7 +86,7 @@ public class GuardFactory {
 		if (symbol == null) {
 			return null;
 		}
-		FlowAssertion asserts = FlowAssertionFactory.getGuard(topContainer, re, negateTree, false);
+		GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, re, negateTree, false);
 		Guard guard = new Guard(re, GuardType.InstanceOf, asserts, symbol, context);
 		return guard;
 	}
@@ -100,7 +100,7 @@ public class GuardFactory {
 		isTruthy |= parent instanceof BinaryLogicalExpression;
 		isTruthy |= parent instanceof UnaryExpression && ((UnaryExpression) parent).getOp() == UnaryOperator.NOT;
 		if (isTruthy) {
-			FlowAssertion asserts = FlowAssertionFactory.getGuard(topContainer, expr, negateTree, false);
+			GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, expr, negateTree, false);
 			Guard guard = new Guard(expr, GuardType.IsTruthy, asserts, symbol);
 			return guard;
 		}
@@ -162,7 +162,7 @@ public class GuardFactory {
 		if (nuz.isZeroLiteral()) {
 			type = GuardType.IsZero;
 		}
-		FlowAssertion asserts = FlowAssertionFactory.getGuard(topContainer, eqe, negateTree, negateEqe);
+		GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, eqe, negateTree, negateEqe);
 		Guard guard = new Guard(eqe, type, asserts, symbol);
 		return guard;
 	}
@@ -182,7 +182,7 @@ public class GuardFactory {
 		if (typeofSymbol == null) {
 			return null;
 		}
-		FlowAssertion asserts = FlowAssertionFactory.getGuard(topContainer, ue.eContainer(), negateTree, negateEqe);
+		GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, ue.eContainer(), negateTree, negateEqe);
 		Guard guard = new Guard(ue, GuardType.IsUndefined, asserts, typeofSymbol);
 		return guard;
 	}
@@ -198,8 +198,7 @@ public class GuardFactory {
 				return null;
 			}
 		}
-		FlowAssertion asserts = FlowAssertionFactory.getGuard(topContainer, ue.eContainer(), negateTree,
-				negateEqe);
+		GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, ue.eContainer(), negateTree, negateEqe);
 		Guard guard = new Guard(ue, GuardType.IsUndefined, asserts, symbol);
 		return guard;
 	}

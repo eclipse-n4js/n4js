@@ -38,6 +38,7 @@ import org.eclipse.n4js.ts.types.TVariable;
  *
  * This is due to the merging behavior which merges visits the condition and merges afterwards.
  */
+// TODO: not active/tested
 public class UsedBeforeDeclaredAnalyserFastVersion extends GraphVisitor {
 	final Map<VariableDeclaration, Set<IdentifierRef>> checkLists = new HashMap<>();
 

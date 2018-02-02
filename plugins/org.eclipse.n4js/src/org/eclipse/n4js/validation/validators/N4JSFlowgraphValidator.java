@@ -23,7 +23,7 @@ import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
-import org.eclipse.n4js.flowgraphs.dataflow.FlowAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -172,7 +172,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private String getAssertionString(NullDereferenceResult ndr, boolean isLeakingToClosure) {
-		if (ndr.assertion == FlowAssertion.AlwaysHolds && !isLeakingToClosure) {
+		if (ndr.assertion == GuardAssertion.AlwaysHolds && !isLeakingToClosure) {
 			return "is";
 		}
 		return "may be";
@@ -188,9 +188,6 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 				break;
 			case IsUndefined:
 				problemType += "undefined";
-				break;
-			case IsFalsy:
-				problemType += "falsy";
 				break;
 			default:
 				problemType += "unknown";

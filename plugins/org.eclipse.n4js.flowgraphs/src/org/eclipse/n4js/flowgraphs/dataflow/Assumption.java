@@ -45,17 +45,17 @@ abstract public class Assumption {
 	public final Multimap<GuardType, Guard> guardsThatNeverHold = HashMultimap.create();
 	/** {@link GuardType}s that definitely not hold for this {@link Assumption} */
 	public final Multimap<GuardType, Guard> guardsThatAlwaysHold = HashMultimap.create();
-	/** Contains all {@link HoldResult} that lead this {@link Assumption} to fail. */
-	public final Set<HoldResult> failedBranches = new HashSet<>();
-	/** Contains all {@link HoldResult} that lead this {@link Assumption} to pass. */
-	public final Set<HoldResult> passedBranches = new HashSet<>();
-	/** The {@link HoldResult} that terminated this {@link Assumption} (either passing or failing) */
-	public HoldResult terminatingGuard;
+	/** Contains all {@link PartialResult} that lead this {@link Assumption} to fail. */
+	public final Set<PartialResult> failedBranches = new HashSet<>();
+	/** Contains all {@link PartialResult} that lead this {@link Assumption} to pass. */
+	public final Set<PartialResult> passedBranches = new HashSet<>();
+	/** The {@link PartialResult} that terminated this {@link Assumption} (either passing or failing) */
+	public PartialResult terminatingGuard;
 
 	private boolean openBranch = true;
 	private DataFlowVisitor dataFlowVisitor;
-
-	private boolean FLAG_WAS_MERGED = false;
+	/** Safety flag for runtime checks in {@link #mergeWith(Assumption)} */
+	private boolean mergedAlready = false;
 
 	/** Constructor */
 	public Assumption(ControlFlowElement cfe, Symbol symbol) {
@@ -68,11 +68,6 @@ abstract public class Assumption {
 		this.creationSite = cfe;
 		this.symbol = symbol;
 		this.aliases.add(symbol);
-	}
-
-	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
-	void setDataFlowVisitor(DataFlowVisitor dataFlowVisitor) {
-		this.dataFlowVisitor = dataFlowVisitor;
 	}
 
 	/** @return a copy of this instance */
@@ -96,6 +91,15 @@ abstract public class Assumption {
 		this.openBranch = assumption.openBranch;
 	}
 
+	/*
+	 * Called from {@link DataFlowVisitor}, {@link DataFlowBranchWalker} and {@link DataFlowGraphExplorer}
+	 */
+
+	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
+	final void setDataFlowVisitor(DataFlowVisitor dataFlowVisitor) {
+		this.dataFlowVisitor = dataFlowVisitor;
+	}
+
 	/** @return a key that is based on the given objects */
 	final Object getKey() {
 		return assumptionGroup;
@@ -107,39 +111,25 @@ abstract public class Assumption {
 	 * @param assumption
 	 *            the {@link Assumption} this {@link Assumption} will be merged with
 	 */
-	protected void mergeWith(Assumption assumption) {
-		if (assumption.FLAG_WAS_MERGED) {
+	final void mergeWith(Assumption assumption) {
+		if (assumption.mergedAlready) {
+			// This case happens after an assumption A1 that is done, was forked to A2.
+			// Assumptions that are done are not cloned/copied but only referenced,
+			// i.e. A1 and A2 are the very same instance.
+			// In case there is another assumption A3, A1 could be merged into this A3.
+			// Eventually, A2 also gets merged but has already mergedAlready=true.
 			return;
 		}
 		checkState(this.symbol == assumption.symbol);
-		// checkState(!assumption.FLAG_WAS_MERGED);
 
 		mergeData(assumption);
 		this.assumptionGroup.remove(assumption);
 		this.assumptionGroup.assure(this);
 
-		assumption.FLAG_WAS_MERGED = true;
+		assumption.mergedAlready = true;
 
+		mergeClientData(assumption);
 		checkAndFinalize();
-	}
-
-	/** Merges all data of the given {@link Assumption} into this. */
-	final private void mergeData(Assumption assumption) {
-		this.aliases.addAll(assumption.aliases);
-		this.failedBranches.addAll(assumption.failedBranches);
-		this.passedBranches.addAll(assumption.passedBranches);
-
-		if (openBranch && assumption.openBranch) {
-			this.guardsThatNeverHold.keySet().retainAll(assumption.guardsThatNeverHold.keySet());
-			this.guardsThatAlwaysHold.keySet().retainAll(assumption.guardsThatAlwaysHold.keySet());
-		} else if (assumption.openBranch) {
-			this.guardsThatNeverHold.clear();
-			this.guardsThatNeverHold.putAll(assumption.guardsThatNeverHold);
-			this.guardsThatAlwaysHold.clear();
-			this.guardsThatAlwaysHold.putAll(assumption.guardsThatAlwaysHold);
-		}
-
-		this.openBranch = this.openBranch || assumption.openBranch;
 	}
 
 	/** @return true iff this {@link Assumption} is still being evaluated. */
@@ -164,7 +154,7 @@ abstract public class Assumption {
 	final boolean isFailed() {
 		if (isDone()) {
 			boolean branchFailed = !failedBranches.isEmpty();
-			boolean guardsFailed = terminatingGuard != null && terminatingGuard.type == FlowAssertion.NeverHolds;
+			boolean guardsFailed = terminatingGuard != null && terminatingGuard.type == PartialResult.Type.Failed;
 			return branchFailed || guardsFailed;
 		}
 		return false;
@@ -174,7 +164,7 @@ abstract public class Assumption {
 	final boolean isPassed() {
 		if (isDone()) {
 			boolean branchPassed = failedBranches.isEmpty();
-			boolean guardsPassed = terminatingGuard == null || terminatingGuard.type != FlowAssertion.NeverHolds;
+			boolean guardsPassed = terminatingGuard == null || terminatingGuard.type != PartialResult.Type.Failed;
 			return branchPassed && guardsPassed;
 		}
 		return false;
@@ -186,10 +176,6 @@ abstract public class Assumption {
 	final void remove() {
 		assumptionGroup.remove(this);
 	}
-
-	/*
-	 * Called from {@link DataFlowBranchWalker} and {@link DataFlowGraphExplorer}
-	 */
 
 	/**
 	 * Called from {@link DataFlowBranchWalker}.
@@ -204,11 +190,11 @@ abstract public class Assumption {
 	final void callHoldsOnDataflow(Symbol lhs, Collection<Object> rhss) {
 		checkState(isOpen());
 
-		Set<FlowAssertion> resultSet = new HashSet<>();
+		Set<PartialResult.Type> resultSet = new HashSet<>();
 
 		for (Object rhs : rhss) {
 			Symbol rSymbol = null;
-			HoldResult result = null;
+			PartialResult result = null;
 
 			if (rhs instanceof Symbol) {
 				rSymbol = (Symbol) rhs;
@@ -229,7 +215,7 @@ abstract public class Assumption {
 			}
 		}
 
-		if (resultSet.size() > 1 && resultSet.contains(FlowAssertion.MayHold)) {
+		if (resultSet.size() > 1 && resultSet.contains(PartialResult.Type.Unclear)) {
 			openBranch = true;
 		}
 	}
@@ -240,7 +226,7 @@ abstract public class Assumption {
 	final void callHoldsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 		checkState(isOpen());
 
-		HoldResult holds = holdsOnEffect(effect, cfe);
+		PartialResult holds = holdsOnEffect(effect, cfe);
 		handleHoldResult(holds);
 		checkAndFinalize();
 	}
@@ -278,8 +264,18 @@ abstract public class Assumption {
 	}
 
 	/*
-	 * Overwritable methods for client analyses
+	 * Methods for client analyses
 	 */
+
+	/**
+	 * Called when a control flow branch B1 is merged into another branch B0.
+	 *
+	 * @param assumption
+	 *            of control flow branch B1
+	 */
+	protected void mergeClientData(Assumption assumption) {
+		// overwrite me
+	}
 
 	/**
 	 * This method gets called on {@link Expression}s that trigger the value of {@code rhs} to be assigned to
@@ -294,8 +290,9 @@ abstract public class Assumption {
 	 *
 	 * @return true iff the assumption holds on the given dataflow
 	 */
-	protected HoldResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
-		return HoldResult.MayHold;
+	protected PartialResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
+		// overwrite me
+		return PartialResult.Unclear;
 	}
 
 	/**
@@ -307,8 +304,9 @@ abstract public class Assumption {
 	 *            the {@link ControlFlowElement} that contains the given alias
 	 * @return true iff the assumption holds on the given alias symbol and its container
 	 */
-	protected HoldResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
-		return HoldResult.MayHold;
+	protected PartialResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+		// overwrite me
+		return PartialResult.Unclear;
 	}
 
 	/**
@@ -322,19 +320,43 @@ abstract public class Assumption {
 	 *
 	 * @return true iff the assumption holds
 	 */
-	protected HoldResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
+	protected PartialResult holdsOnGuards(Multimap<GuardType, Guard> neverHolding,
 			Multimap<GuardType, Guard> alwaysHolding) {
 
-		return HoldResult.MayHold;
+		// overwrite me
+		return PartialResult.Unclear;
 	}
 
-	private void handleHoldResult(HoldResult holds) {
-		if (holds.type == FlowAssertion.NeverHolds) {
-			failedBranches.add(holds);
+	/*
+	 * Internal methods
+	 */
+
+	/** Merges all data of the given {@link Assumption} into this. */
+	private void mergeData(Assumption assumption) {
+		this.aliases.addAll(assumption.aliases);
+		this.failedBranches.addAll(assumption.failedBranches);
+		this.passedBranches.addAll(assumption.passedBranches);
+
+		if (openBranch && assumption.openBranch) {
+			this.guardsThatNeverHold.keySet().retainAll(assumption.guardsThatNeverHold.keySet());
+			this.guardsThatAlwaysHold.keySet().retainAll(assumption.guardsThatAlwaysHold.keySet());
+		} else if (assumption.openBranch) {
+			this.guardsThatNeverHold.clear();
+			this.guardsThatNeverHold.putAll(assumption.guardsThatNeverHold);
+			this.guardsThatAlwaysHold.clear();
+			this.guardsThatAlwaysHold.putAll(assumption.guardsThatAlwaysHold);
+		}
+
+		this.openBranch = this.openBranch || assumption.openBranch;
+	}
+
+	private void handleHoldResult(PartialResult result) {
+		if (result.type == PartialResult.Type.Failed) {
+			failedBranches.add(result);
 			openBranch = false;
 		}
-		if (holds.type == FlowAssertion.AlwaysHolds) {
-			passedBranches.add(holds);
+		if (result.type == PartialResult.Type.Passed) {
+			passedBranches.add(result);
 			openBranch = false;
 		}
 		if (aliases.isEmpty()) {
@@ -343,20 +365,18 @@ abstract public class Assumption {
 	}
 
 	private void finalizeGuards() {
-		if (isOpen() && assumptionGroup.noCopies()) {
-			HoldResult holds = holdsOnGuards(guardsThatNeverHold, guardsThatAlwaysHold);
+		PartialResult holds = holdsOnGuards(guardsThatNeverHold, guardsThatAlwaysHold);
 
-			if (holds.type == FlowAssertion.AlwaysHolds) {
-				terminatingGuard = holds;
-				openBranch = false;
-			}
-			if (holds.type == FlowAssertion.NeverHolds) {
-				terminatingGuard = holds;
-				openBranch = false;
-			}
-			if (aliases.isEmpty()) {
-				openBranch = false;
-			}
+		if (holds.type == PartialResult.Type.Passed) {
+			terminatingGuard = holds;
+			openBranch = false;
+		}
+		if (holds.type == PartialResult.Type.Failed) {
+			terminatingGuard = holds;
+			openBranch = false;
+		}
+		if (aliases.isEmpty()) {
+			openBranch = false;
 		}
 	}
 

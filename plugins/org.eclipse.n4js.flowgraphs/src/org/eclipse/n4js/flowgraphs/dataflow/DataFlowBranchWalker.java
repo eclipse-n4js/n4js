@@ -30,7 +30,7 @@ import com.google.common.collect.Multimap;
  */
 class DataFlowBranchWalker extends BranchWalkerInternal {
 	final Map<Object, Assumption> assumptions = new HashMap<>();
-	private int forkCount = 0;
+	private int forkCount = 0; // memory performance: reduces number of copies
 
 	@Override
 	protected BranchWalkerInternal fork() {
