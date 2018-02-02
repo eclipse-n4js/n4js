@@ -35,8 +35,8 @@
 					IFIXME = $_dep_4.IFIXME;
 					IFIXME2 = $_dep_4.IFIXME2;
 				},
-				function($_dep_8) {
-					TestDIComponent = $_dep_8.TestDIComponent;
+				function($_dep_5) {
+					TestDIComponent = $_dep_5.TestDIComponent;
 				}
 			],
 			execute: function() {

@@ -33,8 +33,8 @@
 		};
 		return {
 			setters: [
-				function($_import_importexport_u002fIDEBUG_684_u002fErr) {
-					N = $_import_importexport_u002fIDEBUG_684_u002fErr;
+				function($_dep_1) {
+					N = $_dep_1;
 				}
 			],
 			execute: function() {
@@ -64,7 +64,7 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 --- */
 
 import * as N from "importexport/IDEBUG_684/Err"

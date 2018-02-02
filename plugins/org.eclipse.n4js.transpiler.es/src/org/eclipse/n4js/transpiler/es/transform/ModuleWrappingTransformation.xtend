@@ -268,16 +268,18 @@ class ModuleWrappingTransformation extends Transformation {
 		for( val iter = contents_im.iterator; iter.hasNext;  ) {
 			val elementIM = iter.next();
 			if( elementIM instanceof ImportDeclaration ) {
-				depNumber+=1
+				
 
 				val module = state.info.getImportedModule(elementIM);
 
+				var actualModuleSpecifier = computeActualModuleSpecifier(module)
 				// name for parameter the setter function, it doesn't matter much
 				// we use dollar, as it is invalid N4JS identifier - we avoid name collisions with user code
 				// we use counter just as a hint for someone reading compiled code
 				// (`$_dep_3` will be parameter of the 3rd setter function that corresponds to the 3rd module required by the SystemJS)
+				if(!map.keySet.contains(actualModuleSpecifier))
+					depNumber+=1
 				val fparName = "$_dep_"+depNumber;
-				var actualModuleSpecifier = computeActualModuleSpecifier(module)
 				
 				var moduleEntry = map.get( actualModuleSpecifier )
 				if( moduleEntry === null ) {
@@ -709,7 +711,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 		// (function(System) {
 		//     < ... statement ...>
-		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(module) : global.System);
+		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(module) : global.System);
 
 		val ret = _ExprStmnt( _CallExpr (
 			_Parenthesis(
