@@ -53,14 +53,14 @@
 		$n4Export('InstrumentedTest', InstrumentedTest);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fIInstrumentedTest) {
-					IInstrumentedTest = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fIInstrumentedTest.IInstrumentedTest;
+				function($_dep_1) {
+					IInstrumentedTest = $_dep_1.IInstrumentedTest;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestFunctionType) {
-					TestFunctionType = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestFunctionType.TestFunctionType;
+				function($_dep_2) {
+					TestFunctionType = $_dep_2.TestFunctionType;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestMethodDescriptor) {
-					TestMethodDescriptor = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestMethodDescriptor.TestMethodDescriptor;
+				function($_dep_3) {
+					TestMethodDescriptor = $_dep_3.TestMethodDescriptor;
 				}
 			],
 			execute: function() {
@@ -433,5 +433,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=InstrumentedTest.map

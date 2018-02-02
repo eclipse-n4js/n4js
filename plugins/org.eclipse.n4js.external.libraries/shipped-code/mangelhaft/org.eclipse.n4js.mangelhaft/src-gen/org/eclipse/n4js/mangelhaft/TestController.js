@@ -23,32 +23,32 @@
 		$n4Export('TestController', TestController);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fInstrumentedTest) {
-					InstrumentedTest = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fInstrumentedTest.InstrumentedTest;
+				function($_dep_1) {
+					InstrumentedTest = $_dep_1.InstrumentedTest;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTestExecutor) {
-					TestExecutor = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTestExecutor.TestExecutor;
+				function($_dep_2) {
+					TestExecutor = $_dep_2.TestExecutor;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroup) {
-					ResultGroup = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroup.ResultGroup;
+				function($_dep_3) {
+					ResultGroup = $_dep_3.ResultGroup;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroups) {
-					ResultGroups = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroups.ResultGroups;
+				function($_dep_4) {
+					ResultGroups = $_dep_4.ResultGroups;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestFunctionType) {
-					TestFunctionType = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestFunctionType.TestFunctionType;
+				function($_dep_5) {
+					TestFunctionType = $_dep_5.TestFunctionType;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestMethodDescriptor) {
-					TestMethodDescriptor = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestMethodDescriptor.TestMethodDescriptor;
+				function($_dep_6) {
+					TestMethodDescriptor = $_dep_6.TestMethodDescriptor;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestSpy) {
-					TestSpy = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestSpy.TestSpy;
+				function($_dep_7) {
+					TestSpy = $_dep_7.TestSpy;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet) {
-					PreconditionNotMet = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet.PreconditionNotMet;
+				function($_dep_8) {
+					PreconditionNotMet = $_dep_8.PreconditionNotMet;
 				},
-				function($_import_n4js_u002flang_u002fN4Injector) {
-					N4Injector = $_import_n4js_u002flang_u002fN4Injector.N4Injector;
+				function($_dep_9) {
+					N4Injector = $_dep_9.N4Injector;
 				}
 			],
 			execute: function() {
@@ -337,5 +337,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=TestController.map

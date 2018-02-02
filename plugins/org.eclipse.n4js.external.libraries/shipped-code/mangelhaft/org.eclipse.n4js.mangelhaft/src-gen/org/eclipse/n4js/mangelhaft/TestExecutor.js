@@ -19,23 +19,23 @@
 		$n4Export('TestExecutor', TestExecutor);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssertionError) {
-					AssertionError = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssertionError.AssertionError;
+				function($_dep_1) {
+					AssertionError = $_dep_1.AssertionError;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroup) {
-					ResultGroup = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroup.ResultGroup;
+				function($_dep_2) {
+					ResultGroup = $_dep_2.ResultGroup;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroups) {
-					ResultGroups = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroups.ResultGroups;
+				function($_dep_3) {
+					ResultGroups = $_dep_3.ResultGroups;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestResult) {
-					TestResult = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestResult.TestResult;
+				function($_dep_4) {
+					TestResult = $_dep_4.TestResult;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestSpy) {
-					TestSpy = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestSpy.TestSpy;
+				function($_dep_5) {
+					TestSpy = $_dep_5.TestSpy;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet) {
-					PreconditionNotMet = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet.PreconditionNotMet;
+				function($_dep_6) {
+					PreconditionNotMet = $_dep_6.PreconditionNotMet;
 				}
 			],
 			execute: function() {
@@ -420,5 +420,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=TestExecutor.map

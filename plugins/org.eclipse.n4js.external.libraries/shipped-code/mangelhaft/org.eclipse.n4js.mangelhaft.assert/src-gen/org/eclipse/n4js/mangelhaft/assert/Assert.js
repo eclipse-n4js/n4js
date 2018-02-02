@@ -39,14 +39,14 @@
 		$n4Export('Assert', Assert);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssertionError) {
-					AssertionError = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssertionError.AssertionError;
+				function($_dep_1) {
+					AssertionError = $_dep_1.AssertionError;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet) {
-					PreconditionNotMet = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet.PreconditionNotMet;
+				function($_dep_2) {
+					PreconditionNotMet = $_dep_2.PreconditionNotMet;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fDeepEqual) {
-					deepEqual = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fDeepEqual.deepEqual;
+				function($_dep_3) {
+					deepEqual = $_dep_3.deepEqual;
 				}
 			],
 			execute: function() {
@@ -564,5 +564,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=Assert.map

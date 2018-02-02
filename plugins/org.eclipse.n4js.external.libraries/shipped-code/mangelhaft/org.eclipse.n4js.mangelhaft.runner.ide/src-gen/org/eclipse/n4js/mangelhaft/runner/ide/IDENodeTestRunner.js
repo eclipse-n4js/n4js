@@ -20,23 +20,23 @@
 		};
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTestController) {
-					TestController = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTestController.TestController;
+				function($_dep_1) {
+					TestController = $_dep_1.TestController;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002freporter_u002fide_u002fIDEReporter) {
-					IDEReporter = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002freporter_u002fide_u002fIDEReporter.IDEReporter;
+				function($_dep_2) {
+					IDEReporter = $_dep_2.IDEReporter;
 				},
-				function($_import_n4js_u002flang_u002fN4Injector) {
-					N4Injector = $_import_n4js_u002flang_u002fN4Injector.N4Injector;
+				function($_dep_3) {
+					N4Injector = $_dep_3.N4Injector;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest) {
-					FIXME1 = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest.FIXME1;
-					FIXME2 = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest.FIXME2;
-					IFIXME = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest.IFIXME;
-					IFIXME2 = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest.IFIXME2;
+				function($_dep_4) {
+					FIXME1 = $_dep_4.FIXME1;
+					FIXME2 = $_dep_4.FIXME2;
+					IFIXME = $_dep_4.IFIXME;
+					IFIXME2 = $_dep_4.IFIXME2;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestDIComponent) {
-					TestDIComponent = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestDIComponent.TestDIComponent;
+				function($_dep_8) {
+					TestDIComponent = $_dep_8.TestDIComponent;
 				}
 			],
 			execute: function() {
@@ -249,5 +249,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=IDENodeTestRunner.map

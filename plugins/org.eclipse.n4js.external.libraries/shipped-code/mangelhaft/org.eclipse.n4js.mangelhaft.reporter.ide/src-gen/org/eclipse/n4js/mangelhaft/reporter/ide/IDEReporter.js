@@ -29,11 +29,11 @@
 		$n4Export('IDEReporter', IDEReporter);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fITestReporter) {
-					ITestReporter = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fITestReporter.ITestReporter;
+				function($_dep_1) {
+					ITestReporter = $_dep_1.ITestReporter;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestSpy) {
-					TestSpy = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestSpy.TestSpy;
+				function($_dep_2) {
+					TestSpy = $_dep_2.TestSpy;
 				}
 			],
 			execute: function() {
@@ -276,5 +276,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=IDEReporter.map
