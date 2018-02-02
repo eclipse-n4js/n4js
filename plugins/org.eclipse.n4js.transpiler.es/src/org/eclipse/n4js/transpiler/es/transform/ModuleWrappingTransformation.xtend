@@ -264,9 +264,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 		val LinkedHashMap<String,ImportEntry> map = newLinkedHashMap()
 
-		var i = 0;
 		for( val iter = contents_im.iterator; iter.hasNext;  ) {
-			i+=1;
 			val elementIM = iter.next();
 			if( elementIM instanceof ImportDeclaration ) {
 
