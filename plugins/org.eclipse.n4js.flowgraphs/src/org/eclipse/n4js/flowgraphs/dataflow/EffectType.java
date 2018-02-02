@@ -24,8 +24,6 @@ public enum EffectType {
 	/** Happens when a variable is read */
 	Read,
 	/** Happens when a variable is the receiver of a method call */
-	MethodCall,
-	/** Happens when a variable is read in an instanceof expression */
-	TypeGuard
+	MethodCall
 
 }

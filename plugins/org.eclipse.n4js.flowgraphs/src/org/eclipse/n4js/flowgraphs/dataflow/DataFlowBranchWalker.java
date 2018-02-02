@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -88,11 +87,18 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 						continue;
 					}
 
-					List<Guard> guards = guardStructure.guards.get(alias);
+					Collection<Guard> guards = guardStructure.guards.get(alias);
 					for (Guard guard : guards) {
 						ass.callHoldsOnGuards(guard);
 					}
 				}
+			}
+		}
+
+		for (DataFlowVisitor dfv : getDataFlowVisitorHost().dfVisitors) {
+			Collection<Guard> guards = guardStructure.guards.values();
+			for (Guard guard : guards) {
+				dfv.visitGuard(guard);
 			}
 		}
 	}

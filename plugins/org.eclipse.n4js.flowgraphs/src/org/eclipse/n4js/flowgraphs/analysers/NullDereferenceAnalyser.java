@@ -19,6 +19,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
@@ -48,10 +49,9 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	}
 
 	@Override
-	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-		if (must && isDereferencing(cfe)) {
-			Symbol tgtSymbol = getSymbolFactory().create(cfe);
-			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(cfe, tgtSymbol);
+	public void visitGuard(Guard guard) {
+		if (guard.asserts != GuardAssertion.MayHold && guard.type == GuardType.IsNull) {
+			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(guard);
 			assume(isReasonableNullGuard);
 		}
 	}
@@ -135,8 +135,8 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		private boolean alwaysNullBefore = false;
 		private boolean neverNullBefore = false;
 
-		IsReasonableNullGuard(ControlFlowElement cfe, Symbol symbol) {
-			this(cfe, symbol, false, false);
+		IsReasonableNullGuard(Guard guard) {
+			this(guard.condition, guard.symbol, false, false);
 		}
 
 		IsReasonableNullGuard(ControlFlowElement cfe, Symbol symbol, boolean alwaysNullBefore,

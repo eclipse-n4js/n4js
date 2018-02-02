@@ -19,6 +19,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
@@ -59,13 +60,14 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 	}
 
 	@Override
-	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-		if (must && effect.type == EffectType.MethodCall) {
-			Set<String> inState = getDeclaredStates(cfe, ANNOTATION_INSTATE);
-			if (!inState.isEmpty()) {
-				IsReasonableStateGuard isInPreState = new IsReasonableStateGuard(cfe, effect.symbol, inState);
-				assume(isInPreState);
-			}
+	public void visitGuard(Guard guard) {
+		if (guard.asserts != GuardAssertion.MayHold && guard.type == GuardType.InState) {
+			// TODO
+			// Set<String> inState = getDeclaredStates(cfe, ANNOTATION_INSTATE);
+			// if (!inState.isEmpty()) {
+			// IsReasonableStateGuard isInPreState = new IsReasonableStateGuard(cfe, effect.symbol, inState);
+			// assume(isInPreState);
+			// }
 		}
 	}
 

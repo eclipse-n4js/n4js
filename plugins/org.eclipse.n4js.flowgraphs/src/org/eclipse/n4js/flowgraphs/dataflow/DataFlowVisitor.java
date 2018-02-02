@@ -57,8 +57,7 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 	 * Moves {@link #newAssumptions} to {@link #allAssumptions}.
 	 *
 	 * @return new assumptions that were created during the last calls to
-	 *         {@link #visitEffect(EffectInfo, ControlFlowElement)} or
-	 *         {@link #visitGuard(EffectInfo, ControlFlowElement, boolean, boolean)}
+	 *         {@link #visitEffect(EffectInfo, ControlFlowElement)} or {@link #visitGuard(Guard)}
 	 */
 	final Collection<Assumption> moveNewAssumptions() {
 		if (newAssumptions.isEmpty()) {
@@ -100,16 +99,10 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 	/**
 	 * Called when a {@link ControlFlowElement} which is part of a condition is related to a symbol.
 	 *
-	 * @param effect
-	 *            the {@link EffectInfo}
-	 * @param cfe
-	 *            the {@link ControlFlowElement} that causes the effect
-	 * @param must
-	 *            is true iff the expression {@code cfe} is mandatory
-	 * @param inverse
-	 *            is true iff the expression is negated (due to negation or due to the else branch)
+	 * @param guard
+	 *            guard that is visited
 	 */
-	protected void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
+	protected void visitGuard(Guard guard) {
 		// overwrite me
 	}
 
