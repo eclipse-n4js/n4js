@@ -65,9 +65,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 			}
 		}
 		for (EffectInfo effect : node.effectInfos) {
-			if (!handledDataFlowSymbols.contains(effect.symbol)) {
-				handleVisitEffect(cfe, effect);
-			}
+			handleVisitEffect(cfe, effect, handledDataFlowSymbols);
 		}
 	}
 
@@ -138,17 +136,19 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		return true;
 	}
 
-	private void handleVisitEffect(ControlFlowElement cfe, EffectInfo effect) {
+	private void handleVisitEffect(ControlFlowElement cfe, EffectInfo effect, Set<Symbol> handledDataFlowSymbols) {
 		callHoldsOnEffect(cfe, effect);
 
 		for (DataFlowVisitor dfv : getDataFlowVisitorHost().dfVisitors) {
 			dfv.visitEffect(effect, cfe);
 
-			Collection<Assumption> newAssumptions = dfv.moveNewAssumptions();
-			Iterator<Assumption> assIter = newAssumptions.iterator();
-			while (assIter.hasNext()) {
-				Assumption ass = assIter.next();
-				assumptions.put(ass.getKey(), ass);
+			if (!handledDataFlowSymbols.contains(effect.symbol)) { // is this desired?
+				Collection<Assumption> newAssumptions = dfv.moveNewAssumptions();
+				Iterator<Assumption> assIter = newAssumptions.iterator();
+				while (assIter.hasNext()) {
+					Assumption ass = assIter.next();
+					assumptions.put(ass.getKey(), ass);
+				}
 			}
 		}
 	}

@@ -200,7 +200,7 @@ abstract public class Assumption {
 				rSymbol = (Symbol) rhs;
 				result = holdsOnDataflow(lhs, rSymbol, null);
 				aliases.remove(lhs);
-				if (rSymbol.isVariableSymbol()) {
+				if (rSymbol.isVariableSymbol() && followAliases()) {
 					aliases.add(rSymbol);
 				}
 
@@ -266,6 +266,11 @@ abstract public class Assumption {
 	/*
 	 * Methods for client analyses
 	 */
+
+	/** @return true iff aliases should be followed */
+	protected boolean followAliases() {
+		return true;
+	}
 
 	/**
 	 * Called when a control flow branch B1 is merged into another branch B0.

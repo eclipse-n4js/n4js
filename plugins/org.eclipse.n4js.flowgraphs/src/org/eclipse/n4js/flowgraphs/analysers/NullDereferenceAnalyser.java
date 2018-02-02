@@ -97,10 +97,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		public PartialResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
 			if (rSymbol != null) {
 				if (rSymbol.isNullLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsNull)) {
-					return new PartialResult.Failed(GuardType.IsNull, lhs);
+					return new NullDerefernceFailed(GuardType.IsNull, lhs);
 				}
 				if (rSymbol.isUndefinedLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsUndefined)) {
-					return new PartialResult.Failed(GuardType.IsUndefined, lhs);
+					return new NullDerefernceFailed(GuardType.IsUndefined, lhs);
 				}
 			} else if (rValue != null) {
 				return PartialResult.Passed;
@@ -119,10 +119,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 				return PartialResult.Passed;
 			}
 			if (alwaysHolding.containsKey(GuardType.IsNull)) {
-				return new PartialResult.Failed(GuardType.IsNull);
+				return new NullDerefernceFailed(GuardType.IsNull);
 			}
 			if (alwaysHolding.containsKey(GuardType.IsUndefined)) {
-				return new PartialResult.Failed(GuardType.IsUndefined);
+				return new NullDerefernceFailed(GuardType.IsUndefined);
 			}
 
 			return PartialResult.Unclear;

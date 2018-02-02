@@ -51,7 +51,8 @@ public class NullDereferenceResult {
 		}
 		Set<Symbol> failedSymbols = new HashSet<>();
 		for (PartialResult result : inn.failedBranches) {
-			failedSymbols.add(result.symbol);
+			NullDerefernceFailed ndFailed = (NullDerefernceFailed) result;
+			failedSymbols.add(ndFailed.symbol);
 		}
 		if (failedSymbols.size() == 1) {
 			return failedSymbols.iterator().next();
@@ -61,12 +62,14 @@ public class NullDereferenceResult {
 
 	private Set<GuardType> getTypes(IsNotNull inn) {
 		if (inn.terminatingGuard != null) {
-			return Sets.newHashSet(inn.terminatingGuard.expectation);
+			NullDerefernceFailed ndFailed = (NullDerefernceFailed) inn.terminatingGuard;
+			return Sets.newHashSet(ndFailed.expectation);
 
 		} else if (!inn.failedBranches.isEmpty()) {
 			Set<GuardType> results = new TreeSet<>();
 			for (PartialResult result : inn.failedBranches) {
-				results.add(result.expectation);
+				NullDerefernceFailed ndFailed = (NullDerefernceFailed) result;
+				results.add(ndFailed.expectation);
 			}
 			return results;
 		}

@@ -93,7 +93,8 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 				Multimap<GuardType, Guard> alwaysHolding) {
 
 			if (alwaysHolding.containsKey(GuardType.IsZero)) {
-				return new PartialResult.Failed(GuardType.IsZero);
+				// TODO
+				// return new PartialResult.Failed(GuardType.IsZero);
 			}
 			if (neverHolding.containsKey(GuardType.IsZero)) {
 				return PartialResult.Passed;
