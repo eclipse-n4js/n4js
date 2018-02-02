@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -68,7 +66,7 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 		};
 
 		// Run
-		final String out = runCaptureOut(args);
+		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(
 				"A.a == 5: true",
 				out);

@@ -69,6 +69,9 @@ public class N4JSEnumDeclarationTypesBuilder {
 
 		n4Enum.definedType = enumType
 		target.topLevelTypes += enumType
+		
+		VersionedTypesBuilderUtil.setTypeVersion(enumType, n4Enum);
+		
 		return enumType;
 	}
 

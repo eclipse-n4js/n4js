@@ -29,6 +29,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.AbstractTranspiler.SourceMapInfo;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -132,7 +133,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 					Optional<SourceMapInfo> optSourceMapData = Optional.absent();
 
 					if (createSourceMap) {
-						SourceMapInfo sourceMapDataInstance = ecmaScriptTranspiler.new SourceMapInfo();
+						SourceMapInfo sourceMapDataInstance = getTranspiler().new SourceMapInfo();
 						sourceMapDataInstance.sourceMapBuff = new StringWriter();
 
 						sourceMapDataInstance.simpleSourceMapFileName = simpleSourceMapFileName;
@@ -149,7 +150,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 						optSourceMapData = Optional.of(sourceMapDataInstance);
 					}
 
-					ecmaScriptTranspiler.transpile(resourceCasted, options, buffCode, optSourceMapData);
+					getTranspiler().transpile(resourceCasted, options, buffCode, optSourceMapData);
 					fsa.generateFile(filename, COMPILER_ID, buffCode.toString());
 
 					if (createSourceMap) {
@@ -172,7 +173,14 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		final N4JSResource resourceCasted = (N4JSResource) resource;
 
 		final Writer buffCode = new StringWriter();
-		ecmaScriptTranspiler.transpile(resourceCasted, options, buffCode, Optional.absent());
+		getTranspiler().transpile(resourceCasted, options, buffCode, Optional.absent());
 		return buffCode.toString();
+	}
+
+	/**
+	 * Returns the {@link AbstractTranspiler} to use to transpile resources.
+	 */
+	protected AbstractTranspiler getTranspiler() {
+		return ecmaScriptTranspiler;
 	}
 }

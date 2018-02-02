@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static java.util.Collections.singletonMap;
-import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
@@ -71,7 +70,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				"-t", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JS
 		};
-		final String out = runCaptureOut(args);
+		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(
 				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
 				out);
@@ -102,7 +101,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				wsRoot + "/" + PROJECT_NAME_N4JSX
 		};
 
-		final String out = runCaptureOut(args);
+		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(
 				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
 				out);

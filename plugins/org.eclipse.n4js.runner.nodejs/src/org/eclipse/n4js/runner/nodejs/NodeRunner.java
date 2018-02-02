@@ -86,6 +86,9 @@ public class NodeRunner implements IRunner {
 	@Inject
 	private RunnerFileBasedShippedCodeConfigurationHelper shippedCodeConfigurationHelper;
 
+	@Inject
+	private Provider<NodeRunOptions> nodeRunOptionsProvider;
+
 	@Override
 	public RunConfiguration createConfiguration() {
 		return new RunConfiguration();
@@ -110,15 +113,7 @@ public class NodeRunner implements IRunner {
 		Process process = null;
 		String[] cmds = new String[0];
 		try {
-			NodeRunOptions runOptions = new NodeRunOptions();
-
-			runOptions.setExecModule(runConfig.getExecModule());
-			runOptions.addInitModules(runConfig.getInitModules());
-			runOptions.setCoreProjectPaths(on(NODE_PATH_SEP).join(runConfig.getCoreProjectPaths()));
-			runOptions.setEngineOptions(runConfig.getEngineOptions());
-			runOptions.setCustomEnginePath(runConfig.getCustomEnginePath());
-			runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
-			runOptions.setSystemLoader(SystemLoaderInfo.fromString(runConfig.getSystemLoader()));
+			NodeRunOptions runOptions = createRunOptions(runConfig);
 
 			Path workingDirectory = FileUtils.createTempDirectory("N4JSNodeRun");
 
@@ -147,5 +142,21 @@ public class NodeRunner implements IRunner {
 			LOGGER.error(e);
 		}
 		return process;
+	}
+
+	/**
+	 * Creates the {@link NodeRunOptions} based on the given {@link RunConfiguration}.
+	 */
+	protected NodeRunOptions createRunOptions(RunConfiguration runConfig) {
+		NodeRunOptions runOptions = nodeRunOptionsProvider.get();
+
+		runOptions.setExecModule(runConfig.getExecModule());
+		runOptions.addInitModules(runConfig.getInitModules());
+		runOptions.setCoreProjectPaths(on(NODE_PATH_SEP).join(runConfig.getCoreProjectPaths()));
+		runOptions.setEngineOptions(runConfig.getEngineOptions());
+		runOptions.setCustomEnginePath(runConfig.getCustomEnginePath());
+		runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
+		runOptions.setSystemLoader(SystemLoaderInfo.fromString(runConfig.getSystemLoader()));
+		return runOptions;
 	}
 }

@@ -2989,6 +2989,1064 @@ public interface ImPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl <em>Versioned Parameterized Type Ref IM</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRef_IM()
+	 * @generated
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM = 18;
+
+	/**
+	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK;
+
+	/**
+	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DYNAMIC = PARAMETERIZED_TYPE_REF_IM__DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
+
+	/**
+	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+
+	/**
+	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DEFINED_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM__DEFINED_TYPING_STRATEGY;
+
+	/**
+	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM__REWIRED_TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Versioned Parameterized Type Ref IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Final By Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_FINAL_BY_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_FINAL_BY_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Array Like</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Dynamic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_DYNAMIC = PARAMETERIZED_TYPE_REF_IM___IS_DYNAMIC;
+
+	/**
+	 * The operation id for the '<em>Is Existential</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_EXISTENTIAL = PARAMETERIZED_TYPE_REF_IM___IS_EXISTENTIAL;
+
+	/**
+	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_UPPER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_UPPER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_LOWER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___TO_STRING = PARAMETERIZED_TYPE_REF_IM___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Top Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_TOP_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_TOP_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Bottom Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Structural Members</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Contains Wildcards</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___CONTAINS_WILDCARDS = PARAMETERIZED_TYPE_REF_IM___CONTAINS_WILDCARDS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_PARAMETERIZED = PARAMETERIZED_TYPE_REF_IM___IS_PARAMETERIZED;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_GENERIC = PARAMETERIZED_TYPE_REF_IM___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Is Raw</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_RAW = PARAMETERIZED_TYPE_REF_IM___IS_RAW;
+
+	/**
+	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___CONTAINS_UNBOUND_TYPE_VARIABLES = PARAMETERIZED_TYPE_REF_IM___CONTAINS_UNBOUND_TYPE_VARIABLES;
+
+	/**
+	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_USE_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_USE_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_DEF_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_DEF_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type IM</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM;
+
+	/**
+	 * The operation id for the '<em>Set Declared Type IM</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY = PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Set Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE = PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE;
+
+	/**
+	 * The operation id for the '<em>Has Requested Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___HAS_REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_REQUESTED_VERSION_OR_ZERO = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_VERSION = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Versioned Parameterized Type Ref IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRefStructural_IMImpl <em>Versioned Parameterized Type Ref Structural IM</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRefStructural_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRefStructural_IM()
+	 * @generated
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 19;
+
+	/**
+	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK;
+
+	/**
+	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DYNAMIC = PARAMETERIZED_TYPE_REF_IM__DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
+
+	/**
+	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+
+	/**
+	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DEFINED_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM__DEFINED_TYPING_STRATEGY;
+
+	/**
+	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM__REWIRED_TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Ast Structural Members</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Structural Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__STRUCTURAL_TYPE = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Gen Structural Members</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__GEN_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Postponed Substitutions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__POSTPONED_SUBSTITUTIONS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of structural features of the '<em>Versioned Parameterized Type Ref Structural IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Is Final By Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_FINAL_BY_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_FINAL_BY_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Array Like</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Dynamic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_DYNAMIC = PARAMETERIZED_TYPE_REF_IM___IS_DYNAMIC;
+
+	/**
+	 * The operation id for the '<em>Is Existential</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_EXISTENTIAL = PARAMETERIZED_TYPE_REF_IM___IS_EXISTENTIAL;
+
+	/**
+	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_UPPER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_UPPER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_LOWER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___TO_STRING = PARAMETERIZED_TYPE_REF_IM___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Top Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TOP_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_TOP_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Bottom Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Contains Wildcards</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___CONTAINS_WILDCARDS = PARAMETERIZED_TYPE_REF_IM___CONTAINS_WILDCARDS;
+
+	/**
+	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_PARAMETERIZED = PARAMETERIZED_TYPE_REF_IM___IS_PARAMETERIZED;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_GENERIC = PARAMETERIZED_TYPE_REF_IM___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Is Raw</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_RAW = PARAMETERIZED_TYPE_REF_IM___IS_RAW;
+
+	/**
+	 * The operation id for the '<em>Contains Unbound Type Variables</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___CONTAINS_UNBOUND_TYPE_VARIABLES = PARAMETERIZED_TYPE_REF_IM___CONTAINS_UNBOUND_TYPE_VARIABLES;
+
+	/**
+	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_USE_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_USE_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_DEF_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_DEF_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type IM</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE_IM = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM;
+
+	/**
+	 * The operation id for the '<em>Set Declared Type IM</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY = PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Set Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE__TYPE = PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE;
+
+	/**
+	 * The operation id for the '<em>Has Requested Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___HAS_REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_REQUESTED_VERSION_OR_ZERO = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_VERSION = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 6;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 7;
+
+	/**
+	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_TYPING_STRATEGY__TYPINGSTRATEGY = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 8;
+
+	/**
+	 * The operation id for the '<em>Get Structural Members</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 9;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 10;
+
+	/**
+	 * The number of operations of the '<em>Versioned Parameterized Type Ref Structural IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 11;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedIdentifierRef_IMImpl <em>Versioned Identifier Ref IM</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.VersionedIdentifierRef_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedIdentifierRef_IM()
+	 * @generated
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM = 20;
+
+	/**
+	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM__STRICT_MODE = IDENTIFIER_REF_IM__STRICT_MODE;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM__ID = IDENTIFIER_REF_IM__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM__ID_AS_TEXT = IDENTIFIER_REF_IM__ID_AS_TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM__REWIRED_TARGET = IDENTIFIER_REF_IM__REWIRED_TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM__REQUESTED_VERSION = IDENTIFIER_REF_IM_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Versioned Identifier Ref IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM_FEATURE_COUNT = IDENTIFIER_REF_IM_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___IS_VALID_SIMPLE_ASSIGNMENT_TARGET = IDENTIFIER_REF_IM___IS_VALID_SIMPLE_ASSIGNMENT_TARGET;
+
+	/**
+	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = IDENTIFIER_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET;
+
+	/**
+	 * The operation id for the '<em>Get Id IM</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___GET_ID_IM = IDENTIFIER_REF_IM___GET_ID_IM;
+
+	/**
+	 * The operation id for the '<em>Set Id IM</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___SET_ID_IM__SYMBOLTABLEENTRY = IDENTIFIER_REF_IM___SET_ID_IM__SYMBOLTABLEENTRY;
+
+	/**
+	 * The operation id for the '<em>Get Id</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___GET_ID = IDENTIFIER_REF_IM___GET_ID;
+
+	/**
+	 * The operation id for the '<em>Set Id</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___SET_ID__IDENTIFIABLEELEMENT = IDENTIFIER_REF_IM___SET_ID__IDENTIFIABLEELEMENT;
+
+	/**
+	 * The operation id for the '<em>Has Requested Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___HAS_REQUESTED_VERSION = IDENTIFIER_REF_IM_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___GET_REQUESTED_VERSION_OR_ZERO = IDENTIFIER_REF_IM_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM___GET_VERSION = IDENTIFIER_REF_IM_OPERATION_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Versioned Identifier Ref IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_IDENTIFIER_REF_IM_OPERATION_COUNT = IDENTIFIER_REF_IM_OPERATION_COUNT + 3;
+
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl <em>Versioned Named Import Specifier IM</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedNamedImportSpecifier_IM()
+	 * @generated
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM = 21;
+
+	/**
+	 * The feature id for the '<em><b>Flagged Used In Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__FLAGGED_USED_IN_CODE = N4JSPackage.NAMED_IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE;
+
+	/**
+	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_ELEMENT = N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Imported Element As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_ELEMENT_AS_TEXT = N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT_AS_TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Alias</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__ALIAS = N4JSPackage.NAMED_IMPORT_SPECIFIER__ALIAS;
+
+	/**
+	 * The feature id for the '<em><b>Imported Type Versions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS = N4JSPackage.NAMED_IMPORT_SPECIFIER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Versioned Type Import</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT = N4JSPackage.NAMED_IMPORT_SPECIFIER_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Versioned Named Import Specifier IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM_FEATURE_COUNT = N4JSPackage.NAMED_IMPORT_SPECIFIER_FEATURE_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Is Default Import</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM___IS_DEFAULT_IMPORT = N4JSPackage.NAMED_IMPORT_SPECIFIER___IS_DEFAULT_IMPORT;
+
+	/**
+	 * The number of operations of the '<em>Versioned Named Import Specifier IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM_OPERATION_COUNT = N4JSPackage.NAMED_IMPORT_SPECIFIER_OPERATION_COUNT + 0;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.Script_IM <em>Script IM</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3556,6 +4614,68 @@ public interface ImPackage extends EPackage {
 	EOperation getStringLiteralForSTE__GetValueAsString();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM <em>Versioned Parameterized Type Ref IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Versioned Parameterized Type Ref IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM
+	 * @generated
+	 */
+	EClass getVersionedParameterizedTypeRef_IM();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM <em>Versioned Parameterized Type Ref Structural IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Versioned Parameterized Type Ref Structural IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM
+	 * @generated
+	 */
+	EClass getVersionedParameterizedTypeRefStructural_IM();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM <em>Versioned Identifier Ref IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Versioned Identifier Ref IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM
+	 * @generated
+	 */
+	EClass getVersionedIdentifierRef_IM();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM <em>Versioned Named Import Specifier IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Versioned Named Import Specifier IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM
+	 * @generated
+	 */
+	EClass getVersionedNamedImportSpecifier_IM();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM#getImportedTypeVersions <em>Imported Type Versions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Imported Type Versions</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM#getImportedTypeVersions()
+	 * @see #getVersionedNamedImportSpecifier_IM()
+	 * @generated
+	 */
+	EReference getVersionedNamedImportSpecifier_IM_ImportedTypeVersions();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM#isVersionedTypeImport <em>Versioned Type Import</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Versioned Type Import</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM#isVersionedTypeImport()
+	 * @see #getVersionedNamedImportSpecifier_IM()
+	 * @generated
+	 */
+	EAttribute getVersionedNamedImportSpecifier_IM_VersionedTypeImport();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4053,6 +5173,62 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STRING_LITERAL_FOR_STE___GET_VALUE_AS_STRING = eINSTANCE.getStringLiteralForSTE__GetValueAsString();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl <em>Versioned Parameterized Type Ref IM</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRef_IM()
+		 * @generated
+		 */
+		EClass VERSIONED_PARAMETERIZED_TYPE_REF_IM = eINSTANCE.getVersionedParameterizedTypeRef_IM();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRefStructural_IMImpl <em>Versioned Parameterized Type Ref Structural IM</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRefStructural_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRefStructural_IM()
+		 * @generated
+		 */
+		EClass VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = eINSTANCE.getVersionedParameterizedTypeRefStructural_IM();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedIdentifierRef_IMImpl <em>Versioned Identifier Ref IM</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.VersionedIdentifierRef_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedIdentifierRef_IM()
+		 * @generated
+		 */
+		EClass VERSIONED_IDENTIFIER_REF_IM = eINSTANCE.getVersionedIdentifierRef_IM();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl <em>Versioned Named Import Specifier IM</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedNamedImportSpecifier_IM()
+		 * @generated
+		 */
+		EClass VERSIONED_NAMED_IMPORT_SPECIFIER_IM = eINSTANCE.getVersionedNamedImportSpecifier_IM();
+
+		/**
+		 * The meta object literal for the '<em><b>Imported Type Versions</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS = eINSTANCE.getVersionedNamedImportSpecifier_IM_ImportedTypeVersions();
+
+		/**
+		 * The meta object literal for the '<em><b>Versioned Type Import</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute VERSIONED_NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT = eINSTANCE.getVersionedNamedImportSpecifier_IM_VersionedTypeImport();
 
 	}
 

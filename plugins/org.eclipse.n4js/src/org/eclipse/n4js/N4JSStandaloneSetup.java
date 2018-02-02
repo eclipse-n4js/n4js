@@ -112,5 +112,8 @@ public class N4JSStandaloneSetup implements ISetup {
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsd", resourceFactory);
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsd",
 				serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4idl", resourceFactory);
+		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4idl",
+				serviceProvider);
 	}
 }
