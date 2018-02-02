@@ -264,22 +264,24 @@ class ModuleWrappingTransformation extends Transformation {
 
 		val LinkedHashMap<String,ImportEntry> map = newLinkedHashMap()
 
+		var depNumber = 0
 		for( val iter = contents_im.iterator; iter.hasNext;  ) {
 			val elementIM = iter.next();
 			if( elementIM instanceof ImportDeclaration ) {
+				depNumber+=1
 
 				val module = state.info.getImportedModule(elementIM);
 
-				// calculate names in output
-				val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module)
-
-				val fparName = "$_import_" + resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module)
-
-				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier)
+				// name for parameter the setter function, it doesn't matter much
+				// we use dollar, as it is invalid N4JS identifier - we avoid name collisions with user code
+				// we use counter just as a hint for someone reading compiled code
+				// (`$_dep_3` will be parameter of the 3rd setter function that corresponds to the 3rd module required by the SystemJS)
+				val fparName = "$_dep_"+depNumber;
+				var actualModuleSpecifier = computeActualModuleSpecifier(module)
 				
 				var moduleEntry = map.get( actualModuleSpecifier )
 				if( moduleEntry === null ) {
-					moduleEntry = new ImportEntry(completeModuleSpecifier, actualModuleSpecifier, fparName, newArrayList(), elementIM)
+					moduleEntry = new ImportEntry(actualModuleSpecifier, fparName, newArrayList(), elementIM)
 					map.put( actualModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry
@@ -325,7 +327,8 @@ class ModuleWrappingTransformation extends Transformation {
 		return map;
 	}
 
-	private def String computeActualModuleSpecifier(TModule module, String completeModuleSpecifier) {
+	private def String computeActualModuleSpecifier(TModule module) {
+		val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module)
 		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
 
 		if (moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier)
@@ -697,7 +700,7 @@ class ModuleWrappingTransformation extends Transformation {
 			System.registerDynamic([], true, function(require, exports, module) {
 				«cs»
 			});
-		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+		})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 		'''
 	}
 
@@ -722,7 +725,7 @@ class ModuleWrappingTransformation extends Transformation {
 					steFor_module._PropertyAccessExpr( steFor_exports )
 				),
 					/*     TRUE-case 		*/
-			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node/src-gen/index') ).
+			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node') ).
 			    _PropertyAccessExpr( steFor_System )._CallExpr( _IdentRef(steFor_require), _IdentRef(steFor_module) ),
 			    	/*     FALSE-case 		*/
 				_IdentRef( steFor_System )
