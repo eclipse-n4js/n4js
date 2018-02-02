@@ -276,11 +276,11 @@ class ModuleWrappingTransformation extends Transformation {
 				val fparName = "$_import_" + resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module)
 
 				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier)
-
-				var moduleEntry = map.get( completeModuleSpecifier )
+				
+				var moduleEntry = map.get( actualModuleSpecifier )
 				if( moduleEntry === null ) {
 					moduleEntry = new ImportEntry(completeModuleSpecifier, actualModuleSpecifier, fparName, newArrayList(), elementIM)
-					map.put( completeModuleSpecifier, moduleEntry )
+					map.put( actualModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry
 
