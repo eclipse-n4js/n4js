@@ -42,7 +42,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -358,13 +357,8 @@ public class TestDiscoveryHelper {
 	}
 
 	private TestCase createTestCase(final TMethod method, final TModule module, final String clazzFqnStr) {
-		String origin = module.getProjectId();
-		IN4JSProject project = n4jsCore.findProject(module.eResource().getURI()).orNull();
-		if (project != null) {
-			origin = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
-		}
 		final TestCase testCase = new TestCase(createTestCaseId(clazzFqnStr, method), clazzFqnStr,
-				origin, method.getName(), method.getName(), EcoreUtil.getURI(method));
+				module.getProjectId(), method.getName(), method.getName(), EcoreUtil.getURI(method));
 		return testCase;
 	}
 
