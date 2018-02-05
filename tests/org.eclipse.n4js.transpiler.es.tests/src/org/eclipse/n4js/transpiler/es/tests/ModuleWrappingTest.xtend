@@ -259,8 +259,9 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 			       c2
 			   ;
 			   return {
-			            setters  : [function ($_dep_1 ){
-			                          C2 = $_dep_1.C2;
+			            setters  : [function ($exports){
+			            	          // ExportedStuff
+			                          C2 = $exports.C2;
 			                        }                                                    ],
 			            execute  : function (){
 			            			 c2 = new C2();
@@ -301,9 +302,10 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		       C2
 		   ;
 		   return {
-		            setters  : [function ($_dep_1 ){
-		                          C1 = $_dep_1.C1;
-		                          C2 = $_dep_1.C2;
+		            setters  : [function ($exports){
+		                          // ExportedStuff
+		                          C1 = $exports.C1;
+		                          C2 = $exports.C2;
 		                        }                                                    ],
 		            execute  : function (){
 		                         console.log(C1);
@@ -344,12 +346,14 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		       C2
 		   ;
 		   return {
-		            setters  : [function ($_dep_1 ){
-		                          C1 = $_dep_1.C1;
-		                          XX = $_dep_1.C2;
+		            setters  : [function ($exports ){
+		                          // ExportedStuff
+		                          C1 = $exports.C1;
+		                          XX = $exports.C2;
 		                        }
-		                        , function ($_dep_2 ){
-								  C2 = $_dep_2.C2;
+		                        , function ($exports){
+		                          // OtherExportedStuff
+								  C2 = $exports.C2;
 								}],
 		            execute  : function (){
 		                         console.log(C1);
@@ -390,11 +394,13 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		   ;
 		   return {
 		            setters  : [
-		                function ($_dep_1){
-		                    C2 = $_dep_1.C2;
+		                function ($exports){
+		                    // OtherExportedStuff
+		                    C2 = $exports.C2;
 		                },
-		                function ($_dep_2){
-		                    Namespace = $_dep_2;
+		                function ($exports){
+		                    // ExportedStuff
+		                    Namespace = $exports;
 		                }
 		            ],
 		            execute  : function (){
@@ -471,8 +477,9 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 				$n4Export('A', A);
 
 			    return {
-			             setters  : [function ($_dep_1 ){
-			                           C1 = $_dep_1.C1;
+			             setters  : [function ($exports){
+			                           // ExportedStuff
+			                           C1 = $exports.C1;
 			                         }                                                      ],
 			             execute  : function (){
 			                          $makeClass(A, N4Object, [], {
@@ -565,8 +572,9 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 				$n4Export('A', A);
 
 			    return {
-			             setters  : [function ($_dep_1 ){
-			                           C1 = $_dep_1.C1;
+			             setters  : [function ($exports){
+			                          // ExportedStuff
+			                           C1 = $exports.C1;
 			                         }                                                      ],
 			             execute  : function (){
 			                          $makeClass(A, N4Object, [], {

@@ -33,11 +33,13 @@
 		var N, S;
 		return {
 			setters: [
-				function($_dep_1) {
-					N = $_dep_1;
+				function($exports) {
+					// org.eclipse.n4js.transpiler.es5.tests/src-gen/importexport/IDEBUG_684/Err
+					N = $exports;
 				},
-				function($_dep_2) {
-					S = $_dep_2;
+				function($exports) {
+					// org.eclipse.n4js.transpiler.es5.tests/src-gen/importexport/IDEBUG_684/Stuff
+					S = $exports;
 				}
 			],
 			execute: function() {

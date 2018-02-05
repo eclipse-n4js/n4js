@@ -39,8 +39,9 @@ stderr:
 		var Address, simple;
 		return {
 			setters: [
-				function($_dep_1) {
-					Address = $_dep_1.Address;
+				function($exports) {
+					// org.eclipse.n4js.spec.examples.xpect.tests/src-gen/my/Address
+					Address = $exports.Address;
 				}
 			],
 			execute: function() {

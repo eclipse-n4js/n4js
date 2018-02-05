@@ -33,8 +33,9 @@
 		};
 		return {
 			setters: [
-				function($_dep_1) {
-					N = $_dep_1;
+				function($exports) {
+					// org.eclipse.n4js.transpiler.es5.tests/src-gen/importexport/IDEBUG_684/Err
+					N = $exports;
 				}
 			],
 			execute: function() {
