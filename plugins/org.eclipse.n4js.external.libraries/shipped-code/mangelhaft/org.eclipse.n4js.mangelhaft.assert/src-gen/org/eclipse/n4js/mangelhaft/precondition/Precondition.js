@@ -13,11 +13,13 @@
 		$n4Export('Precondition', Precondition);
 		return {
 			setters: [
-				function($_dep_1) {
-					Assert = $_dep_1.Assert;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/Assert
+					Assert = $exports.Assert;
 				},
-				function($_dep_2) {
-					PreconditionNotMet = $_dep_2.PreconditionNotMet;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				}
 			],
 			execute: function() {

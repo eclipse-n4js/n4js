@@ -25,8 +25,9 @@
 		$n4Export('TestMethodDescriptor', TestMethodDescriptor);
 		return {
 			setters: [
-				function($_dep_1) {
-					Nvp = $_dep_1.Nvp;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/Nvp
+					Nvp = $exports.Nvp;
 				}
 			],
 			execute: function() {

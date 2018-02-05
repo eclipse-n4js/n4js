@@ -20,23 +20,28 @@
 		};
 		return {
 			setters: [
-				function($_dep_1) {
-					TestController = $_dep_1.TestController;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController
+					TestController = $exports.TestController;
 				},
-				function($_dep_2) {
-					IDEReporter = $_dep_2.IDEReporter;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.reporter.ide/src-gen/org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter
+					IDEReporter = $exports.IDEReporter;
 				},
-				function($_dep_3) {
-					N4Injector = $_dep_3.N4Injector;
+				function($exports) {
+					// n4js.lang/src-gen/n4js/lang/N4Injector
+					N4Injector = $exports.N4Injector;
 				},
-				function($_dep_4) {
-					FIXME1 = $_dep_4.FIXME1;
-					FIXME2 = $_dep_4.FIXME2;
-					IFIXME = $_dep_4.IFIXME;
-					IFIXME2 = $_dep_4.IFIXME2;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/Test
+					FIXME1 = $exports.FIXME1;
+					FIXME2 = $exports.FIXME2;
+					IFIXME = $exports.IFIXME;
+					IFIXME2 = $exports.IFIXME2;
 				},
-				function($_dep_5) {
-					TestDIComponent = $_dep_5.TestDIComponent;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestDIComponent
+					TestDIComponent = $exports.TestDIComponent;
 				}
 			],
 			execute: function() {

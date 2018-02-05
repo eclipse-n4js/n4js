@@ -39,14 +39,17 @@
 		$n4Export('Assert', Assert);
 		return {
 			setters: [
-				function($_dep_1) {
-					AssertionError = $_dep_1.AssertionError;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError
+					AssertionError = $exports.AssertionError;
 				},
-				function($_dep_2) {
-					PreconditionNotMet = $_dep_2.PreconditionNotMet;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				},
-				function($_dep_3) {
-					deepEqual = $_dep_3.deepEqual;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/DeepEqual
+					deepEqual = $exports.deepEqual;
 				}
 			],
 			execute: function() {

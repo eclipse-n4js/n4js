@@ -19,11 +19,13 @@
 		$n4Export('ResultGroups', ResultGroups);
 		return {
 			setters: [
-				function($_dep_1) {
-					ResultGroup = $_dep_1.ResultGroup;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup
+					ResultGroup = $exports.ResultGroup;
 				},
-				function($_dep_2) {
-					aggregateTestStatuses = $_dep_2.aggregateTestStatuses;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestStatus
+					aggregateTestStatuses = $exports.aggregateTestStatuses;
 				}
 			],
 			execute: function() {

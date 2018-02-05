@@ -23,32 +23,41 @@
 		$n4Export('TestController', TestController);
 		return {
 			setters: [
-				function($_dep_1) {
-					InstrumentedTest = $_dep_1.InstrumentedTest;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/InstrumentedTest
+					InstrumentedTest = $exports.InstrumentedTest;
 				},
-				function($_dep_2) {
-					TestExecutor = $_dep_2.TestExecutor;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestExecutor
+					TestExecutor = $exports.TestExecutor;
 				},
-				function($_dep_3) {
-					ResultGroup = $_dep_3.ResultGroup;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup
+					ResultGroup = $exports.ResultGroup;
 				},
-				function($_dep_4) {
-					ResultGroups = $_dep_4.ResultGroups;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroups
+					ResultGroups = $exports.ResultGroups;
 				},
-				function($_dep_5) {
-					TestFunctionType = $_dep_5.TestFunctionType;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestFunctionType
+					TestFunctionType = $exports.TestFunctionType;
 				},
-				function($_dep_6) {
-					TestMethodDescriptor = $_dep_6.TestMethodDescriptor;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor
+					TestMethodDescriptor = $exports.TestMethodDescriptor;
 				},
-				function($_dep_7) {
-					TestSpy = $_dep_7.TestSpy;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy
+					TestSpy = $exports.TestSpy;
 				},
-				function($_dep_8) {
-					PreconditionNotMet = $_dep_8.PreconditionNotMet;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				},
-				function($_dep_9) {
-					N4Injector = $_dep_9.N4Injector;
+				function($exports) {
+					// n4js.lang/src-gen/n4js/lang/N4Injector
+					N4Injector = $exports.N4Injector;
 				}
 			],
 			execute: function() {

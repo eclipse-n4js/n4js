@@ -19,23 +19,29 @@
 		$n4Export('TestExecutor', TestExecutor);
 		return {
 			setters: [
-				function($_dep_1) {
-					AssertionError = $_dep_1.AssertionError;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError
+					AssertionError = $exports.AssertionError;
 				},
-				function($_dep_2) {
-					ResultGroup = $_dep_2.ResultGroup;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup
+					ResultGroup = $exports.ResultGroup;
 				},
-				function($_dep_3) {
-					ResultGroups = $_dep_3.ResultGroups;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroups
+					ResultGroups = $exports.ResultGroups;
 				},
-				function($_dep_4) {
-					TestResult = $_dep_4.TestResult;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestResult
+					TestResult = $exports.TestResult;
 				},
-				function($_dep_5) {
-					TestSpy = $_dep_5.TestSpy;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy
+					TestSpy = $exports.TestSpy;
 				},
-				function($_dep_6) {
-					PreconditionNotMet = $_dep_6.PreconditionNotMet;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				}
 			],
 			execute: function() {

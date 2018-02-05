@@ -19,8 +19,9 @@
 		$n4Export('TestSpy', TestSpy);
 		return {
 			setters: [
-				function($_dep_1) {
-					DispatchQueue = $_dep_1.DispatchQueue;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/DispatchQueue
+					DispatchQueue = $exports.DispatchQueue;
 				}
 			],
 			execute: function() {

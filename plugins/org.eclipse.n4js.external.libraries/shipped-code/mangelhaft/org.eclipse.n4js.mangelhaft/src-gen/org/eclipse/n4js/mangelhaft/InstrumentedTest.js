@@ -53,14 +53,17 @@
 		$n4Export('InstrumentedTest', InstrumentedTest);
 		return {
 			setters: [
-				function($_dep_1) {
-					IInstrumentedTest = $_dep_1.IInstrumentedTest;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/IInstrumentedTest
+					IInstrumentedTest = $exports.IInstrumentedTest;
 				},
-				function($_dep_2) {
-					TestFunctionType = $_dep_2.TestFunctionType;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestFunctionType
+					TestFunctionType = $exports.TestFunctionType;
 				},
-				function($_dep_3) {
-					TestMethodDescriptor = $_dep_3.TestMethodDescriptor;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor
+					TestMethodDescriptor = $exports.TestMethodDescriptor;
 				}
 			],
 			execute: function() {

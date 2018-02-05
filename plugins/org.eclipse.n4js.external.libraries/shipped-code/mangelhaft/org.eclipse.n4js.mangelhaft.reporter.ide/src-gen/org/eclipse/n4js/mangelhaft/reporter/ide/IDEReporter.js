@@ -29,11 +29,13 @@
 		$n4Export('IDEReporter', IDEReporter);
 		return {
 			setters: [
-				function($_dep_1) {
-					ITestReporter = $_dep_1.ITestReporter;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ITestReporter
+					ITestReporter = $exports.ITestReporter;
 				},
-				function($_dep_2) {
-					TestSpy = $_dep_2.TestSpy;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy
+					TestSpy = $exports.TestSpy;
 				}
 			],
 			execute: function() {
