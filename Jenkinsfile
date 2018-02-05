@@ -15,6 +15,12 @@ import groovy.util.AntBuilder
 timestamps {
     ansiColor('xterm') {
 
+		// abort all automatic builds except on branch "master"
+		def isStartedByUser = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause) != null
+		if (!isStartedByUser && !isMaster()) {
+			return
+		}
+
         /** keep builds/artifacts for 10 days */
         String keep10 = '10'
         /** keep up to 5 builds/artifacts */

@@ -47,9 +47,36 @@ pipeline {
             }
         }
 
+        stage('manual') {
+            when {
+            	expression {
+            		def isStartedByUser = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause) != null
+            		return isStartedByUser
+            	}
+            }
+            steps {
+                sshagent(['github-n4js-sandbox']) {
+                    script {
+                        def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
+                        def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                        def profiles = [
+                            'buildProduct',
+                            'execute-plugin-tests',
+                            'execute-plugin-ui-tests'
+                        ].join(',')
+
+                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                    }
+                }
+            }
+        }
+
         stage('ci') {
             when {
-                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
+            	allOf {
+                	branch 'master'
+	                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
+            	}
             }
             steps {
                 sshagent(['github-n4js-sandbox']) {
@@ -73,7 +100,10 @@ pipeline {
             // There should be a better way, see issue
             // https://issues.jenkins-ci.org/browse/JENKINS-41272
             when {
-                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
+            	allOf {
+	               	branch 'master'
+	                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
+            	}
             }
             steps {
                 sshagent(['github-n4js-sandbox']) {
