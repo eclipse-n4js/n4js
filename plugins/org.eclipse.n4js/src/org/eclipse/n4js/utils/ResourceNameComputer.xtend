@@ -16,17 +16,14 @@ import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4mf.DeclaredVersion
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
-import org.eclipse.n4js.naming.SpecifierConverter
+import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeDefs
-import org.eclipse.n4js.utils.ProjectResolveHelper
-import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
@@ -69,30 +66,7 @@ public final class ResourceNameComputer {
 
 	@Inject private N4JSQualifiedNameProvider qualifiedNameProvider;
 	@Inject private IQualifiedNameConverter converter;
-	@Inject private SpecifierConverter specifierConverter;
 	@Inject private ProjectResolveHelper projectResolver;
-
-	/**
-	 * The qualified name of a declared type is its simple name, prefixed by the fully qualified module name it is
-	 * defined in.
-	 * <p>
-	 * Example: <code>p.C</code> for class C in file/module C in package p of project with version 1.0.0.
-	 * </p>
-	 */
-	def String getQualifiedModuleName(Script script) {
-		return converter.toString(qualifiedNameProvider.getFullyQualifiedName(script));
-	}
-
-	/**
-	 * The qualified name of a declared type is its simple name, prefixed by the fully qualified module name it is
-	 * defined in.
-	 * <p>
-	 * Example: <code>p.C</code> for class C in file/module C in package p of project with version 1.0.0.
-	 * </p>
-	 */
-	def String getQualifiedModuleName(TModule module) {
-		return converter.toString(qualifiedNameProvider.getFullyQualifiedName(module));
-	}
 
 	/**
 	 * The simple name of a declared type is the name which is used in its declaration. If type is anonymous, dummy name
@@ -143,46 +117,6 @@ public final class ResourceNameComputer {
 	}
 
 	/**
-	 * In import declarations, modules are references using the qualified module path. This is the file name relative to
-	 * the source folder without any extensions. We use the slash ’/’ as a delimiter.
-	 * <p>
-	 * Example: <code>p/C</code> for class C in file/module C in package p of project with version 1.0.0.
-	 * </p>
-	 */
-	def String getModuleSpecifier(Script script) {
-		return specifierConverter.toString(qualifiedNameProvider.getFullyQualifiedName(script));
-	}
-
-	/**
-	 * In import declarations, modules are references using the qualified module path. This is the file name relative to
-	 * the source folder without any extensions. We use the slash ’/’ as a delimiter.
-	 * <p>
-	 * Example: <code>p/C</code> for class C in file/module C in package p of project with version 1.0.0.
-	 * </p>
-	 */
-	def String getModuleSpecifier(TModule module) {
-		return specifierConverter.toString(qualifiedNameProvider.getFullyQualifiedName(module));
-	}
-
-	/**
-	 * The versioned module specifier is used only internally. It is derived from the module specifier with the version
-	 * (separated with a dash '-’) appended.
-	 * <p>
-	 * Based on provided file resource URI and extension will generate descriptor in form of
-	 * Project-0.0.1/module/path/Module Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor} For
-	 * delegation both project and unitPath are calculated from provided {@link TModule}.
-	 * <p>
-	 * Example: <code>project-1.0.0/p/C</code> for class C in file/module C in package p of project with version 1.0.0.
-	 * </p>
-	 * 
-	 * @module {@link TModule} for which we generate descriptor
-	 */
-	def String getCompleteModuleSpecifier(org.eclipse.n4js.projectModel.IN4JSProject project, TModule module) {
-		val unitPath = module.getModuleSpecifier()
-		return formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR);
-	}
-
-	/**
 	 * The versioned module specifier is used only internally. It is derived from the module specifier with the version
 	 * (separated with a dash '-’) appended.
 	 * <p>
@@ -202,40 +136,14 @@ public final class ResourceNameComputer {
 	}
 
 	/**
-	 * The versioned type specifier is used only internally. It is derived from the complete module specifier with the
-	 * qualified name of the type separated by dashes.
-	 * <p>
-	 * <p>
-	 * Example: <code>project-1.0.0/p/C/C</code> for class C in file/module C in package p of project with version
-	 * 1.0.0.
-	 * </p>
-	 */
-	def String getCompleteTypeSpecifier(Type type) {
-		val TModule module = EcoreUtil2.getContainerOfType(type, TModule);
-		return getCompleteModuleSpecifier(module) + "/" + getSimpleTypeName(type);
-	}
-
-	/**
 	 * Based on provided URI generates project in form of Project-0.0.1
 	 * Convenience method, delegates to {@link ResourceNameComputer#generateProjectDescriptor(IN4JSProject project)} with project
 	 * derived from the URI.
 	 * 
 	 * @n4jsSourceURI URI from file resource
 	 */
-	def generateProjectDescriptor(URI n4jsSourceURI) {
+	def public String generateProjectDescriptor(URI n4jsSourceURI) {
 		val project = projectResolver.resolveProject(n4jsSourceURI)
-		val unitPath = ""
-		formatDescriptor(project, unitPath, "-", ".", "", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, !MAKE_SIMPLE_DESCRIPTOR);
-	}
-
-	/**
-	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project-0.0.1
-	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
-	 * For delegation project is calculated from provided URI.
-	 * 
-	 * @n4jsSourceURI URI from file resource
-	 */
-	def generateProjectDescriptor(org.eclipse.n4js.projectModel.IN4JSProject project) {
 		val unitPath = ""
 		formatDescriptor(project, unitPath, "-", ".", "", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, !MAKE_SIMPLE_DESCRIPTOR);
 	}
@@ -248,7 +156,7 @@ public final class ResourceNameComputer {
 	 * @n4jsSourceURI URI from file resource
 	 * @fileExtension String containing desired extensions, should include dot
 	 */
-	def generateFileDescriptor(Resource resource, String fileExtension) {
+	def public String generateFileDescriptor(Resource resource, String fileExtension) {
 		val project = projectResolver.resolveProject(resource)
 		val unitPath = projectResolver.resolvePackageAndFileName(resource)
 		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
@@ -263,7 +171,7 @@ public final class ResourceNameComputer {
 	 * @n4jsSourceURI URI from file resource
 	 * @fileExtension String containing desired extensions, should include dot
 	 */
-	def generateFileDescriptor(URI n4jsSourceURI, String fileExtension) {
+	def public String generateFileDescriptor(URI n4jsSourceURI, String fileExtension) {
 		val project = projectResolver.resolveProject(n4jsSourceURI)
 		val unitPath = projectResolver.resolvePackageAndFileName(n4jsSourceURI)
 		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
@@ -278,13 +186,13 @@ public final class ResourceNameComputer {
 	 * @n4jsSourceURI URI from file resource
 	 * @fileExtension String containing desired extensions, should include dot
 	 */
-	def generateFileDescriptor(org.eclipse.n4js.projectModel.IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
+	def public String generateFileDescriptor(IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
 		val unitPath = projectResolver.resolvePackageAndFileName(n4jsSourceURI, project)
 		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
 			normalizeFileExtension(fileExtension);
 	}
 
-	def private org.eclipse.n4js.projectModel.IN4JSProject resolveProject(TModule module) {
+	def private IN4JSProject resolveProject(TModule module) {
 		return projectResolver.resolveProject(module.eResource().getURI());
 	}
 
@@ -316,7 +224,7 @@ public final class ResourceNameComputer {
 	 * @param asJsIdentifier  tells if segments must be in form of a valid JS identifier.
 	 * @param makeSimpleDescriptor  tells if simple form of descriptor is to be used.
 	 */
-	def private static String formatDescriptor(org.eclipse.n4js.projectModel.IN4JSProject project, String unitPath, String sep1, String sep2,
+	def private static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
 		String sep3, boolean useProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
 
 		var projectID = project.projectId

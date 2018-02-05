@@ -56,15 +56,6 @@ public class ResourceNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ResourceNameComputer#getQualifiedModuleName(org.eclipse.n4js.n4JS.Script)} .
-	 */
-	@Test
-	public void testGetQualifiedModuleName() {
-		assertEquals("p/C", resourceNameComputer.getQualifiedModuleName(module));
-		assertEquals("p/C", resourceNameComputer.getQualifiedModuleName(script));
-	}
-
-	/**
 	 * Test method for {@link ResourceNameComputer#getSimpleTypeName(org.eclipse.n4js.ts.types.Type)}.
 	 */
 	@Test
@@ -81,28 +72,10 @@ public class ResourceNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ResourceNameComputer#getModuleSpecifier(org.eclipse.n4js.n4JS.Script)} .
-	 */
-	@Test
-	public void testGetModuleSpecifier() {
-		assertEquals("p/C", resourceNameComputer.getModuleSpecifier(script));
-		assertEquals("p/C", resourceNameComputer.getModuleSpecifier(module));
-
-	}
-
-	/**
 	 * Test method for {@link ResourceNameComputer#getCompleteModuleSpecifier(org.eclipse.n4js.ts.types.TModule)} .
 	 */
 	@Test
 	public void testGetCompleteModuleSpecifier() {
 		assertEquals("p/C", resourceNameComputer.getCompleteModuleSpecifier(module));
-	}
-
-	/**
-	 * Test method for {@link ResourceNameComputer#getCompleteTypeSpecifier(org.eclipse.n4js.ts.types.Type)} .
-	 */
-	@Test
-	public void testGetCompleteTypeSpecifier() {
-		assertEquals("p/C/C", resourceNameComputer.getCompleteTypeSpecifier(type));
 	}
 }
