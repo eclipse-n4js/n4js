@@ -320,51 +320,33 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IProject project, int count) throws CoreException {
-<<<<<<< HEAD
-		return ProjectUtils.assertMarkers(assertMessage, project, count, ignoreSomeWarnings);
-=======
-		return ProjectTestsUtils.assertMarkers(assertMessage, project, count);
->>>>>>> refs/remotes/origin/master
+		return ProjectTestsUtils.assertMarkers(assertMessage, project, count, ignoreSomeWarnings);
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, int count) throws CoreException {
-<<<<<<< HEAD
-		return ProjectUtils.assertMarkers(assertMessage, resource, count, ignoreSomeWarnings);
-=======
-		return ProjectTestsUtils.assertMarkers(assertMessage, resource, count);
->>>>>>> refs/remotes/origin/master
+		return ProjectTestsUtils.assertMarkers(assertMessage, resource, count, ignoreSomeWarnings);
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, int count,
 			final Predicate<IMarker> markerPredicate) throws CoreException {
 
-<<<<<<< HEAD
-		return ProjectUtils.assertMarkers(assertMessage, resource, count, markerPredicate, ignoreSomeWarnings);
-=======
-		return ProjectTestsUtils.assertMarkers(assertMessage, resource, count, markerPredicate);
->>>>>>> refs/remotes/origin/master
+		return ProjectTestsUtils.assertMarkers(assertMessage, resource, count, markerPredicate, ignoreSomeWarnings);
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IProject project, String markerType, int count)
 			throws CoreException {
-<<<<<<< HEAD
-		return ProjectUtils.assertMarkers(assertMessage, project, markerType, count, ignoreSomeWarnings);
-=======
-		return ProjectTestsUtils.assertMarkers(assertMessage, project, markerType, count);
->>>>>>> refs/remotes/origin/master
+
+		return ProjectTestsUtils.assertMarkers(assertMessage, project, markerType, count, ignoreSomeWarnings);
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, String markerType, int count)
 			throws CoreException {
-<<<<<<< HEAD
-		return ProjectUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
-=======
-		return ProjectTestsUtils.assertMarkers(assertMessage, resource, markerType, count);
->>>>>>> refs/remotes/origin/master
+
+		return ProjectTestsUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
 	}
 
 	/***/
