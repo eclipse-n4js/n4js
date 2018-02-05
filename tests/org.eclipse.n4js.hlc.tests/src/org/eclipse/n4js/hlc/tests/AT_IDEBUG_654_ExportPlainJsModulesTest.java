@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -52,7 +50,7 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractN4jscTest {
 		final String[] args = { "-pl", wsRoot, "-t", "allprojects", "-rw", "nodejs", "-r", fileToRun, "-v" };
 
 		// Run
-		final String out = runCaptureOut(args);
+		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput("foo === 36: true, bar === 'bar': true", out);
 
 	}

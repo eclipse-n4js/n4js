@@ -16,6 +16,8 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ModuleSpecifierAdjustment
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -40,7 +42,8 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.naming.QualifiedNameComputer
+import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
@@ -51,9 +54,10 @@ import org.eclipse.n4js.transpiler.es.transform.internal.NamedImportAssignment
 import org.eclipse.n4js.transpiler.es.transform.internal.NamespaceImportAssignment
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
+import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
 import static org.eclipse.n4js.n4JS.EqualityOperator.*
@@ -68,7 +72,7 @@ import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 class ModuleWrappingTransformation extends Transformation {
 
 	@Inject
-	extension QualifiedNameComputer qnameComputer
+	private ResourceNameComputer resourceNameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
@@ -217,7 +221,7 @@ class ModuleWrappingTransformation extends Transformation {
 						} else if(current instanceof NamedImportAssignment) {
 							// NamedImportSpecifiers require property access.
 							_PropertyAccessExpr => [
-								property_IM = getSymbolTableEntryInternal(current.ste.exportedName, true); // ref to what we import.
+								property_IM =  getEntryForNamedImportedElement(current.ste) // ref to what we import.
 								target = refToFPar;
 							]
 						} else {
@@ -231,6 +235,20 @@ class ModuleWrappingTransformation extends Transformation {
 			// tracing
 			state.tracer.copyTrace(entry.toBeReplacedImportDeclaration, it)
 		]
+	}
+
+
+	/**
+	 * Returns the STE to use to import a named element from another module.
+	 */
+	private def SymbolTableEntry getEntryForNamedImportedElement(SymbolTableEntryOriginal importedElementEntry) {
+		val IdentifiableElement originalTarget = importedElementEntry.getOriginalTarget();
+
+		// if applicable use versioned internal name for internal STE
+		if (VersionUtils.isTVersionable(originalTarget)) {
+			return getSymbolTableEntryInternal(N4IDLTranspilerUtils.getVersionedInternalName(originalTarget), true);
+		}
+		return getSymbolTableEntryInternal(importedElementEntry.exportedName, true);
 	}
 
 	/**
@@ -253,26 +271,16 @@ class ModuleWrappingTransformation extends Transformation {
 				val module = state.info.getImportedModule(elementIM);
 
 				// calculate names in output
-				val completeModuleSpecifier = module.completeModuleSpecifier;
+				val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module)
 
-				val fparName = "$_import_"+module.completeModuleSpecifierAsIdentifier;
+				val fparName = "$_import_" + resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module)
 
-				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
-
-				var actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
-					if(moduleSpecifierAdjustment.usePlainModuleSpecifier) {
-						moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
-					} else {
-						moduleSpecifierAdjustment.prefix + '/' + completeModuleSpecifier
-					}
-				} else {
-					completeModuleSpecifier
-				};
-
-				var moduleEntry = map.get( completeModuleSpecifier )
+				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier)
+				
+				var moduleEntry = map.get( actualModuleSpecifier )
 				if( moduleEntry === null ) {
 					moduleEntry = new ImportEntry(completeModuleSpecifier, actualModuleSpecifier, fparName, newArrayList(), elementIM)
-					map.put( completeModuleSpecifier, moduleEntry )
+					map.put( actualModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry
 
@@ -315,6 +323,31 @@ class ModuleWrappingTransformation extends Transformation {
 		}
 
 		return map;
+	}
+
+	private def String computeActualModuleSpecifier(TModule module, String completeModuleSpecifier) {
+		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
+
+		if (moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier)
+			return moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
+
+		var specifier = completeModuleSpecifier
+		val depProject = n4jsCore.findProject(module.eResource.URI).orNull
+		if (depProject !== null) {
+			val projectRelativeSegment = depProject.outputPath
+			val depLocation = depProject.locationPath
+			if (depLocation !== null) {
+				val depLocationString = depLocation.toString
+				val depProjecOutputPath = depProject.locationPath.resolve(projectRelativeSegment).normalize.toString
+				val depRelativeSpecifier = depProjecOutputPath.substring(depLocationString.length -
+					depProject.projectId.length)
+				specifier = depRelativeSpecifier + '/' + completeModuleSpecifier
+			}
+		}
+		if (moduleSpecifierAdjustment !== null)
+			return moduleSpecifierAdjustment.prefix + '/' + specifier
+
+		return specifier
 	}
 
 	/**
@@ -500,7 +533,7 @@ class ModuleWrappingTransformation extends Transformation {
 				val container = expr.eContainer;
 				if( container.isAppendableStatement ) {
 					// case 1 : contained in simple statement, then we can issue as 2nd statement just after.
-					insertAfter(container, _ExprStmnt( _N4ExportExpr(ste,steFor_$n4Export)));
+					insertAfter(container, _ExprStmnt(createExportExpression(ste)));
 				} else {
 					// case 2: contained in other expression, must in-line the export call.
 					switch (expr.op) {
@@ -548,7 +581,7 @@ class ModuleWrappingTransformation extends Transformation {
 				val container = expr.eContainer;
 				if( container.isAppendableStatement) {
 					// case 1 : contained in simple statement, then we can issue es 2nd statement just after.
-					insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
+					insertAfter(container, _ExprStmnt(createExportExpression(ste)));
 				} else {
 					switch (expr.op) {
 						case INC: exprReplacement(expr, ste)
@@ -569,7 +602,7 @@ class ModuleWrappingTransformation extends Transformation {
 				if( ste.isExported ) {
 					val container = expr.eContainer
 					if( container.isAppendableStatement ) {
-						insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
+						insertAfter(container, _ExprStmnt(createExportExpression(ste)));
 					}
 					else { // non toplevel, have to inject
 						exprReplacement(expr, ste);
@@ -664,7 +697,7 @@ class ModuleWrappingTransformation extends Transformation {
 			System.registerDynamic([], true, function(require, exports, module) {
 				«cs»
 			});
-		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
+		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
 		'''
 	}
 
@@ -673,7 +706,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 		// (function(System) {
 		//     < ... statement ...>
-		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(module) : global.System);
+		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(module) : global.System);
 
 		val ret = _ExprStmnt( _CallExpr (
 			_Parenthesis(
@@ -689,7 +722,7 @@ class ModuleWrappingTransformation extends Transformation {
 					steFor_module._PropertyAccessExpr( steFor_exports )
 				),
 					/*     TRUE-case 		*/
-			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node/index') ).
+			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node/src-gen/index') ).
 			    _PropertyAccessExpr( steFor_System )._CallExpr( _IdentRef(steFor_require), _IdentRef(steFor_module) ),
 			    	/*     FALSE-case 		*/
 				_IdentRef( steFor_System )
@@ -739,5 +772,15 @@ class ModuleWrappingTransformation extends Transformation {
 		// tracing
 		state.tracer.copyTrace(binding, assignmentStmnt);
 		return assignmentStmnt;
+	}
+
+	/**
+	 * Creates an export expression by the name of the given symbol table entry which exports a simple (identifier) reference
+	 * to the symbol table entry.
+	 *
+	 */
+	def protected ParameterizedCallExpression createExportExpression(SymbolTableEntry entry) {
+		// otherwise create a default export expression
+		return _N4ExportExpr(entry, _IdentRef(entry), steFor_$n4Export);
 	}
 }

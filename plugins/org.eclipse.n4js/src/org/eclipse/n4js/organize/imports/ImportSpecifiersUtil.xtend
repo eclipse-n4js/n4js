@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -67,7 +67,7 @@ class ImportSpecifiersUtil {
 	 * Computes 'actual' name of the namespace for {@link ImportProvidedElement} entry.
 	 * If processed namespace refers to unresolved module, will return dummy name,
 	 * otherwise returns artificial name composed of prefix and target module qualified name
-	 * 
+	 *
 	 */
 	public static def String computeNamespaceActualName(NamespaceImportSpecifier specifier) {
 		if (specifier.importedModule.eIsProxy)
@@ -107,7 +107,7 @@ class ImportSpecifiersUtil {
 	/**
 	 * Returns true if the module that is target of the import declaration containing provided import specifier is invalid (null, proxy, no name).
 	 * Additionally for {@link NamedImportSpecifier} instances checks if linker failed to resolve target (is null, proxy, or has no name)
-	 * 
+	 *
 	 * @param spec - the ImportSpecifier to investigate
 	 * @return true import looks broken
 	 * */

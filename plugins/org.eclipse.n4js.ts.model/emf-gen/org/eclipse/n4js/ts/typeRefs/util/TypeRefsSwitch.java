@@ -309,6 +309,57 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypeRefsPackage.VERSIONED_REFERENCE: {
+				VersionedReference versionedReference = (VersionedReference)theEObject;
+				T result = caseVersionedReference(versionedReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF: {
+				VersionedParameterizedTypeRef versionedParameterizedTypeRef = (VersionedParameterizedTypeRef)theEObject;
+				T result = caseVersionedParameterizedTypeRef(versionedParameterizedTypeRef);
+				if (result == null) result = caseParameterizedTypeRef(versionedParameterizedTypeRef);
+				if (result == null) result = caseVersionedReference(versionedParameterizedTypeRef);
+				if (result == null) result = caseBaseTypeRef(versionedParameterizedTypeRef);
+				if (result == null) result = caseStaticBaseTypeRef(versionedParameterizedTypeRef);
+				if (result == null) result = caseTypeRef(versionedParameterizedTypeRef);
+				if (result == null) result = caseTypeArgument(versionedParameterizedTypeRef);
+				if (result == null) result = caseVersionable(versionedParameterizedTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF: {
+				VersionedFunctionTypeRef versionedFunctionTypeRef = (VersionedFunctionTypeRef)theEObject;
+				T result = caseVersionedFunctionTypeRef(versionedFunctionTypeRef);
+				if (result == null) result = caseVersionedParameterizedTypeRef(versionedFunctionTypeRef);
+				if (result == null) result = caseFunctionTypeRef(versionedFunctionTypeRef);
+				if (result == null) result = caseParameterizedTypeRef(versionedFunctionTypeRef);
+				if (result == null) result = caseVersionedReference(versionedFunctionTypeRef);
+				if (result == null) result = caseFunctionTypeExprOrRef(versionedFunctionTypeRef);
+				if (result == null) result = caseBaseTypeRef(versionedFunctionTypeRef);
+				if (result == null) result = caseStaticBaseTypeRef(versionedFunctionTypeRef);
+				if (result == null) result = caseTypeRef(versionedFunctionTypeRef);
+				if (result == null) result = caseTypeArgument(versionedFunctionTypeRef);
+				if (result == null) result = caseVersionable(versionedFunctionTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL: {
+				VersionedParameterizedTypeRefStructural versionedParameterizedTypeRefStructural = (VersionedParameterizedTypeRefStructural)theEObject;
+				T result = caseVersionedParameterizedTypeRefStructural(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseVersionedParameterizedTypeRef(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseParameterizedTypeRefStructural(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseParameterizedTypeRef(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseVersionedReference(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseStructuralTypeRef(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseBaseTypeRef(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseStaticBaseTypeRef(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseTypeRef(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseTypeArgument(versionedParameterizedTypeRefStructural);
+				if (result == null) result = caseVersionable(versionedParameterizedTypeRefStructural);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -670,6 +721,66 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTypeVariableMapping(TypeVariableMapping object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedReference(VersionedReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedParameterizedTypeRef(VersionedParameterizedTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Function Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Function Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedFunctionTypeRef(VersionedFunctionTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref Structural</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref Structural</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedParameterizedTypeRefStructural(VersionedParameterizedTypeRefStructural object) {
 		return null;
 	}
 

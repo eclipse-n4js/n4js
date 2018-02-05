@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ExecModule;
@@ -36,7 +37,6 @@ import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;

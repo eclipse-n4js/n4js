@@ -13,6 +13,7 @@ package org.eclipse.n4js.hlc.base.running;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_NOT_FOUND;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -56,10 +57,13 @@ public class HeadlessRunner {
 	 *            to be used when loading the modules
 	 * @param locationToRun
 	 *            location of the code to be executed
+	 * @param targetPlatformInstallLocation
+	 *            location for externally installed node_modules
 	 * @throws ExitCodeException
 	 *             in cases of errors
 	 */
-	public void startRunner(String runner, String implementationId, String systemLoader, URI locationToRun)
+	public void startRunner(String runner, String implementationId, String systemLoader, URI locationToRun,
+			File targetPlatformInstallLocation)
 			throws ExitCodeException {
 
 		IRunnerDescriptor runnerDescriptor = checkRunner(runner);
@@ -67,8 +71,14 @@ public class HeadlessRunner {
 
 		RunConfiguration runConfiguration = null;
 		try {
-			runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
-					systemLoader, locationToRun);
+			if (targetPlatformInstallLocation != null) {
+				runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
+						systemLoader, locationToRun,
+						targetPlatformInstallLocation.toPath().resolve("node_modules").toAbsolutePath().toString());
+			} else {
+				runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
+						systemLoader, locationToRun);
+			}
 		} catch (java.lang.IllegalStateException e2) {
 			logger.error(Throwables.getStackTraceAsString(e2));
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,

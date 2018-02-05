@@ -15,11 +15,13 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.SubGeneratorRegistry;
+import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
+import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 
 import com.google.inject.Inject;
 
@@ -37,6 +39,9 @@ public class HeadlessExtensionRegistrationHelper {
 
 	@Inject
 	private EcmaScriptSubGenerator ecmaScriptSubGenerator;
+
+	@Inject
+	private N4IDLSubGenerator n4idlSubGenerator;
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
@@ -67,10 +72,10 @@ public class HeadlessExtensionRegistrationHelper {
 		registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
 				N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
 		registerTranspilableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION,
-				N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
+				N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION, N4IDLGlobals.N4IDL_FILE_EXTENSION);
 		registerTypableFiles(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.N4JS_FILE_EXTENSION,
 				N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-				N4JSGlobals.JSX_FILE_EXTENSION);
+				N4JSGlobals.JSX_FILE_EXTENSION, N4IDLGlobals.N4IDL_FILE_EXTENSION);
 		registerRawFiles(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
 
 		// Register ECMAScript subgenerator
@@ -78,6 +83,7 @@ public class HeadlessExtensionRegistrationHelper {
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JS_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JSX_FILE_EXTENSION);
+		subGeneratorRegistry.register(n4idlSubGenerator, N4IDLGlobals.N4IDL_FILE_EXTENSION);
 	}
 
 	/** Unregister all extensions */

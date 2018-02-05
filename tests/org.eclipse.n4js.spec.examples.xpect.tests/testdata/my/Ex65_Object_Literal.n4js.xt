@@ -34,13 +34,13 @@ stderr:
 (function(System) {
 	'use strict';
 	System.register([
-		'org.eclipse.n4js.spec.examples.xpect.tests/my/Address'
+		'org.eclipse.n4js.spec.examples.xpect.tests/src-gen/my/Address'
 	], function($n4Export) {
 		var Address, simple;
 		return {
 			setters: [
-				function($_import_org_u002eeclipse_u002en4js_u002espec_u002eexamples_u002expect_u002etests_my_u002fAddress) {
-					Address = $_import_org_u002eeclipse_u002en4js_u002espec_u002eexamples_u002expect_u002etests_my_u002fAddress.Address;
+				function($_import_my_u002fAddress) {
+					Address = $_import_my_u002fAddress.Address;
 				}
 			],
 			execute: function() {
@@ -57,7 +57,7 @@ stderr:
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
 --- */
 // IDEBUG-73
 ;

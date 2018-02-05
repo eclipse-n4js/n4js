@@ -115,6 +115,8 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 				TypingStrategy.STRUCTURAL;
 			}
 		);
+		
+		VersionedTypesBuilderUtil.setTypeVersion(tclass, classDecl);
 
 		return tclass;
 	}

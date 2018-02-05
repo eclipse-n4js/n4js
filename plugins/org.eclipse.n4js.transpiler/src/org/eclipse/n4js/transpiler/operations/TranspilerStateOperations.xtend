@@ -51,6 +51,7 @@ import org.eclipse.n4js.ts.types.TypesFactory
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.operations.SymbolTableManagement.*
+import org.eclipse.n4js.n4JS.ExpressionStatement
 
 /**
  * Methods of this class provide elementary operations on a transpiler state, mainly on the intermediate model. The
@@ -257,6 +258,10 @@ class TranspilerStateOperations {
 				"when replacing a function declaration by a variable declaration, " +
 				"we expect the variable to be initialized with a function expression");
 		}
+	}
+	
+	def public static void replace(TranspilerState state, FunctionDeclaration functionDecl, ExpressionStatement stmt) {
+		state.replaceWithoutRewire(functionDecl, stmt);
 	}
 
 	def public static void replace(TranspilerState state, N4MemberDeclaration memberDecl, N4MemberDeclaration replacement) {

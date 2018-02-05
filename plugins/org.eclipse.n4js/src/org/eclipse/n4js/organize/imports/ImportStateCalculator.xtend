@@ -56,17 +56,17 @@ class ImportStateCalculator {
 
 		//TODO refactor this, those composed collections should be encapsulated as specific types with proper get/set methods
 		for (ipe : importProvidedElements) {
-			val pN2IPE = lN2IPE.findFirst[it.key == ipe.localname];
+			val pN2IPE = lN2IPE.findFirst[it.key == ipe.getLocalName()];
 			if(pN2IPE !== null){
 				pN2IPE.value.add(ipe)
 			}else{
-				lN2IPE.add(ipe.localname -> newArrayList(ipe))
+				lN2IPE.add(ipe.getLocalName() -> newArrayList(ipe))
 			}
-			val pM2IPE = lM2IPE.findFirst[it.key == ipe.tmodule];
+			val pM2IPE = lM2IPE.findFirst[it.key == ipe.importedModule];
 			if(pM2IPE !== null){
 				pM2IPE.value.add(ipe)
 			}else{
-				lM2IPE.add(ipe.tmodule -> newArrayList(ipe))
+				lM2IPE.add(ipe.importedModule -> newArrayList(ipe))
 			}
 		}
 
@@ -85,7 +85,7 @@ class ImportStateCalculator {
 			val mod = scriptDep.dependencyModule
 			val pM2IPE = lM2IPE.findFirst[it.key == mod]
 			if(pM2IPE !== null){
-				pM2IPE.value.filter[it.exportedName == scriptDep.actualName && it.localname == scriptDep.localName ].forEach[ it.markUsed];
+				pM2IPE.value.filter[it.exportedName == scriptDep.actualName && it.getLocalName() == scriptDep.localName ].forEach[ it.markUsed];
 			}
 		}
 
@@ -117,7 +117,7 @@ class ImportStateCalculator {
 				val x = v
 				 //filter out ImportProvidedElements that reflect Namespace element itself
 				.filter[internalIPE|
-					val specifier = internalIPE.importSpec;
+					val specifier = internalIPE.importSpecifier;
 					if(specifier instanceof NamespaceImportSpecifier){
 						internalIPE.exportedName != computeNamespaceActualName(specifier)
 					}else{

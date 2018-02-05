@@ -11,22 +11,21 @@
 package org.eclipse.n4js.scoping.utils
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.SingletonScope
 import org.eclipse.xtext.util.IResourceScopeCache
-import org.eclipse.xtext.scoping.impl.MapBasedScope
-import org.eclipse.n4js.ts.types.TModule
 
 /**
  * Helper for {@link N4JSScopeProvider N4JSScopeProvider} using
@@ -40,6 +39,9 @@ class LocallyKnownTypesScopingHelper {
 
 	@Inject
 	ImportedElementsScopingHelper importedElementsScopingHelper
+
+	@Inject
+	ScopesHelper scopesHelper
 
 	/**
 	 * Returns the type itself and type variables in case the type is generic.
@@ -58,7 +60,7 @@ class LocallyKnownTypesScopingHelper {
 					// error case: type variables of a classifier cannot be accessed from static members
 					// e.g. class C<T> { static x: T; }
 					// --> return same scope as in success case, but wrap descriptions with a WrongStaticAccessorDescription
-					result = ScopeUtils.scopeFor(type.typeVars, [new WrongStaticAccessDescription(it, staticAccess)],
+					result = scopesHelper.scopeFor(type.typeVars, [new WrongStaticAccessDescription(it, staticAccess)],
 						result);
 				} else {
 					// success case: simply add type variables to scope
@@ -106,18 +108,9 @@ class LocallyKnownTypesScopingHelper {
 			if (local === null || local.eIsProxy) {
 				return importScope;
 			}
-			return buildMapBasedScope(importScope, local);
+			return scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.map [ topLevelType |
+				EObjectDescription.create(topLevelType.name, topLevelType) ]);
 		];
-	}
-
-	/**
-	 * Creates a map based scope for the locally known types in the given module and with the given import (parent)
-	 * scope. This method may be overridden in sub classes.
-	 */
-	protected def IScope buildMapBasedScope(IScope importScope, TModule localModule) {
-		return MapBasedScope.createScope(importScope, localModule.topLevelTypes.map [ topLevelType |
-			EObjectDescription.create(topLevelType.name, topLevelType)
-		])
 	}
 
 	/**
@@ -135,7 +128,7 @@ class LocallyKnownTypesScopingHelper {
 
 		// locally defined types except polyfillType itself
 		val local = script.module
-		var IScope localTypesScope = MapBasedScope.createScope(importScope, local.topLevelTypes.filter [
+		var IScope localTypesScope = scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.filter [
 			it !== polyfillType
 		].map[EObjectDescription.create(name, it)]);
 

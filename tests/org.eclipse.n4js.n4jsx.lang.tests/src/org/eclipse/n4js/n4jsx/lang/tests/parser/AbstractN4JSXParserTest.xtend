@@ -25,19 +25,15 @@ import org.eclipse.n4js.n4jsx.tests.helper.N4JSXParseHelper
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
+import org.junit.Assert
 import org.junit.runner.RunWith
-
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertFalse
-import static org.junit.Assert.assertTrue
-import static org.junit.Assert.fail
 
 /**
  * N4JSX version of N4JS' AbstractParserTest
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
-public abstract class AbstractN4JSXParserTest {
+public abstract class AbstractN4JSXParserTest extends Assert {
 	@Inject
 	protected extension N4JSXParseHelper
 

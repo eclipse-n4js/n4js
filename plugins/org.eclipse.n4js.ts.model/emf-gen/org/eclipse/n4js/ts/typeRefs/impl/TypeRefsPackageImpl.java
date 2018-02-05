@@ -49,6 +49,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
+import org.eclipse.n4js.ts.typeRefs.VersionedFunctionTypeRef;
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural;
+import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -229,6 +233,34 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EClass typeVariableMappingEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass versionedReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass versionedParameterizedTypeRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass versionedFunctionTypeRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass versionedParameterizedTypeRefStructuralEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1674,6 +1706,78 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getVersionedReference() {
+		return versionedReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getVersionedReference_RequestedVersion() {
+		return (EAttribute)versionedReferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionedReference__HasRequestedVersion() {
+		return versionedReferenceEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionedReference__GetRequestedVersionOrZero() {
+		return versionedReferenceEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVersionedParameterizedTypeRef() {
+		return versionedParameterizedTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVersionedParameterizedTypeRef__GetVersion() {
+		return versionedParameterizedTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVersionedFunctionTypeRef() {
+		return versionedFunctionTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVersionedParameterizedTypeRefStructural() {
+		return versionedParameterizedTypeRefStructuralEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getOptionalFieldStrategy() {
 		return optionalFieldStrategyEEnum;
 	}
@@ -1890,6 +1994,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEReference(typeVariableMappingEClass, TYPE_VARIABLE_MAPPING__TYPE_VAR);
 		createEReference(typeVariableMappingEClass, TYPE_VARIABLE_MAPPING__TYPE_ARG);
 
+		versionedReferenceEClass = createEClass(VERSIONED_REFERENCE);
+		createEAttribute(versionedReferenceEClass, VERSIONED_REFERENCE__REQUESTED_VERSION);
+		createEOperation(versionedReferenceEClass, VERSIONED_REFERENCE___HAS_REQUESTED_VERSION);
+		createEOperation(versionedReferenceEClass, VERSIONED_REFERENCE___GET_REQUESTED_VERSION_OR_ZERO);
+
+		versionedParameterizedTypeRefEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF);
+		createEOperation(versionedParameterizedTypeRefEClass, VERSIONED_PARAMETERIZED_TYPE_REF___GET_VERSION);
+
+		versionedFunctionTypeRefEClass = createEClass(VERSIONED_FUNCTION_TYPE_REF);
+
+		versionedParameterizedTypeRefStructuralEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL);
+
 		// Create enums
 		optionalFieldStrategyEEnum = createEEnum(OPTIONAL_FIELD_STRATEGY);
 
@@ -1954,6 +2070,12 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		functionTypeRefEClass.getESuperTypes().add(this.getFunctionTypeExprOrRef());
 		functionTypeExpressionEClass.getESuperTypes().add(this.getFunctionTypeExprOrRef());
 		deferredTypeRefEClass.getESuperTypes().add(this.getTypeRef());
+		versionedParameterizedTypeRefEClass.getESuperTypes().add(this.getParameterizedTypeRef());
+		versionedParameterizedTypeRefEClass.getESuperTypes().add(this.getVersionedReference());
+		versionedFunctionTypeRefEClass.getESuperTypes().add(this.getVersionedParameterizedTypeRef());
+		versionedFunctionTypeRefEClass.getESuperTypes().add(this.getFunctionTypeRef());
+		versionedParameterizedTypeRefStructuralEClass.getESuperTypes().add(this.getVersionedParameterizedTypeRef());
+		versionedParameterizedTypeRefStructuralEClass.getESuperTypes().add(this.getParameterizedTypeRefStructural());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(versionableEClass, Versionable.class, "Versionable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2233,6 +2355,21 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEClass(typeVariableMappingEClass, TypeVariableMapping.class, "TypeVariableMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTypeVariableMapping_TypeVar(), theTypesPackage.getTypeVariable(), null, "typeVar", null, 0, 1, TypeVariableMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTypeVariableMapping_TypeArg(), this.getTypeArgument(), null, "typeArg", null, 0, 1, TypeVariableMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(versionedReferenceEClass, VersionedReference.class, "VersionedReference", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getVersionedReference_RequestedVersion(), theEcorePackage.getEBigDecimal(), "requestedVersion", null, 0, 1, VersionedReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getVersionedReference__HasRequestedVersion(), theEcorePackage.getEBoolean(), "hasRequestedVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getVersionedReference__GetRequestedVersionOrZero(), theEcorePackage.getEInt(), "getRequestedVersionOrZero", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(versionedParameterizedTypeRefEClass, VersionedParameterizedTypeRef.class, "VersionedParameterizedTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getVersionedParameterizedTypeRef__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(versionedFunctionTypeRefEClass, VersionedFunctionTypeRef.class, "VersionedFunctionTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(versionedParameterizedTypeRefStructuralEClass, VersionedParameterizedTypeRefStructural.class, "VersionedParameterizedTypeRefStructural", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
 		initEEnum(optionalFieldStrategyEEnum, OptionalFieldStrategy.class, "OptionalFieldStrategy");

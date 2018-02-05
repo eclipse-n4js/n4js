@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -32,6 +32,7 @@ import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.ui.outline.N4JSOutlineTreeProvider
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
+import org.eclipse.n4js.n4idl.N4IDLGlobals
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -119,7 +120,7 @@ class LabelCalculationHelper {
 		return dispatchDoGetText(n4SetterDeclaration.definedSetter)
 	}
 
-	/** 
+	/**
 	 * comma separated list of all contained variable names
 	 */
 	def dispatch String dispatchDoGetText(ExportedVariableStatement vs) {
@@ -130,7 +131,7 @@ class LabelCalculationHelper {
 		namedElement.name
 	}
 
-	/** 
+	/**
 	 * dispatchDoGetText types model
 	 * the fully qualified module specifier, e.g. mypack/MyFile
 	 */
@@ -138,11 +139,11 @@ class LabelCalculationHelper {
 		return getModuleSpecifier(tModule)
 	}
 
-	/** 
+	/**
 	 * name + optional type variables, e.g. A<T, U>
 	 */
 	def dispatch String dispatchDoGetText(TClassifier tClassifier) {
-		return tClassifier.name + getTypeVarDescriptions(tClassifier)
+		return tClassifier.name + getTypeVersionDescription(tClassifier) + getTypeVarDescriptions(tClassifier)
 	}
 
 	def private getTypeVarDescriptions(TClassifier tClassifier) {
@@ -150,6 +151,13 @@ class LabelCalculationHelper {
 			"<" + tClassifier.typeVars.map[name].join(", ") + ">"
 		else
 			""
+	}
+
+	def private getTypeVersionDescription(TClassifier tClassifier) {
+		if (tClassifier.declaredVersion != 0) {
+			return N4IDLGlobals.VERSION_SEPARATOR + Integer.toString(tClassifier.declaredVersion)
+		}
+		return "";
 	}
 
 	def dispatch String dispatchDoGetText(TGetter tGetter) {

@@ -16,6 +16,6 @@
   },
   "files": [
     "manifest.n4mf",
-    "n4js-mangelhaft-cli.js"
+    "src-gen"
   ]
 }
