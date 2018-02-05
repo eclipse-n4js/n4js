@@ -8,7 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.ide,
- com.google.guava,
+ com.google.guava;bundle-version="15.0.0",
  org.eclipse.ui.ide.application,
  org.eclipse.e4.ui.model.workbench,
  org.apache.log4j
