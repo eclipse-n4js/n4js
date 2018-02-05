@@ -42,7 +42,7 @@ import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
  */
 @Singleton
 public final class ResourceNameComputer {
-	/** 
+	/**
 	 * https://github.com/eclipse/n4js/issues/394
 	 * 
 	 * for simplifying node js compilation target we want to avoid project name and version in the compiled code location segments.
@@ -199,45 +199,6 @@ public final class ResourceNameComputer {
 		val project = resolveProject(module)
 		val unitPath = module.getModuleSpecifier()
 		return formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR);
-	}
-
-	/**
-	 * Based on provided file resource URI and extension will generate descriptor in form of
-	 * Project_0_0_1_module_path_Module Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor} For
-	 * delegation both project and unitPath are calculated from provided {@link TModule}. Characters that would be
-	 * invalid in a Javascript identifier will be replaced with the unicode sign e.g. _u002e for the dot character (_ is
-	 * used instead of / as Javascript would translate the unicode sign again to the not allowed character).
-	 * <p>
-	 * Example: <code>_import_project_1_0_0_p_C</code> for class C in file/module C in package p of project with version
-	 * 1.0.0.
-	 * </p>
-	 * 
-	 * @module {@link TModule} for which we generate descriptor
-	 */
-	def String getCompleteModuleSpecifierAsIdentifier(org.eclipse.n4js.projectModel.IN4JSProject project, TModule module) {
-		val unitPath = module.getModuleSpecifier()
-		return getValidJavascriptIdentifierName(
-			formatDescriptor(project, unitPath, "_", "_", "_", !USE_PROJECT_VERSION, AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR));
-	}
-
-	/**
-	 * Based on provided file resource URI and extension will generate descriptor in form of
-	 * Project_0_0_1_module_path_Module Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor} For
-	 * delegation both project and unitPath are calculated from provided {@link TModule}. Characters that would be
-	 * invalid in a Javascript identifier will be replaced with the unicode sign e.g. _u002e for the dot character (_ is
-	 * used instead of / as Javascript would translate the unicode sign again to the not allowed character).
-	 * <p>
-	 * Example: <code>_import_project_1_0_0_p_C</code> for class C in file/module C in package p of project with version
-	 * 1.0.0.
-	 * </p>
-	 * 
-	 * @module {@link TModule} for which we generate descriptor
-	 */
-	def String getCompleteModuleSpecifierAsIdentifier(TModule module) {
-		val project = resolveProject(module)
-		val unitPath = module.getModuleSpecifier()
-		return getValidJavascriptIdentifierName(
-			formatDescriptor(project, unitPath, "_", "_", "_", !USE_PROJECT_VERSION, AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR));
 	}
 
 	/**

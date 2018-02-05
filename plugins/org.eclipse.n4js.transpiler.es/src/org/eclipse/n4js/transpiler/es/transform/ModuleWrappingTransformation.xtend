@@ -210,12 +210,15 @@ class ModuleWrappingTransformation extends Transformation {
 
 	/** FunctionExpression for import used inside of the setters-array*/
 	private def FunctionExpression importFE(ImportEntry entry) {
+		val fparName = "$exports";
+		val steFpar = getSymbolTableEntryInternal(fparName, true);
 		_FunExpr(false) => [
-			fpars += _Fpar => [name = entry.fparName]
+			fpars += _Fpar => [name = fparName]
 			body = _Block => [
+				statements += _ExprStmnt(_Snippet('// ' + entry.actualModuleSpecifier));
 				for (val iter = entry.variableSTE_actualName.iterator; iter.hasNext;) {
 					val ImportAssignment current = iter.next;
-					val refToFPar = _IdentRef(getSymbolTableEntryInternal(entry.fparName, true));
+					val refToFPar = _IdentRef(steFpar);
 					val Expression rhs = if (current instanceof NamespaceImportAssignment) {
 							refToFPar
 						} else if(current instanceof NamedImportAssignment) {
@@ -264,26 +267,16 @@ class ModuleWrappingTransformation extends Transformation {
 
 		val LinkedHashMap<String,ImportEntry> map = newLinkedHashMap()
 
-		var depNumber = 0
 		for( val iter = contents_im.iterator; iter.hasNext;  ) {
 			val elementIM = iter.next();
 			if( elementIM instanceof ImportDeclaration ) {
-				
-
 				val module = state.info.getImportedModule(elementIM);
 
-				var actualModuleSpecifier = computeActualModuleSpecifier(module)
-				// name for parameter the setter function, it doesn't matter much
-				// we use dollar, as it is invalid N4JS identifier - we avoid name collisions with user code
-				// we use counter just as a hint for someone reading compiled code
-				// (`$_dep_3` will be parameter of the 3rd setter function that corresponds to the 3rd module required by the SystemJS)
-				if(!map.keySet.contains(actualModuleSpecifier))
-					depNumber+=1
-				val fparName = "$_dep_"+depNumber;
-				
+				val actualModuleSpecifier = computeActualModuleSpecifier(module)
+
 				var moduleEntry = map.get( actualModuleSpecifier )
 				if( moduleEntry === null ) {
-					moduleEntry = new ImportEntry(actualModuleSpecifier, fparName, newArrayList(), elementIM)
+					moduleEntry = new ImportEntry(actualModuleSpecifier, newArrayList(), elementIM)
 					map.put( actualModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry

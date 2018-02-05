@@ -99,16 +99,6 @@ public class ResourceNameComputerTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link ResourceNameComputer#getCompleteModuleSpecifierAsIdentifier(org.eclipse.n4js.ts.types.TModule)} .
-	 */
-	@Test
-	public void testGetCompleteModuleSpecifierAsIdentifier() {
-		assertEquals("p_u002fC",
-				resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module));
-	}
-
-	/**
 	 * Test method for {@link ResourceNameComputer#getCompleteTypeSpecifier(org.eclipse.n4js.ts.types.Type)} .
 	 */
 	@Test
