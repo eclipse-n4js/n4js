@@ -5,13 +5,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
+    xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
-    xmlns:projects_1.0="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/launching/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Launching.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="n4js"
     label="N4JS">
   <annotation
@@ -222,10 +222,10 @@
       xsi:type="setup.p2:P2Task"
       label="XSemantics">
     <requirement
-        name="it.xsemantics.sdk.feature.group"
-        versionRange="[1.12.0,1.12.1)"/>
+        name="org.eclipse.xsemantics.sdk.feature.group"
+        versionRange="[1.12.1,1.12.2)"/>
     <repository
-        url="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
+        url="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -246,22 +246,22 @@
         url="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.0"/>
   </setupTask>
   <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="JUnit Runners">
-    <requirement
-        name="org.eclipse.jdt.junit.runners.feature.feature.group"
-        versionRange="[0.1.0,0.1.1)"/>
-    <repository
-        url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
-  </setupTask>
+       xsi:type="setup.p2:P2Task"
+       label="JUnit Runners">
+     <requirement
+         name="org.eclipse.jdt.junit.runners.feature.feature.group"
+         versionRange="[0.1.0,0.1.1)"/>
+     <repository
+         url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
+   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
       label="XPect">
     <requirement
-        name="org.xpect.sdk.feature.group"
+        name="org.eclipse.xpect.sdk.feature.group"
         versionRange="[0.2.0,0.2.1)"/>
     <repository
-        url="http://www.xpect-tests.org/updatesite/nightly/"/>
+        url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -391,9 +391,11 @@
         <repository
             url="http://boothen.github.io/Json-Eclipse-Plugin"/>
         <repository
-            url="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
+            url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
         <repository
-            url="http://www.xpect-tests.org/updatesite/nightly/"/>
+            url="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
+        <repository
+            url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
         <repository
@@ -516,6 +518,12 @@
       </predicate>
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
+  </setupTask>
+  <setupTask
+      xsi:type="launching:LaunchTask"
+      id="CreateConfigFileForSettingDefaultProduct"
+      launcher="CreateConfigFileForSettingDefaultProduct">
+    <description>Launch that creates a config.ini</description>
   </setupTask>
   <stream name="master"
       label="Master"/>

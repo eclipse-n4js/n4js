@@ -23,7 +23,7 @@ import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Abstract class for creating composed members.

@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.building;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,11 +30,15 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
@@ -50,6 +55,8 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -123,6 +130,12 @@ import com.google.inject.Injector;
  */
 @SuppressWarnings("restriction")
 public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState {
+	static private final DataCollector dcBuild = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Build");
+	static private final DataCollector dcValidations = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Validations", "Build");
+	static private final DataCollector dcTranspilation = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Transpilation", "Build");
 
 	@Inject
 	private RegistryBuilderParticipant builderParticipant;
@@ -166,6 +179,8 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 	protected Collection<Delta> doUpdate(BuildData buildData, ResourceDescriptionsData newData,
 			IProgressMonitor monitor) {
 
+		Measurement mes = dcBuild.getMeasurement("build " + Instant.now());
+
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() >>>");
 		logBuildData(buildData, " of before #doUpdate");
 
@@ -185,22 +200,24 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 			handleCoreException(e);
 		}
 		Collection<Delta> modifiedDeltas = super.doUpdate(buildData, newData, monitor);
-
 		logBuildData(buildData, " of after #doUpdate");
 		builderStateLogger.log("Modified deltas: " + modifiedDeltas);
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");
 
+		mes.end();
 		return modifiedDeltas;
 	}
 
-	@SuppressWarnings("unused")
 	private void logBuildData(BuildData buildData, String... tags) {
 		// This log call sometimes yields a ConcurrentModificationException (see GHOLD-296)
 		// We disable it as a temporary fix only until GHOLD-296 is resolved.
 		// TODO Uncomment the following code when GHOLD-296 is resolved and remove the SuppressWarnings annotation.
 
-		/* @formatter:off */
-		/*
+		// UPDATE as of Nov 2017 (mor):
+		// commented logging back in after (hopefully) fixing the ConcurrentModificationException
+		// (but keeping these comments for reference, for now; if this does not cause problems over the next few weeks,
+		// this comment and the previous comments in this method can be removed)
+
 		String tag = Arrays2.isEmpty(tags) ? "" : Joiner.on(" - ").join(tags);
 		String header = "---------------------- Build data" + tag + " --------------------------------------";
 		builderStateLogger.log(header);
@@ -210,14 +227,16 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		builderStateLogger.log("URI queue: " + buildData.getURIQueue());
 		builderStateLogger.log("All remaining URIs: " + buildData.getAllRemainingURIs());
 		builderStateLogger.log(Strings.repeat("-", header.length()) + "\n");
-		*/
-		/* @formatter:on */
 	}
 
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
+		Measurement mes = dcValidations.getMeasurement("validation");
 		super.updateMarkers(delta, resourceSet, monitor);
+		mes.end();
+
 		if (resourceSet != null) { // resourceSet is null during clean build
+			mes = dcTranspilation.getMeasurement("transpilation");
 			IBuildParticipantInstruction instruction = (IBuildParticipantInstruction) EcoreUtil.getAdapter(
 					resourceSet.eAdapters(), IBuildParticipantInstruction.class);
 			if (instruction == null) {
@@ -228,7 +247,9 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 			} catch (CoreException e) {
 				handleCoreException(e);
 			}
+			mes.end();
 		}
+
 	}
 
 	@Override

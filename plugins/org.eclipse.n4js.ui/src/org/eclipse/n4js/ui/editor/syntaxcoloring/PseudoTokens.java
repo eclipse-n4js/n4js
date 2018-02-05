@@ -36,13 +36,9 @@ public interface PseudoTokens {
 	 */
 	int TYPE_VARIABLE_TOKEN = IDENTIFIER_REF_TOKEN + 1;
 	/**
-	 * Token type for enum literal declarations.
-	 */
-	int ENUM_LITERAL_TOKEN = TYPE_VARIABLE_TOKEN + 1;
-	/**
 	 * Token type for JS Doc comments.
 	 */
-	int JS_DOC_TOKEN = ENUM_LITERAL_TOKEN + 1;
+	int JS_DOC_TOKEN = TYPE_VARIABLE_TOKEN + 1;
 	/**
 	 * Token type for ES5 keywords.
 	 */

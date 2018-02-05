@@ -569,6 +569,7 @@ PrimaryExpression <Yield> returns Expression:
 	  ThisLiteral
 	| SuperLiteral
 	| IdentifierRef<Yield>
+	| JSXElement /* see JSX  */
 	| ParameterizedCallExpression<Yield>
 	| Literal
 	| ArrayLiteral<Yield>
@@ -585,6 +586,7 @@ ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
 IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 ;
 
 SuperLiteral: {SuperLiteral} 'super';
@@ -1183,7 +1185,7 @@ TypeRefForCast returns types::StaticBaseTypeRef:
 	| ThisTypeRef
 	| TypeTypeRef
 	| ArrowFunctionTypeExpression
-	
+
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
@@ -1231,9 +1233,10 @@ QualifiedTypeReferenceName:
 // cf. N4JSSpec §14
 N4ClassDeclaration <Yield>:
 	=>(
-		{N4ClassDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'class' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		'class' typingStrategy=TypingStrategyDefSiteOperator?
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	TypeVariables?
 	ClassExtendsClause<Yield>?
@@ -1274,9 +1277,10 @@ N4ClassExpression <Yield>:
 // cf. N4JSSpec §16
 N4InterfaceDeclaration <Yield>:
 	=> (
-		{N4InterfaceDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	TypeVariables?
 	InterfaceImplementsList?
@@ -1298,6 +1302,7 @@ N4EnumDeclaration <Yield>:
 		{N4EnumDeclaration}
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	'{'
 		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
@@ -1306,7 +1311,7 @@ N4EnumDeclaration <Yield>:
 /*
  * Only upper case literals are allows, this is to be checked by the validator
  */
-N4EnumLiteral: name=IdentifierOrThis (':' value=STRING)?;
+N4EnumLiteral: name=IdentifierName (':' value=STRING)?;
 
 	// grammar allows use of these modifiers in many places that are not actually valid;
 // this is checked in N4JSSyntaxValidator (see N4Modifier in N4JS.xcore for details)
@@ -1445,7 +1450,7 @@ SingleNameBinding <Yield, AllowType> returns BindingElement:
 ;
 
 BindingElement <Yield>:
-	BindingElementImpl<Yield>  
+	BindingElementImpl<Yield>
 ;
 
 BindingRestElement <Yield> returns BindingElement:
@@ -1477,3 +1482,55 @@ LiteralOrComputedPropertyName <Yield>:
 terminal INCOMPLETE_ASYNC_ARROW:
 	'@='
 ;
+
+// ****************************************************************************************************
+// see https://facebook.github.io/jsx/
+// ****************************************************************************************************
+
+JSXElement:
+	'<' jsxElementName=JSXElementName JSXAttributes
+	(('>' jsxChildren+=JSXChild* JSXClosingElement) | ('/' '>'));
+
+fragment JSXClosingElement *:
+	'<' '/' jsxClosingName=JSXElementName '>';
+
+JSXChild:
+	JSXElement | JSXExpression
+	//	| JSXText -- not supported yet, cf. IDE-2414
+;
+
+// terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
+
+JSXExpression: '{' expression=AssignmentExpression<false,false> '}';
+
+JSXElementName:
+	expression=JSXElementNameExpression
+	;
+
+JSXElementNameExpression returns Expression:
+	IdentifierRef<false>
+	({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
+	//	| JSXNamedspacedName not supported
+;
+
+//JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
+//JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
+
+fragment JSXAttributes *:
+	jsxAttributes+=JSXAttribute*;
+
+JSXAttribute:
+	JSXSpreadAttribute
+	|
+	JSXPropertyAttribute;
+
+JSXSpreadAttribute:
+	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';
+
+JSXPropertyAttribute:
+	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | ('{'
+	jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')))?;
+
+
+/* Version (N4IDL) related rules */
+fragment VersionDeclaration*: declaredVersion=VERSION;

@@ -253,10 +253,9 @@ public class ModuleSpecifierSelectionDialog extends CustomElementSelectionDialog
 			dialogValue = convertToUnixPath(dialogValue);
 		}
 
-		IPath folderPath = new Path(dialogValue);
-		IContainer createdFolder = null;
-
 		if (Window.OK == dialog.getReturnCode()) {
+			IPath folderPath = new Path(dialogValue);
+			IContainer createdFolder = null;
 			ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(getShell());
 			progressMonitorDialog.open();
 			IProgressMonitor progressMonitor = progressMonitorDialog.getProgressMonitor();

@@ -13,13 +13,15 @@ package org.eclipse.n4js.ui.proposals.imports;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ui.contentassist.N4JSCandidateFilter;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -57,6 +59,9 @@ public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
 	private FQNImporter.Factory fqnImporterFactory;
+
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private void setValueConverter(IValueConverterService service, N4JSGrammarAccess grammarAccess) {
@@ -98,6 +103,22 @@ public class ImportsAwareReferenceProposalCreator {
 				if (!acceptor.canAcceptMoreProposals())
 					return;
 				if (filter.apply(candidate)) {
+					QualifiedName qfn = candidate.getQualifiedName();
+					String tmodule = null;
+
+					if (qfn.getSegmentCount() >= 2) {
+						tmodule = qfn.getSegment(qfn.getSegmentCount() - 2);
+					}
+					// In case of main module, adjust the qualified name, e.g. index.Element -> react.Element
+					IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+					QualifiedName candidateName;
+					if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
+						candidateName = QualifiedName.create(project.getProjectId(),
+								candidate.getQualifiedName().getLastSegment().toString());
+					} else {
+						candidateName = candidate.getQualifiedName();
+					}
+
 					final ICompletionProposal proposal = getProposal(candidate,
 							model,
 							scope,
@@ -107,7 +128,11 @@ public class ImportsAwareReferenceProposalCreator {
 							proposalFactory);
 					if (proposal instanceof ConfigurableCompletionProposal
 							&& candidate.getName().getSegmentCount() > 1) {
-						((ConfigurableCompletionProposal) proposal).setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME,
+						ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
+						castedProposal.setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME,
+								candidateName);
+						// Original qualified name is the qualified name before adjustment
+						castedProposal.setAdditionalData(FQNImporter.KEY_ORIGINAL_QUALIFIED_NAME,
 								candidate.getQualifiedName());
 					}
 					acceptor.accept(proposal);

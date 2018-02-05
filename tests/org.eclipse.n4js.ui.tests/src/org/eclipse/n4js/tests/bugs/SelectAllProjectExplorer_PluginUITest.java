@@ -516,20 +516,22 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 
 	private Object[] workingSetItemWithName(String... workingSetName) {
 		return Arrays.asList(workingSetName).stream()
-				.map(name -> getNavigatorItem(name, WorkingSet.class))
+				.map(name -> getNavigatorItem(name, WorkingSet.class, DEFAULT_UI_TIMEOUT))
 				.toArray();
 	}
 
-	private TreeItem getNavigatorItem(String name, Class<?> type) {
+	private TreeItem getNavigatorItem(String name, Class<?> type, long timeout) {
+		return obtainValueFromUI(
+				() -> getNavigatorItem(name, type),
+				() -> "tree item of type " + type.getSimpleName() + " with name '" + name + "'",
+				timeout);
+	}
+
+	private Optional<TreeItem> getNavigatorItem(String name, Class<?> type) {
 		Optional<TreeItem> item = Arrays.asList(commonViewer.getTree().getItems()).stream()
 				.filter(i -> i.getText().equals(name) && type.isInstance(i.getData()))
 				.findAny();
-
-		if (!item.isPresent()) {
-			throw new IllegalArgumentException(
-					"Couldn't find tree item of type " + type.getSimpleName() + " with name '" + name + "'");
-		}
-		return item.get();
+		return item;
 	}
 
 	/**

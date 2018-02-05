@@ -16,15 +16,15 @@ var x=1;
 function foo() {
 	var x=3;
 	/* XPECT scopeWithPosition at x ---
-		x - 17, b - 22, c - 25, foo - T16,
+		x - 17, b - 22, c - 24, foo - T16,
 		...
 	---*/
 	var b = x;
 }
-var b = c;
 var c;
+var b = c;
 /* XPECT scopeWithPosition at c ---
-		x - 14, b - 24, c - 25, foo - T16,
+		x - 14, b - 25, c - 24, foo - T16,
 		...
 	---*/
 c=c;

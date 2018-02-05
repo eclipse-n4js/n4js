@@ -21,5 +21,6 @@ Sources {
 	}
 }
 ProjectDependencies {
-	ComponentSuperA
+	ComponentSuperA,
+    react
 }

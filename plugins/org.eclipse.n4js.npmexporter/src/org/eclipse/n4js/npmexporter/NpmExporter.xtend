@@ -14,13 +14,6 @@ import com.google.common.base.Charsets
 import com.google.common.io.Files
 import com.google.common.net.UrlEscapers
 import com.google.inject.Inject
-import org.eclipse.n4js.generator.common.AbstractSubGenerator
-import org.eclipse.n4js.npmexporter.validation.IssueConsumer
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.projectModel.ProjectUtils
-import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator
-import org.eclipse.n4js.utils.io.FileCopier
-import org.eclipse.n4js.utils.io.FileDeleter
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -39,6 +32,11 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.compressors.CompressorException
 import org.apache.commons.compress.compressors.CompressorStreamFactory
+import org.eclipse.n4js.npmexporter.validation.IssueConsumer
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator
+import org.eclipse.n4js.utils.io.FileCopier
+import org.eclipse.n4js.utils.io.FileDeleter
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
 
@@ -69,7 +67,6 @@ class NpmExporter {
 	].toSet;
 
 
-	@Inject ProjectUtils projectUtils;
 	@Inject EcmaScriptSubGenerator es5SubGen;
 	@Inject PackageJsonTemplate packageJsonTemplate;
 
@@ -104,10 +101,7 @@ class NpmExporter {
 		}
 
 		// copy files from original output folder to targetFolder
-//		val Path project_loc = project.locationPath;
-		val String project_out = project.outputPath;
-		// TODO improve generator-access, here ES-transpiler is directly referenced
-		val String project_transpiledContent = AbstractSubGenerator.calculateOutputDirectory(project_out, es5SubGen.compilerID )
+		val String project_transpiledContent = project.outputPath
 		val Path transpiledContentFolder = project_loc.resolve(project_transpiledContent);
 
 		val transpiledContentFolderAsFile = transpiledContentFolder.toFile;
@@ -146,7 +140,7 @@ class NpmExporter {
 		val List<ExporterMessage> exportWarnings = newArrayList();
 		val filePackageJson_user = new File( project.locationPath.toFile, "package.json");
 
-		val outputPathComplete = projectUtils.getOutputPathComplete(project, es5SubGen.compilerID);
+		val outputPathComplete = getOutputPathComplete(project, es5SubGen.compilerID);
 		val data = ConvertManifestToPackageJson.convert(project, outputPathComplete);
 
 		val packageJsonText = packageJsonTemplate.generateTemplate(data);
@@ -166,6 +160,15 @@ class NpmExporter {
 		};
 
 		return new MergeResult( project, existingJsonText , packageJsonText_merged, exportWarnings);
+	}
+	
+	/**
+	 * returns the absolute path to the folder where transpiled target files should be placed.
+	 */
+	private def Path getOutputPathComplete(IN4JSProject project, String compilerId) {
+		val outputFolderPathRelative = project.outputPath + File.separator + compilerId + File.separator +
+			project.projectId;
+		return project.locationPath.resolve(outputFolderPathRelative);
 	}
 
 

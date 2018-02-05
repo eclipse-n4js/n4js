@@ -11,7 +11,6 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
-import it.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProvider
@@ -33,6 +32,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.validation.JavaScriptVariant
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner

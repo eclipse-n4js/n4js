@@ -27,17 +27,17 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org.eclipse.n4js.transpiler.es5.tests/importexport/IDEBUG_684/Err',
-		'org.eclipse.n4js.transpiler.es5.tests/importexport/IDEBUG_684/Stuff'
+		'org.eclipse.n4js.transpiler.es5.tests/src-gen/importexport/IDEBUG_684/Err',
+		'org.eclipse.n4js.transpiler.es5.tests/src-gen/importexport/IDEBUG_684/Stuff'
 	], function($n4Export) {
 		var N, S;
 		return {
 			setters: [
-				function($_import_org_u002eeclipse_u002en4js_u002etranspiler_u002ees5_u002etests_importexport_u002fIDEBUG_684_u002fErr) {
-					N = $_import_org_u002eeclipse_u002en4js_u002etranspiler_u002ees5_u002etests_importexport_u002fIDEBUG_684_u002fErr;
+				function($_import_importexport_u002fIDEBUG_684_u002fErr) {
+					N = $_import_importexport_u002fIDEBUG_684_u002fErr;
 				},
-				function($_import_org_u002eeclipse_u002en4js_u002etranspiler_u002ees5_u002etests_importexport_u002fIDEBUG_684_u002fStuff) {
-					S = $_import_org_u002eeclipse_u002en4js_u002etranspiler_u002ees5_u002etests_importexport_u002fIDEBUG_684_u002fStuff;
+				function($_import_importexport_u002fIDEBUG_684_u002fStuff) {
+					S = $_import_importexport_u002fIDEBUG_684_u002fStuff;
 				}
 			],
 			execute: function() {
@@ -46,7 +46,7 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
 --- */
 
 

@@ -10,15 +10,17 @@
  */
 package org.eclipse.n4js.ui.building
 
-import org.eclipse.n4js.generator.common.CompilerDescriptor
-import org.eclipse.n4js.generator.common.IComposedGenerator
-import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry
+import com.google.inject.Inject
+import org.eclipse.n4js.generator.CompilerDescriptor
 import org.eclipse.xtext.generator.IOutputConfigurationProvider
 import org.eclipse.xtext.generator.OutputConfiguration
+import org.eclipse.n4js.generator.ICompositeGenerator
 
 /**
  */
 class N4JSOutputConfigurationProvider implements IOutputConfigurationProvider {
+	@Inject
+	private ICompositeGenerator compositeGenerator;
 
 	/**
 	 * This method is called in org.eclipse.xtext.generator.Delegate and in
@@ -27,15 +29,12 @@ class N4JSOutputConfigurationProvider implements IOutputConfigurationProvider {
 	 * page these differences will be overlaid by the caller of this method.
 	 */
 	override getOutputConfigurations() {
-		val outputConfigurations = <OutputConfiguration>newLinkedHashSet
-		val composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
-		for (IComposedGenerator composedGenerator : composedGenerators) {
-			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
-				if (compilerDescriptor.getOutputConfiguration() !== null) {
-					outputConfigurations.add(compilerDescriptor.getOutputConfiguration());
-				}
+		val outputConfigurations = <OutputConfiguration>newLinkedHashSet;
+		for (CompilerDescriptor compilerDescriptor : compositeGenerator.getCompilerDescriptors()) {
+			if (compilerDescriptor.getOutputConfiguration() !== null) {
+				outputConfigurations.add(compilerDescriptor.getOutputConfiguration());
 			}
 		}
-		return outputConfigurations
+		return outputConfigurations;
 	}
 }

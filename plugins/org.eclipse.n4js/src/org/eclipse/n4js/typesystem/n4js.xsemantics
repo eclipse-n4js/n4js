@@ -64,7 +64,6 @@ Contributors:
 
 validatorExtends AbstractMessageAdjustingN4JSValidator // AbstractN4JSValidator
 
-import it.xsemantics.runtime.RuleEnvironment
 import java.util.List
 import org.eclipse.emf.common.util.ECollections
 import org.eclipse.emf.ecore.EObject
@@ -98,6 +97,8 @@ import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IntLiteral
+import org.eclipse.n4js.n4JS.JSXElement
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -140,7 +141,8 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
+import org.eclipse.n4js.n4jsx.ReactHelper
+import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -191,14 +193,13 @@ import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesbuilder.N4JSFunctionDefinitionTypesBuilder
 import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.n4js.typesystem.UnsupportedExpressionTypeHelper
-import org.eclipse.n4js.typesystem.VersionResolver
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 
@@ -208,6 +209,7 @@ import static extension org.eclipse.n4js.ts.utils.TypeExtensions.*
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.typesystem.TypeSystemErrorExtensions.*
+import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 
 inject TypeSystemHelper typeSystemHelper
 inject N4JSFunctionDefinitionTypesBuilder functionDefinitionTypesBuilder
@@ -217,10 +219,9 @@ inject DestructureHelper destructureHelper
 inject MemberScopingHelper memberScopingHelper
 inject PromisifyHelper promisifyHelper
 inject JavaScriptVariantHelper jsVariantHelper
-inject VersionResolver versionResolver
-inject UnsupportedExpressionTypeHelper expressionTypeHelper
-inject ASTMetaInfoCacheHelper astMetaInfoCacheHelper
+inject N4IDLVersionResolver versionResolver
 inject IQualifiedNameConverter qualifiedNameConverter
+inject ReactHelper reactHelper
 
 judgments {
 
@@ -677,7 +678,7 @@ from {
 		val targetDeclType = targetTypeRef.declaredType;
 		val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType);
 		val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef };
-		val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index);
+		val indexValue = ASTMetaInfoUtils.getCompileTimeValue(expr.index);
 		val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue);
 
 		if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) {
@@ -960,21 +961,21 @@ from {
 		} else {
 			val lnum = G.isNumericOperand(l);
 			val rnum = G.isNumericOperand(r);
-			
+
 			if (lnum && rnum) {
 				T = G.numberTypeRef
 			} else {
 				if ( (lunknown || runknown) && (lnum || rnum)  ) {
-					// one is numeric, the other unknown --> 
+					// one is numeric, the other unknown -->
 					T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
 				} else {
 					val lMayNum = lnum || G.containsNumericOperand(l) || G.isAny(l) || G.isSymbol(l);
 					val rMayNum = rnum || G.containsNumericOperand(r) || G.isAny(r) || G.isSymbol(r);
-					
+
 					if (lMayNum && rMayNum) {
 						T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
-					}		
-					else {					
+					}
+					else {
 						T = G.stringTypeRef
 					}
 				}
@@ -1099,19 +1100,6 @@ from {
  	G |- FunctionExpression e: TypeRef T
  from {
  	T = this.applyRuleTypeTypeDefiningElement(G, _trace_, e).value;
-}
-
-/*
- * This rule introduces a variation point to the type system.
- * In particular, it allows sub languages to type newly introduced
- * expression types that are unknown to N4JS. To use the variation point,
- * a sub language can use dependency injection to inject a custom implementation
- * of UnsupportedExpressionTypeHelper
- */
-rule typeUnsupportedExpression
-	G |- Expression e: TypeRef T
-from {
-	T = expressionTypeHelper.typeExpression(e, G)
 }
 
 /* ----------------------------------------------------------------------
@@ -1259,6 +1247,19 @@ from {
 }
 
 
+rule typeJSXElement
+	G |- JSXElement expr: TypeRef T
+from {
+	val classifierReactElement = reactHelper.lookUpReactElement(expr);
+	if (classifierReactElement !== null) {
+		T = classifierReactElement.ref;
+	} else {
+		T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
+	}
+}
+
+
+
 // **********************************************************************
 // Judgment subtype
 // **********************************************************************
@@ -1322,7 +1323,7 @@ from {
 	} else if ((leftDeclType === G.intType && rightDeclType === G.numberType)
 				|| (leftDeclType === G.numberType && rightDeclType === G.intType)) {
 		true // int <: number AND number <: int (for now, int and number are synonymous)
-	} else if (leftDeclType instanceof TEnum && rightDeclType===G.n4EnumType) { // @see [N4JS] 4.13. Enums
+	} else if (leftDeclType instanceof TEnum && (rightDeclType===G.n4EnumType || rightDeclType===G.objectType)) { // @see [N4JS] 4.13. Enums
 		 !AnnotationDefinition.STRING_BASED.hasAnnotation( leftDeclType )
 	} else if (leftDeclType instanceof TEnum && (rightDeclType===G.n4StringBasedEnumType || rightDeclType===G.stringType || rightDeclType===G.stringObjectType)) { // @see [N4JS] 4.15.2 String based Enums, IDEBUG-294
 		 AnnotationDefinition.STRING_BASED.hasAnnotation( leftDeclType )
@@ -2010,7 +2011,7 @@ from {
 	}
 }
 
-/* @see [N4JS] 6.1.13. Multiplicative Expression 
+/* @see [N4JS] 6.1.13. Multiplicative Expression
  * Note: symbol type is not allowed, this is checked in validation
  */
 rule expectedTypeInMultiplicativeExpression
@@ -2019,7 +2020,7 @@ from {
 	T = G.anyTypeRef
 }
 
-/* @see [N4JS] 6.1.14 Additive Expression 
+/* @see [N4JS] 6.1.14 Additive Expression
  * Note: symbol type is not allowed, this is checked in validation
  */
 rule expectedTypeInAdditiveExpression
@@ -2028,8 +2029,8 @@ from {
 	T = G.anyTypeRef
 }
 
-/* @see [N4JS] 6.1.15. Shift Expression 
- * Note: symbol type is not allowed, this is checked in validation 
+/* @see [N4JS] 6.1.15. Shift Expression
+ * Note: symbol type is not allowed, this is checked in validation
  * */
 rule expectedTypeInShiftExpression
 	G |- ShiftExpression e |> Expression expression : TypeRef T
@@ -2318,18 +2319,23 @@ from {
 		T = G.anyTypeRef
 	}
 }
-/*
- * This rule defines a variant point for defining expected type for new kinds of expressions in a new sub-language.
- * By doing this, subtype checking is done automatically by N4JS infrastructure for these new expressions as well
- *
- * Other extension point is the rule typeUnsupportedExpression
- */
-rule expectedTypeInUnsupportedContainer
-	G |- EObject container |> Expression expr: TypeRef T
-from {
-	T = expressionTypeHelper.expectedExpressionTypeInEObject(container, expr, G)
-}
 
+rule expectedTypeInJSXPropertyAttribute
+	G |- JSXPropertyAttribute container |> Expression expr: TypeRef T
+from {
+	T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
+	val jsxElem = container.eContainer();
+	if (jsxElem instanceof JSXElement) {
+		val propsTypeRef = reactHelper.getPropsType(jsxElem);
+		if (propsTypeRef !== null) {
+			val G2 = G.wrap;
+			typeSystemHelper.addSubstitutions(G2, propsTypeRef);
+			G2.addThisType(propsTypeRef);
+			G2 |- container.getProperty() : var TypeRef propertyTypeRef
+			G2 |- propertyTypeRef ~> T
+		}
+	}
+}
 
 
 // **********************************************************************
@@ -2546,7 +2552,7 @@ from {
 			val boundRef = TypeUtils.createBoundThisTypeRef(boundRefFromEnv.actualThisTypeRef);
 			boundRef.setTypingStrategy(thisTypeRef.typingStrategy); // note: must take use-site typing-strategy from 'thisTypeRef', not the one stored in the environment
 			TypeUtils.copyTypeModifiers(boundRef, thisTypeRef); // note: must take use-site type modifiers (e.g. optional)
-			T = boundRef;	
+			T = boundRef;
 		} else {
 			T = thisTypeRef
 		}

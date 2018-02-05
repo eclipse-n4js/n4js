@@ -11,9 +11,9 @@
 package org.eclipse.n4js.xpect.config
 
 import java.util.List
-import org.xpect.XpectImport
-import org.xpect.setup.XpectSetupRoot
-import org.xpect.xtext.lib.setup.InjectorSetup
+import org.eclipse.xpect.XpectImport
+import org.eclipse.xpect.setup.XpectSetupRoot
+import org.eclipse.xpect.xtext.lib.setup.InjectorSetup
 import org.eclipse.xtext.resource.XtextResource
 
 /**

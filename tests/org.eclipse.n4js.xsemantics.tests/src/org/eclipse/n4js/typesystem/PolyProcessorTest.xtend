@@ -11,13 +11,16 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import java.util.function.Predicate
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
+import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
@@ -30,9 +33,6 @@ import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.xsemantics.AbstractTypesystemTest
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.function.Predicate
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -49,8 +49,6 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 @InjectWith(N4JSInjectorProvider)
 class PolyProcessorTest extends AbstractTypesystemTest {
 
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 	@Inject
 	private N4JSTypeSystem ts;
 //	@Inject
@@ -165,7 +163,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 //	}
 	def private TypeRef getTypeFromTypingCache(Expression expression) {
 		// NOTE: not using N4JSTypeSystem#type() here to make 100% sure we are just reading from the cache
-		return astMetaInfoCacheHelper.getTypeFailSafe(expression)?.value;
+		return ASTMetaInfoUtils.getTypeFailSafe(expression)?.value;
 	}
 
 

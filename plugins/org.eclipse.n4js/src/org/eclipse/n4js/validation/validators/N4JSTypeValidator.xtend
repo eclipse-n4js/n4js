@@ -11,9 +11,9 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.EList
@@ -113,7 +113,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSScopeProvider n4jsScopeProvider;
 
 	@Inject
-	protected extension ContainerTypesHelper containerTypesHelper;
+	protected ContainerTypesHelper containerTypesHelper;
 	
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;

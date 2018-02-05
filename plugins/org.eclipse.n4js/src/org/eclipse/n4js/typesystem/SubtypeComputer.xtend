@@ -12,7 +12,6 @@ package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import it.xsemantics.runtime.RuleEnvironment
 import java.util.List
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
@@ -25,6 +24,7 @@ import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*

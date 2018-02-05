@@ -2751,7 +2751,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getArrowFunctionTypeExpressionAccess().getRule();
 	}
 	
-	//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
+	//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 	//fragment TAnonymousFormalParameterList *:
 	//	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?;
 	public TypeExpressionsGrammarAccess.TAnonymousFormalParameterListElements getTAnonymousFormalParameterListAccess() {
@@ -2856,8 +2856,9 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ParameterizedTypeRefStructural:
-	//	definedTypingStrategy=TypingStrategyUseSiteOperator
-	//	TypeAndTypeArguments ('with' TStructMemberList)?;
+	//	(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|super::TypeReferenceName] |
+	//	{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
+	//	declaredType=[Type|super::TypeReferenceName] VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
 	public TypeExpressionsGrammarAccess.ParameterizedTypeRefStructuralElements getParameterizedTypeRefStructuralAccess() {
 		return gaTypeExpressions.getParameterizedTypeRefStructuralAccess();
 	}
@@ -2866,14 +2867,25 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//fragment TypeAndTypeArguments returns ParameterizedTypeRef:
-	//	declaredType=[Type|super::TypeReferenceName] -> TypeArguments?;
+	//TypeAndTypeArguments ParameterizedTypeRef:
+	//	(declaredType=[Type|super::TypeReferenceName] | {VersionedParameterizedTypeRef}
+	//	declaredType=[Type|super::TypeReferenceName] VersionRequest) -> TypeArguments?;
 	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
 	}
 	
 	public ParserRule getTypeAndTypeArgumentsRule() {
 		return getTypeAndTypeArgumentsAccess().getRule();
+	}
+	
+	//fragment VersionRequest *:
+	//	requestedVersion=VERSION;
+	public TypeExpressionsGrammarAccess.VersionRequestElements getVersionRequestAccess() {
+		return gaTypeExpressions.getVersionRequestAccess();
+	}
+	
+	public ParserRule getVersionRequestRule() {
+		return getVersionRequestAccess().getRule();
 	}
 	
 	//fragment TypeArguments *:
@@ -3219,6 +3231,12 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	'..';
 	public TerminalRule getDOT_DOTRule() {
 		return gaTypeExpressions.getDOT_DOTRule();
+	}
+	
+	//terminal VERSION returns ecore::EBigDecimal:
+	//	'#' WS* INT;
+	public TerminalRule getVERSIONRule() {
+		return gaTypeExpressions.getVERSIONRule();
 	}
 	
 	//terminal fragment HEX_DIGIT:

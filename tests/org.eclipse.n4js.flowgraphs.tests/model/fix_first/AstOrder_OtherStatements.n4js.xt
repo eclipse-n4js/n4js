@@ -1,0 +1,130 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * The order of all features of AST node instances is tested here.
+ * Example:
+ *   The 'while' statement has the two features 'expression' and 'statement'.
+ *   Their order must be: first 'expression', then 'statement'.
+ */
+
+
+
+/* Block XPECT astOrder ---
+	0: function Block() { { 1; 2; } },
+	1: { { 1; 2; } },
+	2: { 1; 2; },
+	3: 1;,
+	4: 1,
+	5: 2;,
+	6: 2
+--- */
+function Block() {
+	{
+		1;
+		2;
+	}
+}
+
+/* Debugger1 XPECT astOrder ---
+	0: function Debugger1() { debugger; },
+	1: { debugger; },
+	2: debugger;
+--- */
+function Debugger1() {
+	debugger;
+}
+
+/* IfStatement XPECT astOrder ---
+	0: function IfStatement() { if (1) 2; else 3; },
+	1: { if (1) 2; else 3; },
+	2: if (1) 2; else 3;,
+	3: 1,
+	4: 2;,
+	5: 2,
+	6: 3;,
+	7: 3
+--- */
+function IfStatement() {
+	if (1)
+		2;
+	else
+		3;
+}
+
+/* EmptyStatement XPECT astOrder ---
+	0: function EmptyStatement() { ; },
+	1: { ; },
+	2: ;
+--- */
+function EmptyStatement() {
+	 ;
+}
+
+/* ReturnStatement XPECT astOrder ---
+	0: function ReturnStatement() : int { return 1; },
+	1: { return 1; },
+	2: return 1;, 3: 1
+--- */
+function ReturnStatement() : int {
+	 return 1;
+}
+
+/* WithStatement XPECT astOrder ---
+	0: function WithStatement() { with (1) 2; },
+	1: { with (1) 2; },
+	2: with (1) 2;,
+	3: 1,
+	4: 2;,
+	5: 2
+--- */
+function WithStatement() {
+	// WithStatement XPECT errors --> "With statement not allowed." at "with"
+	with (1) 2;
+}
+
+/* VariableStatement1 XPECT astOrder ---
+	0: function VariableStatement1() { let x = 1; },
+	1: { let x = 1; },
+	2: let x = 1;,
+	3: x = 1,
+	4: 1
+--- */
+function VariableStatement1() {
+	let x = 1;
+}
+
+/* VariableStatement2 XPECT astOrder ---
+	0: function VariableStatement2() { var x = 1; },
+	1: { var x = 1; },
+	2: var x = 1;,
+	3: x = 1,
+	4: 1
+--- */
+function VariableStatement2() {
+	var x = 1;
+}
+
+/* VariableStatement3 XPECT astOrder ---
+	0: function VariableStatement3() { let x\, y\, z; }\n,
+	1: { let x\, y\, z; },
+	2: let x\, y\, z;,
+	3: x,
+	4: y,
+	5: z
+--- */
+function VariableStatement3() {
+	let x, y, z;
+}

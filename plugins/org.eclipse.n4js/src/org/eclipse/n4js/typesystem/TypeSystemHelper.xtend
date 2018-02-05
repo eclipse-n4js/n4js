@@ -13,7 +13,6 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import it.xsemantics.runtime.RuleEnvironment
 import java.util.Arrays
 import java.util.LinkedList
 import java.util.List
@@ -25,6 +24,7 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.YieldExpression
+import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
@@ -54,6 +54,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -76,7 +77,7 @@ class TypeSystemHelper {
 
 	@Inject private N4JSTypeSystem ts;
 
-	@Inject private VersionResolver versionResolver;
+	@Inject private N4IDLVersionResolver versionResolver;
 
 	// *****************************************************************************************************
 	//   forwarding of utility methods implemented in strategy classes
@@ -136,7 +137,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def TypeRef createUnionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createUnionType(G,elements)
 	}
-	
+
 	def TypeRef createIntersectionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createIntersectionType(G,elements)
 	}

@@ -153,7 +153,8 @@ try {
 
 } catch(e) {
 
-};
+}
 
+// XPECT warnings --> "Dead code." at "debugger;"
 // XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "debugger;"
 debugger;

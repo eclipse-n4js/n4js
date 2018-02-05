@@ -49,12 +49,17 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -218,6 +223,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	public static final String AST_PROXY_FRAGMENT = ":astProxy";
 
 	/**
+	 * Cache for storing type of AST nodes, inferred type arguments of parameterized call expressions, etc.
+	 */
+	private ASTMetaInfoCache astMetaInfoCache;
+
+	/**
 	 * Set by the dirty state support to announce an upcoming unloading request.
 	 */
 	private boolean aboutToBeUnloaded;
@@ -242,14 +252,53 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	private IDerivedStateComputer myDerivedStateComputer;
 
+	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("N4JSResource");
+
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
 	 */
 	/**
 	 * Public default constructor.
 	 */
+	@Inject
 	public N4JSResource() {
 		super();
+	}
+
+	/**
+	 * Returns the {@link ASTMetaInfoCache} (in states {@link #isFullyProcessed() "Fully Processed"} and during the
+	 * transition from "Fully Initialized" to "Fully Processed", i.e. during post-processing) or throws an exception if
+	 * the cache is unavailable (in all other states).
+	 */
+	public ASTMetaInfoCache getASTMetaInfoCacheVerifyContext() {
+		if (astMetaInfoCache == null) {
+			if (!isFullyProcessed() && !isPostProcessing()) {
+				// getter invoked in wrong state
+				throw new IllegalStateException(
+						"AST meta-info cache only available in state 'Fully Processed' and during post-processing");
+			} else {
+				// getter invoked in correct state, but cache is still undefined
+				throw new NullPointerException("AST meta-info cache missing");
+			}
+		}
+		return astMetaInfoCache;
+	}
+
+	/**
+	 * Retrieve the ASTMetaInfo. Unlike {@code getASTMetaInfoCacheVerifyContext}, this method does not check if the call
+	 * is allowed in the current call context.
+	 */
+	public ASTMetaInfoCache getASTMetaInfoCache() {
+		return astMetaInfoCache;
+	}
+
+	/**
+	 * Set or unset the receiving resource's {@link ASTMetaInfoCache} (in the latter case, pass in <code>null</code>).
+	 * Should only be called at the beginning of post-processing (to set the cache) and when discarding the
+	 * post-processing result (to unset the cache).
+	 */
+	public void setASTMetaInfoCache(ASTMetaInfoCache cache) {
+		this.astMetaInfoCache = cache;
 	}
 
 	/**
@@ -327,40 +376,34 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (isLoaded)
 			throw new IllegalStateException("Resource was already loaded");
 
-		boolean wasDeliver = eDeliver();
-		try {
-			eSetDeliver(false);
-			ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
-			if (!theContents.isEmpty())
-				throw new IllegalStateException("There is already something in the contents list: " + theContents);
-			InternalEObject astProxy = (InternalEObject) N4JSFactory.eINSTANCE.createScript();
-			astProxy.eSetProxyURI(URI.createURI("#" + AST_PROXY_FRAGMENT));
-			theContents.sneakyAdd(astProxy);
-
-			boolean didLoadModule = false;
-			Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
-			for (IEObjectDescription module : modules) {
-				TModule deserializedModule = UserdataMapper.getDeserializedModuleFromDescription(module, getURI());
-				if (deserializedModule != null) {
-					theContents.sneakyAdd(deserializedModule);
-					didLoadModule = true;
-					break;
-				}
+		TModule deserializedModule = null;
+		Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
+		for (IEObjectDescription module : modules) {
+			deserializedModule = UserdataMapper.getDeserializedModuleFromDescription(module, getURI());
+			if (deserializedModule != null) {
+				break;
 			}
-			// TODO: It is possible that TModule is null (e.g. if a module becomes invalid and thus
-			// ResourceDescriptionWithoutUserData is created and stored in the index).
-			// In that case, contents has an AST proxy without TModule. Is this an allowed state??
-			if (didLoadModule) {
+		}
+		if (deserializedModule != null) {
+			boolean wasDeliver = eDeliver();
+			try {
+				eSetDeliver(false);
+				ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
+				if (!theContents.isEmpty())
+					throw new IllegalStateException("There is already something in the contents list: " + theContents);
+				InternalEObject astProxy = (InternalEObject) N4JSFactory.eINSTANCE.createScript();
+				astProxy.eSetProxyURI(URI.createURI("#" + AST_PROXY_FRAGMENT));
+				theContents.sneakyAdd(astProxy);
+				theContents.sneakyAdd(deserializedModule);
 				fullyInitialized = true;
 				// TModule loaded from index had been fully post-processed prior to serialization
 				fullyPostProcessed = true;
-				return true;
-			} else {
-				return false;
+			} finally {
+				eSetDeliver(wasDeliver);
 			}
-		} finally {
-			eSetDeliver(wasDeliver);
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -724,6 +767,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				// (i.e. transition from resource load state "Loaded" to "Created", not to "Loaded from Description")
 			}
 
+			// Clear AST meta cache and Xtext cache
+			this.setASTMetaInfoCache(null);
 			getCache().clear(this);
 		}
 	}
@@ -817,6 +862,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				fullyInitialized = newFullyInitialized;
 				isInitializing = false;
 				try {
+					// Clear AST meta cache and Xtext cache
+					this.setASTMetaInfoCache(null);
 					getCache().clear(this);
 				} catch (RuntimeException e) {
 					// don't rethrow as there might have been an exception in the try block.
@@ -921,7 +968,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				// if targetResource exists, make sure it is post-processed *iff* this resource is post-processed
 				// (only relevant in case targetResource wasn't loaded from index, because after loading from index it
 				// is always marked as fullyPostProcessed==true)
-				if (targetObject != null && (this.isProcessing() || this.isFullyProcessed())) {
+				if (targetObject != null && (this.isPostProcessing() || this.isFullyProcessed())) {
 					final Resource targetResource2 = targetObject.eResource();
 					if (targetResource2 instanceof N4JSResource) {
 						// no harm done, if already running/completed
@@ -945,7 +992,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected EObject getEObjectForURIFragmentRootSegment(String uriFragmentRootSegment) {
-		if (contents != null) {
+		if (contents != null && !contents.isEmpty()) {
 			if (isASTProxy(contents.basicGet(0))) {
 				int position = 0;
 				if (uriFragmentRootSegment.length() > 0) {
@@ -1151,7 +1198,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// called from builder before resource descriptions are created + called from validator
 		final Script script = getScriptResolved(); // need to be called before resolve() since that one injects a proxy
 		// at resource.content[0]
+		final Measurement measurment = collector.getMeasurement(getURI().toString());
 		super.resolveLazyCrossReferences(mon);
+		measurment.end();
 		if (script != null) {
 			// FIXME freezing of used imports tracking can/should now be moved to N4JSPostProcessor or ASTProcessor
 			EcoreUtilN4.doWithDeliver(false,
@@ -1231,6 +1280,44 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		} else {
 			// if not, use default generic scoping message
 			super.createAndAddDiagnostic(triple);
+		}
+	}
+
+	/**
+	 * Adds given type as a temporary type to the receiving resource's TModule. For details, see
+	 * {@link TModule#getTemporaryTypes()}.
+	 *
+	 * @throws IllegalStateException
+	 *             iff receiving resource does not have a module or it is a proxy.
+	 */
+	public void addTemporaryType(Type type) {
+		TModule module = getModule();
+		if (module == null || module.eIsProxy()) {
+			throw new IllegalStateException("trying to add temporary type but module is null or a proxy");
+		}
+		if (!module.getTemporaryTypes().contains(type)) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.getTemporaryTypes().add(type);
+			}, module);
+		}
+	}
+
+	/**
+	 * Clears all temporary types in the receiving resource's TModule. For details, see
+	 * {@link TModule#getTemporaryTypes()}.
+	 *
+	 * @throws IllegalStateException
+	 *             iff receiving resource does not have a module or it is a proxy.
+	 */
+	public void clearTemporaryTypes() {
+		TModule module = getModule();
+		if (module == null || module.eIsProxy()) {
+			throw new IllegalStateException("trying to clear temporary types but module is null or a proxy");
+		}
+		if (!module.getTemporaryTypes().isEmpty()) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.getTemporaryTypes().clear();
+			}, module);
 		}
 	}
 }

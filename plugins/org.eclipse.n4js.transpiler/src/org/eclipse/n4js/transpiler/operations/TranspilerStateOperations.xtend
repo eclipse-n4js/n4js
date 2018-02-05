@@ -41,11 +41,17 @@ import org.eclipse.n4js.transpiler.im.ImPackage
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
+import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TypesFactory
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.operations.SymbolTableManagement.*
+import org.eclipse.n4js.n4JS.ExpressionStatement
 
 /**
  * Methods of this class provide elementary operations on a transpiler state, mainly on the intermediate model. The
@@ -55,6 +61,101 @@ import static extension org.eclipse.n4js.transpiler.operations.SymbolTableManage
  * delegation methods in {@link Transformation}.
  */
 class TranspilerStateOperations {
+
+	/**
+	 * Creates a new namespace import for the given module and adds it to the intermediate model of the given transpiler
+	 * state. The returned symbol table entry can be used to create references to the namespace, e.g. by passing it to
+	 * {@link TranspilerBuilderBlocks#_IdentRef(SymbolTableEntry)}. The newly created import can be obtained by calling
+	 * {@link SymbolTableEntryOriginal#getImportSpecifier()} on the returned symbol table entry.
+	 * <p>
+	 * IMPORTANT: this method does not check if an import for the given module exists already or if the given namespace
+	 * name is unique (i.e. does not avoid name clashes!).
+	 */
+	def public static SymbolTableEntryOriginal addNamespaceImport(TranspilerState state, TModule moduleToImport,
+		String namespaceName) {
+
+		// 1) create import declaration & specifier
+		val importSpec = _NamespaceImportSpecifier(namespaceName, true);
+		val importDecl = _ImportDecl(importSpec);
+		// 2) create a temporary type to use as original target
+		val typeForNamespace = TypesFactory.eINSTANCE.createModuleNamespaceVirtualType();
+		typeForNamespace.name = namespaceName;
+		state.resource.addTemporaryType(typeForNamespace); // make sure our temporary type is contained in a resource
+		// 3) create a symbol table entry
+		val steForNamespace = getSymbolTableEntryOriginal(state, typeForNamespace, true);
+		steForNamespace.importSpecifier = importSpec;
+		// 4) add import to intermediate model
+		val scriptElements = state.im.scriptElements;
+		if(scriptElements.empty) {
+			scriptElements.add(importDecl);
+		} else {
+			insertBefore(state, scriptElements.get(0), importDecl);
+		}
+		// 5) update info registry
+		state.info.setImportedModule(importDecl, moduleToImport);
+		return steForNamespace;
+	}
+
+	/**
+	 * Creates a new named import for the given element and adds it to the intermediate model of the given transpiler
+	 * state. The returned symbol table entry can be used to create references to the imported element, e.g. by passing
+	 * it to {@link TranspilerBuilderBlocks#_IdentRef(SymbolTableEntry)}. The newly created import can be obtained by
+	 * calling {@link SymbolTableEntryOriginal#getImportSpecifier()} on the returned symbol table entry.
+	 * <p>
+	 * If a named import already exists for the given element, nothing will be changed in the intermediate model and its
+	 * symbol table entry will be returned as described above. If the given element is of type
+	 * {@link ModuleNamespaceVirtualType} an exception will be thrown (because only namespace imports can be created for
+	 * those types).
+	 * <p>
+	 * IMPORTANT: this method does not check if the given namespace name is unique (i.e. does not avoid name clashes!).
+	 */
+	def public static SymbolTableEntryOriginal addNamedImport(TranspilerState state, IdentifiableElement elementToImport, String aliasOrNull) {
+		val steOfElementToImport = getSymbolTableEntryOriginal(state, elementToImport, true);
+		addNamedImport(state, steOfElementToImport, aliasOrNull);
+		return steOfElementToImport;
+	}
+
+	/**
+	 * Creates a new named import for the given STE and adds it to the intermediate model of the given transpiler
+	 * state. The passed-in symbol table entry can be used to create references to the imported element, e.g. by passing
+	 * it to {@link TranspilerBuilderBlocks#_IdentRef(SymbolTableEntry)}. The newly created import can be obtained by
+	 * calling {@link SymbolTableEntryOriginal#getImportSpecifier()} on the passed-in symbol table entry.
+	 * <p>
+	 * If a named import already exists for the given element, nothing will be changed in the intermediate model. If the
+	 * original target of the given symbol table entry is of type {@link ModuleNamespaceVirtualType} an exception will
+	 * be thrown (because only namespace imports can be created for those types).
+	 * <p>
+	 * IMPORTANT: this method does not check if the given namespace name is unique (i.e. does not avoid name clashes!).
+	 */
+	def public static void addNamedImport(TranspilerState state, SymbolTableEntryOriginal steOfElementToImport, String aliasOrNull) {
+		// check for valid type of element to be imported (i.e. the original target)
+		val originalTarget = steOfElementToImport.originalTarget;
+		if(originalTarget instanceof ModuleNamespaceVirtualType) {
+			throw new IllegalArgumentException("cannot create named import for a ModuleNamespaceVirtualType");
+		}
+		// check for existing import
+		val existingImportSpec = steOfElementToImport.importSpecifier;
+		if(existingImportSpec!==null) {
+			// import already exists, nothing to be done
+			return;
+		}
+
+		// 1) create import declaration & specifier
+		val importSpec = _NamedImportSpecifier(aliasOrNull, true);
+		val importDecl = _ImportDecl(importSpec);
+		// 2) add import to intermediate model
+		val scriptElements = state.im.scriptElements;
+		if(scriptElements.empty) {
+			scriptElements.add(importDecl);
+		} else {
+			insertBefore(state, scriptElements.get(0), importDecl);
+		}
+		// 3) link symbol table entry to its newly created import specifier
+		steOfElementToImport.importSpecifier = importSpec;
+		// 4) update info registry
+		val moduleOfOriginalTarget = originalTarget.containingModule;
+		state.info.setImportedModule(importDecl, moduleOfOriginalTarget);
+	}
 
 	def public static void setTarget(TranspilerState state, ParameterizedCallExpression callExpr, Expression newTarget) {
 		val oldTarget = callExpr.target;
@@ -157,6 +258,10 @@ class TranspilerStateOperations {
 				"when replacing a function declaration by a variable declaration, " +
 				"we expect the variable to be initialized with a function expression");
 		}
+	}
+	
+	def public static void replace(TranspilerState state, FunctionDeclaration functionDecl, ExpressionStatement stmt) {
+		state.replaceWithoutRewire(functionDecl, stmt);
 	}
 
 	def public static void replace(TranspilerState state, N4MemberDeclaration memberDecl, N4MemberDeclaration replacement) {

@@ -24,18 +24,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
@@ -62,8 +54,15 @@ import org.eclipse.n4js.typesystem.ITypeReplacementProvider;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.n4js.utils.FindArtifactHelper;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
 
 /**
  * Helper for comparing API and implementation projects to check if the implementation complies to the API. For more
@@ -74,7 +73,7 @@ public class ProjectCompareHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private ProjectUtils projectUtils;
+	private FindArtifactHelper artifactHelper;
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 	@Inject
@@ -253,7 +252,7 @@ public class ProjectCompareHelper {
 			}
 			apiProject = project;
 			apiModule = module;
-			URI impUri = projectUtils.findArtifact(implProject, apiModule.getQualifiedName(),
+			URI impUri = artifactHelper.findArtifact(implProject, apiModule.getQualifiedName(),
 					Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION));
 			if (impUri != null) {
 				IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(module.eResource()
@@ -294,7 +293,7 @@ public class ProjectCompareHelper {
 				// should only find one relevant API-project:
 
 				labelA: for (IN4JSProject ap : apiProjects) {
-					URI apiURI = projectUtils.findArtifact(ap, apiImplModule.getQualifiedName(),
+					URI apiURI = artifactHelper.findArtifact(ap, apiImplModule.getQualifiedName(),
 							Optional.of(N4JSGlobals.N4JSD_FILE_EXTENSION));
 					if (apiURI != null) {
 						IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(apiImplModule.eResource()
@@ -405,7 +404,7 @@ public class ProjectCompareHelper {
 	private TModule findImplementation(TModule moduleApi, IN4JSProject projectImpl,
 			ResourceSet resourceSet, IResourceDescriptions index) {
 		final String fqnStr = moduleApi.getQualifiedName();
-		final URI uri = projectUtils.findArtifact(projectImpl, fqnStr, Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION));
+		final URI uri = artifactHelper.findArtifact(projectImpl, fqnStr, Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION));
 		if (uri == null)
 			return null;
 		final IResourceDescription resDesc = index.getResourceDescription(uri);

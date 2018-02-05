@@ -10,17 +10,17 @@
  */
 package org.eclipse.n4js.xpect.config
 
+import java.util.List
+import org.apache.log4j.Logger
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMethod
-import java.util.List
-import org.apache.log4j.Logger
-import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xpect.setup.XpectSetupComponent
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.scoping.IScopeProvider
-import org.xpect.setup.XpectSetupComponent
 
 /**
  * This Component generates a visibility-filtered list of feature names from a type. The type is loaded when evaluating

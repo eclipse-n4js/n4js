@@ -31,14 +31,19 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
+import org.eclipse.n4js.n4JS.VersionedIdentifierRef
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.Type
 
 
 
@@ -135,7 +140,7 @@ class SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * </ul>
 	 * This value must never be <code>null</code>.
 	 * <p>
-	 * <b>WARNING: via this reference, you are leaving <strike>the american sector</strike> the intermediate model and
+	 * <b>WARNING: via this reference, you are leaving <strike>the American sector</strike> the intermediate model and
 	 * enter the original AST or TModule.</b>
 	 */
 	refers IdentifiableElement originalTarget
@@ -370,5 +375,43 @@ class StringLiteralForSTE extends StringLiteral {
 			}
 		}
 		return entry?.name
+	}
+}
+
+// ****************************************************************************************************
+// N4IDL related model elements
+// ****************************************************************************************************
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRef}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedParameterizedTypeRef_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRef {}
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRefStructural {}
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedIdentifierRef_IM extends IdentifierRef_IM, VersionedIdentifierRef {}
+
+/**
+ * Import specifier that is aware of multiple versions of the imported type.
+ */
+class VersionedNamedImportSpecifier_IM extends NamedImportSpecifier {
+	refers SymbolTableEntryOriginal[] importedTypeVersions
+
+	/**
+	 * Returns {@code true} if this import specifiers imports a
+	 * versioned type.
+	 */
+	boolean versionedTypeImport get {
+		return importedTypeVersions.size > 0 && (importedTypeVersions.size > 1 /*shortcut*/ ||
+			VersionUtils.isTVersionable(importedTypeVersions.get(0).originalTarget));
 	}
 }

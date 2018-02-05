@@ -58,7 +58,7 @@ Contributors:
 						<plugin id="org.apache.log4j"/>
 						<plugin id="com.google.guava"/>
 						<plugin id="org.eclipse.emf.ecore"/>
-						<plugin id="it.xsemantics.runtime"/>
+						<plugin id="org.eclipse.xsemantics.runtime"/>
 						<plugin id="com.google.inject"/>
 						<plugin id="org.eclipse.xtext.util"/>
 						<plugin id="org.antlr.runtime"/>
@@ -164,7 +164,7 @@ Contributors:
 						<plugin id="org.eclipse.equinox.p2.repository.tools"/>
 						<plugin id="org.eclipse.equinox.p2.touchpoint.eclipse"/>
 						<plugin id="org.eclipse.jdt.junit4.runtime"/>
-						<plugin id="org.xpect"/>
+						<plugin id="org.eclipse.xpect"/>
 						<plugin id="org.eclipse.ecf"/>
 						<plugin id="org.eclipse.ecf.filetransfer"/>
 						<plugin id="org.eclipse.ecf.provider.filetransfer"/>

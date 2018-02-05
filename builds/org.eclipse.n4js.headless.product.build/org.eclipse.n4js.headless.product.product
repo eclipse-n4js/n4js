@@ -37,7 +37,6 @@
       <plugin id="com.google.inject"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.jcraft.jsch"/>
-      <plugin id="it.xsemantics.runtime"/>
       <plugin id="javaewah"/>
       <plugin id="javax.inject"/>
       <plugin id="javax.servlet"/>
@@ -93,19 +92,17 @@
       <plugin id="org.eclipse.n4js"/>
       <plugin id="org.eclipse.n4js.common.unicode"/>
       <plugin id="org.eclipse.n4js.external.libraries"/>
-      <plugin id="org.eclipse.n4js.generator"/>
-      <plugin id="org.eclipse.n4js.generator.common"/>
+      <plugin id="org.eclipse.n4js.flowgraphs"/>
       <plugin id="org.eclipse.n4js.generator.headless"/>
       <plugin id="org.eclipse.n4js.hlc.base"/>
       <plugin id="org.eclipse.n4js.model"/>
-      <plugin id="org.eclipse.n4js.n4jsx"/>
-      <plugin id="org.eclipse.n4js.n4jsx.model"/>
       <plugin id="org.eclipse.n4js.n4mf"/>
       <plugin id="org.eclipse.n4js.n4mf.model"/>
       <plugin id="org.eclipse.n4js.regex"/>
       <plugin id="org.eclipse.n4js.releng.utils"/>
       <plugin id="org.eclipse.n4js.runner"/>
       <plugin id="org.eclipse.n4js.runner.nodejs"/>
+      <plugin id="org.eclipse.n4js.smith"/>
       <plugin id="org.eclipse.n4js.tester"/>
       <plugin id="org.eclipse.n4js.tester.nodejs"/>
       <plugin id="org.eclipse.n4js.transpiler"/>
@@ -117,6 +114,7 @@
       <plugin id="org.eclipse.team.core"/>
       <plugin id="org.eclipse.text"/>
       <plugin id="org.eclipse.xpand"/>
+      <plugin id="org.eclipse.xsemantics.runtime"/>
       <plugin id="org.eclipse.xtend"/>
       <plugin id="org.eclipse.xtend.lib"/>
       <plugin id="org.eclipse.xtend.lib.macro"/>

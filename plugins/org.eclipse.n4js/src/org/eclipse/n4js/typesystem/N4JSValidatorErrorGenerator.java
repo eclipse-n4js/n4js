@@ -10,12 +10,11 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import it.xsemantics.runtime.ErrorInformation;
-import it.xsemantics.runtime.RuleFailedException;
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
-import it.xsemantics.runtime.validation.XsemanticsValidatorFilter;
-
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xsemantics.runtime.ErrorInformation;
+import org.eclipse.xsemantics.runtime.RuleFailedException;
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorFilter;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 
 import com.google.inject.Inject;

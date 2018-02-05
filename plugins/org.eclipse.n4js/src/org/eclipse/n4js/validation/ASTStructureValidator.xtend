@@ -93,7 +93,7 @@ import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
+import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.isDestructuringAssignment
@@ -1424,12 +1424,14 @@ class ASTStructureValidator {
 						IssueCodes.AST_LET_IN_STATEMENT_POSITION))
 			}
 		}
+		val directParent = model.eContainer;
+		val parent = if(directParent instanceof ExportDeclaration) directParent.eContainer else directParent;
 		recursiveValidateASTStructure(
 			model,
 			producer,
 			validLabels,
 			constraints.allowVarWithoutInitializer(model.varStmtKeyword === VariableStatementKeyword.VAR || model.varStmtKeyword === VariableStatementKeyword.LET &&
-				(model.eContainer instanceof Block || model.eContainer instanceof Script || model.eContainer instanceof AbstractCaseClause)
+				(parent instanceof Block || parent instanceof Script || parent instanceof AbstractCaseClause)
 			)
 		)
 	}

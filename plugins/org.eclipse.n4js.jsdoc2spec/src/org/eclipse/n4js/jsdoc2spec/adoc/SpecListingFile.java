@@ -61,7 +61,7 @@ public class SpecListingFile extends SpecFile {
 
 	@Override
 	public int getOffsetEnd(SpecSection entry) {
-		return StringCountUtils.countLines(newContent);
+		return StringCountUtils.countNewLines(newContent);
 	}
 
 	@Override

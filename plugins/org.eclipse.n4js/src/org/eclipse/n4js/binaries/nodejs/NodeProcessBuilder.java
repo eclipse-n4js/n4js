@@ -18,11 +18,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.eclipse.n4js.binaries.Binary;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.binaries.Binary;
 
 /**
  * Factory for the processes interacting with Node.js, takes care of the OS specific data.
@@ -116,11 +116,11 @@ public class NodeProcessBuilder {
 
 		if (isWindows()) {
 			builder.add(WIN_SHELL_COMAMNDS);
-			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), "cache", "clean");
+			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), "cache", "clean", "--force");
 		} else {
 			builder.add(NIX_SHELL_COMAMNDS);
 			builder.add(
-					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " cache clean");
+					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " cache clean --force");
 		}
 
 		return create(builder.build(), npmBinary, invokationPath, false);

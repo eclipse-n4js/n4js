@@ -23,6 +23,8 @@ import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult"
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
 import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet"
 import {N4Injector} from "n4js/lang/N4Injector"
+
+
 export public class TestController {
     static MAX_GROUPS_PER_TEST_BATCH = 10;
     @Inject
@@ -38,7 +40,70 @@ export public class TestController {
         })
         this.reportersVal = reporters;
     }
-
+    /**
+     * Entrypoint to running tests. Called from a test runner with the test meta information. Any configured reporters
+     * will get updated with progress of tests.
+     */
+    public async runGroups(testInfoObject: TestInfos, numTests: number=, scope: string=): ResultGroups {
+        if (!testInfoObject) {
+            throw new Error("TestController::runGroups called with a null testInfoObject");
+        }
+        let executor: TestExecutor = this.executor
+          , reses: Array<ResultGroups> = []
+          , res: ResultGroups
+          , testInfos: Array<TestInfo> = testInfoObject.testDescriptors
+          , batchedTestInfos: Array<Array<TestInfo>> = []
+          , ii: number = 0
+          , testInfosBatch: Array<TestInfo>
+          , instrumentedTestsBatch2d: Array<Array<InstrumentedTest>>
+          , instrumentedTestsBatch: Array<InstrumentedTest>
+        ;
+        if (numTests === undefined) {
+            numTests = testInfoObject.testDescriptors.reduce(function(acc, info: TestInfo) {
+                return acc + info.testMethods.length;
+            }, 0)
+        }
+        testInfoObject.testDescriptors = testInfoObject.testDescriptors.sort((x: TestInfo,y: TestInfo) => {
+            let xVal = x.fqn ? x.fqn: x.module
+            , yVal = y.fqn ? y.fqn: y.module
+            return xVal.localeCompare(yVal);
+        })
+        try {
+            await this.spy.testingStarted.dispatch([testInfos.length, testInfoObject.sessionId, numTests]);
+        } catch(ex) {
+            console.log("testingStarted.dispatch is bad", ex);
+        }
+        
+        //runs test groups in batches
+        for (ii = 0; ii < testInfos.length; ii += TestController.MAX_GROUPS_PER_TEST_BATCH) {
+            batchedTestInfos.push(
+                testInfos.slice(ii, ii + TestController.MAX_GROUPS_PER_TEST_BATCH)
+            );
+        }
+        
+        for (ii = 0, instrumentedTestsBatch = []; ii < batchedTestInfos.length; ++ii, instrumentedTestsBatch = []) {
+            testInfosBatch = batchedTestInfos[ii]
+            try {
+                instrumentedTestsBatch2d = (await Promise.resolve(await Promise.all(testInfosBatch.map(this.instrument.bind(this)).filter(function(test) {
+                    return test !== null;
+                })))) as Array<Array<InstrumentedTest>>;
+                
+                //flatten array
+                instrumentedTestsBatch =  (Array.prototype.concat.apply([], instrumentedTestsBatch2d) as Array<InstrumentedTest>)
+                res = await executor.runTestsAsync(instrumentedTestsBatch, scope);
+                reses.push(res);
+            } catch (er) {
+                console.error(er);
+                throw er;
+            }
+        };
+        res = ResultGroups.concatArray(reses);
+        await this.spy.testingFinished.dispatch([res]);
+        return res;
+    }
+    /**
+     * creates special group to show errors that occur prior to group being run
+     */
     private async errorGroup(info: TestInfo, loadPath: string, testObject: InstrumentedTest=, originalError: any=) {
         let error = originalError ? originalError: new Error("could not load test " + loadPath)
           , that = this
@@ -143,63 +208,6 @@ export public class TestController {
         }
         let arr = (await Promise.all(instrumentedTestObjects)).filter((item) => item !== null);
         return arr as Array<InstrumentedTest>;
-    }
-    public async runGroups(testInfoObject: TestInfos, numTests: number=): ResultGroups {
-        if (!testInfoObject) {
-            throw new Error("TestController::runGroups called with a null testInfoObject");
-        }
-        let executor: TestExecutor = this.executor
-          , reses: Array<ResultGroups> = []
-          , res: ResultGroups
-          , testInfos: Array<TestInfo> = testInfoObject.testDescriptors
-          , batchedTestInfos: Array<Array<TestInfo>> = []
-          , ii: number = 0
-          , testInfosBatch: Array<TestInfo>
-          , instrumentedTestsBatch2d: Array<Array<InstrumentedTest>>
-          , instrumentedTestsBatch: Array<InstrumentedTest>
-          , fixme: any
-        ;
-        if (numTests === undefined) {
-            numTests = testInfoObject.testDescriptors.reduce(function(acc, info: TestInfo) {
-                return acc + info.testMethods.length;
-            }, 0)
-        }
-        testInfoObject.testDescriptors = testInfoObject.testDescriptors.sort((x: TestInfo,y: TestInfo) => {
-            let xVal = x.fqn ? x.fqn: x.module
-            , yVal = y.fqn ? y.fqn: y.module
-            return xVal.localeCompare(yVal);
-        })
-        try {
-            await this.spy.testingStarted.dispatch([testInfos.length, testInfoObject.sessionId, numTests]);
-        } catch(ex) {
-            console.log("testingStarted.dispatch is bad", ex);
-        }
-        for (ii=0; ii < testInfos.length; ii += TestController.MAX_GROUPS_PER_TEST_BATCH) {
-            batchedTestInfos.push(
-                testInfos.slice(ii, ii + TestController.MAX_GROUPS_PER_TEST_BATCH)
-            );
-        }
-        for (ii = 0, instrumentedTestsBatch = []; ii < batchedTestInfos.length; ++ii, instrumentedTestsBatch = []) {
-            testInfosBatch = batchedTestInfos[ii]
-            try {
-                fixme = await Promise.resolve(await Promise.all(testInfosBatch.map(this.instrument.bind(this)).filter(function(test) {
-                    return test !== null;
-                })));
-                instrumentedTestsBatch2d = fixme as Array<Array<InstrumentedTest>>;
-                //flatten array
-                instrumentedTestsBatch =  (Array.prototype.concat.apply([], instrumentedTestsBatch2d) as Array<InstrumentedTest>)
-
-                //instrumentedTests = that.<Array<InstrumentedTest>>dirtyCast(await Promise.all(blast));
-                res = await executor.runTestsAsync(instrumentedTestsBatch);
-                reses.push(res);
-            } catch (er) {
-                console.error(er);
-                throw er;
-            }
-        };
-        res = ResultGroups.concatArray(reses);
-        await this.spy.testingFinished.dispatch([res]);
-        return res;
     }
 }
 /*

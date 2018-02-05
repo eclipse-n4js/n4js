@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-ProjectId: N4JSXPECTTests
+ProjectId: RTL
 VendorId: org.eclipse.n4js
 VendorName: "Eclipse N4JS Project"
 ProjectType: runtimeLibrary

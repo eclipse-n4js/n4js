@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -30,29 +29,21 @@ abstract public class GraphVisitorInternal {
 	/** Modes, specified in constructor */
 	protected final Mode[] modes;
 
-	private final List<PathExplorerInternal> activationRequests = new LinkedList<>();
-	private final List<PathExplorerInternal> activatedExplorers = new LinkedList<>();
-	private final List<PathExplorerInternal> activeExplorers = new LinkedList<>();
+	private final List<GraphExplorerInternal> activationRequests = new LinkedList<>();
+	private final List<GraphExplorerInternal> activatedExplorers = new LinkedList<>();
+	private final List<GraphExplorerInternal> activeExplorers = new LinkedList<>();
 
 	private ControlFlowElement currentContainer;
 	private Mode currentMode;
 	private boolean activeMode = false;
+	private boolean lastVisitedNodeIsDead = false;
 
 	/** Specifies the traverse mode of a {@link GraphVisitorInternal} instance. */
 	public enum Mode {
 		/** Forward edge-direction begins from the entry node of a given container. */
 		Forward,
 		/** Backward edge-direction begins from the exit node of a given container. */
-		Backward,
-		/**
-		 * Begins from an arbitrary node N of a given container in the following manner: First in forward edge-direction
-		 * beginning from the entry node of N, second in backward edge-direction beginning from the exit node of N.
-		 * <p/>
-		 * Note that N is unreachable from both the containers entry and its exit node.
-		 */
-		Islands,
-		/** Forward edge-direction begins from the entry of a given catch block. */
-		CatchBlocks
+		Backward
 	}
 
 	/**
@@ -77,7 +68,7 @@ abstract public class GraphVisitorInternal {
 	 */
 	protected GraphVisitorInternal(ControlFlowElement container, Mode... modes) {
 		if (modes.length == 0) {
-			modes = new Mode[] { Mode.Forward, Mode.CatchBlocks };
+			modes = new Mode[] { Mode.Forward };
 		}
 		this.modes = modes;
 		this.container = container;
@@ -86,7 +77,9 @@ abstract public class GraphVisitorInternal {
 	/////////////////////// Abstract Methods ///////////////////////
 
 	/** Called before any other method is called. */
-	abstract protected void initialize();
+	protected void initialize() {
+		// overwrite me
+	}
 
 	/**
 	 * Called after {@link #initialize()} and before any visit-method is called.
@@ -96,28 +89,37 @@ abstract public class GraphVisitorInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	abstract protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer);
+	protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer) {
+		// overwrite me
+	}
 
 	/**
 	 * Called for each node that is reachable w.r.t to the current mode and the current container.
 	 * <p>
 	 * Note that the order of nodes is arbitrary.
+	 *
+	 * @param node
+	 *            the node that is visits
 	 */
-	abstract protected void visit(Node node);
+	protected void visit(Node node) {
+		// overwrite me
+	}
 
 	/**
 	 * Called for each edge that is reachable w.r.t to the current mode and the current container.
 	 * <p>
 	 * Note that the order of edges is arbitrary.
 	 *
-	 * @param lastNode
-	 *            node that was visited before
+	 * @param lastVisitNode
+	 *            nodes that were visited before
 	 * @param currentNode
 	 *            end node of the edge in terms of current mode
 	 * @param edge
 	 *            traversed edge
 	 */
-	abstract protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge);
+	protected void visit(Node lastVisitNode, Node currentNode, ControlFlowEdge edge) {
+		// overwrite me
+	}
 
 	/**
 	 * Called before {@link #terminate()} and after any visit-method is called.
@@ -127,10 +129,14 @@ abstract public class GraphVisitorInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of previous calls to visit-methods
 	 */
-	abstract protected void terminateMode(Mode curMode, ControlFlowElement curContainer);
+	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
+		// overwrite me
+	}
 
 	/** Called at last */
-	abstract protected void terminate();
+	protected void terminate() {
+		// overwrite me
+	}
 
 	/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
@@ -170,19 +176,21 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link GraphVisitorInternal#visit(Node)}. */
-	final void callVisit(Node cfe) {
+	final void callVisit(Node node) {
 		if (activeMode) {
-			visit(cfe);
+			this.lastVisitedNodeIsDead = node.isUnreachable();
+			visit(node);
 		}
 	}
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link GraphVisitorInternal#visit(Node,Node,ControlFlowEdge)}.
+	 * {@link GraphVisitorInternal#visit(Node, Node, ControlFlowEdge)}.
 	 */
-	final void callVisit(Node start, Node end, ControlFlowEdge edge) {
+	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
 		if (activeMode) {
-			visit(start, end, edge);
+			this.lastVisitedNodeIsDead = end.isUnreachable();
+			visit(lastVisitNode, end, edge);
 		}
 	}
 
@@ -209,11 +217,14 @@ abstract public class GraphVisitorInternal {
 		}
 	}
 
-	/** Activates the {@link PathExplorerInternal} that wait for activation. */
-	final List<PathWalkerInternal> activateRequestedPathExplorers() {
-		List<PathWalkerInternal> activatedPaths = new LinkedList<>();
-		for (PathExplorerInternal app : activationRequests) {
-			PathWalkerInternal activePath = app.callFirstPathWalker(this);
+	/**
+	 * Only called from {@link GraphVisitorGuideInternal}. Activates the {@link GraphExplorerInternal} that wait for
+	 * activation.
+	 */
+	final List<BranchWalkerInternal> activateRequestedExplorers() {
+		List<BranchWalkerInternal> activatedPaths = new LinkedList<>();
+		for (GraphExplorerInternal app : activationRequests) {
+			BranchWalkerInternal activePath = app.callFirstBranchWalker(this);
 			activatedPaths.add(activePath);
 		}
 		activatedExplorers.addAll(activationRequests);
@@ -222,37 +233,38 @@ abstract public class GraphVisitorInternal {
 		return activatedPaths;
 	}
 
-	/** Called from {@link PathExplorerInternal} when the calling {@link PathExplorerInternal} is finished. */
-	final void deactivatePathExplorer(PathExplorerInternal pathExplorerInternal) {
+	/** Called from {@link GraphExplorerInternal} when the calling {@link GraphExplorerInternal} is finished. */
+	final void deactivateGraphExplorer(GraphExplorerInternal pathExplorerInternal) {
 		activeExplorers.remove(pathExplorerInternal);
 	}
+
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
-	 * Call this method to request the spawn of a new {@link PathExplorerInternal}. The new {@link PathExplorerInternal}
-	 * is spawned after the current visit-method is finished. If not called from a visit-method, the new
-	 * {@link PathExplorerInternal} is spawned after the next visit-method is finished.
+	 * Call this method to request the spawn of a new {@link GraphExplorerInternal}. The new
+	 * {@link GraphExplorerInternal} is spawned after the current visit-method is finished. If not called from a
+	 * visit-method, the new {@link GraphExplorerInternal} is spawned after the next visit-method is finished.
 	 */
-	final public void requestActivation(PathExplorerInternal app) {
+	final public void requestActivation(GraphExplorerInternal app) {
 		activationRequests.add(app);
 	}
 
-	/** @return all activated {@link PathExplorerInternal}s */
-	final public List<PathExplorerInternal> getActivatedExplorers() {
+	/** @return all activated {@link GraphExplorerInternal}s */
+	final public List<GraphExplorerInternal> getActivatedExplorers() {
 		return activatedExplorers;
 	}
 
-	/** @return all active {@link PathExplorerInternal}s */
-	final public List<PathExplorerInternal> getActiveExplorers() {
+	/** @return all active {@link GraphExplorerInternal}s */
+	final public List<GraphExplorerInternal> getActiveExplorers() {
 		return activeExplorers;
 	}
 
-	/** @return the number of activated {@link PathExplorerInternal}s */
+	/** @return the number of activated {@link GraphExplorerInternal}s */
 	final public int getActivatedExplorerCount() {
 		return getActivatedExplorers().size();
 	}
 
-	/** @return the number of active {@link PathExplorerInternal}s */
+	/** @return the number of active {@link GraphExplorerInternal}s */
 	final public int getActiveExplorerCount() {
 		return getActiveExplorers().size();
 	}
@@ -262,15 +274,25 @@ abstract public class GraphVisitorInternal {
 		return currentMode;
 	}
 
+	/** @return true iff the last visited node was not dead. */
+	final public boolean isLiveCode() {
+		return !lastVisitedNodeIsDead;
+	}
+
+	/** @return true iff the last visited node was dead. */
+	final public boolean isDeadCodeNode() {
+		return lastVisitedNodeIsDead;
+	}
+
 	/** @return the current container */
 	final public ControlFlowElement getCurrentContainer() {
 		return currentContainer;
 	}
 
-	/** @return all passed {@link PathExplorerInternal}s */
-	final public List<?> getPassed() {
-		List<PathExplorerInternal> passedPEI = new LinkedList<>();
-		for (PathExplorerInternal pei : activatedExplorers) {
+	/** @return all passed {@link GraphExplorerInternal}s */
+	final public List<GraphExplorerInternal> getPassed() {
+		List<GraphExplorerInternal> passedPEI = new LinkedList<>();
+		for (GraphExplorerInternal pei : activatedExplorers) {
 			if (pei.isPassed()) {
 				passedPEI.add(pei);
 			}
@@ -278,10 +300,10 @@ abstract public class GraphVisitorInternal {
 		return passedPEI;
 	}
 
-	/** @return all failed {@link PathExplorerInternal}s */
-	final public List<PathExplorerInternal> getFailed() {
-		List<PathExplorerInternal> failedPEI = new LinkedList<>();
-		for (PathExplorerInternal pei : activatedExplorers) {
+	/** @return all failed {@link GraphExplorerInternal}s */
+	final public List<GraphExplorerInternal> getFailed() {
+		List<GraphExplorerInternal> failedPEI = new LinkedList<>();
+		for (GraphExplorerInternal pei : activatedExplorers) {
 			if (pei.isFailed()) {
 				failedPEI.add(pei);
 			}

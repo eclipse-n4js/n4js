@@ -22,12 +22,12 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
-import org.xpect.expectation.CommaSeparatedValuesExpectation;
-import org.xpect.expectation.ICommaSeparatedValuesExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
-import org.xpect.xtext.lib.tests.ScopingTest;
-import org.xpect.xtext.lib.util.XtextOffsetAdapter.ICrossEReferenceAndEObject;
+import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
+import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
+import org.eclipse.xpect.parameter.ParameterParser;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.xtext.lib.tests.ScopingTest;
+import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.ICrossEReferenceAndEObject;
 
 import com.google.inject.Inject;
 

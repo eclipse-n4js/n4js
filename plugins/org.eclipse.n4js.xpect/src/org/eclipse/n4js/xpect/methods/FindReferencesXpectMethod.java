@@ -37,12 +37,12 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.junit.runner.RunWith;
-import org.xpect.XpectImport;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
-import org.xpect.runner.XpectRunner;
-import org.xpect.xtext.lib.setup.XtextStandaloneSetup;
-import org.xpect.xtext.lib.setup.XtextWorkspaceSetup;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.parameter.ParameterParser;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.xpect.xtext.lib.setup.XtextStandaloneSetup;
+import org.eclipse.xpect.xtext.lib.setup.XtextWorkspaceSetup;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;

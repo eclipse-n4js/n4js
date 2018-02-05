@@ -31,6 +31,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.generator.ICompositeGenerator;
+import org.eclipse.n4js.ui.building.instructions.BuildInstruction;
+import org.eclipse.n4js.ui.building.instructions.CleanInstruction;
+import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
+import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.builder.BuilderParticipant;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -45,11 +50,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.building.instructions.BuildInstruction;
-import org.eclipse.n4js.ui.building.instructions.CleanInstruction;
-import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 /**
  * A custom builder participant that can be used by the {@link N4JSGenerateImmediatelyBuilderState} to process the
@@ -74,6 +74,9 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 	@Inject
 	private Injector injector;
 
+	@Inject
+	private ICompositeGenerator compositeGenerator;
+
 	/**
 	 * Intentionally package visible producer for the {@link IBuildParticipantInstruction}.
 	 *
@@ -85,6 +88,7 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 	 */
 	IBuildParticipantInstruction prepareBuild(IProject project, IXtextBuilderParticipant.BuildType buildType)
 			throws CoreException {
+
 		if (!isEnabled(project)) {
 			return IBuildParticipantInstruction.NOOP;
 		}
@@ -104,9 +108,10 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 		}
 		Map<OutputConfiguration, Iterable<IMarker>> generatorMarkers = getGeneratorMarkers(project,
 				outputConfigurations.values());
-		return new BuildInstruction(project, outputConfigurations, getDerivedResourceMarkers(), access,
-				generatorMarkers, storage2UriMapper, injector);
-
+		BuildInstruction buildInstruction = new BuildInstruction(project, outputConfigurations,
+				getDerivedResourceMarkers(), access,
+				generatorMarkers, storage2UriMapper, compositeGenerator, injector);
+		return buildInstruction;
 	}
 
 	/**

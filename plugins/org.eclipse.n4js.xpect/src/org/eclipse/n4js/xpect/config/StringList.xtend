@@ -11,8 +11,8 @@
 package org.eclipse.n4js.xpect.config
 
 import java.util.ArrayList
+import org.eclipse.xpect.setup.XpectSetupComponent
 import org.eclipse.xtext.resource.XtextResource
-import org.xpect.setup.XpectSetupComponent
 
 /**
  * Compose a simple list of Strings. The order of elements is preserved. For the time being just add them with the

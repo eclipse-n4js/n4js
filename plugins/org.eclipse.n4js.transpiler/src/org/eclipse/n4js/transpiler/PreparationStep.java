@@ -19,12 +19,13 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.JSXElementName;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
@@ -35,7 +36,8 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Variable;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElementName;
+import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
+import org.eclipse.n4js.n4idl.versioning.VersionHelper;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -46,12 +48,16 @@ import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVersionable;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
@@ -65,8 +71,36 @@ import com.google.inject.Inject;
  */
 public class PreparationStep {
 
+	private static final ImmutableMap<EClass, EClass> ECLASS_REPLACEMENT = ImmutableMap.<EClass, EClass> builder()
+			.put(N4JSPackage.eINSTANCE.getScript(),
+					ImPackage.eINSTANCE.getScript_IM())
+			.put(N4JSPackage.eINSTANCE.getIdentifierRef(),
+					ImPackage.eINSTANCE.getIdentifierRef_IM())
+			.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
+					ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
+			.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
+					ImPackage.eINSTANCE.getVersionedIdentifierRef_IM())
+			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
+					ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
+			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
+					ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
+			.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRef(),
+					ImPackage.eINSTANCE.getVersionedParameterizedTypeRef_IM())
+			.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural(),
+					ImPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural_IM())
+			.build();
+
+	private static final EReference[] REWIRED_REFERENCES = {
+			N4JSPackage.eINSTANCE.getIdentifierRef_Id(),
+			N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property(),
+			TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(),
+	};
+
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
+
+	@Inject
+	private VersionHelper versionHelper;
 
 	/**
 	 * Creates and initializes the transpiler state. In particular, this will create the intermediate model as a copy of
@@ -110,26 +144,11 @@ public class PreparationStep {
 		return resultCasted;
 	}
 
-	private static final class AST2IMCopier extends EcoreUtil.Copier {
-
-		private static final ImmutableMap<EClass, EClass> ECLASS_REPLACEMENT = ImmutableMap.<EClass, EClass> builder()
-				.put(N4JSPackage.eINSTANCE.getScript(),
-						ImPackage.eINSTANCE.getScript_IM())
-				.put(N4JSPackage.eINSTANCE.getIdentifierRef(),
-						ImPackage.eINSTANCE.getIdentifierRef_IM())
-				.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
-						ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
-				.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
-						ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
-				.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
-						ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
-				.build();
-
-		private static final EReference[] REWIRED_REFERENCES = {
-				N4JSPackage.eINSTANCE.getIdentifierRef_Id(),
-				N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property(),
-				TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType()
-		};
+	/**
+	 * A custom implementation of {@link org.eclipse.emf.ecore.util.EcoreUtil.Copier} that copies the N4JS AST model to
+	 * the N4JS transpiler intermediate representation.
+	 */
+	private final class AST2IMCopier extends EcoreUtil.Copier {
 
 		private final Tracer tracer;
 		private final InformationRegistry info;
@@ -191,8 +210,8 @@ public class PreparationStep {
 			} else if (copy instanceof ImportSpecifier) {
 				// remember which TModule elements were imported via ImportSpecifiers
 				if (copy instanceof NamedImportSpecifier)
-					importedElements.put(((NamedImportSpecifier) eObject).getImportedElement(),
-							(NamedImportSpecifier) eObject);
+					// cast to IM-specific class is safe due to ECLASS_REPLACEMENT
+					handleCopyNamedImportSpecifier((NamedImportSpecifier) eObject);
 				else if (copy instanceof NamespaceImportSpecifier)
 					importedModules.put(((ImportDeclaration) eObject.eContainer()).getModule(),
 							(NamespaceImportSpecifier) eObject);
@@ -215,6 +234,16 @@ public class PreparationStep {
 		}
 
 		@Override
+		protected EClass getTarget(EObject eObject) {
+			// special-handling for named import specifiers of versioned types
+			if (eObject instanceof NamedImportSpecifier &&
+					N4IDLTranspilerUtils.isVersionedImportSpecifier((NamedImportSpecifier) eObject)) {
+				return ImPackage.eINSTANCE.getVersionedNamedImportSpecifier_IM();
+			}
+			return super.getTarget(eObject);
+		}
+
+		@Override
 		protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
 			final boolean needsRewiring = Arrays.contains(REWIRED_REFERENCES, eReference);
 			if (needsRewiring) {
@@ -232,7 +261,7 @@ public class PreparationStep {
 		}
 
 		// TODO IDE-2010 consider improving performance of following method!
-		public void createRemainingSymbolTableEntries() {
+		private void createRemainingSymbolTableEntries() {
 			// so far, we have created symbol table entries for all referenced elements on the fly;
 			// now we will create entries for the remaining elements in the TModule
 			final TreeIterator<EObject> iter1 = script.getModule().eAllContents();
@@ -259,6 +288,25 @@ public class PreparationStep {
 		}
 
 		/**
+		 * Handler for when a {@link NamedImportSpecifier} is encountered in the copying process.
+		 */
+		private void handleCopyNamedImportSpecifier(NamedImportSpecifier namedImportSpecifier) {
+			TExportableElement importedElement = namedImportSpecifier.getImportedElement();
+
+			if (importedElement instanceof Type) {
+				// add all versions of the type to the importedElements map.
+				Iterable<? extends Type> versions = versionHelper.findTypeVersions((Type) importedElement);
+				versions.forEach(v -> {
+					importedElements.put(v, namedImportSpecifier);
+				});
+			} else {
+				// for non-type imports, there is no versions
+				importedElements.put(importedElement,
+						namedImportSpecifier);
+			}
+		}
+
+		/**
 		 * Here we use the target of the original cross reference "id", "property", or "declaredType" to set the rewired
 		 * target (i.e. symbol table entry) of the corresponding IM-model reference "id_IM", "property_IM", or
 		 * "declaredType_IM".
@@ -272,24 +320,18 @@ public class PreparationStep {
 				copyEObject.setRewiredTarget(rewiredTarget);
 			} else {
 				// special case: unresolved proxy
-				// -> this is usually an error, except in case of a property access to an any+ type
+				// -> this is usually an error, except in the following special cases:
 				if (eObject instanceof ParameterizedPropertyAccessExpression) {
+					// property access to an any+ type
 					// -> because we know the transpiler is never invoked for resources that contain errors, we can
 					// simply assume that we have the any+ case without actually checking the type of the receiver
 					final String propName = getPropertyAsString((ParameterizedPropertyAccessExpression) eObject);
 					((ParameterizedPropertyAccessExpression_IM) copyEObject).setAnyPlusAccess(true);
 					((ParameterizedPropertyAccessExpression_IM) copyEObject).setNameOfAnyPlusProperty(propName);
-				} else if (eObject.eContainer() instanceof JSXElementName) { // TODO IDE-2416 remove this
-					if (eObject instanceof IdentifierRef) {
-						IdentifierRef_IM acc = ((IdentifierRef_IM) copyEObject);
-						String name = ((IdentifierRef) eObject).getIdAsText();
-						final SymbolTableEntryOriginal entry = ImFactory.eINSTANCE.createSymbolTableEntryOriginal();
-						entry.setName(name);
-						entry.setOriginalTarget(((IdentifierRef) eObject).getId());
-						acc.setIdAsText(name);
-					} else {
-						throw new IllegalStateException("Unsupported JSX element " + eObject);
-					}
+				} else if (eObject instanceof IdentifierRef && eObject.eContainer() instanceof JSXElementName) {
+					// name of a JSX element, e.g. the "div" in something like: <div prop='value'></div>
+					String tagName = ((IdentifierRef) eObject).getIdAsText();
+					((IdentifierRef_IM) copyEObject).setIdAsText(tagName);
 				} else {
 					throw new IllegalStateException("Rewire() called for a proxified original target. IM-eobject = "
 							+ eObject + "   origTarget is "
@@ -302,14 +344,20 @@ public class PreparationStep {
 			final SymbolTableEntryOriginal e = steCache.mapOriginal.get(elem);
 			if (e != null)
 				return e;
-			if (create)
-				return createSymbolTableEntry(elem);
+			if (create) {
+				String versionedName = N4IDLTranspilerUtils.getVersionedInternalName(elem);
+				return createSymbolTableEntry(versionedName, elem);
+			}
 			return null;
 		}
 
-		private SymbolTableEntryOriginal createSymbolTableEntry(IdentifiableElement elem) {
+		/**
+		 * Creates a new {@link SymbolTableEntryOriginal} for the given {@link IdentifiableElement} using the given
+		 * name.
+		 */
+		private SymbolTableEntryOriginal createSymbolTableEntry(String name, IdentifiableElement elem) {
 			final SymbolTableEntryOriginal entry = ImFactory.eINSTANCE.createSymbolTableEntryOriginal();
-			entry.setName(elem.getName());
+			entry.setName(name);
 			entry.setOriginalTarget(elem);
 			// compute properties 'elementsOfThisName' and 'importSpecifier' from 'elem'
 			if (elem instanceof Variable) {
@@ -340,7 +388,22 @@ public class PreparationStep {
 				if (impSpec instanceof NamedImportSpecifier) {
 					String alias = ((NamedImportSpecifier) impSpec).getAlias();
 					if (null != alias) {
-						entry.setName(alias); // exported name is visible via operation entry#exportedName()
+						entry.setName(alias); // exported name is visible via operation entry#exportedName())
+					}
+					if (N4IDLTranspilerUtils.refersToVersionedType(entry)) {
+						// In this block, we may now assume that 'entry' is actually of type {@link
+						// VersionedNamedImportSpecifier_IM} (cf. {@link #getTarget(EObject)}).
+
+						// Add referenced type version to the list of imported type versions of the import specifier
+						// copy. This is only executed once per type version, as the returned STE of this method is
+						// cached.
+						((VersionedNamedImportSpecifier_IM) copy).getImportedTypeVersions().add(entry);
+
+						if (null != alias) {
+							// Make sure to compute the versioned internal name based on the alias
+							entry.setName(N4IDLTranspilerUtils.getVersionedInternalAlias(entry.getName(),
+									(TVersionable) entry.getOriginalTarget()));
+						}
 					}
 				}
 			}
@@ -403,19 +466,19 @@ public class PreparationStep {
 				throw new IllegalStateException("copy of given object has not been created yet: " + obj);
 			return copy;
 		}
+	}
 
-		/**
-		 * For a given AST node in the original AST that refers to some other element and requires re-wiring of its
-		 * cross reference, this method will return the <b>original</b> target of the cross reference to rewire.
-		 */
-		private static final IdentifiableElement getOriginalTargetOfNodeToRewire(EObject nodeInOriginalAST) {
-			if (nodeInOriginalAST instanceof IdentifierRef)
-				return ((IdentifierRef) nodeInOriginalAST).getId();
-			if (nodeInOriginalAST instanceof ParameterizedPropertyAccessExpression)
-				return ((ParameterizedPropertyAccessExpression) nodeInOriginalAST).getProperty();
-			if (nodeInOriginalAST instanceof ParameterizedTypeRef)
-				return ((ParameterizedTypeRef) nodeInOriginalAST).getDeclaredType();
-			throw new IllegalArgumentException("not an AST node that requires rewiring: " + nodeInOriginalAST);
-		}
+	/**
+	 * For a given AST node in the original AST that refers to some other element and requires re-wiring of its cross
+	 * reference, this method will return the <b>original</b> target of the cross reference to rewire.
+	 */
+	private static final IdentifiableElement getOriginalTargetOfNodeToRewire(EObject nodeInOriginalAST) {
+		if (nodeInOriginalAST instanceof IdentifierRef)
+			return ((IdentifierRef) nodeInOriginalAST).getId();
+		if (nodeInOriginalAST instanceof ParameterizedPropertyAccessExpression)
+			return ((ParameterizedPropertyAccessExpression) nodeInOriginalAST).getProperty();
+		if (nodeInOriginalAST instanceof ParameterizedTypeRef)
+			return ((ParameterizedTypeRef) nodeInOriginalAST).getDeclaredType();
+		throw new IllegalArgumentException("not an AST node that requires rewiring: " + nodeInOriginalAST);
 	}
 }

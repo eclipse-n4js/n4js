@@ -18,13 +18,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.RegistryFactory;
+import org.eclipse.n4js.runner.IRunner;
+import org.eclipse.n4js.runner.RunConfiguration;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.runner.IRunner;
-import org.eclipse.n4js.runner.RunConfiguration;
 
 /**
  * Utility for working with runner description extension point.
@@ -54,6 +53,7 @@ public class RunnerRegistry {
 		final String runnerId = runnerDescriptor.getId();
 		if (descriptors.containsKey(runnerId))
 			throw new IllegalArgumentException("cannot register two runners with the same ID: " + runnerId);
+
 		descriptors.put(runnerId, runnerDescriptor);
 	}
 
@@ -127,5 +127,11 @@ public class RunnerRegistry {
 				}
 			}
 		}
+	}
+
+	/** Reset the registry */
+	public void reset() {
+		isInitialized = false;
+		descriptors.clear();
 	}
 }

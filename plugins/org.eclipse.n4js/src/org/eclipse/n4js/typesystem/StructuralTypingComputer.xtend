@@ -12,8 +12,6 @@ package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleEnvironment
 import java.util.Collection
 import java.util.List
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper
@@ -23,6 +21,8 @@ import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.FieldAccessor
+import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
@@ -36,6 +36,8 @@ import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.StructuralMembersTriple
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.EcoreUtil2
 
@@ -46,7 +48,6 @@ import static org.eclipse.n4js.utils.StructuralMembersPredicates.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.ts.types.PrimitiveType
 
 /**
  */
@@ -124,34 +125,49 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	 * 
 	 * @returns A {@link StructuralTypingResult} if primitive structural typing is applicable. {@code null} otherwise.
 	 */
-	def StructuralTypingResult isPrimitiveStructuralSubtype(RuleEnvironment G, TypeRef left, TypeRef right) {
+	def StructuralTypingResult isPrimitiveStructuralSubtype(RuleEnvironment G, TypeRef leftRaw, TypeRef right) {
+
+		// for the purpose of the rules implemented here, a string-based enum behaves like type 'string' (lower-case)
+		val left = changeStringBasedEnumToString(G, leftRaw);
+
 		// check if we're dealing with structural primitive types
 		val rightIsPrimitive = right.declaredType instanceof PrimitiveType;
 		val leftIsPrimitive = left.declaredType instanceof PrimitiveType
 		
 		// primitive type on the right and non-primitive on the left
 		if (rightIsPrimitive && !leftIsPrimitive) { 
-			return failure(left.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+			return failure(leftRaw.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
 		}
 		// primitive type on the left and non-primitive on the right
 		else if (leftIsPrimitive && !rightIsPrimitive) { 
-			return failure(left.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+			return failure(leftRaw.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
 		} 
 		// primitive types on both sides
 		else if (leftIsPrimitive && rightIsPrimitive) {
-			return if (left.declaredType == right.declaredType) {
-				// types must match nominally
-				result(left, right, emptyList, emptyList);
+			// types must match nominally
+			return if (left.declaredType === right.declaredType) {
+				success();
 			} else {
-				failure(left.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+				failure(leftRaw.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
 			}
-			
 		} 
 		// neither left nor right is primitive
 		else {
 			// shouldn't be handled by this method
 			return null;
 		}
+	}
+
+	/**
+	 * Replace type references pointing to the type of a <code>@StringBased</code> enum by a reference to built-in type
+	 * <code>string</code>, leaving all other types unchanged.
+	 */
+	def private TypeRef changeStringBasedEnumToString(RuleEnvironment G, TypeRef typeRef) {
+		val declType = typeRef.declaredType;
+		if (declType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(declType)) {
+			return G.stringTypeRef;
+		}
+		return typeRef;
 	}
 
 	def private void checkMembers(TypeRef leftTypeRef, StructuralMembersTriple triple, StructTypingInfo info) {

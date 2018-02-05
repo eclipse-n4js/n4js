@@ -23,12 +23,10 @@ abstract class AbstractApiImplCompareTest extends Assert {
 	protected static val PROJECT_ID_IMPL = "org.eclipse.n4js.sample.n4js"
 	protected static val PROJECT_ID_UTILS = "org.eclipse.n4js.sample.utils"
 
-
 	@Inject
 	private ProjectCompareHelper projectCompareHelper;
 	@Inject
 	private extension ApiImplCompareTestHelper;
-
 
 	@Test
 	public def testBasicCases() {

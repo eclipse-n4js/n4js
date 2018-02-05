@@ -1,0 +1,14 @@
+{
+ "location" : [
+   {
+     "config" : {
+     },
+     "projects" : {
+       "express" : {
+         "version" : "@4.15.3"
+       }
+     },
+     "repoType" : "npm"
+   }
+ ]
+}

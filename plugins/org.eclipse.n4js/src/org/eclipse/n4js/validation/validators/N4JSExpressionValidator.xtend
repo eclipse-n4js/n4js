@@ -11,8 +11,8 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
@@ -72,7 +72,7 @@ import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
+import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
@@ -128,7 +128,7 @@ import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -160,8 +160,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject private PromisifyHelper promisifyHelper;
 
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
-
-	@Inject private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	@Inject private IQualifiedNameConverter qualifiedNameConverter;
 
@@ -1436,7 +1434,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val accessedBuiltInSymbol = N4JSLanguageUtils.getAccessedBuiltInSymbol(G, index);
 		val accessedStaticType = if(targetTypeRef instanceof TypeTypeRef) tsh.getStaticType(G, targetTypeRef);
 		val indexIsNumeric = ts.subtypeSucceeded(G, indexTypeRef, G.numberTypeRef);
-		val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(index);
+		val indexValue = ASTMetaInfoUtils.getCompileTimeValue(index);
 
 		// create issues depending on the collected information
 		if (targetTypeRef.dynamic) {
@@ -1653,7 +1651,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		if(N4JSLanguageUtils.isMandatoryCompileTimeExpression(expr)) {
-			val evalResult = astMetaInfoCacheHelper.getCompileTimeValue(expr);
+			val evalResult = ASTMetaInfoUtils.getCompileTimeValue(expr);
 			if(evalResult instanceof ValueInvalid) {
 				if(isExpressionOfComputedPropertyNameInObjectLiteral(expr)) {
 					// special case: in object literals, anything goes

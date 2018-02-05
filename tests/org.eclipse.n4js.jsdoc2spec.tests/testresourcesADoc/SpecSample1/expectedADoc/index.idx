@@ -13,17 +13,17 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 	SpecSample1#src
 		NO_PACKAGE
 			A.n4jsd
-				A::15::22::23
-				A#bar::20::24::41
-				A#baz::27::42::61
-				B::30::65::66
-				B#foo::31::67::82
-				D::36::86::112
+				A::15::21::24
+				A#bar::20::25::42
+				A#baz::27::43::63
+				B::30::66::67
+				B#foo::31::68::84
+				D::36::87::117
 	SpecSample1#test
 		NO_PACKAGE
 			ATests.n4js
-				ATest::12::22::23
-				ATest#testBarBasics::17::24::39
-				DTest::21::43::44
-				DTest#testBarAgain::27::45::60
-				DTest#testBazAgain::34::61::80
+				ATest::12::21::22
+				ATest#testBarBasics::17::23::39
+				DTest::21::42::43
+				DTest#testBarAgain::27::44::60
+				DTest#testBazAgain::34::61::81

@@ -11,11 +11,11 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.NullType
@@ -26,9 +26,9 @@ import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.List
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -47,7 +47,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 
 	@Inject
-	QualifiedNameComputer qualifiedNameComputer;
+	private ResourceNameComputer resourceNameComputer;
 
 	/**
 	 * NEEEDED
@@ -258,7 +258,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 		if (!(type.name == 'N4Injector')) {
 			return false
 		}
-		val fqn = qualifiedNameComputer.getFullyQualifiedTypeName(type)
+		val fqn = resourceNameComputer.getFullyQualifiedTypeName(type)
 		return (fqn == 'runtime.n4.N4Injector.N4Injector');
 	}
 

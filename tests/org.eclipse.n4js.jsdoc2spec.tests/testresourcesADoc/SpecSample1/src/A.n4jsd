@@ -10,7 +10,7 @@
  */
 
 /**
- * @Spec spec for class A from source code
+ * @spec spec for class A from source code
  */
 export external public class A {
 

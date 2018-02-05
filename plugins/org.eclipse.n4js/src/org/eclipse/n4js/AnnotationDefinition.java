@@ -313,7 +313,7 @@ public final class AnnotationDefinition {
 	 */
 	public final static AnnotationDefinition TEST_FIXME = define("Fixme")
 			.targets(N4_CLASS_DECLARATION, N4_METHOD_DECLARATION)
-			.retention(RetentionPolicy.RUNTIME).transitive().args(STRING_LITERAL).argsOptional().end();
+			.retention(RetentionPolicy.RUNTIME).transitive().args(STRING_LITERAL, STRING_LITERAL).argsOptional().end();
 
 	/**
 	 * N4JSIDESpec : chapter 9 Testing
@@ -394,6 +394,12 @@ public final class AnnotationDefinition {
 	 * N4JS IDE Spec, Chapter 11
 	 */
 	public final static AnnotationDefinition SINGLETON = define("Singleton").targets(N4_CLASS_DECLARATION)
+			.retention(RUNTIME).end();
+
+	/**
+	 * Annotation to mark function declarations as migrations in the context of N4IDL.
+	 */
+	public final static AnnotationDefinition MIGRATION = define("Migration").targets(FUNCTION_DECLARATION)
 			.retention(RUNTIME).end();
 
 	// <---- miscellaneous ---->

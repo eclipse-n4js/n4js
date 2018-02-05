@@ -10,10 +10,16 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.NodeNames.LHS;
+import static org.eclipse.n4js.flowgraphs.factories.NodeNames.RHS;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
+import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.Argument;
 import org.eclipse.n4js.n4JS.ArrayBindingPattern;
@@ -26,7 +32,6 @@ import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.CommaExpression;
-import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.Expression;
@@ -34,6 +39,12 @@ import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.JSXAttribute;
+import org.eclipse.n4js.n4JS.JSXChild;
+import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
+import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -60,228 +71,230 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXChild;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXExpression;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
-import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * All {@link Expression}s can have a set of children in the sense, that these children are also respected by the
- * control flow. This class provides the function {@link #get(ControlFlowElement)} that returns all control flow
- * relevant sub-expressions of a given {@link Expression}.
+ * control flow. This class provides the function {@link #get(ReentrantASTIterator, ControlFlowElement)} that returns
+ * all control flow relevant sub-expressions of a given {@link Expression}.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
  */
 final class CFEChildren {
 
 	/**
 	 * Returns all control flow relevant sub-expressions of the given {@link Expression}.
 	 */
-	static List<Pair<String, ControlFlowElement>> get(ControlFlowElement expr) {
-		List<Pair<String, ControlFlowElement>> n4jsxExpressionList = new InternalExpressionChildrenX().doSwitch(expr);
-		if (n4jsxExpressionList != null) {
-			return n4jsxExpressionList;
-		}
-		return new InternalExpressionChildren().doSwitch(expr);
+	static List<Node> get(ReentrantASTIterator astIter, ControlFlowElement expr) {
+		return new InternalExpressionChildren(astIter).doSwitch(expr);
 	}
 
-	static private class InternalExpressionChildren extends N4JSSwitch<List<Pair<String, ControlFlowElement>>> {
+	static void addDelegatingNode(ReentrantASTIterator astIter, List<Node> cfc, String name, ControlFlowElement cfe,
+			ControlFlowElement delegate) {
+
+		if (delegate != null) {
+			DelegatingNode delegatingNode = DelegatingNodeFactory.create(astIter, name, cfe, delegate);
+			cfc.add(delegatingNode);
+		}
+	}
+
+	static private class InternalExpressionChildren extends N4JSSwitch<List<Node>> {
+		private final ReentrantASTIterator astIter;
+
+		InternalExpressionChildren(ReentrantASTIterator astIter) {
+			this.astIter = astIter;
+		}
+
+		void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe,
+				ControlFlowElement delegate) {
+
+			CFEChildren.addDelegatingNode(astIter, cfc, name, cfe, delegate);
+		}
+
+		void addHelperNode(List<Node> cfc, String name, ControlFlowElement cfe) {
+			Node node = new HelperNode(name, astIter.pos(), cfe);
+			cfc.add(node);
+		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseAdditiveExpression(AdditiveExpression ae) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("arg_1", ae.getLhs()));
-			cfc.add(Pair.of("arg_2", ae.getRhs()));
+		public List<Node> caseAdditiveExpression(AdditiveExpression ae) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "arg_1", ae, ae.getLhs());
+			addDelegatingNode(cfc, "arg_2", ae, ae.getRhs());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseAssignmentExpression(AssignmentExpression ae) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
+		public List<Node> caseAssignmentExpression(AssignmentExpression ae) {
+			List<Node> cfc = new LinkedList<>();
 			Expression lhs = ae.getLhs();
-			cfc.add(Pair.of("lhs", lhs));
-			cfc.add(Pair.of("rhs", ae.getRhs()));
+			addDelegatingNode(cfc, LHS, ae, lhs);
+			addDelegatingNode(cfc, RHS, ae, ae.getRhs());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseArrayLiteral(ArrayLiteral al) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
+		public List<Node> caseArrayLiteral(ArrayLiteral al) {
+			List<Node> cfc = new LinkedList<>();
 			for (ArrayElement aElem : al.getElements()) {
 				int i = al.getElements().indexOf(aElem);
-				cfc.add(Pair.of("arrayElem_" + i, aElem.getExpression()));
-			}
-			return cfc;
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseAwaitExpression(AwaitExpression ae) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("expression", ae.getExpression()));
-			return cfc;
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseBinaryBitwiseExpression(BinaryBitwiseExpression bbe) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("arg_1", bbe.getLhs()));
-			cfc.add(Pair.of("arg_2", bbe.getRhs()));
-			return cfc;
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseBindingElement(BindingElement be) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			if (be.getNestedPattern() != null) {
-				cfc.add(Pair.of("nestedPattern", be.getNestedPattern()));
-			}
-			if (be.getVarDecl() != null) {
-				cfc.add(Pair.of("declaration", be.getVarDecl()));
-			}
-			if (be.getExpression() != null) {
-				cfc.add(Pair.of("initializer", be.getExpression()));
-			}
-			return cfc;
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseArrayBindingPattern(ArrayBindingPattern abp) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			for (int i = 0; i < abp.getElements().size(); i++) {
-				BindingElement be = abp.getElements().get(i);
-				cfc.add(Pair.of("elem_" + i, be));
-			}
-			return cfc;
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseObjectBindingPattern(ObjectBindingPattern obp) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			for (int i = 0; i < obp.getProperties().size(); i++) {
-				BindingProperty bp = obp.getProperties().get(i);
-				BindingElement be = bp.getValue();
-				if (be != null) {
-					cfc.add(Pair.of("init_" + i, be));
+				String name = "arrayElem_" + i;
+				Expression exp = aElem.getExpression();
+				if (exp == null) {
+					addHelperNode(cfc, name, al);
+				} else {
+					addDelegatingNode(cfc, name, al, exp);
 				}
 			}
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseCastExpression(CastExpression ce) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("expression", ce.getExpression()));
+		public List<Node> caseAwaitExpression(AwaitExpression ae) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, ae, ae.getExpression());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseCommaExpression(CommaExpression ce) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
+		public List<Node> caseBinaryBitwiseExpression(BinaryBitwiseExpression bbe) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "arg_1", bbe, bbe.getLhs());
+			addDelegatingNode(cfc, "arg_2", bbe, bbe.getRhs());
+			return cfc;
+		}
+
+		@Override
+		public List<Node> caseBindingElement(BindingElement be) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "nestedPattern", be, be.getNestedPattern());
+			addDelegatingNode(cfc, "declaration", be, be.getVarDecl());
+			addDelegatingNode(cfc, "initializer", be, be.getExpression());
+			return cfc;
+		}
+
+		@Override
+		public List<Node> caseArrayBindingPattern(ArrayBindingPattern abp) {
+			List<Node> cfc = new LinkedList<>();
+			for (int i = 0; i < abp.getElements().size(); i++) {
+				BindingElement be = abp.getElements().get(i);
+				addDelegatingNode(cfc, "elem_" + i, abp, be);
+			}
+			return cfc;
+		}
+
+		@Override
+		public List<Node> caseObjectBindingPattern(ObjectBindingPattern obp) {
+			List<Node> cfc = new LinkedList<>();
+			for (int i = 0; i < obp.getProperties().size(); i++) {
+				BindingProperty bp = obp.getProperties().get(i);
+				BindingElement be = bp.getValue();
+				addDelegatingNode(cfc, "init_" + i, obp, be);
+			}
+			return cfc;
+		}
+
+		@Override
+		public List<Node> caseCastExpression(CastExpression ce) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, ce, ce.getExpression());
+			return cfc;
+		}
+
+		@Override
+		public List<Node> caseCommaExpression(CommaExpression ce) {
+			List<Node> cfc = new LinkedList<>();
 			for (int i = 0; i < ce.getExprs().size(); i++) {
 				Expression expr = ce.getExprs().get(i);
-				cfc.add(Pair.of("expression_" + i, expr));
+				addDelegatingNode(cfc, "expression_" + i, ce, expr);
 			}
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseConditionalExpression(ConditionalExpression ce) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("condition", ce.getExpression()));
-			cfc.add(Pair.of("then", ce.getTrueExpression()));
-			cfc.add(Pair.of("else", ce.getFalseExpression()));
+		public List<Node> caseEqualityExpression(EqualityExpression ee) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "arg_1", ee, ee.getLhs());
+			addDelegatingNode(cfc, "arg_2", ee, ee.getRhs());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseEqualityExpression(EqualityExpression ee) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("arg_1", ee.getLhs()));
-			cfc.add(Pair.of("arg_2", ee.getRhs()));
+		public List<Node> caseExpressionAnnotationList(ExpressionAnnotationList eal) {
+			return Collections.emptyList();
+		}
+
+		@Override
+		public List<Node> caseFunctionExpression(FunctionExpression fe) {
+			return Collections.emptyList();
+		}
+
+		@Override
+		public List<Node> caseIdentifierRef(IdentifierRef al) {
+			return Collections.emptyList();
+		}
+
+		@Override
+		public List<Node> caseIndexedAccessExpression(IndexedAccessExpression iae) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "target", iae, iae.getTarget());
+			addDelegatingNode(cfc, "index", iae, iae.getIndex());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseExpressionAnnotationList(ExpressionAnnotationList eal) {
+		public List<Node> caseLiteral(Literal lit) {
 			return Collections.emptyList();
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseFunctionExpression(FunctionExpression fe) {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseIdentifierRef(IdentifierRef al) {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseIndexedAccessExpression(IndexedAccessExpression iae) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("target", iae.getTarget()));
-			cfc.add(Pair.of("index", iae.getIndex()));
+		public List<Node> caseMultiplicativeExpression(MultiplicativeExpression me) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "arg_1", me, me.getLhs());
+			addDelegatingNode(cfc, "arg_2", me, me.getRhs());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseLiteral(Literal lit) {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseMultiplicativeExpression(MultiplicativeExpression me) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("arg_1", me.getLhs()));
-			cfc.add(Pair.of("arg_2", me.getRhs()));
-			return cfc;
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseN4ClassExpression(N4ClassExpression n4ce) {
+		public List<Node> caseN4ClassExpression(N4ClassExpression n4ce) {
 			// currently unsupported feature
 			return Collections.emptyList();
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseNewExpression(NewExpression ne) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("callee", ne.getCallee()));
+		public List<Node> caseNewExpression(NewExpression ne) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "callee", ne, ne.getCallee());
 			for (int i = 0; i < ne.getArguments().size(); i++) {
 				Argument arg = ne.getArguments().get(i);
-				cfc.add(Pair.of("arg_" + i, arg.getExpression()));
+				addDelegatingNode(cfc, "arg_" + i, ne, arg.getExpression());
 			}
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseNewTarget(NewTarget nt) {
+		public List<Node> caseNewTarget(NewTarget nt) {
 			// currently unsupported feature
 			return Collections.emptyList();
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseObjectLiteral(ObjectLiteral ol) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
+		public List<Node> caseObjectLiteral(ObjectLiteral ol) {
+			List<Node> cfc = new LinkedList<>();
 			for (int i = 0; i < ol.getPropertyAssignments().size(); i++) {
 				PropertyAssignment pa = ol.getPropertyAssignments().get(i);
 
 				if (pa instanceof PropertyNameValuePair) {
 					PropertyNameValuePair pnvp = (PropertyNameValuePair) pa;
 					LiteralOrComputedPropertyName locpn = pnvp.getDeclaredName();
-					if (locpn != null && locpn.getExpression() != null) {
-						cfc.add(Pair.of("declaredName_" + i, locpn.getExpression()));
+					if (locpn != null) {
+						addDelegatingNode(cfc, "declaredName_" + i, ol, locpn.getExpression());
 					}
-					if (pnvp.getExpression() != null) {
-						cfc.add(Pair.of("expression_" + i, pnvp.getExpression()));
-					}
+					addDelegatingNode(cfc, "expression_" + i, ol, pnvp.getExpression());
 					if (pa instanceof PropertyNameValuePairSingleName) {
 						PropertyNameValuePairSingleName pnvpsv = (PropertyNameValuePairSingleName) pa;
-						if (pnvpsv.getIdentifierRef() != null) {
-							cfc.add(Pair.of("identifierRef_" + i, pnvpsv.getIdentifierRef()));
-						}
+						addDelegatingNode(cfc, "identifierRef_" + i, ol, pnvpsv.getIdentifierRef());
 					}
 				}
 			}
@@ -289,166 +302,156 @@ final class CFEChildren {
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseParenExpression(ParenExpression pe) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("expression", pe.getExpression()));
+		public List<Node> caseParenExpression(ParenExpression pe) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, pe, pe.getExpression());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseParameterizedCallExpression(ParameterizedCallExpression pce) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("target", pce.getTarget()));
+		public List<Node> caseParameterizedCallExpression(ParameterizedCallExpression pce) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.TARGET, pce, pce.getTarget());
 			for (int i = 0; i < pce.getArguments().size(); i++) {
 				Argument arg = pce.getArguments().get(i);
-				cfc.add(Pair.of("arg_" + i, arg.getExpression()));
+				addDelegatingNode(cfc, "arg_" + i, pce, arg.getExpression());
 			}
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseParameterizedPropertyAccessExpression(
-				ParameterizedPropertyAccessExpression ppae) {
+		public List<Node> caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression ppae) {
 
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("target", ppae.getTarget()));
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "target", ppae, ppae.getTarget());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> casePostfixExpression(PostfixExpression pe) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("expression", pe.getExpression()));
+		public List<Node> casePostfixExpression(PostfixExpression pe) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, pe, pe.getExpression());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> casePromisifyExpression(PromisifyExpression pe) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("expression", pe.getExpression()));
+		public List<Node> casePromisifyExpression(PromisifyExpression pe) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, pe, pe.getExpression());
 			return cfc;
 		}
 
 		// ReferencingElementExpression_IM
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseRelationalExpression(RelationalExpression re) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("arg_1", re.getLhs()));
-			cfc.add(Pair.of("arg_2", re.getRhs()));
+		public List<Node> caseRelationalExpression(RelationalExpression re) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "arg_1", re, re.getLhs());
+			addDelegatingNode(cfc, "arg_2", re, re.getRhs());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseShiftExpression(ShiftExpression se) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("arg_1", se.getLhs()));
-			cfc.add(Pair.of("arg_2", se.getRhs()));
+		public List<Node> caseShiftExpression(ShiftExpression se) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "arg_1", se, se.getLhs());
+			addDelegatingNode(cfc, "arg_2", se, se.getRhs());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseSuperLiteral(SuperLiteral sl) {
+		public List<Node> caseSuperLiteral(SuperLiteral sl) {
 			return Collections.emptyList();
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseTaggedTemplateString(TaggedTemplateString tts) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("target", tts.getTarget()));
-			cfc.add(Pair.of("template", tts.getTemplate()));
+		public List<Node> caseTaggedTemplateString(TaggedTemplateString tts) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "target", tts, tts.getTarget());
+			addDelegatingNode(cfc, "template", tts, tts.getTemplate());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseTemplateLiteral(TemplateLiteral tl) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
+		public List<Node> caseTemplateLiteral(TemplateLiteral tl) {
+			List<Node> cfc = new LinkedList<>();
 			for (int i = 0; i < tl.getSegments().size(); i++) {
 				Expression segm = tl.getSegments().get(i);
-				cfc.add(Pair.of("segment_" + i, segm));
+				addDelegatingNode(cfc, "segment_" + i, tl, segm);
 			}
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseThisLiteral(ThisLiteral tl) {
+		public List<Node> caseThisLiteral(ThisLiteral tl) {
 			return Collections.emptyList();
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseUnaryExpression(UnaryExpression ue) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("expression", ue.getExpression()));
+		public List<Node> caseUnaryExpression(UnaryExpression ue) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, ue, ue.getExpression());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseVariableBinding(VariableBinding vb) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			if (vb.getExpression() != null) {
-				cfc.add(Pair.of("expression", vb.getExpression()));
-			}
-			if (vb.getPattern() != null) {
-				cfc.add(Pair.of("pattern", vb.getPattern()));
-			}
+		public List<Node> caseVariableBinding(VariableBinding vb) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, vb, vb.getExpression());
+			addDelegatingNode(cfc, "pattern", vb, vb.getPattern());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseYieldExpression(YieldExpression ye) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			if (ye.getExpression() != null)
-				cfc.add(Pair.of("expression", ye.getExpression()));
+		public List<Node> caseYieldExpression(YieldExpression ye) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, ye, ye.getExpression());
 			return cfc;
 		}
 
-	}
-
-	static private class InternalExpressionChildrenX extends N4JSXSwitch<List<Pair<String, ControlFlowElement>>> {
-
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseJSXElement(JSXElement jsxel) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("openTagName", jsxel.getJsxElementName().getExpression()));
+		public List<Node> caseJSXElement(JSXElement jsxel) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "openTagName", jsxel, jsxel.getJsxElementName().getExpression());
 			for (int i = 0; i < jsxel.getJsxAttributes().size(); i++) {
 				JSXAttribute jsxAttr = jsxel.getJsxAttributes().get(i);
-				cfc.add(Pair.of("attr_" + i, jsxAttr));
+				addDelegatingNode(cfc, "attr_" + i, jsxel, jsxAttr);
 			}
 			for (int i = 0; i < jsxel.getJsxChildren().size(); i++) {
 				JSXChild jsxChild = jsxel.getJsxChildren().get(i);
 				if (jsxChild instanceof JSXElement) {
 					JSXElement jsxElem = (JSXElement) jsxChild;
-					cfc.add(Pair.of("child_" + i, jsxElem));
+					addDelegatingNode(cfc, "child_" + i, jsxel, jsxElem);
 				}
 				if (jsxChild instanceof JSXExpression) {
 					JSXExpression jsxEx = (JSXExpression) jsxChild;
-					cfc.add(Pair.of("child_" + i, jsxEx.getExpression()));
+					addDelegatingNode(cfc, "child_" + i, jsxel, jsxEx.getExpression());
 				}
 			}
 			if (jsxel.getJsxClosingName() != null) {
-				cfc.add(Pair.of("closeTagName", jsxel.getJsxClosingName().getExpression()));
+				addDelegatingNode(cfc, "closeTagName", jsxel, jsxel.getJsxClosingName().getExpression());
 			}
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseJSXExpression(JSXExpression jsxEx) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("expression", jsxEx.getExpression()));
+		public List<Node> caseJSXExpression(JSXExpression jsxEx) {
+			List<Node> cfc = new LinkedList<>();
+			// getDelegatingNode(cfc, EXPRESSION_NODE, jsxEx.getExpression()));
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseJSXSpreadAttribute(JSXSpreadAttribute jsxSA) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("expression", jsxSA.getExpression()));
+		public List<Node> caseJSXSpreadAttribute(JSXSpreadAttribute jsxSA) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, jsxSA, jsxSA.getExpression());
 			return cfc;
 		}
 
 		@Override
-		public List<Pair<String, ControlFlowElement>> caseJSXPropertyAttribute(JSXPropertyAttribute jsxPA) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("value", jsxPA.getJsxAttributeValue()));
+		public List<Node> caseJSXPropertyAttribute(JSXPropertyAttribute jsxPA) {
+			List<Node> cfc = new LinkedList<>();
+			addDelegatingNode(cfc, "value", jsxPA, jsxPA.getJsxAttributeValue());
 			return cfc;
 		}
 

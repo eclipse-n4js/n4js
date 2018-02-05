@@ -11,9 +11,14 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import java.util.Collection
+import java.util.List
+import java.util.Set
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
+import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
@@ -32,11 +37,6 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.RecursionGuard
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Collection
-import java.util.List
-import java.util.Set
-import org.eclipse.emf.ecore.util.EcoreUtil
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -49,8 +49,6 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	@Inject
 	extension TypeCompareHelper;
@@ -252,7 +250,7 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 			val typeArgs = if(callExpr.parameterized) {
 				callExpr.typeArgs
 			} else {
-				astMetaInfoCacheHelper.getInferredTypeArgs(callExpr) ?: #[]
+				ASTMetaInfoUtils.getInferredTypeArgs(callExpr) ?: #[]
 			};
 			G.addTypeMappings(F.typeVars, typeArgs);
 		}

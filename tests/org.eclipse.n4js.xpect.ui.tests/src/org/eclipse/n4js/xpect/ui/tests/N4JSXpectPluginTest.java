@@ -11,20 +11,19 @@
 package org.eclipse.n4js.xpect.ui.tests;
 
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 import org.junit.runner.RunWith;
-import org.xpect.XpectImport;
-import org.xpect.runner.XpectRunner;
-import org.xpect.runner.XpectSuiteClasses;
-import org.xpect.runner.XpectTestFiles;
-import org.xpect.runner.XpectTestFiles.FileRoot;
-import org.xpect.xtext.lib.tests.LinkingTest;
-import org.xpect.xtext.lib.tests.ResourceDescriptionTest;
-import org.xpect.xtext.lib.tests.ValidationTest;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
+import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
+import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
+import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
+import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 
 /**
  * Plugin linking test
@@ -32,7 +31,6 @@ import org.xpect.xtext.lib.tests.ValidationTest;
 @XpectSuiteClasses({
 		LinkingTest.class,
 		TypeXpectMethod.class,
-		NoerrorsXpectMethod.class,
 		ScopeXpectMethod.class,
 		ResourceDescriptionTest.class,
 		ValidationTest.class,

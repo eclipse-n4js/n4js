@@ -46,8 +46,8 @@ public class StringCountUtils {
 	/**
 	 * Returns the number of new lines in the given string {@code text}.
 	 */
-	static public int countLines(String text) {
+	static public int countNewLines(String text) {
 		int count = countInString('\n', text);
-		return count + 1;
+		return count;
 	}
 }

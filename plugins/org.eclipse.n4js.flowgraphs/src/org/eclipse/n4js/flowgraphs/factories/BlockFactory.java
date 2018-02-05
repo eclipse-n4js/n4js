@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,27 +18,33 @@ import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.Statement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class BlockFactory {
 
-	static ComplexNode buildComplexNode(org.eclipse.n4js.n4JS.Block block) {
-		ComplexNode cNode = new ComplexNode(block);
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, org.eclipse.n4js.n4JS.Block block) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), block);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, block);
-		Node exitNode = new HelperNode(EXIT_NODE, block);
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), block);
 		List<Node> blockNodes = new LinkedList<>();
 
 		EList<Statement> stmts = block.getStatements();
 		for (int i = 0; i < stmts.size(); i++) {
 			Statement stmt = stmts.get(i);
-			Node blockNode = new DelegatingNode("stmt_" + i, block, stmt);
+			Node blockNode = DelegatingNodeFactory.create(astpp, "stmt_" + i, block, stmt);
 			blockNodes.add(blockNode);
 		}
+
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), block);
 
 		cNode.addNode(entryNode);
 		for (Node blockNode : blockNodes)

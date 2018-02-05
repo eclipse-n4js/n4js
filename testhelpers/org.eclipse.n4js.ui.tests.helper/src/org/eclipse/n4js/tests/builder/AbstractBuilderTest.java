@@ -26,10 +26,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuilderHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -63,6 +67,10 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 
 	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
 
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
+
 	/***/
 	public static final String F_EXT = ".n4js";
 	private volatile List<Event> events = Lists.newArrayList();
@@ -71,6 +79,8 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+	@Inject
+	private ExternalLibraryBuilderHelper externalLibraryBuilderHelper;
 
 	/***/
 	@Before
@@ -194,7 +204,7 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		ProjectUtils.waitForAutoBuild();
+		ProjectTestsUtils.waitForAutoBuild();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}
@@ -251,9 +261,21 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	}
 
 	/**
-	 * Performs some general validity checks on the Xtext index.
+	 * Performs some general validity checks on the Xtext index. Only intended to be used in tests (e.g. no support for
+	 * cancellation).
 	 */
 	protected void assertXtextIndexIsValid() {
+		// ensure no build is running while we examine the Xtext index
+		final ISchedulingRule rule = externalLibraryBuilderHelper.getRule();
+		try {
+			Job.getJobManager().beginRule(rule, null);
+			assertXtextIndexIsValidInternal();
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
+	}
+
+	private void assertXtextIndexIsValidInternal() {
 		final IResourceDescriptions index = getXtextIndex();
 		final StringBuilder sb = new StringBuilder();
 		for (IResourceDescription desc : index.getAllResourceDescriptions()) {

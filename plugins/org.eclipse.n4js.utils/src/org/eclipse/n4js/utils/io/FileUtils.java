@@ -76,6 +76,32 @@ public abstract class FileUtils {
 	}
 
 	/**
+	 * Creates a new directory nested with the given parent folder and desredSubPath. The newly created folder will be
+	 * deleted on graceful VM shutdown.
+	 *
+	 * @param parent
+	 *            the path of the parent folder.
+	 * @param nestedPath
+	 *            the nested path to the created folder.
+	 * @return the path to the new directory.
+	 */
+	public static Path createNestedDirectory(final Path parent, final String nestedPath) {
+		if (!parent.toFile().isDirectory())
+			throw new RuntimeException(
+					"Invalid parent at " + parent + ".");
+
+		Path desiredPath = parent.resolve(nestedPath);
+		final File file = new File(desiredPath.toUri());
+		if (!file.exists())
+			if (!file.mkdirs())
+				throw new RuntimeException(
+						"Error while trying to create folder at " + parent + " with " + nestedPath + ".");
+
+		file.deleteOnExit();
+		return file.toPath();
+	}
+
+	/**
 	 * Creates a new temp directory with the given parent. The newly created folder will be deleted on graceful VM
 	 * shutdown.
 	 *
@@ -105,13 +131,23 @@ public abstract class FileUtils {
 	 * @return the path to the new directory.
 	 */
 	public static Path createTempDirectory() {
+		return createTempDirectory(null);
+	}
+
+	/**
+	 * Creates a new temp directory in the java temp folder. The newly created folder will use provided prefix for name
+	 * and will be deleted on graceful VM shutdown.
+	 *
+	 * @return the path to the new directory.
+	 */
+	public static Path createTempDirectory(String prefix) {
 		final File parent = new File(getTempDirValue());
 		if (!parent.exists() || !parent.canWrite()) {
 			throw new RuntimeException("Cannot access temporary directory under: " + getTempDirValue());
 		}
 		File child;
 		try {
-			child = Files.createTempDirectory(parent.toPath(), null).toFile();
+			child = Files.createTempDirectory(parent.toPath(), prefix).toFile();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -238,6 +274,22 @@ public abstract class FileUtils {
 			}
 		}
 		file.delete();
+	}
+
+	/**
+	 * Delete a file or a possibly non-empty folder on JVM exit using {@link File#deleteOnExit()}
+	 *
+	 * @param file
+	 *            file or folder to be deleted
+	 */
+	public static void onExitDeleteFileOrFolder(File file) {
+		file.deleteOnExit();
+		if (file.isDirectory()) {
+			File[] childFildes = file.listFiles();
+			for (int i = 0; i < childFildes.length; i++) {
+				onExitDeleteFileOrFolder(childFildes[i]);
+			}
+		}
 	}
 
 	/**

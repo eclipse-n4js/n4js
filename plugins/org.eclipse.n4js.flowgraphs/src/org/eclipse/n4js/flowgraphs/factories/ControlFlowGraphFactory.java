@@ -10,26 +10,31 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.EdgeUtils;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 
 /**
  * Factory to build the internal control flow graphs.
@@ -38,56 +43,62 @@ public class ControlFlowGraphFactory {
 	/** Prints out the {@link ControlFlowEdge}s of the internal graph */
 	private final static boolean PRINT_EDGE_DETAILS = false;
 
+	static private final DataCollector dcCreateNodes = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Create Nodes", "Flow Graphs", "Create Graphs");
+	static private final DataCollector dcConnectNodes = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Connect Nodes", "Flow Graphs", "Create Graphs");
+	static private final DataCollector dcJumpEdges = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Jump Edges", "Flow Graphs", "Create Graphs");
+
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
-		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(new CFEComparator());
-		TreeSet<Block> cfCatchBlocks = new TreeSet<>(new CFEComparator());
+		Set<ControlFlowElement> cfContainers = new LinkedHashSet<>();
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
-		createComplexNodes(script, cfContainers, cfCatchBlocks, cnMap);
-		ComplexNodeMapper cnMapper = new CNMapper(cnMap);
+		Measurement mes = dcCreateNodes.getMeasurement("createNodes_" + script.eResource().getURI().toString());
+		createComplexNodes(script, cfContainers, cnMap);
+		ComplexNodeMapper cnMapper = new ComplexNodeMapper(cnMap);
+		mes.end();
 
+		mes = dcConnectNodes.getMeasurement("connectNodes_" + script.eResource().getURI().toString());
 		connectComplexNodes(cnMapper);
+		mes.end();
+		mes = dcJumpEdges.getMeasurement("jumpEdges_" + script.eResource().getURI().toString());
 		createJumpEdges(cnMapper);
+		mes.end();
 
-		FlowGraph cfg = new FlowGraph(cfContainers, cfCatchBlocks, cnMap);
+		FlowGraph cfg = new FlowGraph(script, cfContainers, cnMap);
+
+		if (PRINT_EDGE_DETAILS)
+			printAllEdgeDetails(cnMapper);
+
 		return cfg;
 	}
 
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
-	static private void createComplexNodes(Script script, TreeSet<ControlFlowElement> cfContainers,
-			TreeSet<Block> cfCatchBlocks, Map<ControlFlowElement, ComplexNode> cnMap) {
+	static private void createComplexNodes(Script script, Set<ControlFlowElement> cfContainers,
+			Map<ControlFlowElement, ComplexNode> cnMap) {
 
-		ComplexNode cn = CFEFactoryDispatcher.build(script);
-		cnMap.put(script, cn);
+		ReentrantASTIterator astIt = new ReentrantASTIterator(cfContainers, cnMap, script);
+		astIt.visitAll();
 
-		TreeIterator<EObject> tit = script.eAllContents();
-		while (tit.hasNext()) {
-			EObject eObj = tit.next();
-			if (eObj instanceof ControlFlowElement) {
-				ControlFlowElement cfe = (ControlFlowElement) eObj;
-				cfe = CFEMapper.map(cfe);
-
-				if (cfe != null && !cnMap.containsKey(cfe)) {
-					ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
-					cfContainers.add(cfContainer);
-					Block cfCatchBlock = FGUtils.getCatchBlock(cfe);
-					if (cfCatchBlock != null) {
-						cfCatchBlocks.add(cfCatchBlock);
-					}
-					cn = CFEFactoryDispatcher.build(cfe);
-					if (cn != null) {
-						cnMap.put(cfe, cn);
-					}
-				}
-			}
-		}
 	}
 
 	static private void connectComplexNodes(ComplexNodeMapper cnMapper) {
 		for (ComplexNode cn : cnMapper.getAll()) {
-			for (Node mNode : cn.getAllButExitNodes()) {
-				connectNode(cnMapper, mNode);
+			List<Node> removeNodes = new LinkedList<>();
+			for (Node mNode : cn.getNodes()) {
+				if (mNode != cn.getExit()) {
+					connectNode(cnMapper, mNode);
+				}
+			}
+			for (Node mNode : cn.getNodes()) {
+				if (isRemovableNode(mNode)) {
+					removeNodes.add(mNode);
+				}
+			}
+			for (Node removeNode : removeNodes) {
+				removeNode(cn, removeNode);
 			}
 		}
 	}
@@ -105,20 +116,53 @@ public class ControlFlowGraphFactory {
 		if (subASTElem != null) {
 			ComplexNode subCN = cnMapper.get(subASTElem);
 			if (subCN != null) { // can be null in case of malformed AST
-				ControlFlowEdge e = EdgeUtils.connectCF(mNode, subCN.getEntry());
+				EdgeUtils.connectCF(mNode, subCN.getEntry());
 				internalStartNode = subCN.getExit();
-				if (PRINT_EDGE_DETAILS)
-					printEdgeDetails(e);
 			}
 		}
 
 		Set<Node> internalSuccs = mNode.getInternalSuccessors();
 		for (Node internalSucc : internalSuccs) {
 			ControlFlowType cfType = mNode.getInternalSuccessorControlFlowType(internalSucc);
-			ControlFlowEdge e = EdgeUtils.connectCF(internalStartNode, internalSucc, cfType);
-			if (PRINT_EDGE_DETAILS)
-				printEdgeDetails(e);
+			EdgeUtils.connectCF(internalStartNode, internalSucc, cfType);
 		}
+	}
+
+	private static boolean isRemovableNode(Node mNode) {
+		boolean remDel = true;
+		remDel = remDel && mNode instanceof DelegatingNode;
+		remDel = remDel && !(mNode instanceof RepresentingNode);
+		remDel = remDel && mNode.jumpToken.isEmpty();
+		remDel = remDel && mNode.catchToken.isEmpty();
+		remDel = remDel && mNode.getInternalPredecessors().size() == 1;
+		remDel = remDel && mNode.pred.size() == 1;
+		remDel = remDel && mNode.succ.size() == 1;
+		remDel = remDel && mNode.pred.first().cfType == ControlFlowType.Successor;
+		remDel = remDel && mNode.succ.first().cfType == ControlFlowType.Successor;
+		return remDel;
+	}
+
+	private static void removeNode(ComplexNode cn, Node mNode) {
+		ControlFlowEdge e1 = mNode.pred.first();
+		ControlFlowEdge e2 = mNode.succ.first();
+		Node pred = e1.start;
+		Node succ = e2.end;
+
+		EdgeUtils.removeCF(e1);
+		EdgeUtils.removeCF(e2);
+		cn.removeNodeChecks(mNode);
+		cn.removeNode(mNode);
+
+		for (Node intPred : mNode.getInternalPredecessors()) {
+			intPred.removeInternalSuccessor(mNode);
+		}
+		for (Node intSucc : mNode.getInternalSuccessors()) {
+			intSucc.removeInternalPredecessor(mNode);
+		}
+		mNode.getInternalPredecessors().clear();
+		mNode.getInternalSuccessors().clear();
+
+		EdgeUtils.connectCF(pred, succ);
 	}
 
 	/**
@@ -127,10 +171,11 @@ public class ControlFlowGraphFactory {
 	 */
 	private static void createJumpEdges(ComplexNodeMapper cnMapper) {
 		for (ComplexNode cn : cnMapper.getAll()) {
-			Node jumpNode = cn.getExit();
-			for (JumpToken jumpToken : jumpNode.jumpToken) {
-				EdgeUtils.removeAllCF(jumpNode.getSuccessorEdges());
-				connectToJumpTarget(cnMapper, jumpNode, jumpToken);
+			Node jumpNode = cn.getJump();
+			if (jumpNode != null) {
+				for (JumpToken jumpToken : jumpNode.jumpToken) {
+					connectToJumpTarget(cnMapper, jumpNode, jumpToken);
+				}
 			}
 		}
 	}
@@ -147,7 +192,10 @@ public class ControlFlowGraphFactory {
 		FinallyBlock enteringFinallyBlock = getEnteringFinallyBlock(catchNode);
 		boolean isExitingFinallyBlock = isExitingFinallyBlock(cnMapper, jumpNode);
 		if (enteringFinallyBlock != null || isExitingFinallyBlock) {
-			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
+			boolean equalEdgeExistsAlready = equalEdgeExistsAlready(jumpNode, jumpToken, catchNode);
+			if (!equalEdgeExistsAlready) {
+				EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
+			}
 		} else {
 			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken.cfType);
 		}
@@ -161,8 +209,16 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
+	private static boolean equalEdgeExistsAlready(Node jumpNode, JumpToken jumpToken, Node catchNode) {
+		boolean equalEdgeExistsAlready = false;
+		for (ControlFlowEdge cfEdge : catchNode.pred) {
+			equalEdgeExistsAlready |= cfEdge.cfType == jumpToken.cfType && cfEdge.start == jumpNode;
+		}
+		return equalEdgeExistsAlready;
+	}
+
 	private static FinallyBlock getEnteringFinallyBlock(Node catchNode) {
-		if (catchNode.name.equals(TryFactory.FINALLY_NODE_NAME)) {
+		if (catchNode.name.equals(NodeNames.FINALLY)) {
 			ControlFlowElement cfe = catchNode.getDelegatedControlFlowElement();
 			EObject cfeContainer = cfe.eContainer();
 			return (FinallyBlock) cfeContainer;
@@ -180,31 +236,6 @@ public class ControlFlowGraphFactory {
 		return isExitingFinallyBlock;
 	}
 
-	private static final class CFEComparator implements Comparator<ControlFlowElement> {
-		@Override
-		public int compare(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-			return cfe1.hashCode() - cfe2.hashCode();
-		}
-	}
-
-	private static class CNMapper implements ComplexNodeMapper {
-		final private Map<ControlFlowElement, ComplexNode> cnMap;
-
-		CNMapper(Map<ControlFlowElement, ComplexNode> cnMap) {
-			this.cnMap = cnMap;
-		}
-
-		@Override
-		public ComplexNode get(ControlFlowElement cfe) {
-			return cnMap.get(CFEMapper.map(cfe));
-		}
-
-		@Override
-		public Iterable<ComplexNode> getAll() {
-			return cnMap.values();
-		}
-	}
-
 	/** Prints detailed information of jump nodes */
 	private static String getJumpTokenDetailString(JumpToken jumpToken, Node jumpNode) {
 		String jNode = ASTUtils.getNodeDetailString(jumpNode);
@@ -212,12 +243,19 @@ public class ControlFlowGraphFactory {
 		return jmpStr;
 	}
 
-	/** Prints detailed information of control flow edges. Used for debugging purposes */
-	private static void printEdgeDetails(ControlFlowEdge e) {
-		String sNode = ASTUtils.getNodeDetailString(e.start);
-		String eNode = ASTUtils.getNodeDetailString(e.end);
-		String edgeStr = sNode + ":" + e.toString() + ":" + eNode;
-		System.out.println(edgeStr);
+	/** Prints detailed information of all control flow edges. Used for debugging purposes */
+	private static void printAllEdgeDetails(ComplexNodeMapper cnMapper) { // TODO move this to a PrintUtils class
+		System.out.println("\nAll edges:");
+		Set<ControlFlowEdge> allEdges = new HashSet<>();
+		for (ComplexNode cn : cnMapper.getAll()) {
+			for (Node n : cn.getNodes()) {
+				allEdges.addAll(n.pred);
+				allEdges.addAll(n.succ);
+			}
+		}
+		for (ControlFlowEdge edge : allEdges) {
+			System.out.println(edge);
+		}
 	}
 
 }

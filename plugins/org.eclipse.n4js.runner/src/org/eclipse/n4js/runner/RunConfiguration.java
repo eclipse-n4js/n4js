@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jetty.util.ajax.JSON;
-import org.eclipse.n4js.generator.common.CompilerUtils;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -369,8 +368,7 @@ public class RunConfiguration {
 	}
 
 	/**
-	 * List of paths to initialization module files, relative to their containing output folder. These are paths as
-	 * created by method {@link CompilerUtils#getTargetFileName(URI,String)}.
+	 * List of paths to initialization module files, relative to their containing output folder.
 	 */
 	public List<String> getInitModules() {
 		return Collections.unmodifiableList(initModules);
@@ -396,7 +394,7 @@ public class RunConfiguration {
 
 	/**
 	 * Path to the file containing the low-level Javascript start-up code to launch, relative to its containing output
-	 * folder. This is a path as created by {@link CompilerUtils#getTargetFileName(URI,String)}.
+	 * folder.
 	 * <p>
 	 * IMPORTANT: assuming the user wants to launch an N4JS file <code>A.n4js</code>, this attribute does <b>NOT</b>
 	 * point to the compiled version of that file; instead, this attribute denotes a file provided by the runtime

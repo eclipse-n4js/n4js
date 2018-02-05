@@ -10,80 +10,22 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-//TODO GH-235
-@SuppressWarnings("javadoc")
+/** Holds information of one effect to a single variable */
 public class EffectInfo {
+	final EffectType type;
+	final Symbol symbol;
 
-	public static final EffectInfo ZERO = new EffectInfo();
-
-	public Symbol assigned;
-	public Symbol declares;
-	public Symbol references;
-
-	/* Direct side effect reads/writes */
-	final public Set<Symbol> seReads = new HashSet<>();
-	final public Set<Symbol> seWrites = new HashSet<>();
-
-	final public Set<Symbol> allReads = new HashSet<>();
-	final public Set<Symbol> allWrites = new HashSet<>();
-
-	public EffectInfo() {
-	}
-
-	public EffectInfo(EffectInfo info) {
-		assigned = info.assigned;
-		declares = info.declares;
-		references = info.references;
-		seReads.addAll(info.seReads);
-		seWrites.addAll(info.seWrites);
-		allReads.addAll(info.allReads);
-		allWrites.addAll(info.allWrites);
-	}
-
-	public void validate() {
-		allReads.clear();
-		if (references != null)
-			allReads.add(references);
-		allReads.addAll(seReads);
-
-		allWrites.clear();
-		if (assigned != null)
-			allWrites.add(assigned);
-		allWrites.addAll(seWrites);
+	/** Constructor */
+	public EffectInfo(EffectType type, Symbol symbol) {
+		this.type = type;
+		this.symbol = symbol;
 	}
 
 	@Override
 	public String toString() {
 		String s = "";
-
-		if (declares != null) {
-			s += "Decl: " + declares;
-		}
-		if (assigned != null) {
-			s += "Asgn: " + assigned;
-		}
-		if (references != null) {
-			s += "Ref: " + references;
-		}
-		if (!seReads.isEmpty()) {
-			Iterator<Symbol> it = seReads.iterator();
-			s += " SEr: " + it.next().toString();
-			while (it.hasNext())
-				s += ", " + it.next().toString();
-		}
-		if (!seWrites.isEmpty()) {
-			Iterator<Symbol> it = seWrites.iterator();
-			s += " SEw: " + it.next().toString();
-			while (it.hasNext())
-				s += ", " + it.next().toString();
-		}
-
-		if (s.length() == 0)
-			s = "-";
+		s += type.name();
+		s += " " + symbol.toString();
 
 		return s;
 	}

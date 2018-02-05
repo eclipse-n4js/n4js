@@ -13,7 +13,7 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ListMultimap
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Collection
 import java.util.Collections
 import java.util.List
@@ -941,7 +941,7 @@ class RuleEnvironmentExtensions {
 				if( TypeSystemHelper::isStringBasedEnumeration( declaredType ))
 					#[G.n4StringBasedEnumTypeRef /* ,  G.stringTypeRef*/]
 				else
-					emptyList
+					#[G.objectTypeRef]
 			default:
 				emptyList // quick exit
 		}

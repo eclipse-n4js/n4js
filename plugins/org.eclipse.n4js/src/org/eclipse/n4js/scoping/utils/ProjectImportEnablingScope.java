@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -71,7 +72,7 @@ public class ProjectImportEnablingScope implements IScope {
 
 	private final IN4JSCore n4jsCore;
 	private final IN4JSProject contextProject;
-	private final ImportDeclaration importDeclaration;
+	private final Optional<ImportDeclaration> importDeclaration;
 	private final IScope parent;
 	private final IScope delegate;
 
@@ -80,14 +81,19 @@ public class ProjectImportEnablingScope implements IScope {
 	 * <p>
 	 * To support tests that use multiple projects without properly setting up IN4JSCore, we simply return 'parent' in
 	 * such cases; however, project imports will not be available in such tests.
+	 *
+	 * @param importDecl
+	 *            if an import declaration is provided, imported error reporting will be activated (i.e. an
+	 *            {@link IEObjectDescriptionWithError} will be returned instead of <code>null</code> in case of
+	 *            unresolvable references).
 	 */
-	public static IScope create(IN4JSCore n4jsCore, ImportDeclaration importDecl, IScope parent, IScope delegate) {
-		if (n4jsCore == null || importDecl == null || parent == null) {
+	public static IScope create(IN4JSCore n4jsCore, Resource resource, Optional<ImportDeclaration> importDecl,
+			IScope parent, IScope delegate) {
+		if (n4jsCore == null || resource == null || importDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
 		}
-		final Resource resource = importDecl.eResource();
-		if (resource == null) {
-			throw new IllegalArgumentException("given import declaration must be contained in a resource");
+		if (importDecl.isPresent() && importDecl.get().eResource() != resource) {
+			throw new IllegalArgumentException("given import declaration must be contained in the given resource");
 		}
 		final Optional<? extends IN4JSProject> contextProject = n4jsCore.findProject(resource.getURI());
 		if (!contextProject.isPresent()) {
@@ -104,10 +110,9 @@ public class ProjectImportEnablingScope implements IScope {
 	 * @param contextProject
 	 *            the project containing the import declaration (not the project containing the module to import from)!
 	 */
-	private ProjectImportEnablingScope(IN4JSCore n4jsCore, IN4JSProject contextProject, ImportDeclaration importDecl,
-			IScope parent,
-			IScope delegate) {
-		if (n4jsCore == null || contextProject == null || parent == null) {
+	private ProjectImportEnablingScope(IN4JSCore n4jsCore, IN4JSProject contextProject,
+			Optional<ImportDeclaration> importDecl, IScope parent, IScope delegate) {
+		if (n4jsCore == null || contextProject == null || importDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
 		}
 		this.n4jsCore = n4jsCore;
@@ -145,6 +150,11 @@ public class ProjectImportEnablingScope implements IScope {
 
 		}
 
+		// if no import declaration was given, we skip the advanced error reporting
+		if (!importDeclaration.isPresent()) {
+			return null;
+		}
+
 		// handle error cases to help user fix the issue
 		StringBuilder sbErrrorMessage = new StringBuilder("Cannot resolve import target ::");
 
@@ -176,7 +186,7 @@ public class ProjectImportEnablingScope implements IScope {
 			}
 		}
 
-		final EObject originalProxy = (EObject) this.importDeclaration
+		final EObject originalProxy = (EObject) this.importDeclaration.get()
 				.eGet(N4JSPackage.eINSTANCE.getImportDeclaration_Module(), false);
 		return new InvalidImportTargetModuleDescription(EObjectDescription.create("impDecl", originalProxy),
 				sbErrrorMessage.toString(), IssueCodes.IMP_UNRESOLVED);
@@ -230,7 +240,7 @@ public class ProjectImportEnablingScope implements IScope {
 		final Map<String, IEObjectDescription> result = new HashMap<>();
 		for (IEObjectDescription desc : moduleSpecifierMatchesWithPossibleDuplicates) {
 			final IN4JSProject containingProject = n4jsCore.findProject(desc.getEObjectURI()).orNull();
-			if (projectId.equals(containingProject.getProjectId())) {
+			if (containingProject != null && projectId.equals(containingProject.getProjectId())) {
 				result.put(desc.getEObjectURI().toString(), desc);
 			}
 		}

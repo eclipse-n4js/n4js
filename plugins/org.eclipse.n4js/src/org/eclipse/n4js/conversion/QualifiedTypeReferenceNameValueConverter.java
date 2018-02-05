@@ -11,8 +11,8 @@
 package org.eclipse.n4js.conversion;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.TerminalRule;

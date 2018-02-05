@@ -19,22 +19,23 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xpect.XpectArgument;
+import org.eclipse.xpect.expectation.impl.AbstractExpectation;
+import org.eclipse.xpect.expectation.impl.ActualCollection;
+import org.eclipse.xpect.expectation.impl.ActualCollection.ActualItem;
+import org.eclipse.xpect.expectation.impl.ActualCollection.ToString;
+import org.eclipse.xpect.expectation.impl.ExpectationCollection;
+import org.eclipse.xpect.expectation.impl.ExpectationCollection.ExpectationItem;
+import org.eclipse.xpect.expectation.impl.TargetSyntaxSupport;
+import org.eclipse.xpect.setup.XpectSetupFactory;
+import org.eclipse.xpect.state.Creates;
+import org.eclipse.xpect.text.Text;
+import org.eclipse.xpect.util.ReflectionUtil;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.Pair;
 import org.junit.ComparisonFailure;
-import org.xpect.XpectArgument;
-import org.xpect.expectation.impl.AbstractExpectation;
-import org.xpect.expectation.impl.ActualCollection;
-import org.xpect.expectation.impl.ActualCollection.ActualItem;
-import org.xpect.expectation.impl.ActualCollection.ToString;
-import org.xpect.expectation.impl.ExpectationCollection;
-import org.xpect.expectation.impl.ExpectationCollection.ExpectationItem;
-import org.xpect.expectation.impl.TargetSyntaxSupport;
-import org.xpect.setup.XpectSetupFactory;
-import org.xpect.state.Creates;
-import org.xpect.text.Text;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -94,13 +95,13 @@ public @interface N4JSCommaSeparatedValuesExpectation {
 
 			if (actual != null && predicate != null) {
 				if (exp.isWildcard())
-					act.init(exp.applyPredicate(predicate), annotation.itemFormatter());
+					initActualCollection(act, exp.applyPredicate(predicate), annotation.itemFormatter());
 				else
-					act.init(actual, annotation.itemFormatter());
+					initActualCollection(act, actual, annotation.itemFormatter());
 			} else if (predicate != null)
-				act.init(exp.applyPredicate(predicate), annotation.itemFormatter());
+				initActualCollection(act, exp.applyPredicate(predicate), annotation.itemFormatter());
 			else if (actual != null)
-				act.init(actual, annotation.itemFormatter());
+				initActualCollection(act, actual, annotation.itemFormatter());
 			else
 				throw new NullPointerException();
 
@@ -164,6 +165,13 @@ public @interface N4JSCommaSeparatedValuesExpectation {
 			}
 		}
 
+		/** Avoid deprecated method {@link ActualCollection#init(Iterable, Class)} */
+		private void initActualCollection(ActualCollection act, Iterable<?> actual,
+				Class<? extends Function<Object, String>> functionClass) {
+			act.setItemFormatter(ReflectionUtil.newInstanceUnchecked(functionClass));
+			act.init(actual);
+		}
+
 		/**
 		 * Explicitly request all expected items, as they may appear in scope only on explicit request.
 		 */
@@ -219,7 +227,7 @@ public @interface N4JSCommaSeparatedValuesExpectation {
 		@Override
 		public List<Value> getExpectedValues() {
 			// if needed, implement as in
-			// org.xpect.expectation.impl.CommaSeparatedValuesExpectationImpl.getExpectedValues()
+			// org.eclipse.xpect.expectation.impl.CommaSeparatedValuesExpectationImpl.getExpectedValues()
 			throw new UnsupportedOperationException();
 		}
 

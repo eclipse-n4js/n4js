@@ -11,22 +11,20 @@
 package org.eclipse.n4js.transpiler.es5.xpect.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 import org.junit.runner.RunWith;
-import org.xpect.XpectImport;
-import org.xpect.runner.XpectRunner;
-import org.xpect.runner.XpectSuiteClasses;
-import org.xpect.runner.XpectTestFiles;
-import org.xpect.runner.XpectTestFiles.FileRoot;
-import org.xpect.xtext.lib.tests.ValidationTest;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
+import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
+import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 
 /**
  */
 @XpectSuiteClasses({
 		ValidationTest.class,
-		NoerrorsXpectMethod.class,
 		OutputXpectMethod.class
 })
 @RunWith(XpectRunner.class)

@@ -11,7 +11,7 @@
 package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Argument
@@ -51,8 +51,6 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 
 	@Inject
 	private N4JSTypeSystem ts;
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	/**
 	 * Convenience method for {@link #isPoly(Expression)} and {@link #isPoly(PropertyAssignment)}, accepting any type of
@@ -176,7 +174,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 	 * nested poly expression's type from the cache.
 	 */
 	def protected TypeRef getFinalResultTypeOfNestedPolyExpression(Expression nestedPolyExpression) {
-		return astMetaInfoCacheHelper.getTypeFailSafe(nestedPolyExpression)?.value;
+		return ASTMetaInfoUtils.getTypeFailSafe(nestedPolyExpression)?.value;
 	}
 
 	def protected TypeRef subst(TypeRef typeRef, RuleEnvironment G,

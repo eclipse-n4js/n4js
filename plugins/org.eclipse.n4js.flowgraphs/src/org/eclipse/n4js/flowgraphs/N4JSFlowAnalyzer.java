@@ -10,21 +10,27 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.Callable;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
-import org.eclipse.n4js.n4JS.Block;
-import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 
 import com.google.common.collect.Lists;
 
@@ -32,10 +38,34 @@ import com.google.common.collect.Lists;
  * Facade for all control and data flow related methods.
  */
 public class N4JSFlowAnalyzer {
+	static private final Logger LOGGER = Logger.getLogger(N4JSFlowAnalyzer.class);
+	static private final DataCollector dcFlowGraphs = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Flow Graphs");
+	static private final DataCollector dcCreateGraph = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Create Graphs", "Flow Graphs");
+	static private final DataCollector dcPerformAnalyses = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Perform Analyses", "Flow Graphs");
+
+	private final Callable<Void> cancelledChecker;
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
 	private GraphVisitorAnalysis gva;
 	private SuccessorPredecessorAnalysis spa;
+
+	/** Constructor */
+	public N4JSFlowAnalyzer() {
+		this(null);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param cancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public N4JSFlowAnalyzer(Callable<Void> cancelledChecker) {
+		this.cancelledChecker = cancelledChecker;
+	}
 
 	/**
 	 * Creates the control flow graphs for all {@link ControlFlowElement}s in the given {@link Script}.
@@ -44,13 +74,29 @@ public class N4JSFlowAnalyzer {
 	 */
 	public void createGraphs(Script script) {
 		Objects.requireNonNull(script);
-
-		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
+		String uriString = script.eResource().getURI().toString();
+		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
+		Measurement msmnt2 = dcCreateGraph.getMeasurement("createGraph_" + uriString);
 		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
 		gva = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
-		// sw.stop();
+		msmnt2.end();
+		msmnt1.end();
+	}
+
+	/** Checks if the user hit the cancel button and if so, a RuntimeException is thrown. */
+	public void checkCancelled() {
+		if (cancelledChecker == null)
+			return;
+
+		try {
+			cancelledChecker.call();
+		} catch (OperationCanceledException e) {
+			throw e;
+		} catch (Exception e) {
+			LOGGER.warn("Unknown exception", e);
+		}
 	}
 
 	/** @return the underlying control flow graph */
@@ -59,23 +105,23 @@ public class N4JSFlowAnalyzer {
 	}
 
 	/** @return a list of all direct internal predecessors of cfe */
-	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getPredecessors(cfe, followEdges);
+	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe) {
+		return spa.getPredecessors(cfe);
 	}
 
 	/** @return a list of all direct external predecessors of cfe */
-	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getPredecessorsSkipInternal(cfe, followEdges);
+	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe) {
+		return spa.getPredecessorsSkipInternal(cfe);
 	}
 
 	/** @return a list of all direct internal successors of cfe */
-	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getSuccessors(cfe, followEdges);
+	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe) {
+		return spa.getSuccessors(cfe);
 	}
 
 	/** @return a list of all direct external successors of cfe */
-	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getSuccessorsSkipInternal(cfe, followEdges);
+	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe) {
+		return spa.getSuccessorsSkipInternal(cfe);
 	}
 
 	/** @return true iff cfe2 is a direct successor of cfe1 */
@@ -90,7 +136,15 @@ public class N4JSFlowAnalyzer {
 
 	/** @return true iff cfeTo is a transitive successor of cfeFrom */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return dpa.isTransitiveSuccessor(cfeFrom, cfeTo);
+		return dpa.isTransitiveSuccessor(cfeFrom, cfeTo, null);
+	}
+
+	/**
+	 * @return true iff cfeTo is a transitive successor of cfeFrom and the connecting path does not include cfeNotVia
+	 */
+	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo,
+			ControlFlowElement cfeNotVia) {
+		return dpa.isTransitiveSuccessor(cfeFrom, cfeTo, cfeNotVia);
 	}
 
 	/**
@@ -106,9 +160,9 @@ public class N4JSFlowAnalyzer {
 	 * Returns the common predecessor of two {@link ControlFlowElement}s.
 	 * <p/>
 	 * The common predecessor is computed as follows. First, the CF graph is traversed beginning from cfeA backwards
-	 * until an element is reached which has no predecessor. All elements that were visited during that traversion are
+	 * until an element is reached which has no predecessor. All elements that were visited during that traversal are
 	 * marked. Second, analogous the CF graph is now traversed beginning from cfeB backwards until an element is reached
-	 * which has no predecessor. If an already marked element can be found during that traversion, this element is
+	 * which has no predecessor. If an already marked element can be found during that traversal, this element is
 	 * supposed to be the common predecessor of cfeA and cfeB.
 	 * <p>
 	 * The described algorithm is repeated for swapped cfeA and cfeB.
@@ -118,28 +172,18 @@ public class N4JSFlowAnalyzer {
 	}
 
 	/**
-	 * Returns an identifier for all paths between two {@link ControlFlowElement}s.
-	 * <p/>
-	 * The path identifier is computed as follows. First, the CF graph is traversed beginning from cfeB backwards until
-	 * an element is reached which has no predecessor. All elements that were visited during that traversion are saved
-	 * in P. Second, the CF graph is now traversed beginning from cfeA forwards. All elements that are visited during
-	 * that second traversion are part of the path identifier iff they are contained in P.
-	 */
-	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return dpa.getPathIdentifier(cfeFrom, cfeTo);
-	}
-
-	/**
 	 * Performs all given {@link GraphVisitor}s in a single run. The single run will traverse the control flow graph in
 	 * the following manner. First forward beginning from the entries of every source container, then backward beginning
 	 * from the exit of every source container. Finally, all remaining code elements are traversed first forward and
 	 * then backward beginning from an arbitrary element.
 	 */
-	public void accept(GraphVisitor... graphWalkers) {
-		List<GraphVisitor> graphWalkerList = Lists.newArrayList(graphWalkers);
-		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#analyze");
-		gva.analyseScript(this, graphWalkerList);
-		// sw.stop();
+	public void accept(GraphVisitor... graphVisitors) {
+		List<GraphVisitor> graphVisitorList = Lists.newArrayList(graphVisitors);
+		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
+		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("createGraph_" + cfg.getScriptName());
+		gva.analyseScript(this, graphVisitorList);
+		msmnt2.end();
+		msmnt1.end();
 	}
 
 	/** @return the containing {@link ControlFlowElement} for the given cfe. */
@@ -149,15 +193,10 @@ public class N4JSFlowAnalyzer {
 
 	/**
 	 * @return all {@link ControlFlowElement}s that are containers in the {@link Script}. See
-	 *         {@link FGUtils#isCFContainer(ControlFlowElement)}
+	 *         {@link FGUtils#isCFContainer(EObject)}
 	 */
-	public Set<ControlFlowElement> getAllContainers() {
+	public Collection<ControlFlowElement> getAllContainers() {
 		return cfg.getAllContainers();
-	}
-
-	/** @return all {@link Block}s whose containers are of type {@link CatchBlock} */
-	public List<Block> getCatchBlocksOfContainer(ControlFlowElement container) {
-		return cfg.getCatchBlocksOfContainer(container);
 	}
 
 }

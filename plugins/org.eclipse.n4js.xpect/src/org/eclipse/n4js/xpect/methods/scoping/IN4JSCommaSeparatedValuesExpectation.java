@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.xpect.methods.scoping;
 
-import org.xpect.XpectImport;
-import org.xpect.expectation.ICommaSeparatedValuesExpectation;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
 
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation.N4JSCommaSeparatedValuesExpectationImpl;
 

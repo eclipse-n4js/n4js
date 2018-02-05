@@ -17,8 +17,8 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.N4JSLanguageConstants
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Objects
 import org.eclipse.xtext.xbase.lib.Functions.Function1
 

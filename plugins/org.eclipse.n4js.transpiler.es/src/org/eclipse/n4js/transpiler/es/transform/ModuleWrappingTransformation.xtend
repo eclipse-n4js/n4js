@@ -16,6 +16,8 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ModuleSpecifierAdjustment
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -25,7 +27,6 @@ import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.ImportDeclaration
-import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -41,19 +42,22 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
-import org.eclipse.n4js.naming.QualifiedNameComputer
+import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
+import org.eclipse.n4js.transpiler.es.transform.internal.ImportAssignment
+import org.eclipse.n4js.transpiler.es.transform.internal.ImportEntry
+import org.eclipse.n4js.transpiler.es.transform.internal.NamedImportAssignment
+import org.eclipse.n4js.transpiler.es.transform.internal.NamespaceImportAssignment
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
-import org.eclipse.xtend.lib.annotations.Data
+import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
 import static org.eclipse.n4js.n4JS.EqualityOperator.*
@@ -66,16 +70,13 @@ import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  */
 @ExcludesAfter(/* if present, must come before: */ DestructuringTransformation)
 class ModuleWrappingTransformation extends Transformation {
-	@Inject
-	JSXBackendHelper jsx;
 
 	@Inject
-	extension QualifiedNameComputer qnameComputer
+	private ResourceNameComputer resourceNameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
-
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
 
@@ -135,7 +136,7 @@ class ModuleWrappingTransformation extends Transformation {
 		// Map Module to imported element.
 		val LinkedHashMap<String,ImportEntry> importSetterMap =  processImports(content_im);
 
-		val List<Statement> activeX = newArrayList();
+		val List<Statement> activeStatements = newArrayList();
 
 		// new Element system.
 		val call_System_dot_register_Expr = _CallExpr => [
@@ -147,7 +148,7 @@ class ModuleWrappingTransformation extends Transformation {
 				// list of imported modules: the order of the elements must correspond to the order in the setters-property down.
 				it.elements += importSetterMap.values.map[itx| _ArrayElement(_StringLiteral(itx.actualModuleSpecifier))=>[
 					//tracing
-					state.tracer.copyTrace(itx.tobeReplacedImportSpecifier,it)
+					state.tracer.copyTrace(itx.toBeReplacedImportDeclaration,it)
 				] ]
 			]); // fpar0
 			arguments += _Argument(_FunExpr(false) => [  // fpar1
@@ -158,7 +159,7 @@ class ModuleWrappingTransformation extends Transformation {
 						statements += hoist.key;  // var-statement
 						statements += hoist.value; // list of initialisers.
 						// keep track of initilizers for further processing
-						activeX += hoist.value;
+						activeStatements += hoist.value;
 					}
 					/* exported things. */
 					// %init_B%
@@ -176,7 +177,7 @@ class ModuleWrappingTransformation extends Transformation {
 									// content_im.filter(Statement)
 								) => [
 									val intoExecute = content_im.filter(Statement).toList
-									activeX += intoExecute;
+									activeStatements += intoExecute;
 									it.body.statements += intoExecute
 								]
 							)
@@ -203,7 +204,7 @@ class ModuleWrappingTransformation extends Transformation {
 //		 	as PropertyNameValuePair).expression
 //		 	as FunctionExpression).body.statements;
 //		transFormExportExpressions( activeStatements )
-		transFormExportExpressions(activeX);
+		transFormExportExpressions(activeStatements);
 
 	}
 
@@ -215,27 +216,39 @@ class ModuleWrappingTransformation extends Transformation {
 				for (val iter = entry.variableSTE_actualName.iterator; iter.hasNext;) {
 					val ImportAssignment current = iter.next;
 					val refToFPar = _IdentRef(getSymbolTableEntryInternal(entry.fparName, true));
-					val Expression rhs = if (current.isNameSpace) {
-							refToFPar;
-						} else {
+					val Expression rhs = if (current instanceof NamespaceImportAssignment) {
+							refToFPar
+						} else if(current instanceof NamedImportAssignment) {
 							// NamedImportSpecifiers require property access.
 							_PropertyAccessExpr => [
-								property_IM = getSymbolTableEntryInternal(current.ste.exportedName, true) // ref to what we import.
+								property_IM =  getEntryForNamedImportedElement(current.ste) // ref to what we import.
 								target = refToFPar;
-							];
+							]
+						} else {
+							throw new IllegalStateException("unsupported subclass of ImportAssignment: " + current.class.simpleName)
 						};
-					if (current.ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(current.tobeReplacedIM)) {
-						statements += _ExprStmnt(_IdentRef(steFor_React)._AssignmentExpr(rhs))
-					} else {
-						statements += _ExprStmnt(_IdentRef(current.ste)._AssignmentExpr(rhs)) => [
-							state.tracer.copyTrace(current.tobeReplacedIM, it)
-						];
-					}
+					statements += _ExprStmnt(_AssignmentExpr(_IdentRef(current.ste), rhs)) => [
+						state.tracer.copyTrace(current.toBeReplacedImportSpecifier, it)
+					];
 				}
 			]
 			// tracing
-			state.tracer.copyTrace(entry.tobeReplacedImportSpecifier, it)
+			state.tracer.copyTrace(entry.toBeReplacedImportDeclaration, it)
 		]
+	}
+
+
+	/**
+	 * Returns the STE to use to import a named element from another module.
+	 */
+	private def SymbolTableEntry getEntryForNamedImportedElement(SymbolTableEntryOriginal importedElementEntry) {
+		val IdentifiableElement originalTarget = importedElementEntry.getOriginalTarget();
+
+		// if applicable use versioned internal name for internal STE
+		if (VersionUtils.isTVersionable(originalTarget)) {
+			return getSymbolTableEntryInternal(N4IDLTranspilerUtils.getVersionedInternalName(originalTarget), true);
+		}
+		return getSymbolTableEntryInternal(importedElementEntry.exportedName, true);
 	}
 
 	/**
@@ -258,39 +271,18 @@ class ModuleWrappingTransformation extends Transformation {
 				val module = state.info.getImportedModule(elementIM);
 
 				// calculate names in output
-				val completeModuleSpecifier =
-					if (JSXBackendHelper.isJsxBackendModule(module)) {
-						jsx.jsxBackendModuleSpecifier(module, state.resource)
-					} else {
-						module.completeModuleSpecifier
-					}
+				val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module)
 
-				val fparName = if (JSXBackendHelper.isJsxBackendModule(module)) {
-						jsx.getJsxBackendCompleteModuleSpecifierAsIdentifier(module)
-					} else {
-						"$_import_"+module.completeModuleSpecifierAsIdentifier
-					}
+				val fparName = "$_import_" + resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module)
 
-
-
-				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
-				val actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
-					if(moduleSpecifierAdjustment.usePlainModuleSpecifier) {
-						moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
-					} else {
-						moduleSpecifierAdjustment.prefix + '/' + completeModuleSpecifier
-					}
-				} else {
-					completeModuleSpecifier
-				};
-
-				var moduleEntry = map.get( completeModuleSpecifier )
+				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier)
+				
+				var moduleEntry = map.get( actualModuleSpecifier )
 				if( moduleEntry === null ) {
 					moduleEntry = new ImportEntry(completeModuleSpecifier, actualModuleSpecifier, fparName, newArrayList(), elementIM)
-					map.put( completeModuleSpecifier, moduleEntry )
+					map.put( actualModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry
-
 
 				// local name : as used in Script
 				// actual name : exported name.
@@ -298,12 +290,12 @@ class ModuleWrappingTransformation extends Transformation {
 					switch(it) {
 						NamespaceImportSpecifier: { // For NamespaceImports there is only one importSpecifier
 							val nisSTE = findSymbolTableEntryForNamespaceImport(it);
-							finalModuleEntry.variableSTE_actualName += new ImportAssignment( nisSTE , null , it, true  );
+							finalModuleEntry.variableSTE_actualName += new NamespaceImportAssignment(nisSTE, it);
 						}
 						NamedImportSpecifier: {
 							val ste = findSymbolTableEntryForNamedImport( it );
 							if (ste !== null) {
-								finalModuleEntry.variableSTE_actualName += new ImportAssignment( ste , it.alias, it , false ) ;
+								finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
 							}
 						}
 					}
@@ -333,32 +325,30 @@ class ModuleWrappingTransformation extends Transformation {
 		return map;
 	}
 
-	/* Data bag for import-rewriting. */
-	@Data
-	static class ImportEntry{
-		// specifier of the module to import from
-		String completeModuleSpecifier
-		// this string will be used in the list of dependencies (i.e. 1st argument to the System.register() call)
-		String actualModuleSpecifier
-		// name of module-parameter passed into setter
-		String fparName
-		// Mappings of things to import. the actualName can be null, which means NamespaceImport
-		List<ImportAssignment> variableSTE_actualName
-		// for Tracing: IM-element which will be replaced:
-		ImportDeclaration tobeReplacedImportSpecifier
+	private def String computeActualModuleSpecifier(TModule module, String completeModuleSpecifier) {
+		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
+
+		if (moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier)
+			return moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
+
+		var specifier = completeModuleSpecifier
+		val depProject = n4jsCore.findProject(module.eResource.URI).orNull
+		if (depProject !== null) {
+			val projectRelativeSegment = depProject.outputPath
+			val depLocation = depProject.locationPath
+			if (depLocation !== null) {
+				val depLocationString = depLocation.toString
+				val depProjecOutputPath = depProject.locationPath.resolve(projectRelativeSegment).normalize.toString
+				val depRelativeSpecifier = depProjecOutputPath.substring(depLocationString.length -
+					depProject.projectId.length)
+				specifier = depRelativeSpecifier + '/' + completeModuleSpecifier
+			}
+		}
+		if (moduleSpecifierAdjustment !== null)
+			return moduleSpecifierAdjustment.prefix + '/' + specifier
+
+		return specifier
 	}
-	@Data
-	static class ImportAssignment {
-		/* imported thing (symbol for exported thing from other file) */
-		SymbolTableEntryOriginal ste;
-		String actualName;
-		ImportSpecifier tobeReplacedIM;
-		boolean isNameSpace;
-	}
-
-
-
-
 
 	/**
 	 * Removes "export" :
@@ -454,7 +444,7 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 
-	/** Decouples VarDeclarations and their initializer expressions. Returns them as a Pair. Value kann be {@null}
+	/** Decouples VarDeclarations and their initializer expressions. Returns them as a Pair. Value can be {@code null}
 	 */
 	private def Iterable<Pair<List<VariableDeclaration>,ExpressionStatement>> toHoistDeclarations(List<VariableDeclarationOrBinding> varDeclsOrBindings) {
 		return varDeclsOrBindings.map[entry|
@@ -470,8 +460,8 @@ class ModuleWrappingTransformation extends Transformation {
 		];
 	}
 
-	/** Decouple Variabledeclaration and initialiser.
-	 * If an initialiser is given it will be wrapped into a new ExpressionStatement.
+	/** Decouple VariableDeclaration and initializer.
+	 * If an initializer is given it will be wrapped into a new ExpressionStatement.
 	 */
 	private def Pair<List<VariableDeclaration>, ExpressionStatement> hoistEntry(VariableDeclaration vDeclIM) {
 
@@ -532,7 +522,6 @@ class ModuleWrappingTransformation extends Transformation {
 		val toProcess = #[]+list;
 		// go into statements
 		toProcess.forEach[ collectNodes(it,Expression,true ).forEach[ it.inferExportCall ] ]
-
 	}
 
 	def private dispatch void inferExportCall(PostfixExpression expr) {
@@ -544,7 +533,7 @@ class ModuleWrappingTransformation extends Transformation {
 				val container = expr.eContainer;
 				if( container.isAppendableStatement ) {
 					// case 1 : contained in simple statement, then we can issue as 2nd statement just after.
-					insertAfter(container, _ExprStmnt( _N4ExportExpr(ste,steFor_$n4Export)));
+					insertAfter(container, _ExprStmnt(createExportExpression(ste)));
 				} else {
 					// case 2: contained in other expression, must in-line the export call.
 					switch (expr.op) {
@@ -590,11 +579,15 @@ class ModuleWrappingTransformation extends Transformation {
 			val ste = subExpr.rewiredTarget
 			if( ste.isExported ) {
 				val container = expr.eContainer;
-				if( container.isAppendableStatement ) {
+				if( container.isAppendableStatement) {
 					// case 1 : contained in simple statement, then we can issue es 2nd statement just after.
-					insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
+					insertAfter(container, _ExprStmnt(createExportExpression(ste)));
 				} else {
-					exprReplacement(expr, ste);
+					switch (expr.op) {
+						case INC: exprReplacement(expr, ste)
+						case DEC: exprReplacement(expr, ste)
+						default: {/*other unary operators do not modify original value, hence no replacement*/}
+					}
 				}
 			}
 		}
@@ -602,30 +595,31 @@ class ModuleWrappingTransformation extends Transformation {
 
 
 	def private dispatch void inferExportCall(AssignmentExpression expr) {
-
 		val lhs = expr.lhs;
-		val isTopLevel_but_not_return = expr.eContainer.isAppendableStatement;
 		switch (lhs) {
 			IdentifierRef_IM: {
 				val ste = lhs.rewiredTarget;
 				if( ste.isExported ) {
-					if( isTopLevel_but_not_return ) { insertAfter(expr.eContainer, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export))); }
+					val container = expr.eContainer
+					if( container.isAppendableStatement ) {
+						insertAfter(container, _ExprStmnt(createExportExpression(ste)));
+					}
 					else { // non toplevel, have to inject
 						exprReplacement(expr, ste);
 					}
 				}
 			}
-			default:{
-				// ntd.
-			}
+			default:{ /*ntd. */ }
 		}
 	}
 
+	/** The EObject is NOT a {@link ReturnStatement} nor {@link ThrowStatement} */
 	def private static boolean isAppendableStatement(EObject container) {
 		return container instanceof Statement
 				&& !(container instanceof ReturnStatement )
 				&& !(container instanceof ThrowStatement);
 	}
+
 	/*
 	 * Reusing an expression {@code expr1} of IM wrapped into a comma-expression including call to $n4Export:
 	 * <pre>
@@ -634,6 +628,11 @@ class ModuleWrappingTransformation extends Transformation {
 	 *
 	 * Only applicable if {@code expr1} evaluates (while actually setting) to the new value of x.
 	 * This is true to Assignment- and Unary-Expressions <b>but not</b> for PostfixExprssion
+	 *
+	 * <p> 
+	 * Note: only <pre>++x</pre> and <pre>--x</pre> are setting the value of <pre>x</pre>.
+	 * other Unary-Expressions are not setting the value. Caller needs to take care of this, as
+	 * expression operator is not checked in this method.
 	 *
 	 * <p>
 	 * Generates a ParenExpression and a callback-function
@@ -645,6 +644,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 *
 	 */
 	private final def void exprReplacement(Expression expr, SymbolTableEntry ste) {
+		
 		// The new code snippet, the ObjectLiteral will be replaced by init-function
 		val replaceExp =
 			_Parenthesis(
@@ -675,21 +675,16 @@ class ModuleWrappingTransformation extends Transformation {
 		return exportedSTEs.contains(ste);
 	}
 
+	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
 	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module) {
 		val resourceURI = module?.eResource?.URI;
-		if(resourceURI!==null) {
-			val project = n4jsCore.findProject(resourceURI);
-			if(project.present) {
-				val loader = project.get.getModuleLoader();
-				if(loader!==null) {
-					val adjustment = N4JSLanguageConstants.MODULE_LOADER_PREFIXES.get(loader);
-					if(adjustment!==null) {
-						return adjustment;
-					}
-				}
-			}
-		}
-		return null; // no adjustment
+		if (resourceURI === null) return null;
+		val project = n4jsCore.findProject(resourceURI);
+		if (!project.present) return null;
+		val loader = project.get.getModuleLoader();
+		if (loader === null) return null;
+		val adjustment = N4JSLanguageConstants.MODULE_LOADER_PREFIXES.get(loader);
+		return adjustment;
 	}
 
 	/** SystemJS-wrapping of external JS-code which is not transpiled by ourselves.
@@ -702,7 +697,7 @@ class ModuleWrappingTransformation extends Transformation {
 			System.registerDynamic([], true, function(require, exports, module) {
 				«cs»
 			});
-		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
+		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
 		'''
 	}
 
@@ -711,7 +706,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 		// (function(System) {
 		//     < ... statement ...>
-		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(module) : global.System);
+		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(module) : global.System);
 
 		val ret = _ExprStmnt( _CallExpr (
 			_Parenthesis(
@@ -727,7 +722,7 @@ class ModuleWrappingTransformation extends Transformation {
 					steFor_module._PropertyAccessExpr( steFor_exports )
 				),
 					/*     TRUE-case 		*/
-			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node/index') ).
+			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node/src-gen/index') ).
 			    _PropertyAccessExpr( steFor_System )._CallExpr( _IdentRef(steFor_require), _IdentRef(steFor_module) ),
 			    	/*     FALSE-case 		*/
 				_IdentRef( steFor_System )
@@ -777,5 +772,15 @@ class ModuleWrappingTransformation extends Transformation {
 		// tracing
 		state.tracer.copyTrace(binding, assignmentStmnt);
 		return assignmentStmnt;
+	}
+
+	/**
+	 * Creates an export expression by the name of the given symbol table entry which exports a simple (identifier) reference
+	 * to the symbol table entry.
+	 *
+	 */
+	def protected ParameterizedCallExpression createExportExpression(SymbolTableEntry entry) {
+		// otherwise create a default export expression
+		return _N4ExportExpr(entry, _IdentRef(entry), steFor_$n4Export);
 	}
 }

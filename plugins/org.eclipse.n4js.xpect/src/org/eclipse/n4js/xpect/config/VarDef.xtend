@@ -11,7 +11,7 @@
 package org.eclipse.n4js.xpect.config
 
 import java.util.List
-import org.xpect.setup.XpectSetupComponent
+import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * Variable definition in XpectSetup section. Variables can be part of a {@link Config} or directly defined. A

@@ -13,10 +13,12 @@ package org.eclipse.n4js.hlc.tests;
 import java.io.File;
 
 /**
- * Wrapper around data for setting up external libraries
+ * Wrapper around data for setting up external libraries. This represent locations created on the file system that will
+ * be created and destroyed during test life cycle. Might not suitable to parallel executions.
  */
 @SuppressWarnings("javadoc")
 public class TargetPlatformFiles {
 	public File targetPlatformInstallLocation;
 	public File targetPlatformFile;
+	public File root;
 }

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.tests.staticpolyfill
 
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.core.resources.IFile
 import org.eclipse.ui.IWorkbenchPage
 import org.eclipse.xtext.ui.editor.XtextEditor
@@ -22,8 +21,6 @@ import static org.eclipse.n4js.tests.staticpolyfill.SingleProject_Probands.*
 /**
  */
 class SingleProjectPluginUITest extends AbstractStaticPolyfillBuilderTest {
-
-
 
 	@Test
 	def void testStaticPolyfill_filling_updates_filled_module() throws Exception {
@@ -41,10 +38,9 @@ class SingleProjectPluginUITest extends AbstractStaticPolyfillBuilderTest {
 		// expected:<0> but was:<7>
 		assertMarkers("filling file should have X errors", cFilling, 4);
 
-		// OUTPUT structure:	src-gen/es/singleProjectTest/a/b/Poly.js
-		val transpilerSubFolder = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
+		// OUTPUT structure:	src-gen/a/b/Poly.js
 		val xRelPath = cFilling.projectRelativePath.removeFirstSegments(1).removeFileExtension.addFileExtension("js")
-		val String compiledFilePath = '''src-gen/«transpilerSubFolder»/«projectUnderTest.project.name»/«xRelPath.toString»'''
+		val String compiledFilePath = '''src-gen/«xRelPath.toString»'''
 		val IFile compiledFile = projectUnderTest.project.getFile(compiledFilePath)
 
 		assertFalse("Nothing should be compiled in error case.",compiledFile.exists)

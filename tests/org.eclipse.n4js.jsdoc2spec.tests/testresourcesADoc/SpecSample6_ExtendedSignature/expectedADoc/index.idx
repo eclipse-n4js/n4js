@@ -13,10 +13,10 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 	SpecSample6_ExtendedSignature#src
 		NO_PACKAGE
 			A.n4jsd
-				A::14::41::42
-				A#bar::17::59::74
-				A#baz::18::75::90
-				A#constructor::15::43::58
-				A#foo::16::91::106
-				A@xgreet::19::107::122
-				func::12::22::37
+				A::14::40::41
+				A#bar::17::59::75
+				A#baz::18::76::92
+				A#constructor::15::42::58
+				A#foo::16::93::109
+				A@xgreet::19::110::126
+				func::12::21::37

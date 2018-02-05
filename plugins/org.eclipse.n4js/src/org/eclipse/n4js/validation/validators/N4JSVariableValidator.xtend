@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.validation.validators
 
-import com.google.inject.Inject
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -19,12 +21,9 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
+import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
-import java.util.List
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -32,9 +31,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
  * Validations for variable declarations and variables.
  */
 class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
-
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	/**
 	 * NEEDED
@@ -50,6 +46,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def void checkVariableDeclaration(VariableDeclaration varDecl) {
 		if(varDecl.expression!==null) {
+			// TODO: GH-331, remove cases where also the 'UsedBeforeDeclared' issue is raised
 			val refs = varDecl.expression.collectIdentifierRefsTo(varDecl,newArrayList);
 			for(IdentifierRef currRef : refs) {
 				val message = IssueCodes.getMessageForAST_VAR_DECL_RECURSIVE(varDecl.name)
@@ -75,7 +72,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		if (astMetaInfoCacheHelper.getLocalVariableReferences(varDecl).empty) {
+		if (ASTMetaInfoUtils.getLocalVariableReferences(varDecl).empty) {
 			val message = IssueCodes.getMessageForAST_LOCAL_VAR_UNUSED(varDecl.name);
 			addIssue(message, varDecl, findNameFeature(varDecl).value, IssueCodes.AST_LOCAL_VAR_UNUSED);
 		}

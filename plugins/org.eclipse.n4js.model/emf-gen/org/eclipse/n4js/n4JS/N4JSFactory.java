@@ -1065,6 +1065,69 @@ public interface N4JSFactory extends EFactory {
 	BindingElement createBindingElement();
 
 	/**
+	 * Returns a new object of class '<em>JSX Element Name</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>JSX Element Name</em>'.
+	 * @generated
+	 */
+	JSXElementName createJSXElementName();
+
+	/**
+	 * Returns a new object of class '<em>JSX Text</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>JSX Text</em>'.
+	 * @generated
+	 */
+	JSXText createJSXText();
+
+	/**
+	 * Returns a new object of class '<em>JSX Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>JSX Expression</em>'.
+	 * @generated
+	 */
+	JSXExpression createJSXExpression();
+
+	/**
+	 * Returns a new object of class '<em>JSX Property Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>JSX Property Attribute</em>'.
+	 * @generated
+	 */
+	JSXPropertyAttribute createJSXPropertyAttribute();
+
+	/**
+	 * Returns a new object of class '<em>JSX Spread Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>JSX Spread Attribute</em>'.
+	 * @generated
+	 */
+	JSXSpreadAttribute createJSXSpreadAttribute();
+
+	/**
+	 * Returns a new object of class '<em>JSX Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>JSX Element</em>'.
+	 * @generated
+	 */
+	JSXElement createJSXElement();
+
+	/**
+	 * Returns a new object of class '<em>Versioned Identifier Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Versioned Identifier Ref</em>'.
+	 * @generated
+	 */
+	VersionedIdentifierRef createVersionedIdentifierRef();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

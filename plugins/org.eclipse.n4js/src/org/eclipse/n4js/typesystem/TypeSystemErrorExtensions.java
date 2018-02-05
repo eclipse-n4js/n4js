@@ -10,16 +10,15 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import it.xsemantics.runtime.RuleFailedException;
-import it.xsemantics.runtime.TraceUtils;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.common.base.Joiner;
-
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.xsemantics.runtime.RuleFailedException;
+import org.eclipse.xsemantics.runtime.TraceUtils;
+
+import com.google.common.base.Joiner;
 
 /**
  * Some methods for handling errors in Xsemantics, error messages in particular. Main logic is in method

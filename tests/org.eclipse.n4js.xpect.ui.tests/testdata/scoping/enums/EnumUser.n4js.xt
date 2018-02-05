@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
 
 	Workspace {
-		JavaProject "N4JSXPECTTests" {
+		JavaProject "N4JSXpectTests" {
 			Folder "model" {
 				Folder "scoping" {
 					Folder "enums" {
@@ -34,9 +34,14 @@ import { MyEnum } from "scoping/enums/MyEnum"
 	ONE - MyEnum.n4js:13,
 	TWO - MyEnum.n4js:14,
 	THREE - MyEnum.n4js:15,
-	__proto__ - builtin_js.n4ts:44, constructor - builtin_js.n4ts:140, findLiteralByName - builtin_n4.n4ts:333,
-	findLiteralByValue - builtin_n4.n4ts:339, hasOwnProperty - builtin_js.n4ts:168, isPrototypeOf - builtin_js.n4ts:177,
-	literals - builtin_n4.n4ts:327, n4type - builtin_n4.n4ts:320, propertyIsEnumerable - builtin_js.n4ts:185,
-	toLocaleString - builtin_js.n4ts:153, toString - builtin_js.n4ts:146, valueOf - builtin_js.n4ts:159
+	__proto__ - builtin_js.n4ts:44, constructor - builtin_js.n4ts:140, findLiteralByName - builtin_n4.n4ts:330,
+	findLiteralByValue - builtin_n4.n4ts:336, hasOwnProperty - builtin_js.n4ts:168, isPrototypeOf - builtin_js.n4ts:177,
+	literals - builtin_n4.n4ts:324, n4type - builtin_n4.n4ts:317, propertyIsEnumerable - builtin_js.n4ts:185,
+	toLocaleString - builtin_js.n4ts:153, toString - builtin_js.n4ts:146, valueOf - builtin_js.n4ts:159,
+	create - builtin_js.n4ts:78, defineProperties - builtin_js.n4ts:90, defineProperty - builtin_js.n4ts:84,
+	freeze - builtin_js.n4ts:102, getOwnPropertyDescriptor - builtin_js.n4ts:66, getOwnPropertyNames - builtin_js.n4ts:72,
+	getPrototypeOf - builtin_js.n4ts:59, is - builtin_js.n4ts:192, isExtensible - builtin_js.n4ts:126,
+	isFrozen - builtin_js.n4ts:120, isSealed - builtin_js.n4ts:114, keys - builtin_js.n4ts:133,
+	preventExtensions - builtin_js.n4ts:108, prototype - builtin_js.n4ts:52, seal - builtin_js.n4ts:96	
 --- */
 var myEnum : MyEnum = MyEnum.ONE;

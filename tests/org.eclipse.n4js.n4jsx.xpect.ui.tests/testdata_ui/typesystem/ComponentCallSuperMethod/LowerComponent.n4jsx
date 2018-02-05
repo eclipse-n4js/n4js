@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as React from "jsxbackend/react"
+import * as React from "react"
 
-export public class LowerComponent extends React.Component<~Object with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
+export public class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
 	@Override
 	public render() : React.Element{
 		return (<div>{this.props.whatTextShouldIShow}</div>);

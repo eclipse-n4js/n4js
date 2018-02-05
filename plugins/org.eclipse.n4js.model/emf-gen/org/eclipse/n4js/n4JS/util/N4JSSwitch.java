@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.n4js.n4JS.*;
 
 import org.eclipse.n4js.ts.typeRefs.Versionable;
+import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -1492,6 +1493,8 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseN4ClassDeclaration(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassDefinition(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassifierDeclaration(n4ClassDeclaration);
+				if (result == null) result = caseVersionable(n4ClassDeclaration);
+				if (result == null) result = caseVersionedElement(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassifierDefinition(n4ClassDeclaration);
 				if (result == null) result = caseThisTarget(n4ClassDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4ClassDeclaration);
@@ -1530,6 +1533,8 @@ public class N4JSSwitch<T> extends Switch<T> {
 				N4InterfaceDeclaration n4InterfaceDeclaration = (N4InterfaceDeclaration)theEObject;
 				T result = caseN4InterfaceDeclaration(n4InterfaceDeclaration);
 				if (result == null) result = caseN4ClassifierDeclaration(n4InterfaceDeclaration);
+				if (result == null) result = caseVersionable(n4InterfaceDeclaration);
+				if (result == null) result = caseVersionedElement(n4InterfaceDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4InterfaceDeclaration);
 				if (result == null) result = caseN4ClassifierDefinition(n4InterfaceDeclaration);
 				if (result == null) result = caseGenericDeclaration(n4InterfaceDeclaration);
@@ -1550,6 +1555,8 @@ public class N4JSSwitch<T> extends Switch<T> {
 				N4EnumDeclaration n4EnumDeclaration = (N4EnumDeclaration)theEObject;
 				T result = caseN4EnumDeclaration(n4EnumDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4EnumDeclaration);
+				if (result == null) result = caseVersionable(n4EnumDeclaration);
+				if (result == null) result = caseVersionedElement(n4EnumDeclaration);
 				if (result == null) result = caseN4TypeDefinition(n4EnumDeclaration);
 				if (result == null) result = caseAnnotableScriptElement(n4EnumDeclaration);
 				if (result == null) result = caseModifiableElement(n4EnumDeclaration);
@@ -1762,6 +1769,86 @@ public class N4JSSwitch<T> extends Switch<T> {
 				BindingElement bindingElement = (BindingElement)theEObject;
 				T result = caseBindingElement(bindingElement);
 				if (result == null) result = caseControlFlowElement(bindingElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_CHILD: {
+				JSXChild jsxChild = (JSXChild)theEObject;
+				T result = caseJSXChild(jsxChild);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_ELEMENT_NAME: {
+				JSXElementName jsxElementName = (JSXElementName)theEObject;
+				T result = caseJSXElementName(jsxElementName);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_TEXT: {
+				JSXText jsxText = (JSXText)theEObject;
+				T result = caseJSXText(jsxText);
+				if (result == null) result = caseJSXChild(jsxText);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_EXPRESSION: {
+				JSXExpression jsxExpression = (JSXExpression)theEObject;
+				T result = caseJSXExpression(jsxExpression);
+				if (result == null) result = caseJSXChild(jsxExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_ATTRIBUTE: {
+				JSXAttribute jsxAttribute = (JSXAttribute)theEObject;
+				T result = caseJSXAttribute(jsxAttribute);
+				if (result == null) result = caseControlFlowElement(jsxAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_PROPERTY_ATTRIBUTE: {
+				JSXPropertyAttribute jsxPropertyAttribute = (JSXPropertyAttribute)theEObject;
+				T result = caseJSXPropertyAttribute(jsxPropertyAttribute);
+				if (result == null) result = caseJSXAttribute(jsxPropertyAttribute);
+				if (result == null) result = caseMemberAccess(jsxPropertyAttribute);
+				if (result == null) result = caseControlFlowElement(jsxPropertyAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: {
+				JSXSpreadAttribute jsxSpreadAttribute = (JSXSpreadAttribute)theEObject;
+				T result = caseJSXSpreadAttribute(jsxSpreadAttribute);
+				if (result == null) result = caseJSXAttribute(jsxSpreadAttribute);
+				if (result == null) result = caseControlFlowElement(jsxSpreadAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_ELEMENT: {
+				JSXElement jsxElement = (JSXElement)theEObject;
+				T result = caseJSXElement(jsxElement);
+				if (result == null) result = caseExpression(jsxElement);
+				if (result == null) result = caseJSXChild(jsxElement);
+				if (result == null) result = caseTypableElement(jsxElement);
+				if (result == null) result = caseControlFlowElement(jsxElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.VERSIONED_ELEMENT: {
+				VersionedElement versionedElement = (VersionedElement)theEObject;
+				T result = caseVersionedElement(versionedElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.VERSIONED_IDENTIFIER_REF: {
+				VersionedIdentifierRef versionedIdentifierRef = (VersionedIdentifierRef)theEObject;
+				T result = caseVersionedIdentifierRef(versionedIdentifierRef);
+				if (result == null) result = caseIdentifierRef(versionedIdentifierRef);
+				if (result == null) result = caseVersionedReference(versionedIdentifierRef);
+				if (result == null) result = casePrimaryExpression(versionedIdentifierRef);
+				if (result == null) result = caseStrictModeRelevant(versionedIdentifierRef);
+				if (result == null) result = caseVersionable(versionedIdentifierRef);
+				if (result == null) result = caseExpression(versionedIdentifierRef);
+				if (result == null) result = caseTypableElement(versionedIdentifierRef);
+				if (result == null) result = caseControlFlowElement(versionedIdentifierRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -4185,6 +4272,156 @@ public class N4JSSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Child</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Child</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXChild(JSXChild object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Element Name</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Element Name</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXElementName(JSXElementName object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Text</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Text</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXText(JSXText object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXExpression(JSXExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXAttribute(JSXAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Property Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Property Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXPropertyAttribute(JSXPropertyAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Spread Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Spread Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXSpreadAttribute(JSXSpreadAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXElement(JSXElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedElement(VersionedElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Identifier Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Identifier Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedIdentifierRef(VersionedIdentifierRef object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Typable Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -4226,6 +4463,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseVersionable(Versionable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedReference(VersionedReference object) {
 		return null;
 	}
 

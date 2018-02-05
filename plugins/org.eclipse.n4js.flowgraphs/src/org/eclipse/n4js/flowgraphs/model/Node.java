@@ -12,45 +12,68 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * Typically, several {@link Node}s are used to represent a {@link ControlFlowElement} within a
- * {@link ComplexNode}. 
+ * Typically, several {@link Node}s are used to represent a {@link ControlFlowElement} within a {@link ComplexNode}.
  */
 abstract public class Node implements ControlFlowable {
+	static private int ID_COUNTER = 0;
+
+	/** The node id */
+	final public int id = ID_COUNTER++;
+	/** The {@link ControlFlowElement} this node refers to */
 	final private ControlFlowElement cfElem;
 	/** Name of the node */
 	final public String name;
+	/** The control flow position of this node in context of the AST */
+	final public int astPosition;
 
-	/** Maps from a successor node to an {@link SuccessorEdgeDescription} */
-	final public Map<Node, SuccessorEdgeDescription> internalSucc = new HashMap<>();
+	/** Maps from a predecessor node to an {@link EdgeDescription} */
+	final public Map<Node, EdgeDescription> internalPred = new HashMap<>();
+	/** Maps from a successor node to an {@link EdgeDescription} */
+	final public Map<Node, EdgeDescription> internalSucc = new HashMap<>();
 	/** List of all preceding {@link ControlFlowEdge}s */
-	final public List<ControlFlowEdge> pred = new LinkedList<>();
+	final public TreeSet<ControlFlowEdge> pred = new TreeSet<>();
 	/** List of all succeeding {@link ControlFlowEdge}s */
-	final public List<ControlFlowEdge> succ = new LinkedList<>();
+	final public TreeSet<ControlFlowEdge> succ = new TreeSet<>();
 	/** List of all {@link DependencyEdge}s starting at this node */
 	final public List<DependencyEdge> startEdges = new LinkedList<>();
 	/** List of all {@link DependencyEdge}s ending at this node */
 	final public List<DependencyEdge> endEdges = new LinkedList<>();
 	/** List of all {@link JumpToken}s of this node */
-	final public List<JumpToken> jumpToken = new ArrayList<>();
+	final public Set<JumpToken> jumpToken = new HashSet<>();
 	/** List of all {@link CatchToken}s of this node */
 	final public List<CatchToken> catchToken = new ArrayList<>();
+	/** List of all {@link EffectInfo}s of this node */
+	final public List<EffectInfo> effectInfos = new ArrayList<>();
+
+	/** Set during graph traversal. */
+	private Reachability reachability = Reachability.Unknown;
+	/** Set to true during graph traversal. */
+	private boolean isVisited = false;
+
+	private enum Reachability {
+		Unknown, Reachable, Unreachable
+	}
 
 	/**
 	 * Constructor.<br/>
 	 * Creates a node with the given name and {@link ControlFlowElement}.
 	 */
-	public Node(String name, ControlFlowElement cfElem) {
+	public Node(String name, int astPosition, ControlFlowElement cfElem) {
 		this.name = name;
+		this.astPosition = astPosition;
 		this.cfElem = cfElem;
 	}
 
@@ -61,29 +84,59 @@ abstract public class Node implements ControlFlowable {
 	abstract public ControlFlowElement getRepresentedControlFlowElement();
 
 	/**
+	 * Adds an internal predecessor with edge type {@literal ControlFlowType.Successor} to this node. It used when the
+	 * control flow graph is created.
+	 */
+	public void addInternalPrecessor(Node node) {
+		addInternalPredecessor(node, ControlFlowType.Successor);
+	}
+
+	/**
 	 * Adds an internal successor with edge type {@literal ControlFlowType.Successor} to this node. It used when the
 	 * control flow graph is created.
 	 */
-	public void addInternalSuccessors(Node node) {
-		addInternalSuccessors(node, ControlFlowType.Successor);
+	public void addInternalSuccessor(Node node) {
+		addInternalSuccessor(node, ControlFlowType.Successor);
+	}
+
+	/**
+	 * Adds an internal predecessor with the given edge type to this node. It used when the control flow graph is
+	 * created.
+	 */
+	public void addInternalPredecessor(Node node, ControlFlowType cfType) {
+		EdgeDescription sed = new EdgeDescription(node, cfType);
+		internalPred.put(sed.node, sed);
+	}
+
+	/** Removes an internal predecessor */
+	public void removeInternalPredecessor(Node node) {
+		internalPred.remove(node);
 	}
 
 	/**
 	 * Adds an internal successor with the given edge type to this node. It used when the control flow graph is created.
 	 */
-	public void addInternalSuccessors(Node node, ControlFlowType cfType) {
-		SuccessorEdgeDescription sed = new SuccessorEdgeDescription(node, cfType);
-		internalSucc.put(sed.endNode, sed);
+	public void addInternalSuccessor(Node node, ControlFlowType cfType) {
+		assert node != this : "Self loops are not allowed";
+		EdgeDescription sed = new EdgeDescription(node, cfType);
+		internalSucc.put(sed.node, sed);
+	}
+
+	/** Removes an internal successor */
+	public void removeInternalSuccessor(Node node) {
+		internalSucc.remove(node);
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addSuccessor(ControlFlowEdge cfEdge) {
-		succ.add(cfEdge);
+		boolean addSucceeded = succ.add(cfEdge);
+		assert addSucceeded : "Adding an edge should always be successful";
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addPredecessor(ControlFlowEdge cfEdge) {
-		pred.add(cfEdge);
+		boolean addSucceeded = pred.add(cfEdge);
+		assert addSucceeded : "Adding an edge should always be successful";
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
@@ -96,6 +149,11 @@ abstract public class Node implements ControlFlowable {
 		endEdges.add(depEdge);
 	}
 
+	/** @return set of all internal predecessors. */
+	public Set<Node> getInternalPredecessors() {
+		return internalPred.keySet();
+	}
+
 	/** @return set of all internal successors. */
 	public Set<Node> getInternalSuccessors() {
 		return internalSucc.keySet();
@@ -104,19 +162,19 @@ abstract public class Node implements ControlFlowable {
 	/** @return the {@link ControlFlowType} of a given internal successor. */
 	public ControlFlowType getInternalSuccessorControlFlowType(Node endNode) {
 		if (internalSucc.containsKey(endNode)) {
-			SuccessorEdgeDescription sed = internalSucc.get(endNode);
+			EdgeDescription sed = internalSucc.get(endNode);
 			return sed.cfType;
 		}
 		return null;
 	}
 
 	/** @return set of all successor edges. */
-	public List<ControlFlowEdge> getSuccessorEdges() {
+	public Set<ControlFlowEdge> getSuccessorEdges() {
 		return succ;
 	}
 
 	/** @return set of all predecessor edges. */
-	public List<ControlFlowEdge> getPredecessorEdges() {
+	public Set<ControlFlowEdge> getPredecessorEdges() {
 		return pred;
 	}
 
@@ -135,9 +193,43 @@ abstract public class Node implements ControlFlowable {
 		catchToken.add(ct);
 	}
 
+	/** Adds {@link EffectInfo} to this node */
+	public void addEffectInfo(EffectInfo ei) {
+		if (ei != null) {
+			effectInfos.add(ei);
+		}
+	}
+
 	/** @return true, iff this node has at least one jump token. */
 	public boolean isJump() {
 		return !jumpToken.isEmpty();
+	}
+
+	/** Sets the reachability of this node to unreachable. Sets this node to be visited. */
+	public void setUnreachable() {
+		reachability = Reachability.Unreachable;
+		isVisited = true;
+	}
+
+	/** Sets the reachability of this node to reachable. Sets this node to be visited. */
+	public void setReachable() {
+		reachability = Reachability.Reachable;
+		isVisited = true;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isVisited() {
+		return isVisited;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isUnreachable() {
+		return reachability == Reachability.Unreachable;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isReachable() {
+		return reachability == Reachability.Reachable;
 	}
 
 	@Override
@@ -160,12 +252,20 @@ abstract public class Node implements ControlFlowable {
 		return getName();
 	}
 
-	private class SuccessorEdgeDescription {
-		final ControlFlowType cfType;
-		final Node endNode;
+	/** @return a String that contains the node name and the {@link ControlFlowElement} */
+	public String getExtendedString() {
+		String s = "";
+		s += "[" + FGUtils.getSourceText(getControlFlowElement()) + "]";
+		s += "(" + getName() + ") ";
+		return s;
+	}
 
-		SuccessorEdgeDescription(Node endNode, ControlFlowType cfType) {
-			this.endNode = endNode;
+	private class EdgeDescription {
+		final ControlFlowType cfType;
+		final Node node;
+
+		EdgeDescription(Node node, ControlFlowType cfType) {
+			this.node = node;
 			this.cfType = cfType;
 		}
 	}

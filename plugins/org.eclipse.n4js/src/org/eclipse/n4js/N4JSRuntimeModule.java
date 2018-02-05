@@ -20,6 +20,8 @@ import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
+import org.eclipse.n4js.generator.ICompositeGenerator;
+import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
@@ -53,19 +55,16 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.scoping.builtin.ScopeRegistrar;
+import org.eclipse.n4js.scoping.imports.ImportedElementsMap;
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.typesystem.CustomInternalTypeSystem;
-import org.eclipse.n4js.typesystem.DefaultUnsupportedExpressionTypeHelper;
 import org.eclipse.n4js.typesystem.N4JSStringRepresenation;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.N4JSValidatorErrorGenerator;
-import org.eclipse.n4js.typesystem.N4JSVersionResolver;
-import org.eclipse.n4js.typesystem.UnsupportedExpressionTypeHelper;
-import org.eclipse.n4js.typesystem.VersionResolver;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 import org.eclipse.n4js.utils.validation.PrePostDiagnostician;
@@ -75,6 +74,8 @@ import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
+import org.eclipse.xsemantics.runtime.StringRepresentation;
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.impl.STRINGValueConverter;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
@@ -112,9 +113,6 @@ import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Names;
-
-import it.xsemantics.runtime.StringRepresentation;
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -541,25 +539,23 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	}
 
 	/**
-	 * Bind type version resolver (used in N4JS.xsemantics). This customization point is used in N4IDL to support
-	 * versions in the type system.
-	 */
-	public Class<? extends VersionResolver> bindVersionResolver() {
-		return N4JSVersionResolver.class;
-	}
-
-	/**
-	 * Bind a helper for typing expression types which are unknown in N4JS. This is a variation point for sub languages
-	 * that need to extend N4JS's type system.
-	 */
-	public Class<? extends UnsupportedExpressionTypeHelper> bindUnsupportedExpressionTypeHelper() {
-		return DefaultUnsupportedExpressionTypeHelper.class;
-	}
-
-	/**
 	 * Bind file extension calculator
 	 */
 	public Class<? extends XpectAwareFileExtensionCalculator> bindXpectAwareFileExtensionCalculator() {
 		return XpectAwareFileExtensionCalculator.class;
 	}
+
+	/** Bind N4JS composite generator */
+	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
+		return N4JSCompositeGenerator.class;
+	}
+
+	//// N4IDL specific bindings
+
+	/**
+	 */
+	public Class<? extends ImportedElementsMap.Provider> bindImportedElementsMapProvider() {
+		return ImportedElementsMap.Provider.class;
+	}
+
 }
