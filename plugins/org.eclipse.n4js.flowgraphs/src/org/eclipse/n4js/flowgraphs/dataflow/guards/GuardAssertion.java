@@ -19,11 +19,11 @@ public enum GuardAssertion {
 	/** The guard is always false. */
 	NeverHolds,
 	/** There is no guarantee for the guard. */
-	MayHold;
+	MayHolds;
 
-	/** @return true iff this {@link GuardAssertion} is {@link #AlwaysHolds} or {@link #MayHold}. */
+	/** @return true iff this {@link GuardAssertion} is {@link #AlwaysHolds} or {@link #MayHolds}. */
 	public boolean canHold() {
-		return this == AlwaysHolds || this == MayHold;
+		return this == AlwaysHolds || this == MayHolds;
 	}
 
 }

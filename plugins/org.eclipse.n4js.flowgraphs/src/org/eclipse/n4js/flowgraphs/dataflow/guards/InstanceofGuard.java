@@ -10,36 +10,23 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
-import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
-import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.RelationalExpression;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 
 /**
+ * Subclass of {@link Guard} that hold context information, such as {@link #typeIdentifier}.
  */
 public class InstanceofGuard extends Guard {
-	/**  */
-	final public RelationalExpression re;
+	/** {@link IdentifierRef} to the type of the type guard */
+	final public Expression typeIdentifier;
 
 	/** Constructor */
-	public InstanceofGuard(RelationalExpression re, GuardAssertion asserts) {
-		super(re, GuardType.InstanceOf, asserts, null);
-		this.re = re;
+	public InstanceofGuard(Expression condition, GuardAssertion asserts, ControlFlowElement symbolCFE,
+			Expression typeIdentifier) {
+
+		super(condition, GuardType.InstanceOf, asserts, symbolCFE);
+		this.typeIdentifier = typeIdentifier;
 	}
 
-	/** Initialized the {@link Symbol} of this guard. */
-	@Override
-	protected Symbol getSymbol(SymbolFactory symbolFactory) {
-		Expression lhs = re.getLhs();
-		Symbol symbol = symbolFactory.create(lhs);
-		if (symbol != null && symbol.isVariableSymbol()) {
-			return symbol;
-		}
-		Expression rhs = re.getRhs();
-		symbol = symbolFactory.create(rhs);
-		if (symbol != null && symbol.isVariableSymbol()) {
-			return symbol;
-		}
-		return null;
-	}
 }

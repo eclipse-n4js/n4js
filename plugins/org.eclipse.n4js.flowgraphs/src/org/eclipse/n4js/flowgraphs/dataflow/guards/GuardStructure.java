@@ -53,6 +53,7 @@ public class GuardStructure {
 		guardList = getGuardList();
 	}
 
+	/** This will initialize the symbol of all guards, and delete guards where a {@link Symbol} cannot be found */
 	public void initSymbols(SymbolFactory symbolFactory) {
 		for (Iterator<Guard> guardsIter = guardList.iterator(); guardsIter.hasNext();) {
 			Guard guard = guardsIter.next();
@@ -66,14 +67,21 @@ public class GuardStructure {
 		}
 	}
 
+	/** @return all {@link Guard} that refer to the given {@link Symbol} */
 	public Collection<Guard> getGuards(Symbol symbol) {
 		return guards.get(symbol);
 	}
 
+	/** @return true iff there are guards for the given {@link Symbol} */
 	public boolean hasGuards(Symbol symbol) {
 		return guards.containsKey(symbol);
 	}
 
+	/**
+	 * Note the side effect of {@link #initSymbols(SymbolFactory)}
+	 *
+	 * @returns all guards.
+	 */
 	public List<Guard> allGuards() {
 		return guardList;
 	}

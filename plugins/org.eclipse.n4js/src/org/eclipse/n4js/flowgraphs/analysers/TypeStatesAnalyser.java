@@ -61,7 +61,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 
 	@Override
 	public void visitGuard(Guard guard) {
-		if (guard.asserts != GuardAssertion.MayHold && guard.type == GuardType.InState) {
+		if (guard.asserts != GuardAssertion.MayHolds && guard.type == GuardType.InState) {
 			// TODO
 			// Set<String> inState = getDeclaredStates(cfe, ANNOTATION_INSTATE);
 			// if (!inState.isEmpty()) {

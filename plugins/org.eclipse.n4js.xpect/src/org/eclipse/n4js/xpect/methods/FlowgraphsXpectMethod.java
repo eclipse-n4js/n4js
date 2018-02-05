@@ -31,9 +31,11 @@ import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegion;
@@ -364,17 +366,35 @@ public class FlowgraphsXpectMethod {
 	}
 
 	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@ParameterParser(syntax = "('of' arg1=OFFSET)? (arg2=STRING)?")
 	@Xpect
 	public void instanceofguard(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion offset) {
+			IEObjectCoveringRegion offset, String holdsName) {
 
 		ControlFlowElement cfe = getCFE(offset);
+		GuardAssertion assertion = null;
+		if (holdsName != null) {
+			assertion = GuardAssertion.valueOf(holdsName);
+		}
 
+		InstanceofGuardAnalyser iga = new InstanceofGuardAnalyser();
 		N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(cfe);
-		flowAnalyzer.accept(new InstanceofGuardAnalyser());
+		flowAnalyzer.accept(iga);
+
+		Collection<Expression> typeExprs = null;
+		if (assertion == GuardAssertion.MayHolds) {
+			typeExprs = iga.getMayHoldingTypes(cfe);
+		} else if (assertion == GuardAssertion.NeverHolds) {
+			typeExprs = iga.getNeverHoldingTypes(cfe);
+		} else {
+			typeExprs = iga.getAlwaysHoldingTypes(cfe);
+		}
 
 		List<String> commonPredStrs = new LinkedList<>();
+		for (Expression typeExpr : typeExprs) {
+			commonPredStrs.add(FGUtils.getSourceText(typeExpr));
+		}
+
 		expectation.assertEquals(commonPredStrs);
 	}
 

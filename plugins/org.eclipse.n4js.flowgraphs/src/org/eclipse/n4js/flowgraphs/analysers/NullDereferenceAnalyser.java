@@ -50,7 +50,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 	@Override
 	public void visitGuard(Guard guard) {
-		if (guard.asserts != GuardAssertion.MayHold && guard.type == GuardType.IsNull) {
+		if (guard.asserts != GuardAssertion.MayHolds && guard.type == GuardType.IsNull) {
 			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(guard);
 			assume(isReasonableNullGuard);
 		}

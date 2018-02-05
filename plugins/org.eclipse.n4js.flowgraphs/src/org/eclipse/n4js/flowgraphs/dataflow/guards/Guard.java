@@ -30,25 +30,15 @@ public class Guard {
 	final public GuardAssertion asserts;
 	/**   */
 	final public ControlFlowElement symbolCFE;
-	/** The context that is guaranteed, such as the right hand side of an {@code instanceof} {@link Expression} */
-	final public Expression context;
 	/** The symbol that is guarded */
 	private Symbol symbol;
 
 	/** Constructor */
 	public Guard(Expression condition, GuardType type, GuardAssertion asserts, ControlFlowElement symbolCFE) {
-		this(condition, type, asserts, symbolCFE, null);
-	}
-
-	/** Constructor */
-	public Guard(Expression condition, GuardType type, GuardAssertion asserts, ControlFlowElement symbolCFE,
-			Expression context) {
-
 		this.condition = condition;
 		this.type = type;
 		this.asserts = asserts;
 		this.symbolCFE = symbolCFE;
-		this.context = context;
 	}
 
 	/** Initialized the {@link Symbol} of this guard. */

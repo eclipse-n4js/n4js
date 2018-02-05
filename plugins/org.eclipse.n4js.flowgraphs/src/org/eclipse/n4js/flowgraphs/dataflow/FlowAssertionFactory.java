@@ -41,7 +41,7 @@ public class FlowAssertionFactory {
 		mayHolds |= beSet.contains(BooleanExpression.eq);
 		mayHolds |= beSet.contains(BooleanExpression.neq);
 		if (mayHolds) {
-			return GuardAssertion.MayHold;
+			return GuardAssertion.MayHolds;
 		}
 
 		return get(beList, negateTree);
@@ -158,7 +158,7 @@ public class FlowAssertionFactory {
 			case and:
 				return GuardAssertion.AlwaysHolds;
 			case or:
-				return GuardAssertion.MayHold;
+				return GuardAssertion.MayHolds;
 			default:
 				return null;
 			}
@@ -168,7 +168,7 @@ public class FlowAssertionFactory {
 			BooleanExpression be1 = beList.get(1);
 
 			if (be0 == BooleanExpression.and && be1 == BooleanExpression.not) {
-				return GuardAssertion.MayHold;
+				return GuardAssertion.MayHolds;
 			}
 
 			if (be0 == BooleanExpression.or && be1 == BooleanExpression.not) {

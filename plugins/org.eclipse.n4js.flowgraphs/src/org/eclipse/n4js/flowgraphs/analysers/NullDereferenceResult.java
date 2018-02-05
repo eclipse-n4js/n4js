@@ -34,7 +34,7 @@ public class NullDereferenceResult {
 	public final Symbol failedAlias;
 	/** Assigned null or undefined */
 	public final Set<GuardType> types;
-	/** Either {@link GuardAssertion#AlwaysHolds} or {@link GuardAssertion#MayHold}. */
+	/** Either {@link GuardAssertion#AlwaysHolds} or {@link GuardAssertion#MayHolds}. */
 	public final GuardAssertion assertion;
 
 	NullDereferenceResult(ControlFlowElement cfe, IsNotNull inn) {
@@ -80,7 +80,7 @@ public class NullDereferenceResult {
 		if (inn.passedBranches.isEmpty()) {
 			return GuardAssertion.AlwaysHolds;
 		}
-		return GuardAssertion.MayHold;
+		return GuardAssertion.MayHolds;
 	}
 
 	@Override
