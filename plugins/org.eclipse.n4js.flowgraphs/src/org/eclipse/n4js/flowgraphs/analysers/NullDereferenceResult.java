@@ -16,10 +16,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.IsNotNull;
-import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
-import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
-import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 import com.google.common.collect.Sets;

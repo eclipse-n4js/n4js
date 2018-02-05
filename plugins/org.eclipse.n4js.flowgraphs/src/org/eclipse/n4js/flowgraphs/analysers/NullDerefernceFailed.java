@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
-import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 
 /**
  * This class augments {@link org.eclipse.n4js.flowgraphs.dataflow.PartialResult.Failed} with additional information

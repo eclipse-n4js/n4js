@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.eclipse.n4js.flowgraphs.dataflow.guards.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;

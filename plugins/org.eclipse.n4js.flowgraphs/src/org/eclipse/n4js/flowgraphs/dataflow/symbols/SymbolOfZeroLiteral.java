@@ -8,33 +8,33 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
-import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.NumericLiteral;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
  */
-public class SymbolOfUndefined extends Symbol {
-	final Expression e;
+public class SymbolOfZeroLiteral extends Symbol {
+	final NumericLiteral nl;
 
-	SymbolOfUndefined(Expression e) {
-		this.e = e;
+	SymbolOfZeroLiteral(NumericLiteral nl) {
+		this.nl = nl;
 	}
 
 	@Override
-	public Expression getASTLocation() {
-		return e;
+	public NumericLiteral getASTLocation() {
+		return nl;
 	}
 
 	@Override
 	public String getName() {
-		return "undefined";
+		return nl.getValueAsString();
 	}
 
 	@Override
-	public boolean isUndefinedLiteral() {
-		return true;
+	public boolean isZeroLiteral() {
+		return nl.getValue().equals(0);
 	}
 
 }

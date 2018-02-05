@@ -18,6 +18,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardStructure;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardStructureFactory;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -71,21 +76,22 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 
 	@Override
 	protected void visit(Node lastVisitNodes, Node end, ControlFlowEdge edge) {
-		GuardStructure guardStructure = new GuardStructureFactory(getSymbolFactory()).create(edge);
+		GuardStructure guardStructure = GuardStructureFactory.create(edge);
 		if (guardStructure == null) {
 			return;
 		}
 
+		guardStructure.initSymbols(getSymbolFactory());
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
 
 			if (ass.isOpen()) {
 				for (Symbol alias : ass.aliases) {
-					if (!guardStructure.guards.containsKey(alias)) {
+					if (!guardStructure.hasGuards(alias)) {
 						continue;
 					}
 
-					Collection<Guard> guards = guardStructure.guards.get(alias);
+					Collection<Guard> guards = guardStructure.getGuards(alias);
 					for (Guard guard : guards) {
 						ass.callHoldsOnGuards(guard);
 					}
@@ -94,8 +100,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 		}
 
 		for (DataFlowVisitor dfv : getDataFlowVisitorHost().dfVisitors) {
-			Collection<Guard> guards = guardStructure.guards.values();
-			for (Guard guard : guards) {
+			for (Guard guard : guardStructure.allGuards()) {
 				dfv.visitGuard(guard);
 			}
 		}
@@ -121,7 +126,7 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 	}
 
 	private DataFlowVisitorHost getDataFlowVisitorHost() {
-		return (DataFlowVisitorHost) getExplorer().getGraphVisitorInternal();
+		return (DataFlowVisitorHost) getGraphVisitor();
 	}
 
 	private SymbolFactory getSymbolFactory() {

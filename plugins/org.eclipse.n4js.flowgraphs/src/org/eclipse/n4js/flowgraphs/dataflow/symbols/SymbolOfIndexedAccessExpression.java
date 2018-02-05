@@ -8,33 +8,28 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
-import org.eclipse.n4js.n4JS.NumericLiteral;
+import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
  */
-public class SymbolOfZeroLiteral extends Symbol {
-	final NumericLiteral nl;
+public class SymbolOfIndexedAccessExpression extends Symbol {
+	final IndexedAccessExpression iae;
 
-	SymbolOfZeroLiteral(NumericLiteral nl) {
-		this.nl = nl;
+	SymbolOfIndexedAccessExpression(IndexedAccessExpression iae) {
+		this.iae = iae;
 	}
 
 	@Override
-	public NumericLiteral getASTLocation() {
-		return nl;
+	public IndexedAccessExpression getASTLocation() {
+		return iae;
 	}
 
 	@Override
 	public String getName() {
-		return nl.getValueAsString();
-	}
-
-	@Override
-	public boolean isZeroLiteral() {
-		return nl.getValue().equals(0);
+		return "Array Access";
 	}
 
 }

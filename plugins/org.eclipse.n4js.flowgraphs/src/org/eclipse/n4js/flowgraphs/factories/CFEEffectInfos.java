@@ -16,8 +16,8 @@ import java.util.Map;
 
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
-import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
-import org.eclipse.n4js.flowgraphs.dataflow.SymbolFactory;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AssignmentExpression;

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
 /**
  * A {@link GuardAssertion} tells if a guard always, never or sometimes holds.

@@ -8,28 +8,33 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
-import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.Expression;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
  */
-public class SymbolOfIndexedAccessExpression extends Symbol {
-	final IndexedAccessExpression iae;
+public class SymbolOfUndefined extends Symbol {
+	final Expression e;
 
-	SymbolOfIndexedAccessExpression(IndexedAccessExpression iae) {
-		this.iae = iae;
+	SymbolOfUndefined(Expression e) {
+		this.e = e;
 	}
 
 	@Override
-	public IndexedAccessExpression getASTLocation() {
-		return iae;
+	public Expression getASTLocation() {
+		return e;
 	}
 
 	@Override
 	public String getName() {
-		return "Array Access";
+		return "undefined";
+	}
+
+	@Override
+	public boolean isUndefinedLiteral() {
+		return true;
 	}
 
 }

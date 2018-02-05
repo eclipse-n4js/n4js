@@ -8,9 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
@@ -27,12 +28,6 @@ import org.eclipse.n4js.n4JS.WhileStatement;
  * which refer to their guarded {@link Symbol}s.
  */
 public class GuardStructureFactory {
-	final private GuardFactory guardFactory;
-
-	/** Constructor. */
-	GuardStructureFactory(SymbolFactory symbolFactory) {
-		this.guardFactory = new GuardFactory(symbolFactory);
-	}
 
 	/**
 	 * Creates {@link GuardStructure}s in case the given edge is connected to a {@link ControlFlowElement} that can
@@ -41,7 +36,7 @@ public class GuardStructureFactory {
 	 * @return {@link GuardStructure} or null
 	 */
 	@SuppressWarnings("incomplete-switch")
-	GuardStructure create(ControlFlowEdge edge) {
+	static public GuardStructure create(ControlFlowEdge edge) {
 		boolean negate = false;
 		switch (edge.cfType) {
 		case IfFalse:
@@ -53,7 +48,7 @@ public class GuardStructureFactory {
 		case LoopReenter:
 			Expression condition = getCondition(edge);
 			if (condition != null) {
-				return new GuardStructure(guardFactory, condition, negate);
+				return new GuardStructure(condition, negate);
 			}
 		}
 		return null;

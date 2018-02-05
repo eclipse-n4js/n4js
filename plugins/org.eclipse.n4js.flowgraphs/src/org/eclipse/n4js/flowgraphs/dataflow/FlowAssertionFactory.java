@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.Expression;
@@ -30,7 +31,7 @@ public class FlowAssertionFactory {
 	}
 
 	/** @return an {@link GuardAssertion} derived from a condition. */
-	static GuardAssertion getGuard(EObject topContainer, EObject condition, boolean negateTree,
+	public static GuardAssertion getGuard(EObject topContainer, EObject condition, boolean negateTree,
 			boolean negateCondition) {
 
 		EObject conditionParent = condition.eContainer();

@@ -45,6 +45,11 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	@Override
+	final protected void visit(Node lastVisitNode, Node currentNode, ControlFlowEdge edge) {
+		super.visit(lastVisitNode, currentNode, edge);
+	}
+
+	@Override
 	final protected void initializeModeInternal(TraverseDirection curMode, ControlFlowElement curContainer) {
 		visitedEdgesInternal.clear();
 		visitedEdges.clear();

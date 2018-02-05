@@ -8,33 +8,34 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
-import org.eclipse.n4js.n4JS.NullLiteral;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
  */
-public class SymbolOfNullLiteral extends Symbol {
-	final NullLiteral nl;
+public class SymbolOfVariableDeclaration extends Symbol {
+	final VariableDeclaration vd;
 
-	SymbolOfNullLiteral(NullLiteral nl) {
-		this.nl = nl;
+	SymbolOfVariableDeclaration(VariableDeclaration vd) {
+		this.vd = vd;
 	}
 
 	@Override
-	public NullLiteral getASTLocation() {
-		return nl;
+	public VariableDeclaration getASTLocation() {
+		return vd;
 	}
 
 	@Override
 	public String getName() {
-		return "null literal";
+		return vd.getName();
 	}
 
 	@Override
-	public boolean isNullLiteral() {
-		return true;
+	public EObject getDeclaration() {
+		return vd;
 	}
 
 }

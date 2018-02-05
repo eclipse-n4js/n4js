@@ -8,11 +8,16 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.Expression;
@@ -29,38 +34,62 @@ import com.google.common.collect.Multimap;
  * negated.
  */
 public class GuardStructure {
-	final private GuardFactory guardFactory;
 
 	/** Top expression */
 	final Expression condition;
 	/** true iff the {@link GuardStructure} is used for reasoning about the else branch */
 	final boolean negate;
+	/***/
+	final private List<Guard> guardList;
 	/**
 	 * All guards within this {@link GuardStructure}. Mapping from guarded {@link Symbol} to the symbols {@link Guard}
 	 */
-	final Multimap<Symbol, Guard> guards;
+	final private Multimap<Symbol, Guard> guards = HashMultimap.create();
 
 	/** Constructor. */
-	GuardStructure(GuardFactory guardFactory, Expression condition, boolean negate) {
-		this.guardFactory = guardFactory;
+	GuardStructure(Expression condition, boolean negate) {
 		this.condition = condition;
 		this.negate = negate;
-		guards = getGuards();
+		guardList = getGuardList();
 	}
 
-	private Multimap<Symbol, Guard> getGuards() {
-		Multimap<Symbol, Guard> guardsMap = HashMultimap.create();
+	public void initSymbols(SymbolFactory symbolFactory) {
+		for (Iterator<Guard> guardsIter = guardList.iterator(); guardsIter.hasNext();) {
+			Guard guard = guardsIter.next();
+			guard.initSymbol(symbolFactory);
+			Symbol symbol = guard.getSymbol();
+			if (symbol != null) {
+				guards.put(symbol, guard);
+			} else {
+				guardsIter.remove();
+			}
+		}
+	}
+
+	public Collection<Guard> getGuards(Symbol symbol) {
+		return guards.get(symbol);
+	}
+
+	public boolean hasGuards(Symbol symbol) {
+		return guards.containsKey(symbol);
+	}
+
+	public List<Guard> allGuards() {
+		return guardList;
+	}
+
+	private List<Guard> getGuardList() {
+		LinkedList<Guard> gList = new LinkedList<>();
 		List<Expression> allExpressions = EcoreUtil2.getAllContentsOfType(condition, Expression.class);
 		allExpressions.add(condition);
 		EObject conditionContainer = condition.eContainer();
 
 		for (Expression expr : allExpressions) {
-			Guard guard = guardFactory.create(conditionContainer, expr, negate);
+			Guard guard = GuardFactory.create(conditionContainer, expr, negate);
 			if (guard != null) {
-				guardsMap.put(guard.symbol, guard);
+				gList.add(guard);
 			}
 		}
-
-		return guardsMap;
+		return gList;
 	}
 }

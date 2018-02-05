@@ -8,34 +8,37 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
+import org.eclipse.n4js.n4JS.ThisLiteral;
+import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
  */
-public class SymbolOfVariableDeclaration extends Symbol {
-	final VariableDeclaration vd;
+public class SymbolOfThisLiteral extends Symbol {
+	final ThisLiteral tl;
 
-	SymbolOfVariableDeclaration(VariableDeclaration vd) {
-		this.vd = vd;
+	SymbolOfThisLiteral(ThisLiteral tl) {
+		this.tl = tl;
 	}
 
 	@Override
-	public VariableDeclaration getASTLocation() {
-		return vd;
+	public ThisLiteral getASTLocation() {
+		return tl;
 	}
 
 	@Override
 	public String getName() {
-		return vd.getName();
+		return "this literal";
 	}
 
 	@Override
 	public EObject getDeclaration() {
-		return vd;
+		N4ClassDeclaration classDef = EcoreUtil2.getContainerOfType(tl, N4ClassDeclaration.class);
+		return classDef;
 	}
 
 }

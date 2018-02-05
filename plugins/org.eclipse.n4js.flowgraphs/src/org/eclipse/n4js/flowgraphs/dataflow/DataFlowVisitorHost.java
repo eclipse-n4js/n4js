@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**

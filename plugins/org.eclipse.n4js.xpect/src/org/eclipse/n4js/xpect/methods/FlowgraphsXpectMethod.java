@@ -28,6 +28,7 @@ import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyserDataRecorder;
 import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
+import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
@@ -360,6 +361,21 @@ public class FlowgraphsXpectMethod {
 		String ccString = (containerContainer != null) ? FGUtils.getClassName(containerContainer) + "::" : "";
 		String containerStr = ccString + FGUtils.getClassName(container);
 		expectation.assertEquals(containerStr);
+	}
+
+	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@Xpect
+	public void instanceofguard(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset) {
+
+		ControlFlowElement cfe = getCFE(offset);
+
+		N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(cfe);
+		flowAnalyzer.accept(new InstanceofGuardAnalyser());
+
+		List<String> commonPredStrs = new LinkedList<>();
+		expectation.assertEquals(commonPredStrs);
 	}
 
 }

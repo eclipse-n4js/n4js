@@ -13,6 +13,8 @@ package org.eclipse.n4js.flowgraphs.dataflow;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.factories.ASTUtils;
 import org.eclipse.n4js.n4JS.ArrayElement;
 import org.eclipse.n4js.n4JS.ArrayLiteral;

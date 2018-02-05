@@ -53,14 +53,14 @@ abstract public class BranchWalkerInternal {
 	/**
 	 * Called for each edge in the order of edges on the current path.
 	 *
-	 * @param lastVisitNodes
+	 * @param lastVisitedNode
 	 *            nodes that were visited before
-	 * @param end
+	 * @param nextNode
 	 *            node that will be visited next
 	 * @param edge
 	 *            traversed edge
 	 */
-	protected void visit(Node lastVisitNodes, Node end, ControlFlowEdge edge) {
+	protected void visit(Node lastVisitedNode, Node nextNode, ControlFlowEdge edge) {
 		// overwrite me
 	}
 
@@ -166,6 +166,11 @@ abstract public class BranchWalkerInternal {
 	/** @return the {@link GraphExplorerInternal} of this instance. */
 	final public GraphExplorerInternal getExplorer() {
 		return pathExplorer;
+	}
+
+	/** @return the {@link GraphVisitorInternal} of this instance. */
+	final public GraphVisitorInternal getGraphVisitor() {
+		return getExplorer().getGraphVisitorInternal();
 	}
 
 	/** @return the current {@link TraverseDirection} */

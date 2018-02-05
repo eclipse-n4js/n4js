@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.dataflow;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.xtext.xbase.lib.Pair;

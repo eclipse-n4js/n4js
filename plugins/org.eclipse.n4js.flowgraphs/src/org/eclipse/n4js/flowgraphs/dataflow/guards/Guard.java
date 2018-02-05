@@ -8,8 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.dataflow;
+package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IfStatement;
 
@@ -25,25 +28,45 @@ public class Guard {
 	final public GuardType type;
 	/** The guarantee of the guard */
 	final public GuardAssertion asserts;
-	/** The symbol that is guarded */
-	final public Symbol symbol;
+	/**   */
+	final public ControlFlowElement symbolCFE;
 	/** The context that is guaranteed, such as the right hand side of an {@code instanceof} {@link Expression} */
 	final public Expression context;
+	/** The symbol that is guarded */
+	private Symbol symbol;
 
 	/** Constructor */
-	public Guard(Expression condition, GuardType type, GuardAssertion asserts, Symbol symbol) {
-		this(condition, type, asserts, symbol, null);
+	public Guard(Expression condition, GuardType type, GuardAssertion asserts, ControlFlowElement symbolCFE) {
+		this(condition, type, asserts, symbolCFE, null);
 	}
 
 	/** Constructor */
-	public Guard(Expression condition, GuardType type, GuardAssertion asserts, Symbol symbol,
+	public Guard(Expression condition, GuardType type, GuardAssertion asserts, ControlFlowElement symbolCFE,
 			Expression context) {
 
 		this.condition = condition;
 		this.type = type;
 		this.asserts = asserts;
-		this.symbol = symbol;
+		this.symbolCFE = symbolCFE;
 		this.context = context;
+	}
+
+	/** Initialized the {@link Symbol} of this guard. */
+	final void initSymbol(SymbolFactory symbolFactory) {
+		symbol = getSymbol(symbolFactory);
+		if (symbol != null && !symbol.isVariableSymbol()) {
+			symbol = null;
+		}
+	}
+
+	/**   */
+	protected Symbol getSymbol(SymbolFactory symbolFactory) {
+		return symbolFactory.create(symbolCFE);
+	}
+
+	/** @return the symbol that is guarded */
+	public Symbol getSymbol() {
+		return symbol;
 	}
 
 	@Override

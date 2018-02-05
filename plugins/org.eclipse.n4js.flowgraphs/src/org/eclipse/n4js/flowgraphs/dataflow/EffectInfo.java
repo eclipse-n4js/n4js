@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.dataflow;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /** Holds information of one effect to a single variable */
