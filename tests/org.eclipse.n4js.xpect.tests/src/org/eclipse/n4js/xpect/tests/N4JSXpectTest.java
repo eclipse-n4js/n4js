@@ -47,7 +47,7 @@ import org.junit.runner.RunWith;
 		ElementKeywordXpectMethod.class
 })
 @RunWith(XpectRunner.class)
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "model/validation/dataflow", fileExtensions = { "xt" })
+@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "model", fileExtensions = { "xt" })
 @XpectImport({ N4JSStandaloneTestsModule.class, SuppressIssuesSetup.class })
 public class N4JSXpectTest {
 	//
