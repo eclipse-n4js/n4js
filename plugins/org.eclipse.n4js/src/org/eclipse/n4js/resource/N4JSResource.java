@@ -915,7 +915,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				|| (script != null && script.eIsProxy());
 		if (!isProxyResolutionAllowed) {
 			// FIXME currently using the following instead of exception (due to Jenkins build node issues)
-			System.out.println("+!+!+!+!+ DISALLOWED PROXY RESOLUTION");
+			System.out.println("+!+!+!+!+ DISALLOWED PROXY RESOLUTION (in: " + this.getURI()
+					+ "; proxy URI: " + (proxy.eIsProxy() ? proxy.eProxyURI() : "<not a proxy>"));
 			// throw new IllegalStateException(
 			// "proxy resolution was triggered in a resource load state that does not allow proxy resolution");
 		}
