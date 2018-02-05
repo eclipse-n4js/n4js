@@ -9,7 +9,6 @@
   },
   "files": [
     "manifest.n4mf",
-    "rt.js",
-    "rt"
+    "src-gen"
   ]
 }

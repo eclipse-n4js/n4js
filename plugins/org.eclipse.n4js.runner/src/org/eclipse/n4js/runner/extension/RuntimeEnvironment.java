@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * Runner environments, correspond to runtime environments in N4JS.
  */
 public enum RuntimeEnvironment {

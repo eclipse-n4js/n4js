@@ -586,6 +586,7 @@ ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
 IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 ;
 
 SuperLiteral: {SuperLiteral} 'super';
@@ -1184,7 +1185,7 @@ TypeRefForCast returns types::StaticBaseTypeRef:
 	| ThisTypeRef
 	| TypeTypeRef
 	| ArrowFunctionTypeExpression
-	
+
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
@@ -1232,9 +1233,10 @@ QualifiedTypeReferenceName:
 // cf. N4JSSpec §14
 N4ClassDeclaration <Yield>:
 	=>(
-		{N4ClassDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'class' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		'class' typingStrategy=TypingStrategyDefSiteOperator?
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	TypeVariables?
 	ClassExtendsClause<Yield>?
@@ -1275,9 +1277,10 @@ N4ClassExpression <Yield>:
 // cf. N4JSSpec §16
 N4InterfaceDeclaration <Yield>:
 	=> (
-		{N4InterfaceDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	TypeVariables?
 	InterfaceImplementsList?
@@ -1299,6 +1302,7 @@ N4EnumDeclaration <Yield>:
 		{N4EnumDeclaration}
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	'{'
 		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
@@ -1446,7 +1450,7 @@ SingleNameBinding <Yield, AllowType> returns BindingElement:
 ;
 
 BindingElement <Yield>:
-	BindingElementImpl<Yield>  
+	BindingElementImpl<Yield>
 ;
 
 BindingRestElement <Yield> returns BindingElement:
@@ -1527,3 +1531,6 @@ JSXPropertyAttribute:
 	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | ('{'
 	jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')))?;
 
+
+/* Version (N4IDL) related rules */
+fragment VersionDeclaration*: declaredVersion=VERSION;

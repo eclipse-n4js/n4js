@@ -246,7 +246,8 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 	/**
 	 * Discards the state of caches used by the current manager.
 	 */
-	protected void discardWorkingSetCaches() {
+	@Override
+	public void discardWorkingSetCaches() {
 		allWorkingSets = null;
 		visibleWorkingSets = null;
 	}
@@ -276,6 +277,7 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 		Collections.sort(workingSets, this);
 
 		allWorkingSets = workingSets;
+		visibleWorkingSets = null; // changed allWorkingSets, so need to invalidate derived property visibleWorkingSets
 
 		return allWorkingSets;
 	}
@@ -292,14 +294,12 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 			return visibleWorkingSets;
 		}
 
-		if (allWorkingSets == null) {
-			allWorkingSets = getOrCreateAllWorkingSets();
-		}
+		final List<WorkingSet> workingSets = getOrCreateAllWorkingSets();
 
 		if (visibleWorkingSetIds.isEmpty()) {
-			visibleWorkingSets = newArrayList(allWorkingSets);
+			visibleWorkingSets = newArrayList(workingSets);
 		} else {
-			visibleWorkingSets = from(allWorkingSets).filter(ws -> visibleWorkingSetIds.contains(ws.getId()))
+			visibleWorkingSets = from(workingSets).filter(ws -> visibleWorkingSetIds.contains(ws.getId()))
 					.toList();
 		}
 

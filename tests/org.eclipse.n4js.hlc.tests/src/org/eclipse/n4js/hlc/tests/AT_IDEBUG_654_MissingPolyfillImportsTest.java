@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -67,7 +65,7 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractN4jscTest 
 		};
 
 		// Run
-		final String out = runCaptureOut(args);
+		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(
 				"functionFromModuleA\n" +
 						"variableFromModuleB\n" +

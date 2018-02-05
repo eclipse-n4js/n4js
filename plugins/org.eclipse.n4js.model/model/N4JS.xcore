@@ -30,6 +30,8 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
+import org.eclipse.n4js.ts.typeRefs.Versionable
+import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -297,7 +299,7 @@ abstract class AnnotableElement {
 	 * annotations only via AnnotationDefinition and use type model annotation (or fields) if ever possible.
 	 */
 	op Annotation[] getAnnotations()
-	
+
 	/**
 	 * Returns the effective annotations of this annotable element. This includes the {@link #getAnnotations()}
 	 * and the annotations on the containing ExportDeclaration, if any.
@@ -1871,12 +1873,18 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	}
 }
 
-class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration {
+class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration, Versionable, VersionedElement {
 	/**
 	 * Returns true if the class is declared as abstract.
 	 */
 	op boolean isAbstract() {
 		declaredModifiers.contains(N4Modifier.ABSTRACT)
+	}
+	/*
+	 * Override VersionedElement#getVersion() to return the declared version.
+	 */
+	op int getVersion() {
+		return declaredVersionOrZero
 	}
 }
 
@@ -1887,7 +1895,7 @@ class N4ClassExpression extends N4ClassDefinition, PrimaryExpression, AnnotableE
 	String name
 }
 
-class N4InterfaceDeclaration extends N4ClassifierDeclaration {
+class N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, VersionedElement {
 	contains ParameterizedTypeRef[] superInterfaceRefs
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TInterface}.
@@ -1901,15 +1909,28 @@ class N4InterfaceDeclaration extends N4ClassifierDeclaration {
 	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
 	}
+	/*
+	 * Override VersionedElement#getVersion() to return the declared version.
+	 */
+	op int getVersion() {
+		return declaredVersionOrZero
+	}
 }
 
-class N4EnumDeclaration extends N4TypeDeclaration {
+class N4EnumDeclaration extends N4TypeDeclaration, Versionable, VersionedElement {
 	contains N4EnumLiteral[] literals
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TEnum}.
 	 */
 	op TEnum getDefinedTypeAsEnum() {
 		return definedType as TEnum;
+	}
+
+	/*
+	 * Override VersionedElement#getVersion() to return the declared version.
+	 */
+	op int getVersion() {
+		return declaredVersionOrZero
 	}
 }
 
@@ -2177,7 +2198,7 @@ class BindingElement extends ControlFlowElement {
 	contains BindingPattern nestedPattern
 	contains Expression expression
 
-	/* 
+	/*
 	 * Tells if this {@link BindingElement} is an "empty" element, corresponding to an {@link ArrayPadding} element in
 	 * an {@link ArrayLiteral}.
 	 */
@@ -2222,4 +2243,38 @@ class JSXElement extends Expression, JSXChild {
 	contains JSXAttribute[] jsxAttributes
 	contains JSXChild[] jsxChildren
 	contains JSXElementName jsxClosingName
+}
+
+
+// ****************************************************************************************************
+// N4IDL related model elements
+// ****************************************************************************************************
+
+/*
+ * This is a base class for all AST nodes where the user can explicitly declare a specific version.
+ */
+abstract class VersionedElement {
+	/*
+	 * The version as declared by the user in the source code. Unlike the requestedVersion attribute of class
+	 * VersionedReference, the value of this attribute is set by the parser and never changed by the type system.
+	 */
+	BigDecimal declaredVersion
+	/*
+	 * Indicates whether this type reference has an explicitly declared version.
+	 */
+	op boolean hasDeclaredVersion() {
+		return declaredVersion !== null
+	}
+	op int getDeclaredVersionOrZero() {
+		if (hasDeclaredVersion) declaredVersion.intValue else 0
+	}
+}
+
+class VersionedIdentifierRef extends IdentifierRef, VersionedReference {
+	/*
+	 * Override VersionedElement#getVersion() to return the declared version.
+	 */
+	op int getVersion() {
+		return requestedVersionOrZero
+	}
 }

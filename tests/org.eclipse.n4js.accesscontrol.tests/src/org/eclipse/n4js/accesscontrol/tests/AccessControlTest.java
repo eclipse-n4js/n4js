@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.n4js.HeadlessCompilerFactory;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.csv.CSVData;
 import org.eclipse.n4js.csv.CSVParser;
 import org.eclipse.n4js.csv.CSVRecord;
@@ -39,7 +40,6 @@ import org.eclipse.n4js.tests.codegen.Member;
 import org.eclipse.n4js.tests.issues.IssueExpectations;
 import org.eclipse.n4js.utils.SimpleParserException;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -46,7 +46,7 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 
 	// nature id to identify the RemoteSystemsTempFiles project
 	private static final String REMOTE_EDIT_PROJECT_NATURE_ID = "org.eclipse.rse.ui.remoteSystemsTempNature";
-	
+
 	/**
 	 * List of all the repository paths the IDE is currently aware of. This field is initialized by
 	 * {@link #initProjectLocation()}.
@@ -84,7 +84,7 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 	}
 
 	@Override
-	protected void discardWorkingSetCaches() {
+	public void discardWorkingSetCaches() {
 		super.discardWorkingSetCaches();
 		projectLocations.clear();
 	}

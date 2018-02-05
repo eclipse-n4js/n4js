@@ -29,19 +29,19 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
+import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
-import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
-import org.eclipse.n4js.utils.CompilerHelper;
+import org.eclipse.n4js.utils.FindArtifactHelper;
 import org.eclipse.n4js.utils.RecursionGuard;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -59,16 +59,13 @@ public class RunnerHelper {
 	private IN4JSCore n4jsCore;
 
 	@Inject
-	private ProjectUtils projectUtils;
+	private FindArtifactHelper artifactHelper;
 
 	@Inject
-	private CompilerHelper compilerHelper;
+	private ResourceNameComputer compilerHelper;
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
-
-	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
 
 	/**
 	 * Returns list of absolute paths to each of the given projects' output folder in the local files system.
@@ -83,40 +80,26 @@ public class RunnerHelper {
 
 	private Collection<String> getProjectPaths(IN4JSProject project) {
 		Set<String> projectPaths = new HashSet<>();
-		projectPaths.addAll(getProjectResourcePaths(project));
-		projectPaths.add(getProjectOutputPath(project));
+		projectPaths.add(getProjectPath(project));
 		return projectPaths;
 	}
 
-	/**
-	 * Returns absolute path to output folder of the given project containing compiled JavaScript files.
-	 */
-	private String getProjectOutputPath(IN4JSProject project) {
-		final String relativeOutputPathStr = project.getOutputPath();
-		if (relativeOutputPathStr == null || relativeOutputPathStr.trim().isEmpty()) {
+	/** get path to the project itself */
+	private String getProjectPath(IN4JSProject project) {
+		if (!project.exists())
 			return null;
-		}
-
-		final String outPath = toAbsolutePath(project, relativeOutputPathStr + File.separator + getCompilerSegment());
-
-		// TODO no one should apply null check on the target platform location except the HLC
-		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
-			java.net.URI nodeModulesLocation = installLocationProvider.getTargetPlatformNodeModulesLocation();
-			if (null != nodeModulesLocation) {
-				final File targetPlatformInstallLocationRoot = new File(nodeModulesLocation);
-				final File extFolder = new File(outPath);
-				if (extFolder.toPath().startsWith(targetPlatformInstallLocationRoot.toPath())) {
-					return targetPlatformInstallLocationRoot.getAbsolutePath();
-				}
-			}
-		}
-
-		return outPath;
+		final String pp = project.getLocationPath().normalize().toAbsolutePath().toString();
+		return pp;
 	}
 
 	/**
-	 * Returns absolute path to output folder of the given project containing compiled JavaScript files.
+	 * Returns absolute path to the resources defined in the projects manifest.
+	 *
+	 * This method was used before GH-394 to provide basic support for project resources at runtime. After GH-394 it is
+	 * not used, but its future should be decided in GH-70
 	 */
+	// TODO GH-70 handle projects resources
+	@SuppressWarnings("unused")
 	private List<String> getProjectResourcePaths(IN4JSProject project) {
 		final List<String> relativeResourcePathStr = new ArrayList<>(project.getResourcePaths());
 		if (relativeResourcePathStr.isEmpty()) {
@@ -134,21 +117,7 @@ public class RunnerHelper {
 		}
 		final Path projectPath = project.getLocationPath().toAbsolutePath();
 		final Path absolutePath = projectPath.resolve(projectRelativePath);
-		return absolutePath.toString();
-	}
-
-	/**
-	 * Returns path segment contributed by used compiler.
-	 */
-	private String getCompilerSegment() {
-		// TODO IDE-1487 handle multiple sub generators
-		/*
-		 * At some point we will have multiple transpilers, we will somehow decide/check which one is used and get
-		 * proper segment from it.
-		 *
-		 * For now, just use the same transpiler that we use during testing.
-		 */
-		return N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
+		return absolutePath.normalize().toString();
 	}
 
 	/**
@@ -161,8 +130,9 @@ public class RunnerHelper {
 					ProjectType pt = p.getProjectType();
 					return ProjectType.RUNTIME_LIBRARY.equals(pt) || ProjectType.RUNTIME_ENVIRONMENT.equals(pt);
 				})
-				.flatMap(p -> projectUtils.getInitModulesAsURIs(p).stream()
-						.map(bmURI -> compilerHelper.getTargetFileName(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION)))
+				.flatMap(p -> getInitModulesAsURIs(p).stream()
+						.map(bmURI -> getProjectRelativePath(p,
+								compilerHelper.generateFileDescriptor(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION))))
 				.collect(Collectors.toList());
 	}
 
@@ -173,11 +143,13 @@ public class RunnerHelper {
 		List<String> execModules = extendedDeps.stream()
 				.filter(p -> ProjectType.RUNTIME_ENVIRONMENT.equals(p.getProjectType()))
 				.map(re -> {
-					Optional<URI> execModuleAsURI = projectUtils.getExecModuleAsURI(re);
+					Optional<URI> execModuleAsURI = getExecModuleAsURI(re);
 					if (!execModuleAsURI.isPresent()) {
 						return null;
 					}
-					return compilerHelper.getTargetFileName(re, execModuleAsURI.get(), null);
+					return getProjectRelativePath(re,
+							compilerHelper.generateFileDescriptor(re, execModuleAsURI.get(),
+									N4JSGlobals.JS_FILE_EXTENSION));
 				})
 				.filter(s -> !Strings.isNullOrEmpty(s))
 				.collect(Collectors.toList());
@@ -186,6 +158,10 @@ public class RunnerHelper {
 			return Optional.of(execModules.get(0));
 
 		return Optional.absent();
+	}
+
+	private String getProjectRelativePath(IN4JSProject project, String subPath) {
+		return AbstractSubGenerator.calculateProjectBasedOutputDirectory(project) + "/" + subPath;
 	}
 
 	/**
@@ -265,6 +241,29 @@ public class RunnerHelper {
 		final RecursionGuard<URI> guard = new RecursionGuard<>();
 		recursiveDependencyCollector(sourceContainerAware, dependencies, guard);
 		return dependencies;
+	}
+
+	/**
+	 * Same as {@link IN4JSProject#getExecModule()}, but returns the execution module as URI.
+	 */
+	private Optional<URI> getExecModuleAsURI(IN4JSProject project) {
+		Optional<BootstrapModule> oExecModule = project.getExecModule();
+		if (oExecModule.isPresent()) {
+			return Optional.of(artifactHelper.findArtifact(project, oExecModule.get().getModuleSpecifierWithWildcard(),
+					Optional.of(".js")));
+		}
+		return Optional.absent();
+	}
+
+	/**
+	 * Same as {@link IN4JSProject#getInitModules()}, but returns the initialization modules as URIs.
+	 */
+	private List<URI> getInitModulesAsURIs(IN4JSProject project) {
+		return project.getInitModules().stream()
+
+				.map(bm -> artifactHelper.findArtifact(project, bm.getModuleSpecifierWithWildcard(),
+						Optional.of(".js")))
+				.filter(module -> module != null).collect(Collectors.toList());
 	}
 
 	private void recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainer,

@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
+import org.eclipse.n4js.n4idl.N4IDLGlobals
+import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator
@@ -29,6 +31,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider
+import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider.DefaultProposalCreator
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 
@@ -119,10 +122,10 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 			val result = new StyledString(name)
 			if (it.segmentCount > 1) {
 				if (it.lastSegment.endsWith(name)) {
-					result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)), StyledString.QUALIFIER_STYLER)
+					result.append(getTypeVersionString(element) +' - ' + qualifiedNameConverter.toString(it.skipLast(1)), StyledString.QUALIFIER_STYLER)
 				} else {
 					// aliased - print the alias and the original name
-					result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)) + ' alias for ' + it.lastSegment, StyledString.QUALIFIER_STYLER)
+					result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)) + ' alias for ' + it.lastSegment + getTypeVersionString(element), StyledString.QUALIFIER_STYLER)
 				}
 			}
 			return result
@@ -135,6 +138,20 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 			return stringifier.apply(parsedQualifiedName, parsedQualifiedName.lastSegment)
 		}
 		return tryGetDisplayString(element, stringifier, shortName) ?: stringifier.apply(qualifiedNameConverter.toQualifiedName(qualifiedName), shortName)
+	}
+
+	/**
+	 * If the element is an instance of {@link TClassifier} this method
+	 * returns a user-faced string description of the version information.
+	 *
+	 * Otherwise, this method returns an empty string.
+	 */
+	private def String getTypeVersionString(EObject element) {
+		if (element instanceof TClassifier &&
+			(element as TClassifier).declaredVersion != 0) {
+			return N4IDLGlobals.VERSION_SEPARATOR + Integer.toString((element as TClassifier).declaredVersion)
+		}
+		return "";
 	}
 
 	/**

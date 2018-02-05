@@ -44,7 +44,7 @@ import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitio
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -110,13 +110,13 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected IProject createJSProject(String projectName) throws CoreException {
-		return ProjectUtils.createJSProject(projectName);
+		return ProjectTestsUtils.createJSProject(projectName);
 	}
 
 	/***/
 	protected IProject createJSProject(String projectName, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
-		return ProjectUtils.createJSProject(projectName, sourceFolder, outputFolder, manifestAdjustments);
+		return ProjectTestsUtils.createJSProject(projectName, sourceFolder, outputFolder, manifestAdjustments);
 	}
 
 	/**
@@ -141,13 +141,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void createManifestN4MFFile(IProject javaProject) throws CoreException {
-		ProjectUtils.createManifestN4MFFile(javaProject.getProject());
+		ProjectTestsUtils.createManifestN4MFFile(javaProject.getProject());
 	}
 
 	/***/
 	protected void createManifestN4MFFile(IProject javaProject, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
-		ProjectUtils.createManifestN4MFFile(javaProject.getProject(), sourceFolder, outputFolder, manifestAdjustments);
+		ProjectTestsUtils.createManifestN4MFFile(javaProject.getProject(), sourceFolder, outputFolder,
+				manifestAdjustments);
 	}
 
 	/***/
@@ -193,12 +194,12 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	 * @return the source folder of the project
 	 */
 	protected IFolder configureProjectWithXtext(final IProject project) throws CoreException {
-		return ProjectUtils.configureProjectWithXtext(project, "src");
+		return ProjectTestsUtils.configureProjectWithXtext(project, "src");
 	}
 
 	/***/
 	protected IFolder configureProjectWithXtext(final IProject project, String sourceFolder) throws CoreException {
-		return ProjectUtils.configureProjectWithXtext(project, sourceFolder);
+		return ProjectTestsUtils.configureProjectWithXtext(project, sourceFolder);
 	}
 
 	/**
@@ -319,36 +320,56 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IProject project, int count) throws CoreException {
+<<<<<<< HEAD
 		return ProjectUtils.assertMarkers(assertMessage, project, count, ignoreSomeWarnings);
+=======
+		return ProjectTestsUtils.assertMarkers(assertMessage, project, count);
+>>>>>>> refs/remotes/origin/master
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, int count) throws CoreException {
+<<<<<<< HEAD
 		return ProjectUtils.assertMarkers(assertMessage, resource, count, ignoreSomeWarnings);
+=======
+		return ProjectTestsUtils.assertMarkers(assertMessage, resource, count);
+>>>>>>> refs/remotes/origin/master
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, int count,
 			final Predicate<IMarker> markerPredicate) throws CoreException {
 
+<<<<<<< HEAD
 		return ProjectUtils.assertMarkers(assertMessage, resource, count, markerPredicate, ignoreSomeWarnings);
+=======
+		return ProjectTestsUtils.assertMarkers(assertMessage, resource, count, markerPredicate);
+>>>>>>> refs/remotes/origin/master
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IProject project, String markerType, int count)
 			throws CoreException {
+<<<<<<< HEAD
 		return ProjectUtils.assertMarkers(assertMessage, project, markerType, count, ignoreSomeWarnings);
+=======
+		return ProjectTestsUtils.assertMarkers(assertMessage, project, markerType, count);
+>>>>>>> refs/remotes/origin/master
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, String markerType, int count)
 			throws CoreException {
+<<<<<<< HEAD
 		return ProjectUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
+=======
+		return ProjectTestsUtils.assertMarkers(assertMessage, resource, markerType, count);
+>>>>>>> refs/remotes/origin/master
 	}
 
 	/***/
 	protected void assertIssues(final IResource resource, String... expectedMessages) throws CoreException {
-		ProjectUtils.assertIssues(resource, expectedMessages);
+		ProjectTestsUtils.assertIssues(resource, expectedMessages);
 	}
 
 	/**
@@ -405,7 +426,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected static void waitForUpdateEditorJob() {
-		ProjectUtils.waitForUpdateEditorJob();
+		ProjectTestsUtils.waitForUpdateEditorJob();
 	}
 
 	/***/

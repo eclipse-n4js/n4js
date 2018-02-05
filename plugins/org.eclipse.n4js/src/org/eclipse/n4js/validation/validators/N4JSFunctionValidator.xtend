@@ -477,6 +477,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
+
 			// not on "default export":
 			// add message "function declarations must have a name"
 			if( functionDeclaration.body !== null) {

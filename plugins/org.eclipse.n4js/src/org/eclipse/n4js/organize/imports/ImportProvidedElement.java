@@ -11,7 +11,6 @@
 package org.eclipse.n4js.organize.imports;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
@@ -24,33 +23,29 @@ import org.eclipse.n4js.ts.types.TModule;
  */
 public class ImportProvidedElement {
 
-	/** name as used in script (can be alias) */
-	public String localname;
-
-	/** name as provided by TModule */
-	public String exportedName;
 	/** Prefix to be used when creating IPE for namespace itself */
 	public final static String NAMESPACE_PREFIX = "NAMESPACE_";
 
-	/** import specifier which imports the name. */
-	public ImportSpecifier importSpec;
+	/** Name as used in script (can be alias) */
+	private final String localname;
 
-	/** imported module, providing this named element. */
-	public TModule tmodule;
+	/** Name as provided by TModule */
+	private final String exportedName;
 
-	/** usage-flag in script (statements & expressions) */
-	public boolean used;
+	/** Import specifier which imports the name. */
+	private final ImportSpecifier importSpec;
+
+	/** Imported module, providing this named element. */
+	private final TModule importedModule;
+
+	/** Usage-flag in script (statements & expressions) */
+	private boolean used;
 
 	/**
 	 * In case of ambiguous imports the scoping gives a List imported things from other modules (variables, functions,
 	 * classes,...). The instances carry the ref to those modules.
 	 */
-	public ArrayList<IdentifiableElement> ambiguityList = new ArrayList<>();
-
-	/**
-	 * List of other Imports which provided ambiguous imports
-	 */
-	public List<ImportSpecifier> ambiguousImports = new ArrayList<>();
+	private final ArrayList<IdentifiableElement> ambiguityList = new ArrayList<>();
 
 	/**
 	 * @param localName
@@ -65,12 +60,51 @@ public class ImportProvidedElement {
 		this.localname = localName;
 		this.exportedName = exportedName;
 		this.importSpec = importer;
-		this.tmodule = ((ImportDeclaration) importer.eContainer()).getModule();
+		this.importedModule = ((ImportDeclaration) importer.eContainer()).getModule();
 	}
 
-	/** set the used flag to true */
+	/**
+	 * Marks this element as used.
+	 */
 	public void markUsed() {
 		used = true;
+	}
+
+	/**
+	 * Returns {@code true} if this element has been marked as used.
+	 *
+	 * @See {@link #markUsed()}
+	 */
+	public boolean isUsed() {
+		return used;
+	}
+
+	/**
+	 * Returns the local name of this element.
+	 */
+	public String getLocalName() {
+		return localname;
+	}
+
+	/**
+	 * Returns the exported name of this element.
+	 */
+	public String getExportedName() {
+		return exportedName;
+	}
+
+	/**
+	 * Returns the {@link ImportSpecifier} of this element.
+	 */
+	public ImportSpecifier getImportSpecifier() {
+		return importSpec;
+	}
+
+	/**
+	 * Returns the module from which this element was imported.
+	 */
+	public TModule getImportedModule() {
+		return importedModule;
 	}
 
 	/**
@@ -82,8 +116,9 @@ public class ImportProvidedElement {
 	 */
 	@Override
 	public String toString() {
-		return localname + (localname != exportedName ? "[" + exportedName + "]" : "") +
-				(importSpec instanceof NamedImportSpecifier ? "-" : "*") + "<" + tmodule.getQualifiedName()
+		return getLocalName() + (getLocalName() != getExportedName() ? "[" + getExportedName() + "]" : "") +
+				(getImportSpecifier() instanceof NamedImportSpecifier ? "-" : "*") + "<"
+				+ getImportedModule().getQualifiedName()
 				+ "" + (used ? "+" : "-") + (ambiguityList != null ? "A" : "");
 	}
 }

@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.GeneratorOption;
@@ -28,6 +29,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.AbstractTranspiler.SourceMapInfo;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -62,7 +64,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		result.setCompiledFileSourceMapExtension("map");
 		final OutputConfiguration outCfg = new OutputConfiguration(COMPILER_ID);
 		outCfg.setDescription("N4JS to ECMAScript transpiler");
-		outCfg.setOutputDirectory(calculateOutputDirectory("src-gen", COMPILER_ID));
+		outCfg.setOutputDirectory(N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT);
 		outCfg.setOverrideExistingResources(true);
 		outCfg.setCreateOutputDirectory(true);
 		outCfg.setCleanUpDerivedResources(true);
@@ -131,7 +133,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 					Optional<SourceMapInfo> optSourceMapData = Optional.absent();
 
 					if (createSourceMap) {
-						SourceMapInfo sourceMapDataInstance = ecmaScriptTranspiler.new SourceMapInfo();
+						SourceMapInfo sourceMapDataInstance = getTranspiler().new SourceMapInfo();
 						sourceMapDataInstance.sourceMapBuff = new StringWriter();
 
 						sourceMapDataInstance.simpleSourceMapFileName = simpleSourceMapFileName;
@@ -148,7 +150,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 						optSourceMapData = Optional.of(sourceMapDataInstance);
 					}
 
-					ecmaScriptTranspiler.transpile(resourceCasted, options, buffCode, optSourceMapData);
+					getTranspiler().transpile(resourceCasted, options, buffCode, optSourceMapData);
 					fsa.generateFile(filename, COMPILER_ID, buffCode.toString());
 
 					if (createSourceMap) {
@@ -171,7 +173,14 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		final N4JSResource resourceCasted = (N4JSResource) resource;
 
 		final Writer buffCode = new StringWriter();
-		ecmaScriptTranspiler.transpile(resourceCasted, options, buffCode, Optional.absent());
+		getTranspiler().transpile(resourceCasted, options, buffCode, Optional.absent());
 		return buffCode.toString();
+	}
+
+	/**
+	 * Returns the {@link AbstractTranspiler} to use to transpile resources.
+	 */
+	protected AbstractTranspiler getTranspiler() {
+		return ecmaScriptTranspiler;
 	}
 }

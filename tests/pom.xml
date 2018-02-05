@@ -117,6 +117,10 @@ Contributors:
 		<module>org.eclipse.n4js.flowgraphs.tests</module>
 		<module>org.eclipse.n4js.flowgraphs.ui.tests</module>
 
+		<!-- *************************************** N4IDL Tests -->
+		<module>org.eclipse.n4js.n4idl.lang.tests</module>
+		<module>org.eclipse.n4js.n4idl.spec.tests</module>
+
 	</modules>
 
 

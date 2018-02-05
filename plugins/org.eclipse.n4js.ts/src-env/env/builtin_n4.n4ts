@@ -382,7 +382,7 @@ public /* @Final */ class N4StringBasedEnumType extends N4Type {
  * Base class for all @StringBased enumerations, literals are assumed to be static constant fields of concrete subclasses with the type of these subclasses.
  * @see N4Enum
  */
-public object N4StringBasedEnum extends String {
+public object N4StringBasedEnum extends string {
 
 	// - IDE-1221 Commented out since not applicable to Stringbased Enums
 	///**
