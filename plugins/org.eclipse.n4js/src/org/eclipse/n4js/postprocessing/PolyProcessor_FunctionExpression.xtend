@@ -304,11 +304,10 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		// Step 1) process arrFun's body, which was postponed earlier according to ASTProcessor#isPostponedNode(EObject)
 		// Rationale: the body of a single-expression arrow function isn't a true block, so we do not have to
 		//            postpone it AND we need its types in the next step.
-		val block = cache.postponedSubTrees.last;
-		if (block !== arrFun.body) {
-			throw new IllegalStateException();
+		val block = arrFun.body;
+		if(!cache.postponedSubTrees.remove(block)) {
+			throw new IllegalStateException("body of single-expression arrow function not among postponed subtrees, in resource: " + arrFun.eResource.URI);
 		}
-		cache.postponedSubTrees.remove(block);
 		astProcessor.processSubtree(G, block, cache, 1);
 		// Step 2) adjust arrFun's return type stored in arrFunTypeRef (if required)
 		var didTweakReturnType = false;
