@@ -177,11 +177,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
-      defaultValue="N4JS_Neon.2.GH-18"
+      defaultValue="N4JS_Oxygen.2.GH-369"
       storageURI="scope://Workspace">
     <choice
-        value="N4JS_Neon.2.GH-18"
-        label="N4JS_Neon.2.GH-18"/>
+        value="N4JS_Oxygen.2.GH-369"
+        label="N4JS_Oxygen.2.GH-369"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -369,25 +369,25 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_Neon.2.GH-18">
+          name="N4JS_Oxygen.2.GH-369">
         <repository
-            url="http://download.eclipse.org/eclipse/updates/4.6/R-4.6.2-201611241400"/>
+            url="http://download.eclipse.org/eclipse/updates/4.7/R-4.7-201706120950"/>
         <repository
-            url="http://download.eclipse.org/egit/updates-4.6"/>
+            url="http://download.eclipse.org/egit/updates-4.8"/>
         <repository
             url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.2.13.v20150730"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/updates/2.12"/>
+            url="http://download.eclipse.org/modeling/emf/emf/updates/2.13"/>
         <repository
             url="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.0"/>
         <repository
-            url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201505260349"/>
+            url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
         <repository
             url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.12.0"/>
         <repository
-            url="http://download.eclipse.org/technology/swtbot/releases/2.4.0"/>
+            url="http://download.eclipse.org/technology/swtbot/releases/2.6.0"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20170818183741/repository"/>
         <repository
             url="http://boothen.github.io/Json-Eclipse-Plugin"/>
         <repository
@@ -525,8 +525,8 @@
       launcher="CreateConfigFileForSettingDefaultProduct">
     <description>Launch that creates a config.ini</description>
   </setupTask>
-  <stream name="master"
-      label="Master"/>
+  <stream name="GH-369"
+      label="GH-369"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
