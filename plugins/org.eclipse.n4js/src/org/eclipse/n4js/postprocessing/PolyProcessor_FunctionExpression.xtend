@@ -250,6 +250,8 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	) {
 		val solution2 = if (solution.present) solution.get else infCtx.createPseudoSolution(G.anyTypeRef);
 		val resultSolved = resultTypeRef.applySolution(G, solution2) as FunctionTypeExprOrRef;
+		// store type of funExpr in cache ...
+		cache.storeType(funExpr, resultSolved);
 		// update the defined function in the TModule
 		val fun = funExpr.definedType as TFunction; // types builder will have created this already
 		fun.replaceDeferredTypeRefs(resultSolved);
@@ -266,11 +268,13 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			val fparTw = TypeUtils.wrapIfVariadic(G.getPredefinedTypes().builtInTypeScope, fparT.typeRef, fparAST);
 			cache.storeType(fparAST, fparTw);
 		}
-		// store type of funExpr in cache ...
+		// tweak return type
 		if (funExpr instanceof ArrowFunction) {
-			tweakReturnTypeOfSingleExpressionArrowFunction(G, cache, funExpr, resultSolved); // note: requires types of fpars to be in cache!
+			// NOTE: the next line requires the type of 'funExpr' and types of fpars to be in cache! For example:
+			//   function <T> foo(p: {function(int):T}) {return undefined;}
+			//   foo( (i) => [i] );
+			tweakReturnTypeOfSingleExpressionArrowFunction(G, cache, funExpr, resultSolved);
 		}
-		cache.storeType(funExpr, resultSolved);
 	}
 
 	/**
