@@ -62,8 +62,8 @@ public enum ControlFlowType {
 			LoopExit };
 
 	/** Set of all control flow types except for {@literal ControlFlowType.DeadCode} */
-	static public final ControlFlowType[] NonDeadTypes = { Successor, Break, Continue, Throw, Return, LoopEnter,
-			LoopExit, LoopRepeat, LoopReenter, LoopInfinite };
+	static public final ControlFlowType[] NonDeadTypes = { Successor, IfTrue, IfFalse, Break, Continue, Throw, Return,
+			LoopEnter, LoopExit, LoopRepeat, LoopReenter, LoopInfinite };
 
 	/** @return a filtered list that contains only {@link ControlFlowType}s of the given types */
 	static public List<ControlFlowType> filter(Iterable<ControlFlowType> list, ControlFlowType... onlyThese) {
