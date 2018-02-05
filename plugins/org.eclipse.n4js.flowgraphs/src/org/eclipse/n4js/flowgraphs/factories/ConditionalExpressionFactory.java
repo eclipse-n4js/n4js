@@ -49,6 +49,11 @@ class ConditionalExpressionFactory {
 		cNode.connectInternalSucc(ControlFlowType.IfFalse, conditionNode, elseNode);
 		cNode.connectInternalSucc(elseNode, exitNode);
 
+		if (thenNode == null && elseNode == null) {
+			// broken AST
+			cNode.connectInternalSucc(conditionNode, exitNode);
+		}
+
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
