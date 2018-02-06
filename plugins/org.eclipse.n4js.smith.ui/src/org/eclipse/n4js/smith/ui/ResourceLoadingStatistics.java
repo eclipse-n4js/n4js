@@ -89,10 +89,20 @@ public class ResourceLoadingStatistics {
 			final List<FileLoadInfo> noOthersFromAST = results.stream().filter(result -> result.countLoadedFromAST == 0)
 					.collect(Collectors.toList());
 			out.println("Files that triggered other files being loaded from AST:");
-			othersFromAST.forEach(result -> result.println(out));
+			if (!othersFromAST.isEmpty()) {
+				othersFromAST.forEach(result -> result.println(out));
+			} else {
+				out.println("None.");
+			}
 			out.println();
 			out.println("Files that did *not* trigger other files being loaded from AST:");
-			noOthersFromAST.forEach(result -> result.println(out));
+			if (!noOthersFromAST.isEmpty()) {
+				noOthersFromAST.forEach(result -> result.println(out));
+			} else {
+				out.println("None.");
+			}
+			out.println();
+			out.println("Legend: countTotal (sum = countLoadedFromAST + countLoadedFromIndex + countBuiltIn)");
 			out.println();
 			out.println(
 					"Files that triggered other files being loaded from AST        : " + othersFromAST.size());
@@ -137,6 +147,9 @@ public class ResourceLoadingStatistics {
 			final IN4JSProject project = entry.getKey();
 			final List<URI> uris = entry.getValue();
 			final List<FileLoadInfo> results = investigate(project, uris, out, monitor, false);
+			out.println();
+			out.println("SUMMARY:");
+			out.println();
 			FileLoadInfo.printReport(project, results, out);
 		}
 	}
