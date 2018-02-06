@@ -208,7 +208,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 	}
 
 	@Test
-	def void testStateFullyProcessed3() throws Exception {
+	def void testStateFullyProcessed_triggeredOnlyThroughProxyResolution() throws Exception {
 		val res = createFromFile(SAMPLE_FILE);
 		res.load(emptyMap);
 		// do *not* trigger installation of derived state explicitly, in this test case
