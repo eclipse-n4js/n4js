@@ -75,13 +75,13 @@ public class N4JSFlowAnalyser {
 	 * <p/>
 	 * Never completes abruptly, i.e. throws an exception.
 	 */
-	public void createGraphs(Script script) {
+	public void createGraphs(Script script, boolean enableDataFlow) {
 		Objects.requireNonNull(script);
 		String uriString = script.eResource().getURI().toString();
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
 		Measurement msmnt2 = dcCreateGraph.getMeasurement("createGraph_" + uriString);
 		symbolFactory = new SymbolFactory();
-		cfg = ControlFlowGraphFactory.build(symbolFactory, script);
+		cfg = ControlFlowGraphFactory.build(symbolFactory, script, enableDataFlow);
 		dpa = new DirectPathAnalyses(cfg);
 		gva = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);

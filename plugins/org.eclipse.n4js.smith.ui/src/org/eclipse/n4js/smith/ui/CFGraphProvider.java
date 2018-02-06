@@ -85,7 +85,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	private void performFlowAnalyses(Object input) {
 		Script script = findScript(input);
 		if (script != null) {
-			flowAnalyzer.createGraphs(script);
+			flowAnalyzer.createGraphs(script, false);
 		}
 	}
 

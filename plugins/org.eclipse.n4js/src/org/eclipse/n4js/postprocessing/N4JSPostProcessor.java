@@ -18,9 +18,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
-import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
-import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
@@ -95,13 +92,6 @@ public class N4JSPostProcessor implements PostProcessor {
 	}
 
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
-
-		Script script = resource.getScript();
-		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
-		flowAnalyzer.createGraphs(script);
-		InstanceofGuardAnalyser iga = new InstanceofGuardAnalyser();
-		flowAnalyzer.accept(iga);
-
 		// step 1: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 2: expose internal types visible from outside

@@ -20,11 +20,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
-import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
-import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
@@ -100,7 +100,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		UsedBeforeDeclaredAnalyser cvgv1 = new UsedBeforeDeclaredAnalyser();
 		NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
 
-		flowAnalyzer.createGraphs(script);
+		flowAnalyzer.createGraphs(script, true);
 		flowAnalyzer.accept(dcv, nda, cvgv1);
 
 		String uriString = script.eResource().getURI().toString();

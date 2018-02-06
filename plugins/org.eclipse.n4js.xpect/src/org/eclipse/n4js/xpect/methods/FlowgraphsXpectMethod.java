@@ -32,10 +32,10 @@ import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegion;
@@ -58,7 +58,7 @@ public class FlowgraphsXpectMethod {
 	N4JSFlowAnalyser getFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
 		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
-		flowAnalyzer.createGraphs(script);
+		flowAnalyzer.createGraphs(script, true);
 		return flowAnalyzer;
 	}
 
@@ -381,18 +381,20 @@ public class FlowgraphsXpectMethod {
 		N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(cfe);
 		flowAnalyzer.accept(iga);
 
-		Collection<Expression> typeExprs = null;
+		Collection<InstanceofGuard> ioGuards = null;
 		if (assertion == GuardAssertion.MayHolds) {
-			typeExprs = iga.getMayHoldingTypes(cfe);
+			ioGuards = iga.getMayHoldingTypes(cfe);
 		} else if (assertion == GuardAssertion.NeverHolds) {
-			typeExprs = iga.getNeverHoldingTypes(cfe);
+			ioGuards = iga.getNeverHoldingTypes(cfe);
 		} else {
-			typeExprs = iga.getAlwaysHoldingTypes(cfe);
+			ioGuards = iga.getAlwaysHoldingTypes(cfe);
 		}
 
 		List<String> commonPredStrs = new LinkedList<>();
-		for (Expression typeExpr : typeExprs) {
-			commonPredStrs.add(FGUtils.getSourceText(typeExpr));
+		for (InstanceofGuard ioGuard : ioGuards) {
+			String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
+			String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
+			commonPredStrs.add(symbolText + "<:" + typeText);
 		}
 
 		expectation.assertEquals(commonPredStrs);

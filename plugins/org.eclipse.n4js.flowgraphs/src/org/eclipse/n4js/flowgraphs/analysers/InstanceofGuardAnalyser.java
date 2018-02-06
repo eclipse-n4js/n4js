@@ -31,7 +31,6 @@ import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.Expression;
 
 /**
  * This analyzer detects and holds information about all instanceof guards at a given source location. It differentiates
@@ -46,7 +45,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 	}
 
 	/** @return all RHS expressions of {@code instanceof} guards that <b>always</b> hold at the given element */
-	public Collection<Expression> getAlwaysHoldingTypes(ControlFlowElement cfe) {
+	public Collection<InstanceofGuard> getAlwaysHoldingTypes(ControlFlowElement cfe) {
 		cfe = CFEMapper.map(cfe);
 		InstanceofBranchWalker ibw = elementsToBranch.get(cfe);
 		if (ibw != null) {
@@ -56,7 +55,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 	}
 
 	/** @return all RHS expressions of {@code instanceof} guards that <b>never</b> hold at the given element */
-	public Collection<Expression> getNeverHoldingTypes(ControlFlowElement cfe) {
+	public Collection<InstanceofGuard> getNeverHoldingTypes(ControlFlowElement cfe) {
 		cfe = CFEMapper.map(cfe);
 		InstanceofBranchWalker ibw = elementsToBranch.get(cfe);
 		if (ibw != null) {
@@ -66,7 +65,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 	}
 
 	/** @return all RHS expressions of {@code instanceof} guards that <b>may</b> hold at the given element */
-	public Collection<Expression> getMayHoldingTypes(ControlFlowElement cfe) {
+	public Collection<InstanceofGuard> getMayHoldingTypes(ControlFlowElement cfe) {
 		cfe = CFEMapper.map(cfe);
 		InstanceofBranchWalker ibw = elementsToBranch.get(cfe);
 		if (ibw != null) {
@@ -89,7 +88,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 		@Override
 		protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
 			InstanceofBranchWalker joinedIBW = new InstanceofBranchWalker();
-			Set<Expression> alwaysHoldUnion = new HashSet<>();
+			Set<InstanceofGuard> alwaysHoldUnion = new HashSet<>();
 
 			Iterator<BranchWalkerInternal> bwiIter = branchWalkers.iterator();
 			if (!bwiIter.hasNext()) {
@@ -121,9 +120,9 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 	}
 
 	class InstanceofBranchWalker extends BranchWalkerInternal {
-		Set<Expression> alwaysHoldGards = new HashSet<>();
-		Set<Expression> neverHoldGards = new HashSet<>();
-		Set<Expression> mayHoldGards = new HashSet<>();
+		Set<InstanceofGuard> alwaysHoldGards = new HashSet<>();
+		Set<InstanceofGuard> neverHoldGards = new HashSet<>();
+		Set<InstanceofGuard> mayHoldGards = new HashSet<>();
 
 		@Override
 		protected BranchWalkerInternal fork() {
@@ -150,13 +149,13 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 
 						switch (guard.asserts) {
 						case AlwaysHolds:
-							alwaysHoldGards.add(instanceofGuard.typeIdentifier);
+							alwaysHoldGards.add(instanceofGuard);
 							break;
 						case NeverHolds:
-							neverHoldGards.add(instanceofGuard.typeIdentifier);
+							neverHoldGards.add(instanceofGuard);
 							break;
 						case MayHolds:
-							mayHoldGards.add(instanceofGuard.typeIdentifier);
+							mayHoldGards.add(instanceofGuard);
 							break;
 
 						default:

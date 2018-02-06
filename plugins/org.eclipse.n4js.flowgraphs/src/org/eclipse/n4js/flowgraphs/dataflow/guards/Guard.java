@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
+import java.util.Objects;
+
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -49,7 +52,7 @@ public class Guard {
 		}
 	}
 
-	/**   */
+	/** @return the {@link Symbol} using {@link #symbolCFE} and the given {@link SymbolFactory} */
 	protected Symbol getSymbol(SymbolFactory symbolFactory) {
 		return symbolFactory.create(symbolCFE);
 	}
@@ -60,11 +63,30 @@ public class Guard {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Guard)) {
+			return false;
+		}
+		Guard guard = (Guard) obj;
+		boolean equals = true;
+		equals &= condition == guard.condition;
+		equals &= type == guard.type;
+		equals &= asserts == guard.asserts;
+		equals &= symbolCFE == guard.symbolCFE;
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(condition, type, asserts, symbolCFE);
+	}
+
+	@Override
 	public String toString() {
 		String str = "";
 		str += type.toString();
 		str += " " + asserts.toString();
-		str += " on " + symbol.getName();
+		str += " on " + FGUtils.getSourceText(symbolCFE);
 		return str;
 	}
 

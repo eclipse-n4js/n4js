@@ -36,15 +36,17 @@ public class ReentrantASTIterator {
 	final private Set<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 	final private ASTIterator astIt;
+	final private boolean setSymbols;
 	private int astPositionCounter = 0;
 
 	/** Constructor */
 	ReentrantASTIterator(SymbolFactory symbolFactory, Set<ControlFlowElement> cfContainers,
-			Map<ControlFlowElement, ComplexNode> cnMap, Script script) {
+			Map<ControlFlowElement, ComplexNode> cnMap, Script script, boolean setSymbols) {
 
 		this.symbolFactory = symbolFactory;
 		this.cfContainers = cfContainers;
 		this.cnMap = cnMap;
+		this.setSymbols = setSymbols;
 		this.astIt = new ASTIterator(script);
 	}
 
@@ -68,7 +70,9 @@ public class ReentrantASTIterator {
 						cfContainers.add(cn.getControlFlowContainer());
 						cnMap.put(mappedCFE, cn);
 
-						CFEEffectInfos.set(symbolFactory, cnMap, cn, mappedCFE);
+						if (setSymbols) {
+							CFEEffectInfos.set(symbolFactory, cnMap, cn, mappedCFE);
+						}
 					}
 				}
 				if (termNode == cfe || (termNode == mappedCFE && termNode != null)) {
