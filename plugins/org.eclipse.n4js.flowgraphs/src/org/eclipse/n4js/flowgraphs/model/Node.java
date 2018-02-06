@@ -129,6 +129,9 @@ abstract public class Node implements ControlFlowable {
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addSuccessor(ControlFlowEdge cfEdge) {
 		boolean addSucceeded = succ.add(cfEdge);
+		if (!addSucceeded) {
+			System.out.println("problem");
+		}
 		checkState(addSucceeded, "Adding an edge should always be successful");
 	}
 

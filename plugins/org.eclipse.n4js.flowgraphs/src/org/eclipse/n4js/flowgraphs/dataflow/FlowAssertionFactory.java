@@ -175,11 +175,8 @@ public class FlowAssertionFactory {
 				return GuardAssertion.NeverHolds;
 			}
 		}
-		if (beList.size() > 2) {
-			return null;
-		}
 
-		return null;
+		return GuardAssertion.MayHolds;
 	}
 
 }

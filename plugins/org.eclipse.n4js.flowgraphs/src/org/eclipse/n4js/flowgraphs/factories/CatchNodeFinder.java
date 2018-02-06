@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
@@ -186,6 +187,7 @@ public class CatchNodeFinder {
 			isCatchingBreakStatement |= cfe instanceof ForStatement;
 			isCatchingBreakStatement |= cfe instanceof WhileStatement;
 			isCatchingBreakStatement |= cfe instanceof SwitchStatement;
+			isCatchingBreakStatement |= cfe instanceof Block && cfe.eContainer() instanceof LabelledStatement;
 			return isCatchingBreakStatement;
 		}
 
