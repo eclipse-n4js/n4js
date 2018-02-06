@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ASTIterator;
+import org.eclipse.n4js.flowgraphs.dataflow.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -29,15 +32,17 @@ import org.eclipse.n4js.n4JS.Script;
 public class ReentrantASTIterator {
 	static final String ASSERTION_MSG_AST_ORDER = "DelegatingNode or AST order erroneous";
 
+	final private SymbolFactory symbolFactory;
 	final private Set<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 	final private ASTIterator astIt;
 	private int astPositionCounter = 0;
 
 	/** Constructor */
-	ReentrantASTIterator(Set<ControlFlowElement> cfContainers, Map<ControlFlowElement, ComplexNode> cnMap,
-			Script script) {
+	ReentrantASTIterator(SymbolFactory symbolFactory, Set<ControlFlowElement> cfContainers,
+			Map<ControlFlowElement, ComplexNode> cnMap, Script script) {
 
+		this.symbolFactory = symbolFactory;
 		this.cfContainers = cfContainers;
 		this.cnMap = cnMap;
 		this.astIt = new ASTIterator(script);
@@ -58,12 +63,12 @@ public class ReentrantASTIterator {
 				if (mappedCFE != null && !cnMap.containsKey(mappedCFE)) {
 					ComplexNode cn = CFEFactoryDispatcher.build(this, mappedCFE);
 					if (cn != null) {
-						assert astPositionCounter - 1 == cn.getExit().astPosition : ASSERTION_MSG_AST_ORDER;
+						checkState(astPositionCounter - 1 == cn.getExit().astPosition, ASSERTION_MSG_AST_ORDER);
 
 						cfContainers.add(cn.getControlFlowContainer());
 						cnMap.put(mappedCFE, cn);
 
-						CFEEffectInfos.set(cnMap, cn, mappedCFE);
+						CFEEffectInfos.set(symbolFactory, cnMap, cn, mappedCFE);
 					}
 				}
 				if (termNode == cfe || (termNode == mappedCFE && termNode != null)) {
@@ -71,7 +76,8 @@ public class ReentrantASTIterator {
 				}
 			}
 		}
-		assert termNode == null : ASSERTION_MSG_AST_ORDER;
+
+		checkState(termNode == null, ASSERTION_MSG_AST_ORDER);
 	}
 
 	/** @return the current container */

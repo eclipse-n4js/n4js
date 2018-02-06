@@ -79,7 +79,7 @@ class IsDestructuringPatternTest {
 
 		'''.parseAndValidate;
 
-		script.assertNoIssuesExcept(IssueCodes.AST_LOCAL_VAR_UNUSED);
+		script.assertNoIssuesExcept(IssueCodes.CFG_LOCAL_VAR_UNUSED);
 
 		val arrLit0 = script.eAllContents.filter(ArrayLiteral).toList.get(0);
 		val arrLit1 = script.eAllContents.filter(ArrayLiteral).toList.get(1);
@@ -103,7 +103,7 @@ class IsDestructuringPatternTest {
 
 		'''.parseAndValidate;
 
-		script.assertNoIssuesExcept(IssueCodes.AST_LOCAL_VAR_UNUSED);
+		script.assertNoIssuesExcept(IssueCodes.CFG_LOCAL_VAR_UNUSED);
 
 		val arrLit0 = script.eAllContents.filter(ForStatement).head.initExpr;
 		val arrLit1 = script.eAllContents.filter(ForStatement).head.expression;

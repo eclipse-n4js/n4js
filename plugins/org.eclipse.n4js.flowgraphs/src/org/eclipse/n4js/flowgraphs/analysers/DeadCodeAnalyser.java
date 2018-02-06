@@ -19,7 +19,8 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.FGUtils;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -44,7 +45,7 @@ public class DeadCodeAnalyser extends GraphVisitor {
 
 	/** Constructor */
 	public DeadCodeAnalyser() {
-		super(Mode.Forward);
+		super(TraverseDirection.Forward);
 	}
 
 	@Override

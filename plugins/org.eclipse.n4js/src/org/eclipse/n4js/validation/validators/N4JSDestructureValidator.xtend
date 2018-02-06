@@ -14,8 +14,8 @@ import com.google.inject.Inject
 import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.misc.DestructNode
-import org.eclipse.n4js.misc.DestructureHelper
+import org.eclipse.n4js.n4JS.DestructNode
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
@@ -44,7 +44,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
 
-import static extension org.eclipse.n4js.misc.DestructNode.arePositional
+import static extension org.eclipse.n4js.n4JS.DestructNode.arePositional
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.UtilN4.trimPrefix
 import static extension org.eclipse.n4js.utils.UtilN4.trimSuffix

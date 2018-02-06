@@ -10,10 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-/**
- *
- */
-public class NodeNames {
+class NodeNames {
 
 	static final String STATEMENT = "statement";
 	static final String ENTRY_EXIT = "entryExit";

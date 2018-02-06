@@ -15,7 +15,7 @@ import java.util.List
 import java.util.Map
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.misc.DestructNode
+import org.eclipse.n4js.n4JS.DestructNode
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.Block

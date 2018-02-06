@@ -68,7 +68,7 @@ import java.util.List
 import org.eclipse.emf.common.util.ECollections
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.misc.DestructureHelper
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.n4JS.AdditiveExpression
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.Argument

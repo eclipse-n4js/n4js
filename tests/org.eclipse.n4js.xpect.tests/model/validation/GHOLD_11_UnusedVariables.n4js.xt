@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
 
 IssueConfiguration {
-	IssueCode "AST_LOCAL_VAR_UNUSED" {enabled=true}
+	IssueCode "CFG_LOCAL_VAR_UNUSED" {enabled=true}
 }
 
 END_SETUP
