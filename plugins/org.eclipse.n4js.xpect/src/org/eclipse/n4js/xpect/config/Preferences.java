@@ -16,8 +16,8 @@ import java.util.Set;
 import org.eclipse.xtext.preferences.ITypedPreferenceValues;
 import org.eclipse.xtext.preferences.PreferenceKey;
 import org.eclipse.xtext.preferences.TypedPreferenceKey;
-import org.xpect.XpectImport;
-import org.xpect.setup.XpectSetupRoot;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.setup.XpectSetupRoot;
 
 /**
  * Preferences Container for Xpect-Setup sections.

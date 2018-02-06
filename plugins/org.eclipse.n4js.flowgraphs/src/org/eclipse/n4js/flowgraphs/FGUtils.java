@@ -23,7 +23,6 @@ import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
@@ -102,14 +101,17 @@ public class FGUtils {
 	}
 
 	/** @return true iff the given {@link ControlFlowElement} is a container such as a function's body. */
-	public static boolean isCFContainer(ControlFlowElement cfe) {
-		EObject cfeContainer = cfe.eContainer();
-
+	public static boolean isCFContainer(EObject cfe) {
 		boolean isScript = cfe instanceof Script;
 		boolean isBlock = cfe instanceof Block;
 		boolean isExpression = cfe instanceof Expression;
-		boolean isExpressionAnnotationList = cfe instanceof ExpressionAnnotationList;
 		boolean isBindingPattern = cfe instanceof BindingPattern;
+		if (!isScript && !isBlock && !isExpression && !isBindingPattern) {
+			return false;
+		}
+
+		EObject cfeContainer = cfe.eContainer();
+		EObject cfeContainer2 = (cfeContainer == null) ? null : cfeContainer.eContainer();
 
 		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
 		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
@@ -122,9 +124,10 @@ public class FGUtils {
 		boolean containerIsExportDeclaration = cfeContainer instanceof ExportDeclaration;
 		boolean containerIsN4ClassDefinition = cfeContainer instanceof N4ClassDefinition;
 
+		boolean container2IsN4FieldDeclaration = cfeContainer2 instanceof N4FieldDeclaration;
+
 		boolean isCFContainer = false;
 		isCFContainer |= isScript;
-		isCFContainer |= isExpressionAnnotationList;
 		isCFContainer |= isBlock && containerIsFunctionDeclaration;
 		isCFContainer |= isBlock && containerIsFunctionDefinition;
 		isCFContainer |= isBlock && containerIsFieldAccessor;
@@ -132,7 +135,7 @@ public class FGUtils {
 		isCFContainer |= isExpression && containerIsFormalParameter;
 		isCFContainer |= isExpression && containerIsFieldDeclaration;
 		isCFContainer |= isExpression && containerIsAnnotationArgument;
-		isCFContainer |= isExpression && containerIsLiteralOrComputedPropertyName;
+		isCFContainer |= isExpression && containerIsLiteralOrComputedPropertyName && container2IsN4FieldDeclaration;
 		isCFContainer |= isExpression && containerIsN4ClassDefinition;
 		isCFContainer |= isExpression && containerIsExportSpecifier;
 		isCFContainer |= isExpression && containerIsExportDeclaration;
@@ -193,5 +196,14 @@ public class FGUtils {
 			}
 		}
 		return null;
+	}
+
+	/** @return the AST depth of the given {@link EObject}. */
+	public static int getASTDepth(EObject eObj) {
+		int i;
+		for (i = 0; eObj != null; i++) {
+			eObj = eObj.eContainer();
+		}
+		return i;
 	}
 }

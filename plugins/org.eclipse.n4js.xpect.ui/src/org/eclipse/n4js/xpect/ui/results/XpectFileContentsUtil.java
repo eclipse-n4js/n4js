@@ -16,8 +16,8 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.junit.runner.Description;
-import org.xpect.runner.IXpectURIProvider;
-import org.xpect.runner.XpectRunner;
+import org.eclipse.xpect.runner.IXpectURIProvider;
+import org.eclipse.xpect.runner.XpectRunner;
 
 import org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin;
 import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestFilesCollector.N4IDEXpectTestURIProvider;

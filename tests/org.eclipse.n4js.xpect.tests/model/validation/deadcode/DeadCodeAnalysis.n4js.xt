@@ -13,12 +13,19 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 
+
+// XPECT warnings --> "Dead code." at "3"
+for (1;2;3) {
+	break;
+}
+
+
+
 function f1() {
 	/* Forward XPECT allPaths ---
 		"start" -> 1 -> "x" -> throw "x"; -> 3 -> 6
 	---	*/
 	/* Backward XPECT allPaths direction 'Backward' ---
-		"end" -> 6 -> 4 -> 3 -> 2,
 		6 -> 3 -> throw "x"; -> "x" -> 1 -> "start"
 	---	*/
 	"start";
@@ -43,7 +50,6 @@ function f1() {
 
 
 function f2() {
-	// f2 XPECT allIslandElems --> 1, 2, 3, 4
 	return;
 	//  XPECT warnings --> "Dead code." at "1; 2; 3; for (;;) 4;"
 	for (;;)  1;
@@ -73,7 +79,9 @@ function f3() {
 function f4() {
 	/*  XPECT allEdges ---
 		"start" --> 1,
+		"start" --> 2,
 		0 --> 4,
+		1 --> 2,
 		1 --> 4,
 		2 --> 3,
 		3 --> throw 3;,
@@ -81,12 +89,14 @@ function f4() {
 		throw 3; -Throw-> 4
 	--- */
 	/* Forward XPECT allPaths ---
-		"start" -> 1 -> 4 -> "end"
+		"start" -> 1 -> 4 -> "end",
+		"start" -> 1 -> 2 -> 3 -> throw 3; -> 4,
+		"start" -> 2 -> 3 -> throw 3; -> 4
 	---	*/
 	/* ThrowTryCatchFinallyStatement2 XPECT allPaths direction 'Backward' ---
 		"end" -> 4 -> 1 -> "start",
-		"end" -> 4 -> 0,
-		4 -> throw 3; -> 3 -> 2
+		4 -> throw 3; -> 3 -> 2 -> "start",
+		4 -> throw 3; -> 3 -> 2 -> 1 -> "start"
 	---	*/
 	"start";
 	try {

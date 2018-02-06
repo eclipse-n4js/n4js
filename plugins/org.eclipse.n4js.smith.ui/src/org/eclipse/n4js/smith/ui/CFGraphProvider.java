@@ -25,10 +25,14 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.ui.graph.CFEdge;
+import org.eclipse.n4js.smith.ui.graph.CFNode;
 import org.eclipse.n4js.smith.ui.graph.Edge;
 import org.eclipse.n4js.smith.ui.graph.GraphProvider;
 import org.eclipse.n4js.smith.ui.graph.Node;
@@ -40,7 +44,7 @@ import org.eclipse.xtext.EcoreUtil2;
  */
 public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement> {
 	N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
-	Map<ControlFlowElement, Node> nodeMap = new HashMap<>();
+	Map<ControlFlowElement, CFNode> nodeMap = new HashMap<>();
 	Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
 	final NodesEdgesCollector nodesEdgesCollector = new NodesEdgesCollector();
 
@@ -101,9 +105,10 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	}
 
 	private class NodesEdgesCollector extends GraphVisitor {
+		private int nodeIdx = 0;
 
 		NodesEdgesCollector() {
-			super(Mode.Forward, Mode.Backward, Mode.Islands);
+			super(Mode.Forward);
 		}
 
 		@Override
@@ -113,47 +118,79 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
-			// nothing to do
+		protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+			requestActivation(new EdgesExplorer());
 		}
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
-			addNode(cfe);
+			addNode(cfe, isDeadCodeNode());
 		}
 
-		@Override
-		protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-			addNode(edge.start);
-			addNode(edge.end);
-			Node sNode = nodeMap.get(edge.start);
-			Node eNode = nodeMap.get(edge.end);
-			Edge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes);
-
-			if (!edgesMap.containsKey(edge.start)) {
-				edgesMap.put(edge.start, new LinkedList<>());
-			}
-			List<Edge> cfEdges = edgesMap.get(edge.start);
-			cfEdges.add(cfEdge);
-		}
-
-		private void addNode(ControlFlowElement cfe) {
+		private void addNode(ControlFlowElement cfe, boolean isDeadCode) {
 			if (!nodeMap.containsKey(cfe)) {
 				String label = FGUtils.getSourceText(cfe);
-				Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
+				String description = cfe.getClass().getSimpleName();
+				CFNode node = new CFNode(cfe, label, description, nodeIdx++, isDeadCode);
 				nodeMap.put(cfe, node);
 			}
 		}
 
-		@Override
-		protected void terminateMode(Mode curDirection, ControlFlowElement curContainer) {
-			// nothing to do
+		class EdgesExplorer extends GraphExplorer {
+
+			@Override
+			protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
+				return new EdgesBranchWalker();
+			}
+
+			@Override
+			protected BranchWalkerInternal firstBranchWalker() {
+				return new EdgesBranchWalker();
+			}
+
 		}
 
-		@Override
-		protected void terminate() {
-			// nothing to do
-		}
+		class EdgesBranchWalker extends BranchWalker {
 
+			@Override
+			protected BranchWalker forkPath() {
+				return new EdgesBranchWalker();
+			}
+
+			@Override
+			protected void visit(FlowEdge edge) {
+				addNode(edge.start, isDeadCodeNode());
+				addNode(edge.end, isDeadCodeNode());
+				Node sNode = nodeMap.get(edge.start);
+				Node eNode = nodeMap.get(edge.end);
+				CFEdge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes, isDeadCodeNode());
+
+				if (!edgesMap.containsKey(edge.start)) {
+					edgesMap.put(edge.start, new LinkedList<>());
+				}
+				List<Edge> cfEdges = edgesMap.get(edge.start);
+				cfEdges.add(cfEdge);
+
+				removeDuplicatedDeadEdge(eNode, cfEdge, cfEdges);
+			}
+
+			private void removeDuplicatedDeadEdge(Node eNode, CFEdge cfEdge, List<Edge> cfEdges) {
+				CFEdge removeEdge = null;
+				for (Edge e : cfEdges) {
+					if (cfEdge != e && e.getEndNodes().get(0) == eNode) {
+						removeEdge = (CFEdge) e;
+						break;
+					}
+				}
+				if (removeEdge != null) {
+					if (removeEdge.isDead) {
+						cfEdges.remove(removeEdge);
+					} else {
+						cfEdges.remove(cfEdge);
+					}
+				}
+			}
+
+		}
 	}
 }

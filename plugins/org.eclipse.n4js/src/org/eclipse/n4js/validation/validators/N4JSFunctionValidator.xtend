@@ -17,8 +17,9 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion
+import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -54,7 +55,7 @@ import org.eclipse.n4js.utils.nodemodel.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -66,7 +67,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
+import static org.eclipse.n4js.N4JSLanguageConstants.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
 import static org.eclipse.xtext.util.Strings.toFirstUpper
 
@@ -125,17 +126,19 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		// Note: The Flow Graph is NOT stored in the meta info cache. Hence, it is created here at use site.
 		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
 		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
+
+		val dcv = new DeadCodeAnalyser();
+		val cvgv1 = new UsedBeforeDeclaredAnalyser();
+
 		flowAnalyzer.createGraphs(script);
-
-		val dcv = new DeadCodeVisitor();
-
-		flowAnalyzer.accept(dcv);
+		flowAnalyzer.accept(dcv, cvgv1 );
 
 		internalCheckDeadCode(dcv);
+		internalCheckUsedBeforeDeclared(cvgv1);
 	}
 
 	// Req.107
-	private def String internalCheckDeadCode(DeadCodeVisitor dcf) {
+	private def void internalCheckDeadCode(DeadCodeAnalyser dcf) {
 		val deadCodeRegions = dcf.getDeadCodeRegions();
 
 		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {
@@ -150,11 +153,21 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	private def void internalCheckUsedBeforeDeclared(UsedBeforeDeclaredAnalyser ubda) {
+		val usedBeforeDeclared = ubda.getUsedButNotDeclaredIdentifierRefs();
+
+		for (IdentifierRef idRef : usedBeforeDeclared) {
+			val String varName = idRef.id.name;
+			var String msg = getMessageForAST_USED_BEFORE_DECLARED(varName);
+			addIssue(msg, idRef, AST_USED_BEFORE_DECLARED);
+		}
+	}
+
 	private def String getStatementDescription(DeadCodeRegion deadCodeRegion) {
 		val reachablePred = deadCodeRegion.getReachablePredecessor();
 		if (reachablePred === null)
 			return null;
-		
+
 		val String keyword = keywordProvider.keyword(reachablePred);
 		if (Strings.isNullOrEmpty(keyword)) {
 			return reachablePred.eClass.name;
@@ -545,6 +558,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
+
 			// not on "default export":
 			// add message "function declarations must have a name"
 			if( functionDeclaration.body !== null) {

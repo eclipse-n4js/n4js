@@ -11,6 +11,7 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.AssignmentExpression
@@ -30,7 +31,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.projectModel.ProjectUtils
+import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -49,7 +50,6 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -69,7 +69,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject StructuralTypesHelper structuralTypesHelper;
 
-	@Inject ProjectUtils pu;
+	@Inject StaticPolyfillHelper staticPolyfillHelper;
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
@@ -311,7 +311,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 
 		// if static polyfill is available, then look for  filled in ctor.
 		val polyAware = n4classifier.definedType.containingModule.isStaticPolyfillAware
-		val polyfill = if (polyAware) pu.getStaticPolyfill(n4classifier.definedType) else null;
+		val polyfill = if (polyAware) staticPolyfillHelper.getStaticPolyfill(n4classifier.definedType) else null;
 		val polyfillCtor = polyfill?.ownedCtor
 
 		val N4MethodDeclaration ctor = polyfillCtor ?: n4classifier.ownedCtor;

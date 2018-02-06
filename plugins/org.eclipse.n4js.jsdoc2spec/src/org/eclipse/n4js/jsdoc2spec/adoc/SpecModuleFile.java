@@ -76,7 +76,7 @@ public class SpecModuleFile extends SpecFile {
 	 */
 	public static int getHeaderLength() {
 		String dummyHeader = generateModuleHeader("", "");
-		return StringCountUtils.countLines(dummyHeader);
+		return StringCountUtils.countNewLines(dummyHeader);
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class SpecModuleFile extends SpecFile {
 		if (!startlineOfElem.containsKey(entry))
 			throw new RuntimeException("Entry not in change set.");
 
-		return getOffsetStart(entry) + entry.getGeneratedLineCount();
+		return getOffsetStart(entry) + entry.getGeneratedLineCount() - 1;
 	}
 
 	private String ensureNewContent() {
@@ -208,7 +208,7 @@ public class SpecModuleFile extends SpecFile {
 			return newContent;
 
 		StringBuilder strb = new StringBuilder();
-		int startline = 0;
+		int startline = 1;
 		startline = generateModuleHeader(strb, startline);
 		startline = generateVariableSection(strb, startline);
 		startline = generateFunctionSection(strb, startline);
@@ -229,7 +229,7 @@ public class SpecModuleFile extends SpecFile {
 		String title = getModuleName().replaceAll("/", ".");
 		String header = generateModuleHeader(title, getBaseDir());
 		strb.append(header);
-		int nextStartline = startline + StringCountUtils.countLines(header);
+		int nextStartline = startline + StringCountUtils.countNewLines(header);
 		return nextStartline;
 	}
 
@@ -251,7 +251,7 @@ public class SpecModuleFile extends SpecFile {
 			return startline;
 
 		strb.append("== Variables\n\n");
-		startline += 3;
+		startline += 2;
 		startline = generateSubElements(strb, startline, variables);
 		return startline;
 	}
@@ -261,7 +261,7 @@ public class SpecModuleFile extends SpecFile {
 			return startline;
 
 		strb.append("== Functions\n\n");
-		startline += 3;
+		startline += 2;
 		startline = generateSubElements(strb, startline, functions);
 		return startline;
 	}
@@ -280,11 +280,11 @@ public class SpecModuleFile extends SpecFile {
 			SortedSet<SpecIdentifiableElementSection> elems) {
 
 		for (SpecIdentifiableElementSection property : elems) {
-			strb.append(property.getGeneratedADocText());
-			strb.append("\n");
+			String generatedAdoc = property.getGeneratedADocText();
+			strb.append(generatedAdoc);
 
 			startlineOfElem.put(property, startline);
-			startline += property.getGeneratedLineCount() + 1;
+			startline += StringCountUtils.countNewLines(generatedAdoc);
 		}
 		return startline;
 	}
@@ -299,7 +299,7 @@ public class SpecModuleFile extends SpecFile {
 			strb.append("Enum ");
 		strb.append(type.getName());
 		strb.append("\n\n");
-		return startline + 3;
+		return startline + 2;
 	}
 
 	private String getBaseDir() {

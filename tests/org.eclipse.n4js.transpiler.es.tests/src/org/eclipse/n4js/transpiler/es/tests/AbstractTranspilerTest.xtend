@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSParseHelper
-import org.eclipse.n4js.generator.common.GeneratorOption
+import org.eclipse.n4js.generator.GeneratorOption
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedElement
@@ -66,6 +66,9 @@ abstract class AbstractTranspilerTest {
 	@Inject private EcmaScriptTranspiler esTranspiler;
 
 	@Inject protected EcmaScriptSubGenerator esSubGen
+
+	@Inject
+	private TranspilerDebugUtils transpilerDebugUtils;
 
 
 	/** Find first element of given type in original AST; throw assertion error if not found. */
@@ -127,8 +130,8 @@ abstract class AbstractTranspilerTest {
 	 * Perform some consistency checks on the transpiler state. For example, this asserts that no node in the
 	 * intermediate model has a direct cross-reference to the original AST or an original TModule element.
 	 */
-	def public static void validateState(TranspilerState state) throws AssertionError {
-		TranspilerDebugUtils.validateState(state, false);
+	def public void validateState(TranspilerState state) throws AssertionError {
+		transpilerDebugUtils.validateState(state, false);
 	}
 
 
@@ -393,7 +396,7 @@ abstract class AbstractTranspilerTest {
 				""
 			}»(function(System) {
 			«raw»
-			})(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
+			})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
 		''';
 	}
 }

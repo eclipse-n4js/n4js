@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.generator.common.GeneratorOption;
-import org.eclipse.n4js.projectModel.ProjectUtils;
+import org.eclipse.n4js.generator.GeneratorOption;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
@@ -103,7 +103,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	private Provider<JSXTransformation> jsxTransformationProvider;
 
 	@Inject
-	private ProjectUtils projectUtils;
+	private IN4JSCore n4jsCore;
 
 	@Override
 	protected Optional<String> getPreamble() {
@@ -170,7 +170,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	 */
 	private void doWrapAndWrite(N4JSResource resource, Writer outCode) {
 		// check if wrapping really applies.
-		boolean moduleWrapping = projectUtils.isModuleWrappingEnabled(resource.getURI());
+		boolean moduleWrapping = !n4jsCore.isNoModuleWrapping(resource.getURI());
 
 		// get script
 		EObject script = resource.getContents().get(0);

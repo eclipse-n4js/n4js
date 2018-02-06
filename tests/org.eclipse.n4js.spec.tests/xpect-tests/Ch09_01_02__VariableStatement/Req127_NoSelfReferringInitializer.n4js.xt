@@ -15,16 +15,25 @@
 // IDEBUG-19
 
 
-// XPECT warnings --> "Reference to variable n within the initializer expression of the declaration of n." at "n"
+// XPECT warnings ---
+// "Reference to variable n within the initializer expression of the declaration of n." at "n"
+// "Variable n is used before it is declared" at "n"
+// ---
 var n = n + 1;
 
 
 function foo(param : any) {return null;}
-// XPECT warnings --> "Reference to variable f within the initializer expression of the declaration of f." at "f"
+// XPECT warnings ---
+// "Reference to variable f within the initializer expression of the declaration of f." at "f"
+// "Variable f is used before it is declared" at "f"
+// ---
 var f = foo(f);
 
 
-// XPECT warnings --> "Reference to variable ol within the initializer expression of the declaration of ol." at "ol"
+// XPECT warnings ---
+// "Reference to variable ol within the initializer expression of the declaration of ol." at "ol"
+// "Variable ol is used before it is declared" at "ol"
+// ---
 var ol = { prop: 23 + ol };
 
 
@@ -33,11 +42,20 @@ var ol = { prop: 23 + ol };
 //
 
 var m = (((
-	// XPECT warnings --> "Reference to variable m within the initializer expression of the declaration of m." at "m"
+	// XPECT warnings ---
+	//		"Reference to variable m within the initializer expression of the declaration of m." at "m"
+	//		"Variable m is used before it is declared" at "m"
+	//	---
 	m + 3
-	// XPECT warnings --> "Reference to variable m within the initializer expression of the declaration of m." at "m"
+	// XPECT warnings ---
+	//		"Reference to variable m within the initializer expression of the declaration of m." at "m"
+	//		"Variable m is used before it is declared" at "m"
+	//	---
 	) + m
-	// XPECT warnings --> "Reference to variable m within the initializer expression of the declaration of m." at "m"
+	// XPECT warnings ---
+	//		"Reference to variable m within the initializer expression of the declaration of m." at "m"
+	//		"Variable m is used before it is declared" at "m"
+	//	---
 	) + 4 + m);
 
 
@@ -45,7 +63,10 @@ var m = (((
 // exported variables
 //
 
-// XPECT warnings --> "Reference to variable e within the initializer expression of the declaration of e." at "e"
+// XPECT warnings ---
+// "Reference to variable e within the initializer expression of the declaration of e." at "e"
+// "Variable e is used before it is declared" at "e"
+// ---
 export var e = e + 1;
 
 
@@ -53,7 +74,10 @@ export var e = e + 1;
 // const
 //
 
-// XPECT warnings --> "Reference to variable c within the initializer expression of the declaration of c." at "c"
+// XPECT warnings ---
+// "Reference to variable c within the initializer expression of the declaration of c." at "c"
+// "Variable c is used before it is declared" at "c"
+// ---
 const c = c + 1;
 
 

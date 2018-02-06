@@ -33,7 +33,7 @@ import java.util.Collection
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.nodemodel.INode
 import com.google.inject.Inject
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration

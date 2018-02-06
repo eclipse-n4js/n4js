@@ -11,7 +11,6 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 
 import com.google.common.collect.ComparisonChain;
@@ -37,6 +36,7 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	 */
 	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType) {
 		super(start, end);
+		assert cfType.isBackwards() == (start.astPosition > end.astPosition) : "Edge has wrong direction";
 		this.finallyPathContext = null;
 		this.cfType = cfType;
 	}
@@ -51,35 +51,14 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		this.cfType = finallyPathContext.cfType;
 	}
 
-	/** @return true iff {@link #cfType} is {@literal ControlFlowType.Repeat} */
-	public boolean isRepeat() {
-		switch (cfType) {
-		case Repeat:
-			return true;
-		default:
-			return false;
-		}
-	}
-
+	/** There should be no two edges with same start and end nodes. */
 	@Override
 	public int compareTo(ControlFlowEdge edge) {
 		int result = ComparisonChain.start()
 				.compare(start.id, edge.start.id)
 				.compare(end.id, edge.end.id)
-				.compare(cfType, edge.cfType)
 				.result();
 
-		if (result == 0) {
-			if (finallyPathContext != null && edge.finallyPathContext != null) {
-				return finallyPathContext.compareTo(edge.finallyPathContext);
-			}
-			if (finallyPathContext != null) {
-				return -1;
-			}
-			if (edge.finallyPathContext != null) {
-				return 1;
-			}
-		}
 		return result;
 	}
 
@@ -92,8 +71,6 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		boolean equals = true;
 		equals &= start.id == edge.start.id;
 		equals &= end.id == edge.end.id;
-		equals &= cfType == edge.cfType;
-		equals &= finallyPathContext.equals(edge.finallyPathContext);
 		return equals;
 	}
 
@@ -102,22 +79,18 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		long hashCode = 0;
 		hashCode += start.hashCode();
 		hashCode += end.hashCode();
-		hashCode += cfType.hashCode();
-		hashCode += (finallyPathContext != null) ? finallyPathContext.hashCode() : 0;
 		return (int) (hashCode % Integer.MAX_VALUE);
 	}
 
 	@Override
 	public String toString() {
 		String s = "";
-		s += "[" + FGUtils.getSourceText(start.getControlFlowElement()) + "]";
-		s += "(" + start + ") ";
+		s += start.getExtendedString();
 		if (cfType != ControlFlowType.Successor) {
 			s += "-" + cfType.name();
 		}
 		s += "-> ";
-		s += "[" + FGUtils.getSourceText(end.getControlFlowElement()) + "]";
-		s += "(" + end + ")";
+		s += end.getExtendedString();
 		return s;
 	}
 }

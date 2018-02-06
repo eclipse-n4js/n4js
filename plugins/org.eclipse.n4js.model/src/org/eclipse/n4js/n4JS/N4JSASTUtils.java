@@ -497,6 +497,18 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * If the given AST node is a {@link ParenExpression}, this method will return its first ancestor which is not a
+	 * {@code ParenExpression}; otherwise returns the given AST node. Will return <code>null</code> if a value of
+	 * <code>null</code> is passed in or if a non-contained ParenExpression is reached while moving upwards.
+	 */
+	public static EObject skipParenExpressionUpward(EObject astNode) {
+		while (astNode instanceof ParenExpression) {
+			astNode = astNode.eContainer();
+		}
+		return astNode;
+	}
+
+	/**
 	 * If the given AST node is a {@link ParenExpression}, this method will return its first nested expression which is
 	 * not a {@code ParenExpression}; otherwise returns the given AST node.
 	 * <p>
@@ -504,7 +516,7 @@ public abstract class N4JSASTUtils {
 	 * {@code ParenExpression}. Hence, this method will return <code>null</code> only if passed in a value of
 	 * <code>null</code>.
 	 */
-	public static TypableElement ignoreParentheses(TypableElement astNode) {
+	public static TypableElement skipParenExpressionDownward(TypableElement astNode) {
 		while (astNode instanceof ParenExpression) {
 			final Expression expr = ((ParenExpression) astNode).getExpression();
 			if (expr == null) {

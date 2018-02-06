@@ -6,7 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Fragment-Host: org.eclipse.n4js.jsdoc2spec
 Require-Bundle: org.eclipse.n4js.tests.helper,
- org.xpect.xtext.lib,
+ org.eclipse.xpect.xtext.lib,
  org.eclipse.n4js.n4mf.ui,
  org.eclipse.n4js.xpect,
  org.eclipse.xtext.testing

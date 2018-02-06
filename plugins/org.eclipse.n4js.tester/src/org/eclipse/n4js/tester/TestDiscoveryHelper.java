@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
-import org.eclipse.n4js.naming.QualifiedNameComputer;
+import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -59,11 +59,13 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
 import com.google.inject.Inject;
 
@@ -74,6 +76,8 @@ public class TestDiscoveryHelper {
 
 	@Inject
 	private FileExtensionsRegistry fileExtensionRegistry;
+	@Inject
+	private IN4JSCore n4jscore;
 
 	private static final EClass T_CLASS = TypesPackage.eINSTANCE.getTClass();
 
@@ -94,7 +98,7 @@ public class TestDiscoveryHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private QualifiedNameComputer qualifiedNameComputer;
+	private ResourceNameComputer resourceNameComputer;
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 
@@ -369,8 +373,28 @@ public class TestDiscoveryHelper {
 	 * Returns the name to be used in the test catalog for the given {@link TClass}. We use the fully qualified name for
 	 * this purpose.
 	 */
-	private String getClassName(final TClass clazz) {
-		return qualifiedNameComputer.getFullyQualifiedTypeName(clazz);
+	private String getClassName(TClass clazz) {
+		String classStr = "";
+		if (clazz.getDeclaredVersion() > 0) {
+			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz) + N4IDLGlobals.COMPILED_VERSION_SEPARATOR
+					+ clazz.getDeclaredVersion();
+		} else {
+			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz);
+		}
+
+		IN4JSProject project = n4jscore.findProject(clazz.eResource().getURI()).orNull();
+		if (project != null) {
+			String output = project.getOutputPath();
+			if (Strings.isNullOrEmpty(output) == false && output != ".") {
+				if (output.endsWith("/")) {
+					classStr = output + classStr;
+				} else {
+					classStr = output + "/" + classStr;
+				}
+			}
+		}
+
+		return classStr;
 	}
 
 	private Map<URI, TModule> loadModules(final Iterable<URI> moduleUris, final IResourceDescriptions index,

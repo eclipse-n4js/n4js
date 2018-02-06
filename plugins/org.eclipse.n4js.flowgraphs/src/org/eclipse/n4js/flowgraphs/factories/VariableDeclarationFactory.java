@@ -10,14 +10,10 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
@@ -25,20 +21,25 @@ import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class VariableDeclarationFactory {
 
-	static ComplexNode buildComplexNode(VariableDeclaration vd) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(vd);
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, VariableDeclaration vd) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), vd);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, intPos++, vd);
+		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), vd);
 		Node expressionNode = null;
 
 		if (vd.getExpression() != null) {
-			expressionNode = new DelegatingNode("expression", intPos++, vd, vd.getExpression());
+			expressionNode = DelegatingNodeFactory.create(astpp, NodeNames.EXPRESSION, vd, vd.getExpression());
 		}
-		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, vd);
+		Node exitNode = new RepresentingNode(NodeNames.EXIT, astpp.pos(), vd);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(expressionNode);
@@ -52,6 +53,7 @@ class VariableDeclarationFactory {
 
 		if (vd.eContainer() instanceof BindingElement) {
 			// In this case, the expression is the default value
+			// TODO: improve this: find out if this is true or false
 			cNode.connectInternalSucc(entryNode, exitNode);
 		}
 

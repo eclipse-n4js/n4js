@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.*;
 
 import org.eclipse.n4js.ts.typeRefs.Versionable;
+import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -725,6 +726,46 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createBindingElementAdapter();
 			}
 			@Override
+			public Adapter caseJSXChild(JSXChild object) {
+				return createJSXChildAdapter();
+			}
+			@Override
+			public Adapter caseJSXElementName(JSXElementName object) {
+				return createJSXElementNameAdapter();
+			}
+			@Override
+			public Adapter caseJSXText(JSXText object) {
+				return createJSXTextAdapter();
+			}
+			@Override
+			public Adapter caseJSXExpression(JSXExpression object) {
+				return createJSXExpressionAdapter();
+			}
+			@Override
+			public Adapter caseJSXAttribute(JSXAttribute object) {
+				return createJSXAttributeAdapter();
+			}
+			@Override
+			public Adapter caseJSXPropertyAttribute(JSXPropertyAttribute object) {
+				return createJSXPropertyAttributeAdapter();
+			}
+			@Override
+			public Adapter caseJSXSpreadAttribute(JSXSpreadAttribute object) {
+				return createJSXSpreadAttributeAdapter();
+			}
+			@Override
+			public Adapter caseJSXElement(JSXElement object) {
+				return createJSXElementAdapter();
+			}
+			@Override
+			public Adapter caseVersionedElement(VersionedElement object) {
+				return createVersionedElementAdapter();
+			}
+			@Override
+			public Adapter caseVersionedIdentifierRef(VersionedIdentifierRef object) {
+				return createVersionedIdentifierRefAdapter();
+			}
+			@Override
 			public Adapter caseTypableElement(TypableElement object) {
 				return createTypableElementAdapter();
 			}
@@ -735,6 +776,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseVersionable(Versionable object) {
 				return createVersionableAdapter();
+			}
+			@Override
+			public Adapter caseVersionedReference(VersionedReference object) {
+				return createVersionedReferenceAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -3011,6 +3056,146 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXChild <em>JSX Child</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXChild
+	 * @generated
+	 */
+	public Adapter createJSXChildAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXElementName <em>JSX Element Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXElementName
+	 * @generated
+	 */
+	public Adapter createJSXElementNameAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXText <em>JSX Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXText
+	 * @generated
+	 */
+	public Adapter createJSXTextAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXExpression <em>JSX Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXExpression
+	 * @generated
+	 */
+	public Adapter createJSXExpressionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXAttribute <em>JSX Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXAttribute
+	 * @generated
+	 */
+	public Adapter createJSXAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXPropertyAttribute <em>JSX Property Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXPropertyAttribute
+	 * @generated
+	 */
+	public Adapter createJSXPropertyAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXSpreadAttribute <em>JSX Spread Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXSpreadAttribute
+	 * @generated
+	 */
+	public Adapter createJSXSpreadAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXElement <em>JSX Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXElement
+	 * @generated
+	 */
+	public Adapter createJSXElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.VersionedElement <em>Versioned Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.VersionedElement
+	 * @generated
+	 */
+	public Adapter createVersionedElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.VersionedIdentifierRef <em>Versioned Identifier Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.VersionedIdentifierRef
+	 * @generated
+	 */
+	public Adapter createVersionedIdentifierRefAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TypableElement <em>Typable Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -3049,6 +3234,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createVersionableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedReference <em>Versioned Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.VersionedReference
+	 * @generated
+	 */
+	public Adapter createVersionedReferenceAdapter() {
 		return null;
 	}
 

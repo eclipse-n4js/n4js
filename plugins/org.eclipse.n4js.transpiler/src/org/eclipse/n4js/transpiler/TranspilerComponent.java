@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -34,7 +35,6 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.ReferencingElementExpression_IM;
@@ -42,12 +42,14 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
 import org.eclipse.n4js.transpiler.operations.TranspilerStateOperations;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
@@ -71,8 +73,6 @@ public abstract class TranspilerComponent {
 	private TranspilerState state;
 	@Inject
 	private PreparationStep preparationStep;
-	@Inject
-	private JSXBackendHelper jsx;
 
 	/**
 	 * Default constructor.
@@ -94,6 +94,21 @@ public abstract class TranspilerComponent {
 
 	// ###############################################################################################################
 	// DELEGATION METHODS TO TRANSPILER STATE OPERATIONS
+
+	/** See {@link TranspilerStateOperations#addNamespaceImport(TranspilerState, TModule, String)}. */
+	protected SymbolTableEntryOriginal addNamespaceImport(TModule moduleToImport, String namespaceName) {
+		return TranspilerStateOperations.addNamespaceImport(state, moduleToImport, namespaceName);
+	}
+
+	/** See {@link TranspilerStateOperations#addNamedImport(TranspilerState, IdentifiableElement, String)}. */
+	public SymbolTableEntryOriginal addNamedImport(IdentifiableElement elementToImport, String aliasOrNull) {
+		return TranspilerStateOperations.addNamedImport(state, elementToImport, aliasOrNull);
+	}
+
+	/** See {@link TranspilerStateOperations#addNamedImport(TranspilerState, SymbolTableEntryOriginal, String)}. */
+	public void addNamedImport(SymbolTableEntryOriginal steOfElementToImport, String aliasOrNull) {
+		TranspilerStateOperations.addNamedImport(state, steOfElementToImport, aliasOrNull);
+	}
 
 	@SuppressWarnings("javadoc")
 	protected void setTarget(ParameterizedCallExpression callExpr, Expression newTarget) {
@@ -264,6 +279,12 @@ public abstract class TranspilerComponent {
 	@SuppressWarnings("javadoc")
 	protected SymbolTableEntryOriginal findSymbolTableEntryForNamedImport(NamedImportSpecifier importspec) {
 		return SymbolTableManagement.findSymbolTableEntryForNamedImport(state, importspec);
+	}
+
+	@SuppressWarnings("javadoc")
+	protected Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(
+			VersionedNamedImportSpecifier_IM importspec) {
+		return SymbolTableManagement.findSymbolTableEntriesForVersionedTypeImport(state, importspec);
 	}
 
 	@SuppressWarnings("javadoc")
@@ -670,20 +691,5 @@ public abstract class TranspilerComponent {
 	public SymbolTableEntryInternal steFor_assign() {
 
 		return getSymbolTableEntryInternal("assign", true);
-	}
-
-	// ################################################################################################################
-	// JSX RELATED THINGS (TODO IDE-2416 remove this from n4js transpiler)
-
-	/** "React" - retrieve the internal symbol table entry for the symbol "React" */
-	public SymbolTableEntryInternal steFor_React() {
-
-		return getSymbolTableEntryInternal(jsx.getBackendFacadeName(), true);
-	}
-
-	/** "createElement" - retrieve the internal symbol table entry for the symbol "createElement" */
-	public SymbolTableEntryInternal steFor_createElement() {
-
-		return getSymbolTableEntryInternal(jsx.getBackendElementFactoryMethodName(), true);
 	}
 }

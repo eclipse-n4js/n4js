@@ -11,10 +11,10 @@ Contributors:
 -->
 <?eclipse version="3.4"?>
 <plugin>
-	<extension point="org.xpect.testSuite">
+	<extension point="org.eclipse.xpect.testSuite">
 		<testSuite class="org.eclipse.n4js.bugreports.tests.N4JSBugreportTest" fileExtension="n4js" />
 	</extension>
-	<extension point="org.xpect.testSuite">
+	<extension point="org.eclipse.xpect.testSuite">
 		<testSuite class="org.eclipse.n4js.bugreports.tests.N4JSBugreportTest" fileExtension="js" />
 	</extension>
 

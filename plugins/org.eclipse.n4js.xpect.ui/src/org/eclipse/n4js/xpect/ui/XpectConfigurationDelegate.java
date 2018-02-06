@@ -25,8 +25,8 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
-import org.xpect.runner.IXpectURIProvider;
-import org.xpect.runner.XpectRunner;
+import org.eclipse.xpect.runner.IXpectURIProvider;
+import org.eclipse.xpect.runner.XpectRunner;
 
 import org.eclipse.n4js.xpect.ui.results.N4IDEXpectRunListener;
 import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestClass;

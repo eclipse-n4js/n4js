@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
@@ -35,6 +36,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedAccess;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PrimaryExpression;
@@ -49,6 +51,7 @@ import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 
+import org.eclipse.n4js.n4JS.VersionedIdentifierRef;
 import org.eclipse.n4js.transpiler.im.*;
 
 import org.eclipse.n4js.ts.typeRefs.BaseTypeRef;
@@ -60,6 +63,9 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural;
+import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 import org.eclipse.n4js.ts.types.TypableElement;
 
 /**
@@ -338,6 +344,67 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_IM: {
+				VersionedParameterizedTypeRef_IM versionedParameterizedTypeRef_IM = (VersionedParameterizedTypeRef_IM)theEObject;
+				T result = caseVersionedParameterizedTypeRef_IM(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseParameterizedTypeRef_IM(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseVersionedParameterizedTypeRef(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseParameterizedTypeRef(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseReferencingElement_IM(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseVersionedReference(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseBaseTypeRef(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseStaticBaseTypeRef(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseTypeRef(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseTypeArgument(versionedParameterizedTypeRef_IM);
+				if (result == null) result = caseVersionable(versionedParameterizedTypeRef_IM);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM: {
+				VersionedParameterizedTypeRefStructural_IM versionedParameterizedTypeRefStructural_IM = (VersionedParameterizedTypeRefStructural_IM)theEObject;
+				T result = caseVersionedParameterizedTypeRefStructural_IM(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseParameterizedTypeRef_IM(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseVersionedParameterizedTypeRefStructural(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseReferencingElement_IM(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseVersionedParameterizedTypeRef(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseParameterizedTypeRefStructural(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseParameterizedTypeRef(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseBaseTypeRef(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseVersionedReference(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseStructuralTypeRef(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseStaticBaseTypeRef(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseTypeRef(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseTypeArgument(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = caseVersionable(versionedParameterizedTypeRefStructural_IM);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ImPackage.VERSIONED_IDENTIFIER_REF_IM: {
+				VersionedIdentifierRef_IM versionedIdentifierRef_IM = (VersionedIdentifierRef_IM)theEObject;
+				T result = caseVersionedIdentifierRef_IM(versionedIdentifierRef_IM);
+				if (result == null) result = caseIdentifierRef_IM(versionedIdentifierRef_IM);
+				if (result == null) result = caseVersionedIdentifierRef(versionedIdentifierRef_IM);
+				if (result == null) result = caseIdentifierRef(versionedIdentifierRef_IM);
+				if (result == null) result = caseReferencingElementExpression_IM(versionedIdentifierRef_IM);
+				if (result == null) result = caseVersionedReference(versionedIdentifierRef_IM);
+				if (result == null) result = casePrimaryExpression(versionedIdentifierRef_IM);
+				if (result == null) result = caseStrictModeRelevant(versionedIdentifierRef_IM);
+				if (result == null) result = caseVersionable(versionedIdentifierRef_IM);
+				if (result == null) result = caseReferencingElement_IM(versionedIdentifierRef_IM);
+				if (result == null) result = caseExpression(versionedIdentifierRef_IM);
+				if (result == null) result = caseTypableElement(versionedIdentifierRef_IM);
+				if (result == null) result = caseControlFlowElement(versionedIdentifierRef_IM);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM: {
+				VersionedNamedImportSpecifier_IM versionedNamedImportSpecifier_IM = (VersionedNamedImportSpecifier_IM)theEObject;
+				T result = caseVersionedNamedImportSpecifier_IM(versionedNamedImportSpecifier_IM);
+				if (result == null) result = caseNamedImportSpecifier(versionedNamedImportSpecifier_IM);
+				if (result == null) result = caseImportSpecifier(versionedNamedImportSpecifier_IM);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -613,6 +680,66 @@ public class ImSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref IM</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref IM</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedParameterizedTypeRef_IM(VersionedParameterizedTypeRef_IM object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref Structural IM</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref Structural IM</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedParameterizedTypeRefStructural_IM(VersionedParameterizedTypeRefStructural_IM object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Identifier Ref IM</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Identifier Ref IM</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedIdentifierRef_IM(VersionedIdentifierRef_IM object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Named Import Specifier IM</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Named Import Specifier IM</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedNamedImportSpecifier_IM(VersionedNamedImportSpecifier_IM object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Variable Environment Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -643,6 +770,21 @@ public class ImSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseControlFlowElement(ControlFlowElement object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Script</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -669,21 +811,6 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTypableElement(TypableElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseControlFlowElement(ControlFlowElement object) {
 		return null;
 	}
 
@@ -1239,6 +1366,96 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseStringLiteral(StringLiteral object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedReference(VersionedReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedParameterizedTypeRef(VersionedParameterizedTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref Structural</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Parameterized Type Ref Structural</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedParameterizedTypeRefStructural(VersionedParameterizedTypeRefStructural object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Versioned Identifier Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Versioned Identifier Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVersionedIdentifierRef(VersionedIdentifierRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Import Specifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Import Specifier</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseImportSpecifier(ImportSpecifier object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Named Import Specifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Named Import Specifier</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNamedImportSpecifier(NamedImportSpecifier object) {
 		return null;
 	}
 

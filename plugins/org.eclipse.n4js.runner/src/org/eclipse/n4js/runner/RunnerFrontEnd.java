@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.runner;
 
-import static org.eclipse.n4js.utils.io.FileUtils.getTempFolder;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
@@ -27,13 +25,14 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.common.CompilerUtils;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -51,7 +50,7 @@ public class RunnerFrontEnd {
 	private IN4JSCore in4jscore;
 
 	@Inject
-	private CompilerUtils compilerUtils;
+	private ResourceNameComputer resourceNameComputer;
 
 	@Inject
 	private RunnerHelper runnerHelper;
@@ -175,7 +174,8 @@ public class RunnerFrontEnd {
 	 * Create runner-config customized for this Xpect test. cf. org.eclipse.n4js.xpect.XpectN4JSES5TranspilerHelper
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
-			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader) {
+			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader,
+			String additionalPath) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -189,7 +189,7 @@ public class RunnerFrontEnd {
 
 		config.setUseCustomBootstrap(true);
 
-		config.setCoreProjectPaths(Lists.newArrayList(getTempFolder().toString()));
+		config.setCoreProjectPaths(Lists.newArrayList(additionalPath));
 
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);
@@ -270,8 +270,12 @@ public class RunnerFrontEnd {
 	private void configureExecutionData(RunConfiguration config) {
 		final URI userSelection = config.getUserSelection();
 		if (userSelection != null && (hasValidFileExtension(userSelection.toString()))) {
-			final String userSelection_targetFileName = compilerUtils.getTargetFileName(userSelection, null);
-			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION, userSelection_targetFileName);
+			final String userSelection_targetFileName = resourceNameComputer.generateFileDescriptor(userSelection,
+					null);
+			IN4JSProject project = resolveProject(userSelection);
+			String base = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
+			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
+					base + "/" + userSelection_targetFileName);
 		} else {
 			// this can happen if the RunConfiguration 'config' is actually a TestConfiguration, because then the user
 			// selection is allowed to point to a project or folder (and method CompilerUtils#getModuleName() above
@@ -281,6 +285,18 @@ public class RunnerFrontEnd {
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__INIT_MODULES, config.getInitModules());
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__PROJECT_NAME_MAPPING,
 				config.getApiImplProjectMapping());
+	}
+
+	/**
+	 * Resolves project from provided URI.
+	 */
+	private IN4JSProject resolveProject(URI n4jsSourceURI) {
+		final Optional<? extends IN4JSProject> optionalProject = in4jscore.findProject(n4jsSourceURI);
+		if (!optionalProject.isPresent()) {
+			throw new RuntimeException(
+					"Cannot handle resource without containing project. Resource URI was: " + n4jsSourceURI + ".");
+		}
+		return optionalProject.get();
 	}
 
 	/**

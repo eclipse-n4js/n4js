@@ -58,6 +58,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerModificationStrategyProvider;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManualAssociationWizard;
 import org.eclipse.n4js.ui.workingsets.WorkingSetProjectNameFilterWizard;
+import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
@@ -139,6 +140,8 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSProjectExplorerLabelProvider.class);
 		binder.bind(N4JSProjectExplorerHelper.class);
 		binder.bind(ObjectMapper.class);
+
+		binder.bind(WorkspaceRepositoriesProvider.class).in(SINGLETON);
 
 		binder.bind(ResourceDescriptionsProvider.class);
 		binder.bind(ResourceSetBasedResourceDescriptions.class);

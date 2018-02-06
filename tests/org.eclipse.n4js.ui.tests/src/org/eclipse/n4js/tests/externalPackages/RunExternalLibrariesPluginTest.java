@@ -12,10 +12,10 @@ package org.eclipse.n4js.tests.externalPackages;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 import static java.util.Arrays.asList;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
+import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 
 import java.io.File;
 import java.net.URI;
@@ -28,6 +28,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.runner.RunConfiguration;
+import org.eclipse.n4js.runner.RunnerFrontEnd;
+import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.utils.process.OutputRedirection;
+import org.eclipse.n4js.utils.process.ProcessExecutor;
+import org.eclipse.n4js.utils.process.ProcessResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -35,16 +44,6 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.runner.RunConfiguration;
-import org.eclipse.n4js.runner.RunnerFrontEnd;
-import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
-import org.eclipse.n4js.utils.process.OutputRedirection;
-import org.eclipse.n4js.utils.process.ProcessExecutor;
-import org.eclipse.n4js.utils.process.ProcessResult;
 
 /**
  * Test for checking the runtime behavior of the external libraries.
@@ -108,7 +107,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		waitForAutoBuild();
 		for (final String projectName : ALL_PROJECT_IDS) {
 			final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-			ProjectUtils.importProject(projectsRoot, projectName);
+			ProjectTestsUtils.importProject(projectsRoot, projectName);
 		}
 		waitForAutoBuild();
 	}
@@ -298,7 +297,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 
 		for (final String libProjectName : newArrayList(PB, PD)) {
 			final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-			ProjectUtils.importProject(projectsRoot, libProjectName);
+			ProjectTestsUtils.importProject(projectsRoot, libProjectName);
 			waitForAutoBuildCheckIndexRigid();
 		}
 
@@ -329,8 +328,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(ID, null, moduleToRun);
 		final Process process = runnerFrontEndUI.runInUI(config);
 		final ProcessResult result = processExecutor.execute(process, "", OutputRedirection.REDIRECT);
-		assertTrue("Expected 0 error code for the process. Was: " + result.getExitCode(), result.isOK());
-		return result;
+		if (result.isOK())
+			return result;
+		throw new RuntimeException("Client exited with error.\n" + result);
 	}
 
 	private IProject getProjectByName(final String name) {

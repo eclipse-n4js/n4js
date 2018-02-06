@@ -22,7 +22,7 @@ o as string;
 o as any;
 // XPECT warnings --> "Unnecessary cast from Object to Object" at "o as Object"
 o as Object;
-// XPECT errors --> "Cannot cast from Object to E" at "o as E"
+// XPECT noerrors -->
 o as E;
 // XPECT noerrors -->
 o as constructor{C};

@@ -21,9 +21,3 @@ Sources {
 		"model_ui"
 	}
 }
-ModuleFilters {
-	noValidate {
-		"validation/IDE_754_noValidate/novalidate/*",
-		"validation/IDE_754_noValidate/nowrap/*"
-	}
-}

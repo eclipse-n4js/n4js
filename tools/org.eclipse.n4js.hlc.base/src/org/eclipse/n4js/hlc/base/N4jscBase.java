@@ -39,16 +39,13 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
-import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
@@ -59,8 +56,6 @@ import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
-import org.eclipse.n4js.fileextensions.FileExtensionType;
-import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -71,20 +66,15 @@ import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4jsx.N4JSXGlobals;
-import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.runner.extension.RunnerRegistry;
-import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
-import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
 import org.eclipse.n4js.ts.TypesStandaloneSetup;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -254,23 +244,10 @@ public class N4jscBase implements IApplication {
 	private HeadlessRunner headlessRunner;
 
 	@Inject
-	private RunnerRegistry runnerRegistry;
-
-	@Inject
 	private HeadlessTester headlessTester;
 
 	@Inject
-	private TesterRegistry testerRegistry;
-
-	@Inject
 	private FileBasedWorkspace n4jsFileBasedWorkspace;
-
-	// TODO IDE-2493 remove duplicated singletons
-	/**
-	 * Due to issues described in {@code IDE-2493} we need to duplicate singletons that have state.
-	 */
-	@Inject
-	private FileBasedWorkspace n4jsxFileBasedWorkspace;
 
 	@Inject
 	private TestCatalogSupplier testCatalogSupplier;
@@ -282,10 +259,7 @@ public class N4jscBase implements IApplication {
 	private NpmManager npmManager;
 
 	@Inject
-	private NodeRunnerDescriptorProvider nodeRunnerDescriptorProvider;
-
-	@Inject
-	private NodeTesterDescriptorProvider nodeTesterDescriptorProvider;
+	private TesterRegistry testerRegistry;
 
 	@Inject
 	private Provider<NodeJsBinary> nodeJsBinaryProvider;
@@ -303,14 +277,7 @@ public class N4jscBase implements IApplication {
 	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
 	@Inject
-	private FileExtensionsRegistry n4jsFileExtensionsRegistry;
-
-	// TODO IDE-2493 remove duplicated singletons
-	/**
-	 * Due to issues described in {@code IDE-2493} we need to duplicate singletons that have state.
-	 */
-	@Inject
-	private FileExtensionsRegistry n4jsxFileExtensionsRegistry;
+	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -407,21 +374,8 @@ public class N4jscBase implements IApplication {
 			// help.
 			initInjection(refProperties());
 
-			// Wire registers related to the extension points
-			// in non-OSGI mode extension points are not automatically populated
-			if (!Platform.isRunning()) {
-				runnerRegistry.register(nodeRunnerDescriptorProvider.get());
-				testerRegistry.register(nodeTesterDescriptorProvider.get());
-			}
-			registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSXGlobals.N4JSX_FILE_EXTENSION);
-			registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-					N4JSXGlobals.N4JSX_FILE_EXTENSION, N4JSXGlobals.JSX_FILE_EXTENSION);
-			registerTranspilableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSXGlobals.N4JSX_FILE_EXTENSION,
-					N4JSGlobals.JS_FILE_EXTENSION, N4JSXGlobals.JSX_FILE_EXTENSION);
-			registerTypableFiles(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.N4JS_FILE_EXTENSION,
-					N4JSXGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-					N4JSXGlobals.JSX_FILE_EXTENSION);
-			registerRawFiles(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
+			// Register extensions manually
+			headlessExtensionRegistrationHelper.registerExtensions();
 
 			if (listRunners) {
 				printAvailableRunners(System.out);
@@ -587,56 +541,6 @@ public class N4jscBase implements IApplication {
 		}
 	}
 
-	/**
-	 * Registers files to {@link FileExtensionType#TESTABLE_FILE_EXTENSION}
-	 */
-	private void registerTestableFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#RUNNABLE_FILE_EXTENSION}
-	 */
-	private void registerRunnableFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.RUNNABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.RUNNABLE_FILE_EXTENSION);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#TRANSPILABLE_FILE_EXTENSION}
-	 */
-	private void registerTranspilableFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#TYPABLE_FILE_EXTENSION}
-	 */
-	private void registerTypableFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TYPABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.TYPABLE_FILE_EXTENSION);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#RAW_FILE_EXTENSION}
-	 */
-	private void registerRawFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
-		}
-	}
-
 	private void validateBinaries() throws ExitCodeException {
 		IStatus status = nodeJsBinaryProvider.get().validate();
 		if (!status.isOK()) {
@@ -728,21 +632,14 @@ public class N4jscBase implements IApplication {
 					if (null != versionedPackages) {
 						final Iterable<Entry<String, String>> packageData = versionedPackages.entrySet();
 						for (final Entry<String, String> name2version : packageData) {
-							try {
-								final IStatus status = npmManager.installDependency(name2version.getKey(),
-										name2version.getValue(), new NullProgressMonitor());
-								if (!status.isOK()) {
-									throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(),
-											status.getException());
-								}
-							} catch (final IllegalBinaryStateException e) {
-								final IStatus status = e.getStatus();
+							final IStatus status = npmManager.installDependency(name2version.getKey(),
+									name2version.getValue(), new NullProgressMonitor());
+							if (!status.isOK()) {
 								throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(),
 										status.getException());
 							}
 						}
 					}
-
 				}
 			} catch (IOException e) {
 				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
@@ -891,12 +788,7 @@ public class N4jscBase implements IApplication {
 		return string == null || string.trim().length() == 0;
 	}
 
-	/**
-	 * Creates the injector for the test and injects all fields with the initialized injector.
-	 *
-	 * TODO injection setup + EMF registration performed in n4jsc.jar (i.e. in this method) requires major refactoring
-	 * (problem is that the N4JS-specific injector is used to inject 'this', i.e. an instance of class N4jsc)
-	 */
+	/** Creates the injector for the test and injects all fields with the initialized injector. */
 	private void initInjection(Properties properties) {
 
 		// STEP 1: set up language N4JS
@@ -930,19 +822,6 @@ public class N4jscBase implements IApplication {
 		final Injector injector = Guice.createInjector(overridenModule);
 		new N4JSStandaloneSetup().register(injector);
 		injector.injectMembers(this);
-
-		// STEP 2: set up language N4JSX
-
-		// By default, the ISetup classes generated by Xtext trigger the setup of parent languages (for example,
-		// setup of N4JSX triggers setup of N4JS, i.e. method #createInjectorAndDoEMFRegistration() in the generated
-		// class N4JSXStandaloneSetupGenerated invokes #doSetup() of class N4JSStandaloneSetup). In the following line,
-		// we have to avoid this implicit setup of N4JS, because N4JS was already initialized (another initialization
-		// would create a second injector for the language N4JS, which might lead to follow-up issues, e.g. multiple
-		// instances of singletons per language).
-		Injector n4jsxInjector = N4JSXStandaloneSetup.doSetupWithoutParentLanguages();
-		this.n4jsxFileExtensionsRegistry = n4jsxInjector.getInstance(FileExtensionsRegistry.class);
-		this.n4jsxFileBasedWorkspace = n4jsxInjector.getInstance(FileBasedWorkspace.class);
-		headless.setInstancesFromN4JSXInjector(n4jsxFileBasedWorkspace);
 	}
 
 	/**
@@ -1011,7 +890,8 @@ public class N4jscBase implements IApplication {
 			if (buildtype != BuildType.dontcompile) {
 				flushAndIinsertMarkerInOutputs();
 			}
-			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun());
+			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
+					targetPlatformInstallLocation);
 		}
 
 		if (debug) {
@@ -1122,7 +1002,7 @@ public class N4jscBase implements IApplication {
 					"Require option for projectlocations.");
 
 		HeadlessHelper.registerProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
-				n4jsFileBasedWorkspace, n4jsxFileBasedWorkspace);
+				n4jsFileBasedWorkspace);
 	}
 
 	/**

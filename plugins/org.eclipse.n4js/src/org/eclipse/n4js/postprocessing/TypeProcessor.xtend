@@ -139,7 +139,7 @@ public class TypeProcessor extends AbstractProcessor {
 				log(indentLevel, "asking Xsemantics ...");
 				val result = askXsemanticsForType(G, null, node);
 
-				val resultAdjusted = adjustResultForLocationInAST(G, result, N4JSASTUtils.ignoreParentheses(node));
+				val resultAdjusted = adjustResultForLocationInAST(G, result, N4JSASTUtils.skipParenExpressionDownward(node));
 
 				// in this case, we are responsible for storing the type in the cache
 				// (Xsemantics does not know of the cache)
@@ -288,7 +288,7 @@ public class TypeProcessor extends AbstractProcessor {
 			return askXsemanticsForType(G, trace, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
 		} else if (obj.isASTNode && obj.isTypableNode) {
 			// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
-			val cache = res.getASTMetaInfoCache();
+			val cache = res.getASTMetaInfoCacheVerifyContext();
 			if (!res.isPostProcessing && !res.isFullyProcessed) {
 				// we have called #performPostProcessing() on the containing resource above, so this is "impossible"
 				throw new IllegalStateException("post-processing neither in progress nor completed after calling #performPostProcessing() in resource: " + res.URI);
@@ -396,7 +396,7 @@ public class TypeProcessor extends AbstractProcessor {
 		} else {
 			val msg = "*#*#*#*#*#* ILLEGAL FORWARD REFERENCE to " + node + " in " + node.eResource?.URI;
 			logErr(msg);
-			return new Result(new IllegalStateException(msg));
+			return new Result<TypeRef>(new RuleFailedException(msg));
 		}
 	}
 

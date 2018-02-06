@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import java.util.List
+import java.util.Map
+import javax.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -27,10 +31,6 @@ import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import java.util.List
-import java.util.Map
-import javax.inject.Inject
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -40,8 +40,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 
-/**
- */
+/** Validations for the import statements. */
 @Log
 class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
@@ -72,7 +71,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkConflictingImports(Script script) {
 		val eObjectToIssueCode = newHashMap
-		analyzeAndcheckConflictingImports(script, eObjectToIssueCode)
+		analyzeAndCheckConflictingImports(script, eObjectToIssueCode)
 		// regardless of other issues, add markers for scattered imports
 		markScatteredImports(script)
 	}
@@ -106,7 +105,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Algorithm to check the Model for Issues with Imports.
 	 */
-	private def analyzeAndcheckConflictingImports(Script script, Map<EObject, String> eObjectToIssueCode) {
+	private def analyzeAndCheckConflictingImports(Script script, Map<EObject, String> eObjectToIssueCode) {
 		val reg = importStateCalculator.calculateImportstate(script);
 
 		reg.duplicatedImportDeclarations.forEach[handleDuplicatedImportDeclarations(eObjectToIssueCode)]
@@ -147,17 +146,20 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
+	 * Computes a user-facing name for the given {@link NamedImportSpecifier}
+	 * that can be used in error/warning messages.
+	 *
 	 * @param spec
 	 * @return name from NamedImportSpecifier or AST-text if unresolved.
 	 */
-	private def String importedElementErrorName(NamedImportSpecifier spec) {
+	private def String computeImportSpecifierName(NamedImportSpecifier spec) {
 		if (spec.isBrokenImport) {
 			// find AST for Message:
 			NodeModelUtils.findActualNodeFor(spec).text.trim
 		} else
 			spec.importedElementName
 	}
-	
+
 	/** Mark all imports that don't appear in the header.
 	 * @param script the script
 	 */
@@ -221,7 +223,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			val name = pair.key
 			val providers = pair.value
 			// assuming they came in order
-			val first = providers.head.importSpec
+			val first = providers.head.importSpecifier
 			val name2reason = switch (first) {
 				NamespaceImportSpecifier: {
 					name -> "namespace name for " + first.importedModule.qualifiedName.toString
@@ -241,8 +243,8 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 			providers.tail.forEach [ importProvidedElement |
-				addLocalNameCollision(importProvidedElement.importSpec, name2reason.key, name2reason.value,
-					eObjectToIssueCode)
+				addLocalNameCollision(importProvidedElement.importSpecifier, name2reason.key, name2reason.value,
+					eObjectToIssueCode);
 			]
 		]
 	}
@@ -254,7 +256,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			val entryName = entry.key
 			val entryModule = entry.value
 			val imports = duplicateEntry.value
-			val firstImportSpecifier = imports.head.importSpec
+			val firstImportSpecifier = imports.head.importSpecifier
 			val firstImportName = switch (firstImportSpecifier) {
 				NamespaceImportSpecifier: {
 					firstImportSpecifier.alias + "." + entryName
@@ -268,7 +270,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			};
 
 			imports.tail.forEach [ dupe |
-				val duplicateImportSpecifier = dupe.importSpec
+				val duplicateImportSpecifier = dupe.importSpecifier
 				if (firstImportIsDefault && duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
 					addIssueDuplicate(firstImportSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
 				}
@@ -277,7 +279,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 					addIssueDuplicateNamespace(duplicateImportSpecifier as NamespaceImportSpecifier,
 						firstImportSpecifier as NamespaceImportSpecifier, eObjectToIssueCode)
 				} else {
-					addIssueDuplicate(dupe.importSpec, entryName, entryModule, firstImportName, eObjectToIssueCode)
+					addIssueDuplicate(dupe.importSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
 				}
 			]
 		]
@@ -291,10 +293,10 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private handleNotImportedTypeRefs(Script script, List<ImportSpecifier> specifiersWithIssues,
+	private def handleNotImportedTypeRefs(Script script, List<ImportSpecifier> specifiersWithIssues,
 		Map<EObject, String> eObjectToIssueCode) {
 		val importedProvidedElementsWithIssuesByModule = specifiersWithIssues.mapToImportProvidedElements.groupBy [
-			tmodule
+			importedModule
 		]
 		val potentiallyAffectedTypeRefs = script.eAllContents.filter(ParameterizedTypeRef).filter [
 			declaredType !== null && declaredType.containingModule !== null
@@ -305,7 +307,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			if (conflict !== null) {
 				typeRefs.forEach [ typeRef |
 					val typeRefName = typeRef.typeRefUsedName;
-					if (conflict.exists[ipe|ipe.localname == typeRefName]) {
+					if (conflict.exists[ipe|ipe.getLocalName() == typeRefName]) {
 						regUnresolvedImport(typeRef, typeRefName, eObjectToIssueCode);
 					}
 				]
@@ -352,6 +354,14 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		]
 	}
 
+	/**
+	 * Adds an issue for duplicate named import specifiers.
+	 *
+	 * @param specifier The first import of the element
+	 * @param duplicate The duplicated import of the element
+	 * @param duplicateImportDeclaration The import declaration of the duplicated import
+	 * @param eObjectToIssueCode A map to keep track of all added issues
+	 */
 	private def addIssueDuplicateNamedImportDeclaration(NamedImportSpecifier specifier,
 		NamedImportSpecifier duplicate, ImportDeclaration duplicateImportDeclaration,
 		Map<EObject, String> eObjectToIssueCode) {
@@ -409,7 +419,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def String computeUnusedOrUnresolvedMessage(ImportSpecifier specifier) {
 		switch (specifier) {
-			NamedImportSpecifier: specifier.importedElementErrorName
+			NamedImportSpecifier: computeImportSpecifierName(specifier)
 			NamespaceImportSpecifier: "* as " + specifier.alias + " from " + computeModuleSpecifier(specifier)
 		}
 	}

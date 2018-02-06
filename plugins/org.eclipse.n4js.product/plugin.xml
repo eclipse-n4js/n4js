@@ -349,10 +349,6 @@ Contributors:
       </activityPatternBinding>
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"
-            pattern=".*/org.eclipse.n4js.ui.apicompareview">
-      </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.eclipse.n4js.product.activity"
             pattern=".*/org.eclipse.rse.ui.view.monitorView">
       </activityPatternBinding>
       <activityPatternBinding
@@ -825,7 +821,7 @@ Contributors:
       </activityPatternBinding>
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"
-            pattern=".*/org.xpect.Xpect">
+            pattern=".*/org.eclipse.xpect.Xpect">
       </activityPatternBinding>
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"

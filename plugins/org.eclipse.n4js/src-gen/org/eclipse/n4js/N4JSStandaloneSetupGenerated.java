@@ -40,9 +40,15 @@ public class N4JSStandaloneSetupGenerated implements ISetup {
 		
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4js", resourceFactory);
 		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4js", serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsx", resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsx", serviceProvider);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("js", resourceFactory);
 		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("js", serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("jsx", resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("jsx", serviceProvider);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsd", resourceFactory);
 		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsd", serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4idl", resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4idl", serviceProvider);
 	}
 }

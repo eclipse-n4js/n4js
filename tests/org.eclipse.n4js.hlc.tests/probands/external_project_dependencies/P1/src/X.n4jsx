@@ -1,0 +1,4 @@
+//import * as React from "react";
+import NukaCarousel from "nuka-carousel";
+
+<NukaCarousel />

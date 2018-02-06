@@ -10,6 +10,13 @@
  */
 package org.eclipse.n4js.validation.validators;
 
+import static org.eclipse.n4js.N4JSLanguageConstants.ACCESS_MODIFIERS;
+import static org.eclipse.n4js.N4JSLanguageConstants.BASE_TYPES;
+import static org.eclipse.n4js.N4JSLanguageConstants.BOOLEAN_LITERALS;
+import static org.eclipse.n4js.N4JSLanguageConstants.CONSTRUCTOR;
+import static org.eclipse.n4js.N4JSLanguageConstants.DISCOURAGED_CHARACTERS;
+import static org.eclipse.n4js.N4JSLanguageConstants.FUTURE_RESERVED_WORDS;
+import static org.eclipse.n4js.N4JSLanguageConstants.GETTER_SETTER;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME;
 import static org.eclipse.n4js.ts.types.TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR;
@@ -28,13 +35,6 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_DOES_
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_DOLLAR;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_INDISTINGUISHABLE;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_RESERVED;
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ACCESS_MODIFIERS;
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.BASE_TYPES;
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.BOOLEAN_LITERALS;
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.CONSTRUCTOR;
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.DISCOURAGED_CHARACTERS;
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.FUTURE_RESERVED_WORDS;
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.GETTER_SETTER;
 
 import java.util.Collection;
 

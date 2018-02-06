@@ -54,8 +54,6 @@ public class TokenToAttributeIdMapper extends DefaultAntlrTokenToAttributeIdMapp
 			return HighlightingConfiguration.IDENTIFIER_ID;
 		case IDENTIFIER_REF_TOKEN:
 			return HighlightingConfiguration.IDENTIFIER_REF_ID;
-		case ENUM_LITERAL_TOKEN:
-			return HighlightingConfiguration.ENUM_LITERAL_ID;
 		case TYPE_VARIABLE_TOKEN:
 			return HighlightingConfiguration.TYPE_VARIABLE_ID;
 		case JS_DOC_TOKEN:

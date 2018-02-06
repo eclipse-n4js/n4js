@@ -18,6 +18,7 @@ let x = new X();
 
 // worked before:
 
+// XPECT warnings -->"Variable a is used before it is declared" at "a"
 // XPECT type of 't1' --> X
 let t1 = a;
 
@@ -27,7 +28,7 @@ var a = x;
 
 // did not work before:
 
-// XPECT noerrors -->
+// XPECT warnings -->"Variable c is used before it is declared" at "c"
 // XPECT type of 't3' --> X
 let t3 = c;
 
@@ -36,6 +37,7 @@ for(var c of [x]) {}
 
 // worked before:
 
+// XPECT warnings -->"Variable b is used before it is declared" at "b"
 // XPECT type of 't2' --> X
 let t2 = b;
 

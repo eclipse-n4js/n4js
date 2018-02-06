@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -18,14 +19,13 @@ import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
-import org.eclipse.n4js.n4JS.Block;
-import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.DataCollector;
@@ -105,23 +105,23 @@ public class N4JSFlowAnalyzer {
 	}
 
 	/** @return a list of all direct internal predecessors of cfe */
-	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getPredecessors(cfe, followEdges);
+	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe) {
+		return spa.getPredecessors(cfe);
 	}
 
 	/** @return a list of all direct external predecessors of cfe */
-	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getPredecessorsSkipInternal(cfe, followEdges);
+	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe) {
+		return spa.getPredecessorsSkipInternal(cfe);
 	}
 
 	/** @return a list of all direct internal successors of cfe */
-	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getSuccessors(cfe, followEdges);
+	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe) {
+		return spa.getSuccessors(cfe);
 	}
 
 	/** @return a list of all direct external successors of cfe */
-	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getSuccessorsSkipInternal(cfe, followEdges);
+	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe) {
+		return spa.getSuccessorsSkipInternal(cfe);
 	}
 
 	/** @return true iff cfe2 is a direct successor of cfe1 */
@@ -172,18 +172,6 @@ public class N4JSFlowAnalyzer {
 	}
 
 	/**
-	 * Returns an identifier for all paths between two {@link ControlFlowElement}s.
-	 * <p/>
-	 * The path identifier is computed as follows. First, the CF graph is traversed beginning from cfeB backwards until
-	 * an element is reached which has no predecessor. All elements that were visited during that traversal are saved in
-	 * P. Second, the CF graph is now traversed beginning from cfeA forwards. All elements that are visited during that
-	 * second traversal are part of the path identifier iff they are contained in P.
-	 */
-	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return dpa.getPathIdentifier(cfeFrom, cfeTo);
-	}
-
-	/**
 	 * Performs all given {@link GraphVisitor}s in a single run. The single run will traverse the control flow graph in
 	 * the following manner. First forward beginning from the entries of every source container, then backward beginning
 	 * from the exit of every source container. Finally, all remaining code elements are traversed first forward and
@@ -205,15 +193,10 @@ public class N4JSFlowAnalyzer {
 
 	/**
 	 * @return all {@link ControlFlowElement}s that are containers in the {@link Script}. See
-	 *         {@link FGUtils#isCFContainer(ControlFlowElement)}
+	 *         {@link FGUtils#isCFContainer(EObject)}
 	 */
-	public Set<ControlFlowElement> getAllContainers() {
+	public Collection<ControlFlowElement> getAllContainers() {
 		return cfg.getAllContainers();
-	}
-
-	/** @return all {@link Block}s whose containers are of type {@link CatchBlock} */
-	public List<Block> getCatchBlocksOfContainer(ControlFlowElement container) {
-		return cfg.getCatchBlocksOfContainer(container);
 	}
 
 }

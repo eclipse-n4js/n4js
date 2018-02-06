@@ -13,6 +13,8 @@ package org.eclipse.n4js.ui;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -22,11 +24,18 @@ import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.actions.ContributionItemFactory;
+import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.part.IShowInSource;
+import org.eclipse.ui.part.IShowInTargetList;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.XtextEditorErrorTickUpdater;
+import org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput;
 import org.eclipse.xtext.ui.editor.XtextSourceViewer;
 import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler;
 
@@ -34,7 +43,7 @@ import com.google.inject.Inject;
 
 /**
  */
-public class N4JSEditor extends XtextEditor {
+public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTargetList {
 
 	private static final Logger LOG = Logger.getLogger(N4JSEditor.class);
 
@@ -147,5 +156,35 @@ public class N4JSEditor extends XtextEditor {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Provides input so that the Project Explorer can locate the editor's input in its tree.
+	 */
+	@Override
+	public ShowInContext getShowInContext() {
+		IEditorInput editorInput = getEditorInput();
+		if (editorInput instanceof FileEditorInput) {
+			FileEditorInput fei = (FileEditorInput) getEditorInput();
+			return new ShowInContext(fei.getFile(), null);
+		} else if (editorInput instanceof XtextReadonlyEditorInput) {
+			XtextReadonlyEditorInput readOnlyEditorInput = (XtextReadonlyEditorInput) editorInput;
+			IStorage storage;
+			try {
+				storage = readOnlyEditorInput.getStorage();
+				return new ShowInContext(storage.getFullPath(), null);
+			} catch (CoreException e) {
+				// Do nothing
+			}
+		}
+		return new ShowInContext(null, null);
+	}
+
+	/**
+	 * List Project Explorer as target in Navigator -> Show In.
+	 */
+	@Override
+	public String[] getShowInTargetIds() {
+		return new String[] { IPageLayout.ID_PROJECT_EXPLORER };
 	}
 }

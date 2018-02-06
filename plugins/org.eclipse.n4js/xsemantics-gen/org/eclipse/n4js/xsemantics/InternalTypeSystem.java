@@ -54,6 +54,8 @@ import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
+import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -97,6 +99,8 @@ import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
+import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver;
+import org.eclipse.n4js.n4jsx.ReactHelper;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.scoping.members.MemberScopingHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
@@ -158,8 +162,6 @@ import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.StructuralTypingResult;
 import org.eclipse.n4js.typesystem.TypeSystemErrorExtensions;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
-import org.eclipse.n4js.typesystem.UnsupportedExpressionTypeHelper;
-import org.eclipse.n4js.typesystem.VersionResolver;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
@@ -331,8 +333,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   public final static String TYPEFUNCTIONEXPRESSION = "org.eclipse.n4js.xsemantics.TypeFunctionExpression";
   
-  public final static String TYPEUNSUPPORTEDEXPRESSION = "org.eclipse.n4js.xsemantics.TypeUnsupportedExpression";
-  
   public final static String TYPEVARIABLEDECLARATION = "org.eclipse.n4js.xsemantics.TypeVariableDeclaration";
   
   public final static String TYPEFORMALPARAMETER = "org.eclipse.n4js.xsemantics.TypeFormalParameter";
@@ -342,6 +342,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   public final static String TYPELOCALARGUMENTSVARIABLE = "org.eclipse.n4js.xsemantics.TypeLocalArgumentsVariable";
   
   public final static String TYPEMODULENAMESPACE = "org.eclipse.n4js.xsemantics.TypeModuleNamespace";
+  
+  public final static String TYPEJSXELEMENT = "org.eclipse.n4js.xsemantics.TypeJSXElement";
   
   public final static String SUBTYPETYPEARGUMENT = "org.eclipse.n4js.xsemantics.SubtypeTypeArgument";
   
@@ -429,7 +431,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   public final static String EXPECTEDTYPEINAWAITEXPRESSION = "org.eclipse.n4js.xsemantics.ExpectedTypeInAwaitExpression";
   
-  public final static String EXPECTEDTYPEINUNSUPPORTEDCONTAINER = "org.eclipse.n4js.xsemantics.ExpectedTypeInUnsupportedContainer";
+  public final static String EXPECTEDTYPEINJSXPROPERTYATTRIBUTE = "org.eclipse.n4js.xsemantics.ExpectedTypeInJSXPropertyAttribute";
   
   public final static String UPPERBOUNDTYPEREF = "org.eclipse.n4js.xsemantics.UpperBoundTypeRef";
   
@@ -516,13 +518,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   private JavaScriptVariantHelper jsVariantHelper;
   
   @Inject
-  private VersionResolver versionResolver;
-  
-  @Inject
-  private UnsupportedExpressionTypeHelper expressionTypeHelper;
+  private N4IDLVersionResolver versionResolver;
   
   @Inject
   private IQualifiedNameConverter qualifiedNameConverter;
+  
+  @Inject
+  private ReactHelper reactHelper;
   
   private PolymorphicDispatcher<Result<TypeRef>> typeDispatcher;
   
@@ -631,20 +633,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     this.jsVariantHelper = jsVariantHelper;
   }
   
-  public VersionResolver getVersionResolver() {
+  public N4IDLVersionResolver getVersionResolver() {
     return this.versionResolver;
   }
   
-  public void setVersionResolver(final VersionResolver versionResolver) {
+  public void setVersionResolver(final N4IDLVersionResolver versionResolver) {
     this.versionResolver = versionResolver;
-  }
-  
-  public UnsupportedExpressionTypeHelper getExpressionTypeHelper() {
-    return this.expressionTypeHelper;
-  }
-  
-  public void setExpressionTypeHelper(final UnsupportedExpressionTypeHelper expressionTypeHelper) {
-    this.expressionTypeHelper = expressionTypeHelper;
   }
   
   public IQualifiedNameConverter getQualifiedNameConverter() {
@@ -653,6 +647,14 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   public void setQualifiedNameConverter(final IQualifiedNameConverter qualifiedNameConverter) {
     this.qualifiedNameConverter = qualifiedNameConverter;
+  }
+  
+  public ReactHelper getReactHelper() {
+    return this.reactHelper;
+  }
+  
+  public void setReactHelper(final ReactHelper reactHelper) {
+    this.reactHelper = reactHelper;
   }
   
   public Result<TypeRef> type(final TypableElement element) {
@@ -3247,31 +3249,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     return new Result<TypeRef>(T);
   }
   
-  protected Result<TypeRef> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final Expression e) throws RuleFailedException {
-    try {
-    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
-    	final Result<TypeRef> _result_ = applyRuleTypeUnsupportedExpression(G, _subtrace_, e);
-    	addToTrace(_trace_, new Provider<Object>() {
-    		public Object get() {
-    			return ruleName("typeUnsupportedExpression") + stringRepForEnv(G) + " |- " + stringRep(e) + " : " + stringRep(_result_.getFirst());
-    		}
-    	});
-    	addAsSubtrace(_trace_, _subtrace_);
-    	return _result_;
-    } catch (Exception e_applyRuleTypeUnsupportedExpression) {
-    	typeThrowException(ruleName("typeUnsupportedExpression") + stringRepForEnv(G) + " |- " + stringRep(e) + " : " + "TypeRef",
-    		TYPEUNSUPPORTEDEXPRESSION,
-    		e_applyRuleTypeUnsupportedExpression, e, new ErrorInformation[] {new ErrorInformation(e)});
-    	return null;
-    }
-  }
-  
-  protected Result<TypeRef> applyRuleTypeUnsupportedExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final Expression e) throws RuleFailedException {
-    TypeRef T = null; // output parameter
-    T = this.expressionTypeHelper.typeExpression(e, G);
-    return new Result<TypeRef>(T);
-  }
-  
   protected Result<TypeRef> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VariableDeclaration vdecl) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
@@ -3602,6 +3579,36 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     return new Result<TypeRef>(T);
   }
   
+  protected Result<TypeRef> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final JSXElement expr) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final Result<TypeRef> _result_ = applyRuleTypeJSXElement(G, _subtrace_, expr);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return ruleName("typeJSXElement") + stringRepForEnv(G) + " |- " + stringRep(expr) + " : " + stringRep(_result_.getFirst());
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyRuleTypeJSXElement) {
+    	typeThrowException(ruleName("typeJSXElement") + stringRepForEnv(G) + " |- " + stringRep(expr) + " : " + "TypeRef",
+    		TYPEJSXELEMENT,
+    		e_applyRuleTypeJSXElement, expr, new ErrorInformation[] {new ErrorInformation(expr)});
+    	return null;
+    }
+  }
+  
+  protected Result<TypeRef> applyRuleTypeJSXElement(final RuleEnvironment G, final RuleApplicationTrace _trace_, final JSXElement expr) throws RuleFailedException {
+    TypeRef T = null; // output parameter
+    final TClassifier classifierReactElement = this.reactHelper.lookUpReactElement(expr);
+    if ((classifierReactElement != null)) {
+      T = TypeExtensions.ref(classifierReactElement);
+    } else {
+      T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+    }
+    return new Result<TypeRef>(T);
+  }
+  
   protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeArgument left, final TypeArgument right) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
@@ -3780,7 +3787,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 sneakyThrowRuleFailedException("true");
               }
             } else {
-              if (((leftDeclType instanceof TEnum) && (rightDeclType == RuleEnvironmentExtensions.n4EnumType(G)))) {
+              if (((leftDeclType instanceof TEnum) && ((rightDeclType == RuleEnvironmentExtensions.n4EnumType(G)) || (rightDeclType == RuleEnvironmentExtensions.objectType(G))))) {
                 boolean _hasAnnotation = AnnotationDefinition.STRING_BASED.hasAnnotation(leftDeclType);
                 /* !AnnotationDefinition.STRING_BASED.hasAnnotation( leftDeclType ) */
                 if (!(!_hasAnnotation)) {
@@ -5812,28 +5819,49 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     return new Result<TypeRef>(T);
   }
   
-  protected Result<TypeRef> expectedTypeInImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final EObject container, final Expression expr) throws RuleFailedException {
+  protected Result<TypeRef> expectedTypeInImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final JSXPropertyAttribute container, final Expression expr) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
-    	final Result<TypeRef> _result_ = applyRuleExpectedTypeInUnsupportedContainer(G, _subtrace_, container, expr);
+    	final Result<TypeRef> _result_ = applyRuleExpectedTypeInJSXPropertyAttribute(G, _subtrace_, container, expr);
     	addToTrace(_trace_, new Provider<Object>() {
     		public Object get() {
-    			return ruleName("expectedTypeInUnsupportedContainer") + stringRepForEnv(G) + " |- " + stringRep(container) + " |> " + stringRep(expr) + " : " + stringRep(_result_.getFirst());
+    			return ruleName("expectedTypeInJSXPropertyAttribute") + stringRepForEnv(G) + " |- " + stringRep(container) + " |> " + stringRep(expr) + " : " + stringRep(_result_.getFirst());
     		}
     	});
     	addAsSubtrace(_trace_, _subtrace_);
     	return _result_;
-    } catch (Exception e_applyRuleExpectedTypeInUnsupportedContainer) {
-    	expectedTypeInThrowException(ruleName("expectedTypeInUnsupportedContainer") + stringRepForEnv(G) + " |- " + stringRep(container) + " |> " + stringRep(expr) + " : " + "TypeRef",
-    		EXPECTEDTYPEINUNSUPPORTEDCONTAINER,
-    		e_applyRuleExpectedTypeInUnsupportedContainer, container, expr, new ErrorInformation[] {new ErrorInformation(container), new ErrorInformation(expr)});
+    } catch (Exception e_applyRuleExpectedTypeInJSXPropertyAttribute) {
+    	expectedTypeInThrowException(ruleName("expectedTypeInJSXPropertyAttribute") + stringRepForEnv(G) + " |- " + stringRep(container) + " |> " + stringRep(expr) + " : " + "TypeRef",
+    		EXPECTEDTYPEINJSXPROPERTYATTRIBUTE,
+    		e_applyRuleExpectedTypeInJSXPropertyAttribute, container, expr, new ErrorInformation[] {new ErrorInformation(container), new ErrorInformation(expr)});
     	return null;
     }
   }
   
-  protected Result<TypeRef> applyRuleExpectedTypeInUnsupportedContainer(final RuleEnvironment G, final RuleApplicationTrace _trace_, final EObject container, final Expression expr) throws RuleFailedException {
+  protected Result<TypeRef> applyRuleExpectedTypeInJSXPropertyAttribute(final RuleEnvironment G, final RuleApplicationTrace _trace_, final JSXPropertyAttribute container, final Expression expr) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    T = this.expressionTypeHelper.expectedExpressionTypeInEObject(container, expr, G);
+    T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+    final EObject jsxElem = container.eContainer();
+    if ((jsxElem instanceof JSXElement)) {
+      final TypeRef propsTypeRef = this.reactHelper.getPropsType(((JSXElement)jsxElem));
+      if ((propsTypeRef != null)) {
+        final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+        this.typeSystemHelper.addSubstitutions(G2, propsTypeRef);
+        RuleEnvironmentExtensions.addThisType(G2, propsTypeRef);
+        /* G2 |- container.getProperty() : var TypeRef propertyTypeRef */
+        IdentifiableElement _property = container.getProperty();
+        TypeRef propertyTypeRef = null;
+        Result<TypeRef> result = typeInternal(G2, _trace_, _property);
+        checkAssignableTo(result.getFirst(), TypeRef.class);
+        propertyTypeRef = (TypeRef) result.getFirst();
+        
+        /* G2 |- propertyTypeRef ~> T */
+        Result<TypeArgument> result_1 = substTypeVariablesInternal(G2, _trace_, propertyTypeRef);
+        checkAssignableTo(result_1.getFirst(), TypeRef.class);
+        T = (TypeRef) result_1.getFirst();
+        
+      }
+    }
     return new Result<TypeRef>(T);
   }
   

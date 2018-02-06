@@ -115,6 +115,17 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	}
 
 	@Test
+	def void testLowerAndUpperBounds_03() {
+		script.assertSolution(
+			#[
+				constraint(alpha,'<:',I.ref),
+				constraint(intersection(IA,IB),'<:',alpha)
+			],
+			alpha -> intersection(IA,IB)
+		)
+	}
+
+	@Test
 	def void testTwoInferenceVariables_Simple() {
 		script.assertSolution(
 			#[

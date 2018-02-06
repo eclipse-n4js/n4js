@@ -37,35 +37,35 @@ public class SuccessorPredecessorAnalysis {
 		this.cfg = cfg;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getPredecessors(ControlFlowElement, ControlFlowType...)} */
-	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
+	/** see {@link N4JSFlowAnalyzer#getPredecessors(ControlFlowElement)} */
+	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Backward();
 		Node nextNode = getNextNode(cfe, false, nextEdgesProvider);
-		Set<ControlFlowElement> predecessors = getNextCFEs(nextEdgesProvider, cfe, nextNode, followEdges);
+		Set<ControlFlowElement> predecessors = getNextCFEs(nextEdgesProvider, cfe, nextNode);
 		return predecessors;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getPredecessorsSkipInternal(ControlFlowElement, ControlFlowType...)} */
-	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
+	/** see {@link N4JSFlowAnalyzer#getPredecessorsSkipInternal(ControlFlowElement)} */
+	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Backward();
 		Node nextNode = getNextNode(cfe, true, nextEdgesProvider);
-		Set<ControlFlowElement> predecessors = getNextCFEs(nextEdgesProvider, cfe, nextNode, followEdges);
+		Set<ControlFlowElement> predecessors = getNextCFEs(nextEdgesProvider, cfe, nextNode);
 		return predecessors;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getSuccessors(ControlFlowElement, ControlFlowType...)} */
-	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
+	/** see {@link N4JSFlowAnalyzer#getSuccessors(ControlFlowElement)} */
+	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Forward();
 		Node nextNode = getNextNode(cfe, false, nextEdgesProvider);
-		Set<ControlFlowElement> successors = getNextCFEs(nextEdgesProvider, cfe, nextNode, followEdges);
+		Set<ControlFlowElement> successors = getNextCFEs(nextEdgesProvider, cfe, nextNode);
 		return successors;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getSuccessorsSkipInternal(ControlFlowElement, ControlFlowType...)} */
-	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
+	/** see {@link N4JSFlowAnalyzer#getSuccessorsSkipInternal(ControlFlowElement)} */
+	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Forward();
 		Node nextNode = getNextNode(cfe, true, nextEdgesProvider);
-		Set<ControlFlowElement> successors = getNextCFEs(nextEdgesProvider, cfe, nextNode, followEdges);
+		Set<ControlFlowElement> successors = getNextCFEs(nextEdgesProvider, cfe, nextNode);
 		return successors;
 	}
 
@@ -88,14 +88,13 @@ public class SuccessorPredecessorAnalysis {
 
 	/** @return the set of all next {@link ControlFlowElement} */
 	private Set<ControlFlowElement> getNextCFEs(NextEdgesProvider nextEdgesProvider, ControlFlowElement cfe,
-			Node nextNode,
-			ControlFlowType... followEdges) {
+			Node nextNode) {
 
 		Objects.requireNonNull(cfe);
 		Set<ControlFlowElement> nexts = new HashSet<>();
 
 		LinkedList<ControlFlowEdge> allEdges = new LinkedList<>();
-		List<ControlFlowEdge> nextEdges = nextEdgesProvider.getNextEdges(nextNode, followEdges);
+		List<ControlFlowEdge> nextEdges = nextEdgesProvider.getNextEdges(nextNode, ControlFlowType.NonDeadTypes);
 		allEdges.addAll(nextEdges);
 
 		while (!allEdges.isEmpty()) {
@@ -105,7 +104,7 @@ public class SuccessorPredecessorAnalysis {
 				ControlFlowElement succ = nextNode.getRepresentedControlFlowElement();
 				nexts.add(succ);
 			} else {
-				nextEdges = nextEdgesProvider.getNextEdges(nextNode, followEdges);
+				nextEdges = nextEdgesProvider.getNextEdges(nextNode, ControlFlowType.NonDeadTypes);
 				allEdges.addAll(nextEdges);
 			}
 		}

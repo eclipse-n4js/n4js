@@ -59,6 +59,7 @@ import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -269,7 +270,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * transition from "Fully Initialized" to "Fully Processed", i.e. during post-processing) or throws an exception if
 	 * the cache is unavailable (in all other states).
 	 */
-	public ASTMetaInfoCache getASTMetaInfoCache() {
+	public ASTMetaInfoCache getASTMetaInfoCacheVerifyContext() {
 		if (astMetaInfoCache == null) {
 			if (!isFullyProcessed() && !isPostProcessing()) {
 				// getter invoked in wrong state
@@ -280,6 +281,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				throw new NullPointerException("AST meta-info cache missing");
 			}
 		}
+		return astMetaInfoCache;
+	}
+
+	/**
+	 * Retrieve the ASTMetaInfo. Unlike {@code getASTMetaInfoCacheVerifyContext}, this method does not check if the call
+	 * is allowed in the current call context.
+	 */
+	public ASTMetaInfoCache getASTMetaInfoCache() {
 		return astMetaInfoCache;
 	}
 
@@ -367,40 +376,34 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (isLoaded)
 			throw new IllegalStateException("Resource was already loaded");
 
-		boolean wasDeliver = eDeliver();
-		try {
-			eSetDeliver(false);
-			ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
-			if (!theContents.isEmpty())
-				throw new IllegalStateException("There is already something in the contents list: " + theContents);
-			InternalEObject astProxy = (InternalEObject) N4JSFactory.eINSTANCE.createScript();
-			astProxy.eSetProxyURI(URI.createURI("#" + AST_PROXY_FRAGMENT));
-			theContents.sneakyAdd(astProxy);
-
-			boolean didLoadModule = false;
-			Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
-			for (IEObjectDescription module : modules) {
-				TModule deserializedModule = UserdataMapper.getDeserializedModuleFromDescription(module, getURI());
-				if (deserializedModule != null) {
-					theContents.sneakyAdd(deserializedModule);
-					didLoadModule = true;
-					break;
-				}
+		TModule deserializedModule = null;
+		Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
+		for (IEObjectDescription module : modules) {
+			deserializedModule = UserdataMapper.getDeserializedModuleFromDescription(module, getURI());
+			if (deserializedModule != null) {
+				break;
 			}
-			// TODO: It is possible that TModule is null (e.g. if a module becomes invalid and thus
-			// ResourceDescriptionWithoutUserData is created and stored in the index).
-			// In that case, contents has an AST proxy without TModule. Is this an allowed state??
-			if (didLoadModule) {
+		}
+		if (deserializedModule != null) {
+			boolean wasDeliver = eDeliver();
+			try {
+				eSetDeliver(false);
+				ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
+				if (!theContents.isEmpty())
+					throw new IllegalStateException("There is already something in the contents list: " + theContents);
+				InternalEObject astProxy = (InternalEObject) N4JSFactory.eINSTANCE.createScript();
+				astProxy.eSetProxyURI(URI.createURI("#" + AST_PROXY_FRAGMENT));
+				theContents.sneakyAdd(astProxy);
+				theContents.sneakyAdd(deserializedModule);
 				fullyInitialized = true;
 				// TModule loaded from index had been fully post-processed prior to serialization
 				fullyPostProcessed = true;
-				return true;
-			} else {
-				return false;
+			} finally {
+				eSetDeliver(wasDeliver);
 			}
-		} finally {
-			eSetDeliver(wasDeliver);
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -764,6 +767,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				// (i.e. transition from resource load state "Loaded" to "Created", not to "Loaded from Description")
 			}
 
+			// Clear AST meta cache and Xtext cache
+			this.setASTMetaInfoCache(null);
 			getCache().clear(this);
 		}
 	}
@@ -857,6 +862,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				fullyInitialized = newFullyInitialized;
 				isInitializing = false;
 				try {
+					// Clear AST meta cache and Xtext cache
+					this.setASTMetaInfoCache(null);
 					getCache().clear(this);
 				} catch (RuntimeException e) {
 					// don't rethrow as there might have been an exception in the try block.
@@ -1261,6 +1268,44 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		} else {
 			// if not, use default generic scoping message
 			super.createAndAddDiagnostic(triple);
+		}
+	}
+
+	/**
+	 * Adds given type as a temporary type to the receiving resource's TModule. For details, see
+	 * {@link TModule#getTemporaryTypes()}.
+	 *
+	 * @throws IllegalStateException
+	 *             iff receiving resource does not have a module or it is a proxy.
+	 */
+	public void addTemporaryType(Type type) {
+		TModule module = getModule();
+		if (module == null || module.eIsProxy()) {
+			throw new IllegalStateException("trying to add temporary type but module is null or a proxy");
+		}
+		if (!module.getTemporaryTypes().contains(type)) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.getTemporaryTypes().add(type);
+			}, module);
+		}
+	}
+
+	/**
+	 * Clears all temporary types in the receiving resource's TModule. For details, see
+	 * {@link TModule#getTemporaryTypes()}.
+	 *
+	 * @throws IllegalStateException
+	 *             iff receiving resource does not have a module or it is a proxy.
+	 */
+	public void clearTemporaryTypes() {
+		TModule module = getModule();
+		if (module == null || module.eIsProxy()) {
+			throw new IllegalStateException("trying to clear temporary types but module is null or a proxy");
+		}
+		if (!module.getTemporaryTypes().isEmpty()) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.getTemporaryTypes().clear();
+			}, module);
 		}
 	}
 }

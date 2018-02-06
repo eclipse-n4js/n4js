@@ -31,6 +31,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 import org.eclipse.ui.IWorkbench;
@@ -53,12 +54,12 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	private static Logger LOGGER = Logger.getLogger(N4JSProjectCreator.class);
 
 	/** The default source folder name */
-	private static final String SRC_ROOT = "src";
+	private static final String SRC_ROOT = N4JSLanguageConstants.DEFAULT_PROJECT_SRC;
 	/** The default test source folder name */
-	private static final String TEST_SRC_ROOT = "test";
+	private static final String TEST_SRC_ROOT = N4JSLanguageConstants.DEFAULT_PROJECT_TEST;
 
 	/** The default generated source folder name */
-	private static final String SRC_GEN = "src-gen";
+	private static final String SRC_GEN = N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
 	/** The default builders */
 	private static final String[] BUILDERS = { BUILDER_ID };

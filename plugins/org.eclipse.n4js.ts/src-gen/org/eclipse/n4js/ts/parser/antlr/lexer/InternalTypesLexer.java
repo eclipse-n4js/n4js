@@ -31,6 +31,7 @@ public class InternalTypesLexer extends Lexer {
     public static final int False=46;
     public static final int LessThanSign=89;
     public static final int LeftParenthesis=81;
+    public static final int RULE_VERSION=124;
     public static final int Throw=49;
     public static final int VirtualBase=11;
     public static final int Private=28;
@@ -60,11 +61,11 @@ public class InternalTypesLexer extends Lexer {
     public static final int Union=50;
     public static final int Case=54;
     public static final int Comma=84;
-    public static final int RULE_SL_COMMENT_FRAGMENT=127;
+    public static final int RULE_SL_COMMENT_FRAGMENT=128;
     public static final int Target=38;
     public static final int As=75;
     public static final int RULE_IDENTIFIER_PART=105;
-    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=126;
+    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=127;
     public static final int Export=31;
     public static final int Solidus=86;
     public static final int RightCurlyBracket=97;
@@ -136,14 +137,14 @@ public class InternalTypesLexer extends Lexer {
     public static final int Indexed=27;
     public static final int Return=35;
     public static final int RULE_WS=114;
-    public static final int RULE_BOM=125;
+    public static final int RULE_BOM=126;
     public static final int LeftCurlyBracket=96;
     public static final int Tilde=98;
     public static final int While=51;
     public static final int From=57;
-    public static final int RULE_ANY_OTHER=128;
+    public static final int RULE_ANY_OTHER=129;
     public static final int RULE_UNICODE_LETTER_FRAGMENT=117;
-    public static final int RULE_DECIMAL_DIGIT_FRAGMENT=124;
+    public static final int RULE_DECIMAL_DIGIT_FRAGMENT=125;
     public static final int Of=79;
     public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=107;
     public static final int Let=68;
@@ -2360,17 +2361,13 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_INT"
     public final void mRULE_INT() throws RecognitionException {
         try {
-            int _type = RULE_INT;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalTypesLexer.g:219:10: ( RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT )
-            // InternalTypesLexer.g:219:12: RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT
+            // InternalTypesLexer.g:219:19: ( RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT )
+            // InternalTypesLexer.g:219:21: RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT
             {
             mRULE_DECIMAL_INTEGER_LITERAL_FRAGMENT(); 
 
             }
 
-            state.type = _type;
-            state.channel = _channel;
         }
         finally {
         }
@@ -2878,11 +2875,57 @@ public class InternalTypesLexer extends Lexer {
     }
     // $ANTLR end "RULE_DOT_DOT"
 
+    // $ANTLR start "RULE_VERSION"
+    public final void mRULE_VERSION() throws RecognitionException {
+        try {
+            int _type = RULE_VERSION;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // InternalTypesLexer.g:237:14: ( '#' ( RULE_WS )* RULE_INT )
+            // InternalTypesLexer.g:237:16: '#' ( RULE_WS )* RULE_INT
+            {
+            match('#'); 
+            // InternalTypesLexer.g:237:20: ( RULE_WS )*
+            loop16:
+            do {
+                int alt16=2;
+                int LA16_0 = input.LA(1);
+
+                if ( (LA16_0=='\t'||(LA16_0>='\u000B' && LA16_0<='\f')||LA16_0==' '||LA16_0=='\u00A0'||LA16_0=='\u1680'||(LA16_0>='\u2000' && LA16_0<='\u200A')||LA16_0=='\u202F'||LA16_0=='\u205F'||LA16_0=='\u3000'||LA16_0=='\uFEFF') ) {
+                    alt16=1;
+                }
+
+
+                switch (alt16) {
+            	case 1 :
+            	    // InternalTypesLexer.g:237:20: RULE_WS
+            	    {
+            	    mRULE_WS(); 
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop16;
+                }
+            } while (true);
+
+            mRULE_INT(); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "RULE_VERSION"
+
     // $ANTLR start "RULE_HEX_DIGIT"
     public final void mRULE_HEX_DIGIT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:237:25: ( ( RULE_DECIMAL_DIGIT_FRAGMENT | 'a' .. 'f' | 'A' .. 'F' ) )
-            // InternalTypesLexer.g:237:27: ( RULE_DECIMAL_DIGIT_FRAGMENT | 'a' .. 'f' | 'A' .. 'F' )
+            // InternalTypesLexer.g:239:25: ( ( RULE_DECIMAL_DIGIT_FRAGMENT | 'a' .. 'f' | 'A' .. 'F' ) )
+            // InternalTypesLexer.g:239:27: ( RULE_DECIMAL_DIGIT_FRAGMENT | 'a' .. 'f' | 'A' .. 'F' )
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='F')||(input.LA(1)>='a' && input.LA(1)<='f') ) {
                 input.consume();
@@ -2905,51 +2948,51 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT"
     public final void mRULE_DECIMAL_INTEGER_LITERAL_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:239:48: ( ( '0' | '1' .. '9' ( RULE_DECIMAL_DIGIT_FRAGMENT )* ) )
-            // InternalTypesLexer.g:239:50: ( '0' | '1' .. '9' ( RULE_DECIMAL_DIGIT_FRAGMENT )* )
+            // InternalTypesLexer.g:241:48: ( ( '0' | '1' .. '9' ( RULE_DECIMAL_DIGIT_FRAGMENT )* ) )
+            // InternalTypesLexer.g:241:50: ( '0' | '1' .. '9' ( RULE_DECIMAL_DIGIT_FRAGMENT )* )
             {
-            // InternalTypesLexer.g:239:50: ( '0' | '1' .. '9' ( RULE_DECIMAL_DIGIT_FRAGMENT )* )
-            int alt17=2;
-            int LA17_0 = input.LA(1);
+            // InternalTypesLexer.g:241:50: ( '0' | '1' .. '9' ( RULE_DECIMAL_DIGIT_FRAGMENT )* )
+            int alt18=2;
+            int LA18_0 = input.LA(1);
 
-            if ( (LA17_0=='0') ) {
-                alt17=1;
+            if ( (LA18_0=='0') ) {
+                alt18=1;
             }
-            else if ( ((LA17_0>='1' && LA17_0<='9')) ) {
-                alt17=2;
+            else if ( ((LA18_0>='1' && LA18_0<='9')) ) {
+                alt18=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("", 17, 0, input);
+                    new NoViableAltException("", 18, 0, input);
 
                 throw nvae;
             }
-            switch (alt17) {
+            switch (alt18) {
                 case 1 :
-                    // InternalTypesLexer.g:239:51: '0'
+                    // InternalTypesLexer.g:241:51: '0'
                     {
                     match('0'); 
 
                     }
                     break;
                 case 2 :
-                    // InternalTypesLexer.g:239:55: '1' .. '9' ( RULE_DECIMAL_DIGIT_FRAGMENT )*
+                    // InternalTypesLexer.g:241:55: '1' .. '9' ( RULE_DECIMAL_DIGIT_FRAGMENT )*
                     {
                     matchRange('1','9'); 
-                    // InternalTypesLexer.g:239:64: ( RULE_DECIMAL_DIGIT_FRAGMENT )*
-                    loop16:
+                    // InternalTypesLexer.g:241:64: ( RULE_DECIMAL_DIGIT_FRAGMENT )*
+                    loop17:
                     do {
-                        int alt16=2;
-                        int LA16_0 = input.LA(1);
+                        int alt17=2;
+                        int LA17_0 = input.LA(1);
 
-                        if ( ((LA16_0>='0' && LA16_0<='9')) ) {
-                            alt16=1;
+                        if ( ((LA17_0>='0' && LA17_0<='9')) ) {
+                            alt17=1;
                         }
 
 
-                        switch (alt16) {
+                        switch (alt17) {
                     	case 1 :
-                    	    // InternalTypesLexer.g:239:64: RULE_DECIMAL_DIGIT_FRAGMENT
+                    	    // InternalTypesLexer.g:241:64: RULE_DECIMAL_DIGIT_FRAGMENT
                     	    {
                     	    mRULE_DECIMAL_DIGIT_FRAGMENT(); 
 
@@ -2957,7 +3000,7 @@ public class InternalTypesLexer extends Lexer {
                     	    break;
 
                     	default :
-                    	    break loop16;
+                    	    break loop17;
                         }
                     } while (true);
 
@@ -2979,8 +3022,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_DECIMAL_DIGIT_FRAGMENT"
     public final void mRULE_DECIMAL_DIGIT_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:241:38: ( '0' .. '9' )
-            // InternalTypesLexer.g:241:40: '0' .. '9'
+            // InternalTypesLexer.g:243:38: ( '0' .. '9' )
+            // InternalTypesLexer.g:243:40: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -2995,8 +3038,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_ZWJ"
     public final void mRULE_ZWJ() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:243:19: ( '\\u200D' )
-            // InternalTypesLexer.g:243:21: '\\u200D'
+            // InternalTypesLexer.g:245:19: ( '\\u200D' )
+            // InternalTypesLexer.g:245:21: '\\u200D'
             {
             match('\u200D'); 
 
@@ -3011,8 +3054,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_ZWNJ"
     public final void mRULE_ZWNJ() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:245:20: ( '\\u200C' )
-            // InternalTypesLexer.g:245:22: '\\u200C'
+            // InternalTypesLexer.g:247:20: ( '\\u200C' )
+            // InternalTypesLexer.g:247:22: '\\u200C'
             {
             match('\u200C'); 
 
@@ -3027,8 +3070,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_BOM"
     public final void mRULE_BOM() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:247:19: ( '\\uFEFF' )
-            // InternalTypesLexer.g:247:21: '\\uFEFF'
+            // InternalTypesLexer.g:249:19: ( '\\uFEFF' )
+            // InternalTypesLexer.g:249:21: '\\uFEFF'
             {
             match('\uFEFF'); 
 
@@ -3043,8 +3086,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_WHITESPACE_FRAGMENT"
     public final void mRULE_WHITESPACE_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:249:35: ( ( '\\t' | '\\u000B' | '\\f' | ' ' | '\\u00A0' | RULE_BOM | RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT ) )
-            // InternalTypesLexer.g:249:37: ( '\\t' | '\\u000B' | '\\f' | ' ' | '\\u00A0' | RULE_BOM | RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT )
+            // InternalTypesLexer.g:251:35: ( ( '\\t' | '\\u000B' | '\\f' | ' ' | '\\u00A0' | RULE_BOM | RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT ) )
+            // InternalTypesLexer.g:251:37: ( '\\t' | '\\u000B' | '\\f' | ' ' | '\\u00A0' | RULE_BOM | RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT )
             {
             if ( input.LA(1)=='\t'||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||input.LA(1)==' '||input.LA(1)=='\u00A0'||input.LA(1)=='\u1680'||(input.LA(1)>='\u2000' && input.LA(1)<='\u200A')||input.LA(1)=='\u202F'||input.LA(1)=='\u205F'||input.LA(1)=='\u3000'||input.LA(1)=='\uFEFF' ) {
                 input.consume();
@@ -3067,8 +3110,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_LINE_TERMINATOR_FRAGMENT"
     public final void mRULE_LINE_TERMINATOR_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:251:40: ( ( '\\n' | '\\r' | '\\u2028' | '\\u2029' ) )
-            // InternalTypesLexer.g:251:42: ( '\\n' | '\\r' | '\\u2028' | '\\u2029' )
+            // InternalTypesLexer.g:253:40: ( ( '\\n' | '\\r' | '\\u2028' | '\\u2029' ) )
+            // InternalTypesLexer.g:253:42: ( '\\n' | '\\r' | '\\u2028' | '\\u2029' )
             {
             if ( input.LA(1)=='\n'||input.LA(1)=='\r'||(input.LA(1)>='\u2028' && input.LA(1)<='\u2029') ) {
                 input.consume();
@@ -3091,61 +3134,61 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT"
     public final void mRULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:253:49: ( ( '\\n' | '\\r' ( '\\n' )? | '\\u2028' | '\\u2029' ) )
-            // InternalTypesLexer.g:253:51: ( '\\n' | '\\r' ( '\\n' )? | '\\u2028' | '\\u2029' )
+            // InternalTypesLexer.g:255:49: ( ( '\\n' | '\\r' ( '\\n' )? | '\\u2028' | '\\u2029' ) )
+            // InternalTypesLexer.g:255:51: ( '\\n' | '\\r' ( '\\n' )? | '\\u2028' | '\\u2029' )
             {
-            // InternalTypesLexer.g:253:51: ( '\\n' | '\\r' ( '\\n' )? | '\\u2028' | '\\u2029' )
-            int alt19=4;
+            // InternalTypesLexer.g:255:51: ( '\\n' | '\\r' ( '\\n' )? | '\\u2028' | '\\u2029' )
+            int alt20=4;
             switch ( input.LA(1) ) {
             case '\n':
                 {
-                alt19=1;
+                alt20=1;
                 }
                 break;
             case '\r':
                 {
-                alt19=2;
+                alt20=2;
                 }
                 break;
             case '\u2028':
                 {
-                alt19=3;
+                alt20=3;
                 }
                 break;
             case '\u2029':
                 {
-                alt19=4;
+                alt20=4;
                 }
                 break;
             default:
                 NoViableAltException nvae =
-                    new NoViableAltException("", 19, 0, input);
+                    new NoViableAltException("", 20, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt19) {
+            switch (alt20) {
                 case 1 :
-                    // InternalTypesLexer.g:253:52: '\\n'
+                    // InternalTypesLexer.g:255:52: '\\n'
                     {
                     match('\n'); 
 
                     }
                     break;
                 case 2 :
-                    // InternalTypesLexer.g:253:57: '\\r' ( '\\n' )?
+                    // InternalTypesLexer.g:255:57: '\\r' ( '\\n' )?
                     {
                     match('\r'); 
-                    // InternalTypesLexer.g:253:62: ( '\\n' )?
-                    int alt18=2;
-                    int LA18_0 = input.LA(1);
+                    // InternalTypesLexer.g:255:62: ( '\\n' )?
+                    int alt19=2;
+                    int LA19_0 = input.LA(1);
 
-                    if ( (LA18_0=='\n') ) {
-                        alt18=1;
+                    if ( (LA19_0=='\n') ) {
+                        alt19=1;
                     }
-                    switch (alt18) {
+                    switch (alt19) {
                         case 1 :
-                            // InternalTypesLexer.g:253:62: '\\n'
+                            // InternalTypesLexer.g:255:62: '\\n'
                             {
                             match('\n'); 
 
@@ -3158,14 +3201,14 @@ public class InternalTypesLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // InternalTypesLexer.g:253:68: '\\u2028'
+                    // InternalTypesLexer.g:255:68: '\\u2028'
                     {
                     match('\u2028'); 
 
                     }
                     break;
                 case 4 :
-                    // InternalTypesLexer.g:253:77: '\\u2029'
+                    // InternalTypesLexer.g:255:77: '\\u2029'
                     {
                     match('\u2029'); 
 
@@ -3186,25 +3229,25 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_SL_COMMENT_FRAGMENT"
     public final void mRULE_SL_COMMENT_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:255:35: ( '//' (~ ( RULE_LINE_TERMINATOR_FRAGMENT ) )* )
-            // InternalTypesLexer.g:255:37: '//' (~ ( RULE_LINE_TERMINATOR_FRAGMENT ) )*
+            // InternalTypesLexer.g:257:35: ( '//' (~ ( RULE_LINE_TERMINATOR_FRAGMENT ) )* )
+            // InternalTypesLexer.g:257:37: '//' (~ ( RULE_LINE_TERMINATOR_FRAGMENT ) )*
             {
             match("//"); 
 
-            // InternalTypesLexer.g:255:42: (~ ( RULE_LINE_TERMINATOR_FRAGMENT ) )*
-            loop20:
+            // InternalTypesLexer.g:257:42: (~ ( RULE_LINE_TERMINATOR_FRAGMENT ) )*
+            loop21:
             do {
-                int alt20=2;
-                int LA20_0 = input.LA(1);
+                int alt21=2;
+                int LA21_0 = input.LA(1);
 
-                if ( ((LA20_0>='\u0000' && LA20_0<='\t')||(LA20_0>='\u000B' && LA20_0<='\f')||(LA20_0>='\u000E' && LA20_0<='\u2027')||(LA20_0>='\u202A' && LA20_0<='\uFFFF')) ) {
-                    alt20=1;
+                if ( ((LA21_0>='\u0000' && LA21_0<='\t')||(LA21_0>='\u000B' && LA21_0<='\f')||(LA21_0>='\u000E' && LA21_0<='\u2027')||(LA21_0>='\u202A' && LA21_0<='\uFFFF')) ) {
+                    alt21=1;
                 }
 
 
-                switch (alt20) {
+                switch (alt21) {
             	case 1 :
-            	    // InternalTypesLexer.g:255:42: ~ ( RULE_LINE_TERMINATOR_FRAGMENT )
+            	    // InternalTypesLexer.g:257:42: ~ ( RULE_LINE_TERMINATOR_FRAGMENT )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\u2027')||(input.LA(1)>='\u202A' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -3220,7 +3263,7 @@ public class InternalTypesLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop20;
+            	    break loop21;
                 }
             } while (true);
 
@@ -3236,37 +3279,37 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_ML_COMMENT_FRAGMENT"
     public final void mRULE_ML_COMMENT_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:257:35: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // InternalTypesLexer.g:257:37: '/*' ( options {greedy=false; } : . )* '*/'
+            // InternalTypesLexer.g:259:35: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // InternalTypesLexer.g:259:37: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // InternalTypesLexer.g:257:42: ( options {greedy=false; } : . )*
-            loop21:
+            // InternalTypesLexer.g:259:42: ( options {greedy=false; } : . )*
+            loop22:
             do {
-                int alt21=2;
-                int LA21_0 = input.LA(1);
+                int alt22=2;
+                int LA22_0 = input.LA(1);
 
-                if ( (LA21_0=='*') ) {
-                    int LA21_1 = input.LA(2);
+                if ( (LA22_0=='*') ) {
+                    int LA22_1 = input.LA(2);
 
-                    if ( (LA21_1=='/') ) {
-                        alt21=2;
+                    if ( (LA22_1=='/') ) {
+                        alt22=2;
                     }
-                    else if ( ((LA21_1>='\u0000' && LA21_1<='.')||(LA21_1>='0' && LA21_1<='\uFFFF')) ) {
-                        alt21=1;
+                    else if ( ((LA22_1>='\u0000' && LA22_1<='.')||(LA22_1>='0' && LA22_1<='\uFFFF')) ) {
+                        alt22=1;
                     }
 
 
                 }
-                else if ( ((LA21_0>='\u0000' && LA21_0<=')')||(LA21_0>='+' && LA21_0<='\uFFFF')) ) {
-                    alt21=1;
+                else if ( ((LA22_0>='\u0000' && LA22_0<=')')||(LA22_0>='+' && LA22_0<='\uFFFF')) ) {
+                    alt22=1;
                 }
 
 
-                switch (alt21) {
+                switch (alt22) {
             	case 1 :
-            	    // InternalTypesLexer.g:257:70: .
+            	    // InternalTypesLexer.g:259:70: .
             	    {
             	    matchAny(); 
 
@@ -3274,7 +3317,7 @@ public class InternalTypesLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop21;
+            	    break loop22;
                 }
             } while (true);
 
@@ -3292,8 +3335,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_UNICODE_COMBINING_MARK_FRAGMENT"
     public final void mRULE_UNICODE_COMBINING_MARK_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:259:47: ( ( '\\u0300' .. '\\u036F' | '\\u0483' .. '\\u0487' | '\\u0591' .. '\\u05BD' | '\\u05BF' | '\\u05C1' .. '\\u05C2' | '\\u05C4' .. '\\u05C5' | '\\u05C7' | '\\u0610' .. '\\u061A' | '\\u064B' .. '\\u065F' | '\\u0670' | '\\u06D6' .. '\\u06DC' | '\\u06DF' .. '\\u06E4' | '\\u06E7' .. '\\u06E8' | '\\u06EA' .. '\\u06ED' | '\\u0711' | '\\u0730' .. '\\u074A' | '\\u07A6' .. '\\u07B0' | '\\u07EB' .. '\\u07F3' | '\\u0816' .. '\\u0819' | '\\u081B' .. '\\u0823' | '\\u0825' .. '\\u0827' | '\\u0829' .. '\\u082D' | '\\u0859' .. '\\u085B' | '\\u08E3' .. '\\u0903' | '\\u093A' .. '\\u093C' | '\\u093E' .. '\\u094F' | '\\u0951' .. '\\u0957' | '\\u0962' .. '\\u0963' | '\\u0981' .. '\\u0983' | '\\u09BC' | '\\u09BE' .. '\\u09C4' | '\\u09C7' .. '\\u09C8' | '\\u09CB' .. '\\u09CD' | '\\u09D7' | '\\u09E2' .. '\\u09E3' | '\\u0A01' .. '\\u0A03' | '\\u0A3C' | '\\u0A3E' .. '\\u0A42' | '\\u0A47' .. '\\u0A48' | '\\u0A4B' .. '\\u0A4D' | '\\u0A51' | '\\u0A70' .. '\\u0A71' | '\\u0A75' | '\\u0A81' .. '\\u0A83' | '\\u0ABC' | '\\u0ABE' .. '\\u0AC5' | '\\u0AC7' .. '\\u0AC9' | '\\u0ACB' .. '\\u0ACD' | '\\u0AE2' .. '\\u0AE3' | '\\u0B01' .. '\\u0B03' | '\\u0B3C' | '\\u0B3E' .. '\\u0B44' | '\\u0B47' .. '\\u0B48' | '\\u0B4B' .. '\\u0B4D' | '\\u0B56' .. '\\u0B57' | '\\u0B62' .. '\\u0B63' | '\\u0B82' | '\\u0BBE' .. '\\u0BC2' | '\\u0BC6' .. '\\u0BC8' | '\\u0BCA' .. '\\u0BCD' | '\\u0BD7' | '\\u0C00' .. '\\u0C03' | '\\u0C3E' .. '\\u0C44' | '\\u0C46' .. '\\u0C48' | '\\u0C4A' .. '\\u0C4D' | '\\u0C55' .. '\\u0C56' | '\\u0C62' .. '\\u0C63' | '\\u0C81' .. '\\u0C83' | '\\u0CBC' | '\\u0CBE' .. '\\u0CC4' | '\\u0CC6' .. '\\u0CC8' | '\\u0CCA' .. '\\u0CCD' | '\\u0CD5' .. '\\u0CD6' | '\\u0CE2' .. '\\u0CE3' | '\\u0D01' .. '\\u0D03' | '\\u0D3E' .. '\\u0D44' | '\\u0D46' .. '\\u0D48' | '\\u0D4A' .. '\\u0D4D' | '\\u0D57' | '\\u0D62' .. '\\u0D63' | '\\u0D82' .. '\\u0D83' | '\\u0DCA' | '\\u0DCF' .. '\\u0DD4' | '\\u0DD6' | '\\u0DD8' .. '\\u0DDF' | '\\u0DF2' .. '\\u0DF3' | '\\u0E31' | '\\u0E34' .. '\\u0E3A' | '\\u0E47' .. '\\u0E4E' | '\\u0EB1' | '\\u0EB4' .. '\\u0EB9' | '\\u0EBB' .. '\\u0EBC' | '\\u0EC8' .. '\\u0ECD' | '\\u0F18' .. '\\u0F19' | '\\u0F35' | '\\u0F37' | '\\u0F39' | '\\u0F3E' .. '\\u0F3F' | '\\u0F71' .. '\\u0F84' | '\\u0F86' .. '\\u0F87' | '\\u0F8D' .. '\\u0F97' | '\\u0F99' .. '\\u0FBC' | '\\u0FC6' | '\\u102B' .. '\\u103E' | '\\u1056' .. '\\u1059' | '\\u105E' .. '\\u1060' | '\\u1062' .. '\\u1064' | '\\u1067' .. '\\u106D' | '\\u1071' .. '\\u1074' | '\\u1082' .. '\\u108D' | '\\u108F' | '\\u109A' .. '\\u109D' | '\\u135D' .. '\\u135F' | '\\u1712' .. '\\u1714' | '\\u1732' .. '\\u1734' | '\\u1752' .. '\\u1753' | '\\u1772' .. '\\u1773' | '\\u17B4' .. '\\u17D3' | '\\u17DD' | '\\u180B' .. '\\u180D' | '\\u18A9' | '\\u1920' .. '\\u192B' | '\\u1930' .. '\\u193B' | '\\u1A17' .. '\\u1A1B' | '\\u1A55' .. '\\u1A5E' | '\\u1A60' .. '\\u1A7C' | '\\u1A7F' | '\\u1AB0' .. '\\u1ABD' | '\\u1B00' .. '\\u1B04' | '\\u1B34' .. '\\u1B44' | '\\u1B6B' .. '\\u1B73' | '\\u1B80' .. '\\u1B82' | '\\u1BA1' .. '\\u1BAD' | '\\u1BE6' .. '\\u1BF3' | '\\u1C24' .. '\\u1C37' | '\\u1CD0' .. '\\u1CD2' | '\\u1CD4' .. '\\u1CE8' | '\\u1CED' | '\\u1CF2' .. '\\u1CF4' | '\\u1CF8' .. '\\u1CF9' | '\\u1DC0' .. '\\u1DF5' | '\\u1DFC' .. '\\u1DFF' | '\\u20D0' .. '\\u20DC' | '\\u20E1' | '\\u20E5' .. '\\u20F0' | '\\u2CEF' .. '\\u2CF1' | '\\u2D7F' | '\\u2DE0' .. '\\u2DFF' | '\\u302A' .. '\\u302F' | '\\u3099' .. '\\u309A' | '\\uA66F' | '\\uA674' .. '\\uA67D' | '\\uA69E' .. '\\uA69F' | '\\uA6F0' .. '\\uA6F1' | '\\uA802' | '\\uA806' | '\\uA80B' | '\\uA823' .. '\\uA827' | '\\uA880' .. '\\uA881' | '\\uA8B4' .. '\\uA8C4' | '\\uA8E0' .. '\\uA8F1' | '\\uA926' .. '\\uA92D' | '\\uA947' .. '\\uA953' | '\\uA980' .. '\\uA983' | '\\uA9B3' .. '\\uA9C0' | '\\uA9E5' | '\\uAA29' .. '\\uAA36' | '\\uAA43' | '\\uAA4C' .. '\\uAA4D' | '\\uAA7B' .. '\\uAA7D' | '\\uAAB0' | '\\uAAB2' .. '\\uAAB4' | '\\uAAB7' .. '\\uAAB8' | '\\uAABE' .. '\\uAABF' | '\\uAAC1' | '\\uAAEB' .. '\\uAAEF' | '\\uAAF5' .. '\\uAAF6' | '\\uABE3' .. '\\uABEA' | '\\uABEC' .. '\\uABED' | '\\uFB1E' | '\\uFE00' .. '\\uFE0F' | '\\uFE20' .. '\\uFE2F' ) )
-            // InternalTypesLexer.g:259:49: ( '\\u0300' .. '\\u036F' | '\\u0483' .. '\\u0487' | '\\u0591' .. '\\u05BD' | '\\u05BF' | '\\u05C1' .. '\\u05C2' | '\\u05C4' .. '\\u05C5' | '\\u05C7' | '\\u0610' .. '\\u061A' | '\\u064B' .. '\\u065F' | '\\u0670' | '\\u06D6' .. '\\u06DC' | '\\u06DF' .. '\\u06E4' | '\\u06E7' .. '\\u06E8' | '\\u06EA' .. '\\u06ED' | '\\u0711' | '\\u0730' .. '\\u074A' | '\\u07A6' .. '\\u07B0' | '\\u07EB' .. '\\u07F3' | '\\u0816' .. '\\u0819' | '\\u081B' .. '\\u0823' | '\\u0825' .. '\\u0827' | '\\u0829' .. '\\u082D' | '\\u0859' .. '\\u085B' | '\\u08E3' .. '\\u0903' | '\\u093A' .. '\\u093C' | '\\u093E' .. '\\u094F' | '\\u0951' .. '\\u0957' | '\\u0962' .. '\\u0963' | '\\u0981' .. '\\u0983' | '\\u09BC' | '\\u09BE' .. '\\u09C4' | '\\u09C7' .. '\\u09C8' | '\\u09CB' .. '\\u09CD' | '\\u09D7' | '\\u09E2' .. '\\u09E3' | '\\u0A01' .. '\\u0A03' | '\\u0A3C' | '\\u0A3E' .. '\\u0A42' | '\\u0A47' .. '\\u0A48' | '\\u0A4B' .. '\\u0A4D' | '\\u0A51' | '\\u0A70' .. '\\u0A71' | '\\u0A75' | '\\u0A81' .. '\\u0A83' | '\\u0ABC' | '\\u0ABE' .. '\\u0AC5' | '\\u0AC7' .. '\\u0AC9' | '\\u0ACB' .. '\\u0ACD' | '\\u0AE2' .. '\\u0AE3' | '\\u0B01' .. '\\u0B03' | '\\u0B3C' | '\\u0B3E' .. '\\u0B44' | '\\u0B47' .. '\\u0B48' | '\\u0B4B' .. '\\u0B4D' | '\\u0B56' .. '\\u0B57' | '\\u0B62' .. '\\u0B63' | '\\u0B82' | '\\u0BBE' .. '\\u0BC2' | '\\u0BC6' .. '\\u0BC8' | '\\u0BCA' .. '\\u0BCD' | '\\u0BD7' | '\\u0C00' .. '\\u0C03' | '\\u0C3E' .. '\\u0C44' | '\\u0C46' .. '\\u0C48' | '\\u0C4A' .. '\\u0C4D' | '\\u0C55' .. '\\u0C56' | '\\u0C62' .. '\\u0C63' | '\\u0C81' .. '\\u0C83' | '\\u0CBC' | '\\u0CBE' .. '\\u0CC4' | '\\u0CC6' .. '\\u0CC8' | '\\u0CCA' .. '\\u0CCD' | '\\u0CD5' .. '\\u0CD6' | '\\u0CE2' .. '\\u0CE3' | '\\u0D01' .. '\\u0D03' | '\\u0D3E' .. '\\u0D44' | '\\u0D46' .. '\\u0D48' | '\\u0D4A' .. '\\u0D4D' | '\\u0D57' | '\\u0D62' .. '\\u0D63' | '\\u0D82' .. '\\u0D83' | '\\u0DCA' | '\\u0DCF' .. '\\u0DD4' | '\\u0DD6' | '\\u0DD8' .. '\\u0DDF' | '\\u0DF2' .. '\\u0DF3' | '\\u0E31' | '\\u0E34' .. '\\u0E3A' | '\\u0E47' .. '\\u0E4E' | '\\u0EB1' | '\\u0EB4' .. '\\u0EB9' | '\\u0EBB' .. '\\u0EBC' | '\\u0EC8' .. '\\u0ECD' | '\\u0F18' .. '\\u0F19' | '\\u0F35' | '\\u0F37' | '\\u0F39' | '\\u0F3E' .. '\\u0F3F' | '\\u0F71' .. '\\u0F84' | '\\u0F86' .. '\\u0F87' | '\\u0F8D' .. '\\u0F97' | '\\u0F99' .. '\\u0FBC' | '\\u0FC6' | '\\u102B' .. '\\u103E' | '\\u1056' .. '\\u1059' | '\\u105E' .. '\\u1060' | '\\u1062' .. '\\u1064' | '\\u1067' .. '\\u106D' | '\\u1071' .. '\\u1074' | '\\u1082' .. '\\u108D' | '\\u108F' | '\\u109A' .. '\\u109D' | '\\u135D' .. '\\u135F' | '\\u1712' .. '\\u1714' | '\\u1732' .. '\\u1734' | '\\u1752' .. '\\u1753' | '\\u1772' .. '\\u1773' | '\\u17B4' .. '\\u17D3' | '\\u17DD' | '\\u180B' .. '\\u180D' | '\\u18A9' | '\\u1920' .. '\\u192B' | '\\u1930' .. '\\u193B' | '\\u1A17' .. '\\u1A1B' | '\\u1A55' .. '\\u1A5E' | '\\u1A60' .. '\\u1A7C' | '\\u1A7F' | '\\u1AB0' .. '\\u1ABD' | '\\u1B00' .. '\\u1B04' | '\\u1B34' .. '\\u1B44' | '\\u1B6B' .. '\\u1B73' | '\\u1B80' .. '\\u1B82' | '\\u1BA1' .. '\\u1BAD' | '\\u1BE6' .. '\\u1BF3' | '\\u1C24' .. '\\u1C37' | '\\u1CD0' .. '\\u1CD2' | '\\u1CD4' .. '\\u1CE8' | '\\u1CED' | '\\u1CF2' .. '\\u1CF4' | '\\u1CF8' .. '\\u1CF9' | '\\u1DC0' .. '\\u1DF5' | '\\u1DFC' .. '\\u1DFF' | '\\u20D0' .. '\\u20DC' | '\\u20E1' | '\\u20E5' .. '\\u20F0' | '\\u2CEF' .. '\\u2CF1' | '\\u2D7F' | '\\u2DE0' .. '\\u2DFF' | '\\u302A' .. '\\u302F' | '\\u3099' .. '\\u309A' | '\\uA66F' | '\\uA674' .. '\\uA67D' | '\\uA69E' .. '\\uA69F' | '\\uA6F0' .. '\\uA6F1' | '\\uA802' | '\\uA806' | '\\uA80B' | '\\uA823' .. '\\uA827' | '\\uA880' .. '\\uA881' | '\\uA8B4' .. '\\uA8C4' | '\\uA8E0' .. '\\uA8F1' | '\\uA926' .. '\\uA92D' | '\\uA947' .. '\\uA953' | '\\uA980' .. '\\uA983' | '\\uA9B3' .. '\\uA9C0' | '\\uA9E5' | '\\uAA29' .. '\\uAA36' | '\\uAA43' | '\\uAA4C' .. '\\uAA4D' | '\\uAA7B' .. '\\uAA7D' | '\\uAAB0' | '\\uAAB2' .. '\\uAAB4' | '\\uAAB7' .. '\\uAAB8' | '\\uAABE' .. '\\uAABF' | '\\uAAC1' | '\\uAAEB' .. '\\uAAEF' | '\\uAAF5' .. '\\uAAF6' | '\\uABE3' .. '\\uABEA' | '\\uABEC' .. '\\uABED' | '\\uFB1E' | '\\uFE00' .. '\\uFE0F' | '\\uFE20' .. '\\uFE2F' )
+            // InternalTypesLexer.g:261:47: ( ( '\\u0300' .. '\\u036F' | '\\u0483' .. '\\u0487' | '\\u0591' .. '\\u05BD' | '\\u05BF' | '\\u05C1' .. '\\u05C2' | '\\u05C4' .. '\\u05C5' | '\\u05C7' | '\\u0610' .. '\\u061A' | '\\u064B' .. '\\u065F' | '\\u0670' | '\\u06D6' .. '\\u06DC' | '\\u06DF' .. '\\u06E4' | '\\u06E7' .. '\\u06E8' | '\\u06EA' .. '\\u06ED' | '\\u0711' | '\\u0730' .. '\\u074A' | '\\u07A6' .. '\\u07B0' | '\\u07EB' .. '\\u07F3' | '\\u0816' .. '\\u0819' | '\\u081B' .. '\\u0823' | '\\u0825' .. '\\u0827' | '\\u0829' .. '\\u082D' | '\\u0859' .. '\\u085B' | '\\u08E3' .. '\\u0903' | '\\u093A' .. '\\u093C' | '\\u093E' .. '\\u094F' | '\\u0951' .. '\\u0957' | '\\u0962' .. '\\u0963' | '\\u0981' .. '\\u0983' | '\\u09BC' | '\\u09BE' .. '\\u09C4' | '\\u09C7' .. '\\u09C8' | '\\u09CB' .. '\\u09CD' | '\\u09D7' | '\\u09E2' .. '\\u09E3' | '\\u0A01' .. '\\u0A03' | '\\u0A3C' | '\\u0A3E' .. '\\u0A42' | '\\u0A47' .. '\\u0A48' | '\\u0A4B' .. '\\u0A4D' | '\\u0A51' | '\\u0A70' .. '\\u0A71' | '\\u0A75' | '\\u0A81' .. '\\u0A83' | '\\u0ABC' | '\\u0ABE' .. '\\u0AC5' | '\\u0AC7' .. '\\u0AC9' | '\\u0ACB' .. '\\u0ACD' | '\\u0AE2' .. '\\u0AE3' | '\\u0B01' .. '\\u0B03' | '\\u0B3C' | '\\u0B3E' .. '\\u0B44' | '\\u0B47' .. '\\u0B48' | '\\u0B4B' .. '\\u0B4D' | '\\u0B56' .. '\\u0B57' | '\\u0B62' .. '\\u0B63' | '\\u0B82' | '\\u0BBE' .. '\\u0BC2' | '\\u0BC6' .. '\\u0BC8' | '\\u0BCA' .. '\\u0BCD' | '\\u0BD7' | '\\u0C00' .. '\\u0C03' | '\\u0C3E' .. '\\u0C44' | '\\u0C46' .. '\\u0C48' | '\\u0C4A' .. '\\u0C4D' | '\\u0C55' .. '\\u0C56' | '\\u0C62' .. '\\u0C63' | '\\u0C81' .. '\\u0C83' | '\\u0CBC' | '\\u0CBE' .. '\\u0CC4' | '\\u0CC6' .. '\\u0CC8' | '\\u0CCA' .. '\\u0CCD' | '\\u0CD5' .. '\\u0CD6' | '\\u0CE2' .. '\\u0CE3' | '\\u0D01' .. '\\u0D03' | '\\u0D3E' .. '\\u0D44' | '\\u0D46' .. '\\u0D48' | '\\u0D4A' .. '\\u0D4D' | '\\u0D57' | '\\u0D62' .. '\\u0D63' | '\\u0D82' .. '\\u0D83' | '\\u0DCA' | '\\u0DCF' .. '\\u0DD4' | '\\u0DD6' | '\\u0DD8' .. '\\u0DDF' | '\\u0DF2' .. '\\u0DF3' | '\\u0E31' | '\\u0E34' .. '\\u0E3A' | '\\u0E47' .. '\\u0E4E' | '\\u0EB1' | '\\u0EB4' .. '\\u0EB9' | '\\u0EBB' .. '\\u0EBC' | '\\u0EC8' .. '\\u0ECD' | '\\u0F18' .. '\\u0F19' | '\\u0F35' | '\\u0F37' | '\\u0F39' | '\\u0F3E' .. '\\u0F3F' | '\\u0F71' .. '\\u0F84' | '\\u0F86' .. '\\u0F87' | '\\u0F8D' .. '\\u0F97' | '\\u0F99' .. '\\u0FBC' | '\\u0FC6' | '\\u102B' .. '\\u103E' | '\\u1056' .. '\\u1059' | '\\u105E' .. '\\u1060' | '\\u1062' .. '\\u1064' | '\\u1067' .. '\\u106D' | '\\u1071' .. '\\u1074' | '\\u1082' .. '\\u108D' | '\\u108F' | '\\u109A' .. '\\u109D' | '\\u135D' .. '\\u135F' | '\\u1712' .. '\\u1714' | '\\u1732' .. '\\u1734' | '\\u1752' .. '\\u1753' | '\\u1772' .. '\\u1773' | '\\u17B4' .. '\\u17D3' | '\\u17DD' | '\\u180B' .. '\\u180D' | '\\u18A9' | '\\u1920' .. '\\u192B' | '\\u1930' .. '\\u193B' | '\\u1A17' .. '\\u1A1B' | '\\u1A55' .. '\\u1A5E' | '\\u1A60' .. '\\u1A7C' | '\\u1A7F' | '\\u1AB0' .. '\\u1ABD' | '\\u1B00' .. '\\u1B04' | '\\u1B34' .. '\\u1B44' | '\\u1B6B' .. '\\u1B73' | '\\u1B80' .. '\\u1B82' | '\\u1BA1' .. '\\u1BAD' | '\\u1BE6' .. '\\u1BF3' | '\\u1C24' .. '\\u1C37' | '\\u1CD0' .. '\\u1CD2' | '\\u1CD4' .. '\\u1CE8' | '\\u1CED' | '\\u1CF2' .. '\\u1CF4' | '\\u1CF8' .. '\\u1CF9' | '\\u1DC0' .. '\\u1DF5' | '\\u1DFC' .. '\\u1DFF' | '\\u20D0' .. '\\u20DC' | '\\u20E1' | '\\u20E5' .. '\\u20F0' | '\\u2CEF' .. '\\u2CF1' | '\\u2D7F' | '\\u2DE0' .. '\\u2DFF' | '\\u302A' .. '\\u302F' | '\\u3099' .. '\\u309A' | '\\uA66F' | '\\uA674' .. '\\uA67D' | '\\uA69E' .. '\\uA69F' | '\\uA6F0' .. '\\uA6F1' | '\\uA802' | '\\uA806' | '\\uA80B' | '\\uA823' .. '\\uA827' | '\\uA880' .. '\\uA881' | '\\uA8B4' .. '\\uA8C4' | '\\uA8E0' .. '\\uA8F1' | '\\uA926' .. '\\uA92D' | '\\uA947' .. '\\uA953' | '\\uA980' .. '\\uA983' | '\\uA9B3' .. '\\uA9C0' | '\\uA9E5' | '\\uAA29' .. '\\uAA36' | '\\uAA43' | '\\uAA4C' .. '\\uAA4D' | '\\uAA7B' .. '\\uAA7D' | '\\uAAB0' | '\\uAAB2' .. '\\uAAB4' | '\\uAAB7' .. '\\uAAB8' | '\\uAABE' .. '\\uAABF' | '\\uAAC1' | '\\uAAEB' .. '\\uAAEF' | '\\uAAF5' .. '\\uAAF6' | '\\uABE3' .. '\\uABEA' | '\\uABEC' .. '\\uABED' | '\\uFB1E' | '\\uFE00' .. '\\uFE0F' | '\\uFE20' .. '\\uFE2F' ) )
+            // InternalTypesLexer.g:261:49: ( '\\u0300' .. '\\u036F' | '\\u0483' .. '\\u0487' | '\\u0591' .. '\\u05BD' | '\\u05BF' | '\\u05C1' .. '\\u05C2' | '\\u05C4' .. '\\u05C5' | '\\u05C7' | '\\u0610' .. '\\u061A' | '\\u064B' .. '\\u065F' | '\\u0670' | '\\u06D6' .. '\\u06DC' | '\\u06DF' .. '\\u06E4' | '\\u06E7' .. '\\u06E8' | '\\u06EA' .. '\\u06ED' | '\\u0711' | '\\u0730' .. '\\u074A' | '\\u07A6' .. '\\u07B0' | '\\u07EB' .. '\\u07F3' | '\\u0816' .. '\\u0819' | '\\u081B' .. '\\u0823' | '\\u0825' .. '\\u0827' | '\\u0829' .. '\\u082D' | '\\u0859' .. '\\u085B' | '\\u08E3' .. '\\u0903' | '\\u093A' .. '\\u093C' | '\\u093E' .. '\\u094F' | '\\u0951' .. '\\u0957' | '\\u0962' .. '\\u0963' | '\\u0981' .. '\\u0983' | '\\u09BC' | '\\u09BE' .. '\\u09C4' | '\\u09C7' .. '\\u09C8' | '\\u09CB' .. '\\u09CD' | '\\u09D7' | '\\u09E2' .. '\\u09E3' | '\\u0A01' .. '\\u0A03' | '\\u0A3C' | '\\u0A3E' .. '\\u0A42' | '\\u0A47' .. '\\u0A48' | '\\u0A4B' .. '\\u0A4D' | '\\u0A51' | '\\u0A70' .. '\\u0A71' | '\\u0A75' | '\\u0A81' .. '\\u0A83' | '\\u0ABC' | '\\u0ABE' .. '\\u0AC5' | '\\u0AC7' .. '\\u0AC9' | '\\u0ACB' .. '\\u0ACD' | '\\u0AE2' .. '\\u0AE3' | '\\u0B01' .. '\\u0B03' | '\\u0B3C' | '\\u0B3E' .. '\\u0B44' | '\\u0B47' .. '\\u0B48' | '\\u0B4B' .. '\\u0B4D' | '\\u0B56' .. '\\u0B57' | '\\u0B62' .. '\\u0B63' | '\\u0B82' | '\\u0BBE' .. '\\u0BC2' | '\\u0BC6' .. '\\u0BC8' | '\\u0BCA' .. '\\u0BCD' | '\\u0BD7' | '\\u0C00' .. '\\u0C03' | '\\u0C3E' .. '\\u0C44' | '\\u0C46' .. '\\u0C48' | '\\u0C4A' .. '\\u0C4D' | '\\u0C55' .. '\\u0C56' | '\\u0C62' .. '\\u0C63' | '\\u0C81' .. '\\u0C83' | '\\u0CBC' | '\\u0CBE' .. '\\u0CC4' | '\\u0CC6' .. '\\u0CC8' | '\\u0CCA' .. '\\u0CCD' | '\\u0CD5' .. '\\u0CD6' | '\\u0CE2' .. '\\u0CE3' | '\\u0D01' .. '\\u0D03' | '\\u0D3E' .. '\\u0D44' | '\\u0D46' .. '\\u0D48' | '\\u0D4A' .. '\\u0D4D' | '\\u0D57' | '\\u0D62' .. '\\u0D63' | '\\u0D82' .. '\\u0D83' | '\\u0DCA' | '\\u0DCF' .. '\\u0DD4' | '\\u0DD6' | '\\u0DD8' .. '\\u0DDF' | '\\u0DF2' .. '\\u0DF3' | '\\u0E31' | '\\u0E34' .. '\\u0E3A' | '\\u0E47' .. '\\u0E4E' | '\\u0EB1' | '\\u0EB4' .. '\\u0EB9' | '\\u0EBB' .. '\\u0EBC' | '\\u0EC8' .. '\\u0ECD' | '\\u0F18' .. '\\u0F19' | '\\u0F35' | '\\u0F37' | '\\u0F39' | '\\u0F3E' .. '\\u0F3F' | '\\u0F71' .. '\\u0F84' | '\\u0F86' .. '\\u0F87' | '\\u0F8D' .. '\\u0F97' | '\\u0F99' .. '\\u0FBC' | '\\u0FC6' | '\\u102B' .. '\\u103E' | '\\u1056' .. '\\u1059' | '\\u105E' .. '\\u1060' | '\\u1062' .. '\\u1064' | '\\u1067' .. '\\u106D' | '\\u1071' .. '\\u1074' | '\\u1082' .. '\\u108D' | '\\u108F' | '\\u109A' .. '\\u109D' | '\\u135D' .. '\\u135F' | '\\u1712' .. '\\u1714' | '\\u1732' .. '\\u1734' | '\\u1752' .. '\\u1753' | '\\u1772' .. '\\u1773' | '\\u17B4' .. '\\u17D3' | '\\u17DD' | '\\u180B' .. '\\u180D' | '\\u18A9' | '\\u1920' .. '\\u192B' | '\\u1930' .. '\\u193B' | '\\u1A17' .. '\\u1A1B' | '\\u1A55' .. '\\u1A5E' | '\\u1A60' .. '\\u1A7C' | '\\u1A7F' | '\\u1AB0' .. '\\u1ABD' | '\\u1B00' .. '\\u1B04' | '\\u1B34' .. '\\u1B44' | '\\u1B6B' .. '\\u1B73' | '\\u1B80' .. '\\u1B82' | '\\u1BA1' .. '\\u1BAD' | '\\u1BE6' .. '\\u1BF3' | '\\u1C24' .. '\\u1C37' | '\\u1CD0' .. '\\u1CD2' | '\\u1CD4' .. '\\u1CE8' | '\\u1CED' | '\\u1CF2' .. '\\u1CF4' | '\\u1CF8' .. '\\u1CF9' | '\\u1DC0' .. '\\u1DF5' | '\\u1DFC' .. '\\u1DFF' | '\\u20D0' .. '\\u20DC' | '\\u20E1' | '\\u20E5' .. '\\u20F0' | '\\u2CEF' .. '\\u2CF1' | '\\u2D7F' | '\\u2DE0' .. '\\u2DFF' | '\\u302A' .. '\\u302F' | '\\u3099' .. '\\u309A' | '\\uA66F' | '\\uA674' .. '\\uA67D' | '\\uA69E' .. '\\uA69F' | '\\uA6F0' .. '\\uA6F1' | '\\uA802' | '\\uA806' | '\\uA80B' | '\\uA823' .. '\\uA827' | '\\uA880' .. '\\uA881' | '\\uA8B4' .. '\\uA8C4' | '\\uA8E0' .. '\\uA8F1' | '\\uA926' .. '\\uA92D' | '\\uA947' .. '\\uA953' | '\\uA980' .. '\\uA983' | '\\uA9B3' .. '\\uA9C0' | '\\uA9E5' | '\\uAA29' .. '\\uAA36' | '\\uAA43' | '\\uAA4C' .. '\\uAA4D' | '\\uAA7B' .. '\\uAA7D' | '\\uAAB0' | '\\uAAB2' .. '\\uAAB4' | '\\uAAB7' .. '\\uAAB8' | '\\uAABE' .. '\\uAABF' | '\\uAAC1' | '\\uAAEB' .. '\\uAAEF' | '\\uAAF5' .. '\\uAAF6' | '\\uABE3' .. '\\uABEA' | '\\uABEC' .. '\\uABED' | '\\uFB1E' | '\\uFE00' .. '\\uFE0F' | '\\uFE20' .. '\\uFE2F' )
             {
             if ( (input.LA(1)>='\u0300' && input.LA(1)<='\u036F')||(input.LA(1)>='\u0483' && input.LA(1)<='\u0487')||(input.LA(1)>='\u0591' && input.LA(1)<='\u05BD')||input.LA(1)=='\u05BF'||(input.LA(1)>='\u05C1' && input.LA(1)<='\u05C2')||(input.LA(1)>='\u05C4' && input.LA(1)<='\u05C5')||input.LA(1)=='\u05C7'||(input.LA(1)>='\u0610' && input.LA(1)<='\u061A')||(input.LA(1)>='\u064B' && input.LA(1)<='\u065F')||input.LA(1)=='\u0670'||(input.LA(1)>='\u06D6' && input.LA(1)<='\u06DC')||(input.LA(1)>='\u06DF' && input.LA(1)<='\u06E4')||(input.LA(1)>='\u06E7' && input.LA(1)<='\u06E8')||(input.LA(1)>='\u06EA' && input.LA(1)<='\u06ED')||input.LA(1)=='\u0711'||(input.LA(1)>='\u0730' && input.LA(1)<='\u074A')||(input.LA(1)>='\u07A6' && input.LA(1)<='\u07B0')||(input.LA(1)>='\u07EB' && input.LA(1)<='\u07F3')||(input.LA(1)>='\u0816' && input.LA(1)<='\u0819')||(input.LA(1)>='\u081B' && input.LA(1)<='\u0823')||(input.LA(1)>='\u0825' && input.LA(1)<='\u0827')||(input.LA(1)>='\u0829' && input.LA(1)<='\u082D')||(input.LA(1)>='\u0859' && input.LA(1)<='\u085B')||(input.LA(1)>='\u08E3' && input.LA(1)<='\u0903')||(input.LA(1)>='\u093A' && input.LA(1)<='\u093C')||(input.LA(1)>='\u093E' && input.LA(1)<='\u094F')||(input.LA(1)>='\u0951' && input.LA(1)<='\u0957')||(input.LA(1)>='\u0962' && input.LA(1)<='\u0963')||(input.LA(1)>='\u0981' && input.LA(1)<='\u0983')||input.LA(1)=='\u09BC'||(input.LA(1)>='\u09BE' && input.LA(1)<='\u09C4')||(input.LA(1)>='\u09C7' && input.LA(1)<='\u09C8')||(input.LA(1)>='\u09CB' && input.LA(1)<='\u09CD')||input.LA(1)=='\u09D7'||(input.LA(1)>='\u09E2' && input.LA(1)<='\u09E3')||(input.LA(1)>='\u0A01' && input.LA(1)<='\u0A03')||input.LA(1)=='\u0A3C'||(input.LA(1)>='\u0A3E' && input.LA(1)<='\u0A42')||(input.LA(1)>='\u0A47' && input.LA(1)<='\u0A48')||(input.LA(1)>='\u0A4B' && input.LA(1)<='\u0A4D')||input.LA(1)=='\u0A51'||(input.LA(1)>='\u0A70' && input.LA(1)<='\u0A71')||input.LA(1)=='\u0A75'||(input.LA(1)>='\u0A81' && input.LA(1)<='\u0A83')||input.LA(1)=='\u0ABC'||(input.LA(1)>='\u0ABE' && input.LA(1)<='\u0AC5')||(input.LA(1)>='\u0AC7' && input.LA(1)<='\u0AC9')||(input.LA(1)>='\u0ACB' && input.LA(1)<='\u0ACD')||(input.LA(1)>='\u0AE2' && input.LA(1)<='\u0AE3')||(input.LA(1)>='\u0B01' && input.LA(1)<='\u0B03')||input.LA(1)=='\u0B3C'||(input.LA(1)>='\u0B3E' && input.LA(1)<='\u0B44')||(input.LA(1)>='\u0B47' && input.LA(1)<='\u0B48')||(input.LA(1)>='\u0B4B' && input.LA(1)<='\u0B4D')||(input.LA(1)>='\u0B56' && input.LA(1)<='\u0B57')||(input.LA(1)>='\u0B62' && input.LA(1)<='\u0B63')||input.LA(1)=='\u0B82'||(input.LA(1)>='\u0BBE' && input.LA(1)<='\u0BC2')||(input.LA(1)>='\u0BC6' && input.LA(1)<='\u0BC8')||(input.LA(1)>='\u0BCA' && input.LA(1)<='\u0BCD')||input.LA(1)=='\u0BD7'||(input.LA(1)>='\u0C00' && input.LA(1)<='\u0C03')||(input.LA(1)>='\u0C3E' && input.LA(1)<='\u0C44')||(input.LA(1)>='\u0C46' && input.LA(1)<='\u0C48')||(input.LA(1)>='\u0C4A' && input.LA(1)<='\u0C4D')||(input.LA(1)>='\u0C55' && input.LA(1)<='\u0C56')||(input.LA(1)>='\u0C62' && input.LA(1)<='\u0C63')||(input.LA(1)>='\u0C81' && input.LA(1)<='\u0C83')||input.LA(1)=='\u0CBC'||(input.LA(1)>='\u0CBE' && input.LA(1)<='\u0CC4')||(input.LA(1)>='\u0CC6' && input.LA(1)<='\u0CC8')||(input.LA(1)>='\u0CCA' && input.LA(1)<='\u0CCD')||(input.LA(1)>='\u0CD5' && input.LA(1)<='\u0CD6')||(input.LA(1)>='\u0CE2' && input.LA(1)<='\u0CE3')||(input.LA(1)>='\u0D01' && input.LA(1)<='\u0D03')||(input.LA(1)>='\u0D3E' && input.LA(1)<='\u0D44')||(input.LA(1)>='\u0D46' && input.LA(1)<='\u0D48')||(input.LA(1)>='\u0D4A' && input.LA(1)<='\u0D4D')||input.LA(1)=='\u0D57'||(input.LA(1)>='\u0D62' && input.LA(1)<='\u0D63')||(input.LA(1)>='\u0D82' && input.LA(1)<='\u0D83')||input.LA(1)=='\u0DCA'||(input.LA(1)>='\u0DCF' && input.LA(1)<='\u0DD4')||input.LA(1)=='\u0DD6'||(input.LA(1)>='\u0DD8' && input.LA(1)<='\u0DDF')||(input.LA(1)>='\u0DF2' && input.LA(1)<='\u0DF3')||input.LA(1)=='\u0E31'||(input.LA(1)>='\u0E34' && input.LA(1)<='\u0E3A')||(input.LA(1)>='\u0E47' && input.LA(1)<='\u0E4E')||input.LA(1)=='\u0EB1'||(input.LA(1)>='\u0EB4' && input.LA(1)<='\u0EB9')||(input.LA(1)>='\u0EBB' && input.LA(1)<='\u0EBC')||(input.LA(1)>='\u0EC8' && input.LA(1)<='\u0ECD')||(input.LA(1)>='\u0F18' && input.LA(1)<='\u0F19')||input.LA(1)=='\u0F35'||input.LA(1)=='\u0F37'||input.LA(1)=='\u0F39'||(input.LA(1)>='\u0F3E' && input.LA(1)<='\u0F3F')||(input.LA(1)>='\u0F71' && input.LA(1)<='\u0F84')||(input.LA(1)>='\u0F86' && input.LA(1)<='\u0F87')||(input.LA(1)>='\u0F8D' && input.LA(1)<='\u0F97')||(input.LA(1)>='\u0F99' && input.LA(1)<='\u0FBC')||input.LA(1)=='\u0FC6'||(input.LA(1)>='\u102B' && input.LA(1)<='\u103E')||(input.LA(1)>='\u1056' && input.LA(1)<='\u1059')||(input.LA(1)>='\u105E' && input.LA(1)<='\u1060')||(input.LA(1)>='\u1062' && input.LA(1)<='\u1064')||(input.LA(1)>='\u1067' && input.LA(1)<='\u106D')||(input.LA(1)>='\u1071' && input.LA(1)<='\u1074')||(input.LA(1)>='\u1082' && input.LA(1)<='\u108D')||input.LA(1)=='\u108F'||(input.LA(1)>='\u109A' && input.LA(1)<='\u109D')||(input.LA(1)>='\u135D' && input.LA(1)<='\u135F')||(input.LA(1)>='\u1712' && input.LA(1)<='\u1714')||(input.LA(1)>='\u1732' && input.LA(1)<='\u1734')||(input.LA(1)>='\u1752' && input.LA(1)<='\u1753')||(input.LA(1)>='\u1772' && input.LA(1)<='\u1773')||(input.LA(1)>='\u17B4' && input.LA(1)<='\u17D3')||input.LA(1)=='\u17DD'||(input.LA(1)>='\u180B' && input.LA(1)<='\u180D')||input.LA(1)=='\u18A9'||(input.LA(1)>='\u1920' && input.LA(1)<='\u192B')||(input.LA(1)>='\u1930' && input.LA(1)<='\u193B')||(input.LA(1)>='\u1A17' && input.LA(1)<='\u1A1B')||(input.LA(1)>='\u1A55' && input.LA(1)<='\u1A5E')||(input.LA(1)>='\u1A60' && input.LA(1)<='\u1A7C')||input.LA(1)=='\u1A7F'||(input.LA(1)>='\u1AB0' && input.LA(1)<='\u1ABD')||(input.LA(1)>='\u1B00' && input.LA(1)<='\u1B04')||(input.LA(1)>='\u1B34' && input.LA(1)<='\u1B44')||(input.LA(1)>='\u1B6B' && input.LA(1)<='\u1B73')||(input.LA(1)>='\u1B80' && input.LA(1)<='\u1B82')||(input.LA(1)>='\u1BA1' && input.LA(1)<='\u1BAD')||(input.LA(1)>='\u1BE6' && input.LA(1)<='\u1BF3')||(input.LA(1)>='\u1C24' && input.LA(1)<='\u1C37')||(input.LA(1)>='\u1CD0' && input.LA(1)<='\u1CD2')||(input.LA(1)>='\u1CD4' && input.LA(1)<='\u1CE8')||input.LA(1)=='\u1CED'||(input.LA(1)>='\u1CF2' && input.LA(1)<='\u1CF4')||(input.LA(1)>='\u1CF8' && input.LA(1)<='\u1CF9')||(input.LA(1)>='\u1DC0' && input.LA(1)<='\u1DF5')||(input.LA(1)>='\u1DFC' && input.LA(1)<='\u1DFF')||(input.LA(1)>='\u20D0' && input.LA(1)<='\u20DC')||input.LA(1)=='\u20E1'||(input.LA(1)>='\u20E5' && input.LA(1)<='\u20F0')||(input.LA(1)>='\u2CEF' && input.LA(1)<='\u2CF1')||input.LA(1)=='\u2D7F'||(input.LA(1)>='\u2DE0' && input.LA(1)<='\u2DFF')||(input.LA(1)>='\u302A' && input.LA(1)<='\u302F')||(input.LA(1)>='\u3099' && input.LA(1)<='\u309A')||input.LA(1)=='\uA66F'||(input.LA(1)>='\uA674' && input.LA(1)<='\uA67D')||(input.LA(1)>='\uA69E' && input.LA(1)<='\uA69F')||(input.LA(1)>='\uA6F0' && input.LA(1)<='\uA6F1')||input.LA(1)=='\uA802'||input.LA(1)=='\uA806'||input.LA(1)=='\uA80B'||(input.LA(1)>='\uA823' && input.LA(1)<='\uA827')||(input.LA(1)>='\uA880' && input.LA(1)<='\uA881')||(input.LA(1)>='\uA8B4' && input.LA(1)<='\uA8C4')||(input.LA(1)>='\uA8E0' && input.LA(1)<='\uA8F1')||(input.LA(1)>='\uA926' && input.LA(1)<='\uA92D')||(input.LA(1)>='\uA947' && input.LA(1)<='\uA953')||(input.LA(1)>='\uA980' && input.LA(1)<='\uA983')||(input.LA(1)>='\uA9B3' && input.LA(1)<='\uA9C0')||input.LA(1)=='\uA9E5'||(input.LA(1)>='\uAA29' && input.LA(1)<='\uAA36')||input.LA(1)=='\uAA43'||(input.LA(1)>='\uAA4C' && input.LA(1)<='\uAA4D')||(input.LA(1)>='\uAA7B' && input.LA(1)<='\uAA7D')||input.LA(1)=='\uAAB0'||(input.LA(1)>='\uAAB2' && input.LA(1)<='\uAAB4')||(input.LA(1)>='\uAAB7' && input.LA(1)<='\uAAB8')||(input.LA(1)>='\uAABE' && input.LA(1)<='\uAABF')||input.LA(1)=='\uAAC1'||(input.LA(1)>='\uAAEB' && input.LA(1)<='\uAAEF')||(input.LA(1)>='\uAAF5' && input.LA(1)<='\uAAF6')||(input.LA(1)>='\uABE3' && input.LA(1)<='\uABEA')||(input.LA(1)>='\uABEC' && input.LA(1)<='\uABED')||input.LA(1)=='\uFB1E'||(input.LA(1)>='\uFE00' && input.LA(1)<='\uFE0F')||(input.LA(1)>='\uFE20' && input.LA(1)<='\uFE2F') ) {
                 input.consume();
@@ -3316,8 +3359,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_UNICODE_DIGIT_FRAGMENT"
     public final void mRULE_UNICODE_DIGIT_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:261:38: ( ( '0' .. '9' | '\\u0660' .. '\\u0669' | '\\u06F0' .. '\\u06F9' | '\\u07C0' .. '\\u07C9' | '\\u0966' .. '\\u096F' | '\\u09E6' .. '\\u09EF' | '\\u0A66' .. '\\u0A6F' | '\\u0AE6' .. '\\u0AEF' | '\\u0B66' .. '\\u0B6F' | '\\u0BE6' .. '\\u0BEF' | '\\u0C66' .. '\\u0C6F' | '\\u0CE6' .. '\\u0CEF' | '\\u0D66' .. '\\u0D6F' | '\\u0DE6' .. '\\u0DEF' | '\\u0E50' .. '\\u0E59' | '\\u0ED0' .. '\\u0ED9' | '\\u0F20' .. '\\u0F29' | '\\u1040' .. '\\u1049' | '\\u1090' .. '\\u1099' | '\\u17E0' .. '\\u17E9' | '\\u1810' .. '\\u1819' | '\\u1946' .. '\\u194F' | '\\u19D0' .. '\\u19D9' | '\\u1A80' .. '\\u1A89' | '\\u1A90' .. '\\u1A99' | '\\u1B50' .. '\\u1B59' | '\\u1BB0' .. '\\u1BB9' | '\\u1C40' .. '\\u1C49' | '\\u1C50' .. '\\u1C59' | '\\uA620' .. '\\uA629' | '\\uA8D0' .. '\\uA8D9' | '\\uA900' .. '\\uA909' | '\\uA9D0' .. '\\uA9D9' | '\\uA9F0' .. '\\uA9F9' | '\\uAA50' .. '\\uAA59' | '\\uABF0' .. '\\uABF9' | '\\uFF10' .. '\\uFF19' ) )
-            // InternalTypesLexer.g:261:40: ( '0' .. '9' | '\\u0660' .. '\\u0669' | '\\u06F0' .. '\\u06F9' | '\\u07C0' .. '\\u07C9' | '\\u0966' .. '\\u096F' | '\\u09E6' .. '\\u09EF' | '\\u0A66' .. '\\u0A6F' | '\\u0AE6' .. '\\u0AEF' | '\\u0B66' .. '\\u0B6F' | '\\u0BE6' .. '\\u0BEF' | '\\u0C66' .. '\\u0C6F' | '\\u0CE6' .. '\\u0CEF' | '\\u0D66' .. '\\u0D6F' | '\\u0DE6' .. '\\u0DEF' | '\\u0E50' .. '\\u0E59' | '\\u0ED0' .. '\\u0ED9' | '\\u0F20' .. '\\u0F29' | '\\u1040' .. '\\u1049' | '\\u1090' .. '\\u1099' | '\\u17E0' .. '\\u17E9' | '\\u1810' .. '\\u1819' | '\\u1946' .. '\\u194F' | '\\u19D0' .. '\\u19D9' | '\\u1A80' .. '\\u1A89' | '\\u1A90' .. '\\u1A99' | '\\u1B50' .. '\\u1B59' | '\\u1BB0' .. '\\u1BB9' | '\\u1C40' .. '\\u1C49' | '\\u1C50' .. '\\u1C59' | '\\uA620' .. '\\uA629' | '\\uA8D0' .. '\\uA8D9' | '\\uA900' .. '\\uA909' | '\\uA9D0' .. '\\uA9D9' | '\\uA9F0' .. '\\uA9F9' | '\\uAA50' .. '\\uAA59' | '\\uABF0' .. '\\uABF9' | '\\uFF10' .. '\\uFF19' )
+            // InternalTypesLexer.g:263:38: ( ( '0' .. '9' | '\\u0660' .. '\\u0669' | '\\u06F0' .. '\\u06F9' | '\\u07C0' .. '\\u07C9' | '\\u0966' .. '\\u096F' | '\\u09E6' .. '\\u09EF' | '\\u0A66' .. '\\u0A6F' | '\\u0AE6' .. '\\u0AEF' | '\\u0B66' .. '\\u0B6F' | '\\u0BE6' .. '\\u0BEF' | '\\u0C66' .. '\\u0C6F' | '\\u0CE6' .. '\\u0CEF' | '\\u0D66' .. '\\u0D6F' | '\\u0DE6' .. '\\u0DEF' | '\\u0E50' .. '\\u0E59' | '\\u0ED0' .. '\\u0ED9' | '\\u0F20' .. '\\u0F29' | '\\u1040' .. '\\u1049' | '\\u1090' .. '\\u1099' | '\\u17E0' .. '\\u17E9' | '\\u1810' .. '\\u1819' | '\\u1946' .. '\\u194F' | '\\u19D0' .. '\\u19D9' | '\\u1A80' .. '\\u1A89' | '\\u1A90' .. '\\u1A99' | '\\u1B50' .. '\\u1B59' | '\\u1BB0' .. '\\u1BB9' | '\\u1C40' .. '\\u1C49' | '\\u1C50' .. '\\u1C59' | '\\uA620' .. '\\uA629' | '\\uA8D0' .. '\\uA8D9' | '\\uA900' .. '\\uA909' | '\\uA9D0' .. '\\uA9D9' | '\\uA9F0' .. '\\uA9F9' | '\\uAA50' .. '\\uAA59' | '\\uABF0' .. '\\uABF9' | '\\uFF10' .. '\\uFF19' ) )
+            // InternalTypesLexer.g:263:40: ( '0' .. '9' | '\\u0660' .. '\\u0669' | '\\u06F0' .. '\\u06F9' | '\\u07C0' .. '\\u07C9' | '\\u0966' .. '\\u096F' | '\\u09E6' .. '\\u09EF' | '\\u0A66' .. '\\u0A6F' | '\\u0AE6' .. '\\u0AEF' | '\\u0B66' .. '\\u0B6F' | '\\u0BE6' .. '\\u0BEF' | '\\u0C66' .. '\\u0C6F' | '\\u0CE6' .. '\\u0CEF' | '\\u0D66' .. '\\u0D6F' | '\\u0DE6' .. '\\u0DEF' | '\\u0E50' .. '\\u0E59' | '\\u0ED0' .. '\\u0ED9' | '\\u0F20' .. '\\u0F29' | '\\u1040' .. '\\u1049' | '\\u1090' .. '\\u1099' | '\\u17E0' .. '\\u17E9' | '\\u1810' .. '\\u1819' | '\\u1946' .. '\\u194F' | '\\u19D0' .. '\\u19D9' | '\\u1A80' .. '\\u1A89' | '\\u1A90' .. '\\u1A99' | '\\u1B50' .. '\\u1B59' | '\\u1BB0' .. '\\u1BB9' | '\\u1C40' .. '\\u1C49' | '\\u1C50' .. '\\u1C59' | '\\uA620' .. '\\uA629' | '\\uA8D0' .. '\\uA8D9' | '\\uA900' .. '\\uA909' | '\\uA9D0' .. '\\uA9D9' | '\\uA9F0' .. '\\uA9F9' | '\\uAA50' .. '\\uAA59' | '\\uABF0' .. '\\uABF9' | '\\uFF10' .. '\\uFF19' )
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='\u0660' && input.LA(1)<='\u0669')||(input.LA(1)>='\u06F0' && input.LA(1)<='\u06F9')||(input.LA(1)>='\u07C0' && input.LA(1)<='\u07C9')||(input.LA(1)>='\u0966' && input.LA(1)<='\u096F')||(input.LA(1)>='\u09E6' && input.LA(1)<='\u09EF')||(input.LA(1)>='\u0A66' && input.LA(1)<='\u0A6F')||(input.LA(1)>='\u0AE6' && input.LA(1)<='\u0AEF')||(input.LA(1)>='\u0B66' && input.LA(1)<='\u0B6F')||(input.LA(1)>='\u0BE6' && input.LA(1)<='\u0BEF')||(input.LA(1)>='\u0C66' && input.LA(1)<='\u0C6F')||(input.LA(1)>='\u0CE6' && input.LA(1)<='\u0CEF')||(input.LA(1)>='\u0D66' && input.LA(1)<='\u0D6F')||(input.LA(1)>='\u0DE6' && input.LA(1)<='\u0DEF')||(input.LA(1)>='\u0E50' && input.LA(1)<='\u0E59')||(input.LA(1)>='\u0ED0' && input.LA(1)<='\u0ED9')||(input.LA(1)>='\u0F20' && input.LA(1)<='\u0F29')||(input.LA(1)>='\u1040' && input.LA(1)<='\u1049')||(input.LA(1)>='\u1090' && input.LA(1)<='\u1099')||(input.LA(1)>='\u17E0' && input.LA(1)<='\u17E9')||(input.LA(1)>='\u1810' && input.LA(1)<='\u1819')||(input.LA(1)>='\u1946' && input.LA(1)<='\u194F')||(input.LA(1)>='\u19D0' && input.LA(1)<='\u19D9')||(input.LA(1)>='\u1A80' && input.LA(1)<='\u1A89')||(input.LA(1)>='\u1A90' && input.LA(1)<='\u1A99')||(input.LA(1)>='\u1B50' && input.LA(1)<='\u1B59')||(input.LA(1)>='\u1BB0' && input.LA(1)<='\u1BB9')||(input.LA(1)>='\u1C40' && input.LA(1)<='\u1C49')||(input.LA(1)>='\u1C50' && input.LA(1)<='\u1C59')||(input.LA(1)>='\uA620' && input.LA(1)<='\uA629')||(input.LA(1)>='\uA8D0' && input.LA(1)<='\uA8D9')||(input.LA(1)>='\uA900' && input.LA(1)<='\uA909')||(input.LA(1)>='\uA9D0' && input.LA(1)<='\uA9D9')||(input.LA(1)>='\uA9F0' && input.LA(1)<='\uA9F9')||(input.LA(1)>='\uAA50' && input.LA(1)<='\uAA59')||(input.LA(1)>='\uABF0' && input.LA(1)<='\uABF9')||(input.LA(1)>='\uFF10' && input.LA(1)<='\uFF19') ) {
                 input.consume();
@@ -3340,8 +3383,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT"
     public final void mRULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:263:54: ( ( '_' | '\\u203F' .. '\\u2040' | '\\u2054' | '\\uFE33' .. '\\uFE34' | '\\uFE4D' .. '\\uFE4F' | '\\uFF3F' ) )
-            // InternalTypesLexer.g:263:56: ( '_' | '\\u203F' .. '\\u2040' | '\\u2054' | '\\uFE33' .. '\\uFE34' | '\\uFE4D' .. '\\uFE4F' | '\\uFF3F' )
+            // InternalTypesLexer.g:265:54: ( ( '_' | '\\u203F' .. '\\u2040' | '\\u2054' | '\\uFE33' .. '\\uFE34' | '\\uFE4D' .. '\\uFE4F' | '\\uFF3F' ) )
+            // InternalTypesLexer.g:265:56: ( '_' | '\\u203F' .. '\\u2040' | '\\u2054' | '\\uFE33' .. '\\uFE34' | '\\uFE4D' .. '\\uFE4F' | '\\uFF3F' )
             {
             if ( input.LA(1)=='_'||(input.LA(1)>='\u203F' && input.LA(1)<='\u2040')||input.LA(1)=='\u2054'||(input.LA(1)>='\uFE33' && input.LA(1)<='\uFE34')||(input.LA(1)>='\uFE4D' && input.LA(1)<='\uFE4F')||input.LA(1)=='\uFF3F' ) {
                 input.consume();
@@ -3364,8 +3407,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_UNICODE_LETTER_FRAGMENT"
     public final void mRULE_UNICODE_LETTER_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:265:39: ( ( 'A' .. 'Z' | 'a' .. 'z' | '\\u00AA' | '\\u00B5' | '\\u00BA' | '\\u00C0' .. '\\u00D6' | '\\u00D8' .. '\\u00F6' | '\\u00F8' .. '\\u02C1' | '\\u02C6' .. '\\u02D1' | '\\u02E0' .. '\\u02E4' | '\\u02EC' | '\\u02EE' | '\\u0370' .. '\\u0374' | '\\u0376' .. '\\u0377' | '\\u037A' .. '\\u037D' | '\\u037F' | '\\u0386' | '\\u0388' .. '\\u038A' | '\\u038C' | '\\u038E' .. '\\u03A1' | '\\u03A3' .. '\\u03F5' | '\\u03F7' .. '\\u0481' | '\\u048A' .. '\\u052F' | '\\u0531' .. '\\u0556' | '\\u0559' | '\\u0561' .. '\\u0587' | '\\u05D0' .. '\\u05EA' | '\\u05F0' .. '\\u05F2' | '\\u0620' .. '\\u064A' | '\\u066E' .. '\\u066F' | '\\u0671' .. '\\u06D3' | '\\u06D5' | '\\u06E5' .. '\\u06E6' | '\\u06EE' .. '\\u06EF' | '\\u06FA' .. '\\u06FC' | '\\u06FF' | '\\u0710' | '\\u0712' .. '\\u072F' | '\\u074D' .. '\\u07A5' | '\\u07B1' | '\\u07CA' .. '\\u07EA' | '\\u07F4' .. '\\u07F5' | '\\u07FA' | '\\u0800' .. '\\u0815' | '\\u081A' | '\\u0824' | '\\u0828' | '\\u0840' .. '\\u0858' | '\\u08A0' .. '\\u08B4' | '\\u0904' .. '\\u0939' | '\\u093D' | '\\u0950' | '\\u0958' .. '\\u0961' | '\\u0971' .. '\\u0980' | '\\u0985' .. '\\u098C' | '\\u098F' .. '\\u0990' | '\\u0993' .. '\\u09A8' | '\\u09AA' .. '\\u09B0' | '\\u09B2' | '\\u09B6' .. '\\u09B9' | '\\u09BD' | '\\u09CE' | '\\u09DC' .. '\\u09DD' | '\\u09DF' .. '\\u09E1' | '\\u09F0' .. '\\u09F1' | '\\u0A05' .. '\\u0A0A' | '\\u0A0F' .. '\\u0A10' | '\\u0A13' .. '\\u0A28' | '\\u0A2A' .. '\\u0A30' | '\\u0A32' .. '\\u0A33' | '\\u0A35' .. '\\u0A36' | '\\u0A38' .. '\\u0A39' | '\\u0A59' .. '\\u0A5C' | '\\u0A5E' | '\\u0A72' .. '\\u0A74' | '\\u0A85' .. '\\u0A8D' | '\\u0A8F' .. '\\u0A91' | '\\u0A93' .. '\\u0AA8' | '\\u0AAA' .. '\\u0AB0' | '\\u0AB2' .. '\\u0AB3' | '\\u0AB5' .. '\\u0AB9' | '\\u0ABD' | '\\u0AD0' | '\\u0AE0' .. '\\u0AE1' | '\\u0AF9' | '\\u0B05' .. '\\u0B0C' | '\\u0B0F' .. '\\u0B10' | '\\u0B13' .. '\\u0B28' | '\\u0B2A' .. '\\u0B30' | '\\u0B32' .. '\\u0B33' | '\\u0B35' .. '\\u0B39' | '\\u0B3D' | '\\u0B5C' .. '\\u0B5D' | '\\u0B5F' .. '\\u0B61' | '\\u0B71' | '\\u0B83' | '\\u0B85' .. '\\u0B8A' | '\\u0B8E' .. '\\u0B90' | '\\u0B92' .. '\\u0B95' | '\\u0B99' .. '\\u0B9A' | '\\u0B9C' | '\\u0B9E' .. '\\u0B9F' | '\\u0BA3' .. '\\u0BA4' | '\\u0BA8' .. '\\u0BAA' | '\\u0BAE' .. '\\u0BB9' | '\\u0BD0' | '\\u0C05' .. '\\u0C0C' | '\\u0C0E' .. '\\u0C10' | '\\u0C12' .. '\\u0C28' | '\\u0C2A' .. '\\u0C39' | '\\u0C3D' | '\\u0C58' .. '\\u0C5A' | '\\u0C60' .. '\\u0C61' | '\\u0C85' .. '\\u0C8C' | '\\u0C8E' .. '\\u0C90' | '\\u0C92' .. '\\u0CA8' | '\\u0CAA' .. '\\u0CB3' | '\\u0CB5' .. '\\u0CB9' | '\\u0CBD' | '\\u0CDE' | '\\u0CE0' .. '\\u0CE1' | '\\u0CF1' .. '\\u0CF2' | '\\u0D05' .. '\\u0D0C' | '\\u0D0E' .. '\\u0D10' | '\\u0D12' .. '\\u0D3A' | '\\u0D3D' | '\\u0D4E' | '\\u0D5F' .. '\\u0D61' | '\\u0D7A' .. '\\u0D7F' | '\\u0D85' .. '\\u0D96' | '\\u0D9A' .. '\\u0DB1' | '\\u0DB3' .. '\\u0DBB' | '\\u0DBD' | '\\u0DC0' .. '\\u0DC6' | '\\u0E01' .. '\\u0E30' | '\\u0E32' .. '\\u0E33' | '\\u0E40' .. '\\u0E46' | '\\u0E81' .. '\\u0E82' | '\\u0E84' | '\\u0E87' .. '\\u0E88' | '\\u0E8A' | '\\u0E8D' | '\\u0E94' .. '\\u0E97' | '\\u0E99' .. '\\u0E9F' | '\\u0EA1' .. '\\u0EA3' | '\\u0EA5' | '\\u0EA7' | '\\u0EAA' .. '\\u0EAB' | '\\u0EAD' .. '\\u0EB0' | '\\u0EB2' .. '\\u0EB3' | '\\u0EBD' | '\\u0EC0' .. '\\u0EC4' | '\\u0EC6' | '\\u0EDC' .. '\\u0EDF' | '\\u0F00' | '\\u0F40' .. '\\u0F47' | '\\u0F49' .. '\\u0F6C' | '\\u0F88' .. '\\u0F8C' | '\\u1000' .. '\\u102A' | '\\u103F' | '\\u1050' .. '\\u1055' | '\\u105A' .. '\\u105D' | '\\u1061' | '\\u1065' .. '\\u1066' | '\\u106E' .. '\\u1070' | '\\u1075' .. '\\u1081' | '\\u108E' | '\\u10A0' .. '\\u10C5' | '\\u10C7' | '\\u10CD' | '\\u10D0' .. '\\u10FA' | '\\u10FC' .. '\\u1248' | '\\u124A' .. '\\u124D' | '\\u1250' .. '\\u1256' | '\\u1258' | '\\u125A' .. '\\u125D' | '\\u1260' .. '\\u1288' | '\\u128A' .. '\\u128D' | '\\u1290' .. '\\u12B0' | '\\u12B2' .. '\\u12B5' | '\\u12B8' .. '\\u12BE' | '\\u12C0' | '\\u12C2' .. '\\u12C5' | '\\u12C8' .. '\\u12D6' | '\\u12D8' .. '\\u1310' | '\\u1312' .. '\\u1315' | '\\u1318' .. '\\u135A' | '\\u1380' .. '\\u138F' | '\\u13A0' .. '\\u13F5' | '\\u13F8' .. '\\u13FD' | '\\u1401' .. '\\u166C' | '\\u166F' .. '\\u167F' | '\\u1681' .. '\\u169A' | '\\u16A0' .. '\\u16EA' | '\\u16EE' .. '\\u16F8' | '\\u1700' .. '\\u170C' | '\\u170E' .. '\\u1711' | '\\u1720' .. '\\u1731' | '\\u1740' .. '\\u1751' | '\\u1760' .. '\\u176C' | '\\u176E' .. '\\u1770' | '\\u1780' .. '\\u17B3' | '\\u17D7' | '\\u17DC' | '\\u1820' .. '\\u1877' | '\\u1880' .. '\\u18A8' | '\\u18AA' | '\\u18B0' .. '\\u18F5' | '\\u1900' .. '\\u191E' | '\\u1950' .. '\\u196D' | '\\u1970' .. '\\u1974' | '\\u1980' .. '\\u19AB' | '\\u19B0' .. '\\u19C9' | '\\u1A00' .. '\\u1A16' | '\\u1A20' .. '\\u1A54' | '\\u1AA7' | '\\u1B05' .. '\\u1B33' | '\\u1B45' .. '\\u1B4B' | '\\u1B83' .. '\\u1BA0' | '\\u1BAE' .. '\\u1BAF' | '\\u1BBA' .. '\\u1BE5' | '\\u1C00' .. '\\u1C23' | '\\u1C4D' .. '\\u1C4F' | '\\u1C5A' .. '\\u1C7D' | '\\u1CE9' .. '\\u1CEC' | '\\u1CEE' .. '\\u1CF1' | '\\u1CF5' .. '\\u1CF6' | '\\u1D00' .. '\\u1DBF' | '\\u1E00' .. '\\u1F15' | '\\u1F18' .. '\\u1F1D' | '\\u1F20' .. '\\u1F45' | '\\u1F48' .. '\\u1F4D' | '\\u1F50' .. '\\u1F57' | '\\u1F59' | '\\u1F5B' | '\\u1F5D' | '\\u1F5F' .. '\\u1F7D' | '\\u1F80' .. '\\u1FB4' | '\\u1FB6' .. '\\u1FBC' | '\\u1FBE' | '\\u1FC2' .. '\\u1FC4' | '\\u1FC6' .. '\\u1FCC' | '\\u1FD0' .. '\\u1FD3' | '\\u1FD6' .. '\\u1FDB' | '\\u1FE0' .. '\\u1FEC' | '\\u1FF2' .. '\\u1FF4' | '\\u1FF6' .. '\\u1FFC' | '\\u2071' | '\\u207F' | '\\u2090' .. '\\u209C' | '\\u2102' | '\\u2107' | '\\u210A' .. '\\u2113' | '\\u2115' | '\\u2119' .. '\\u211D' | '\\u2124' | '\\u2126' | '\\u2128' | '\\u212A' .. '\\u212D' | '\\u212F' .. '\\u2139' | '\\u213C' .. '\\u213F' | '\\u2145' .. '\\u2149' | '\\u214E' | '\\u2160' .. '\\u2188' | '\\u2C00' .. '\\u2C2E' | '\\u2C30' .. '\\u2C5E' | '\\u2C60' .. '\\u2CE4' | '\\u2CEB' .. '\\u2CEE' | '\\u2CF2' .. '\\u2CF3' | '\\u2D00' .. '\\u2D25' | '\\u2D27' | '\\u2D2D' | '\\u2D30' .. '\\u2D67' | '\\u2D6F' | '\\u2D80' .. '\\u2D96' | '\\u2DA0' .. '\\u2DA6' | '\\u2DA8' .. '\\u2DAE' | '\\u2DB0' .. '\\u2DB6' | '\\u2DB8' .. '\\u2DBE' | '\\u2DC0' .. '\\u2DC6' | '\\u2DC8' .. '\\u2DCE' | '\\u2DD0' .. '\\u2DD6' | '\\u2DD8' .. '\\u2DDE' | '\\u2E2F' | '\\u3005' .. '\\u3007' | '\\u3021' .. '\\u3029' | '\\u3031' .. '\\u3035' | '\\u3038' .. '\\u303C' | '\\u3041' .. '\\u3096' | '\\u309D' .. '\\u309F' | '\\u30A1' .. '\\u30FA' | '\\u30FC' .. '\\u30FF' | '\\u3105' .. '\\u312D' | '\\u3131' .. '\\u318E' | '\\u31A0' .. '\\u31BA' | '\\u31F0' .. '\\u31FF' | '\\u3400' .. '\\u4DB5' | '\\u4E00' .. '\\u9FD5' | '\\uA000' .. '\\uA48C' | '\\uA4D0' .. '\\uA4FD' | '\\uA500' .. '\\uA60C' | '\\uA610' .. '\\uA61F' | '\\uA62A' .. '\\uA62B' | '\\uA640' .. '\\uA66E' | '\\uA67F' .. '\\uA69D' | '\\uA6A0' .. '\\uA6EF' | '\\uA717' .. '\\uA71F' | '\\uA722' .. '\\uA788' | '\\uA78B' .. '\\uA7AD' | '\\uA7B0' .. '\\uA7B7' | '\\uA7F7' .. '\\uA801' | '\\uA803' .. '\\uA805' | '\\uA807' .. '\\uA80A' | '\\uA80C' .. '\\uA822' | '\\uA840' .. '\\uA873' | '\\uA882' .. '\\uA8B3' | '\\uA8F2' .. '\\uA8F7' | '\\uA8FB' | '\\uA8FD' | '\\uA90A' .. '\\uA925' | '\\uA930' .. '\\uA946' | '\\uA960' .. '\\uA97C' | '\\uA984' .. '\\uA9B2' | '\\uA9CF' | '\\uA9E0' .. '\\uA9E4' | '\\uA9E6' .. '\\uA9EF' | '\\uA9FA' .. '\\uA9FE' | '\\uAA00' .. '\\uAA28' | '\\uAA40' .. '\\uAA42' | '\\uAA44' .. '\\uAA4B' | '\\uAA60' .. '\\uAA76' | '\\uAA7A' | '\\uAA7E' .. '\\uAAAF' | '\\uAAB1' | '\\uAAB5' .. '\\uAAB6' | '\\uAAB9' .. '\\uAABD' | '\\uAAC0' | '\\uAAC2' | '\\uAADB' .. '\\uAADD' | '\\uAAE0' .. '\\uAAEA' | '\\uAAF2' .. '\\uAAF4' | '\\uAB01' .. '\\uAB06' | '\\uAB09' .. '\\uAB0E' | '\\uAB11' .. '\\uAB16' | '\\uAB20' .. '\\uAB26' | '\\uAB28' .. '\\uAB2E' | '\\uAB30' .. '\\uAB5A' | '\\uAB5C' .. '\\uAB65' | '\\uAB70' .. '\\uABE2' | '\\uAC00' .. '\\uD7A3' | '\\uD7B0' .. '\\uD7C6' | '\\uD7CB' .. '\\uD7FB' | '\\uF900' .. '\\uFA6D' | '\\uFA70' .. '\\uFAD9' | '\\uFB00' .. '\\uFB06' | '\\uFB13' .. '\\uFB17' | '\\uFB1D' | '\\uFB1F' .. '\\uFB28' | '\\uFB2A' .. '\\uFB36' | '\\uFB38' .. '\\uFB3C' | '\\uFB3E' | '\\uFB40' .. '\\uFB41' | '\\uFB43' .. '\\uFB44' | '\\uFB46' .. '\\uFBB1' | '\\uFBD3' .. '\\uFD3D' | '\\uFD50' .. '\\uFD8F' | '\\uFD92' .. '\\uFDC7' | '\\uFDF0' .. '\\uFDFB' | '\\uFE70' .. '\\uFE74' | '\\uFE76' .. '\\uFEFC' | '\\uFF21' .. '\\uFF3A' | '\\uFF41' .. '\\uFF5A' | '\\uFF66' .. '\\uFFBE' | '\\uFFC2' .. '\\uFFC7' | '\\uFFCA' .. '\\uFFCF' | '\\uFFD2' .. '\\uFFD7' | '\\uFFDA' .. '\\uFFDC' ) )
-            // InternalTypesLexer.g:265:41: ( 'A' .. 'Z' | 'a' .. 'z' | '\\u00AA' | '\\u00B5' | '\\u00BA' | '\\u00C0' .. '\\u00D6' | '\\u00D8' .. '\\u00F6' | '\\u00F8' .. '\\u02C1' | '\\u02C6' .. '\\u02D1' | '\\u02E0' .. '\\u02E4' | '\\u02EC' | '\\u02EE' | '\\u0370' .. '\\u0374' | '\\u0376' .. '\\u0377' | '\\u037A' .. '\\u037D' | '\\u037F' | '\\u0386' | '\\u0388' .. '\\u038A' | '\\u038C' | '\\u038E' .. '\\u03A1' | '\\u03A3' .. '\\u03F5' | '\\u03F7' .. '\\u0481' | '\\u048A' .. '\\u052F' | '\\u0531' .. '\\u0556' | '\\u0559' | '\\u0561' .. '\\u0587' | '\\u05D0' .. '\\u05EA' | '\\u05F0' .. '\\u05F2' | '\\u0620' .. '\\u064A' | '\\u066E' .. '\\u066F' | '\\u0671' .. '\\u06D3' | '\\u06D5' | '\\u06E5' .. '\\u06E6' | '\\u06EE' .. '\\u06EF' | '\\u06FA' .. '\\u06FC' | '\\u06FF' | '\\u0710' | '\\u0712' .. '\\u072F' | '\\u074D' .. '\\u07A5' | '\\u07B1' | '\\u07CA' .. '\\u07EA' | '\\u07F4' .. '\\u07F5' | '\\u07FA' | '\\u0800' .. '\\u0815' | '\\u081A' | '\\u0824' | '\\u0828' | '\\u0840' .. '\\u0858' | '\\u08A0' .. '\\u08B4' | '\\u0904' .. '\\u0939' | '\\u093D' | '\\u0950' | '\\u0958' .. '\\u0961' | '\\u0971' .. '\\u0980' | '\\u0985' .. '\\u098C' | '\\u098F' .. '\\u0990' | '\\u0993' .. '\\u09A8' | '\\u09AA' .. '\\u09B0' | '\\u09B2' | '\\u09B6' .. '\\u09B9' | '\\u09BD' | '\\u09CE' | '\\u09DC' .. '\\u09DD' | '\\u09DF' .. '\\u09E1' | '\\u09F0' .. '\\u09F1' | '\\u0A05' .. '\\u0A0A' | '\\u0A0F' .. '\\u0A10' | '\\u0A13' .. '\\u0A28' | '\\u0A2A' .. '\\u0A30' | '\\u0A32' .. '\\u0A33' | '\\u0A35' .. '\\u0A36' | '\\u0A38' .. '\\u0A39' | '\\u0A59' .. '\\u0A5C' | '\\u0A5E' | '\\u0A72' .. '\\u0A74' | '\\u0A85' .. '\\u0A8D' | '\\u0A8F' .. '\\u0A91' | '\\u0A93' .. '\\u0AA8' | '\\u0AAA' .. '\\u0AB0' | '\\u0AB2' .. '\\u0AB3' | '\\u0AB5' .. '\\u0AB9' | '\\u0ABD' | '\\u0AD0' | '\\u0AE0' .. '\\u0AE1' | '\\u0AF9' | '\\u0B05' .. '\\u0B0C' | '\\u0B0F' .. '\\u0B10' | '\\u0B13' .. '\\u0B28' | '\\u0B2A' .. '\\u0B30' | '\\u0B32' .. '\\u0B33' | '\\u0B35' .. '\\u0B39' | '\\u0B3D' | '\\u0B5C' .. '\\u0B5D' | '\\u0B5F' .. '\\u0B61' | '\\u0B71' | '\\u0B83' | '\\u0B85' .. '\\u0B8A' | '\\u0B8E' .. '\\u0B90' | '\\u0B92' .. '\\u0B95' | '\\u0B99' .. '\\u0B9A' | '\\u0B9C' | '\\u0B9E' .. '\\u0B9F' | '\\u0BA3' .. '\\u0BA4' | '\\u0BA8' .. '\\u0BAA' | '\\u0BAE' .. '\\u0BB9' | '\\u0BD0' | '\\u0C05' .. '\\u0C0C' | '\\u0C0E' .. '\\u0C10' | '\\u0C12' .. '\\u0C28' | '\\u0C2A' .. '\\u0C39' | '\\u0C3D' | '\\u0C58' .. '\\u0C5A' | '\\u0C60' .. '\\u0C61' | '\\u0C85' .. '\\u0C8C' | '\\u0C8E' .. '\\u0C90' | '\\u0C92' .. '\\u0CA8' | '\\u0CAA' .. '\\u0CB3' | '\\u0CB5' .. '\\u0CB9' | '\\u0CBD' | '\\u0CDE' | '\\u0CE0' .. '\\u0CE1' | '\\u0CF1' .. '\\u0CF2' | '\\u0D05' .. '\\u0D0C' | '\\u0D0E' .. '\\u0D10' | '\\u0D12' .. '\\u0D3A' | '\\u0D3D' | '\\u0D4E' | '\\u0D5F' .. '\\u0D61' | '\\u0D7A' .. '\\u0D7F' | '\\u0D85' .. '\\u0D96' | '\\u0D9A' .. '\\u0DB1' | '\\u0DB3' .. '\\u0DBB' | '\\u0DBD' | '\\u0DC0' .. '\\u0DC6' | '\\u0E01' .. '\\u0E30' | '\\u0E32' .. '\\u0E33' | '\\u0E40' .. '\\u0E46' | '\\u0E81' .. '\\u0E82' | '\\u0E84' | '\\u0E87' .. '\\u0E88' | '\\u0E8A' | '\\u0E8D' | '\\u0E94' .. '\\u0E97' | '\\u0E99' .. '\\u0E9F' | '\\u0EA1' .. '\\u0EA3' | '\\u0EA5' | '\\u0EA7' | '\\u0EAA' .. '\\u0EAB' | '\\u0EAD' .. '\\u0EB0' | '\\u0EB2' .. '\\u0EB3' | '\\u0EBD' | '\\u0EC0' .. '\\u0EC4' | '\\u0EC6' | '\\u0EDC' .. '\\u0EDF' | '\\u0F00' | '\\u0F40' .. '\\u0F47' | '\\u0F49' .. '\\u0F6C' | '\\u0F88' .. '\\u0F8C' | '\\u1000' .. '\\u102A' | '\\u103F' | '\\u1050' .. '\\u1055' | '\\u105A' .. '\\u105D' | '\\u1061' | '\\u1065' .. '\\u1066' | '\\u106E' .. '\\u1070' | '\\u1075' .. '\\u1081' | '\\u108E' | '\\u10A0' .. '\\u10C5' | '\\u10C7' | '\\u10CD' | '\\u10D0' .. '\\u10FA' | '\\u10FC' .. '\\u1248' | '\\u124A' .. '\\u124D' | '\\u1250' .. '\\u1256' | '\\u1258' | '\\u125A' .. '\\u125D' | '\\u1260' .. '\\u1288' | '\\u128A' .. '\\u128D' | '\\u1290' .. '\\u12B0' | '\\u12B2' .. '\\u12B5' | '\\u12B8' .. '\\u12BE' | '\\u12C0' | '\\u12C2' .. '\\u12C5' | '\\u12C8' .. '\\u12D6' | '\\u12D8' .. '\\u1310' | '\\u1312' .. '\\u1315' | '\\u1318' .. '\\u135A' | '\\u1380' .. '\\u138F' | '\\u13A0' .. '\\u13F5' | '\\u13F8' .. '\\u13FD' | '\\u1401' .. '\\u166C' | '\\u166F' .. '\\u167F' | '\\u1681' .. '\\u169A' | '\\u16A0' .. '\\u16EA' | '\\u16EE' .. '\\u16F8' | '\\u1700' .. '\\u170C' | '\\u170E' .. '\\u1711' | '\\u1720' .. '\\u1731' | '\\u1740' .. '\\u1751' | '\\u1760' .. '\\u176C' | '\\u176E' .. '\\u1770' | '\\u1780' .. '\\u17B3' | '\\u17D7' | '\\u17DC' | '\\u1820' .. '\\u1877' | '\\u1880' .. '\\u18A8' | '\\u18AA' | '\\u18B0' .. '\\u18F5' | '\\u1900' .. '\\u191E' | '\\u1950' .. '\\u196D' | '\\u1970' .. '\\u1974' | '\\u1980' .. '\\u19AB' | '\\u19B0' .. '\\u19C9' | '\\u1A00' .. '\\u1A16' | '\\u1A20' .. '\\u1A54' | '\\u1AA7' | '\\u1B05' .. '\\u1B33' | '\\u1B45' .. '\\u1B4B' | '\\u1B83' .. '\\u1BA0' | '\\u1BAE' .. '\\u1BAF' | '\\u1BBA' .. '\\u1BE5' | '\\u1C00' .. '\\u1C23' | '\\u1C4D' .. '\\u1C4F' | '\\u1C5A' .. '\\u1C7D' | '\\u1CE9' .. '\\u1CEC' | '\\u1CEE' .. '\\u1CF1' | '\\u1CF5' .. '\\u1CF6' | '\\u1D00' .. '\\u1DBF' | '\\u1E00' .. '\\u1F15' | '\\u1F18' .. '\\u1F1D' | '\\u1F20' .. '\\u1F45' | '\\u1F48' .. '\\u1F4D' | '\\u1F50' .. '\\u1F57' | '\\u1F59' | '\\u1F5B' | '\\u1F5D' | '\\u1F5F' .. '\\u1F7D' | '\\u1F80' .. '\\u1FB4' | '\\u1FB6' .. '\\u1FBC' | '\\u1FBE' | '\\u1FC2' .. '\\u1FC4' | '\\u1FC6' .. '\\u1FCC' | '\\u1FD0' .. '\\u1FD3' | '\\u1FD6' .. '\\u1FDB' | '\\u1FE0' .. '\\u1FEC' | '\\u1FF2' .. '\\u1FF4' | '\\u1FF6' .. '\\u1FFC' | '\\u2071' | '\\u207F' | '\\u2090' .. '\\u209C' | '\\u2102' | '\\u2107' | '\\u210A' .. '\\u2113' | '\\u2115' | '\\u2119' .. '\\u211D' | '\\u2124' | '\\u2126' | '\\u2128' | '\\u212A' .. '\\u212D' | '\\u212F' .. '\\u2139' | '\\u213C' .. '\\u213F' | '\\u2145' .. '\\u2149' | '\\u214E' | '\\u2160' .. '\\u2188' | '\\u2C00' .. '\\u2C2E' | '\\u2C30' .. '\\u2C5E' | '\\u2C60' .. '\\u2CE4' | '\\u2CEB' .. '\\u2CEE' | '\\u2CF2' .. '\\u2CF3' | '\\u2D00' .. '\\u2D25' | '\\u2D27' | '\\u2D2D' | '\\u2D30' .. '\\u2D67' | '\\u2D6F' | '\\u2D80' .. '\\u2D96' | '\\u2DA0' .. '\\u2DA6' | '\\u2DA8' .. '\\u2DAE' | '\\u2DB0' .. '\\u2DB6' | '\\u2DB8' .. '\\u2DBE' | '\\u2DC0' .. '\\u2DC6' | '\\u2DC8' .. '\\u2DCE' | '\\u2DD0' .. '\\u2DD6' | '\\u2DD8' .. '\\u2DDE' | '\\u2E2F' | '\\u3005' .. '\\u3007' | '\\u3021' .. '\\u3029' | '\\u3031' .. '\\u3035' | '\\u3038' .. '\\u303C' | '\\u3041' .. '\\u3096' | '\\u309D' .. '\\u309F' | '\\u30A1' .. '\\u30FA' | '\\u30FC' .. '\\u30FF' | '\\u3105' .. '\\u312D' | '\\u3131' .. '\\u318E' | '\\u31A0' .. '\\u31BA' | '\\u31F0' .. '\\u31FF' | '\\u3400' .. '\\u4DB5' | '\\u4E00' .. '\\u9FD5' | '\\uA000' .. '\\uA48C' | '\\uA4D0' .. '\\uA4FD' | '\\uA500' .. '\\uA60C' | '\\uA610' .. '\\uA61F' | '\\uA62A' .. '\\uA62B' | '\\uA640' .. '\\uA66E' | '\\uA67F' .. '\\uA69D' | '\\uA6A0' .. '\\uA6EF' | '\\uA717' .. '\\uA71F' | '\\uA722' .. '\\uA788' | '\\uA78B' .. '\\uA7AD' | '\\uA7B0' .. '\\uA7B7' | '\\uA7F7' .. '\\uA801' | '\\uA803' .. '\\uA805' | '\\uA807' .. '\\uA80A' | '\\uA80C' .. '\\uA822' | '\\uA840' .. '\\uA873' | '\\uA882' .. '\\uA8B3' | '\\uA8F2' .. '\\uA8F7' | '\\uA8FB' | '\\uA8FD' | '\\uA90A' .. '\\uA925' | '\\uA930' .. '\\uA946' | '\\uA960' .. '\\uA97C' | '\\uA984' .. '\\uA9B2' | '\\uA9CF' | '\\uA9E0' .. '\\uA9E4' | '\\uA9E6' .. '\\uA9EF' | '\\uA9FA' .. '\\uA9FE' | '\\uAA00' .. '\\uAA28' | '\\uAA40' .. '\\uAA42' | '\\uAA44' .. '\\uAA4B' | '\\uAA60' .. '\\uAA76' | '\\uAA7A' | '\\uAA7E' .. '\\uAAAF' | '\\uAAB1' | '\\uAAB5' .. '\\uAAB6' | '\\uAAB9' .. '\\uAABD' | '\\uAAC0' | '\\uAAC2' | '\\uAADB' .. '\\uAADD' | '\\uAAE0' .. '\\uAAEA' | '\\uAAF2' .. '\\uAAF4' | '\\uAB01' .. '\\uAB06' | '\\uAB09' .. '\\uAB0E' | '\\uAB11' .. '\\uAB16' | '\\uAB20' .. '\\uAB26' | '\\uAB28' .. '\\uAB2E' | '\\uAB30' .. '\\uAB5A' | '\\uAB5C' .. '\\uAB65' | '\\uAB70' .. '\\uABE2' | '\\uAC00' .. '\\uD7A3' | '\\uD7B0' .. '\\uD7C6' | '\\uD7CB' .. '\\uD7FB' | '\\uF900' .. '\\uFA6D' | '\\uFA70' .. '\\uFAD9' | '\\uFB00' .. '\\uFB06' | '\\uFB13' .. '\\uFB17' | '\\uFB1D' | '\\uFB1F' .. '\\uFB28' | '\\uFB2A' .. '\\uFB36' | '\\uFB38' .. '\\uFB3C' | '\\uFB3E' | '\\uFB40' .. '\\uFB41' | '\\uFB43' .. '\\uFB44' | '\\uFB46' .. '\\uFBB1' | '\\uFBD3' .. '\\uFD3D' | '\\uFD50' .. '\\uFD8F' | '\\uFD92' .. '\\uFDC7' | '\\uFDF0' .. '\\uFDFB' | '\\uFE70' .. '\\uFE74' | '\\uFE76' .. '\\uFEFC' | '\\uFF21' .. '\\uFF3A' | '\\uFF41' .. '\\uFF5A' | '\\uFF66' .. '\\uFFBE' | '\\uFFC2' .. '\\uFFC7' | '\\uFFCA' .. '\\uFFCF' | '\\uFFD2' .. '\\uFFD7' | '\\uFFDA' .. '\\uFFDC' )
+            // InternalTypesLexer.g:267:39: ( ( 'A' .. 'Z' | 'a' .. 'z' | '\\u00AA' | '\\u00B5' | '\\u00BA' | '\\u00C0' .. '\\u00D6' | '\\u00D8' .. '\\u00F6' | '\\u00F8' .. '\\u02C1' | '\\u02C6' .. '\\u02D1' | '\\u02E0' .. '\\u02E4' | '\\u02EC' | '\\u02EE' | '\\u0370' .. '\\u0374' | '\\u0376' .. '\\u0377' | '\\u037A' .. '\\u037D' | '\\u037F' | '\\u0386' | '\\u0388' .. '\\u038A' | '\\u038C' | '\\u038E' .. '\\u03A1' | '\\u03A3' .. '\\u03F5' | '\\u03F7' .. '\\u0481' | '\\u048A' .. '\\u052F' | '\\u0531' .. '\\u0556' | '\\u0559' | '\\u0561' .. '\\u0587' | '\\u05D0' .. '\\u05EA' | '\\u05F0' .. '\\u05F2' | '\\u0620' .. '\\u064A' | '\\u066E' .. '\\u066F' | '\\u0671' .. '\\u06D3' | '\\u06D5' | '\\u06E5' .. '\\u06E6' | '\\u06EE' .. '\\u06EF' | '\\u06FA' .. '\\u06FC' | '\\u06FF' | '\\u0710' | '\\u0712' .. '\\u072F' | '\\u074D' .. '\\u07A5' | '\\u07B1' | '\\u07CA' .. '\\u07EA' | '\\u07F4' .. '\\u07F5' | '\\u07FA' | '\\u0800' .. '\\u0815' | '\\u081A' | '\\u0824' | '\\u0828' | '\\u0840' .. '\\u0858' | '\\u08A0' .. '\\u08B4' | '\\u0904' .. '\\u0939' | '\\u093D' | '\\u0950' | '\\u0958' .. '\\u0961' | '\\u0971' .. '\\u0980' | '\\u0985' .. '\\u098C' | '\\u098F' .. '\\u0990' | '\\u0993' .. '\\u09A8' | '\\u09AA' .. '\\u09B0' | '\\u09B2' | '\\u09B6' .. '\\u09B9' | '\\u09BD' | '\\u09CE' | '\\u09DC' .. '\\u09DD' | '\\u09DF' .. '\\u09E1' | '\\u09F0' .. '\\u09F1' | '\\u0A05' .. '\\u0A0A' | '\\u0A0F' .. '\\u0A10' | '\\u0A13' .. '\\u0A28' | '\\u0A2A' .. '\\u0A30' | '\\u0A32' .. '\\u0A33' | '\\u0A35' .. '\\u0A36' | '\\u0A38' .. '\\u0A39' | '\\u0A59' .. '\\u0A5C' | '\\u0A5E' | '\\u0A72' .. '\\u0A74' | '\\u0A85' .. '\\u0A8D' | '\\u0A8F' .. '\\u0A91' | '\\u0A93' .. '\\u0AA8' | '\\u0AAA' .. '\\u0AB0' | '\\u0AB2' .. '\\u0AB3' | '\\u0AB5' .. '\\u0AB9' | '\\u0ABD' | '\\u0AD0' | '\\u0AE0' .. '\\u0AE1' | '\\u0AF9' | '\\u0B05' .. '\\u0B0C' | '\\u0B0F' .. '\\u0B10' | '\\u0B13' .. '\\u0B28' | '\\u0B2A' .. '\\u0B30' | '\\u0B32' .. '\\u0B33' | '\\u0B35' .. '\\u0B39' | '\\u0B3D' | '\\u0B5C' .. '\\u0B5D' | '\\u0B5F' .. '\\u0B61' | '\\u0B71' | '\\u0B83' | '\\u0B85' .. '\\u0B8A' | '\\u0B8E' .. '\\u0B90' | '\\u0B92' .. '\\u0B95' | '\\u0B99' .. '\\u0B9A' | '\\u0B9C' | '\\u0B9E' .. '\\u0B9F' | '\\u0BA3' .. '\\u0BA4' | '\\u0BA8' .. '\\u0BAA' | '\\u0BAE' .. '\\u0BB9' | '\\u0BD0' | '\\u0C05' .. '\\u0C0C' | '\\u0C0E' .. '\\u0C10' | '\\u0C12' .. '\\u0C28' | '\\u0C2A' .. '\\u0C39' | '\\u0C3D' | '\\u0C58' .. '\\u0C5A' | '\\u0C60' .. '\\u0C61' | '\\u0C85' .. '\\u0C8C' | '\\u0C8E' .. '\\u0C90' | '\\u0C92' .. '\\u0CA8' | '\\u0CAA' .. '\\u0CB3' | '\\u0CB5' .. '\\u0CB9' | '\\u0CBD' | '\\u0CDE' | '\\u0CE0' .. '\\u0CE1' | '\\u0CF1' .. '\\u0CF2' | '\\u0D05' .. '\\u0D0C' | '\\u0D0E' .. '\\u0D10' | '\\u0D12' .. '\\u0D3A' | '\\u0D3D' | '\\u0D4E' | '\\u0D5F' .. '\\u0D61' | '\\u0D7A' .. '\\u0D7F' | '\\u0D85' .. '\\u0D96' | '\\u0D9A' .. '\\u0DB1' | '\\u0DB3' .. '\\u0DBB' | '\\u0DBD' | '\\u0DC0' .. '\\u0DC6' | '\\u0E01' .. '\\u0E30' | '\\u0E32' .. '\\u0E33' | '\\u0E40' .. '\\u0E46' | '\\u0E81' .. '\\u0E82' | '\\u0E84' | '\\u0E87' .. '\\u0E88' | '\\u0E8A' | '\\u0E8D' | '\\u0E94' .. '\\u0E97' | '\\u0E99' .. '\\u0E9F' | '\\u0EA1' .. '\\u0EA3' | '\\u0EA5' | '\\u0EA7' | '\\u0EAA' .. '\\u0EAB' | '\\u0EAD' .. '\\u0EB0' | '\\u0EB2' .. '\\u0EB3' | '\\u0EBD' | '\\u0EC0' .. '\\u0EC4' | '\\u0EC6' | '\\u0EDC' .. '\\u0EDF' | '\\u0F00' | '\\u0F40' .. '\\u0F47' | '\\u0F49' .. '\\u0F6C' | '\\u0F88' .. '\\u0F8C' | '\\u1000' .. '\\u102A' | '\\u103F' | '\\u1050' .. '\\u1055' | '\\u105A' .. '\\u105D' | '\\u1061' | '\\u1065' .. '\\u1066' | '\\u106E' .. '\\u1070' | '\\u1075' .. '\\u1081' | '\\u108E' | '\\u10A0' .. '\\u10C5' | '\\u10C7' | '\\u10CD' | '\\u10D0' .. '\\u10FA' | '\\u10FC' .. '\\u1248' | '\\u124A' .. '\\u124D' | '\\u1250' .. '\\u1256' | '\\u1258' | '\\u125A' .. '\\u125D' | '\\u1260' .. '\\u1288' | '\\u128A' .. '\\u128D' | '\\u1290' .. '\\u12B0' | '\\u12B2' .. '\\u12B5' | '\\u12B8' .. '\\u12BE' | '\\u12C0' | '\\u12C2' .. '\\u12C5' | '\\u12C8' .. '\\u12D6' | '\\u12D8' .. '\\u1310' | '\\u1312' .. '\\u1315' | '\\u1318' .. '\\u135A' | '\\u1380' .. '\\u138F' | '\\u13A0' .. '\\u13F5' | '\\u13F8' .. '\\u13FD' | '\\u1401' .. '\\u166C' | '\\u166F' .. '\\u167F' | '\\u1681' .. '\\u169A' | '\\u16A0' .. '\\u16EA' | '\\u16EE' .. '\\u16F8' | '\\u1700' .. '\\u170C' | '\\u170E' .. '\\u1711' | '\\u1720' .. '\\u1731' | '\\u1740' .. '\\u1751' | '\\u1760' .. '\\u176C' | '\\u176E' .. '\\u1770' | '\\u1780' .. '\\u17B3' | '\\u17D7' | '\\u17DC' | '\\u1820' .. '\\u1877' | '\\u1880' .. '\\u18A8' | '\\u18AA' | '\\u18B0' .. '\\u18F5' | '\\u1900' .. '\\u191E' | '\\u1950' .. '\\u196D' | '\\u1970' .. '\\u1974' | '\\u1980' .. '\\u19AB' | '\\u19B0' .. '\\u19C9' | '\\u1A00' .. '\\u1A16' | '\\u1A20' .. '\\u1A54' | '\\u1AA7' | '\\u1B05' .. '\\u1B33' | '\\u1B45' .. '\\u1B4B' | '\\u1B83' .. '\\u1BA0' | '\\u1BAE' .. '\\u1BAF' | '\\u1BBA' .. '\\u1BE5' | '\\u1C00' .. '\\u1C23' | '\\u1C4D' .. '\\u1C4F' | '\\u1C5A' .. '\\u1C7D' | '\\u1CE9' .. '\\u1CEC' | '\\u1CEE' .. '\\u1CF1' | '\\u1CF5' .. '\\u1CF6' | '\\u1D00' .. '\\u1DBF' | '\\u1E00' .. '\\u1F15' | '\\u1F18' .. '\\u1F1D' | '\\u1F20' .. '\\u1F45' | '\\u1F48' .. '\\u1F4D' | '\\u1F50' .. '\\u1F57' | '\\u1F59' | '\\u1F5B' | '\\u1F5D' | '\\u1F5F' .. '\\u1F7D' | '\\u1F80' .. '\\u1FB4' | '\\u1FB6' .. '\\u1FBC' | '\\u1FBE' | '\\u1FC2' .. '\\u1FC4' | '\\u1FC6' .. '\\u1FCC' | '\\u1FD0' .. '\\u1FD3' | '\\u1FD6' .. '\\u1FDB' | '\\u1FE0' .. '\\u1FEC' | '\\u1FF2' .. '\\u1FF4' | '\\u1FF6' .. '\\u1FFC' | '\\u2071' | '\\u207F' | '\\u2090' .. '\\u209C' | '\\u2102' | '\\u2107' | '\\u210A' .. '\\u2113' | '\\u2115' | '\\u2119' .. '\\u211D' | '\\u2124' | '\\u2126' | '\\u2128' | '\\u212A' .. '\\u212D' | '\\u212F' .. '\\u2139' | '\\u213C' .. '\\u213F' | '\\u2145' .. '\\u2149' | '\\u214E' | '\\u2160' .. '\\u2188' | '\\u2C00' .. '\\u2C2E' | '\\u2C30' .. '\\u2C5E' | '\\u2C60' .. '\\u2CE4' | '\\u2CEB' .. '\\u2CEE' | '\\u2CF2' .. '\\u2CF3' | '\\u2D00' .. '\\u2D25' | '\\u2D27' | '\\u2D2D' | '\\u2D30' .. '\\u2D67' | '\\u2D6F' | '\\u2D80' .. '\\u2D96' | '\\u2DA0' .. '\\u2DA6' | '\\u2DA8' .. '\\u2DAE' | '\\u2DB0' .. '\\u2DB6' | '\\u2DB8' .. '\\u2DBE' | '\\u2DC0' .. '\\u2DC6' | '\\u2DC8' .. '\\u2DCE' | '\\u2DD0' .. '\\u2DD6' | '\\u2DD8' .. '\\u2DDE' | '\\u2E2F' | '\\u3005' .. '\\u3007' | '\\u3021' .. '\\u3029' | '\\u3031' .. '\\u3035' | '\\u3038' .. '\\u303C' | '\\u3041' .. '\\u3096' | '\\u309D' .. '\\u309F' | '\\u30A1' .. '\\u30FA' | '\\u30FC' .. '\\u30FF' | '\\u3105' .. '\\u312D' | '\\u3131' .. '\\u318E' | '\\u31A0' .. '\\u31BA' | '\\u31F0' .. '\\u31FF' | '\\u3400' .. '\\u4DB5' | '\\u4E00' .. '\\u9FD5' | '\\uA000' .. '\\uA48C' | '\\uA4D0' .. '\\uA4FD' | '\\uA500' .. '\\uA60C' | '\\uA610' .. '\\uA61F' | '\\uA62A' .. '\\uA62B' | '\\uA640' .. '\\uA66E' | '\\uA67F' .. '\\uA69D' | '\\uA6A0' .. '\\uA6EF' | '\\uA717' .. '\\uA71F' | '\\uA722' .. '\\uA788' | '\\uA78B' .. '\\uA7AD' | '\\uA7B0' .. '\\uA7B7' | '\\uA7F7' .. '\\uA801' | '\\uA803' .. '\\uA805' | '\\uA807' .. '\\uA80A' | '\\uA80C' .. '\\uA822' | '\\uA840' .. '\\uA873' | '\\uA882' .. '\\uA8B3' | '\\uA8F2' .. '\\uA8F7' | '\\uA8FB' | '\\uA8FD' | '\\uA90A' .. '\\uA925' | '\\uA930' .. '\\uA946' | '\\uA960' .. '\\uA97C' | '\\uA984' .. '\\uA9B2' | '\\uA9CF' | '\\uA9E0' .. '\\uA9E4' | '\\uA9E6' .. '\\uA9EF' | '\\uA9FA' .. '\\uA9FE' | '\\uAA00' .. '\\uAA28' | '\\uAA40' .. '\\uAA42' | '\\uAA44' .. '\\uAA4B' | '\\uAA60' .. '\\uAA76' | '\\uAA7A' | '\\uAA7E' .. '\\uAAAF' | '\\uAAB1' | '\\uAAB5' .. '\\uAAB6' | '\\uAAB9' .. '\\uAABD' | '\\uAAC0' | '\\uAAC2' | '\\uAADB' .. '\\uAADD' | '\\uAAE0' .. '\\uAAEA' | '\\uAAF2' .. '\\uAAF4' | '\\uAB01' .. '\\uAB06' | '\\uAB09' .. '\\uAB0E' | '\\uAB11' .. '\\uAB16' | '\\uAB20' .. '\\uAB26' | '\\uAB28' .. '\\uAB2E' | '\\uAB30' .. '\\uAB5A' | '\\uAB5C' .. '\\uAB65' | '\\uAB70' .. '\\uABE2' | '\\uAC00' .. '\\uD7A3' | '\\uD7B0' .. '\\uD7C6' | '\\uD7CB' .. '\\uD7FB' | '\\uF900' .. '\\uFA6D' | '\\uFA70' .. '\\uFAD9' | '\\uFB00' .. '\\uFB06' | '\\uFB13' .. '\\uFB17' | '\\uFB1D' | '\\uFB1F' .. '\\uFB28' | '\\uFB2A' .. '\\uFB36' | '\\uFB38' .. '\\uFB3C' | '\\uFB3E' | '\\uFB40' .. '\\uFB41' | '\\uFB43' .. '\\uFB44' | '\\uFB46' .. '\\uFBB1' | '\\uFBD3' .. '\\uFD3D' | '\\uFD50' .. '\\uFD8F' | '\\uFD92' .. '\\uFDC7' | '\\uFDF0' .. '\\uFDFB' | '\\uFE70' .. '\\uFE74' | '\\uFE76' .. '\\uFEFC' | '\\uFF21' .. '\\uFF3A' | '\\uFF41' .. '\\uFF5A' | '\\uFF66' .. '\\uFFBE' | '\\uFFC2' .. '\\uFFC7' | '\\uFFCA' .. '\\uFFCF' | '\\uFFD2' .. '\\uFFD7' | '\\uFFDA' .. '\\uFFDC' ) )
+            // InternalTypesLexer.g:267:41: ( 'A' .. 'Z' | 'a' .. 'z' | '\\u00AA' | '\\u00B5' | '\\u00BA' | '\\u00C0' .. '\\u00D6' | '\\u00D8' .. '\\u00F6' | '\\u00F8' .. '\\u02C1' | '\\u02C6' .. '\\u02D1' | '\\u02E0' .. '\\u02E4' | '\\u02EC' | '\\u02EE' | '\\u0370' .. '\\u0374' | '\\u0376' .. '\\u0377' | '\\u037A' .. '\\u037D' | '\\u037F' | '\\u0386' | '\\u0388' .. '\\u038A' | '\\u038C' | '\\u038E' .. '\\u03A1' | '\\u03A3' .. '\\u03F5' | '\\u03F7' .. '\\u0481' | '\\u048A' .. '\\u052F' | '\\u0531' .. '\\u0556' | '\\u0559' | '\\u0561' .. '\\u0587' | '\\u05D0' .. '\\u05EA' | '\\u05F0' .. '\\u05F2' | '\\u0620' .. '\\u064A' | '\\u066E' .. '\\u066F' | '\\u0671' .. '\\u06D3' | '\\u06D5' | '\\u06E5' .. '\\u06E6' | '\\u06EE' .. '\\u06EF' | '\\u06FA' .. '\\u06FC' | '\\u06FF' | '\\u0710' | '\\u0712' .. '\\u072F' | '\\u074D' .. '\\u07A5' | '\\u07B1' | '\\u07CA' .. '\\u07EA' | '\\u07F4' .. '\\u07F5' | '\\u07FA' | '\\u0800' .. '\\u0815' | '\\u081A' | '\\u0824' | '\\u0828' | '\\u0840' .. '\\u0858' | '\\u08A0' .. '\\u08B4' | '\\u0904' .. '\\u0939' | '\\u093D' | '\\u0950' | '\\u0958' .. '\\u0961' | '\\u0971' .. '\\u0980' | '\\u0985' .. '\\u098C' | '\\u098F' .. '\\u0990' | '\\u0993' .. '\\u09A8' | '\\u09AA' .. '\\u09B0' | '\\u09B2' | '\\u09B6' .. '\\u09B9' | '\\u09BD' | '\\u09CE' | '\\u09DC' .. '\\u09DD' | '\\u09DF' .. '\\u09E1' | '\\u09F0' .. '\\u09F1' | '\\u0A05' .. '\\u0A0A' | '\\u0A0F' .. '\\u0A10' | '\\u0A13' .. '\\u0A28' | '\\u0A2A' .. '\\u0A30' | '\\u0A32' .. '\\u0A33' | '\\u0A35' .. '\\u0A36' | '\\u0A38' .. '\\u0A39' | '\\u0A59' .. '\\u0A5C' | '\\u0A5E' | '\\u0A72' .. '\\u0A74' | '\\u0A85' .. '\\u0A8D' | '\\u0A8F' .. '\\u0A91' | '\\u0A93' .. '\\u0AA8' | '\\u0AAA' .. '\\u0AB0' | '\\u0AB2' .. '\\u0AB3' | '\\u0AB5' .. '\\u0AB9' | '\\u0ABD' | '\\u0AD0' | '\\u0AE0' .. '\\u0AE1' | '\\u0AF9' | '\\u0B05' .. '\\u0B0C' | '\\u0B0F' .. '\\u0B10' | '\\u0B13' .. '\\u0B28' | '\\u0B2A' .. '\\u0B30' | '\\u0B32' .. '\\u0B33' | '\\u0B35' .. '\\u0B39' | '\\u0B3D' | '\\u0B5C' .. '\\u0B5D' | '\\u0B5F' .. '\\u0B61' | '\\u0B71' | '\\u0B83' | '\\u0B85' .. '\\u0B8A' | '\\u0B8E' .. '\\u0B90' | '\\u0B92' .. '\\u0B95' | '\\u0B99' .. '\\u0B9A' | '\\u0B9C' | '\\u0B9E' .. '\\u0B9F' | '\\u0BA3' .. '\\u0BA4' | '\\u0BA8' .. '\\u0BAA' | '\\u0BAE' .. '\\u0BB9' | '\\u0BD0' | '\\u0C05' .. '\\u0C0C' | '\\u0C0E' .. '\\u0C10' | '\\u0C12' .. '\\u0C28' | '\\u0C2A' .. '\\u0C39' | '\\u0C3D' | '\\u0C58' .. '\\u0C5A' | '\\u0C60' .. '\\u0C61' | '\\u0C85' .. '\\u0C8C' | '\\u0C8E' .. '\\u0C90' | '\\u0C92' .. '\\u0CA8' | '\\u0CAA' .. '\\u0CB3' | '\\u0CB5' .. '\\u0CB9' | '\\u0CBD' | '\\u0CDE' | '\\u0CE0' .. '\\u0CE1' | '\\u0CF1' .. '\\u0CF2' | '\\u0D05' .. '\\u0D0C' | '\\u0D0E' .. '\\u0D10' | '\\u0D12' .. '\\u0D3A' | '\\u0D3D' | '\\u0D4E' | '\\u0D5F' .. '\\u0D61' | '\\u0D7A' .. '\\u0D7F' | '\\u0D85' .. '\\u0D96' | '\\u0D9A' .. '\\u0DB1' | '\\u0DB3' .. '\\u0DBB' | '\\u0DBD' | '\\u0DC0' .. '\\u0DC6' | '\\u0E01' .. '\\u0E30' | '\\u0E32' .. '\\u0E33' | '\\u0E40' .. '\\u0E46' | '\\u0E81' .. '\\u0E82' | '\\u0E84' | '\\u0E87' .. '\\u0E88' | '\\u0E8A' | '\\u0E8D' | '\\u0E94' .. '\\u0E97' | '\\u0E99' .. '\\u0E9F' | '\\u0EA1' .. '\\u0EA3' | '\\u0EA5' | '\\u0EA7' | '\\u0EAA' .. '\\u0EAB' | '\\u0EAD' .. '\\u0EB0' | '\\u0EB2' .. '\\u0EB3' | '\\u0EBD' | '\\u0EC0' .. '\\u0EC4' | '\\u0EC6' | '\\u0EDC' .. '\\u0EDF' | '\\u0F00' | '\\u0F40' .. '\\u0F47' | '\\u0F49' .. '\\u0F6C' | '\\u0F88' .. '\\u0F8C' | '\\u1000' .. '\\u102A' | '\\u103F' | '\\u1050' .. '\\u1055' | '\\u105A' .. '\\u105D' | '\\u1061' | '\\u1065' .. '\\u1066' | '\\u106E' .. '\\u1070' | '\\u1075' .. '\\u1081' | '\\u108E' | '\\u10A0' .. '\\u10C5' | '\\u10C7' | '\\u10CD' | '\\u10D0' .. '\\u10FA' | '\\u10FC' .. '\\u1248' | '\\u124A' .. '\\u124D' | '\\u1250' .. '\\u1256' | '\\u1258' | '\\u125A' .. '\\u125D' | '\\u1260' .. '\\u1288' | '\\u128A' .. '\\u128D' | '\\u1290' .. '\\u12B0' | '\\u12B2' .. '\\u12B5' | '\\u12B8' .. '\\u12BE' | '\\u12C0' | '\\u12C2' .. '\\u12C5' | '\\u12C8' .. '\\u12D6' | '\\u12D8' .. '\\u1310' | '\\u1312' .. '\\u1315' | '\\u1318' .. '\\u135A' | '\\u1380' .. '\\u138F' | '\\u13A0' .. '\\u13F5' | '\\u13F8' .. '\\u13FD' | '\\u1401' .. '\\u166C' | '\\u166F' .. '\\u167F' | '\\u1681' .. '\\u169A' | '\\u16A0' .. '\\u16EA' | '\\u16EE' .. '\\u16F8' | '\\u1700' .. '\\u170C' | '\\u170E' .. '\\u1711' | '\\u1720' .. '\\u1731' | '\\u1740' .. '\\u1751' | '\\u1760' .. '\\u176C' | '\\u176E' .. '\\u1770' | '\\u1780' .. '\\u17B3' | '\\u17D7' | '\\u17DC' | '\\u1820' .. '\\u1877' | '\\u1880' .. '\\u18A8' | '\\u18AA' | '\\u18B0' .. '\\u18F5' | '\\u1900' .. '\\u191E' | '\\u1950' .. '\\u196D' | '\\u1970' .. '\\u1974' | '\\u1980' .. '\\u19AB' | '\\u19B0' .. '\\u19C9' | '\\u1A00' .. '\\u1A16' | '\\u1A20' .. '\\u1A54' | '\\u1AA7' | '\\u1B05' .. '\\u1B33' | '\\u1B45' .. '\\u1B4B' | '\\u1B83' .. '\\u1BA0' | '\\u1BAE' .. '\\u1BAF' | '\\u1BBA' .. '\\u1BE5' | '\\u1C00' .. '\\u1C23' | '\\u1C4D' .. '\\u1C4F' | '\\u1C5A' .. '\\u1C7D' | '\\u1CE9' .. '\\u1CEC' | '\\u1CEE' .. '\\u1CF1' | '\\u1CF5' .. '\\u1CF6' | '\\u1D00' .. '\\u1DBF' | '\\u1E00' .. '\\u1F15' | '\\u1F18' .. '\\u1F1D' | '\\u1F20' .. '\\u1F45' | '\\u1F48' .. '\\u1F4D' | '\\u1F50' .. '\\u1F57' | '\\u1F59' | '\\u1F5B' | '\\u1F5D' | '\\u1F5F' .. '\\u1F7D' | '\\u1F80' .. '\\u1FB4' | '\\u1FB6' .. '\\u1FBC' | '\\u1FBE' | '\\u1FC2' .. '\\u1FC4' | '\\u1FC6' .. '\\u1FCC' | '\\u1FD0' .. '\\u1FD3' | '\\u1FD6' .. '\\u1FDB' | '\\u1FE0' .. '\\u1FEC' | '\\u1FF2' .. '\\u1FF4' | '\\u1FF6' .. '\\u1FFC' | '\\u2071' | '\\u207F' | '\\u2090' .. '\\u209C' | '\\u2102' | '\\u2107' | '\\u210A' .. '\\u2113' | '\\u2115' | '\\u2119' .. '\\u211D' | '\\u2124' | '\\u2126' | '\\u2128' | '\\u212A' .. '\\u212D' | '\\u212F' .. '\\u2139' | '\\u213C' .. '\\u213F' | '\\u2145' .. '\\u2149' | '\\u214E' | '\\u2160' .. '\\u2188' | '\\u2C00' .. '\\u2C2E' | '\\u2C30' .. '\\u2C5E' | '\\u2C60' .. '\\u2CE4' | '\\u2CEB' .. '\\u2CEE' | '\\u2CF2' .. '\\u2CF3' | '\\u2D00' .. '\\u2D25' | '\\u2D27' | '\\u2D2D' | '\\u2D30' .. '\\u2D67' | '\\u2D6F' | '\\u2D80' .. '\\u2D96' | '\\u2DA0' .. '\\u2DA6' | '\\u2DA8' .. '\\u2DAE' | '\\u2DB0' .. '\\u2DB6' | '\\u2DB8' .. '\\u2DBE' | '\\u2DC0' .. '\\u2DC6' | '\\u2DC8' .. '\\u2DCE' | '\\u2DD0' .. '\\u2DD6' | '\\u2DD8' .. '\\u2DDE' | '\\u2E2F' | '\\u3005' .. '\\u3007' | '\\u3021' .. '\\u3029' | '\\u3031' .. '\\u3035' | '\\u3038' .. '\\u303C' | '\\u3041' .. '\\u3096' | '\\u309D' .. '\\u309F' | '\\u30A1' .. '\\u30FA' | '\\u30FC' .. '\\u30FF' | '\\u3105' .. '\\u312D' | '\\u3131' .. '\\u318E' | '\\u31A0' .. '\\u31BA' | '\\u31F0' .. '\\u31FF' | '\\u3400' .. '\\u4DB5' | '\\u4E00' .. '\\u9FD5' | '\\uA000' .. '\\uA48C' | '\\uA4D0' .. '\\uA4FD' | '\\uA500' .. '\\uA60C' | '\\uA610' .. '\\uA61F' | '\\uA62A' .. '\\uA62B' | '\\uA640' .. '\\uA66E' | '\\uA67F' .. '\\uA69D' | '\\uA6A0' .. '\\uA6EF' | '\\uA717' .. '\\uA71F' | '\\uA722' .. '\\uA788' | '\\uA78B' .. '\\uA7AD' | '\\uA7B0' .. '\\uA7B7' | '\\uA7F7' .. '\\uA801' | '\\uA803' .. '\\uA805' | '\\uA807' .. '\\uA80A' | '\\uA80C' .. '\\uA822' | '\\uA840' .. '\\uA873' | '\\uA882' .. '\\uA8B3' | '\\uA8F2' .. '\\uA8F7' | '\\uA8FB' | '\\uA8FD' | '\\uA90A' .. '\\uA925' | '\\uA930' .. '\\uA946' | '\\uA960' .. '\\uA97C' | '\\uA984' .. '\\uA9B2' | '\\uA9CF' | '\\uA9E0' .. '\\uA9E4' | '\\uA9E6' .. '\\uA9EF' | '\\uA9FA' .. '\\uA9FE' | '\\uAA00' .. '\\uAA28' | '\\uAA40' .. '\\uAA42' | '\\uAA44' .. '\\uAA4B' | '\\uAA60' .. '\\uAA76' | '\\uAA7A' | '\\uAA7E' .. '\\uAAAF' | '\\uAAB1' | '\\uAAB5' .. '\\uAAB6' | '\\uAAB9' .. '\\uAABD' | '\\uAAC0' | '\\uAAC2' | '\\uAADB' .. '\\uAADD' | '\\uAAE0' .. '\\uAAEA' | '\\uAAF2' .. '\\uAAF4' | '\\uAB01' .. '\\uAB06' | '\\uAB09' .. '\\uAB0E' | '\\uAB11' .. '\\uAB16' | '\\uAB20' .. '\\uAB26' | '\\uAB28' .. '\\uAB2E' | '\\uAB30' .. '\\uAB5A' | '\\uAB5C' .. '\\uAB65' | '\\uAB70' .. '\\uABE2' | '\\uAC00' .. '\\uD7A3' | '\\uD7B0' .. '\\uD7C6' | '\\uD7CB' .. '\\uD7FB' | '\\uF900' .. '\\uFA6D' | '\\uFA70' .. '\\uFAD9' | '\\uFB00' .. '\\uFB06' | '\\uFB13' .. '\\uFB17' | '\\uFB1D' | '\\uFB1F' .. '\\uFB28' | '\\uFB2A' .. '\\uFB36' | '\\uFB38' .. '\\uFB3C' | '\\uFB3E' | '\\uFB40' .. '\\uFB41' | '\\uFB43' .. '\\uFB44' | '\\uFB46' .. '\\uFBB1' | '\\uFBD3' .. '\\uFD3D' | '\\uFD50' .. '\\uFD8F' | '\\uFD92' .. '\\uFDC7' | '\\uFDF0' .. '\\uFDFB' | '\\uFE70' .. '\\uFE74' | '\\uFE76' .. '\\uFEFC' | '\\uFF21' .. '\\uFF3A' | '\\uFF41' .. '\\uFF5A' | '\\uFF66' .. '\\uFFBE' | '\\uFFC2' .. '\\uFFC7' | '\\uFFCA' .. '\\uFFCF' | '\\uFFD2' .. '\\uFFD7' | '\\uFFDA' .. '\\uFFDC' )
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z')||input.LA(1)=='\u00AA'||input.LA(1)=='\u00B5'||input.LA(1)=='\u00BA'||(input.LA(1)>='\u00C0' && input.LA(1)<='\u00D6')||(input.LA(1)>='\u00D8' && input.LA(1)<='\u00F6')||(input.LA(1)>='\u00F8' && input.LA(1)<='\u02C1')||(input.LA(1)>='\u02C6' && input.LA(1)<='\u02D1')||(input.LA(1)>='\u02E0' && input.LA(1)<='\u02E4')||input.LA(1)=='\u02EC'||input.LA(1)=='\u02EE'||(input.LA(1)>='\u0370' && input.LA(1)<='\u0374')||(input.LA(1)>='\u0376' && input.LA(1)<='\u0377')||(input.LA(1)>='\u037A' && input.LA(1)<='\u037D')||input.LA(1)=='\u037F'||input.LA(1)=='\u0386'||(input.LA(1)>='\u0388' && input.LA(1)<='\u038A')||input.LA(1)=='\u038C'||(input.LA(1)>='\u038E' && input.LA(1)<='\u03A1')||(input.LA(1)>='\u03A3' && input.LA(1)<='\u03F5')||(input.LA(1)>='\u03F7' && input.LA(1)<='\u0481')||(input.LA(1)>='\u048A' && input.LA(1)<='\u052F')||(input.LA(1)>='\u0531' && input.LA(1)<='\u0556')||input.LA(1)=='\u0559'||(input.LA(1)>='\u0561' && input.LA(1)<='\u0587')||(input.LA(1)>='\u05D0' && input.LA(1)<='\u05EA')||(input.LA(1)>='\u05F0' && input.LA(1)<='\u05F2')||(input.LA(1)>='\u0620' && input.LA(1)<='\u064A')||(input.LA(1)>='\u066E' && input.LA(1)<='\u066F')||(input.LA(1)>='\u0671' && input.LA(1)<='\u06D3')||input.LA(1)=='\u06D5'||(input.LA(1)>='\u06E5' && input.LA(1)<='\u06E6')||(input.LA(1)>='\u06EE' && input.LA(1)<='\u06EF')||(input.LA(1)>='\u06FA' && input.LA(1)<='\u06FC')||input.LA(1)=='\u06FF'||input.LA(1)=='\u0710'||(input.LA(1)>='\u0712' && input.LA(1)<='\u072F')||(input.LA(1)>='\u074D' && input.LA(1)<='\u07A5')||input.LA(1)=='\u07B1'||(input.LA(1)>='\u07CA' && input.LA(1)<='\u07EA')||(input.LA(1)>='\u07F4' && input.LA(1)<='\u07F5')||input.LA(1)=='\u07FA'||(input.LA(1)>='\u0800' && input.LA(1)<='\u0815')||input.LA(1)=='\u081A'||input.LA(1)=='\u0824'||input.LA(1)=='\u0828'||(input.LA(1)>='\u0840' && input.LA(1)<='\u0858')||(input.LA(1)>='\u08A0' && input.LA(1)<='\u08B4')||(input.LA(1)>='\u0904' && input.LA(1)<='\u0939')||input.LA(1)=='\u093D'||input.LA(1)=='\u0950'||(input.LA(1)>='\u0958' && input.LA(1)<='\u0961')||(input.LA(1)>='\u0971' && input.LA(1)<='\u0980')||(input.LA(1)>='\u0985' && input.LA(1)<='\u098C')||(input.LA(1)>='\u098F' && input.LA(1)<='\u0990')||(input.LA(1)>='\u0993' && input.LA(1)<='\u09A8')||(input.LA(1)>='\u09AA' && input.LA(1)<='\u09B0')||input.LA(1)=='\u09B2'||(input.LA(1)>='\u09B6' && input.LA(1)<='\u09B9')||input.LA(1)=='\u09BD'||input.LA(1)=='\u09CE'||(input.LA(1)>='\u09DC' && input.LA(1)<='\u09DD')||(input.LA(1)>='\u09DF' && input.LA(1)<='\u09E1')||(input.LA(1)>='\u09F0' && input.LA(1)<='\u09F1')||(input.LA(1)>='\u0A05' && input.LA(1)<='\u0A0A')||(input.LA(1)>='\u0A0F' && input.LA(1)<='\u0A10')||(input.LA(1)>='\u0A13' && input.LA(1)<='\u0A28')||(input.LA(1)>='\u0A2A' && input.LA(1)<='\u0A30')||(input.LA(1)>='\u0A32' && input.LA(1)<='\u0A33')||(input.LA(1)>='\u0A35' && input.LA(1)<='\u0A36')||(input.LA(1)>='\u0A38' && input.LA(1)<='\u0A39')||(input.LA(1)>='\u0A59' && input.LA(1)<='\u0A5C')||input.LA(1)=='\u0A5E'||(input.LA(1)>='\u0A72' && input.LA(1)<='\u0A74')||(input.LA(1)>='\u0A85' && input.LA(1)<='\u0A8D')||(input.LA(1)>='\u0A8F' && input.LA(1)<='\u0A91')||(input.LA(1)>='\u0A93' && input.LA(1)<='\u0AA8')||(input.LA(1)>='\u0AAA' && input.LA(1)<='\u0AB0')||(input.LA(1)>='\u0AB2' && input.LA(1)<='\u0AB3')||(input.LA(1)>='\u0AB5' && input.LA(1)<='\u0AB9')||input.LA(1)=='\u0ABD'||input.LA(1)=='\u0AD0'||(input.LA(1)>='\u0AE0' && input.LA(1)<='\u0AE1')||input.LA(1)=='\u0AF9'||(input.LA(1)>='\u0B05' && input.LA(1)<='\u0B0C')||(input.LA(1)>='\u0B0F' && input.LA(1)<='\u0B10')||(input.LA(1)>='\u0B13' && input.LA(1)<='\u0B28')||(input.LA(1)>='\u0B2A' && input.LA(1)<='\u0B30')||(input.LA(1)>='\u0B32' && input.LA(1)<='\u0B33')||(input.LA(1)>='\u0B35' && input.LA(1)<='\u0B39')||input.LA(1)=='\u0B3D'||(input.LA(1)>='\u0B5C' && input.LA(1)<='\u0B5D')||(input.LA(1)>='\u0B5F' && input.LA(1)<='\u0B61')||input.LA(1)=='\u0B71'||input.LA(1)=='\u0B83'||(input.LA(1)>='\u0B85' && input.LA(1)<='\u0B8A')||(input.LA(1)>='\u0B8E' && input.LA(1)<='\u0B90')||(input.LA(1)>='\u0B92' && input.LA(1)<='\u0B95')||(input.LA(1)>='\u0B99' && input.LA(1)<='\u0B9A')||input.LA(1)=='\u0B9C'||(input.LA(1)>='\u0B9E' && input.LA(1)<='\u0B9F')||(input.LA(1)>='\u0BA3' && input.LA(1)<='\u0BA4')||(input.LA(1)>='\u0BA8' && input.LA(1)<='\u0BAA')||(input.LA(1)>='\u0BAE' && input.LA(1)<='\u0BB9')||input.LA(1)=='\u0BD0'||(input.LA(1)>='\u0C05' && input.LA(1)<='\u0C0C')||(input.LA(1)>='\u0C0E' && input.LA(1)<='\u0C10')||(input.LA(1)>='\u0C12' && input.LA(1)<='\u0C28')||(input.LA(1)>='\u0C2A' && input.LA(1)<='\u0C39')||input.LA(1)=='\u0C3D'||(input.LA(1)>='\u0C58' && input.LA(1)<='\u0C5A')||(input.LA(1)>='\u0C60' && input.LA(1)<='\u0C61')||(input.LA(1)>='\u0C85' && input.LA(1)<='\u0C8C')||(input.LA(1)>='\u0C8E' && input.LA(1)<='\u0C90')||(input.LA(1)>='\u0C92' && input.LA(1)<='\u0CA8')||(input.LA(1)>='\u0CAA' && input.LA(1)<='\u0CB3')||(input.LA(1)>='\u0CB5' && input.LA(1)<='\u0CB9')||input.LA(1)=='\u0CBD'||input.LA(1)=='\u0CDE'||(input.LA(1)>='\u0CE0' && input.LA(1)<='\u0CE1')||(input.LA(1)>='\u0CF1' && input.LA(1)<='\u0CF2')||(input.LA(1)>='\u0D05' && input.LA(1)<='\u0D0C')||(input.LA(1)>='\u0D0E' && input.LA(1)<='\u0D10')||(input.LA(1)>='\u0D12' && input.LA(1)<='\u0D3A')||input.LA(1)=='\u0D3D'||input.LA(1)=='\u0D4E'||(input.LA(1)>='\u0D5F' && input.LA(1)<='\u0D61')||(input.LA(1)>='\u0D7A' && input.LA(1)<='\u0D7F')||(input.LA(1)>='\u0D85' && input.LA(1)<='\u0D96')||(input.LA(1)>='\u0D9A' && input.LA(1)<='\u0DB1')||(input.LA(1)>='\u0DB3' && input.LA(1)<='\u0DBB')||input.LA(1)=='\u0DBD'||(input.LA(1)>='\u0DC0' && input.LA(1)<='\u0DC6')||(input.LA(1)>='\u0E01' && input.LA(1)<='\u0E30')||(input.LA(1)>='\u0E32' && input.LA(1)<='\u0E33')||(input.LA(1)>='\u0E40' && input.LA(1)<='\u0E46')||(input.LA(1)>='\u0E81' && input.LA(1)<='\u0E82')||input.LA(1)=='\u0E84'||(input.LA(1)>='\u0E87' && input.LA(1)<='\u0E88')||input.LA(1)=='\u0E8A'||input.LA(1)=='\u0E8D'||(input.LA(1)>='\u0E94' && input.LA(1)<='\u0E97')||(input.LA(1)>='\u0E99' && input.LA(1)<='\u0E9F')||(input.LA(1)>='\u0EA1' && input.LA(1)<='\u0EA3')||input.LA(1)=='\u0EA5'||input.LA(1)=='\u0EA7'||(input.LA(1)>='\u0EAA' && input.LA(1)<='\u0EAB')||(input.LA(1)>='\u0EAD' && input.LA(1)<='\u0EB0')||(input.LA(1)>='\u0EB2' && input.LA(1)<='\u0EB3')||input.LA(1)=='\u0EBD'||(input.LA(1)>='\u0EC0' && input.LA(1)<='\u0EC4')||input.LA(1)=='\u0EC6'||(input.LA(1)>='\u0EDC' && input.LA(1)<='\u0EDF')||input.LA(1)=='\u0F00'||(input.LA(1)>='\u0F40' && input.LA(1)<='\u0F47')||(input.LA(1)>='\u0F49' && input.LA(1)<='\u0F6C')||(input.LA(1)>='\u0F88' && input.LA(1)<='\u0F8C')||(input.LA(1)>='\u1000' && input.LA(1)<='\u102A')||input.LA(1)=='\u103F'||(input.LA(1)>='\u1050' && input.LA(1)<='\u1055')||(input.LA(1)>='\u105A' && input.LA(1)<='\u105D')||input.LA(1)=='\u1061'||(input.LA(1)>='\u1065' && input.LA(1)<='\u1066')||(input.LA(1)>='\u106E' && input.LA(1)<='\u1070')||(input.LA(1)>='\u1075' && input.LA(1)<='\u1081')||input.LA(1)=='\u108E'||(input.LA(1)>='\u10A0' && input.LA(1)<='\u10C5')||input.LA(1)=='\u10C7'||input.LA(1)=='\u10CD'||(input.LA(1)>='\u10D0' && input.LA(1)<='\u10FA')||(input.LA(1)>='\u10FC' && input.LA(1)<='\u1248')||(input.LA(1)>='\u124A' && input.LA(1)<='\u124D')||(input.LA(1)>='\u1250' && input.LA(1)<='\u1256')||input.LA(1)=='\u1258'||(input.LA(1)>='\u125A' && input.LA(1)<='\u125D')||(input.LA(1)>='\u1260' && input.LA(1)<='\u1288')||(input.LA(1)>='\u128A' && input.LA(1)<='\u128D')||(input.LA(1)>='\u1290' && input.LA(1)<='\u12B0')||(input.LA(1)>='\u12B2' && input.LA(1)<='\u12B5')||(input.LA(1)>='\u12B8' && input.LA(1)<='\u12BE')||input.LA(1)=='\u12C0'||(input.LA(1)>='\u12C2' && input.LA(1)<='\u12C5')||(input.LA(1)>='\u12C8' && input.LA(1)<='\u12D6')||(input.LA(1)>='\u12D8' && input.LA(1)<='\u1310')||(input.LA(1)>='\u1312' && input.LA(1)<='\u1315')||(input.LA(1)>='\u1318' && input.LA(1)<='\u135A')||(input.LA(1)>='\u1380' && input.LA(1)<='\u138F')||(input.LA(1)>='\u13A0' && input.LA(1)<='\u13F5')||(input.LA(1)>='\u13F8' && input.LA(1)<='\u13FD')||(input.LA(1)>='\u1401' && input.LA(1)<='\u166C')||(input.LA(1)>='\u166F' && input.LA(1)<='\u167F')||(input.LA(1)>='\u1681' && input.LA(1)<='\u169A')||(input.LA(1)>='\u16A0' && input.LA(1)<='\u16EA')||(input.LA(1)>='\u16EE' && input.LA(1)<='\u16F8')||(input.LA(1)>='\u1700' && input.LA(1)<='\u170C')||(input.LA(1)>='\u170E' && input.LA(1)<='\u1711')||(input.LA(1)>='\u1720' && input.LA(1)<='\u1731')||(input.LA(1)>='\u1740' && input.LA(1)<='\u1751')||(input.LA(1)>='\u1760' && input.LA(1)<='\u176C')||(input.LA(1)>='\u176E' && input.LA(1)<='\u1770')||(input.LA(1)>='\u1780' && input.LA(1)<='\u17B3')||input.LA(1)=='\u17D7'||input.LA(1)=='\u17DC'||(input.LA(1)>='\u1820' && input.LA(1)<='\u1877')||(input.LA(1)>='\u1880' && input.LA(1)<='\u18A8')||input.LA(1)=='\u18AA'||(input.LA(1)>='\u18B0' && input.LA(1)<='\u18F5')||(input.LA(1)>='\u1900' && input.LA(1)<='\u191E')||(input.LA(1)>='\u1950' && input.LA(1)<='\u196D')||(input.LA(1)>='\u1970' && input.LA(1)<='\u1974')||(input.LA(1)>='\u1980' && input.LA(1)<='\u19AB')||(input.LA(1)>='\u19B0' && input.LA(1)<='\u19C9')||(input.LA(1)>='\u1A00' && input.LA(1)<='\u1A16')||(input.LA(1)>='\u1A20' && input.LA(1)<='\u1A54')||input.LA(1)=='\u1AA7'||(input.LA(1)>='\u1B05' && input.LA(1)<='\u1B33')||(input.LA(1)>='\u1B45' && input.LA(1)<='\u1B4B')||(input.LA(1)>='\u1B83' && input.LA(1)<='\u1BA0')||(input.LA(1)>='\u1BAE' && input.LA(1)<='\u1BAF')||(input.LA(1)>='\u1BBA' && input.LA(1)<='\u1BE5')||(input.LA(1)>='\u1C00' && input.LA(1)<='\u1C23')||(input.LA(1)>='\u1C4D' && input.LA(1)<='\u1C4F')||(input.LA(1)>='\u1C5A' && input.LA(1)<='\u1C7D')||(input.LA(1)>='\u1CE9' && input.LA(1)<='\u1CEC')||(input.LA(1)>='\u1CEE' && input.LA(1)<='\u1CF1')||(input.LA(1)>='\u1CF5' && input.LA(1)<='\u1CF6')||(input.LA(1)>='\u1D00' && input.LA(1)<='\u1DBF')||(input.LA(1)>='\u1E00' && input.LA(1)<='\u1F15')||(input.LA(1)>='\u1F18' && input.LA(1)<='\u1F1D')||(input.LA(1)>='\u1F20' && input.LA(1)<='\u1F45')||(input.LA(1)>='\u1F48' && input.LA(1)<='\u1F4D')||(input.LA(1)>='\u1F50' && input.LA(1)<='\u1F57')||input.LA(1)=='\u1F59'||input.LA(1)=='\u1F5B'||input.LA(1)=='\u1F5D'||(input.LA(1)>='\u1F5F' && input.LA(1)<='\u1F7D')||(input.LA(1)>='\u1F80' && input.LA(1)<='\u1FB4')||(input.LA(1)>='\u1FB6' && input.LA(1)<='\u1FBC')||input.LA(1)=='\u1FBE'||(input.LA(1)>='\u1FC2' && input.LA(1)<='\u1FC4')||(input.LA(1)>='\u1FC6' && input.LA(1)<='\u1FCC')||(input.LA(1)>='\u1FD0' && input.LA(1)<='\u1FD3')||(input.LA(1)>='\u1FD6' && input.LA(1)<='\u1FDB')||(input.LA(1)>='\u1FE0' && input.LA(1)<='\u1FEC')||(input.LA(1)>='\u1FF2' && input.LA(1)<='\u1FF4')||(input.LA(1)>='\u1FF6' && input.LA(1)<='\u1FFC')||input.LA(1)=='\u2071'||input.LA(1)=='\u207F'||(input.LA(1)>='\u2090' && input.LA(1)<='\u209C')||input.LA(1)=='\u2102'||input.LA(1)=='\u2107'||(input.LA(1)>='\u210A' && input.LA(1)<='\u2113')||input.LA(1)=='\u2115'||(input.LA(1)>='\u2119' && input.LA(1)<='\u211D')||input.LA(1)=='\u2124'||input.LA(1)=='\u2126'||input.LA(1)=='\u2128'||(input.LA(1)>='\u212A' && input.LA(1)<='\u212D')||(input.LA(1)>='\u212F' && input.LA(1)<='\u2139')||(input.LA(1)>='\u213C' && input.LA(1)<='\u213F')||(input.LA(1)>='\u2145' && input.LA(1)<='\u2149')||input.LA(1)=='\u214E'||(input.LA(1)>='\u2160' && input.LA(1)<='\u2188')||(input.LA(1)>='\u2C00' && input.LA(1)<='\u2C2E')||(input.LA(1)>='\u2C30' && input.LA(1)<='\u2C5E')||(input.LA(1)>='\u2C60' && input.LA(1)<='\u2CE4')||(input.LA(1)>='\u2CEB' && input.LA(1)<='\u2CEE')||(input.LA(1)>='\u2CF2' && input.LA(1)<='\u2CF3')||(input.LA(1)>='\u2D00' && input.LA(1)<='\u2D25')||input.LA(1)=='\u2D27'||input.LA(1)=='\u2D2D'||(input.LA(1)>='\u2D30' && input.LA(1)<='\u2D67')||input.LA(1)=='\u2D6F'||(input.LA(1)>='\u2D80' && input.LA(1)<='\u2D96')||(input.LA(1)>='\u2DA0' && input.LA(1)<='\u2DA6')||(input.LA(1)>='\u2DA8' && input.LA(1)<='\u2DAE')||(input.LA(1)>='\u2DB0' && input.LA(1)<='\u2DB6')||(input.LA(1)>='\u2DB8' && input.LA(1)<='\u2DBE')||(input.LA(1)>='\u2DC0' && input.LA(1)<='\u2DC6')||(input.LA(1)>='\u2DC8' && input.LA(1)<='\u2DCE')||(input.LA(1)>='\u2DD0' && input.LA(1)<='\u2DD6')||(input.LA(1)>='\u2DD8' && input.LA(1)<='\u2DDE')||input.LA(1)=='\u2E2F'||(input.LA(1)>='\u3005' && input.LA(1)<='\u3007')||(input.LA(1)>='\u3021' && input.LA(1)<='\u3029')||(input.LA(1)>='\u3031' && input.LA(1)<='\u3035')||(input.LA(1)>='\u3038' && input.LA(1)<='\u303C')||(input.LA(1)>='\u3041' && input.LA(1)<='\u3096')||(input.LA(1)>='\u309D' && input.LA(1)<='\u309F')||(input.LA(1)>='\u30A1' && input.LA(1)<='\u30FA')||(input.LA(1)>='\u30FC' && input.LA(1)<='\u30FF')||(input.LA(1)>='\u3105' && input.LA(1)<='\u312D')||(input.LA(1)>='\u3131' && input.LA(1)<='\u318E')||(input.LA(1)>='\u31A0' && input.LA(1)<='\u31BA')||(input.LA(1)>='\u31F0' && input.LA(1)<='\u31FF')||(input.LA(1)>='\u3400' && input.LA(1)<='\u4DB5')||(input.LA(1)>='\u4E00' && input.LA(1)<='\u9FD5')||(input.LA(1)>='\uA000' && input.LA(1)<='\uA48C')||(input.LA(1)>='\uA4D0' && input.LA(1)<='\uA4FD')||(input.LA(1)>='\uA500' && input.LA(1)<='\uA60C')||(input.LA(1)>='\uA610' && input.LA(1)<='\uA61F')||(input.LA(1)>='\uA62A' && input.LA(1)<='\uA62B')||(input.LA(1)>='\uA640' && input.LA(1)<='\uA66E')||(input.LA(1)>='\uA67F' && input.LA(1)<='\uA69D')||(input.LA(1)>='\uA6A0' && input.LA(1)<='\uA6EF')||(input.LA(1)>='\uA717' && input.LA(1)<='\uA71F')||(input.LA(1)>='\uA722' && input.LA(1)<='\uA788')||(input.LA(1)>='\uA78B' && input.LA(1)<='\uA7AD')||(input.LA(1)>='\uA7B0' && input.LA(1)<='\uA7B7')||(input.LA(1)>='\uA7F7' && input.LA(1)<='\uA801')||(input.LA(1)>='\uA803' && input.LA(1)<='\uA805')||(input.LA(1)>='\uA807' && input.LA(1)<='\uA80A')||(input.LA(1)>='\uA80C' && input.LA(1)<='\uA822')||(input.LA(1)>='\uA840' && input.LA(1)<='\uA873')||(input.LA(1)>='\uA882' && input.LA(1)<='\uA8B3')||(input.LA(1)>='\uA8F2' && input.LA(1)<='\uA8F7')||input.LA(1)=='\uA8FB'||input.LA(1)=='\uA8FD'||(input.LA(1)>='\uA90A' && input.LA(1)<='\uA925')||(input.LA(1)>='\uA930' && input.LA(1)<='\uA946')||(input.LA(1)>='\uA960' && input.LA(1)<='\uA97C')||(input.LA(1)>='\uA984' && input.LA(1)<='\uA9B2')||input.LA(1)=='\uA9CF'||(input.LA(1)>='\uA9E0' && input.LA(1)<='\uA9E4')||(input.LA(1)>='\uA9E6' && input.LA(1)<='\uA9EF')||(input.LA(1)>='\uA9FA' && input.LA(1)<='\uA9FE')||(input.LA(1)>='\uAA00' && input.LA(1)<='\uAA28')||(input.LA(1)>='\uAA40' && input.LA(1)<='\uAA42')||(input.LA(1)>='\uAA44' && input.LA(1)<='\uAA4B')||(input.LA(1)>='\uAA60' && input.LA(1)<='\uAA76')||input.LA(1)=='\uAA7A'||(input.LA(1)>='\uAA7E' && input.LA(1)<='\uAAAF')||input.LA(1)=='\uAAB1'||(input.LA(1)>='\uAAB5' && input.LA(1)<='\uAAB6')||(input.LA(1)>='\uAAB9' && input.LA(1)<='\uAABD')||input.LA(1)=='\uAAC0'||input.LA(1)=='\uAAC2'||(input.LA(1)>='\uAADB' && input.LA(1)<='\uAADD')||(input.LA(1)>='\uAAE0' && input.LA(1)<='\uAAEA')||(input.LA(1)>='\uAAF2' && input.LA(1)<='\uAAF4')||(input.LA(1)>='\uAB01' && input.LA(1)<='\uAB06')||(input.LA(1)>='\uAB09' && input.LA(1)<='\uAB0E')||(input.LA(1)>='\uAB11' && input.LA(1)<='\uAB16')||(input.LA(1)>='\uAB20' && input.LA(1)<='\uAB26')||(input.LA(1)>='\uAB28' && input.LA(1)<='\uAB2E')||(input.LA(1)>='\uAB30' && input.LA(1)<='\uAB5A')||(input.LA(1)>='\uAB5C' && input.LA(1)<='\uAB65')||(input.LA(1)>='\uAB70' && input.LA(1)<='\uABE2')||(input.LA(1)>='\uAC00' && input.LA(1)<='\uD7A3')||(input.LA(1)>='\uD7B0' && input.LA(1)<='\uD7C6')||(input.LA(1)>='\uD7CB' && input.LA(1)<='\uD7FB')||(input.LA(1)>='\uF900' && input.LA(1)<='\uFA6D')||(input.LA(1)>='\uFA70' && input.LA(1)<='\uFAD9')||(input.LA(1)>='\uFB00' && input.LA(1)<='\uFB06')||(input.LA(1)>='\uFB13' && input.LA(1)<='\uFB17')||input.LA(1)=='\uFB1D'||(input.LA(1)>='\uFB1F' && input.LA(1)<='\uFB28')||(input.LA(1)>='\uFB2A' && input.LA(1)<='\uFB36')||(input.LA(1)>='\uFB38' && input.LA(1)<='\uFB3C')||input.LA(1)=='\uFB3E'||(input.LA(1)>='\uFB40' && input.LA(1)<='\uFB41')||(input.LA(1)>='\uFB43' && input.LA(1)<='\uFB44')||(input.LA(1)>='\uFB46' && input.LA(1)<='\uFBB1')||(input.LA(1)>='\uFBD3' && input.LA(1)<='\uFD3D')||(input.LA(1)>='\uFD50' && input.LA(1)<='\uFD8F')||(input.LA(1)>='\uFD92' && input.LA(1)<='\uFDC7')||(input.LA(1)>='\uFDF0' && input.LA(1)<='\uFDFB')||(input.LA(1)>='\uFE70' && input.LA(1)<='\uFE74')||(input.LA(1)>='\uFE76' && input.LA(1)<='\uFEFC')||(input.LA(1)>='\uFF21' && input.LA(1)<='\uFF3A')||(input.LA(1)>='\uFF41' && input.LA(1)<='\uFF5A')||(input.LA(1)>='\uFF66' && input.LA(1)<='\uFFBE')||(input.LA(1)>='\uFFC2' && input.LA(1)<='\uFFC7')||(input.LA(1)>='\uFFCA' && input.LA(1)<='\uFFCF')||(input.LA(1)>='\uFFD2' && input.LA(1)<='\uFFD7')||(input.LA(1)>='\uFFDA' && input.LA(1)<='\uFFDC') ) {
                 input.consume();
@@ -3388,8 +3431,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT"
     public final void mRULE_UNICODE_SPACE_SEPARATOR_FRAGMENT() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:267:48: ( ( ' ' | '\\u00A0' | '\\u1680' | '\\u2000' .. '\\u200A' | '\\u202F' | '\\u205F' | '\\u3000' ) )
-            // InternalTypesLexer.g:267:50: ( ' ' | '\\u00A0' | '\\u1680' | '\\u2000' .. '\\u200A' | '\\u202F' | '\\u205F' | '\\u3000' )
+            // InternalTypesLexer.g:269:48: ( ( ' ' | '\\u00A0' | '\\u1680' | '\\u2000' .. '\\u200A' | '\\u202F' | '\\u205F' | '\\u3000' ) )
+            // InternalTypesLexer.g:269:50: ( ' ' | '\\u00A0' | '\\u1680' | '\\u2000' .. '\\u200A' | '\\u202F' | '\\u205F' | '\\u3000' )
             {
             if ( input.LA(1)==' '||input.LA(1)=='\u00A0'||input.LA(1)=='\u1680'||(input.LA(1)>='\u2000' && input.LA(1)<='\u200A')||input.LA(1)=='\u202F'||input.LA(1)=='\u205F'||input.LA(1)=='\u3000' ) {
                 input.consume();
@@ -3412,8 +3455,8 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR start "RULE_ANY_OTHER"
     public final void mRULE_ANY_OTHER() throws RecognitionException {
         try {
-            // InternalTypesLexer.g:269:25: ( . )
-            // InternalTypesLexer.g:269:27: .
+            // InternalTypesLexer.g:271:25: ( . )
+            // InternalTypesLexer.g:271:27: .
             {
             matchAny(); 
 
@@ -3426,10 +3469,10 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR end "RULE_ANY_OTHER"
 
     public void mTokens() throws RecognitionException {
-        // InternalTypesLexer.g:1:8: ( AssignmnentCompatible | ProtectedInternal | ProvidedByRuntime | PublicInternal | AutoboxedType | Intersection | Constructor | VirtualBase | Implements | Instanceof | Promisify | Interface | Primitive | Protected | Undefined | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Indexed | Private | Project | Delete | Export | Import | Object | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Final | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | FullStopFullStopFullStop | Any | For | Get | Let | New | Out | Set | Try | Var | EqualsSignGreaterThanSign | As | Do | If | In | Of | Ampersand | LeftParenthesis | RightParenthesis | PlusSign | Comma | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | LeftCurlyBracket | RightCurlyBracket | Tilde | RULE_STRING | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT )
-        int alt22=104;
-        alt22 = dfa22.predict(input);
-        switch (alt22) {
+        // InternalTypesLexer.g:1:8: ( AssignmnentCompatible | ProtectedInternal | ProvidedByRuntime | PublicInternal | AutoboxedType | Intersection | Constructor | VirtualBase | Implements | Instanceof | Promisify | Interface | Primitive | Protected | Undefined | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Indexed | Private | Project | Delete | Export | Import | Object | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Final | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | FullStopFullStopFullStop | Any | For | Get | Let | New | Out | Set | Try | Var | EqualsSignGreaterThanSign | As | Do | If | In | Of | Ampersand | LeftParenthesis | RightParenthesis | PlusSign | Comma | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | LeftCurlyBracket | RightCurlyBracket | Tilde | RULE_STRING | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT | RULE_VERSION )
+        int alt23=104;
+        alt23 = dfa23.predict(input);
+        switch (alt23) {
             case 1 :
                 // InternalTypesLexer.g:1:10: AssignmnentCompatible
                 {
@@ -4117,44 +4160,44 @@ public class InternalTypesLexer extends Lexer {
                 }
                 break;
             case 99 :
-                // InternalTypesLexer.g:1:890: RULE_INT
-                {
-                mRULE_INT(); 
-
-                }
-                break;
-            case 100 :
-                // InternalTypesLexer.g:1:899: RULE_ML_COMMENT
+                // InternalTypesLexer.g:1:890: RULE_ML_COMMENT
                 {
                 mRULE_ML_COMMENT(); 
 
                 }
                 break;
-            case 101 :
-                // InternalTypesLexer.g:1:915: RULE_SL_COMMENT
+            case 100 :
+                // InternalTypesLexer.g:1:906: RULE_SL_COMMENT
                 {
                 mRULE_SL_COMMENT(); 
 
                 }
                 break;
-            case 102 :
-                // InternalTypesLexer.g:1:931: RULE_EOL
+            case 101 :
+                // InternalTypesLexer.g:1:922: RULE_EOL
                 {
                 mRULE_EOL(); 
 
                 }
                 break;
-            case 103 :
-                // InternalTypesLexer.g:1:940: RULE_WS
+            case 102 :
+                // InternalTypesLexer.g:1:931: RULE_WS
                 {
                 mRULE_WS(); 
 
                 }
                 break;
-            case 104 :
-                // InternalTypesLexer.g:1:948: RULE_DOT_DOT
+            case 103 :
+                // InternalTypesLexer.g:1:939: RULE_DOT_DOT
                 {
                 mRULE_DOT_DOT(); 
+
+                }
+                break;
+            case 104 :
+                // InternalTypesLexer.g:1:952: RULE_VERSION
+                {
+                mRULE_VERSION(); 
 
                 }
                 break;
@@ -4164,21 +4207,21 @@ public class InternalTypesLexer extends Lexer {
     }
 
 
-    protected DFA22 dfa22 = new DFA22(this);
-    static final String DFA22_eotS =
+    protected DFA23 dfa23 = new DFA23(this);
+    static final String DFA23_eotS =
         "\1\uffff\23\52\1\137\2\52\1\143\5\uffff\1\146\20\uffff\1\151\6\52\1\164\1\52\1\166\1\uffff\11\52\1\u0084\12\52\1\u0090\20\52\1\u00a4\1\uffff\2\52\5\uffff\2\52\1\uffff\3\52\1\u00ac\6\52\1\uffff\1\52\1\uffff\6\52\1\u00bf\6\52\1\uffff\10\52\1\u00ce\1\52\1\u00d0\1\uffff\4\52\1\u00d5\5\52\1\u00db\6\52\1\u00e2\2\uffff\1\u00e3\1\u00e4\5\52\1\uffff\16\52\1\u00f8\2\52\1\u00fb\1\uffff\10\52\1\u0105\1\u0106\3\52\1\u010a\1\uffff\1\52\1\uffff\4\52\1\uffff\1\52\1\u0112\1\52\1\u0114\1\u0115\1\uffff\2\52\1\u0118\1\52\1\u011a\1\u011b\3\uffff\1\52\1\u011d\2\52\1\u0120\13\52\1\u012e\1\52\1\u0130\1\uffff\1\u0131\1\52\1\uffff\2\52\1\u0135\6\52\2\uffff\1\52\1\u013e\1\u013f\1\uffff\4\52\1\u0144\2\52\1\uffff\1\u0147\2\uffff\1\u0148\1\u0149\1\uffff\1\u014a\2\uffff\1\52\1\uffff\2\52\1\uffff\5\52\1\u0154\5\52\1\u015a\1\52\1\uffff\1\52\2\uffff\3\52\1\uffff\2\52\1\u0162\2\52\1\u0165\2\52\2\uffff\1\u0168\1\u0169\1\u016a\1\u016b\1\uffff\1\u016c\1\u016d\4\uffff\5\52\1\u0173\1\52\1\u0175\1\52\1\uffff\3\52\1\u017a\1\52\1\uffff\6\52\1\u0182\1\uffff\1\52\1\u0184\1\uffff\1\52\1\u0186\6\uffff\2\52\1\u0189\2\52\1\uffff\1\52\1\uffff\4\52\1\uffff\2\52\1\u0193\3\52\1\u0197\1\uffff\1\u0198\1\uffff\1\u0199\1\uffff\2\52\1\uffff\1\u019d\1\52\1\u019f\2\52\1\u01a2\3\52\1\uffff\1\52\1\u01a7\1\u01a8\3\uffff\3\52\1\uffff\1\52\1\uffff\2\52\1\uffff\1\u01af\1\u01b0\2\52\2\uffff\6\52\2\uffff\1\u01b9\1\u01ba\5\52\1\u01c0\2\uffff\1\52\1\u01c2\3\52\1\uffff\1\52\1\uffff\2\52\1\u01c9\3\52\1\uffff\4\52\1\u01d1\1\u01d2\1\52\2\uffff\2\52\1\u01d6\1\uffff";
-    static final String DFA22_eofS =
+    static final String DFA23_eofS =
         "\u01d7\uffff";
-    static final String DFA22_minS =
+    static final String DFA23_minS =
         "\1\11\1\142\1\162\1\146\2\141\1\162\1\156\1\145\1\154\1\141\1\142\2\145\1\141\1\162\1\150\1\151\1\150\1\145\1\56\2\145\1\76\5\uffff\1\52\20\uffff\1\44\1\164\1\163\1\141\1\171\1\151\1\142\1\44\1\160\1\44\1\uffff\1\156\1\163\1\141\1\162\1\151\1\162\1\157\1\144\1\142\1\44\1\160\1\163\1\165\2\156\1\154\1\157\1\162\1\152\1\164\1\44\1\164\1\141\1\151\1\160\1\164\1\162\1\160\1\151\1\165\1\145\1\151\1\164\1\145\1\151\1\154\1\167\1\56\1\uffff\2\164\5\uffff\1\151\1\156\1\uffff\1\157\1\164\1\151\1\44\1\152\1\155\1\154\1\145\1\164\1\145\1\uffff\1\154\1\uffff\1\163\1\143\1\145\1\163\1\164\1\144\1\44\1\155\1\145\1\157\1\165\1\141\1\145\1\uffff\1\145\1\157\1\145\1\155\1\143\1\141\1\163\1\155\1\44\1\145\1\44\1\uffff\1\165\2\164\1\145\1\44\1\147\1\145\1\157\1\163\1\145\1\44\1\141\1\154\1\150\1\154\1\163\1\154\1\44\2\uffff\2\44\1\147\1\143\1\142\1\162\1\164\1\uffff\1\145\1\151\1\145\1\151\1\141\1\151\1\162\1\141\1\170\1\145\1\162\1\164\1\151\1\150\1\44\1\163\1\165\1\44\1\uffff\1\151\1\146\1\156\1\147\1\165\1\164\1\156\1\162\2\44\1\164\1\154\1\145\1\44\1\uffff\1\143\1\uffff\1\162\1\151\1\143\1\162\1\uffff\1\145\1\44\1\167\2\44\1\uffff\1\153\1\145\1\44\1\144\2\44\3\uffff\1\156\1\44\1\157\1\141\1\44\1\143\1\144\1\143\2\164\1\143\1\146\1\156\1\145\1\155\1\164\1\44\1\156\1\44\1\uffff\1\44\1\141\1\uffff\1\163\1\151\1\44\1\147\1\154\1\145\1\156\1\144\1\164\2\uffff\1\151\2\44\1\uffff\1\164\1\156\1\143\1\150\1\44\1\164\1\146\1\uffff\1\44\2\uffff\2\44\1\uffff\1\44\2\uffff\1\155\1\uffff\1\170\1\143\1\uffff\1\164\1\145\1\164\1\151\1\145\1\44\1\145\1\141\1\143\1\144\1\145\1\44\1\165\1\uffff\1\165\2\uffff\1\154\1\151\1\156\1\uffff\1\145\1\164\1\44\1\141\1\163\1\44\1\157\1\171\2\uffff\4\44\1\uffff\2\44\4\uffff\1\156\1\145\1\164\1\145\1\144\1\44\1\166\1\44\1\156\1\uffff\2\143\1\145\1\44\1\156\1\uffff\1\143\1\145\1\102\1\146\1\145\1\162\1\44\1\uffff\1\154\1\44\1\uffff\1\156\1\44\6\uffff\1\145\1\144\1\44\1\144\1\102\1\uffff\1\145\1\uffff\2\164\1\145\1\157\1\uffff\2\164\1\44\1\141\1\171\1\144\1\44\1\uffff\1\44\1\uffff\1\44\1\uffff\1\156\1\124\1\uffff\1\44\1\171\1\44\1\145\1\151\1\44\1\146\1\163\1\157\1\uffff\1\163\2\44\3\uffff\1\164\1\171\1\156\1\uffff\1\122\1\uffff\1\162\1\157\1\uffff\2\44\1\162\1\145\2\uffff\1\103\1\160\1\164\1\165\2\156\2\uffff\2\44\1\157\2\145\1\156\1\141\1\44\2\uffff\1\155\1\44\1\162\1\164\1\154\1\uffff\1\160\1\uffff\1\156\1\151\1\44\2\141\1\155\1\uffff\1\164\1\154\1\145\1\151\2\44\1\142\2\uffff\1\154\1\145\1\44\1\uffff";
-    static final String DFA22_maxS =
+    static final String DFA23_maxS =
         "\1\uffdc\1\167\1\165\1\176\2\157\1\162\1\156\1\157\1\170\2\165\1\176\1\167\1\171\1\162\1\176\1\151\1\150\1\165\1\56\2\145\1\76\5\uffff\1\57\20\uffff\1\uffdc\1\164\1\163\1\141\1\171\1\157\1\142\1\uffdc\1\160\1\uffdc\1\uffff\1\156\1\164\1\141\1\162\1\151\1\162\1\157\1\151\1\154\1\uffdc\1\164\1\163\1\165\2\156\1\154\1\157\1\162\1\152\1\164\1\uffdc\1\164\1\141\1\151\1\160\1\164\1\162\1\160\1\162\1\171\1\145\1\151\1\164\1\145\1\151\1\154\1\167\1\56\1\uffff\2\164\5\uffff\1\151\1\156\1\uffff\1\157\1\164\1\151\1\uffdc\2\166\1\154\1\145\1\164\1\145\1\uffff\1\157\1\uffff\1\164\1\143\1\145\1\163\1\164\1\144\1\uffdc\1\155\1\145\1\157\1\165\1\141\1\145\1\uffff\1\145\1\157\1\145\1\155\1\143\1\141\1\163\1\155\1\uffdc\1\145\1\uffdc\1\uffff\1\165\2\164\1\145\1\uffdc\1\147\1\145\1\157\1\163\1\145\1\uffdc\1\141\1\154\1\150\1\154\1\163\1\154\1\uffdc\2\uffff\2\uffdc\1\147\1\143\1\142\1\162\1\164\1\uffff\1\145\1\151\1\145\1\151\1\141\1\151\1\162\1\141\1\170\1\145\1\162\1\164\1\151\1\150\1\uffdc\1\163\1\165\1\uffdc\1\uffff\1\151\1\146\1\156\1\147\1\165\1\164\2\162\2\uffdc\1\164\1\154\1\145\1\uffdc\1\uffff\1\143\1\uffff\1\162\1\151\1\143\1\162\1\uffff\1\145\1\uffdc\1\167\2\uffdc\1\uffff\1\153\1\145\1\uffdc\1\144\2\uffdc\3\uffff\1\156\1\uffdc\1\157\1\141\1\uffdc\1\143\1\144\1\143\2\164\1\143\1\163\1\156\1\145\1\155\1\164\1\uffdc\1\156\1\uffdc\1\uffff\1\uffdc\1\141\1\uffff\1\163\1\151\1\uffdc\1\147\1\154\1\145\1\156\1\144\1\164\2\uffff\1\151\2\uffdc\1\uffff\1\164\1\156\1\143\1\150\1\uffdc\1\164\1\146\1\uffff\1\uffdc\2\uffff\2\uffdc\1\uffff\1\uffdc\2\uffff\1\155\1\uffff\1\170\1\143\1\uffff\1\164\1\145\1\164\1\151\1\145\1\uffdc\1\145\1\141\1\143\1\144\1\145\1\uffdc\1\165\1\uffff\1\165\2\uffff\1\154\1\151\1\156\1\uffff\1\145\1\164\1\uffdc\1\141\1\163\1\uffdc\1\157\1\171\2\uffff\4\uffdc\1\uffff\2\uffdc\4\uffff\1\156\1\145\1\164\1\145\1\144\1\uffdc\1\166\1\uffdc\1\156\1\uffff\2\143\1\145\1\uffdc\1\156\1\uffff\1\143\1\145\1\102\1\146\1\145\1\162\1\uffdc\1\uffff\1\154\1\uffdc\1\uffff\1\156\1\uffdc\6\uffff\1\145\1\144\1\uffdc\1\144\1\102\1\uffff\1\145\1\uffff\2\164\1\145\1\157\1\uffff\2\164\1\uffdc\1\141\1\171\1\144\1\uffdc\1\uffff\1\uffdc\1\uffff\1\uffdc\1\uffff\1\156\1\124\1\uffff\1\uffdc\1\171\1\uffdc\1\145\1\151\1\uffdc\1\146\1\163\1\157\1\uffff\1\163\2\uffdc\3\uffff\1\164\1\171\1\156\1\uffff\1\122\1\uffff\1\162\1\157\1\uffff\2\uffdc\1\162\1\145\2\uffff\1\103\1\160\1\164\1\165\2\156\2\uffff\2\uffdc\1\157\2\145\1\156\1\141\1\uffdc\2\uffff\1\155\1\uffdc\1\162\1\164\1\154\1\uffff\1\160\1\uffff\1\156\1\151\1\uffdc\2\141\1\155\1\uffff\1\164\1\154\1\145\1\151\2\uffdc\1\142\2\uffff\1\154\1\145\1\uffdc\1\uffff";
-    static final String DFA22_acceptS =
-        "\30\uffff\1\115\1\116\1\117\1\120\1\121\1\uffff\1\124\1\125\1\126\1\130\1\131\1\132\1\133\1\134\1\135\1\136\1\137\1\140\1\142\1\143\1\146\1\147\12\uffff\1\141\46\uffff\1\122\2\uffff\1\107\1\127\1\144\1\145\1\123\2\uffff\1\110\12\uffff\1\113\1\uffff\1\112\15\uffff\1\111\13\uffff\1\114\22\uffff\1\75\1\150\7\uffff\1\76\22\uffff\1\106\16\uffff\1\77\1\uffff\1\103\4\uffff\1\104\5\uffff\1\105\6\uffff\1\102\1\100\1\101\23\uffff\1\63\2\uffff\1\73\11\uffff\1\64\1\65\3\uffff\1\66\7\uffff\1\72\1\uffff\1\70\1\71\2\uffff\1\74\1\uffff\1\62\1\67\1\uffff\1\45\2\uffff\1\46\15\uffff\1\52\1\uffff\1\50\1\51\3\uffff\1\57\10\uffff\1\54\1\53\4\uffff\1\55\2\uffff\1\56\1\47\1\60\1\61\11\uffff\1\37\5\uffff\1\35\7\uffff\1\33\2\uffff\1\34\2\uffff\1\36\1\40\1\41\1\42\1\43\1\44\5\uffff\1\32\1\uffff\1\31\4\uffff\1\30\7\uffff\1\25\1\uffff\1\26\1\uffff\1\27\2\uffff\1\20\11\uffff\1\21\3\uffff\1\22\1\23\1\24\3\uffff\1\16\1\uffff\1\15\2\uffff\1\14\4\uffff\1\13\1\17\6\uffff\1\12\1\11\10\uffff\1\7\1\10\5\uffff\1\6\1\uffff\1\5\6\uffff\1\4\7\uffff\1\2\1\3\3\uffff\1\1";
-    static final String DFA22_specialS =
+    static final String DFA23_acceptS =
+        "\30\uffff\1\115\1\116\1\117\1\120\1\121\1\uffff\1\124\1\125\1\126\1\130\1\131\1\132\1\133\1\134\1\135\1\136\1\137\1\140\1\142\1\145\1\146\1\150\12\uffff\1\141\46\uffff\1\122\2\uffff\1\107\1\127\1\143\1\144\1\123\2\uffff\1\110\12\uffff\1\113\1\uffff\1\112\15\uffff\1\111\13\uffff\1\114\22\uffff\1\75\1\147\7\uffff\1\76\22\uffff\1\106\16\uffff\1\77\1\uffff\1\103\4\uffff\1\104\5\uffff\1\105\6\uffff\1\102\1\100\1\101\23\uffff\1\63\2\uffff\1\73\11\uffff\1\64\1\65\3\uffff\1\66\7\uffff\1\72\1\uffff\1\70\1\71\2\uffff\1\74\1\uffff\1\62\1\67\1\uffff\1\45\2\uffff\1\46\15\uffff\1\52\1\uffff\1\50\1\51\3\uffff\1\57\10\uffff\1\54\1\53\4\uffff\1\55\2\uffff\1\56\1\47\1\60\1\61\11\uffff\1\37\5\uffff\1\35\7\uffff\1\33\2\uffff\1\34\2\uffff\1\36\1\40\1\41\1\42\1\43\1\44\5\uffff\1\32\1\uffff\1\31\4\uffff\1\30\7\uffff\1\25\1\uffff\1\26\1\uffff\1\27\2\uffff\1\20\11\uffff\1\21\3\uffff\1\22\1\23\1\24\3\uffff\1\16\1\uffff\1\15\2\uffff\1\14\4\uffff\1\13\1\17\6\uffff\1\12\1\11\10\uffff\1\7\1\10\5\uffff\1\6\1\uffff\1\5\6\uffff\1\4\7\uffff\1\2\1\3\3\uffff\1\1";
+    static final String DFA23_specialS =
         "\u01d7\uffff}>";
-    static final String[] DFA22_transitionS = {
-            "\1\55\1\54\2\55\1\54\22\uffff\1\55\3\uffff\1\52\1\uffff\1\30\1\51\1\31\1\32\1\uffff\1\33\1\34\1\uffff\1\24\1\35\12\53\1\36\1\37\1\40\1\27\1\41\1\42\1\43\17\52\1\6\3\52\1\22\6\52\1\44\1\52\1\45\1\uffff\1\52\1\uffff\1\1\1\17\1\4\1\10\1\11\1\12\1\25\1\52\1\3\2\52\1\26\1\52\1\23\1\13\1\2\1\52\1\14\1\15\1\16\1\7\1\5\1\20\1\52\1\21\1\52\1\46\1\uffff\1\47\1\50\41\uffff\1\55\11\uffff\1\52\12\uffff\1\52\4\uffff\1\52\5\uffff\27\52\1\uffff\37\52\1\uffff\u01ca\52\4\uffff\14\52\16\uffff\5\52\7\uffff\1\52\1\uffff\1\52\u0081\uffff\5\52\1\uffff\2\52\2\uffff\4\52\1\uffff\1\52\6\uffff\1\52\1\uffff\3\52\1\uffff\1\52\1\uffff\24\52\1\uffff\123\52\1\uffff\u008b\52\10\uffff\u00a6\52\1\uffff\46\52\2\uffff\1\52\7\uffff\47\52\110\uffff\33\52\5\uffff\3\52\55\uffff\53\52\43\uffff\2\52\1\uffff\143\52\1\uffff\1\52\17\uffff\2\52\7\uffff\2\52\12\uffff\3\52\2\uffff\1\52\20\uffff\1\52\1\uffff\36\52\35\uffff\131\52\13\uffff\1\52\30\uffff\41\52\11\uffff\2\52\4\uffff\1\52\5\uffff\26\52\4\uffff\1\52\11\uffff\1\52\3\uffff\1\52\27\uffff\31\52\107\uffff\25\52\117\uffff\66\52\3\uffff\1\52\22\uffff\1\52\7\uffff\12\52\17\uffff\20\52\4\uffff\10\52\2\uffff\2\52\2\uffff\26\52\1\uffff\7\52\1\uffff\1\52\3\uffff\4\52\3\uffff\1\52\20\uffff\1\52\15\uffff\2\52\1\uffff\3\52\16\uffff\2\52\23\uffff\6\52\4\uffff\2\52\2\uffff\26\52\1\uffff\7\52\1\uffff\2\52\1\uffff\2\52\1\uffff\2\52\37\uffff\4\52\1\uffff\1\52\23\uffff\3\52\20\uffff\11\52\1\uffff\3\52\1\uffff\26\52\1\uffff\7\52\1\uffff\2\52\1\uffff\5\52\3\uffff\1\52\22\uffff\1\52\17\uffff\2\52\27\uffff\1\52\13\uffff\10\52\2\uffff\2\52\2\uffff\26\52\1\uffff\7\52\1\uffff\2\52\1\uffff\5\52\3\uffff\1\52\36\uffff\2\52\1\uffff\3\52\17\uffff\1\52\21\uffff\1\52\1\uffff\6\52\3\uffff\3\52\1\uffff\4\52\3\uffff\2\52\1\uffff\1\52\1\uffff\2\52\3\uffff\2\52\3\uffff\3\52\3\uffff\14\52\26\uffff\1\52\64\uffff\10\52\1\uffff\3\52\1\uffff\27\52\1\uffff\20\52\3\uffff\1\52\32\uffff\3\52\5\uffff\2\52\43\uffff\10\52\1\uffff\3\52\1\uffff\27\52\1\uffff\12\52\1\uffff\5\52\3\uffff\1\52\40\uffff\1\52\1\uffff\2\52\17\uffff\2\52\22\uffff\10\52\1\uffff\3\52\1\uffff\51\52\2\uffff\1\52\20\uffff\1\52\20\uffff\3\52\30\uffff\6\52\5\uffff\22\52\3\uffff\30\52\1\uffff\11\52\1\uffff\1\52\2\uffff\7\52\72\uffff\60\52\1\uffff\2\52\14\uffff\7\52\72\uffff\2\52\1\uffff\1\52\2\uffff\2\52\1\uffff\1\52\2\uffff\1\52\6\uffff\4\52\1\uffff\7\52\1\uffff\3\52\1\uffff\1\52\1\uffff\1\52\2\uffff\2\52\1\uffff\4\52\1\uffff\2\52\11\uffff\1\52\2\uffff\5\52\1\uffff\1\52\25\uffff\4\52\40\uffff\1\52\77\uffff\10\52\1\uffff\44\52\33\uffff\5\52\163\uffff\53\52\24\uffff\1\52\20\uffff\6\52\4\uffff\4\52\3\uffff\1\52\3\uffff\2\52\7\uffff\3\52\4\uffff\15\52\14\uffff\1\52\21\uffff\46\52\1\uffff\1\52\5\uffff\1\52\2\uffff\53\52\1\uffff\u014d\52\1\uffff\4\52\2\uffff\7\52\1\uffff\1\52\1\uffff\4\52\2\uffff\51\52\1\uffff\4\52\2\uffff\41\52\1\uffff\4\52\2\uffff\7\52\1\uffff\1\52\1\uffff\4\52\2\uffff\17\52\1\uffff\71\52\1\uffff\4\52\2\uffff\103\52\45\uffff\20\52\20\uffff\126\52\2\uffff\6\52\3\uffff\u026c\52\2\uffff\21\52\1\55\32\52\5\uffff\113\52\3\uffff\13\52\7\uffff\15\52\1\uffff\4\52\16\uffff\22\52\16\uffff\22\52\16\uffff\15\52\1\uffff\3\52\17\uffff\64\52\43\uffff\1\52\4\uffff\1\52\103\uffff\130\52\10\uffff\51\52\1\uffff\1\52\5\uffff\106\52\12\uffff\37\52\61\uffff\36\52\2\uffff\5\52\13\uffff\54\52\4\uffff\32\52\66\uffff\27\52\11\uffff\65\52\122\uffff\1\52\135\uffff\57\52\21\uffff\7\52\67\uffff\36\52\15\uffff\2\52\12\uffff\54\52\32\uffff\44\52\51\uffff\3\52\12\uffff\44\52\153\uffff\4\52\1\uffff\4\52\3\uffff\2\52\11\uffff\u00c0\52\100\uffff\u0116\52\2\uffff\6\52\2\uffff\46\52\2\uffff\6\52\2\uffff\10\52\1\uffff\1\52\1\uffff\1\52\1\uffff\1\52\1\uffff\37\52\2\uffff\65\52\1\uffff\7\52\1\uffff\1\52\3\uffff\3\52\1\uffff\7\52\3\uffff\4\52\2\uffff\6\52\4\uffff\15\52\5\uffff\3\52\1\uffff\7\52\3\uffff\13\55\35\uffff\2\54\5\uffff\1\55\57\uffff\1\55\21\uffff\1\52\15\uffff\1\52\20\uffff\15\52\145\uffff\1\52\4\uffff\1\52\2\uffff\12\52\1\uffff\1\52\3\uffff\5\52\6\uffff\1\52\1\uffff\1\52\1\uffff\1\52\1\uffff\4\52\1\uffff\13\52\2\uffff\4\52\5\uffff\5\52\4\uffff\1\52\21\uffff\51\52\u0a77\uffff\57\52\1\uffff\57\52\1\uffff\u0085\52\6\uffff\4\52\3\uffff\2\52\14\uffff\46\52\1\uffff\1\52\5\uffff\1\52\2\uffff\70\52\7\uffff\1\52\20\uffff\27\52\11\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\120\uffff\1\52\u01d0\uffff\1\55\4\uffff\3\52\31\uffff\11\52\7\uffff\5\52\2\uffff\5\52\4\uffff\126\52\6\uffff\3\52\1\uffff\132\52\1\uffff\4\52\5\uffff\51\52\3\uffff\136\52\21\uffff\33\52\65\uffff\20\52\u0200\uffff\u19b6\52\112\uffff\u51d6\52\52\uffff\u048d\52\103\uffff\56\52\2\uffff\u010d\52\3\uffff\20\52\12\uffff\2\52\24\uffff\57\52\20\uffff\37\52\2\uffff\120\52\47\uffff\11\52\2\uffff\147\52\2\uffff\43\52\2\uffff\10\52\77\uffff\13\52\1\uffff\3\52\1\uffff\4\52\1\uffff\27\52\35\uffff\64\52\16\uffff\62\52\76\uffff\6\52\3\uffff\1\52\1\uffff\1\52\14\uffff\34\52\12\uffff\27\52\31\uffff\35\52\7\uffff\57\52\34\uffff\1\52\20\uffff\5\52\1\uffff\12\52\12\uffff\5\52\1\uffff\51\52\27\uffff\3\52\1\uffff\10\52\24\uffff\27\52\3\uffff\1\52\3\uffff\62\52\1\uffff\1\52\3\uffff\2\52\2\uffff\5\52\2\uffff\1\52\1\uffff\1\52\30\uffff\3\52\2\uffff\13\52\7\uffff\3\52\14\uffff\6\52\2\uffff\6\52\2\uffff\6\52\11\uffff\7\52\1\uffff\7\52\1\uffff\53\52\1\uffff\12\52\12\uffff\163\52\35\uffff\u2ba4\52\14\uffff\27\52\4\uffff\61\52\u2104\uffff\u016e\52\2\uffff\152\52\46\uffff\7\52\14\uffff\5\52\5\uffff\1\52\1\uffff\12\52\1\uffff\15\52\1\uffff\5\52\1\uffff\1\52\1\uffff\2\52\1\uffff\2\52\1\uffff\154\52\41\uffff\u016b\52\22\uffff\100\52\2\uffff\66\52\50\uffff\14\52\164\uffff\5\52\1\uffff\u0087\52\2\uffff\1\55\41\uffff\32\52\6\uffff\32\52\13\uffff\131\52\3\uffff\6\52\2\uffff\6\52\2\uffff\6\52\2\uffff\3\52",
+    static final String[] DFA23_transitionS = {
+            "\1\54\1\53\2\54\1\53\22\uffff\1\54\2\uffff\1\55\1\52\1\uffff\1\30\1\51\1\31\1\32\1\uffff\1\33\1\34\1\uffff\1\24\1\35\12\uffff\1\36\1\37\1\40\1\27\1\41\1\42\1\43\17\52\1\6\3\52\1\22\6\52\1\44\1\52\1\45\1\uffff\1\52\1\uffff\1\1\1\17\1\4\1\10\1\11\1\12\1\25\1\52\1\3\2\52\1\26\1\52\1\23\1\13\1\2\1\52\1\14\1\15\1\16\1\7\1\5\1\20\1\52\1\21\1\52\1\46\1\uffff\1\47\1\50\41\uffff\1\54\11\uffff\1\52\12\uffff\1\52\4\uffff\1\52\5\uffff\27\52\1\uffff\37\52\1\uffff\u01ca\52\4\uffff\14\52\16\uffff\5\52\7\uffff\1\52\1\uffff\1\52\u0081\uffff\5\52\1\uffff\2\52\2\uffff\4\52\1\uffff\1\52\6\uffff\1\52\1\uffff\3\52\1\uffff\1\52\1\uffff\24\52\1\uffff\123\52\1\uffff\u008b\52\10\uffff\u00a6\52\1\uffff\46\52\2\uffff\1\52\7\uffff\47\52\110\uffff\33\52\5\uffff\3\52\55\uffff\53\52\43\uffff\2\52\1\uffff\143\52\1\uffff\1\52\17\uffff\2\52\7\uffff\2\52\12\uffff\3\52\2\uffff\1\52\20\uffff\1\52\1\uffff\36\52\35\uffff\131\52\13\uffff\1\52\30\uffff\41\52\11\uffff\2\52\4\uffff\1\52\5\uffff\26\52\4\uffff\1\52\11\uffff\1\52\3\uffff\1\52\27\uffff\31\52\107\uffff\25\52\117\uffff\66\52\3\uffff\1\52\22\uffff\1\52\7\uffff\12\52\17\uffff\20\52\4\uffff\10\52\2\uffff\2\52\2\uffff\26\52\1\uffff\7\52\1\uffff\1\52\3\uffff\4\52\3\uffff\1\52\20\uffff\1\52\15\uffff\2\52\1\uffff\3\52\16\uffff\2\52\23\uffff\6\52\4\uffff\2\52\2\uffff\26\52\1\uffff\7\52\1\uffff\2\52\1\uffff\2\52\1\uffff\2\52\37\uffff\4\52\1\uffff\1\52\23\uffff\3\52\20\uffff\11\52\1\uffff\3\52\1\uffff\26\52\1\uffff\7\52\1\uffff\2\52\1\uffff\5\52\3\uffff\1\52\22\uffff\1\52\17\uffff\2\52\27\uffff\1\52\13\uffff\10\52\2\uffff\2\52\2\uffff\26\52\1\uffff\7\52\1\uffff\2\52\1\uffff\5\52\3\uffff\1\52\36\uffff\2\52\1\uffff\3\52\17\uffff\1\52\21\uffff\1\52\1\uffff\6\52\3\uffff\3\52\1\uffff\4\52\3\uffff\2\52\1\uffff\1\52\1\uffff\2\52\3\uffff\2\52\3\uffff\3\52\3\uffff\14\52\26\uffff\1\52\64\uffff\10\52\1\uffff\3\52\1\uffff\27\52\1\uffff\20\52\3\uffff\1\52\32\uffff\3\52\5\uffff\2\52\43\uffff\10\52\1\uffff\3\52\1\uffff\27\52\1\uffff\12\52\1\uffff\5\52\3\uffff\1\52\40\uffff\1\52\1\uffff\2\52\17\uffff\2\52\22\uffff\10\52\1\uffff\3\52\1\uffff\51\52\2\uffff\1\52\20\uffff\1\52\20\uffff\3\52\30\uffff\6\52\5\uffff\22\52\3\uffff\30\52\1\uffff\11\52\1\uffff\1\52\2\uffff\7\52\72\uffff\60\52\1\uffff\2\52\14\uffff\7\52\72\uffff\2\52\1\uffff\1\52\2\uffff\2\52\1\uffff\1\52\2\uffff\1\52\6\uffff\4\52\1\uffff\7\52\1\uffff\3\52\1\uffff\1\52\1\uffff\1\52\2\uffff\2\52\1\uffff\4\52\1\uffff\2\52\11\uffff\1\52\2\uffff\5\52\1\uffff\1\52\25\uffff\4\52\40\uffff\1\52\77\uffff\10\52\1\uffff\44\52\33\uffff\5\52\163\uffff\53\52\24\uffff\1\52\20\uffff\6\52\4\uffff\4\52\3\uffff\1\52\3\uffff\2\52\7\uffff\3\52\4\uffff\15\52\14\uffff\1\52\21\uffff\46\52\1\uffff\1\52\5\uffff\1\52\2\uffff\53\52\1\uffff\u014d\52\1\uffff\4\52\2\uffff\7\52\1\uffff\1\52\1\uffff\4\52\2\uffff\51\52\1\uffff\4\52\2\uffff\41\52\1\uffff\4\52\2\uffff\7\52\1\uffff\1\52\1\uffff\4\52\2\uffff\17\52\1\uffff\71\52\1\uffff\4\52\2\uffff\103\52\45\uffff\20\52\20\uffff\126\52\2\uffff\6\52\3\uffff\u026c\52\2\uffff\21\52\1\54\32\52\5\uffff\113\52\3\uffff\13\52\7\uffff\15\52\1\uffff\4\52\16\uffff\22\52\16\uffff\22\52\16\uffff\15\52\1\uffff\3\52\17\uffff\64\52\43\uffff\1\52\4\uffff\1\52\103\uffff\130\52\10\uffff\51\52\1\uffff\1\52\5\uffff\106\52\12\uffff\37\52\61\uffff\36\52\2\uffff\5\52\13\uffff\54\52\4\uffff\32\52\66\uffff\27\52\11\uffff\65\52\122\uffff\1\52\135\uffff\57\52\21\uffff\7\52\67\uffff\36\52\15\uffff\2\52\12\uffff\54\52\32\uffff\44\52\51\uffff\3\52\12\uffff\44\52\153\uffff\4\52\1\uffff\4\52\3\uffff\2\52\11\uffff\u00c0\52\100\uffff\u0116\52\2\uffff\6\52\2\uffff\46\52\2\uffff\6\52\2\uffff\10\52\1\uffff\1\52\1\uffff\1\52\1\uffff\1\52\1\uffff\37\52\2\uffff\65\52\1\uffff\7\52\1\uffff\1\52\3\uffff\3\52\1\uffff\7\52\3\uffff\4\52\2\uffff\6\52\4\uffff\15\52\5\uffff\3\52\1\uffff\7\52\3\uffff\13\54\35\uffff\2\53\5\uffff\1\54\57\uffff\1\54\21\uffff\1\52\15\uffff\1\52\20\uffff\15\52\145\uffff\1\52\4\uffff\1\52\2\uffff\12\52\1\uffff\1\52\3\uffff\5\52\6\uffff\1\52\1\uffff\1\52\1\uffff\1\52\1\uffff\4\52\1\uffff\13\52\2\uffff\4\52\5\uffff\5\52\4\uffff\1\52\21\uffff\51\52\u0a77\uffff\57\52\1\uffff\57\52\1\uffff\u0085\52\6\uffff\4\52\3\uffff\2\52\14\uffff\46\52\1\uffff\1\52\5\uffff\1\52\2\uffff\70\52\7\uffff\1\52\20\uffff\27\52\11\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\1\uffff\7\52\120\uffff\1\52\u01d0\uffff\1\54\4\uffff\3\52\31\uffff\11\52\7\uffff\5\52\2\uffff\5\52\4\uffff\126\52\6\uffff\3\52\1\uffff\132\52\1\uffff\4\52\5\uffff\51\52\3\uffff\136\52\21\uffff\33\52\65\uffff\20\52\u0200\uffff\u19b6\52\112\uffff\u51d6\52\52\uffff\u048d\52\103\uffff\56\52\2\uffff\u010d\52\3\uffff\20\52\12\uffff\2\52\24\uffff\57\52\20\uffff\37\52\2\uffff\120\52\47\uffff\11\52\2\uffff\147\52\2\uffff\43\52\2\uffff\10\52\77\uffff\13\52\1\uffff\3\52\1\uffff\4\52\1\uffff\27\52\35\uffff\64\52\16\uffff\62\52\76\uffff\6\52\3\uffff\1\52\1\uffff\1\52\14\uffff\34\52\12\uffff\27\52\31\uffff\35\52\7\uffff\57\52\34\uffff\1\52\20\uffff\5\52\1\uffff\12\52\12\uffff\5\52\1\uffff\51\52\27\uffff\3\52\1\uffff\10\52\24\uffff\27\52\3\uffff\1\52\3\uffff\62\52\1\uffff\1\52\3\uffff\2\52\2\uffff\5\52\2\uffff\1\52\1\uffff\1\52\30\uffff\3\52\2\uffff\13\52\7\uffff\3\52\14\uffff\6\52\2\uffff\6\52\2\uffff\6\52\11\uffff\7\52\1\uffff\7\52\1\uffff\53\52\1\uffff\12\52\12\uffff\163\52\35\uffff\u2ba4\52\14\uffff\27\52\4\uffff\61\52\u2104\uffff\u016e\52\2\uffff\152\52\46\uffff\7\52\14\uffff\5\52\5\uffff\1\52\1\uffff\12\52\1\uffff\15\52\1\uffff\5\52\1\uffff\1\52\1\uffff\2\52\1\uffff\2\52\1\uffff\154\52\41\uffff\u016b\52\22\uffff\100\52\2\uffff\66\52\50\uffff\14\52\164\uffff\5\52\1\uffff\u0087\52\2\uffff\1\54\41\uffff\32\52\6\uffff\32\52\13\uffff\131\52\3\uffff\6\52\2\uffff\6\52\2\uffff\6\52\2\uffff\3\52",
             "\1\60\13\uffff\1\62\4\uffff\1\56\1\uffff\1\57\1\uffff\1\61",
             "\1\63\2\uffff\1\64",
             "\1\67\6\uffff\1\66\1\65\17\uffff\1\70",
@@ -4651,37 +4694,37 @@ public class InternalTypesLexer extends Lexer {
             ""
     };
 
-    static final short[] DFA22_eot = DFA.unpackEncodedString(DFA22_eotS);
-    static final short[] DFA22_eof = DFA.unpackEncodedString(DFA22_eofS);
-    static final char[] DFA22_min = DFA.unpackEncodedStringToUnsignedChars(DFA22_minS);
-    static final char[] DFA22_max = DFA.unpackEncodedStringToUnsignedChars(DFA22_maxS);
-    static final short[] DFA22_accept = DFA.unpackEncodedString(DFA22_acceptS);
-    static final short[] DFA22_special = DFA.unpackEncodedString(DFA22_specialS);
-    static final short[][] DFA22_transition;
+    static final short[] DFA23_eot = DFA.unpackEncodedString(DFA23_eotS);
+    static final short[] DFA23_eof = DFA.unpackEncodedString(DFA23_eofS);
+    static final char[] DFA23_min = DFA.unpackEncodedStringToUnsignedChars(DFA23_minS);
+    static final char[] DFA23_max = DFA.unpackEncodedStringToUnsignedChars(DFA23_maxS);
+    static final short[] DFA23_accept = DFA.unpackEncodedString(DFA23_acceptS);
+    static final short[] DFA23_special = DFA.unpackEncodedString(DFA23_specialS);
+    static final short[][] DFA23_transition;
 
     static {
-        int numStates = DFA22_transitionS.length;
-        DFA22_transition = new short[numStates][];
+        int numStates = DFA23_transitionS.length;
+        DFA23_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA22_transition[i] = DFA.unpackEncodedString(DFA22_transitionS[i]);
+            DFA23_transition[i] = DFA.unpackEncodedString(DFA23_transitionS[i]);
         }
     }
 
-    class DFA22 extends DFA {
+    class DFA23 extends DFA {
 
-        public DFA22(BaseRecognizer recognizer) {
+        public DFA23(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 22;
-            this.eot = DFA22_eot;
-            this.eof = DFA22_eof;
-            this.min = DFA22_min;
-            this.max = DFA22_max;
-            this.accept = DFA22_accept;
-            this.special = DFA22_special;
-            this.transition = DFA22_transition;
+            this.decisionNumber = 23;
+            this.eot = DFA23_eot;
+            this.eof = DFA23_eof;
+            this.min = DFA23_min;
+            this.max = DFA23_max;
+            this.accept = DFA23_accept;
+            this.special = DFA23_special;
+            this.transition = DFA23_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( AssignmnentCompatible | ProtectedInternal | ProvidedByRuntime | PublicInternal | AutoboxedType | Intersection | Constructor | VirtualBase | Implements | Instanceof | Promisify | Interface | Primitive | Protected | Undefined | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Indexed | Private | Project | Delete | Export | Import | Object | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Final | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | FullStopFullStopFullStop | Any | For | Get | Let | New | Out | Set | Try | Var | EqualsSignGreaterThanSign | As | Do | If | In | Of | Ampersand | LeftParenthesis | RightParenthesis | PlusSign | Comma | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | LeftCurlyBracket | RightCurlyBracket | Tilde | RULE_STRING | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT );";
+            return "1:1: Tokens : ( AssignmnentCompatible | ProtectedInternal | ProvidedByRuntime | PublicInternal | AutoboxedType | Intersection | Constructor | VirtualBase | Implements | Instanceof | Promisify | Interface | Primitive | Protected | Undefined | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Indexed | Private | Project | Delete | Export | Import | Object | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Final | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | FullStopFullStopFullStop | Any | For | Get | Let | New | Out | Set | Try | Var | EqualsSignGreaterThanSign | As | Do | If | In | Of | Ampersand | LeftParenthesis | RightParenthesis | PlusSign | Comma | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | LeftCurlyBracket | RightCurlyBracket | Tilde | RULE_STRING | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT | RULE_VERSION );";
         }
     }
  

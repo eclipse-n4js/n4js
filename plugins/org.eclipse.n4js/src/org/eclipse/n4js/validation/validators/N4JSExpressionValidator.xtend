@@ -128,7 +128,7 @@ import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
