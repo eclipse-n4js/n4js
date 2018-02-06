@@ -19,11 +19,11 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.resource.IResourceFactory;
-import org.xpect.XpectFile;
-import org.xpect.XpectJavaModel;
-import org.xpect.state.StateContainer;
-import org.xpect.util.IXtInjectorProvider;
-import org.xpect.xtext.lib.setup.FileSetupContext;
+import org.eclipse.xpect.XpectFile;
+import org.eclipse.xpect.XpectJavaModel;
+import org.eclipse.xpect.state.StateContainer;
+import org.eclipse.xpect.util.IXtInjectorProvider;
+import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 
 import com.google.inject.Injector;
 

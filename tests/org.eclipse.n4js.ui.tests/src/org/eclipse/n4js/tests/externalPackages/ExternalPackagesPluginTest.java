@@ -29,7 +29,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.builder.BuilderUtil;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -115,7 +115,7 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	public void testWorkspaceProjectAndExternalProject() throws Exception {
 
-		IProject createJSProject = ProjectUtils.createJSProject("LibFoo2");
+		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo2");
 		IFolder src = configureProjectWithXtext(createJSProject);
 		IFile manifest = createJSProject.getProject().getFile("manifest.n4mf");
 		assertMarkers("manifest of first project should have no errors", manifest, 0);
@@ -144,7 +144,7 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 	 */
 	public void testWorkspaceProjectHidingExternalProject_after() throws Exception {
 
-		IProject createJSProject = ProjectUtils.createJSProject("LibFoo");
+		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo");
 		IFolder src = configureProjectWithXtext(createJSProject);
 		IFile manifest = createJSProject.getProject().getFile("manifest.n4mf");
 		assertMarkers("manifest of first project should have no errors", manifest, 0);
@@ -176,7 +176,7 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 		copyProjectsToLocation(externalLibrariesRoot, "LibFoo");
 		setExternalLibrariesPreferenceStoreLocations(externalLibraryPreferenceStore, externalLibrariesRoot);
 
-		IProject createJSProject = ProjectUtils.createJSProject("LibFoo");
+		IProject createJSProject = ProjectTestsUtils.createJSProject("LibFoo");
 		IFolder src = configureProjectWithXtext(createJSProject);
 		IFile manifest = createJSProject.getProject().getFile("manifest.n4mf");
 		assertMarkers("manifest of first project should have no errors", manifest, 0);

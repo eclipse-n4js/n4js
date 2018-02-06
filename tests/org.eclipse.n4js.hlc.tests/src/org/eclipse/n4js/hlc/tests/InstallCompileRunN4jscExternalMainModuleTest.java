@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
@@ -100,7 +99,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 				"-r", fileToRun,
 				"--verbose"
 		};
-		final String actual = runCaptureOut(args);
+		final String actual = runAndCaptureOutput(args);
 		StringBuilder expected = new StringBuilder()
 				.append("\\(node:(\\d)+\\) \\[DEP0025\\] DeprecationWarning: sys is deprecated\\. Use util instead\\.")
 				.append("express imported").append("\n")

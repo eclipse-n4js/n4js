@@ -1586,7 +1586,7 @@ For a given additive expression the following constraints must hold in N4JS mode
 [math]
 ++++
 \beginalign
-\infer{\typeEnv \entails \type{AdditiveExpression}\ e \expectType \type{Expression}: \type{any}
+\infer{\typeEnv \entails \type{AdditiveExpression}\ e \expectType \type{Expression}: \type{any}}{}
 \endalign
 ++++
 --
@@ -1606,7 +1606,7 @@ We first define two helper rules to simplify the addition operator condition:
 [math]
 ++++
 \beginalign
-\inferRule{nb}{nb(T)}{\exits N in \{\type{number, int, boolean, null, undefined}\}: T \subtype = N} \\
+\inferRule{nb}{nb(T)}{\exists N in \{\type{number, int, boolean, null, undefined}\}: T \subtype = N} \\
 \inferRule{mnb}{mnb(T)}{nb(T) \lor\  (\mu(T)=\type{Union}\ \land\  \exists\  E\in T.typeRefs: mnb(E) } \\
 
 \inferRule{toNum}{toNum(expr)}

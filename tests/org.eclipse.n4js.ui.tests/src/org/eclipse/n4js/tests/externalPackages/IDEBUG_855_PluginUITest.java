@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.EMFBasedPersister;
@@ -81,7 +81,7 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 		assertTrue("Error while saving external library preference changes.", result.isOK());
 		waitForAutoBuild();
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-		ProjectUtils.importProject(projectsRoot, PROJECT);
+		ProjectTestsUtils.importProject(projectsRoot, PROJECT);
 		waitForAutoBuild();
 	}
 
@@ -104,9 +104,9 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testAllIndexElementsCanBeAddedToAResource() throws InvocationTargetException, CoreException {
-
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 		assertTrue(PROJECT + " project is not accessible.", project.isAccessible());
+
 		final IFile clientModule = project.getFile(getResourceName(SRC_FOLDER, MODULE + "." + N4JS_FILE_EXTENSION));
 		assertTrue(clientModule + " client module is not accessible.", clientModule.isAccessible());
 

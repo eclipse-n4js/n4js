@@ -49,10 +49,6 @@ public class HighlightingConfiguration extends DefaultHighlightingConfiguration 
 	 */
 	public static final String IDENTIFIER_REF_ID = "IDENTIFIER_REF_ID";
 	/**
-	 * Style ident for enum literal declarations.
-	 */
-	public static final String ENUM_LITERAL_ID = "ENUM_LITERAL_ID";
-	/**
 	 * Style ident for type variable declarations.
 	 */
 	public static final String TYPE_VARIABLE_ID = "TYPE_VARIABLE_ID";
@@ -102,7 +98,6 @@ public class HighlightingConfiguration extends DefaultHighlightingConfiguration 
 		acceptor.acceptDefaultHighlighting(TYPE_REF_ID, "Type Reference", typeRefTextStyle());
 		acceptor.acceptDefaultHighlighting(IDENTIFIER_ID, "Identifier", defaultTextStyle());
 		acceptor.acceptDefaultHighlighting(IDENTIFIER_REF_ID, "Reference", defaultTextStyle());
-		acceptor.acceptDefaultHighlighting(ENUM_LITERAL_ID, "Enum Literal", defaultTextStyle());
 		acceptor.acceptDefaultHighlighting(TYPE_VARIABLE_ID, "Type Variable", defaultTextStyle());
 		acceptor.acceptDefaultHighlighting(JS_DOC_ID, "JSDoc Comment", jsDocTextStyle());
 		acceptor.acceptDefaultHighlighting(ES5_KW_ID, "ES5 Keywords", keywordTextStyle());

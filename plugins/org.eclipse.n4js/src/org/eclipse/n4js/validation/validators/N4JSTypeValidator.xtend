@@ -113,7 +113,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSScopeProvider n4jsScopeProvider;
 
 	@Inject
-	protected extension ContainerTypesHelper containerTypesHelper;
+	protected ContainerTypesHelper containerTypesHelper;
 	
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;

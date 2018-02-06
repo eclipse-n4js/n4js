@@ -18,14 +18,14 @@ import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.lib.XpectTestResultTest;
+import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
+import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
+import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 import org.junit.runner.RunWith;
-import org.xpect.XpectImport;
-import org.xpect.lib.XpectTestResultTest;
-import org.xpect.runner.XpectRunner;
-import org.xpect.runner.XpectSuiteClasses;
-import org.xpect.runner.XpectTestFiles;
-import org.xpect.runner.XpectTestFiles.FileRoot;
-import org.xpect.xtext.lib.tests.ValidationTest;
 
 /**
  * Plugin for proposal test. This plugin turns <b>off</b> validation in xpect-tests by default since most input files

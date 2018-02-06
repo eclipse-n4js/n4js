@@ -30,14 +30,14 @@ import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
-import org.xpect.XpectImport;
-import org.xpect.expectation.IStringDiffExpectation;
-import org.xpect.expectation.StringDiffExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
-import org.xpect.xtext.lib.setup.ThisResource;
-import org.xpect.xtext.lib.tests.ValidationTestModuleSetup;
-import org.xpect.xtext.lib.tests.ValidationTestModuleSetup.ConsumedIssues;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.expectation.IStringDiffExpectation;
+import org.eclipse.xpect.expectation.StringDiffExpectation;
+import org.eclipse.xpect.parameter.ParameterParser;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.xtext.lib.setup.ThisResource;
+import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup;
+import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.ConsumedIssues;
 
 import com.google.inject.Inject;
 

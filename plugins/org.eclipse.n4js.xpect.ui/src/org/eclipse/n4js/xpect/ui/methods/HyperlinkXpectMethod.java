@@ -32,11 +32,11 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.hyperlinking.XtextHyperlink;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.testing.ContentAssistProcessorTestBuilder;
-import org.xpect.expectation.CommaSeparatedValuesExpectation;
-import org.xpect.expectation.ICommaSeparatedValuesExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
-import org.xpect.xtext.lib.setup.ThisResource;
+import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
+import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
+import org.eclipse.xpect.parameter.ParameterParser;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;

@@ -17,7 +17,7 @@ import java.io.File;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Test;
 
@@ -43,11 +43,11 @@ public class GHOLD_129_BrokenAstMustNotCauseBuildFailure_PluginUITest extends Ab
 		assertTrue("Project '" + PROJECT_NAME + "' does not exist in workspace.", project.isAccessible());
 
 		IResourcesSetupUtil.fullBuild();
-		ProjectUtils.waitForAutoBuild();
+		ProjectTestsUtils.waitForAutoBuild();
 
 		// Couldn't resolve reference to IdentifiableElement 'A'.
 		// Name missing in type declaration.
-		ProjectUtils.assertMarkers("Expected exactly two validation errors.", project, 2);
+		ProjectTestsUtils.assertMarkers("Expected exactly two validation errors.", project, 2);
 	}
 
 }

@@ -11,8 +11,10 @@
 package org.eclipse.n4js.validation.validators;
 
 import static org.eclipse.n4js.validation.IssueCodes.ENM_DUPLICTAE_LITERALS;
+import static org.eclipse.n4js.validation.IssueCodes.ENM_INVALID_USE_OF_STRINGBASED_ENUM;
 import static org.eclipse.n4js.validation.IssueCodes.ENM_LITERALS_HIDE_META;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForENM_DUPLICTAE_LITERALS;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForENM_INVALID_USE_OF_STRINGBASED_ENUM;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForENM_LITERALS_HIDE_META;
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.internalCheckNotInStaticPolyfillModule;
 
@@ -21,15 +23,23 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.N4EnumDeclaration;
+import org.eclipse.n4js.n4JS.N4EnumLiteral;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TEnum;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
+import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.EnumLiteralDeclaration;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-
-import org.eclipse.n4js.n4JS.N4EnumDeclaration;
-import org.eclipse.n4js.n4JS.N4EnumLiteral;
-import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 
 /**
  * Validation for N4Enums.
@@ -104,6 +114,49 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 				.map(tm -> {
 					return tm.getName();
 				}).collect(Collectors.toSet());
+	}
+
+	/**
+	 * See N4JS Specification, Req. IDE-41, Nr. 6.
+	 */
+	@Check
+	public void checkUsageOfStringBasedEnum(IdentifierRef identRef) {
+		final IdentifiableElement id = identRef.getId();
+		if (id == null || id.eIsProxy()) {
+			return;
+		}
+		if (!(id instanceof TEnum)) {
+			return;
+		}
+		final TEnum tEnum = (TEnum) id;
+		if (!AnnotationDefinition.STRING_BASED.hasAnnotation(tEnum)) {
+			return;
+		}
+		// we now have an IdentifierRef pointing to a string-based enum ...
+		final EObject parent = N4JSASTUtils.skipParenExpressionUpward(identRef.eContainer());
+		final ParameterizedPropertyAccessExpression parentPAE = parent instanceof ParameterizedPropertyAccessExpression
+				? (ParameterizedPropertyAccessExpression) parent : null;
+		final IdentifiableElement prop = parentPAE != null ? parentPAE.getProperty() : null;
+		if (prop != null) {
+			if (prop.eIsProxy()) {
+				// there will be an error for the unresolved property access, so any error shown below would be an
+				// unnecessary duplicate error
+				return;
+			}
+			if (tEnum.getLiterals().contains(prop)) {
+				// reference to one of tEnum's literals -> valid usage!
+				return;
+			}
+			final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(identRef);
+			final TMember getterLiterals = RuleEnvironmentExtensions.n4StringBasedEnumType(G)
+					.findOwnedMember("literals", false, true);
+			if (prop == getterLiterals) {
+				// reference to static getter 'literals' in N4StringBasedEnum -> valid usage!
+				return;
+			}
+		}
+		// invalid usage!
+		addIssue(getMessageForENM_INVALID_USE_OF_STRINGBASED_ENUM(), identRef, ENM_INVALID_USE_OF_STRINGBASED_ENUM);
 	}
 
 	// publish

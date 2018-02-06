@@ -11,11 +11,12 @@
 package org.eclipse.n4js.naming
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.utils.ResourceType
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IResourceDescription
 
@@ -29,6 +30,7 @@ import org.eclipse.xtext.resource.IResourceDescription
  * Client code should usually use {@code TModule.getName()} or {@code Script.getModule().getName()} to access the
  * module's name.
  */
+@Singleton
 class ModuleNameComputer {
 
 	@Inject

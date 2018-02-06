@@ -162,6 +162,27 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
 	 */
 	contains transient ComposedMemberCache[] composedMemberCaches
+
+	/**
+	 * As a rule, types must always be contained in a resource and resource set (as opposed to type references which
+	 * need not be contained). Therefore, when types are required to be created for a temporary purpose, they need to be
+	 * added somewhere, temporarily. This transient containment reference is used for that purpose.
+	 * <p>
+	 * IMPORTANT: code using this reference should
+	 * <ol>
+	 * <li>turn off notifications whenever adding/removing a type to this reference or when changing properties of an
+	 * already added type (to avoid unnecessary cache clear),
+	 * <li>remove the temporary type when it is no longer required,<br>
+	 * For convenience, the transpiler infrastructure will <b>clear this reference after transpilation</b> has
+	 * completed, so transpiler transformations do not have to handle removal of temporary types themselves.
+	 * <li>make sure no ordinary types ever refer to a temporary type contained here (references in the other direction
+	 * are ok, though),
+	 * <li>use the convenience methods for dealing with this reference provided in {@code N4JSResource}:
+	 * {@code addTemporaryType} and {@code clearTemporaryTypes}.
+	 * </ol>
+	 */
+	contains transient Type[] temporaryTypes
+
 	/**
 	 * Returns the qualified module name as a file path, using '/' as a segment delimiter. No file extension is added,
 	 * though.

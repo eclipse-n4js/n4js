@@ -16,7 +16,7 @@ import { ModuleTest } from "es-module-tests/ModuleTest"
 export public class IDERunnerSystemJSModuleTest implements ModuleTest {
     @Override
     protected getNodeExecArgs(exampleId: string): Array<string> {
-        const args = [System._nodeRequire.resolve("n4js-node/n4js-cli")];
+        const args = [System._nodeRequire.resolve("n4js-node/src-gen/n4js-cli")];
         args.push(this.getRunnerModuleIdOf(exampleId));
         return args;
     }

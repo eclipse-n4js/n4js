@@ -11,9 +11,8 @@
 package org.eclipse.n4js.xpect.validation.suppression
 
 import org.eclipse.n4js.validation.IssueCodes
-import org.xpect.XpectImport
-import org.xpect.setup.XpectSetupComponent
-import org.eclipse.n4js.xpect.validation.suppression.IssueConfiguration
+import org.eclipse.xpect.XpectImport
+import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * An xpect setup element which allows to

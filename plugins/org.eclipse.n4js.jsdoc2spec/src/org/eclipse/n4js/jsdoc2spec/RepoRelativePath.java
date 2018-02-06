@@ -13,6 +13,7 @@ package org.eclipse.n4js.jsdoc2spec;
 import java.io.File;
 import java.nio.file.Path;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jgit.errors.ConfigInvalidException;
@@ -20,17 +21,21 @@ import org.eclipse.jgit.lib.Config;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.utils.Log;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.Files;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 
 /**
  * Value object containing information about the repository relative location of a file, optionally with line number to
  * create a deep link.
  */
+@Log
 public class RepoRelativePath {
+	private static final Logger LOGGER = Logger.getLogger(RepoRelativePath.class);
 
 	/**
 	 * Creates the RepoRelativePath from a given resource. Returns null, if resource is not contained in a repository.
@@ -52,64 +57,80 @@ public class RepoRelativePath {
 			if (!file.exists()) {
 				return null;
 			}
-			File f = file.getParentFile();
-			while (f != null && f.isDirectory() && f.exists()) {
-				File[] files = f.listFiles((File pathname) -> pathname.isDirectory()
-						&& ".git".equals(pathname.getName()));
-				if (files.length > 0) {
-					String repoName = null;
-
-					File config = new File(files[0], "config");
-					if (config.exists()) {
-						try {
-							String configStr = Files.readFileIntoString(config.getAbsolutePath());
-							Config cfg = new Config();
-
-							cfg.fromText(configStr);
-							String originURL = cfg.getString("remote", "origin", "url");
-							if (originURL != null && !originURL.isEmpty()) {
-								int lastSlash = originURL.lastIndexOf('/');
-								if (lastSlash >= 0) {
-									repoName = originURL.substring(lastSlash + 1);
-								} else {
-									repoName = originURL;
-								}
-								if (repoName.endsWith(".git")) {
-									repoName = repoName.substring(0, repoName.length() - 4);
-								}
-							}
-						} catch (ConfigInvalidException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					if (repoName == null) {
-						repoName = f.getName();
-					}
-
-					String projName = project.getProjectId();
-					String projPath = fileRelString;
-					String repoPath = getRepoPath(absFileName, projName, repoName);
-
-					if (File.separatorChar != '/') {
-						projPath = projPath.replace(File.separatorChar, '/');
-						repoPath = repoPath.replace(File.separatorChar, '/');
-					}
-
-					return new RepoRelativePath(repoName, repoPath, projName, projPath, -1);
-
-				} else {
-					f = f.getParentFile();
+			File currentFolder = file.getParentFile();
+			while (currentFolder != null && currentFolder.isDirectory() && currentFolder.exists()) {
+				String repoName = getRepoName(currentFolder);
+				if (Strings.isNullOrEmpty(repoName)) {
+					currentFolder = currentFolder.getParentFile();
+					continue;
 				}
 
+				// git clone folder name might be different than
+				// git repository name
+				String cloneFolder = currentFolder.getName();
+				String projName = project.getProjectId();
+				String repoPath = getRepoPath(absFileName, projName, cloneFolder);
+
+				String projPath = fileRelString;
+				if (File.separatorChar != '/') {
+					projPath = projPath.replace(File.separatorChar, '/');
+					repoPath = repoPath.replace(File.separatorChar, '/');
+				}
+				return new RepoRelativePath(repoName, repoPath, projName, projPath, -1);
 			}
 		}
 		return null;
 	}
 
-	private static String getRepoPath(String absFileName, String projName, String repoName) {
+	/**
+	 * Tries to obtain repository name from the provided directory by reading git config in
+	 * {@code currendDir/.git/config}
+	 *
+	 * @return string with repo name or {@code null}
+	 */
+	private static String getRepoName(File currentDir) {
+		File gitFolder = new File(currentDir, ".git");
+		if (!gitFolder.isDirectory()) {
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("No '.git' folder at " + currentDir.getAbsolutePath());
+			return null;
+		}
+
+		File config = new File(gitFolder, "config");
+		if (!config.isFile()) {
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("No 'config' file at " + gitFolder.getAbsolutePath());
+			return null;
+		}
+		try {
+			String configStr = Files.readFileIntoString(config.getAbsolutePath());
+			Config cfg = new Config();
+
+			cfg.fromText(configStr);
+			String originURL = cfg.getString("remote", "origin", "url");
+			if (originURL != null && !originURL.isEmpty()) {
+				int lastSlash = originURL.lastIndexOf('/');
+				String repoName = null;
+				if (lastSlash >= 0) {
+					repoName = originURL.substring(lastSlash + 1);
+				} else {
+					repoName = originURL;
+				}
+				if (repoName.endsWith(".git")) {
+					repoName = repoName.substring(0, repoName.length() - 4);
+				}
+				return repoName;
+			}
+		} catch (ConfigInvalidException e) {
+			LOGGER.warn("Cannot read git config at " + config.getAbsolutePath(), e);
+		}
+
+		return null;
+	}
+
+	private static String getRepoPath(String absFileName, String projName, String repoCloneName) {
 		int startIdx = -1;
-		String repoNameSlashes = "/" + repoName + "/";
+		String repoNameSlashes = "/" + repoCloneName + "/";
 		String projNameSlashes = "/" + projName + "/";
 		startIdx = absFileName.indexOf(repoNameSlashes) + repoNameSlashes.length();
 		int endIdx = absFileName.indexOf(projNameSlashes);

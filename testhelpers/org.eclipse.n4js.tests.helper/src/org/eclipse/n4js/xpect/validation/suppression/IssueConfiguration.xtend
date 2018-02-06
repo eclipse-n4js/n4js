@@ -11,8 +11,8 @@
 package org.eclipse.n4js.xpect.validation.suppression
 
 import java.util.List
-import org.xpect.setup.XpectSetupComponent
-import org.xpect.XpectImport
+import org.eclipse.xpect.XpectImport
+import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * An xpect setup element which allows to explicitly

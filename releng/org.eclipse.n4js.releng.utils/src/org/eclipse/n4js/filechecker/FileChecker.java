@@ -257,7 +257,7 @@ public class FileChecker extends AbstractFileChecker {
 			FILE_NAME__ABOUT_HTML,
 			FILE_NAME__ABOUT_HTML_TEMPLATE,
 			FILE_NAME__EPL,
-			"org.xpect/model/Xpect.genmodel",
+			"org.eclipse.xpect/model/Xpect.genmodel",
 	};
 
 	private static final String[] COPYRIGHT_TEXT_N4JS = {

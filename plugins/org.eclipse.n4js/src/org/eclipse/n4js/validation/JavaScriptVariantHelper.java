@@ -14,13 +14,21 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * The N4JS type system and validation is used not only for pure N4JS, but in the context of certain variants as plain
- * JavaScript in unrestricted or strict mode, type definition files (N4JSD) etc. It also is re-used by sublanguage (such
- * as JSX). Instead of replacing the validators (or other components) for these variants (which may be an additional
- * technique), the variant helper allows fine-grained control of what kind of constraints to check. An instance of the
- * helper is to be provided by the injector; N4Js uses the {@link N4JSJavaScriptVariantHelper}, sub-languages may bind
- * to a different implementation.
+ * JavaScript in unrestricted or strict mode, type definition files (N4JSD) etc. It also is re-used by sub-language
+ * (such as JSX). Instead of replacing the validators (or other components) for these variants (which may be an
+ * additional technique), the variant helper allows fine-grained control of what kind of constraints to check. An
+ * instance of the helper is to be provided by the injector; N4Js uses the {@link N4JSJavaScriptVariantHelper},
+ * sub-languages may bind to a different implementation.
  */
 public interface JavaScriptVariantHelper {
+
+	/**
+	 * Returns the name of the variant of the given element.
+	 *
+	 * This method is not intended to be used to detect the current variant. It is rather intended to be used in
+	 * user-faced error messages exclusively.
+	 */
+	public String getVariantName(EObject eobj);
 
 	/**
 	 * Return true if dynamic pseudo scope should be activated.
@@ -275,5 +283,23 @@ public interface JavaScriptVariantHelper {
 	 *            The EObject providing the context to find out the variant mode.
 	 */
 	public String variantMode(EObject eobj);
+
+	/**
+	 * Return {@code true} if in the context of the given {@link EObject}, there can be distinct elements with the same
+	 * qualified name in a scope.
+	 */
+	public boolean isMultiQNScope(EObject eobj);
+
+	/**
+	 * Returns {@code true} if the script allows for the declaration and reference of versioned types as well as
+	 * corresponding migrations.
+	 */
+	public boolean allowVersionedTypes(EObject eobj);
+
+	/**
+	 * Returns {@code true} if the script allows for top-level statements as opposed to just type and function
+	 * declarations.
+	 */
+	public boolean allowTopLevelStatements(EObject eobj);
 
 }

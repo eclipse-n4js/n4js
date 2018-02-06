@@ -27,7 +27,6 @@ import org.eclipse.n4js.HeadlessCompilerFactory;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -45,9 +44,6 @@ public class ScenarioTest {
 
 	static final File workspace = new File("target/testscenarios");
 	static final File scenarioRepository = new File("testdata");
-
-	/** compiler path segment as "es" in "...src-gen/es/A/..." */
-	static final String CMPLR = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 
 	/**
 	 * Called once
@@ -131,16 +127,16 @@ public class ScenarioTest {
 
 		hlc.compileAllProjects(pProjectRoots);
 		// expect source-files:
-		assertExists(root, "wsp1/A/src-gen/" + CMPLR + "/A/packA/A.js");
-		assertExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B.js");
-		assertExists(root, "wsp3/C/src-gen/" + CMPLR + "/C/packC/C.js");
-		assertExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D.js");
-		assertExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D2.js");
-		assertExists(root, "nest/nest/wsp4/E/src-gen/" + CMPLR + "/E/packE/E.js");
-		assertExists(root, "nest/nest/wsp4/E/src-gen/" + CMPLR + "/E/packE/E2.js");
-		assertExists(root, "nest/wsp5/F/src-gen/" + CMPLR + "/F/packF/F.js");
-		assertExists(root, "wsp6/G/src-gen/" + CMPLR + "/G/packG/G.js");
-		assertExists(root, "nest/nest/wsp4/H/src-gen/" + CMPLR + "/H/packH/H.js");
+		assertExists(root, "wsp1/A/src-gen/packA/A.js");
+		assertExists(root, "nest/wsp2/B/src-gen/packB/B.js");
+		assertExists(root, "wsp3/C/src-gen/packC/C.js");
+		assertExists(root, "nest/wsp2/D/src-gen/packD/D.js");
+		assertExists(root, "nest/wsp2/D/src-gen/packD/D2.js");
+		assertExists(root, "nest/nest/wsp4/E/src-gen/packE/E.js");
+		assertExists(root, "nest/nest/wsp4/E/src-gen/packE/E2.js");
+		assertExists(root, "nest/wsp5/F/src-gen/packF/F.js");
+		assertExists(root, "wsp6/G/src-gen/packG/G.js");
+		assertExists(root, "nest/nest/wsp4/H/src-gen/packH/H.js");
 	}
 
 	/**
@@ -191,18 +187,18 @@ public class ScenarioTest {
 
 		hlc.compileProjects(pProjectRoots, toCompile);
 
-		assertNotExists(root, "wsp1/A/src-gen/" + CMPLR + "/A/packA/A.js");
-		assertNotExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B.js");
-		assertNotExists(root, "wsp3/C/src-gen/" + CMPLR + "/C/packC/C.js");
+		assertNotExists(root, "wsp1/A/src-gen/packA/A.js");
+		assertNotExists(root, "nest/wsp2/B/src-gen/packB/B.js");
+		assertNotExists(root, "wsp3/C/src-gen/packC/C.js");
 		// Only those both should be available
-		assertExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D.js");
-		assertExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D2.js");
+		assertExists(root, "nest/wsp2/D/src-gen/packD/D.js");
+		assertExists(root, "nest/wsp2/D/src-gen/packD/D2.js");
 
-		assertNotExists(root, "nest/nest/wsp4/E/src-gen/" + CMPLR + "/E/packE/E.js");
-		assertNotExists(root, "nest/nest/wsp4/E/src-gen/" + CMPLR + "/E/packE/E2.js");
-		assertNotExists(root, "nest/wsp5/F/src-gen/" + CMPLR + "/F/packF/F.js");
-		assertNotExists(root, "wsp6/G/src-gen/" + CMPLR + "/G/packG/G.js");
-		assertNotExists(root, "nest/nest/wsp4/H/src-gen/" + CMPLR + "/H/packH/H.js");
+		assertNotExists(root, "nest/nest/wsp4/E/src-gen/packE/E.js");
+		assertNotExists(root, "nest/nest/wsp4/E/src-gen/packE/E2.js");
+		assertNotExists(root, "nest/wsp5/F/src-gen/packF/F.js");
+		assertNotExists(root, "wsp6/G/src-gen/packG/G.js");
+		assertNotExists(root, "nest/nest/wsp4/H/src-gen/packH/H.js");
 	}
 
 	/**
@@ -221,10 +217,10 @@ public class ScenarioTest {
 		hlc.compileProjects(toCompile);
 
 		// those should be available
-		assertExists(root, "wsp1/A/src-gen/" + CMPLR + "/A/packA/A.js");
-		assertExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B.js");
-		assertExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D.js");
-		assertExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D2.js");
+		assertExists(root, "wsp1/A/src-gen/packA/A.js");
+		assertExists(root, "nest/wsp2/B/src-gen/packB/B.js");
+		assertExists(root, "nest/wsp2/D/src-gen/packD/D.js");
+		assertExists(root, "nest/wsp2/D/src-gen/packD/D2.js");
 
 	}
 
@@ -244,16 +240,16 @@ public class ScenarioTest {
 		hlc.compileProjects(toCompile);
 
 		// those should be available
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/Csrc1.js");
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X.js");
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X2.js");
+		assertExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
+		assertExists(root, "wsp1/P1/outfolder/c/X.js");
+		assertExists(root, "wsp1/P1/outfolder/c/X2.js");
 
 		// there should be no src-gen folder:
 		assertNotExists(root, "wsp1/P1/src-gen");
 
-		assertFileSystemCallStartsWith(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X.js",
+		assertFileSystemCallStartsWith(root, "wsp1/P1/outfolder/c/X.js",
 				"System.registerDynamic([");
-		assertFileSystemCallStartsNotWith(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X2.js",
+		assertFileSystemCallStartsNotWith(root, "wsp1/P1/outfolder/c/X2.js",
 				"System.register([");
 	}
 
@@ -273,15 +269,15 @@ public class ScenarioTest {
 		hlc.compileProjects(toCompile);
 
 		// those should be available
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X.js");
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X2.js");
+		assertExists(root, "wsp1/P1/outfolder/c/X.js");
+		assertExists(root, "wsp1/P1/outfolder/c/X2.js");
 
 		// there should be no src-gen folder:
 		assertNotExists(root, "wsp1/P1/src-gen");
 
-		assertFileSystemCallStartsWith(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X.js",
+		assertFileSystemCallStartsWith(root, "wsp1/P1/outfolder/c/X.js",
 				"System.registerDynamic([");
-		assertFileSystemCallStartsNotWith(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X2.js",
+		assertFileSystemCallStartsNotWith(root, "wsp1/P1/outfolder/c/X2.js",
 				"System.register([");
 	}
 
@@ -303,11 +299,11 @@ public class ScenarioTest {
 		hlc.compileProjects(toCompile);
 
 		// those should be available
-		assertNotExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/Csrc1.js");
-		assertNotExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X.js");
-		assertNotExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X2.js");
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/t/T1.js");
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/t/T2.js");
+		assertNotExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
+		assertNotExists(root, "wsp1/P1/outfolder/c/X.js");
+		assertNotExists(root, "wsp1/P1/outfolder/c/X2.js");
+		assertExists(root, "wsp1/P1/outfolder/t/T1.js");
+		assertExists(root, "wsp1/P1/outfolder/t/T2.js");
 
 		// there should be no src-gen folder:
 		assertNotExists(root, "wsp1/P1/src-gen");
@@ -332,11 +328,11 @@ public class ScenarioTest {
 		hlc.compileProjects(toCompile);
 
 		// those should be available
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/Csrc1.js");
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X.js");
-		assertExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/c/X2.js");
-		assertNotExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/t/T1.js");
-		assertNotExists(root, "wsp1/P1/outfolder/" + CMPLR + "/P1/t/T2.js");
+		assertExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
+		assertExists(root, "wsp1/P1/outfolder/c/X.js");
+		assertExists(root, "wsp1/P1/outfolder/c/X2.js");
+		assertNotExists(root, "wsp1/P1/outfolder/t/T1.js");
+		assertNotExists(root, "wsp1/P1/outfolder/t/T2.js");
 
 		// there should be no src-gen folder:
 		assertNotExists(root, "wsp1/P1/src-gen");
@@ -358,13 +354,13 @@ public class ScenarioTest {
 
 		hlc.compileSingleFiles(toCompile);
 
-		assertExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B2.js");
+		assertExists(root, "nest/wsp2/B/src-gen/packB/B2.js");
 
 		// those should be available
-		assertNotExists(root, "wsp1/A/src-gen/" + CMPLR + "/A/packA/A.js");
-		assertNotExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B.js");
-		assertNotExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D.js");
-		assertNotExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D2.js");
+		assertNotExists(root, "wsp1/A/src-gen/packA/A.js");
+		assertNotExists(root, "nest/wsp2/B/src-gen/packB/B.js");
+		assertNotExists(root, "nest/wsp2/D/src-gen/packD/D.js");
+		assertNotExists(root, "nest/wsp2/D/src-gen/packD/D2.js");
 
 	}
 
@@ -386,13 +382,13 @@ public class ScenarioTest {
 
 		hlc.compileSingleFiles(wspRoots, toCompile);
 
-		assertExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D2.js");
+		assertExists(root, "nest/wsp2/D/src-gen/packD/D2.js");
 
 		// those should be available
-		assertNotExists(root, "wsp1/A/src-gen/" + CMPLR + "/A/packA/A.js");
-		assertNotExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B.js");
-		assertNotExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B2.js");
-		assertNotExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D.js");
+		assertNotExists(root, "wsp1/A/src-gen/packA/A.js");
+		assertNotExists(root, "nest/wsp2/B/src-gen/packB/B.js");
+		assertNotExists(root, "nest/wsp2/B/src-gen/packB/B2.js");
+		assertNotExists(root, "nest/wsp2/D/src-gen/packD/D.js");
 
 	}
 
@@ -416,8 +412,8 @@ public class ScenarioTest {
 					msg.startsWith(expected));
 		}
 		// expect source-files (depends on the chosen build order algorithm):
-		assertExists(root, "wsp1/A/src-gen/" + CMPLR + "/A/packA/A.js");
-		assertExists(root, "wsp1/C/src-gen/" + CMPLR + "/C/packC/C.js");
+		assertExists(root, "wsp1/A/src-gen/packA/A.js");
+		assertExists(root, "wsp1/C/src-gen/packC/C.js");
 	}
 
 	// //////// //// /// / ///////// //// //// /// / ///////// //// //// /// / ///////// //// //// /// / ///////// ////

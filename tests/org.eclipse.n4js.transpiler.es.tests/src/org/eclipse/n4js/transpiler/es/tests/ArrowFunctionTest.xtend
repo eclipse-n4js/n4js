@@ -11,9 +11,18 @@
 package org.eclipse.n4js.transpiler.es.tests
 
 import com.google.inject.Inject
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
-import org.eclipse.n4js.n4JS.Script
+import java.math.BigDecimal
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.n4JS.ArrowFunction
+import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.FunctionExpression
+import org.eclipse.n4js.n4JS.IntLiteral
+import org.eclipse.n4js.n4JS.ParameterizedCallExpression
+import org.eclipse.n4js.n4JS.ReturnStatement
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -22,17 +31,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 
-
 import static extension org.junit.Assert.*
-import org.eclipse.n4js.n4JS.ArrowFunction
-import org.eclipse.n4js.n4JS.FunctionExpression
-import org.eclipse.n4js.n4JS.ParameterizedCallExpression
-import org.eclipse.n4js.n4JS.IntLiteral
-import org.eclipse.n4js.n4JS.ExpressionStatement
-import java.math.BigDecimal
-import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.n4js.n4JS.ReturnStatement
-import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 
 /**
  */

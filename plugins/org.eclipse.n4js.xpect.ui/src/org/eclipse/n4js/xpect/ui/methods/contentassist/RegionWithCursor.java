@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.xpect.ui.methods.contentassist;
 
-import org.xpect.XpectImport;
-import org.xpect.XpectInvocation;
-import org.xpect.parameter.DerivedRegion;
-import org.xpect.parameter.IStatementRelatedRegion;
-import org.xpect.parameter.StringRegion;
-import org.xpect.setup.XpectSetupFactory;
-import org.xpect.state.Creates;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.XpectInvocation;
+import org.eclipse.xpect.parameter.DerivedRegion;
+import org.eclipse.xpect.parameter.IStatementRelatedRegion;
+import org.eclipse.xpect.parameter.StringRegion;
+import org.eclipse.xpect.setup.XpectSetupFactory;
+import org.eclipse.xpect.state.Creates;
 
 /**
  * Region with global Cursor. The cursor is not necessarily inside of the region.

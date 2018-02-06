@@ -14,11 +14,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
-import org.xpect.expectation.IStringExpectation;
-import org.xpect.expectation.StringExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
-import org.xpect.xtext.lib.setup.ThisResource;
+import org.eclipse.xpect.expectation.IStringExpectation;
+import org.eclipse.xpect.expectation.StringExpectation;
+import org.eclipse.xpect.parameter.ParameterParser;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;

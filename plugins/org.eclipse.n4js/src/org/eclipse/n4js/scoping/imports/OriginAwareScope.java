@@ -16,10 +16,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.scoping.UsageAwareObjectDescription;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.IResourceScopeCache;
+
+import com.google.common.collect.Iterables;
 
 /**
  * Delegating Scope holding a map of {@link IEObjectDescription} to {@link ImportSpecifier}. Queries via
@@ -66,45 +70,16 @@ public class OriginAwareScope implements IScope {
 			if ((script instanceof Script) && ((Script) script).isFlaggedUsageMarkingFinished()) {
 				// do nothing as linking phase is over
 			} else {
-				markAsUsed(origin);
-
-				// TODO: Mark Twin-Ambiguous as well as used.
-				if (ret instanceof AmbiguousImportDescription) {
-					AmbiguousImportDescription ambiguousImportDescription = (AmbiguousImportDescription) ret;
-					for (ImportSpecifier ispec : ambiguousImportDescription.getOriginatingImports()) {
-						markAsUsed(ispec);
-					}
-				} else if (ret instanceof PlainAccessOfAliasedImportDescription) {
-					PlainAccessOfAliasedImportDescription plainAccess = (PlainAccessOfAliasedImportDescription) ret;
-					ImportSpecifier plainImport = origins.get(plainAccess.delegate());
-					if (plainImport != null)
-						markAsUsed(plainImport);
-				}
+				// return usage aware description
+				return getUsageAwareDescription(ret);
 			}
 		}
 		return ret;
 	}
 
-	/**
-	 * Mark the import specifier as used without throwing an event. This preserves the cached data in the
-	 * {@link IResourceScopeCache}.
-	 *
-	 * @param origin
-	 *            the import specific to be marked as used. May not be null.
-	 */
-	private void markAsUsed(ImportSpecifier origin) {
-		boolean wasDeliver = origin.eDeliver();
-		try {
-			origin.eSetDeliver(false);
-			origin.setFlaggedUsedInCode(true);
-		} finally {
-			origin.eSetDeliver(wasDeliver);
-		}
-	}
-
 	@Override
 	public Iterable<IEObjectDescription> getElements(QualifiedName name) {
-		return delegatee.getElements(name);
+		return Iterables.transform(delegatee.getElements(name), this::getUsageAwareDescription);
 	}
 
 	@Override
@@ -120,6 +95,133 @@ public class OriginAwareScope implements IScope {
 	@Override
 	public Iterable<IEObjectDescription> getAllElements() {
 		return delegatee.getAllElements();
+	}
+
+	private IEObjectDescription getUsageAwareDescription(IEObjectDescription original) {
+		ImportSpecifier origin = origins.get(original);
+		if (origin != null) {
+			EObject script = EcoreUtil.getRootContainer(origin);
+			if ((script instanceof Script) && ((Script) script).isFlaggedUsageMarkingFinished()) {
+				// do nothing as linking phase is over
+			} else {
+				// TODO: Mark Twin-Ambiguous as well as used.
+				if (original instanceof AmbiguousImportDescription) {
+					AmbiguousImportDescription ambiguousImportDescription = (AmbiguousImportDescription) original;
+					return new UsageAwareAmbiguousImportDescription(ambiguousImportDescription);
+				} else if (original instanceof PlainAccessOfAliasedImportDescription) {
+					PlainAccessOfAliasedImportDescription plainAccess = (PlainAccessOfAliasedImportDescription) original;
+					return new UsageAwarePlainAccessOfAliasedImportDescription(plainAccess);
+				} else {
+					if (IEObjectDescriptionWithError.isErrorDescription(original)) {
+						return new UsageAwareImportDescriptionWithError<>(
+								(IEObjectDescriptionWithError) original);
+					} else {
+						return new UsageAwareImportDescription<>(original);
+					}
+
+				}
+			}
+		}
+		return original;
+	}
+
+	/**
+	 * A {@link UsageAwareObjectDescription} that invokes
+	 * {@link OriginAwareScope#markImportSpecifierAsUsed(ImportSpecifier)} in case a name is bound using this
+	 * description.
+	 */
+	private class UsageAwareImportDescription<T extends IEObjectDescription> extends UsageAwareObjectDescription<T> {
+		/**
+		 *
+		 */
+		public UsageAwareImportDescription(T delegate) {
+			super(delegate);
+		}
+
+		@Override
+		public void markAsUsed() {
+			markImportSpecifierAsUsed(origins.get(this.getDelegate()));
+		}
+
+		@Override
+		public String toString() {
+			return getDelegate().toString();
+		}
+	}
+
+	private class UsageAwareImportDescriptionWithError<T extends IEObjectDescriptionWithError>
+			extends UsageAwareImportDescription<T> implements IEObjectDescriptionWithError {
+
+		/** */
+		public UsageAwareImportDescriptionWithError(T delegate) {
+			super(delegate);
+		}
+
+		@Override
+		public String getMessage() {
+			return getDelegate().getMessage();
+		}
+
+		@Override
+		public String getIssueCode() {
+			return getDelegate().getIssueCode();
+		}
+
+	}
+
+	private class UsageAwarePlainAccessOfAliasedImportDescription
+			extends UsageAwareImportDescriptionWithError<PlainAccessOfAliasedImportDescription> {
+
+		/**
+		 */
+		public UsageAwarePlainAccessOfAliasedImportDescription(PlainAccessOfAliasedImportDescription delegate) {
+			super(delegate);
+		}
+
+		@Override
+		public void markAsUsed() {
+			super.markAsUsed();
+
+			ImportSpecifier plainImport = origins.get(this.getDelegate().delegate());
+			if (plainImport != null)
+				markImportSpecifierAsUsed(plainImport);
+		}
+
+	}
+
+	private class UsageAwareAmbiguousImportDescription
+			extends UsageAwareImportDescriptionWithError<AmbiguousImportDescription> {
+
+		public UsageAwareAmbiguousImportDescription(AmbiguousImportDescription delegate) {
+			super(delegate);
+		}
+
+		@Override
+		public void markAsUsed() {
+			super.markAsUsed();
+
+			for (ImportSpecifier ispec : getDelegate().getOriginatingImports()) {
+				markImportSpecifierAsUsed(ispec);
+			}
+		}
+
+	}
+
+	/**
+	 * Mark the import specifier as used without throwing an event. This preserves the cached data in the
+	 * {@link IResourceScopeCache}.
+	 *
+	 * @param origin
+	 *            the import specific to be marked as used. May not be null.
+	 */
+	private void markImportSpecifierAsUsed(ImportSpecifier origin) {
+		boolean wasDeliver = origin.eDeliver();
+		try {
+			origin.eSetDeliver(false);
+			origin.setFlaggedUsedInCode(true);
+		} finally {
+			origin.eSetDeliver(wasDeliver);
+		}
 	}
 
 	@Override

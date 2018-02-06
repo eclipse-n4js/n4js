@@ -18,6 +18,7 @@ import org.eclipse.n4js.ApiImplCompareTestHelper
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.compare.ProjectCompareHelper
 import org.eclipse.n4js.n4mf.N4mfFactory
+import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.ui.compare.ProjectCompareTreeHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -29,7 +30,7 @@ import org.junit.runner.RunWith
 
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature
 
-import static extension org.eclipse.n4js.tests.util.ProjectUtils.*
+import static extension org.eclipse.n4js.tests.util.ProjectTestsUtils.*
 
 /**
  * Tests for the API / implementation compare logic (not for the UI part!).
@@ -84,14 +85,14 @@ class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
 	public def void testMultipleImplementationsWithSameId() {
 		val clashIdApi = "org.eclipse.clash.api";
 		val IProject pApi = createJSProject(clashIdApi)
-		val IProject pImpl1 = createJSProject("org.eclipse.clash.n4js","src","src-gen",[pd|
+		val IProject pImpl1 = ProjectTestsUtils.createJSProject("org.eclipse.clash.n4js","src","src-gen",[pd|
 			if (null === pd.implementedProjects) {
 				pd.implementedProjects = N4mfFactory.eINSTANCE.createImplementedProjects;
 			}
 			pd.implementationId = "impl.n4js"
 			pd.implementedProjects.implementedProjects += createProjectReference(clashIdApi)
 		])
-		val IProject pImpl2 = createJSProject("org.eclipse.clash.ios","src","src-gen",[pd|
+		val IProject pImpl2 = ProjectTestsUtils.createJSProject("org.eclipse.clash.ios","src","src-gen",[pd|
 			if (null === pd.implementedProjects) {
 				pd.implementedProjects = N4mfFactory.eINSTANCE.createImplementedProjects;
 			}

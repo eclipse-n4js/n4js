@@ -28,6 +28,7 @@ import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.link.LinkedModeUI;
 import org.eclipse.jface.text.link.LinkedPosition;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -70,6 +71,9 @@ public class FQNImporter extends ReplacementTextApplier {
 	 */
 	public static final String KEY_QUALIFIED_NAME = FQNImporter.class.getName() + "#QUALIFIED_NAME";
 
+	/** The original qualified name, used for looking up in the scope. */
+	public static final String KEY_ORIGINAL_QUALIFIED_NAME = FQNImporter.class.getName() + "#ORIGINAL_QUALIFIED_NAME";
+
 	private static final Logger logger = Logger.getLogger(FQNImporter.class);
 
 	@Inject
@@ -77,6 +81,9 @@ public class FQNImporter extends ReplacementTextApplier {
 
 	@Inject
 	private ImportRewriter.Factory importRewriterFactory;
+
+	@Inject
+	IN4JSCore n4jsCore;
 
 	/**
 	 * Factory class for {@link FQNImporter}.
@@ -218,6 +225,9 @@ public class FQNImporter extends ReplacementTextApplier {
 		}
 
 		final QualifiedName qualifiedName = (QualifiedName) proposal.getAdditionalData(KEY_QUALIFIED_NAME);
+		final QualifiedName originalQualifiedName = (QualifiedName) proposal
+				.getAdditionalData(KEY_ORIGINAL_QUALIFIED_NAME);
+
 		if (qualifiedName == null) {
 			super.apply(document, proposal);
 			return;
@@ -238,7 +248,7 @@ public class FQNImporter extends ReplacementTextApplier {
 		}
 
 		String alias = null;
-		String shortQName = lastSegmentOrDefaultHost(qualifiedName);
+		String shortQName = lastSegmentOrDefaultHost(originalQualifiedName);
 		IEObjectDescription descriptionFullQN = scope
 				.getSingleElement(QualifiedName.create(shortQName));
 
@@ -260,7 +270,7 @@ public class FQNImporter extends ReplacementTextApplier {
 
 			// the simple name is already reachable - another import is present
 			// try to use an alias
-			IEObjectDescription description = scope.getSingleElement(qualifiedName);
+			IEObjectDescription description = scope.getSingleElement(originalQualifiedName);
 			IEObjectDescription existingAliased = findApplicableDescription(description.getEObjectOrProxy(),
 					qualifiedName, false);
 

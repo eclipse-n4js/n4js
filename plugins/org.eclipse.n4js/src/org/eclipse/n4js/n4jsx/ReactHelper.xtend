@@ -11,10 +11,8 @@
 package org.eclipse.n4js.n4jsx
 
 import com.google.inject.Inject
-import java.io.File
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
@@ -47,22 +45,13 @@ class ReactHelper {
 	@Inject private IScopeProvider scopeProvider;
 
 	public final static String REACT_PROJECT_ID = "react"
-	public final static String REACT_FILE_NAME = "index"
 	public final static String REACT_COMPONENT = "Component"
 	public final static String REACT_ELEMENT = "Element"
 
-	public final static String REACT_NAMESPACE = REACT_PROJECT_ID.toFirstUpper;
-	public final static String REACT_SCOPE_PREFIX = REACT_FILE_NAME
-	public final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
-	public final static String REACT_DEFINITION_FILE = REACT_PROJECT_ID + File.separatorChar + REACT_FILE_NAME + "." +
-		N4JSGlobals.N4JSD_FILE_EXTENSION
+	public final static String REACT_NAMESPACE_NAME = REACT_PROJECT_ID.toFirstUpper;
+	public final static String REACT_ELEMENT_FACTORY_FUNCTION_NAME = "createElement";
 
-	/**
-	 * Check if a module is a React module.
-	 */
-	def public boolean isReactModule(TModule module) {
-		return (module !== null && REACT_PROJECT_ID.equals(module.projectId))
-	}
+	private final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
 
 	/**
 	 * Look up React.Element in the index.

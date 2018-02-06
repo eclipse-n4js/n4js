@@ -12,8 +12,8 @@ package org.eclipse.n4js.generator;
 
 import java.util.Map;
 
-import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.n4js.utils.IComponentProperties;
+import org.eclipse.xtext.generator.OutputConfiguration;
 
 /**
  * Compiler properties to be used to generically build up the compiler configuration preference pages.
@@ -34,6 +34,7 @@ public enum CompilerProperties implements IComponentProperties<CompilerDescripto
 			return compilerDescriptor.isActive();
 		}
 	},
+
 	/** the file extension to use for the compiled file */
 	COMPILED_FILE_EXTENSION("compiledFileExtension", "Extension to use for compiled file", String.class, true, false) {
 		@Override

@@ -11,25 +11,24 @@
 package org.eclipse.n4js.xpect.common;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegionProvider;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.XpectInvocation;
+import org.eclipse.xpect.parameter.OffsetRegion;
+import org.eclipse.xpect.setup.XpectSetupFactory;
+import org.eclipse.xpect.state.Creates;
+import org.eclipse.xpect.text.IRegion;
+import org.eclipse.xpect.xtext.lib.setup.ThisResource;
+import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
-import org.xpect.XpectImport;
-import org.xpect.XpectInvocation;
-import org.xpect.parameter.OffsetRegion;
-import org.xpect.setup.XpectSetupFactory;
-import org.xpect.state.Creates;
-import org.xpect.text.IRegion;
-import org.xpect.xtext.lib.setup.ThisResource;
-import org.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
-
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegionProvider;
 
 /**
  * Extension of default parameter adapter providing support for {@link IEObjectCoveringRegion}, which basically is an
  * offset adapter taking the length of the location into account.
  *
- * This adapter needs to be added to a test via annotation {@link org.xpect.XpectImport}, i.e.
+ * This adapter needs to be added to a test via annotation {@link org.eclipse.xpect.XpectImport}, i.e.
  * {@code @XpectImport(N4JSOffsetAdapter.class)}.
  */
 @XpectSetupFactory

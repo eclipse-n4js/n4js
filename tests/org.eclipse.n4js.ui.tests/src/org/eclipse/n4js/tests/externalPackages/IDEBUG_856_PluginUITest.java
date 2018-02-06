@@ -21,7 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
 import org.junit.After;
@@ -58,7 +58,7 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 		super.setUp();
 		shippedCodeInitializeTestHelper.setupBuiltIns();
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-		ProjectUtils.importProject(projectsRoot, PROJECT);
+		ProjectTestsUtils.importProject(projectsRoot, PROJECT);
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 		assertTrue("Cannot access project: " + project, project.isAccessible());
 	}

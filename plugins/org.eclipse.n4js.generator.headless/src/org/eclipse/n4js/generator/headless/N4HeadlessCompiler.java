@@ -468,6 +468,9 @@ public class N4HeadlessCompiler {
 		// Register all projects with the file based workspace.
 		for (URI projectURI : projectURIs) {
 			try {
+				if (logger.isCreateDebugOutput()) {
+					logger.debug("Registering project '" + projectURI + "'");
+				}
 				n4jsFileBasedWorkspace.registerProject(projectURI);
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);
@@ -1005,10 +1008,21 @@ public class N4HeadlessCompiler {
 			logger.debug("Loading project " + markedProject.project.getProjectId());
 		}
 
+		/*
+		 * GH-448: We need to populate the index in two passes. The first pass installs prelinking modules which are
+		 * necessary for post processing. The second pass installs full modules created from fully initialized
+		 * resources.
+		 */
+
 		collectResources(markedProject, resSet, recorder);
 		loadResources(markedProject, recorder);
+
+		// First indexing pass.
 		indexResources(markedProject, resSet);
 		postProcessResources(markedProject);
+
+		// Second indexing pass - now the index is valid.
+		indexResources(markedProject, resSet);
 	}
 
 	/**
@@ -1181,14 +1195,14 @@ public class N4HeadlessCompiler {
 		IResourceServiceProvider serviceProvider = IResourceServiceProvider.Registry.INSTANCE
 				.getResourceServiceProvider(uri);
 		if (serviceProvider != null) {
+			if (logger.isCreateDebugOutput()) {
+				logger.debug("  Indexing resource " + uri);
+			}
+
 			IResourceDescription.Manager resourceDescriptionManager = serviceProvider.getResourceDescriptionManager();
 			IResourceDescription resourceDescription = resourceDescriptionManager.getResourceDescription(resource);
 
 			if (resourceDescription != null) {
-				if (logger.isCreateDebugOutput()) {
-					logger.debug("  Indexing resource " + uri);
-				}
-
 				index.addDescription(uri, resourceDescription);
 			}
 		}
@@ -1814,7 +1828,6 @@ public class N4HeadlessCompiler {
 			Iterables.filter(resources, resource -> resource.isLoaded()).forEach(resource -> {
 				if (resource instanceof N4JSResource) {
 					N4JSResource n4jsResource = (N4JSResource) resource;
-
 					n4jsResource.unloadAST();
 				}
 			});

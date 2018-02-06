@@ -12,7 +12,7 @@ package org.eclipse.n4js.xpect.ui.methods.contentassist;
 
 import java.lang.annotation.Annotation;
 
-import org.xpect.expectation.CommaSeparatedValuesExpectation;
+import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
 
 import com.google.common.base.Function;
 

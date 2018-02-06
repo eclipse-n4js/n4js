@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.CoreException
 import org.eclipse.xtext.util.Files
 import org.junit.Test
 
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
+import static org.eclipse.n4js.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild
 
@@ -38,7 +38,7 @@ class IDEBUG_650_PluginUITest extends AbstractIDEBUG_Test {
 		LOGGER.info('Full clean build successfully completed.');
 		val IProject project = getWorkspace.root.getProject('A');
 		val IFile file = project.
-			getFile('''src-gen/«ES5_SUB_GENERATOR_ID»/A/n4/model/common/TimezoneRegion.js''');
+			getFile('''src-gen/n4/model/common/TimezoneRegion.js''');
 		assertTrue('TimezoneRegion.js compiled file does not exist.', file.exists);
 
 		val actualContent = Files.readFileIntoString(file.location.toFile.absolutePath);

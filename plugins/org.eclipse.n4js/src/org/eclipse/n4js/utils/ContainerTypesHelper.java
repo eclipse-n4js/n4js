@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.TMemberEntry;
 import org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource;
@@ -92,11 +91,6 @@ public class ContainerTypesHelper {
 
 	@Inject
 	private IResourceScopeCache cache;
-
-	/**
-	 * Injected to gain access for users of this class.
-	 */
-	public @Inject ProjectUtils projectUtils;
 
 	/**
 	 * Returns a new member collector to collect members available in the current context. The available members are

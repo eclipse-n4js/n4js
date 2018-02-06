@@ -32,8 +32,8 @@ import org.eclipse.xtext.nodemodel.impl.SyntheticCompositeNode;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.util.ReplaceRegion;
-import org.xpect.runner.Xpect;
-import org.xpect.xtext.lib.setup.ThisResource;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Provider;

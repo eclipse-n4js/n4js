@@ -16,7 +16,7 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,6 +34,7 @@ import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerDescriptorImpl;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Splitter;
@@ -85,6 +86,9 @@ public class NodeRunner implements IRunner {
 	@Inject
 	private RunnerFileBasedShippedCodeConfigurationHelper shippedCodeConfigurationHelper;
 
+	@Inject
+	private Provider<NodeRunOptions> nodeRunOptionsProvider;
+
 	@Override
 	public RunConfiguration createConfiguration() {
 		return new RunConfiguration();
@@ -109,29 +113,21 @@ public class NodeRunner implements IRunner {
 		Process process = null;
 		String[] cmds = new String[0];
 		try {
-			NodeRunOptions runOptions = new NodeRunOptions();
+			NodeRunOptions runOptions = createRunOptions(runConfig);
 
-			runOptions.setExecModule(runConfig.getExecModule());
-			runOptions.addInitModules(runConfig.getInitModules());
-			runOptions.setCoreProjectPaths(on(NODE_PATH_SEP).join(runConfig.getCoreProjectPaths()));
-			runOptions.setEngineOptions(runConfig.getEngineOptions());
-			runOptions.setCustomEnginePath(runConfig.getCustomEnginePath());
-			runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
-			runOptions.setSystemLoader(SystemLoaderInfo.fromString(runConfig.getSystemLoader()));
+			Path workingDirectory = FileUtils.createTempDirectory("N4JSNodeRun");
+
+			NodeEngineCommandBuilder cb = commandBuilderProvider.get();
+			cmds = cb.createCmds(runOptions, workingDirectory);
 
 			final Collection<String> paths = newLinkedHashSet();
-			// Add custom node paths
 			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
 					.split(runConfig.getCustomEnginePath())));
 
-			NodeEngineCommandBuilder cb = commandBuilderProvider.get();
-			cmds = cb.createCmds(runOptions);
-
-			File workingDirectory = Files.createTempDirectory(null).toFile();
-
-			paths.addAll(runConfig.getCoreProjectPaths());
 			if (runConfig.getAdditionalPath() != null && !runConfig.getAdditionalPath().isEmpty())
 				paths.add(runConfig.getAdditionalPath());
+
+			paths.add(workingDirectory.resolve("node_modules").toAbsolutePath().toString());
 
 			String nodePaths = on(NODE_PATH_SEP).join(paths);
 
@@ -140,11 +136,27 @@ public class NodeRunner implements IRunner {
 
 			env = nodeJsBinary.updateEnvironment(env);
 
-			process = executor.exec(cmds, workingDirectory, env);
+			process = executor.exec(cmds, workingDirectory.toFile(), env);
 
 		} catch (IOException | RuntimeException | ExecutionException e) {
 			LOGGER.error(e);
 		}
 		return process;
+	}
+
+	/**
+	 * Creates the {@link NodeRunOptions} based on the given {@link RunConfiguration}.
+	 */
+	protected NodeRunOptions createRunOptions(RunConfiguration runConfig) {
+		NodeRunOptions runOptions = nodeRunOptionsProvider.get();
+
+		runOptions.setExecModule(runConfig.getExecModule());
+		runOptions.addInitModules(runConfig.getInitModules());
+		runOptions.setCoreProjectPaths(on(NODE_PATH_SEP).join(runConfig.getCoreProjectPaths()));
+		runOptions.setEngineOptions(runConfig.getEngineOptions());
+		runOptions.setCustomEnginePath(runConfig.getCustomEnginePath());
+		runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
+		runOptions.setSystemLoader(SystemLoaderInfo.fromString(runConfig.getSystemLoader()));
+		return runOptions;
 	}
 }

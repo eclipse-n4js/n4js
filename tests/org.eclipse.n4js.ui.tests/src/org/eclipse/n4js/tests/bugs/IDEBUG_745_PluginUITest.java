@@ -20,7 +20,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.junit.Test;
 
 /**
@@ -46,8 +46,8 @@ public class IDEBUG_745_PluginUITest extends AbstractIDEBUG_Test {
 		assertNotNull("Cannot find file: client.src/ClientTwo.n4js.", clientTwo);
 		assertTrue("File: client.src/ClientTwo.n4js dose not exist.", clientTwo.exists());
 
-		ProjectUtils.assertMarkers("Expected 0 validation issues.", clientOne, 0);
-		ProjectUtils.assertMarkers("Expected 0 validation issues.", clientTwo, 0);
+		ProjectTestsUtils.assertMarkers("Expected 0 validation issues.", clientOne, 0);
+		ProjectTestsUtils.assertMarkers("Expected 0 validation issues.", clientTwo, 0);
 	}
 
 	@Override

@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.xpect.validation.suppression
 
-import org.xpect.XpectImport
-import org.xpect.setup.XpectSetupRoot
-import org.xpect.xtext.lib.setup.InjectorSetup
+import org.eclipse.xpect.XpectImport
+import org.eclipse.xpect.setup.XpectSetupRoot
+import org.eclipse.xpect.xtext.lib.setup.InjectorSetup
 
 /**
  * An xpect setup root which allows to configure a {@link SuppressIssuesSetup}.

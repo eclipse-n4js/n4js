@@ -35,8 +35,7 @@ public class IDEBUG_647_PluginUITest extends AbstractIDEBUG_Test {
 		final IProject project = getWorkspace().getRoot().getProject("org.eclipse.n4js.lib.model.common");
 
 		final IFile file = project.getFile(
-				"src-gen/" + ES5_SUB_GENERATOR_ID
-						+ "/org.eclipse.n4js.lib.model.common/n4/model/common/TimezoneRegion.js");
+				"src-gen/n4/model/common/TimezoneRegion.js");
 		assertTrue("TimezoneRegion.js compiled file does not exist.", file.exists());
 	}
 

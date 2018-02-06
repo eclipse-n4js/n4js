@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static java.util.Collections.singletonMap;
-import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
@@ -67,7 +66,7 @@ public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()
 		};
-		final String out = runCaptureOut(args);
+		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(
 				"express properties: application, request, response, Route, Router, query, static", out);
 	}

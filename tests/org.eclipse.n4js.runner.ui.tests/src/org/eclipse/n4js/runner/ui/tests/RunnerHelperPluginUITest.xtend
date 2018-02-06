@@ -17,7 +17,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.runner.RunnerHelper
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.tests.util.ProjectUtils
+import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -82,7 +82,7 @@ class RunnerHelperPluginUITest extends AbstractBuilderParticipantTest {
 	 */
 	private def getClosedProjectRef() {
 		try {
-			val project = ProjectUtils.createJSProject(PROJECT_NAME);
+			val project = ProjectTestsUtils.createJSProject(PROJECT_NAME);
 			val srcFolder = project.getFolder('src');
 			createTestFile(srcFolder, 'A', '''console.log('foo');''');
 			waitForAutoBuild;

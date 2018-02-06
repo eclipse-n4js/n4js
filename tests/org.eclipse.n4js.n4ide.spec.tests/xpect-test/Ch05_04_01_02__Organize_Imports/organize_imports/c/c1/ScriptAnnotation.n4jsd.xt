@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.n4ide.spec.tests.N4JSXpectPluginUITest
    Workspace {
-   	 Project "P1" {
+   	 Project "RTL" {
    	 	Folder "src" {
  	 	 	File "URLUtils.n4jsd" { from="../../a/URLUtils.n4jsd"}
  	 	 	ThisFile {}

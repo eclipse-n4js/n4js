@@ -28,7 +28,7 @@ import org.eclipse.n4js.runner.RunnerFileBasedShippedCodeConfigurationHelper;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.junit.After;
 import org.junit.Before;
@@ -111,7 +111,7 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 	public void testBootstrapConfiguration() throws Exception {
 
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-		ProjectUtils.importProject(projectsRoot, CLIENT);
+		ProjectTestsUtils.importProject(projectsRoot, CLIENT);
 		waitForAutoBuild();
 
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(NODE_RUNNER_ID,

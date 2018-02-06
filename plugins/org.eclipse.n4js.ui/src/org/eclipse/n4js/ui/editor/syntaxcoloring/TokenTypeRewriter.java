@@ -166,7 +166,6 @@ public class TokenTypeRewriter implements PseudoTokens {
 		rewriteAnnotationReferences(ga, builder);
 		rewriteTypeReferences(ga, builder);
 		rewriteIdentifiers(ga, builder);
-		rewriteEnumLiterals(ga, builder);
 		rewriteTypeVariables(ga, builder);
 		rewriteNumberLiterals(ga, builder);
 		rewriteKeywords(ga, builder);
@@ -207,11 +206,6 @@ public class TokenTypeRewriter implements PseudoTokens {
 			ImmutableMap.Builder<AbstractElement, Integer> builder) {
 		builder.put(ga.getTemplateExpressionEndAccess().getRightCurlyBracketKeyword(),
 				InternalN4JSParser.RULE_TEMPLATE_CONTINUATION);
-	}
-
-	private static void rewriteEnumLiterals(N4JSGrammarAccess ga,
-			ImmutableMap.Builder<AbstractElement, Integer> builder) {
-		builder.put(ga.getN4EnumLiteralAccess().getNameAssignment_0(), ENUM_LITERAL_TOKEN);
 	}
 
 	private static void rewriteTypeVariables(N4JSGrammarAccess ga,

@@ -15,10 +15,11 @@ import java.nio.file.Path;
 
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.naming.QualifiedNameComputer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.print.PrettyPrinter;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 
@@ -56,7 +57,7 @@ public abstract class AbstractTranspiler {
 	private ScopeManager scopeManager;
 
 	@Inject
-	private QualifiedNameComputer qnComputer;
+	private ResourceNameComputer resourceNameComputer;
 
 	@Inject
 	private TranspilerDebugUtils transpilerDebugUtils;
@@ -114,7 +115,7 @@ public abstract class AbstractTranspiler {
 		public String resolve(N4JSResource eResource) {
 			if (isExplicitSourceRef) {
 				//
-				String completeSpecifier = qnComputer.getCompleteModuleSpecifier(eResource.getModule());
+				String completeSpecifier = resourceNameComputer.getCompleteModuleSpecifier(eResource.getModule());
 				String fileExtension = eResource.getURI().fileExtension();
 				String specifierAsFile = fileExtension == null ? completeSpecifier
 						: completeSpecifier + "." + fileExtension;
@@ -146,12 +147,20 @@ public abstract class AbstractTranspiler {
 		// step 1: create initial transpiler state (i.e. create intermediate model, etc.)
 		final TranspilerState state = prepare(resource, options);
 
-		// step 2: execute all transformations on the transpiler state
-		transform(state);
+		try {
 
-		// step 3: pretty-print the intermediate model + emit source maps (optional)
-		final Optional<String> optPreamble = getPreamble();
-		prettyPrint(state, outCode, optPreamble, optSourceMapInfo);
+			// step 2: execute all transformations on the transpiler state
+			transform(state);
+
+			// step 3: pretty-print the intermediate model + emit source maps (optional)
+			final Optional<String> optPreamble = getPreamble();
+			prettyPrint(state, outCode, optPreamble, optSourceMapInfo);
+
+		} finally {
+
+			// step 4: clean up temporary types (if any)
+			cleanUpTemporaryTypes(state);
+		}
 	}
 
 	/**
@@ -237,6 +246,18 @@ public abstract class AbstractTranspiler {
 	protected void prettyPrint(TranspilerState state, Writer outCode, Optional<String> optPreamble,
 			Optional<SourceMapInfo> optSourceMapInfo) {
 		prettyPrintingStep.print(state, outCode, optPreamble, optSourceMapInfo);
+	}
+
+	/**
+	 * Clears reference {@link TModule#getTemporaryTypes() temporaryTypes} of the <code>TModule</code> of the given
+	 * state's resource.
+	 * <p>
+	 * Motivation: transformations often have to create temporary types (e.g., when creating new namespace imports) and
+	 * by clearing all temporary types after transpilation we relieve the individual transformations of the burden of
+	 * handling removal themselves.
+	 */
+	protected void cleanUpTemporaryTypes(TranspilerState state) {
+		state.resource.clearTemporaryTypes();
 	}
 
 	/**

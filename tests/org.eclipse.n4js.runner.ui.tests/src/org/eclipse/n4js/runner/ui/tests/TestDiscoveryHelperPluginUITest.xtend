@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.tester.TestDiscoveryHelper
 import org.eclipse.n4js.tests.builder.AbstractBuilderTest
-import org.eclipse.n4js.tests.util.ProjectUtils
+import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -43,7 +43,7 @@ class TestDiscoveryHelperPluginUITest extends AbstractBuilderTest {
 	@Test
 	def void testNoErrorsForClosedProjects() throws CoreException {
 
-		val project = ProjectUtils.createJSProject(PROJECT_NAME);
+		val project = ProjectTestsUtils.createJSProject(PROJECT_NAME);
 		waitForAutoBuild;
 		val n4Project = create(PROJECT_URI);
 		assertTrue('''Cannot find N4JS project '«project.name»' in the workspace.''', null !== n4Project);

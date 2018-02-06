@@ -23,13 +23,16 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuilderHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -75,6 +78,8 @@ public abstract class AbstractBuilderTest {
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+	@Inject
+	private ExternalLibraryBuilderHelper externalLibraryBuilderHelper;
 
 	/***/
 	@Before
@@ -201,8 +206,8 @@ public abstract class AbstractBuilderTest {
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		ProjectUtils.waitForAutoBuild();
-		ProjectUtils.waitForAllJobs();
+		ProjectTestsUtils.waitForAutoBuild();
+		ProjectTestsUtils.waitForAllJobs();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}
@@ -257,24 +262,21 @@ public abstract class AbstractBuilderTest {
 	}
 
 	/**
-	 * Performs some general validity checks on the Xtext index.
+	 * Performs some general validity checks on the Xtext index. Only intended to be used in tests (e.g. no support for
+	 * cancellation).
 	 */
 	protected void assertXtextIndexIsValid() {
-		// first throw away check, for sync purposes
-		if (getIndexData().length() != 0) {
-			try {
-				Thread.sleep(100);
-				ProjectUtils.waitForAllJobs();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		// ensure no build is running while we examine the Xtext index
+		final ISchedulingRule rule = externalLibraryBuilderHelper.getRule();
+		try {
+			Job.getJobManager().beginRule(rule, null);
+			assertXtextIndexIsValidInternal();
+		} finally {
+			Job.getJobManager().endRule(rule);
 		}
-		String indexData = getIndexData();
-		assertTrue(indexData, 0 == indexData.length());
 	}
 
-	private String getIndexData() {
+	private void assertXtextIndexIsValidInternal() {
 		final IResourceDescriptions index = getXtextIndex();
 		final StringBuilder sb = new StringBuilder();
 		for (IResourceDescription desc : index.getAllResourceDescriptions()) {
@@ -285,10 +287,8 @@ public abstract class AbstractBuilderTest {
 				sb.append(ResourceDescriptionWithoutModuleUserData.class.getSimpleName());
 				sb.append(" but it was. URI: ");
 				sb.append(desc.getURI());
-				sb.append(", ");
-				sb.append(desc.toString());
 			}
 		}
-		return sb.toString();
+		assertTrue(sb.toString(), 0 == sb.length());
 	}
 }
