@@ -34,6 +34,8 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 
 /**
+ * This analyzer detects and holds information about all instanceof guards at a given source location. It differentiates
+ * between instanceof guards that always, never or may hold.
  */
 public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 	Map<ControlFlowElement, InstanceofBranchWalker> elementsToBranch = new HashMap<>();
