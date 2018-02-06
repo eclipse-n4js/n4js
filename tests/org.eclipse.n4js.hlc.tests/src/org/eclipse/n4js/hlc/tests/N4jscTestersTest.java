@@ -40,16 +40,17 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	File workspace;
 
 	private final static String EXPECTED_TEST_CATALOG = "" +
-			"[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]}" +
-			",{\"origin\":\"DemoTest\",\"fqn\":\"BazTest/OsInspectorTest3\",\"testMethods\":[\"testIgnored\"]}" +
-			",{\"origin\":\"DemoTest\",\"fqn\":\"FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]}" +
-			",{\"origin\":\"DemoTest\",\"fqn\":\"subfolder/SubFolderModule/SubFolderTest\",\"testMethods\":[\"testPass\"]}"
+			"[{\"origin\":\"DemoTest\",\"fqn\":\"src-gen/BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]}" +
+			",{\"origin\":\"DemoTest\",\"fqn\":\"src-gen/BazTest/OsInspectorTest3\",\"testMethods\":[\"testIgnored\"]}"
 			+
-			",{\"origin\":\"SysProjectA\",\"fqn\":\"T/T\",\"testMethods\":[\"t\"]}" +
-			",{\"origin\":\"TestProjectA\",\"fqn\":\"A/A\",\"testMethods\":[\"a\"]}" +
-			",{\"origin\":\"TestProjectA\",\"fqn\":\"B/B\",\"testMethods\":[\"b1\",\"b2\"]}" +
-			",{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]}" +
-			",{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
+			",{\"origin\":\"DemoTest\",\"fqn\":\"src-gen/FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]}" +
+			",{\"origin\":\"DemoTest\",\"fqn\":\"src-gen/subfolder/SubFolderModule/SubFolderTest\",\"testMethods\":[\"testPass\"]}"
+			+
+			",{\"origin\":\"SysProjectA\",\"fqn\":\"src-gen/T/T\",\"testMethods\":[\"t\"]}" +
+			",{\"origin\":\"TestProjectA\",\"fqn\":\"src-gen/A/A\",\"testMethods\":[\"a\"]}" +
+			",{\"origin\":\"TestProjectA\",\"fqn\":\"src-gen/B/B\",\"testMethods\":[\"b1\",\"b2\"]}" +
+			",{\"origin\":\"TestProjectB\",\"fqn\":\"src-gen/CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]}" +
+			",{\"origin\":\"TestProjectB\",\"fqn\":\"src-gen/CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
 
 	private static Collection<String> REQUIRED_LIBS = ImmutableSet.<String> builder()
 			.add(N4JSGlobals.MANGELHAFT)
@@ -191,20 +192,20 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		@SuppressWarnings("resource")
 		String content = new Scanner(report).useDelimiter("\\Z").next();
 		assertTrue(content.contains(
-				"<testsuite name=\"BarTest/OsInspectorTest2\" tests=\"1\" errors=\"0\" failures=\"1\" skipped=\"0\""));
+				"<testsuite name=\"src-gen/BarTest/OsInspectorTest2\" tests=\"1\" errors=\"0\" failures=\"1\" skipped=\"0\""));
 		assertTrue(content.contains(
 				"<error message=\"AssertionError: Invalid OS detected. (detected os :: fakeOsName not == fakeOsName )\">"));
 
 		assertTrue(content.contains(
-				"<testsuite name=\"BazTest/OsInspectorTest3\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"1\""));
+				"<testsuite name=\"src-gen/BazTest/OsInspectorTest3\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"1\""));
 
 		assertTrue(content.contains(
-				"<testsuite name=\"FooTest/OsInspectorTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
+				"<testsuite name=\"src-gen/FooTest/OsInspectorTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
 
 		assertTrue(content.contains(
-				"\"subfolder/SubFolderModule/SubFolderTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
+				"\"src-gen/subfolder/SubFolderModule/SubFolderTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
 		assertTrue(content.contains(
-				"<testcase name=\"testPass\" classname=\"subfolder/SubFolderModule/SubFolderTest\""));
+				"<testcase name=\"testPass\" classname=\"src-gen/subfolder/SubFolderModule/SubFolderTest\""));
 	}
 
 	/**

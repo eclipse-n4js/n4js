@@ -41,11 +41,6 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl {
 	}
 
 	@Override
-	protected void discardWorkingSetCaches() {
-		super.discardWorkingSetCaches();
-	}
-
-	@Override
 	public String getLabel() {
 		return "Git Repository";
 	}

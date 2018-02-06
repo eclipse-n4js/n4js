@@ -193,7 +193,6 @@ import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesbuilder.N4JSFunctionDefinitionTypesBuilder
 import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.n4js.typesystem.VersionResolver
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.PromisifyHelper
@@ -210,6 +209,7 @@ import static extension org.eclipse.n4js.ts.utils.TypeExtensions.*
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.typesystem.TypeSystemErrorExtensions.*
+import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 
 inject TypeSystemHelper typeSystemHelper
 inject N4JSFunctionDefinitionTypesBuilder functionDefinitionTypesBuilder
@@ -219,7 +219,7 @@ inject DestructureHelper destructureHelper
 inject MemberScopingHelper memberScopingHelper
 inject PromisifyHelper promisifyHelper
 inject JavaScriptVariantHelper jsVariantHelper
-inject VersionResolver versionResolver
+inject N4IDLVersionResolver versionResolver
 inject IQualifiedNameConverter qualifiedNameConverter
 inject ReactHelper reactHelper
 
@@ -961,21 +961,21 @@ from {
 		} else {
 			val lnum = G.isNumericOperand(l);
 			val rnum = G.isNumericOperand(r);
-			
+
 			if (lnum && rnum) {
 				T = G.numberTypeRef
 			} else {
 				if ( (lunknown || runknown) && (lnum || rnum)  ) {
-					// one is numeric, the other unknown --> 
+					// one is numeric, the other unknown -->
 					T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
 				} else {
 					val lMayNum = lnum || G.containsNumericOperand(l) || G.isAny(l) || G.isSymbol(l);
 					val rMayNum = rnum || G.containsNumericOperand(r) || G.isAny(r) || G.isSymbol(r);
-					
+
 					if (lMayNum && rMayNum) {
 						T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
-					}		
-					else {					
+					}
+					else {
 						T = G.stringTypeRef
 					}
 				}
@@ -1323,7 +1323,7 @@ from {
 	} else if ((leftDeclType === G.intType && rightDeclType === G.numberType)
 				|| (leftDeclType === G.numberType && rightDeclType === G.intType)) {
 		true // int <: number AND number <: int (for now, int and number are synonymous)
-	} else if (leftDeclType instanceof TEnum && rightDeclType===G.n4EnumType) { // @see [N4JS] 4.13. Enums
+	} else if (leftDeclType instanceof TEnum && (rightDeclType===G.n4EnumType || rightDeclType===G.objectType)) { // @see [N4JS] 4.13. Enums
 		 !AnnotationDefinition.STRING_BASED.hasAnnotation( leftDeclType )
 	} else if (leftDeclType instanceof TEnum && (rightDeclType===G.n4StringBasedEnumType || rightDeclType===G.stringType || rightDeclType===G.stringObjectType)) { // @see [N4JS] 4.15.2 String based Enums, IDEBUG-294
 		 AnnotationDefinition.STRING_BASED.hasAnnotation( leftDeclType )
@@ -2011,7 +2011,7 @@ from {
 	}
 }
 
-/* @see [N4JS] 6.1.13. Multiplicative Expression 
+/* @see [N4JS] 6.1.13. Multiplicative Expression
  * Note: symbol type is not allowed, this is checked in validation
  */
 rule expectedTypeInMultiplicativeExpression
@@ -2020,7 +2020,7 @@ from {
 	T = G.anyTypeRef
 }
 
-/* @see [N4JS] 6.1.14 Additive Expression 
+/* @see [N4JS] 6.1.14 Additive Expression
  * Note: symbol type is not allowed, this is checked in validation
  */
 rule expectedTypeInAdditiveExpression
@@ -2029,8 +2029,8 @@ from {
 	T = G.anyTypeRef
 }
 
-/* @see [N4JS] 6.1.15. Shift Expression 
- * Note: symbol type is not allowed, this is checked in validation 
+/* @see [N4JS] 6.1.15. Shift Expression
+ * Note: symbol type is not allowed, this is checked in validation
  * */
 rule expectedTypeInShiftExpression
 	G |- ShiftExpression e |> Expression expression : TypeRef T
@@ -2552,7 +2552,7 @@ from {
 			val boundRef = TypeUtils.createBoundThisTypeRef(boundRefFromEnv.actualThisTypeRef);
 			boundRef.setTypingStrategy(thisTypeRef.typingStrategy); // note: must take use-site typing-strategy from 'thisTypeRef', not the one stored in the environment
 			TypeUtils.copyTypeModifiers(boundRef, thisTypeRef); // note: must take use-site type modifiers (e.g. optional)
-			T = boundRef;	
+			T = boundRef;
 		} else {
 			T = thisTypeRef
 		}

@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilderHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -204,7 +204,7 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		ProjectUtils.waitForAutoBuild();
+		ProjectTestsUtils.waitForAutoBuild();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}

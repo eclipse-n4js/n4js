@@ -890,7 +890,8 @@ public class N4jscBase implements IApplication {
 			if (buildtype != BuildType.dontcompile) {
 				flushAndIinsertMarkerInOutputs();
 			}
-			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun());
+			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
+					targetPlatformInstallLocation);
 		}
 
 		if (debug) {

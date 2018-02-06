@@ -17,22 +17,17 @@
     "node": ">= 5.0.0"
   },
   "bin": {
-    "n4js": "./n4js-cli.js"
+    "n4js": "./src-gen/n4js-cli.js"
   },
-  "main": "./index.js",
-  "browser": "./browser.js",
-  "react-native": "./react-native.js",
+  "main": "./src-gen/index.js",
+  "browser": "./src-gen/browser.js",
+  "react-native": "./src-gen/react-native.js",
   "dependencies": {
     "node-fetch": "^1.6.3",
     "systemjs": "^0.19.39"
   },
   "files": [
     "manifest.n4mf",
-    "n4js-cli.js",
-    "run.js",
-    "index.js",
-    "browser.js",
-    "react-native.js",
-    "rt"
+    "src-gen"
   ]
 }

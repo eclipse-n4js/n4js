@@ -14,15 +14,14 @@ import java.util.Comparator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.Diff;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.util.Strings;
 import org.osgi.service.prefs.Preferences;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.Diff;
 
 /**
  * Representation of a working set manager.
@@ -80,6 +79,12 @@ public interface WorkingSetManager extends Comparator<WorkingSet>, MementoAware 
 	 * @return an iterable of all working sets. Including visible and invisible ones as well.
 	 */
 	WorkingSet[] getAllWorkingSets();
+
+	/**
+	 * Discard cached information about existing working sets, forcing a re-computation of working sets the next time
+	 * the list of working sets is requested via {@link #getAllWorkingSets()}.
+	 */
+	public void discardWorkingSetCaches();
 
 	/**
 	 * Updates its internal state based on the {@link Diff diff} argument. Clients should call

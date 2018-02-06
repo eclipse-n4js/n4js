@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.MemberAccess
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -113,6 +114,8 @@ class MemberScopingHelper {
 	 * Creates member scope via #members and decorates it via #decorate.
 	 */
 	private def IScope decoratedMemberScopeFor(TypeRef typeRef, MemberScopeRequest memberScopeRequest) {
+		if(typeRef === null)
+			return IScope.NULLSCOPE
 		var result = members(typeRef, memberScopeRequest);
 		return result;
 	}
@@ -220,13 +223,16 @@ class MemberScopingHelper {
 			staticMembers = new DynamicPseudoScope(staticMembers.decorate(staticRequest, ttr))
 		}
 		// in addition, we need instance members of either Function (in case of constructor{T}) or Object (for type{T})
+		// except for @StringBased enums:
+		if (ctrStaticType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(ctrStaticType)) {
+			return staticMembers.decorate(staticRequest, ttr);
+		}
 		val MemberScopeRequest instanceRequest = request.enforceInstance;
 		val builtInScope = BuiltInTypeScope.get(getResourceSet(ttr, request.context));
 		val functionType = if (ttr.isConstructorRef) builtInScope.functionType else builtInScope.objectType;
 		val IScope ftypeScope = membersOfType(functionType, instanceRequest);
-
-		// order matters (shadowing!)
 		val result = CompositeScope.create(
+			// order matters (shadowing!)
 			staticMembers.decorate(staticRequest, ttr),
 			ftypeScope.decorate(instanceRequest, ttr)
 		);
@@ -318,7 +324,7 @@ class MemberScopingHelper {
 	 */
 	private def dispatch IScope membersOfType(ContainerType<?> type, MemberScopeRequest request) {
 		val builtInTypeScope = BuiltInTypeScope.get(getResourceSet(type, request.context));
-		var implicitSuperType = builtInTypeScope.objectType
+		var ContainerType<?> implicitSuperType = builtInTypeScope.objectType
 		if (type instanceof TN4Classifier) {
 			if (type.typingStrategy !== TypingStrategy.DEFAULT) {
 				implicitSuperType = builtInTypeScope.objectType
@@ -328,6 +334,18 @@ class MemberScopingHelper {
 				}
 			} else { // TInterface
 				implicitSuperType = builtInTypeScope.n4ObjectType;
+			}
+		} else if (type instanceof TObjectPrototype) {
+			// TObjectPrototypes defined in builtin_js.n4ts and builtin_n4.n4ts are allowed to extend primitive
+			// types, and the following is required to support auto-boxing in such a case:
+			val rootSuperType = getRootSuperType(type);
+			if (rootSuperType instanceof PrimitiveType) {
+				val boxedType = rootSuperType.autoboxedType;
+				if(boxedType!==null && !request.staticAccess) {
+					implicitSuperType = boxedType;
+				} else {
+					implicitSuperType = rootSuperType;
+				}
 			}
 		}
 		val implicitSuperTypeMemberScope = if (jsVariantHelper.activateDynamicPseudoScope(request.context)) { // cf. sec. 13.1
@@ -352,8 +370,7 @@ class MemberScopingHelper {
 			} else {
 				builtInTypeScope.n4EnumType
 			};
-		val enumScope = memberScopeFactory.create(specificEnumType, request.context, request.staticAccess);
-		return enumScope;
+		return membersOfType(specificEnumType, request);
 	}
 
 	private def dispatch IScope membersOfType(TypeVariable typeVar, MemberScopeRequest request) {
@@ -380,5 +397,17 @@ class MemberScopingHelper {
 		if (result === null)
 			throw new IllegalStateException("type or context must be contained in a ResourceSet")
 		return result;
+	}
+
+	def private Type getRootSuperType(TObjectPrototype type) {
+		var Type curr = type;
+		var Type next;
+		do {
+			next = if(curr instanceof TObjectPrototype) curr.superType?.declaredType;
+			if (next !== null) {
+				curr = next;
+			}
+		} while (next !== null);
+		return curr;
 	}
 }
