@@ -907,6 +907,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	public EObject doResolveProxy(InternalEObject proxy, EObject objectContext) {
+		// step 0: ensure proxy resolution is allowed
+		// (this must be checked before calling #performPostProcessing(), because that would trigger initialization if
+		// not done already)
+		// NOTE: we decided not to add a fail fast check here, mostly because we cannot distinguish between whether the
+		// resolution was triggered by our internal N4JS implementation or by client code; for a detailed discussion
+		// see Section 9.11.4. "When is Proxy Resolution Allowed?" in the design document and GH-219.
+
 		// step 1: trigger post processing of the resource containing 'proxy' iff it is the first proxy being resolved
 		// (if another proxy has been resolved before, post processing will already be running/completed, and in that
 		// case the next line will simply do nothing, cf. #performPostProcessing())
