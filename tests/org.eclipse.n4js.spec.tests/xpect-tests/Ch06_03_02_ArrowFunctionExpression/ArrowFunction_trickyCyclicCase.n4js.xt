@@ -23,4 +23,5 @@ function <T> foo(p: {function(int):T}) {
 	return undefined;
 }
 
+// must not throw exception(s) XPECT noerrors -->
 foo( (i) => [i] );

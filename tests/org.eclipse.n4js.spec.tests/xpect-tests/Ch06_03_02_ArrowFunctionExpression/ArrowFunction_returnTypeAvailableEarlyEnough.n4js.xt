@@ -16,7 +16,7 @@
 // NOTE: this is an important test! It ensures that the type of the single-expression arrow function in its tweaked
 // version (see ArrowFunctionProcessor#tweakArrowFunctions()) is available already during AST traversal, immediately
 // after processing the arrow function node. This is ensure below by checking the type of variable 'v01', which is
-// inferred during AST taversal immediately after processing the AST node representing the single-expression arrow
+// inferred during AST traversal immediately after processing the AST node representing the single-expression arrow
 // function.
 //
 
