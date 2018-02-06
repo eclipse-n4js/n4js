@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js;
+package org.eclipse.n4js.smith.ui;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -43,7 +43,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Inject this somewhere and invoke method {@link #investigate()} to start gathering statistics.
+ * Class for computing and showing resource loading statistics. For details, see methods
+ * {@link #computeAndShowStatsForWorkspace(PrintStream, IProgressMonitor)} and
+ * {@link #computeAndShowStatsFor(ResourceSet, PrintStream)}.
  */
 @Singleton
 @SuppressWarnings("javadoc")
@@ -102,6 +104,15 @@ public class ResourceLoadingStatistics {
 
 	/**
 	 * Computes and prints resource loading statistics for all N4JS[X] projects in the workspace.
+	 * <p>
+	 * For each N4JS[X] file in the workspace, this method will
+	 * <ol>
+	 * <li>create a new, empty resource set,
+	 * <li>load the file into this resource set and fully process it (parser, types builder, post-processing),
+	 * <li>count how many other files/resources were automatically loaded into the resource set and if they were loaded
+	 * from AST or from Xtext index,
+	 * <li>print statistics to the given stream.
+	 * </ol>
 	 */
 	public void computeAndShowStatsForWorkspace(PrintStream out, IProgressMonitor monitor) {
 		final CancelIndicator cancelIndicator = new MonitorBasedCancelIndicator(monitor);
@@ -135,7 +146,7 @@ public class ResourceLoadingStatistics {
 	 * resource, i.e. the only resource for which loading and proxy resolution was triggered explicitly (and thus all
 	 * other resources can be assumed to have been loaded incidentally while processing the first).
 	 */
-	public void computeAndShowStatsFor(ResourceSet resSet, PrintStream out) {
+	public void computeAndShowStatsForResourceSet(ResourceSet resSet, PrintStream out) {
 		final FileLoadInfo info = investigate(resSet);
 		info.println(out);
 	}

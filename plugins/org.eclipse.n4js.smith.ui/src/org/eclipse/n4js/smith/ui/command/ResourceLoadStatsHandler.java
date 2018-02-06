@@ -8,7 +8,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
-import org.eclipse.n4js.ResourceLoadingStatistics;
+import org.eclipse.n4js.smith.ui.ResourceLoadingStatistics;
 import org.eclipse.n4js.ui.utils.EclipseUtils;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -81,7 +81,8 @@ public class ResourceLoadStatsHandler implements IHandler {
 		final XtextEditor xeddy = eddy instanceof XtextEditor ? (XtextEditor) eddy : null;
 		if (xeddy != null) {
 			xeddy.getDocument().readOnly((resource) -> {
-				resourceLoadingStatistics.computeAndShowStatsFor(resource.getResourceSet(), getConsolePrintStream());
+				resourceLoadingStatistics.computeAndShowStatsForResourceSet(resource.getResourceSet(),
+						getConsolePrintStream());
 				return null;
 			});
 		} else {
