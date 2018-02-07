@@ -19,11 +19,13 @@
 		$n4Export('ResultGroups', ResultGroups);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroup) {
-					ResultGroup = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroup.ResultGroup;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup
+					ResultGroup = $exports.ResultGroup;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestStatus) {
-					aggregateTestStatuses = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestStatus.aggregateTestStatuses;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestStatus
+					aggregateTestStatuses = $exports.aggregateTestStatuses;
 				}
 			],
 			execute: function() {
@@ -168,5 +170,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=ResultGroups.map

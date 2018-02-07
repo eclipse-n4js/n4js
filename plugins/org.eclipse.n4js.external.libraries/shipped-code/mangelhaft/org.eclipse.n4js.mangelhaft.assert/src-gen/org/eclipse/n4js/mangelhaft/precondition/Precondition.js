@@ -13,11 +13,13 @@
 		$n4Export('Precondition', Precondition);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssert) {
-					Assert = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssert.Assert;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/Assert
+					Assert = $exports.Assert;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet) {
-					PreconditionNotMet = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet.PreconditionNotMet;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				}
 			],
 			execute: function() {
@@ -57,5 +59,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=Precondition.map
