@@ -15,11 +15,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.ui.graph.DashboardComposite;
@@ -35,11 +38,15 @@ import org.eclipse.ui.part.ViewPart;
  * A view showing a graph of the AST and type model (i.e. TModule).
  */
 public class PerformanceView extends ViewPart {
+
 	private final Map<String, DashboardComposite> visualisation = new HashMap<>();
-	DashboardComposite visualisationComposite = null;
+	private DashboardComposite visualisationComposite = null;
 	private boolean paused = true;
-	Composite visualisationParent = null;
-	final StackLayout layout = new StackLayout();
+	private Composite visualisationParent = null;
+	private final StackLayout layout = new StackLayout();
+
+	/** Default items of the view's menu as contributed by extensions in plugin.xml. */
+	private IContributionItem[] defaultMenuItems = null;
 
 	@Override
 	public void createPartControl(final Composite parent) {
@@ -76,8 +83,6 @@ public class PerformanceView extends ViewPart {
 
 	private void createMenu() {
 		IMenuManager mgr = getViewSite().getActionBars().getMenuManager();
-		mgr.setRemoveAllWhenShown(true);
-		addDynamicVisualisationSelection(mgr);
 		mgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager m) {
@@ -87,10 +92,20 @@ public class PerformanceView extends ViewPart {
 	}
 
 	private void addDynamicVisualisationSelection(IMenuManager menuManager) {
+		if (defaultMenuItems == null) {
+			// first call: remember default menu items (as contributed by extensions in plugin.xml)
+			defaultMenuItems = menuManager.getItems();
+		} else {
+			// later calls: clear menu & restore the default menu items
+			menuManager.removeAll();
+			Stream.of(defaultMenuItems).forEach(item -> menuManager.add(item));
+		}
+
 		Set<String> collectorsKeys = CollectedDataAccess.getCollectorsKeys();
 		trashUnreachableVisualisations(collectorsKeys);
 
 		// add actions to the menu
+		menuManager.add(new Separator());
 		collectorsKeys
 				.forEach(collectorName -> menuManager.add(createDynamicAction(collectorName, this::selectDataSource)));
 	}

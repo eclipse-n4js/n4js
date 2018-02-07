@@ -28,4 +28,58 @@ Contributors:
             name="Performance Graphs">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.n4js.smith.ui.PerformanceView">
+         <command
+               commandId="org.eclipse.n4js.smith.ui.MassOpen"
+               label="Mass Open"
+               style="push"
+               tooltip="Open several files at once.">
+         </command>
+         <menu
+               label="Resource Loading Statistics">
+	         <command
+	               commandId="org.eclipse.n4js.smith.ui.ResourceLoadStatsHandler"
+	               label="Workspace"
+	               style="push"
+	               tooltip="Check how many files are loaded from AST / from index per n4js(x) file in the workspace.">
+	            <parameter
+	                  name="org.eclipse.n4js.smith.ui.ResourceLoadStatsHandler.param.scope"
+	                  value="workspace">
+	            </parameter>
+	         </command>
+	         <command
+	               commandId="org.eclipse.n4js.smith.ui.ResourceLoadStatsHandler"
+	               label="Active Editor"
+	               style="push"
+	               tooltip="Check how many files are loaded from AST / from index in the currently active editor.">
+	            <parameter
+	                  name="org.eclipse.n4js.smith.ui.ResourceLoadStatsHandler.param.scope"
+	                  value="editor">
+	            </parameter>
+	         </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.n4js.smith.ui.SmithExecutableExtensionFactory:org.eclipse.n4js.smith.ui.command.MassOpenHandler"
+            id="org.eclipse.n4js.smith.ui.MassOpen"
+            name="Mass Open">
+      </command>
+      <command
+            defaultHandler="org.eclipse.n4js.smith.ui.SmithExecutableExtensionFactory:org.eclipse.n4js.smith.ui.command.ResourceLoadStatsHandler"
+            id="org.eclipse.n4js.smith.ui.ResourceLoadStatsHandler"
+            name="Resource Loading Statistics">
+         <commandParameter
+               id="org.eclipse.n4js.smith.ui.ResourceLoadStatsHandler.param.scope"
+               name="scope"
+               optional="true">
+         </commandParameter>
+      </command>
+   </extension>
 </plugin>

@@ -19,8 +19,9 @@
 		$n4Export('TestSpy', TestSpy);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fDispatchQueue) {
-					DispatchQueue = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fDispatchQueue.DispatchQueue;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/DispatchQueue
+					DispatchQueue = $exports.DispatchQueue;
 				}
 			],
 			execute: function() {
@@ -144,5 +145,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=TestSpy.map

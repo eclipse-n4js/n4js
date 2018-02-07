@@ -39,14 +39,17 @@
 		$n4Export('Assert', Assert);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssertionError) {
-					AssertionError = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssertionError.AssertionError;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError
+					AssertionError = $exports.AssertionError;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet) {
-					PreconditionNotMet = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet.PreconditionNotMet;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fDeepEqual) {
-					deepEqual = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fDeepEqual.deepEqual;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/DeepEqual
+					deepEqual = $exports.deepEqual;
 				}
 			],
 			execute: function() {
@@ -564,5 +567,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=Assert.map

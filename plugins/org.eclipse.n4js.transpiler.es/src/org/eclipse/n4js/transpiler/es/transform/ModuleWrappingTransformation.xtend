@@ -210,12 +210,15 @@ class ModuleWrappingTransformation extends Transformation {
 
 	/** FunctionExpression for import used inside of the setters-array*/
 	private def FunctionExpression importFE(ImportEntry entry) {
+		val fparName = "$exports";
+		val steFpar = getSymbolTableEntryInternal(fparName, true);
 		_FunExpr(false) => [
-			fpars += _Fpar => [name = entry.fparName]
+			fpars += _Fpar => [name = fparName]
 			body = _Block => [
+				statements += _ExprStmnt(_Snippet('// ' + entry.actualModuleSpecifier));
 				for (val iter = entry.variableSTE_actualName.iterator; iter.hasNext;) {
 					val ImportAssignment current = iter.next;
-					val refToFPar = _IdentRef(getSymbolTableEntryInternal(entry.fparName, true));
+					val refToFPar = _IdentRef(steFpar);
 					val Expression rhs = if (current instanceof NamespaceImportAssignment) {
 							refToFPar
 						} else if(current instanceof NamedImportAssignment) {
@@ -267,19 +270,13 @@ class ModuleWrappingTransformation extends Transformation {
 		for( val iter = contents_im.iterator; iter.hasNext;  ) {
 			val elementIM = iter.next();
 			if( elementIM instanceof ImportDeclaration ) {
-
 				val module = state.info.getImportedModule(elementIM);
 
-				// calculate names in output
-				val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module)
+				val actualModuleSpecifier = computeActualModuleSpecifier(module)
 
-				val fparName = "$_import_" + resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module)
-
-				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier)
-				
 				var moduleEntry = map.get( actualModuleSpecifier )
 				if( moduleEntry === null ) {
-					moduleEntry = new ImportEntry(completeModuleSpecifier, actualModuleSpecifier, fparName, newArrayList(), elementIM)
+					moduleEntry = new ImportEntry(actualModuleSpecifier, newArrayList(), elementIM)
 					map.put( actualModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry
@@ -325,7 +322,8 @@ class ModuleWrappingTransformation extends Transformation {
 		return map;
 	}
 
-	private def String computeActualModuleSpecifier(TModule module, String completeModuleSpecifier) {
+	private def String computeActualModuleSpecifier(TModule module) {
+		val completeModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module)
 		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
 
 		if (moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier)
@@ -697,7 +695,7 @@ class ModuleWrappingTransformation extends Transformation {
 			System.registerDynamic([], true, function(require, exports, module) {
 				«cs»
 			});
-		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+		})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 		'''
 	}
 
@@ -706,7 +704,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 		// (function(System) {
 		//     < ... statement ...>
-		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(module) : global.System);
+		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(module) : global.System);
 
 		val ret = _ExprStmnt( _CallExpr (
 			_Parenthesis(
@@ -722,7 +720,7 @@ class ModuleWrappingTransformation extends Transformation {
 					steFor_module._PropertyAccessExpr( steFor_exports )
 				),
 					/*     TRUE-case 		*/
-			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node/src-gen/index') ).
+			    _IdentRef(steFor_require)._CallExpr( _StringLiteral('n4js-node') ).
 			    _PropertyAccessExpr( steFor_System )._CallExpr( _IdentRef(steFor_require), _IdentRef(steFor_module) ),
 			    	/*     FALSE-case 		*/
 				_IdentRef( steFor_System )
