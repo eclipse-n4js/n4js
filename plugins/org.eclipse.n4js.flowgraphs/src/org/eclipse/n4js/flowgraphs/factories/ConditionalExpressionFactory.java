@@ -10,9 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -44,18 +42,17 @@ class ConditionalExpressionFactory {
 		cNode.addNode(elseNode);
 		cNode.addNode(exitNode);
 
-		List<Node> nodes = new LinkedList<>();
-		nodes.add(entryNode);
-		nodes.add(conditionNode);
-		nodes.add(thenNode);
-		nodes.add(exitNode);
-		cNode.connectInternalSucc(nodes);
+		cNode.connectInternalSucc(entryNode, conditionNode);
+		cNode.connectInternalSucc(ControlFlowType.IfTrue, conditionNode, thenNode);
+		cNode.connectInternalSucc(thenNode, exitNode);
 
-		nodes.clear();
-		nodes.add(conditionNode);
-		nodes.add(elseNode);
-		nodes.add(exitNode);
-		cNode.connectInternalSucc(nodes);
+		cNode.connectInternalSucc(ControlFlowType.IfFalse, conditionNode, elseNode);
+		cNode.connectInternalSucc(elseNode, exitNode);
+
+		if (thenNode == null && elseNode == null) {
+			// broken AST
+			cNode.connectInternalSucc(conditionNode, exitNode);
+		}
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);

@@ -17,6 +17,7 @@ import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ContinueStatement;
+import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 
@@ -27,6 +28,10 @@ import org.eclipse.n4js.n4JS.ThrowStatement;
 public enum ControlFlowType {
 	/** Successor edges are default edges */
 	Successor,
+	/** IfTrue edges only flow from the condition of an {@link IfStatement} to its then block */
+	IfTrue,
+	/** IfFalse edges flow from the condition of an {@link IfStatement} to its then else or its exit node */
+	IfFalse,
 	/** Return edges are caused by {@link ReturnStatement}s */
 	Return,
 	/** Throw edges are caused by {@link ThrowStatement}s */
@@ -57,8 +62,8 @@ public enum ControlFlowType {
 			LoopExit };
 
 	/** Set of all control flow types except for {@literal ControlFlowType.DeadCode} */
-	static public final ControlFlowType[] NonDeadTypes = { Successor, Break, Continue, Throw, Return, LoopEnter,
-			LoopExit, LoopRepeat, LoopReenter, LoopInfinite };
+	static public final ControlFlowType[] NonDeadTypes = { Successor, IfTrue, IfFalse, Break, Continue, Throw, Return,
+			LoopEnter, LoopExit, LoopRepeat, LoopReenter, LoopInfinite };
 
 	/** @return a filtered list that contains only {@link ControlFlowType}s of the given types */
 	static public List<ControlFlowType> filter(Iterable<ControlFlowType> list, ControlFlowType... onlyThese) {

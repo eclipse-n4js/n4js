@@ -51,7 +51,6 @@ import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NewTarget
@@ -96,8 +95,9 @@ import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
-import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.isDestructuringAssignment
-import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.isDestructuringForStatement
+import org.eclipse.n4js.n4JS.DestructureUtils
+import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
+import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -536,7 +536,7 @@ class ASTStructureValidator {
 		)
 		val lhs = model.lhs
 		if (lhs !== null && !lhs.isValidSimpleAssignmentTarget) {
-			if (model.op !== AssignmentOperator.ASSIGN || !model.isDestructuringAssignment) {
+			if (model.op !== AssignmentOperator.ASSIGN || !model.isTopOfDestructuringAssignment) {
 				val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS)
 				val target = nodes.head
 				producer.node = target
@@ -810,7 +810,7 @@ class ASTStructureValidator {
 								IssueCodes.getDefaultSeverity(IssueCodes.AST_VAR_DECL_IN_FOR_INVALID_INIT),
 								IssueCodes.AST_VAR_DECL_IN_FOR_INVALID_INIT))
 					}
-				} else if(!initExpr.isValidSimpleAssignmentTarget && !model.isDestructuringForStatement) {
+				} else if(!initExpr.isValidSimpleAssignmentTarget && !model.isTopOfDestructuringForStatement) {
 					val nodes = NodeModelUtils.findNodesForFeature(model,
 						N4JSPackage.Literals.FOR_STATEMENT__INIT_EXPR)
 					val target = nodes.head ?: NodeModelUtils.findActualNodeFor(initExpr)
@@ -1285,7 +1285,7 @@ class ASTStructureValidator {
 			// more validation not required in this case, because expression has a different meaning and problem cannot occur
 			return;
 		}
-		if(elem!==null && N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
+		if(elem!==null && DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
 			if(elem instanceof PropertyMethodDeclaration) {
 				// methods are not allowed at all in a destructuring pattern
 				producer.node = NodeModelUtils.findActualNodeFor(elem)
@@ -1323,7 +1323,7 @@ class ASTStructureValidator {
 
 	def private void validateSpreadInArrayLiteral(ArrayElement elem, ASTStructureDiagnosticProducer producer) {
 		if(elem!==null && elem.spread) {
-			if(!N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
+			if(!DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
 				// use of spread in an array literal that is *not* used as a destructuring pattern
 				// --> always error (legal in ES6 but not yet supported; might be supported later)
 				val nodes = NodeModelUtils.findNodesForFeature(elem, N4JSPackage.eINSTANCE.arrayElement_Spread);
@@ -1391,7 +1391,7 @@ class ASTStructureValidator {
 	}
 
 	def private void validateSingleNameInObjectLiteral(PropertyNameValuePair elem, ASTStructureDiagnosticProducer producer) {
-		if(elem instanceof PropertyNameValuePairSingleName && !N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
+		if(elem instanceof PropertyNameValuePairSingleName && !DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
 			producer.node = NodeModelUtils.findActualNodeFor(elem)
 			producer.addDiagnostic(
 				new DiagnosticMessage(IssueCodes.getMessageForAST_SINGLE_NAME_IN_OBJECT_LITERAL_UNSUPPORTED,

@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorGuideInternal;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorGuideInternal;
 import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ForStatement;

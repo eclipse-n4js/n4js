@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -61,13 +61,13 @@ public class FlowGraph {
 		return cnMap.get(cfe);
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getContainer(ControlFlowElement)} */
+	/** see {@link N4JSFlowAnalyser#getContainer(ControlFlowElement)} */
 	public ControlFlowElement getContainer(ControlFlowElement cfe) {
 		ComplexNode cn = getComplexNode(cfe);
 		return cn.getControlFlowContainer();
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getAllContainers()}. */
+	/** see {@link N4JSFlowAnalyser#getAllContainers()}. */
 	public Collection<ControlFlowElement> getAllContainers() {
 		// The order of containers is reversed.
 		// This causes fail-fast behavior regarding the assertion 'isVisited()'

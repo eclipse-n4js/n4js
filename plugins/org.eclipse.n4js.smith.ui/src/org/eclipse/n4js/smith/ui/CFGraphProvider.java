@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -24,11 +23,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analysis.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.ui.graph.CFEdge;
@@ -40,10 +40,10 @@ import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * The graph provider creates {@link Node}s and {@link CFEdge}s for a given {@link Script}. Moreover, it provides some
- * calls to the {@link N4JSFlowAnalyzer} API by delegating to it.
+ * calls to the {@link N4JSFlowAnalyser} API by delegating to it.
  */
 public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement> {
-	N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
+	N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
 	Map<ControlFlowElement, CFNode> nodeMap = new HashMap<>();
 	Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
 	final NodesEdgesCollector nodesEdgesCollector = new NodesEdgesCollector();
@@ -70,8 +70,8 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return succs;
 	}
 
-	/** @return a reference to {@link N4JSFlowAnalyzer} of the current {@link Script} */
-	public N4JSFlowAnalyzer getFlowAnalyses() {
+	/** @return a reference to {@link N4JSFlowAnalyser} of the current {@link Script} */
+	public N4JSFlowAnalyser getFlowAnalyses() {
 		return flowAnalyzer;
 	}
 
@@ -84,8 +84,9 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	/** Finds a script for the given input and then triggers a control flow analyses. */
 	private void performFlowAnalyses(Object input) {
 		Script script = findScript(input);
-		Objects.nonNull(script);
-		flowAnalyzer.createGraphs(script);
+		if (script != null) {
+			flowAnalyzer.createGraphs(script, false);
+		}
 	}
 
 	/** Searches the script node in the given input. */
@@ -108,7 +109,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		private int nodeIdx = 0;
 
 		NodesEdgesCollector() {
-			super(Mode.Forward);
+			super(TraverseDirection.Forward);
 		}
 
 		@Override
@@ -118,7 +119,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+		protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
 			requestActivation(new EdgesExplorer());
 		}
 

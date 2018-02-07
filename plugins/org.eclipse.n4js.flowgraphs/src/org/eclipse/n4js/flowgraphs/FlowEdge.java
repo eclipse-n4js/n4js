@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
+import static com.google.common.base.Preconditions.checkState;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -34,12 +38,21 @@ public class FlowEdge implements Comparable<FlowEdge> {
 	/** Flow types that connect {@link #start} and {@link #end} */
 	final public SortedSet<ControlFlowType> cfTypes;
 
+	final private int cachedHash;
+
 	/** Constructor */
 	public FlowEdge(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
-		assert start != null && end != null;
+		checkState(start != null && end != null);
+
 		this.start = start;
 		this.end = end;
 		this.cfTypes = Collections.unmodifiableSortedSet(Sets.newTreeSet(cfTypes));
+
+		ArrayList<Object> ar = new ArrayList<>();
+		ar.add(start);
+		ar.add(end);
+		ar.addAll(cfTypes);
+		this.cachedHash = Objects.hash(ar.toArray());
 	}
 
 	/** @return true iff the edge traverses dead code */
@@ -80,11 +93,7 @@ public class FlowEdge implements Comparable<FlowEdge> {
 
 	@Override
 	public int hashCode() {
-		long hashCode = start.hashCode() + end.hashCode();
-		for (ControlFlowType cft : cfTypes) {
-			hashCode += cft.hashCode();
-		}
-		return (int) (hashCode % Integer.MAX_VALUE);
+		return cachedHash;
 	}
 
 	@Override

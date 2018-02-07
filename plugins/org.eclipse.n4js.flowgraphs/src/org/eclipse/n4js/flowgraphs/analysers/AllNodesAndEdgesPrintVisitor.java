@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,10 +19,11 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analysis.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -43,11 +46,11 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	 *            if not null, only graph elements within (transitive) are found, otherwise all elements of the script
 	 */
 	public AllNodesAndEdgesPrintVisitor(ControlFlowElement container) {
-		super(container, Mode.Forward);
+		super(container, TraverseDirection.Forward);
 	}
 
 	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+	protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
 		requestActivation(new AllNodesAndEdgesExplorer());
 	}
 
@@ -60,9 +63,10 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		assert allDeadNodesGV.size() == allDeadNodesBW.size();
-		assert allDeadNodesGV.containsAll(allDeadNodesBW);
+	protected void terminateMode(TraverseDirection curMode, ControlFlowElement curContainer) {
+		checkState(allDeadNodesGV.size() == allDeadNodesBW.size());
+		checkState(allDeadNodesGV.containsAll(allDeadNodesBW));
+
 		allDeadNodesGV.clear();
 		allDeadNodesBW.clear();
 	}

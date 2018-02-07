@@ -57,9 +57,9 @@ function ThrowStatement2() {
 	// ThrowStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ThrowStatement2 XPECT allEdges ---
 		"start" --> 1,
-		1 --> 2,
+		1 -IfTrue-> 2,
 		2 --> throw 2;,
-		1 --> "end"
+		1 -IfFalse-> "end"
 	--- */
 	/* ThrowStatement2 XPECT allBranches ---
 	   B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> throw 2;[b3|B4], B2: [B0] -> [B5],
@@ -730,8 +730,8 @@ function ThrowTryIfReturnFinallyStatement() {
 		"finally" --> "end",
 		"start" --> 1,
 		1 --> 2,
-		2 --> 3,
-		2 --> return;,
+		2 -IfFalse-> 3,
+		2 -IfTrue-> return;,
 		3 --> "finally",
 		return; -Return-> "finally"
 	--- */
