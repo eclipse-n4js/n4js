@@ -12,23 +12,21 @@ package org.eclipse.n4js.ui.contentassist;
 
 import static org.eclipse.n4js.parser.InternalSemicolonInjectingParser.SEMICOLON_INSERTED;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenSource;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.ui.contentassist.antlr.lexer.InternalN4JSLexer;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.Lexer;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.util.Strings;
-
-import com.google.common.collect.Iterators;
-
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ui.contentassist.antlr.lexer.InternalN4JSLexer;
 
 /**
  * An implementation of an Antlr {@link TokenSource} that is backed by a previously parsed node model. The leafs are
@@ -84,7 +82,7 @@ public class NodeModelTokenSource implements TokenSource {
 		}
 		ILeafNode leaf = leafNodes.next();
 		if (leaf.getTotalOffset() >= endOffset) {
-			leafNodes = Iterators.emptyIterator();
+			leafNodes = Collections.emptyIterator();
 			return Token.EOF_TOKEN;
 		}
 		if (leaf.getTotalEndOffset() <= startOffset) {
@@ -134,7 +132,7 @@ public class NodeModelTokenSource implements TokenSource {
 					return new CommonToken(semicolonTokenType, leaf.getText());
 				}
 				if (leaf.getTotalEndOffset() == endOffset) {
-					leafNodes = Iterators.emptyIterator();
+					leafNodes = Collections.emptyIterator();
 					return new CommonToken(tokenType, leaf.getText());
 				}
 				next = new CommonToken(semicolonTokenType, leaf.getText());

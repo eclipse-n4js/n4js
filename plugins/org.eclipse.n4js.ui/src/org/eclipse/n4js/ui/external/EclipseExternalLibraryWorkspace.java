@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.addAll;
-import static com.google.common.collect.Iterators.emptyIterator;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Maps.newTreeMap;
@@ -170,7 +169,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 	@Override
 	public Iterator<URI> getArchiveIterator(URI archiveLocation, String archiveRelativeLocation) {
 		ensureInitialized();
-		return emptyIterator();
+		return Collections.emptyIterator();
 	}
 
 	@Override
@@ -201,7 +200,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 			}
 		}
 
-		return emptyIterator();
+		return Collections.emptyIterator();
 	}
 
 	@Override
