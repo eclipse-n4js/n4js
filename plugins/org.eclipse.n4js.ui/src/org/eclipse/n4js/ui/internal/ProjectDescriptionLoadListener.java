@@ -24,6 +24,9 @@ import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 
@@ -31,10 +34,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 /**
  * An internal notification mechanism to announce loaded project descriptions.
@@ -103,10 +102,12 @@ public class ProjectDescriptionLoadListener implements IEagerContribution {
 				return;
 			}
 			IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+				@SuppressWarnings("deprecation")
 				@Override
 				public void run(IProgressMonitor monitor) throws CoreException {
 					IProjectDescription description = project.getDescription();
 					IProject[] array = newRequires.toArray(new IProject[newRequires.size()]);
+
 					description.setDynamicReferences(array);
 					project.setDescription(description, IResource.AVOID_NATURE_CONFIG, monitor);
 				}

@@ -927,7 +927,7 @@ public class TestResultsView extends ViewPart {
 			if (!i.next().isRunning())
 				i.remove();
 		// if the currently shown root was among the purged ones, clear the UI
-		if (currentRoot != null && !registeredSessions.contains(currentRoot))
+		if (currentRoot != null && !registeredSessions.stream().filter(session -> session.root == currentRoot).findFirst().isPresent())
 			setShownTestTree(null);
 		// if nothing is shown, show the newest session
 		if (currentRoot == null && !registeredSessions.isEmpty())
