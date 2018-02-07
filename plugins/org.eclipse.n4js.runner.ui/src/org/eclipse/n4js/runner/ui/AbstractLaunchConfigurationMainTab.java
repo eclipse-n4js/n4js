@@ -20,6 +20,9 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -36,10 +39,6 @@ import org.eclipse.ui.dialogs.ResourceListSelectionDialog;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.runner.RunConfiguration;
 
 /**
  * Base implementation for the main tab of Eclipse launch configurations for N4JS runners and testers.
@@ -97,7 +96,6 @@ public abstract class AbstractLaunchConfigurationMainTab extends AbstractLaunchC
 		txtResource.setLayoutData(gd);
 		txtResource.setFont(parent.getFont());
 		txtResource.addModifyListener(new ModifyListener() {
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void modifyText(ModifyEvent e) {
 				updateLaunchConfigurationDialog();
