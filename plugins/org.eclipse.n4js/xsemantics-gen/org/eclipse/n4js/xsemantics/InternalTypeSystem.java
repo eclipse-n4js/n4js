@@ -5400,7 +5400,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInAssignmentExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final AssignmentExpression expr, final Expression operand) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    /* { ! jsVariantHelper.isTypeAware(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { DestructureUtils.isTopOfAssignment(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { expr.op===AssignmentOperator.ASSIGN; if (operand===expr.lhs) { T = G.bottomTypeRef } else { G |- expr.lhs : T } } or { expr.op===AssignmentOperator.ADD_ASSIGN if (operand===expr.lhs) { T = TypeUtils.createNonSimplifiedIntersectionType(G.numberTypeRef, G.stringTypeRef); } else { G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef if (lhsTypeRef.declaredType === G.stringType) { T = G.anyTypeRef } else if(G.isNumeric(lhsTypeRef.declaredType)) { T = G.numberTypeRef } else { T = G.anyTypeRef } } } or { T = G.numberTypeRef } */
+    /* { ! jsVariantHelper.isTypeAware(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { DestructureUtils.isTopOfDestructuringAssignment(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { expr.op===AssignmentOperator.ASSIGN; if (operand===expr.lhs) { T = G.bottomTypeRef } else { G |- expr.lhs : T } } or { expr.op===AssignmentOperator.ADD_ASSIGN if (operand===expr.lhs) { T = TypeUtils.createNonSimplifiedIntersectionType(G.numberTypeRef, G.stringTypeRef); } else { G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef if (lhsTypeRef.declaredType === G.stringType) { T = G.anyTypeRef } else if(G.isNumeric(lhsTypeRef.declaredType)) { T = G.numberTypeRef } else { T = G.anyTypeRef } } } or { T = G.numberTypeRef } */
     {
       RuleFailedException previousFailure = null;
       try {
@@ -5419,13 +5419,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         }
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
-        /* { DestructureUtils.isTopOfAssignment(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { expr.op===AssignmentOperator.ASSIGN; if (operand===expr.lhs) { T = G.bottomTypeRef } else { G |- expr.lhs : T } } or { expr.op===AssignmentOperator.ADD_ASSIGN if (operand===expr.lhs) { T = TypeUtils.createNonSimplifiedIntersectionType(G.numberTypeRef, G.stringTypeRef); } else { G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef if (lhsTypeRef.declaredType === G.stringType) { T = G.anyTypeRef } else if(G.isNumeric(lhsTypeRef.declaredType)) { T = G.numberTypeRef } else { T = G.anyTypeRef } } } or { T = G.numberTypeRef } */
+        /* { DestructureUtils.isTopOfDestructuringAssignment(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { expr.op===AssignmentOperator.ASSIGN; if (operand===expr.lhs) { T = G.bottomTypeRef } else { G |- expr.lhs : T } } or { expr.op===AssignmentOperator.ADD_ASSIGN if (operand===expr.lhs) { T = TypeUtils.createNonSimplifiedIntersectionType(G.numberTypeRef, G.stringTypeRef); } else { G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef if (lhsTypeRef.declaredType === G.stringType) { T = G.anyTypeRef } else if(G.isNumeric(lhsTypeRef.declaredType)) { T = G.numberTypeRef } else { T = G.anyTypeRef } } } or { T = G.numberTypeRef } */
         {
           try {
-            boolean _isTopOfAssignment = DestructureUtils.isTopOfAssignment(expr);
-            /* DestructureUtils.isTopOfAssignment(expr) */
-            if (!_isTopOfAssignment) {
-              sneakyThrowRuleFailedException("DestructureUtils.isTopOfAssignment(expr)");
+            boolean _isTopOfDestructuringAssignment = DestructureUtils.isTopOfDestructuringAssignment(expr);
+            /* DestructureUtils.isTopOfDestructuringAssignment(expr) */
+            if (!_isTopOfDestructuringAssignment) {
+              sneakyThrowRuleFailedException("DestructureUtils.isTopOfDestructuringAssignment(expr)");
             }
             Expression _lhs_1 = expr.getLhs();
             boolean _tripleEquals_1 = (operand == _lhs_1);
@@ -5736,8 +5736,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef T = null; // output parameter
     if ((forStmnt.isForOf() && (expression == forStmnt.getExpression()))) {
       final Wildcard wildThing = TypeRefsFactory.eINSTANCE.createWildcard();
-      boolean _isTopOfForStatement = DestructureUtils.isTopOfForStatement(forStmnt);
-      if (_isTopOfForStatement) {
+      boolean _isTopOfDestructuringForStatement = DestructureUtils.isTopOfDestructuringForStatement(forStmnt);
+      if (_isTopOfDestructuringForStatement) {
       } else {
         VariableDeclaration _xifexpression = null;
         boolean _isEmpty = forStmnt.getVarDecl().isEmpty();

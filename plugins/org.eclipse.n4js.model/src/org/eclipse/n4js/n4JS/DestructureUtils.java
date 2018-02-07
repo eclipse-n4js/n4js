@@ -13,6 +13,7 @@ package org.eclipse.n4js.n4JS;
 import org.eclipse.emf.ecore.EObject;
 
 /**
+ * Utilities for destructuring patterns
  */
 public abstract class DestructureUtils {
 
@@ -36,7 +37,7 @@ public abstract class DestructureUtils {
 	 * "Destructuring Assignment" of the ECMA Script 6 specification. This is done by dedicated validations in
 	 * ASTStructureValidator.
 	 */
-	public static boolean isTopOfAssignment(EObject eobj) {
+	public static boolean isTopOfDestructuringAssignment(EObject eobj) {
 		if (eobj instanceof AssignmentExpression) {
 			AssignmentExpression ae = (AssignmentExpression) eobj;
 			return isObjectOrArrayLiteral(ae.getLhs());
@@ -45,7 +46,7 @@ public abstract class DestructureUtils {
 	}
 
 	/** @return true iff the given object is of type {@link VariableBinding} and has a {@link BindingPattern}. */
-	public static boolean isTopOfVariableBinding(EObject eobj) {
+	public static boolean isTopOfDestructuringVariableBinding(EObject eobj) {
 		if (eobj instanceof VariableBinding) {
 			VariableBinding vb = (VariableBinding) eobj;
 			return vb.getPattern() != null;
@@ -69,7 +70,7 @@ public abstract class DestructureUtils {
 	 *
 	 * because in such cases the destructuring is seen as part of the variable declaration, not the for statement.
 	 */
-	public static boolean isTopOfForStatement(EObject eobj) {
+	public static boolean isTopOfDestructuringForStatement(EObject eobj) {
 		if (eobj instanceof ForStatement) {
 			ForStatement fs = (ForStatement) eobj;
 			boolean isDestructuringForStatement = false;
@@ -84,18 +85,18 @@ public abstract class DestructureUtils {
 	/**
 	 * Checks the following methods:
 	 * <ul>
-	 * <li/>{@link #isTopOfAssignment(EObject)}
-	 * <li/>{@link #isTopOfForStatement(EObject)}
-	 * <li/>{@link #isTopOfVariableBinding(EObject)}
+	 * <li/>{@link #isTopOfDestructuringAssignment(EObject)}
+	 * <li/>{@link #isTopOfDestructuringForStatement(EObject)}
+	 * <li/>{@link #isTopOfDestructuringVariableBinding(EObject)}
 	 * </ul>
 	 *
 	 * @return true iff one of other {@code isTop} methods returns true
 	 */
-	public static boolean isTop(EObject eobj) {
+	public static boolean isTopOfDestructuring(EObject eobj) {
 		boolean isParentOfDestructuring = false;
-		isParentOfDestructuring |= isTopOfAssignment(eobj);
-		isParentOfDestructuring |= isTopOfVariableBinding(eobj);
-		isParentOfDestructuring |= isTopOfForStatement(eobj);
+		isParentOfDestructuring |= isTopOfDestructuringAssignment(eobj);
+		isParentOfDestructuring |= isTopOfDestructuringVariableBinding(eobj);
+		isParentOfDestructuring |= isTopOfDestructuringForStatement(eobj);
 		return isParentOfDestructuring;
 	}
 
@@ -104,7 +105,7 @@ public abstract class DestructureUtils {
 	 *         given {@link EObject} is part of a destructuring pattern. Otherwise returns null.
 	 */
 	public static EObject getTop(EObject eobj) {
-		if (isTop(eobj)) {
+		if (isTopOfDestructuring(eobj)) {
 			return eobj;
 		}
 		EObject root = getRoot(eobj);
@@ -222,9 +223,9 @@ public abstract class DestructureUtils {
 		final EObject parent = root.eContainer();
 		if (parent instanceof VariableBinding)
 			return ((VariableBinding) parent).getExpression() == root;
-		if (parent instanceof AssignmentExpression && isTopOfAssignment(parent))
+		if (parent instanceof AssignmentExpression && isTopOfDestructuringAssignment(parent))
 			return ((AssignmentExpression) parent).getRhs() == root;
-		if (parent instanceof ForStatement && isTopOfForStatement(parent)) {
+		if (parent instanceof ForStatement && isTopOfDestructuringForStatement(parent)) {
 			// reason why we require obj!=root below:
 			// in code like "for([a,b] of [ ["hello",42], ["world",43] ]) {}" the top-level array literal after
 			// the "of" is *NOT* an array being destructured; instead, it's the array being iterated over.

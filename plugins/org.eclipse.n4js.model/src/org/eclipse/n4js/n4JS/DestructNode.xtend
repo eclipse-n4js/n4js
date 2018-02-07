@@ -191,7 +191,7 @@ public class DestructNode {
 	 */
 	public static def DestructNode unify(AssignmentExpression expr) {
 		if (expr !== null && expr.lhs !== null && expr.rhs !== null
-			&& DestructureUtils.isTopOfAssignment(expr)
+			&& DestructureUtils.isTopOfDestructuringAssignment(expr)
 		) {
 			unify(expr.lhs, expr.rhs);
 		}
@@ -202,7 +202,7 @@ public class DestructNode {
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
 	public static def DestructNode unify(ForStatement stmnt) {
-		if (stmnt !== null && DestructureUtils.isTopOfForStatement(stmnt)) {
+		if (stmnt !== null && DestructureUtils.isTopOfDestructuringForStatement(stmnt)) {
 			val valueToBeDestructured = if (stmnt.forOf) {
 					stmnt.expression
 				} else if (stmnt.forIn) {

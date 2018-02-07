@@ -85,7 +85,7 @@ class DestructureHelper {
 
 			val rootParent2 = rootParent.eContainer;
 			val isLocatedUnderForInOf = rootParent2 instanceof ForStatement
-					&& DestructureUtils.isTopOfForStatement(rootParent2);
+					&& DestructureUtils.isTopOfDestructuringForStatement(rootParent2);
 
 			val rootNode = if(isLocatedUnderForInOf) {
 				DestructNode.unify(rootParent2 as ForStatement)

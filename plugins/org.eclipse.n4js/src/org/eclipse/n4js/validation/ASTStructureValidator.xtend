@@ -95,9 +95,9 @@ import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
-import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfAssignment
-import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfForStatement
 import org.eclipse.n4js.n4JS.DestructureUtils
+import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
+import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -536,7 +536,7 @@ class ASTStructureValidator {
 		)
 		val lhs = model.lhs
 		if (lhs !== null && !lhs.isValidSimpleAssignmentTarget) {
-			if (model.op !== AssignmentOperator.ASSIGN || !model.isTopOfAssignment) {
+			if (model.op !== AssignmentOperator.ASSIGN || !model.isTopOfDestructuringAssignment) {
 				val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS)
 				val target = nodes.head
 				producer.node = target
@@ -810,7 +810,7 @@ class ASTStructureValidator {
 								IssueCodes.getDefaultSeverity(IssueCodes.AST_VAR_DECL_IN_FOR_INVALID_INIT),
 								IssueCodes.AST_VAR_DECL_IN_FOR_INVALID_INIT))
 					}
-				} else if(!initExpr.isValidSimpleAssignmentTarget && !model.isTopOfForStatement) {
+				} else if(!initExpr.isValidSimpleAssignmentTarget && !model.isTopOfDestructuringForStatement) {
 					val nodes = NodeModelUtils.findNodesForFeature(model,
 						N4JSPackage.Literals.FOR_STATEMENT__INIT_EXPR)
 					val target = nodes.head ?: NodeModelUtils.findActualNodeFor(initExpr)

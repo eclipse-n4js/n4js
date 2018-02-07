@@ -62,7 +62,7 @@ public class AssignmentRelationFactory {
 	Multimap<Symbol, Object> findAssignments(ControlFlowElement cfe) {
 		Multimap<Symbol, Object> assgns = HashMultimap.create();
 
-		if (DestructureUtils.isTop(cfe)) {
+		if (DestructureUtils.isTopOfDestructuring(cfe)) {
 			findInAllDestructNodes(assgns, cfe);
 
 		} else if (DestructureUtils.isInDestructuringPattern(cfe)) {

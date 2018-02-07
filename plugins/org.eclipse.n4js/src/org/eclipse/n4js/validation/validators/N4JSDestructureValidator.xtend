@@ -85,7 +85,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def public void checkNoEmptyPattern_Assignment(AssignmentExpression expr) {
-		if(DestructureUtils.isTopOfAssignment(expr)) {
+		if(DestructureUtils.isTopOfDestructuringAssignment(expr)) {
 			val lhs = expr.lhs;
 			val empty = switch(lhs) {
 			ArrayLiteral: lhs.elements.empty

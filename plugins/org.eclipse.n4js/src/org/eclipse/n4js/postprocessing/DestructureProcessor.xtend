@@ -119,10 +119,10 @@ package class DestructureProcessor extends AbstractProcessor {
 		if (obj instanceof Expression) {
 			val parent = obj.eContainer;
 			if (parent instanceof ForStatement) {
-				return DestructureUtils.isTopOfForStatement(parent);
+				return DestructureUtils.isTopOfDestructuringForStatement(parent);
 			}
 			if (parent instanceof AssignmentExpression) {
-				return DestructureUtils.isTopOfAssignment(parent)
+				return DestructureUtils.isTopOfDestructuringAssignment(parent)
 			}
 			return parent instanceof VariableBinding
 				|| parent instanceof BindingElement

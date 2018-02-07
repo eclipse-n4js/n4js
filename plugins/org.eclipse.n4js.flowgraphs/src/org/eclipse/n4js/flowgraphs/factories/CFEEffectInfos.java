@@ -76,7 +76,7 @@ class CFEEffectInfos {
 			}
 
 			List<Expression> idRefs = new LinkedList<>();
-			if (DestructureUtils.isTopOfAssignment(feature)) {
+			if (DestructureUtils.isTopOfDestructuringAssignment(feature)) {
 				idRefs.addAll(DestructNode.getAllDeclaredIdRefs(feature));
 			} else {
 				idRefs.add(lhs);

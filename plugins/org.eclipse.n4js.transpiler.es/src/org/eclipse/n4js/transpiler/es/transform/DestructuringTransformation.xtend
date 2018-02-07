@@ -81,9 +81,9 @@ class DestructuringTransformation extends Transformation {
 		val destructBindings = collectNodes(state.im, VariableStatement, true)
 			.filter[containsDestructuringPattern].toList;
 		val destructAssignments = collectNodes(state.im, AssignmentExpression, true)
-			.filter[isTopOfAssignment].filter[isRoot].toList;
+			.filter[isTopOfDestructuringAssignment].filter[isRoot].toList;
 		val destructForStmnts = collectNodes(state.im, ForStatement, true)
-			.filter[containsDestructuringPattern || isTopOfForStatement].toList;
+			.filter[containsDestructuringPattern || isTopOfDestructuringForStatement].toList;
 
 		// now perform the changes
 		destructBindings.forEach[transformDestructuringBindings];

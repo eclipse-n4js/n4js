@@ -2125,7 +2125,7 @@ from {
 	}
 	or
 	{
-		DestructureUtils.isTopOfAssignment(expr)
+		DestructureUtils.isTopOfDestructuringAssignment(expr)
 		if (operand===expr.lhs) {
 			// left-hand side:
 			T = G.bottomTypeRef // no expectation
@@ -2278,7 +2278,7 @@ from {
 
 		val wildThing = TypeRefsFactory.eINSTANCE.createWildcard;
 
-		if(DestructureUtils.isTopOfForStatement(forStmnt)) {
+		if(DestructureUtils.isTopOfDestructuringForStatement(forStmnt)) {
 			// special case: destructuring pattern in for..of
 			// e.g. for(var [a,b] of myListOfArrays) {}
 			// -> do nothing (keep wildThing on the default)
