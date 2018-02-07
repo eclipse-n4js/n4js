@@ -19,12 +19,8 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
  */
 @Data
 class ImportEntry {
-	// specifier of the module to import from
-	String completeModuleSpecifier
 	// this string will be used in the list of dependencies (i.e. 1st argument to the System.register() call)
 	String actualModuleSpecifier
-	// name of module-parameter passed into setter
-	String fparName
 	// Mappings of things to import. the actualName can be null, which means NamespaceImport
 	List<ImportAssignment> variableSTE_actualName
 	// for Tracing: IM-element which will be replaced:

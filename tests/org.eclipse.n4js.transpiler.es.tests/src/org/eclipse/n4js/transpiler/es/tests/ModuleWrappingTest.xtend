@@ -259,8 +259,9 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 			       c2
 			   ;
 			   return {
-			            setters  : [function ($_import_ExportedStuff ){
-			                          C2 = $_import_ExportedStuff.C2;
+			            setters  : [function ($exports){
+			            	          // ExportedStuff
+			                          C2 = $exports.C2;
 			                        }                                                    ],
 			            execute  : function (){
 			            			 c2 = new C2();
@@ -301,9 +302,10 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		       C2
 		   ;
 		   return {
-		            setters  : [function ($_import_ExportedStuff ){
-		                          C1 = $_import_ExportedStuff.C1;
-		                          C2 = $_import_ExportedStuff.C2;
+		            setters  : [function ($exports){
+		                          // ExportedStuff
+		                          C1 = $exports.C1;
+		                          C2 = $exports.C2;
 		                        }                                                    ],
 		            execute  : function (){
 		                         console.log(C1);
@@ -344,12 +346,14 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		       C2
 		   ;
 		   return {
-		            setters  : [function ($_import_ExportedStuff ){
-		                          C1 = $_import_ExportedStuff.C1;
-		                          XX = $_import_ExportedStuff.C2;
+		            setters  : [function ($exports ){
+		                          // ExportedStuff
+		                          C1 = $exports.C1;
+		                          XX = $exports.C2;
 		                        }
-		                        , function ($_import_OtherExportedStuff ){
-								  C2 = $_import_OtherExportedStuff.C2;
+		                        , function ($exports){
+		                          // OtherExportedStuff
+								  C2 = $exports.C2;
 								}],
 		            execute  : function (){
 		                         console.log(C1);
@@ -389,12 +393,16 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		       Namespace
 		   ;
 		   return {
-		            setters  : [function ($_import_OtherExportedStuff ){
-		                          C2 = $_import_OtherExportedStuff.C2;
-		                        }
-								 , function ($_import_ExportedStuff ){
-								  Namespace = $_import_ExportedStuff;
-								}],
+		            setters  : [
+		                function ($exports){
+		                    // OtherExportedStuff
+		                    C2 = $exports.C2;
+		                },
+		                function ($exports){
+		                    // ExportedStuff
+		                    Namespace = $exports;
+		                }
+		            ],
 		            execute  : function (){
 		                         console.log(Namespace.C1);
 		                         console.log(C2);
@@ -469,8 +477,9 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 				$n4Export('A', A);
 
 			    return {
-			             setters  : [function ($_import_ExportedStuff ){
-			                           C1 = $_import_ExportedStuff.C1;
+			             setters  : [function ($exports){
+			                           // ExportedStuff
+			                           C1 = $exports.C1;
 			                         }                                                      ],
 			             execute  : function (){
 			                          $makeClass(A, N4Object, [], {
@@ -563,8 +572,9 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 				$n4Export('A', A);
 
 			    return {
-			             setters  : [function ($_import_ExportedStuff ){
-			                           C1 = $_import_ExportedStuff.C1;
+			             setters  : [function ($exports){
+			                          // ExportedStuff
+			                           C1 = $exports.C1;
 			                         }                                                      ],
 			             execute  : function (){
 			                          $makeClass(A, N4Object, [], {

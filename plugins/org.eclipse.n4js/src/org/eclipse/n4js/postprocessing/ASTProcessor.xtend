@@ -12,7 +12,6 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
@@ -49,6 +48,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
@@ -85,8 +85,6 @@ public class ASTProcessor extends AbstractProcessor {
 	private TypeProcessor typeProcessor;
 	@Inject
 	private TypeDeferredProcessor typeDeferredProcessor;
-	@Inject
-	private ArrowFunctionProcessor arrowFunctionProcessor;
 	@Inject
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
 
@@ -405,8 +403,6 @@ public class ASTProcessor extends AbstractProcessor {
 		typeDeferredProcessor.handleDeferredTypeRefs_postChildren(G, node, cache);
 
 		typeProcessor.typeNode(G, node, cache, indentLevel);
-
-		arrowFunctionProcessor.tweakArrowFunctions(G, node, cache);
 
 		// references to other files via import statements:
 		if (node instanceof NamedImportSpecifier) {

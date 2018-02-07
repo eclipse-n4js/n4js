@@ -20,23 +20,28 @@
 		};
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTestController) {
-					TestController = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTestController.TestController;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController
+					TestController = $exports.TestController;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002freporter_u002fide_u002fIDEReporter) {
-					IDEReporter = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002freporter_u002fide_u002fIDEReporter.IDEReporter;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.reporter.ide/src-gen/org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter
+					IDEReporter = $exports.IDEReporter;
 				},
-				function($_import_n4js_u002flang_u002fN4Injector) {
-					N4Injector = $_import_n4js_u002flang_u002fN4Injector.N4Injector;
+				function($exports) {
+					// n4js.lang/src-gen/n4js/lang/N4Injector
+					N4Injector = $exports.N4Injector;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest) {
-					FIXME1 = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest.FIXME1;
-					FIXME2 = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest.FIXME2;
-					IFIXME = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest.IFIXME;
-					IFIXME2 = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fTest.IFIXME2;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/Test
+					FIXME1 = $exports.FIXME1;
+					FIXME2 = $exports.FIXME2;
+					IFIXME = $exports.IFIXME;
+					IFIXME2 = $exports.IFIXME2;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestDIComponent) {
-					TestDIComponent = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestDIComponent.TestDIComponent;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestDIComponent
+					TestDIComponent = $exports.TestDIComponent;
 				}
 			],
 			execute: function() {
@@ -249,5 +254,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=IDENodeTestRunner.map

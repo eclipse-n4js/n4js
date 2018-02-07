@@ -19,23 +19,29 @@
 		$n4Export('TestExecutor', TestExecutor);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssertionError) {
-					AssertionError = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fassert_u002fAssertionError.AssertionError;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError
+					AssertionError = $exports.AssertionError;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroup) {
-					ResultGroup = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroup.ResultGroup;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup
+					ResultGroup = $exports.ResultGroup;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroups) {
-					ResultGroups = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fResultGroups.ResultGroups;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroups
+					ResultGroups = $exports.ResultGroups;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestResult) {
-					TestResult = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestResult.TestResult;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestResult
+					TestResult = $exports.TestResult;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestSpy) {
-					TestSpy = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fTestSpy.TestSpy;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy
+					TestSpy = $exports.TestSpy;
 				},
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet) {
-					PreconditionNotMet = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002fprecondition_u002fPreconditionNotMet.PreconditionNotMet;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				}
 			],
 			execute: function() {
@@ -420,5 +426,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=TestExecutor.map
