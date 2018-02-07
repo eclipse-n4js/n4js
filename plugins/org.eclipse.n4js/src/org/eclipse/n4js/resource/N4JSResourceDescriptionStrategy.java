@@ -130,7 +130,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 */
 	private Map<String, String> createClassUserData(final Map<String, String> immutableUserData,
 			final TClass tClass) {
-		Map<String, String> userData = newHashMap();
+		Map<String, String> userData = newHashMap(immutableUserData);
 		if (tClass.isExported()) {
 			userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClass.isExported()));
 		}
