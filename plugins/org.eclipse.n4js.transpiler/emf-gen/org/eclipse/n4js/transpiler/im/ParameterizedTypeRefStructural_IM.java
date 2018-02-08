@@ -64,7 +64,7 @@ public interface ParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model ixUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((ix != null))\n{\n\tthrow new <%java.lang.IllegalArgumentException%>(\"ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM.\");\n}'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((ix != null))\n{\n\tthrow new &lt;%java.lang.IllegalArgumentException%&gt;(\"ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM.\");\n}'"
 	 * @generated
 	 */
 	void setDeclaredType(Type ix);

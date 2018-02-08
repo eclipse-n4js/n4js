@@ -121,7 +121,7 @@ public interface TypeVariable extends Type {
 	 * invariant, unless the type variable was explicitly declared on definition site to be co- or contravariant.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.Variance" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final boolean co = this.isDeclaredCovariant();\nfinal boolean contra = this.isDeclaredContravariant();\nif ((co && (!contra)))\n{\n\treturn <%org.eclipse.n4js.ts.types.util.Variance%>.CO;\n}\nelse\n{\n\tif ((contra && (!co)))\n\t{\n\t\treturn <%org.eclipse.n4js.ts.types.util.Variance%>.CONTRA;\n\t}\n\telse\n\t{\n\t\treturn <%org.eclipse.n4js.ts.types.util.Variance%>.INV;\n\t}\n}'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final boolean co = this.isDeclaredCovariant();\nfinal boolean contra = this.isDeclaredContravariant();\nif ((co &amp;&amp; (!contra)))\n{\n\treturn &lt;%org.eclipse.n4js.ts.types.util.Variance%&gt;.CO;\n}\nelse\n{\n\tif ((contra &amp;&amp; (!co)))\n\t{\n\t\treturn &lt;%org.eclipse.n4js.ts.types.util.Variance%&gt;.CONTRA;\n\t}\n\telse\n\t{\n\t\treturn &lt;%org.eclipse.n4js.ts.types.util.Variance%&gt;.INV;\n\t}\n}'"
 	 * @generated
 	 */
 	Variance getVariance();
@@ -130,7 +130,7 @@ public interface TypeVariable extends Type {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.ts.types.TypeVariable%>>emptyEList();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;&gt;emptyEList();'"
 	 * @generated
 	 */
 	EList<TypeVariable> getTypeVars();
@@ -148,7 +148,7 @@ public interface TypeVariable extends Type {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false" upperBoundUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.String%> _xifexpression = null;\nboolean _isDeclaredCovariant = this.isDeclaredCovariant();\nif (_isDeclaredCovariant)\n{\n\t_xifexpression = \"out \";\n}\nelse\n{\n\t<%java.lang.String%> _xifexpression_1 = null;\n\tboolean _isDeclaredContravariant = this.isDeclaredContravariant();\n\tif (_isDeclaredContravariant)\n\t{\n\t\t_xifexpression_1 = \"in \";\n\t}\n\telse\n\t{\n\t\t_xifexpression_1 = \"\";\n\t}\n\t_xifexpression = _xifexpression_1;\n}\n<%java.lang.String%> _name = this.getName();\n<%java.lang.String%> _plus = (_xifexpression + _name);\n<%java.lang.String%> _xifexpression_2 = null;\nif ((upperBound != null))\n{\n\t<%java.lang.String%> _typeRefAsString = upperBound.getTypeRefAsString();\n\t_xifexpression_2 = (\" extends \" + _typeRefAsString);\n}\nelse\n{\n\t_xifexpression_2 = \"\";\n}\nreturn (_plus + _xifexpression_2);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _xifexpression = null;\nboolean _isDeclaredCovariant = this.isDeclaredCovariant();\nif (_isDeclaredCovariant)\n{\n\t_xifexpression = \"out \";\n}\nelse\n{\n\t&lt;%java.lang.String%&gt; _xifexpression_1 = null;\n\tboolean _isDeclaredContravariant = this.isDeclaredContravariant();\n\tif (_isDeclaredContravariant)\n\t{\n\t\t_xifexpression_1 = \"in \";\n\t}\n\telse\n\t{\n\t\t_xifexpression_1 = \"\";\n\t}\n\t_xifexpression = _xifexpression_1;\n}\n&lt;%java.lang.String%&gt; _name = this.getName();\n&lt;%java.lang.String%&gt; _plus = (_xifexpression + _name);\n&lt;%java.lang.String%&gt; _xifexpression_2 = null;\nif ((upperBound != null))\n{\n\t&lt;%java.lang.String%&gt; _typeRefAsString = upperBound.getTypeRefAsString();\n\t_xifexpression_2 = (\" extends \" + _typeRefAsString);\n}\nelse\n{\n\t_xifexpression_2 = \"\";\n}\nreturn (_plus + _xifexpression_2);'"
 	 * @generated
 	 */
 	String getTypeVariableAsString(TypeRef upperBound);

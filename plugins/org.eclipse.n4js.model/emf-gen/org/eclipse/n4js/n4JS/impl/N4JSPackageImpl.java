@@ -1583,6 +1583,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		isInited = true;
 
+		// Initialize simple dependencies
+		EcorePackage.eINSTANCE.eClass();
+		TypesPackage.eINSTANCE.eClass();
+		TypeRefsPackage.eINSTANCE.eClass();
+
 		// Create package meta-data objects
 		theN4JSPackage.createPackageContents();
 
