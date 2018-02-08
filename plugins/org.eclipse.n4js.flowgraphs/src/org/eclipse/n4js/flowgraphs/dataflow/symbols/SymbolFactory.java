@@ -110,6 +110,9 @@ public class SymbolFactory {
 
 	/** @return true iff the given element represents a {@link Symbol} */
 	static public boolean canCreate(ControlFlowElement cfe) {
+		if (cfe == null) {
+			return false;
+		}
 		return symbolCreators.containsKey(cfe.getClass());
 	}
 
