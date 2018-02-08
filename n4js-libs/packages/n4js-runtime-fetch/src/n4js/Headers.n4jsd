@@ -21,6 +21,8 @@ export external public class Headers implements Iterable<Iterable2<string, strin
     public set(name: string, value: string): void;
 
     public entries(): IteratorExt<Iterable2<string, string>>;
+    public forEach(callback: (value: string, name: string=, context: Object=) => void, context: Object=): void;
+
     @Override public [Symbol.iterator](): IteratorExt<Iterable2<string, string>>;
 }
 
