@@ -125,6 +125,13 @@ class ErrorTest extends AbstractParserTest {
 		'''.parse
 		analyser.analyse(script, "script", "script")
 	}
+	
+	@Test
+	def void testNoNPE_06() {
+		val script = '''mport * as 1 from 'a/X';
+			var N1.x: X;'''.parse
+		analyser.analyse(script, "script", "script");
+	}
 
 	@Test
 	def void testNoCyclicResolution_01() {
