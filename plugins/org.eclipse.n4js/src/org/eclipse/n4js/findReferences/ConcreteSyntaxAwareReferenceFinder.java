@@ -157,6 +157,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 				} catch (IllegalNodeException ine) {
 					// illegal nodes exist in broken ASTs
 					// fired in linkingHelper.getCrossRefNodeAsString(...)
+					result = null;
 				}
 			} else {
 				result = resolveInternalProxy(value, resource);
