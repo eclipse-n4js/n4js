@@ -88,6 +88,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4idl.scoping.FailedToInferContextVersionDescription
 
 /**
  * This class contains custom scoping description.
@@ -130,7 +131,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject extension SourceElementExtensions
 
 	@Inject EObjectDescriptionHelper descriptionsHelper;
-	
+
 	@Inject extension ReactHelper;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
@@ -567,8 +568,16 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (reference === TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE ||
 			reference === N4JSPackage.Literals.IDENTIFIER_REF__ID
 		) {
-			val int contextVersion = versionHelper.computeMaximumVersion(context);
-			return new N4IDLVersionAwareScope(scope, contextVersion);
+			val contextVersion = versionHelper.computeMaximumVersion(context);
+			val versionAwareScope = new N4IDLVersionAwareScope(scope, contextVersion.or(Integer.MAX_VALUE));
+
+			if (contextVersion.present) {
+				return versionAwareScope;
+			} else {
+				// If the context-version cannot be determined, wrap all results in a
+				// corresponding ({@link FailedToInferContextVersionDescription}).
+				return new FailedToInferContextVersionDescription.TVersionableWrappingScope(scope)
+			}
 		}
 
 		return scope;

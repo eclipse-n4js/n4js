@@ -14,19 +14,21 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.ScriptElement
+import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VersionedElement
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
-import org.eclipse.n4js.n4JS.Statement
-import org.eclipse.n4js.n4JS.ScriptElement
-import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.n4js.n4JS.Script
 
 /**
  * Validate the use of version in N4IDL
@@ -57,15 +59,38 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		if (context !== null) {
 			val requestedVersion = if (ref.requestedVersion === null) 0 else ref.requestedVersion.intValue
 			val maxVersion = versionHelper.computeMaximumVersion(context)
+
+			// if no context-version can be determined, do not validate anything
+			if (!maxVersion.present) {
+				return;
+			}
 			// The referenced version cannot exceed the maximum version of the context
-			if (requestedVersion > maxVersion) {
-				val message = IssueCodes.getMessageForIDL_INVALID_VERSION(requestedVersion, maxVersion);
+			if (requestedVersion > maxVersion.get()) {
+				val message = IssueCodes.getMessageForIDL_INVALID_VERSION(requestedVersion, maxVersion.get());
 				addIssue(
 					message,
 					context,
 					ref.eContainingFeature, IssueCodes.IDL_INVALID_VERSION
 				);
 			}
+		}
+	}
+
+	/** Check that the current context allows for the explicit declaration of versions in references. */
+	@Check
+	def checkExplicitVersionDeclaration(VersionedReference ref) {
+		// this validation is only active for variants that actually support versioned types
+		if (!variantHelper.allowVersionedTypes(ref)) {
+			return;
+		}
+
+		val containerFunctionDeclaration = EcoreUtil2.getContainerOfType(ref, FunctionDeclaration);
+		if (null === containerFunctionDeclaration ||
+			!AnnotationDefinition.MIGRATION.hasAnnotation(containerFunctionDeclaration)
+		) {
+			val message = IssueCodes.messageForIDL_EXPLICIT_VERSION_DECLARATION_NOT_ALLOWED;
+			addIssue(message, ref, TypeRefsPackage.Literals.VERSIONED_REFERENCE__REQUESTED_VERSION,
+				IssueCodes.IDL_EXPLICIT_VERSION_DECLARATION_NOT_ALLOWED);
 		}
 	}
 

@@ -22,6 +22,9 @@ import org.eclipse.xpect.runner.Xpect
 import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.ts.types.Type
 
 /**
  * Provides X!PECT methods for testing versions
@@ -49,6 +52,8 @@ class ModelVersionXpectMethod {
 
 	private def int getVersion(EObject object) {
 		switch (object) {
+			IdentifierRef: return getVersion(object.id)
+			Type: return object.version
 			Versionable: object.version
 			TypableElement: ts.tau(object).version
 			default: throw new IllegalArgumentException("Cannot determine version of " + object.eClass)

@@ -11,25 +11,16 @@
 
 /* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
 
-// XPECT version of E --> 1
-enum E # 1 {
-	BLUE
+class A#1 {
+	static a : A
+	field : A
+
+	m() {
+		// XPECT version of 'A' --> 1
+		(A).a;
+		// XPECT version of 'A' --> 1
+		(((((((A)))))).a.field.field).field;
+	}
 }
 
-// XPECT version of E --> 2
-enum E # 2 {
-	GREEN
-}
-
-// XPECT version of C --> 1
-class C # 1 {
-	// XPECT version of E --> 1
-	e1: E;
-}
-
-// XPECT version of C --> 2
-class C # 2 {
-	// XPECT version of E --> 2
-	e2: E;
-}
-
+class A#2 {}
