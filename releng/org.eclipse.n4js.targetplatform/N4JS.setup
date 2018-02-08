@@ -377,7 +377,7 @@
         <repository
             url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.2.13.v20150730"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/updates/2.13"/>
+            url="http://download.eclipse.org/modeling/emf/emf/updates/2.12"/>
         <repository
             url="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.0"/>
         <repository
