@@ -59,6 +59,14 @@ class BinaryLogicalExpressionFactory {
 
 		cNode.connectInternalSucc(elseCFT, lhsNode, exitNode); // short-circuit evaluation
 
+		if (lhsNode == null) { // broken AST
+			if (rhsNode == null) {
+				cNode.connectInternalSucc(entryNode, exitNode);
+			} else {
+				cNode.connectInternalSucc(entryNode, rhsNode);
+			}
+		}
+
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
