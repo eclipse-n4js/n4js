@@ -347,12 +347,6 @@ Contributors:
 							</goals>
 							<configuration>
 								<sources>
-									<source>src-gen</source>
-								</sources>
-								<sources>
-									<source>emf-gen</source>
-								</sources>
-								<sources>
 									<source>grammar-gen</source>
 								</sources>
 								<sources>
