@@ -37,7 +37,7 @@ public interface ThisTypeRef extends BaseTypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.String%> _modifiersAsString = this.getModifiersAsString();\nreturn (\"this\" + _modifiersAsString);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _modifiersAsString = this.getModifiersAsString();\nreturn (\"this\" + _modifiersAsString);'"
 	 * @generated
 	 */
 	String getTypeRefAsString();
@@ -50,7 +50,7 @@ public interface ThisTypeRef extends BaseTypeRef {
 	 * Always returns NOMINAL for simple this type references
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.n4js.ts.types.TypingStrategy%>.NOMINAL;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.NOMINAL;'"
 	 * @generated
 	 */
 	TypingStrategy getTypingStrategy();
@@ -64,7 +64,7 @@ public interface ThisTypeRef extends BaseTypeRef {
 	 * Overridden in {@link ParameterizedTypeRefStructural}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.ts.types.TStructMember%>>emptyEList();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt;emptyEList();'"
 	 * @generated
 	 */
 	EList<TStructMember> getStructuralMembers();

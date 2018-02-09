@@ -106,7 +106,7 @@ public interface AccessibleTypeElement extends EObject {
 	 * Returns declared type if specified, otherwise modifier is computed (exported = project, private otherwise)
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.TypeAccessModifier%> _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();\nboolean _equals = <%com.google.common.base.Objects%>.equal(_declaredTypeAccessModifier, <%org.eclipse.n4js.ts.types.TypeAccessModifier%>.UNDEFINED);\nif (_equals)\n{\n\tboolean _isExported = this.isExported();\n\tif (_isExported)\n\t{\n\t\treturn <%org.eclipse.n4js.ts.types.TypeAccessModifier%>.PROJECT;\n\t}\n\telse\n\t{\n\t\treturn <%org.eclipse.n4js.ts.types.TypeAccessModifier%>.PRIVATE;\n\t}\n}\nreturn this.getDeclaredTypeAccessModifier();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.TypeAccessModifier%&gt; _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();\nboolean _equals = &lt;%com.google.common.base.Objects%&gt;.equal(_declaredTypeAccessModifier, &lt;%org.eclipse.n4js.ts.types.TypeAccessModifier%&gt;.UNDEFINED);\nif (_equals)\n{\n\tboolean _isExported = this.isExported();\n\tif (_isExported)\n\t{\n\t\treturn &lt;%org.eclipse.n4js.ts.types.TypeAccessModifier%&gt;.PROJECT;\n\t}\n\telse\n\t{\n\t\treturn &lt;%org.eclipse.n4js.ts.types.TypeAccessModifier%&gt;.PRIVATE;\n\t}\n}\nreturn this.getDeclaredTypeAccessModifier();'"
 	 * @generated
 	 */
 	TypeAccessModifier getTypeAccessModifier();

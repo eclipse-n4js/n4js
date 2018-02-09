@@ -119,7 +119,7 @@ public interface TField extends TMemberWithAccessModifier, TTypedElement, TConst
 	 * * Always returns FIELD
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.n4js.ts.types.MemberType%>.FIELD;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.MemberType%&gt;.FIELD;'"
 	 * @generated
 	 */
 	MemberType getMemberType();
@@ -133,7 +133,7 @@ public interface TField extends TMemberWithAccessModifier, TTypedElement, TConst
 	 * colon separated type if declared. Overrides TMember's method.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>();\nstrb.append(this.getName());\nboolean _isOptional = this.isOptional();\nif (_isOptional)\n{\n\tstrb.append(\"?\");\n}\n<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _typeRef = this.getTypeRef();\nboolean _tripleNotEquals = (_typeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(\": \").append(this.getTypeRef().getTypeRefAsString());\n}\nreturn strb.toString();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.StringBuilder%&gt; strb = new &lt;%java.lang.StringBuilder%&gt;();\nstrb.append(this.getName());\nboolean _isOptional = this.isOptional();\nif (_isOptional)\n{\n\tstrb.append(\"?\");\n}\n&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; _typeRef = this.getTypeRef();\nboolean _tripleNotEquals = (_typeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(\": \").append(this.getTypeRef().getTypeRefAsString());\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String getMemberAsString();
