@@ -21,13 +21,24 @@ include::{find}config.adoc[]
 
 
 
+[[gsec:spec_A.A.field]]
+[role=memberdoc]
+=== ++Field field++
+
+==== Signature
+
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:src/A:A#field++[``++@Final public field: string++``]
+
+
+
+
 [[gsec:spec_A.A.bar]]
 [role=memberdoc]
 === ++Method bar++
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:src/A:A#bar++[``++public bar(n: number): string++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:src/A:A#bar++[``++@Final public bar(n: number): string++``]
 
 
 ==== Description
