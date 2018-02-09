@@ -13,11 +13,10 @@ package org.eclipse.n4js.jsdoc2spec;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.n4js.jsdoc.dom.Doclet;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.annotations.VisibleForTesting;
-
-import org.eclipse.n4js.jsdoc.dom.Doclet;
 
 /**
  * Info of a test method.
@@ -112,7 +111,7 @@ public class SpecTestInfo implements Comparable<SpecTestInfo> {
 		String[] parsedName = parseName(methodName);
 		// String parsedTesteeName = parsedName[0];
 		// parsedTesteeName and given testeeName may differ, this is not a problem since a single test may be used
-		// for several methos (although this is not recommended).
+		// for several methods (although this is not recommended).
 		this.testCase = humanReadable(parsedName[2]);
 		this.testTitle = humanReadable(parsedName[1]);
 	}
@@ -127,6 +126,11 @@ public class SpecTestInfo implements Comparable<SpecTestInfo> {
 		if (camelcaseOrUnderscoredString.indexOf('_') >= 0) {
 			return camelcaseOrUnderscoredString.replaceAll("_", " ");
 		} else {
+			if (camelcaseOrUnderscoredString.toUpperCase().equals(camelcaseOrUnderscoredString)) {
+				// CAPITAL only titles are preserved
+				return camelcaseOrUnderscoredString;
+			}
+
 			StringBuilder strb = new StringBuilder();
 			char p = 0;
 			for (int i = 0; i < camelcaseOrUnderscoredString.length(); i++) {

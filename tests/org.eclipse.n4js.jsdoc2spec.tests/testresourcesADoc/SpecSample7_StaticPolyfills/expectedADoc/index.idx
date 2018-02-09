@@ -14,9 +14,9 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 		NO_PACKAGE
 			A.n4js
 				A::13::21::22
-				A#base::14::41::57
+				A#base::14::42::58
 	SpecSample7_StaticPolyfills#src.n4js
 		NO_PACKAGE
 			A.n4js
-				A#bar::17::23::40::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample7_StaticPolyfills:testresources
-				A#foo::15::58::75::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample7_StaticPolyfills:testresources
+				A#bar::17::23::41::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample7_StaticPolyfills:testresources
+				A#foo::15::59::77::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample7_StaticPolyfills:testresources
