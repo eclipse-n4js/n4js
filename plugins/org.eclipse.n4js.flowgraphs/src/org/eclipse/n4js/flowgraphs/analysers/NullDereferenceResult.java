@@ -77,7 +77,7 @@ public class NullDereferenceResult {
 	}
 
 	private GuardAssertion getAssertion(IsNotNull inn) {
-		if (inn.passedBranches.isEmpty()) {
+		if ((inn.passedBranches.isEmpty() && inn.aliases.isEmpty()) || inn.terminatingGuard != null) {
 			return GuardAssertion.AlwaysHolds;
 		}
 		return GuardAssertion.MayHolds;

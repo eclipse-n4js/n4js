@@ -214,7 +214,7 @@ abstract public class Assumption {
 
 			if (result != null) {
 				resultSet.add(result.type);
-				handleHoldResult(result);
+				handleHoldResult(result, lhs);
 			}
 		}
 
@@ -230,7 +230,7 @@ abstract public class Assumption {
 		checkState(isOpen());
 
 		PartialResult holds = holdsOnEffect(effect, cfe);
-		handleHoldResult(holds);
+		handleHoldResult(holds, effect.symbol);
 		checkAndFinalize();
 	}
 
@@ -249,6 +249,16 @@ abstract public class Assumption {
 			break;
 		default:
 			break;
+		}
+	}
+
+	/**
+	 * Called from {@link DataFlowGraphExplorer}.
+	 */
+	void terminate() {
+		if (assumptionGroup.noCopies() && isOpen()) {
+			openBranch = false;
+			checkAndFinalize();
 		}
 	}
 
@@ -358,14 +368,14 @@ abstract public class Assumption {
 		this.openBranch = this.openBranch || assumption.openBranch;
 	}
 
-	private void handleHoldResult(PartialResult result) {
+	private void handleHoldResult(PartialResult result, Symbol lhs) {
 		if (result.type == PartialResult.Type.Failed) {
 			failedBranches.add(result);
-			openBranch = false;
+			aliases.remove(lhs);
 		}
 		if (result.type == PartialResult.Type.Passed) {
 			passedBranches.add(result);
-			openBranch = false;
+			aliases.remove(lhs);
 		}
 		if (aliases.isEmpty()) {
 			openBranch = false;
