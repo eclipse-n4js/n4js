@@ -12,6 +12,7 @@ package org.eclipse.n4js.xpect.ui.runner;
 
 import org.eclipse.n4js.xpect.methods.AccessModifierXpectMethod;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
+import org.eclipse.n4js.xpect.methods.FlowgraphsXpectMethod;
 import org.eclipse.n4js.xpect.methods.FormatterXpectMethod;
 import org.eclipse.n4js.xpect.methods.LinkingXpectMethod;
 import org.eclipse.n4js.xpect.methods.ReturnXpectMethod;
@@ -25,13 +26,13 @@ import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestFilesCollector.N4IDEXpectTestURIProvider;
-import org.junit.runner.RunWith;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.IXpectURIProvider;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
 import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
+import org.junit.runner.RunWith;
 
 /**
  * Main and only entry point for executing xpect in the product. Uses custom setup {@link N4IDEXpectFileSetup}.
@@ -54,7 +55,8 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 		ProposalXpectMethod.class,
 		ContentAssistXpectMethod.class,
 		QuickFixXpectMethod.class,
-		ResourceDescriptionTest.class
+		ResourceDescriptionTest.class,
+		FlowgraphsXpectMethod.class
 })
 
 @RunWith(XpectRunner.class)
