@@ -1,4 +1,4 @@
-FROM openjdk:9
+FROM openjdk:8u151-jdk
 
 LABEL version="0.1.0" \
       description="Build n4js with Maven. Includes xvfb, node." \
