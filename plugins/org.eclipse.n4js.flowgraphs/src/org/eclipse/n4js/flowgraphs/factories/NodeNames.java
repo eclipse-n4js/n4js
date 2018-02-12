@@ -37,5 +37,6 @@ class NodeNames {
 	static final String FINALLY = "finally";
 	static final String TARGET = "target";
 	static final String CONTINUE_CATCH = "continueCatch";
+	static final String SHORT_CIRCUIT_JUMP = "shortCircuitJump";
 
 }
