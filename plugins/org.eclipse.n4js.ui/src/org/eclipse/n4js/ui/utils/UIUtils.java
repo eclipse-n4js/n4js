@@ -12,6 +12,7 @@ package org.eclipse.n4js.ui.utils;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import org.eclipse.jface.util.Geometry;
@@ -49,6 +50,22 @@ public abstract class UIUtils {
 		Optional<T> get();
 	}
 
+	/** Same purpose as {@link TimeoutException}, but as a runtime exception. */
+	public static final class TimeoutRuntimeException extends RuntimeException {
+		/** See {@link TimeoutRuntimeException}. */
+		public TimeoutRuntimeException(String message) {
+			super(message);
+		}
+	}
+
+	/** Same purpose as {@link InterruptedException}, but as a runtime exception. */
+	public static final class InterruptedRuntimeException extends RuntimeException {
+		/** See {@link InterruptedRuntimeException}. */
+		public InterruptedRuntimeException(String message) {
+			super(message);
+		}
+	}
+
 	/**
 	 * Like {@link #waitForValueFromUI(NonWaitingSupplier, Supplier, long)}, but using {@link #DEFAULT_UI_TIMEOUT} as
 	 * timeout.
@@ -69,8 +86,13 @@ public abstract class UIUtils {
 	 *            a supplier providing a description of the value to be obtained. Used for messages in exceptions
 	 *            thrown.
 	 * @param timeout
-	 *            timeout in ms.
+	 *            timeout in ms. If lower or equal 0 the supplier will still be invoked once but no waiting will be
+	 *            performed.
 	 * @return the value obtained from the UI. Never returns <code>null</code>.
+	 * @throws TimeoutRuntimeException
+	 *             upon timeout.
+	 * @throws InterruptedRuntimeException
+	 *             when an interrupt is received while waiting for the value.
 	 */
 	public static <T> T waitForValueFromUI(NonWaitingSupplier<T> nonWaitingSupplier, Supplier<String> valueDescSupplier,
 			long timeout) {
@@ -82,13 +104,14 @@ public abstract class UIUtils {
 			try {
 				Thread.sleep(100); // wait for more UI events coming in
 			} catch (InterruptedException e) {
-				throw new IllegalStateException("received interrupt while waiting for " + valueDescSupplier.get());
+				throw new InterruptedRuntimeException(
+						"received interrupt while waiting for " + valueDescSupplier.get());
 			}
 			waitForUiThread(); // process all pending UI events
 		}
 
 		if (!item.isPresent()) {
-			throw new IllegalStateException(
+			throw new TimeoutRuntimeException(
 					"timed out after " + timeout + "ms while waiting for " + valueDescSupplier.get());
 		}
 		return item.get();
