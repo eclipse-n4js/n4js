@@ -127,10 +127,12 @@ public abstract class UIUtils {
 	public static void waitForUiThread() {
 		final Display display = getDisplay();
 		display.syncExec(() -> {
-			while (display.readAndDispatch()) {
-				// wait while there might be something to process.
+			if (!display.isDisposed()) {
+				while (display.readAndDispatch()) {
+					// wait while there might be something to process.
+				}
+				display.update();
 			}
-			display.update();
 		});
 	}
 
