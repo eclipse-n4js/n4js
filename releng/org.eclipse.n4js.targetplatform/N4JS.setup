@@ -200,7 +200,7 @@
       label="Xcore">
     <requirement
         name="org.eclipse.emf.ecore.xcore.sdk.feature.group"
-        versionRange="[1.4.0,1.4.1)"/>
+        versionRange="[1.5.0,1.5.1)"/>
     <repository
         url="http://download.eclipse.org/modeling/emf/emf/updates/2.13"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
