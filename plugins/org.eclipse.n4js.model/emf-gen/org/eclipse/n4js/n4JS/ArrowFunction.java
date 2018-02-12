@@ -96,6 +96,9 @@ public interface ArrowFunction extends FunctionExpression {
 	 * *
 	 * If {@link #isSingleExprImplicitReturn()} returns <code>true</code>, this method will return the single expression
 	 * that makes up the body of this arrow function, otherwise the behavior is undefined (might throw exception).
+	 * <p>
+	 * In case of broken AST, this method may return <code>null</code> even if {@link #isSingleExprImplicitReturn()}
+	 * returns <code>true</code>.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.n4JS.Statement%> _head = <%org.eclipse.xtext.xbase.lib.IterableExtensions%>.<<%org.eclipse.n4js.n4JS.Statement%>>head(this.getBody().getStatements());\nreturn ((<%org.eclipse.n4js.n4JS.ExpressionStatement%>) _head).getExpression();'"

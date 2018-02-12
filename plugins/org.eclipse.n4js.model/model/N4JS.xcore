@@ -619,6 +619,9 @@ class ArrowFunction extends FunctionExpression {
 	/**
 	 * If {@link #isSingleExprImplicitReturn()} returns <code>true</code>, this method will return the single expression
 	 * that makes up the body of this arrow function, otherwise the behavior is undefined (might throw exception).
+	 * <p>
+	 * In case of broken AST, this method may return <code>null</code> even if {@link #isSingleExprImplicitReturn()}
+	 * returns <code>true</code>.
 	 */
 	op Expression getSingleExpression() {
 		return (body.statements.head as ExpressionStatement).expression;
