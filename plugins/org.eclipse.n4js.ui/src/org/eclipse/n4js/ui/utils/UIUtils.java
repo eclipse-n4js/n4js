@@ -118,17 +118,20 @@ public abstract class UIUtils {
 	}
 
 	/**
-	 * Processes UI input and does not return while there are things to do on the UI thread.<br>
-	 * I.e., when this method returns, there is no more work to do on the UI thread <em>at this time</em>.
+	 * Processes UI input and does not return while there are things to do on the UI thread. I.e., when this method
+	 * returns, there is no more work to do on the UI thread <em>at this time</em>. This method may be invoked from any
+	 * thread.
 	 * <p>
 	 * Moved here from <code>AbstractPluginUITest#waitForUiThread()</code>.
 	 */
 	public static void waitForUiThread() {
 		final Display display = getDisplay();
-		while (display.readAndDispatch()) {
-			// wait while there might be something to process.
-		}
-		display.update();
+		display.syncExec(() -> {
+			while (display.readAndDispatch()) {
+				// wait while there might be something to process.
+			}
+			display.update();
+		});
 	}
 
 	/**
