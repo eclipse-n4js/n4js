@@ -31,8 +31,8 @@ import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
-import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.WhileStatement;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * For a given {@link JumpToken}s of a given start {@link Node} the method
@@ -48,14 +48,14 @@ public class CatchNodeFinder {
 	static private final CatchEvaluator catchShortCircuitElseEvaluator = new CatchShortCircuitElseEvaluator();
 
 	/** @return the node to which the given {@code jumpNode} jumps via the given {@link JumpToken}. Can return null. */
-	static Node find(JumpToken jumpToken, Node jumpNode, ComplexNodeMapper cnMapper) {
+	static Pair<Node, ControlFlowType> find(JumpToken jumpToken, Node jumpNode, ComplexNodeMapper cnMapper) {
 		CatchEvaluator catchEvaluator = getCatchEvaluator(jumpToken);
 		ControlFlowElement cfe = jumpNode.getControlFlowElement();
 		cfe = skipContainers(cfe);
 		while (cfe != null) {
-			Node catchNode = findCatchNode(jumpToken, cfe, catchEvaluator, cnMapper);
-			if (catchNode != null)
-				return catchNode;
+			Pair<Node, ControlFlowType> catcher = findCatchNode(jumpToken, cfe, catchEvaluator, cnMapper);
+			if (catcher != null)
+				return catcher;
 
 			cfe = getContainer(cfe);
 		}
@@ -113,20 +113,26 @@ public class CatchNodeFinder {
 	}
 
 	/** @return a node that can catch the given {@link JumpToken}. */
-	private static Node findCatchNode(JumpToken jumpToken, ControlFlowElement cfe,
+	private static Pair<Node, ControlFlowType> findCatchNode(JumpToken jumpToken, ControlFlowElement cfe,
 			CatchEvaluator catchEvaluator, ComplexNodeMapper cnMapper) {
 
 		if (catchEvaluator.isCatchingType(cfe)) {
 			Node catchNode = catchEvaluator.getCatchingNode(cfe, cnMapper);
 			for (CatchToken catchToken : catchNode.catchToken) {
-				if (catchEvaluator.isCatchingToken(cfe, jumpToken, catchToken))
-					return catchNode;
+				if (catchEvaluator.isCatchingToken(cfe, jumpToken, catchToken)) {
+					ControlFlowType newEdgeType = catchToken.newEdgeType;
+					if (newEdgeType == ControlFlowType.CatchesAll) {
+						newEdgeType = jumpToken.cfType;
+					}
+					return Pair.of(catchNode, newEdgeType);
+				}
 			}
 		}
 
-		Node catchNode = findCatchAllNode(cfe, cnMapper);
-		if (catchNode != null)
-			return catchNode;
+		Node catchAllNode = findCatchAllNode(cfe, cnMapper);
+		if (catchAllNode != null) {
+			return Pair.of(catchAllNode, jumpToken.cfType);
+		}
 		return null;
 	}
 
@@ -212,6 +218,7 @@ public class CatchNodeFinder {
 			boolean isCatchingToken = false;
 			isCatchingToken |= jumpToken.lblStmt != null && jumpToken.lblStmt == catchToken.lblStmt;
 			isCatchingToken |= jumpToken.lblStmt == null;
+			isCatchingToken &= jumpToken.cfType == catchToken.cfType;
 			return isCatchingToken;
 		}
 	}
@@ -361,11 +368,14 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingType(ControlFlowElement cfe) {
-			EObject container = cfe.eContainer();
-			boolean containerIsBooleanExpression = false;
-			containerIsBooleanExpression |= container instanceof UnaryExpression;
-			containerIsBooleanExpression |= container instanceof BinaryLogicalExpression;
-			return !containerIsBooleanExpression;
+			boolean isCatching = false;
+			isCatching |= cfe instanceof BinaryLogicalExpression;
+			isCatching |= cfe instanceof ConditionalExpression;
+			isCatching |= cfe instanceof IfStatement;
+			isCatching |= cfe instanceof DoStatement;
+			isCatching |= cfe instanceof ForStatement;
+			isCatching |= cfe instanceof WhileStatement;
+			return isCatching;
 		}
 
 		@Override
@@ -407,11 +417,14 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingType(ControlFlowElement cfe) {
-			EObject container = cfe.eContainer();
-			boolean containerIsBooleanExpression = false;
-			containerIsBooleanExpression |= container instanceof UnaryExpression;
-			containerIsBooleanExpression |= container instanceof BinaryLogicalExpression;
-			return !containerIsBooleanExpression;
+			boolean isCatching = false;
+			isCatching |= cfe instanceof BinaryLogicalExpression;
+			isCatching |= cfe instanceof ConditionalExpression;
+			isCatching |= cfe instanceof IfStatement;
+			isCatching |= cfe instanceof DoStatement;
+			isCatching |= cfe instanceof ForStatement;
+			isCatching |= cfe instanceof WhileStatement;
+			return isCatching;
 		}
 
 		@Override
@@ -428,18 +441,7 @@ public class CatchNodeFinder {
 				}
 				return cn.getNode(NodeNames.EXIT);
 			}
-			if (cfe instanceof DoStatement) {
-				ComplexNode cn = cnMapper.get(cfe);
-				return cn.getNode(NodeNames.EXIT);
-			}
-			if (cfe instanceof WhileStatement) {
-				ComplexNode cn = cnMapper.get(cfe);
-				return cn.getNode(NodeNames.EXIT);
-			}
-			if (cfe instanceof ForStatement) {
-				ComplexNode cn = cnMapper.get(cfe);
-				return cn.getNode(NodeNames.EXIT);
-			}
+
 			ComplexNode cn = cnMapper.get(cfe);
 			return cn.getNode(NodeNames.EXIT);
 		}

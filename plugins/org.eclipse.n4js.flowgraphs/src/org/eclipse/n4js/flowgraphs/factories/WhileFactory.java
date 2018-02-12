@@ -53,8 +53,9 @@ class WhileFactory {
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
-		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue)); // catch for short-circuits
-		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse)); // catch for short-circuits
+		// catch for short-circuits
+		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue, ControlFlowType.LoopEnter));
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse, ControlFlowType.LoopExit));
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(whileStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));

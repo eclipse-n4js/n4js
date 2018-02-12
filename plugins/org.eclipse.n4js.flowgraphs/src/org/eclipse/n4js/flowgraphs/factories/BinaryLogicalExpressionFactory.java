@@ -102,6 +102,10 @@ class BinaryLogicalExpressionFactory {
 			BinaryLogicalExpression bleParent = (BinaryLogicalExpression) parent;
 			return bleParent.getOp() != operator;
 		}
+		if (parent instanceof ConditionalExpression) {
+			ConditionalExpression isParent = (ConditionalExpression) parent;
+			return isParent.getExpression() != eObj;
+		}
 		if (parent instanceof Statement) {
 			if (parent instanceof IfStatement) {
 				IfStatement isParent = (IfStatement) parent;

@@ -23,6 +23,7 @@ class NodeNames {
 	static final String THEN = "then";
 	static final String ELSE = "else";
 	static final String BODY = "body";
+	static final String CONTINUE_CATCH = "continueCatch";
 	static final String INITS = "inits";
 	static final String UPDATES = "updates";
 	static final String HAS_NEXT = "hasNext";
@@ -36,7 +37,6 @@ class NodeNames {
 	static final String CATCH = "catch";
 	static final String FINALLY = "finally";
 	static final String TARGET = "target";
-	static final String CONTINUE_CATCH = "continueCatch";
 	static final String SHORT_CIRCUIT_JUMP = "shortCircuitJump";
 
 }
