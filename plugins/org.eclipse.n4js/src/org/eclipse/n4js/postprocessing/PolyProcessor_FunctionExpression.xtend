@@ -270,10 +270,12 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		}
 		// tweak return type
 		if (funExpr instanceof ArrowFunction) {
+			log(0, "===START of special handling of single-expression arrow function");
 			// NOTE: the next line requires the type of 'funExpr' and types of fpars to be in cache! For example:
 			//   function <T> foo(p: {function(int):T}) {return undefined;}
 			//   foo( (i) => [i] );
 			tweakReturnTypeOfSingleExpressionArrowFunction(G, cache, funExpr, resultSolved);
+			log(0, "===END of special handling of single-expression arrow function");
 		}
 	}
 
@@ -300,11 +302,13 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		if (!arrFun.isSingleExprImplicitReturn) {
 			return; // not applicable
 		}
-		log(0, "===START of special handling of single-expression arrow function");
 		// Step 1) process arrFun's body, which was postponed earlier according to ASTProcessor#isPostponedNode(EObject)
 		// Rationale: the body of a single-expression arrow function isn't a true block, so we do not have to
 		//            postpone it AND we need its types in the next step.
 		val block = arrFun.body;
+		if (block === null) {
+			return; // broken AST
+		}
 		if(!cache.postponedSubTrees.remove(block)) {
 			throw new IllegalStateException("body of single-expression arrow function not among postponed subtrees, in resource: " + arrFun.eResource.URI);
 		}
@@ -312,6 +316,9 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		// Step 2) adjust arrFun's return type stored in arrFunTypeRef (if required)
 		var didTweakReturnType = false;
 		val expr = arrFun.getSingleExpression();
+		if (expr === null) {
+			return; // broken AST
+		}
 		val exprTypeRef = cache.getType(expr).value; // must now be in cache, because we just processed arrFun's body
 		if (TypeUtils.isVoid(exprTypeRef)) {
 			// the actual type of 'expr' is void
@@ -344,7 +351,6 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		if(!didTweakReturnType) {
 			log(1, "tweaking of return type not required");
 		}
-		log(0, "===END of special handling of single-expression arrow function");
 	}
 
 	/**
