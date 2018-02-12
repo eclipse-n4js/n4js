@@ -12,9 +12,10 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analysis.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;
@@ -22,19 +23,19 @@ import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Checks if all paths to a given a given node have a type constraint that is assignable from the given {@link TypeRef}.
  */
+// TODO: not active/tested
 public class TypeGuardVisitor extends GraphVisitor {
 	final N4JSTypeSystem ts;
 	final TypeRef reqTypeRef;
 	final ControlFlowElement cfElem;
 
 	TypeGuardVisitor(N4JSTypeSystem ts, TypeRef reqTypeRef, ControlFlowElement cfElem) {
-		super(Mode.Backward);
+		super(TraverseDirection.Backward);
 		this.ts = ts;
 		this.reqTypeRef = reqTypeRef;
 		this.cfElem = cfElem;

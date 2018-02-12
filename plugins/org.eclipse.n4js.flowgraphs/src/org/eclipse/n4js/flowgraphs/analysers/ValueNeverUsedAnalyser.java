@@ -10,75 +10,60 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import java.util.List;
-
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
+import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
+import org.eclipse.n4js.flowgraphs.dataflow.PartialResult;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
- * Analysis to detect obsolete variable definitions. In other words, the analysis detects variable definition sites that
- * are not followed by use sites of the same variable. In these cases, the defined value is never used.
+ * Analysis to detect obsolete variable writes. In other words, the analysis detects variable definition sites that are
+ * not followed by read sites of the same variable. In these cases, the defined value is never used.
  */
-public class ValueNeverUsedAnalyser extends GraphVisitor {
-	// TODO GH-235
+// TODO: not active/tested
+public class ValueNeverUsedAnalyser extends DataFlowVisitor {
 
 	ValueNeverUsedAnalyser() {
-		super(Mode.Forward);
+		super(TraverseDirection.Forward);
 	}
 
 	@Override
-	protected void visit(ControlFlowElement cfe) {
-		if (cfe instanceof IdentifierRef && cfe.eContainer() instanceof VariableDeclaration) {
-			super.requestActivation(new NeverUsedExplorer((IdentifierRef) cfe));
+	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
+		if (effect.type == EffectType.Write) {
+			IsUsedSubsequently isUsedSubsequently = new IsUsedSubsequently(cfe, effect.symbol);
+			assume(isUsedSubsequently);
 		}
 	}
 
-	static private class NeverUsedExplorer extends GraphExplorer {
+	// TODO: make it work
+	static class IsUsedSubsequently extends Assumption {
 		@SuppressWarnings("unused")
-		final IdentifierRef idRef;
+		private boolean isUsedSubsequently = false;
 
-		public NeverUsedExplorer(IdentifierRef idRef) {
-			super(Quantor.AtLeastOneBranch);
-			this.idRef = idRef;
+		IsUsedSubsequently(ControlFlowElement cfe, Symbol symbol) {
+			super(cfe, symbol);
+		}
+
+		IsUsedSubsequently(IsUsedSubsequently copy) {
+			super(copy);
 		}
 
 		@Override
-		protected NeverUsedWalker firstBranchWalker() {
-			return new NeverUsedWalker();
+		public Assumption copy() {
+			return new IsUsedSubsequently(this);
 		}
 
 		@Override
-		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
-			return new NeverUsedWalker();
+		public PartialResult holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+			if (symbol.is(effect.symbol)) {
+				isUsedSubsequently = true;
+				return PartialResult.Passed;
+			}
+			return PartialResult.Unclear;
 		}
 
 	}
-
-	static private class NeverUsedWalker extends BranchWalker {
-
-		@Override
-		protected void visit(ControlFlowElement cfe) {
-			// TODO
-			// if (cfe instanceof IdentifierRef && flowAnalyses.isRead(cfe, idRef)) {
-			// pass();
-			// deactivateAll();
-			// }
-		}
-
-		@Override
-		protected NeverUsedWalker forkPath() {
-			return new NeverUsedWalker();
-		}
-
-		@Override
-		protected void terminate() {
-			fail();
-		}
-
-	}
-
 }

@@ -62,8 +62,8 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		val fileWolfgangsUglyHack = createTestFile(p, "wolfgangsUglyHack", fileWolfgangsUglyHack);
 		val fileJuergenA = createTestFile(pJuergensHacks, "A", fileJuergenA);
 		val fileJuergenB = createTestFile(pJuergensHacks, "B", fileJuergenB);
-		assertMarkers("file A should have markers", fileAValidated, 4);
-		assertMarkers("file AInSrc should have markers", fileAValidatedInSrc2, 4);
+		assertMarkers("file A should have 3 markers", fileAValidated, 3);
+		assertMarkers("file AInSrc should have 3 markers", fileAValidatedInSrc2, 3);
 		assertMarkers("file B should have markers", fileBValidated, 2);
 		assertMarkers("file MyAlreadyAsModuleHack should have markers", fileMyAlreadyAsModuleHack, 2);
 		assertMarkers("file WolfgangsUglyHack should have markers", fileWolfgangsUglyHack, 2);
@@ -74,7 +74,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("file WolfgangsUglyHack should have no markers", fileWolfgangsUglyHack, 0);
 		assertMarkers("file JuergensA should have no markers", fileJuergenA, 0);
 		assertMarkers("file JuergenB should have no markers", fileJuergenB, 0);
-		assertMarkers("file AInSrc should have still markers", fileAValidatedInSrc2, 4);
+		assertMarkers("file AInSrc should have still 3 markers", fileAValidatedInSrc2, 3);
 		addPathsToNoValidate("p2/*" -> "src2")
 		assertMarkers("file AInSrc2 should have no markers", fileAValidatedInSrc2, 0);
 	}

@@ -167,9 +167,9 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 		waitForAutoBuild(false) // note: do not validate Xtext index (want do my custom checks first!)
 
 		assertMarkers("file should have no errors", c1, 0)
-		assertMarkers("file should have no errors but one unused variable warning", m1, 1)
+		assertMarkers("file should have no errors", m1, 0)
 		assertMarkers("file should have no errors", c2, 0)
-		assertMarkers("file should have no errors but one unused variable warning", m2, 1)
+		assertMarkers("file should have no errors", m2, 0)
 
 		val xtextIndex = getXtextIndex
 

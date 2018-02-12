@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
@@ -51,12 +52,12 @@ public class ControlFlowGraphFactory {
 			.getOrCreateDataCollector("Jump Edges", "Flow Graphs", "Create Graphs");
 
 	/** Builds and returns a control flow graph from a given {@link Script}. */
-	static public FlowGraph build(Script script) {
+	static public FlowGraph build(SymbolFactory symbolFactory, Script script, boolean setSymbols) {
 		Set<ControlFlowElement> cfContainers = new LinkedHashSet<>();
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
 		Measurement mes = dcCreateNodes.getMeasurement("createNodes_" + script.eResource().getURI().toString());
-		createComplexNodes(script, cfContainers, cnMap);
+		createComplexNodes(symbolFactory, script, cfContainers, cnMap, setSymbols);
 		ComplexNodeMapper cnMapper = new ComplexNodeMapper(cnMap);
 		mes.end();
 
@@ -76,10 +77,10 @@ public class ControlFlowGraphFactory {
 	}
 
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
-	static private void createComplexNodes(Script script, Set<ControlFlowElement> cfContainers,
-			Map<ControlFlowElement, ComplexNode> cnMap) {
+	static private void createComplexNodes(SymbolFactory symbolFactory, Script script,
+			Set<ControlFlowElement> cfContainers, Map<ControlFlowElement, ComplexNode> cnMap, boolean setSymbols) {
 
-		ReentrantASTIterator astIt = new ReentrantASTIterator(cfContainers, cnMap, script);
+		ReentrantASTIterator astIt = new ReentrantASTIterator(symbolFactory, cfContainers, cnMap, script, setSymbols);
 		astIt.visitAll();
 
 	}

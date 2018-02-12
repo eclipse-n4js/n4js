@@ -14,10 +14,12 @@
  */
 export external public class A {
 
+	@Final public field : string;
+
 	/**
 	 * @spec spec for method A.bar from source code
 	 */
-	public bar(n: number): string;
+	@Final public bar(n: number): string;
 }
 
 

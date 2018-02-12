@@ -10,10 +10,11 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,7 @@ import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -47,10 +49,6 @@ abstract public class Node implements ControlFlowable {
 	final public TreeSet<ControlFlowEdge> pred = new TreeSet<>();
 	/** List of all succeeding {@link ControlFlowEdge}s */
 	final public TreeSet<ControlFlowEdge> succ = new TreeSet<>();
-	/** List of all {@link DependencyEdge}s starting at this node */
-	final public List<DependencyEdge> startEdges = new LinkedList<>();
-	/** List of all {@link DependencyEdge}s ending at this node */
-	final public List<DependencyEdge> endEdges = new LinkedList<>();
 	/** List of all {@link JumpToken}s of this node */
 	final public Set<JumpToken> jumpToken = new HashSet<>();
 	/** List of all {@link CatchToken}s of this node */
@@ -117,7 +115,8 @@ abstract public class Node implements ControlFlowable {
 	 * Adds an internal successor with the given edge type to this node. It used when the control flow graph is created.
 	 */
 	public void addInternalSuccessor(Node node, ControlFlowType cfType) {
-		assert node != this : "Self loops are not allowed";
+		checkState(node != this, "Self loops are not allowed");
+
 		EdgeDescription sed = new EdgeDescription(node, cfType);
 		internalSucc.put(sed.node, sed);
 	}
@@ -130,23 +129,16 @@ abstract public class Node implements ControlFlowable {
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addSuccessor(ControlFlowEdge cfEdge) {
 		boolean addSucceeded = succ.add(cfEdge);
-		assert addSucceeded : "Adding an edge should always be successful";
+		if (!addSucceeded) {
+			System.out.println("problem");
+		}
+		checkState(addSucceeded, "Adding an edge should always be successful");
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addPredecessor(ControlFlowEdge cfEdge) {
 		boolean addSucceeded = pred.add(cfEdge);
-		assert addSucceeded : "Adding an edge should always be successful";
-	}
-
-	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
-	void addOutgoingDependency(DependencyEdge depEdge) {
-		startEdges.add(depEdge);
-	}
-
-	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
-	void addIncomingDependency(DependencyEdge depEdge) {
-		endEdges.add(depEdge);
+		checkState(addSucceeded, "Adding an edge should always be successful");
 	}
 
 	/** @return set of all internal predecessors. */

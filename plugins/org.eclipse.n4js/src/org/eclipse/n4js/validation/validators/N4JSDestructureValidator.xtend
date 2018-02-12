@@ -14,15 +14,15 @@ import com.google.inject.Inject
 import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.misc.DestructNode
-import org.eclipse.n4js.misc.DestructureHelper
+import org.eclipse.n4js.n4JS.DestructNode
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.BindingProperty
 import org.eclipse.n4js.n4JS.ForStatement
-import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -44,7 +44,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
 
-import static extension org.eclipse.n4js.misc.DestructNode.arePositional
+import static extension org.eclipse.n4js.n4JS.DestructNode.arePositional
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.UtilN4.trimPrefix
 import static extension org.eclipse.n4js.utils.UtilN4.trimSuffix
@@ -85,7 +85,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def public void checkNoEmptyPattern_Assignment(AssignmentExpression expr) {
-		if(N4JSASTUtils.isDestructuringAssignment(expr)) {
+		if(DestructureUtils.isTopOfDestructuringAssignment(expr)) {
 			val lhs = expr.lhs;
 			val empty = switch(lhs) {
 			ArrayLiteral: lhs.elements.empty

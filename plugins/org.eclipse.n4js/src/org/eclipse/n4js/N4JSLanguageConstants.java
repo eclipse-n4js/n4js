@@ -54,7 +54,8 @@ public abstract class N4JSLanguageConstants {
 	 * or {@code SuppressIssuesSetup} to configure Xpect tests for issue suppression.
 	 */
 	public static final Collection<String> DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS = unmodifiableCollection(newHashSet(
-			IssueCodes.AST_LOCAL_VAR_UNUSED
+			IssueCodes.CFG_LOCAL_VAR_UNUSED,
+			IssueCodes.DFG_NULL_DEREFERENCE
 	));
 
 	//@formatter:on

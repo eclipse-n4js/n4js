@@ -12,9 +12,10 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analysis.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
@@ -27,11 +28,11 @@ public class DummyForwardBackwardVisitor extends GraphVisitor {
 	 * Constructor.
 	 */
 	public DummyForwardBackwardVisitor() {
-		super(Mode.Forward, Mode.Backward);
+		super(TraverseDirection.Forward, TraverseDirection.Backward);
 	}
 
 	@Override
-	protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
+	protected void initializeMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
 		super.requestActivation(new DummyExplorer());
 	}
 

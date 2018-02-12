@@ -36,6 +36,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.xtext.validation.Issue
 
 /**
  * Tests for static scoping, combined with type system test.
@@ -53,6 +54,14 @@ class StaticScopingTest {
 	@Inject extension N4JSTypeSystem ts
 	@Inject TypeSystemHelper tsh
 	@Inject extension IScopeProvider scopeProvider
+
+
+	def Issue[] getIssues(Script script) {
+		return validate(script).filter[
+			it.code != IssueCodes.CFG_LOCAL_VAR_UNUSED
+			&& it.code != IssueCodes.DFG_NULL_DEREFERENCE
+		];
+	}
 
 	@Test
 	def void testStaticGetterSetterAccess() {
@@ -91,7 +100,7 @@ class StaticScopingTest {
 			}
 		'''.parse
 
-		val issues = validate(script)
+		val issues = getIssues(script);
 		Assert.assertEquals(issues.join(", "), 0, issues.size)
 	}
 
@@ -108,7 +117,7 @@ class StaticScopingTest {
 			}
 		'''.parse
 
-		val issues = validate(script).filter[it.code != IssueCodes.AST_LOCAL_VAR_UNUSED]
+		val issues = getIssues(script);
 		Assert.assertEquals(issues.join(", "), 0, issues.size)
 
 		val thisInMethod1 = script.eAllContents.filter(ThisLiteral).head
@@ -138,7 +147,7 @@ class StaticScopingTest {
 			var z2 = new C()
 		'''.parse
 
-		val issues = validate(script).filter[it.code != IssueCodes.AST_LOCAL_VAR_UNUSED];
+		val issues = getIssues(script);
 		Assert.assertEquals(issues.join(", "), 0, issues.size)
 
 		val G = script.newRuleEnvironment;
