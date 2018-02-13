@@ -371,7 +371,7 @@
       <repositoryList
           name="N4JS_Oxygen.2.GH-369">
         <repository
-            url="http://download.eclipse.org/eclipse/updates/4.7/R-4.7-201706120950"/>
+            url="http://download.eclipse.org/eclipse/updates/4.7/R-4.7.2-201711300510"/>
         <repository
             url="http://download.eclipse.org/egit/updates-4.8"/>
         <repository
