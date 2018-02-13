@@ -56,6 +56,7 @@ import static org.eclipse.n4js.ts.types.TypingStrategy.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
 
+import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
@@ -95,7 +96,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	// Get all transitive methods and checks if any of them has @Test annotation
-	private def hasTestMethods(TClass clazz) {
+	private def boolean hasTestMethods(TClass clazz) {
 		if (null !== clazz?.eResource) {
 			val module = N4JSResource.getModule(clazz.eResource);
 			if (null !== module) {
@@ -233,7 +234,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 		super.addIssue(message, source, feature, issueCode, issueData);
 	}
 
-	def private internalCheckAbstractFinal(TClass tClass) {
+	def private void internalCheckAbstractFinal(TClass tClass) {
 		if (tClass.abstract && tClass.final) {
 			val message = getMessageForCLF_ABSTRACT_FINAL("class");
 			addIssue(message, tClass.astElement, N4_TYPE_DECLARATION__NAME, CLF_ABSTRACT_FINAL);
@@ -258,9 +259,6 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					return false;
 				}
 			} else if (superType instanceof TClass) {
-
-
-
 				// (got a super class; now validate it ...)
 				// super class must not be final
 				if (superType.final) {
@@ -283,7 +281,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	def private internalCheckImplementedInterfaces(N4ClassDeclaration n4Class) {
+	def private void internalCheckImplementedInterfaces(N4ClassDeclaration n4Class) {
 		n4Class.implementedInterfaceRefs.forEach [
 			val consumedType = it.declaredType;
 			if (consumedType !== null && consumedType.name !== null) { // note: in case consumedType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
@@ -305,7 +303,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 		]
 	}
 
-	def private internalCheckSpecAnnotation(N4ClassDeclaration n4ClassDeclaration) {
+	def private void internalCheckSpecAnnotation(N4ClassDeclaration n4ClassDeclaration) {
 		val N4MethodDeclaration ctor = n4ClassDeclaration.ownedCtor;
 		if (ctor !== null) {
 			var specAnnotations = newArrayList;
@@ -335,11 +333,13 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					val message = messageForCLF_SPEC_MULTIPLE;
 					addIssue(message, currAnnSpec, null, CLF_SPEC_MULTIPLE);
 				}
+			} else if (specAnnotations.size == 1) {
+				holdsSuperClassHasSpecCtorToo(n4ClassDeclaration, ctor);
 			}
 		}
 	}
 
-	def holdsAdditionalSpecFieldMatchesOwnedFields(
+	def private void holdsAdditionalSpecFieldMatchesOwnedFields(
 		N4ClassDeclaration n4ClassDeclaration,
 		N4MethodDeclaration ctor,
 		int parIndex
@@ -373,9 +373,26 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
 			}
 			memberIndex = memberIndex + 1;
-
 		}
+	}
 
+	def private boolean holdsSuperClassHasSpecCtorToo(N4ClassDeclaration n4ClassDeclaration, N4MethodDeclaration ctor) {
+		val tSuperClass = (n4ClassDeclaration.definedType as TClass)?.superClass;
+		if(tSuperClass===null) {
+			return true; // no explicitly declared super class and no spec ctor required in implicit super classes
+		}
+		val G = n4ClassDeclaration.newRuleEnvironment;
+		if(tSuperClass===G.objectType || tSuperClass===G.n4ObjectType) {
+			return true; // no spec ctor required in these super classes
+		}
+		val tSuperCtor = tSuperClass.ownedCtor;
+		val superClassHasSpecCtor = tSuperCtor!==null && tSuperCtor.fpars.exists[SPEC.hasAnnotation(it)];
+		if(!superClassHasSpecCtor) {
+			val message = getMessageForCLF_SPEC_SUPER_CLASS_NOT_SPEC;
+			addIssue(message, ctor, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_SPEC_SUPER_CLASS_NOT_SPEC);
+			return false;
+		}
+		return true;
 	}
 
 	def private boolean holdsNoCyclicInheritance(N4ClassDeclaration n4ClassDeclaration) {
