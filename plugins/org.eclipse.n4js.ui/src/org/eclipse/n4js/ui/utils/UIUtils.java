@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js.ui.utils;
 
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
+
 import org.eclipse.jface.util.Geometry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
@@ -26,6 +31,110 @@ import org.eclipse.ui.PlatformUI;
  * Collection of convenient SWT and JFace utility methods.
  */
 public abstract class UIUtils {
+
+	/** Default timeout when waiting for values obtained from the UI. */
+	public static final long DEFAULT_UI_TIMEOUT = TimeUnit.SECONDS.toMillis(10);
+
+	/**
+	 * Like {@link Supplier}, but supports results that may not be available yet, by returning immediately with an
+	 * {@link Optional#empty() empty optional}.
+	 */
+	public interface NonWaitingSupplier<T> {
+
+		/**
+		 * Gets a result without waiting for it. Iff the result is not available yet, an {@link Optional#empty() empty
+		 * optional} is returned.
+		 *
+		 * @return a result
+		 */
+		Optional<T> get();
+	}
+
+	/** Same purpose as {@link TimeoutException}, but as a runtime exception. */
+	public static final class TimeoutRuntimeException extends RuntimeException {
+		/** See {@link TimeoutRuntimeException}. */
+		public TimeoutRuntimeException(String message) {
+			super(message);
+		}
+	}
+
+	/** Same purpose as {@link InterruptedException}, but as a runtime exception. */
+	public static final class InterruptedRuntimeException extends RuntimeException {
+		/** See {@link InterruptedRuntimeException}. */
+		public InterruptedRuntimeException(String message) {
+			super(message);
+		}
+	}
+
+	/**
+	 * Like {@link #waitForValueFromUI(NonWaitingSupplier, Supplier, long)}, but using {@link #DEFAULT_UI_TIMEOUT} as
+	 * timeout.
+	 */
+	public static <T> T waitForValueFromUI(NonWaitingSupplier<T> nonWaitingSupplier,
+			Supplier<String> valueDescSupplier) {
+		return waitForValueFromUI(nonWaitingSupplier, valueDescSupplier, DEFAULT_UI_TIMEOUT);
+	}
+
+	/**
+	 * Utility method to obtain some value from the UI (e.g. TreeItem of a JFace viewer, string label of a button) and
+	 * waiting for it if it isn't readily available at the time this method is invoked, up to the given timeout. If the
+	 * value is still not available after timeout, this method will throw an exception.
+	 *
+	 * @param nonWaitingSupplier
+	 *            a supplier trying to obtain the value without waiting for it.
+	 * @param valueDescSupplier
+	 *            a supplier providing a description of the value to be obtained. Used for messages in exceptions
+	 *            thrown.
+	 * @param timeout
+	 *            timeout in ms. If lower or equal 0 the supplier will still be invoked once but no waiting will be
+	 *            performed.
+	 * @return the value obtained from the UI. Never returns <code>null</code>.
+	 * @throws TimeoutRuntimeException
+	 *             upon timeout.
+	 * @throws InterruptedRuntimeException
+	 *             when an interrupt is received while waiting for the value.
+	 */
+	public static <T> T waitForValueFromUI(NonWaitingSupplier<T> nonWaitingSupplier, Supplier<String> valueDescSupplier,
+			long timeout) {
+		final long start = System.currentTimeMillis();
+
+		Optional<T> item;
+		while (!(item = nonWaitingSupplier.get()).isPresent()
+				&& System.currentTimeMillis() - start < timeout) {
+			try {
+				Thread.sleep(100); // wait for more UI events coming in
+			} catch (InterruptedException e) {
+				throw new InterruptedRuntimeException(
+						"received interrupt while waiting for " + valueDescSupplier.get());
+			}
+			waitForUiThread(); // process all pending UI events
+		}
+
+		if (!item.isPresent()) {
+			throw new TimeoutRuntimeException(
+					"timed out after " + timeout + "ms while waiting for " + valueDescSupplier.get());
+		}
+		return item.get();
+	}
+
+	/**
+	 * Processes UI input and does not return while there are things to do on the UI thread. I.e., when this method
+	 * returns, there is no more work to do on the UI thread <em>at this time</em>. This method may be invoked from any
+	 * thread.
+	 * <p>
+	 * Moved here from <code>AbstractPluginUITest#waitForUiThread()</code>.
+	 */
+	public static void waitForUiThread() {
+		final Display display = getDisplay();
+		display.syncExec(() -> {
+			if (!display.isDisposed()) {
+				while (display.readAndDispatch()) {
+					// wait while there might be something to process.
+				}
+				display.update();
+			}
+		});
+	}
 
 	/**
 	 * Disposes the resource argument. Has no effect if the resource argument is either {@code null} or already

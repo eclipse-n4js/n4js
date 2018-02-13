@@ -44,11 +44,7 @@ class StandardCFEFactory {
 
 		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), cfe);
 
-		List<Node> argumentNodes = new LinkedList<>();
-		List<Node> args = CFEChildren.get(astpp, cfe);
-		for (Node argNode : args) {
-			argumentNodes.add(argNode);
-		}
+		List<Node> argumentNodes = CFEChildren.get(astpp, cfe);
 
 		Node exitNode;
 		String extName;
