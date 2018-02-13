@@ -119,14 +119,12 @@ public class ShippedCodeAccess {
 				} else {
 					checkState(newResource.createNewFile(), "Error while creating new file at: " + newResource);
 					ByteSink byteSink = Files.asByteSink(newResource);
-					OutputStream outputStream = byteSink.openStream();
-
-					try (final InputStream is = jarFile.getInputStream(entry)) {
+					try (
+							final InputStream is = jarFile.getInputStream(entry);
+							OutputStream outputStream = byteSink.openStream();) {
 						ByteStreams.copy(is, outputStream);
 					}
-					outputStream.close();
 				}
-
 				newResource.deleteOnExit();
 			}
 		}
