@@ -84,11 +84,12 @@ AnnotatedScriptElement returns ScriptElement:
 				name=BindingIdentifier<Yield=false>
 				TypeVariables?
 				ClassExtendsClause<Yield=false>?
+				ClassImplementsList?
 			|   {N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false>
 				TypeVariables?
-				InterfaceImplementsList?
+				InterfaceExtendsList?
 			)
 			Members<Yield=false>
 		)
@@ -162,11 +163,12 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 				name=BindingIdentifier<Yield>
 				TypeVariables?
 				ClassExtendsClause<Yield>?
+				ClassImplementsList?
 			|	{N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				('interface') typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
 				TypeVariables?
-				InterfaceImplementsList?
+				InterfaceExtendsList?
 			)
 			Members<Yield>
 		)
@@ -314,6 +316,7 @@ AnnotatedExpression <Yield> returns Expression:
 		{N4ClassExpression.annotationList=current}
 		'class' name=BindingIdentifier<Yield>?
 		ClassExtendsClause<Yield>?
+		ClassImplementsList?
 		Members<Yield>
 	|	{FunctionExpression.annotationList=current} AsyncNoTrailingLineBreak
 		FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>
@@ -1240,6 +1243,7 @@ N4ClassDeclaration <Yield>:
 	)
 	TypeVariables?
 	ClassExtendsClause<Yield>?
+	ClassImplementsList?
 	Members<Yield>
 ;
 
@@ -1249,29 +1253,23 @@ fragment Members <Yield>*:
 	'}'
 ;
 
-/**
- * Second 'extends' is not allowed and later validated to produce nicer error messages.
- */
 fragment ClassExtendsClause <Yield>*:
 	'extends' (
-		  =>superClassRef=ParameterizedTypeRefNominal (('implements' | 'extends') ClassImplementsList)?
+		  =>superClassRef=ParameterizedTypeRefNominal
 		| superClassExpression=LeftHandSideExpression<Yield>
 	)
-	| 'implements' ClassImplementsList
 ;
 
-/**
- * In the list, only ',' is allowed as separator, this is validated later to procude nicer error messages.
- */
 fragment ClassImplementsList*:
-	implementedInterfaceRefs+=ParameterizedTypeRefNominal
-	((',' | 'implements' | 'extends') implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
+	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal
+	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
 ;
 
 N4ClassExpression <Yield>:
 	{N4ClassExpression}
 	'class' name=BindingIdentifier<Yield>?
 	ClassExtendsClause<Yield>?
+	ClassImplementsList?
 	Members<Yield>;
 
 // cf. N4JSSpec §16
@@ -1283,17 +1281,13 @@ N4InterfaceDeclaration <Yield>:
 		VersionDeclaration?
 	)
 	TypeVariables?
-	InterfaceImplementsList?
+	InterfaceExtendsList?
 	Members<Yield>
 ;
 
-/**
- * Actually only 'implements' is allowed in front and ',' are allowed as list separator,
- * this is validated later to produce nicer error messages.
- */
-fragment InterfaceImplementsList*:
-	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal
-		((',' | 'implements' | 'extends') superInterfaceRefs+=ParameterizedTypeRefNominal)*
+fragment InterfaceExtendsList*:
+	'extends' superInterfaceRefs+=ParameterizedTypeRefNominal
+	(',' superInterfaceRefs+=ParameterizedTypeRefNominal)*
 ;
 
 // cf. N4JSSpec §13

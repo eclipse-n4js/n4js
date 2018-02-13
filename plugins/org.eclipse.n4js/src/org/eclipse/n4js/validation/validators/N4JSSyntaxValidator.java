@@ -12,10 +12,8 @@ package org.eclipse.n4js.validation.validators;
 
 import static org.eclipse.n4js.validation.IssueCodes.AST_CATCH_VAR_TYPED;
 import static org.eclipse.n4js.validation.IssueCodes.SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP;
-import static org.eclipse.n4js.validation.IssueCodes.SYN_KW_INSTEAD_OF_COMMA_WARN;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForAST_CATCH_VAR_TYPED;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForSYN_KW_INSTEAD_OF_COMMA_WARN;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,19 +26,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.AbstractElement;
-import org.eclipse.xtext.Alternatives;
-import org.eclipse.xtext.Keyword;
-import org.eclipse.xtext.nodemodel.BidiTreeIterator;
-import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.ILeafNode;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.validation.Check;
-import org.eclipse.xtext.validation.EValidatorRegistrar;
-
-import com.google.common.base.Joiner;
-
 import org.eclipse.n4js.n4JS.CatchVariable;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.ModifierUtils;
@@ -55,6 +40,18 @@ import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.AbstractElement;
+import org.eclipse.xtext.Alternatives;
+import org.eclipse.xtext.Keyword;
+import org.eclipse.xtext.nodemodel.BidiTreeIterator;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.EValidatorRegistrar;
+
+import com.google.common.base.Joiner;
 
 /**
  * Validates syntax of N4JS not already checked by the parser. The parser is designed to accept some invalid constructs
@@ -171,8 +168,6 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	public void checkClassDefinition(N4ClassDefinition n4ClassDefinition) {
-		holdsNoKeywordInsteadOfComma(n4ClassDefinition);
-
 		ICompositeNode node = NodeModelUtils.findActualNodeFor(n4ClassDefinition);
 		ILeafNode keywordNode = findSecondLeafWithKeyword(n4ClassDefinition, "{", node, "extends", false);
 		if (keywordNode != null) {
@@ -210,8 +205,6 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	public void checkInterfaceDeclaration(N4InterfaceDeclaration n4InterfaceDecl) {
 
-		holdsNoKeywordInsteadOfComma(n4InterfaceDecl);
-
 		ICompositeNode node = NodeModelUtils.findActualNodeFor(n4InterfaceDecl);
 		ILeafNode keywordNode;
 
@@ -246,20 +239,6 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 
 		}
 
-	}
-
-	private boolean holdsNoKeywordInsteadOfComma(EObject semanticElement) {
-		ICompositeNode node = NodeModelUtils.findActualNodeFor(semanticElement);
-		List<ILeafNode> commaAlternatives = filterLeafsWithKeywordInsteadOfComma(semanticElement, "{", node, "extends",
-				"implements",
-				"with");
-		boolean result = true;
-		for (ILeafNode n : commaAlternatives) {
-			addIssue(getMessageForSYN_KW_INSTEAD_OF_COMMA_WARN(n.getText()), semanticElement, n.getTotalOffset(),
-					n.getLength(), SYN_KW_INSTEAD_OF_COMMA_WARN);
-			result = false;
-		}
-		return result;
 	}
 
 	private ILeafNode findLeafWithKeyword(EObject semanticElement, String stopAtKeyword, ICompositeNode node,

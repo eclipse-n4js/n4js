@@ -280,6 +280,9 @@ ruleAnnotatedScriptElement
 					(
 						ClassExtendsClauseParserRuleCall_1_3_0_0_6=ruleClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_1_3_0_0_6.start, $ClassExtendsClauseParserRuleCall_1_3_0_0_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getClassExtendsClauseParserRuleCall_1_3_0_0_6()); }
 					)?
+					(
+						ClassImplementsListParserRuleCall_1_3_0_0_7=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_1_3_0_0_7.start, $ClassImplementsListParserRuleCall_1_3_0_0_7.stop, grammarAccess.getAnnotatedScriptElementAccess().getClassImplementsListParserRuleCall_1_3_0_0_7()); }
+					)?
 				)
 				    |
 				(
@@ -310,7 +313,7 @@ ruleAnnotatedScriptElement
 						TypeVariablesParserRuleCall_1_3_0_1_5=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_1_5.start, $TypeVariablesParserRuleCall_1_3_0_1_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_1_5()); }
 					)?
 					(
-						InterfaceImplementsListParserRuleCall_1_3_0_1_6=ruleInterfaceImplementsList{ announce($InterfaceImplementsListParserRuleCall_1_3_0_1_6.start, $InterfaceImplementsListParserRuleCall_1_3_0_1_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getInterfaceImplementsListParserRuleCall_1_3_0_1_6()); }
+						InterfaceExtendsListParserRuleCall_1_3_0_1_6=ruleInterfaceExtendsList{ announce($InterfaceExtendsListParserRuleCall_1_3_0_1_6.start, $InterfaceExtendsListParserRuleCall_1_3_0_1_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getInterfaceExtendsListParserRuleCall_1_3_0_1_6()); }
 					)?
 				)
 			)
@@ -793,6 +796,9 @@ ruleAnnotatedExportableElement
 					(
 						ClassExtendsClauseParserRuleCall_1_2_0_0_6=ruleClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_1_2_0_0_6.start, $ClassExtendsClauseParserRuleCall_1_2_0_0_6.stop, grammarAccess.getAnnotatedExportableElementAccess().getClassExtendsClauseParserRuleCall_1_2_0_0_6()); }
 					)?
+					(
+						ClassImplementsListParserRuleCall_1_2_0_0_7=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_1_2_0_0_7.start, $ClassImplementsListParserRuleCall_1_2_0_0_7.stop, grammarAccess.getAnnotatedExportableElementAccess().getClassImplementsListParserRuleCall_1_2_0_0_7()); }
+					)?
 				)
 				    |
 				(
@@ -823,7 +829,7 @@ ruleAnnotatedExportableElement
 						TypeVariablesParserRuleCall_1_2_0_1_5=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_2_0_1_5.start, $TypeVariablesParserRuleCall_1_2_0_1_5.stop, grammarAccess.getAnnotatedExportableElementAccess().getTypeVariablesParserRuleCall_1_2_0_1_5()); }
 					)?
 					(
-						InterfaceImplementsListParserRuleCall_1_2_0_1_6=ruleInterfaceImplementsList{ announce($InterfaceImplementsListParserRuleCall_1_2_0_1_6.start, $InterfaceImplementsListParserRuleCall_1_2_0_1_6.stop, grammarAccess.getAnnotatedExportableElementAccess().getInterfaceImplementsListParserRuleCall_1_2_0_1_6()); }
+						InterfaceExtendsListParserRuleCall_1_2_0_1_6=ruleInterfaceExtendsList{ announce($InterfaceExtendsListParserRuleCall_1_2_0_1_6.start, $InterfaceExtendsListParserRuleCall_1_2_0_1_6.stop, grammarAccess.getAnnotatedExportableElementAccess().getInterfaceExtendsListParserRuleCall_1_2_0_1_6()); }
 					)?
 				)
 			)
@@ -2466,7 +2472,10 @@ ruleAnnotatedExpression
 			(
 				ClassExtendsClauseParserRuleCall_1_0_3=ruleClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_1_0_3.start, $ClassExtendsClauseParserRuleCall_1_0_3.stop, grammarAccess.getAnnotatedExpressionAccess().getClassExtendsClauseParserRuleCall_1_0_3()); }
 			)?
-			MembersParserRuleCall_1_0_4=ruleMembers{ announce($MembersParserRuleCall_1_0_4.start, $MembersParserRuleCall_1_0_4.stop, grammarAccess.getAnnotatedExpressionAccess().getMembersParserRuleCall_1_0_4()); }
+			(
+				ClassImplementsListParserRuleCall_1_0_4=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_1_0_4.start, $ClassImplementsListParserRuleCall_1_0_4.stop, grammarAccess.getAnnotatedExpressionAccess().getClassImplementsListParserRuleCall_1_0_4()); }
+			)?
+			MembersParserRuleCall_1_0_5=ruleMembers{ announce($MembersParserRuleCall_1_0_5.start, $MembersParserRuleCall_1_0_5.stop, grammarAccess.getAnnotatedExpressionAccess().getMembersParserRuleCall_1_0_5()); }
 		)
 		    |
 		(
@@ -2500,7 +2509,10 @@ norm1_AnnotatedExpression
 			(
 				ClassExtendsClauseParserRuleCall_1_0_3=norm1_ClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_1_0_3.start, $ClassExtendsClauseParserRuleCall_1_0_3.stop, grammarAccess.getAnnotatedExpressionAccess().getClassExtendsClauseParserRuleCall_1_0_3()); }
 			)?
-			MembersParserRuleCall_1_0_4=norm1_Members{ announce($MembersParserRuleCall_1_0_4.start, $MembersParserRuleCall_1_0_4.stop, grammarAccess.getAnnotatedExpressionAccess().getMembersParserRuleCall_1_0_4()); }
+			(
+				ClassImplementsListParserRuleCall_1_0_4=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_1_0_4.start, $ClassImplementsListParserRuleCall_1_0_4.stop, grammarAccess.getAnnotatedExpressionAccess().getClassImplementsListParserRuleCall_1_0_4()); }
+			)?
+			MembersParserRuleCall_1_0_5=norm1_Members{ announce($MembersParserRuleCall_1_0_5.start, $MembersParserRuleCall_1_0_5.stop, grammarAccess.getAnnotatedExpressionAccess().getMembersParserRuleCall_1_0_5()); }
 		)
 		    |
 		(
@@ -14988,7 +15000,10 @@ ruleN4ClassDeclaration
 	(
 		ClassExtendsClauseParserRuleCall_2=ruleClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_2.start, $ClassExtendsClauseParserRuleCall_2.stop, grammarAccess.getN4ClassDeclarationAccess().getClassExtendsClauseParserRuleCall_2()); }
 	)?
-	MembersParserRuleCall_3=ruleMembers{ announce($MembersParserRuleCall_3.start, $MembersParserRuleCall_3.stop, grammarAccess.getN4ClassDeclarationAccess().getMembersParserRuleCall_3()); }
+	(
+		ClassImplementsListParserRuleCall_3=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_3.start, $ClassImplementsListParserRuleCall_3.stop, grammarAccess.getN4ClassDeclarationAccess().getClassImplementsListParserRuleCall_3()); }
+	)?
+	MembersParserRuleCall_4=ruleMembers{ announce($MembersParserRuleCall_4.start, $MembersParserRuleCall_4.stop, grammarAccess.getN4ClassDeclarationAccess().getMembersParserRuleCall_4()); }
 )
 ;
 
@@ -15046,56 +15061,30 @@ ruleClassExtendsClause
 @init {
 }:
 (
+	ExtendsKeyword_0=Extends
+	 {
+		announce($ExtendsKeyword_0, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0());
+	}
 	(
-		ExtendsKeyword_0_0=Extends
-		 {
-			announce($ExtendsKeyword_0_0, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_0());
-		}
 		(
-			(
-				(
-					((
-						ruleParameterizedTypeRefNominal
-					)
-					)=>
-					(
-						SuperClassRefParameterizedTypeRefNominalParserRuleCall_0_1_0_0_0=ruleParameterizedTypeRefNominal{
-							announce($SuperClassRefParameterizedTypeRefNominalParserRuleCall_0_1_0_0_0.start, $SuperClassRefParameterizedTypeRefNominalParserRuleCall_0_1_0_0_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassRefAssignment_0_1_0_0());
-						}
-					)
-				)
-				(
-					(
-						ImplementsKeyword_0_1_0_1_0_0=Implements
-						 {
-							announce($ImplementsKeyword_0_1_0_1_0_0, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_0_1_0_1_0_0());
-						}
-						    |
-						ExtendsKeyword_0_1_0_1_0_1=Extends
-						 {
-							announce($ExtendsKeyword_0_1_0_1_0_1, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_1_0_1_0_1());
-						}
-					)
-					ClassImplementsListParserRuleCall_0_1_0_1_1=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_0_1_0_1_1.start, $ClassImplementsListParserRuleCall_0_1_0_1_1.stop, grammarAccess.getClassExtendsClauseAccess().getClassImplementsListParserRuleCall_0_1_0_1_1()); }
-				)?
+			((
+				ruleParameterizedTypeRefNominal
 			)
-			    |
+			)=>
 			(
-				(
-					SuperClassExpressionLeftHandSideExpressionParserRuleCall_0_1_1_0=ruleLeftHandSideExpression{
-						announce($SuperClassExpressionLeftHandSideExpressionParserRuleCall_0_1_1_0.start, $SuperClassExpressionLeftHandSideExpressionParserRuleCall_0_1_1_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassExpressionAssignment_0_1_1());
-					}
-				)
+				SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0=ruleParameterizedTypeRefNominal{
+					announce($SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0.start, $SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassRefAssignment_1_0());
+				}
 			)
 		)
-	)
-	    |
-	(
-		ImplementsKeyword_1_0=Implements
-		 {
-			announce($ImplementsKeyword_1_0, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_1_0());
-		}
-		ClassImplementsListParserRuleCall_1_1=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_1_1.start, $ClassImplementsListParserRuleCall_1_1.stop, grammarAccess.getClassExtendsClauseAccess().getClassImplementsListParserRuleCall_1_1()); }
+		    |
+		(
+			(
+				SuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0=ruleLeftHandSideExpression{
+					announce($SuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0.start, $SuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassExpressionAssignment_1_1());
+				}
+			)
+		)
 	)
 )
 ;
@@ -15106,56 +15095,30 @@ norm1_ClassExtendsClause
 @init {
 }:
 (
+	ExtendsKeyword_0=Extends
+	 {
+		announce($ExtendsKeyword_0, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0());
+	}
 	(
-		ExtendsKeyword_0_0=Extends
-		 {
-			announce($ExtendsKeyword_0_0, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_0());
-		}
 		(
-			(
-				(
-					((
-						ruleParameterizedTypeRefNominal
-					)
-					)=>
-					(
-						SuperClassRefParameterizedTypeRefNominalParserRuleCall_0_1_0_0_0=ruleParameterizedTypeRefNominal{
-							announce($SuperClassRefParameterizedTypeRefNominalParserRuleCall_0_1_0_0_0.start, $SuperClassRefParameterizedTypeRefNominalParserRuleCall_0_1_0_0_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassRefAssignment_0_1_0_0());
-						}
-					)
-				)
-				(
-					(
-						ImplementsKeyword_0_1_0_1_0_0=Implements
-						 {
-							announce($ImplementsKeyword_0_1_0_1_0_0, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_0_1_0_1_0_0());
-						}
-						    |
-						ExtendsKeyword_0_1_0_1_0_1=Extends
-						 {
-							announce($ExtendsKeyword_0_1_0_1_0_1, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_1_0_1_0_1());
-						}
-					)
-					ClassImplementsListParserRuleCall_0_1_0_1_1=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_0_1_0_1_1.start, $ClassImplementsListParserRuleCall_0_1_0_1_1.stop, grammarAccess.getClassExtendsClauseAccess().getClassImplementsListParserRuleCall_0_1_0_1_1()); }
-				)?
+			((
+				ruleParameterizedTypeRefNominal
 			)
-			    |
+			)=>
 			(
-				(
-					SuperClassExpressionLeftHandSideExpressionParserRuleCall_0_1_1_0=norm1_LeftHandSideExpression{
-						announce($SuperClassExpressionLeftHandSideExpressionParserRuleCall_0_1_1_0.start, $SuperClassExpressionLeftHandSideExpressionParserRuleCall_0_1_1_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassExpressionAssignment_0_1_1());
-					}
-				)
+				SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0=ruleParameterizedTypeRefNominal{
+					announce($SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0.start, $SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassRefAssignment_1_0());
+				}
 			)
 		)
-	)
-	    |
-	(
-		ImplementsKeyword_1_0=Implements
-		 {
-			announce($ImplementsKeyword_1_0, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_1_0());
-		}
-		ClassImplementsListParserRuleCall_1_1=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_1_1.start, $ClassImplementsListParserRuleCall_1_1.stop, grammarAccess.getClassExtendsClauseAccess().getClassImplementsListParserRuleCall_1_1()); }
+		    |
+		(
+			(
+				SuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0=norm1_LeftHandSideExpression{
+					announce($SuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0.start, $SuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassExpressionAssignment_1_1());
+				}
+			)
+		)
 	)
 )
 ;
@@ -15166,34 +15129,26 @@ ruleClassImplementsList
 @init {
 }:
 (
+	ImplementsKeyword_0=Implements
+	 {
+		announce($ImplementsKeyword_0, grammarAccess.getClassImplementsListAccess().getImplementsKeyword_0());
+	}
 	(
 		(
-			ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_0_0=ruleParameterizedTypeRefNominal{
-				announce($ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_0_0.start, $ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_0_0.stop, grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsAssignment_0());
+			ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0=ruleParameterizedTypeRefNominal{
+				announce($ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.start, $ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.stop, grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsAssignment_1());
 			}
 		)
 	)
 	(
-		(
-			CommaKeyword_1_0_0=Comma
-			 {
-				announce($CommaKeyword_1_0_0, grammarAccess.getClassImplementsListAccess().getCommaKeyword_1_0_0());
-			}
-			    |
-			ImplementsKeyword_1_0_1=Implements
-			 {
-				announce($ImplementsKeyword_1_0_1, grammarAccess.getClassImplementsListAccess().getImplementsKeyword_1_0_1());
-			}
-			    |
-			ExtendsKeyword_1_0_2=Extends
-			 {
-				announce($ExtendsKeyword_1_0_2, grammarAccess.getClassImplementsListAccess().getExtendsKeyword_1_0_2());
-			}
-		)
+		CommaKeyword_2_0=Comma
+		 {
+			announce($CommaKeyword_2_0, grammarAccess.getClassImplementsListAccess().getCommaKeyword_2_0());
+		}
 		(
 			(
-				ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_1_0=ruleParameterizedTypeRefNominal{
-					announce($ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_1_0.start, $ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_1_0.stop, grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsAssignment_1_1());
+				ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0=ruleParameterizedTypeRefNominal{
+					announce($ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.start, $ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.stop, grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsAssignment_2_1());
 				}
 			)
 		)
@@ -15226,7 +15181,10 @@ ruleN4ClassExpression
 	(
 		ClassExtendsClauseParserRuleCall_3=ruleClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_3.start, $ClassExtendsClauseParserRuleCall_3.stop, grammarAccess.getN4ClassExpressionAccess().getClassExtendsClauseParserRuleCall_3()); }
 	)?
-	MembersParserRuleCall_4=ruleMembers{ announce($MembersParserRuleCall_4.start, $MembersParserRuleCall_4.stop, grammarAccess.getN4ClassExpressionAccess().getMembersParserRuleCall_4()); }
+	(
+		ClassImplementsListParserRuleCall_4=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_4.start, $ClassImplementsListParserRuleCall_4.stop, grammarAccess.getN4ClassExpressionAccess().getClassImplementsListParserRuleCall_4()); }
+	)?
+	MembersParserRuleCall_5=ruleMembers{ announce($MembersParserRuleCall_5.start, $MembersParserRuleCall_5.stop, grammarAccess.getN4ClassExpressionAccess().getMembersParserRuleCall_5()); }
 )
 ;
 
@@ -15250,7 +15208,10 @@ norm1_N4ClassExpression
 	(
 		ClassExtendsClauseParserRuleCall_3=norm1_ClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_3.start, $ClassExtendsClauseParserRuleCall_3.stop, grammarAccess.getN4ClassExpressionAccess().getClassExtendsClauseParserRuleCall_3()); }
 	)?
-	MembersParserRuleCall_4=norm1_Members{ announce($MembersParserRuleCall_4.start, $MembersParserRuleCall_4.stop, grammarAccess.getN4ClassExpressionAccess().getMembersParserRuleCall_4()); }
+	(
+		ClassImplementsListParserRuleCall_4=ruleClassImplementsList{ announce($ClassImplementsListParserRuleCall_4.start, $ClassImplementsListParserRuleCall_4.stop, grammarAccess.getN4ClassExpressionAccess().getClassImplementsListParserRuleCall_4()); }
+	)?
+	MembersParserRuleCall_5=norm1_Members{ announce($MembersParserRuleCall_5.start, $MembersParserRuleCall_5.stop, grammarAccess.getN4ClassExpressionAccess().getMembersParserRuleCall_5()); }
 )
 ;
 
@@ -15321,57 +15282,38 @@ ruleN4InterfaceDeclaration
 		TypeVariablesParserRuleCall_1=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1.start, $TypeVariablesParserRuleCall_1.stop, grammarAccess.getN4InterfaceDeclarationAccess().getTypeVariablesParserRuleCall_1()); }
 	)?
 	(
-		InterfaceImplementsListParserRuleCall_2=ruleInterfaceImplementsList{ announce($InterfaceImplementsListParserRuleCall_2.start, $InterfaceImplementsListParserRuleCall_2.stop, grammarAccess.getN4InterfaceDeclarationAccess().getInterfaceImplementsListParserRuleCall_2()); }
+		InterfaceExtendsListParserRuleCall_2=ruleInterfaceExtendsList{ announce($InterfaceExtendsListParserRuleCall_2.start, $InterfaceExtendsListParserRuleCall_2.stop, grammarAccess.getN4InterfaceDeclarationAccess().getInterfaceExtendsListParserRuleCall_2()); }
 	)?
 	MembersParserRuleCall_3=ruleMembers{ announce($MembersParserRuleCall_3.start, $MembersParserRuleCall_3.stop, grammarAccess.getN4InterfaceDeclarationAccess().getMembersParserRuleCall_3()); }
 )
 ;
 
 
-// Rule InterfaceImplementsList
-ruleInterfaceImplementsList
+// Rule InterfaceExtendsList
+ruleInterfaceExtendsList
 @init {
 }:
 (
-	(
-		ExtendsKeyword_0_0=Extends
-		 {
-			announce($ExtendsKeyword_0_0, grammarAccess.getInterfaceImplementsListAccess().getExtendsKeyword_0_0());
-		}
-		    |
-		ImplementsKeyword_0_1=Implements
-		 {
-			announce($ImplementsKeyword_0_1, grammarAccess.getInterfaceImplementsListAccess().getImplementsKeyword_0_1());
-		}
-	)
+	ExtendsKeyword_0=Extends
+	 {
+		announce($ExtendsKeyword_0, grammarAccess.getInterfaceExtendsListAccess().getExtendsKeyword_0());
+	}
 	(
 		(
 			SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0=ruleParameterizedTypeRefNominal{
-				announce($SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.start, $SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.stop, grammarAccess.getInterfaceImplementsListAccess().getSuperInterfaceRefsAssignment_1());
+				announce($SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.start, $SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.stop, grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsAssignment_1());
 			}
 		)
 	)
 	(
-		(
-			CommaKeyword_2_0_0=Comma
-			 {
-				announce($CommaKeyword_2_0_0, grammarAccess.getInterfaceImplementsListAccess().getCommaKeyword_2_0_0());
-			}
-			    |
-			ImplementsKeyword_2_0_1=Implements
-			 {
-				announce($ImplementsKeyword_2_0_1, grammarAccess.getInterfaceImplementsListAccess().getImplementsKeyword_2_0_1());
-			}
-			    |
-			ExtendsKeyword_2_0_2=Extends
-			 {
-				announce($ExtendsKeyword_2_0_2, grammarAccess.getInterfaceImplementsListAccess().getExtendsKeyword_2_0_2());
-			}
-		)
+		CommaKeyword_2_0=Comma
+		 {
+			announce($CommaKeyword_2_0, grammarAccess.getInterfaceExtendsListAccess().getCommaKeyword_2_0());
+		}
 		(
 			(
 				SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0=ruleParameterizedTypeRefNominal{
-					announce($SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.start, $SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.stop, grammarAccess.getInterfaceImplementsListAccess().getSuperInterfaceRefsAssignment_2_1());
+					announce($SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.start, $SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.stop, grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsAssignment_2_1());
 				}
 			)
 		)
