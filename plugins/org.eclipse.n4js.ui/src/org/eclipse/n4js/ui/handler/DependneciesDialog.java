@@ -28,12 +28,16 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.google.common.base.Strings;
+
 /**
  * UI for the {@link UeberFixHandler}, which will use this class for visualizing its long running operation. Since in
  * some (user data depended) scenarios processing has to be suspended in order to get users input, instance of this
  * class will hold reference to the caller. It is assumed that, if needed, the caller will {@link #wait()} for this
  * instance to get user input, and this instance will {@link #notify()} caller when input is obtained.
  */
+// TODO refactor to custom UI
+// For better user experience refactor the UI to avoid wait-notify mechanisms.
 public class DependneciesDialog extends ProgressMonitorDialog {
 
 	private Table tNPMRC = null;
@@ -41,6 +45,9 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 	private Object suspendedCaller = null;
 	private Button proceed = null;
 	Composite configsContainer = null;
+
+	String selectedNPMRC = null;
+	String selectedN4TP = null;
 
 	/** */
 	public DependneciesDialog(Shell parent) {
@@ -79,12 +86,48 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 		proceed.setEnabled(false);
 
 		// TODO compute selections based on the tables state, to allow other thread to know user selection
-		TableItem[] selection = tN4TP.getSelection();
+		processN4TP();
+		processNPMRC();
 
 		// notify other thread to resume
 		synchronized (this.suspendedCaller) {
 			this.suspendedCaller.notify();
 		}
+	}
+
+	public String getNPMRC() {
+		return this.selectedNPMRC;
+	}
+
+	public String getN4TP() {
+		return this.selectedN4TP;
+	}
+
+	private void processN4TP() {
+		this.selectedN4TP = getTableItem(tN4TP);
+	}
+
+	private void processNPMRC() {
+		this.selectedNPMRC = getTableItem(tNPMRC);
+	}
+
+	private String getTableItem(Table table) {
+		TableItem[] items = table.getSelection();
+		if (items.length >= 2) {
+			// TODO LOG we allow only one selection;
+			return null;
+		}
+		if (items.length == 1) {
+			TableItem item = items[0];
+			if (item != null) {
+				// first is the display name, second is data
+				String npmrc = item.getText(1);
+				if (!Strings.isNullOrEmpty(npmrc)) {
+					return npmrc;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
