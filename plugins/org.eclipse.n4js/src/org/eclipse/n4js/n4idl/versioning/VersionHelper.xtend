@@ -14,7 +14,6 @@ import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.util.Collections
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
@@ -78,17 +77,6 @@ class VersionHelper {
 		switch (object) {
 			VersionedReference case object.hasRequestedVersion:
 				return Optional.of(object.requestedVersionOrZero)
-			// For expressions use a different traversal strategy.
-			// If the expression cannot be used to infer a specific maximum version,
-			// compute the maximum version based on the container
-			Expression: {
-				val expressionMaxVersion = computeMaximumVersionOfExpression(object);
-				if (expressionMaxVersion.present) {
-					return expressionMaxVersion;
-				} else {
-					computeMaximumVersion(object.eContainer);
-				}
-			}
 			N4ClassDeclaration case isVersioned(object):
 				return computeMaximumVersion(object.definedType as TClass)
 			N4InterfaceDeclaration case isVersioned(object):
@@ -99,23 +87,6 @@ class VersionHelper {
 				return computeMaximumVersion(object)
 			default:
 				return computeMaximumVersion(object.eContainer)
-		}
-	}
-
-	private def Optional<Integer> computeMaximumVersionOfExpression(Expression expression) {
-		val occuringVersions = expression.eAllContents
-			.filter[expr |
-				expr instanceof VersionedReference &&
-				(expr as VersionedReference).hasRequestedVersion]
-			.map[ref | (ref as VersionedReference).requestedVersionOrZero]
-			.toSet;
-
-		if (occuringVersions.size == 1) {
-			// return single version in the set of occuring versions
-			return Optional.of(occuringVersions.iterator.next)
-		} else {
-			// in this case we are unable to infer the maximum version
-			return Optional.absent();
 		}
 	}
 
