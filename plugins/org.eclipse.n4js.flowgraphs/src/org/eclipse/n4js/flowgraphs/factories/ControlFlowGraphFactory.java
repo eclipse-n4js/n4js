@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * Factory to build the internal control flow graphs.
@@ -182,13 +183,14 @@ public class ControlFlowGraphFactory {
 	}
 
 	private static void connectToJumpTarget(ComplexNodeMapper cnMapper, Node jumpNode, JumpToken jumpToken) {
-		Node catchNode = null;
-		catchNode = CatchNodeFinder.find(jumpToken, jumpNode, cnMapper);
-		if (catchNode == null) {
+		Pair<Node, ControlFlowType> catcher = CatchNodeFinder.find(jumpToken, jumpNode, cnMapper);
+		if (catcher == null) {
 			String jumpTokenStr = getJumpTokenDetailString(jumpToken, jumpNode);
 			System.err.println("Could not find catching node for jump token '" + jumpTokenStr + "'");
 			return;
 		}
+		Node catchNode = catcher.getKey();
+		ControlFlowType newEdgeType = catcher.getValue();
 
 		FinallyBlock enteringFinallyBlock = getEnteringFinallyBlock(catchNode);
 		boolean isExitingFinallyBlock = isExitingFinallyBlock(cnMapper, jumpNode);
@@ -198,7 +200,7 @@ public class ControlFlowGraphFactory {
 				EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
 			}
 		} else {
-			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken.cfType);
+			EdgeUtils.connectCF(jumpNode, catchNode, newEdgeType);
 		}
 
 		if (enteringFinallyBlock != null) {

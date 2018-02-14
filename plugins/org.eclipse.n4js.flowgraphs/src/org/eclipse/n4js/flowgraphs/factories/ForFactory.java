@@ -178,6 +178,10 @@ class ForFactory {
 			cNode.connectInternalSucc(ControlFlowType.DeadCode, loopSrc, exitNode);
 		}
 
+		// catch for short-circuits
+		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue, ControlFlowType.LoopEnter));
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse, ControlFlowType.LoopExit));
+
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 

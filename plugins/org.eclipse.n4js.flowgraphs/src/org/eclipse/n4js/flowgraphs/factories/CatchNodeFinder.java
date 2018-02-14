@@ -19,16 +19,20 @@ import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.CatchBlock;
+import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * For a given {@link JumpToken}s of a given start {@link Node} the method
@@ -40,16 +44,18 @@ public class CatchNodeFinder {
 	static private final CatchEvaluator catchContinueEvluator = new CatchContinueEvaluator();
 	static private final CatchEvaluator catchReturnEvaluator = new CatchReturnEvaluator();
 	static private final CatchEvaluator catchThrowEvaluator = new CatchThrowEvaluator();
+	static private final CatchEvaluator catchShortCircuitThenEvaluator = new CatchShortCircuitThenEvaluator();
+	static private final CatchEvaluator catchShortCircuitElseEvaluator = new CatchShortCircuitElseEvaluator();
 
 	/** @return the node to which the given {@code jumpNode} jumps via the given {@link JumpToken}. Can return null. */
-	static Node find(JumpToken jumpToken, Node jumpNode, ComplexNodeMapper cnMapper) {
+	static Pair<Node, ControlFlowType> find(JumpToken jumpToken, Node jumpNode, ComplexNodeMapper cnMapper) {
 		CatchEvaluator catchEvaluator = getCatchEvaluator(jumpToken);
 		ControlFlowElement cfe = jumpNode.getControlFlowElement();
 		cfe = skipContainers(cfe);
 		while (cfe != null) {
-			Node catchNode = findCatchNode(jumpToken, cfe, catchEvaluator, cnMapper);
-			if (catchNode != null)
-				return catchNode;
+			Pair<Node, ControlFlowType> catcher = findCatchNode(jumpToken, cfe, catchEvaluator, cnMapper);
+			if (catcher != null)
+				return catcher;
 
 			cfe = getContainer(cfe);
 		}
@@ -68,6 +74,10 @@ public class CatchNodeFinder {
 			return catchReturnEvaluator;
 		case Throw:
 			return catchThrowEvaluator;
+		case IfTrue:
+			return catchShortCircuitThenEvaluator;
+		case IfFalse:
+			return catchShortCircuitElseEvaluator;
 		default:
 			throw new IllegalArgumentException("not implemented");
 		}
@@ -103,20 +113,26 @@ public class CatchNodeFinder {
 	}
 
 	/** @return a node that can catch the given {@link JumpToken}. */
-	private static Node findCatchNode(JumpToken jumpToken, ControlFlowElement cfe,
+	private static Pair<Node, ControlFlowType> findCatchNode(JumpToken jumpToken, ControlFlowElement cfe,
 			CatchEvaluator catchEvaluator, ComplexNodeMapper cnMapper) {
 
 		if (catchEvaluator.isCatchingType(cfe)) {
 			Node catchNode = catchEvaluator.getCatchingNode(cfe, cnMapper);
 			for (CatchToken catchToken : catchNode.catchToken) {
-				if (catchEvaluator.isCatchingToken(cfe, jumpToken, catchToken))
-					return catchNode;
+				if (catchEvaluator.isCatchingToken(cfe, jumpToken, catchToken)) {
+					ControlFlowType newEdgeType = catchToken.newEdgeType;
+					if (newEdgeType == ControlFlowType.CatchesAll) {
+						newEdgeType = jumpToken.cfType;
+					}
+					return Pair.of(catchNode, newEdgeType);
+				}
 			}
 		}
 
-		Node catchNode = findCatchAllNode(cfe, cnMapper);
-		if (catchNode != null)
-			return catchNode;
+		Node catchAllNode = findCatchAllNode(cfe, cnMapper);
+		if (catchAllNode != null) {
+			return Pair.of(catchAllNode, jumpToken.cfType);
+		}
 		return null;
 	}
 
@@ -202,6 +218,7 @@ public class CatchNodeFinder {
 			boolean isCatchingToken = false;
 			isCatchingToken |= jumpToken.lblStmt != null && jumpToken.lblStmt == catchToken.lblStmt;
 			isCatchingToken |= jumpToken.lblStmt == null;
+			isCatchingToken &= jumpToken.cfType == catchToken.cfType;
 			return isCatchingToken;
 		}
 	}
@@ -336,6 +353,97 @@ public class CatchNodeFinder {
 				return catchNode;
 			}
 			throw new IllegalStateException("Method 'isCatchingType' should be true first");
+		}
+
+		@Override
+		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
+			return true;
+		}
+	}
+
+	/**
+	 * Catches jumps that happen due to short circuit execution in {@link BinaryLogicalExpression}
+	 */
+	static private class CatchShortCircuitThenEvaluator implements CatchEvaluator {
+
+		@Override
+		public boolean isCatchingType(ControlFlowElement cfe) {
+			boolean isCatching = false;
+			isCatching |= cfe instanceof BinaryLogicalExpression;
+			isCatching |= cfe instanceof ConditionalExpression;
+			isCatching |= cfe instanceof IfStatement;
+			isCatching |= cfe instanceof DoStatement;
+			isCatching |= cfe instanceof ForStatement;
+			isCatching |= cfe instanceof WhileStatement;
+			return isCatching;
+		}
+
+		@Override
+		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+			if (cfe instanceof ConditionalExpression) {
+				ComplexNode cn = cnMapper.get(cfe);
+				return cn.getNode(NodeNames.THEN);
+			}
+			if (cfe instanceof IfStatement) {
+				ComplexNode cn = cnMapper.get(cfe);
+				return cn.getNode(NodeNames.THEN);
+			}
+			if (cfe instanceof DoStatement) {
+				ComplexNode cn = cnMapper.get(cfe);
+				return cn.getNode(NodeNames.BODY);
+			}
+			if (cfe instanceof WhileStatement) {
+				ComplexNode cn = cnMapper.get(cfe);
+				return cn.getNode(NodeNames.BODY);
+			}
+			if (cfe instanceof ForStatement) {
+				ComplexNode cn = cnMapper.get(cfe);
+				return cn.getNode(NodeNames.BODY);
+			}
+			ComplexNode cn = cnMapper.get(cfe);
+			return cn.getNode(NodeNames.EXIT);
+		}
+
+		@Override
+		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
+			return true;
+		}
+	}
+
+	/**
+	 * Catches jumps that happen due to short circuit execution in {@link BinaryLogicalExpression}
+	 */
+	static private class CatchShortCircuitElseEvaluator implements CatchEvaluator {
+
+		@Override
+		public boolean isCatchingType(ControlFlowElement cfe) {
+			boolean isCatching = false;
+			isCatching |= cfe instanceof BinaryLogicalExpression;
+			isCatching |= cfe instanceof ConditionalExpression;
+			isCatching |= cfe instanceof IfStatement;
+			isCatching |= cfe instanceof DoStatement;
+			isCatching |= cfe instanceof ForStatement;
+			isCatching |= cfe instanceof WhileStatement;
+			return isCatching;
+		}
+
+		@Override
+		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+			if (cfe instanceof ConditionalExpression) {
+				ComplexNode cn = cnMapper.get(cfe);
+				return cn.getNode(NodeNames.ELSE);
+			}
+			if (cfe instanceof IfStatement) {
+				ComplexNode cn = cnMapper.get(cfe);
+				Node elseNode = cn.getNode(NodeNames.ELSE);
+				if (elseNode != null) {
+					return elseNode;
+				}
+				return cn.getNode(NodeNames.EXIT);
+			}
+
+			ComplexNode cn = cnMapper.get(cfe);
+			return cn.getNode(NodeNames.EXIT);
 		}
 
 		@Override
