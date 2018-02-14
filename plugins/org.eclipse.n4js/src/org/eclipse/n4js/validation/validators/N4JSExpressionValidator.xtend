@@ -880,37 +880,37 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			doCheckMathOperandTypeSymbol(ae.lhs, ae.rhs)
 		}
 	}
-			
+
 	/**
 	 * Note: Division by 0 may lead to infinity or NaN, depending on the value of the rhs.
 	 * I.e. 0/0=NaN, but 1/0=Infinity. So we cannot infer from the type the result in these cases.
-	 */	
+	 */
 	@Check
 	def checkMultiplicativeExpression(MultiplicativeExpression me) {
 		doCheckMathOperandTypes(me.lhs, me.rhs);
 	}
-	
+
 	@Check
 	def checkShiftExpression(ShiftExpression se) {
 		doCheckMathOperandTypes(se.lhs, se.rhs);
 	}
 
 	def doCheckMathOperandTypes(Expression lhs, Expression rhs) {
-		if (lhs===null || rhs===null) return;	
+		if (lhs===null || rhs===null) return;
 		val tlhs = ts.tau(lhs)
 		if (tlhs===null) return;
 		val trhs = ts.tau(rhs)
 		if (trhs===null) return;
-		
+
 		val bits = BuiltInTypeScope.get(lhs.eResource.resourceSet)
-		
+
 		if (tlhs.declaredType === bits.undefinedType) {
 			issueMathResultIsConstant("of type undefined", "NaN", lhs);
 		}
 		if (trhs.declaredType === bits.undefinedType) {
 			issueMathResultIsConstant("of type undefined", "NaN", rhs);
 		}
-		
+
 		if (tlhs.declaredType===bits.nullType) {
 			issueMathOperandIsConstant("null", "0", lhs);
 		}
@@ -924,14 +924,14 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			issueMathOperandTypeNotPermitted("symbol", rhs);
 		}
 	}
-		
-	def doCheckMathOperandTypeSymbol(Expression lhs, Expression rhs) {	
-		if (lhs===null || rhs===null) return;	
+
+	def doCheckMathOperandTypeSymbol(Expression lhs, Expression rhs) {
+		if (lhs===null || rhs===null) return;
 		val tlhs = ts.tau(lhs)
 		if (tlhs===null) return;
 		val trhs = ts.tau(rhs)
 		if (trhs===null) return;
-		
+
 		val bits = BuiltInTypeScope.get(lhs.eResource.resourceSet)
 		if (tlhs.declaredType==bits.symbolType) {
 			issueMathOperandTypeNotPermitted("symbol", lhs);
@@ -940,7 +940,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			issueMathOperandTypeNotPermitted("symbol", rhs);
 		}
 	}
-	
+
 
 	def issueMathResultIsConstant(String operand, String constResult, Expression location) {
 		addIssue(IssueCodes.getMessageForEXP_MATH_OPERATION_RESULT_IS_CONSTANT(operand, constResult),
@@ -959,10 +959,10 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			location,
 			IssueCodes.EXP_MATH_TYPE_NOT_PERMITTED);
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * IDE-731 / IDE-773
 	 * Cf. 6.1.17. Equality Expression
@@ -1237,6 +1237,10 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkCastExpression(CastExpression castExpression) {
+		// avoid validating a broken AST
+		if (castExpression.expression === null)
+			return;
+
 		val S = ts.tau(castExpression.expression, castExpression);
 		val T = castExpression.targetTypeRef
 

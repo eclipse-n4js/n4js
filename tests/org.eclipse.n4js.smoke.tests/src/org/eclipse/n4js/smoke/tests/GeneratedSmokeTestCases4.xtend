@@ -3121,4 +3121,15 @@ class GeneratedSmokeTestCases4 {
 			}
 		'''.assertNoException
 	}
+
+	/**
+	 * GH-616
+	 */
+	@Test
+	def void test_GH_616() {
+		// removing the second dot removes the exception
+		'''
+			let r = (v) => v..foo();
+		'''.assertNoException
+	}
 }

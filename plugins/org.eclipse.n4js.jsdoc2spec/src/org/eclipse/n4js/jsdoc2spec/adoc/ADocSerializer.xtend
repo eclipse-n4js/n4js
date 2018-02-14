@@ -248,13 +248,14 @@ class ADocSerializer {
 		«IF hasTodo(spec.doclet)»
 		«getTodoLink(spec.doclet)»
 		«ENDIF»
+		«IF element instanceof TMember && ((element as TMember).isPolyfilled())»
+
+		[.small]#(Polyfilled from «trueSrcFolder»)#
+		«ENDIF»
 
 		==== Signature
 
 		«codeLink(element)»
-		«IF element instanceof TMember && ((element as TMember).isPolyfilled())»
-		footnote:[Polyfilled from «trueSrcFolder»]
-		«ENDIF»
 
 		''');
 		return strb;
@@ -280,7 +281,7 @@ class ADocSerializer {
 		for (a: member.annotations.filter[it.name!=AnnotationDefinition.INTERNAL.name]) {
 			strb.append(a.annotationAsString + " ");
 		}
-		if (member.final) {
+		if (member.final && !member.field) {
 			strb.append("@Final ");
 		}
 		strb.append(keywordProvider.keyword(member.memberAccessModifier) + " ");
