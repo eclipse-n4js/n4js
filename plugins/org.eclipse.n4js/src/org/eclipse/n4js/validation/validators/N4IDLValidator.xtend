@@ -14,6 +14,8 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ScriptElement
 import org.eclipse.n4js.n4JS.Statement
@@ -26,6 +28,7 @@ import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -39,6 +42,9 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
+
+	@Inject
+	private N4JSElementKeywordProvider elementKeywordProvider;
 
 	/**
 	 * NEEEDED
@@ -94,6 +100,27 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	/** Checks that type declarations in language variants that allow versioned types
+	 * always explicitly declare a type version. */
+	@Check
+	def checkTypeDeclaration(N4TypeDeclaration n4TypeDeclaration) {
+		// early exit for variants that do not support versioned types
+		if (!variantHelper.allowVersionedTypes(n4TypeDeclaration)) {
+			return;
+		}
+
+		// make sure all type declarations explicitly declare a type version
+		if (n4TypeDeclaration instanceof VersionedElement) {
+			if (!n4TypeDeclaration.hasDeclaredVersion) {
+				val message = IssueCodes.getMessageForIDL_VERSIONED_ELEMENT_MISSING_VERSION(
+					elementKeywordProvider.keyword(n4TypeDeclaration), n4TypeDeclaration.name);
+				// add an issue for un-versioned type declarations
+				addIssue(message, n4TypeDeclaration, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+					IssueCodes.IDL_VERSIONED_ELEMENT_MISSING_VERSION);
+			}
+		}
+	}
+
 	/**
 	 * Adds an issue in case of missing support for type versions in
 	 * the current JavaScript variant.
@@ -101,12 +128,13 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	 * This validation only applies to {@link VersionedElement}s (e.g. classifiers, enums).
 	 */
 	@Check
-	def checkVersionedElementsSupported(VersionedElement versionedElement) {
-		if (!variantHelper.allowVersionedTypes(versionedElement) &&
+	def checkVersionedElements(VersionedElement versionedElement) {
+		// versioned types are *not* supported
+		if (!variantHelper.allowVersionedTypes(versionedElement)) {
 			// check for non-zero version
-			VersionUtils.isVersioned(versionedElement)
-		) {
-			addIssueForUnsupportedVersionedTypes(versionedElement);
+			if (VersionUtils.isVersioned(versionedElement)) {
+				addIssueForUnsupportedVersionedTypes(versionedElement);
+			}
 		}
 	}
 
