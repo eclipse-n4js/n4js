@@ -20,6 +20,7 @@ import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.Statement;
 
 /**
@@ -62,6 +63,12 @@ class BlockFactory {
 
 		if (FGUtils.isCFContainer(block)) {
 			exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesAll));
+
+		} else {
+			LabelledStatement lblStmt = ASTUtils.getLabelledStatement(block);
+			if (lblStmt != null) {
+				exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
+			}
 		}
 
 		return cNode;

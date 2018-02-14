@@ -66,7 +66,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		IFile file2 = createTestFile(moduleFolder, "Class1", TestFiles.class1());
 
 		assertMarkers("File2 should have no errors", file2, 0);
-		assertMarkers("File1 should have no errors, one unused variable warning", file1, 1);
+		assertMarkers("File1 should have no errors", file1, 0);
 
 		// open editors of test files
 		IWorkbenchPage page = getActivePage();
@@ -128,7 +128,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		IFile file2 = createTestFile(moduleFolder, "Class1", TestFiles.class1());
 		assertMarkers("File2 should have no errors", file2, 0);
 		IFile file1 = createTestFile(moduleFolder, "Class0", TestFiles.class0());
-		assertMarkers("File1 should have no errors, one unused variable warning", file1, 1);
+		assertMarkers("File1 should have no errors", file1, 0);
 
 		// open editors of test files
 		IWorkbenchPage page = getActivePage();
@@ -590,7 +590,7 @@ public class BuilderParticipantPluginUITest extends AbstractBuilderParticipantTe
 		waitForAutoBuild();
 
 		assertMarkers("File MyEnum should have no errors", fileMyEnum, 0);
-		assertMarkers("File MyEnumUser should have no errors, one unused variable warning", fileMyEnumUser, 1);
+		assertMarkers("File MyEnumUser should have no errors", fileMyEnumUser, 0);
 
 		// open editors of test files
 		IWorkbenchPage page = getActivePage();

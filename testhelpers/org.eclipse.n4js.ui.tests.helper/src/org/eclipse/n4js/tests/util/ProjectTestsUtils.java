@@ -74,6 +74,15 @@ public class ProjectTestsUtils {
 
 	private static Logger LOGGER = Logger.getLogger(ProjectTestsUtils.class);
 
+	static private boolean allPredicatesApply(Predicate<IMarker>[] preds, IMarker marker) {
+		for (Predicate<IMarker> p : preds) {
+			if (!p.apply(marker)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Imports a project into the running JUnit test workspace. Usage:
 	 *
@@ -402,10 +411,11 @@ public class ProjectTestsUtils {
 	}
 
 	/***/
+	@SafeVarargs
 	public static IMarker[] assertMarkers(String assertMessage, final IResource resource, int count,
-			final Predicate<IMarker> markerPredicate) throws CoreException {
+			final Predicate<IMarker>... markerPredicates) throws CoreException {
 
-		return assertMarkers(assertMessage, resource, MarkerTypes.ANY_VALIDATION, count, markerPredicate);
+		return assertMarkers(assertMessage, resource, MarkerTypes.ANY_VALIDATION, count, markerPredicates);
 	}
 
 	/***/
@@ -415,10 +425,15 @@ public class ProjectTestsUtils {
 	}
 
 	/***/
+	@SafeVarargs
 	public static IMarker[] assertMarkers(String assertMessage, final IResource resource, String markerType, int count,
-			final Predicate<IMarker> markerPredicate) throws CoreException {
+			final Predicate<IMarker>... markerPredicates) throws CoreException {
+
 		IMarker[] markers = resource.findMarkers(markerType, true, IResource.DEPTH_INFINITE);
-		List<IMarker> markerList = from(Arrays.asList(markers)).filter(markerPredicate).toList();
+		List<IMarker> markerList = from(Arrays.asList(markers))
+				.filter(m -> allPredicatesApply(markerPredicates, m))
+				.toList();
+
 		if (markerList.size() != count) {
 			StringBuilder message = new StringBuilder(assertMessage);
 			message.append("\nbut was:");
@@ -427,7 +442,7 @@ public class ProjectTestsUtils {
 				message.append("line " + MarkerUtilities.getLineNumber(marker) + ": ");
 				message.append(marker.getAttribute(IMarker.MESSAGE, "<no message>"));
 			}
-			Assert.assertEquals(message.toString(), count, markers.length);
+			Assert.assertEquals(message.toString(), count, markerList.size());
 		}
 		return markers;
 	}

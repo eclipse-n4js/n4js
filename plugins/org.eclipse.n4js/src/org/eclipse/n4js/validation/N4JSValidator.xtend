@@ -28,6 +28,7 @@ import org.eclipse.n4js.validation.validators.N4JSDestructureValidator
 import org.eclipse.n4js.validation.validators.N4JSEnumValidator
 import org.eclipse.n4js.validation.validators.N4JSExpressionValidator
 import org.eclipse.n4js.validation.validators.N4JSExternalValidator
+import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator
 import org.eclipse.n4js.validation.validators.N4JSFunctionValidator
 import org.eclipse.n4js.validation.validators.N4JSImportValidator
 import org.eclipse.n4js.validation.validators.N4JSInjectorCallsitesValidator
@@ -87,6 +88,7 @@ import org.eclipse.n4js.validation.validators.N4IDLValidator
 	N4JSEnumValidator,
 	N4JSExpressionValidator,
 	N4JSExternalValidator,
+	N4JSFlowgraphValidator,
 	N4JSFunctionValidator,
 	N4JSImportValidator,
 	N4JSInjectorCallsitesValidator,

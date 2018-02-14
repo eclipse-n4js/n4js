@@ -20,7 +20,6 @@ import org.eclipse.n4js.xpect.methods.ReturnXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
-import org.junit.runner.RunWith;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
@@ -29,6 +28,7 @@ import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
 import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
+import org.junit.runner.RunWith;
 
 /**
  * Xpect test class, also configured in fragment.xml, executes all Xpect tests found in model folder.

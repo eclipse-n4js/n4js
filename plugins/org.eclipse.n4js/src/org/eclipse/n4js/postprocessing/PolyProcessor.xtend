@@ -13,7 +13,6 @@ package org.eclipse.n4js.postprocessing
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.misc.DestructureHelper
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
@@ -33,6 +32,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager

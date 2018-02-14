@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.ReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURIs;
+import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.linking.impl.LinkingHelper;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -146,10 +147,16 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			URI proxyURI = EcoreUtil.getURI(result);
 			if (uriEncoder.isCrossLinkFragment(resource, proxyURI.fragment())) {
 				INode node = uriEncoder.decode(resource, proxyURI.fragment()).getThird();
-				String string = linkingHelper.getCrossRefNodeAsString(node, true);
-				if (((TargetURIs) targetURIs).getUserData(TargetURIKey.KEY).isMatchingConcreteSyntax(string)) {
-					result = resolveInternalProxy(value, resource);
-				} else {
+				try {
+					String string = linkingHelper.getCrossRefNodeAsString(node, true);
+					if (((TargetURIs) targetURIs).getUserData(TargetURIKey.KEY).isMatchingConcreteSyntax(string)) {
+						result = resolveInternalProxy(value, resource);
+					} else {
+						result = null;
+					}
+				} catch (IllegalNodeException ine) {
+					// illegal nodes exist in broken ASTs
+					// fired in linkingHelper.getCrossRefNodeAsString(...)
 					result = null;
 				}
 			} else {

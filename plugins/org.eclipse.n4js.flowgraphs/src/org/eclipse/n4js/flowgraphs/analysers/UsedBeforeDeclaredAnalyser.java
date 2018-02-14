@@ -13,7 +13,7 @@ package org.eclipse.n4js.flowgraphs.analysers;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.analyses.FastFlowVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.FastFlowVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;

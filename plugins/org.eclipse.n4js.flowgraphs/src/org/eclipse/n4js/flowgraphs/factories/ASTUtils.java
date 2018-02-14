@@ -16,7 +16,9 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ContinueStatement;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LabelledStatement;
+import org.eclipse.n4js.n4JS.ParenExpression;
 import org.eclipse.n4js.n4JS.Statement;
 
 /** Utilities for factory classes. */
@@ -50,4 +52,13 @@ public class ASTUtils {
 		return null;
 	}
 
+	/** @return inner non-{@link ParenExpression} (transitively) */
+	public static Expression unwrapParentheses(Expression parenExpr) {
+		if (!(parenExpr instanceof ParenExpression)) {
+			return parenExpr;
+		}
+
+		ParenExpression pe = (ParenExpression) parenExpr;
+		return unwrapParentheses(pe.getExpression());
+	}
 }
