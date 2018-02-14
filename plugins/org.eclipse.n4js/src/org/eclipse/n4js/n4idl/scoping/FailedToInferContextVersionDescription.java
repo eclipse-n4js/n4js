@@ -21,8 +21,8 @@ import org.eclipse.xtext.scoping.IScope;
 
 /**
  * A custom {@link IEObjectDescriptionWithError} that indicates users, that the name binding may note be accurate since
- * the context version of the scoping context could not be computed (e.g. There may not be a context version in the
- * current context).
+ * the context version of the scoping context could not be computed (e.g. The current context cannot be used to infer a
+ * context version).
  */
 public class FailedToInferContextVersionDescription extends AbstractDescriptionWithError {
 

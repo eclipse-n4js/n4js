@@ -68,7 +68,7 @@ class VersionHelper {
 	 *
 	 * @param object
 	 *            the object for which to compute the maximum version
-	 * @return the maximum version of the given object
+	 * @return the maximum version of the given object or {@link Optional.absent()} if no context version can be determined for the given object.
 	 */
 	def Optional<Integer> computeMaximumVersion(EObject object) {
 		if (object === null) // TODO: This may be an error!

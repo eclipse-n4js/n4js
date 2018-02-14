@@ -76,7 +76,7 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	/** Check that the current context allows for the explicit declaration of versions in references. */
+	/** Checks that the current context allows for the explicit declaration of versions in references. */
 	@Check
 	def checkExplicitVersionDeclaration(VersionedReference ref) {
 		// this validation is only active for variants that actually support versioned types
