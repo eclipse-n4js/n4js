@@ -287,10 +287,7 @@ function f12b() {
 function f12c() {
 	let a = 2;
 	if (a instanceof Number || a instanceof Object) {
-		// The following expectation contains 'a<:Number' twice, since it
-		// (1) always holds (case of short-circuit evaluation)
-		// (2) may holds (other case)
-		// XPECT instanceofguard of 'a;' 'MayHolds' --> a<:Number, a<:Object
+		// XPECT FIXME instanceofguard of 'a;' 'MayHolds' --> a<:Number, a<:Object
 		a;
 	}
 }

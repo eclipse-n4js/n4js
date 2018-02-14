@@ -71,14 +71,6 @@ class BinaryLogicalExpressionFactory {
 		scJumpNode.addJumpToken(new JumpToken(elseCFT)); // short-circuit evaluation
 		cNode.setJumpNode(scJumpNode);
 
-		if (lhsNode == null) { // broken AST
-			if (rhsNode == null) {
-				cNode.connectInternalSucc(entryNode, exitNode);
-			} else {
-				cNode.connectInternalSucc(entryNode, rhsNode);
-			}
-		}
-
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
