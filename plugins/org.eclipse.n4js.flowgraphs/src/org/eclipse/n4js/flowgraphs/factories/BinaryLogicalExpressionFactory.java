@@ -74,36 +74,22 @@ class BinaryLogicalExpressionFactory {
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
-		boolean isCatchingNestedLhs = isCatchingNestedLhs(lbExpr);
-		if (isCatchingNestedLhs) {
-			rhsNode.addCatchToken(new CatchToken(thenCFT));
-		}
+		rhsNode.addCatchToken(new CatchToken(thenCFT));
 
-		boolean isCatchingLhs = isCatchingLhs(lbExpr);
+		boolean isCatchingLhs = isTopJumpCatcher(lbExpr);
 		if (isCatchingLhs) {
 			exitNode.addCatchToken(new CatchToken(elseCFT));
+			exitNode.addCatchToken(new CatchToken(thenCFT));
+		} else {
+			// TODO: minor improvement: add the following jump node
+			// exitNode.addJumpToken(new JumpToken(thenCFT)); // short-circuit evaluation
+			// cNode.setJumpNode(scJumpNode);
 		}
 
 		return cNode;
 	}
 
-	static private boolean isCatchingNestedLhs(BinaryLogicalExpression ble) {
-		EObject lhs = ble.getLhs();
-		while (lhs instanceof ParenExpression) { // skip parentheses
-			ParenExpression parenExpr = (ParenExpression) lhs;
-			lhs = parenExpr.getExpression();
-		}
-
-		if (lhs instanceof BinaryLogicalExpression) {
-			BinaryLogicalExpression bleLhs = (BinaryLogicalExpression) lhs;
-			if (bleLhs.getOp() != ble.getOp()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	static private boolean isCatchingLhs(BinaryLogicalExpression ble) {
+	static private boolean isTopJumpCatcher(BinaryLogicalExpression ble) {
 		EObject child, parent = ble;
 		do { // skip parentheses
 			child = parent;
@@ -111,11 +97,6 @@ class BinaryLogicalExpressionFactory {
 		} while (parent instanceof ParenExpression);
 
 		if (parent instanceof BinaryLogicalExpression) {
-			BinaryLogicalExpression bleParent = (BinaryLogicalExpression) parent;
-			if (bleParent.getOp() != ble.getOp() && bleParent.getLhs() == child) {
-				// return true;
-			}
-
 			return false;
 		}
 		if (parent instanceof ConditionalExpression) {
@@ -129,7 +110,7 @@ class BinaryLogicalExpressionFactory {
 			}
 			if (parent instanceof ForStatement) {
 				ForStatement isParent = (ForStatement) parent;
-				return isParent.getExpression() != child;
+				return isParent.getExpression() != child || !isParent.isForPlain();
 			}
 			if (parent instanceof WhileStatement) {
 				WhileStatement isParent = (WhileStatement) parent;

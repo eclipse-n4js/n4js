@@ -25,25 +25,24 @@
 
 
 function SimpleD1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* SimpleD1and XPECT allEdges ---
 		"start" --> 1,
 		1 && 2 --> "end",
 		1 -IfTrue-> 2,
 		1 -IfFalse-> 1 && 2,
 		2 --> 1 && 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* SimpleD1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2],
 		B1: [B0] -> 2 -> [B3],
 		B2: [B0] -> [B3],
 		B3: [B1|B2]1 && 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* SimpleD1and XPECT allPaths ---
 		"start" -> 1 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* SimpleD1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
@@ -53,25 +52,24 @@ function SimpleD1and() {
 }
 
 function SimpleD1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* SimpleD1or XPECT allEdges ---
 		"start" --> 1,
 		1 -IfFalse-> 2,
 		1 -IfTrue-> 1 || 2,
 		1 || 2 --> "end",
 		2 --> 1 || 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* SimpleD1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2],
 		B1: [B0] -> 2 -> [B3],
 		B2: [B0] -> [B3],
 		B3: [B1|B2]1 || 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* SimpleD1or XPECT allPaths ---
 		"start" -> 1 -> 1 || 2 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* SimpleD1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 || 2 -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
@@ -81,34 +79,21 @@ function SimpleD1or() {
 }
 
 function SimpleT1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
-		"start" --> 1,
-		1 && 2 && 3 --> "end",
-		1 && 2 -IfFalse-> 1 && 2 && 3,
-		1 && 2 -IfTrue-> 3,
-		1 -IfFalse-> 1 && 2 && 3,
-		1 -IfTrue-> 2,
-		2 --> 1 && 2,
-		3 --> 1 && 2 && 3
+	/* SimpleT1and XPECT allEdges ---
+		"start" --> 1, 1 && 2 && 3 --> "end", 1 && 2 -IfFalse-> 1 && 2 && 3,
+		1 && 2 -IfTrue-> 3, 1 -IfFalse-> 1 && 2 && 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> 2 -> 1 && 2[B3|B4],
-		B2: [B0] -> [B5],
-		B3: [B1] -> 3 -> [B5],
-		B4: [B1] -> [B5],
-		B5: [B2|B3|B4]1 && 2 && 3 -> "end"
+	/* SimpleT1and XPECT allBranches ---
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5],
+		B3: [B1] -> 3 -> [B5], B4: [B1] -> [B5], B5: [B2|B3|B4]1 && 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* SimpleT1and XPECT allPaths ---
 		"start" -> 1 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
+		"start" -> 1 -> 2 -> 1 && 2 -> 1 && 2 && 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 && 3 -> 1 -> "start",
+	/* SimpleT1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 && 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> 1 && 2 && 3 -> 1 -> "start", "end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
 	"start";
 	1 && 2 && 3;
@@ -116,20 +101,19 @@ function SimpleT1and() {
 }
 
 function SimpleT1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* SimpleT1or XPECT allEdges ---
 		"start" --> 1, 1 -IfFalse-> 2, 1 -IfTrue-> 1 || 2 || 3, 1 || 2 -IfFalse-> 3,
 		1 || 2 -IfTrue-> 1 || 2 || 3, 1 || 2 || 3 --> "end", 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* SimpleT1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B5],
 		B3: [B1] -> 3 -> [B5], B4: [B1] -> [B5], B5: [B2|B3|B4]1 || 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* SimpleT1or XPECT allPaths ---
 		"start" -> 1 -> 1 || 2 || 3 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> 1 || 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* SimpleT1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 || 2 || 3 -> 1 -> "start",
 		"end" -> 1 || 2 || 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
@@ -139,20 +123,19 @@ function SimpleT1or() {
 }
 
 function SimpleT1mixed1() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* SimpleT1mixed1 XPECT allEdges ---
 		"start" --> 1, 1 && 2 -IfFalse-> 3, 1 && 2 -IfTrue-> 1 && 2 || 3,
 		1 && 2 || 3 --> "end", 1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* SimpleT1mixed1 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5],
 		B3: [B1] -> [B5], B4: [B1] -> [B6], B5: [B2|B3]3 -> [B6], B6: [B4|B5]1 && 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* SimpleT1mixed1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 && 2 -> 1 && 2 || 3 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 3 -> 1 && 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* SimpleT1mixed1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 || 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 -> "start"
 	--- */
@@ -162,22 +145,21 @@ function SimpleT1mixed1() {
 }
 
 function SimpleT1mixed2() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* SimpleT1mixed2 XPECT allEdges ---
 		"start" --> 1, 1 -IfFalse-> 2, 1 -IfTrue-> 1 || 2 && 3, 1 || 2 && 3 --> "end",
-		2 && 3 --> 1 || 2 && 3, 2 -IfTrue-> 3, 3 --> 2 && 3
+		2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> 1 || 2 && 3, 2 -IfTrue-> 3, 3 --> 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* SimpleT1mixed2 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2[B3|B4], B2: [B0] -> [B5],
-		B3: [B1] -> 3 -> 2 && 3 -> [B5], B4: [B1][B6], B5: [B2|B3]1 || 2 && 3 -> "end"[B6], B6: [B4|B5]
+		B3: [B1] -> 3 -> 2 && 3 -> [B5], B4: [B1] -> [B5], B5: [B2|B3|B4]1 || 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2,
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
+	/* SimpleT1mixed2 XPECT allPaths ---
+		"start" -> 1 -> 1 || 2 && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* SimpleT1mixed2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 || 2 && 3 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", 2 -> 1 -> "start"
+		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 -> 1 -> "start"
 	--- */
 	"start";
 	1 || 2 && 3;
@@ -185,22 +167,21 @@ function SimpleT1mixed2() {
 }
 
 function SimpleT1mixed3() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* SimpleT1mixed3 XPECT allEdges ---
 		"start" --> 1, (1 || 2) && 3 --> "end", (1 || 2) -IfFalse-> (1 || 2) && 3,
 		(1 || 2) -IfTrue-> 3, 1 -IfFalse-> 2, 1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2,
 		3 --> (1 || 2) && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* SimpleT1mixed3 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
 		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B6], B5: [B2|B3]3 -> [B6],
 		B6: [B4|B5](1 || 2) && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* SimpleT1mixed3 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> (1 || 2) && 3 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end", "start" -> 1 -> 3 -> (1 || 2) && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* SimpleT1mixed3 backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 || 2) && 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start", "end" -> (1 || 2) && 3 -> 3 -> 1 -> "start"
 	--- */
@@ -210,8 +191,7 @@ function SimpleT1mixed3() {
 }
 
 function IfD1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* IfD1and XPECT allEdges ---
 		"start" --> 1,
 		1 -IfTrue-> 2,
 		2 --> 1 && 2,
@@ -221,7 +201,7 @@ function IfD1and() {
 		"then" --> "end",
 		"else" --> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* IfD1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2],
 		B1: [B0] -> 2 -> 1 && 2[B3|B4],
 		B2: [B0] -> [B5],
@@ -230,12 +210,12 @@ function IfD1and() {
 		B5: [B2|B4]"else" -> [B6],
 		B6: [B3|B5]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* IfD1and XPECT allPaths ---
 		"start" -> 1 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "then" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* IfD1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> "else" -> 1 -> "start",
 		"end" -> "else" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> 1 && 2 -> 2 -> 1 -> "start"
@@ -249,8 +229,7 @@ function IfD1and() {
 }
 
 function IfD1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* IfD1or XPECT allEdges ---
 		"start" --> 1,
 		1 -IfFalse-> 2,
 		1 -IfTrue-> "then",
@@ -260,7 +239,7 @@ function IfD1or() {
 		"else" --> "end",
 		"then" --> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* IfD1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2],
 		B1: [B0] -> 2 -> 1 || 2[B3|B4],
 		B2: [B0] -> [B5],
@@ -269,12 +248,12 @@ function IfD1or() {
 		B5: [B2|B3]"then" -> [B6],
 		B6: [B4|B5]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* IfD1or XPECT allPaths ---
 		"start" -> 1 -> "then" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "then" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* IfD1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> "then" -> 1 -> "start",
 		"end" -> "else" -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> 1 || 2 -> 2 -> 1 -> "start"
@@ -288,8 +267,7 @@ function IfD1or() {
 }
 
 function IfT1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* IfT1and XPECT allEdges ---
 		"start" --> 1,
 		1 -IfFalse-> "else",
 		1 -IfTrue-> 2,
@@ -302,7 +280,7 @@ function IfT1and() {
 		"else" --> "end",
 		"then" --> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* IfT1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2],
 		B1: [B0] -> 2 -> 1 && 2[B3|B4],
 		B2: [B0] -> [B7],
@@ -313,13 +291,13 @@ function IfT1and() {
 		B7: [B2|B4|B6]"else" -> [B8],
 		B8: [B5|B7]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* IfT1and XPECT allPaths ---
 		"start" -> 1 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "then" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* IfT1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> "else" -> 1 -> "start",
 		"end" -> "else" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> "else" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
@@ -334,23 +312,22 @@ function IfT1and() {
 }
 
 function IfT1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* IfT1or XPECT allEdges ---
 		"else" --> "end", "start" --> 1, "then" --> "end", 1 -IfFalse-> 2,
 		1 -IfTrue-> "then", 1 || 2 -IfFalse-> 3, 1 || 2 -IfTrue-> "then", 1 || 2 || 3 -IfFalse-> "else",
 		1 || 2 || 3 -IfTrue-> "then", 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* IfT1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B7],
 		B3: [B1] -> 3 -> 1 || 2 || 3[B5|B6], B4: [B1] -> [B7], B5: [B3] -> [B7], B6: [B3] -> "else" -> [B8],
 		B7: [B2|B4|B5]"then" -> [B8], B8: [B6|B7]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* IfT1or XPECT allPaths ---
 		"start" -> 1 -> "then" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "then" -> "end", "start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "then" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* IfT1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> "else" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> 1 -> "start", "end" -> "then" -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start"
@@ -364,23 +341,22 @@ function IfT1or() {
 }
 
 function IfT1mixed1() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* IfT1mixed1 XPECT allEdges ---
 		"else" --> "end", "start" --> 1, "then" --> "end", 1 && 2 -IfFalse-> 3,
 		1 && 2 -IfTrue-> "then", 1 && 2 || 3 -IfFalse-> "else", 1 && 2 || 3 -IfTrue-> "then", 1 -IfFalse-> 3,
 		1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* IfT1mixed1 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5],
 		B3: [B1] -> [B5], B4: [B1] -> [B8], B5: [B2|B3]3 -> 1 && 2 || 3[B6|B7], B6: [B5] -> [B8],
 		B7: [B5] -> "else" -> [B9], B8: [B4|B6]"then" -> [B9], B9: [B7|B8]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* IfT1mixed1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 && 2 -> "then" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "else" -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "then" -> "end",
 		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "else" -> "end", "start" -> 1 -> 3 -> 1 && 2 || 3 -> "then" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* IfT1mixed1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> "else" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> "else" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> "then" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> "then" -> 1 && 2 || 3 -> 3 -> 1 -> "start"
@@ -394,22 +370,21 @@ function IfT1mixed1() {
 }
 
 function IfT1mixed2() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* IfT1mixed2 XPECT allEdges ---
 		"else" --> "end", "start" --> 1, "then" --> "end", 1 -IfFalse-> 2,
 		1 -IfTrue-> "then", 1 || 2 && 3 -IfFalse-> "else", 1 || 2 && 3 -IfTrue-> "then",
 		2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> "else", 2 -IfTrue-> 3, 3 --> 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* IfT1mixed2 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2[B3|B4], B2: [B0] -> [B7],
 		B3: [B1] -> 3 -> 2 && 3 -> 1 || 2 && 3[B5|B6], B4: [B1] -> [B8], B5: [B3] -> [B7], B6: [B3] -> [B8],
 		B7: [B2|B5]"then" -> [B9], B8: [B4|B6]"else" -> [B9], B9: [B7|B8]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* IfT1mixed2 XPECT allPaths ---
 		"start" -> 1 -> "then" -> "end", "start" -> 1 -> 2 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "else" -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "then" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* IfT1mixed2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> "else" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
 		"end" -> "else" -> 2 -> 1 -> "start", "end" -> "then" -> 1 -> "start",
 		"end" -> "then" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start"
@@ -423,25 +398,24 @@ function IfT1mixed2() {
 }
 
 function IfT1mixed3() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* IfT1mixed3 XPECT allEdges ---
 		"else" --> "end", "start" --> 1, "then" --> "end",
 		(1 || 2) && 3 -IfFalse-> "else", (1 || 2) && 3 -IfTrue-> "then", (1 || 2) -IfFalse-> "else",
 		(1 || 2) -IfTrue-> 3, 1 -IfFalse-> 2, 1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2,
 		3 --> (1 || 2) && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* IfT1mixed3 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
 		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B8], B5: [B2|B3]3 -> (1 || 2) && 3[B6|B7],
 		B6: [B5] -> "then" -> [B9], B7: [B5] -> [B8], B8: [B4|B7]"else" -> [B9], B9: [B6|B8]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* IfT1mixed3 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "then" -> "end", "start" -> 1 -> 3 -> (1 || 2) && 3 -> "else" -> "end",
 		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "then" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* IfT1mixed3 backward XPECT allPaths direction 'Backward' ---
 		"end" -> "else" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> "else" -> (1 || 2) && 3 -> 3 -> 1 -> "start", "end" -> "else" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start", "end" -> "then" -> (1 || 2) && 3 -> 3 -> 1 -> "start"
@@ -456,23 +430,22 @@ function IfT1mixed3() {
 
 
 function ConditionalD1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ConditionalD1and XPECT allEdges ---
 		"else" --> (1 && 2) ? "then" : "else", "start" --> 1,
 		"then" --> (1 && 2) ? "then" : "else", (1 && 2) -IfFalse-> "else", (1 && 2) -IfTrue-> "then",
 		(1 && 2) ? "then" : "else" --> "end", 1 && 2 --> (1 && 2), 1 -IfFalse-> "else", 1 -IfTrue-> 2, 2 --> 1 && 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ConditionalD1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2 -> (1 && 2)[B3|B4],
 		B2: [B0] -> [B5], B3: [B1] -> "then" -> [B6], B4: [B1] -> [B5], B5: [B2|B4]"else" -> [B6],
 		B6: [B3|B5](1 && 2) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ConditionalD1and XPECT allPaths ---
 		"start" -> 1 -> "else" -> (1 && 2) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> (1 && 2) -> "else" -> (1 && 2) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> (1 && 2) -> "then" -> (1 && 2) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ConditionalD1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 && 2) ? "then" : "else" -> "else" -> (1 && 2) -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> (1 && 2) ? "then" : "else" -> "else" -> 1 -> "start",
 		"end" -> (1 && 2) ? "then" : "else" -> "then" -> (1 && 2) -> 1 && 2 -> 2 -> 1 -> "start"
@@ -486,23 +459,22 @@ function ConditionalD1and() {
 }
 
 function ConditionalD1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ConditionalD1or XPECT allEdges ---
 		"else" --> (1 || 2) ? "then" : "else", "start" --> 1,
 		"then" --> (1 || 2) ? "then" : "else", (1 || 2) -IfFalse-> "else", (1 || 2) -IfTrue-> "then",
 		(1 || 2) ? "then" : "else" --> "end", 1 -IfFalse-> 2, 1 -IfTrue-> "then", 1 || 2 --> (1 || 2), 2 --> 1 || 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ConditionalD1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
 		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> "else" -> [B6], B5: [B2|B3]"then" -> [B6],
 		B6: [B4|B5](1 || 2) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ConditionalD1or XPECT allPaths ---
 		"start" -> 1 -> "then" -> (1 || 2) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "else" -> (1 || 2) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "then" -> (1 || 2) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ConditionalD1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 || 2) ? "then" : "else" -> "else" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> (1 || 2) ? "then" : "else" -> "then" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start", "end" -> (1 || 2) ? "then" : "else" -> "then" -> 1 -> "start"
 	--- */
@@ -515,25 +487,24 @@ function ConditionalD1or() {
 }
 
 function ConditionalT1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ConditionalT1and XPECT allEdges ---
 		"else" --> (1 && 2 && 3) ? "then" : "else", "start" --> 1,
 		"then" --> (1 && 2 && 3) ? "then" : "else", (1 && 2 && 3) -IfFalse-> "else", (1 && 2 && 3) -IfTrue-> "then",
 		(1 && 2 && 3) ? "then" : "else" --> "end", 1 && 2 && 3 --> (1 && 2 && 3), 1 && 2 -IfFalse-> "else", 1 && 2 -IfTrue-> 3,
 		1 -IfFalse-> "else", 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ConditionalT1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B7],
 		B3: [B1] -> 3 -> 1 && 2 && 3 -> (1 && 2 && 3)[B5|B6], B4: [B1] -> [B7], B5: [B3] -> "then" -> [B8], B6: [B3] -> [B7],
 		B7: [B2|B4|B6]"else" -> [B8], B8: [B5|B7](1 && 2 && 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ConditionalT1and XPECT allPaths ---
 		"start" -> 1 -> "else" -> (1 && 2 && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "else" -> (1 && 2 && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> (1 && 2 && 3) -> "else" -> (1 && 2 && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> (1 && 2 && 3) -> "then" -> (1 && 2 && 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ConditionalT1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 && 2 && 3) ? "then" : "else" -> "else" -> (1 && 2 && 3) -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> (1 && 2 && 3) ? "then" : "else" -> "else" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> (1 && 2 && 3) ? "then" : "else" -> "else" -> 1 -> "start",
 		"end" -> (1 && 2 && 3) ? "then" : "else" -> "then" -> (1 && 2 && 3) -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
@@ -547,25 +518,24 @@ function ConditionalT1and() {
 }
 
 function ConditionalT1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ConditionalT1or XPECT allEdges ---
 		"else" --> (1 || 2 || 3) ? "then" : "else", "start" --> 1,
 		"then" --> (1 || 2 || 3) ? "then" : "else", (1 || 2 || 3) -IfFalse-> "else", (1 || 2 || 3) -IfTrue-> "then",
 		(1 || 2 || 3) ? "then" : "else" --> "end", 1 -IfFalse-> 2, 1 -IfTrue-> "then", 1 || 2 -IfFalse-> 3,
 		1 || 2 -IfTrue-> "then", 1 || 2 || 3 --> (1 || 2 || 3), 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ConditionalT1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B7],
 		B3: [B1] -> 3 -> 1 || 2 || 3 -> (1 || 2 || 3)[B5|B6], B4: [B1] -> [B7], B5: [B3] -> [B7], B6: [B3] -> "else" -> [B8],
 		B7: [B2|B4|B5]"then" -> [B8], B8: [B6|B7](1 || 2 || 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ConditionalT1or XPECT allPaths ---
 		"start" -> 1 -> "then" -> (1 || 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "then" -> (1 || 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> (1 || 2 || 3) -> "else" -> (1 || 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> (1 || 2 || 3) -> "then" -> (1 || 2 || 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ConditionalT1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 || 2 || 3) ? "then" : "else" -> "else" -> (1 || 2 || 3) -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> (1 || 2 || 3) ? "then" : "else" -> "then" -> (1 || 2 || 3) -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> (1 || 2 || 3) ? "then" : "else" -> "then" -> 1 -> "start",
 		"end" -> (1 || 2 || 3) ? "then" : "else" -> "then" -> 1 || 2 -> 2 -> 1 -> "start"
@@ -579,27 +549,26 @@ function ConditionalT1or() {
 }
 
 function ConditionalT1mixed1() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ConditionalT1mixed1 XPECT allEdges ---
 		"else" --> (1 && 2 || 3) ? "then" : "else", "start" --> 1,
 		"then" --> (1 && 2 || 3) ? "then" : "else", (1 && 2 || 3) -IfFalse-> "else", (1 && 2 || 3) -IfTrue-> "then",
 		(1 && 2 || 3) ? "then" : "else" --> "end", 1 && 2 -IfFalse-> 3, 1 && 2 -IfTrue-> "then", 1 && 2 || 3 --> (1 && 2 || 3),
 		1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ConditionalT1mixed1 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5],
 		B3: [B1] -> [B5], B4: [B1] -> [B8], B5: [B2|B3]3 -> 1 && 2 || 3 -> (1 && 2 || 3)[B6|B7],
 		B6: [B5] -> [B8], B7: [B5] -> "else" -> [B9], B8: [B4|B6]"then" -> [B9],
 		B9: [B7|B8](1 && 2 || 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ConditionalT1mixed1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 && 2 -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "else" -> (1 && 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "else" -> (1 && 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ConditionalT1mixed1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 && 2 || 3) ? "then" : "else" -> "else" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> (1 && 2 || 3) ? "then" : "else" -> "else" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 -> "start",
 		"end" -> (1 && 2 || 3) ? "then" : "else" -> "then" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
@@ -615,25 +584,24 @@ function ConditionalT1mixed1() {
 }
 
 function ConditionalT1mixed2() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ConditionalT1mixed2 XPECT allEdges ---
 		"else" --> (1 || 2 && 3) ? "then" : "else", "start" --> 1,
 		"then" --> (1 || 2 && 3) ? "then" : "else", (1 || 2 && 3) -IfFalse-> "else", (1 || 2 && 3) -IfTrue-> "then",
 		(1 || 2 && 3) ? "then" : "else" --> "end", 1 -IfFalse-> 2, 1 -IfTrue-> "then", 1 || 2 && 3 --> (1 || 2 && 3),
 		2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> "else", 2 -IfTrue-> 3, 3 --> 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ConditionalT1mixed2 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2[B3|B4], B2: [B0] -> [B7],
 		B3: [B1] -> 3 -> 2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3)[B5|B6], B4: [B1] -> [B8], B5: [B3] -> [B7], B6: [B3] -> [B8],
 		B7: [B2|B5]"then" -> [B9], B8: [B4|B6]"else" -> [B9], B9: [B7|B8](1 || 2 && 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ConditionalT1mixed2 XPECT allPaths ---
 		"start" -> 1 -> "then" -> (1 || 2 && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> "else" -> (1 || 2 && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3) -> "else" -> (1 || 2 && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3) -> "then" -> (1 || 2 && 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ConditionalT1mixed2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 || 2 && 3) ? "then" : "else" -> "else" -> (1 || 2 && 3) -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
 		"end" -> (1 || 2 && 3) ? "then" : "else" -> "else" -> 2 -> 1 -> "start",
 		"end" -> (1 || 2 && 3) ? "then" : "else" -> "then" -> (1 || 2 && 3) -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> (1 || 2 && 3) ? "then" : "else" -> "then" -> 1 -> "start"
@@ -647,28 +615,27 @@ function ConditionalT1mixed2() {
 }
 
 function ConditionalT1mixed3() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ConditionalT1mixed3 XPECT allEdges ---
 		"else" --> ((1 || 2) && 3) ? "then" : "else", "start" --> 1,
 		"then" --> ((1 || 2) && 3) ? "then" : "else", ((1 || 2) && 3) -IfFalse-> "else", ((1 || 2) && 3) -IfTrue-> "then",
 		((1 || 2) && 3) ? "then" : "else" --> "end", (1 || 2) && 3 --> ((1 || 2) && 3), (1 || 2) -IfFalse-> "else",
 		(1 || 2) -IfTrue-> 3, 1 -IfFalse-> 2, 1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2,
 		3 --> (1 || 2) && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ConditionalT1mixed3 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
 		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B8],
 		B5: [B2|B3]3 -> (1 || 2) && 3 -> ((1 || 2) && 3)[B6|B7], B6: [B5] -> "then" -> [B9], B7: [B5] -> [B8], B8: [B4|B7]"else" -> [B9],
 		B9: [B6|B8]((1 || 2) && 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ConditionalT1mixed3 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "else" -> ((1 || 2) && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> ((1 || 2) && 3) -> "else" -> ((1 || 2) && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> ((1 || 2) && 3) -> "then" -> ((1 || 2) && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 3 -> (1 || 2) && 3 -> ((1 || 2) && 3) -> "else" -> ((1 || 2) && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 3 -> (1 || 2) && 3 -> ((1 || 2) && 3) -> "then" -> ((1 || 2) && 3) ? "then" : "else" -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ConditionalT1mixed3 backward XPECT allPaths direction 'Backward' ---
 		"end" -> ((1 || 2) && 3) ? "then" : "else" -> "else" -> ((1 || 2) && 3) -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> ((1 || 2) && 3) ? "then" : "else" -> "else" -> ((1 || 2) && 3) -> (1 || 2) && 3 -> 3 -> 1 -> "start",
 		"end" -> ((1 || 2) && 3) ? "then" : "else" -> "else" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
@@ -685,24 +652,23 @@ function ConditionalT1mixed3() {
 
 
 function ForD1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ForD1and XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 -LoopEnter-> "loop",
 		1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2, 1 -LoopExit-> "end", 2 --> 1 && 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ForD1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B7] -> [B11], B11: [B2|B4|B6|B8|B9|B10]"end",
 		B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B11], B3: [B1] -> "loop" -> 1[B5|B6], B4: [B1] -> [B11],
 		B5: [B3] -> 2 -> 1 && 2[B7|B8], B6: [B3] -> [B11], B7: [B5] -> "loop" -> 1[B9|B10], B8: [B5] -> [B11],
 		B9: [B7] -> 2 -> 1 && 2 -> [B11]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ForD1and XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ForD1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "start"
@@ -714,20 +680,19 @@ function ForD1and() {
 }
 
 function ForD1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ForD1or XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
 		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 -LoopEnter-> "loop",
 		1 || 2 -LoopExit-> "end", 2 --> 1 || 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ForD1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B8][B14], B11: [B9] -> 2 -> 1 || 2 -> [B13],
 		B12: [B9] -> [B13], B13: [B11|B12][B14], B14: [B10|B13]"end"[B15], B15: [B5|B14],
 		B1: [B0] -> 2 -> 1 || 2 ->  -> [B3], B2: [B0] ->  -> [B3], B3: [B1|B2][B4|B5], B4: [B3]"loop" -> 1[B6|B7],
 		B5: [B3]"end"[B15], B6: [B4] -> 2 -> 1 || 2 ->  -> [B8], B7: [B4] ->  -> [B8], B8: [B6|B7][B9|B10],
 		B9: [B8]"loop" -> 1[B11|B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ForD1or XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
@@ -737,7 +702,7 @@ function ForD1or() {
 		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ForD1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
@@ -755,13 +720,12 @@ function ForD1or() {
 }
 
 function ForT1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ForT1and XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 && 3 -LoopEnter-> "loop",
 		1 && 2 && 3 -LoopExit-> "end", 1 && 2 -IfTrue-> 3, 1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2,
 		1 -LoopExit-> "end", 2 --> 1 && 2, 3 --> 1 && 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ForT1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B7] -> [B17], B11: [B9] -> "loop" -> 1[B13|B14],
 		B12: [B9] -> [B17], B13: [B11] -> 2 -> 1 && 2[B15|B16], B14: [B11] -> [B17],
 		B15: [B13] -> 3 -> 1 && 2 && 3 -> [B17], B16: [B13] -> [B17], B17: [B2|B4|B6|B8|B10|B12|B14|B15|B16]"end",
@@ -769,7 +733,7 @@ function ForT1and() {
 		B5: [B3] -> "loop" -> 1[B7|B8], B6: [B3] -> [B17], B7: [B5] -> 2 -> 1 && 2[B9|B10], B8: [B5] -> [B17],
 		B9: [B7] -> 3 -> 1 && 2 && 3[B11|B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ForT1and XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
@@ -778,7 +742,7 @@ function ForT1and() {
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ForT1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
@@ -793,14 +757,13 @@ function ForT1and() {
 }
 
 function ForT1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ForT1or XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
 		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 -IfFalse-> 3,
 		1 || 2 -IfTrue|LoopEnter-> "loop", 1 || 2 -IfTrue|LoopExit-> "end", 1 || 2 || 3 -LoopEnter-> "loop",
 		1 || 2 || 3 -LoopExit-> "end", 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ForT1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B8] -> 3 -> 1 || 2 || 3 ->  -> [B12],
 		B11: [B8] ->  -> [B12], B12: [B9|B10|B11][B13|B14], B13: [B12]"loop" -> 1[B15|B16], B14: [B12][B20],
 		B15: [B13] -> 2 -> 1 || 2[B17|B18], B16: [B13] -> [B19], B17: [B15] -> 3 -> 1 || 2 || 3 -> [B19],
@@ -809,7 +772,7 @@ function ForT1or() {
 		B4: [B1] ->  -> [B5], B5: [B2|B3|B4][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5]"end"[B21],
 		B8: [B6] -> 2 -> 1 || 2[B10|B11], B9: [B6] ->  -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ForT1or XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
@@ -842,7 +805,7 @@ function ForT1or() {
 		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ForT1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
@@ -881,13 +844,12 @@ function ForT1or() {
 }
 
 function ForT1mixed1() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ForT1mixed1 XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 -IfFalse-> 3,
 		1 && 2 -IfTrue|LoopEnter-> "loop", 1 && 2 -IfTrue|LoopExit-> "end", 1 && 2 || 3 -LoopEnter-> "loop",
 		1 && 2 || 3 -LoopExit-> "end", 1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ForT1mixed1 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B7] -> [B13], B11: [B9] -> [B13],
 		B12: [B9] ->  -> [B14], B13: [B10|B11]3 -> 1 && 2 || 3 ->  -> [B14], B14: [B12|B13][B15|B16],
 		B15: [B14]"loop" -> 1[B17|B18], B16: [B14][B23], B17: [B15] -> 2 -> 1 && 2[B19|B20], B18: [B15] -> [B21],
@@ -897,7 +859,7 @@ function ForT1mixed1() {
 		B6: [B4|B5][B7|B8], B7: [B6]"loop" -> 1[B9|B10], B8: [B6]"end"[B24],
 		B9: [B7] -> 2 -> 1 && 2[B11|B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ForT1mixed1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
@@ -934,7 +896,7 @@ function ForT1mixed1() {
 		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
 		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ForT1mixed1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
@@ -977,13 +939,12 @@ function ForT1mixed1() {
 }
 
 function ForT1mixed2() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ForT1mixed2 XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
 		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 && 3 -LoopEnter-> "loop",
 		1 || 2 && 3 -LoopExit-> "end", 2 && 3 --> 1 || 2 && 3, 2 -IfTrue-> 3, 2 -LoopExit-> "end", 3 --> 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ForT1mixed2 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B8] -> 3 -> 2 && 3 -> 1 || 2 && 3 ->  -> [B12],
 		B11: [B8] -> [B20], B12: [B9|B10][B13|B14], B13: [B12]"loop" -> 1[B15|B16], B14: [B12][B20],
 		B15: [B13] -> 2[B17|B18], B16: [B13] -> [B19], B17: [B15] -> 3 -> 2 && 3 -> 1 || 2 && 3 -> [B19],
@@ -992,7 +953,7 @@ function ForT1mixed2() {
 		B4: [B1] -> "end"[B21], B5: [B2|B3][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5][B20],
 		B8: [B6] -> 2[B10|B11], B9: [B6] ->  -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ForT1mixed2 XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> "end",
@@ -1009,7 +970,7 @@ function ForT1mixed2() {
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ForT1mixed2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
@@ -1033,13 +994,12 @@ function ForT1mixed2() {
 }
 
 function ForT1mixed3() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* ForT1mixed3 XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, (1 || 2) && 3 -LoopEnter-> "loop",
 		(1 || 2) && 3 -LoopExit-> "end", (1 || 2) -IfTrue-> 3, (1 || 2) -LoopExit-> "end", 1 -IfFalse-> 2,
 		1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2, 3 --> (1 || 2) && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* ForT1mixed3 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B8] -> [B12], B11: [B8] -> [B20],
 		B12: [B9|B10]3 -> (1 || 2) && 3[B13|B14], B13: [B12] -> "loop" -> 1[B15|B16], B14: [B12] -> [B20],
 		B15: [B13] -> 2 -> 1 || 2 -> (1 || 2)[B17|B18], B16: [B13] -> [B19], B17: [B15] -> [B19], B18: [B15] -> [B20],
@@ -1048,7 +1008,7 @@ function ForT1mixed3() {
 		B6: [B5] -> "loop" -> 1[B8|B9], B7: [B5] -> [B20], B8: [B6] -> 2 -> 1 || 2 -> (1 || 2)[B10|B11],
 		B9: [B6] -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* ForT1mixed3 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
@@ -1070,7 +1030,7 @@ function ForT1mixed3() {
 		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
 		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* ForT1mixed3 backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
@@ -1098,18 +1058,17 @@ function ForT1mixed3() {
 
 
 function WhileD1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* WhileD1and XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 -LoopEnter-> "loop",
 		1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2, 1 -LoopExit-> "end", 2 --> 1 && 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* WhileD1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B7] -> [B11], B11: [B2|B4|B6|B8|B9|B10]"end",
 		B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B11], B3: [B1] -> "loop" -> 1[B5|B6], B4: [B1] -> [B11],
 		B5: [B3] -> 2 -> 1 && 2[B7|B8], B6: [B3] -> [B11], B7: [B5] -> "loop" -> 1[B9|B10], B8: [B5] -> [B11],
 		B9: [B7] -> 2 -> 1 && 2 -> [B11]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* WhileD1and XPECT allPaths ---
 		"start" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
@@ -1117,7 +1076,7 @@ function WhileD1and() {
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* WhileD1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "start",
@@ -1132,20 +1091,19 @@ function WhileD1and() {
 }
 
 function WhileD1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* WhileD1or XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
 		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 -LoopEnter-> "loop",
 		1 || 2 -LoopExit-> "end", 2 --> 1 || 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* WhileD1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B8][B14], B11: [B9] -> 2 -> 1 || 2 -> [B13],
 		B12: [B9] -> [B13], B13: [B11|B12][B14], B14: [B10|B13]"end"[B15], B15: [B5|B14],
 		B1: [B0] -> 2 -> 1 || 2 ->  -> [B3], B2: [B0] ->  -> [B3], B3: [B1|B2][B4|B5], B4: [B3]"loop" -> 1[B6|B7],
 		B5: [B3]"end"[B15], B6: [B4] -> 2 -> 1 || 2 ->  -> [B8], B7: [B4] ->  -> [B8], B8: [B6|B7][B9|B10],
 		B9: [B8]"loop" -> 1[B11|B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* WhileD1or XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
@@ -1155,7 +1113,7 @@ function WhileD1or() {
 		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* WhileD1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
@@ -1173,13 +1131,12 @@ function WhileD1or() {
 }
 
 function WhileT1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* WhileT1and XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 && 3 -LoopEnter-> "loop",
 		1 && 2 && 3 -LoopExit-> "end", 1 && 2 -IfTrue-> 3, 1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2,
 		1 -LoopExit-> "end", 2 --> 1 && 2, 3 --> 1 && 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* WhileT1and XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B7] -> [B17], B11: [B9] -> "loop" -> 1[B13|B14],
 		B12: [B9] -> [B17], B13: [B11] -> 2 -> 1 && 2[B15|B16], B14: [B11] -> [B17],
 		B15: [B13] -> 3 -> 1 && 2 && 3 -> [B17], B16: [B13] -> [B17], B17: [B2|B4|B6|B8|B10|B12|B14|B15|B16]"end",
@@ -1187,7 +1144,7 @@ function WhileT1and() {
 		B5: [B3] -> "loop" -> 1[B7|B8], B6: [B3] -> [B17], B7: [B5] -> 2 -> 1 && 2[B9|B10], B8: [B5] -> [B17],
 		B9: [B7] -> 3 -> 1 && 2 && 3[B11|B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* WhileT1and XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
@@ -1196,7 +1153,7 @@ function WhileT1and() {
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* WhileT1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
@@ -1211,14 +1168,13 @@ function WhileT1and() {
 }
 
 function WhileT1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* WhileT1or XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
 		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 -IfFalse-> 3,
 		1 || 2 -IfTrue|LoopEnter-> "loop", 1 || 2 -IfTrue|LoopExit-> "end", 1 || 2 || 3 -LoopEnter-> "loop",
 		1 || 2 || 3 -LoopExit-> "end", 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* WhileT1or XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B8] -> 3 -> 1 || 2 || 3 ->  -> [B12],
 		B11: [B8] ->  -> [B12], B12: [B9|B10|B11][B13|B14], B13: [B12]"loop" -> 1[B15|B16], B14: [B12][B20],
 		B15: [B13] -> 2 -> 1 || 2[B17|B18], B16: [B13] -> [B19], B17: [B15] -> 3 -> 1 || 2 || 3 -> [B19],
@@ -1227,7 +1183,7 @@ function WhileT1or() {
 		B4: [B1] ->  -> [B5], B5: [B2|B3|B4][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5]"end"[B21],
 		B8: [B6] -> 2 -> 1 || 2[B10|B11], B9: [B6] ->  -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* WhileT1or XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
@@ -1260,7 +1216,7 @@ function WhileT1or() {
 		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* WhileT1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
@@ -1299,13 +1255,12 @@ function WhileT1or() {
 }
 
 function WhileT1mixed1() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* WhileT1mixed1 XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 -IfFalse-> 3,
 		1 && 2 -IfTrue|LoopEnter-> "loop", 1 && 2 -IfTrue|LoopExit-> "end", 1 && 2 || 3 -LoopEnter-> "loop",
 		1 && 2 || 3 -LoopExit-> "end", 1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* WhileT1mixed1 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B7] -> [B13], B11: [B9] -> [B13],
 		B12: [B9] ->  -> [B14], B13: [B10|B11]3 -> 1 && 2 || 3 ->  -> [B14], B14: [B12|B13][B15|B16],
 		B15: [B14]"loop" -> 1[B17|B18], B16: [B14][B23], B17: [B15] -> 2 -> 1 && 2[B19|B20], B18: [B15] -> [B21],
@@ -1315,7 +1270,7 @@ function WhileT1mixed1() {
 		B6: [B4|B5][B7|B8], B7: [B6]"loop" -> 1[B9|B10], B8: [B6]"end"[B24],
 		B9: [B7] -> 2 -> 1 && 2[B11|B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* WhileT1mixed1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
@@ -1352,7 +1307,7 @@ function WhileT1mixed1() {
 		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
 		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* WhileT1mixed1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
@@ -1395,13 +1350,12 @@ function WhileT1mixed1() {
 }
 
 function WhileT1mixed2() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* WhileT1mixed2 XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
 		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 && 3 -LoopEnter-> "loop",
 		1 || 2 && 3 -LoopExit-> "end", 2 && 3 --> 1 || 2 && 3, 2 -IfTrue-> 3, 2 -LoopExit-> "end", 3 --> 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* WhileT1mixed2 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B8] -> 3 -> 2 && 3 -> 1 || 2 && 3 ->  -> [B12],
 		B11: [B8] -> [B20], B12: [B9|B10][B13|B14], B13: [B12]"loop" -> 1[B15|B16], B14: [B12][B20],
 		B15: [B13] -> 2[B17|B18], B16: [B13] -> [B19], B17: [B15] -> 3 -> 2 && 3 -> 1 || 2 && 3 -> [B19],
@@ -1410,7 +1364,7 @@ function WhileT1mixed2() {
 		B4: [B1] -> "end"[B21], B5: [B2|B3][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5][B20],
 		B8: [B6] -> 2[B10|B11], B9: [B6] ->  -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* WhileT1mixed2 XPECT allPaths ---
 		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> "end",
@@ -1427,7 +1381,7 @@ function WhileT1mixed2() {
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* WhileT1mixed2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
@@ -1451,13 +1405,12 @@ function WhileT1mixed2() {
 }
 
 function WhileT1mixed3() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* WhileT1mixed3 XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, (1 || 2) && 3 -LoopEnter-> "loop",
 		(1 || 2) && 3 -LoopExit-> "end", (1 || 2) -IfTrue-> 3, (1 || 2) -LoopExit-> "end", 1 -IfFalse-> 2,
 		1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2, 3 --> (1 || 2) && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* WhileT1mixed3 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B8] -> [B12], B11: [B8] -> [B20],
 		B12: [B9|B10]3 -> (1 || 2) && 3[B13|B14], B13: [B12] -> "loop" -> 1[B15|B16], B14: [B12] -> [B20],
 		B15: [B13] -> 2 -> 1 || 2 -> (1 || 2)[B17|B18], B16: [B13] -> [B19], B17: [B15] -> [B19], B18: [B15] -> [B20],
@@ -1466,7 +1419,7 @@ function WhileT1mixed3() {
 		B6: [B5] -> "loop" -> 1[B8|B9], B7: [B5] -> [B20], B8: [B6] -> 2 -> 1 || 2 -> (1 || 2)[B10|B11],
 		B9: [B6] -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* WhileT1mixed3 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
@@ -1489,7 +1442,7 @@ function WhileT1mixed3() {
 		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
 		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* WhileT1mixed3 backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
@@ -1521,22 +1474,21 @@ function WhileT1mixed3() {
 
 
 function DoWhileD1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* DoWhileD1and XPECT allEdges ---
 		"loop" --> 1, "start" --> "loop", 1 && 2 -LoopExit-> "end",
 		1 && 2 -LoopReenter-> "loop", 1 -IfTrue-> 2, 1 -LoopExit-> "end", 2 --> 1 && 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* DoWhileD1and XPECT allBranches ---
 		B0: "start" -> "loop" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4],
 		B2: [B0] -> [B7], B3: [B1] -> "loop" -> 1[B5|B6], B4: [B1] -> [B7],
 		B5: [B3] -> 2 -> 1 && 2 -> [B7], B6: [B3] -> [B7], B7: [B2|B4|B5|B6]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* DoWhileD1and XPECT allPaths ---
 		"start" -> "loop" -> 1 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* DoWhileD1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 -> "loop" -> "start",
 		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start"
@@ -1549,23 +1501,22 @@ function DoWhileD1and() {
 }
 
 function DoWhileD1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* DoWhileD1or XPECT allEdges ---
 		"loop" --> 1, "start" --> "loop", 1 -IfFalse-> 2, 1 -IfTrue|LoopExit-> "end",
 		1 -IfTrue|LoopReenter-> "loop", 1 || 2 -LoopExit-> "end", 1 || 2 -LoopReenter-> "loop", 2 --> 1 || 2
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* DoWhileD1or XPECT allBranches ---
 		B0: "start" -> "loop" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 ->  -> [B3],
 		B2: [B0] ->  -> [B3], B3: [B1|B2][B4|B5], B4: [B3]"loop" -> 1[B6|B7], B5: [B3][B9],
 		B6: [B4] -> 2 -> 1 || 2 -> [B8], B7: [B4] -> [B8], B8: [B6|B7][B9], B9: [B5|B8]"end"
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* DoWhileD1or XPECT allPaths ---
 		"start" -> "loop" -> 1 -> "end",
 		"start" -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* DoWhileD1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> "start", "end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> "start",
@@ -1579,26 +1530,25 @@ function DoWhileD1or() {
 }
 
 function DoWhileT1and() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* DoWhileT1and XPECT allEdges ---
 		"loop" --> 1, "start" --> "loop", 1 && 2 && 3 -LoopExit-> "end",
 		1 && 2 && 3 -LoopReenter-> "loop", 1 && 2 -IfTrue-> 3, 1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2,
 		1 -LoopExit-> "end", 2 --> 1 && 2, 3 --> 1 && 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* DoWhileT1and XPECT allBranches ---
 		B0: "start" -> "loop" -> 1[B1|B2], B10: [B7] -> [B11],
 		B11: [B2|B4|B6|B8|B9|B10]"end", B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B11],
 		B3: [B1] -> 3 -> 1 && 2 && 3[B5|B6], B4: [B1] -> [B11], B5: [B3] -> "loop" -> 1[B7|B8], B6: [B3] -> [B11],
 		B7: [B5] -> 2 -> 1 && 2[B9|B10], B8: [B5] -> [B11], B9: [B7] -> 3 -> 1 && 2 && 3 -> [B11]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* DoWhileT1and XPECT allPaths ---
 		"start" -> "loop" -> 1 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* DoWhileT1and backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 -> "loop" -> "start",
@@ -1612,21 +1562,20 @@ function DoWhileT1and() {
 }
 
 function DoWhileT1or() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* DoWhileT1or XPECT allEdges ---
 		"loop" --> 1, "start" --> "loop", 1 -IfFalse-> 2, 1 -IfTrue|LoopExit-> "end",
 		1 -IfTrue|LoopReenter-> "loop", 1 || 2 -IfFalse-> 3, 1 || 2 -IfTrue|LoopExit-> "end",
 		1 || 2 -IfTrue|LoopReenter-> "loop", 1 || 2 || 3 -LoopExit-> "end", 1 || 2 || 3 -LoopReenter-> "loop", 2 --> 1 || 2,
 		3 --> 1 || 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* DoWhileT1or XPECT allBranches ---
 		B0: "start" -> "loop" -> 1[B1|B2], B10: [B8] -> 3 -> 1 || 2 || 3 -> [B12],
 		B11: [B8] -> [B12], B12: [B9|B10|B11][B13], B13: [B7|B12]"end", B1: [B0] -> 2 -> 1 || 2[B3|B4],
 		B2: [B0] ->  -> [B5], B3: [B1] -> 3 -> 1 || 2 || 3 ->  -> [B5], B4: [B1] ->  -> [B5],
 		B5: [B2|B3|B4][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5][B13], B8: [B6] -> 2 -> 1 || 2[B10|B11],
 		B9: [B6] -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* DoWhileT1or XPECT allPaths ---
 		"start" -> "loop" -> 1 -> "end",
 		"start" -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
@@ -1636,7 +1585,7 @@ function DoWhileT1or() {
 		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* DoWhileT1or backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> "start", "end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
@@ -1654,20 +1603,19 @@ function DoWhileT1or() {
 }
 
 function DoWhileT1mixed1() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* DoWhileT1mixed1 XPECT allEdges ---
 		"loop" --> 1, "start" --> "loop", 1 && 2 -IfFalse-> 3,
 		1 && 2 -IfTrue|LoopExit-> "end", 1 && 2 -IfTrue|LoopReenter-> "loop", 1 && 2 || 3 -LoopExit-> "end",
 		1 && 2 || 3 -LoopReenter-> "loop", 1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* DoWhileT1mixed1 XPECT allBranches ---
 		B0: "start" -> "loop" -> 1[B1|B2], B10: [B7] -> [B13], B11: [B9] -> [B13],
 		B12: [B9] -> [B14], B13: [B10|B11]3 -> 1 && 2 || 3 -> [B14], B14: [B12|B13][B15],
 		B15: [B8|B14]"end", B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5], B3: [B1] -> [B5],
 		B4: [B1] ->  -> [B6], B5: [B2|B3]3 -> 1 && 2 || 3 ->  -> [B6], B6: [B4|B5][B7|B8],
 		B7: [B6]"loop" -> 1[B9|B10], B8: [B6][B15], B9: [B7] -> 2 -> 1 && 2[B11|B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* DoWhileT1mixed1 XPECT allPaths ---
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
@@ -1679,7 +1627,7 @@ function DoWhileT1mixed1() {
 		"start" -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
 		"start" -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* DoWhileT1mixed1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
@@ -1699,20 +1647,19 @@ function DoWhileT1mixed1() {
 }
 
 function DoWhileT1mixed2() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* DoWhileT1mixed2 XPECT allEdges ---
 		"loop" --> 1, "start" --> "loop", 1 -IfFalse-> 2, 1 -IfTrue|LoopExit-> "end",
 		1 -IfTrue|LoopReenter-> "loop", 1 || 2 && 3 -LoopExit-> "end", 1 || 2 && 3 -LoopReenter-> "loop",
 		2 && 3 --> 1 || 2 && 3, 2 -IfTrue-> 3, 2 -LoopExit-> "end", 3 --> 2 && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* DoWhileT1mixed2 XPECT allBranches ---
 		B0: "start" -> "loop" -> 1[B1|B2],
 		B10: [B8] -> 3 -> 2 && 3 -> 1 || 2 && 3 -> [B12], B11: [B8] -> [B13], B12: [B9|B10][B13], B13: [B7|B11|B12]"end"[B14],
 		B14: [B4|B13], B1: [B0] -> 2[B3|B4], B2: [B0] ->  -> [B5],
 		B3: [B1] -> 3 -> 2 && 3 -> 1 || 2 && 3 ->  -> [B5], B4: [B1] -> "end"[B14], B5: [B2|B3][B6|B7], B6: [B5]"loop" -> 1[B8|B9],
 		B7: [B5][B13], B8: [B6] -> 2[B10|B11], B9: [B6] -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* DoWhileT1mixed2 XPECT allPaths ---
 		"start" -> "loop" -> 1 -> "end",
 		"start" -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> "loop" -> 1 -> 2 -> "end",
@@ -1721,7 +1668,7 @@ function DoWhileT1mixed2() {
 		"start" -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* DoWhileT1mixed2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "loop" -> "start",
 		"end" -> 1 -> "loop" -> 1 -> "loop" -> "start",
 		"end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start",
@@ -1738,20 +1685,19 @@ function DoWhileT1mixed2() {
 }
 
 function DoWhileT1mixed3() {
-	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	/* BinaryLogicalExpression XPECT allEdges ---
+	/* DoWhileT1mixed3 XPECT allEdges ---
 		"loop" --> 1, "start" --> "loop", (1 || 2) && 3 -LoopExit-> "end",
 		(1 || 2) && 3 -LoopReenter-> "loop", (1 || 2) -IfTrue-> 3, (1 || 2) -LoopExit-> "end", 1 -IfFalse-> 2,
 		1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2, 3 --> (1 || 2) && 3
 	--- */
-	/* BinaryLogicalExpression XPECT allBranches ---
+	/* DoWhileT1mixed3 XPECT allBranches ---
 		B0: "start" -> "loop" -> 1[B1|B2], B10: [B8] -> [B12], B11: [B8] -> [B13],
 		B12: [B9|B10]3 -> (1 || 2) && 3 -> [B13], B13: [B4|B7|B11|B12]"end", B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
 		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B13], B5: [B2|B3]3 -> (1 || 2) && 3[B6|B7],
 		B6: [B5] -> "loop" -> 1[B8|B9], B7: [B5] -> [B13], B8: [B6] -> 2 -> 1 || 2 -> (1 || 2)[B10|B11],
 		B9: [B6] -> [B12]
 	--- */
-	/* BinaryLogicalExpression XPECT allPaths ---
+	/* DoWhileT1mixed3 XPECT allPaths ---
 		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
@@ -1762,7 +1708,7 @@ function DoWhileT1mixed3() {
 		"start" -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
 		"start" -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end"
 	--- */
-	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+	/* DoWhileT1mixed3 backward XPECT allPaths direction 'Backward' ---
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> "start",
@@ -1779,3 +1725,49 @@ function DoWhileT1mixed3() {
 	while ((1 || 2) && 3)
 	"end";
 }
+
+
+
+function NotShortCircuit3() {
+	/* NotShortCircuit3 XPECT allEdges ---
+		"start" --> a,
+		a --> 0,
+		0 --> [0],
+		[0] -IfFalse-> 1,
+		[0] -IfTrue-> [0] || [1],
+		[0] || [1] --> ([0] || [1]),
+		1 --> [1],
+		[1] --> [0] || [1],
+		([0] || [1]) -LoopEnter-> "loop",
+		([0] || [1]) -LoopExit-> "end",
+		"loop" -LoopEnter|LoopRepeat-> "loop",
+		"loop" -LoopExit|LoopRepeat-> "end"
+	--- */
+	/* NotShortCircuit3 XPECT allBranches ---
+		B0: "start" -> a -> 0 -> [0][B1|B2], B1: [B0] -> 1 -> [1] -> [B3],
+		B2: [B0] -> [B3], B3: [B1|B2][0] || [1] -> ([0] || [1])[B4|B5], B4: [B3] -> "loop"[B6|B7],
+		B5: [B3] -> [B8], B6: [B4] -> "loop" -> [B8], B7: [B4] -> [B8], B8: [B5|B6|B7]"end"
+	--- */
+	/* NotShortCircuit3 XPECT allPaths ---
+		"start" -> a -> 0 -> [0] -> [0] || [1] -> ([0] || [1]) -> "end",
+		"start" -> a -> 0 -> [0] -> [0] || [1] -> ([0] || [1]) -> "loop" -> "end",
+		"start" -> a -> 0 -> [0] -> 1 -> [1] -> [0] || [1] -> ([0] || [1]) -> "end",
+		"start" -> a -> 0 -> [0] -> [0] || [1] -> ([0] || [1]) -> "loop" -> "loop" -> "end",
+		"start" -> a -> 0 -> [0] -> 1 -> [1] -> [0] || [1] -> ([0] || [1]) -> "loop" -> "end",
+		"start" -> a -> 0 -> [0] -> 1 -> [1] -> [0] || [1] -> ([0] || [1]) -> "loop" -> "loop" -> "end"
+	--- */
+	/* NotShortCircuit3 backward XPECT allPaths direction 'Backward' ---
+		"end" -> ([0] || [1]) -> [0] || [1] -> [0] -> 0 -> a -> "start",
+		"end" -> "loop" -> ([0] || [1]) -> [0] || [1] -> [0] -> 0 -> a -> "start",
+		"end" -> ([0] || [1]) -> [0] || [1] -> [1] -> 1 -> [0] -> 0 -> a -> "start",
+		"end" -> "loop" -> "loop" -> ([0] || [1]) -> [0] || [1] -> [0] -> 0 -> a -> "start",
+		"end" -> "loop" -> ([0] || [1]) -> [0] || [1] -> [1] -> 1 -> [0] -> 0 -> a -> "start",
+		"end" -> "loop" -> "loop" -> ([0] || [1]) -> [0] || [1] -> [1] -> 1 -> [0] -> 0 -> a -> "start"
+	--- */
+	"start";
+	for (let a of ([0] || [1])) {
+	    "loop"
+	}
+	"end";
+}
+
