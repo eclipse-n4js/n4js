@@ -122,7 +122,7 @@ Contributors:
 		</dependency>
 	</dependencies>
 	
-	
+	<!-- 
 	<profiles>
 		<profile>
 			<id>noTests</id>
@@ -202,6 +202,6 @@ Contributors:
 				</plugins>
 			</build>
 		</profile>	
-	
 	</profiles>
+	 -->
 </project>
