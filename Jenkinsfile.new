@@ -21,7 +21,7 @@ pipeline {
         MAVEN_OPTS = "-XX:+UnlockExperimentalVMOptions " +
                      "-XX:+UseCGroupMemoryLimitForHeap " +
                      "-XX:MaxRAMFraction=2 "             +
-                     "-XshowSettings:vm "                +
+                     "-XshowSettings:vm "
     }
     options {
         ansiColor('xterm')
