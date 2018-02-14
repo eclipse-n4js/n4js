@@ -22,4 +22,10 @@ public class ATest {
 	 */
 	@Test
 	testBarBasics(): string {}
+
+	/**
+	 * @testee A.barvar
+	 */
+	@Test
+	testCAPITALS(): string {}
 }
