@@ -33,6 +33,7 @@ class WhileFactory {
 		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), whileStmt);
 		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, whileStmt,
 				whileStmt.getExpression());
+		Node conditionForkNode = new HelperNode(NodeNames.CONDITION_FORK, astpp.pos(), whileStmt);
 		Node bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, whileStmt,
 				whileStmt.getStatement());
 		Node continueCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), whileStmt);
@@ -40,13 +41,14 @@ class WhileFactory {
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);
+		cNode.addNode(conditionForkNode);
 		cNode.addNode(bodyNode);
 		cNode.addNode(continueCatchNode);
 		cNode.addNode(exitNode);
 
-		cNode.connectInternalSucc(entryNode, conditionNode);
-		cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionNode, bodyNode);
-		cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
+		cNode.connectInternalSucc(entryNode, conditionNode, conditionForkNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionForkNode, bodyNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionForkNode, exitNode);
 		cNode.connectInternalSucc(bodyNode, continueCatchNode);
 		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, continueCatchNode, conditionNode);
 
@@ -54,7 +56,7 @@ class WhileFactory {
 		cNode.setExitNode(exitNode);
 
 		// catch for short-circuits
-		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue, ControlFlowType.LoopEnter));
+		conditionForkNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue));
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse, ControlFlowType.LoopExit));
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(whileStmt);

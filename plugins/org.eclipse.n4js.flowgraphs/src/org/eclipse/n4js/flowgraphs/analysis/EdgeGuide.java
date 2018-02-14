@@ -53,17 +53,22 @@ public class EdgeGuide {
 	}
 
 	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Collection<BranchWalkerInternal> activePaths,
-			FinallyFlowContext flowContext) {
-		this(edgeProvider, edge, activePaths, flowContext, null);
+			FinallyFlowContext finallyContext) {
+		this(edgeProvider, edge, activePaths, finallyContext, null);
+	}
+
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, FinallyFlowContext finallyContext,
+			DeadFlowContext deadContext) {
+		this(edgeProvider, edge, Sets.newHashSet(), finallyContext, deadContext);
 	}
 
 	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Collection<BranchWalkerInternal> activePaths,
-			FinallyFlowContext flowContext, DeadFlowContext deadContext) {
+			FinallyFlowContext finallyContext, DeadFlowContext deadContext) {
 
 		this.edgeProvider = edgeProvider;
 		this.edge = edge;
 		this.branchWalkers = activePaths;
-		this.finallyContext = new FinallyFlowContext(flowContext, edge);
+		this.finallyContext = new FinallyFlowContext(finallyContext, edge);
 		this.deadContext = DeadFlowContext.create(deadContext, edgeProvider, edge);
 		setBranchWalkersReachability();
 	}
@@ -170,11 +175,6 @@ public class EdgeGuide {
 
 	ControlFlowEdge getEdge() {
 		return edge;
-	}
-
-	/** @return true iff this edge guide refers to dead code */
-	boolean isDeadCode() {
-		return deadContext.isDead();
 	}
 
 	@Override

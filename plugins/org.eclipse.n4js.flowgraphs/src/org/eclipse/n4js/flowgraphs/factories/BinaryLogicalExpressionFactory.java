@@ -19,7 +19,6 @@ import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
-import org.eclipse.n4js.n4JS.BinaryLogicalOperator;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.ForStatement;
@@ -42,13 +41,13 @@ class BinaryLogicalExpressionFactory {
 
 		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), lbExpr);
 		Node lhsNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.LHS, lbExpr, lbExpr.getLhs());
-		Node jumpNode = new HelperNode(NodeNames.SHORT_CIRCUIT_JUMP, astpp.pos(), lbExpr);
+		Node scJumpNode = new HelperNode(NodeNames.SHORT_CIRCUIT_JUMP, astpp.pos(), lbExpr);
 		Node rhsNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.RHS, lbExpr, lbExpr.getRhs());
 		Node exitNode = new RepresentingNode(NodeNames.EXIT, astpp.pos(), lbExpr);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(lhsNode);
-		cNode.addNode(jumpNode);
+		cNode.addNode(scJumpNode);
 		cNode.addNode(rhsNode);
 		cNode.addNode(exitNode);
 
@@ -65,63 +64,80 @@ class BinaryLogicalExpressionFactory {
 			break;
 		}
 
-		cNode.connectInternalSucc(entryNode, lhsNode, jumpNode);
-		cNode.connectInternalSucc(thenCFT, jumpNode, rhsNode);
+		cNode.connectInternalSucc(entryNode, lhsNode, scJumpNode);
+		cNode.connectInternalSucc(thenCFT, scJumpNode, rhsNode);
 		cNode.connectInternalSucc(rhsNode, exitNode);
 
-		jumpNode.addJumpToken(new JumpToken(elseCFT)); // short-circuit evaluation
-		cNode.setJumpNode(jumpNode);
+		scJumpNode.addJumpToken(new JumpToken(elseCFT)); // short-circuit evaluation
+		cNode.setJumpNode(scJumpNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
-		boolean isCatching = isCatching(lbExpr, lbExpr.getOp());
-		if (isCatching) {
-			CatchToken catchToken = null;
-			if (lbExpr.getOp() == BinaryLogicalOperator.OR) {
-				catchToken = new CatchToken(ControlFlowType.IfTrue);
-			}
-			if (lbExpr.getOp() == BinaryLogicalOperator.AND) {
-				catchToken = new CatchToken(ControlFlowType.IfFalse);
-			}
-			if (catchToken != null) {
-				exitNode.addCatchToken(catchToken);
-			}
+		boolean isCatchingNestedLhs = isCatchingNestedLhs(lbExpr);
+		if (isCatchingNestedLhs) {
+			rhsNode.addCatchToken(new CatchToken(thenCFT));
+		}
+
+		boolean isCatchingLhs = isCatchingLhs(lbExpr);
+		if (isCatchingLhs) {
+			exitNode.addCatchToken(new CatchToken(elseCFT));
 		}
 
 		return cNode;
 	}
 
-	static private boolean isCatching(EObject eObj, BinaryLogicalOperator operator) {
-		EObject parent = eObj.eContainer();
-		if (parent instanceof ParenExpression) {
-			return isCatching(parent, operator);
+	static private boolean isCatchingNestedLhs(BinaryLogicalExpression ble) {
+		EObject lhs = ble.getLhs();
+		while (lhs instanceof ParenExpression) { // skip parentheses
+			ParenExpression parenExpr = (ParenExpression) lhs;
+			lhs = parenExpr.getExpression();
 		}
+
+		if (lhs instanceof BinaryLogicalExpression) {
+			BinaryLogicalExpression bleLhs = (BinaryLogicalExpression) lhs;
+			if (bleLhs.getOp() != ble.getOp()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	static private boolean isCatchingLhs(BinaryLogicalExpression ble) {
+		EObject child, parent = ble;
+		do { // skip parentheses
+			child = parent;
+			parent = parent.eContainer();
+		} while (parent instanceof ParenExpression);
 
 		if (parent instanceof BinaryLogicalExpression) {
 			BinaryLogicalExpression bleParent = (BinaryLogicalExpression) parent;
-			return bleParent.getOp() != operator;
+			if (bleParent.getOp() != ble.getOp() && bleParent.getLhs() == child) {
+				// return true;
+			}
+
+			return false;
 		}
 		if (parent instanceof ConditionalExpression) {
 			ConditionalExpression isParent = (ConditionalExpression) parent;
-			return isParent.getExpression() != eObj;
+			return isParent.getExpression() != child;
 		}
 		if (parent instanceof Statement) {
 			if (parent instanceof IfStatement) {
 				IfStatement isParent = (IfStatement) parent;
-				return isParent.getExpression() != eObj;
+				return isParent.getExpression() != child;
 			}
 			if (parent instanceof ForStatement) {
 				ForStatement isParent = (ForStatement) parent;
-				return isParent.getExpression() != eObj;
+				return isParent.getExpression() != child;
 			}
 			if (parent instanceof WhileStatement) {
 				WhileStatement isParent = (WhileStatement) parent;
-				return isParent.getExpression() != eObj;
+				return isParent.getExpression() != child;
 			}
 			if (parent instanceof DoStatement) {
 				DoStatement isParent = (DoStatement) parent;
-				return isParent.getExpression() != eObj;
+				return isParent.getExpression() != child;
 			}
 		}
 

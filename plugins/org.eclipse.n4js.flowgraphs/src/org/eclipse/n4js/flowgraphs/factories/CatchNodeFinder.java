@@ -117,7 +117,7 @@ public class CatchNodeFinder {
 			CatchEvaluator catchEvaluator, ComplexNodeMapper cnMapper) {
 
 		if (catchEvaluator.isCatchingType(cfe)) {
-			Node catchNode = catchEvaluator.getCatchingNode(cfe, cnMapper);
+			Node catchNode = catchEvaluator.getCatchingNode(cfe, jumpToken, cnMapper);
 			for (CatchToken catchToken : catchNode.catchToken) {
 				if (catchEvaluator.isCatchingToken(cfe, jumpToken, catchToken)) {
 					ControlFlowType newEdgeType = catchToken.newEdgeType;
@@ -181,9 +181,12 @@ public class CatchNodeFinder {
 		/**
 		 * Result is valid only if {@link #isCatchingType(ControlFlowElement)} returns true on the same <code>cfe</code>
 		 *
+		 * @param jumpToken
+		 *            the {@link JumpToken} for which a catching node is searched
+		 *
 		 * @return the catching node.
 		 */
-		Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper);
+		Node getCatchingNode(ControlFlowElement cfe, JumpToken jumpToken, ComplexNodeMapper cnMapper);
 
 		/** @return true iff the given {@link CatchToken} can catch the given {@link JumpToken}. */
 		boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken);
@@ -208,7 +211,7 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+		public Node getCatchingNode(ControlFlowElement cfe, JumpToken jumpToken, ComplexNodeMapper cnMapper) {
 			ComplexNode cn = cnMapper.get(cfe);
 			return cn.getExit();
 		}
@@ -239,7 +242,7 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+		public Node getCatchingNode(ControlFlowElement cfe, JumpToken jumpToken, ComplexNodeMapper cnMapper) {
 			if (cfe instanceof DoStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
 				Node conditionNode = cn.getNode(NodeNames.CONDITION);
@@ -279,14 +282,14 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+		public Node getCatchingNode(ControlFlowElement cfe, JumpToken jumpToken, ComplexNodeMapper cnMapper) {
 			ComplexNode cn = cnMapper.get(cfe);
 			return cn.getExit();
 		}
 
 		@Override
 		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
-			return true;
+			return jumpToken.cfType == catchToken.cfType;
 		}
 	}
 
@@ -326,7 +329,7 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+		public Node getCatchingNode(ControlFlowElement cfe, JumpToken jumpToken, ComplexNodeMapper cnMapper) {
 			EObject container = cfe.eContainer();
 			if (FGUtils.isCFContainer(cfe)) {
 				ComplexNode cnContainer = cnMapper.get(cfe);
@@ -357,7 +360,7 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
-			return true;
+			return jumpToken.cfType == catchToken.cfType;
 		}
 	}
 
@@ -379,7 +382,7 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+		public Node getCatchingNode(ControlFlowElement cfe, JumpToken jumpToken, ComplexNodeMapper cnMapper) {
 			if (cfe instanceof ConditionalExpression) {
 				ComplexNode cn = cnMapper.get(cfe);
 				return cn.getNode(NodeNames.THEN);
@@ -390,15 +393,31 @@ public class CatchNodeFinder {
 			}
 			if (cfe instanceof DoStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
-				return cn.getNode(NodeNames.BODY);
+				return cn.getNode(NodeNames.CONDITION_FORK);
 			}
 			if (cfe instanceof WhileStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
-				return cn.getNode(NodeNames.BODY);
+				return cn.getNode(NodeNames.CONDITION_FORK);
 			}
 			if (cfe instanceof ForStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
-				return cn.getNode(NodeNames.BODY);
+				return cn.getNode(NodeNames.CONDITION_FORK);
+			}
+			if (cfe instanceof BinaryLogicalExpression) {
+				ComplexNode cn = cnMapper.get(cfe);
+				Node catchNode = cn.getNode(NodeNames.RHS);
+				for (CatchToken ct : catchNode.catchToken) {
+					if (ct.cfType == jumpToken.cfType) {
+						return catchNode;
+					}
+				}
+				catchNode = cn.getNode(NodeNames.EXIT);
+				for (CatchToken ct : catchNode.catchToken) {
+					if (ct.cfType == jumpToken.cfType) {
+						return catchNode;
+					}
+				}
+				return catchNode;
 			}
 			ComplexNode cn = cnMapper.get(cfe);
 			return cn.getNode(NodeNames.EXIT);
@@ -406,7 +425,7 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
-			return true;
+			return jumpToken.cfType == catchToken.cfType;
 		}
 	}
 
@@ -428,7 +447,7 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+		public Node getCatchingNode(ControlFlowElement cfe, JumpToken jumpToken, ComplexNodeMapper cnMapper) {
 			if (cfe instanceof ConditionalExpression) {
 				ComplexNode cn = cnMapper.get(cfe);
 				return cn.getNode(NodeNames.ELSE);
@@ -441,6 +460,22 @@ public class CatchNodeFinder {
 				}
 				return cn.getNode(NodeNames.EXIT);
 			}
+			if (cfe instanceof BinaryLogicalExpression) {
+				ComplexNode cn = cnMapper.get(cfe);
+				Node catchNode = cn.getNode(NodeNames.RHS);
+				for (CatchToken ct : catchNode.catchToken) {
+					if (ct.cfType == jumpToken.cfType) {
+						return catchNode;
+					}
+				}
+				catchNode = cn.getNode(NodeNames.EXIT);
+				for (CatchToken ct : catchNode.catchToken) {
+					if (ct.cfType == jumpToken.cfType) {
+						return catchNode;
+					}
+				}
+				return catchNode;
+			}
 
 			ComplexNode cn = cnMapper.get(cfe);
 			return cn.getNode(NodeNames.EXIT);
@@ -448,7 +483,7 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
-			return true;
+			return jumpToken.cfType == catchToken.cfType;
 		}
 	}
 }

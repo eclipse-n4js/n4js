@@ -135,6 +135,7 @@ class ForFactory {
 		if (forStmt.getExpression() != null) {
 			conditionNode = DelegatingNodeFactory.create(astpp, NodeNames.CONDITION, forStmt, forStmt.getExpression());
 		}
+		Node conditionForkNode = new HelperNode(NodeNames.CONDITION_FORK, astpp.pos(), forStmt);
 		bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, forStmt, forStmt.getStatement());
 		Node loopCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
 		if (forStmt.getUpdateExpr() != null) {
@@ -147,6 +148,7 @@ class ForFactory {
 		for (Node initNode : initNodes)
 			cNode.addNode(initNode);
 		cNode.addNode(conditionNode);
+		cNode.addNode(conditionForkNode);
 		cNode.addNode(bodyNode);
 		cNode.addNode(loopCatchNode);
 		cNode.addNode(updatesNode);
@@ -155,31 +157,27 @@ class ForFactory {
 		nodes.add(entryNode);
 		nodes.addAll(initNodes);
 		nodes.add(conditionNode);
+		nodes.add(conditionForkNode);
 		cNode.connectInternalSucc(nodes);
+		cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionForkNode, bodyNode);
 
 		if (conditionNode != null) {
-			cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionNode, bodyNode);
-			cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
+			cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionForkNode, exitNode);
 			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
-			Node beforeBodyNode = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode).getLast();
-			cNode.connectInternalSucc(ControlFlowType.LoopRepeat, beforeBodyNode, conditionNode);
+			Node beforeConditionNode = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode).getLast();
+			cNode.connectInternalSucc(ControlFlowType.LoopRepeat, beforeConditionNode, conditionNode);
 
 		} else {
-			nodes.clear();
-			nodes.add(entryNode);
-			nodes.addAll(initNodes);
-			Node beforeBodyNode = ListUtils.filterNulls(nodes).getLast();
-			cNode.connectInternalSucc(ControlFlowType.LoopEnter, beforeBodyNode, bodyNode);
 			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
 
-			LinkedList<Node> loopCycle = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode);
+			LinkedList<Node> loopCycle = ListUtils.filterNulls(loopCatchNode, updatesNode);
 			Node loopSrc = loopCycle.getLast();
-			cNode.connectInternalSucc(ControlFlowType.LoopInfinite, loopSrc, bodyNode);
+			cNode.connectInternalSucc(ControlFlowType.LoopInfinite, loopSrc, conditionForkNode);
 			cNode.connectInternalSucc(ControlFlowType.DeadCode, loopSrc, exitNode);
 		}
 
 		// catch for short-circuits
-		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue, ControlFlowType.LoopEnter));
+		conditionForkNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue));
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse, ControlFlowType.LoopExit));
 
 		cNode.setEntryNode(entryNode);

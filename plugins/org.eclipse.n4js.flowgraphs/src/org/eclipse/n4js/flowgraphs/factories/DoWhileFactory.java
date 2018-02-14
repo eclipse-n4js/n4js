@@ -34,22 +34,24 @@ class DoWhileFactory {
 		Node bodyNode = DelegatingNodeFactory.create(astpp, NodeNames.BODY, doStmt, doStmt.getStatement());
 		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, doStmt,
 				doStmt.getExpression());
+		Node conditionForkNode = new HelperNode(NodeNames.CONDITION_FORK, astpp.pos(), doStmt);
 		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), doStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(bodyNode);
 		cNode.addNode(conditionNode);
+		cNode.addNode(conditionForkNode);
 		cNode.addNode(exitNode);
 
-		cNode.connectInternalSucc(entryNode, bodyNode, conditionNode);
-		cNode.connectInternalSucc(ControlFlowType.LoopReenter, conditionNode, bodyNode);
-		cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
+		cNode.connectInternalSucc(entryNode, bodyNode, conditionNode, conditionForkNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopReenter, conditionForkNode, bodyNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionForkNode, exitNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
 		// catch for short-circuits
-		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue, ControlFlowType.LoopReenter));
+		conditionForkNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue));
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse, ControlFlowType.LoopExit));
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(doStmt);

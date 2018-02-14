@@ -38,5 +38,6 @@ class NodeNames {
 	static final String FINALLY = "finally";
 	static final String TARGET = "target";
 	static final String SHORT_CIRCUIT_JUMP = "shortCircuitJump";
+	static final String CONDITION_FORK = "conditionFork";
 
 }
