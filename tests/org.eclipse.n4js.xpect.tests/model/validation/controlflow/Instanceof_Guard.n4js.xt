@@ -265,7 +265,7 @@ function f11b() {
 function f11c() {
 	let a = 2;
 	if (a instanceof Number && a instanceof Object) {
-		// XPECT FIXME instanceofguard of 'a;' 'MayHolds' -->
+		// XPECT instanceofguard of 'a;' 'MayHolds' -->
 		a;
 	}
 }
@@ -290,7 +290,7 @@ function f12c() {
 		// The following expectation contains 'a<:Number' twice, since it
 		// (1) always holds (case of short-circuit evaluation)
 		// (2) may holds (other case)
-		// XPECT instanceofguard of 'a;' 'MayHolds' --> a<:Number, a<:Number, a<:Object
+		// XPECT instanceofguard of 'a;' 'MayHolds' --> a<:Number, a<:Object
 		a;
 	}
 }

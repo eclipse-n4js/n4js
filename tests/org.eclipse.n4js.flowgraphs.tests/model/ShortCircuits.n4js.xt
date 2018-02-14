@@ -47,13 +47,6 @@ function SimpleD1and() {
 		"end" -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end"
 	"start";
 	1 && 2;
 	"end";
@@ -82,13 +75,6 @@ function SimpleD1or() {
 		"end" -> 1 || 2 -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 || 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 || 2
-	// BinaryLogicalExpression XPECT succs at '1 ||| 2' --> "end"
 	"start";
 	1 || 2;
 	"end";
@@ -124,13 +110,6 @@ function SimpleT1and() {
 		"end" -> 1 && 2 && 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 1 && 2 && 3, 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> 1 && 2 && 3, 3
 	"start";
 	1 && 2 && 3;
 	"end";
@@ -139,85 +118,44 @@ function SimpleT1and() {
 function SimpleT1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"start" --> 1,
-		1 -IfTrue-> 2,
-		1 -IfFalse-> 1 && 2 && 3,
-		2 --> 1 && 2,
-		1 && 2 -IfFalse-> 1 && 2 && 3,
-		1 && 2 -IfTrue-> 3,
-		1 && 2 && 3 --> "end",
-		3 --> 1 && 2 && 3
+		"start" --> 1, 1 -IfFalse-> 2, 1 -IfTrue-> 1 || 2 || 3, 1 || 2 -IfFalse-> 3,
+		1 || 2 -IfTrue-> 1 || 2 || 3, 1 || 2 || 3 --> "end", 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> 2 -> 1 && 2[B3|B4],
-		B2: [B0] -> [B5],
-		B3: [B1] -> 3 -> [B5],
-		B4: [B1] -> [B5],
-		B5: [B2|B3|B4]1 && 2 && 3 -> "end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B5],
+		B3: [B1] -> 3 -> [B5], B4: [B1] -> [B5], B5: [B2|B3|B4]1 || 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
+		"start" -> 1 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 1 || 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 && 3 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> 1 || 2 || 3 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 1 && 2 && 3, 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> 1 && 2 && 3, 3
 	"start";
-	1 && 2 && 3;
+	1 || 2 || 3;
 	"end";
 }
 
 function SimpleT1mixed1() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"start" --> 1,
-		1 && 2 -IfFalse-> 3,
-		1 && 2 -IfTrue-> 1 && 2 || 3,
-		1 && 2 || 3 --> "end",
-		1 -IfFalse-> 1 && 2,
-		1 -IfTrue-> 2,
-		2 --> 1 && 2,
-		3 --> 1 && 2 || 3
+		"start" --> 1, 1 && 2 -IfFalse-> 3, 1 && 2 -IfTrue-> 1 && 2 || 3,
+		1 && 2 || 3 --> "end", 1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> 2 -> [B3],
-		B2: [B0] -> [B3],
-		B3: [B1|B2]1 && 2[B4|B5],
-		B4: [B3] -> 3 -> [B6],
-		B5: [B3] -> [B6],
-		B6: [B4|B5]1 && 2 || 3 -> "end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5],
+		B3: [B1] -> [B5], B4: [B1] -> [B6], B5: [B2|B3]3 -> [B6], B6: [B4|B5]1 && 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 && 2 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end"
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 3 -> 1 && 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 || 3 -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '2 ||| 3' --> "end"
 	"start";
 	1 && 2 || 3;
 	"end";
@@ -226,41 +164,48 @@ function SimpleT1mixed1() {
 function SimpleT1mixed2() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"start" --> 1,
-		1 -IfFalse-> 2,
-		1 -IfTrue-> 1 || 2 && 3, 1 || 2 && 3 --> "end",
-		2 && 3 --> 1 || 2 && 3,
-		2 -IfFalse-> 2 && 3,
-		2 -IfTrue-> 3, 3 --> 2 && 3
+		"start" --> 1, 1 -IfFalse-> 2, 1 -IfTrue-> 1 || 2 && 3, 1 || 2 && 3 --> "end",
+		2 && 3 --> 1 || 2 && 3, 2 -IfTrue-> 3, 3 --> 2 && 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> 2[B3|B4],
-		B2: [B0] -> 1 || 2 && 3 -> [B6],
-		B3: [B1] -> 3 -> [B5],
-		B4: [B1] -> [B5],
-		B5: [B3|B4]2 && 3 -> 1 || 2 && 3 -> [B6],
-		B6: [B2|B5]"end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2[B3|B4], B2: [B0] -> [B5],
+		B3: [B1] -> 3 -> 2 && 3 -> [B5], B4: [B1][B6], B5: [B2|B3]1 || 2 && 3 -> "end"[B6], B6: [B4|B5]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> 1 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2,
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 || 2 && 3 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start"
+		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 1 || 2 && 3, 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 2 && 3, 3
-	// BinaryLogicalExpression XPECT succs at '2 && 3' --> 1 || 2 && 3
 	"start";
 	1 || 2 && 3;
+	"end";
+}
+
+function SimpleT1mixed3() {
+	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* BinaryLogicalExpression XPECT allEdges ---
+		"start" --> 1, (1 || 2) && 3 --> "end", (1 || 2) -IfFalse-> (1 || 2) && 3,
+		(1 || 2) -IfTrue-> 3, 1 -IfFalse-> 2, 1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2,
+		3 --> (1 || 2) && 3
+	--- */
+	/* BinaryLogicalExpression XPECT allBranches ---
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
+		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B6], B5: [B2|B3]3 -> [B6],
+		B6: [B4|B5](1 || 2) && 3 -> "end"
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths ---
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end", "start" -> 1 -> 3 -> (1 || 2) && 3 -> "end"
+	--- */
+	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> (1 || 2) && 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start", "end" -> (1 || 2) && 3 -> 3 -> 1 -> "start"
+	--- */
+	"start";
+	(1 || 2) && 3;
 	"end";
 }
 
@@ -295,13 +240,6 @@ function IfD1and() {
 		"end" -> "else" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "else", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "else", "then"
 	"start";
 	if (1 && 2)
 		"then";
@@ -341,13 +279,6 @@ function IfD1or() {
 		"end" -> "else" -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "then", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 || 2
-	// BinaryLogicalExpression XPECT succs at '1 ||| 2' --> "else", "then"
 	"start";
 	if (1 || 2)
 		"then";
@@ -394,13 +325,6 @@ function IfT1and() {
 		"end" -> "else" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> "then" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "else", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "else", 3
 	"start";
 	if (1 && 2 && 3)
 		"then";
@@ -412,42 +336,27 @@ function IfT1and() {
 function IfT1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"else" --> "end", "start" --> 1, "then" --> "end",
-		1 && 2 && 3 -IfFalse-> "else", 1 && 2 && 3 -IfTrue-> "then", 1 && 2 -IfFalse-> "else", 1 && 2 -IfTrue-> 3,
-		1 -IfFalse-> "else", 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 && 3
+		"else" --> "end", "start" --> 1, "then" --> "end", 1 -IfFalse-> 2,
+		1 -IfTrue-> "then", 1 || 2 -IfFalse-> 3, 1 || 2 -IfTrue-> "then", 1 || 2 || 3 -IfFalse-> "else",
+		1 || 2 || 3 -IfTrue-> "then", 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> 2 -> 1 && 2[B3|B4],
-		B2: [B0] -> [B7],
-		B3: [B1] -> 3 -> 1 && 2 && 3[B5|B6],
-		B4: [B1] -> [B7],
-		B5: [B3] -> "then" -> [B8],
-		B6: [B3] -> [B7],
-		B7: [B2|B4|B6]"else" -> [B8],
-		B8: [B5|B7]"end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B7],
+		B3: [B1] -> 3 -> 1 || 2 || 3[B5|B6], B4: [B1] -> [B7], B5: [B3] -> [B7], B6: [B3] -> "else" -> [B8],
+		B7: [B2|B4|B5]"then" -> [B8], B8: [B6|B7]"end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "else" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "else" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "else" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "then" -> "end"
+		"start" -> 1 -> "then" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "then" -> "end", "start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "else" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "then" -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> "else" -> 1 -> "start",
-		"end" -> "else" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> "else" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> "then" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> "else" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> "then" -> 1 -> "start", "end" -> "then" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> "then" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "else", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "else", 3
 	"start";
-	if (1 && 2 && 3)
+	if (1 || 2 || 3)
 		"then";
 	else
 		"else";
@@ -458,33 +367,24 @@ function IfT1mixed1() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
 		"else" --> "end", "start" --> 1, "then" --> "end", 1 && 2 -IfFalse-> 3,
-		1 && 2 -IfTrue-> "then", 1 && 2 || 3 -IfFalse-> "else", 1 && 2 || 3 -IfTrue-> "then",
-		1 -IfFalse-> 1 && 2, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
+		1 && 2 -IfTrue-> "then", 1 && 2 || 3 -IfFalse-> "else", 1 && 2 || 3 -IfTrue-> "then", 1 -IfFalse-> 3,
+		1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> [B3], B2: [B0] -> [B3],
-		B3: [B1|B2]1 && 2[B4|B5], B4: [B3] -> 3 -> 1 && 2 || 3[B6|B7], B5: [B3] -> [B8], B6: [B4] -> [B8],
-		B7: [B4] -> "else" -> [B9], B8: [B5|B6]"then" -> [B9], B9: [B7|B8]"end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5],
+		B3: [B1] -> [B5], B4: [B1] -> [B8], B5: [B2|B3]3 -> 1 && 2 || 3[B6|B7], B6: [B5] -> [B8],
+		B7: [B5] -> "else" -> [B9], B8: [B4|B6]"then" -> [B9], B9: [B7|B8]"end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 && 2 -> "then" -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "else" -> "end", "start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "then" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "then" -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "else" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "then" -> "end"
+		"start" -> 1 -> 2 -> 1 && 2 -> "then" -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "else" -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "then" -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "else" -> "end", "start" -> 1 -> 3 -> 1 && 2 || 3 -> "then" -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> "else" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> "else" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> "then" -> 1 && 2 -> 1 -> "start",
-		"end" -> "then" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> "then" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> "then" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> "else" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> "else" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> "then" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> "then" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> "then" -> 1 && 2 || 3 -> 3 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "then", 3
 	"start";
 	if (1 && 2 || 3)
 		"then";
@@ -498,32 +398,56 @@ function IfT1mixed2() {
 	/* BinaryLogicalExpression XPECT allEdges ---
 		"else" --> "end", "start" --> 1, "then" --> "end", 1 -IfFalse-> 2,
 		1 -IfTrue-> "then", 1 || 2 && 3 -IfFalse-> "else", 1 || 2 && 3 -IfTrue-> "then",
-		2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> 2 && 3, 2 -IfTrue-> 3, 3 --> 2 && 3
+		2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> "else", 2 -IfTrue-> 3, 3 --> 2 && 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> 2[B3|B4], B2: [B0] -> [B8],
-		B3: [B1] -> 3 -> [B5], B4: [B1] -> [B5], B5: [B3|B4]2 && 3 -> 1 || 2 && 3[B6|B7], B6: [B5] -> [B8],
-		B7: [B5] -> "else" -> [B9], B8: [B2|B6]"then" -> [B9], B9: [B7|B8]"end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2[B3|B4], B2: [B0] -> [B7],
+		B3: [B1] -> 3 -> 2 && 3 -> 1 || 2 && 3[B5|B6], B4: [B1] -> [B8], B5: [B3] -> [B7], B6: [B3] -> [B8],
+		B7: [B2|B5]"then" -> [B9], B8: [B4|B6]"else" -> [B9], B9: [B7|B8]"end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "then" -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "else" -> "end", "start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "then" -> "end",
+		"start" -> 1 -> "then" -> "end", "start" -> 1 -> 2 -> "else" -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "else" -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "then" -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> "else" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> "else" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> "then" -> 1 -> "start",
-		"end" -> "then" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start", "end" -> "then" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start"
+		"end" -> "else" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
+		"end" -> "else" -> 2 -> 1 -> "start", "end" -> "then" -> 1 -> "start",
+		"end" -> "then" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "then", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 2 && 3, 3
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> (1 && 2)
 	"start";
 	if (1 || 2 && 3)
+		"then";
+	else
+		"else";
+	"end";
+}
+
+function IfT1mixed3() {
+	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* BinaryLogicalExpression XPECT allEdges ---
+		"else" --> "end", "start" --> 1, "then" --> "end",
+		(1 || 2) && 3 -IfFalse-> "else", (1 || 2) && 3 -IfTrue-> "then", (1 || 2) -IfFalse-> "else",
+		(1 || 2) -IfTrue-> 3, 1 -IfFalse-> 2, 1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2,
+		3 --> (1 || 2) && 3
+	--- */
+	/* BinaryLogicalExpression XPECT allBranches ---
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
+		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B8], B5: [B2|B3]3 -> (1 || 2) && 3[B6|B7],
+		B6: [B5] -> "then" -> [B9], B7: [B5] -> [B8], B8: [B4|B7]"else" -> [B9], B9: [B6|B8]"end"
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths ---
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "else" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "else" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "then" -> "end", "start" -> 1 -> 3 -> (1 || 2) && 3 -> "else" -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "then" -> "end"
+	--- */
+	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> "else" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> "else" -> (1 || 2) && 3 -> 3 -> 1 -> "start", "end" -> "else" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> "then" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start", "end" -> "then" -> (1 || 2) && 3 -> 3 -> 1 -> "start"
+	--- */
+	"start";
+	if ((1 || 2) && 3)
 		"then";
 	else
 		"else";
@@ -553,13 +477,6 @@ function ConditionalD1and() {
 		"end" -> (1 && 2) ? "then" : "else" -> "else" -> 1 -> "start",
 		"end" -> (1 && 2) ? "then" : "else" -> "then" -> (1 && 2) -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "else", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> (1 && 2)
 	"start";
 	(1 && 2) ?
 		"then"
@@ -589,13 +506,6 @@ function ConditionalD1or() {
 		"end" -> (1 || 2) ? "then" : "else" -> "else" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> (1 || 2) ? "then" : "else" -> "then" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start", "end" -> (1 || 2) ? "then" : "else" -> "then" -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "then", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 || 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "else", 3
 	"start";
 	(1 || 2) ?
 		"then"
@@ -628,13 +538,6 @@ function ConditionalT1and() {
 		"end" -> (1 && 2 && 3) ? "then" : "else" -> "else" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> (1 && 2 && 3) ? "then" : "else" -> "else" -> 1 -> "start",
 		"end" -> (1 && 2 && 3) ? "then" : "else" -> "then" -> (1 && 2 && 3) -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "else", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "else", 3
 	"start";
 	(1 && 2 && 3) ?
 		"then"
@@ -646,36 +549,29 @@ function ConditionalT1and() {
 function ConditionalT1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"else" --> (1 && 2 && 3) ? "then" : "else", "start" --> 1,
-		"then" --> (1 && 2 && 3) ? "then" : "else", (1 && 2 && 3) -IfFalse-> "else", (1 && 2 && 3) -IfTrue-> "then",
-		(1 && 2 && 3) ? "then" : "else" --> "end", 1 && 2 && 3 --> (1 && 2 && 3), 1 && 2 -IfFalse-> "else", 1 && 2 -IfTrue-> 3,
-		1 -IfFalse-> "else", 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 && 3
+		"else" --> (1 || 2 || 3) ? "then" : "else", "start" --> 1,
+		"then" --> (1 || 2 || 3) ? "then" : "else", (1 || 2 || 3) -IfFalse-> "else", (1 || 2 || 3) -IfTrue-> "then",
+		(1 || 2 || 3) ? "then" : "else" --> "end", 1 -IfFalse-> 2, 1 -IfTrue-> "then", 1 || 2 -IfFalse-> 3,
+		1 || 2 -IfTrue-> "then", 1 || 2 || 3 --> (1 || 2 || 3), 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B7],
-		B3: [B1] -> 3 -> 1 && 2 && 3 -> (1 && 2 && 3)[B5|B6], B4: [B1] -> [B7], B5: [B3] -> "then" -> [B8], B6: [B3] -> [B7],
-		B7: [B2|B4|B6]"else" -> [B8], B8: [B5|B7](1 && 2 && 3) ? "then" : "else" -> "end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B7],
+		B3: [B1] -> 3 -> 1 || 2 || 3 -> (1 || 2 || 3)[B5|B6], B4: [B1] -> [B7], B5: [B3] -> [B7], B6: [B3] -> "else" -> [B8],
+		B7: [B2|B4|B5]"then" -> [B8], B8: [B6|B7](1 || 2 || 3) ? "then" : "else" -> "end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "else" -> (1 && 2 && 3) ? "then" : "else" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "else" -> (1 && 2 && 3) ? "then" : "else" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> (1 && 2 && 3) -> "else" -> (1 && 2 && 3) ? "then" : "else" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> (1 && 2 && 3) -> "then" -> (1 && 2 && 3) ? "then" : "else" -> "end"
+		"start" -> 1 -> "then" -> (1 || 2 || 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "then" -> (1 || 2 || 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> (1 || 2 || 3) -> "else" -> (1 || 2 || 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> (1 || 2 || 3) -> "then" -> (1 || 2 || 3) ? "then" : "else" -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> (1 && 2 && 3) ? "then" : "else" -> "else" -> (1 && 2 && 3) -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> (1 && 2 && 3) ? "then" : "else" -> "else" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> (1 && 2 && 3) ? "then" : "else" -> "else" -> 1 -> "start",
-		"end" -> (1 && 2 && 3) ? "then" : "else" -> "then" -> (1 && 2 && 3) -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> (1 || 2 || 3) ? "then" : "else" -> "else" -> (1 || 2 || 3) -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2 || 3) ? "then" : "else" -> "then" -> (1 || 2 || 3) -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> (1 || 2 || 3) ? "then" : "else" -> "then" -> 1 -> "start",
+		"end" -> (1 || 2 || 3) ? "then" : "else" -> "then" -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "else", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "else", 3
 	"start";
-	(1 && 2 && 3) ?
+	(1 || 2 || 3) ?
 		"then"
 	:
 		"else";
@@ -688,36 +584,28 @@ function ConditionalT1mixed1() {
 		"else" --> (1 && 2 || 3) ? "then" : "else", "start" --> 1,
 		"then" --> (1 && 2 || 3) ? "then" : "else", (1 && 2 || 3) -IfFalse-> "else", (1 && 2 || 3) -IfTrue-> "then",
 		(1 && 2 || 3) ? "then" : "else" --> "end", 1 && 2 -IfFalse-> 3, 1 && 2 -IfTrue-> "then", 1 && 2 || 3 --> (1 && 2 || 3),
-		1 -IfFalse-> 1 && 2, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
+		1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> [B3], B2: [B0] -> [B3],
-		B3: [B1|B2]1 && 2[B4|B5], B4: [B3] -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3)[B6|B7], B5: [B3] -> [B8],
-		B6: [B4] -> [B8], B7: [B4] -> "else" -> [B9], B8: [B5|B6]"then" -> [B9],
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5],
+		B3: [B1] -> [B5], B4: [B1] -> [B8], B5: [B2|B3]3 -> 1 && 2 || 3 -> (1 && 2 || 3)[B6|B7],
+		B6: [B5] -> [B8], B7: [B5] -> "else" -> [B9], B8: [B4|B6]"then" -> [B9],
 		B9: [B7|B8](1 && 2 || 3) ? "then" : "else" -> "end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 && 2 -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "else" -> (1 && 2 || 3) ? "then" : "else" -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "else" -> (1 && 2 || 3) ? "then" : "else" -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end"
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "else" -> (1 && 2 || 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> (1 && 2 || 3) -> "then" -> (1 && 2 || 3) ? "then" : "else" -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> (1 && 2 || 3) ? "then" : "else" -> "else" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
 		"end" -> (1 && 2 || 3) ? "then" : "else" -> "else" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> (1 && 2 || 3) ? "then" : "else" -> "then" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> (1 && 2 || 3) ? "then" : "else" -> "then" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> (1 && 2 || 3) ? "then" : "else" -> "then" -> 1 && 2 -> 1 -> "start",
+		"end" -> (1 && 2 || 3) ? "then" : "else" -> "else" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> (1 && 2 || 3) ? "then" : "else" -> "then" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> (1 && 2 || 3) ? "then" : "else" -> "then" -> (1 && 2 || 3) -> 1 && 2 || 3 -> 3 -> 1 -> "start",
 		"end" -> (1 && 2 || 3) ? "then" : "else" -> "then" -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "then", 3
 	"start";
 	(1 && 2 || 3) ?
 		"then"
@@ -732,36 +620,63 @@ function ConditionalT1mixed2() {
 		"else" --> (1 || 2 && 3) ? "then" : "else", "start" --> 1,
 		"then" --> (1 || 2 && 3) ? "then" : "else", (1 || 2 && 3) -IfFalse-> "else", (1 || 2 && 3) -IfTrue-> "then",
 		(1 || 2 && 3) ? "then" : "else" --> "end", 1 -IfFalse-> 2, 1 -IfTrue-> "then", 1 || 2 && 3 --> (1 || 2 && 3),
-		2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> 2 && 3, 2 -IfTrue-> 3, 3 --> 2 && 3
+		2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> "else", 2 -IfTrue-> 3, 3 --> 2 && 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> 2[B3|B4], B2: [B0] -> [B8],
-		B3: [B1] -> 3 -> [B5], B4: [B1] -> [B5], B5: [B3|B4]2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3)[B6|B7],
-		B6: [B5] -> [B8], B7: [B5] -> "else" -> [B9], B8: [B2|B6]"then" -> [B9],
-		B9: [B7|B8](1 || 2 && 3) ? "then" : "else" -> "end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2[B3|B4], B2: [B0] -> [B7],
+		B3: [B1] -> 3 -> 2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3)[B5|B6], B4: [B1] -> [B8], B5: [B3] -> [B7], B6: [B3] -> [B8],
+		B7: [B2|B5]"then" -> [B9], B8: [B4|B6]"else" -> [B9], B9: [B7|B8](1 || 2 && 3) ? "then" : "else" -> "end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
 		"start" -> 1 -> "then" -> (1 || 2 && 3) ? "then" : "else" -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3) -> "else" -> (1 || 2 && 3) ? "then" : "else" -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3) -> "then" -> (1 || 2 && 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 2 -> "else" -> (1 || 2 && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3) -> "else" -> (1 || 2 && 3) ? "then" : "else" -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> (1 || 2 && 3) -> "then" -> (1 || 2 && 3) ? "then" : "else" -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> (1 || 2 && 3) ? "then" : "else" -> "else" -> (1 || 2 && 3) -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
 		"end" -> (1 || 2 && 3) ? "then" : "else" -> "else" -> (1 || 2 && 3) -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> (1 || 2 && 3) ? "then" : "else" -> "then" -> (1 || 2 && 3) -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2 && 3) ? "then" : "else" -> "else" -> 2 -> 1 -> "start",
 		"end" -> (1 || 2 && 3) ? "then" : "else" -> "then" -> (1 || 2 && 3) -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> (1 || 2 && 3) ? "then" : "else" -> "then" -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "then", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 2 && 3, 3
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", "loop"
 	"start";
 	(1 || 2 && 3) ?
+		"then"
+	:
+		"else";
+	"end";
+}
+
+function ConditionalT1mixed3() {
+	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* BinaryLogicalExpression XPECT allEdges ---
+		"else" --> ((1 || 2) && 3) ? "then" : "else", "start" --> 1,
+		"then" --> ((1 || 2) && 3) ? "then" : "else", ((1 || 2) && 3) -IfFalse-> "else", ((1 || 2) && 3) -IfTrue-> "then",
+		((1 || 2) && 3) ? "then" : "else" --> "end", (1 || 2) && 3 --> ((1 || 2) && 3), (1 || 2) -IfFalse-> "else",
+		(1 || 2) -IfTrue-> 3, 1 -IfFalse-> 2, 1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2,
+		3 --> (1 || 2) && 3
+	--- */
+	/* BinaryLogicalExpression XPECT allBranches ---
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
+		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B8],
+		B5: [B2|B3]3 -> (1 || 2) && 3 -> ((1 || 2) && 3)[B6|B7], B6: [B5] -> "then" -> [B9], B7: [B5] -> [B8], B8: [B4|B7]"else" -> [B9],
+		B9: [B6|B8]((1 || 2) && 3) ? "then" : "else" -> "end"
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths ---
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "else" -> ((1 || 2) && 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> ((1 || 2) && 3) -> "else" -> ((1 || 2) && 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> ((1 || 2) && 3) -> "then" -> ((1 || 2) && 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> ((1 || 2) && 3) -> "else" -> ((1 || 2) && 3) ? "then" : "else" -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> ((1 || 2) && 3) -> "then" -> ((1 || 2) && 3) ? "then" : "else" -> "end"
+	--- */
+	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> ((1 || 2) && 3) ? "then" : "else" -> "else" -> ((1 || 2) && 3) -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> ((1 || 2) && 3) ? "then" : "else" -> "else" -> ((1 || 2) && 3) -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> ((1 || 2) && 3) ? "then" : "else" -> "else" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> ((1 || 2) && 3) ? "then" : "else" -> "then" -> ((1 || 2) && 3) -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> ((1 || 2) && 3) ? "then" : "else" -> "then" -> ((1 || 2) && 3) -> (1 || 2) && 3 -> 3 -> 1 -> "start"
+	--- */
+	"start";
+	((1 || 2) && 3) ?
 		"then"
 	:
 		"else";
@@ -792,13 +707,6 @@ function ForD1and() {
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", "loop"
 	"start";
 	for (; 1 && 2 ;)
 		"loop";
@@ -808,36 +716,38 @@ function ForD1and() {
 function ForD1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2, 1 -LoopEnter-> "loop",
-		1 || 2 -LoopEnter-> "loop", 1 || 2 -LoopExit-> "end", 2 --> 1 || 2
+		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
+		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 -LoopEnter-> "loop",
+		1 || 2 -LoopExit-> "end", 2 --> 1 || 2
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B7|B8]"loop" -> 1 -> 2 -> 1 || 2 -> [B11],
-		B11: [B4|B9|B10]"end", B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B5], B3: [B1] -> [B5],
-		B4: [B1] -> [B11], B5: [B2|B3]"loop" -> 1[B6|B7], B6: [B5] -> 2 -> 1 || 2[B8|B9],
-		B7: [B5] -> [B10], B8: [B6] -> [B10], B9: [B6] -> [B11]
+		B0: "start" -> 1[B1|B2], B10: [B8][B14], B11: [B9] -> 2 -> 1 || 2 -> [B13],
+		B12: [B9] -> [B13], B13: [B11|B12][B14], B14: [B10|B13]"end"[B15], B15: [B5|B14],
+		B1: [B0] -> 2 -> 1 || 2 ->  -> [B3], B2: [B0] ->  -> [B3], B3: [B1|B2][B4|B5], B4: [B3]"loop" -> 1[B6|B7],
+		B5: [B3]"end"[B15], B6: [B4] -> 2 -> 1 || 2 ->  -> [B8], B7: [B4] ->  -> [B8], B8: [B6|B7][B9|B10],
+		B9: [B8]"loop" -> 1[B11|B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' notTo '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "loop", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 || 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
 	for (; 1 || 2 ;)
 		"loop";
@@ -876,13 +786,6 @@ function ForT1and() {
 		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
 	for (; 1 && 2 && 3 ;)
 		"loop";
@@ -892,44 +795,87 @@ function ForT1and() {
 function ForT1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 && 3 -LoopEnter-> "loop",
-		1 && 2 && 3 -LoopExit-> "end", 1 && 2 -IfTrue-> 3, 1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2,
-		1 -LoopExit-> "end", 2 --> 1 && 2, 3 --> 1 && 2 && 3
+		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
+		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 -IfFalse-> 3,
+		1 || 2 -IfTrue|LoopEnter-> "loop", 1 || 2 -IfTrue|LoopExit-> "end", 1 || 2 || 3 -LoopEnter-> "loop",
+		1 || 2 || 3 -LoopExit-> "end", 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B7] -> [B17], B11: [B9] -> "loop" -> 1[B13|B14],
-		B12: [B9] -> [B17], B13: [B11] -> 2 -> 1 && 2[B15|B16], B14: [B11] -> [B17],
-		B15: [B13] -> 3 -> 1 && 2 && 3 -> [B17], B16: [B13] -> [B17], B17: [B2|B4|B6|B8|B10|B12|B14|B15|B16]"end",
-		B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B17], B3: [B1] -> 3 -> 1 && 2 && 3[B5|B6], B4: [B1] -> [B17],
-		B5: [B3] -> "loop" -> 1[B7|B8], B6: [B3] -> [B17], B7: [B5] -> 2 -> 1 && 2[B9|B10], B8: [B5] -> [B17],
-		B9: [B7] -> 3 -> 1 && 2 && 3[B11|B12]
+		B0: "start" -> 1[B1|B2], B10: [B8] -> 3 -> 1 || 2 || 3 ->  -> [B12],
+		B11: [B8] ->  -> [B12], B12: [B9|B10|B11][B13|B14], B13: [B12]"loop" -> 1[B15|B16], B14: [B12][B20],
+		B15: [B13] -> 2 -> 1 || 2[B17|B18], B16: [B13] -> [B19], B17: [B15] -> 3 -> 1 || 2 || 3 -> [B19],
+		B18: [B15] -> [B19], B19: [B16|B17|B18][B20], B1: [B0] -> 2 -> 1 || 2[B3|B4],
+		B20: [B14|B19]"end"[B21], B21: [B7|B20], B2: [B0] ->  -> [B5], B3: [B1] -> 3 -> 1 || 2 || 3 ->  -> [B5],
+		B4: [B1] ->  -> [B5], B5: [B2|B3|B4][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5]"end"[B21],
+		B8: [B6] -> 2 -> 1 || 2[B10|B11], B9: [B6] ->  -> [B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
+		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "start"
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
-	for (; 1 && 2 && 3 ;)
+	for (; 1 || 2 || 3 ;)
 		"loop";
 	"end";
 }
@@ -938,106 +884,92 @@ function ForT1mixed1() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 -IfFalse-> 3,
-		1 && 2 -LoopEnter-> "loop", 1 && 2 || 3 -LoopEnter-> "loop", 1 && 2 || 3 -LoopExit-> "end",
-		1 -IfFalse-> 1 && 2, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
+		1 && 2 -IfTrue|LoopEnter-> "loop", 1 && 2 -IfTrue|LoopExit-> "end", 1 && 2 || 3 -LoopEnter-> "loop",
+		1 && 2 || 3 -LoopExit-> "end", 1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B8] -> [B11], B11: [B9|B10]1 && 2[B12|B13],
-		B12: [B11] -> 3 -> 1 && 2 || 3[B14|B15], B13: [B11] -> [B16], B14: [B12] -> [B16], B15: [B12] -> [B20],
-		B16: [B13|B14]"loop" -> 1[B17|B18], B17: [B16] -> 2 -> [B19], B18: [B16] -> [B19],
-		B19: [B17|B18]1 && 2 -> 3 -> 1 && 2 || 3 -> [B20], B1: [B0] -> 2 -> [B3], B20: [B7|B15|B19]"end", B2: [B0] -> [B3],
-		B3: [B1|B2]1 && 2[B4|B5], B4: [B3] -> 3 -> 1 && 2 || 3[B6|B7], B5: [B3] -> [B8], B6: [B4] -> [B8],
-		B7: [B4] -> [B20], B8: [B5|B6]"loop" -> 1[B9|B10], B9: [B8] -> 2 -> [B11]
+		B0: "start" -> 1[B1|B2], B10: [B7] -> [B13], B11: [B9] -> [B13],
+		B12: [B9] ->  -> [B14], B13: [B10|B11]3 -> 1 && 2 || 3 ->  -> [B14], B14: [B12|B13][B15|B16],
+		B15: [B14]"loop" -> 1[B17|B18], B16: [B14][B23], B17: [B15] -> 2 -> 1 && 2[B19|B20], B18: [B15] -> [B21],
+		B19: [B17] -> [B21], B1: [B0] -> 2 -> 1 && 2[B3|B4], B20: [B17] -> [B22],
+		B21: [B18|B19]3 -> 1 && 2 || 3 -> [B22], B22: [B20|B21][B23], B23: [B16|B22]"end"[B24], B24: [B8|B23], B2: [B0] -> [B5],
+		B3: [B1] -> [B5], B4: [B1] ->  -> [B6], B5: [B2|B3]3 -> 1 && 2 || 3 ->  -> [B6],
+		B6: [B4|B5][B7|B8], B7: [B6]"loop" -> 1[B9|B10], B8: [B6]"end"[B24],
+		B9: [B7] -> 2 -> 1 && 2[B11|B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end"
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "loop", 3
 	"start";
 	for (; 1 && 2 || 3 ;)
 		"loop";
@@ -1047,76 +979,119 @@ function ForT1mixed1() {
 function ForT1mixed2() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2, 1 -LoopEnter-> "loop",
-		1 || 2 && 3 -LoopEnter-> "loop", 1 || 2 && 3 -LoopExit-> "end", 2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> 2 && 3,
-		2 -IfTrue-> 3, 3 --> 2 && 3
+		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
+		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 && 3 -LoopEnter-> "loop",
+		1 || 2 && 3 -LoopExit-> "end", 2 && 3 --> 1 || 2 && 3, 2 -IfTrue-> 3, 2 -LoopExit-> "end", 3 --> 2 && 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B8] -> [B16], B11: [B9] -> 3 -> [B13],
-		B12: [B9] -> [B13], B13: [B11|B12]2 && 3 -> 1 || 2 && 3[B14|B15], B14: [B13] -> [B16],
-		B15: [B13] -> [B20], B16: [B10|B14]"loop" -> 1 -> 2[B17|B18], B17: [B16] -> 3 -> [B19],
-		B18: [B16] -> [B19], B19: [B17|B18]2 && 3 -> 1 || 2 && 3 -> [B20], B1: [B0] -> 2[B3|B4],
-		B20: [B7|B15|B19]"end", B2: [B0] -> [B8], B3: [B1] -> 3 -> [B5], B4: [B1] -> [B5],
-		B5: [B3|B4]2 && 3 -> 1 || 2 && 3[B6|B7], B6: [B5] -> [B8], B7: [B5] -> [B20], B8: [B2|B6]"loop" -> 1[B9|B10],
-		B9: [B8] -> 2[B11|B12]
+		B0: "start" -> 1[B1|B2], B10: [B8] -> 3 -> 2 && 3 -> 1 || 2 && 3 ->  -> [B12],
+		B11: [B8] -> [B20], B12: [B9|B10][B13|B14], B13: [B12]"loop" -> 1[B15|B16], B14: [B12][B20],
+		B15: [B13] -> 2[B17|B18], B16: [B13] -> [B19], B17: [B15] -> 3 -> 2 && 3 -> 1 || 2 && 3 -> [B19],
+		B18: [B15] -> [B20], B19: [B16|B17][B20], B1: [B0] -> 2[B3|B4], B20: [B7|B11|B14|B18|B19]"end"[B21],
+		B21: [B4|B20], B2: [B0] ->  -> [B5], B3: [B1] -> 3 -> 2 && 3 -> 1 || 2 && 3 ->  -> [B5],
+		B4: [B1] -> "end"[B21], B5: [B2|B3][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5][B20],
+		B8: [B6] -> 2[B10|B11], B9: [B6] ->  -> [B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start"
+		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '3' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "loop", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 2 && 3, 3
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", "loop"
 	"start";
 	for (; 1 || 2 && 3 ;)
+		"loop";
+	"end";
+}
+
+function ForT1mixed3() {
+	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* BinaryLogicalExpression XPECT allEdges ---
+		"loop" -LoopRepeat-> 1, "start" --> 1, (1 || 2) && 3 -LoopEnter-> "loop",
+		(1 || 2) && 3 -LoopExit-> "end", (1 || 2) -IfTrue-> 3, (1 || 2) -LoopExit-> "end", 1 -IfFalse-> 2,
+		1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2, 3 --> (1 || 2) && 3
+	--- */
+	/* BinaryLogicalExpression XPECT allBranches ---
+		B0: "start" -> 1[B1|B2], B10: [B8] -> [B12], B11: [B8] -> [B20],
+		B12: [B9|B10]3 -> (1 || 2) && 3[B13|B14], B13: [B12] -> "loop" -> 1[B15|B16], B14: [B12] -> [B20],
+		B15: [B13] -> 2 -> 1 || 2 -> (1 || 2)[B17|B18], B16: [B13] -> [B19], B17: [B15] -> [B19], B18: [B15] -> [B20],
+		B19: [B16|B17]3 -> (1 || 2) && 3 -> [B20], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4], B20: [B4|B7|B11|B14|B18|B19]"end",
+		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B20], B5: [B2|B3]3 -> (1 || 2) && 3[B6|B7],
+		B6: [B5] -> "loop" -> 1[B8|B9], B7: [B5] -> [B20], B8: [B6] -> 2 -> 1 || 2 -> (1 || 2)[B10|B11],
+		B9: [B6] -> [B12]
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths ---
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end", "start" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end"
+	--- */
+	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start", "end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start", "end" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start", "end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start"
+	--- */
+	"start";
+	for (; (1 || 2) && 3 ;)
 		"loop";
 	"end";
 }
@@ -1135,23 +1110,21 @@ function WhileD1and() {
 		B9: [B7] -> 2 -> 1 && 2 -> [B11]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "start"
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", "loop"
 	"start";
 	while (1 && 2)
 		"loop";
@@ -1161,36 +1134,38 @@ function WhileD1and() {
 function WhileD1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2, 1 -LoopEnter-> "loop",
-		1 || 2 -LoopEnter-> "loop", 1 || 2 -LoopExit-> "end", 2 --> 1 || 2
+		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
+		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 -LoopEnter-> "loop",
+		1 || 2 -LoopExit-> "end", 2 --> 1 || 2
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B7|B8]"loop" -> 1 -> 2 -> 1 || 2 -> [B11],
-		B11: [B4|B9|B10]"end", B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B5], B3: [B1] -> [B5],
-		B4: [B1] -> [B11], B5: [B2|B3]"loop" -> 1[B6|B7], B6: [B5] -> 2 -> 1 || 2[B8|B9],
-		B7: [B5] -> [B10], B8: [B6] -> [B10], B9: [B6] -> [B11]
+		B0: "start" -> 1[B1|B2], B10: [B8][B14], B11: [B9] -> 2 -> 1 || 2 -> [B13],
+		B12: [B9] -> [B13], B13: [B11|B12][B14], B14: [B10|B13]"end"[B15], B15: [B5|B14],
+		B1: [B0] -> 2 -> 1 || 2 ->  -> [B3], B2: [B0] ->  -> [B3], B3: [B1|B2][B4|B5], B4: [B3]"loop" -> 1[B6|B7],
+		B5: [B3]"end"[B15], B6: [B4] -> 2 -> 1 || 2 ->  -> [B8], B7: [B4] ->  -> [B8], B8: [B6|B7][B9|B10],
+		B9: [B8]"loop" -> 1[B11|B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
 		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
 		"end" -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' notTo '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "loop", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 || 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
 	while (1 || 2)
 		"loop";
@@ -1229,13 +1204,6 @@ function WhileT1and() {
 		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
 	while (1 && 2 && 3)
 		"loop";
@@ -1245,44 +1213,87 @@ function WhileT1and() {
 function WhileT1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 && 3 -LoopEnter-> "loop",
-		1 && 2 && 3 -LoopExit-> "end", 1 && 2 -IfTrue-> 3, 1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2,
-		1 -LoopExit-> "end", 2 --> 1 && 2, 3 --> 1 && 2 && 3
+		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
+		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 -IfFalse-> 3,
+		1 || 2 -IfTrue|LoopEnter-> "loop", 1 || 2 -IfTrue|LoopExit-> "end", 1 || 2 || 3 -LoopEnter-> "loop",
+		1 || 2 || 3 -LoopExit-> "end", 2 --> 1 || 2, 3 --> 1 || 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B7] -> [B17], B11: [B9] -> "loop" -> 1[B13|B14],
-		B12: [B9] -> [B17], B13: [B11] -> 2 -> 1 && 2[B15|B16], B14: [B11] -> [B17],
-		B15: [B13] -> 3 -> 1 && 2 && 3 -> [B17], B16: [B13] -> [B17], B17: [B2|B4|B6|B8|B10|B12|B14|B15|B16]"end",
-		B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B17], B3: [B1] -> 3 -> 1 && 2 && 3[B5|B6], B4: [B1] -> [B17],
-		B5: [B3] -> "loop" -> 1[B7|B8], B6: [B3] -> [B17], B7: [B5] -> 2 -> 1 && 2[B9|B10], B8: [B5] -> [B17],
-		B9: [B7] -> 3 -> 1 && 2 && 3[B11|B12]
+		B0: "start" -> 1[B1|B2], B10: [B8] -> 3 -> 1 || 2 || 3 ->  -> [B12],
+		B11: [B8] ->  -> [B12], B12: [B9|B10|B11][B13|B14], B13: [B12]"loop" -> 1[B15|B16], B14: [B12][B20],
+		B15: [B13] -> 2 -> 1 || 2[B17|B18], B16: [B13] -> [B19], B17: [B15] -> 3 -> 1 || 2 || 3 -> [B19],
+		B18: [B15] -> [B19], B19: [B16|B17|B18][B20], B1: [B0] -> 2 -> 1 || 2[B3|B4],
+		B20: [B14|B19]"end"[B21], B21: [B7|B20], B2: [B0] ->  -> [B5], B3: [B1] -> 3 -> 1 || 2 || 3 ->  -> [B5],
+		B4: [B1] ->  -> [B5], B5: [B2|B3|B4][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5]"end"[B21],
+		B8: [B6] -> 2 -> 1 || 2[B10|B11], B9: [B6] ->  -> [B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
+		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "start"
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start", "end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
-	while (1 && 2 && 3)
+	while (1 || 2 || 3)
 		"loop";
 	"end";
 }
@@ -1291,106 +1302,92 @@ function WhileT1mixed1() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
 		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 -IfFalse-> 3,
-		1 && 2 -LoopEnter-> "loop", 1 && 2 || 3 -LoopEnter-> "loop", 1 && 2 || 3 -LoopExit-> "end",
-		1 -IfFalse-> 1 && 2, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
+		1 && 2 -IfTrue|LoopEnter-> "loop", 1 && 2 -IfTrue|LoopExit-> "end", 1 && 2 || 3 -LoopEnter-> "loop",
+		1 && 2 || 3 -LoopExit-> "end", 1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B8] -> [B11], B11: [B9|B10]1 && 2[B12|B13],
-		B12: [B11] -> 3 -> 1 && 2 || 3[B14|B15], B13: [B11] -> [B16], B14: [B12] -> [B16], B15: [B12] -> [B20],
-		B16: [B13|B14]"loop" -> 1[B17|B18], B17: [B16] -> 2 -> [B19], B18: [B16] -> [B19],
-		B19: [B17|B18]1 && 2 -> 3 -> 1 && 2 || 3 -> [B20], B1: [B0] -> 2 -> [B3], B20: [B7|B15|B19]"end", B2: [B0] -> [B3],
-		B3: [B1|B2]1 && 2[B4|B5], B4: [B3] -> 3 -> 1 && 2 || 3[B6|B7], B5: [B3] -> [B8], B6: [B4] -> [B8],
-		B7: [B4] -> [B20], B8: [B5|B6]"loop" -> 1[B9|B10], B9: [B8] -> 2 -> [B11]
+		B0: "start" -> 1[B1|B2], B10: [B7] -> [B13], B11: [B9] -> [B13],
+		B12: [B9] ->  -> [B14], B13: [B10|B11]3 -> 1 && 2 || 3 ->  -> [B14], B14: [B12|B13][B15|B16],
+		B15: [B14]"loop" -> 1[B17|B18], B16: [B14][B23], B17: [B15] -> 2 -> 1 && 2[B19|B20], B18: [B15] -> [B21],
+		B19: [B17] -> [B21], B1: [B0] -> 2 -> 1 && 2[B3|B4], B20: [B17] -> [B22],
+		B21: [B18|B19]3 -> 1 && 2 || 3 -> [B22], B22: [B20|B21][B23], B23: [B16|B22]"end"[B24], B24: [B8|B23], B2: [B0] -> [B5],
+		B3: [B1] -> [B5], B4: [B1] ->  -> [B6], B5: [B2|B3]3 -> 1 && 2 || 3 ->  -> [B6],
+		B6: [B4|B5][B7|B8], B7: [B6]"loop" -> 1[B9|B10], B8: [B6]"end"[B24],
+		B9: [B7] -> 2 -> 1 && 2[B11|B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
 		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end"
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
 		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "loop", 3
 	"start";
 	while (1 && 2 || 3)
 		"loop";
@@ -1400,76 +1397,123 @@ function WhileT1mixed1() {
 function WhileT1mixed2() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2, 1 -LoopEnter-> "loop",
-		1 || 2 && 3 -LoopEnter-> "loop", 1 || 2 && 3 -LoopExit-> "end", 2 && 3 --> 1 || 2 && 3, 2 -IfFalse-> 2 && 3,
-		2 -IfTrue-> 3, 3 --> 2 && 3
+		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2,
+		1 -IfTrue|LoopEnter-> "loop", 1 -IfTrue|LoopExit-> "end", 1 || 2 && 3 -LoopEnter-> "loop",
+		1 || 2 && 3 -LoopExit-> "end", 2 && 3 --> 1 || 2 && 3, 2 -IfTrue-> 3, 2 -LoopExit-> "end", 3 --> 2 && 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B8] -> [B16], B11: [B9] -> 3 -> [B13],
-		B12: [B9] -> [B13], B13: [B11|B12]2 && 3 -> 1 || 2 && 3[B14|B15], B14: [B13] -> [B16],
-		B15: [B13] -> [B20], B16: [B10|B14]"loop" -> 1 -> 2[B17|B18], B17: [B16] -> 3 -> [B19],
-		B18: [B16] -> [B19], B19: [B17|B18]2 && 3 -> 1 || 2 && 3 -> [B20], B1: [B0] -> 2[B3|B4],
-		B20: [B7|B15|B19]"end", B2: [B0] -> [B8], B3: [B1] -> 3 -> [B5], B4: [B1] -> [B5],
-		B5: [B3|B4]2 && 3 -> 1 || 2 && 3[B6|B7], B6: [B5] -> [B8], B7: [B5] -> [B20], B8: [B2|B6]"loop" -> 1[B9|B10],
-		B9: [B8] -> 2[B11|B12]
+		B0: "start" -> 1[B1|B2], B10: [B8] -> 3 -> 2 && 3 -> 1 || 2 && 3 ->  -> [B12],
+		B11: [B8] -> [B20], B12: [B9|B10][B13|B14], B13: [B12]"loop" -> 1[B15|B16], B14: [B12][B20],
+		B15: [B13] -> 2[B17|B18], B16: [B13] -> [B19], B17: [B15] -> 3 -> 2 && 3 -> 1 || 2 && 3 -> [B19],
+		B18: [B15] -> [B20], B19: [B16|B17][B20], B1: [B0] -> 2[B3|B4], B20: [B7|B11|B14|B18|B19]"end"[B21],
+		B21: [B4|B20], B2: [B0] ->  -> [B5], B3: [B1] -> 3 -> 2 && 3 -> 1 || 2 && 3 ->  -> [B5],
+		B4: [B1] -> "end"[B21], B5: [B2|B3][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5][B20],
+		B8: [B6] -> 2[B10|B11], B9: [B6] ->  -> [B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
+		"end" -> 1 -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start"
+		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start", "end" -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 1 -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '3' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "loop", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 2 && 3, 3
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", "loop"
 	"start";
 	while (1 || 2 && 3)
+		"loop";
+	"end";
+}
+
+function WhileT1mixed3() {
+	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* BinaryLogicalExpression XPECT allEdges ---
+		"loop" -LoopRepeat-> 1, "start" --> 1, (1 || 2) && 3 -LoopEnter-> "loop",
+		(1 || 2) && 3 -LoopExit-> "end", (1 || 2) -IfTrue-> 3, (1 || 2) -LoopExit-> "end", 1 -IfFalse-> 2,
+		1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2, 3 --> (1 || 2) && 3
+	--- */
+	/* BinaryLogicalExpression XPECT allBranches ---
+		B0: "start" -> 1[B1|B2], B10: [B8] -> [B12], B11: [B8] -> [B20],
+		B12: [B9|B10]3 -> (1 || 2) && 3[B13|B14], B13: [B12] -> "loop" -> 1[B15|B16], B14: [B12] -> [B20],
+		B15: [B13] -> 2 -> 1 || 2 -> (1 || 2)[B17|B18], B16: [B13] -> [B19], B17: [B15] -> [B19], B18: [B15] -> [B20],
+		B19: [B16|B17]3 -> (1 || 2) && 3 -> [B20], B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4], B20: [B4|B7|B11|B14|B18|B19]"end",
+		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B20], B5: [B2|B3]3 -> (1 || 2) && 3[B6|B7],
+		B6: [B5] -> "loop" -> 1[B8|B9], B7: [B5] -> [B20], B8: [B6] -> 2 -> 1 || 2 -> (1 || 2)[B10|B11],
+		B9: [B6] -> [B12]
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths ---
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end"
+	--- */
+	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "start"
+	--- */
+	"start";
+	while ((1 || 2) && 3)
 		"loop";
 	"end";
 }
@@ -1479,356 +1523,213 @@ function WhileT1mixed2() {
 function DoWhileD1and() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 -LoopEnter-> "loop",
-		1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2, 1 -LoopExit-> "end", 2 --> 1 && 2
+		"loop" --> 1, "start" --> "loop", 1 && 2 -LoopExit-> "end",
+		1 && 2 -LoopReenter-> "loop", 1 -IfTrue-> 2, 1 -LoopExit-> "end", 2 --> 1 && 2
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B7] -> [B11], B11: [B2|B4|B6|B8|B9|B10]"end",
-		B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B11], B3: [B1] -> "loop" -> 1[B5|B6], B4: [B1] -> [B11],
-		B5: [B3] -> 2 -> 1 && 2[B7|B8], B6: [B3] -> [B11], B7: [B5] -> "loop" -> 1[B9|B10], B8: [B5] -> [B11],
-		B9: [B7] -> 2 -> 1 && 2 -> [B11]
+		B0: "start" -> "loop" -> 1[B1|B2], B1: [B0] -> 2 -> 1 && 2[B3|B4],
+		B2: [B0] -> [B7], B3: [B1] -> "loop" -> 1[B5|B6], B4: [B1] -> [B7],
+		B5: [B3] -> 2 -> 1 && 2 -> [B7], B6: [B3] -> [B7], B7: [B2|B4|B5|B6]"end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end"
+		"start" -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "start"
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 -> "loop" -> "start",
+		"end" -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", "loop"
 	"start";
-	while (1 && 2)
+	do
 		"loop";
+	while (1 && 2)
 	"end";
 }
 
 function DoWhileD1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 -IfFalse-> 2, 1 -LoopEnter-> "loop",
-		1 || 2 -LoopEnter-> "loop", 1 || 2 -LoopExit-> "end", 2 --> 1 || 2
+		"loop" --> 1, "start" --> "loop", 1 -IfFalse-> 2, 1 -IfTrue|LoopExit-> "end",
+		1 -IfTrue|LoopReenter-> "loop", 1 || 2 -LoopExit-> "end", 1 || 2 -LoopReenter-> "loop", 2 --> 1 || 2
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B7|B8]"loop" -> 1 -> 2 -> 1 || 2 -> [B11],
-		B11: [B4|B9|B10]"end", B1: [B0] -> 2 -> 1 || 2[B3|B4], B2: [B0] -> [B5], B3: [B1] -> [B5],
-		B4: [B1] -> [B11], B5: [B2|B3]"loop" -> 1[B6|B7], B6: [B5] -> 2 -> 1 || 2[B8|B9],
-		B7: [B5] -> [B10], B8: [B6] -> [B10], B9: [B6] -> [B11]
+		B0: "start" -> "loop" -> 1[B1|B2], B1: [B0] -> 2 -> 1 || 2 ->  -> [B3],
+		B2: [B0] ->  -> [B3], B3: [B1|B2][B4|B5], B4: [B3]"loop" -> 1[B6|B7], B5: [B3][B9],
+		B6: [B4] -> 2 -> 1 || 2 -> [B8], B7: [B4] -> [B8], B8: [B6|B7][B9], B9: [B5|B8]"end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
-		"start" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
-		"start" -> 1 -> 2 -> 1 || 2 -> "end",
-		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
-		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
-		"start" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end"
+		"start" -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "start",
-		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "start",
-		"end" -> 1 || 2 -> 2 -> 1 -> "start"
+		"end" -> 1 -> "loop" -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> "start", "end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' notTo '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "loop", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 || 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
-	while (1 || 2)
+	do
 		"loop";
+	while (1 || 2)
 	"end";
 }
 
 function DoWhileT1and() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 && 3 -LoopEnter-> "loop",
-		1 && 2 && 3 -LoopExit-> "end", 1 && 2 -IfTrue-> 3, 1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2,
+		"loop" --> 1, "start" --> "loop", 1 && 2 && 3 -LoopExit-> "end",
+		1 && 2 && 3 -LoopReenter-> "loop", 1 && 2 -IfTrue-> 3, 1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2,
 		1 -LoopExit-> "end", 2 --> 1 && 2, 3 --> 1 && 2 && 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B7] -> [B17], B11: [B9] -> "loop" -> 1[B13|B14],
-		B12: [B9] -> [B17], B13: [B11] -> 2 -> 1 && 2[B15|B16], B14: [B11] -> [B17],
-		B15: [B13] -> 3 -> 1 && 2 && 3 -> [B17], B16: [B13] -> [B17], B17: [B2|B4|B6|B8|B10|B12|B14|B15|B16]"end",
-		B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B17], B3: [B1] -> 3 -> 1 && 2 && 3[B5|B6], B4: [B1] -> [B17],
-		B5: [B3] -> "loop" -> 1[B7|B8], B6: [B3] -> [B17], B7: [B5] -> 2 -> 1 && 2[B9|B10], B8: [B5] -> [B17],
-		B9: [B7] -> 3 -> 1 && 2 && 3[B11|B12]
+		B0: "start" -> "loop" -> 1[B1|B2], B10: [B7] -> [B11],
+		B11: [B2|B4|B6|B8|B9|B10]"end", B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B11],
+		B3: [B1] -> 3 -> 1 && 2 && 3[B5|B6], B4: [B1] -> [B11], B5: [B3] -> "loop" -> 1[B7|B8], B6: [B3] -> [B11],
+		B7: [B5] -> 2 -> 1 && 2[B9|B10], B8: [B5] -> [B11], B9: [B7] -> 3 -> 1 && 2 && 3 -> [B11]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
+		"start" -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "start"
+		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 -> "loop" -> "start",
+		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
-	while (1 && 2 && 3)
+	do
 		"loop";
+	while (1 && 2 && 3)
 	"end";
 }
 
 function DoWhileT1or() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 && 3 -LoopEnter-> "loop",
-		1 && 2 && 3 -LoopExit-> "end", 1 && 2 -IfTrue-> 3, 1 && 2 -LoopExit-> "end", 1 -IfTrue-> 2,
-		1 -LoopExit-> "end", 2 --> 1 && 2, 3 --> 1 && 2 && 3
+		"loop" --> 1, "start" --> "loop", 1 -IfFalse-> 2, 1 -IfTrue|LoopExit-> "end",
+		1 -IfTrue|LoopReenter-> "loop", 1 || 2 -IfFalse-> 3, 1 || 2 -IfTrue|LoopExit-> "end",
+		1 || 2 -IfTrue|LoopReenter-> "loop", 1 || 2 || 3 -LoopExit-> "end", 1 || 2 || 3 -LoopReenter-> "loop", 2 --> 1 || 2,
+		3 --> 1 || 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B7] -> [B17], B11: [B9] -> "loop" -> 1[B13|B14],
-		B12: [B9] -> [B17], B13: [B11] -> 2 -> 1 && 2[B15|B16], B14: [B11] -> [B17],
-		B15: [B13] -> 3 -> 1 && 2 && 3 -> [B17], B16: [B13] -> [B17], B17: [B2|B4|B6|B8|B10|B12|B14|B15|B16]"end",
-		B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B17], B3: [B1] -> 3 -> 1 && 2 && 3[B5|B6], B4: [B1] -> [B17],
-		B5: [B3] -> "loop" -> 1[B7|B8], B6: [B3] -> [B17], B7: [B5] -> 2 -> 1 && 2[B9|B10], B8: [B5] -> [B17],
-		B9: [B7] -> 3 -> 1 && 2 && 3[B11|B12]
+		B0: "start" -> "loop" -> 1[B1|B2], B10: [B8] -> 3 -> 1 || 2 || 3 -> [B12],
+		B11: [B8] -> [B12], B12: [B9|B10|B11][B13], B13: [B7|B12]"end", B1: [B0] -> 2 -> 1 || 2[B3|B4],
+		B2: [B0] ->  -> [B5], B3: [B1] -> 3 -> 1 || 2 || 3 ->  -> [B5], B4: [B1] ->  -> [B5],
+		B5: [B2|B3|B4][B6|B7], B6: [B5]"loop" -> 1[B8|B9], B7: [B5][B13], B8: [B6] -> 2 -> 1 || 2[B10|B11],
+		B9: [B6] -> [B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 && 3 -> "end"
+		"start" -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> 3 -> 1 || 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "loop" -> 1 && 2 && 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 -> "start"
+		"end" -> 1 -> "loop" -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> "start", "end" -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> "start", "end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> 1 || 2 || 3 -> 3 -> 1 || 2 -> 2 -> 1 -> "loop" -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> "end", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end", 3
 	"start";
-	while (1 && 2 && 3)
+	do
 		"loop";
+	while (1 || 2 || 3)
 	"end";
 }
 
 function DoWhileT1mixed1() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" -LoopRepeat-> 1, "start" --> 1, 1 && 2 -IfFalse-> 3,
-		1 && 2 -LoopEnter-> "loop", 1 && 2 || 3 -LoopEnter-> "loop", 1 && 2 || 3 -LoopExit-> "end",
-		1 -IfFalse-> 1 && 2, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
+		"loop" --> 1, "start" --> "loop", 1 && 2 -IfFalse-> 3,
+		1 && 2 -IfTrue|LoopExit-> "end", 1 && 2 -IfTrue|LoopReenter-> "loop", 1 && 2 || 3 -LoopExit-> "end",
+		1 && 2 || 3 -LoopReenter-> "loop", 1 -IfFalse-> 3, 1 -IfTrue-> 2, 2 --> 1 && 2, 3 --> 1 && 2 || 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B10: [B8] -> [B11], B11: [B9|B10]1 && 2[B12|B13],
-		B12: [B11] -> 3 -> 1 && 2 || 3[B14|B15], B13: [B11] -> [B16], B14: [B12] -> [B16], B15: [B12] -> [B20],
-		B16: [B13|B14]"loop" -> 1[B17|B18], B17: [B16] -> 2 -> [B19], B18: [B16] -> [B19],
-		B19: [B17|B18]1 && 2 -> 3 -> 1 && 2 || 3 -> [B20], B1: [B0] -> 2 -> [B3], B20: [B7|B15|B19]"end", B2: [B0] -> [B3],
-		B3: [B1|B2]1 && 2[B4|B5], B4: [B3] -> 3 -> 1 && 2 || 3[B6|B7], B5: [B3] -> [B8], B6: [B4] -> [B8],
-		B7: [B4] -> [B20], B8: [B5|B6]"loop" -> 1[B9|B10], B9: [B8] -> 2 -> [B11]
+		B0: "start" -> "loop" -> 1[B1|B2], B10: [B7] -> [B13], B11: [B9] -> [B13],
+		B12: [B9] -> [B14], B13: [B10|B11]3 -> 1 && 2 || 3 -> [B14], B14: [B12|B13][B15],
+		B15: [B8|B14]"end", B1: [B0] -> 2 -> 1 && 2[B3|B4], B2: [B0] -> [B5], B3: [B1] -> [B5],
+		B4: [B1] ->  -> [B6], B5: [B2|B3]3 -> 1 && 2 || 3 ->  -> [B6], B6: [B4|B5][B7|B8],
+		B7: [B6]"loop" -> 1[B9|B10], B8: [B6][B15], B9: [B7] -> 2 -> 1 && 2[B11|B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end", "start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
-		"start" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end"
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end", "start" -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> "end",
+		"start" -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 2 -> 1 && 2 -> 3 -> 1 && 2 || 3 -> "end",
+		"start" -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "loop" -> 1 -> 3 -> 1 && 2 || 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start",
-		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "start"
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> "start", "end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 && 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> 1 && 2 || 3 -> 3 -> 1 -> "loop" -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
-	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "loop", 3
 	"start";
-	while (1 && 2 || 3)
+	do
 		"loop";
+	while (1 && 2 || 3)
 	"end";
 }
 
 function DoWhileT1mixed2() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
 	/* BinaryLogicalExpression XPECT allEdges ---
-		"loop" --> 1,
-		"start" --> "loop",
-		1 -IfFalse-> 2, 1 -LoopReenter-> "loop",
-		1 || 2 && 3 -LoopExit-> "end",
-		1 || 2 && 3 -LoopReenter-> "loop",
-		2 && 3 --> 1 || 2 && 3,
-		2 -IfFalse-> 2 && 3,
-		2 -IfTrue-> 3, 3 --> 2 && 3
+		"loop" --> 1, "start" --> "loop", 1 -IfFalse-> 2, 1 -IfTrue|LoopExit-> "end",
+		1 -IfTrue|LoopReenter-> "loop", 1 || 2 && 3 -LoopExit-> "end", 1 || 2 && 3 -LoopReenter-> "loop",
+		2 && 3 --> 1 || 2 && 3, 2 -IfTrue-> 3, 2 -LoopExit-> "end", 3 --> 2 && 3
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
 		B0: "start" -> "loop" -> 1[B1|B2],
-		B10: [B7] -> [B11],
-		B11: [B9|B10]2 && 3 -> 1 || 2 && 3 -> [B12],
-		B12: [B8|B11]"end",
-		B1: [B0] -> "loop" -> 1 -> [B3],
-		B2: [B0] -> [B3],
-		B3: [B1|B2]2[B4|B5],
-		B4: [B3] -> 3 -> [B6],
-		B5: [B3] -> [B6],
-		B6: [B4|B5]2 && 3 -> 1 || 2 && 3[B7|B8],
-		B7: [B6] -> "loop" -> 1 -> 2[B9|B10],
-		B8: [B6] -> [B12],
-		B9: [B7] -> 3 -> [B11]
+		B10: [B8] -> 3 -> 2 && 3 -> 1 || 2 && 3 -> [B12], B11: [B8] -> [B13], B12: [B9|B10][B13], B13: [B7|B11|B12]"end"[B14],
+		B14: [B4|B13], B1: [B0] -> 2[B3|B4], B2: [B0] ->  -> [B5],
+		B3: [B1] -> 3 -> 2 && 3 -> 1 || 2 && 3 ->  -> [B5], B4: [B1] -> "end"[B14], B5: [B2|B3][B6|B7], B6: [B5]"loop" -> 1[B8|B9],
+		B7: [B5][B13], B8: [B6] -> 2[B10|B11], B9: [B6] -> [B12]
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---
-		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> "loop" -> 1 -> "end", "start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> "end",
+		"start" -> "loop" -> 1 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end", "start" -> "loop" -> 1 -> 2 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end",
-		"start" -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 2 && 3 -> 1 || 2 && 3 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> "end",
 		"start" -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "loop" -> 1 -> 2 -> 3 -> 2 && 3 -> 1 || 2 && 3 -> "end"
 	--- */
 	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 1 -> "loop" -> "start",
+		"end" -> 1 -> "loop" -> 1 -> "loop" -> "start",
+		"end" -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start", "end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start",
 		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 -> "loop" -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 2 -> 1 -> "loop" -> "start",
-		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start"
+		"end" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start", "end" -> 2 -> 1 -> "loop" -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 -> "loop" -> "start",
+		"end" -> 2 -> 1 -> "loop" -> 1 || 2 && 3 -> 2 && 3 -> 3 -> 2 -> 1 -> "loop" -> "start"
 	--- */
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '3' -->
-	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
-	// BinaryLogicalExpression XPECT succs at '"start"' --> "loop"
-	// BinaryLogicalExpression XPECT succs at '1' --> "loop", 2
-	// BinaryLogicalExpression XPECT succs at '2' --> 2 && 3, 3
-	// BinaryLogicalExpression XPECT succs at '2 && 3' --> 1 || 2 && 3
 	"start";
 	do
 		"loop";
@@ -1836,3 +1737,45 @@ function DoWhileT1mixed2() {
 	"end";
 }
 
+function DoWhileT1mixed3() {
+	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* BinaryLogicalExpression XPECT allEdges ---
+		"loop" --> 1, "start" --> "loop", (1 || 2) && 3 -LoopExit-> "end",
+		(1 || 2) && 3 -LoopReenter-> "loop", (1 || 2) -IfTrue-> 3, (1 || 2) -LoopExit-> "end", 1 -IfFalse-> 2,
+		1 -IfTrue-> 3, 1 || 2 --> (1 || 2), 2 --> 1 || 2, 3 --> (1 || 2) && 3
+	--- */
+	/* BinaryLogicalExpression XPECT allBranches ---
+		B0: "start" -> "loop" -> 1[B1|B2], B10: [B8] -> [B12], B11: [B8] -> [B13],
+		B12: [B9|B10]3 -> (1 || 2) && 3 -> [B13], B13: [B4|B7|B11|B12]"end", B1: [B0] -> 2 -> 1 || 2 -> (1 || 2)[B3|B4],
+		B2: [B0] -> [B5], B3: [B1] -> [B5], B4: [B1] -> [B13], B5: [B2|B3]3 -> (1 || 2) && 3[B6|B7],
+		B6: [B5] -> "loop" -> 1[B8|B9], B7: [B5] -> [B13], B8: [B6] -> 2 -> 1 || 2 -> (1 || 2)[B10|B11],
+		B9: [B6] -> [B12]
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths ---
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> "end",
+		"start" -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 2 -> 1 || 2 -> (1 || 2) -> 3 -> (1 || 2) && 3 -> "end",
+		"start" -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "loop" -> 1 -> 3 -> (1 || 2) && 3 -> "end"
+	--- */
+	/* BinaryLogicalExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> "start",
+		"end" -> (1 || 2) -> 1 || 2 -> 2 -> 1 -> "loop" -> (1 || 2) && 3 -> 3 -> 1 -> "loop" -> "start"
+	--- */
+	"start";
+	do
+		"loop";
+	while ((1 || 2) && 3)
+	"end";
+}
