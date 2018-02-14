@@ -21,6 +21,7 @@ export external public class ~NodeURL {
     public hash?: string;
     public auth?: string;
     public slashes?: boolean;
+    public query?: Object+;
 
     public username?: string;
     public password?: string;
