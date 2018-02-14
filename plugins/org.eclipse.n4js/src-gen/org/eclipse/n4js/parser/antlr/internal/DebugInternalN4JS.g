@@ -120,6 +120,7 @@ ruleAnnotatedScriptElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
+			ruleVersionDeclaration?
 			ruleTypeVariables?
 			ruleClassExtendsClause?
 			    |
@@ -129,6 +130,7 @@ ruleAnnotatedScriptElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
+			ruleVersionDeclaration?
 			ruleTypeVariables?
 			ruleInterfaceImplementsList?
 		)

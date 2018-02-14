@@ -275,10 +275,13 @@ ruleAnnotatedScriptElement
 						)
 					)
 					(
-						TypeVariablesParserRuleCall_1_3_0_0_5=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_0_5.start, $TypeVariablesParserRuleCall_1_3_0_0_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_0_5()); }
+						VersionDeclarationParserRuleCall_1_3_0_0_5=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_1_3_0_0_5.start, $VersionDeclarationParserRuleCall_1_3_0_0_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getVersionDeclarationParserRuleCall_1_3_0_0_5()); }
 					)?
 					(
-						ClassExtendsClauseParserRuleCall_1_3_0_0_6=ruleClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_1_3_0_0_6.start, $ClassExtendsClauseParserRuleCall_1_3_0_0_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getClassExtendsClauseParserRuleCall_1_3_0_0_6()); }
+						TypeVariablesParserRuleCall_1_3_0_0_6=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_0_6.start, $TypeVariablesParserRuleCall_1_3_0_0_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_0_6()); }
+					)?
+					(
+						ClassExtendsClauseParserRuleCall_1_3_0_0_7=ruleClassExtendsClause{ announce($ClassExtendsClauseParserRuleCall_1_3_0_0_7.start, $ClassExtendsClauseParserRuleCall_1_3_0_0_7.stop, grammarAccess.getAnnotatedScriptElementAccess().getClassExtendsClauseParserRuleCall_1_3_0_0_7()); }
 					)?
 				)
 				    |
@@ -307,10 +310,13 @@ ruleAnnotatedScriptElement
 						)
 					)
 					(
-						TypeVariablesParserRuleCall_1_3_0_1_5=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_1_5.start, $TypeVariablesParserRuleCall_1_3_0_1_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_1_5()); }
+						VersionDeclarationParserRuleCall_1_3_0_1_5=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_1_3_0_1_5.start, $VersionDeclarationParserRuleCall_1_3_0_1_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getVersionDeclarationParserRuleCall_1_3_0_1_5()); }
 					)?
 					(
-						InterfaceImplementsListParserRuleCall_1_3_0_1_6=ruleInterfaceImplementsList{ announce($InterfaceImplementsListParserRuleCall_1_3_0_1_6.start, $InterfaceImplementsListParserRuleCall_1_3_0_1_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getInterfaceImplementsListParserRuleCall_1_3_0_1_6()); }
+						TypeVariablesParserRuleCall_1_3_0_1_6=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_1_6.start, $TypeVariablesParserRuleCall_1_3_0_1_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_1_6()); }
+					)?
+					(
+						InterfaceImplementsListParserRuleCall_1_3_0_1_7=ruleInterfaceImplementsList{ announce($InterfaceImplementsListParserRuleCall_1_3_0_1_7.start, $InterfaceImplementsListParserRuleCall_1_3_0_1_7.stop, grammarAccess.getAnnotatedScriptElementAccess().getInterfaceImplementsListParserRuleCall_1_3_0_1_7()); }
 					)?
 				)
 			)

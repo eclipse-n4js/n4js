@@ -82,11 +82,14 @@ AnnotatedScriptElement returns ScriptElement:
 				(declaredModifiers+=N4Modifier)*
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
+				VersionDeclaration?
 				TypeVariables?
 				ClassExtendsClause<Yield=false>?
 			|   {N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
-				'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false>
+				'interface' typingStrategy=TypingStrategyDefSiteOperator?
+				name=BindingIdentifier<Yield=false>
+				VersionDeclaration?
 				TypeVariables?
 				InterfaceImplementsList?
 			)
