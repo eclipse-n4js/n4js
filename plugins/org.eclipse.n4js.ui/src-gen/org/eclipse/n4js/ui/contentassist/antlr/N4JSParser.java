@@ -97,7 +97,9 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getTypeRefForCastAccess().getAlternatives(), "rule__TypeRefForCast__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeReferenceNameAccess().getAlternatives(), "rule__TypeReferenceName__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getQualifiedTypeReferenceNameAccess().getAlternatives_1_1(), "rule__QualifiedTypeReferenceName__Alternatives_1_1");
+			nameMappingsBuilder.put(grammarAccess.getClassExtendsImplementsAccess().getAlternatives(), "rule__ClassExtendsImplements__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getClassExtendsClauseAccess().getAlternatives_1(), "rule__ClassExtendsClause__Alternatives_1");
+			nameMappingsBuilder.put(grammarAccess.getInterfaceExtendsListAccess().getAlternatives_0(), "rule__InterfaceExtendsList__Alternatives_0");
 			nameMappingsBuilder.put(grammarAccess.getN4MemberDeclarationAccess().getAlternatives(), "rule__N4MemberDeclaration__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1_2_0_0_4(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1_2_0_0_4");
@@ -452,6 +454,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getN4ClassDeclarationAccess().getGroup_0(), "rule__N4ClassDeclaration__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getN4ClassDeclarationAccess().getGroup_0_0(), "rule__N4ClassDeclaration__Group_0_0__0");
 			nameMappingsBuilder.put(grammarAccess.getMembersAccess().getGroup(), "rule__Members__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getClassExtendsImplementsAccess().getGroup_0(), "rule__ClassExtendsImplements__Group_0__0");
+			nameMappingsBuilder.put(grammarAccess.getClassExtendsImplementsAccess().getGroup_1(), "rule__ClassExtendsImplements__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getClassExtendsClauseAccess().getGroup(), "rule__ClassExtendsClause__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getClassImplementsListAccess().getGroup(), "rule__ClassImplementsList__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getClassImplementsListAccess().getGroup_2(), "rule__ClassImplementsList__Group_2__0");

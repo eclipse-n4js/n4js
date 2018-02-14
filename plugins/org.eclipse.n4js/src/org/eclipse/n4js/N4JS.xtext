@@ -83,8 +83,7 @@ AnnotatedScriptElement returns ScriptElement:
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
 				TypeVariables?
-				ClassExtendsClause<Yield=false>?
-				ClassImplementsList?
+				ClassExtendsImplements<Yield=false>?
 			|   {N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false>
@@ -162,8 +161,7 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield>
 				TypeVariables?
-				ClassExtendsClause<Yield>?
-				ClassImplementsList?
+				ClassExtendsImplements<Yield>?
 			|	{N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				('interface') typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
@@ -315,8 +313,7 @@ AnnotatedExpression <Yield> returns Expression:
 	ExpressionAnnotationList (
 		{N4ClassExpression.annotationList=current}
 		'class' name=BindingIdentifier<Yield>?
-		ClassExtendsClause<Yield>?
-		ClassImplementsList?
+		ClassExtendsImplements<Yield>?
 		Members<Yield>
 	|	{FunctionExpression.annotationList=current} AsyncNoTrailingLineBreak
 		FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>
@@ -1242,8 +1239,7 @@ N4ClassDeclaration <Yield>:
 		VersionDeclaration?
 	)
 	TypeVariables?
-	ClassExtendsClause<Yield>?
-	ClassImplementsList?
+	ClassExtendsImplements<Yield>?
 	Members<Yield>
 ;
 
@@ -1251,6 +1247,12 @@ fragment Members <Yield>*:
 	'{'
 	ownedMembersRaw+=N4MemberDeclaration<Yield>*
 	'}'
+;
+
+// we allow incorrect order of 'extends' and 'implements'; a validation will ensure the correct order
+fragment ClassExtendsImplements <Yield>*:
+	  (ClassExtendsClause<Yield> ClassImplementsList?)
+	| (ClassImplementsList ClassExtendsClause<Yield>?)
 ;
 
 fragment ClassExtendsClause <Yield>*:
@@ -1268,8 +1270,7 @@ fragment ClassImplementsList*:
 N4ClassExpression <Yield>:
 	{N4ClassExpression}
 	'class' name=BindingIdentifier<Yield>?
-	ClassExtendsClause<Yield>?
-	ClassImplementsList?
+	ClassExtendsImplements<Yield>?
 	Members<Yield>;
 
 // cf. N4JSSpec §16
@@ -1285,8 +1286,9 @@ N4InterfaceDeclaration <Yield>:
 	Members<Yield>
 ;
 
+// we allow both 'extends' and 'implements' here, a validation will ensure 'extends' is used
 fragment InterfaceExtendsList*:
-	'extends' superInterfaceRefs+=ParameterizedTypeRefNominal
+	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal
 	(',' superInterfaceRefs+=ParameterizedTypeRefNominal)*
 ;
 

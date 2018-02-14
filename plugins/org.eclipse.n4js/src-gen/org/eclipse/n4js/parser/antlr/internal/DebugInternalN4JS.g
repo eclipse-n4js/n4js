@@ -121,8 +121,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleClassExtendsClause?
-			ruleClassImplementsList?
+			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
 			*
@@ -317,8 +316,7 @@ ruleAnnotatedExportableElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleClassExtendsClause?
-			ruleClassImplementsList?
+			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
 			*
@@ -968,8 +966,7 @@ ruleAnnotatedExpression:
 		'class'
 		ruleBindingIdentifier
 		?
-		ruleClassExtendsClause?
-		ruleClassImplementsList?
+		ruleClassExtendsImplements?
 		ruleMembers
 		    |
 		ruleAsyncNoTrailingLineBreak
@@ -984,8 +981,7 @@ norm1_AnnotatedExpression:
 		'class'
 		norm1_BindingIdentifier
 		?
-		norm1_ClassExtendsClause?
-		ruleClassImplementsList?
+		norm1_ClassExtendsImplements?
 		norm1_Members
 		    |
 		ruleAsyncNoTrailingLineBreak
@@ -6286,8 +6282,7 @@ ruleN4ClassDeclaration:
 		ruleVersionDeclaration?
 	)
 	ruleTypeVariables?
-	ruleClassExtendsClause?
-	ruleClassImplementsList?
+	ruleClassExtendsImplements?
 	ruleMembers
 ;
 
@@ -6305,6 +6300,28 @@ norm1_Members:
 	norm1_N4MemberDeclaration
 	*
 	'}'
+;
+
+// Rule ClassExtendsImplements
+ruleClassExtendsImplements:
+	(
+		ruleClassExtendsClause
+		ruleClassImplementsList?
+		    |
+		ruleClassImplementsList
+		ruleClassExtendsClause?
+	)
+;
+
+// Rule ClassExtendsImplements
+norm1_ClassExtendsImplements:
+	(
+		norm1_ClassExtendsClause
+		ruleClassImplementsList?
+		    |
+		ruleClassImplementsList
+		norm1_ClassExtendsClause?
+	)
 ;
 
 // Rule ClassExtendsClause
@@ -6350,8 +6367,7 @@ ruleN4ClassExpression:
 	'class'
 	ruleBindingIdentifier
 	?
-	ruleClassExtendsClause?
-	ruleClassImplementsList?
+	ruleClassExtendsImplements?
 	ruleMembers
 ;
 
@@ -6360,8 +6376,7 @@ norm1_N4ClassExpression:
 	'class'
 	norm1_BindingIdentifier
 	?
-	norm1_ClassExtendsClause?
-	ruleClassImplementsList?
+	norm1_ClassExtendsImplements?
 	norm1_Members
 ;
 
@@ -6393,7 +6408,11 @@ ruleN4InterfaceDeclaration:
 
 // Rule InterfaceExtendsList
 ruleInterfaceExtendsList:
-	'extends'
+	(
+		'extends'
+		    |
+		'implements'
+	)
 	ruleParameterizedTypeRefNominal
 	(
 		','

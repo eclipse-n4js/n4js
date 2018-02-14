@@ -10,14 +10,14 @@
  */
 package org.eclipse.n4js.validation.validators;
 
+import static org.eclipse.n4js.N4JSLanguageConstants.EXTENDS_KEYWORD;
+import static org.eclipse.n4js.N4JSLanguageConstants.IMPLEMENTS_KEYWORD;
 import static org.eclipse.n4js.validation.IssueCodes.AST_CATCH_VAR_TYPED;
 import static org.eclipse.n4js.validation.IssueCodes.SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForAST_CATCH_VAR_TYPED;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForSYN_KW_EXTENDS_IMPLEMENTS_WRONG_ORDER;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -168,8 +168,10 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	public void checkClassDefinition(N4ClassDefinition n4ClassDefinition) {
+		holdsCorrectOrderOfExtendsImplements(n4ClassDefinition);
+
 		ICompositeNode node = NodeModelUtils.findActualNodeFor(n4ClassDefinition);
-		ILeafNode keywordNode = findSecondLeafWithKeyword(n4ClassDefinition, "{", node, "extends", false);
+		ILeafNode keywordNode = findSecondLeafWithKeyword(n4ClassDefinition, "{", node, EXTENDS_KEYWORD, false);
 		if (keywordNode != null) {
 			TClass tclass = n4ClassDefinition.getDefinedTypeAsClass();
 			if (tclass == null) {
@@ -183,7 +185,7 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 				String message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(
 						validatorMessageHelper.description(tclass), "extend",
 						"interface" + (interfaces.size() > 1 ? "s " : " ") + validatorMessageHelper.names(interfaces),
-						"implements");
+						IMPLEMENTS_KEYWORD);
 				addIssue(message, n4ClassDefinition, keywordNode.getTotalOffset(),
 						keywordNode.getLength(), SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP);
 			}
@@ -204,11 +206,10 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	public void checkInterfaceDeclaration(N4InterfaceDeclaration n4InterfaceDecl) {
-
 		ICompositeNode node = NodeModelUtils.findActualNodeFor(n4InterfaceDecl);
 		ILeafNode keywordNode;
 
-		keywordNode = findLeafWithKeyword(n4InterfaceDecl, "{", node, "implements", false);
+		keywordNode = findLeafWithKeyword(n4InterfaceDecl, "{", node, IMPLEMENTS_KEYWORD, false);
 		if (keywordNode != null) {
 			TInterface tinterface = n4InterfaceDecl.getDefinedTypeAsInterface();
 			if (tinterface == null) {
@@ -231,14 +232,38 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 						.collect(Collectors.toList());
 				String message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(
 						validatorMessageHelper.description(tinterface), "implement",
-						"interface" + (interfaces.size() > 1 ? "s" : "") + validatorMessageHelper.names(interfaces),
-						"extends");
+						"interface" + (interfaces.size() > 1 ? "s " : " ") + validatorMessageHelper.names(interfaces),
+						EXTENDS_KEYWORD);
 				addIssue(message, n4InterfaceDecl, keywordNode.getTotalOffset(),
 						keywordNode.getLength(), SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP);
 			}
 
 		}
 
+	}
+
+	private boolean holdsCorrectOrderOfExtendsImplements(N4ClassDefinition semanticElement) {
+		if (semanticElement.getSuperClassRef() == null || semanticElement.getImplementedInterfaceRefs().isEmpty()) {
+			return true;
+		}
+		ICompositeNode node = NodeModelUtils.findActualNodeFor(semanticElement);
+		if (node == null) {
+			return true;
+		}
+		ILeafNode extendsNode = findLeafWithKeyword(semanticElement, "{", node, EXTENDS_KEYWORD, false);
+		ILeafNode implementsNode = findLeafWithKeyword(semanticElement, "{", node, IMPLEMENTS_KEYWORD, false);
+		if (extendsNode == null || implementsNode == null) {
+			return true;
+		}
+		int extendsOffset = extendsNode.getOffset();
+		int implementsOffset = implementsNode.getOffset();
+		if (extendsOffset > implementsOffset) {
+			String message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_WRONG_ORDER();
+			addIssue(message, semanticElement, extendsOffset, EXTENDS_KEYWORD.length(),
+					IssueCodes.SYN_KW_EXTENDS_IMPLEMENTS_WRONG_ORDER);
+			return false;
+		}
+		return true;
 	}
 
 	private ILeafNode findLeafWithKeyword(EObject semanticElement, String stopAtKeyword, ICompositeNode node,
@@ -300,48 +325,6 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Returns nodes which represent keywords and specified in keywords.
-	 *
-	 * @param keywords
-	 *            keywords in natural order used in Arrays#s
-	 */
-	protected List<ILeafNode> filterLeafsWithKeywordInsteadOfComma(EObject semanticElement, String stopAtKeyword,
-			ICompositeNode node,
-			final String... keywords) {
-		List<ILeafNode> filteredLeaves = null;
-		for (BidiTreeIterator<INode> iter = node.getAsTreeIterable().iterator(); iter.hasNext();) {
-			INode child = iter.next();
-			EObject childSemElement = child.getSemanticElement();
-			if (child != node && childSemElement != null && childSemElement != semanticElement) {
-				iter.prune();
-			} else if (child instanceof ILeafNode) {
-				ILeafNode leaf = (ILeafNode) child;
-				EObject grammarElement = leaf.getGrammarElement();
-				if (grammarElement instanceof Keyword) {
-					String value = ((Keyword) grammarElement).getValue();
-					if (stopAtKeyword.equals(value)) {
-						break;
-					}
-					if (Arrays.binarySearch(keywords, value) >= 0) {
-						if (grammarElement.eContainer() instanceof Alternatives) {
-							AbstractElement first = ((Alternatives) (grammarElement.eContainer())).getElements().get(0);
-							boolean inCommaAlternative = (first instanceof Keyword && ",".equals(((Keyword) first)
-									.getValue()));
-							if (inCommaAlternative) {
-								if (filteredLeaves == null) {
-									filteredLeaves = new ArrayList<>(5);
-								}
-								filteredLeaves.add(leaf);
-							}
-						}
-					}
-				}
-			}
-		}
-		return filteredLeaves == null ? Collections.emptyList() : filteredLeaves;
 	}
 
 	/**
