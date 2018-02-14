@@ -33,7 +33,7 @@ timestamps {
                      [$class  : 'BuildDiscarderProperty',
                         strategy: [$class: 'LogRotator', artifactDaysToKeepStr: keep10, artifactNumToKeepStr: keep5, daysToKeepStr: keep10, numToKeepStr: keep5]]])
 
-        String n4jsNodeLabel = "ide"
+        String n4jsNodeLabel = "build-linux-ide-1"
         node(n4jsNodeLabel) {
             try {
                 //get parameters provided in the environment or the local defaults
