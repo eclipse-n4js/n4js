@@ -68,6 +68,8 @@ public class UeberFixHandler extends AbstractHandler {
 	@Inject
 	private Provider<NpmrcBinary> npmrcBinaryProvider;
 
+	private IProgressMonitor rootMonitor = null;
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
@@ -76,6 +78,7 @@ public class UeberFixHandler extends AbstractHandler {
 			IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
 				@Override
 				public void run(IProgressMonitor monitor) {
+					rootMonitor = monitor;
 					IStatus status = setupWorkspaceDependnecies(monitor, dependneciesDialog);
 					if (!status.isOK())
 						userLogger.logError(status);
@@ -230,7 +233,6 @@ public class UeberFixHandler extends AbstractHandler {
 		Map<String, String> versionedPackages = new HashMap<>();
 		populateFromPlatformFile(versionedPackages, selectedN4TP);
 		versionedPackages.putAll(dependneciesHelper.calculateMissingDependnecies());
-		// TODO remove logging
 		if (LOGGER.isDebugEnabled()) {
 			StringJoiner messages = new StringJoiner(System.lineSeparator());
 			messages.add("dependencies to install: ");
