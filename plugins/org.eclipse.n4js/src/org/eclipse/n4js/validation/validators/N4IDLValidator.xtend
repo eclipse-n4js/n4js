@@ -12,7 +12,6 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -29,7 +28,6 @@ import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -47,10 +45,10 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSElementKeywordProvider elementKeywordProvider;
 
 	/**
-	 * NEEEDED
+	 * NEEDED
 	 *
-	 * when removed check methods will be called twice once by N4JSValidator, and once by
-	 * AbstractDeclarativeN4JSValidator
+	 * When removed check methods will be called twice once by N4JSValidator, and once by
+	 * AbstractDeclarativeN4JSValidator.
 	 */
 	override void register(EValidatorRegistrar registrar) {
 		// nop
@@ -82,7 +80,7 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	/** Checks that the current context allows for the explicit declaration of versions in references. */
+	/** Checks that an explicit type version request is valid in the current context. */
 	@Check
 	def checkExplicitVersionDeclaration(VersionedReference ref) {
 		// this validation is only active for variants that actually support versioned types
@@ -90,10 +88,7 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		val containerFunctionDeclaration = EcoreUtil2.getContainerOfType(ref, FunctionDeclaration);
-		if (null === containerFunctionDeclaration ||
-			!AnnotationDefinition.MIGRATION.hasAnnotation(containerFunctionDeclaration)
-		) {
+		if (!VersionUtils.isVersionAwareContext(ref)) {
 			val message = IssueCodes.messageForIDL_EXPLICIT_VERSION_DECLARATION_NOT_ALLOWED;
 			addIssue(message, ref, TypeRefsPackage.Literals.VERSIONED_REFERENCE__REQUESTED_VERSION,
 				IssueCodes.IDL_EXPLICIT_VERSION_DECLARATION_NOT_ALLOWED);
@@ -125,7 +120,7 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	 * Adds an issue in case of missing support for type versions in
 	 * the current JavaScript variant.
 	 *
-	 * This validation only applies to {@link VersionedElement}s (e.g. classifiers, enums).
+	 * This validation only applies to {@link VersionedElement}s (e.g. classifier, enum declarations).
 	 */
 	@Check
 	def checkVersionedElements(VersionedElement versionedElement) {
@@ -167,32 +162,8 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		)
 	}
 
-	/**
-	 * Adds an issue in case of missing support for type versions and therefore migrations in
-	 * the current JavaScript variant.
-	 */
-	@Check
-	def checkMigrationAnnotationSupport(FunctionDeclaration migrationDeclaration) {
-		if (AnnotationDefinition.MIGRATION.hasAnnotation(migrationDeclaration) &&
-			// annotations are enabled in the current variant
-			variantHelper.allowAnnotation(migrationDeclaration) &&
-			// versioned types are disabled in the current variant
-			!variantHelper.allowVersionedTypes(migrationDeclaration)
-		) {
-			val variantName = variantHelper.getVariantName(migrationDeclaration);
-
-			addIssue(
-				IssueCodes.getMessageForIDL_MIGRATIONS_NOT_SUPPORTED(variantName),
-				migrationDeclaration,
-				IssueCodes.IDL_MIGRATIONS_NOT_SUPPORTED
-			);
-		}
-	}
-
-	/**
-	 * Checks whether the current {@link JavaScriptVariant} allows for top-level statements and issues errors
-	 * accordingly.
-	 */
+	/** Checks whether the current {@link JavaScriptVariant} allows for top-level statements and issues errors
+	 * accordingly. */
 	@Check
 	public def void checkTopLevelElements(Script script) {
 		if (!variantHelper.allowTopLevelStatements(script)) {
@@ -217,4 +188,5 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	private def boolean isStatement(EObject element) {
 		return element instanceof Statement && !(element instanceof FunctionDeclaration);
 	}
+
 }

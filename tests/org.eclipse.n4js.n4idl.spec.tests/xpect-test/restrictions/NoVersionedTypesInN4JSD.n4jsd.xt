@@ -43,7 +43,14 @@ let t3 = (T#2).n4type
 
 external function c(p : constructor{N4Object}) {}
 
+// classes cannot be declared @VersionAware in N4JS XPECT errors --> "The annotation @VersionAware can not be applied in N4JSD External Definitions Language (n4jsd) files." at "VersionAware"
+@VersionAware
+external class VA {}
 
-// XPECT errors -->"Migrations are not supported in N4JSD External Definitions Language (n4jsd) files." at "@Migration external function someMigration(u : User) : T"
+// functions cannot be declared @VersionAware in N4JS XPECT errors --> "The annotation @VersionAware can not be applied in N4JSD External Definitions Language (n4jsd) files." at "VersionAware"
+@VersionAware
+external function versionAware() {}
+
+// XPECT errors -->"The annotation @Migration can not be applied in N4JSD External Definitions Language (n4jsd) files." at "Migration"
 @Migration
 external function someMigration(u : User) : T

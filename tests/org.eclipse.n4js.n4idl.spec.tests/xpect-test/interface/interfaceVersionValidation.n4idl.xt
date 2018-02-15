@@ -24,7 +24,7 @@ interface J # 1 {
 interface J # 2 {
 	/* XPECT errors ---
 		"Requested version 3 exceeds the maximal version 2 of the current context." at "I # 3"
-		"The explicit declaration of type version requests is only allowed in functions annotated as @Migration." at "# 3"
+		"The explicit declaration of type version requests is only allowed in functions/classifiers annotated as @Migration or @VersionAware." at "# 3"
 	--- */
 	i: I # 3;
 }
