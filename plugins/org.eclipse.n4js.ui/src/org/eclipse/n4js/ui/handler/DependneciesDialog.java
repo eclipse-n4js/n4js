@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.TableItem;
 import com.google.common.base.Strings;
 
 /**
- * UI for the {@link UeberFixHandler}, which will use this class for visualizing its long running operation. Since in
+ * UI for the {@link LibrariesFixHandler}, which will use this class for visualizing its long running operation. Since in
  * some (user data depended) scenarios processing has to be suspended in order to get users input, instance of this
  * class will hold reference to the caller. It is assumed that, if needed, the caller will {@link #wait()} for this
  * instance to get user input, and this instance will {@link #notify()} caller when input is obtained.
@@ -138,7 +138,7 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 	 * caller passes reference to itself, so later this UI thread can notify the caller to resume processing.
 	 *
 	 */
-	public void updateConfigs(Map<String, String> npmrcs, Map<String, String> n4tps, UeberFixHandler ueberFixHandler) {
+	public void updateConfigs(Map<String, String> npmrcs, Map<String, String> n4tps, LibrariesFixHandler LibrariesFixHandler) {
 		addConfigArea();
 		if (!npmrcs.isEmpty()) {
 			npmrcs.forEach((name, path) -> {
@@ -164,54 +164,37 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 		configsContainer.getParent().getParent().pack(true);
 		configsContainer.setCursor(arrowCursor);
 
-		this.suspendedCaller = ueberFixHandler;
+		this.suspendedCaller = LibrariesFixHandler;
 	}
 
 	/**
 	 * Adds new controls to the UI, that allow user to select configuration to be used in underlying operations.
 	 */
 	private void addConfigArea() {
-		// npmrc table
-		tNPMRC = new Table(configsContainer, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
-		tNPMRC.setLinesVisible(true);
-		tNPMRC.setHeaderVisible(true);
-		tNPMRC.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		tNPMRC.setToolTipText(".npmrc configurations");
-		String[] titles = { "name", "Location" };
-		for (int i = 0; i < titles.length; i++) {
-			TableColumn column = new TableColumn(tNPMRC, SWT.NONE);
-			column.setText(titles[i]);
-		}
-		TableItem item = new TableItem(tNPMRC, SWT.NONE);
-		item.setText(0, "(no name)");
-		item.setText(1, "default settings");
-		for (int i = 0; i < titles.length; i++) {
-			tNPMRC.getColumn(i).pack();
-		}
-
-		// n4tp table
-		tN4TP = new Table(configsContainer, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
-		tN4TP.setLinesVisible(true);
-		tN4TP.setHeaderVisible(true);
-		tN4TP.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		tNPMRC.setToolTipText("*.n4tp configurations");
-		String[] titles2 = { "name", "Location" };
-		for (int i = 0; i < titles.length; i++) {
-			TableColumn column = new TableColumn(tN4TP, SWT.NONE);
-			column.setText(titles2[i]);
-		}
-		TableItem item2 = new TableItem(tN4TP, SWT.NONE);
-		item2.setText(0, "(no name)");
-		item2.setText(1, "default settings");
-		for (int i = 0; i < titles2.length; i++) {
-			tN4TP.getColumn(i).pack();
-		}
+		tNPMRC = createTable(configsContainer, ".npmrc configurations");
+		tN4TP = createTable(configsContainer, "*.n4tp configurations");
 
 		proceed = createDisabledPushButton(configsContainer, "Proceed",
 				createSelectionListener(this::handleUserWantsToProceed));
 
 		configsContainer.setVisible(false);
 		configsContainer.getParent().getParent().layout(true, true);
+	}
+
+	private static Table createTable(Composite parent, String toolTipText) {
+		Table table = new Table(parent, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		table.setToolTipText(toolTipText);
+		TableColumn name = new TableColumn(table, SWT.NONE);
+		name.setText("name");
+		TableColumn location = new TableColumn(table, SWT.NONE);
+		location.setText("Location");
+		TableItem defaultItem = new TableItem(table, SWT.NONE);
+		defaultItem.setText(0, "default");
+		defaultItem.setText(1, "default settings");
+		return table;
 	}
 
 }

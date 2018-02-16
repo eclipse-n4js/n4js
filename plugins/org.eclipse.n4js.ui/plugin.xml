@@ -260,7 +260,7 @@ Contributors:
             name="Show Type Information">
       </command>
       <command
-            id="org.eclipse.n4js.ui.handler.UeberFix"
+            id="org.eclipse.n4js.ui.handler.LibrariesFix"
             name="Fix Libraries Setup">
       </command>
       <command
@@ -353,7 +353,7 @@ Contributors:
                      style="push">
                </command>
                <command
-                     commandId="org.eclipse.n4js.ui.handler.UeberFix"
+                     commandId="org.eclipse.n4js.ui.handler.LibrariesFix"
                      icon="icons/debugt_obj.png"
                      label="Fix Libraries setup"
                      style="push">
@@ -483,8 +483,8 @@ Contributors:
            commandId="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences">
      </handler>
      <handler
-           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.UeberFixHandler"
-           commandId="org.eclipse.n4js.ui.handler.UeberFix">
+           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.LibrariesFixHandler"
+           commandId="org.eclipse.n4js.ui.handler.LibrariesFix">
      </handler>
      <handler
              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.CreateNewN4JSElementInModuleHandler"

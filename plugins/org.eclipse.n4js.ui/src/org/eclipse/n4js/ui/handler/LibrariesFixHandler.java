@@ -44,8 +44,8 @@ import com.google.inject.Provider;
  * Handler for user requesting to fix all problems with projects / dependencies. In particular, we delete all external
  * libraries, install them again, clear build everything.
  */
-public class UeberFixHandler extends AbstractHandler {
-	private static final Logger LOGGER = Logger.getLogger(UeberFixHandler.class);
+public class LibrariesFixHandler extends AbstractHandler {
+	private static final Logger LOGGER = Logger.getLogger(LibrariesFixHandler.class);
 
 	private boolean wasAutoBuilding;
 
@@ -68,8 +68,6 @@ public class UeberFixHandler extends AbstractHandler {
 	@Inject
 	private Provider<NpmrcBinary> npmrcBinaryProvider;
 
-	private IProgressMonitor rootMonitor = null;
-
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
@@ -78,7 +76,6 @@ public class UeberFixHandler extends AbstractHandler {
 			IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
 				@Override
 				public void run(IProgressMonitor monitor) {
-					rootMonitor = monitor;
 					IStatus status = setupWorkspaceDependnecies(monitor, dependneciesDialog);
 					if (!status.isOK())
 						userLogger.logError(status);
@@ -120,8 +117,6 @@ public class UeberFixHandler extends AbstractHandler {
 
 		Collection<File> fNPMRCs = files.getNPMRCs();
 		Collection<File> fN4TPs = files.getN4TPs();
-		// TODO add to fNPMRC file from preferences
-		// process found files
 
 		File selectedNPMRC = null;
 		File selectedN4TP = null;
@@ -137,10 +132,7 @@ public class UeberFixHandler extends AbstractHandler {
 			UIUtils.getDisplay().asyncExec(() -> dependneciesDialog.updateConfigs(npmrcs, n4tps, this));
 
 			// at this point UI is updated with detected settings,
-			// UI should also create new button to proceed,
-			// and this thread should wait for the user to click on proceed
-			// than we check UI for the options selected by the user
-			// and proceed based on that selection
+			// and this thread waits to be notified by the UI thread
 			synchronized (this) {
 				try {
 					wait();
@@ -166,13 +158,11 @@ public class UeberFixHandler extends AbstractHandler {
 
 		}
 
-		// information about .npmrc is deep in the NodeProcessBuilder and by designe
+		// information about .npmrc is deep in the NodeProcessBuilder and by design
 		// it is not exposed. We could redesign that part and expose it, but it makes sense
 		// to assume if user points to a specific .npmrc file while setting up the workspace
 		// then this .npmrc should be used for further dependencies setups in this workspace
 		// hence set it in preferences, so that other invocations of npm install will use it.
-		// TODO if .npmrc was selected should we save it in preferences?
-
 		if (selectedNPMRC != null) {
 			NpmrcBinary npmrcBinary = npmrcBinaryProvider.get();
 			URI oldLocation = npmrcBinary.getUserConfiguredLocation();
