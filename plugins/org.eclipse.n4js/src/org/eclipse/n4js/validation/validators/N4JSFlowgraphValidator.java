@@ -29,6 +29,8 @@ import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
+import org.eclipse.n4js.n4JS.BreakStatement;
+import org.eclipse.n4js.n4JS.ContinueStatement;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.DestructureUtils;
@@ -41,7 +43,9 @@ import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
+import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.smith.DataCollector;
@@ -163,11 +167,19 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		if (reachablePred == null)
 			return null;
 
-		String keyword = keywordProvider.keyword(reachablePred);
-		if (Strings.isNullOrEmpty(keyword)) {
-			return reachablePred.eClass().getName();
+		boolean addKeyword = false;
+		addKeyword |= reachablePred instanceof ReturnStatement;
+		addKeyword |= reachablePred instanceof BreakStatement;
+		addKeyword |= reachablePred instanceof ContinueStatement;
+		addKeyword |= reachablePred instanceof ThrowStatement;
+
+		if (addKeyword) {
+			String keyword = keywordProvider.keyword(reachablePred);
+			if (Strings.isNullOrEmpty(keyword)) {
+				return reachablePred.eClass().getName();
+			}
 		}
-		return keyword;
+		return null;
 	}
 
 	private void internalCheckNullDereference(NullDereferenceAnalyser nda) {

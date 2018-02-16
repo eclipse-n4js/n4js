@@ -209,7 +209,7 @@ function f22() {
 		// XPECT warnings --> "Variable a is undefined" at "a"
 		a.toString();
 		break;
-		// XPECT warnings --> "Dead code. No execution possible after variable." at "a"
+		// XPECT warnings --> "Dead code." at "a"
 	} while (a);
 	// XPECT warnings --> "Variable a is undefined" at "a"
 	a.toString();
@@ -221,7 +221,7 @@ function f23() {
 		// XPECT nowarnings -->
 		a.toString();
 		break;
-		// XPECT warnings --> "Dead code. No execution possible after variable." at "a"
+		// XPECT warnings --> "Dead code." at "a"
 	} while (a);
 	// XPECT nowarnings -->
 	a.toString();

@@ -33,17 +33,17 @@ function f1() {
 		try {
 			1;
 			throw "x";
-			// XPECT warnings --> "Dead code. No execution possible after throw." at "2;"
+			// XPECT warnings --> "Dead code." at "2;"
 			2;
 		} finally {
 			3;
 		}
-		// XPECT warnings --> "Dead code. No execution possible after try statement." at "4;"
+		// XPECT warnings --> "Dead code." at "4;"
 		4;
 	} finally {
 		6;
 	}
-	// XPECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
+	// XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 
@@ -105,7 +105,7 @@ function f4() {
 	} catch (e) {
 		2;
 		throw 3;
-		// XPECT warnings --> "Dead code. No execution possible after throw." at "0;"
+		// XPECT warnings --> "Dead code." at "0;"
 		0;
 
 	} finally {
@@ -122,17 +122,17 @@ function f5() {
 		if (2) {
 			3;
 			break;
-		// XPECT warnings --> "Dead code. No execution possible after break." at "4;"
+		// XPECT warnings --> "Dead code." at "4;"
 			4;
 		} else {
 			5;
 			break;
-		// XPECT warnings --> "Dead code. No execution possible after break." at "6;"
+		// XPECT warnings --> "Dead code." at "6;"
 			6;
 		}
-		// XPECT warnings --> "Dead code. No execution possible after if statement." at "7;"
+		// XPECT warnings --> "Dead code." at "7;"
 		7;
-	// XPECT warnings --> "Dead code. No execution possible after expression statement." at "8"
+	// XPECT warnings --> "Dead code." at "8"
 	} while (8);
 	"end";
 };

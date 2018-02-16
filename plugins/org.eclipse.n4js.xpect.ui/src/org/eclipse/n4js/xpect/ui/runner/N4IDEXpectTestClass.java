@@ -15,7 +15,6 @@ import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.FlowgraphsXpectMethod;
 import org.eclipse.n4js.xpect.methods.FormatterXpectMethod;
 import org.eclipse.n4js.xpect.methods.LinkingXpectMethod;
-import org.eclipse.n4js.xpect.methods.ReturnXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.HyperlinkXpectMethod;
@@ -44,7 +43,6 @@ import org.junit.runner.RunWith;
 		FindReferencesXpectMethod.class,
 		FormatterXpectMethod.class,
 		LinkingXpectMethod.class,
-		ReturnXpectMethod.class,
 		TypeXpectMethod.class,
 		ValidationTest.class,
 		ScopeXpectMethod.class,

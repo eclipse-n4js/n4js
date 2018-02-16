@@ -248,6 +248,9 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def boolean checkReturnExpression(ReturnStatement retStmt) {
 		val fofa = EcoreUtil2.getContainerOfType(retStmt, FunctionOrFieldAccessor);
+		if (fofa === null) {
+			return false;
+		}
 
 		if (fofa.isReturnValueOptional) {
 			return false;

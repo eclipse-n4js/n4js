@@ -15,9 +15,9 @@
 
 
 
-// XPECT deadCode --> dead code
+// XPECT noerrors -->
 function f(): void {
 	return;
-	// XPECT warnings --> "Dead code. No execution possible after return." at "console.log();"
+	// XPECT warnings --> "Dead code." at "console.log();"
 	console.log();
 }
