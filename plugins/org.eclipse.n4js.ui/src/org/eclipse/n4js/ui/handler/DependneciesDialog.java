@@ -84,10 +84,11 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 			return;
 
 		proceed.setEnabled(false);
+		tNPMRC.setEnabled(false);
+		tN4TP.setEnabled(false);
+		configsContainer.setCursor(super.dialogArea.getCursor());
 
-		// TODO compute selections based on the tables state, to allow other thread to know user selection
-		processN4TP();
-		processNPMRC();
+		processUserSelection();
 
 		// notify other thread to resume
 		synchronized (this.suspendedCaller) {
@@ -95,27 +96,29 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 		}
 	}
 
+	/** gets user selection for {@code .npmrc}, may be {@code null} */
 	public String getNPMRC() {
 		return this.selectedNPMRC;
 	}
 
+	/** gets user selection for {@code *.n4tp}, may be {@code null} */
 	public String getN4TP() {
 		return this.selectedN4TP;
 	}
 
-	private void processN4TP() {
+	/** Process all selections to prepare data for non-UI thread */
+	private void processUserSelection() {
 		this.selectedN4TP = getTableItem(tN4TP);
-	}
-
-	private void processNPMRC() {
 		this.selectedNPMRC = getTableItem(tNPMRC);
 	}
 
 	private String getTableItem(Table table) {
 		TableItem[] items = table.getSelection();
 		if (items.length >= 2) {
-			// TODO LOG we allow only one selection;
-			return null;
+			String text = Strings.nullToEmpty(table.getToolTipText());
+			if (!text.isEmpty())
+				text = " :: " + text;
+			throw new RuntimeException("Multiple selections not supported" + text);
 		}
 		if (items.length == 1) {
 			TableItem item = items[0];
@@ -159,6 +162,7 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 		proceed.setEnabled(true);
 		configsContainer.setVisible(true);
 		configsContainer.getParent().getParent().pack(true);
+		configsContainer.setCursor(arrowCursor);
 
 		this.suspendedCaller = ueberFixHandler;
 	}
@@ -172,6 +176,7 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 		tNPMRC.setLinesVisible(true);
 		tNPMRC.setHeaderVisible(true);
 		tNPMRC.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		tNPMRC.setToolTipText(".npmrc configurations");
 		String[] titles = { "name", "Location" };
 		for (int i = 0; i < titles.length; i++) {
 			TableColumn column = new TableColumn(tNPMRC, SWT.NONE);
@@ -189,6 +194,7 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 		tN4TP.setLinesVisible(true);
 		tN4TP.setHeaderVisible(true);
 		tN4TP.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		tNPMRC.setToolTipText("*.n4tp configurations");
 		String[] titles2 = { "name", "Location" };
 		for (int i = 0; i < titles.length; i++) {
 			TableColumn column = new TableColumn(tN4TP, SWT.NONE);

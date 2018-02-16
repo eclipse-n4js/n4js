@@ -354,7 +354,7 @@ Contributors:
                </command>
                <command
                      commandId="org.eclipse.n4js.ui.handler.UeberFix"
-                     icon="icons/native_lib_path_attrib.gif"
+                     icon="icons/debugt_obj.png"
                      label="Fix Libraries setup"
                      style="push">
                </command>

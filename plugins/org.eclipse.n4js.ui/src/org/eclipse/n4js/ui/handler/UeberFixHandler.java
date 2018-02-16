@@ -174,18 +174,20 @@ public class UeberFixHandler extends AbstractHandler {
 		// TODO if .npmrc was selected should we save it in preferences?
 
 		if (selectedNPMRC != null) {
-			// TODO check if it is "equal" then skip setting
 			NpmrcBinary npmrcBinary = npmrcBinaryProvider.get();
 			URI oldLocation = npmrcBinary.getUserConfiguredLocation();
-			URI newLocation = selectedNPMRC.getParentFile().toURI();
-			if (newLocation.compareTo(oldLocation) != 0) {
-				userLogger.logInfo("dropping old npmrc : " + oldLocation);
-				userLogger.logInfo("setting new npmrc : " + newLocation);
-				preferenceStore.setPath(npmrcBinaryProvider.get(), newLocation);
-				IStatus save = preferenceStore.save();
-				if (!save.isOK()) {
-					multistatus.add(save);
-					return multistatus;
+			File npmrcFolder = selectedNPMRC.getParentFile();
+			if (npmrcFolder != null) {
+				URI newLocation = npmrcFolder.toURI();
+				if (!newLocation.equals(oldLocation)) {
+					userLogger.logInfo("dropping old npmrc : " + oldLocation);
+					userLogger.logInfo("setting new npmrc : " + newLocation);
+					preferenceStore.setPath(npmrcBinaryProvider.get(), newLocation);
+					IStatus save = preferenceStore.save();
+					if (!save.isOK()) {
+						multistatus.add(save);
+						return multistatus;
+					}
 				}
 			}
 		}
