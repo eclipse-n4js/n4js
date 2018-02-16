@@ -44,7 +44,7 @@ function k(): number {
 }
 
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "k2"
+// XPECT errors --> "Missing return or throw statement." at "k2"
 function k2(): number
 {
 	console.log("Hello");
@@ -57,15 +57,15 @@ function k2(): number
 
 
 
-// works XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f"
+// works XPECT errors --> "Missing return or throw statement." at "f"
 function f(): string {}
 
 
 
 class C {
-	// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f"
+	// XPECT errors --> "Missing return or throw statement." at "f"
 	f() : string {}
-	// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "get x() {}"
+	// XPECT errors --> "Missing return or throw statement." at "get x() {}"
 	get x() {}
 
 	// XPECT errors --> "Set accessors must not return anything." at "return "Hello";"
@@ -74,7 +74,7 @@ class C {
 
 
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "function(): number {}"
+// XPECT errors --> "Missing return or throw statement." at "function(): number {}"
 var g = function(): number {}
 
 
@@ -83,7 +83,7 @@ var g = function(): number {}
 var ol = {
 	// XPECT errors --> "Set accessors must not return anything." at "return "Hello";"
 	set x(p) { return "Hello";},
-	// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "get x() {}"
+	// XPECT errors --> "Missing return or throw statement." at "get x() {}"
 	get x() {}
 };
 

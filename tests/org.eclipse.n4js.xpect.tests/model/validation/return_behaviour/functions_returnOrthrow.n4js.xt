@@ -314,7 +314,7 @@ function f13() : number {
 }
 
 
-// found during IDE-1852: XPECT FIXME noerrors
+// found during IDE-1852: XPECT FIXME errors --> ""
 //////// try: try+catch: just throws.
 // XPECT returnOrThrow --> noReturnsMode
 function f14() : number {
@@ -340,5 +340,22 @@ function f15() : number {
 		}
 	} catch (e2) {
 		return 15;
+	}
+}
+
+//////// infinitive loop does not need succeeding return
+// XPECT noerrors -->
+function f16() : number {
+	for (;;) {
+		console.log("loop");
+	}
+}
+
+//////// infinitive loop does not need succeeding return
+// XPECT noerrors -->
+function f17() : number {
+	for (;;) {
+		console.log("loop");
+		return 2;
 	}
 }
