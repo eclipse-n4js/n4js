@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,9 +18,11 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
+import org.eclipse.n4js.flowgraphs.analysers.MissingReturnThrowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
@@ -30,18 +33,25 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.DestructureUtils;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionExpression;
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
+import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -69,6 +79,12 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private IN4JSCore n4jsCore;
+
+	@Inject
+	private N4JSTypeSystem typeSystem;
+
+	@Inject
+	private JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * NEEEDED
@@ -99,9 +115,10 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		DeadCodeAnalyser dcv = new DeadCodeAnalyser();
 		UsedBeforeDeclaredAnalyser cvgv1 = new UsedBeforeDeclaredAnalyser();
 		NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
+		MissingReturnThrowAnalyser mrta = new MissingReturnThrowAnalyser(typeSystem, jsVariantHelper);
 
 		flowAnalyzer.createGraphs(script, true);
-		flowAnalyzer.accept(dcv, nda, cvgv1);
+		flowAnalyzer.accept(dcv, nda, cvgv1, mrta);
 
 		String uriString = script.eResource().getURI().toString();
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
@@ -109,6 +126,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		internalCheckDeadCode(dcv);
 		internalCheckUsedBeforeDeclared(cvgv1);
 		internalCheckNullDereference(nda);
+		internalCheckMissingReturnDisallowed(mrta);
 		msmnt2.end();
 		msmnt1.end();
 	}
@@ -275,4 +293,29 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		return c != null && c.isTest();
 	}
 
+	private void internalCheckMissingReturnDisallowed(MissingReturnThrowAnalyser mrta) {
+		Collection<FunctionOrFieldAccessor> mrtFunctions = mrta.getMRTFunctions();
+		for (FunctionOrFieldAccessor fofa : mrtFunctions) {
+			EStructuralFeature highlightFeature = getMarkedElement(fofa);
+			String msg = IssueCodes.getMessageForFUN_MISSING_RETURN_OR_THROW_STATEMENT();
+			addIssue(msg, fofa, highlightFeature, IssueCodes.FUN_MISSING_RETURN_OR_THROW_STATEMENT);
+		}
+
+	}
+
+	private EStructuralFeature getMarkedElement(FunctionOrFieldAccessor fofa) {
+		if (fofa instanceof FunctionDeclaration) {
+			return N4JSPackage.Literals.FUNCTION_DECLARATION__NAME;
+		}
+		if (fofa instanceof N4MethodDeclaration) {
+			return N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME;
+		}
+		if (fofa instanceof FunctionExpression) {
+			return N4JSPackage.Literals.FUNCTION_EXPRESSION__NAME;
+		}
+		if (fofa instanceof GetterDeclaration) {
+			return N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER;
+		}
+		return null;
+	}
 }

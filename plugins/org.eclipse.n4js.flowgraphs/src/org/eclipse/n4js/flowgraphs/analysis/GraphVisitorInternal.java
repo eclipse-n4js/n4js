@@ -150,7 +150,7 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 	 */
 	final void callInitializeModeInternal() {
 		if (activeMode) {
-			initializeModeInternal(getCurrentDirection(), null);
+			initializeModeInternal(getCurrentDirection(), getCurrentContainer());
 		}
 	}
 

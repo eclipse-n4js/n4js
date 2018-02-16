@@ -15,13 +15,18 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TypableElement;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
 import org.eclipse.xsemantics.runtime.Result;
@@ -320,5 +325,51 @@ public class N4JSTypeSystem {
 		} else {
 			return null;
 		}
+	}
+
+	public TypeRef getReturnTypeRef(FunctionOrFieldAccessor fofa) {
+		TypeRef inferredType = tau(fofa);
+		if (inferredType instanceof FunctionTypeExprOrRef) {
+			return getActualReturnTypeRef(fofa, (FunctionTypeExprOrRef) inferredType);
+		}
+		if (inferredType instanceof ParameterizedTypeRef) {
+			return inferredType;
+		}
+		return null;
+	}
+
+	private TypeRef getActualReturnTypeRef(FunctionOrFieldAccessor fofa, FunctionTypeExprOrRef inferredType) {
+		if (inferredType == null) {
+			return null;
+		}
+		TypeRef typeRef = inferredType.getReturnTypeRef();
+		if (fofa instanceof FunctionDefinition) {
+			FunctionDefinition fDef = (FunctionDefinition) fofa;
+			Type tFun = fDef.getDefinedType();
+			if (fofa.isAsync()) {
+				typeRef = getTypeArgumentOfReturnType(fDef, tFun, 0);
+			}
+			if (fDef.isGenerator()) {
+				typeRef = getTypeArgumentOfReturnType(fDef, tFun, 1);
+			}
+		}
+		return typeRef;
+	}
+
+	private TypeRef getTypeArgumentOfReturnType(FunctionOrFieldAccessor functionOrFieldAccessor, Type type, int idx) {
+		if (type instanceof TFunction) {
+			TFunction tFun = (TFunction) type;
+			TypeRef actualReturnTypeRef = tFun.getReturnTypeRef();
+			if (actualReturnTypeRef.getTypeArgs().size() > idx) {
+				TypeArgument tReturn = actualReturnTypeRef.getTypeArgs().get(idx);
+				RuleEnvironment fofaRuleEnv = RuleEnvironmentExtensions.newRuleEnvironment(functionOrFieldAccessor);
+				TypeRef typeRef = resolveType(fofaRuleEnv, tReturn);
+				if (TypeUtils.isUndefined(typeRef)) {
+					typeRef = RuleEnvironmentExtensions.voidTypeRef(fofaRuleEnv);
+				}
+				return typeRef;
+			}
+		}
+		return null;
 	}
 }

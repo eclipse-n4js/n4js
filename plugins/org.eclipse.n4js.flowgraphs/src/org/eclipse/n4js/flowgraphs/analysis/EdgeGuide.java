@@ -145,7 +145,9 @@ public class EdgeGuide {
 				for (BranchWalkerInternal aPath : getBranchIterable()) {
 					BranchWalkerInternal forkedPath = aPath.callFork();
 					aPath.deactivate();
-					forkedPaths.add(forkedPath);
+					if (forkedPath != null) {
+						forkedPaths.add(forkedPath);
+					}
 				}
 
 				NextEdgesProvider epCopy = edgeProvider.copy();
