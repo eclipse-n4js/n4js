@@ -43,8 +43,8 @@ import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
  * data that describes unknown or missing projects. Unlike {@link ManifestValuesParsingUtil} it allows to read manifest
  * of known projects, and not arbitrary {@code .n4mf} file.
  */
-class ProjectDependneciesHelper {
-	private static final Logger LOGGER = Logger.getLogger(ProjectDependneciesHelper.class);
+class ProjectDependenciesHelper {
+	private static final Logger LOGGER = Logger.getLogger(ProjectDependenciesHelper.class);
 
 	@Inject
 	private EclipseBasedN4JSWorkspace workspace;

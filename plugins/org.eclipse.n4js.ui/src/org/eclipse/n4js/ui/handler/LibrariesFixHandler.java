@@ -64,7 +64,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 	private NpmLogger userLogger;
 
 	@Inject
-	private ProjectDependneciesHelper dependneciesHelper;
+	private ProjectDependenciesHelper dependneciesHelper;
 
 	@Inject
 	private ExternalLibrariesActionsHelper externals;
@@ -81,18 +81,18 @@ public class LibrariesFixHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
-			final DependenciesDialog dependneciesDialog = new DependenciesDialog(UIUtils.getShell());
+			final DependenciesDialog dependenciesDialog = new DependenciesDialog(UIUtils.getShell());
 			IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
 				@Override
 				public void run(IProgressMonitor monitor) {
-					IStatus status = setupWorkspaceDependnecies(monitor, dependneciesDialog);
+					IStatus status = setupWorkspaceDependnecies(monitor, dependenciesDialog);
 					if (!status.isOK())
 						userLogger.logError(status);
 					monitor.done();
 				}
 
 			};
-			dependneciesDialog.run(true, true, iRunnableWithProgress);
+			dependenciesDialog.run(true, true, iRunnableWithProgress);
 		} catch (InvocationTargetException | InterruptedException | SWTException err) {
 			LOGGER.error("unhandled error while setting up dependencies", err);
 		}
