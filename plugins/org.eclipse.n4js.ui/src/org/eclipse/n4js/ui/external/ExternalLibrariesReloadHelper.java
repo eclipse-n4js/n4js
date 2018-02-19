@@ -117,6 +117,7 @@ public class ExternalLibrariesReloadHelper {
 				.collectProjectsWithDirectExternalDependencies(toBuild);
 
 		builderHelper.build(toBuild, subMonitor.newChild(1));
+
 		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
 	}
 }

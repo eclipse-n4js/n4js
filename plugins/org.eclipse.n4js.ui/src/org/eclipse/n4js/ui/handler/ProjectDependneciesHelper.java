@@ -129,7 +129,7 @@ class ProjectDependneciesHelper {
 					getVersionedImplementedProjects(projectDescription))
 					.reduce(Stream::concat)
 					.orElseGet(Stream::empty)
-					.forEach(info -> dependencies.merge(info.getID(), info.getVersion(), DependencyInfo::resolve));
+					.forEach(info -> dependencies.merge(info.id, info.version, DependencyInfo::resolve));
 		}
 	}
 

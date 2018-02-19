@@ -16,26 +16,19 @@ import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.TestedProject;
 
+/** Custom type for {@code Pair<String, String>} that is used to describe dependency (i.e. npm package). */
 class DependencyInfo {
 	/**
 	 * version representation for projects with no declared versions, mimics behavior of
 	 * {@link org.eclipse.n4js.external.version.VersionConstraintFormatUtil#npmFormat}
 	 */
 	private static String NO_VERSION = "";
-	private final String id;
-	private final String version;
+	final String id;
+	final String version;
 
 	private DependencyInfo(String id, String version) {
 		this.id = id;
 		this.version = version;
-	}
-
-	public String getID() {
-		return this.id;
-	}
-
-	public String getVersion() {
-		return this.version;
 	}
 
 	/** Resolve conflict between two versions. Simple strategy - returns first if it is not empty. */
@@ -60,5 +53,4 @@ class DependencyInfo {
 
 		return version;
 	}
-
 }
