@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_Neon.2.GH-18" sequenceNumber="134">
+<target name="Generated target-platform N4JS:N4JS_Neon.2.GH-18" sequenceNumber="135">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.300.v20161122-1740"/>
@@ -59,7 +59,7 @@
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xsemantics.runtime" version="1.12.1.v20171102-1951"/>
-      <repository location="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
+      <repository location="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/2/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.jetty.servlets" version="9.2.13.v20150730"/>
@@ -78,10 +78,6 @@
       <unit id="org.eclipse.emf.mwe2.launch" version="2.9.0.v201605261103"/>
       <unit id="org.eclipse.emf.mwe2.lib" version="2.9.0.v201605261103"/>
       <repository location="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.0"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.jdt.junit.runners" version="0.1.0.201411181552"/>
-      <repository location="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.gef" version="3.11.0.201606061308"/>
