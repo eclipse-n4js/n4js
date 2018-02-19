@@ -14,7 +14,6 @@ import java.util.Collection;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.n4js.flowgraphs.FlowAnalyser;
-import org.eclipse.n4js.flowgraphs.analysers.MissingReturnThrowAnalyser;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
