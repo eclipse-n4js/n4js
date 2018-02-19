@@ -121,7 +121,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleClassExtendsClause?
+			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
 			*
@@ -130,7 +130,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleInterfaceImplementsList?
+			ruleInterfaceExtendsList?
 		)
 		ruleMembers
 		    |
@@ -316,7 +316,7 @@ ruleAnnotatedExportableElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleClassExtendsClause?
+			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
 			*
@@ -325,7 +325,7 @@ ruleAnnotatedExportableElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleInterfaceImplementsList?
+			ruleInterfaceExtendsList?
 		)
 		ruleMembers
 		    |
@@ -966,7 +966,7 @@ ruleAnnotatedExpression:
 		'class'
 		ruleBindingIdentifier
 		?
-		ruleClassExtendsClause?
+		ruleClassExtendsImplements?
 		ruleMembers
 		    |
 		ruleAsyncNoTrailingLineBreak
@@ -981,7 +981,7 @@ norm1_AnnotatedExpression:
 		'class'
 		norm1_BindingIdentifier
 		?
-		norm1_ClassExtendsClause?
+		norm1_ClassExtendsImplements?
 		norm1_Members
 		    |
 		ruleAsyncNoTrailingLineBreak
@@ -6282,7 +6282,7 @@ ruleN4ClassDeclaration:
 		ruleVersionDeclaration?
 	)
 	ruleTypeVariables?
-	ruleClassExtendsClause?
+	ruleClassExtendsImplements?
 	ruleMembers
 ;
 
@@ -6302,71 +6302,62 @@ norm1_Members:
 	'}'
 ;
 
+// Rule ClassExtendsImplements
+ruleClassExtendsImplements:
+	(
+		ruleClassExtendsClause
+		ruleClassImplementsList?
+		    |
+		ruleClassImplementsList
+		ruleClassExtendsClause?
+	)
+;
+
+// Rule ClassExtendsImplements
+norm1_ClassExtendsImplements:
+	(
+		norm1_ClassExtendsClause
+		ruleClassImplementsList?
+		    |
+		ruleClassImplementsList
+		norm1_ClassExtendsClause?
+	)
+;
+
 // Rule ClassExtendsClause
 ruleClassExtendsClause:
+	'extends'
 	(
-		'extends'
 		(
-			(
-				(ruleParameterizedTypeRefNominal
-				)=>
-				ruleParameterizedTypeRefNominal
-			)
-			(
-				(
-					'implements'
-					    |
-					'extends'
-				)
-				ruleClassImplementsList
-			)?
-			    |
-			ruleLeftHandSideExpression
+			(ruleParameterizedTypeRefNominal
+			)=>
+			ruleParameterizedTypeRefNominal
 		)
 		    |
-		'implements'
-		ruleClassImplementsList
+		ruleLeftHandSideExpression
 	)
 ;
 
 // Rule ClassExtendsClause
 norm1_ClassExtendsClause:
+	'extends'
 	(
-		'extends'
 		(
-			(
-				(ruleParameterizedTypeRefNominal
-				)=>
-				ruleParameterizedTypeRefNominal
-			)
-			(
-				(
-					'implements'
-					    |
-					'extends'
-				)
-				ruleClassImplementsList
-			)?
-			    |
-			norm1_LeftHandSideExpression
+			(ruleParameterizedTypeRefNominal
+			)=>
+			ruleParameterizedTypeRefNominal
 		)
 		    |
-		'implements'
-		ruleClassImplementsList
+		norm1_LeftHandSideExpression
 	)
 ;
 
 // Rule ClassImplementsList
 ruleClassImplementsList:
+	'implements'
 	ruleParameterizedTypeRefNominal
 	(
-		(
-			','
-			    |
-			'implements'
-			    |
-			'extends'
-		)
+		','
 		ruleParameterizedTypeRefNominal
 	)*
 ;
@@ -6376,7 +6367,7 @@ ruleN4ClassExpression:
 	'class'
 	ruleBindingIdentifier
 	?
-	ruleClassExtendsClause?
+	ruleClassExtendsImplements?
 	ruleMembers
 ;
 
@@ -6385,7 +6376,7 @@ norm1_N4ClassExpression:
 	'class'
 	norm1_BindingIdentifier
 	?
-	norm1_ClassExtendsClause?
+	norm1_ClassExtendsImplements?
 	norm1_Members
 ;
 
@@ -6411,12 +6402,12 @@ ruleN4InterfaceDeclaration:
 		ruleVersionDeclaration?
 	)
 	ruleTypeVariables?
-	ruleInterfaceImplementsList?
+	ruleInterfaceExtendsList?
 	ruleMembers
 ;
 
-// Rule InterfaceImplementsList
-ruleInterfaceImplementsList:
+// Rule InterfaceExtendsList
+ruleInterfaceExtendsList:
 	(
 		'extends'
 		    |
@@ -6424,13 +6415,7 @@ ruleInterfaceImplementsList:
 	)
 	ruleParameterizedTypeRefNominal
 	(
-		(
-			','
-			    |
-			'implements'
-			    |
-			'extends'
-		)
+		','
 		ruleParameterizedTypeRefNominal
 	)*
 ;
