@@ -360,7 +360,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 				final Object object = objects[i];
 				if (object instanceof WorkingSet) {
 					final WorkingSet workingSet = (WorkingSet) object;
-					if (!OTHERS_WORKING_SET_ID.equals(workingSet)) {
+					if (!OTHERS_WORKING_SET_ID.equals(workingSet.getName())) {
 						removedWorkingSets.add(workingSet);
 					}
 				}

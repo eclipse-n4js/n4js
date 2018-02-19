@@ -341,7 +341,7 @@ public class N4jscBase implements IApplication {
 		try {
 
 			CmdLineParser parser = new CmdLineParser(this);
-			parser.setUsageWidth(130);
+			parser.getProperties().withUsageWidth(130);
 
 			try {
 

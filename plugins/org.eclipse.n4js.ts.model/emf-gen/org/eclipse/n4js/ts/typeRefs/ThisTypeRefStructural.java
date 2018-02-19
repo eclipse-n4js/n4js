@@ -70,7 +70,7 @@ public interface ThisTypeRefStructural extends ThisTypeRef, StructuralTypeRef {
 	 * actual this type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.TypingStrategy%> _definedTypingStrategy = this.getDefinedTypingStrategy();\nboolean _tripleEquals = (_definedTypingStrategy == <%org.eclipse.n4js.ts.types.TypingStrategy%>.DEFAULT);\nif (_tripleEquals)\n{\n\treturn <%org.eclipse.n4js.ts.types.TypingStrategy%>.NOMINAL;\n}\nreturn this.getDefinedTypingStrategy();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt; _definedTypingStrategy = this.getDefinedTypingStrategy();\nboolean _tripleEquals = (_definedTypingStrategy == &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.DEFAULT);\nif (_tripleEquals)\n{\n\treturn &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.NOMINAL;\n}\nreturn this.getDefinedTypingStrategy();'"
 	 * @generated
 	 */
 	TypingStrategy getTypingStrategy();
@@ -91,7 +91,7 @@ public interface ThisTypeRefStructural extends ThisTypeRef, StructuralTypeRef {
 	 * Convenience method, returns true if typingStrategy is neither NOMINAL nor DEFAULT
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getTypingStrategy() != <%org.eclipse.n4js.ts.types.TypingStrategy%>.NOMINAL) && (this.getTypingStrategy() != <%org.eclipse.n4js.ts.types.TypingStrategy%>.DEFAULT));'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getTypingStrategy() != &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.NOMINAL) &amp;&amp; (this.getTypingStrategy() != &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.DEFAULT));'"
 	 * @generated
 	 */
 	boolean isUseSiteStructuralTyping();
@@ -104,7 +104,7 @@ public interface ThisTypeRefStructural extends ThisTypeRef, StructuralTypeRef {
 	 * (if non-empty) or the genStructuralMembers.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.ts.types.TStructMember%>> _xifexpression = null;\n<%org.eclipse.n4js.ts.types.TStructuralType%> _structuralType = this.getStructuralType();\nboolean _tripleNotEquals = (_structuralType != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getStructuralType().getOwnedMembers();\n}\nelse\n{\n\t<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.ts.types.TStructMember%>> _xifexpression_1 = null;\n\tboolean _isEmpty = this.getAstStructuralMembers().isEmpty();\n\tboolean _not = (!_isEmpty);\n\tif (_not)\n\t{\n\t\t_xifexpression_1 = this.getAstStructuralMembers();\n\t}\n\telse\n\t{\n\t\t_xifexpression_1 = this.getGenStructuralMembers();\n\t}\n\t_xifexpression = _xifexpression_1;\n}\nreturn <%org.eclipse.emf.common.util.ECollections%>.<<%org.eclipse.n4js.ts.types.TStructMember%>>unmodifiableEList(_xifexpression);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.ts.types.TStructuralType%&gt; _structuralType = this.getStructuralType();\nboolean _tripleNotEquals = (_structuralType != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getStructuralType().getOwnedMembers();\n}\nelse\n{\n\t&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt; _xifexpression_1 = null;\n\tboolean _isEmpty = this.getAstStructuralMembers().isEmpty();\n\tboolean _not = (!_isEmpty);\n\tif (_not)\n\t{\n\t\t_xifexpression_1 = this.getAstStructuralMembers();\n\t}\n\telse\n\t{\n\t\t_xifexpression_1 = this.getGenStructuralMembers();\n\t}\n\t_xifexpression = _xifexpression_1;\n}\nreturn &lt;%org.eclipse.emf.common.util.ECollections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt;unmodifiableEList(_xifexpression);'"
 	 * @generated
 	 */
 	EList<TStructMember> getStructuralMembers();
@@ -116,7 +116,7 @@ public interface ThisTypeRefStructural extends ThisTypeRef, StructuralTypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.TypingStrategy%> _typingStrategy = this.getTypingStrategy();\n<%java.lang.String%> _plus = (_typingStrategy + \"this\");\n<%java.lang.String%> _modifiersAsString = this.getModifiersAsString();\nreturn (_plus + _modifiersAsString);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt; _typingStrategy = this.getTypingStrategy();\n&lt;%java.lang.String%&gt; _plus = (_typingStrategy + \"this\");\n&lt;%java.lang.String%&gt; _modifiersAsString = this.getModifiersAsString();\nreturn (_plus + _modifiersAsString);'"
 	 * @generated
 	 */
 	String getTypeRefAsString();

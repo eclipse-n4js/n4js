@@ -13,9 +13,15 @@ pipeline {
         dockerfile {
             dir 'docker-build/'
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
-            args '-v n4js-m2-repository:/usr/share/maven/ref/repository/'
+            args '-v n4js-m2-repository:/usr/share/maven/ref/repository/ -m 7500M'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
         }
+    }
+    environment {
+        MAVEN_OPTS = "-XX:+UnlockExperimentalVMOptions " +
+                     "-XX:+UseCGroupMemoryLimitForHeap " +
+                     "-XX:MaxRAMFraction=2 "             +
+                     "-XshowSettings:vm "
     }
     options {
         ansiColor('xterm')

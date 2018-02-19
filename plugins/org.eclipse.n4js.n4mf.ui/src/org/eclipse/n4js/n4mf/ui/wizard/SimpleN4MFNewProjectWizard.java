@@ -14,15 +14,14 @@ import static org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.ui.wizard.IProjectCreator;
 import org.eclipse.xtext.ui.wizard.IProjectInfo;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
 
 /**
  * Project wizard that creates a new N4JS Project.
@@ -107,7 +106,7 @@ public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.Xtex
 		 *
 		 * This means that even for test projects the whole second page can be completely skipped.
 		 */
-		return (!ProjectType.TEST.equals(n4mfWizardNewProjectCreationPage) &&
+		return (!ProjectType.TEST.equals(projectInfo.getProjectType()) &&
 				n4mfWizardNewProjectCreationPage.isPageComplete()) || super.canFinish();
 	}
 

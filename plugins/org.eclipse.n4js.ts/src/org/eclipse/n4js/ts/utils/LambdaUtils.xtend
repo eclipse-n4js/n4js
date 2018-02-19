@@ -30,6 +30,7 @@ import java.util.Iterator
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.EcoreUtil2
+import java.util.Collections
 
 /**
  * Utility methods added to support ES6 arrow functions, aka lambdas.
@@ -85,7 +86,7 @@ public class LambdaUtils {
 			result = Iterators.concat(result, nestedResult)
 		}
 		if (result.isEmpty) {
-			return Iterators.emptyIterator
+			return Collections.emptyIterator()
 		} else {
 			return result
 		}

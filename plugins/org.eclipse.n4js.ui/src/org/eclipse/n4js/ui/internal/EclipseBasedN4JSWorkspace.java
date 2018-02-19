@@ -16,6 +16,7 @@ import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEG
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -179,7 +180,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			Iterator<ZipEntry> entries = getArchiveIterator(stream, archiveRelativeLocation);
 			return toArchiveURIs(archiveLocation, entries);
 		} catch (CoreException | IOException e) {
-			return Iterators.emptyIterator();
+			return Collections.emptyIterator();
 		} finally {
 			if (stream != null) {
 				try {
@@ -226,7 +227,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 				return Iterators.unmodifiableIterator(result.iterator());
 			}
 		}
-		return Iterators.emptyIterator();
+		return Iterators.unmodifiableIterator(Collections.emptyIterator());
 	}
 
 	@Override
