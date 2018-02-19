@@ -47,9 +47,9 @@ class CC extends C {
 let c: C;
 let cc: CC;
 
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of getter g: C is not a subtype of CC." at "g"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of getter C.g: C is not a subtype of CC." at "g"
 c.g;
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of setter s: C is not a subtype of CC." at "s"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of setter C.s: C is not a subtype of CC." at "s"
 c.s = 42;
 // XPECT noerrors -->
 cc.g;
@@ -57,9 +57,9 @@ cc.g;
 cc.s = 42;
 
 
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of getter g: constructor{C} is not a subtype of type{CC}." at "g"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static getter C.g: constructor{C} is not a subtype of type{CC}." at "g"
 C.g;
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of setter s: constructor{C} is not a subtype of type{CC}." at "s"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static setter C.s: constructor{C} is not a subtype of type{CC}." at "s"
 C.s = 42;
 // XPECT noerrors -->
 CC.g;
