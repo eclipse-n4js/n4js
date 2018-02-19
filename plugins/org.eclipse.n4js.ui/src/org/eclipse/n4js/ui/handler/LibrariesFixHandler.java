@@ -31,7 +31,7 @@ import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.ui.external.ExternalLibraraiesActionsHelper;
+import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.wizard.dependencies.ProjectsSettingsFillesLocator;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -67,7 +67,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 	private ProjectDependneciesHelper dependneciesHelper;
 
 	@Inject
-	private ExternalLibraraiesActionsHelper externals;
+	private ExternalLibrariesActionsHelper externals;
 
 	@Inject
 	private StatusHelper statusHelper;
@@ -81,7 +81,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
-			final DependneciesDialog dependneciesDialog = new DependneciesDialog(UIUtils.getShell());
+			final DependenciesDialog dependneciesDialog = new DependenciesDialog(UIUtils.getShell());
 			IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
 				@Override
 				public void run(IProgressMonitor monitor) {
@@ -105,7 +105,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 	 * dependencies with NPM based on calculated data. In case of ambiguities, asks user for input, but user
 	 * interactions should be kept minimal.
 	 */
-	public IStatus setupWorkspaceDependnecies(IProgressMonitor pmonitor, DependneciesDialog dependneciesDialog) {
+	public IStatus setupWorkspaceDependnecies(IProgressMonitor pmonitor, DependenciesDialog dependneciesDialog) {
 		final SubMonitor monitor = SubMonitor.convert(pmonitor, 100);
 		final MultiStatus multistatus = statusHelper
 				.createMultiStatus("Status of setting up dependnecies.");
@@ -177,7 +177,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 
 		Measurement measurement2 = DC_INTALL_NPMS.getMeasurement("install npms " + Instant.now());
 		// install npms from target platform
-		Map<String, String> versionedPackages = dependneciesHelper.calculateDependneciesToInstall(selectedN4TP);
+		Map<String, String> versionedPackages = dependneciesHelper.calculateDependenciesToInstall(selectedN4TP);
 		final SubMonitor subMonitor3 = monitor.split(45);
 
 		externals.installNoUpdate(versionedPackages, multistatus, subMonitor3);

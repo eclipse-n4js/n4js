@@ -39,8 +39,8 @@ import com.google.common.base.Strings;
  * class will hold reference to the caller. It is assumed that, if needed, the caller will {@link #wait()} for this
  * instance to get user input, and this instance will {@link #notify()} caller when input is obtained.
  */
-public class DependneciesDialog extends ProgressMonitorDialog {
-	private static final Logger LOGGER = Logger.getLogger(DependneciesDialog.class);
+public class DependenciesDialog extends ProgressMonitorDialog {
+	private static final Logger LOGGER = Logger.getLogger(DependenciesDialog.class);
 
 	/** simple input data validation */
 	private static boolean isDataValid(Map<String, String> npmrcs, Map<String, String> n4tps, Object lock) {
@@ -101,7 +101,7 @@ public class DependneciesDialog extends ProgressMonitorDialog {
 	private Table tNPMRC = null;
 
 	/** */
-	public DependneciesDialog(Shell parent) {
+	public DependenciesDialog(Shell parent) {
 		super(parent);
 	}
 

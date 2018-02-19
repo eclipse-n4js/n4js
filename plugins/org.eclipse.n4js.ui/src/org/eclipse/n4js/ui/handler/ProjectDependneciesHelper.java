@@ -65,7 +65,7 @@ class ProjectDependneciesHelper {
 	 *  <ul>
 	 * </pre>
 	 */
-	public Map<String, String> calculateDependneciesToInstall(File selectedN4TP) {
+	public Map<String, String> calculateDependenciesToInstall(File selectedN4TP) {
 		Map<String, String> versionedPackages = populateFromPlatformFile(selectedN4TP);
 		updateMissingDependneciesMap(versionedPackages);
 		if (LOGGER.isDebugEnabled()) {

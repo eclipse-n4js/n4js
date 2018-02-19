@@ -33,7 +33,7 @@ import com.google.inject.Inject;
 /**
  * Similar to {@link MaintenanceActionsButtonListener} actions, but dedicated for different UI.
  */
-public class ExternalLibraraiesActionsHelper {
+public class ExternalLibrariesActionsHelper {
 
 	@Inject
 	private StatusHelper statusHelper;
