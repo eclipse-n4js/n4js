@@ -81,19 +81,20 @@ class StructuralTypesHelper {
 	}
 
 	/**
-	 * Collect the members of a structural type.
+	 * Collect the members of a structural type reference. The given typing strategy will override the typing strategies
+	 * defined in the type reference and at definition site.
 	 */
 	def Iterable<TMember> collectStructuralMembers(RuleEnvironment G, TypeRef typeRef, TypingStrategy strategy) {
-		val predicate = G.createBaseStructuralMembersPredicate.and(
-			switch (strategy) {
-				case STRUCTURAL_WRITE_ONLY_FIELDS: WRITABLE_FIELDS_PREDICATE
-				case STRUCTURAL_READ_ONLY_FIELDS: READABLE_FIELDS_PREDICATE
-				case STRUCTURAL_FIELDS: FIELDS_PREDICATE
-				case STRUCTURAL_FIELD_INITIALIZER: throw new IllegalStateException('Expected read-only and write-only variants instead.')
-				default: MEMBERS_PREDICATE
-			}
-		);
+		val predicate = createStructuralMembersPredicate(G, strategy);
 		return doCollectMembers(G, typeRef, predicate);
+	}
+
+	/**
+	 * Collect the members of a structural type.
+	 */
+	def Iterable<TMember> collectStructuralMembers(RuleEnvironment G, Type type, TypingStrategy strategy) {
+		val predicate = createStructuralMembersPredicate(G, strategy);
+		return doCollectMembersOfType(G, type, predicate);
 	}
 
 	def private dispatch Iterable<TMember> doCollectMembers(RuleEnvironment G, TypeRef ref,

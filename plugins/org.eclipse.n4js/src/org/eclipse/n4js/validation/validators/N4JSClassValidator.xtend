@@ -38,11 +38,14 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
+import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypingStrategyFilter
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
@@ -64,9 +67,10 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  */
 class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
-	@Inject N4JSTypeSystem ts;
+	@Inject private N4JSTypeSystem ts;
 
-	@Inject PolyfillValidatorFragment polyfillValidatorFragment;
+	@Inject private PolyfillValidatorFragment polyfillValidatorFragment;
+	@Inject private StructuralTypesHelper structuralTypesHelper;
 
 	@Inject extension ContainerTypesHelper containerTypesHelper;
 
@@ -377,22 +381,32 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private boolean holdsSuperClassHasSpecCtorToo(N4ClassDeclaration n4ClassDeclaration, N4MethodDeclaration ctor) {
-		val tSuperClass = (n4ClassDeclaration.definedType as TClass)?.superClass;
-		if(tSuperClass===null) {
-			return true; // no explicitly declared super class and no spec ctor required in implicit super classes
+		val tClass = n4ClassDeclaration.definedType as TClass;
+		val tDirectSuperClass = tClass?.superClass;
+		if (tDirectSuperClass === null) {
+			return true; // no explicitly declared super class and no @Spec ctor required in implicit super classes
 		}
 		val G = n4ClassDeclaration.newRuleEnvironment;
-		if(tSuperClass===G.objectType || tSuperClass===G.n4ObjectType) {
-			return true; // no spec ctor required in these super classes
+		if (tDirectSuperClass === G.objectType || tDirectSuperClass === G.n4ObjectType) {
+			return true; // no @Spec ctor required in these direct super classes
 		}
-		val tSuperCtor = tSuperClass.ownedCtor;
-		val superClassHasSpecCtor = tSuperCtor!==null && tSuperCtor.fpars.exists[SPEC.hasAnnotation(it)];
-		if(!superClassHasSpecCtor) {
-			val message = getMessageForCLF_SPEC_SUPER_CLASS_NOT_SPEC;
-			addIssue(message, ctor, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_SPEC_SUPER_CLASS_NOT_SPEC);
-			return false;
+		if (tDirectSuperClass === tClass) {
+			return true; // avoid follow up errors in case of bogus code such as: class C extends C {}
 		}
-		return true;
+		// one of the direct or indirect super classes must have a @Spec ctor
+		if (new ExtendedClassesIterable(tClass).exists[it.hasSpecCtor]) {
+			return true; // @Spec ctor found!
+		}
+		// OR the structural type ~i~S does not contain any members (with S being the direct super class of tClass) 
+		val structMembersIter = structuralTypesHelper.collectStructuralMembers(G, tDirectSuperClass,
+			TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS);
+		if (structMembersIter.isEmpty()) {
+			return true; // super class does not contribute any ~i~ members
+		}
+		// @Spec ctor not found --> error case:
+		val message = getMessageForCLF_SPEC_SUPER_CLASS_NOT_SPEC;
+		addIssue(message, ctor, N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName, CLF_SPEC_SUPER_CLASS_NOT_SPEC);
+		return false;
 	}
 
 	def private boolean holdsNoCyclicInheritance(N4ClassDeclaration n4ClassDeclaration) {
@@ -405,5 +419,10 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 			return false;
 		}
 		return true;
+	}
+
+	def private boolean hasSpecCtor(TClass tClass) {
+		val ctor = tClass?.ownedCtor;
+		return ctor!==null && ctor.fpars.exists[SPEC.hasAnnotation(it)];
 	}
 }
