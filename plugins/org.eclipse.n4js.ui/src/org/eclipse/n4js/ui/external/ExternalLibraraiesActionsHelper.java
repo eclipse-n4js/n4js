@@ -31,11 +31,9 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import com.google.inject.Inject;
 
 /**
- * Temporarily copied from {@link MaintenanceActionsButtonListener} actions.
- *
- * TODO Consider refactoring original and caller to use this helper.
+ * Similar to {@link MaintenanceActionsButtonListener} actions, but dedicated for different UI.
  */
-public class ExternalLibraraiesHelper {
+public class ExternalLibraraiesActionsHelper {
 
 	@Inject
 	private StatusHelper statusHelper;

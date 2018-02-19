@@ -31,7 +31,7 @@ import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.ui.external.ExternalLibraraiesHelper;
+import org.eclipse.n4js.ui.external.ExternalLibraraiesActionsHelper;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.wizard.dependencies.ProjectsSettingsFillesLocator;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -67,7 +67,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 	private ProjectDependneciesHelper dependneciesHelper;
 
 	@Inject
-	private ExternalLibraraiesHelper externals;
+	private ExternalLibraraiesActionsHelper externals;
 
 	@Inject
 	private StatusHelper statusHelper;

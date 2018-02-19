@@ -93,6 +93,7 @@ public final class ProjectsSettingsFillesLocator {
 		return resources;
 	}
 
+	/** performs shallow and then deep scan of the file system */
 	private void scan(Set<File> roots, Set<File> files, IProgressMonitor monitor) {
 		final SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		final SubMonitor shallowMonitor = subMonitor.split(10);
@@ -156,6 +157,11 @@ public final class ProjectsSettingsFillesLocator {
 		return false;
 	}
 
+	/**
+	 * If the argument is a file, than it is passed to {@link #processFile(File)}, if it is a folder, then its children
+	 * are passed recursively to itself. Doesn't traverse children of folders with names {@link #GIT},
+	 * {@link #NODE_MODULES}.
+	 */
 	private void processContainer(File file) {
 		if (file.isFile())
 			processFile(file);
@@ -164,6 +170,7 @@ public final class ProjectsSettingsFillesLocator {
 
 	}
 
+	/** If the extension of a given file matches {@link #NPMRC} or {@link #N4TP} then it is collected. */
 	private void processFile(File file) {
 		switch (Files.getFileExtension(file.getAbsolutePath())) {
 		case NPMRC:
