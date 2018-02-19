@@ -124,13 +124,15 @@ public class ExternalLibraraiesHelper {
 	}
 
 	/**
-	 * Installs npm packages with provide names and versions, if successful updates preference page view. Note that in
-	 * case package has no version it is expected that empty string is provided.
+	 * Installs npm packages with provide names and versions. Note that in case package has no version it is expected
+	 * that empty string is provided.
 	 *
+	 * Rebuild of externals is not triggered, hence caller needs to take care of that, e.g. by calling
+	 * {@link #maintenanceUpateState}
 	 */
-	public void intallAndUpdate(final Map<String, String> versionedPackages, final MultiStatus multistatus,
+	public void installNoUpdate(final Map<String, String> versionedPackages, final MultiStatus multistatus,
 			final IProgressMonitor monitor) {
-		IStatus status = npmManager.installDependencies(versionedPackages, monitor);
+		IStatus status = npmManager.installDependencies(versionedPackages, monitor, false);
 		if (!status.isOK())
 			multistatus.merge(status);
 	}
@@ -147,7 +149,10 @@ public class ExternalLibraraiesHelper {
 	public void maintenanceUpateState(final MultiStatus multistatus, IProgressMonitor monitor) {
 		externalLibraryWorkspace.updateState();
 		try {
-			externalLibrariesReloadHelper.reloadLibraries(true, monitor);
+			// we are running batch operations, where we know for sure
+			// type definitions were updated at the beginning,
+			// hence skip refreshing type definitions
+			externalLibrariesReloadHelper.reloadLibraries(false, monitor);
 		} catch (InvocationTargetException e) {
 			multistatus.merge(
 					statusHelper.createError("Error when reloading libraries after maintenance actions.", e));

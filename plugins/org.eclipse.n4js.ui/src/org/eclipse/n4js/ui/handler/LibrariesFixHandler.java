@@ -4,13 +4,12 @@ import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringJoiner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
@@ -24,17 +23,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.external.libraries.TargetPlatformModel;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.external.ExternalLibraraiesHelper;
 import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.ui.wizard.dependencies.FillesLocator;
+import org.eclipse.n4js.ui.wizard.dependencies.ProjectsSettingsFillesLocator;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.swt.SWTException;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -47,14 +48,23 @@ import com.google.inject.Provider;
 public class LibrariesFixHandler extends AbstractHandler {
 	private static final Logger LOGGER = Logger.getLogger(LibrariesFixHandler.class);
 
+	static private final DataCollector DC_SETUP = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Setup Dependencies");
+	static private final DataCollector DC_INTALL_NPMS = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("install npms", DC_SETUP);
+	static private final DataCollector DC_BUILD_NPMS = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("build npms", DC_SETUP);
+
 	private boolean wasAutoBuilding;
+
+	private final Object lock = new Object();
 
 	/** Logger that logs to the npm console which is visible by the user in his IDE. */
 	@Inject
 	private NpmLogger userLogger;
 
 	@Inject
-	private DependneciesHelper dependneciesHelper;
+	private ProjectDependneciesHelper dependneciesHelper;
 
 	@Inject
 	private ExternalLibraraiesHelper externals;
@@ -70,7 +80,6 @@ public class LibrariesFixHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-
 		try {
 			final DependneciesDialog dependneciesDialog = new DependneciesDialog(UIUtils.getShell());
 			IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
@@ -84,8 +93,8 @@ public class LibrariesFixHandler extends AbstractHandler {
 
 			};
 			dependneciesDialog.run(true, true, iRunnableWithProgress);
-		} catch (InvocationTargetException | InterruptedException err) {
-			userLogger.logError("unhandled error while setting up dependnecies", err);
+		} catch (InvocationTargetException | InterruptedException | SWTException err) {
+			LOGGER.error("unhandled error while setting up dependencies", err);
 		}
 
 		return null;
@@ -93,9 +102,8 @@ public class LibrariesFixHandler extends AbstractHandler {
 
 	/**
 	 * long running operation that scans workspace for missing dependencies and user config files. Installs missing
-	 * dependencies with NPM based on calculated data. In case of ambiguities, asks user for inptu, but user
+	 * dependencies with NPM based on calculated data. In case of ambiguities, asks user for input, but user
 	 * interactions should be kept minimal.
-	 *
 	 */
 	public IStatus setupWorkspaceDependnecies(IProgressMonitor pmonitor, DependneciesDialog dependneciesDialog) {
 		final SubMonitor monitor = SubMonitor.convert(pmonitor, 100);
@@ -105,15 +113,12 @@ public class LibrariesFixHandler extends AbstractHandler {
 		if (wasAutoBuilding)
 			turnOffAutobuild();
 
-		// TODO make refreshWorkspace part of the monitor task
-		// it gets blocked by auto build, so it can take a while on large workspace
-		userLogger.logInfo("force workspace refresh");
-		refreshWorkspace();
-		userLogger.logInfo("finished workspace refresh");
+		final SubMonitor subMonitor0 = monitor.split(5);
+		refreshWorkspace(subMonitor0);
 
 		// search for .npmrc, targetplatform.n4tp
-		final SubMonitor subMonitor1 = monitor.split(10);
-		FillesLocator files = FillesLocator.findFiles(subMonitor1);
+		final SubMonitor subMonitor1 = monitor.split(5);
+		ProjectsSettingsFillesLocator files = ProjectsSettingsFillesLocator.findFiles(subMonitor1);
 
 		Collection<File> fNPMRCs = files.getNPMRCs();
 		Collection<File> fN4TPs = files.getN4TPs();
@@ -129,40 +134,81 @@ public class LibrariesFixHandler extends AbstractHandler {
 			fNPMRCs.forEach(f -> npmrcs.put(f.getName(), f.getAbsolutePath()));
 			fN4TPs.forEach(f -> n4tps.put(f.getName(), f.getAbsolutePath()));
 
-			UIUtils.getDisplay().asyncExec(() -> dependneciesDialog.updateConfigs(npmrcs, n4tps, this));
+			UIUtils.getDisplay().asyncExec(() -> dependneciesDialog.updateConfigs(npmrcs, n4tps, lock));
 
 			// at this point UI is updated with detected settings,
 			// and this thread waits to be notified by the UI thread
-			synchronized (this) {
+			synchronized (lock) {
 				try {
-					wait();
+					lock.wait();
 				} catch (InterruptedException e) {
 					multistatus.add(statusHelper.createError("Interrupted while waiting for the user input. ", e));
 					return multistatus;
 				}
 			}
 
+			if (pmonitor.isCanceled()) {
+				userLogger.logInfo("Operation was cancelled.");
+				multistatus.add(statusHelper.createInfo("Operation was cancelled."));
+				return multistatus;
+			}
+
 			// get selection from the UI
-			String n4tp = dependneciesDialog.getN4TP();
-			if (!Strings.isNullOrEmpty(n4tp)) {
-				File fN4TP = new File(n4tp);
-				if (fN4TP.isFile())
-					selectedN4TP = fN4TP;
-			}
-			String npmrc = dependneciesDialog.getNPMRC();
-			if (!Strings.isNullOrEmpty(npmrc)) {
-				File fNPMRC = new File(npmrc);
-				if (fNPMRC.isFile())
-					selectedNPMRC = fNPMRC;
-			}
+			selectedN4TP = getFileOrNull(dependneciesDialog.getN4TP());
+			selectedNPMRC = getFileOrNull(dependneciesDialog.getNPMRC());
 
 		}
 
-		// information about .npmrc is deep in the NodeProcessBuilder and by design
-		// it is not exposed. We could redesign that part and expose it, but it makes sense
-		// to assume if user points to a specific .npmrc file while setting up the workspace
-		// then this .npmrc should be used for further dependencies setups in this workspace
-		// hence set it in preferences, so that other invocations of npm install will use it.
+		processSettingsForNPM(multistatus, selectedNPMRC);
+		if (!multistatus.isOK())
+			return multistatus;
+
+		Measurement measurement = DC_SETUP.getMeasurement("setup npms " + Instant.now());
+		final SubMonitor subMonitor2 = monitor.split(1);
+
+		// remove npm cache
+		externals.maintenanceCleanNpmCache(multistatus, subMonitor2);
+
+		// reset type definitions
+		externals.maintenanceResetTypeDefinitions(multistatus);
+
+		// remove npms
+		externals.maintenanceDeleteNpms(multistatus);
+
+		Measurement measurement2 = DC_INTALL_NPMS.getMeasurement("install npms " + Instant.now());
+		// install npms from target platform
+		Map<String, String> versionedPackages = dependneciesHelper.calculateDependneciesToInstall(selectedN4TP);
+		final SubMonitor subMonitor3 = monitor.split(45);
+
+		externals.installNoUpdate(versionedPackages, multistatus, subMonitor3);
+		measurement2.end();
+
+		Measurement measurement3 = DC_BUILD_NPMS.getMeasurement("build npms " + Instant.now());
+		// rebuild externals & schedule full rebuild
+		final SubMonitor subMonitor4 = monitor.split(35);
+		externals.maintenanceUpateState(multistatus, subMonitor4);
+		measurement3.end();
+
+		// turn on autobuild
+		if (wasAutoBuilding)
+			turnOnAutobuild();
+
+		measurement.end();
+		return multistatus;
+	}
+
+	/**
+	 * information about {@code .npmrc} is deep in the NodeProcessBuilder and by design it is not exposed. We could
+	 * redesign that part and expose it, but it makes sense to assume user selected {@code .npmrc} file while setting up
+	 * the workspace should be used for further dependencies setups (e.g. quickfixes in manifests) in this workspace
+	 * hence we save provided {@code .npmrc} file in the preferences.
+	 *
+	 * @param multistatus
+	 *            used to accumulate operations result, if any
+	 * @param selectedNPMRC
+	 *            npmrc file to process
+	 */
+	private void processSettingsForNPM(final MultiStatus multistatus, File selectedNPMRC) {
 		if (selectedNPMRC != null) {
 			NpmrcBinary npmrcBinary = npmrcBinaryProvider.get();
 			URI oldLocation = npmrcBinary.getUserConfiguredLocation();
@@ -174,89 +220,35 @@ public class LibrariesFixHandler extends AbstractHandler {
 					userLogger.logInfo("setting new npmrc : " + newLocation);
 					preferenceStore.setPath(npmrcBinaryProvider.get(), newLocation);
 					IStatus save = preferenceStore.save();
-					if (!save.isOK()) {
-						multistatus.add(save);
-						return multistatus;
-					}
+					multistatus.add(save);
 				}
 			}
 		}
-
-		// remove npm cache
-		final SubMonitor subMonitor2 = monitor.split(1);
-		externals.maintenanceCleanNpmCache(multistatus, subMonitor2);
-		// reset type definitions
-		externals.maintenanceResetTypeDefinitions(multistatus);
-		// remove npms
-		externals.maintenanceDeleteNpms(multistatus);
-
-		// TODO combine with "*.n4tp" file
-		Map<String, String> versionedPackages = dependneciesToInstall(selectedN4TP);
-
-		// install npms from target platform
-		final SubMonitor subMonitor3 = monitor.split(35);
-		externals.intallAndUpdate(versionedPackages, multistatus, subMonitor3);
-
-		// rebuild externals & schedule full rebuild
-		final SubMonitor subMonitor4 = monitor.split(45);
-		externals.maintenanceUpateState(multistatus, subMonitor4);
-		monitor.done();
-
-		// turn on autobuild
-		if (wasAutoBuilding)
-			turnOnAutobuild();
-
-		return multistatus;
 	}
 
 	/**
-	 * Creates map of dependency-version calculated based on the selected target platform file, workspace projects and
-	 * installed external libraries. Note that list of dependencies is combined, but in case of conflicting versions
-	 * info, workspace based data wins, e.g.
+	 * Checks if file exists under path specified by the provided string.
 	 *
-	 * <pre>
-	 *  <ul>
-	 *   <li> platform files requests "express" but no project depends on "express" then express is installed (in latest version)</li>
-	 *   <li> platform files requests "express@2.0.0" but workspace project depends on "express@1.0.0"  then express is installed in version "1.0.0"</li>
-	 *  <ul>
-	 * </pre>
+	 * @return {@code File} instance or {@code null}
 	 */
-	private Map<String, String> dependneciesToInstall(File selectedN4TP) {
-		Map<String, String> versionedPackages = new HashMap<>();
-		populateFromPlatformFile(versionedPackages, selectedN4TP);
-		versionedPackages.putAll(dependneciesHelper.calculateMissingDependnecies());
-		if (LOGGER.isDebugEnabled()) {
-			StringJoiner messages = new StringJoiner(System.lineSeparator());
-			messages.add("dependencies to install: ");
-			versionedPackages.forEach((id, v) -> messages.add(" - " + id + v));
-			LOGGER.debug(messages);
+	private File getFileOrNull(String filePath) {
+		if (!Strings.isNullOrEmpty(filePath)) {
+			File fNPMRC = new File(filePath);
+			if (fNPMRC.isFile())
+				return fNPMRC;
 		}
-		return versionedPackages;
+		return null;
 	}
 
-	/** Updates dependencies to install with information from platform file. */
-	private void populateFromPlatformFile(Map<String, String> versionedPackages, File n4tp) {
-		if (n4tp != null) {
+	private void refreshWorkspace(IProgressMonitor monitor) {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		final SubMonitor subMonitor = SubMonitor.convert(monitor, projects.length);
+		for (IProject project : projects) {
 			try {
-				final URI platformFileLocation = n4tp.toURI();
-				Map<String, String> n4tpPackages;
-				n4tpPackages = TargetPlatformModel
-						.npmVersionedPackageNamesFrom(platformFileLocation);
-				versionedPackages.putAll(n4tpPackages);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void refreshWorkspace() {
-		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			try {
-				project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+				subMonitor.beginTask("refreshing " + project.getName(), 1);
+				project.refreshLocal(IResource.DEPTH_INFINITE, subMonitor);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOGGER.error("Error when refreshing workspace", e);
 			}
 		}
 	}

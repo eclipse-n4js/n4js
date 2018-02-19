@@ -10,28 +10,28 @@
  */
 package org.eclipse.n4js.ui.handler;
 
-import static org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment;
 import org.eclipse.n4js.n4mf.ImplementedProjects;
 import org.eclipse.n4js.n4mf.ProjectDependencies;
-import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries;
 import org.eclipse.n4js.n4mf.RequiredRuntimeLibraries;
-import org.eclipse.n4js.n4mf.TestedProject;
 import org.eclipse.n4js.n4mf.TestedProjects;
 import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -43,7 +43,9 @@ import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
  * data that describes unknown or missing projects. Unlike {@link ManifestValuesParsingUtil} it allows to read manifest
  * of known projects, and not arbitrary {@code .n4mf} file.
  */
-class DependneciesHelper {
+class ProjectDependneciesHelper {
+	private static final Logger LOGGER = Logger.getLogger(ProjectDependneciesHelper.class);
+
 	@Inject
 	private EclipseBasedN4JSWorkspace workspace;
 	@Inject
@@ -51,70 +53,59 @@ class DependneciesHelper {
 	@Inject
 	private IN4JSCore core;
 
-	private static class DependencyInfo {
-		/**
-		 * version representation for projects with no declared versions, mimics behavior of
-		 * {@link org.eclipse.n4js.external.version.VersionConstraintFormatUtil#npmFormat}
-		 */
-		private static String NO_VERSION = "";
-		private final String id;
-		private final String version;
-
-		private DependencyInfo(String id, String version) {
-			this.id = id;
-			this.version = version;
+	/**
+	 * Creates map of dependency-version calculated based on the selected target platform file, workspace projects and
+	 * shipped external libraries. Note that list of dependencies is combined, but in case of conflicting versions info,
+	 * workspace based data wins, e.g.
+	 *
+	 * <pre>
+	 *  <ul>
+	 *   <li> platform files requests "express" but no project depends on "express" then express is installed (in latest version)</li>
+	 *   <li> platform files requests "express@2.0.0" but workspace project depends on "express@1.0.0"  then express is installed in version "2.0.0"</li>
+	 *  <ul>
+	 * </pre>
+	 */
+	public Map<String, String> calculateDependneciesToInstall(File selectedN4TP) {
+		Map<String, String> versionedPackages = populateFromPlatformFile(selectedN4TP);
+		updateMissingDependneciesMap(versionedPackages);
+		if (LOGGER.isDebugEnabled()) {
+			StringJoiner messages = new StringJoiner(System.lineSeparator());
+			messages.add("dependencies to install: ");
+			versionedPackages.forEach((id, v) -> messages.add(" - " + id + v));
+			LOGGER.debug(messages);
 		}
+		return versionedPackages;
+	}
 
-		public String getID() {
-			return this.id;
+	/** @return dependencies to install based on the platform file. */
+	private Map<String, String> populateFromPlatformFile(File n4tp) {
+		if (n4tp != null) {
+			try {
+				final java.net.URI platformFileLocation = n4tp.toURI();
+				Map<String, String> n4tpPackages;
+				n4tpPackages = TargetPlatformModel
+						.npmVersionedPackageNamesFrom(platformFileLocation);
+				return n4tpPackages;
+			} catch (IOException e) {
+				LOGGER.error("Cannot read platform file", e);
+			}
 		}
-
-		public String getVersion() {
-			return this.version;
-		}
-
-		/** Resolve conflict between two versions. Simple strategy - returns second if it is not empty. */
-		public static String resolve(String version1, String version2) {
-			return NO_VERSION.equals(version2) ? version1 : version2;
-		}
-
-		public static DependencyInfo create(ProjectReference projectReference) {
-			return new DependencyInfo(toID(projectReference), toVersion(projectReference));
-		}
-
-		private static String toID(ProjectReference projectReference) {
-			return projectReference.getProject().getProjectId();
-		}
-
-		private static String toVersion(ProjectReference projectReference) {
-			String version = NO_VERSION;
-			if (projectReference instanceof ProjectDependency)
-				version = npmFormat(((ProjectDependency) projectReference).getVersionConstraint());
-			else if (projectReference instanceof TestedProject)
-				version = npmFormat(((TestedProject) projectReference).getVersionConstraint());
-
-			return version;
-		}
-
+		return new HashMap<>();
 	}
 
 	/**
 	 * Calculates missing dependencies based on current workspace and library manager state.
 	 *
 	 * Names of the dependencies are not validated. Also there is no version resolution, last one wins.
-	 *
-	 * @return map of {@code id->version} dependency infos
 	 */
-	public Map<String, String> calculateMissingDependnecies() {
+	private void updateMissingDependneciesMap(Map<String, String> versionedPackages) {
 		final Set<String> availableProjectsIds = new HashSet<>();
-		final Map<String, String> versionedDependnecies = new HashMap<>();
 		core.findAllProjects().forEach(p -> {
 			availableProjectsIds.add(p.getProjectId());
-			updateFromProject(versionedDependnecies, p);
+			updateFromProject(versionedPackages, p);
 		});
 
-		availableProjectsIds.forEach(versionedDependnecies::remove);
-		return versionedDependnecies;
+		availableProjectsIds.forEach(versionedPackages::remove);
 	}
 
 	/**
@@ -123,8 +114,8 @@ class DependneciesHelper {
 	 * Note that {@code ids} of the returned dependencies are not validated.
 	 *
 	 * Note that in case of dependency being defined in multiple places of the dependency graph only one mapping will be
-	 * present. In case of different versions simple resolution is performed, last found with non empty version is used
-	 * (where "latest" is not ).
+	 * present. In case of different versions simple resolution is performed, first found with non empty version is
+	 * used.
 	 */
 	private void updateFromProject(Map<String, String> dependencies, IN4JSProject project) {
 		ProjectDescription projectDescription = getProjectDescription(project.getLocation());
