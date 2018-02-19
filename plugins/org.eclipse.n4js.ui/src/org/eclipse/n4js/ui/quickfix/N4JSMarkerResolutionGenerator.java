@@ -250,6 +250,7 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 	 * Same as {@link #isMarkerStillValid(IMarker, IAnnotationModel)}, but obtains the annotation model from the
 	 * marker's editor.
 	 */
+	@SuppressWarnings("deprecation")
 	private boolean isMarkerStillValid(IMarker marker) {
 		if (marker == null)
 			return false;
