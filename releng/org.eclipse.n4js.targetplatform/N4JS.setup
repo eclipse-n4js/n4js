@@ -246,15 +246,6 @@
         url="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.0"/>
   </setupTask>
   <setupTask
-       xsi:type="setup.p2:P2Task"
-       label="JUnit Runners">
-     <requirement
-         name="org.eclipse.jdt.junit.runners.feature.feature.group"
-         versionRange="[0.1.0,0.1.1)"/>
-     <repository
-         url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
-   </setupTask>
-  <setupTask
       xsi:type="setup.p2:P2Task"
       label="XPect">
     <requirement
@@ -391,8 +382,6 @@
         <repository
             url="http://boothen.github.io/Json-Eclipse-Plugin"/>
         <repository
-            url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
-        <repository
             url="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
         <repository
             url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
@@ -525,8 +514,8 @@
       launcher="CreateConfigFileForSettingDefaultProduct">
     <description>Launch that creates a config.ini</description>
   </setupTask>
-  <stream name="master"
-      label="Master"/>
+  <stream name="GH-224-Xpect"
+      label="GH-224-Xpect (Neon)"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
