@@ -26,6 +26,10 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator"
             fileExtensions="n4js,js,n4jsx,jsx">
       </subgenerator>
+      <subgenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator"
+            fileExtensions="n4idl">
+      </subgenerator>
    </extension>
 
     <extension
@@ -79,6 +83,7 @@ Contributors:
                 <test property="org.eclipse.core.resources.extension"  value="n4jsd"/>
                 <test property="org.eclipse.core.resources.extension"  value="js"/>
                 <test property="org.eclipse.core.resources.extension"  value="jsx"/>
+                <test property="org.eclipse.core.resources.extension"  value="n4idl"/>
                </or>
           </adapt>
       </definition>
@@ -91,7 +96,7 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="n4js,n4jsx,n4jsd,js,jsx"
+            extensions="n4js,n4jsx,n4idl,n4jsd,js,jsx"
             id="org.eclipse.n4js.N4JS"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4JS Editor">
@@ -448,7 +453,7 @@ Contributors:
                      checkEnabled="false">
                   <test
                         property="org.eclipse.n4js.ui.fileExtension"
-                        value="n4js, js, n4jsx, jsx">
+                        value="n4js, js, n4jsx, jsx, n4idl">
                   </test>
                </visibleWhen>
             </command>
@@ -564,6 +569,19 @@ Contributors:
         </resourceServiceProvider>
     </extension>
 
+    <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+        <parser
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            type="n4idl">
+        </parser>
+    </extension>
+    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="n4idl">
+        </resourceServiceProvider>
+    </extension>
 
     <!-- marker definitions for org.eclipse.n4js.N4JS -->
     <extension
@@ -637,7 +655,7 @@ Contributors:
          point="org.eclipse.xtext.builder.participant">
       <participant
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
-            fileExtensions="n4js,n4jsx,js,jsx,n4jsd">
+            fileExtensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
       </participant>
    </extension>
    <extension
@@ -913,19 +931,19 @@ Contributors:
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.eclipse.n4js.N4JS.compare.contentViewers"
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="n4js,n4jsx,js,jsx,n4jsd">
+            extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
     <viewer id="org.eclipse.n4js.N4JS.compare.contentMergeViewers"
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="n4js,n4jsx,js,jsx,n4jsd" label="N4JS Compare">
+            extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl" label="N4JS Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
     <provider id="org.eclipse.n4js.N4JS.editors.documentProviders"
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="n4js,n4jsx,js,jsx,n4jsd">
+            extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
     </provider>
   </extension>
   <extension point="org.eclipse.team.core.fileTypes">
@@ -986,7 +1004,7 @@ Contributors:
                      checkEnabled="false">
                   <test
                         property="org.eclipse.n4js.ui.fileExtension"
-                        value="n4js,n4jsx,js,n4js">  <!-- No code generation for N4JSD -->
+                        value="n4js,n4jsx,js,n4js,n4idl">  <!-- No code generation for N4JSD -->
                   </test>
                </visibleWhen>
             </command>

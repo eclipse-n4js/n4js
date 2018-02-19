@@ -396,6 +396,12 @@ public final class AnnotationDefinition {
 	public final static AnnotationDefinition SINGLETON = define("Singleton").targets(N4_CLASS_DECLARATION)
 			.retention(RUNTIME).end();
 
+	/**
+	 * Annotation to mark function declarations as migrations in the context of N4IDL.
+	 */
+	public final static AnnotationDefinition MIGRATION = define("Migration").targets(FUNCTION_DECLARATION)
+			.retention(RUNTIME).end();
+
 	// <---- miscellaneous ---->
 
 	/**

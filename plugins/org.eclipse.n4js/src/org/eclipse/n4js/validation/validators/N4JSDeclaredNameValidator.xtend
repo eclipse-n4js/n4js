@@ -12,6 +12,17 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.Sets
 import com.google.inject.Inject
+import java.util.ArrayList
+import java.util.Collections
+import java.util.HashSet
+import java.util.Iterator
+import java.util.List
+import java.util.ListIterator
+import java.util.Set
+import java.util.stream.Collectors
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Block
@@ -26,6 +37,8 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
+import org.eclipse.n4js.n4JS.N4EnumDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -55,17 +68,6 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
-import java.util.ArrayList
-import java.util.Collections
-import java.util.HashSet
-import java.util.Iterator
-import java.util.List
-import java.util.ListIterator
-import java.util.Set
-import java.util.stream.Collectors
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.util.IResourceScopeCache
@@ -75,6 +77,8 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4JS.VersionedElement
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 
 /**
  */
@@ -594,7 +598,11 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * returns null in other cases.
 	 * Does not check value of the returned name, so it can be null or empty string.
 	 */
-	def protected String getDeclaredName(EObject eo) {
+	def private String getDeclaredName(EObject eo) {
+		if (VersionUtils.isVersioned(eo) && eo instanceof NamedElement) {
+			return (eo as NamedElement).name + "#" + (eo as VersionedElement).declaredVersion;
+		}
+
 		if (eo instanceof FunctionDeclaration || eo instanceof FunctionExpression || eo instanceof N4TypeDefinition ||
 			eo instanceof Variable) {
 			return eo.findName
@@ -609,7 +617,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 				if (importedElem === null) {
 					return null
 				}
-				return importedElem.findName;
+				val n = importedElem.findName
+				return n;
 			}
 		}
 
@@ -622,8 +631,13 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		return null
 	}
 
-	def protected String getDeclaredNameForGlobalScopeComparision(EObject eo) {
-		return eo.declaredName
+	def private String getDeclaredNameForGlobalScopeComparision(EObject eo) {
+		switch (eo) {
+			N4ClassDeclaration    : eo.name
+			N4InterfaceDeclaration: eo.name
+			N4EnumDeclaration	 : eo.name
+			default                  : eo.declaredName
+		}
 	}
 
 	/** helper dispatch because we lack one uniform interface for getName */

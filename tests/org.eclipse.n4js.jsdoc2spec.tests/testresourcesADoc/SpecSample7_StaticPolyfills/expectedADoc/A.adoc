@@ -25,10 +25,11 @@ include::{find}config.adoc[]
 [role=memberdoc]
 === ++Method bar++
 
+[.small]#(Polyfilled from n4js:testresources)#
+
 ==== Signature
 
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample7_StaticPolyfills:src/n4js/A:A#bar++[``++public bar(): void++``]
-footnote:[Polyfilled from n4js:testresources]
 
 
 
@@ -60,10 +61,11 @@ Add tests specifying semantics for ``++base(x: number): void++``
 [role=memberdoc]
 === ++Method foo++
 
+[.small]#(Polyfilled from n4js:testresources)#
+
 ==== Signature
 
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample7_StaticPolyfills:src/n4js/A:A#foo++[``++public foo(x: any, n: number=…): void++``]
-footnote:[Polyfilled from n4js:testresources]
 
 
 

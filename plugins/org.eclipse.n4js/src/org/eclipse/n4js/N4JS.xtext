@@ -83,12 +83,12 @@ AnnotatedScriptElement returns ScriptElement:
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
 				TypeVariables?
-				ClassExtendsClause<Yield=false>?
+				ClassExtendsImplements<Yield=false>?
 			|   {N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false>
 				TypeVariables?
-				InterfaceImplementsList?
+				InterfaceExtendsList?
 			)
 			Members<Yield=false>
 		)
@@ -161,12 +161,12 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield>
 				TypeVariables?
-				ClassExtendsClause<Yield>?
+				ClassExtendsImplements<Yield>?
 			|	{N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				('interface') typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
 				TypeVariables?
-				InterfaceImplementsList?
+				InterfaceExtendsList?
 			)
 			Members<Yield>
 		)
@@ -313,7 +313,7 @@ AnnotatedExpression <Yield> returns Expression:
 	ExpressionAnnotationList (
 		{N4ClassExpression.annotationList=current}
 		'class' name=BindingIdentifier<Yield>?
-		ClassExtendsClause<Yield>?
+		ClassExtendsImplements<Yield>?
 		Members<Yield>
 	|	{FunctionExpression.annotationList=current} AsyncNoTrailingLineBreak
 		FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>
@@ -586,6 +586,7 @@ ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
 IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 ;
 
 SuperLiteral: {SuperLiteral} 'super';
@@ -1184,7 +1185,7 @@ TypeRefForCast returns types::StaticBaseTypeRef:
 	| ThisTypeRef
 	| TypeTypeRef
 	| ArrowFunctionTypeExpression
-	
+
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
@@ -1232,12 +1233,13 @@ QualifiedTypeReferenceName:
 // cf. N4JSSpec §14
 N4ClassDeclaration <Yield>:
 	=>(
-		{N4ClassDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'class' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		'class' typingStrategy=TypingStrategyDefSiteOperator?
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	TypeVariables?
-	ClassExtendsClause<Yield>?
+	ClassExtendsImplements<Yield>?
 	Members<Yield>
 ;
 
@@ -1247,50 +1249,47 @@ fragment Members <Yield>*:
 	'}'
 ;
 
-/**
- * Second 'extends' is not allowed and later validated to produce nicer error messages.
- */
-fragment ClassExtendsClause <Yield>*:
-	'extends' (
-		  =>superClassRef=ParameterizedTypeRefNominal (('implements' | 'extends') ClassImplementsList)?
-		| superClassExpression=LeftHandSideExpression<Yield>
-	)
-	| 'implements' ClassImplementsList
+// we allow incorrect order of 'extends' and 'implements'; a validation will ensure the correct order
+fragment ClassExtendsImplements <Yield>*:
+	  (ClassExtendsClause<Yield> ClassImplementsList?)
+	| (ClassImplementsList ClassExtendsClause<Yield>?)
 ;
 
-/**
- * In the list, only ',' is allowed as separator, this is validated later to procude nicer error messages.
- */
+fragment ClassExtendsClause <Yield>*:
+	'extends' (
+		  =>superClassRef=ParameterizedTypeRefNominal
+		| superClassExpression=LeftHandSideExpression<Yield>
+	)
+;
+
 fragment ClassImplementsList*:
-	implementedInterfaceRefs+=ParameterizedTypeRefNominal
-	((',' | 'implements' | 'extends') implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
+	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal
+	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
 ;
 
 N4ClassExpression <Yield>:
 	{N4ClassExpression}
 	'class' name=BindingIdentifier<Yield>?
-	ClassExtendsClause<Yield>?
+	ClassExtendsImplements<Yield>?
 	Members<Yield>;
 
 // cf. N4JSSpec §16
 N4InterfaceDeclaration <Yield>:
 	=> (
-		{N4InterfaceDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	TypeVariables?
-	InterfaceImplementsList?
+	InterfaceExtendsList?
 	Members<Yield>
 ;
 
-/**
- * Actually only 'implements' is allowed in front and ',' are allowed as list separator,
- * this is validated later to produce nicer error messages.
- */
-fragment InterfaceImplementsList*:
+// we allow both 'extends' and 'implements' here, a validation will ensure 'extends' is used
+fragment InterfaceExtendsList*:
 	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal
-		((',' | 'implements' | 'extends') superInterfaceRefs+=ParameterizedTypeRefNominal)*
+	(',' superInterfaceRefs+=ParameterizedTypeRefNominal)*
 ;
 
 // cf. N4JSSpec §13
@@ -1299,6 +1298,7 @@ N4EnumDeclaration <Yield>:
 		{N4EnumDeclaration}
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	'{'
 		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
@@ -1446,7 +1446,7 @@ SingleNameBinding <Yield, AllowType> returns BindingElement:
 ;
 
 BindingElement <Yield>:
-	BindingElementImpl<Yield>  
+	BindingElementImpl<Yield>
 ;
 
 BindingRestElement <Yield> returns BindingElement:
@@ -1527,3 +1527,6 @@ JSXPropertyAttribute:
 	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | ('{'
 	jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')))?;
 
+
+/* Version (N4IDL) related rules */
+fragment VersionDeclaration*: declaredVersion=VERSION;

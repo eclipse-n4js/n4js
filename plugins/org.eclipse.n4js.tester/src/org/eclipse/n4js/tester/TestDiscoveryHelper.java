@@ -42,8 +42,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
+import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -65,6 +65,7 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
 import com.google.inject.Inject;
 
@@ -75,6 +76,8 @@ public class TestDiscoveryHelper {
 
 	@Inject
 	private FileExtensionsRegistry fileExtensionRegistry;
+	@Inject
+	private IN4JSCore n4jscore;
 
 	private static final EClass T_CLASS = TypesPackage.eINSTANCE.getTClass();
 
@@ -357,13 +360,8 @@ public class TestDiscoveryHelper {
 	}
 
 	private TestCase createTestCase(final TMethod method, final TModule module, final String clazzFqnStr) {
-		String origin = module.getProjectId();
-		IN4JSProject project = n4jsCore.findProject(module.eResource().getURI()).orNull();
-		if (project != null) {
-			origin = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
-		}
 		final TestCase testCase = new TestCase(createTestCaseId(clazzFqnStr, method), clazzFqnStr,
-				origin, method.getName(), method.getName(), EcoreUtil.getURI(method));
+				module.getProjectId(), method.getName(), method.getName(), EcoreUtil.getURI(method));
 		return testCase;
 	}
 
@@ -375,8 +373,28 @@ public class TestDiscoveryHelper {
 	 * Returns the name to be used in the test catalog for the given {@link TClass}. We use the fully qualified name for
 	 * this purpose.
 	 */
-	private String getClassName(final TClass clazz) {
-		return resourceNameComputer.getFullyQualifiedTypeName(clazz);
+	private String getClassName(TClass clazz) {
+		String classStr = "";
+		if (clazz.getDeclaredVersion() > 0) {
+			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz) + N4IDLGlobals.COMPILED_VERSION_SEPARATOR
+					+ clazz.getDeclaredVersion();
+		} else {
+			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz);
+		}
+
+		IN4JSProject project = n4jscore.findProject(clazz.eResource().getURI()).orNull();
+		if (project != null) {
+			String output = project.getOutputPath();
+			if (Strings.isNullOrEmpty(output) == false && output != ".") {
+				if (output.endsWith("/")) {
+					classStr = output + classStr;
+				} else {
+					classStr = output + "/" + classStr;
+				}
+			}
+		}
+
+		return classStr;
 	}
 
 	private Map<URI, TModule> loadModules(final Iterable<URI> moduleUris, final IResourceDescriptions index,

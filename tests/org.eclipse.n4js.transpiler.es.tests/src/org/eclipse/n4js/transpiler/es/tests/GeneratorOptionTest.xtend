@@ -91,7 +91,7 @@ class GeneratorOptionTest extends AbstractTranspilerTest {
 						}
 					};
 				});
-			})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+			})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 		''');
 	}
 
@@ -126,7 +126,7 @@ class GeneratorOptionTest extends AbstractTranspilerTest {
 						}
 					};
 				});
-			})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+			})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 		''');
 	}
 }

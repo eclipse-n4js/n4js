@@ -274,3 +274,38 @@ function WhileStatementContinue5() {
 	}
 	"end";
 }
+
+function Block1(a) {
+	// Block1 XPECT succs type 'Break' at 'break LBLa;' --> "end"
+	"start";
+	LBLa: {
+		break LBLa;
+	}
+	"end";
+}
+
+function Block2(a) {
+	// Block2 XPECT succs type 'Break' at 'break LBLa;' --> return;
+	"start";
+	try {
+		LBLa: {
+			break LBLa;
+		}
+		return;
+	} finally {
+		"finally";
+	}
+}
+
+function Block3(a) {
+	// Block3 XPECT succs type 'Break' at 'break LBLa;' --> "finally"
+	"start";
+	LBLa: {
+		try {
+			break LBLa;
+		} finally {
+			"finally";
+		}
+	}
+	"end";
+}

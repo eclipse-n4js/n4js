@@ -25,8 +25,9 @@
 		$n4Export('TestMethodDescriptor', TestMethodDescriptor);
 		return {
 			setters: [
-				function($_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fNvp) {
-					Nvp = $_import_org_u002feclipse_u002fn4js_u002fmangelhaft_u002ftypes_u002fNvp.Nvp;
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/Nvp
+					Nvp = $exports.Nvp;
 				}
 			],
 			execute: function() {
@@ -147,5 +148,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node').System(require, module) : System);
 //# sourceMappingURL=TestMethodDescriptor.map

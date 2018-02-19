@@ -42,6 +42,7 @@ ruleScriptElement:
 			?
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
 			ruleN4ClassDeclaration
 		)
@@ -54,6 +55,7 @@ ruleScriptElement:
 			?
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
 			ruleN4InterfaceDeclaration
 		)
@@ -64,6 +66,7 @@ ruleScriptElement:
 			'enum'
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
 			ruleN4EnumDeclaration
 		)
@@ -118,7 +121,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleClassExtendsClause?
+			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
 			*
@@ -127,7 +130,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleInterfaceImplementsList?
+			ruleInterfaceExtendsList?
 		)
 		ruleMembers
 		    |
@@ -233,6 +236,7 @@ ruleExportableElement:
 			?
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
 			ruleN4ClassDeclaration
 		)
@@ -245,6 +249,7 @@ ruleExportableElement:
 			?
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
 			ruleN4InterfaceDeclaration
 		)
@@ -255,6 +260,7 @@ ruleExportableElement:
 			'enum'
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
 			ruleN4EnumDeclaration
 		)
@@ -310,7 +316,7 @@ ruleAnnotatedExportableElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleClassExtendsClause?
+			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
 			*
@@ -319,7 +325,7 @@ ruleAnnotatedExportableElement:
 			?
 			ruleBindingIdentifier
 			ruleTypeVariables?
-			ruleInterfaceImplementsList?
+			ruleInterfaceExtendsList?
 		)
 		ruleMembers
 		    |
@@ -960,7 +966,7 @@ ruleAnnotatedExpression:
 		'class'
 		ruleBindingIdentifier
 		?
-		ruleClassExtendsClause?
+		ruleClassExtendsImplements?
 		ruleMembers
 		    |
 		ruleAsyncNoTrailingLineBreak
@@ -975,7 +981,7 @@ norm1_AnnotatedExpression:
 		'class'
 		norm1_BindingIdentifier
 		?
-		norm1_ClassExtendsClause?
+		norm1_ClassExtendsImplements?
 		norm1_Members
 		    |
 		ruleAsyncNoTrailingLineBreak
@@ -2648,12 +2654,22 @@ norm1_ParenExpression:
 
 // Rule IdentifierRef
 ruleIdentifierRef:
-	ruleBindingIdentifier
+	(
+		ruleBindingIdentifier
+		    |
+		ruleBindingIdentifier
+		ruleVersionRequest
+	)
 ;
 
 // Rule IdentifierRef
 norm1_IdentifierRef:
-	norm1_BindingIdentifier
+	(
+		norm1_BindingIdentifier
+		    |
+		norm1_BindingIdentifier
+		ruleVersionRequest
+	)
 ;
 
 // Rule SuperLiteral
@@ -6254,6 +6270,7 @@ ruleN4ClassDeclaration:
 		?
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
@@ -6262,9 +6279,10 @@ ruleN4ClassDeclaration:
 		?
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 	)
 	ruleTypeVariables?
-	ruleClassExtendsClause?
+	ruleClassExtendsImplements?
 	ruleMembers
 ;
 
@@ -6284,71 +6302,62 @@ norm1_Members:
 	'}'
 ;
 
+// Rule ClassExtendsImplements
+ruleClassExtendsImplements:
+	(
+		ruleClassExtendsClause
+		ruleClassImplementsList?
+		    |
+		ruleClassImplementsList
+		ruleClassExtendsClause?
+	)
+;
+
+// Rule ClassExtendsImplements
+norm1_ClassExtendsImplements:
+	(
+		norm1_ClassExtendsClause
+		ruleClassImplementsList?
+		    |
+		ruleClassImplementsList
+		norm1_ClassExtendsClause?
+	)
+;
+
 // Rule ClassExtendsClause
 ruleClassExtendsClause:
+	'extends'
 	(
-		'extends'
 		(
-			(
-				(ruleParameterizedTypeRefNominal
-				)=>
-				ruleParameterizedTypeRefNominal
-			)
-			(
-				(
-					'implements'
-					    |
-					'extends'
-				)
-				ruleClassImplementsList
-			)?
-			    |
-			ruleLeftHandSideExpression
+			(ruleParameterizedTypeRefNominal
+			)=>
+			ruleParameterizedTypeRefNominal
 		)
 		    |
-		'implements'
-		ruleClassImplementsList
+		ruleLeftHandSideExpression
 	)
 ;
 
 // Rule ClassExtendsClause
 norm1_ClassExtendsClause:
+	'extends'
 	(
-		'extends'
 		(
-			(
-				(ruleParameterizedTypeRefNominal
-				)=>
-				ruleParameterizedTypeRefNominal
-			)
-			(
-				(
-					'implements'
-					    |
-					'extends'
-				)
-				ruleClassImplementsList
-			)?
-			    |
-			norm1_LeftHandSideExpression
+			(ruleParameterizedTypeRefNominal
+			)=>
+			ruleParameterizedTypeRefNominal
 		)
 		    |
-		'implements'
-		ruleClassImplementsList
+		norm1_LeftHandSideExpression
 	)
 ;
 
 // Rule ClassImplementsList
 ruleClassImplementsList:
+	'implements'
 	ruleParameterizedTypeRefNominal
 	(
-		(
-			','
-			    |
-			'implements'
-			    |
-			'extends'
-		)
+		','
 		ruleParameterizedTypeRefNominal
 	)*
 ;
@@ -6358,7 +6367,7 @@ ruleN4ClassExpression:
 	'class'
 	ruleBindingIdentifier
 	?
-	ruleClassExtendsClause?
+	ruleClassExtendsImplements?
 	ruleMembers
 ;
 
@@ -6367,7 +6376,7 @@ norm1_N4ClassExpression:
 	'class'
 	norm1_BindingIdentifier
 	?
-	norm1_ClassExtendsClause?
+	norm1_ClassExtendsImplements?
 	norm1_Members
 ;
 
@@ -6381,6 +6390,7 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
@@ -6389,14 +6399,15 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 	)
 	ruleTypeVariables?
-	ruleInterfaceImplementsList?
+	ruleInterfaceExtendsList?
 	ruleMembers
 ;
 
-// Rule InterfaceImplementsList
-ruleInterfaceImplementsList:
+// Rule InterfaceExtendsList
+ruleInterfaceExtendsList:
 	(
 		'extends'
 		    |
@@ -6404,13 +6415,7 @@ ruleInterfaceImplementsList:
 	)
 	ruleParameterizedTypeRefNominal
 	(
-		(
-			','
-			    |
-			'implements'
-			    |
-			'extends'
-		)
+		','
 		ruleParameterizedTypeRefNominal
 	)*
 ;
@@ -6423,12 +6428,14 @@ ruleN4EnumDeclaration:
 		'enum'
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
 		'enum'
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 	)
 	'{'
 	(
@@ -8182,6 +8189,11 @@ ruleJSXPropertyAttribute:
 	)?
 ;
 
+// Rule VersionDeclaration
+ruleVersionDeclaration:
+	RULE_VERSION
+;
+
 // Rule TypeRef
 ruleTypeRef:
 	ruleIntersectionTypeExpression
@@ -8445,8 +8457,18 @@ ruleArrayTypeRef:
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
-	ruleTypingStrategyUseSiteOperator
-	ruleTypeAndTypeArguments
+	(
+		ruleTypingStrategyUseSiteOperator
+		ruleTypeReferenceName
+		    |
+		ruleTypingStrategyUseSiteOperator
+		ruleTypeReferenceName
+		ruleVersionRequest
+	)
+	(
+		('<')=>
+		ruleTypeArguments
+	)?
 	(
 		'with'
 		ruleTStructMemberList
@@ -8455,11 +8477,21 @@ ruleParameterizedTypeRefStructural:
 
 // Rule TypeAndTypeArguments
 ruleTypeAndTypeArguments:
-	ruleTypeReferenceName
+	(
+		ruleTypeReferenceName
+		    |
+		ruleTypeReferenceName
+		ruleVersionRequest
+	)
 	(
 		('<')=>
 		ruleTypeArguments
 	)?
+;
+
+// Rule VersionRequest
+ruleVersionRequest:
+	RULE_VERSION
 ;
 
 // Rule TypeArguments
@@ -9007,6 +9039,8 @@ fragment RULE_IDENTIFIER_START : (RULE_UNICODE_LETTER_FRAGMENT|'$'|'_'|RULE_UNIC
 fragment RULE_IDENTIFIER_PART : (RULE_UNICODE_LETTER_FRAGMENT|RULE_UNICODE_ESCAPE_FRAGMENT|'$'|RULE_UNICODE_COMBINING_MARK_FRAGMENT|RULE_UNICODE_DIGIT_FRAGMENT|RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT|RULE_ZWNJ|RULE_ZWJ);
 
 RULE_DOT_DOT : '..';
+
+RULE_VERSION : '#' RULE_WS* RULE_INT;
 
 fragment RULE_HEX_DIGIT : (RULE_DECIMAL_DIGIT_FRAGMENT|'a'..'f'|'A'..'F');
 

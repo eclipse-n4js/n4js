@@ -12,12 +12,9 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleApplicationTrace
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.RuleFailedException
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
 import org.eclipse.n4js.n4JS.N4ClassExpression
@@ -43,6 +40,10 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleApplicationTrace
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleFailedException
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -79,7 +80,7 @@ public class TypeProcessor extends AbstractProcessor {
 		if (node.isTypableNode) {
 			val nodeCasted = node as TypableElement; // because #isTypableNode() returned true
 			// we have a typable node
-			if (N4JSASTUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(node)
+			if (DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(node)
 				&& polyProcessor.isEntryPoint(nodeCasted)) {
 				// special case: array or object literal being used as a destructuring pattern
 				log(indentLevel, "ignored (array or object literal being used as a destructuring pattern)")
@@ -396,7 +397,7 @@ public class TypeProcessor extends AbstractProcessor {
 		} else {
 			val msg = "*#*#*#*#*#* ILLEGAL FORWARD REFERENCE to " + node + " in " + node.eResource?.URI;
 			logErr(msg);
-			return new Result(new IllegalStateException(msg));
+			return new Result<TypeRef>(new RuleFailedException(msg));
 		}
 	}
 

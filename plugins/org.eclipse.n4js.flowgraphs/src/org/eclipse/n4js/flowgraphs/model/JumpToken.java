@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import java.util.Objects;
+
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 
@@ -22,6 +24,8 @@ public class JumpToken implements Comparable<JumpToken> {
 	final public ControlFlowType cfType;
 	/** Specifies an identifier, such as a label in a {@link LabelledStatement}. */
 	final public LabelledStatement lblStmt;
+
+	final private int cachedHash;
 
 	/**
 	 * Constructor.<br/>
@@ -38,6 +42,7 @@ public class JumpToken implements Comparable<JumpToken> {
 	public JumpToken(ControlFlowType type, LabelledStatement lblStmt) {
 		this.cfType = type;
 		this.lblStmt = lblStmt;
+		this.cachedHash = Objects.hash(cfType, lblStmt);
 	}
 
 	@Override
@@ -71,11 +76,7 @@ public class JumpToken implements Comparable<JumpToken> {
 
 	@Override
 	public int hashCode() {
-		long hashCode = cfType.hashCode();
-		if (lblStmt != null) {
-			hashCode += lblStmt.hashCode();
-		}
-		return (int) (hashCode % Integer.MAX_VALUE);
+		return cachedHash;
 	}
 
 	@Override

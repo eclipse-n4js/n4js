@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
-import org.eclipse.n4js.misc.DestructureHelper;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.AdditiveOperator;
 import org.eclipse.n4js.n4JS.Argument;
@@ -42,6 +41,7 @@ import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.CatchVariable;
 import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
+import org.eclipse.n4js.n4JS.DestructureUtils;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
@@ -99,6 +99,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
+import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver;
 import org.eclipse.n4js.n4jsx.ReactHelper;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.scoping.members.MemberScopingHelper;
@@ -161,8 +162,8 @@ import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.StructuralTypingResult;
 import org.eclipse.n4js.typesystem.TypeSystemErrorExtensions;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
-import org.eclipse.n4js.typesystem.VersionResolver;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
@@ -518,7 +519,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   private JavaScriptVariantHelper jsVariantHelper;
   
   @Inject
-  private VersionResolver versionResolver;
+  private N4IDLVersionResolver versionResolver;
   
   @Inject
   private IQualifiedNameConverter qualifiedNameConverter;
@@ -633,11 +634,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     this.jsVariantHelper = jsVariantHelper;
   }
   
-  public VersionResolver getVersionResolver() {
+  public N4IDLVersionResolver getVersionResolver() {
     return this.versionResolver;
   }
   
-  public void setVersionResolver(final VersionResolver versionResolver) {
+  public void setVersionResolver(final N4IDLVersionResolver versionResolver) {
     this.versionResolver = versionResolver;
   }
   
@@ -5399,7 +5400,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInAssignmentExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final AssignmentExpression expr, final Expression operand) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    /* { ! jsVariantHelper.isTypeAware(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { N4JSASTUtils.isDestructuringAssignment(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { expr.op===AssignmentOperator.ASSIGN; if (operand===expr.lhs) { T = G.bottomTypeRef } else { G |- expr.lhs : T } } or { expr.op===AssignmentOperator.ADD_ASSIGN if (operand===expr.lhs) { T = TypeUtils.createNonSimplifiedIntersectionType(G.numberTypeRef, G.stringTypeRef); } else { G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef if (lhsTypeRef.declaredType === G.stringType) { T = G.anyTypeRef } else if(G.isNumeric(lhsTypeRef.declaredType)) { T = G.numberTypeRef } else { T = G.anyTypeRef } } } or { T = G.numberTypeRef } */
+    /* { ! jsVariantHelper.isTypeAware(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { DestructureUtils.isTopOfDestructuringAssignment(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { expr.op===AssignmentOperator.ASSIGN; if (operand===expr.lhs) { T = G.bottomTypeRef } else { G |- expr.lhs : T } } or { expr.op===AssignmentOperator.ADD_ASSIGN if (operand===expr.lhs) { T = TypeUtils.createNonSimplifiedIntersectionType(G.numberTypeRef, G.stringTypeRef); } else { G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef if (lhsTypeRef.declaredType === G.stringType) { T = G.anyTypeRef } else if(G.isNumeric(lhsTypeRef.declaredType)) { T = G.numberTypeRef } else { T = G.anyTypeRef } } } or { T = G.numberTypeRef } */
     {
       RuleFailedException previousFailure = null;
       try {
@@ -5418,13 +5419,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         }
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
-        /* { N4JSASTUtils.isDestructuringAssignment(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { expr.op===AssignmentOperator.ASSIGN; if (operand===expr.lhs) { T = G.bottomTypeRef } else { G |- expr.lhs : T } } or { expr.op===AssignmentOperator.ADD_ASSIGN if (operand===expr.lhs) { T = TypeUtils.createNonSimplifiedIntersectionType(G.numberTypeRef, G.stringTypeRef); } else { G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef if (lhsTypeRef.declaredType === G.stringType) { T = G.anyTypeRef } else if(G.isNumeric(lhsTypeRef.declaredType)) { T = G.numberTypeRef } else { T = G.anyTypeRef } } } or { T = G.numberTypeRef } */
+        /* { DestructureUtils.isTopOfDestructuringAssignment(expr) if (operand===expr.lhs) { T = G.bottomTypeRef } else { T = G.topTypeRef } } or { expr.op===AssignmentOperator.ASSIGN; if (operand===expr.lhs) { T = G.bottomTypeRef } else { G |- expr.lhs : T } } or { expr.op===AssignmentOperator.ADD_ASSIGN if (operand===expr.lhs) { T = TypeUtils.createNonSimplifiedIntersectionType(G.numberTypeRef, G.stringTypeRef); } else { G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef if (lhsTypeRef.declaredType === G.stringType) { T = G.anyTypeRef } else if(G.isNumeric(lhsTypeRef.declaredType)) { T = G.numberTypeRef } else { T = G.anyTypeRef } } } or { T = G.numberTypeRef } */
         {
           try {
-            boolean _isDestructuringAssignment = N4JSASTUtils.isDestructuringAssignment(expr);
-            /* N4JSASTUtils.isDestructuringAssignment(expr) */
-            if (!_isDestructuringAssignment) {
-              sneakyThrowRuleFailedException("N4JSASTUtils.isDestructuringAssignment(expr)");
+            boolean _isTopOfDestructuringAssignment = DestructureUtils.isTopOfDestructuringAssignment(expr);
+            /* DestructureUtils.isTopOfDestructuringAssignment(expr) */
+            if (!_isTopOfDestructuringAssignment) {
+              sneakyThrowRuleFailedException("DestructureUtils.isTopOfDestructuringAssignment(expr)");
             }
             Expression _lhs_1 = expr.getLhs();
             boolean _tripleEquals_1 = (operand == _lhs_1);
@@ -5735,8 +5736,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef T = null; // output parameter
     if ((forStmnt.isForOf() && (expression == forStmnt.getExpression()))) {
       final Wildcard wildThing = TypeRefsFactory.eINSTANCE.createWildcard();
-      boolean _isDestructuringForStatement = N4JSASTUtils.isDestructuringForStatement(forStmnt);
-      if (_isDestructuringForStatement) {
+      boolean _isTopOfDestructuringForStatement = DestructureUtils.isTopOfDestructuringForStatement(forStmnt);
+      if (_isTopOfDestructuringForStatement) {
       } else {
         VariableDeclaration _xifexpression = null;
         boolean _isEmpty = forStmnt.getVarDecl().isEmpty();

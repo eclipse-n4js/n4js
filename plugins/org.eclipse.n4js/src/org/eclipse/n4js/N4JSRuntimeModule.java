@@ -18,7 +18,7 @@ import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
@@ -55,6 +55,7 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.scoping.builtin.ScopeRegistrar;
+import org.eclipse.n4js.scoping.imports.ImportedElementsMap;
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
@@ -64,8 +65,6 @@ import org.eclipse.n4js.typesystem.CustomInternalTypeSystem;
 import org.eclipse.n4js.typesystem.N4JSStringRepresenation;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.N4JSValidatorErrorGenerator;
-import org.eclipse.n4js.typesystem.N4JSVersionResolver;
-import org.eclipse.n4js.typesystem.VersionResolver;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 import org.eclipse.n4js.utils.validation.PrePostDiagnostician;
@@ -411,8 +410,8 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/**
 	 * Binds the flow analyses facade used as an entry point into flow analyses.
 	 */
-	public Class<? extends N4JSFlowAnalyzer> bindFlowAnalyses() {
-		return N4JSFlowAnalyzer.class;
+	public Class<? extends N4JSFlowAnalyser> bindFlowAnalyses() {
+		return N4JSFlowAnalyser.class;
 	}
 
 	/**
@@ -540,14 +539,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	}
 
 	/**
-	 * Bind type version resolver (used in N4JS.xsemantics). This customization point is used in N4IDL to support
-	 * versions in the type system.
-	 */
-	public Class<? extends VersionResolver> bindVersionResolver() {
-		return N4JSVersionResolver.class;
-	}
-
-	/**
 	 * Bind file extension calculator
 	 */
 	public Class<? extends XpectAwareFileExtensionCalculator> bindXpectAwareFileExtensionCalculator() {
@@ -558,4 +549,13 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
 		return N4JSCompositeGenerator.class;
 	}
+
+	//// N4IDL specific bindings
+
+	/**
+	 */
+	public Class<? extends ImportedElementsMap.Provider> bindImportedElementsMapProvider() {
+		return ImportedElementsMap.Provider.class;
+	}
+
 }

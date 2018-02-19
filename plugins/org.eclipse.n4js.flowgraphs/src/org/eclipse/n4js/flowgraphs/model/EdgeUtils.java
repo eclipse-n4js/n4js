@@ -66,32 +66,4 @@ public class EdgeUtils {
 		end.pred.remove(succEdge);
 	}
 
-	/** Adds a {@link DependencyEdge} from n1 to n2 with the given {@link DependencyEdgeType}. */
-	@Deprecated
-	public static DependencyEdge connectDep(DependencyEdgeType edgeType, Node n1, Node n2) {
-		return connectDep(edgeType, n1, n2, null, false);
-	}
-
-	/** Adds a {@link DependencyEdge} from n1 to n2 with the given {@link DependencyEdgeType} and {@link Symbol}. */
-	@Deprecated
-	public static DependencyEdge connectDep(DependencyEdgeType edgeType, Node n1, Node n2, Symbol symbol) {
-		return connectDep(edgeType, n1, n2, symbol, false);
-	}
-
-	/**
-	 * Adds a {@link DependencyEdge} from n1 to n2 with the given {@link DependencyEdgeType}, {@link Symbol} and
-	 * loop-carried property.
-	 */
-	@Deprecated
-	public static DependencyEdge connectDep(DependencyEdgeType edgeType, Node n1, Node n2, Symbol symbol,
-			boolean loopCarried) {
-		assert (n1 != n2) : "Dep-Edge with same Start/End-Nodes";
-
-		DependencyEdge depEdge = new DependencyEdge(edgeType, n1, n2, symbol, loopCarried);
-		n1.addOutgoingDependency(depEdge);
-		n2.addIncomingDependency(depEdge);
-
-		return depEdge;
-	}
-
 }

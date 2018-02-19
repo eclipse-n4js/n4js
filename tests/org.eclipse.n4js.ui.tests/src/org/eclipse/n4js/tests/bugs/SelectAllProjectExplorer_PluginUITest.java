@@ -48,6 +48,7 @@ import org.eclipse.n4js.ui.navigator.internal.SelectWorkingSetDropDownAction;
 import org.eclipse.n4js.ui.navigator.internal.ShowHiddenWorkingSetsDropDownAction;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.workingsets.ProjectTypeAwareWorkingSetManager;
 import org.eclipse.n4js.ui.workingsets.WorkingSet;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
@@ -516,12 +517,12 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 
 	private Object[] workingSetItemWithName(String... workingSetName) {
 		return Arrays.asList(workingSetName).stream()
-				.map(name -> getNavigatorItem(name, WorkingSet.class, DEFAULT_UI_TIMEOUT))
+				.map(name -> getNavigatorItem(name, WorkingSet.class, UIUtils.DEFAULT_UI_TIMEOUT))
 				.toArray();
 	}
 
 	private TreeItem getNavigatorItem(String name, Class<?> type, long timeout) {
-		return obtainValueFromUI(
+		return UIUtils.waitForValueFromUI(
 				() -> getNavigatorItem(name, type),
 				() -> "tree item of type " + type.getSimpleName() + " with name '" + name + "'",
 				timeout);

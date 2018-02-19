@@ -23,14 +23,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ASTIterator;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzerDataRecorder;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyserDataRecorder;
 import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
+import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -53,10 +55,10 @@ import org.eclipse.xtext.xbase.lib.Pair;
 @XpectImport(N4JSOffsetAdapter.class)
 public class FlowgraphsXpectMethod {
 
-	N4JSFlowAnalyzer getFlowAnalyzer(EObject eo) {
+	N4JSFlowAnalyser getFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
-		N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
-		flowAnalyzer.createGraphs(script);
+		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
+		flowAnalyzer.createGraphs(script, true);
 		return flowAnalyzer;
 	}
 
@@ -153,7 +155,7 @@ public class FlowgraphsXpectMethod {
 			return;
 
 		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
-			N4JSFlowAnalyzer flowAnalyzer = getFlowAnalyzer(start);
+			N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(start);
 			Set<ControlFlowType> currCFTypes = flowAnalyzer.getControlFlowTypeToSuccessors(start, succIt.next());
 			if (!currCFTypes.contains(cfType)) {
 				succIt.remove();
@@ -222,16 +224,16 @@ public class FlowgraphsXpectMethod {
 	public void allMergeBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion referenceOffset) {
 
-		N4JSFlowAnalyzerDataRecorder.setEnabled(true);
+		N4JSFlowAnalyserDataRecorder.setEnabled(true);
 		GraphVisitor gv = new DummyForwardBackwardVisitor();
 		ControlFlowElement referenceCFE = getCFE(referenceOffset);
 		getFlowAnalyzer(referenceCFE).accept(gv);
-		N4JSFlowAnalyzerDataRecorder.setEnabled(false);
+		N4JSFlowAnalyserDataRecorder.setEnabled(false);
 		performBranchAnalysis(referenceOffset, null, referenceOffset);
 		List<String> edgeStrings = new LinkedList<>();
 
 		int groupIdx = 0;
-		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyzerDataRecorder.getMergedEdges();
+		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyserDataRecorder.getMergedEdges();
 
 		for (Pair<Node, List<ControlFlowEdge>> pair : mergedEdges) {
 			Node startNode = pair.getKey();
@@ -284,7 +286,7 @@ public class FlowgraphsXpectMethod {
 		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
 		ControlFlowElement startCFE = getCFEWithReference(offsetImpl, referenceOffsetImpl);
 		ControlFlowElement referenceCFE = getCFE(referenceOffset);
-		GraphVisitorInternal.Mode direction = getDirection(directionName);
+		TraverseDirection direction = getDirection(directionName);
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
 		AllBranchPrintVisitor appw = new AllBranchPrintVisitor(container, startCFE, direction);
@@ -292,10 +294,10 @@ public class FlowgraphsXpectMethod {
 		return appw;
 	}
 
-	private GraphVisitorInternal.Mode getDirection(String directionName) {
-		GraphVisitorInternal.Mode direction = Mode.Forward;
+	private TraverseDirection getDirection(String directionName) {
+		TraverseDirection direction = TraverseDirection.Forward;
 		if (directionName != null && !directionName.isEmpty()) {
-			direction = GraphVisitorInternal.Mode.valueOf(directionName);
+			direction = TraverseDirection.valueOf(directionName);
 			if (direction == null) {
 				fail("Unknown direction");
 			}
@@ -361,6 +363,41 @@ public class FlowgraphsXpectMethod {
 		String ccString = (containerContainer != null) ? FGUtils.getClassName(containerContainer) + "::" : "";
 		String containerStr = ccString + FGUtils.getClassName(container);
 		expectation.assertEquals(containerStr);
+	}
+
+	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)? (arg2=STRING)?")
+	@Xpect
+	public void instanceofguard(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset, String holdsName) {
+
+		ControlFlowElement cfe = getCFE(offset);
+		GuardAssertion assertion = null;
+		if (holdsName != null) {
+			assertion = GuardAssertion.valueOf(holdsName);
+		}
+
+		InstanceofGuardAnalyser iga = new InstanceofGuardAnalyser();
+		N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(cfe);
+		flowAnalyzer.accept(iga);
+
+		Collection<InstanceofGuard> ioGuards = null;
+		if (assertion == GuardAssertion.MayHolds) {
+			ioGuards = iga.getMayHoldingTypes(cfe);
+		} else if (assertion == GuardAssertion.NeverHolds) {
+			ioGuards = iga.getNeverHoldingTypes(cfe);
+		} else {
+			ioGuards = iga.getAlwaysHoldingTypes(cfe);
+		}
+
+		List<String> commonPredStrs = new LinkedList<>();
+		for (InstanceofGuard ioGuard : ioGuards) {
+			String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
+			String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
+			commonPredStrs.add(symbolText + "<:" + typeText);
+		}
+
+		expectation.assertEquals(commonPredStrs);
 	}
 
 }

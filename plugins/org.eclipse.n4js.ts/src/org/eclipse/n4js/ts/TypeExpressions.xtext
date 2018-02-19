@@ -60,7 +60,7 @@ TypeRefWithModifiers returns StaticBaseTypeRef:
 TypeRefWithoutModifiers returns StaticBaseTypeRef:
 	  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	| TypeTypeRef
-	
+
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
@@ -69,7 +69,7 @@ TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
 	  ParameterizedTypeRef
 	| ArrayTypeRef
 	| TypeTypeRef
-	
+
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD
 	;
@@ -103,7 +103,7 @@ FunctionTypeExpressionOLD returns FunctionTypeExpression:
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
 	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression;
 
-// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
+// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 fragment TAnonymousFormalParameterList* :
 	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?
 ;
@@ -112,7 +112,7 @@ fragment TAnonymousFormalParameterList* :
  * Used in type expressions, name is optional.
  */
 TAnonymousFormalParameter:
-	variadic?='...'? (=>(name=BindingIdentifier<Yield=false> ->ColonSepTypeRef) | typeRef=TypeRef) 
+	variadic?='...'? (=>(name=BindingIdentifier<Yield=false> ->ColonSepTypeRef) | typeRef=TypeRef)
 	DefaultFormalParameter
 ;
 
@@ -152,13 +152,23 @@ ArrayTypeRef returns ParameterizedTypeRef:
 	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
 
 ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
-	definedTypingStrategy=TypingStrategyUseSiteOperator
-	TypeAndTypeArguments
+	(
+		definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName]
+	  | {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
+		 declaredType=[Type|TypeReferenceName] VersionRequest
+	)
+	(-> TypeArguments)?
 	('with' TStructMemberList)?;
 
-fragment TypeAndTypeArguments returns ParameterizedTypeRef:
-	declaredType=[Type|TypeReferenceName] (->TypeArguments)?
+TypeAndTypeArguments returns ParameterizedTypeRef:
+	(
+		declaredType=[Type|TypeReferenceName]
+	  | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName] VersionRequest
+	)
+	(->TypeArguments)?
 ;
+
+fragment VersionRequest*: requestedVersion=VERSION;
 
 fragment TypeArguments *:
 	'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>'
@@ -349,4 +359,8 @@ terminal fragment IDENTIFIER_PART:
 // the input contains an incomplete variadic?='...' keyword, e.g. ..)
 terminal DOT_DOT:
 	'..'
+;
+
+terminal VERSION returns ecore::EBigDecimal:
+	'#' WS* INT
 ;

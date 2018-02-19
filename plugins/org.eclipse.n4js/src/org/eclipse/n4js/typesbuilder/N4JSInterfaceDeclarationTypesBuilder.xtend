@@ -69,6 +69,9 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 		interfaceType.name = n4Interface.name;
 		interfaceType.exportedName = n4Interface.exportedName;
 		interfaceType.external = n4Interface.external;
+		
+		VersionedTypesBuilderUtil.setTypeVersion(interfaceType, n4Interface);
+		
 		interfaceType
 	}
 

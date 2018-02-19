@@ -10,9 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -42,13 +40,32 @@ class BinaryLogicalExpressionFactory {
 		cNode.addNode(rhsNode);
 		cNode.addNode(exitNode);
 
-		List<Node> nodes = new LinkedList<>();
-		nodes.add(entryNode);
-		nodes.add(lhsNode);
-		nodes.add(rhsNode);
-		nodes.add(exitNode);
-		cNode.connectInternalSucc(nodes);
-		cNode.connectInternalSucc(lhsNode, exitNode);
+		ControlFlowType thenCFT = null;
+		ControlFlowType elseCFT = null;
+		switch (lbExpr.getOp()) {
+		case OR:
+			thenCFT = ControlFlowType.IfFalse;
+			elseCFT = ControlFlowType.IfTrue;
+			break;
+		case AND:
+			thenCFT = ControlFlowType.IfTrue;
+			elseCFT = ControlFlowType.IfFalse;
+			break;
+		}
+
+		cNode.connectInternalSucc(entryNode, lhsNode);
+		cNode.connectInternalSucc(thenCFT, lhsNode, rhsNode);
+		cNode.connectInternalSucc(rhsNode, exitNode);
+
+		cNode.connectInternalSucc(elseCFT, lhsNode, exitNode); // short-circuit evaluation
+
+		if (lhsNode == null) { // broken AST
+			if (rhsNode == null) {
+				cNode.connectInternalSucc(entryNode, exitNode);
+			} else {
+				cNode.connectInternalSucc(entryNode, rhsNode);
+			}
+		}
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
