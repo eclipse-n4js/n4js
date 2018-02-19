@@ -70,7 +70,7 @@ class ForFactory {
 		Node hasNextNode = new HelperNode(NodeNames.HAS_NEXT, astpp.pos(), forStmt);
 		Node nextNode = new HelperNode(NodeNames.NEXT, astpp.pos(), forStmt);
 		Node bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, forStmt, forStmt.getStatement());
-		Node catchContinueNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
+		Node continueCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
 		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), forStmt);
 
 		cNode.addNode(entryNode);
@@ -84,7 +84,7 @@ class ForFactory {
 		cNode.addNode(hasNextNode);
 		cNode.addNode(nextNode);
 		cNode.addNode(bodyNode);
-		cNode.addNode(catchContinueNode);
+		cNode.addNode(continueCatchNode);
 		cNode.addNode(exitNode);
 
 		List<Node> nodes = new LinkedList<>();
@@ -98,15 +98,15 @@ class ForFactory {
 		cNode.connectInternalSucc(nodes);
 		cNode.connectInternalSucc(ControlFlowType.LoopExit, hasNextNode, exitNode);
 		cNode.connectInternalSucc(ControlFlowType.LoopEnter, hasNextNode, nextNode);
-		cNode.connectInternalSucc(nextNode, bodyNode, catchContinueNode);
-		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, catchContinueNode, hasNextNode);
+		cNode.connectInternalSucc(nextNode, bodyNode, continueCatchNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, continueCatchNode, hasNextNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(forStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
-		hasNextNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
+		continueCatchNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
 
 		return cNode;
 	}
@@ -137,7 +137,7 @@ class ForFactory {
 		}
 		Node conditionForkNode = new HelperNode(NodeNames.CONDITION_FORK, astpp.pos(), forStmt);
 		bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, forStmt, forStmt.getStatement());
-		Node loopCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
+		Node continueCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
 		if (forStmt.getUpdateExpr() != null) {
 			updatesNode = DelegatingNodeFactory.create(astpp, NodeNames.UPDATES, forStmt, forStmt.getUpdateExpr());
 		}
@@ -150,7 +150,7 @@ class ForFactory {
 		cNode.addNode(conditionNode);
 		cNode.addNode(conditionForkNode);
 		cNode.addNode(bodyNode);
-		cNode.addNode(loopCatchNode);
+		cNode.addNode(continueCatchNode);
 		cNode.addNode(updatesNode);
 
 		List<Node> nodes = new LinkedList<>();
@@ -163,14 +163,14 @@ class ForFactory {
 
 		if (conditionNode != null) {
 			cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionForkNode, exitNode);
-			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
-			Node beforeConditionNode = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode).getLast();
+			cNode.connectInternalSucc(bodyNode, continueCatchNode, updatesNode);
+			Node beforeConditionNode = ListUtils.filterNulls(bodyNode, continueCatchNode, updatesNode).getLast();
 			cNode.connectInternalSucc(ControlFlowType.LoopRepeat, beforeConditionNode, conditionNode);
 
 		} else {
-			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
+			cNode.connectInternalSucc(bodyNode, continueCatchNode, updatesNode);
 
-			LinkedList<Node> loopCycle = ListUtils.filterNulls(loopCatchNode, updatesNode);
+			LinkedList<Node> loopCycle = ListUtils.filterNulls(continueCatchNode, updatesNode);
 			Node loopSrc = loopCycle.getLast();
 			cNode.connectInternalSucc(ControlFlowType.LoopInfinite, loopSrc, conditionForkNode);
 			cNode.connectInternalSucc(ControlFlowType.DeadCode, loopSrc, exitNode);
@@ -185,7 +185,7 @@ class ForFactory {
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(forStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
-		loopCatchNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
+		continueCatchNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
 
 		return cNode;
 	}

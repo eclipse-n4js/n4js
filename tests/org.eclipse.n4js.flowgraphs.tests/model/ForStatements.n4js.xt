@@ -931,39 +931,37 @@ function ForStatementContinue4() {
 function ForStatementInContinue1() {
 	// ForStatementInContinue1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementInContinue1 XPECT allEdges ---
-		"start" --> i,
-		1 --> [1],
-		[1] -LoopEnter-> continue;,
-		[1] -LoopExit-> "end",
-		i --> 1
+		"start" --> i, 1 --> [1], [1] -LoopEnter-> continue;, [1] -LoopExit-> "end",
+		continue; -Continue|LoopEnter|LoopRepeat-> continue;, continue; -Continue|LoopExit|LoopRepeat-> "end", i --> 1
 	--- */
 	/* ForStatementInContinue1 XPECT allBranches ---
-		B0: "start" -> i -> 1 -> [1][B1|B2], B10: [B4|B8|B9],
-		B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B9], B4: [B1][B10], B5: [b3] -> continue;[b7|B8],
-		B6: [b3] -> [B9], B8: [B5][B10], B9: [B2|B6|b7]"end"[B10], b3: [B1][B5|B6], b7: [B5] -> [B9]
+		B0: "start" -> i -> 1 -> [1][B1|B2], B10: [b8|B9][B11], B11: [B2|B7|B10]"end",
+		B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B11], B4: [B1] ->  -> [B5], B5: [b3|B4][B6|B7],
+		B6: [B5]continue;[b8|B9], B7: [B5][B11], B9: [B6] -> [B10], b3: [B1] ->  -> [B5], b8: [B6] -> [B10]
 	--- */
 	/* ForStatementInContinue1 backward XPECT allBranches direction 'Backward' ---
-		B0: [B1|B2], B10: [B4|B7|B9][1] -> 1 -> i -> "start",
-		B1: [B0]continue; -> [B3], B2: [B0]"end" -> [B3], B3: [B1|B2][B4|b5], B4: [B3][B10],
-		B6: [b5] ->  -> continue;[B7|b8], B7: [B6] -> [B10], B9: [b8] -> continue; -> [B10], b5: [B3][B6], b8: [B6][B9]
+		B0: "end"[B1|B2], B11: [b10] -> [B12], B12: [B9|B11]continue; -> [B13],
+		B13: [B1|B7|B12][1] -> 1 -> i -> "start", B1: [B0] -> [B13], B2: [B0][B3|b4], B3: [B2] -> [B6], B5: [b4] -> [B6],
+		B6: [B3|B5]continue;[B7|B8], B7: [B6] -> [B13], B8: [B6][B9|b10], B9: [B8] -> [B12], b10: [B8][B11],
+		b4: [B2][B5]
 	--- */
 	/* ForStatementInContinue1 XPECT allPaths ---
 		"start" -> i -> 1 -> [1] -> "end",
-		"start" -> i -> 1 -> [1] -> continue;
+		"start" -> i -> 1 -> [1] -> continue; -> "end", "start" -> i -> 1 -> [1] -> continue; -> continue; -> "end"
 	--- */
 	/* ForStatementInContinue1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> [1] -> 1 -> i -> "start",
-		continue; -> [1] -> 1 -> i -> "start"
+		"end" -> continue; -> [1] -> 1 -> i -> "start", "end" -> continue; -> continue; -> [1] -> 1 -> i -> "start"
 	--- */
 	// ForStatementInContinue1 XPECT path from '"start"' to '"end"' -->
-	// ForStatementInContinue1 XPECT path from 'continue;' notTo '"end"' -->
+	// ForStatementInContinue1 XPECT path from 'continue;' to '"end"' -->
 	// ForStatementInContinue1 XPECT commonPreds of 'continue;' and '[1]' --> [1]
-	// ForStatementInContinue1 XPECT commonPreds of '"end"' and 'continue;' --> [1]
+	// ForStatementInContinue1 XPECT commonPreds of '"end"' and 'continue;' --> [1], continue;
 	// ForStatementInContinue1 XPECT succs at '"start"' --> i
 	// ForStatementInContinue1 XPECT succs at '[1]' --> continue;, "end"
 	// ForStatementInContinue1 XPECT succs type 'LoopEnter' at '[1]' --> continue;
-	// ForStatementInContinue1 XPECT succs type 'Continue' at 'continue;' -->
-	// ForStatementInContinue1 XPECT succs at 'continue;' -->
+	// ForStatementInContinue1 XPECT succs type 'Continue' at 'continue;' -->"end"
+	// ForStatementInContinue1 XPECT succs at 'continue;' -->"end", continue;
 	// ForStatementInContinue1 XPECT preds at 'for' --> "start"
 	// ForStatementInContinue1 XPECT succs at 'for' --> "end"
 	"start";
