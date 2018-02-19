@@ -11,10 +11,10 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-class C{}
-class C2{}
-interface I{}
-interface I1{}
+class C {}
+class C2 {}
+interface I {}
+interface I1 {}
 
 // XPECT noerrors --> "this is how it is defined" at "A"
 class A0 extends C implements I {}
@@ -26,27 +26,20 @@ interface J0 extends I, I1 {}
 class A1 implements C {}
 
 // XPECT errors --> "The class A2 cannot extend interface I, use "implements"." at "I"
-class A2 extends I{}
+class A2 extends I {}
 
-// XPECT errors --> "The interface A3 cannot implement interfaceI, use "extends"." at "implements"
-interface A3 implements I {}
+// XPECT errors --> "The interface A3 cannot extend class C." at "C"
+interface A3 extends C {}
 
-// XPECT errors --> "The interface A4 cannot extend class C." at "C"
-interface A4 extends C {}
+// XPECT errors --> "The class A4 cannot implement class C2." at "C2"
+class A4 extends C implements C2 {}
 
-// XPECT errors --> "The class A5 cannot implement class C2." at "C2"
-class A5 extends C implements C2 {}
+// XPECT errors --> "Extended class must be declared before implemented interfaces." at "extends"
+class A5 implements I extends C {}
 
-// XPECT errors --> "The class A5a cannot extend interface I, use "implements"." at "extends"
-class A5a extends C extends I {}
-
-// temporary a warning XPECT warnings --> "Use comma (",") instead of keyword "implements". This warning will become an error soon!" at "implements"
-interface A6 extends I implements I1 {}
-
-interface A7 extends I
-// XPECT warnings --> "Use comma (",") instead of keyword "extends". This warning will become an error soon!" at "extends"
-extends I1 {}
-
-class A9 extends C implements
-// temporary a warning XPECT warnings --> "Use comma (",") instead of keyword "implements". This warning will become an error soon!" at "implements"
-I implements I1 {}
+// XPECT errors ---
+// "The class A6 cannot implement class C." at "C"
+// "Extended class must be declared before implemented interfaces." at "extends"
+// "The class A6 cannot extend interface I, use "implements"." at "I"
+// ---
+class A6 implements C extends I {}

@@ -538,11 +538,11 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedScriptElementRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getClassExtendsClauseParserRuleCall_1_3_0_0_6());
+								newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getClassExtendsImplementsParserRuleCall_1_3_0_0_6());
 							}
-							this_ClassExtendsClause_15=ruleClassExtendsClause[$current]
+							this_ClassExtendsImplements_15=ruleClassExtendsImplements[$current]
 							{
-								$current = $this_ClassExtendsClause_15.current;
+								$current = $this_ClassExtendsImplements_15.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -635,11 +635,11 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedScriptElementRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getInterfaceImplementsListParserRuleCall_1_3_0_1_6());
+								newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getInterfaceExtendsListParserRuleCall_1_3_0_1_6());
 							}
-							this_InterfaceImplementsList_22=ruleInterfaceImplementsList[$current]
+							this_InterfaceExtendsList_22=ruleInterfaceExtendsList[$current]
 							{
-								$current = $this_InterfaceImplementsList_22.current;
+								$current = $this_InterfaceExtendsList_22.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -1596,11 +1596,11 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedExportableElementRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getClassExtendsClauseParserRuleCall_1_2_0_0_6());
+								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getClassExtendsImplementsParserRuleCall_1_2_0_0_6());
 							}
-							this_ClassExtendsClause_18=ruleClassExtendsClause[$current]
+							this_ClassExtendsImplements_18=ruleClassExtendsImplements[$current]
 							{
-								$current = $this_ClassExtendsClause_18.current;
+								$current = $this_ClassExtendsImplements_18.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -1693,11 +1693,11 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedExportableElementRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getInterfaceImplementsListParserRuleCall_1_2_0_1_6());
+								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getInterfaceExtendsListParserRuleCall_1_2_0_1_6());
 							}
-							this_InterfaceImplementsList_25=ruleInterfaceImplementsList[$current]
+							this_InterfaceExtendsList_25=ruleInterfaceExtendsList[$current]
 							{
-								$current = $this_InterfaceImplementsList_25.current;
+								$current = $this_InterfaceExtendsList_25.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -4972,11 +4972,11 @@ ruleAnnotatedExpression returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getAnnotatedExpressionRule());
 						}
-						newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getClassExtendsClauseParserRuleCall_1_0_3());
+						newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getClassExtendsImplementsParserRuleCall_1_0_3());
 					}
-					this_ClassExtendsClause_4=ruleClassExtendsClause[$current]
+					this_ClassExtendsImplements_4=ruleClassExtendsImplements[$current]
 					{
-						$current = $this_ClassExtendsClause_4.current;
+						$current = $this_ClassExtendsImplements_4.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -5083,11 +5083,11 @@ norm1_AnnotatedExpression returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getAnnotatedExpressionRule());
 						}
-						newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getClassExtendsClauseParserRuleCall_1_0_3());
+						newCompositeNode(grammarAccess.getAnnotatedExpressionAccess().getClassExtendsImplementsParserRuleCall_1_0_3());
 					}
-					this_ClassExtendsClause_4=norm1_ClassExtendsClause[$current]
+					this_ClassExtendsImplements_4=norm1_ClassExtendsImplements[$current]
 					{
-						$current = $this_ClassExtendsClause_4.current;
+						$current = $this_ClassExtendsImplements_4.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -27012,11 +27012,11 @@ ruleN4ClassDeclaration returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getN4ClassDeclarationRule());
 				}
-				newCompositeNode(grammarAccess.getN4ClassDeclarationAccess().getClassExtendsClauseParserRuleCall_2());
+				newCompositeNode(grammarAccess.getN4ClassDeclarationAccess().getClassExtendsImplementsParserRuleCall_2());
 			}
-			this_ClassExtendsClause_6=ruleClassExtendsClause[$current]
+			this_ClassExtendsImplements_6=ruleClassExtendsImplements[$current]
 			{
-				$current = $this_ClassExtendsClause_6.current;
+				$current = $this_ClassExtendsImplements_6.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -27115,6 +27115,138 @@ norm1_Members[EObject in_current]  returns [EObject current=in_current]
 ;
 
 
+// Rule ClassExtendsImplements
+ruleClassExtendsImplements[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getClassExtendsImplementsRule());
+				}
+				newCompositeNode(grammarAccess.getClassExtendsImplementsAccess().getClassExtendsClauseParserRuleCall_0_0());
+			}
+			this_ClassExtendsClause_0=ruleClassExtendsClause[$current]
+			{
+				$current = $this_ClassExtendsClause_0.current;
+				afterParserOrEnumRuleCall();
+			}
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getClassExtendsImplementsRule());
+					}
+					newCompositeNode(grammarAccess.getClassExtendsImplementsAccess().getClassImplementsListParserRuleCall_0_1());
+				}
+				this_ClassImplementsList_1=ruleClassImplementsList[$current]
+				{
+					$current = $this_ClassImplementsList_1.current;
+					afterParserOrEnumRuleCall();
+				}
+			)?
+		)
+		    |
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getClassExtendsImplementsRule());
+				}
+				newCompositeNode(grammarAccess.getClassExtendsImplementsAccess().getClassImplementsListParserRuleCall_1_0());
+			}
+			this_ClassImplementsList_2=ruleClassImplementsList[$current]
+			{
+				$current = $this_ClassImplementsList_2.current;
+				afterParserOrEnumRuleCall();
+			}
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getClassExtendsImplementsRule());
+					}
+					newCompositeNode(grammarAccess.getClassExtendsImplementsAccess().getClassExtendsClauseParserRuleCall_1_1());
+				}
+				this_ClassExtendsClause_3=ruleClassExtendsClause[$current]
+				{
+					$current = $this_ClassExtendsClause_3.current;
+					afterParserOrEnumRuleCall();
+				}
+			)?
+		)
+	)
+;
+
+
+// Rule ClassExtendsImplements
+norm1_ClassExtendsImplements[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getClassExtendsImplementsRule());
+				}
+				newCompositeNode(grammarAccess.getClassExtendsImplementsAccess().getClassExtendsClauseParserRuleCall_0_0());
+			}
+			this_ClassExtendsClause_0=norm1_ClassExtendsClause[$current]
+			{
+				$current = $this_ClassExtendsClause_0.current;
+				afterParserOrEnumRuleCall();
+			}
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getClassExtendsImplementsRule());
+					}
+					newCompositeNode(grammarAccess.getClassExtendsImplementsAccess().getClassImplementsListParserRuleCall_0_1());
+				}
+				this_ClassImplementsList_1=ruleClassImplementsList[$current]
+				{
+					$current = $this_ClassImplementsList_1.current;
+					afterParserOrEnumRuleCall();
+				}
+			)?
+		)
+		    |
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getClassExtendsImplementsRule());
+				}
+				newCompositeNode(grammarAccess.getClassExtendsImplementsAccess().getClassImplementsListParserRuleCall_1_0());
+			}
+			this_ClassImplementsList_2=ruleClassImplementsList[$current]
+			{
+				$current = $this_ClassImplementsList_2.current;
+				afterParserOrEnumRuleCall();
+			}
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getClassExtendsImplementsRule());
+					}
+					newCompositeNode(grammarAccess.getClassExtendsImplementsAccess().getClassExtendsClauseParserRuleCall_1_1());
+				}
+				this_ClassExtendsClause_3=norm1_ClassExtendsClause[$current]
+				{
+					$current = $this_ClassExtendsClause_3.current;
+					afterParserOrEnumRuleCall();
+				}
+			)?
+		)
+	)
+;
+
+
 // Rule ClassExtendsClause
 ruleClassExtendsClause[EObject in_current]  returns [EObject current=in_current]
 @init {
@@ -27124,100 +27256,54 @@ ruleClassExtendsClause[EObject in_current]  returns [EObject current=in_current]
 	leaveRule();
 }:
 	(
+		otherlv_0=Extends
+		{
+			newLeafNode(otherlv_0, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0());
+		}
 		(
-			otherlv_0=Extends
-			{
-				newLeafNode(otherlv_0, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_0());
-			}
 			(
-				(
-					(
-						((
-							ruleParameterizedTypeRefNominal
-						)
-						)=>
-						(
-							{
-								newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_0_1_0_0_0());
-							}
-							lv_superClassRef_1_0=ruleParameterizedTypeRefNominal
-							{
-								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
-								}
-								set(
-									$current,
-									"superClassRef",
-									lv_superClassRef_1_0,
-									"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
-								afterParserOrEnumRuleCall();
-							}
-						)
-					)
-					(
-						(
-							otherlv_2=Implements
-							{
-								newLeafNode(otherlv_2, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_0_1_0_1_0_0());
-							}
-							    |
-							otherlv_3=Extends
-							{
-								newLeafNode(otherlv_3, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_1_0_1_0_1());
-							}
-						)
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getClassExtendsClauseRule());
-							}
-							newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getClassImplementsListParserRuleCall_0_1_0_1_1());
-						}
-						this_ClassImplementsList_4=ruleClassImplementsList[$current]
-						{
-							$current = $this_ClassImplementsList_4.current;
-							afterParserOrEnumRuleCall();
-						}
-					)?
+				((
+					ruleParameterizedTypeRefNominal
 				)
-				    |
+				)=>
 				(
-					(
-						{
-							newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassExpressionLeftHandSideExpressionParserRuleCall_0_1_1_0());
+					{
+						newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0());
+					}
+					lv_superClassRef_1_0=ruleParameterizedTypeRefNominal
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
 						}
-						lv_superClassExpression_5_0=ruleLeftHandSideExpression
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
-							}
-							set(
-								$current,
-								"superClassExpression",
-								lv_superClassExpression_5_0,
-								"org.eclipse.n4js.N4JS.LeftHandSideExpression");
-							afterParserOrEnumRuleCall();
-						}
-					)
+						set(
+							$current,
+							"superClassRef",
+							lv_superClassRef_1_0,
+							"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+						afterParserOrEnumRuleCall();
+					}
 				)
 			)
-		)
-		    |
-		(
-			otherlv_6=Implements
-			{
-				newLeafNode(otherlv_6, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_1_0());
-			}
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getClassExtendsClauseRule());
-				}
-				newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getClassImplementsListParserRuleCall_1_1());
-			}
-			this_ClassImplementsList_7=ruleClassImplementsList[$current]
-			{
-				$current = $this_ClassImplementsList_7.current;
-				afterParserOrEnumRuleCall();
-			}
+			    |
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0());
+					}
+					lv_superClassExpression_2_0=ruleLeftHandSideExpression
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
+						}
+						set(
+							$current,
+							"superClassExpression",
+							lv_superClassExpression_2_0,
+							"org.eclipse.n4js.N4JS.LeftHandSideExpression");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)
 	)
 ;
@@ -27232,100 +27318,54 @@ norm1_ClassExtendsClause[EObject in_current]  returns [EObject current=in_curren
 	leaveRule();
 }:
 	(
+		otherlv_0=Extends
+		{
+			newLeafNode(otherlv_0, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0());
+		}
 		(
-			otherlv_0=Extends
-			{
-				newLeafNode(otherlv_0, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_0());
-			}
 			(
-				(
-					(
-						((
-							ruleParameterizedTypeRefNominal
-						)
-						)=>
-						(
-							{
-								newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_0_1_0_0_0());
-							}
-							lv_superClassRef_1_0=ruleParameterizedTypeRefNominal
-							{
-								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
-								}
-								set(
-									$current,
-									"superClassRef",
-									lv_superClassRef_1_0,
-									"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
-								afterParserOrEnumRuleCall();
-							}
-						)
-					)
-					(
-						(
-							otherlv_2=Implements
-							{
-								newLeafNode(otherlv_2, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_0_1_0_1_0_0());
-							}
-							    |
-							otherlv_3=Extends
-							{
-								newLeafNode(otherlv_3, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_1_0_1_0_1());
-							}
-						)
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getClassExtendsClauseRule());
-							}
-							newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getClassImplementsListParserRuleCall_0_1_0_1_1());
-						}
-						this_ClassImplementsList_4=ruleClassImplementsList[$current]
-						{
-							$current = $this_ClassImplementsList_4.current;
-							afterParserOrEnumRuleCall();
-						}
-					)?
+				((
+					ruleParameterizedTypeRefNominal
 				)
-				    |
+				)=>
 				(
-					(
-						{
-							newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassExpressionLeftHandSideExpressionParserRuleCall_0_1_1_0());
+					{
+						newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0());
+					}
+					lv_superClassRef_1_0=ruleParameterizedTypeRefNominal
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
 						}
-						lv_superClassExpression_5_0=norm1_LeftHandSideExpression
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
-							}
-							set(
-								$current,
-								"superClassExpression",
-								lv_superClassExpression_5_0,
-								"org.eclipse.n4js.N4JS.LeftHandSideExpression");
-							afterParserOrEnumRuleCall();
-						}
-					)
+						set(
+							$current,
+							"superClassRef",
+							lv_superClassRef_1_0,
+							"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+						afterParserOrEnumRuleCall();
+					}
 				)
 			)
-		)
-		    |
-		(
-			otherlv_6=Implements
-			{
-				newLeafNode(otherlv_6, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_1_0());
-			}
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getClassExtendsClauseRule());
-				}
-				newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getClassImplementsListParserRuleCall_1_1());
-			}
-			this_ClassImplementsList_7=ruleClassImplementsList[$current]
-			{
-				$current = $this_ClassImplementsList_7.current;
-				afterParserOrEnumRuleCall();
-			}
+			    |
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0());
+					}
+					lv_superClassExpression_2_0=norm1_LeftHandSideExpression
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
+						}
+						set(
+							$current,
+							"superClassExpression",
+							lv_superClassExpression_2_0,
+							"org.eclipse.n4js.N4JS.LeftHandSideExpression");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)
 	)
 ;
@@ -27340,12 +27380,16 @@ ruleClassImplementsList[EObject in_current]  returns [EObject current=in_current
 	leaveRule();
 }:
 	(
+		otherlv_0=Implements
+		{
+			newLeafNode(otherlv_0, grammarAccess.getClassImplementsListAccess().getImplementsKeyword_0());
+		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0());
 				}
-				lv_implementedInterfaceRefs_0_0=ruleParameterizedTypeRefNominal
+				lv_implementedInterfaceRefs_1_0=ruleParameterizedTypeRefNominal
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getClassImplementsListRule());
@@ -27353,35 +27397,23 @@ ruleClassImplementsList[EObject in_current]  returns [EObject current=in_current
 					add(
 						$current,
 						"implementedInterfaceRefs",
-						lv_implementedInterfaceRefs_0_0,
+						lv_implementedInterfaceRefs_1_0,
 						"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
 		(
-			(
-				otherlv_1=Comma
-				{
-					newLeafNode(otherlv_1, grammarAccess.getClassImplementsListAccess().getCommaKeyword_1_0_0());
-				}
-				    |
-				otherlv_2=Implements
-				{
-					newLeafNode(otherlv_2, grammarAccess.getClassImplementsListAccess().getImplementsKeyword_1_0_1());
-				}
-				    |
-				otherlv_3=Extends
-				{
-					newLeafNode(otherlv_3, grammarAccess.getClassImplementsListAccess().getExtendsKeyword_1_0_2());
-				}
-			)
+			otherlv_2=Comma
+			{
+				newLeafNode(otherlv_2, grammarAccess.getClassImplementsListAccess().getCommaKeyword_2_0());
+			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0());
 					}
-					lv_implementedInterfaceRefs_4_0=ruleParameterizedTypeRefNominal
+					lv_implementedInterfaceRefs_3_0=ruleParameterizedTypeRefNominal
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getClassImplementsListRule());
@@ -27389,7 +27421,7 @@ ruleClassImplementsList[EObject in_current]  returns [EObject current=in_current
 						add(
 							$current,
 							"implementedInterfaceRefs",
-							lv_implementedInterfaceRefs_4_0,
+							lv_implementedInterfaceRefs_3_0,
 							"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
 						afterParserOrEnumRuleCall();
 					}
@@ -27450,11 +27482,11 @@ ruleN4ClassExpression returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getN4ClassExpressionRule());
 				}
-				newCompositeNode(grammarAccess.getN4ClassExpressionAccess().getClassExtendsClauseParserRuleCall_3());
+				newCompositeNode(grammarAccess.getN4ClassExpressionAccess().getClassExtendsImplementsParserRuleCall_3());
 			}
-			this_ClassExtendsClause_3=ruleClassExtendsClause[$current]
+			this_ClassExtendsImplements_3=ruleClassExtendsImplements[$current]
 			{
-				$current = $this_ClassExtendsClause_3.current;
+				$current = $this_ClassExtendsImplements_3.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -27517,11 +27549,11 @@ norm1_N4ClassExpression returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getN4ClassExpressionRule());
 				}
-				newCompositeNode(grammarAccess.getN4ClassExpressionAccess().getClassExtendsClauseParserRuleCall_3());
+				newCompositeNode(grammarAccess.getN4ClassExpressionAccess().getClassExtendsImplementsParserRuleCall_3());
 			}
-			this_ClassExtendsClause_3=norm1_ClassExtendsClause[$current]
+			this_ClassExtendsImplements_3=norm1_ClassExtendsImplements[$current]
 			{
-				$current = $this_ClassExtendsClause_3.current;
+				$current = $this_ClassExtendsImplements_3.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -27673,11 +27705,11 @@ ruleN4InterfaceDeclaration returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getN4InterfaceDeclarationRule());
 				}
-				newCompositeNode(grammarAccess.getN4InterfaceDeclarationAccess().getInterfaceImplementsListParserRuleCall_2());
+				newCompositeNode(grammarAccess.getN4InterfaceDeclarationAccess().getInterfaceExtendsListParserRuleCall_2());
 			}
-			this_InterfaceImplementsList_6=ruleInterfaceImplementsList[$current]
+			this_InterfaceExtendsList_6=ruleInterfaceExtendsList[$current]
 			{
-				$current = $this_InterfaceImplementsList_6.current;
+				$current = $this_InterfaceExtendsList_6.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -27696,8 +27728,8 @@ ruleN4InterfaceDeclaration returns [EObject current=null]
 ;
 
 
-// Rule InterfaceImplementsList
-ruleInterfaceImplementsList[EObject in_current]  returns [EObject current=in_current]
+// Rule InterfaceExtendsList
+ruleInterfaceExtendsList[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -27708,23 +27740,23 @@ ruleInterfaceImplementsList[EObject in_current]  returns [EObject current=in_cur
 		(
 			otherlv_0=Extends
 			{
-				newLeafNode(otherlv_0, grammarAccess.getInterfaceImplementsListAccess().getExtendsKeyword_0_0());
+				newLeafNode(otherlv_0, grammarAccess.getInterfaceExtendsListAccess().getExtendsKeyword_0_0());
 			}
 			    |
 			otherlv_1=Implements
 			{
-				newLeafNode(otherlv_1, grammarAccess.getInterfaceImplementsListAccess().getImplementsKeyword_0_1());
+				newLeafNode(otherlv_1, grammarAccess.getInterfaceExtendsListAccess().getImplementsKeyword_0_1());
 			}
 		)
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getInterfaceImplementsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0());
 				}
 				lv_superInterfaceRefs_2_0=ruleParameterizedTypeRefNominal
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getInterfaceImplementsListRule());
+						$current = createModelElementForParent(grammarAccess.getInterfaceExtendsListRule());
 					}
 					add(
 						$current,
@@ -27736,36 +27768,24 @@ ruleInterfaceImplementsList[EObject in_current]  returns [EObject current=in_cur
 			)
 		)
 		(
-			(
-				otherlv_3=Comma
-				{
-					newLeafNode(otherlv_3, grammarAccess.getInterfaceImplementsListAccess().getCommaKeyword_2_0_0());
-				}
-				    |
-				otherlv_4=Implements
-				{
-					newLeafNode(otherlv_4, grammarAccess.getInterfaceImplementsListAccess().getImplementsKeyword_2_0_1());
-				}
-				    |
-				otherlv_5=Extends
-				{
-					newLeafNode(otherlv_5, grammarAccess.getInterfaceImplementsListAccess().getExtendsKeyword_2_0_2());
-				}
-			)
+			otherlv_3=Comma
+			{
+				newLeafNode(otherlv_3, grammarAccess.getInterfaceExtendsListAccess().getCommaKeyword_2_0());
+			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getInterfaceImplementsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0());
+						newCompositeNode(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0());
 					}
-					lv_superInterfaceRefs_6_0=ruleParameterizedTypeRefNominal
+					lv_superInterfaceRefs_4_0=ruleParameterizedTypeRefNominal
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getInterfaceImplementsListRule());
+							$current = createModelElementForParent(grammarAccess.getInterfaceExtendsListRule());
 						}
 						add(
 							$current,
 							"superInterfaceRefs",
-							lv_superInterfaceRefs_6_0,
+							lv_superInterfaceRefs_4_0,
 							"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
 						afterParserOrEnumRuleCall();
 					}

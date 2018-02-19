@@ -46,6 +46,10 @@ public abstract class N4JSLanguageConstants {
 	public static final String EXTERNAL_KEYWORD = "external";
 	/** Direct access to the yield keyword */
 	public static final String YIELD_KEYWORD = "yield";
+	/** Direct access to the yield keyword */
+	public static final String EXTENDS_KEYWORD = "extends";
+	/** Direct access to the yield keyword */
+	public static final String IMPLEMENTS_KEYWORD = "implements";
 
 	/**
 	 * Default issue codes to suppress while running tests which are configured for issue suppression.
