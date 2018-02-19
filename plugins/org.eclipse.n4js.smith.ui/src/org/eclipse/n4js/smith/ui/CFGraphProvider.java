@@ -160,6 +160,9 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 			@Override
 			protected void visit(FlowEdge edge) {
+				if (edge.start == getContainer() || edge.end == getContainer()) {
+					return;
+				}
 				addNode(edge.start, isDeadCodeNode());
 				addNode(edge.end, isDeadCodeNode());
 				Node sNode = nodeMap.get(edge.start);
