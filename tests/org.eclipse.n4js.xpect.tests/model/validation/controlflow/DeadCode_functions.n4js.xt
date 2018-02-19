@@ -34,7 +34,7 @@ function f0a() {
 		if ( b1 )
 		{
 	       break x;
-	       // XPECT warnings --> "Dead code." at "f0();"
+	       // XPECT warnings --> "Dead code. No execution possible after break." at "f0();"
 	       f0(); // Dead
 
 	    } else {
@@ -57,7 +57,7 @@ function f0b() {
 	    } else {
 	       continue y;
 
-	       // XPECT warnings --> "Dead code." at "f0();"
+	       // XPECT warnings --> "Dead code. No execution possible after continue." at "f0();"
 	       f0(); // Dead
 		}
 
@@ -114,7 +114,7 @@ function f0e() {
 	if ( b1 )
 	{
        return x;
-       // XPECT warnings --> "Dead code." at "f0();"
+       // XPECT warnings --> "Dead code. No execution possible after return." at "f0();"
 	   f0(); // Dead
 
     } else {
@@ -139,7 +139,7 @@ function f1() {
            // XPECT noerrors --> dead code
            {
                break x;
-               // XPECT warnings --> "Dead code." at "f0();"
+               // XPECT warnings --> "Dead code. No execution possible after break." at "f0();"
          	   f0();	// Dead
            } else {
                break y;
@@ -191,7 +191,7 @@ function f4(): number {
                // XPECT noerrors --> dead code
                {
                	 return 3;
-               	 // XPECT warnings --> "Dead code." at "f0();"
+               	 // XPECT warnings --> "Dead code. No execution possible after return." at "f0();"
                	 f0(); // dead
                }
            } else {
@@ -243,7 +243,7 @@ function f5(): number {
 	return 6;
 
 	// Dead code
-	// XPECT warnings --> "Dead code." at "console.log("b");"
+	// XPECT warnings --> "Dead code. No execution possible after return." at "console.log("b");"
 	console.log("b");
 
 }
@@ -300,7 +300,7 @@ function f6(): number {
 // XPECT noerrors --> dead code
 function f7() : number {
 	throw 'hallo';
-	// XPECT warnings --> "Dead code." at "f0();"
+	// XPECT warnings --> "Dead code. No execution possible after throw." at "f0();"
     f0(); // Dead
 
 }

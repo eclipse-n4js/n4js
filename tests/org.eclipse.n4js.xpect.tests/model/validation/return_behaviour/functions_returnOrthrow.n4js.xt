@@ -142,7 +142,7 @@ function f5(): number {
 	return 6;
 
 	// Dead code
-	// XPECT warnings --> "Dead code." at "console.log("b");"
+	// XPECT warnings --> "Dead code. No execution possible after return." at "console.log("b");"
 	console.log("b");
 
 }

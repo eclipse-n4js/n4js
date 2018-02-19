@@ -51,8 +51,8 @@ class C {
 	// note: not checking fields and setters here (different topic)
 
 	// XPECT errors ---
-	// "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "get g() : string? {}"
 	// "The optional modifier isn't allowed here." at "string?"
+	// "Missing return or throw statement." at "get g() : string? {}"
 	// ---
 	get g() : string? {}
 
@@ -66,8 +66,8 @@ class C {
 var ol = {
 
 	// XPECT errors ---
-	// "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "get g() : string? {}"
 	// "The optional modifier isn't allowed here." at "string?"
+	// "Missing return or throw statement." at "get g() : string? {}"
 	// ---
 	get g() : string? {}
 };
