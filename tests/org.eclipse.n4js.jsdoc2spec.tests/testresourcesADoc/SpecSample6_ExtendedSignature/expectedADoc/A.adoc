@@ -30,10 +30,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test function ++func++"]
+
+[TODO, title="test function ++func++"]
 --
 Add tests specifying semantics for ``++func++``
 --
+
 
 == Class A
 
@@ -51,10 +53,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++A.constructor++"]
+
+[TODO, title="test ++A.constructor++"]
 --
 Add tests specifying semantics for ``++constructor(s: ~i~this): this[A]?++``
 --
+
 
 
 [[gsec:spec_A.A.bar]]
@@ -68,10 +72,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++A.bar++"]
+
+[TODO, title="test ++A.bar++"]
 --
 Add tests specifying semantics for ``++async bar(): Promise<string,?>++``
 --
+
 
 
 [[gsec:spec_A.A.baz]]
@@ -85,10 +91,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++A.baz++"]
+
+[TODO, title="test ++A.baz++"]
 --
 Add tests specifying semantics for ``++baz(): string++``
 --
+
 
 
 [[gsec:spec_A.A.foo]]
@@ -102,10 +110,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++A.foo++"]
+
+[TODO, title="test ++A.foo++"]
 --
 Add tests specifying semantics for ``++foo(x: string, n: number=…, ...p: string): void++``
 --
+
 
 
 [[gsec:spec_A.A.static.xgreet]]
@@ -119,8 +129,10 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++A.xgreet++"]
+
+[TODO, title="test ++A.xgreet++"]
 --
 Add tests specifying semantics for ``++xgreet(some: union{string,number}): void++``
 --
+
 
