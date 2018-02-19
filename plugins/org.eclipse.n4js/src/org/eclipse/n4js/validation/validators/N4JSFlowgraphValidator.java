@@ -10,60 +10,30 @@
  */
 package org.eclipse.n4js.validation.validators;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser;
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
-import org.eclipse.n4js.flowgraphs.analysers.MissingReturnThrowAnalyser;
-import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
-import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
-import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
-import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
-import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
-import org.eclipse.n4js.n4JS.AssignmentExpression;
-import org.eclipse.n4js.n4JS.BreakStatement;
-import org.eclipse.n4js.n4JS.ContinueStatement;
-import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.DestructNode;
-import org.eclipse.n4js.n4JS.DestructureUtils;
-import org.eclipse.n4js.n4JS.ForStatement;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.FunctionDefinition;
-import org.eclipse.n4js.n4JS.FunctionExpression;
-import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
-import org.eclipse.n4js.n4JS.GetterDeclaration;
-import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.N4MethodDeclaration;
-import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
-import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.n4js.validation.flowValidators.DeadCodeValidator;
+import org.eclipse.n4js.validation.flowValidators.FlowValidator;
+import org.eclipse.n4js.validation.flowValidators.MissingReturnOrThrowValidator;
+import org.eclipse.n4js.validation.flowValidators.NullUndefinedValidator;
+import org.eclipse.n4js.validation.flowValidators.UsedBeforeDeclaredValidator;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -73,7 +43,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	static private final DataCollector dcFlowGraphs = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Flow Graphs");
 	static private final DataCollector dcPostprocessing = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Postprocessing", "Flow Graphs");
+			.getOrCreateDataCollector("PostProcessing", "Flow Graphs");
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
@@ -108,7 +78,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Checks all flow graph related validations
+	 * Triggers all flow graph related validations
 	 */
 	@Check
 	public void checkFlowGraphs(Script script) {
@@ -116,218 +86,44 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
 		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser(this::checkCancelled);
 
-		DeadCodeAnalyser dcv = new DeadCodeAnalyser();
-		UsedBeforeDeclaredAnalyser cvgv1 = new UsedBeforeDeclaredAnalyser();
-		NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
-		MissingReturnThrowAnalyser mrta = new MissingReturnThrowAnalyser(typeSystem, jsVariantHelper);
+		FlowValidator[] fValidators = {
+				new DeadCodeValidator(keywordProvider),
+				new UsedBeforeDeclaredValidator(),
+				new NullUndefinedValidator(n4jsCore, findReferenceHelper),
+				new MissingReturnOrThrowValidator(typeSystem, jsVariantHelper) };
+
+		FlowAnalyser[] fAnalysers = new FlowAnalyser[fValidators.length];
+		for (int i = 0; i < fValidators.length; i++) {
+			fAnalysers[i] = fValidators[i].getFlowAnalyser();
+		}
 
 		flowAnalyzer.createGraphs(script, true);
-		flowAnalyzer.accept(dcv, nda, cvgv1, mrta);
+		flowAnalyzer.accept(fAnalysers);
 
 		String uriString = script.eResource().getURI().toString();
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
 		Measurement msmnt2 = dcPostprocessing.getMeasurement("createGraph_" + uriString);
-		internalCheckDeadCode(dcv);
-		internalCheckUsedBeforeDeclared(cvgv1);
-		internalCheckNullDereference(nda);
-		internalCheckMissingReturnDisallowed(mrta);
+		for (FlowValidator fValidator : fValidators) {
+			fValidator.checkResults(this);
+		}
 		msmnt2.end();
 		msmnt1.end();
 	}
 
-	// Req.107
-	private void internalCheckDeadCode(DeadCodeAnalyser dcf) {
-		Set<DeadCodeRegion> deadCodeRegions = dcf.getDeadCodeRegions();
-
-		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {
-			String stmtDescription = getStatementDescription(deadCodeRegion);
-			String errCode = IssueCodes.FUN_DEAD_CODE;
-			String msg = IssueCodes.getMessageForFUN_DEAD_CODE();
-			if (stmtDescription != null) {
-				msg = IssueCodes.getMessageForFUN_DEAD_CODE_WITH_PREDECESSOR(stmtDescription);
-				errCode = IssueCodes.FUN_DEAD_CODE_WITH_PREDECESSOR;
-			}
-			addIssue(msg, deadCodeRegion.getContainer(), deadCodeRegion.getOffset(), deadCodeRegion.getLength(),
-					errCode);
-		}
+	@Override
+	public void addIssue(String message, EObject source, String issueCode) {
+		super.addIssue(message, source, issueCode);
 	}
 
-	private void internalCheckUsedBeforeDeclared(UsedBeforeDeclaredAnalyser ubda) {
-		List<IdentifierRef> usedBeforeDeclared = ubda.getUsedButNotDeclaredIdentifierRefs();
-
-		for (IdentifierRef idRef : usedBeforeDeclared) {
-			String varName = idRef.getId().getName();
-			String msg = IssueCodes.getMessageForCFG_USED_BEFORE_DECLARED(varName);
-			addIssue(msg, idRef, IssueCodes.CFG_USED_BEFORE_DECLARED);
-		}
+	@Override
+	public void addIssue(String message, EObject source, int offset, int length, String issueCode) {
+		super.addIssue(message, source, offset, length, issueCode);
 	}
 
-	private String getStatementDescription(DeadCodeRegion deadCodeRegion) {
-		ControlFlowElement reachablePred = deadCodeRegion.getReachablePredecessor();
-		if (reachablePred == null)
-			return null;
-
-		boolean addKeyword = false;
-		addKeyword |= reachablePred instanceof ReturnStatement;
-		addKeyword |= reachablePred instanceof BreakStatement;
-		addKeyword |= reachablePred instanceof ContinueStatement;
-		addKeyword |= reachablePred instanceof ThrowStatement;
-
-		if (addKeyword) {
-			String keyword = keywordProvider.keyword(reachablePred);
-			if (Strings.isNullOrEmpty(keyword)) {
-				return reachablePred.eClass().getName();
-			}
-		}
-		return null;
+	@Override
+	public void addIssue(String message, EObject source, EStructuralFeature feature, String issueCode,
+			String... issueData) {
+		super.addIssue(message, source, feature, issueCode, issueData);
 	}
 
-	private void internalCheckNullDereference(NullDereferenceAnalyser nda) {
-		Iterable<NullDereferenceResult> nullDerefs = nda.getNullDereferences();
-		for (NullDereferenceResult ndr : nullDerefs) {
-			String varName = ndr.checkedSymbol.getName();
-
-			boolean isLeakingToClosure = isLeakingToClosure(ndr);
-			boolean isInTestFolder = isInTestFolder(ndr.checkedSymbol.getASTLocation());
-			if (isInTestFolder && isLeakingToClosure) {
-				continue; // ignore these warnings in test related source
-			}
-
-			String isOrMaybe = getAssertionString(ndr, isLeakingToClosure);
-			String nullOrUndefined = getNullOrUndefinedString(ndr);
-			String reason = getReason(ndr);
-			String msg = IssueCodes.getMessageForDFG_NULL_DEREFERENCE(varName, isOrMaybe, nullOrUndefined, reason);
-			addIssue(msg, ndr.cfe, IssueCodes.DFG_NULL_DEREFERENCE); // deactivated during tests
-		}
-	}
-
-	private String getAssertionString(NullDereferenceResult ndr, boolean isLeakingToClosure) {
-		if (ndr.assertion == GuardAssertion.AlwaysHolds && !isLeakingToClosure) {
-			return "is";
-		}
-		return "may be";
-	}
-
-	private String getNullOrUndefinedString(NullDereferenceResult ndr) {
-		String problemType = "";
-		for (GuardType guardType : ndr.types) {
-			problemType += !problemType.isEmpty() ? " or " : "";
-			switch (guardType) {
-			case IsNull:
-				problemType += "null";
-				break;
-			case IsUndefined:
-				problemType += "undefined";
-				break;
-			default:
-				problemType += "unknown";
-			}
-		}
-		return problemType;
-	}
-
-	private String getReason(NullDereferenceResult ndr) {
-		if (ndr.failedAlias != null && !ndr.checkedSymbol.is(ndr.failedAlias)) {
-			return " due to previous variable " + ndr.failedAlias.getName();
-		}
-		return "";
-	}
-
-	private boolean isLeakingToClosure(NullDereferenceResult ndr) {
-		EObject decl = ndr.checkedSymbol.getDeclaration();
-		List<EObject> refs = findReferenceHelper.findReferencesInResource(decl, decl.eResource());
-		List<EObject> writeRefs = new LinkedList<>();
-		writeRefs.add(ndr.cfe);
-
-		for (EObject ref : refs) {
-			if (isWriteAccess(ref)) {
-				writeRefs.add(ref);
-			}
-		}
-
-		Iterator<EObject> writeRefsIter = writeRefs.iterator();
-		if (!writeRefsIter.hasNext()) {
-			return false;
-		}
-
-		EObject ref = writeRefsIter.next();
-		EObject parentScope = getParentScope(ref);
-		while (writeRefsIter.hasNext()) {
-			ref = writeRefsIter.next();
-			if (parentScope != getParentScope(ref)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private boolean isWriteAccess(EObject reference) {
-		EObject parent = reference.eContainer();
-		if (parent == null) {
-			return false;
-		}
-
-		if (parent instanceof AssignmentExpression) {
-			AssignmentExpression ae = (AssignmentExpression) parent;
-			return ae.getLhs() == reference;
-		}
-		if (parent instanceof ForStatement) {
-			ForStatement fs = (ForStatement) parent;
-			return fs.getInitExpr() == reference;
-		}
-
-		DestructNode dNode = DestructureUtils.getCorrespondingDestructNode(reference);
-		if (dNode != null) {
-			dNode = dNode.findNodeForElement(parent);
-			return dNode != null;
-		}
-
-		return false;
-	}
-
-	private EObject getParentScope(EObject eobj) {
-		Iterable<EObject> containers = EcoreUtil2.getAllContainers(eobj);
-		for (EObject container : containers) {
-			boolean isScopeParent = false;
-			isScopeParent |= container instanceof FunctionDefinition;
-			isScopeParent |= container instanceof FunctionExpression;
-			if (isScopeParent) {
-				return container;
-			}
-		}
-		return null;
-	}
-
-	private boolean isInTestFolder(EObject eobj) {
-		URI location = eobj.eResource().getURI();
-		final IN4JSSourceContainer c = n4jsCore.findN4JSSourceContainer(location).orNull();
-		return c != null && c.isTest();
-	}
-
-	private void internalCheckMissingReturnDisallowed(MissingReturnThrowAnalyser mrta) {
-		Collection<FunctionOrFieldAccessor> mrtFunctions = mrta.getMRTFunctions();
-		for (FunctionOrFieldAccessor fofa : mrtFunctions) {
-			EStructuralFeature highlightFeature = getMarkedElement(fofa);
-			String msg = IssueCodes.getMessageForFUN_MISSING_RETURN_OR_THROW_STATEMENT();
-			addIssue(msg, fofa, highlightFeature, IssueCodes.FUN_MISSING_RETURN_OR_THROW_STATEMENT);
-		}
-
-	}
-
-	private EStructuralFeature getMarkedElement(FunctionOrFieldAccessor fofa) {
-		if (fofa instanceof FunctionDeclaration) {
-			return N4JSPackage.Literals.FUNCTION_DECLARATION__NAME;
-		}
-		if (fofa instanceof N4MethodDeclaration) {
-			return N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME;
-		}
-		if (fofa instanceof FunctionExpression) {
-			return N4JSPackage.Literals.FUNCTION_EXPRESSION__NAME;
-		}
-		if (fofa instanceof GetterDeclaration) {
-			return N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER;
-		}
-		return null;
-	}
 }

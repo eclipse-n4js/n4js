@@ -127,10 +127,10 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Given a function/method with returntype void, checking the lack of returns or presence of empty returns
+	 * Given a function/method with return type void, checking the lack of returns or presence of empty returns
 	 *
-	 * @param functionDefinition definition whith void-returntype
-	 * @param _void precomputed builtin void type
+	 * @param functionDefinition definition with void-return-type
+	 * @param _void precomputed built-in void type
 	 * @param isSetter true for setter and therefore ensuring no return at all, false in case of ordinary function/methods
 	 * 			where TS already does the job
 	 */
@@ -248,6 +248,15 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def boolean checkReturnExpression(ReturnStatement retStmt) {
 		val fofa = EcoreUtil2.getContainerOfType(retStmt, FunctionOrFieldAccessor);
+		if (!jsVariantHelper.requireCheckFunctionReturn(fofa)) {
+			// cf. 13.1
+			return false;
+		}
+
+		if (fofa instanceof SetterDeclaration) {
+			return false;
+		}
+
 		if (fofa === null) {
 			return false;
 		}
@@ -255,6 +264,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		if (fofa.isReturnValueOptional) {
 			return false;
 		}
+
 		val _void = newRuleEnvironment(fofa).voidType;
 		val returnTypeRef = ts.getReturnTypeRef(fofa);
 		val isDeclaredVoid = if (fofa instanceof FieldAccessor) {
@@ -272,7 +282,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// check missing return-expression
-		if (retStmt.expression === null) {
+		if (returnTypeRef !== null && retStmt.expression === null) {
 			val String msg = getMessageForFUN_MISSING_RETURN_EXPRESSION(returnTypeRef.typeRefAsString);
 			addIssue(msg, retStmt, FUN_MISSING_RETURN_EXPRESSION);
 			return true;
@@ -281,7 +291,6 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		// given return-expressions will be checked by xsemantics.
 		// TODO what about null - tests with primitives (builtin types) expected ?
 		return false;
-
 	}
 
 	/** additional check on top of {@link #checkFunctionName()} */

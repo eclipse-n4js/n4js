@@ -179,8 +179,12 @@ public class MissingReturnThrowAnalyser extends GraphVisitor {
 			return true;
 		}
 
+		if (fofa.isReturnValueOptional()) {
+			return false;
+		}
+
 		TypeRef returnType = typeSystem.getReturnTypeRef(fofa);
-		if (TypeUtils.isVoid(returnType)) {
+		if (returnType == null || TypeUtils.isVoid(returnType)) {
 			return false;
 		}
 
@@ -195,10 +199,14 @@ public class MissingReturnThrowAnalyser extends GraphVisitor {
 		return body.getAllStatements().hasNext();
 	}
 
+	/** @return the set of all {@link FunctionOrFieldAccessor} that have a missing return or throw statement(s). */
 	public Collection<FunctionOrFieldAccessor> getMRTFunctions() {
 		return missingTRAfter.keySet();
 	}
 
+	/**
+	 * @return a {@link Multimap} of all {@link ControlFlowElement} that miss a succeeding return or throw statement.
+	 */
 	public Multimap<FunctionOrFieldAccessor, ControlFlowElement> getLastStatementsWithoutSuccReturnOrThrow() {
 		return missingTRAfter;
 	}

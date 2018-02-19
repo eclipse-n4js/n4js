@@ -327,6 +327,7 @@ public class N4JSTypeSystem {
 		}
 	}
 
+	/** @return the return {@link TypeRef} for a given {@link FunctionOrFieldAccessor} */
 	public TypeRef getReturnTypeRef(FunctionOrFieldAccessor fofa) {
 		TypeRef inferredType = tau(fofa);
 		if (inferredType instanceof FunctionTypeExprOrRef) {
