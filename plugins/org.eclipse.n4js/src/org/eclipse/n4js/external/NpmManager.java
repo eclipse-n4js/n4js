@@ -174,7 +174,7 @@ public class NpmManager {
 	 * @param monitor
 	 *            the monitor for the blocking install process.
 	 * @param triggerCleanbuild
-	 *            iff true, a clean build is triggered on all affected workspace projects.
+	 *            if true, a clean build is triggered on all affected workspace projects.
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installDependencies(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
