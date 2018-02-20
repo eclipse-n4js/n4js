@@ -41,7 +41,8 @@ export external public class Comparable {
 
 
 	   ==== Semantics
-	   [.todo, label="test ++Comparable.equals++"]
+	
+	   [TODO, title="test ++Comparable.equals++"]
 	   --
 	   Add tests specifying semantics for ``++equals(other: any): boolean++``
 	   --
@@ -86,7 +87,7 @@ export external public class Comparable {
 
 
 	   ==== Semantics
-	   [.todo, label="test ++Comparable.equal++"]
+	   [TODO, title="test ++Comparable.equal++"]
 	   --
 	   Add tests specifying semantics for ``++equal(left: any, right: any): boolean++``
 	   --

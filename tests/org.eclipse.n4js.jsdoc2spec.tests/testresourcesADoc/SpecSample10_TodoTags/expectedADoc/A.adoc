@@ -18,13 +18,22 @@ include::{find}config.adoc[]
 
 == Class A
 
-todo:Hello[]
+
+[TODO]
+--
+Hello
+--
+
 
 
 [[gsec:spec_A.A.bar]]
 [role=memberdoc]
 === ++Method bar++
-todo:To something here[]
+
+[TODO]
+--
+Do something here
+--
 
 ==== Signature
 

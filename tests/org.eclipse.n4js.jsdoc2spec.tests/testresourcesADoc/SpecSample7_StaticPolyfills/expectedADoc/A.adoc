@@ -34,10 +34,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++A.bar++"]
+
+[TODO, title="test ++A.bar++"]
 --
 Add tests specifying semantics for ``++bar(): void++``
 --
+
 
 
 [[gsec:spec_A.A.base]]
@@ -51,10 +53,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++A.base++"]
+
+[TODO, title="test ++A.base++"]
 --
 Add tests specifying semantics for ``++base(x: number): void++``
 --
+
 
 
 [[gsec:spec_A.A.foo]]
@@ -70,8 +74,10 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++A.foo++"]
+
+[TODO, title="test ++A.foo++"]
 --
 Add tests specifying semantics for ``++foo(x: any, n: number=…): void++``
 --
+
 
