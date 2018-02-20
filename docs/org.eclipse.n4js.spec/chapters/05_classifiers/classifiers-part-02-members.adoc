@@ -676,7 +676,7 @@ b. all data fields and setters from interfaces implemented by the containing cla
 +
 if and only if those members are also part of the spec parameter's structural initializer field type.
 5.  Fields explicitly added to the spec parameter, e.g. `pass:[@Spec spec: ~i~this with {name:string}]`, are used for initialization
-if a non-public field of the same name exists in the class, either as an owned member of from an implemented interface.
+if a non-public field of the same name exists in the class, either as an owned member or from an implemented interface.
 The type of such an additional field must be a subtype of the declared type of the field being initialized:
 +
 [%hardbreaks]
