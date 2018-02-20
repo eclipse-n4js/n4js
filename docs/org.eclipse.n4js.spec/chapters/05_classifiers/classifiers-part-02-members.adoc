@@ -664,25 +664,38 @@ given in the constructor.
 
 1.  Annotation `@Spec` may only appear on a formal parameter of a constructor. Such a formal parameter is then called
 _@Spec parameter_ or simply _spec parameter_ and its owning constructor is referred to as a _@Spec constructor_ or
-_spec constructor_.
+_spec constructor_. An argument to the spec parameter is called _spec object_.
 2.  Only a single formal parameter of a constructor may be annotated with `@Spec`.
 3.  If a formal parameter is annotated with `@Spec`, the parameter’s type must be `pass:[~this]` or `pass:[~i~this]` (i.e.
 a use-site structural initializer field type of `this`, see <<structural-readWriteInit-field-typing>>).
-4.  A spec constructor will automatically initialize all its owned data fields, owned setters and data fields / setters
-from implemented interfaces that _are also part of the spec parameter's structural initializer field type_ with the data
-provided in the argument to the spec parameter.
-5.  Properties provided by an argument, but not defined in the parameter's structural initializer field type, are _not_
-used for initialization, even if a field of the same name exists in the class.
-6.  Fields explicitly added to the spec parameter, e.g. `@Spec spec: ~i~this with {name:string}`, are used for initialization
+4.  Using the data provided in the spec object, i.e. in the argument to the spec parameter, a spec constructor will
+automatically initialize
+a. all *owned* data fields and *owned* setters of the containing class, and
+b. all data fields and setters from interfaces implemented by the containing class
+
++
+if and only if those members are also part of the spec parameter's structural initializer field type.
+5.  Fields explicitly added to the spec parameter, e.g. `pass:[@Spec spec: ~i~this with {name:string}]`, are used for initialization
 if a non-public field of the same name exists in the class, either as an owned member of from an implemented interface.
-The type of such an additional field must be a subtype of the class's field’s type.
+The type of such an additional field must be a subtype of the declared type of the field being initialized:
 +
 [%hardbreaks]
 $\forall s \in ctor.fpar.structuralMembers, ctor.fpar.spec: $
 $\hspace{2em}\exists f \in ctor.owner.ownedFields \Rightarrow \tee s \subtype f $
-7.  Even if the `@Spec` annotation is used, the super constructor must be invoked explicitly (as usual).
+6.  Even if the `@Spec` annotation is used, the super constructor must be invoked explicitly (as usual).
 
 --
+
+It follows from no. 4 above that
+
+1. non-public data fields and setters are never initialized (because they will never be part of the spec parameter's
+structural initializer field type),
+2. properties provided in the spec object but not defined in the parameter's structural initializer field type, are
+_not_ used for initialization, even if a (protected or private) field of the same name exists in the class,
+3. data fields and setters inherited from a super class are never initialized by a spec constructor (instead, this will
+happen in the spec constructor of the super class).
+
+The last of these implications will be detailed further at the end of the coming section.
 
 
 *@Spec Constructors and Inheritance*
@@ -725,11 +738,11 @@ console.log(a.fi); // prints: world
 ----
 
 When having a spec constructor in a class `B` that extends a super class `A` without an owned or inherited spec
-constructor, it should be noted that the `~i~this` type will require properties for public writable fields of `A`, but the
-initialization code automatically generated due to the `@Spec` annotation will *not* initialize those members. For
-public writable fields from an interface `I` implemented by `B`, however, both a property will be required by `~i~this`
-*and* initialization code will be generated in the `@Spec` constructor. This is illustrated in the following code
-example.
+constructor, it should be noted that the `pass:[~i~this]` type will require properties for public writable fields of `A`,
+but the initialization code automatically generated due to the `@Spec` annotation will *not* initialize those members.
+For public writable fields from an interface `I` implemented by `B`, however, both a property will be required by
+`pass:[~i~this]` *and* initialization code will be generated in the `@Spec` constructor. This is illustrated in the
+following code example.
 
 [source,n4js]
 ----
