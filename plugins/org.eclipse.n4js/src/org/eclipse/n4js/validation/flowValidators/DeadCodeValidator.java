@@ -31,14 +31,14 @@ import com.google.inject.Inject;
  * This validator validates dead code.
  */
 public class DeadCodeValidator implements FlowValidator {
-	final private DeadCodeAnalyser dca = new DeadCodeAnalyser();
+	private DeadCodeAnalyser dca;
 
 	@Inject
 	private N4JSElementKeywordProvider keywordProvider;
 
 	@Override
-	public FlowAnalyser getFlowAnalyser() {
-		return dca;
+	public FlowAnalyser createFlowAnalyser() {
+		return dca = new DeadCodeAnalyser();
 	}
 
 	@Override

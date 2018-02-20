@@ -90,7 +90,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 
 		FlowAnalyser[] fAnalysers = new FlowAnalyser[fValidators.length];
 		for (int i = 0; i < fValidators.length; i++) {
-			fAnalysers[i] = fValidators[i].getFlowAnalyser();
+			fAnalysers[i] = fValidators[i].createFlowAnalyser();
 		}
 
 		flowAnalyzer.createGraphs(script, true);

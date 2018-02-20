@@ -89,6 +89,15 @@ class BinaryLogicalExpressionFactory {
 		return cNode;
 	}
 
+	/**
+	 * Short circuit evaluation of a {@link BinaryLogicalExpression} <i>ble</i> causes jumps that start at a lhs
+	 * condition and jump e.g. directly into the then or else block. However, sometimes this jump does not target such a
+	 * then or else block, for instance when <i>ble</i> is not used as a condition. In this case, the <i>ble</i> itself
+	 * or one of its parents will catch the short circuit jump.
+	 * <p>
+	 * This method returns true if the given {@link BinaryLogicalExpression} is catching a jump that is caused by a
+	 * short circuit evaluation. It returns false, if there is a parent element that will catch the jump instead.
+	 */
 	static private boolean isTopJumpCatcher(BinaryLogicalExpression ble) {
 		EObject child, parent = ble;
 		do { // skip parentheses

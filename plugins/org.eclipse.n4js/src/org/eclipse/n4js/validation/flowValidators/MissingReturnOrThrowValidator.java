@@ -40,11 +40,8 @@ public class MissingReturnOrThrowValidator implements FlowValidator {
 	private JavaScriptVariantHelper jsVariantHelper;
 
 	@Override
-	public FlowAnalyser getFlowAnalyser() {
-		if (mrta == null) {
-			mrta = new MissingReturnOrThrowAnalyser(typeSystem, jsVariantHelper);
-		}
-		return mrta;
+	public FlowAnalyser createFlowAnalyser() {
+		return mrta = new MissingReturnOrThrowAnalyser(typeSystem, jsVariantHelper);
 	}
 
 	@Override

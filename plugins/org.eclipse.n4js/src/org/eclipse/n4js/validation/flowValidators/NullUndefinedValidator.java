@@ -40,7 +40,7 @@ import com.google.inject.Inject;
  * This validator validates all dereference of null or undefined.
  */
 public class NullUndefinedValidator implements FlowValidator {
-	final private NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
+	private NullDereferenceAnalyser nda;
 
 	@Inject
 	private FindReferenceHelper findReferenceHelper;
@@ -49,8 +49,8 @@ public class NullUndefinedValidator implements FlowValidator {
 	private IN4JSCore n4jsCore;
 
 	@Override
-	public FlowAnalyser getFlowAnalyser() {
-		return nda;
+	public FlowAnalyser createFlowAnalyser() {
+		return nda = new NullDereferenceAnalyser();
 	}
 
 	@Override
