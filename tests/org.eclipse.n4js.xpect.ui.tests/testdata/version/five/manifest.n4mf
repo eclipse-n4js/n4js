@@ -1,6 +1,6 @@
 ProjectId: five
 ProjectType: library
-ProjectVersion: 5.0.0
+ProjectVersion: 15.0.0
 VendorId: org.eclipse.n4js
 Output: "src-gen"
 Sources {
