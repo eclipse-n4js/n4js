@@ -287,17 +287,18 @@ public class NpmPackageToProjectAdapter {
 
 		Version closestMatchingVersion = Version.findClosestMatching(availableTypeDefinitionsVersions, packageVersion);
 		if (Version.MISSING.equals(closestMatchingVersion)) {
-			logger.logInfo("Type definitions for '" + packageName + "' npm package in version " + packageVersion
-					+ " are not available.");
+			String details = "";
 			if (availableTypeDefinitionsVersions.isEmpty()) {
-				logger.logInfo("Cannot find any type definitions for  '" + packageName + "'.");
+				details = " Cannot find any type definitions for  '" + packageName + "'.";
 			} else if (1 == availableTypeDefinitionsVersions.size()) {
 				final Version head = availableTypeDefinitionsVersions.iterator().next();
-				logger.logInfo("Type definitions are available only in version : " + head + ".");
+				details = " Type definitions are available only in version : " + head + ".";
 			} else {
 				final String versions = Iterables.toString(availableTypeDefinitionsVersions);
-				logger.logInfo("Type definitions are available only in versions : " + versions + ".");
+				details = " Type definitions are available only in versions : " + versions + ".";
 			}
+			logger.logInfo("Type definitions for '" + packageName + "' npm package in version " + packageVersion
+					+ " are not available." + details);
 			return statusHelper.OK();
 		}
 

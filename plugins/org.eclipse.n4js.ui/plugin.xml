@@ -71,22 +71,6 @@ Contributors:
             id="org.eclipse.n4js.ui.export">
       </category>
 
-<!-- Disabled NFAR Wizard -->
-<!--
-      <wizard
-            name="%ExportWizards.NFAR"
-            category="org.eclipse.n4js.ui.export"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.export.nfar.NFARExportWizard"
-            id="org.eclipse.n4js.ui.export.NFAR">
-         <description>
-            %ExportWizards.NFARDescription
-         </description>
-         <selection
-               class="org.eclipse.core.resources.IResource">
-         </selection>
-      </wizard>
--->
-
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
@@ -281,6 +265,10 @@ Contributors:
             name="Show Type Information">
       </command>
       <command
+            id="org.eclipse.n4js.ui.handler.LibrariesFix"
+            name="Fix Libraries Setup">
+      </command>
+      <command
             id="org.eclipse.n4js.ui.openGeneratedSourceInEditor"
             name="Open Generated Source In Editor">
       </command>
@@ -367,6 +355,12 @@ Contributors:
                      commandId="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences"
                      icon="icons/native_lib_path_attrib.gif"
                      label="Open Built-in Libraries Preferences"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.n4js.ui.handler.LibrariesFix"
+                     icon="icons/debugt_obj.png"
+                     label="Fix Libraries setup"
                      style="push">
                </command>
                <command
@@ -492,6 +486,10 @@ Contributors:
      <handler
            class="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferencePageHandler"
            commandId="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences">
+     </handler>
+     <handler
+           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.LibrariesFixHandler"
+           commandId="org.eclipse.n4js.ui.handler.LibrariesFix">
      </handler>
      <handler
              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.CreateNewN4JSElementInModuleHandler"
