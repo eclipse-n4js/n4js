@@ -8,12 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.validation.flowValidators;
+package org.eclipse.n4js.validation.validators.flowgraphs;
 
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.n4js.flowgraphs.FlowAnalyser;
+import org.eclipse.n4js.flowgraphs.analysers.MissingReturnOrThrowAnalyser;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;

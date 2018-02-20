@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.validation.flowValidators;
+package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.Collection;
 import java.util.HashSet;

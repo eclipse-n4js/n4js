@@ -61,6 +61,7 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
+import org.eclipse.n4js.typesystem.TypeSystemHelper
 
 /**
  */
@@ -68,6 +69,9 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private N4JSTypeSystem ts;
+	
+	@Inject
+	private TypeSystemHelper tsh;
 
 	@Inject
 	private HiddenLeafAccess hla;
