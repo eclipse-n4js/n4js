@@ -58,6 +58,7 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 
 /**
  * Utility methods used in the XSemantics type system. Must be injected.
@@ -197,6 +198,11 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	/** @see ExpectedTypeComputer#getExpectedTypeOfYieldValueExpression(RuleEnvironment,YieldExpression,Expression) */
 	def TypeRef getExpectedTypeOfYieldValueExpression(RuleEnvironment G, YieldExpression yieldExpr, TypeRef exprTypeRef) {
 		return expectedTypeCompuer.getExpectedTypeOfYieldValueExpression(G, yieldExpr, exprTypeRef);
+	}
+
+	/** @see ExpectedTypeComputer#getExpectedTypeOfYieldValueExpression(RuleEnvironment,YieldExpression,Expression) */
+	def TypeRef getExpectedTypeOfFunctionOrFieldAccessor(RuleEnvironment G, FunctionOrFieldAccessor fofa) {
+		return expectedTypeCompuer.getExpectedTypeOfFunctionOrFieldAccessor(G, fofa);
 	}
 
 

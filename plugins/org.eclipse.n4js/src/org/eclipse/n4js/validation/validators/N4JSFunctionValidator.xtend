@@ -69,7 +69,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private N4JSTypeSystem ts;
-	
+
 	@Inject
 	private TypeSystemHelper tsh;
 
@@ -270,7 +270,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		val _void = newRuleEnvironment(fofa).voidType;
-		val returnTypeRef = ts.getReturnTypeRef(fofa);
+		val returnTypeRef = tsh.getExpectedTypeOfFunctionOrFieldAccessor(null, fofa);
 		val isDeclaredVoid = if (fofa instanceof FieldAccessor) {
 				TypeUtils.isOrContainsType(fofa.declaredTypeRef, _void)
 			} else if (fofa instanceof FunctionDefinition) {

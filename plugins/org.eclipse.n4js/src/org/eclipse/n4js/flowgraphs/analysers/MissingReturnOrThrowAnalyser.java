@@ -34,7 +34,7 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.utils.TypeUtils;
-import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -49,15 +49,15 @@ import com.google.common.collect.Multimap;
  * Constraint 111.3 Item 2 "all control flows must either end with a return or throw statement"
  */
 public class MissingReturnOrThrowAnalyser extends GraphVisitor {
-	final private N4JSTypeSystem typeSystem;
+	final private TypeSystemHelper typeSystemHelper;
 	final private JavaScriptVariantHelper jsVariantHelper;
 
 	Multimap<FunctionOrFieldAccessor, ControlFlowElement> missingTRAfter = HashMultimap.create();
 
 	/** Constructor */
-	public MissingReturnOrThrowAnalyser(N4JSTypeSystem typeSystem, JavaScriptVariantHelper jsVariantHelper) {
+	public MissingReturnOrThrowAnalyser(TypeSystemHelper typeSystemHelper, JavaScriptVariantHelper jsVariantHelper) {
 		super(TraverseDirection.Backward);
-		this.typeSystem = typeSystem;
+		this.typeSystemHelper = typeSystemHelper;
 		this.jsVariantHelper = jsVariantHelper;
 	}
 
@@ -183,8 +183,8 @@ public class MissingReturnOrThrowAnalyser extends GraphVisitor {
 			return false;
 		}
 
-		TypeRef returnType = typeSystem.getReturnTypeRef(fofa);
-		if (returnType == null || TypeUtils.isVoid(returnType)) {
+		TypeRef returnType = typeSystemHelper.getExpectedTypeOfFunctionOrFieldAccessor(null, fofa);
+		if (returnType == null || TypeUtils.isVoid(returnType) || TypeUtils.isUndefined(returnType)) {
 			return false;
 		}
 
