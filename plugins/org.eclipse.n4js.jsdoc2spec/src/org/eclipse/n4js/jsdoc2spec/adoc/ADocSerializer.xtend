@@ -559,31 +559,22 @@ class ADocSerializer {
 	private def String getTodoLink(String todoText, String sideText) {
 		val todo =
 			'''
-			[.todo«
+
+			[TODO«
 			IF !sideText.isNullOrEmpty
-			», label="«sideText»"«
+			», title="«sideText»"«
 			ENDIF
 			»]
 			--
 			«todoText»
 			--
+
 			'''
 		return todo;
 	}
 
 	private def String getTodoLink(Doclet doclet) {
-		return getTodoLink(doclet, "");
-	}
-
-	private def String getTodoLink(Doclet doclet, String sideText) {
-		var link = getTodo(doclet);
-		val todo =
-			'''todo:«link»[«
-			IF !sideText.isNullOrEmpty
-			»"«sideText»"«
-			ENDIF
-			»]''';
-		return todo;
+		return getTodoLink(getTodo(doclet), "");
 	}
 
 	private def StringBuilder appendTaskLink(StringBuilder strb, String taskID) {

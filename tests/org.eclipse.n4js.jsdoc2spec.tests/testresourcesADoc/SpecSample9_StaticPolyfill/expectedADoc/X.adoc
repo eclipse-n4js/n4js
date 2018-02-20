@@ -50,10 +50,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++X.foo++"]
+
+[TODO, title="test ++X.foo++"]
 --
 Add tests specifying semantics for ``++foo(): void++``
 --
+
 
 
 [[gsec:spec_X.X.my]]
@@ -67,8 +69,10 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++X.my++"]
+
+[TODO, title="test ++X.my++"]
 --
 Add tests specifying semantics for ``++my(): void++``
 --
+
 
