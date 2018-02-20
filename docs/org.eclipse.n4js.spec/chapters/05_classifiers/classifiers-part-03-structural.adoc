@@ -592,7 +592,7 @@ h|Member of type __X__ | ``pass:[~~X]`` |``pass:[~r~X]`` |``pass:[~w~X]`` |``pas
 --
 
 [.language-n4js]
-== Structural Read-only, Write-only and Initializer Field Typing
+== Structural Read-only, Write-only and Initializer Field Typing [[structural-readWriteInit-field-typing]]
 
 
 Structural read-only, write-only and initializer field typings are extensions of structural field typing.
