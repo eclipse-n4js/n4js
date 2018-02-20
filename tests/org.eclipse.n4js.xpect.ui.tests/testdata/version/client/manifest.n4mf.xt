@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+
+	Workspace {
+		JavaProject "client" {
+			File "manifest.n4mf" {from="../../version/client/manifest.n4mf.xt"}
+		}
+		JavaProject "one" {
+			File "manifest.n4mf" {from="../../version/one/manifest.n4mf"}
+		}
+		JavaProject "two" {
+			File "manifest.n4mf" {from="../../version/two/manifest.n4mf"}
+		}
+		JavaProject "three" {
+			File "manifest.n4mf" {from="../../version/three/manifest.n4mf"}
+		}
+		JavaProject "four" {
+			File "manifest.n4mf" {from="../../version/four/manifest.n4mf"}
+		}
+		JavaProject "five" {
+			File "manifest.n4mf" {from="../../version/five/manifest.n4mf"}
+		}
+		JavaProject "six" {
+			File "manifest.n4mf" {from="../../version/six/manifest.n4mf"}
+		}
+		JavaProject "seven" {
+			File "manifest.n4mf" {from="../../version/seven/manifest.n4mf"}
+		}
+	}
+
+	END_SETUP
+ */
+
+ProjectId: client
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+VendorId: MyVendorID
+VendorName: "My Vendor Name"
+Output: "src-gen"
+
+ProjectDependencies {
+	// XPECT noerrors --> "1 is short form of 1.0.0 so we have a match"
+	one 1,
+	// XPECT errors --> "Project two is required in version higher than 2.0.0, but only version 2.0.0 is present." at "2.0.0"
+    two (2.0.0, 4),
+    // XPECT noerrors --> "lower bound is inclusive, so we have a match"
+    three [3.0.0, 4),
+    	// XPECT errors --> "Project four is required in version lower than 4.0.0, but only version 4.0.0 is present." at "4.0.0"
+    four (1, 4.0.0),
+    // XPECT noerrors --> "upper bound is inclusive, so we have a match"
+    five (1, 5.0.0], //inclusive
+	// XPECT noerrors --> "1 is short form of 1.0.0 so we have a match"
+    six 0.0.0, //special 0.0.0 matches any
+    // XPECT noerrors --> "no version is short for 0.0.0 so we have a match"
+    	seven
+}

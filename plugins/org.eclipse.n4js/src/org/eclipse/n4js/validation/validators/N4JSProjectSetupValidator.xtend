@@ -70,6 +70,8 @@ import static java.util.Collections.unmodifiableMap
 
 import static extension com.google.common.base.Strings.nullToEmpty
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.n4mf.ProjectDependency
+import org.eclipse.n4js.utils.Version
 
 /**
  * Checking Project Setup from N4MF considering Polyfills.
@@ -664,14 +666,48 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(getMessageForNON_EXISTING_PROJECT(id), it, NON_EXISTING_PROJECT);
 				} else {
 					// Create only one single validation issue for a particular project reference.
-					var valid = true;
-					if (valid && desc?.projectId == id) {
+					if (desc?.projectId == id) {
 						addProjectReferencesItselfIssue(it.eContainer, features.last, references.indexOf(it));
-						valid = false;
-					}
-					if (valid && !projectPredicate.apply(project)) {
+					}else if (!projectPredicate.apply(project)) {
 						addInvalidProjectTypeIssue(it.eContainer, id, project.projectType, features.last, references.indexOf(it));
-						valid = false;
+					}else{
+						//
+						if(it instanceof ProjectDependency){
+							val desiredVersion = it.versionConstraint
+							if(desiredVersion !== null){
+								val proj = allProjects.get(id)
+								val availableVersion = proj.version
+								val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro, availableVersion.qualifier);
+								val desiredLower = desiredVersion.lowerVersion
+								if(desiredLower !== null){
+									val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
+									switch (available.compareTo(lower)) {
+										case -1: {
+											addVersionMismatchIssue(desiredLower,id, "higher than " +  lower.toString, available.toString);
+
+										}
+										case 0: {
+											if(desiredVersion.exclLowerBound)
+												addVersionMismatchIssue(desiredLower,id, "higher than " +  lower.toString, available.toString);
+										}
+									}
+								}
+								val desiredUpper = desiredVersion.upperVersion
+								if(desiredUpper !== null ){
+									val upper = new Version(desiredUpper.major, desiredUpper.minor, desiredUpper.micro, desiredUpper.qualifier);
+									switch (available.compareTo(upper)) {
+										case 1: {
+											addVersionMismatchIssue(desiredUpper,id, "lower than " +  upper.toString, available.toString);
+
+										}
+										case 0: {
+											if(desiredVersion.exclUpperBound)
+												addVersionMismatchIssue(desiredUpper,id, "lower than " +  upper.toString, available.toString);
+										}
+									}
+								}
+							}
+						}
 					}
 					existentIds.put(id, it);
 				}
@@ -763,6 +799,10 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def addDuplicateProjectReferenceIssue(EObject eObject, EStructuralFeature feature, int index) {
 		addIssue(messageForDUPLICATE_PROJECT_REF, eObject, feature, index, DUPLICATE_PROJECT_REF);
+	}
+	 
+	private def addVersionMismatchIssue(EObject eObject, String name, String requiredVersion, String presentVersion) {
+		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), eObject, NO_MATCHING_VERSION)
 	}
 
 	private def toProjectId(ProjectReference it) {
