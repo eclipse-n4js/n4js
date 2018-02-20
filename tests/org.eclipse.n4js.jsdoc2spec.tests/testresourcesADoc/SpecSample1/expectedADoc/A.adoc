@@ -56,10 +56,12 @@ spec for method A.baz from source code
 
 
 ==== Semantics
-[.todo, label="test ++A.baz++"]
+
+[TODO, title="test ++A.baz++"]
 --
 Add tests specifying semantics for ``++baz(): string++``
 --
+
 
 == Class B
 
@@ -77,10 +79,12 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 
 ==== Semantics
-[.todo, label="test ++B.foo++"]
+
+[TODO, title="test ++B.foo++"]
 --
 Add tests specifying semantics for ``++foo(s: string): void++``
 --
+
 
 == Class D
 

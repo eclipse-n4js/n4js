@@ -529,15 +529,25 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			default: {
 				val container = context.eContainer;
 
-				// do we set super type reference of polyfill?
+				// handle special areas inside a polyfill that should *not* get the usual polyfill handling implemented
+				// in the above case for "TypeDefiningElement":
 				if (container instanceof N4ClassDeclaration) {
-					if (container.superClassRef === context
-						&&	(container.isPolyfill || container.isStaticPolyfill)
-					) {
-						val script = EcoreUtil2.getContainerOfType(container, Script);
-						val parent = scopeWithLocallyKnownTypesForPolyfillSuperRef(script, reference, delegate,
-							container.definedType);
-						return parent;
+					if (container.isPolyfill || container.isStaticPolyfill) {
+						if (container.typeVars.contains(context)) {
+							// area #1: upper/lower bound of type parameter of polyfill, e.g. the 2nd 'T' in:
+							// @@StaticPolyfillModule
+							// @StaticPolyfill export public class ToBeFilled<T,S extends T> extends ToBeFilled<T,S> {}
+							val IScope parent = getTypeScope(context.eContainer, reference, false);
+							return scopeWithTypeAndItsTypeVariables(parent, container.definedType, fromStaticContext);
+						} else if (container.superClassRef === context) {
+							// area #2: super type reference of polyfill, e.g. everything after 'extends' in:
+							// @@StaticPolyfillModule
+							// @StaticPolyfill export public class ToBeFilled<T> extends ToBeFilled<T> {}
+							val script = EcoreUtil2.getContainerOfType(container, Script);
+							val parent = scopeWithLocallyKnownTypesForPolyfillSuperRef(script, reference, delegate,
+								container.definedType);
+							return parent;
+						}
 					}
 				}
 

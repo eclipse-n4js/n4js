@@ -435,13 +435,6 @@ Contributors:
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jdt.junit.runners"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.xpect.xtext.lib"
          download-size="0"
          install-size="0"
