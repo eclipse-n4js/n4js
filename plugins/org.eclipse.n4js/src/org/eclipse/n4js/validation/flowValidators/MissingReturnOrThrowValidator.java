@@ -25,19 +25,25 @@ import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
 
+import com.google.inject.Inject;
+
 /**
  * This validator validates all missing return or throw statements.
  */
 public class MissingReturnOrThrowValidator implements FlowValidator {
-	final private MissingReturnOrThrowAnalyser mrta;
+	private MissingReturnOrThrowAnalyser mrta;
 
-	/** Constructor. */
-	public MissingReturnOrThrowValidator(N4JSTypeSystem typeSystem, JavaScriptVariantHelper jsVariantHelper) {
-		this.mrta = new MissingReturnOrThrowAnalyser(typeSystem, jsVariantHelper);
-	}
+	@Inject
+	private N4JSTypeSystem typeSystem;
+
+	@Inject
+	private JavaScriptVariantHelper jsVariantHelper;
 
 	@Override
 	public FlowAnalyser getFlowAnalyser() {
+		if (mrta == null) {
+			mrta = new MissingReturnOrThrowAnalyser(typeSystem, jsVariantHelper);
+		}
 		return mrta;
 	}
 

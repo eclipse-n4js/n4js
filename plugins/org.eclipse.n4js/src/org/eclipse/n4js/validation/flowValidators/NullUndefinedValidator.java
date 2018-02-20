@@ -34,19 +34,19 @@ import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
 import org.eclipse.xtext.EcoreUtil2;
 
+import com.google.inject.Inject;
+
 /**
  * This validator validates all dereference of null or undefined.
  */
 public class NullUndefinedValidator implements FlowValidator {
 	final private NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
-	final private IN4JSCore n4jsCore;
-	final private FindReferenceHelper findReferenceHelper;
 
-	/** Constructor. */
-	public NullUndefinedValidator(IN4JSCore n4jsCore, FindReferenceHelper findReferenceHelper) {
-		this.n4jsCore = n4jsCore;
-		this.findReferenceHelper = findReferenceHelper;
-	}
+	@Inject
+	private FindReferenceHelper findReferenceHelper;
+
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	@Override
 	public FlowAnalyser getFlowAnalyser() {
