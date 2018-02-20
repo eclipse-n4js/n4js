@@ -551,7 +551,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			checkReferencedProjects(extendedREFeatures, allProjects, RE_TYPE.forN4jsProjects);
 		}
 
-
 		// Required runtime library feature check. Obsolete or not allowed.
 		val requiredRLFeatures = #[projectDescription_RequiredRuntimeLibraries, requiredRuntimeLibraries_RequiredRuntimeLibraries];
 		if (checkFeature(
@@ -573,7 +572,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			checkReferencedProjects(providedRLFeatures, allProjects, RL_TYPE.forN4jsProjects);
 		}
 
-
 		// Tested projects feature check. Obsolete or not allowed.
 		val testProjectsFeatures = #[projectDescription_TestedProjects, testedProjects_TestedProjects];
 		if (checkFeature(
@@ -593,7 +591,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			//
 		}
 
-
 		// Executer module feature check for REs and RLs. Obsolete or not allowed.
 		if (checkFeature(
 			#[projectDescription_ExecModule],
@@ -602,7 +599,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			//
 		}
 
-
 		// Implementation ID feature check for applications, libraries and processors. Obsolete or not allowed.
 		if (checkFeature(
 			#[projectDescription_ImplementationId],
@@ -610,7 +606,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		)) {
 			//
 		}
-
 
 		// Implemented projects feature check for applications, libraries and processors. Obsolete or not allowed.
 		val implementedProjectsFeatures = #[projectDescription_ImplementedProjects, implementedProjects_ImplementedProjects];
@@ -671,7 +666,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 					}else if (!projectPredicate.apply(project)) {
 						addInvalidProjectTypeIssue(it.eContainer, id, project.projectType, features.last, references.indexOf(it));
 					}else{
-						//
 						if(it instanceof ProjectDependency){
 							val desiredVersion = it.versionConstraint
 							if(desiredVersion !== null){
@@ -682,13 +676,12 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 								if(desiredLower !== null){
 									val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
 									switch (available.compareTo(lower)) {
-										case -1: {
-											addVersionMismatchIssue(desiredLower,id, "higher than " +  lower.toString, available.toString);
-
-										}
 										case 0: {
 											if(desiredVersion.exclLowerBound)
 												addVersionMismatchIssue(desiredLower,id, "higher than " +  lower.toString, available.toString);
+										}
+										case -1: {
+											addVersionMismatchIssue(desiredLower,id, "higher than " +  lower.toString, available.toString);
 										}
 									}
 								}
@@ -698,7 +691,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 									switch (available.compareTo(upper)) {
 										case 1: {
 											addVersionMismatchIssue(desiredUpper,id, "lower than " +  upper.toString, available.toString);
-
 										}
 										case 0: {
 											if(desiredVersion.exclUpperBound)
