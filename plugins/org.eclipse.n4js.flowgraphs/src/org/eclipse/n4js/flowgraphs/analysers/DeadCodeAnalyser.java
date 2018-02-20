@@ -49,6 +49,12 @@ public class DeadCodeAnalyser extends GraphVisitor {
 	}
 
 	@Override
+	protected void initialize() {
+		allLiveNodes.clear();
+		allDeadNodes.clear();
+	}
+
+	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (isLiveCode()) {
 			allLiveNodes.add(cfe);
