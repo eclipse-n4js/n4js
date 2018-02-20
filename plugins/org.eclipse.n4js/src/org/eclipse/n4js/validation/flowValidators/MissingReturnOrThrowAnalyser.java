@@ -48,14 +48,14 @@ import com.google.common.collect.Multimap;
  * <p>
  * Constraint 111.3 Item 2 "all control flows must either end with a return or throw statement"
  */
-public class MissingReturnThrowAnalyser extends GraphVisitor {
+public class MissingReturnOrThrowAnalyser extends GraphVisitor {
 	final private N4JSTypeSystem typeSystem;
 	final private JavaScriptVariantHelper jsVariantHelper;
 
 	Multimap<FunctionOrFieldAccessor, ControlFlowElement> missingTRAfter = HashMultimap.create();
 
 	/** Constructor */
-	public MissingReturnThrowAnalyser(N4JSTypeSystem typeSystem, JavaScriptVariantHelper jsVariantHelper) {
+	public MissingReturnOrThrowAnalyser(N4JSTypeSystem typeSystem, JavaScriptVariantHelper jsVariantHelper) {
 		super(TraverseDirection.Backward);
 		this.typeSystem = typeSystem;
 		this.jsVariantHelper = jsVariantHelper;

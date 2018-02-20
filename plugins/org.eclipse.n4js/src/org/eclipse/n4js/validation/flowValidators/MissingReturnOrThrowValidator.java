@@ -29,11 +29,11 @@ import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
  * This validator validates all missing return or throw statements.
  */
 public class MissingReturnOrThrowValidator implements FlowValidator {
-	final private MissingReturnThrowAnalyser mrta;
+	final private MissingReturnOrThrowAnalyser mrta;
 
 	/** Constructor. */
 	public MissingReturnOrThrowValidator(N4JSTypeSystem typeSystem, JavaScriptVariantHelper jsVariantHelper) {
-		this.mrta = new MissingReturnThrowAnalyser(typeSystem, jsVariantHelper);
+		this.mrta = new MissingReturnOrThrowAnalyser(typeSystem, jsVariantHelper);
 	}
 
 	@Override
