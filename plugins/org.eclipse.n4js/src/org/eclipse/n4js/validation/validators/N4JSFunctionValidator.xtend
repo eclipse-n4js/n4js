@@ -277,11 +277,12 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 				TypeUtils.isOrContainsType(returnTypeRef, _void)
 			} else false;
 
+		val isUndefined = TypeUtils.isUndefined(returnTypeRef);
 		val isVoid = TypeUtils.isOrContainsType(returnTypeRef, _void);
 		val isComposed = (returnTypeRef instanceof ComposedTypeRef && (returnTypeRef as ComposedTypeRef).typeRefs.size>1);
 		val isGetter = fofa instanceof GetterDeclaration;
 
-		if (!isGetter && (isDeclaredVoid || isVoid || isComposed)) {
+		if (!isGetter && (isDeclaredVoid || isVoid || isUndefined || isComposed)) {
 			return false;
 		}
 

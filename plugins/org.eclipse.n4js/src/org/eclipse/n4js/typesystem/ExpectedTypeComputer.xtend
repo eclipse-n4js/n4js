@@ -54,9 +54,9 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 
 // The following comment will be removed as soon as Jenkins is green
 
-//		val G2 = G.wrap;
-//		val myThisTypeRef = ts.thisTypeRef(G, returnValueExpr).value;
-//		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
+		val G2 = G.wrap;
+		val myThisTypeRef = ts.thisTypeRef(G, returnValueExpr).value;
+		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 //
 //		if (funDef !== null) {
 //			if (funDef.isAsync) {
@@ -78,7 +78,7 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 //			val getterDef = EcoreUtil2.getContainerOfType(returnValueExpr, GetterDeclaration);
 //			return getterDef?.definedGetter?.declaredTypeRef;
 //		}
-		return getExpectedTypeOfFunctionOrFieldAccessor(G, fofa); // null means: no type expectation
+		return getExpectedTypeOfFunctionOrFieldAccessor(G2, fofa); // null means: no type expectation
 	}
 
 	def TypeRef getExpectedTypeOfFunctionOrFieldAccessor(RuleEnvironment G, FunctionOrFieldAccessor fofa) {
