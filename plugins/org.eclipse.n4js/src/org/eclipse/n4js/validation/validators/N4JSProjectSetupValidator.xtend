@@ -18,29 +18,6 @@ import com.google.common.collect.Iterables
 import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
-import org.eclipse.n4js.projectModel.IN4JSArchive
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
-import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
-import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.n4js.validation.N4JSIssueSeverities
-import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider
-import org.eclipse.n4js.validation.helper.PolyFilledProvision
-import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
-import org.eclipse.n4js.n4mf.N4mfFactory
-import org.eclipse.n4js.n4mf.N4mfPackage
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectReference
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.RuntimeProjectDependency
-import org.eclipse.n4js.n4mf.SimpleProjectDescription
-import org.eclipse.n4js.n4mf.SourceFragmentType
-import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
-import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.types.TypesPackage
 import java.util.List
 import java.util.Map
 import java.util.Set
@@ -50,6 +27,33 @@ import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.n4mf.N4mfFactory
+import org.eclipse.n4js.n4mf.N4mfPackage
+import org.eclipse.n4js.n4mf.ProjectDependency
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.ProjectReference
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.n4mf.RuntimeProjectDependency
+import org.eclipse.n4js.n4mf.SimpleProjectDescription
+import org.eclipse.n4js.n4mf.SourceFragmentType
+import org.eclipse.n4js.n4mf.VersionConstraint
+import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
+import org.eclipse.n4js.projectModel.IN4JSArchive
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
+import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.utils.Version
+import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.N4JSIssueSeverities
+import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider
+import org.eclipse.n4js.validation.helper.PolyFilledProvision
+import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
 import org.eclipse.xtext.resource.IContainer.Manager
@@ -61,15 +65,14 @@ import org.eclipse.xtext.validation.Check
 import static com.google.common.base.CaseFormat.LOWER_CAMEL
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE
 import static com.google.common.base.Preconditions.checkState
-import static org.eclipse.n4js.validation.IssueCodes.*
+import static java.util.Collections.singletonList
+import static java.util.Collections.unmodifiableMap
 import static org.eclipse.n4js.n4mf.N4mfPackage.Literals.*
 import static org.eclipse.n4js.n4mf.ProjectType.*
 import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
-import static java.util.Collections.singletonList
-import static java.util.Collections.unmodifiableMap
+import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.N4JSGlobals
 
 /**
  * Checking Project Setup from N4MF considering Polyfills.
@@ -549,7 +552,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			checkReferencedProjects(extendedREFeatures, allProjects, RE_TYPE.forN4jsProjects);
 		}
 
-
 		// Required runtime library feature check. Obsolete or not allowed.
 		val requiredRLFeatures = #[projectDescription_RequiredRuntimeLibraries, requiredRuntimeLibraries_RequiredRuntimeLibraries];
 		if (checkFeature(
@@ -571,7 +573,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			checkReferencedProjects(providedRLFeatures, allProjects, RL_TYPE.forN4jsProjects);
 		}
 
-
 		// Tested projects feature check. Obsolete or not allowed.
 		val testProjectsFeatures = #[projectDescription_TestedProjects, testedProjects_TestedProjects];
 		if (checkFeature(
@@ -591,7 +592,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			//
 		}
 
-
 		// Executer module feature check for REs and RLs. Obsolete or not allowed.
 		if (checkFeature(
 			#[projectDescription_ExecModule],
@@ -600,7 +600,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			//
 		}
 
-
 		// Implementation ID feature check for applications, libraries and processors. Obsolete or not allowed.
 		if (checkFeature(
 			#[projectDescription_ImplementationId],
@@ -608,7 +607,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		)) {
 			//
 		}
-
 
 		// Implemented projects feature check for applications, libraries and processors. Obsolete or not allowed.
 		val implementedProjectsFeatures = #[projectDescription_ImplementedProjects, implementedProjects_ImplementedProjects];
@@ -664,14 +662,12 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(getMessageForNON_EXISTING_PROJECT(id), it, NON_EXISTING_PROJECT);
 				} else {
 					// Create only one single validation issue for a particular project reference.
-					var valid = true;
-					if (valid && desc?.projectId == id) {
+					if (desc?.projectId == id) {
 						addProjectReferencesItselfIssue(it.eContainer, features.last, references.indexOf(it));
-						valid = false;
-					}
-					if (valid && !projectPredicate.apply(project)) {
+					}else if (!projectPredicate.apply(project)) {
 						addInvalidProjectTypeIssue(it.eContainer, id, project.projectType, features.last, references.indexOf(it));
-						valid = false;
+					}else{
+						checkVersions(it, id, allProjects)
 					}
 					existentIds.put(id, it);
 				}
@@ -686,6 +682,52 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 				];
 			}
 		];
+	}
+
+	/** Checks if version constraint of the project reference is satisfied by any available project.*/
+	private def checkVersions(ProjectReference it, String id, Map<String, IN4JSProject> allProjects) {
+		if (it instanceof ProjectDependency) {
+			val desiredVersion = it.versionConstraint
+			if (desiredVersion !== null) {
+				val availableVersion = allProjects.get(id).version
+				val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro,
+					availableVersion.qualifier);
+				checkLowerVersion(desiredVersion, available, id)
+				checkUpperVersion(desiredVersion, available, id)
+			}
+		}
+	}
+
+	private def checkLowerVersion(VersionConstraint constraint, Version available, String id) {
+		val desiredLower = constraint.lowerVersion
+		if (desiredLower !== null) {
+			val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
+			switch (available.compareTo(lower)) {
+				case 0: {
+					if (constraint.exclLowerBound)
+						addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
+				}
+				case -1: {
+					addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
+				}
+			}
+		}
+	}
+
+	private def checkUpperVersion(VersionConstraint constraint, Version available, String id) {
+		val desiredUpper = constraint.upperVersion
+		if (desiredUpper !== null) {
+			val upper = new Version(desiredUpper.major, desiredUpper.minor, desiredUpper.micro, desiredUpper.qualifier);
+			switch (available.compareTo(upper)) {
+				case 1: {
+					addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
+				}
+				case 0: {
+					if (constraint.exclUpperBound)
+						addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
+				}
+			}
+		}
 	}
 
 	private def checkFeature(ProjectDescription it, Iterable<? extends EStructuralFeature> features, Predicate<ProjectType> supportedTypesPredicate) {
@@ -763,6 +805,10 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def addDuplicateProjectReferenceIssue(EObject eObject, EStructuralFeature feature, int index) {
 		addIssue(messageForDUPLICATE_PROJECT_REF, eObject, feature, index, DUPLICATE_PROJECT_REF);
+	}
+	 
+	private def addVersionMismatchIssue(EObject eObject, String name, String requiredVersion, String presentVersion) {
+		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), eObject, NO_MATCHING_VERSION)
 	}
 
 	private def toProjectId(ProjectReference it) {
