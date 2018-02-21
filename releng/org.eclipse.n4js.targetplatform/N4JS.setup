@@ -411,6 +411,8 @@
             url="http://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952"/>
         <repository
         		url="http://download.eclipse.org/mpc/releases/1.6.1"/>
+        <repository
+        		url="http://download.eclipse.org/usssdk/drops/release/1.1.0"/>
       </repositoryList>
     </targlet>
   </setupTask>
