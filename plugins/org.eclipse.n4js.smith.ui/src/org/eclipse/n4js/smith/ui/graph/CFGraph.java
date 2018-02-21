@@ -97,6 +97,7 @@ public class CFGraph extends Graph<CFGraphProvider> {
 		int lastLine = 0;
 		int posInLine = 70;
 		int lineCounter = 0;
+		int entryLineCounter = 0;
 
 		Set<Entry<CFNode, ControlFlowElement>> entries = nodeMap.entrySet();
 		Iterator<Entry<CFNode, ControlFlowElement>> entriesIt = entries.iterator();
@@ -109,25 +110,33 @@ public class CFGraph extends Graph<CFGraphProvider> {
 
 			int line = getLineEnd(cfe);
 			boolean lineChange = lastLine != line;
-			lastLine = line;
 			if (lineChange) {
 				posInLine = 70;
 
-				boolean addNewLine = true;
-				addNewLine &= lastNode != null && !lastNode.isEntry && !lastNode.isExit;
-				addNewLine &= !node.isEntry && !node.isExit;
-				if (addNewLine) {
-					lineCounter++;
+				boolean lastIsContainer = lastNode != null && (lastNode.isEntry || lastNode.isExit);
+				boolean isContainer = node.isEntry || node.isExit;
+				if (!lastIsContainer && !isContainer) {
+					lineCounter++; // normal lines
+				}
+				if (lastIsContainer && isContainer) {
+					lineCounter += 2; // lines between two functions
+				}
+				if (node.isExit && entryLineCounter == lineCounter) {
+					lineCounter++; // line iff function consists of one line only
 				}
 			}
 
 			node.x = node.isEntry || node.isExit ? 0 : posInLine;
 			node.y = lineCounter * 100;
 
-			posInLine += node.width + 50;
 			node.trim(gc);
+			posInLine += node.width + 50;
 
 			lastNode = node;
+			lastLine = line;
+			if (node.isEntry) {
+				entryLineCounter = lineCounter;
+			}
 		}
 		layoutDone = true;
 	}
@@ -171,7 +180,7 @@ public class CFGraph extends Graph<CFGraphProvider> {
 			ControlFlowElement cfe2 = cfn2.getControlFlowElement();
 
 			int line1 = cfn1.isEntry ? getLineStart(cfe1) : getLineEnd(cfe1);
-			int line2 = cfn1.isEntry ? getLineStart(cfe2) : getLineEnd(cfe2);
+			int line2 = cfn2.isEntry ? getLineStart(cfe2) : getLineEnd(cfe2);
 			int offset = line1 - line2;
 
 			if (offset == 0) {
