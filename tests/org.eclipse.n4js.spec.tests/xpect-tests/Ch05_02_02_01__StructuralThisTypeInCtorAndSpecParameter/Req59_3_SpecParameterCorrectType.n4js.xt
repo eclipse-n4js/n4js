@@ -15,12 +15,12 @@
 
 
 class A {
-	// XPECT noerrors --> "simple success case #1: structural this"
+	// XPECT errors --> "Annotation @Spec may only be used with formal parameters of type ~i~this." at "Spec"
 	constructor(a : string, @Spec b : ~this, c : number) {}
 }
 
 class B {
-	// XPECT noerrors --> "simple success case #2: structural-field this"
+	// XPECT noerrors --> "simple success case: structural-field this"
 	constructor(a : string, @Spec b : ~i~this, c : number) {}
 }
 
