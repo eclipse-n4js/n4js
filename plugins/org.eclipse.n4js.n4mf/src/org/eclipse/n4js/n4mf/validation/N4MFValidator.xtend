@@ -330,7 +330,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 			val basePathToCheck = absoluteProjectPath + "/" + it
 			val pathsToFind = "/" + moduleFilterSpecifier.moduleSpecifierWithWildcard
 			val foundFiles = WildcardPathFilter.collectPathsByWildcardPath(basePathToCheck, pathsToFind)
-			foundFiles.filter[endsWith(".n4js")|| endsWith(".n4jsx")||endsWith(".n4jsd")].forEach [
+			foundFiles.filter[endsWith(".n4js") || endsWith(".n4jsx")].forEach [
 				handleNoValidationForN4JSFiles(moduleFilterSpecifier, moduleFilterSpecifierWithWildcard)
 			]
 			return !foundFiles.empty
