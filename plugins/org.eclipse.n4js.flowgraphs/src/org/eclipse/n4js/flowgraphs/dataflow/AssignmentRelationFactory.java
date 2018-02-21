@@ -19,6 +19,8 @@ import org.eclipse.n4js.flowgraphs.factories.ASTUtils;
 import org.eclipse.n4js.n4JS.ArrayElement;
 import org.eclipse.n4js.n4JS.ArrayLiteral;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
+import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
+import org.eclipse.n4js.n4JS.BinaryLogicalOperator;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
@@ -40,6 +42,7 @@ import com.google.common.collect.Multimap;
  * <li/>plain {@link VariableDeclaration}: {@code let a = b}
  * <li/>{@link ConditionalExpression} on the RHS: {@code a = b ? c : d}
  * <li/>nested {@link AssignmentExpression} on the RHS: {@code a = b = c}
+ * <li/>{@link BinaryLogicalExpression}s on the RHS: {@code a = b || c}
  * <li/>assignments in {@code for-of} loops with declaration: <code>for (let a of [1,2,3]){}</code>
  * <li/>assignments in {@code for-of} loops without declaration: <code>for (a of [1,2,3]){}</code>
  * <li/>destructuring patterns in {@link AssignmentExpression}: {@code [a] = [b]} or <code>{p:a} = {p:b}}</code>
@@ -135,6 +138,13 @@ public class AssignmentRelationFactory {
 			Expression falseExpr = ce.getFalseExpression();
 			handleSubexpressions(assgns, lhs, trueExpr);
 			handleSubexpressions(assgns, lhs, falseExpr);
+
+		} else if (rhs instanceof BinaryLogicalExpression) {
+			BinaryLogicalExpression ble = (BinaryLogicalExpression) rhs;
+			if (ble.getOp() == BinaryLogicalOperator.OR) {
+				handleSubexpressions(assgns, lhs, ble.getLhs());
+			}
+			handleSubexpressions(assgns, lhs, ble.getRhs());
 
 		} else {
 			createRelation(assgns, lhs, rhs);

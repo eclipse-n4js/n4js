@@ -40,7 +40,7 @@ class D
 	}
 
 	/* XPECT errors ---
-		"Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "get b () {}"
+		"Missing return or throw statement." at "get b () {}"
 	--- */
 	get b () {}
 	// 	XPECT errors -->"Set accessors must not return anything." at "return 17;"
@@ -64,7 +64,7 @@ class E
 	set a ( n : number ) {
 	}
 
-	// 	XPECT errors -->"Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "get b() : number {}"
+	// 	XPECT errors -->"Missing return or throw statement." at "get b() : number {}"
 	get b() : number {}
 	// 	XPECT errors -->"Set accessors must not return anything." at "return 17;"
 	set b ( n : number ) { return 17; }
@@ -105,7 +105,7 @@ interface RE
 	set a ( n : number ) {
 	}
 
-	// 	XPECT errors -->"Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "get b() : number {}"
+	// 	XPECT errors -->"Missing return or throw statement." at "get b() : number {}"
 	get b() : number {}
 	// 	XPECT errors -->"Set accessors must not return anything." at "return 17;"
 	set b ( n : number ) { return 17; }

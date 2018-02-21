@@ -21,8 +21,8 @@
 
 
 /* IfStatement XPECT allMergeBranches ---
-	B0: [1](entryExit) -IfFalse-> [if (1) 2; else 3;](else),
-	B0: [1](entryExit) -IfTrue-> [if (1) 2; else 3;](then),
+	B0: [if (1) 2; else 3;](conditionFork) -IfFalse-> [if (1) 2; else 3;](else),
+	B0: [if (1) 2; else 3;](conditionFork) -IfTrue-> [if (1) 2; else 3;](then),
 	F1: [2](entryExit) -> [if (1) 2; else 3;](exit),
 	F1: [3](entryExit) -> [if (1) 2; else 3;](exit)
 --- */

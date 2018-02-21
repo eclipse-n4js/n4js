@@ -26,6 +26,9 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * the starting or ending node of a given {@link ComplexNode} with regard to a specific traverse direction. The
  * directions are implemented in {@link Forward} and {@link Backward}.
  * <p>
+ * <b>Attention:</b> Counted edges (see {@link #getMaxOccurences(ControlFlowType)}) must not have parallel control flow.
+ * For instance, there must not be a loop with more than one edge of type {@link ControlFlowType#LoopReenter}.
+ * <p>
  * <b>Attention:</b> {@link ControlFlowEdge}s of type {@literal ControlFlowType.Repeat} are followed at most twice.
  */
 abstract class NextEdgesProvider {
@@ -88,7 +91,7 @@ abstract class NextEdgesProvider {
 			case LoopEnter:
 				return 2; // repeat while/for loop bodies twice
 			case LoopReenter:
-				return 1; // repeat do loop once twice
+				return 1; // repeat do loop once
 			case LoopInfinite:
 				return 1;
 			default:
@@ -152,9 +155,9 @@ abstract class NextEdgesProvider {
 		int getMaxOccurences(ControlFlowType cfType) {
 			switch (cfType) {
 			case LoopRepeat:
-				return 2;
+				return 2; // repeat while/for loop bodies twice
 			case LoopReenter:
-				return 1;
+				return 1; // repeat do loop once
 			case LoopInfinite:
 				return 1;
 			default:

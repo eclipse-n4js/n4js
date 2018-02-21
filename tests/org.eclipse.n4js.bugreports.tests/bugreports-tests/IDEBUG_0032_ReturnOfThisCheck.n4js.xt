@@ -13,8 +13,8 @@
 
 
 abstract class BaseParty {
-	// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "party"
+	// XPECT errors --> "Missing return or throw statement." at "party"
     public party() : this {}
-    // XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "time"
+    // XPECT errors --> "Missing return or throw statement." at "time"
     public time() : Number{ }
 }

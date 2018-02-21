@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.factories;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -32,27 +33,29 @@ class ConditionalExpressionFactory {
 		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), condExpr);
 		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, condExpr,
 				condExpr.getExpression());
-		Node thenNode = DelegatingNodeFactory.create(astpp, NodeNames.THEN, condExpr, condExpr.getTrueExpression());
-		Node elseNode = DelegatingNodeFactory.create(astpp, NodeNames.ELSE, condExpr, condExpr.getFalseExpression());
+		HelperNode conditionForkNode = new HelperNode(NodeNames.CONDITION_FORK, astpp.pos(), condExpr);
+		Node thenNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.THEN, condExpr,
+				condExpr.getTrueExpression());
+		Node elseNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.ELSE, condExpr,
+				condExpr.getFalseExpression());
 		Node exitNode = new RepresentingNode(NodeNames.EXIT, astpp.pos(), condExpr);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);
+		cNode.addNode(conditionForkNode);
 		cNode.addNode(thenNode);
 		cNode.addNode(elseNode);
 		cNode.addNode(exitNode);
 
-		cNode.connectInternalSucc(entryNode, conditionNode);
-		cNode.connectInternalSucc(ControlFlowType.IfTrue, conditionNode, thenNode);
+		cNode.connectInternalSucc(entryNode, conditionNode, conditionForkNode);
+		cNode.connectInternalSucc(ControlFlowType.IfTrue, conditionForkNode, thenNode);
 		cNode.connectInternalSucc(thenNode, exitNode);
 
-		cNode.connectInternalSucc(ControlFlowType.IfFalse, conditionNode, elseNode);
+		cNode.connectInternalSucc(ControlFlowType.IfFalse, conditionForkNode, elseNode);
 		cNode.connectInternalSucc(elseNode, exitNode);
 
-		if (thenNode == null && elseNode == null) {
-			// broken AST
-			cNode.connectInternalSucc(conditionNode, exitNode);
-		}
+		thenNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue)); // catch for short-circuits
+		elseNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse)); // catch for short-circuits
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);

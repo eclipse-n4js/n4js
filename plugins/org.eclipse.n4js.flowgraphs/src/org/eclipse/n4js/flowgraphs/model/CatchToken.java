@@ -18,13 +18,23 @@ import org.eclipse.n4js.n4JS.LabelledStatement;
  * be specialized by giving a specific Object as an identifier.
  */
 public class CatchToken extends JumpToken {
+	/** The edge type of the edge that will jump from the jump to the catch node */
+	public final ControlFlowType newEdgeType;
 
 	/**
 	 * Constructor.<br/>
 	 * Catches the given {@link ControlFlowType}.
 	 */
 	public CatchToken(ControlFlowType type) {
-		this(type, null);
+		this(type, type, null);
+	}
+
+	/**
+	 * Constructor.<br/>
+	 * Catches the given {@link ControlFlowType} and creates edges of the given type.
+	 */
+	public CatchToken(ControlFlowType type, ControlFlowType newEdgeType) {
+		this(type, newEdgeType, null);
 	}
 
 	/**
@@ -32,7 +42,12 @@ public class CatchToken extends JumpToken {
 	 * Catches the given {@link ControlFlowType} iff the given id matches the id from the {@link JumpToken}.
 	 */
 	public CatchToken(ControlFlowType type, LabelledStatement lblStmt) {
+		this(type, type, lblStmt);
+	}
+
+	private CatchToken(ControlFlowType type, ControlFlowType newEdgeType, LabelledStatement lblStmt) {
 		super(type, lblStmt);
+		this.newEdgeType = newEdgeType;
 	}
 
 }

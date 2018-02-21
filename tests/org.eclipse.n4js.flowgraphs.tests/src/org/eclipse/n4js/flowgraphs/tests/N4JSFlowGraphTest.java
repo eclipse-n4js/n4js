@@ -16,11 +16,9 @@ import org.eclipse.n4js.xpect.methods.ElementKeywordXpectMethod;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.FlowgraphsXpectMethod;
 import org.eclipse.n4js.xpect.methods.FormatterXpectMethod;
-import org.eclipse.n4js.xpect.methods.ReturnXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
-import org.junit.runner.RunWith;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
@@ -29,6 +27,7 @@ import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
 import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
+import org.junit.runner.RunWith;
 
 /**
  * Xpect test class, also configured in fragment.xml, executes all Xpect tests found in model folder.
@@ -37,7 +36,6 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 		FlowgraphsXpectMethod.class,
 		AccessModifierXpectMethod.class,
 		LinkingTest.class,
-		ReturnXpectMethod.class,
 		TypeXpectMethod.class,
 		ScopeXpectMethod.class,
 		ResourceDescriptionTest.class,

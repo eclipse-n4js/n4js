@@ -143,7 +143,9 @@ abstract public class GraphExplorerInternal {
 			activeBranches.remove(bW);
 			bW.deactivate();
 		}
-		activeBranch.callInitialize(this, branchWalkers);
+		if (activeBranch != null) {
+			activeBranch.callInitialize(this, branchWalkers);
+		}
 		lastBranch = activeBranch;
 		return activeBranch;
 	}
