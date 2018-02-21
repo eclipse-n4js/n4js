@@ -276,4 +276,74 @@ function f33() {
 	}
 }
 
+function f34() {
+	for (let a of [0]) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+}
 
+function f35() {
+	for (let a of [0]) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+}
+
+function f36() {
+	let a : int;
+	for (a of [0]) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function f37() {
+	let a : int = 0;
+	for (a of [0]) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function ns() : Array<number> {
+	return [];
+}
+
+function f38() {
+	for (let a of ns()) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+}
+
+function f39() {
+	for (let a of ns()) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+}
+
+function f40() {
+	let a : int;
+	for (a of ns()) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function f41() {
+	let a : int = 0;
+	for (a of ns()) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
