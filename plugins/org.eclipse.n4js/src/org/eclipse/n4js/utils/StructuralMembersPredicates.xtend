@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.utils
 
+import java.util.Objects
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
@@ -17,9 +19,8 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.N4JSLanguageConstants
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.xsemantics.runtime.RuleEnvironment
-import java.util.Objects
 import org.eclipse.xtext.xbase.lib.Functions.Function1
 
 import static org.eclipse.n4js.ts.types.MemberAccessModifier.*
@@ -81,9 +82,28 @@ abstract class StructuralMembersPredicates {
 	 * Creates and returns with a new predicate instance that can be used to filter out all members of a type that
 	 * cannot be a member of any structural types. For instance each {@link TMember#isStatic() static} and/or non-public
 	 * members will be filtered out.
+	 * <p>
+	 * Does not consider a particular typing strategy, so the returned predicate will filter out only those members that
+	 * can never, under any typing strategy, be a member of a structural type.
 	 */
 	static def createBaseStructuralMembersPredicate(RuleEnvironment it) {
 		return conjunctionOf(new BaseStructuralMembersPredicate(it) as Function1<TMember, Boolean>)
+	}
+
+	/**
+	 * Same as {@link #createBaseStructuralMembersPredicate(RuleEnvironment)}, but also considers a particular typing
+	 * strategy.
+	 */
+	static def createStructuralMembersPredicate(RuleEnvironment G, TypingStrategy strategy) {
+		return G.createBaseStructuralMembersPredicate.and(
+			switch (strategy) {
+				case STRUCTURAL_WRITE_ONLY_FIELDS: WRITABLE_FIELDS_PREDICATE
+				case STRUCTURAL_READ_ONLY_FIELDS: READABLE_FIELDS_PREDICATE
+				case STRUCTURAL_FIELDS: FIELDS_PREDICATE
+				case STRUCTURAL_FIELD_INITIALIZER: throw new IllegalStateException('Expected read-only and write-only variants instead.')
+				default: MEMBERS_PREDICATE
+			}
+		);
 	}
 
 	/**

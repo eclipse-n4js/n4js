@@ -359,6 +359,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			if (type instanceof TClass) { // otherwise another validation will complain
 				val G = constructor.newRuleEnvironment;
 				val superClass = G.getDeclaredOrImplicitSuperType(type);
+				if (superClass === type) {
+					return true; // avoid follow up errors in case of bogus code such as: class C extends C {}
+				}
 				val ctor = containerTypesHelper.fromContext(constructor).findConstructor(superClass);
 				if (ctor !== null && ctor !== G.objectType.ownedCtor) {
 					if (ctor.fpars.size > 0) {

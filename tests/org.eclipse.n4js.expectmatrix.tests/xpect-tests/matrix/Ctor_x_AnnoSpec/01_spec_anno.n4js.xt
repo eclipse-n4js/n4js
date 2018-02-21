@@ -30,6 +30,7 @@ class BX extends AX {
 
 class CX extends BX {
 	public z : string;
+	// XPECT errors --> "Super class does not have a spec constructor." at "constructor"
 	public constructor (@Spec spec : ~i~this) {
 		// XPECT errors --> "~i~this[CX] is not a structural subtype of ~~this[BX]: x failed: writable field requires a getter/setter pair in subtype. and 1 more problems." at "spec"
 		super(spec);
