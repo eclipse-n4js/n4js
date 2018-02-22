@@ -347,3 +347,37 @@ function f41() {
 	// XPECT nowarnings -->
 	a.toString();
 }
+
+function f42() {
+	for (let a in ns()) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+}
+
+function f43() {
+	for (let a in ns()) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+}
+
+function f44() {
+	let a : int;
+	for (a in ns()) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
+
+function f45() {
+	let a : int = 0;
+	for (a in ns()) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}

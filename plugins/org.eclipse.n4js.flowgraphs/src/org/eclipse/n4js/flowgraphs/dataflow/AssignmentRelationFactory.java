@@ -81,7 +81,7 @@ public class AssignmentRelationFactory {
 			EObject parent = cfe.eContainer();
 			if (parent instanceof ForStatement) {
 				ForStatement fs = (ForStatement) parent;
-				if (fs.getInitExpr() == cfe && fs.isForOf()) {
+				if (fs.getInitExpr() == cfe && !fs.isForPlain()) {
 					findInForStatementInOf(assgns, cfe, fs);
 				}
 			}
@@ -99,9 +99,12 @@ public class AssignmentRelationFactory {
 	private void findInVariableDeclaration(Multimap<Symbol, Object> assgns, VariableDeclaration vd) {
 		EObject parent = vd.eContainer();
 
-		if (parent instanceof ForStatement && ((ForStatement) parent).isForOf()) {
-			findInForStatementInOf(assgns, vd, (ForStatement) parent);
-			return;
+		if (parent instanceof ForStatement) {
+			ForStatement fs = (ForStatement) parent;
+			if (!fs.isForPlain()) {
+				findInForStatementInOf(assgns, vd, (ForStatement) parent);
+				return;
+			}
 		}
 
 		Expression rhs = vd.getExpression();
@@ -120,6 +123,8 @@ public class AssignmentRelationFactory {
 			for (ArrayElement arElem : al.getElements()) {
 				handleSubexpressions(assgns, cfe, arElem.getExpression());
 			}
+		} else {
+			createRelation(assgns, cfe, rhs);
 		}
 	}
 
