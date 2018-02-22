@@ -150,8 +150,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def void internalCheckAnnotation(AnnotationDefinition definition, Annotation annotation) {
 
-		if (holdsTargets(definition, annotation) && holdsArgumentTypes(definition, annotation)
-			&& holdsTargetVariants(definition, annotation)) {
+		if (holdsJavaScriptVariants(definition, annotation) && holdsTargets(definition, annotation) 
+			&& holdsArgumentTypes(definition, annotation)) {
 			checkUnnecessaryAnnotation(definition, annotation)
 
 			// special validations:
@@ -247,17 +247,18 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		return valid;
 	}
 	
-	/** Checks whether the given annotation conforms with the {@link AnnotationDefinition#targetVariants} of the 
+	/** Checks whether the given annotation conforms with the {@link AnnotationDefinition#javaScriptVariants} of the 
 	 * given AnnotationDefinition.*/
-	private def boolean holdsTargetVariants(AnnotationDefinition definition, Annotation annotation) {
-		if (definition.targetVariants.nullOrEmpty) {
+	private def boolean holdsJavaScriptVariants(AnnotationDefinition definition, Annotation annotation) {
+		if (definition.javaScriptVariants.nullOrEmpty) {
 			return true; // nothing to validate against
 		}
 		val element = annotation.annotatedElement;
-		if (!definition.targetVariants.contains(jsVariantHelper.variantMode(element))) {
-			addIssue(IssueCodes.getMessageForANN_DISALLOWED_IN_VARIANT(definition.name, 
-				jsVariantHelper.getVariantName(element)), annotation, 
-				IssueCodes.ANN_DISALLOWED_IN_VARIANT);
+		
+		if (!definition.javaScriptVariants.contains(jsVariantHelper.variantMode(element))) {
+			val message = IssueCodes.getMessageForANN_ONL_ALLOWED_IN_VARIANTS(definition.name, 
+				orList(definition.javaScriptVariants.map[v | jsVariantHelper.getVariantName(v)]));
+			addIssue(message, annotation, IssueCodes.ANN_ONL_ALLOWED_IN_VARIANTS);
 			return false;
 		}
 		return true;

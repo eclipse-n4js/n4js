@@ -171,14 +171,15 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cEnumKeyword_1_4_2 = (Keyword)cGroup_1_4.eContents().get(2);
 		private final Assignment cNameAssignment_1_4_3 = (Assignment)cGroup_1_4.eContents().get(3);
 		private final RuleCall cNameBindingIdentifierParserRuleCall_1_4_3_0 = (RuleCall)cNameAssignment_1_4_3.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_1_4_4 = (Keyword)cGroup_1_4.eContents().get(4);
-		private final Assignment cLiteralsAssignment_1_4_5 = (Assignment)cGroup_1_4.eContents().get(5);
-		private final RuleCall cLiteralsN4EnumLiteralParserRuleCall_1_4_5_0 = (RuleCall)cLiteralsAssignment_1_4_5.eContents().get(0);
-		private final Group cGroup_1_4_6 = (Group)cGroup_1_4.eContents().get(6);
-		private final Keyword cCommaKeyword_1_4_6_0 = (Keyword)cGroup_1_4_6.eContents().get(0);
-		private final Assignment cLiteralsAssignment_1_4_6_1 = (Assignment)cGroup_1_4_6.eContents().get(1);
-		private final RuleCall cLiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0 = (RuleCall)cLiteralsAssignment_1_4_6_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_1_4_7 = (Keyword)cGroup_1_4.eContents().get(7);
+		private final RuleCall cVersionDeclarationParserRuleCall_1_4_4 = (RuleCall)cGroup_1_4.eContents().get(4);
+		private final Keyword cLeftCurlyBracketKeyword_1_4_5 = (Keyword)cGroup_1_4.eContents().get(5);
+		private final Assignment cLiteralsAssignment_1_4_6 = (Assignment)cGroup_1_4.eContents().get(6);
+		private final RuleCall cLiteralsN4EnumLiteralParserRuleCall_1_4_6_0 = (RuleCall)cLiteralsAssignment_1_4_6.eContents().get(0);
+		private final Group cGroup_1_4_7 = (Group)cGroup_1_4.eContents().get(7);
+		private final Keyword cCommaKeyword_1_4_7_0 = (Keyword)cGroup_1_4_7.eContents().get(0);
+		private final Assignment cLiteralsAssignment_1_4_7_1 = (Assignment)cGroup_1_4_7.eContents().get(1);
+		private final RuleCall cLiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0 = (RuleCall)cLiteralsAssignment_1_4_7_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_1_4_8 = (Keyword)cGroup_1_4.eContents().get(8);
 		
 		///**
 		// * Left factored, annotated script elements.
@@ -203,7 +204,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	TypeVariables?
 		//	InterfaceExtendsList?) Members<Yield=false> | {N4EnumDeclaration.annotationList=current}
 		//	declaredModifiers+=N4Modifier*
-		//	'enum' name=BindingIdentifier<Yield=false>
+		//	'enum' name=BindingIdentifier<Yield=false> VersionDeclaration?
 		//	'{'
 		//	literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*
 		//	'}');
@@ -218,7 +219,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//{N4InterfaceDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'interface'
 		//typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false> VersionDeclaration? TypeVariables?
 		//InterfaceExtendsList?) Members<Yield=false> | {N4EnumDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
-		//'enum' name=BindingIdentifier<Yield=false> '{' literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)* '}')
+		//'enum' name=BindingIdentifier<Yield=false> VersionDeclaration? '{' literals+=N4EnumLiteral (','
+		//literals+=N4EnumLiteral)* '}')
 		public Group getGroup() { return cGroup; }
 		
 		//AnnotationList
@@ -232,8 +234,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//ClassExtendsImplements<Yield=false>? | {N4InterfaceDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
 		//'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false> VersionDeclaration?
 		//TypeVariables? InterfaceExtendsList?) Members<Yield=false> | {N4EnumDeclaration.annotationList=current}
-		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield=false> '{' literals+=N4EnumLiteral (','
-		//literals+=N4EnumLiteral)* '}'
+		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield=false> VersionDeclaration? '{'
+		//literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)* '}'
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//{ExportDeclaration.annotationList=current} ExportDeclarationImpl
@@ -374,8 +376,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//Members<Yield=false>
 		public RuleCall getMembersParserRuleCall_1_3_1() { return cMembersParserRuleCall_1_3_1; }
 		
-		//{N4EnumDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield=false> '{'
-		//literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)* '}'
+		//{N4EnumDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield=false>
+		//VersionDeclaration? '{' literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)* '}'
 		public Group getGroup_1_4() { return cGroup_1_4; }
 		
 		//{N4EnumDeclaration.annotationList=current}
@@ -396,29 +398,32 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingIdentifier<Yield=false>
 		public RuleCall getNameBindingIdentifierParserRuleCall_1_4_3_0() { return cNameBindingIdentifierParserRuleCall_1_4_3_0; }
 		
+		//VersionDeclaration?
+		public RuleCall getVersionDeclarationParserRuleCall_1_4_4() { return cVersionDeclarationParserRuleCall_1_4_4; }
+		
 		//'{'
-		public Keyword getLeftCurlyBracketKeyword_1_4_4() { return cLeftCurlyBracketKeyword_1_4_4; }
+		public Keyword getLeftCurlyBracketKeyword_1_4_5() { return cLeftCurlyBracketKeyword_1_4_5; }
 		
 		//literals+=N4EnumLiteral
-		public Assignment getLiteralsAssignment_1_4_5() { return cLiteralsAssignment_1_4_5; }
+		public Assignment getLiteralsAssignment_1_4_6() { return cLiteralsAssignment_1_4_6; }
 		
 		//N4EnumLiteral
-		public RuleCall getLiteralsN4EnumLiteralParserRuleCall_1_4_5_0() { return cLiteralsN4EnumLiteralParserRuleCall_1_4_5_0; }
+		public RuleCall getLiteralsN4EnumLiteralParserRuleCall_1_4_6_0() { return cLiteralsN4EnumLiteralParserRuleCall_1_4_6_0; }
 		
 		//(',' literals+=N4EnumLiteral)*
-		public Group getGroup_1_4_6() { return cGroup_1_4_6; }
+		public Group getGroup_1_4_7() { return cGroup_1_4_7; }
 		
 		//','
-		public Keyword getCommaKeyword_1_4_6_0() { return cCommaKeyword_1_4_6_0; }
+		public Keyword getCommaKeyword_1_4_7_0() { return cCommaKeyword_1_4_7_0; }
 		
 		//literals+=N4EnumLiteral
-		public Assignment getLiteralsAssignment_1_4_6_1() { return cLiteralsAssignment_1_4_6_1; }
+		public Assignment getLiteralsAssignment_1_4_7_1() { return cLiteralsAssignment_1_4_7_1; }
 		
 		//N4EnumLiteral
-		public RuleCall getLiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0() { return cLiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0; }
+		public RuleCall getLiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0() { return cLiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0; }
 		
 		//'}'
-		public Keyword getRightCurlyBracketKeyword_1_4_7() { return cRightCurlyBracketKeyword_1_4_7; }
+		public Keyword getRightCurlyBracketKeyword_1_4_8() { return cRightCurlyBracketKeyword_1_4_8; }
 	}
 	public class ExportDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportDeclaration");
@@ -10554,7 +10559,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	TypeVariables?
 	//	InterfaceExtendsList?) Members<Yield=false> | {N4EnumDeclaration.annotationList=current}
 	//	declaredModifiers+=N4Modifier*
-	//	'enum' name=BindingIdentifier<Yield=false>
+	//	'enum' name=BindingIdentifier<Yield=false> VersionDeclaration?
 	//	'{'
 	//	literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*
 	//	'}');

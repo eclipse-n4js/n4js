@@ -98,6 +98,7 @@ AnnotatedScriptElement returns ScriptElement:
 	|	{N4EnumDeclaration.annotationList=current}
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield=false>
+		VersionDeclaration?
 		'{'
 			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
 		'}'

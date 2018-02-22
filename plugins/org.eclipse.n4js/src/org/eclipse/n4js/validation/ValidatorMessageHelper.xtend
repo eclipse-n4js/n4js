@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
+import java.util.List
 
 /**
  */
@@ -317,6 +318,32 @@ class ValidatorMessageHelper {
 		strb.append(": ");
 		appendPromisedReturnType(strb, tfunction)
 		return strb.toString();
+	}
+	
+	/**
+	 * Returns nicely worded enumeration of the given items.
+	 * 
+	 * Examples
+	 * <code>
+	 * "A" -> "A"
+	 * "A", "B" -> "A or B"
+	 * "A", "B", "C" -> "A, B or C"
+	 * </code>
+	 */
+	public def String orList(List<String> items) {
+		// if there is nothing to enumerate
+		if (items.empty) 	 { return ""; }
+		if (items.size == 1) { return items.head }
+		if (items.size >= 2)  { 
+			return new StringBuilder()
+			// add first element
+			.append(items.head)
+			// add middle elements with prepended "or" (possible empty sublist)
+			.append(items.tail.take(items.size - 2).join(", ", ", ", "", [it]))
+			// add last element with prepended "or"
+			.append(" or " + items.last)
+			.toString;
+		}
 	}
 
 	/**

@@ -340,33 +340,36 @@ ruleAnnotatedScriptElement
 					}
 				)
 			)
-			LeftCurlyBracketKeyword_1_4_4=LeftCurlyBracket
+			(
+				VersionDeclarationParserRuleCall_1_4_4=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_1_4_4.start, $VersionDeclarationParserRuleCall_1_4_4.stop, grammarAccess.getAnnotatedScriptElementAccess().getVersionDeclarationParserRuleCall_1_4_4()); }
+			)?
+			LeftCurlyBracketKeyword_1_4_5=LeftCurlyBracket
 			 {
-				announce($LeftCurlyBracketKeyword_1_4_4, grammarAccess.getAnnotatedScriptElementAccess().getLeftCurlyBracketKeyword_1_4_4());
+				announce($LeftCurlyBracketKeyword_1_4_5, grammarAccess.getAnnotatedScriptElementAccess().getLeftCurlyBracketKeyword_1_4_5());
 			}
 			(
 				(
-					LiteralsN4EnumLiteralParserRuleCall_1_4_5_0=ruleN4EnumLiteral{
-						announce($LiteralsN4EnumLiteralParserRuleCall_1_4_5_0.start, $LiteralsN4EnumLiteralParserRuleCall_1_4_5_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_5());
+					LiteralsN4EnumLiteralParserRuleCall_1_4_6_0=ruleN4EnumLiteral{
+						announce($LiteralsN4EnumLiteralParserRuleCall_1_4_6_0.start, $LiteralsN4EnumLiteralParserRuleCall_1_4_6_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_6());
 					}
 				)
 			)
 			(
-				CommaKeyword_1_4_6_0=Comma
+				CommaKeyword_1_4_7_0=Comma
 				 {
-					announce($CommaKeyword_1_4_6_0, grammarAccess.getAnnotatedScriptElementAccess().getCommaKeyword_1_4_6_0());
+					announce($CommaKeyword_1_4_7_0, grammarAccess.getAnnotatedScriptElementAccess().getCommaKeyword_1_4_7_0());
 				}
 				(
 					(
-						LiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0=ruleN4EnumLiteral{
-							announce($LiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0.start, $LiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_6_1());
+						LiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0=ruleN4EnumLiteral{
+							announce($LiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0.start, $LiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_7_1());
 						}
 					)
 				)
 			)*
-			RightCurlyBracketKeyword_1_4_7=RightCurlyBracket
+			RightCurlyBracketKeyword_1_4_8=RightCurlyBracket
 			 {
-				announce($RightCurlyBracketKeyword_1_4_7, grammarAccess.getAnnotatedScriptElementAccess().getRightCurlyBracketKeyword_1_4_7());
+				announce($RightCurlyBracketKeyword_1_4_8, grammarAccess.getAnnotatedScriptElementAccess().getRightCurlyBracketKeyword_1_4_8());
 			}
 		)
 	)

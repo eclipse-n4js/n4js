@@ -741,12 +741,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedExportableElement_N4EnumDeclaration_VersionDeclaration(context, (N4EnumDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
-					sequence_AnnotatedScriptElement(context, (N4EnumDeclaration) semanticObject); 
-					return; 
-				}
 				else if (rule == grammarAccess.getScriptElementRule()) {
 					sequence_AnnotatedScriptElement_N4EnumDeclaration_VersionDeclaration(context, (N4EnumDeclaration) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
+					sequence_AnnotatedScriptElement_VersionDeclaration(context, (N4EnumDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4EnumDeclarationRule()) {
@@ -4063,24 +4063,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     AnnotatedScriptElement returns N4EnumDeclaration
-	 *
-	 * Constraint:
-	 *     (
-	 *         annotationList=AnnotatedScriptElement_N4EnumDeclaration_1_4_0 
-	 *         declaredModifiers+=N4Modifier* 
-	 *         name=BindingIdentifier 
-	 *         literals+=N4EnumLiteral 
-	 *         literals+=N4EnumLiteral*
-	 *     )
-	 */
-	protected void sequence_AnnotatedScriptElement(ISerializationContext context, N4EnumDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     ScriptElement returns N4EnumDeclaration
 	 *
 	 * Constraint:
@@ -4089,13 +4071,41 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             annotationList=AnnotatedScriptElement_N4EnumDeclaration_1_4_0 
 	 *             declaredModifiers+=N4Modifier* 
 	 *             name=BindingIdentifier 
-	 *             literals+=N4EnumLiteral 
-	 *             literals+=N4EnumLiteral*
+	 *             (
+	 *                 (declaredVersion=VERSION? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?) | 
+	 *                 (declaredVersion=VERSION? literals+=N4EnumLiteral literals+=N4EnumLiteral*)
+	 *             )
 	 *         ) | 
-	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? declaredVersion=VERSION? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
+	 *         (
+	 *             declaredModifiers+=N4Modifier* 
+	 *             name=BindingIdentifier? 
+	 *             (
+	 *                 (declaredVersion=VERSION? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?) | 
+	 *                 (declaredVersion=VERSION? literals+=N4EnumLiteral literals+=N4EnumLiteral*)
+	 *             )
+	 *         )
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_N4EnumDeclaration_VersionDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedScriptElement returns N4EnumDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         annotationList=AnnotatedScriptElement_N4EnumDeclaration_1_4_0 
+	 *         declaredModifiers+=N4Modifier* 
+	 *         name=BindingIdentifier 
+	 *         declaredVersion=VERSION? 
+	 *         literals+=N4EnumLiteral 
+	 *         literals+=N4EnumLiteral*
+	 *     )
+	 */
+	protected void sequence_AnnotatedScriptElement_VersionDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

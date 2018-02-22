@@ -140,6 +140,7 @@ ruleAnnotatedScriptElement:
 		*
 		'enum'
 		ruleBindingIdentifier
+		ruleVersionDeclaration?
 		'{'
 		ruleN4EnumLiteral
 		(
