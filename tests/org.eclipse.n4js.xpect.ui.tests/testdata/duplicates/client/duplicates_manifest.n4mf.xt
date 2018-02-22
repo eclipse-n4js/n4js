@@ -37,13 +37,13 @@ VendorName: "My Vendor Name"
 Output: "src-gen"
 
 RequiredRuntimeLibraries {
-	vendorA:libA,
-	libB,
-	vendorB:libA,
+	//XPECT noerrors --> "first occurance"
 	libA,
-	// XPECT errors -->"Duplicate runtime library MyVendorID:libA." at "MyVendorID:libA"
+	//XPECT noerrors --> "first occurance"
+	MyVendorID:libB,
+	// XPECT errors -->"Duplicate project reference MyVendorID:libA." at "MyVendorID:libA"
 	MyVendorID:libA,
-	// XPECT errors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+	// XPECT errors -->"Duplicate project reference MyVendorID:libB." at "libB"
 	libB,
 	MyVendorID:libC
 }

@@ -302,17 +302,20 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		return types;
 	}
 
-	/** Calculate qualified name for ProjectDescription */
+	/** Calculate qualified name for ProjectReference */
+	def private static String qname(ProjectReference pref) {
+		return qname(pref.project)
+	}
+
+	/** Calculate qualified name for SimpleProjectDescription */
 	def private static String qname(SimpleProjectDescription pdesc) {
 		return qname(pdesc.vendorId, pdesc.projectId)
 	}
 
-	/** Calculate qualified name for ProjectDescription */
+	/** Calculate qualified name for vendor id and project id */
 	def private static String qname(String vendorId, String projectId) {
-		return projectId; // TODO vendorId of NFAR: as long as not queryable use only project ID:
-
-	//		if( vendorId === null ) return projectId
-	//		return vendorId+":"+projectId
+		if( vendorId === null ) return projectId
+		return '''«vendorId»:«projectId»'''
 	}
 
 	/** IDEBUG-266 issue error warning on cyclic dependencies*/
@@ -541,7 +544,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			checkReferencedProjects(projectDescriptionFeatures, allProjects, predicate);
 		}
 
-
 		// Extended runtime environment feature check. Obsolete or not allowed.
 		val extendedREFeatures = #[projectDescription_ExtendedRuntimeEnvironment];
 		if (checkFeature(
@@ -561,7 +563,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			// Required RL check.
 			checkReferencedProjects(requiredRLFeatures, allProjects, RL_TYPE.forN4jsProjects);
 		}
-
 
 		// Provided RL feature check. Obsolete or not allowed.
 		val providedRLFeatures = #[projectDescription_ProvidedRuntimeLibraries, providedRuntimeLibraries_ProvidedRuntimeLibraries];
@@ -674,12 +675,34 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		];
 
-		// Check duplicates among the existence project references.
-		existentIds.asMap.keySet.forEach[
-			if (existentIds.get(it).size > 1) {
-				existentIds.get(it).forEach[
-					addDuplicateProjectReferenceIssue(it.eContainer, features.last, references.indexOf(it));
-				];
+		checkForDuplicateRuntimeLibraries(desc, existentIds)
+	}
+
+	private def checkForDuplicateRuntimeLibraries(ProjectDescription desc,
+		HashMultimap<String, ProjectReference> validProjectRefs) {
+
+		val currentVendor = desc.vendorId
+		validProjectRefs.asMap.keySet.forEach [
+			//grouped just by projectID
+			if (validProjectRefs.get(it).size > 1) {
+				val referencesByNameAndVendor = HashMultimap.<String, ProjectReference>create;
+				validProjectRefs.get(it).forEach [
+					var refVendor = it.project.vendorId
+					//use vendor id of the refering project if not provided explicitly
+					if (refVendor === null)
+						refVendor = currentVendor
+					referencesByNameAndVendor.put(refVendor, it)
+				]
+
+				referencesByNameAndVendor.keySet.forEach [
+					val mappedRefs = referencesByNameAndVendor.get(it);
+					if (mappedRefs.size > 1) {
+						mappedRefs 
+							.sortBy[NodeModelUtils.findActualNodeFor(it).offset]
+							.tail
+							.forEach [addDuplicateProjectReferenceIssue2(qname)];
+					}
+				]
 			}
 		];
 	}
@@ -803,10 +826,10 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		);
 	}
 
-	private def addDuplicateProjectReferenceIssue(EObject eObject, EStructuralFeature feature, int index) {
-		addIssue(messageForDUPLICATE_PROJECT_REF, eObject, feature, index, DUPLICATE_PROJECT_REF);
+	private def addDuplicateProjectReferenceIssue2(EObject eObject, String name) {
+		addIssue(getMessageForDUPLICATE_PROJECT_REF(name), eObject, DUPLICATE_PROJECT_REF);
 	}
-	 
+	
 	private def addVersionMismatchIssue(EObject eObject, String name, String requiredVersion, String presentVersion) {
 		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), eObject, NO_MATCHING_VERSION)
 	}
