@@ -482,7 +482,7 @@ class ADocSerializer {
 				val SpecTestInfo testSpec = iter.next;
 				strb.append(nfgitTest(testSpec));
 				if (iter.hasNext) {
-					strb.append(", ");
+					strb.append(", \n");
 				}
 			}
 			strb.append(")\n");
