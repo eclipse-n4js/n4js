@@ -715,16 +715,16 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			if (desiredVersion !== null) {
 				val availableVersion = allProjects.get(id).version
 				val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro, availableVersion.qualifier);
-					val desiredLower = desiredVersion.lowerVersion
-					val desiredUpper = desiredVersion.upperVersion
-					if(desiredLower !==null){
-						if(desiredUpper !== null){
-							checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id)
-							checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id)
-						}else{
-							checkExactVersion(desiredLower, available, id)
-						}
+				val desiredLower = desiredVersion.lowerVersion
+				val desiredUpper = desiredVersion.upperVersion
+				if(desiredLower !==null){
+					if(desiredUpper !== null){
+						checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id)
+						checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id)
+					}else{
+						checkExactVersion(desiredLower, available, id)
 					}
+				}
 			}
 		}
 	}
