@@ -57,9 +57,9 @@ Sources {
 ProjectDependencies {
 	// XPECT noerrors --> "Only test project can depend on other test projects."
 	test.data.test.project.one,
-	// XPECT errors -->	"Duplicate project reference." at "test.data.test.project.two"
+	//N4JS validation XPECT noerrors --> "Duplicate project reference." at "test.data.test.project.two"
 	test.data.test.project.two,
-	// XPECT errors -->	"Duplicate project reference." at "org.eclipse:test.data.test.project.two"
+	//N4JS validation XPECT noerrors --> "Duplicate project reference." at "org.eclipse:test.data.test.project.two"
 	org.eclipse:test.data.test.project.two
 }
 
@@ -82,8 +82,8 @@ ProvidedRuntimeLibraries { }
 TestedProjects {
 	// XPECT noerrors -->
 	test.data.system.project.one,
-	// XPECT errors -->	"Duplicate project reference." at "org.eclipse:test.data.system.project.two"
+	//N4JS validation XPECT noerrors --> "Duplicate project reference." at "org.eclipse:test.data.system.project.two"
 	org.eclipse:test.data.system.project.two,
-	// XPECT errors -->	"Duplicate project reference." at "test.data.system.project.two"
+	//N4JS validation XPECT noerrors --> "Duplicate project reference." at "test.data.system.project.two"
 	test.data.system.project.two
 }

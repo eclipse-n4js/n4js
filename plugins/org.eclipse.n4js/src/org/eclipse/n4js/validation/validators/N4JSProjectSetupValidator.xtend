@@ -246,7 +246,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 			val polyFilledMemberAsStrings = markerMapLibs2FilledName.get(keyS)
 			val libsString = keyS.toList.map [
-				it.project.qname
+				it.project.projectId
 			].sort.join(", ")
 
 			val userPresentablePolyFills = polyFilledMemberAsStrings.toList.map['"' + it + '"'].sort.join(", ")
