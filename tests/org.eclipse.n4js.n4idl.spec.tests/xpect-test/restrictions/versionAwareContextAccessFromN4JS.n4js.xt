@@ -19,9 +19,9 @@
    END_SETUP
  */
 
-// type imports cause an issue when importing an @VersionAware annotated element XPECT errors --> "The version-aware class SomethingVersionAware cannot be referenced from N4JS files." at "SomethingVersionAware"
+// type imports cause an issue when importing an @VersionAware annotated element XPECT errors --> "The version-aware class SomethingVersionAware can only be referenced from n4idl files." at "SomethingVersionAware"
 import {SomethingVersionAware} from "restrictions/Somewhere";
-// function imports cause an issue when importing an @VersionAware annotated element XPECT errors --> "The version-aware function migrationHelper cannot be referenced from N4JS files." at "migrationHelper"
+// function imports cause an issue when importing an @VersionAware annotated element XPECT errors --> "The version-aware function migrationHelper can only be referenced from n4idl files." at "migrationHelper"
 import {migrationHelper} from "restrictions/Somewhere";
 
 // imports of versioned classes not marked as @VersionAware do not cause any issues XPECT noerrors

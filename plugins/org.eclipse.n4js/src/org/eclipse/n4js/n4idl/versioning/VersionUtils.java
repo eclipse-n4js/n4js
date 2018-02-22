@@ -13,7 +13,6 @@ package org.eclipse.n4js.n4idl.versioning;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
@@ -111,12 +110,8 @@ public class VersionUtils {
 	 * Equivalent of {@link VersionUtils#hasVersionAwarenessAnnotation(AnnotableElement)} for type model elements.
 	 */
 	public static boolean hasVersionAwarenessAnnotation(TAnnotableElement element) {
-		return element.getAnnotations().stream()
-				// map to corresponding AnnotationDefinition
-				.map(tAnno -> AnnotationDefinition.find(tAnno.getName()))
-				// filter for version-awareness annotations
-				.filter(N4IDLGlobals.VERSION_AWARENESS_ANNOTATIONS::contains)
-				.findAny().isPresent();
+		return N4IDLGlobals.VERSION_AWARENESS_ANNOTATIONS.stream()
+				.anyMatch(anno -> anno.hasAnnotation(element));
 
 	}
 

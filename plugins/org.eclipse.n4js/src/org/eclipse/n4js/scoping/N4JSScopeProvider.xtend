@@ -16,7 +16,6 @@ import com.google.inject.name.Named
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.Expression
@@ -91,6 +90,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.validation.ValidatorMessageHelper
 
 /**
  * This class contains custom scoping description.
@@ -148,8 +148,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject private VersionHelper versionHelper;
 	
-	@Inject private NonVersionAwareContextScope.Provider nonVersionAwareContextScopeProvider;
-
+	@Inject private ValidatorMessageHelper messageHelper;
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -352,7 +351,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	protected def IScope scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
 		val declaration = EcoreUtil2.getContainerOfType(specifier, ImportDeclaration);
-		return scope_AllTopLevelElementsFromModule(declaration.module, declaration.eResource);
+		return scope_AllTopLevelElementsFromModule(declaration.module, declaration);
 	}
 
 	/**
@@ -445,23 +444,21 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * Used for elements imported with named import and to access elements vi namespace import.
 	 *
 	 * @param importedModule target {@link TModule} from which elements are imported
-	 * @param contextResource receiver {@link Resource} importing elements
+	 * @param contextResource Receiver context {@link EObject} which is importing elements
 	 */
-	private def IScope scope_AllTopLevelElementsFromModule(TModule importedModule, Resource contextResource) {
+	private def IScope scope_AllTopLevelElementsFromModule(TModule importedModule, EObject context) {
 		if (importedModule === null) {
 			return IScope.NULLSCOPE;
 		}
 		
 		// get regular top-level elements scope
 		val topLevelElementsScope = scopesHelper.mapBasedScopeFor(importedModule, IScope.NULLSCOPE,
-			topLevelElementCollector.getTopLevelElements(importedModule, contextResource));
+			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource));
 		
-		// obtain a context element to determine the language variant in use
-		val contextElement = contextResource.allContents.findFirst[true];
 		// if the context resource does not allow for versioned types but the imported module does...
-		if (!jsVariantHelper.allowVersionedTypes(contextElement) && jsVariantHelper.allowVersionedTypes(importedModule)) {
+		if (!jsVariantHelper.allowVersionedTypes(context) && jsVariantHelper.allowVersionedTypes(importedModule)) {
 			// ...make sure that all results are validated according to @VersionAware reference constraints
-			return nonVersionAwareContextScopeProvider.get(contextElement, topLevelElementsScope);
+			return new NonVersionAwareContextScope(topLevelElementsScope, false, messageHelper);
 		}
 		
 		return topLevelElementsScope;
@@ -479,7 +476,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (receiver instanceof IdentifierRef) {
 			if (receiver.id instanceof ModuleNamespaceVirtualType) {
 				val namespace = receiver.id as ModuleNamespaceVirtualType;
-				val result = scope_AllTopLevelElementsFromModule(namespace.module, propertyAccess.eResource);
+				val result = scope_AllTopLevelElementsFromModule(namespace.module, propertyAccess);
 				if (namespace.declaredDynamic && !(result instanceof DynamicPseudoScope)) {
 					return new DynamicPseudoScope(result);
 				}
@@ -588,7 +585,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		// Make sure that references to version-aware contexts, from non-version-aware contexts
 		// are detected and prevented.
 		if (!VersionUtils.isVersionAwareContext(context)) {
-			return nonVersionAwareContextScopeProvider.get(context, contextVersionScope);
+			return new NonVersionAwareContextScope(contextVersionScope, true, messageHelper);
 		}
 		
 		return contextVersionScope;
