@@ -101,7 +101,11 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 
 		@Override
 		protected void visit(FlowEdge edge) {
-			if (!edge.isDead()) {
+			boolean considerEdge = true;
+			considerEdge &= !edge.isDead();
+			considerEdge &= edge.start != getContainer();
+			considerEdge &= edge.end != getContainer();
+			if (considerEdge) {
 				allEdges.add(edge);
 			}
 		}

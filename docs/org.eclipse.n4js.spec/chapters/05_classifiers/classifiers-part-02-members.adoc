@@ -549,7 +549,7 @@ The super literal used in order to call super methods is further
 described in <<_the-super-keyword>>.
 
 
-=== Structural This Type in Constructor and Spec Parameter
+=== Structural This Type in Constructor
 
 
 The use of a structural this reference as a formal parameter type is possible only in constructors.
@@ -639,40 +639,150 @@ class B extends A {
 ====
 
 
-@Spec-style Constructor [[spec-style-constructor]] ::
+=== @Spec Constructor [[spec-constructor]]
 
-The tedious process of copying the members of the parameter to the fields of the class can be automated via the `@Spec` annotation if the argument has `pass:[~i~this]` structural initializer field typing.
-For more details about this typing can be found in <<_structural-read-only-write-only-and-initializer-field-typing>>.
-This can be used as shown in the following listing:
+The tedious process of copying the members of the parameter to the fields of the class can be automated via the `@Spec`
+annotation if the argument has `pass:[~i~this]` structural initializer field typing. More details about this typing can be
+found in <<structural-readWriteInit-field-typing>>. This can be used as shown in the following listing:
 
 [source,n4js]
 ----
 class A {
+    public field: string;
     public constructor(@Spec spec: ~i~this) {}
 }
+let a = new A({field: 'hello'});
+console.log(a.field); // prints: hello
 ----
 
-.Spec-style Constructor
+The code for initializing the public field of `A` is automatically generated, thanks to the `@Spec` annotation being
+given in the constructor.
+
+.@Spec Constructor
 [req,id=IDE-59,version=1]
 --
 
-1.  Annotation `@Spec` may only appear on a formal parameter of a constructor.
+1.  Annotation `@Spec` may only appear on a formal parameter of a constructor. Such a formal parameter is then called
+_@Spec parameter_ or simply _spec parameter_ and its owning constructor is referred to as a _@Spec constructor_ or
+_spec constructor_. An argument to the spec parameter is called _spec object_.
 2.  Only a single formal parameter of a constructor may be annotated with `@Spec`.
-3.  If a formal parameter is annotated with `@Spec`, the parameter’s type must be `pass:[~this]` or `pass:[~i~this]` (i.e. use-site structurally typed `this`).
-4.  Fields provided by the parameter, but not defined in the structural field type, are _not_ used to set fields.
-5.  Non-`public` fields explicitly added to the specparameter are copied as well.
-6.  Even if the `@Spec` annotation is used, the super constructor must be calledaccordingly.
-7.  The type of an additional member which match owned non-public fieldmust be subtype of the field’s type:
+3.  If a formal parameter is annotated with `@Spec`, the parameter’s type must be `pass:[~this]` or `pass:[~i~this]` (i.e.
+a use-site structural initializer field type of `this`, see <<structural-readWriteInit-field-typing>>).
+4.  Using the data provided in the spec object, i.e. in the argument to the spec parameter, a spec constructor will
+automatically initialize
+a. all *owned* data fields and *owned* setters of the containing class, and
+b. all data fields and setters from interfaces implemented by the containing class
+
++
+if and only if those members are also part of the spec parameter's structural initializer field type.
+5.  Fields explicitly added to the spec parameter, e.g. `pass:[@Spec spec: ~i~this with {name:string}]`, are used for initialization
+if a non-public field of the same name exists in the class, either as an owned member or from an implemented interface.
+The type of such an additional field must be a subtype of the declared type of the field being initialized:
 +
 [%hardbreaks]
 $\forall s \in ctor.fpar.structuralMembers, ctor.fpar.spec: $
 $\hspace{2em}\exists f \in ctor.owner.ownedFields \Rightarrow \tee s \subtype f $
-8.  `pass:[~i~this]` constructor ignores superfluous properties provided by an object literal.
-These ignored properties are _not_ used to set non-$\lenum{public}$ fields.
-9.  Since use-site structural initializer field types can be defined via public, non-static, non-optional writable fields, `pass:[~i~this]` constructor accepts those properties provided by an object literal which has the corresponding readble fields.
-These properties will be initialzed.
+6.  Even if the `@Spec` annotation is used, the super constructor must be invoked explicitly (as usual).
 
 --
+
+It follows from no. 4 above that
+
+1. non-public data fields and setters are never initialized (because they will never be part of the spec parameter's
+structural initializer field type),
+2. properties provided in the spec object but not defined in the parameter's structural initializer field type, are
+_not_ used for initialization, even if a (protected or private) field of the same name exists in the class,
+3. data fields and setters inherited from a super class are never initialized by a spec constructor (instead, this will
+happen in the spec constructor of the super class).
+
+The last of these implications will be detailed further at the end of the coming section.
+
+
+*@Spec Constructors and Inheritance*
+
+Spec constructors are inherited by subclasses that do not have a constructor and, when creating instances of the
+subclass, will then require properties for writable public fields of the subclass in the spec object *and* include
+initialization code for them.
+
+[source,n4js]
+----
+class A {
+    public fa;
+    public constructor(@Spec spec: ~i~this) {}
+}
+class B extends A {
+    public fb;
+}
+
+const b = new B({fa: 'hello', fb: 'world'}); // requires & initializes fb too!
+console.log(b.fa); // prints: hello
+console.log(b.fb); // prints: world
+----
+
+Public writable fields from implemented interfaces are included as well, i.e. required as property in spec object *and*
+initialized by auto-generated code in the `@Spec` constructor:
+
+[source,n4js]
+----
+interface I {
+    public fi;
+}
+class B implements I {
+    public fb;
+    public constructor(@Spec spec: ~i~this) {}
+}
+
+const a = new B({fb: 'hello', fi: 'world'}); // requires & initializes fi too!
+console.log(a.fb); // prints: hello
+console.log(a.fi); // prints: world
+----
+
+When having a spec constructor in a class `B` that extends a super class `A` without an owned or inherited spec
+constructor, it should be noted that the `pass:[~i~this]` type will require properties for public writable fields of `A`,
+but the initialization code automatically generated due to the `@Spec` annotation will *not* initialize those members.
+For public writable fields from an interface `I` implemented by `B`, however, both a property will be required by
+`pass:[~i~this]` *and* initialization code will be generated in the `@Spec` constructor. This is illustrated in the
+following code example.
+
+[source,n4js]
+----
+class A {
+    public fa;
+}
+interface I {
+    public fi;
+}
+class B extends A implements I {
+    public fb;
+    public constructor(@Spec spec: ~i~this) { // <- fa, fi, fb required in spec object
+        // Constructor is responsible for initializing fa, fi, fb.
+        // The @Spec annotation will generate initialization code
+        // for fb and fi, but not for fa!
+    }
+}
+
+let b = new B({
+    fa: 'hello', // <- fa is required (removing it would be a compile error)
+    fi: 'world',
+    fb: '!!'
+});
+
+console.log(b.fa); // undefined
+console.log(b.fi); // world
+console.log(b.fb); // !!
+----
+
+The rationale for this different handling of fields from super classes and implemented interfaces is
+1. fields from an implemented interface are not seen as inherited but rather implemented by implementing class, so from
+   the `@Spec` annotation's perspective the field is a field of the implementing class, and
+2. in case of a field inherited from a super class the correct way of initialization may depend on details of the super
+   class and has to be taken care of by custom code in the constructor of the subclass (usually by invoking the non-`@Spec`
+   constructor of the superclass with `super`).
+
+
+*Special Use Cases*
+
+The following examples illustrate further details of other use cases of spec constructors.
 
 .Anonymous Interface in Constructor
 [example]
@@ -758,7 +868,7 @@ Optional fields like `n?` in class `A2` or fields with default values like `n=10
 ====
 
 
-.Superfluous Properties in Spec-style Constructor
+.Superfluous Properties in @Spec Constructors
 [example]
 ====
 
@@ -787,7 +897,7 @@ new C( { s: "Hello", weird: true } );
 
 ====
 
-Restriction when initializing interface fields via @Spec constructor [[restriction-interface-field-spec-style-constructor]] ::
+Restriction when initializing interface fields via @Spec constructor [[restriction-interface-field-spec-constructor]] ::
 
 In most cases, interface definitions in `n4jsd` files simply declare functions and fields that are supposed to be provided by the runtime environment.
 As a result, there are restrictions as to whether fields of interfaces defined in `n4jsd` files can initialized via `@Spec` constructors or not.
@@ -1149,7 +1259,7 @@ $f.final \to \lnot f.writeable$ +
 A final field may, however, be set in the constructor.
 See <<Req-IDE-68>> for details.
 .  A final data field must be either initialized by an initializer expression or in the constructor.
-If the field is initialized in the constructor, this may be done either explicitly or via a spec-style constructor.
+If the field is initialized in the constructor, this may be done either explicitly or via a spec style constructor.
 
 +
 [math]

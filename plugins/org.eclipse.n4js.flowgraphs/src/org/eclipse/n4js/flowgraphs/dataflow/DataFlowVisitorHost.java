@@ -68,4 +68,11 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		requestActivation(dfExplorer);
 	}
 
+	@Override
+	protected void terminateMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
+		DataFlowBranchWalker dfb = (DataFlowBranchWalker) dfExplorer.getLastBranch();
+		for (Assumption ass : dfb.assumptions.values()) {
+			ass.terminate();
+		}
+	}
 }

@@ -26,7 +26,7 @@
 
 
    ==== Semantics
-   [.todo, label="test function ++async1++"]
+   [TODO, title="test function ++async1++"]
    --
    Add tests specifying semantics for ``++async1++``
    --
@@ -55,7 +55,7 @@ external async function async1() : void {}
 
 
    ==== Semantics
-   [.todo, label="test function ++async2++"]
+   [TODO, title="test function ++async2++"]
    --
    Add tests specifying semantics for ``++async2++``
    --
@@ -87,7 +87,7 @@ external async function async2() : Promise<string, ?> {
 
 
    ==== Semantics
-   [.todo, label="test function ++gen1++"]
+   [TODO, title="test function ++gen1++"]
    --
    Add tests specifying semantics for ``++gen1++``
    --
@@ -115,7 +115,7 @@ external function * gen1() : void {}
 
 
    ==== Semantics
-   [.todo, label="test function ++gen2++"]
+   [TODO, title="test function ++gen2++"]
    --
    Add tests specifying semantics for ``++gen2++``
    --
@@ -143,7 +143,7 @@ external function * gen2() : String {}
 
 
    ==== Semantics
-   [.todo, label="test function ++gen3++"]
+   [TODO, title="test function ++gen3++"]
    --
    Add tests specifying semantics for ``++gen3++``
    --

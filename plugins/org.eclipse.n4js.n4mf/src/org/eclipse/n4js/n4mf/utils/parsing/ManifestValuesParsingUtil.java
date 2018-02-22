@@ -40,8 +40,8 @@ public class ManifestValuesParsingUtil {
 	 * @throws ParseException
 	 *             when provided data has parse error
 	 */
-	public static ParserResults<ProjectDescription> parseProjectDescription(String projectDependency) throws Exception {
-		return parse(ProjectDescription.class.getSimpleName(), projectDependency);
+	public static ParserResults<ProjectDescription> parseProjectDescription(String projectDescriotion) throws Exception {
+		return parse(ProjectDescription.class.getSimpleName(), projectDescriotion);
 	}
 
 	/**

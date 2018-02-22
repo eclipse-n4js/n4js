@@ -18,21 +18,18 @@
 // e.g.,  X-PECT:
 //   X-PECT returnOrThrow --> returnsMode
 //   X-PECT returnOrThrow --> throwsMode
-//   X-PECT returnOrThrow --> breakOrContinue labels ...
+//   X-PECT returnOrThrow --> breakOrContinue labels ..
 //   X-PECT returnOrThrow --> noReturnsMode
 // example see: org.eclipse.n4js.xpect.N4JSTypeSystemXpectTest
 
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT noerrors -->
 function f0() {
 	var b1 : boolean = true;
     x: y: do {
-		// XPECT returnOrThrow --> breakOrContinue labels  x, y
 		if ( b1 ) {
-	       // XPECT returnOrThrow --> breakOrContinue labels x
 	       break x;
 
 	    } else {
-	       // XPECT returnOrThrow --> breakOrContinue labels y
 	       continue y;
 		}
 
@@ -40,27 +37,21 @@ function f0() {
 }
 
 
-// XPECT returnOrThrow at '|function' --> noReturnsMode
+// XPECT noerrors -->
 function f1() {
 
    var b1 : boolean = true;
 
-   // XPECT returnOrThrow --> noReturnsMode
    y: do  {
-       // XPECT returnOrThrow --> breakOrContinue labels y
        x: do  {
-           // XPECT returnOrThrow --> breakOrContinue labels x, y
            if ( b1 ) {
-               // XPECT returnOrThrow --> breakOrContinue labels x
                break x;
 
            } else {
-               // XPECT returnOrThrow --> breakOrContinue labels y
                break y;
            }
    		// XPECT warnings --> "Dead code." at "true"
        } while ( true )
-       // XPECT returnOrThrow --> returnsMode
        return;
 	// XPECT warnings --> "Dead code." at "true"
    } while ( true )
@@ -88,29 +79,22 @@ function f3() {
 }
 
 
-// found during IDE-1852: XPECT FIXME noerrors
 /////// break out of try:
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors -->"Missing return or throw statement." at "f4"
 function f4(): number {
 
    var b1 : boolean = true;
 
-   // XPECT returnOrThrow --> noReturnsMode
    y: do  {
-       // XPECT returnOrThrow --> breakOrContinue labels y
        x: do  {
-           // XPECT returnOrThrow --> breakOrContinue labels x,y
            if ( b1 ) {
            	  try {
-                 // XPECT returnOrThrow --> breakOrContinue labels x
                  break x;
                } finally {
                	 return 3;
                }
            } else {
-               // XPECT returnOrThrow --> breakOrContinue labels y
                try
-               // XPECT returnOrThrow --> returnsMode
                {
                  return 1;
                } catch(e) {
@@ -130,6 +114,7 @@ function f4(): number {
 
 
 ///// checking behaviour of caught exception control flow.
+// XPECT noerrors -->
 function f5(): number {
 	console.log("a");
 	try {
@@ -157,38 +142,30 @@ function f5(): number {
 	return 6;
 
 	// Dead code
-	// XPECT warnings --> "Dead code. No execution possible after return."  at "console.log("b");"
+	// XPECT warnings --> "Dead code. No execution possible after return." at "console.log("b");"
 	console.log("b");
 
 }
 
 
-// found during IDE-1852: XPECT FIXME noerrors
 /////// break out of try:
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f6"
 function f6(): number {
 
    var b1 : boolean = true;
 
-   // XPECT returnOrThrow --> noReturnsMode
    y: do  {
-       // XPECT returnOrThrow --> breakOrContinue labels y
        z: {
-       	   // XPECT returnOrThrow --> breakOrContinue labels  y, z
 	       x: do  {
-	           // XPECT returnOrThrow at '|if'--> breakOrContinue labels y, z
 	           if ( b1 ) {
 	           	  try {
-	                 // XPECT returnOrThrow --> breakOrContinue labels z
 	                 break z;
 	               } finally {
 	               	 return 3;
 	               }
 	           } else {
-	               // XPECT returnOrThrow --> breakOrContinue labels y
 	               try
 	               {
-                     // XPECT returnOrThrow --> returnsMode
 	                 return 1;
 	               } catch(e) {
 	               	 return 2;
@@ -201,8 +178,7 @@ function f6(): number {
 	       } while ( true )
 
        } // z
-       // XPECT returnOrThrow --> returnsMode
-  	   // XPECT warnings --> "Dead code. No execution possible after labelled statement." at "return 4;"
+  	   // XPECT warnings --> "Dead code." at "return 4;"
        return 4;
 	// XPECT warnings --> "Dead code." at "true"
    } while ( true )
@@ -210,35 +186,29 @@ function f6(): number {
 }
 
 
-//////// just throws.
-// XPECT returnOrThrow --> throwsMode
+// XPECT noerrors -->
 function f7() : number {
-	// XPECT returnOrThrow --> throwsMode
 	throw 'hallo'
 }
 
 
 
 
-//////// try: just throws.
-// XPECT returnOrThrow --> throwsMode
+// XPECT noerrors -->
 function f8() : number {
 	try {
-		// XPECT returnOrThrow --> throwsMode
 		throw 'hallo'
 	}
 	finally
-    // XPECT returnOrThrow --> noReturnsMode
 	{
 		console.log("hallo")
 	}
 }
 
 //////// try: try+catch: just throws.
-// XPECT returnOrThrow --> throwsMode
+// XPECT noerrors -->
 function f9() : number {
 	try {
-		// XPECT returnOrThrow --> throwsMode
 		throw 'hallo'
 	}  catch (e) {
 		throw "e //wrapped in string see IDE-617";
@@ -246,55 +216,45 @@ function f9() : number {
 }
 
 //////// try: case returns
-// XPECT returnOrThrow --> returnsMode
-function f10() : number {
+function f10a() : number {
 	try {
-		// XPECT returnOrThrow --> throwsMode
 		throw 'hallo'
 	}
 	catch (e)
-	// XPECT returnOrThrow --> returnsMode
 	{
 		return 10;
 	}
 }
 
-// found during IDE-1852: XPECT FIXME noerrors
 //////// try: case doesn't return
-// XPECT returnOrThrow --> noReturnsMode
-function f10() : number {
+// XPECT errors --> "Missing return or throw statement." at "f10b"
+function f10b() : number {
 	try {
-		// XPECT returnOrThrow --> throwsMode
 		throw 'hallo'
 	}
 	catch (e)
-	// XPECT returnOrThrow --> noReturnsMode
 	{
 		; // nothing.
 	}
 }
 
 ////////
-// XPECT returnOrThrow --> returnsMode
+// XPECT noerrors -->
 function f11() : number {
 	try {
-		// XPECT returnOrThrow --> throwsMode
 		throw 'hallo'
 	}
 	finally
-    // XPECT returnOrThrow --> returnsMode
 	{
 		return 11;
 	}
 }
 
 //////// try: try+catch: just throws.
-// XPECT returnOrThrow --> throwsMode
+// XPECT noerrors -->
 function f12() : number {
-	// XPECT returnOrThrow --> throwsMode
 	try {
 		f11(); // don't know if it throws?
-		// XPECT returnOrThrow --> returnsMode
 		return 12;
 	}  catch (e) {
 		throw "e //wrapped in string see IDE-617";
@@ -302,11 +262,10 @@ function f12() : number {
 }
 
 //////// try: try+catch: just throws.
-// XPECT returnOrThrow --> returnsMode
+// XPECT noerrors -->
 function f13() : number {
 	try {
 		f11(); // don't know if it throws?
-		// XPECT returnOrThrow --> returnsMode
 		return 12;
 	}  catch (e) {
 		return 13;
@@ -314,12 +273,10 @@ function f13() : number {
 }
 
 
-// found during IDE-1852: XPECT FIXME noerrors
 //////// try: try+catch: just throws.
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors -->"Missing return or throw statement." at "f14"
 function f14() : number {
 	try {
-		// XPECT returnOrThrow --> returnsMode
 		return f12();  // don't know if it throws?
 	}  catch (e) {
 
@@ -327,18 +284,33 @@ function f14() : number {
 }
 
 //////// try: try+catch: just throws.
-// XPECT returnOrThrow --> returnsMode
+// XPECT noerrors -->
 function f15() : number {
 	try {
-		// XPECT returnOrThrow --> throwsMode
 		try {
 			f11(); // don't know if it throws?
-			// XPECT returnOrThrow --> returnsMode
 			return 12;
 		}  catch (e) {
 			throw "e //wrapped in string see IDE-617";
 		}
 	} catch (e2) {
 		return 15;
+	}
+}
+
+//////// infinitive loop does not need succeeding return
+// XPECT noerrors -->
+function f16() : number {
+	for (;;) {
+		console.log("loop");
+	}
+}
+
+//////// infinitive loop does not need succeeding return
+// XPECT noerrors -->
+function f17() : number {
+	for (;;) {
+		console.log("loop");
+		return 2;
 	}
 }
