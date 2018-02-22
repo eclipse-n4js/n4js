@@ -18,6 +18,7 @@ import com.google.common.collect.Iterables
 import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
+import java.util.HashMap
 import java.util.List
 import java.util.Map
 import java.util.Set
@@ -28,6 +29,7 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.n4mf.DeclaredVersion
 import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDependency
@@ -37,7 +39,6 @@ import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.RuntimeProjectDependency
 import org.eclipse.n4js.n4mf.SimpleProjectDescription
 import org.eclipse.n4js.n4mf.SourceFragmentType
-import org.eclipse.n4js.n4mf.VersionConstraint
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.n4js.projectModel.IN4JSArchive
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -645,7 +646,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		// Check project existence.
 		references.filter(ProjectReference).forEach[
 
-			val id = toProjectId;
+			val id = it?.project?.projectId;
 			// Assuming completely broken AST.
 			if (null !== id) {
 
@@ -713,43 +714,51 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			val desiredVersion = it.versionConstraint
 			if (desiredVersion !== null) {
 				val availableVersion = allProjects.get(id).version
-				val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro,
-					availableVersion.qualifier);
-				checkLowerVersion(desiredVersion, available, id)
-				checkUpperVersion(desiredVersion, available, id)
+				val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro, availableVersion.qualifier);
+					val desiredLower = desiredVersion.lowerVersion
+					val desiredUpper = desiredVersion.upperVersion
+					if(desiredLower !==null){
+						if(desiredUpper !== null){
+							checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id)
+							checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id)
+						}else{
+							checkExactVersion(desiredLower, available, id)
+						}
+					}
 			}
 		}
 	}
 
-	private def checkLowerVersion(VersionConstraint constraint, Version available, String id) {
-		val desiredLower = constraint.lowerVersion
-		if (desiredLower !== null) {
+	private def checkExactVersion(DeclaredVersion exactVersion, Version available, String id) {
+			val lower = new Version(exactVersion.major, exactVersion.minor, exactVersion.micro, exactVersion.qualifier);
+			if(!lower.equals(Version.MISSING))
+				if(available.compareTo(lower) !== 0) 
+					addVersionMismatchIssue(exactVersion, id, lower.toString, available.toString);
+	}
+
+	private def checkLowerVersion(DeclaredVersion desiredLower, boolean exclusive, Version available, String id) {
 			val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
 			switch (available.compareTo(lower)) {
 				case 0: {
-					if (constraint.exclLowerBound)
+					if (exclusive)
 						addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
 				}
 				case -1: {
 					addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
 				}
-			}
 		}
 	}
 
-	private def checkUpperVersion(VersionConstraint constraint, Version available, String id) {
-		val desiredUpper = constraint.upperVersion
-		if (desiredUpper !== null) {
+	private def checkUpperVersion(DeclaredVersion desiredUpper, boolean exclusive, Version available, String id) {
 			val upper = new Version(desiredUpper.major, desiredUpper.minor, desiredUpper.micro, desiredUpper.qualifier);
 			switch (available.compareTo(upper)) {
 				case 1: {
 					addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
 				}
 				case 0: {
-					if (constraint.exclUpperBound)
+					if (exclusive)
 						addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
 				}
-			}
 		}
 	}
 
@@ -834,20 +843,10 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), eObject, NO_MATCHING_VERSION)
 	}
 
-	private def toProjectId(ProjectReference it) {
-		it?.project?.projectId;
-	}
-
 	private def Map<String, IN4JSProject> getExistingProjectIds(EObject it) {
-		return findAllProjects.filter[exists].map[projectId -> it].toMap;
-	}
-
-	private def <K, V> toMap(Iterable<Pair<K, V>> it) {
-		val map = <K, V>newHashMap();
-		forEach[
-			map.put(key, value);
-		];
-		return unmodifiableMap(map);
+		val Map<String, IN4JSProject> res = new HashMap
+		findAllProjects.filter[exists].forEach[res.put(it.projectId, it)]
+		return res
 	}
 
 	private def getLibraryDependencies(IN4JSProject it) {

@@ -58,5 +58,9 @@ ProjectDependencies {
     // XPECT noerrors --> "0 is short form of 0.0.0 hence 0.0.0 = 14.0.0"
     four 0,
     // XPECT noerrors --> "no version is short form of 0.0.0 hence 0.0.0 = 15.0.0"
-    five
+    five,
+    // XPECT errors --> "Project six is required in version 1.0.0, but only version 16.0.0 is present." at "1"
+    six 1,
+    // XPECT errors --> "Project seven is required in version 10.0.0, but only version 17.0.0 is present." at "10.0"
+    seven 10.0
 }
