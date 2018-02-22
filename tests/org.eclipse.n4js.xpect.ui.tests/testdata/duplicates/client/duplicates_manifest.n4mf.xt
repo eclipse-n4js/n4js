@@ -19,10 +19,10 @@
             File "manifest.n4mf" {from="../../duplicates/libA/manifest.n4mf"}
         }
         JavaProject "libB" {
-            File "manifest.n4mf" {from="../../duplicates/libA/manifest.n4mf"}
+            File "manifest.n4mf" {from="../../duplicates/libB/manifest.n4mf"}
         }
         JavaProject "libC" {
-            File "manifest.n4mf" {from="../../duplicates/libA/manifest.n4mf"}
+            File "manifest.n4mf" {from="../../duplicates/libC/manifest.n4mf"}
         }
     }
 
