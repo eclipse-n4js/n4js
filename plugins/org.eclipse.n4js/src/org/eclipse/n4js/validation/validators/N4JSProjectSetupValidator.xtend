@@ -700,7 +700,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 						mappedRefs 
 							.sortBy[NodeModelUtils.findActualNodeFor(it).offset]
 							.tail
-							.forEach [addDuplicateProjectReferenceIssue2(qname)];
+							.forEach [addDuplicateProjectReferenceIssue(qname)];
 					}
 				]
 			}
@@ -826,7 +826,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		);
 	}
 
-	private def addDuplicateProjectReferenceIssue2(EObject eObject, String name) {
+	private def addDuplicateProjectReferenceIssue(EObject eObject, String name) {
 		addIssue(getMessageForDUPLICATE_PROJECT_REF(name), eObject, DUPLICATE_PROJECT_REF);
 	}
 	
