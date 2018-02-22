@@ -22,11 +22,11 @@ import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
  * This validator validates all variables that are used before their declaration.
  */
 public class UsedBeforeDeclaredValidator implements FlowValidator {
-	private UsedBeforeDeclaredAnalyser ubda;
+	final private UsedBeforeDeclaredAnalyser ubda = new UsedBeforeDeclaredAnalyser();
 
 	@Override
-	public FlowAnalyser createFlowAnalyser() {
-		return ubda = new UsedBeforeDeclaredAnalyser();
+	public FlowAnalyser getFlowAnalyser() {
+		return ubda;
 	}
 
 	@Override

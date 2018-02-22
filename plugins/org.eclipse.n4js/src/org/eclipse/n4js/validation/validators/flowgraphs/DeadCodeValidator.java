@@ -25,20 +25,24 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
 
 import com.google.common.base.Strings;
-import com.google.inject.Inject;
 
 /**
  * This validator validates dead code.
  */
 public class DeadCodeValidator implements FlowValidator {
-	private DeadCodeAnalyser dca;
+	final private DeadCodeAnalyser dca;
 
-	@Inject
-	private N4JSElementKeywordProvider keywordProvider;
+	final private N4JSElementKeywordProvider keywordProvider;
+
+	/** Constructor. */
+	public DeadCodeValidator(N4JSElementKeywordProvider keywordProvider) {
+		this.keywordProvider = keywordProvider;
+		dca = new DeadCodeAnalyser();
+	}
 
 	@Override
-	public FlowAnalyser createFlowAnalyser() {
-		return dca = new DeadCodeAnalyser();
+	public FlowAnalyser getFlowAnalyser() {
+		return dca;
 	}
 
 	@Override

@@ -51,33 +51,10 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 	 */
 	def TypeRef getExpectedTypeOfReturnValueExpression(RuleEnvironment G, Expression returnValueExpr) {
 		val fofa = EcoreUtil2.getContainerOfType(returnValueExpr?.eContainer, FunctionOrFieldAccessor);
-
-// The following comment will be removed as soon as Jenkins is green
-
 		val G2 = G.wrap;
 		val myThisTypeRef = ts.thisTypeRef(G, returnValueExpr).value;
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
-//
-//		if (funDef !== null) {
-//			if (funDef.isAsync) {
-//		        return getExpectedTypeOfReturnValueExpressionForAsyncFunction(G, funDef);
-//
-//		    } else if (funDef.isGenerator()) {
-//		        return getExpectedTypeOfReturnValueExpressionForGeneratorFunction(G, funDef);
-//
-//		    } else {
-//		        // this is the normal case
-//				val fType = ts.type(G2, funDef).value;
-//				if (fType instanceof FunctionTypeExprOrRef) {
-//					return ts.substTypeVariablesInTypeRef(G2, fType.returnTypeRef);
-//				}
-//		    }
-//
-//		} else {
-//			// funDef === null, so maybe we are in a getter:
-//			val getterDef = EcoreUtil2.getContainerOfType(returnValueExpr, GetterDeclaration);
-//			return getterDef?.definedGetter?.declaredTypeRef;
-//		}
+
 		return getExpectedTypeOfFunctionOrFieldAccessor(G2, fofa); // null means: no type expectation
 	}
 
