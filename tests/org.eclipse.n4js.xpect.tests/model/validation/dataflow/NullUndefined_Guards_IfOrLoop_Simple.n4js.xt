@@ -381,3 +381,23 @@ function f45() {
 	// XPECT nowarnings -->
 	a.toString();
 }
+
+function f46() {
+	let a : int;
+	for (let a of [0]) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f47() {
+	let a : int = 0;
+	for (let a of [0]) {
+		// XPECT nowarnings -->
+		a.toString();
+	}
+	// XPECT nowarnings -->
+	a.toString();
+}
