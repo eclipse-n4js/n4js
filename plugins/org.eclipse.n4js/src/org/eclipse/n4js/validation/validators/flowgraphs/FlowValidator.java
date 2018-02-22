@@ -19,7 +19,7 @@ import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
 public interface FlowValidator {
 
 	/** @return the {@link FlowAnalyser} that gets triggered during the CF/DF analysis. */
-	FlowAnalyser createFlowAnalyser();
+	FlowAnalyser getFlowAnalyser();
 
 	/**
 	 * After the CF/DF analysis was performed, the collected data is evaluated and issue markers are created in this

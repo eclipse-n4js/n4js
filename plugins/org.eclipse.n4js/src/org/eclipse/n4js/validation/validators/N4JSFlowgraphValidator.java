@@ -15,10 +15,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.typesystem.TypeSystemHelper;
+import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.validation.validators.flowgraphs.DeadCodeValidator;
 import org.eclipse.n4js.validation.validators.flowgraphs.FlowValidator;
 import org.eclipse.n4js.validation.validators.flowgraphs.MissingReturnOrThrowValidator;
@@ -45,16 +49,16 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
-	private DeadCodeValidator deadCodeValidator;
+	private FindReferenceHelper findReferenceHelper;
 
 	@Inject
-	private UsedBeforeDeclaredValidator usedBeforeDeclaredValidator;
+	private IN4JSCore n4jsCore;
 
 	@Inject
-	private NullUndefinedValidator nullUndefinedValidator;
+	private TypeSystemHelper typeSystemHelper;
 
 	@Inject
-	private MissingReturnOrThrowValidator missingReturnOrThrowValidator;
+	private JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * NEEEDED
@@ -83,14 +87,15 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser(this::checkCancelled);
 
 		FlowValidator[] fValidators = {
-				deadCodeValidator,
-				usedBeforeDeclaredValidator,
-				nullUndefinedValidator,
-				missingReturnOrThrowValidator };
+				new DeadCodeValidator(keywordProvider),
+				new UsedBeforeDeclaredValidator(),
+				new NullUndefinedValidator(n4jsCore, findReferenceHelper),
+				new MissingReturnOrThrowValidator(typeSystemHelper, jsVariantHelper)
+		};
 
 		FlowAnalyser[] fAnalysers = new FlowAnalyser[fValidators.length];
 		for (int i = 0; i < fValidators.length; i++) {
-			fAnalysers[i] = fValidators[i].createFlowAnalyser();
+			fAnalysers[i] = fValidators[i].getFlowAnalyser();
 		}
 
 		flowAnalyzer.createGraphs(script, true);
