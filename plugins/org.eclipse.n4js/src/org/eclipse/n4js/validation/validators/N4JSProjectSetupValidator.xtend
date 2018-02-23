@@ -18,6 +18,7 @@ import com.google.common.collect.Iterables
 import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
+import java.util.HashMap
 import java.util.List
 import java.util.Map
 import java.util.Set
@@ -28,6 +29,7 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.n4mf.DeclaredVersion
 import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDependency
@@ -37,7 +39,6 @@ import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.RuntimeProjectDependency
 import org.eclipse.n4js.n4mf.SimpleProjectDescription
 import org.eclipse.n4js.n4mf.SourceFragmentType
-import org.eclipse.n4js.n4mf.VersionConstraint
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.n4js.projectModel.IN4JSArchive
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -245,7 +246,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 			val polyFilledMemberAsStrings = markerMapLibs2FilledName.get(keyS)
 			val libsString = keyS.toList.map [
-				it.project.qname
+				it.project.projectId
 			].sort.join(", ")
 
 			val userPresentablePolyFills = polyFilledMemberAsStrings.toList.map['"' + it + '"'].sort.join(", ")
@@ -302,17 +303,20 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		return types;
 	}
 
-	/** Calculate qualified name for ProjectDescription */
+	/** Calculate qualified name for ProjectReference */
+	def private static String qname(ProjectReference pref) {
+		return qname(pref.project)
+	}
+
+	/** Calculate qualified name for SimpleProjectDescription */
 	def private static String qname(SimpleProjectDescription pdesc) {
 		return qname(pdesc.vendorId, pdesc.projectId)
 	}
 
-	/** Calculate qualified name for ProjectDescription */
+	/** Calculate qualified name for vendor id and project id */
 	def private static String qname(String vendorId, String projectId) {
-		return projectId; // TODO vendorId of NFAR: as long as not queryable use only project ID:
-
-	//		if( vendorId === null ) return projectId
-	//		return vendorId+":"+projectId
+		if( vendorId === null ) return projectId
+		return '''«vendorId»:«projectId»'''
 	}
 
 	/** IDEBUG-266 issue error warning on cyclic dependencies*/
@@ -541,7 +545,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			checkReferencedProjects(projectDescriptionFeatures, allProjects, predicate);
 		}
 
-
 		// Extended runtime environment feature check. Obsolete or not allowed.
 		val extendedREFeatures = #[projectDescription_ExtendedRuntimeEnvironment];
 		if (checkFeature(
@@ -561,7 +564,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			// Required RL check.
 			checkReferencedProjects(requiredRLFeatures, allProjects, RL_TYPE.forN4jsProjects);
 		}
-
 
 		// Provided RL feature check. Obsolete or not allowed.
 		val providedRLFeatures = #[projectDescription_ProvidedRuntimeLibraries, providedRuntimeLibraries_ProvidedRuntimeLibraries];
@@ -644,7 +646,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		// Check project existence.
 		references.filter(ProjectReference).forEach[
 
-			val id = toProjectId;
+			val id = it?.project?.projectId;
 			// Assuming completely broken AST.
 			if (null !== id) {
 
@@ -674,12 +676,34 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		];
 
-		// Check duplicates among the existence project references.
-		existentIds.asMap.keySet.forEach[
-			if (existentIds.get(it).size > 1) {
-				existentIds.get(it).forEach[
-					addDuplicateProjectReferenceIssue(it.eContainer, features.last, references.indexOf(it));
-				];
+		checkForDuplicateRuntimeLibraries(desc, existentIds)
+	}
+
+	private def checkForDuplicateRuntimeLibraries(ProjectDescription desc,
+		HashMultimap<String, ProjectReference> validProjectRefs) {
+
+		val currentVendor = desc.vendorId
+		validProjectRefs.asMap.keySet.forEach [
+			//grouped just by projectID
+			if (validProjectRefs.get(it).size > 1) {
+				val referencesByNameAndVendor = HashMultimap.<String, ProjectReference>create;
+				validProjectRefs.get(it).forEach [
+					var refVendor = it.project.vendorId
+					//use vendor id of the refering project if not provided explicitly
+					if (refVendor === null)
+						refVendor = currentVendor
+					referencesByNameAndVendor.put(refVendor, it)
+				]
+
+				referencesByNameAndVendor.keySet.forEach [
+					val mappedRefs = referencesByNameAndVendor.get(it);
+					if (mappedRefs.size > 1) {
+						mappedRefs 
+							.sortBy[NodeModelUtils.findActualNodeFor(it).offset]
+							.tail
+							.forEach [addDuplicateProjectReferenceIssue(qname)];
+					}
+				]
 			}
 		];
 	}
@@ -690,43 +714,51 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			val desiredVersion = it.versionConstraint
 			if (desiredVersion !== null) {
 				val availableVersion = allProjects.get(id).version
-				val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro,
-					availableVersion.qualifier);
-				checkLowerVersion(desiredVersion, available, id)
-				checkUpperVersion(desiredVersion, available, id)
+				val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro, availableVersion.qualifier);
+				val desiredLower = desiredVersion.lowerVersion
+				val desiredUpper = desiredVersion.upperVersion
+				if(desiredLower !==null){
+					if(desiredUpper !== null){
+						checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id)
+						checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id)
+					}else{
+						checkExactVersion(desiredLower, available, id)
+					}
+				}
 			}
 		}
 	}
 
-	private def checkLowerVersion(VersionConstraint constraint, Version available, String id) {
-		val desiredLower = constraint.lowerVersion
-		if (desiredLower !== null) {
+	private def checkExactVersion(DeclaredVersion exactVersion, Version available, String id) {
+			val lower = new Version(exactVersion.major, exactVersion.minor, exactVersion.micro, exactVersion.qualifier);
+			if(!lower.equals(Version.MISSING))
+				if(available.compareTo(lower) !== 0) 
+					addVersionMismatchIssue(exactVersion, id, lower.toString, available.toString);
+	}
+
+	private def checkLowerVersion(DeclaredVersion desiredLower, boolean exclusive, Version available, String id) {
 			val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
 			switch (available.compareTo(lower)) {
 				case 0: {
-					if (constraint.exclLowerBound)
+					if (exclusive)
 						addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
 				}
 				case -1: {
 					addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
 				}
-			}
 		}
 	}
 
-	private def checkUpperVersion(VersionConstraint constraint, Version available, String id) {
-		val desiredUpper = constraint.upperVersion
-		if (desiredUpper !== null) {
+	private def checkUpperVersion(DeclaredVersion desiredUpper, boolean exclusive, Version available, String id) {
 			val upper = new Version(desiredUpper.major, desiredUpper.minor, desiredUpper.micro, desiredUpper.qualifier);
 			switch (available.compareTo(upper)) {
 				case 1: {
 					addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
 				}
 				case 0: {
-					if (constraint.exclUpperBound)
+					if (exclusive)
 						addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
 				}
-			}
 		}
 	}
 
@@ -803,28 +835,18 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		);
 	}
 
-	private def addDuplicateProjectReferenceIssue(EObject eObject, EStructuralFeature feature, int index) {
-		addIssue(messageForDUPLICATE_PROJECT_REF, eObject, feature, index, DUPLICATE_PROJECT_REF);
+	private def addDuplicateProjectReferenceIssue(EObject eObject, String name) {
+		addIssue(getMessageForDUPLICATE_PROJECT_REF(name), eObject, DUPLICATE_PROJECT_REF);
 	}
-	 
+	
 	private def addVersionMismatchIssue(EObject eObject, String name, String requiredVersion, String presentVersion) {
 		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), eObject, NO_MATCHING_VERSION)
 	}
 
-	private def toProjectId(ProjectReference it) {
-		it?.project?.projectId;
-	}
-
 	private def Map<String, IN4JSProject> getExistingProjectIds(EObject it) {
-		return findAllProjects.filter[exists].map[projectId -> it].toMap;
-	}
-
-	private def <K, V> toMap(Iterable<Pair<K, V>> it) {
-		val map = <K, V>newHashMap();
-		forEach[
-			map.put(key, value);
-		];
-		return unmodifiableMap(map);
+		val Map<String, IN4JSProject> res = new HashMap
+		findAllProjects.filter[exists].forEach[res.put(it.projectId, it)]
+		return res
 	}
 
 	private def getLibraryDependencies(IN4JSProject it) {
