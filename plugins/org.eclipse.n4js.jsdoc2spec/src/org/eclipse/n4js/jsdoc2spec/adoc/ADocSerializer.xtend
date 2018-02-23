@@ -47,6 +47,7 @@ import java.util.SortedSet
 import static org.eclipse.n4js.jsdoc.N4JSDocletParser.*
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.jsdoc2spec.KeyUtils
 
 /**
  * Print AsciiDoc code of specification JSDoc. Start and end markers are printed by client.

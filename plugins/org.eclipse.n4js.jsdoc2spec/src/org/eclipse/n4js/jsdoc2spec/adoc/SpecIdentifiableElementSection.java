@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.Map;
 
 import org.eclipse.n4js.jsdoc.dom.Doclet;
+import org.eclipse.n4js.jsdoc2spec.KeyUtils;
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
 import org.eclipse.n4js.jsdoc2spec.SpecInfo;
 import org.eclipse.n4js.ts.types.IdentifiableElement;

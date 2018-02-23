@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.n4js.jsdoc2spec.JSDoc2SpecProcessor;
+import org.eclipse.n4js.jsdoc2spec.KeyUtils;
 import org.eclipse.n4js.jsdoc2spec.SpecElementRef;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SpecInfo;

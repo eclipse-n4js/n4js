@@ -32,14 +32,11 @@ public class SourceEntry {
 	final public String module;
 	/** The extension of the N4JS file. */
 	final public String extension;
-	/**
-	 * Polyfilling classes are mapped to the PolyfillAware classes. Hence the value of {@link #folder} always refers to
-	 * the PolyfillAware class, if one exists.
-	 */
+	/** The project folder. */
 	final public String folder;
 	/**
-	 * Since polyfilling classes are mapped to the PolyfillAware classes, the value of {@link #trueFolder} always refers
-	 * to the actual folder where the polyfilling class is located.
+	 * In case of a polyfill aware class, features are copied to the filling classes. Then, the {@code trueFolder}
+	 * refers to the polyfill aware class.
 	 */
 	final public String trueFolder;
 	/** The project name */
