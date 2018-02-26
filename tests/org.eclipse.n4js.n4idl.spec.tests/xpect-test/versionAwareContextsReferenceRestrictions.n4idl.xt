@@ -19,7 +19,7 @@ class A#2 {
 }
 
 @VersionAware
-export public class Insider#1 {
+export public class Insider {
 	public static versionAwareField : int = 3;
 	
 	a1 = A#1;

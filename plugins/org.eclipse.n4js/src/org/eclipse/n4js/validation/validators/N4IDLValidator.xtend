@@ -106,12 +106,20 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 
 		// make sure all type declarations explicitly declare a type version
 		if (n4TypeDeclaration instanceof VersionedElement) {
-			if (!n4TypeDeclaration.hasDeclaredVersion) {
+			// if non-version-aware and has no declared version
+			if (!n4TypeDeclaration.hasDeclaredVersion && !VersionUtils.hasVersionAwarenessAnnotation(n4TypeDeclaration)) {
 				val message = IssueCodes.getMessageForIDL_VERSIONED_ELEMENT_MISSING_VERSION(
 					elementKeywordProvider.keyword(n4TypeDeclaration), n4TypeDeclaration.name);
 				// add an issue for un-versioned type declarations
 				addIssue(message, n4TypeDeclaration, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
 					IssueCodes.IDL_VERSIONED_ELEMENT_MISSING_VERSION);
+			}
+			
+			// if version-aware and has declared version
+			if (n4TypeDeclaration.hasDeclaredVersion && VersionUtils.hasVersionAwarenessAnnotation(n4TypeDeclaration)) {
+				addIssue(IssueCodes.messageForIDL_VERSION_AWARE_CLASSIFIER_MUST_NOT_DECLARE_VERSION, n4TypeDeclaration, 
+					N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+					IssueCodes.IDL_VERSION_AWARE_CLASSIFIER_MUST_NOT_DECLARE_VERSION);
 			}
 		}
 	}

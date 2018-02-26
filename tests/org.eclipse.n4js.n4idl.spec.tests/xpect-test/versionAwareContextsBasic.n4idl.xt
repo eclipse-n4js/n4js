@@ -42,6 +42,7 @@ function migration(p : A#1) {
 
 // classes can be declared @VersionAware
 @VersionAware
+// version-aware classifiers may not declare a version XPECT errors --> "Classifiers annotated as @VersionAware must not declare a version."
 class VersionAwareClass#5 {
 	// In @VersionAware classes, explicit type version requests may be specified XPECT noerrors
 	field1 : A#1
@@ -54,7 +55,8 @@ class VersionAwareClass#5 {
 }
 
 @VersionAware
-export public class VersionAwareClass#2 {}
+// XPECT noerrors
+export public class VersionAwareClass {}
 
 // functions can be declared @VersionAware XPECT noerrors
 @VersionAware
