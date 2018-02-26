@@ -33,6 +33,7 @@ import org.eclipse.n4js.jsdoc.dom.FullMemberReference;
 import org.eclipse.n4js.jsdoc.dom.LineTag;
 import org.eclipse.n4js.jsdoc.tags.LineTagWithFullElementReference;
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -40,6 +41,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -49,6 +51,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Strings;
@@ -147,7 +150,7 @@ public class N4JSDReader {
 								throw new IllegalStateException("Error parsing " + uri);
 							}
 							N4JSResource.postProcess(resource);
-							for (Type type : script.getModule().getTopLevelTypes()) {
+							for (Type type : getRealTopLevelTypes(script)) {
 								createTypeSpecInfo(type, specInfoByName);
 							}
 							for (TVariable tvar : script.getModule().getVariables()) {
@@ -164,6 +167,29 @@ public class N4JSDReader {
 				sub.checkCanceled();
 			}
 		}
+	}
+
+	/**
+	 * The method {@link TModule#getTopLevelTypes()} returns also functions that are nested in functions. These are
+	 * filtered out in this method.
+	 *
+	 * @return real top level types
+	 */
+	private Collection<Type> getRealTopLevelTypes(Script script) {
+		Collection<Type> realTLT = new LinkedList<>();
+		for (Type tlt : script.getModule().getTopLevelTypes()) {
+			if (tlt instanceof SyntaxRelatedTElement) {
+				SyntaxRelatedTElement srte = (SyntaxRelatedTElement) tlt;
+				EObject astElem = srte.getAstElement();
+				FunctionOrFieldAccessor fofa = EcoreUtil2.getContainerOfType(astElem, FunctionOrFieldAccessor.class);
+				if (fofa != null) {
+					continue;
+				}
+			}
+
+			realTLT.add(tlt);
+		}
+		return realTLT;
 	}
 
 	private void createTVarSpecInfo(TVariable tvar, Multimap<String, SpecInfo> specInfoByName) {
@@ -257,7 +283,7 @@ public class N4JSDReader {
 								throw new IllegalStateException("Error parsing " + uri);
 							}
 							N4JSResource.postProcess(resource);
-							for (Type type : script.getModule().getTopLevelTypes()) {
+							for (Type type : getRealTopLevelTypes(script)) {
 								testTypes.add(type);
 							}
 						}
