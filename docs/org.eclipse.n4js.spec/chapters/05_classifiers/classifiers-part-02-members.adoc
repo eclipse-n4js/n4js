@@ -666,8 +666,8 @@ given in the constructor.
 _@Spec parameter_ or simply _spec parameter_ and its owning constructor is referred to as a _@Spec constructor_ or
 _spec constructor_. An argument to the spec parameter is called _spec object_.
 2.  Only a single formal parameter of a constructor may be annotated with `@Spec`.
-3.  If a formal parameter is annotated with `@Spec`, the parameter’s type must be `pass:[~this]` or `pass:[~i~this]` (i.e.
-a use-site structural initializer field type of `this`, see <<structural-readWriteInit-field-typing>>).
+3.  If a formal parameter is annotated with `@Spec`, the parameter’s type must be `pass:[~i~this]` (i.e. a use-site
+structural initializer field type of `this`, see <<structural-readWriteInit-field-typing>>).
 4.  Using the data provided in the spec object, i.e. in the argument to the spec parameter, a spec constructor will
 automatically initialize
 a. all *owned* data fields and *owned* setters of the containing class, and
