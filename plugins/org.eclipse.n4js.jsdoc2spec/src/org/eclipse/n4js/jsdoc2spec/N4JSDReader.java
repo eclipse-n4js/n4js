@@ -40,10 +40,10 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
-import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.MemberList;
@@ -52,8 +52,10 @@ import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
 /**
@@ -80,16 +82,15 @@ public class N4JSDReader {
 	/**
 	 * Reads all N4JSD files in project, scans for types and links the tests.
 	 *
-	 * @return all types in a mapped with fully qualified type name (incl module spec) as key, the type info conly
+	 * @return all types in a mapped with fully qualified type name (inclusive module spec) as key, the type info only
 	 *         contains the types, no other information yet.
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	public Map<String, SpecInfo> readN4JSDs(Collection<IN4JSProject> projects,
-			Function<IN4JSProject, ResourceSet> resSetProvider,
-			SubMonitorMsg monitor) throws InterruptedException {
+	public Collection<SpecInfo> readN4JSDs(Collection<IN4JSProject> projects,
+			Function<IN4JSProject, ResourceSet> resSetProvider, SubMonitorMsg monitor) throws InterruptedException {
 
-		Map<String, SpecInfo> specInfoByName = new HashMap<>();
+		Multimap<String, SpecInfo> specInfoByName = HashMultimap.create();
 		ResourceSet resSet = null;
 		SubMonitorMsg sub = monitor.convert(2 * 100 * projects.size());
 		for (IN4JSProject project : projects) {
@@ -105,20 +106,20 @@ public class N4JSDReader {
 			linkTests(specInfoByName, project, resSet, sub.newChild(100));
 		}
 
-		return specInfoByName;
+		return specInfoByName.values();
 	}
 
 	/**
 	 * Reads all N4JSD files in project and scans for types. No further information is added yet. Reads all types into a
-	 * map with fully qualified type name (incl module spec) as key, the type info conly contains the types, no other
-	 * information yet.
+	 * map with fully qualified type name (inclusive module spec) as key, the type info only contains the types, no
+	 * other information yet.
 	 *
 	 * @param specInfoByName
 	 *            map of fqn of types or reqid keys to their corresponding spec info.
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	private void readScripts(Map<String, SpecInfo> specInfoByName, IN4JSProject project, ResourceSet resSet,
+	private void readScripts(Multimap<String, SpecInfo> specInfoByName, IN4JSProject project, ResourceSet resSet,
 			SubMonitorMsg monitor) throws InterruptedException {
 
 		ImmutableList<? extends IN4JSSourceContainer> srcCont = project.getSourceContainers();
@@ -155,7 +156,8 @@ public class N4JSDReader {
 						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
-						throw new IllegalArgumentException("Error processing " + uri + ": " + ex.getMessage());
+						String msg = "Error processing " + uri + ": " + ex.getMessage();
+						throw new IllegalArgumentException(msg);
 					}
 				}
 				sub.worked(1);
@@ -164,24 +166,37 @@ public class N4JSDReader {
 		}
 	}
 
-	private void createTVarSpecInfo(TVariable tvar, Map<String, SpecInfo> specInfoByName) {
+	private void createTVarSpecInfo(TVariable tvar, Multimap<String, SpecInfo> specInfoByName) {
 		String name = KeyUtils.getSpecKeyWithoutProjectFolder(rrph, tvar);
 		specInfoByName.put(name, new SpecInfo(tvar));
 	}
 
-	private void createTypeSpecInfo(Type type, Map<String, SpecInfo> specInfoByName) {
+	private void createTypeSpecInfo(Type type, Multimap<String, SpecInfo> specInfoByName) {
 		SpecInfo typeInfo = new SpecInfo(type);
 		String regionName = KeyUtils.getSpecKeyWithoutProjectFolder(rrph, type);
-		SpecInfo existing = specInfoByName.put(regionName, typeInfo);
-		if (existing != null && type instanceof TClass) { // polyfill is only marked in reference to fix github links
-															// later
-			Type existingType = existing.specElementRef.getElementAsType();
-			if (existingType != null) {
-				if (existingType.isStaticPolyfill()) {
-					typeInfo.specElementRef.polyfill = existingType;
-				} else if (type.isStaticPolyfill()) {
-					existing.specElementRef.polyfill = type;
-					specInfoByName.put(regionName, existing);
+		specInfoByName.put(regionName, typeInfo);
+
+		Collection<SpecInfo> identicalSpecInfo = specInfoByName.get(regionName);
+		if (identicalSpecInfo.size() > 1) {
+			SpecInfo polyfillAware = null;
+			List<SpecInfo> polyfilling = new LinkedList<>();
+			for (SpecInfo si : identicalSpecInfo) {
+				Type moduleType = si.specElementRef.getElementAsType();
+
+				if (moduleType != null) {
+					TModule typeModule = moduleType.getContainingModule();
+					if (typeModule.isStaticPolyfillModule()) {
+						polyfilling.add(si);
+					} else if (typeModule.isStaticPolyfillAware()) {
+						polyfillAware = si;
+					}
+				}
+			}
+
+			if (polyfillAware != null) {
+				Type polyfillAwareType = polyfillAware.specElementRef.getElementAsType();
+				for (SpecInfo si : polyfilling) {
+					si.specElementRef.polyfillAware = polyfillAwareType;
 				}
 			}
 		}
@@ -193,7 +208,7 @@ public class N4JSDReader {
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	private void linkTests(Map<String, SpecInfo> specInfoByName, IN4JSProject project, ResourceSet resSet,
+	private void linkTests(Multimap<String, SpecInfo> specInfoByName, IN4JSProject project, ResourceSet resSet,
 			SubMonitorMsg monitor) throws InterruptedException {
 
 		List<Type> testTypes = getTestTypes(project, resSet, monitor);
@@ -206,8 +221,8 @@ public class N4JSDReader {
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				throw new IllegalArgumentException(
-						"Error processing " + testType.eResource().getURI().toString() + ": " + ex.getMessage());
+				String msg = "Error processing " + testType.eResource().getURI().toString() + ": " + ex.getMessage();
+				throw new IllegalArgumentException(msg);
 			}
 		}
 	}
@@ -255,7 +270,7 @@ public class N4JSDReader {
 		return testTypes;
 	}
 
-	private void processClassifier(Map<String, SpecInfo> specInfoByName, Type testType, TClassifier ctype) {
+	private void processClassifier(Multimap<String, SpecInfo> specInfoByName, Type testType, TClassifier ctype) {
 		RepoRelativePath rrp = RepoRelativePath.compute(testType.eResource(), n4jsCore);
 		Doclet testTypeDoclet = n4jsDocHelper.getDoclet(ctype.getAstElement());
 		Collection<FullMemberReference> testeeRefsFromType = getFullMemberRefsFromType(testTypeDoclet);
@@ -281,7 +296,7 @@ public class N4JSDReader {
 		}
 	}
 
-	private void processTag(Map<String, SpecInfo> specInfoByName, RepoRelativePath rrp,
+	private void processTag(Multimap<String, SpecInfo> specInfoByName, RepoRelativePath rrp,
 			Collection<FullMemberReference> testeeRefsFromType, Collection<FullMemberReference> testeeTypeRefsFromType,
 			TMember testMember, boolean isOwnedMember, EObject astElement, Doclet testMethodDoclet, LineTag tag) {
 
@@ -387,13 +402,13 @@ public class N4JSDReader {
 	 * Adds test info to an identified element.
 	 */
 	private void addTestInfoForCodeElement(RepoRelativePath rrp, Doclet testMethodDoclet, FullMemberReference ref,
-			TMember testMember, Map<String, SpecInfo> typesByName) {
+			TMember testMember, Multimap<String, SpecInfo> typesByName) {
 
 		String fullTypeName = ref.fullTypeName();
 		String regionName = KeyUtils.getSpecKeyWithoutProjectFolder(rrp, fullTypeName);
-		SpecInfo specInfo = typesByName.get(regionName);
+		Collection<SpecInfo> specInfos = typesByName.get(regionName);
 
-		if (specInfo != null) {
+		for (SpecInfo specInfo : specInfos) {
 			for (Type testee : specInfo.specElementRef.getTypes()) {
 				if (testee instanceof ContainerType<?> && ref.memberNameSet()) {
 					TMember testeeMember = getRefMember((ContainerType<?>) testee, ref);
@@ -409,20 +424,24 @@ public class N4JSDReader {
 			String elementName = specInfo.specElementRef.identifiableElement.getName();
 			SpecTestInfo testSpecInfo = createTestSpecInfo(elementName, testMethodDoclet, testMember, rrp);
 			specInfo.addTypeTestInfo(testSpecInfo);
-		} else {
+		}
+
+		if (specInfos.isEmpty()) {
 			issueAcceptor.addWarning("Testee " + fullTypeName + " not found", testMember);
 		}
 	}
 
 	private void addTestInfoForRequirement(RepoRelativePath rrp, Doclet testMethodDoclet, String reqid,
-			TMember testMember, Map<String, SpecInfo> typesByName) {
+			TMember testMember, Multimap<String, SpecInfo> typesByName) {
 
-		SpecInfo specInfo = typesByName.get(SpecElementRef.reqidKey(reqid));
-		if (specInfo == null) {
-			specInfo = new SpecInfo(reqid);
+		Collection<SpecInfo> specInfos = typesByName.get(SpecElementRef.reqidKey(reqid));
+		if (specInfos.isEmpty()) {
+			SpecInfo specInfo = new SpecInfo(reqid);
 			typesByName.put(SpecElementRef.reqidKey(reqid), specInfo);
 		}
-		specInfo.addTypeTestInfo(createTestSpecInfo(reqid, testMethodDoclet, testMember, rrp));
+		for (SpecInfo specInfo : specInfos) {
+			specInfo.addTypeTestInfo(createTestSpecInfo(reqid, testMethodDoclet, testMember, rrp));
+		}
 	}
 
 	private FullMemberReference getFullMemberRef(LineTag tag) {

@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSInjectorProvider;
@@ -81,18 +81,18 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 						SubMonitorMsg.nullProgressMonitor());
 
 				String adocRootName = TESTRESOURCES + projectId + "/expectedADoc";
-				List<String> expectedFileNames = getExpectedFileNames(adocRootName, specChangeSet);
+				Collection<String> expectedFileNames = getExpectedFileNames(adocRootName, specChangeSet);
 				assertFalse(expectedFileNames.isEmpty());
 
 				File adocRoot = new File(adocRootName);
 				String completeActual = "";
 				String completeExpected = "";
 				for (SpecFile specFile : specChangeSet) {
-					String fileName = specFile.getFile().getName().toString();
-					if (!expectedFileNames.contains(fileName))
+					String expectedFile = getExpectedFile(expectedFileNames, specFile);
+					if (expectedFile == null)
 						continue;
 
-					String fullExpectationFileName = adocRoot.toPath().resolve(fileName).toString();
+					String fullExpectationFileName = adocRoot.toPath().resolve(expectedFile).toString();
 					String expectedADoc = Files.readFileIntoString(fullExpectationFileName);
 					String actualADoc = specFile.getNewContent();
 
@@ -102,9 +102,9 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 						System.out.println("Updated expectation " + fullExpectationFileName);
 					}
 
-					completeActual += "\n//////// " + fileName + " ////////\n";
+					completeActual += "\n//////// " + expectedFile + " ////////\n";
 					completeActual += actualADoc;
-					completeExpected += "\n//////// " + fileName + " ////////\n";
+					completeExpected += "\n//////// " + expectedFile + " ////////\n";
 					completeExpected += expectedADoc;
 				}
 
@@ -115,7 +115,19 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 		}
 	}
 
-	private List<String> getExpectedFileNames(String expectationFilesRoot, Collection<SpecFile> specFiles) {
+	private String getExpectedFile(Collection<String> expectedFileNames, SpecFile specFile) {
+		String specFileName = specFile.getFile().getName().toString();
+		if (expectedFileNames.contains(specFileName)) {
+			return specFileName;
+		}
+		specFileName = getFolderIncludingFileName(specFile);
+		if (expectedFileNames.contains(specFileName)) {
+			return specFileName;
+		}
+		return null;
+	}
+
+	private Collection<String> getExpectedFileNames(String expectationFilesRoot, Collection<SpecFile> specFiles) {
 		if (specFiles == null)
 			return Collections.emptyList();
 
@@ -124,12 +136,34 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 		if (expFileNames == null)
 			return Collections.emptyList();
 
-		List<String> expFiles = Arrays.asList(expFileNames)
-				.stream()
-				.filter(fName -> specFiles.stream().anyMatch(sFile -> fName.equals(sFile.getFile().getName())))
-				.collect(Collectors.toList());
+		Set<String> expFiles = new HashSet<>(Arrays.asList(expFileNames));
+		for (SpecFile specFile : specFiles) {
+			String fileName = specFile.getFile().getName();
+			if (expFiles.contains(fileName)) {
+				expFiles.add(fileName);
+			} else {
+				fileName = getFolderIncludingFileName(specFile);
+				if (expFiles.contains(fileName)) {
+					expFiles.add(fileName);
+				}
+			}
+		}
 
 		return expFiles;
+	}
+
+	private String getFolderIncludingFileName(SpecFile specFile) {
+		String fileName = specFile.getFile().getName();
+		String parentFileName = specFile.getFile().getParentFile().getName();
+		if ("NO_PACKAGE".equals(parentFileName)) {
+			parentFileName = specFile.getFile().getParentFile().getParentFile().getName();
+		}
+		int hashIdx = parentFileName.indexOf("#");
+		if (hashIdx > 0) {
+			parentFileName = parentFileName.substring(hashIdx + 1);
+		}
+		fileName = parentFileName + "." + fileName;
+		return fileName;
 	}
 
 }

@@ -51,6 +51,16 @@ public class KeyUtils {
 		return null;
 	}
 
+	/**
+	 * @return a complete spec key comprised of the whole {@link RepoRelativePath} of the given type and the element
+	 *         name
+	 */
+	public static String getSpecKey(RepoRelativePathHolder rrph, IdentifiableElement type,
+			IdentifiableElement element) {
+
+		return getSpecKeyPrefix(rrph, type) + "." + element.getName();
+	}
+
 	/** @return a complete spec key comprised of the whole {@link RepoRelativePath} and the element name */
 	public static String getSpecKey(RepoRelativePathHolder rrph, IdentifiableElement element) {
 		return getSpecKeyPrefix(rrph, element) + "." + element.getName();

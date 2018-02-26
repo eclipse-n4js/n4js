@@ -70,7 +70,7 @@ class ADocSerializer {
 	def CharSequence process(SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
 		val strb = new StringBuilder();
 		strb.appendSpecElementPre(spec);
-		strb.appendSpec(spec, specsByKey);
+		strb.appendSpec(spec);
 		strb.appendSpecElementPost(spec, specsByKey);
 		return strb;
 	}
@@ -83,7 +83,7 @@ class ADocSerializer {
 		return strb
 	}
 
-	private def StringBuilder appendSpec(StringBuilder strb, SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
+	private def StringBuilder appendSpec(StringBuilder strb, SpecIdentifiableElementSection spec) {
 		strb.append("\n");
 
 		var addedTaskLinks = false;
@@ -238,6 +238,7 @@ class ADocSerializer {
 	private def StringBuilder appendMemberOrVarOrFuncPre(StringBuilder strb, String shortDescr, String shortQN,
 			String reqName, SyntaxRelatedTElement element, SpecIdentifiableElementSection spec) {
 
+		val boolean isIntegratedFromPolyfill = spec.sourceEntry.trueFolder != spec.sourceEntry.folder;
 		val String trueSrcFolder = spec.sourceEntry.repository + ":" + spec.sourceEntry.trueFolder;
 
 		strb.append(
@@ -249,9 +250,9 @@ class ADocSerializer {
 		«IF hasTodo(spec.doclet)»
 		«getTodoLink(spec.doclet)»
 		«ENDIF»
-		«IF element instanceof TMember && ((element as TMember).isPolyfilled())»
+		«IF isIntegratedFromPolyfill»
 
-		[.small]#(Polyfilled from «trueSrcFolder»)#
+		[.small]#(Integrated from static polyfill aware class in: «trueSrcFolder»)#
 		«ENDIF»
 
 		==== Signature
@@ -312,7 +313,7 @@ class ADocSerializer {
 		val strb = new StringBuilder();
 
 		if (rrp !== null) {
-			val SourceEntry se = SourceEntryFactory.create(rrp, element);
+			val SourceEntry se = SourceEntryFactory.create(repoPathHolder, rrp, element);
 			strb.appendSourceLink(se, passThenMonospace(signature));
 		}
 
