@@ -103,6 +103,7 @@ public class SourceEntryFactory {
 		String path = getPath(rrpType, repository);
 		String project = getProject(rrpType);
 		String folder = getFolder(rrpType, module);
+		boolean isStaticPolyfillAware = getIsStaticPolyfillAware(idElement);
 		String trueFolder = getTrueFolder(rrpElement, idElement, folder, module);
 		String extension = getExtension(rrpType);
 		String packageName = getPackageName(module);
@@ -117,6 +118,7 @@ public class SourceEntryFactory {
 				path,
 				project,
 				folder,
+				isStaticPolyfillAware,
 				trueFolder,
 				module,
 				extension,
@@ -158,12 +160,23 @@ public class SourceEntryFactory {
 		return getFolderInUriString(rrp.pathInProject, module);
 	}
 
+	private static boolean getIsStaticPolyfillAware(IdentifiableElement idElement) {
+		if (idElement == null) {
+			return false;
+		}
+		TModule containingModule = idElement.getContainingModule();
+		if (containingModule == null) {
+			return false;
+		}
+		return containingModule.isStaticPolyfillAware();
+	}
+
 	static private String getTrueFolder(RepoRelativePath rrpElement, IdentifiableElement idElement, String folder,
 			String module) {
 
 		if (idElement == null
 				|| idElement.getContainingModule() == null
-				|| !idElement.getContainingModule().isStaticPolyfillAware())
+				|| !getIsStaticPolyfillAware(idElement))
 			return folder;
 
 		String trueFolder = getFolder(rrpElement, module);

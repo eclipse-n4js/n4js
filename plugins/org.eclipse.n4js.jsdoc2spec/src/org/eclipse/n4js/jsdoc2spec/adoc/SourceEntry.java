@@ -34,6 +34,8 @@ public class SourceEntry {
 	final public String extension;
 	/** The project folder. */
 	final public String folder;
+	/** True iff this SourceEntry is declared in a StaticPolyfillAware class */
+	final public boolean isStaticPolyfillAware;
 	/**
 	 * In case of a polyfill aware class, features are copied to the filling classes. Then, the {@code trueFolder}
 	 * refers to the polyfill aware class.
@@ -65,6 +67,7 @@ public class SourceEntry {
 			String path,
 			String project,
 			String folder,
+			boolean isStaticPolyfillAware,
 			String trueFolder,
 			String module,
 			String extension,
@@ -82,6 +85,7 @@ public class SourceEntry {
 		this.path = path;
 		this.project = project;
 		this.folder = folder;
+		this.isStaticPolyfillAware = isStaticPolyfillAware;
 		this.trueFolder = trueFolder;
 		this.module = module;
 		this.extension = extension;
@@ -104,6 +108,7 @@ public class SourceEntry {
 		this.path = se.path;
 		this.project = se.project;
 		this.folder = se.folder;
+		this.isStaticPolyfillAware = se.isStaticPolyfillAware;
 		this.trueFolder = se.trueFolder;
 		this.module = se.module;
 		this.extension = se.extension;

@@ -147,7 +147,8 @@ public class N4JSDReader {
 							Script script = (Script) (resource.getContents().isEmpty() ? null
 									: resource.getContents().get(0));
 							if (script == null) {
-								throw new IllegalStateException("Error parsing " + uri);
+								// throw new IllegalStateException("Error parsing " + uri);
+								continue;
 							}
 							N4JSResource.postProcess(resource);
 							for (Type type : getRealTopLevelTypes(script)) {
@@ -160,7 +161,7 @@ public class N4JSDReader {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 						String msg = "Error processing " + uri + ": " + ex.getMessage();
-						throw new IllegalArgumentException(msg);
+						throw new IllegalArgumentException(msg, ex);
 					}
 				}
 				sub.worked(1);
