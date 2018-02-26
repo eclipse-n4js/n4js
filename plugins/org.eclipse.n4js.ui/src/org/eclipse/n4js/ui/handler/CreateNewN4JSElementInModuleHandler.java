@@ -22,6 +22,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.ui.wizard.classifiers.N4JSNewClassifierWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -34,9 +36,6 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.ui.wizard.classifiers.N4JSNewClassifierWizard;
 
 /**
  * Handler for the "Create New N4JS Element in module" command.

@@ -58,10 +58,10 @@ Sources {
 ProjectDependencies {
 	// XPECT noerrors -->
 	test.data.system.project.one,
-	// XPECT errors -->	"Duplicate project reference." at "test.data.system.project.two"
+	// XPECT noerrors --> "error is reported on subsequent occurances"
 	test.data.system.project.two,
-	// XPECT errors -->	"Duplicate project reference." at "org.eclipse:test.data.system.project.two"
-	org.eclipse:test.data.system.project.two,
+	// XPECT errors --> "Duplicate project reference org.eclipse.n4js:test.data.system.project.two." at "org.eclipse.n4js:test.data.system.project.two"
+	org.eclipse.n4js:test.data.system.project.two,
 	// XPECT warnings --> "Project test.data.re.project type of runtime environment cannot be declared among the project dependencies." at "test.data.re.project"
 	test.data.re.project,
 	// XPECT errors -->	"Project does not exist with project ID: xxx.yyy.zzz." at "xxx.yyy.zzz"

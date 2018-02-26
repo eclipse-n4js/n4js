@@ -314,10 +314,9 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				val annSpec = SPEC.getAnnotation(currFPar);
 				if (annSpec !== null) {
 					specAnnotations.add(annSpec);
-					if (!(currFPar.declaredTypeRef instanceof ThisTypeRef &&
-						(STRUCTURAL_FIELD_INITIALIZER === currFPar.declaredTypeRef.typingStrategy
-							|| STRUCTURAL === currFPar.declaredTypeRef.typingStrategy
-						))) {
+					val correctType = currFPar.declaredTypeRef instanceof ThisTypeRef
+						&& STRUCTURAL_FIELD_INITIALIZER === currFPar.declaredTypeRef.typingStrategy;
+					if (!correctType) {
 						val message = messageForCLF_SPEC_WRONG_TYPE;
 						addIssue(message, annSpec, null, CLF_SPEC_WRONG_TYPE);
 					} else { // prevent consequential errors

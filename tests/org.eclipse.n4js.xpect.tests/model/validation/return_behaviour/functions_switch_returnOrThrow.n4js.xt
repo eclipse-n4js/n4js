@@ -12,14 +12,6 @@
 /* XPECT_SETUP  org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 
-// test containsReturnOrThrow with:
-// e.g.,  X-PECT:
-//   X-PECT returnOrThrow --> returnsMode
-//   X-PECT returnOrThrow --> throwsMode
-//   X-PECT returnOrThrow --> breakOrContinue labels ...
-//   X-PECT returnOrThrow --> noReturnsMode
-// example see: org.eclipse.n4js.xpect.N4JSTypeSystemXpectTest
-
 
 ///////////////////
 // Standard expressions in functions
@@ -35,7 +27,6 @@ function c() {
 
 ///////// Simple Switch statements
 // XPECT noerrors -->
-// XPECT returnOrThrow at '|function' --> returnsMode
 function f0(a : number) : number {
 	switch(a) {
 		case 1: ;
@@ -49,8 +40,7 @@ function f0(a : number) : number {
 }
 
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f1"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f1"
 function f1(a : number) : number {
 	switch(a) {
 		case 1: ;
@@ -63,8 +53,7 @@ function f1(a : number) : number {
 	}
 }
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f2"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f2"
 function f2(a : number) : number {
 	switch(a) {
 		case 1: ;
@@ -77,8 +66,7 @@ function f2(a : number) : number {
 	}
 }
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f3"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f3"
 function f3(a : number) : number {
 	switch(a) {
 		case 1: ;
@@ -92,7 +80,6 @@ function f3(a : number) : number {
 }
 
 // XPECT noerrors -->
-// XPECT returnOrThrow --> returnsMode
 function f4(a : number) : number {
 	switch(a) {
 		case 1: ;
@@ -109,8 +96,7 @@ function f4(a : number) : number {
 }
 
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f5"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f5"
 function f5(a : number) : number {
 	switch(a) {
 		case 1: ;
@@ -128,9 +114,7 @@ function f5(a : number) : number {
 
 
 // XPECT noerrors -->
-// XPECT returnOrThrow --> throwsMode
 function f6(a : number) : number {
-    // XPECT returnOrThrow --> throwsMode
 	switch(a) {
 		case 1: ;
 		case 2: ;
@@ -145,7 +129,6 @@ function f6(a : number) : number {
 
 //// labeled breaks
 // XPECT noerrors -->
-// XPECT returnOrThrow --> returnsMode
 function f10(a : number) : number {
 	l1: switch(a) {
 		case 1: ;
@@ -158,8 +141,7 @@ function f10(a : number) : number {
 	}
 }
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f11"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f11"
 function f11(a : number) : number {
 	l2: switch(a) {
 		case 1: ;
@@ -173,15 +155,12 @@ function f11(a : number) : number {
 }
 
 // XPECT noerrors -->
-// XPECT returnOrThrow --> returnsMode
 function f12(a : number) : number {
 	l2: switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: {
-			// XPECT returnOrThrow --> noReturnsMode
 			l3: {
-				// XPECT returnOrThrow --> breakOrContinue labels l3
 				break l3;
 			}
 		}
@@ -192,16 +171,13 @@ function f12(a : number) : number {
 	}
 }
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f13"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f13"
 function f13(a : number) : number {
 	l2: switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: {
-			// XPECT returnOrThrow --> breakOrContinue labels l2
 			l3: {
-				// XPECT returnOrThrow --> breakOrContinue labels l2
 				break l2;
 			}
 		}
@@ -212,18 +188,14 @@ function f13(a : number) : number {
 	}
 }
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f14"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f14"
 function f14(a : number) : number {
 	l1: {
-		// XPECT returnOrThrow --> breakOrContinue labels l1
 		l2: switch(a) {
 			case 1: ;
 			case 2: ;
 			case 3: {
-				// XPECT returnOrThrow --> breakOrContinue labels l1
 				l3: {
-					// XPECT returnOrThrow --> breakOrContinue labels l1
 					break l1;
 				}
 			}
@@ -237,7 +209,6 @@ function f14(a : number) : number {
 
 ////// subswitch statements:
 // XPECT noerrors -->
-// XPECT returnOrThrow --> returnsMode
 function f20(a : number) : number {
 	switch(a) {
 		case 1: ;
@@ -260,14 +231,12 @@ function f20(a : number) : number {
 }
 
 // XPECT noerrors -->
-// XPECT returnOrThrow --> returnsMode
 function f21(a : number) : number {
 	switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: ;
 		default :
-		    // XPECT returnOrThrow --> noReturnsMode
 			switch(a) {
 				case 11: ;
 				case 12: ;
@@ -283,15 +252,13 @@ function f21(a : number) : number {
 	}
 }
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f22"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f22"
 function f22(a : number) : number {
 	switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: ;
 		default :
-		    // XPECT returnOrThrow --> noReturnsMode
 			switch(a) {
 				case 11: ;
 				case 12: ;
@@ -309,16 +276,12 @@ function f22(a : number) : number {
 }
 
 // XPECT noerrors -->
-// X-PECT returnOrThrow --> throwsMode
-// Sloppy Situation, it really should be throwsMode.
-// XPECT returnOrThrow --> returnsMode
 function f23(a : number) : number {
 	switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: ;
 		default :
-		    // XPECT returnOrThrow --> noReturnsMode
 			switch(a) {
 				case 11: ;
 				case 12: ;
@@ -336,14 +299,12 @@ function f23(a : number) : number {
 
 
 // XPECT noerrors -->
-// XPECT returnOrThrow --> throwsMode
 function f24(a : number) : number {
 	switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: ;
 		default :
-		    // XPECT returnOrThrow --> throwsMode
 			switch(a) {
 				case 11: ;
 				case 12: ;
@@ -363,16 +324,13 @@ function f24(a : number) : number {
 
 ////// try-catch in subswitch
 // XPECT noerrors -->
-// XPECT returnOrThrow --> returnsMode
 function f25(a : number) : number {
 	switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: ;
 		default :
-		    // XPECT returnOrThrow --> noReturnsMode
 		    try {
-			    // XPECT returnOrThrow --> throwsMode
 				switch(a) {
 					case 11: ;
 					case 12: ;
@@ -392,16 +350,13 @@ function f25(a : number) : number {
 
 
 // XPECT noerrors -->
-// XPECT returnOrThrow --> returnsMode
 function f26(a : number) : number {
 	switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: ;
 		default :
-		    // XPECT returnOrThrow --> noReturnsMode
 		    try {
-			    // XPECT returnOrThrow --> noReturnsMode
 				switch(a) {
 					case 11: ;
 					case 12: ;
@@ -420,17 +375,14 @@ function f26(a : number) : number {
 }
 
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f27"
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f27"
 function f27(a : number) : number {
 	l1: switch(a) {
 		case 1: ;
 		case 2: ;
 		case 3: ;
 		default :
-		    // XPECT returnOrThrow --> breakOrContinue labels l1
 		    try {
-			    // XPECT returnOrThrow --> breakOrContinue labels l1
 				l2: switch(a) {
 					case 11: ;
 					case 12: ;

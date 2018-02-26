@@ -108,3 +108,35 @@ function f3c() {
 	// XPECT warnings --> "Variable b may be undefined" at "b"
 	b.toString();
 }
+
+
+function f4a() {
+	let a : int;
+	let b : int = a || a;
+	// XPECT warnings --> "Variable b is undefined due to previous variable a" at "b"
+	b.toString();
+}
+
+function f4b() {
+	let a : int;
+	let b : int;
+	let c : int = a || b;
+	// XPECT warnings --> "Variable c is undefined due to previous variable b" at "c"
+	c.toString();
+}
+
+function f4c() {
+	let a : int = 1;
+	let b : int;
+	let c : int = a || b;
+	// unsupported implicit guard XPECT FIXME nowarnings -->
+	c.toString();
+}
+
+function f4d() {
+	let a : int;
+	let b : int = 1;
+	let c : int = a || b;
+	// unsupported implicit guard XPECT FIXME nowarnings -->
+	c.toString();
+}

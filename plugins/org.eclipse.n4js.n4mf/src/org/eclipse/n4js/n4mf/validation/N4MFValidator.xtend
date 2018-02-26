@@ -11,14 +11,6 @@
 package org.eclipse.n4js.n4mf.validation
 
 import com.google.inject.Inject
-import org.eclipse.n4js.n4mf.ModuleFilter
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
-import org.eclipse.n4js.n4mf.ModuleFilterType
-import org.eclipse.n4js.n4mf.N4mfPackage
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.RuntimeProjectDependency
-import org.eclipse.n4js.n4mf.SourceFragment
-import org.eclipse.n4js.n4mf.utils.IPathProvider
 import java.io.File
 import java.lang.reflect.Method
 import java.util.HashMap
@@ -27,9 +19,14 @@ import java.util.Map
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Platform
-import org.eclipse.emf.common.util.DiagnosticChain
 import org.eclipse.emf.ecore.EAttribute
-import org.eclipse.emf.ecore.EDataType
+import org.eclipse.n4js.n4mf.ModuleFilter
+import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
+import org.eclipse.n4js.n4mf.ModuleFilterType
+import org.eclipse.n4js.n4mf.N4mfPackage
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.SourceFragment
+import org.eclipse.n4js.n4mf.utils.IPathProvider
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.util.Exceptions
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
@@ -48,9 +45,6 @@ class N4MFValidator extends AbstractN4MFValidator {
 	@Inject
 	private IPathProvider pathProvider
 
-	/**
-	 * @since 2.6
-	 */
 	override createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
 		return new MethodWrapper(instanceToUse, method) {
 			override void handleInvocationTargetException(Throwable targetException, State state) {
@@ -64,20 +58,6 @@ class N4MFValidator extends AbstractN4MFValidator {
 			}
 		};
 	}
-
-
-
-override   boolean validate(EDataType eDataType, Object value, DiagnosticChain diagnostics, Map<Object, Object> context){
-	try{
-	super.validate(eDataType, value, diagnostics, context)
-	}catch(Throwable t){
-		println(t)
-		false;
-	}
-
-}
-
-
 
 	@Check
 	def void checkProjectDescription(ProjectDescription projectDescription) {
@@ -275,23 +255,6 @@ override   boolean validate(EDataType eDataType, Object value, DiagnosticChain d
 	}
 
 	@Check
-	def checkForDuplicateRuntimeLibraries(ProjectDescription projectDescription) {
-		val rtLib = projectDescription.allRequiredRuntimeLibraries
-		val Map<String, List<RuntimeProjectDependency>>  grouped = rtLib.groupBy[it.project?.vendorId+":"+it.project?.projectId]
-		val duplicateRTLibs = grouped.entrySet.filter[value.size>1]
-		duplicateRTLibs.forEach [
-			val msg = getMessageForDUPLICATE_RUNTIME_LIBRARY(it.key)
-			it.value.forEach [
-				val idx = rtLib.indexOf(it)
-				addIssue(msg , projectDescription.requiredRuntimeLibraries,
-					REQUIRED_RUNTIME_LIBRARIES__REQUIRED_RUNTIME_LIBRARIES, idx ,
-					DUPLICATE_RUNTIME_LIBRARY)
-
-			]
-		]
-	}
-
-	@Check
 	def checkForDuplicateModuleSpecifiers(ModuleFilter moduleFilter) {
 		val paths = moduleFilter.moduleSpecifiers.filter[sourcePath !== null].map[
 			moduleSpecifierWithWildcard -> sourcePath].toList
@@ -320,7 +283,6 @@ override   boolean validate(EDataType eDataType, Object value, DiagnosticChain d
 				checkForExistingWildcardModuleSpecifier(moduleSpecifierWithWildcard)
 			}
 		]
-
 	}
 
 	def private checkForValidWildcardModuleSpecifier(ModuleFilterSpecifier moduleFilterSpecifier,
@@ -368,7 +330,7 @@ override   boolean validate(EDataType eDataType, Object value, DiagnosticChain d
 			val basePathToCheck = absoluteProjectPath + "/" + it
 			val pathsToFind = "/" + moduleFilterSpecifier.moduleSpecifierWithWildcard
 			val foundFiles = WildcardPathFilter.collectPathsByWildcardPath(basePathToCheck, pathsToFind)
-			foundFiles.filter[endsWith(".n4js")].forEach [
+			foundFiles.filter[endsWith(".n4js") || endsWith(".n4jsx")].forEach [
 				handleNoValidationForN4JSFiles(moduleFilterSpecifier, moduleFilterSpecifierWithWildcard)
 			]
 			return !foundFiles.empty
@@ -557,10 +519,9 @@ override   boolean validate(EDataType eDataType, Object value, DiagnosticChain d
 		}
 	}
 
-
 	/**
 	 * Tells if for the given moduleSpecifier of the form "a/b/c/M" (without project ID) a module exists in the N4JS
-	 * project represented by the given project description. Checks if a corresponding .js, .n4js, or .n4jsd file exists
+	 * project represented by the given project description. Checks if a corresponding .js, .jsx, .n4js, .n4jsx, or .n4jsd file exists
 	 * in any of the project's source containers.
 	 */
 	def private boolean isExistingModule(ProjectDescription pd, String moduleSpecifier) {
@@ -570,7 +531,7 @@ override   boolean validate(EDataType eDataType, Object value, DiagnosticChain d
 		val sourcePaths = pd.sourceFragment.map[paths].flatten.filterNull.map[replace('/', File.separator)];
 		return sourcePaths.exists[sp|
 			val sourceFolder = new File(absoluteProjectPath, sp);
-			return #[".n4js",".n4jsd",".js"].exists[ext|
+			return #[".n4js", ".n4jsx", ".n4jsd", ".js", ".jsx"].exists[ext|
 				new File(sourceFolder, relativeModulePath + ext).exists()
 			];
 		];

@@ -14,7 +14,9 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.GetterDeclaration
+import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
@@ -23,7 +25,6 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.YieldExpression
 
 /**
  * Contains helper methods used by the rules of the 'expectedTypeIn' judgment.
@@ -49,21 +50,27 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 	 * @return the expected type or <code>null</code> if there is no type expectation or some error occurred (e.g. broken AST).
 	 */
 	def TypeRef getExpectedTypeOfReturnValueExpression(RuleEnvironment G, Expression returnValueExpr) {
-		val funDef = EcoreUtil2.getContainerOfType(returnValueExpr?.eContainer, FunctionDefinition);
+		val fofa = EcoreUtil2.getContainerOfType(returnValueExpr?.eContainer, FunctionOrFieldAccessor);
 		val G2 = G.wrap;
 		val myThisTypeRef = ts.thisTypeRef(G, returnValueExpr).value;
 		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
-		if (funDef !== null) {
-			if (funDef.isAsync) {
-		        return getExpectedTypeOfReturnValueExpressionForAsyncFunction(G, funDef);
+		return getExpectedTypeOfFunctionOrFieldAccessor(G2, fofa); // null means: no type expectation
+	}
 
-		    } else if (funDef.isGenerator()) {
-		        return getExpectedTypeOfReturnValueExpressionForGeneratorFunction(G, funDef);
+	def TypeRef getExpectedTypeOfFunctionOrFieldAccessor(RuleEnvironment G, FunctionOrFieldAccessor fofa) {
+		val G2 = if (G === null) RuleEnvironmentExtensions.newRuleEnvironment(fofa) else G;
+
+		if (fofa instanceof FunctionDefinition) {
+			if (fofa.isAsync) {
+		        return getExpectedTypeOfReturnValueExpressionForAsyncFunction(G2, fofa);
+
+		    } else if (fofa.isGenerator()) {
+		        return getExpectedTypeOfReturnValueExpressionForGeneratorFunction(G2, fofa);
 
 		    } else {
 		        // this is the normal case
-				val fType = ts.type(G2, funDef).value;
+				val fType = ts.type(G2, fofa).value;
 				if (fType instanceof FunctionTypeExprOrRef) {
 					return ts.substTypeVariablesInTypeRef(G2, fType.returnTypeRef);
 				}
@@ -71,8 +78,9 @@ class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 
 		} else {
 			// funDef === null, so maybe we are in a getter:
-			val getterDef = EcoreUtil2.getContainerOfType(returnValueExpr, GetterDeclaration);
-			return getterDef?.definedGetter?.declaredTypeRef;
+			if (fofa instanceof GetterDeclaration) {
+				return fofa?.definedGetter?.declaredTypeRef;
+			}
 		}
 		return null; // null means: no type expectation
 	}

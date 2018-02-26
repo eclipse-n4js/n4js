@@ -14,7 +14,10 @@
 
 class A {
 
-	// XPECT errors --> "Void is not a valid type for getters and setters." at "name"
+	/* XPECT errors ---
+		"Missing return or throw statement." at "public get name() : void {}"
+		"Void is not a valid type for getters and setters." at "name"
+	--- */
 	public get name() : void {}
 
 	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"

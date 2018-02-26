@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+
+
+
+
+
+function continueForIn1() {
+	// continueForIn1 XPECT path from 'continue' to '"end"' -->
+	"start";
+    for (let v in [1]) {
+        if ("condition2") {
+            continue;
+        }
+        5;
+    }
+    "end";
+}
+
+function continueForOf1() {
+	// continueForOf1 XPECT path from 'continue' to '"end"' -->
+	"start";
+    for (let v of [1]) {
+        if ("condition2") {
+            continue;
+        }
+        5;
+    }
+    "end";
+}
+
+function continueForPlain1() {
+	// continueForPlain1 XPECT path from 'continue' to '"end"' -->
+	"start";
+    for (;1;) {
+        if ("condition2") {
+            continue;
+        }
+        5;
+    }
+    "end";
+}
+
+function continueWhile1() {
+	// continueWhile1 XPECT path from 'continue' to '"end"' -->
+	"start";
+    while (1) {
+        if ("condition2") {
+            continue;
+        }
+        5;
+    }
+    "end";
+}
+
+function continueDo1() {
+	// continueDo1 XPECT path from 'continue' to '"end"' -->
+	"start";
+    do {
+        if ("condition2") {
+            continue;
+        }
+        5;
+    } while (7);
+    "end";
+}

@@ -518,7 +518,7 @@ function ThrowTryFinallyStatement1() {
 	} finally {
 		3;
 	}
-	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
+	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 
@@ -558,7 +558,7 @@ function ThrowTryFinallyStatement2() {
 		2;
 		throw 3;
 	}
-	// ThrowTryFinallyStatement2 XPECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
+	// ThrowTryFinallyStatement2 XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 

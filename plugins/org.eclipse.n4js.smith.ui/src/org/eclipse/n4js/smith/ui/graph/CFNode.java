@@ -16,17 +16,27 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
 /**
- *
+ * Node of a control flow graph
  */
 public class CFNode extends Node {
-	final int nodeIdx;
-	final boolean isDeadCode;
+	/** Node ID */
+	final public int nodeIdx;
+	/** true iff this node represents dead code */
+	final public boolean isDeadCode;
+	/** true iff this node is an entry node of a control flow container */
+	final public boolean isEntry;
+	/** true iff this node is an exit node of a control flow container */
+	final public boolean isExit;
 
 	/** Constructor */
-	public CFNode(ControlFlowElement cfe, String label, String description, int nodeIdx, boolean isDeadCode) {
+	public CFNode(ControlFlowElement cfe, String label, String description, int nodeIdx, boolean isDeadCode,
+			boolean isEntry, boolean isExit) {
+
 		super(cfe, label, description);
 		this.nodeIdx = nodeIdx;
 		this.isDeadCode = isDeadCode;
+		this.isEntry = isEntry;
+		this.isExit = isExit;
 	}
 
 	@Override
