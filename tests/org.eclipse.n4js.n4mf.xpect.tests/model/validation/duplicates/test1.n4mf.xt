@@ -91,14 +91,14 @@ ModuleFilters {
 }
 RequiredRuntimeLibraries {
 	vendorA:libA,
-// XPECT errors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libB." at "libB"
 	libB,
 	vendorB:libA,
-// XPECT errors -->"Duplicate runtime library MyVendorID:libA." at "libA"
+// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libA." at "libA"
 	libA,
-// XPECT errors -->"Duplicate runtime library MyVendorID:libA." at "MyVendorID:libA"
+// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libA." at "MyVendorID:libA"
 	MyVendorID:libA,
-// XPECT errors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libB." at "libB"
 	libB,
 	MyVendorID:libC
 }
