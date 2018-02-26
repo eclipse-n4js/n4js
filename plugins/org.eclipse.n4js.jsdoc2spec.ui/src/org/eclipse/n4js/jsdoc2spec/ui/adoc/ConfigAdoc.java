@@ -16,14 +16,12 @@ import java.io.File;
  * Data holder for the configuration done by the user on the {@link SpecConfigAdocPage}.
  */
 class ConfigAdoc {
-	final boolean genAdoc;
 	final String docRootDir;
 
 	private File docRootDirFile;
 
-	ConfigAdoc(String docRootDir, boolean genAdoc) {
+	ConfigAdoc(String docRootDir) {
 		this.docRootDir = docRootDir;
-		this.genAdoc = genAdoc;
 	}
 
 	File getDocRootDir() {
