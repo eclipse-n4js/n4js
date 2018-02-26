@@ -14,9 +14,14 @@
 // IDE-347
 
 
-class A {
+class A1 {
 	// XPECT errors --> "Annotation @Spec may only be used with formal parameters of type ~i~this." at "Spec"
 	constructor(a : string, @Spec b : ~this, c : number) {}
+}
+
+class A2 {
+	// XPECT errors --> "Annotation @Spec may only be used with formal parameters of type ~i~this." at "Spec"
+	constructor(a : string, @Spec b : ~~this, c : number) {}
 }
 
 class B {
