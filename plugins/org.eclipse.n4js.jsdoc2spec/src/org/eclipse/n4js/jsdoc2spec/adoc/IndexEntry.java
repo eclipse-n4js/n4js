@@ -16,8 +16,6 @@ package org.eclipse.n4js.jsdoc2spec.adoc;
 public class IndexEntry extends SourceEntry implements Comparable<IndexEntry> {
 	final int offsetStart;
 	final int offsetEnd;
-	@Deprecated
-	final String compareString;
 
 	/**
 	 * Constructor
@@ -62,22 +60,12 @@ public class IndexEntry extends SourceEntry implements Comparable<IndexEntry> {
 
 		this.offsetStart = offsetStart;
 		this.offsetEnd = offsetEnd;
-		this.compareString = getCompareString();
 	}
 
 	IndexEntry(SourceEntry pc, int offsetStart, int offsetEnd) {
 		super(pc);
 		this.offsetStart = offsetStart;
 		this.offsetEnd = offsetEnd;
-		this.compareString = getCompareString();
-	}
-
-	private String getCompareString() {
-		String cs = toPQN();
-		cs += "::" + sourceLine;
-		cs += "::" + offsetStart;
-		cs += "::" + offsetEnd;
-		return cs;
 	}
 
 	@Override
