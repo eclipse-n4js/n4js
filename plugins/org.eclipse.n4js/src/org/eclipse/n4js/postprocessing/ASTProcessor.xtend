@@ -243,13 +243,8 @@ public class ASTProcessor extends AbstractProcessor {
 	}
 
 	def private boolean isPostponedNode(EObject node) {
-		return
-			isPostponedInitializer(node)
-		||	(node instanceof Block
-			 && (  node.eContainer instanceof FunctionExpression
-				|| node.eContainer instanceof PropertyGetterDeclaration
-				|| node.eContainer instanceof PropertySetterDeclaration
-				|| node.eContainer instanceof PropertyMethodDeclaration));
+		return isPostponedInitializer(node)
+			|| (node instanceof Block && node.eContainer instanceof FunctionOrFieldAccessor);
 	}
 
 	/**
