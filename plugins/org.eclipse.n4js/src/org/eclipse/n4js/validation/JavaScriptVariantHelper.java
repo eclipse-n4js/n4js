@@ -31,6 +31,13 @@ public interface JavaScriptVariantHelper {
 	public String getVariantName(EObject eobj);
 
 	/**
+	 * Returns the name of the variant of the file extension.
+	 *
+	 * Returns {@code null} if fileExtension is unkonwn.
+	 */
+	public String getVariantName(String fileExtension);
+
+	/**
 	 * Return true if dynamic pseudo scope should be activated.
 	 *
 	 * @param eobj

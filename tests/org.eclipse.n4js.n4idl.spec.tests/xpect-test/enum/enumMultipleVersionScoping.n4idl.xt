@@ -24,8 +24,12 @@ enum E # 2 {
 // XPECT version of C --> 1
 class C # 1 {
 	// XPECT version of E --> 1
-	e1: E # 1;
+	e1: E;
+}
+
+// XPECT version of C --> 2
+class C # 2 {
 	// XPECT version of E --> 2
-	e2: E # 2;
+	e2: E;
 }
 

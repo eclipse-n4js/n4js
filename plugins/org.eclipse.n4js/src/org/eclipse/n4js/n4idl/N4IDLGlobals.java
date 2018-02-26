@@ -10,6 +10,12 @@
  */
 package org.eclipse.n4js.n4idl;
 
+import java.util.Set;
+
+import org.eclipse.n4js.AnnotationDefinition;
+
+import com.google.common.collect.Sets;
+
 /**
  * Contains constants for the N4IDL language.
  */
@@ -30,4 +36,11 @@ public class N4IDLGlobals {
 	 * E.g. A#1
 	 */
 	public static final String COMPILED_VERSION_SEPARATOR = "$";
+
+	/**
+	 * The set of annotations that enable a context to declare explicit type version requests (declare a context to be
+	 * version-aware).
+	 */
+	public static final Set<AnnotationDefinition> VERSION_AWARENESS_ANNOTATIONS = Sets
+			.newHashSet(AnnotationDefinition.MIGRATION, AnnotationDefinition.VERSION_AWARE);
 }

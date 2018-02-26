@@ -48,7 +48,15 @@ function c(p : constructor{N4Object}) {}
 // Use as function parameter XPECT errors -->"Versioned types are not supported in N4JSX files." at "T#2"
 c(T#2)
 
-// XPECT errors -->"Migrations are not supported in N4JSX files." at "@Migration function someMigration(u : User) : T { 	return null; }"
+// classes cannot be declared @VersionAware in N4JS XPECT errors --> "The annotation @VersionAware may only be applied in N4JS Interface Definition Language (n4idl) files." at "VersionAware"
+@VersionAware
+class VA {}
+
+// functions cannot be declared @VersionAware in N4JS XPECT errors --> "The annotation @VersionAware may only be applied in N4JS Interface Definition Language (n4idl) files." at "VersionAware"
+@VersionAware
+function versionAware() {}
+
+// XPECT errors -->"The annotation @Migration may only be applied in N4JS Interface Definition Language (n4idl) files." at "Migration"
 @Migration
 function someMigration(u : User) : T {
 	return null;

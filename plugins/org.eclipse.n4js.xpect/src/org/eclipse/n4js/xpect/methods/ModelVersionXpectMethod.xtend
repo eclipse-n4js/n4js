@@ -11,17 +11,19 @@
 package org.eclipse.n4js.xpect.methods
 
 import com.google.inject.Inject
-import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.ts.typeRefs.Versionable
+import org.eclipse.n4js.ts.types.TypableElement
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion
 import org.eclipse.xpect.XpectImport
 import org.eclipse.xpect.expectation.IStringExpectation
 import org.eclipse.xpect.expectation.StringExpectation
 import org.eclipse.xpect.parameter.ParameterParser
 import org.eclipse.xpect.runner.Xpect
-import org.eclipse.n4js.ts.typeRefs.Versionable
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion
 
 /**
  * Provides X!PECT methods for testing versions
@@ -49,6 +51,8 @@ class ModelVersionXpectMethod {
 
 	private def int getVersion(EObject object) {
 		switch (object) {
+			IdentifierRef: return getVersion(object.id)
+			Type: return object.version
 			Versionable: object.version
 			TypableElement: ts.tau(object).version
 			default: throw new IllegalArgumentException("Cannot determine version of " + object.eClass)

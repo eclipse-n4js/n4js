@@ -24,7 +24,7 @@ END_SETUP
 import {Something} from "restrictions/Somewhere"
 
 // XPECT noerrors
-class AllowedClass#1 extends Something#1 {}
+class AllowedClass#1 extends Something {}
 
 // XPECT noerrors
 interface AllowedInterface#1 {}
@@ -55,7 +55,7 @@ var disallowedLocal = "VariableAssignment";
 
 // XPECT noerrors
 @Migration
-function migration(s : Something#1) : AllowedClass {
+function migration(s : Something#1) : AllowedClass#1 {
 	return null;
 }
 
