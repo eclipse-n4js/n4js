@@ -73,7 +73,7 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 		pathTo_one_api_execution = proot + "/" + project_one_api_execution;
 
 		String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-v"
 		};
 
@@ -102,7 +102,7 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 
 	String[] runArgs(String execPath) {
 		return new String[] { "-pl", proot,
-				"-t", "dontcompile",
+				"-bt", "dontcompile",
 				"-rw", "nodejs",
 				"-r", execPath,
 				"-v"

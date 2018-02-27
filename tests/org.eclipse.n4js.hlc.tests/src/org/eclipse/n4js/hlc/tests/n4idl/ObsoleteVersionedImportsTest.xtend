@@ -66,7 +66,7 @@ class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 				"-rw", "nodejs",
 				"-r", fileToRun,
 				"--verbose",
-				"-t", BuildType.projects.toString(),
+				"-bt", BuildType.projects.toString(),
 				projectToCompile,
 				"-r",
 				fileToRun];

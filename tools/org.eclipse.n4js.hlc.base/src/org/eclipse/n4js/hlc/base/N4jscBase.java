@@ -124,7 +124,7 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--preferences", usage = "provide custom compiler preference settings stored in a *.properties file")
 	File preferencesProperties;
 
-	@Option(name = "-t", metaVar = "type", usage = "provide the type to build (defaults to dontcompile). "
+	@Option(name = "--buildType", aliases = "-bt", metaVar = "type", usage = "provide the type to build (defaults to dontcompile). "
 			+ "\n'allprojects' compiles all projects found in the projectlocations, no other argument required. "
 			+ "\n'projects' interprets the arguments as projects-folders and compiles them. "
 			+ "\n'singlefile' interprets the arguments as paths to N4JS-source files and compiles only those both."
@@ -200,7 +200,7 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--list-runners", aliases = "-lr", usage = "show list of available runners.")
 	boolean listRunners = false;
 
-	@Option(name = "--test", /* aliases = "-t", */metaVar = "path", usage = "path must point to a project, folder, or file containing tests.")
+	@Option(name = "--test", aliases = "-t", metaVar = "path", usage = "path must point to a project, folder, or file containing tests.")
 	File testThisLocation = null;
 
 	@Option(name = "--testReportRoot", required = false, usage = "when provided, it is expected to be directory in which test report will be written."

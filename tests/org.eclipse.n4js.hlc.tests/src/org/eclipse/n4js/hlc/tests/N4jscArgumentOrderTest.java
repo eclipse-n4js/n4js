@@ -61,7 +61,7 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 				"--targetPlatformInstallLocation " + currentPath + "/test-catalog.json",
 				"--targetPlatformFile " + currentPath + "/build/npm",
 				"--targetPlatformSkipInstall",
-				"-t projects",
+				"-bt projects",
 				currentPath + "/PA",
 				currentPath + "/PB",
 				currentPath + "/PC",

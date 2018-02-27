@@ -182,7 +182,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		// Clean all projects first
 		final String[] cleanArgs = {
 				"-c",
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-pl", foldersContainingProjectsStr,
 		};
 		try {
@@ -197,7 +197,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 
 		// Then compile the projects
 		final String[] args = {
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-pl", foldersContainingProjectsStr,
 		};
 		try {

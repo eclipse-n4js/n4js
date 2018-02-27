@@ -66,7 +66,7 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 				"-rw", "nodejs",
 				"-r", fileToRun,
 				"--verbose",
-				"-t", BuildType.projects.toString(),
+				"-bt", BuildType.projects.toString(),
 				projectToCompile
 		};
 		final String out = runAndCaptureOutput(args);
