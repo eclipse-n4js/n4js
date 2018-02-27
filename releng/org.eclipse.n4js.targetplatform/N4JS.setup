@@ -177,11 +177,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
-      defaultValue="N4JS_Oxygen.2.GH-369"
+      defaultValue="N4JS_Oxygen"
       storageURI="scope://Workspace">
     <choice
-        value="N4JS_Oxygen.2.GH-369"
-        label="N4JS_Oxygen.2.GH-369"/>
+        value="N4JS_Oxygen"
+        label="N4JS_Oxygen"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -376,7 +376,7 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_Oxygen.2.GH-369">
+          name="N4JS_Oxygen">
         <repository
             url="http://download.eclipse.org/eclipse/updates/4.7/R-4.7.2-201711300510"/>
         <repository
