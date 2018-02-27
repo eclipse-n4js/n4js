@@ -46,6 +46,11 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 		this.direction = mode;
 	}
 
+	/** @return the {@link TraverseDirection} of this visitor */
+	final public TraverseDirection getDirection() {
+		return direction;
+	}
+
 	/*
 	 * Called from internal classes
 	 */
