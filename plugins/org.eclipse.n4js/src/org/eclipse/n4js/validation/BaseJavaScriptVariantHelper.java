@@ -666,4 +666,9 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	public String getVariantName(EObject eobj) {
 		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), VARIANT_NAME);
 	}
+
+	@Override
+	public String getVariantName(String fileExtension) {
+		return get(fileExtension, VARIANT_NAME);
+	}
 }

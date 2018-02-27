@@ -28,9 +28,11 @@ import {P} from "imports/ToImport"
 import {P} from "imports/AnotherToImport"
 
 class Client#1 {
-	a : P#1
+	// XPECT errors --> "Import of P cannot be resolved." at "P"
+	a : P
 }
 
 class Client#2 {
-	a : P#2
+	// XPECT errors --> "Import of P cannot be resolved." at "P"
+	a : P
 }

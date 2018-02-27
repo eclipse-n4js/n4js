@@ -15,7 +15,10 @@
 // XPECT noerrors -->
 function foo1a(): void {}
 
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+/* XPECT errors ---
+	"Missing return or throw statement." at "foo1b"
+	"Type void may only be used to declare the return type of functions and methods." at "void"
+--- */
 function foo1b(): any|void {}
 
 // XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
@@ -26,7 +29,10 @@ function foo1c(p: void) {}
 class C1a {
 	// XPECT noerrors -->
 	m1(): void {}
-	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	/* XPECT errors ---
+		"Type void may only be used to declare the return type of functions and methods." at "void"
+		"Missing return or throw statement." at "m2"
+	--- */
 	m2(): any|void {}
 }
 
@@ -40,7 +46,10 @@ class C1b {
 let ol1 = {
 	// XPECT noerrors -->
 	void m1() {},
-	// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+	/* XPECT errors ---
+		"Type void may only be used to declare the return type of functions and methods." at "void"
+		"Missing return or throw statement." at "union{any,void} m2() {}"
+	--- */
 	union{any,void} m2() {}
 };
 
@@ -65,7 +74,10 @@ let f1c: {function(void)};
 // XPECT noerrors -->
 let f2a = function(): void {};
 
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+/* XPECT errors ---
+	"Type void may only be used to declare the return type of functions and methods." at "void"
+	"Missing return or throw statement." at "function(): any|void {}"
+--- */
 let f2b = function(): any|void {};
 
 // XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
@@ -76,7 +88,10 @@ let f2c = function(p: void) {}
 // XPECT noerrors -->
 let f3a = (): void => {};
 
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+/* XPECT errors ---
+	"Missing return or throw statement." at "(): any|void => {}"
+	"Type void may only be used to declare the return type of functions and methods." at "void"
+--- */
 let f3b = (): any|void => {};
 
 // XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"

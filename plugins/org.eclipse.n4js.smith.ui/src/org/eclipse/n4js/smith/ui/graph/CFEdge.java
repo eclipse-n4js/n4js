@@ -121,9 +121,13 @@ public class CFEdge extends Edge {
 		srcB = GraphUtils.pointOnRect(ctr, srcR);
 
 		drawLabel(gc, ctr);
-		GraphUtils.arc(gc, ctr, srcB, tgtB);
-
-		return tgtB;
+		if (srcB == null || tgtB == null) {
+			GraphUtils.drawLine(gc, src, tgt, false);
+			return tgt;
+		} else {
+			GraphUtils.arc(gc, ctr, srcB, tgtB);
+			return tgtB;
+		}
 	}
 
 	/**

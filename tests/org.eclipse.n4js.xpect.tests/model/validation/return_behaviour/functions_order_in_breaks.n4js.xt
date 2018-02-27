@@ -13,32 +13,24 @@
    END_SETUP
  */
 
-// found during IDE-1852: XPECT FIXME noerrors
 /////// break out of try:
-// XPECT returnOrThrow --> noReturnsMode
+// XPECT errors --> "Missing return or throw statement." at "f6"
 function f6(): number {
 
    var b1 : boolean = true;
 
-   // XPECT returnOrThrow --> noReturnsMode
    y: do  {
-       // XPECT returnOrThrow --> breakOrContinue labels y
        z: {
-       	   // XPECT returnOrThrow --> breakOrContinue labels  y, z
 	       x: do  {
-	           // XPECT returnOrThrow at '|if'--> breakOrContinue labels y, z
 	           if ( b1 ) {
 	           	  try {
-	                 // XPECT returnOrThrow --> breakOrContinue labels z
 	                 break z;
 	               } finally {
 	               	 return 3;
 	               }
 	           } else {
-	               // XPECT returnOrThrow --> breakOrContinue labels y
 	               try
 	               {
-                     // XPECT returnOrThrow --> returnsMode
 	                 return 1;
 	               } catch(e) {
 	               	 return 2;
@@ -51,8 +43,7 @@ function f6(): number {
 	       } while ( true )
 
        } // z
-   	   // XPECT warnings --> "Dead code. No execution possible after labelled statement." at "return 4;"
-       // XPECT returnOrThrow --> returnsMode
+   	   // XPECT warnings --> "Dead code." at "return 4;"
        return 4;
 	// XPECT warnings --> "Dead code." at "true"
    } while ( true )

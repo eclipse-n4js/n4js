@@ -24,8 +24,11 @@ interface I # 2 {
 // XPECT version of J --> 1
 interface J # 1 {
 	// XPECT version of I --> 1
-	i1: I # 1;
+	i1: I;
+}
 
+// XPECT version of J --> 2
+interface J # 2 {
 	// XPECT version of I --> 2
-	i2: I # 2;
+	i2: I;
 }

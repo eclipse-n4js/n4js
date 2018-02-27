@@ -275,10 +275,13 @@ ruleAnnotatedScriptElement
 						)
 					)
 					(
-						TypeVariablesParserRuleCall_1_3_0_0_5=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_0_5.start, $TypeVariablesParserRuleCall_1_3_0_0_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_0_5()); }
+						VersionDeclarationParserRuleCall_1_3_0_0_5=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_1_3_0_0_5.start, $VersionDeclarationParserRuleCall_1_3_0_0_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getVersionDeclarationParserRuleCall_1_3_0_0_5()); }
 					)?
 					(
-						ClassExtendsImplementsParserRuleCall_1_3_0_0_6=ruleClassExtendsImplements{ announce($ClassExtendsImplementsParserRuleCall_1_3_0_0_6.start, $ClassExtendsImplementsParserRuleCall_1_3_0_0_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getClassExtendsImplementsParserRuleCall_1_3_0_0_6()); }
+						TypeVariablesParserRuleCall_1_3_0_0_6=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_0_6.start, $TypeVariablesParserRuleCall_1_3_0_0_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_0_6()); }
+					)?
+					(
+						ClassExtendsImplementsParserRuleCall_1_3_0_0_7=ruleClassExtendsImplements{ announce($ClassExtendsImplementsParserRuleCall_1_3_0_0_7.start, $ClassExtendsImplementsParserRuleCall_1_3_0_0_7.stop, grammarAccess.getAnnotatedScriptElementAccess().getClassExtendsImplementsParserRuleCall_1_3_0_0_7()); }
 					)?
 				)
 				    |
@@ -307,10 +310,13 @@ ruleAnnotatedScriptElement
 						)
 					)
 					(
-						TypeVariablesParserRuleCall_1_3_0_1_5=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_1_5.start, $TypeVariablesParserRuleCall_1_3_0_1_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_1_5()); }
+						VersionDeclarationParserRuleCall_1_3_0_1_5=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_1_3_0_1_5.start, $VersionDeclarationParserRuleCall_1_3_0_1_5.stop, grammarAccess.getAnnotatedScriptElementAccess().getVersionDeclarationParserRuleCall_1_3_0_1_5()); }
 					)?
 					(
-						InterfaceExtendsListParserRuleCall_1_3_0_1_6=ruleInterfaceExtendsList{ announce($InterfaceExtendsListParserRuleCall_1_3_0_1_6.start, $InterfaceExtendsListParserRuleCall_1_3_0_1_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getInterfaceExtendsListParserRuleCall_1_3_0_1_6()); }
+						TypeVariablesParserRuleCall_1_3_0_1_6=ruleTypeVariables{ announce($TypeVariablesParserRuleCall_1_3_0_1_6.start, $TypeVariablesParserRuleCall_1_3_0_1_6.stop, grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_1_6()); }
+					)?
+					(
+						InterfaceExtendsListParserRuleCall_1_3_0_1_7=ruleInterfaceExtendsList{ announce($InterfaceExtendsListParserRuleCall_1_3_0_1_7.start, $InterfaceExtendsListParserRuleCall_1_3_0_1_7.stop, grammarAccess.getAnnotatedScriptElementAccess().getInterfaceExtendsListParserRuleCall_1_3_0_1_7()); }
 					)?
 				)
 			)
@@ -334,33 +340,36 @@ ruleAnnotatedScriptElement
 					}
 				)
 			)
-			LeftCurlyBracketKeyword_1_4_4=LeftCurlyBracket
+			(
+				VersionDeclarationParserRuleCall_1_4_4=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_1_4_4.start, $VersionDeclarationParserRuleCall_1_4_4.stop, grammarAccess.getAnnotatedScriptElementAccess().getVersionDeclarationParserRuleCall_1_4_4()); }
+			)?
+			LeftCurlyBracketKeyword_1_4_5=LeftCurlyBracket
 			 {
-				announce($LeftCurlyBracketKeyword_1_4_4, grammarAccess.getAnnotatedScriptElementAccess().getLeftCurlyBracketKeyword_1_4_4());
+				announce($LeftCurlyBracketKeyword_1_4_5, grammarAccess.getAnnotatedScriptElementAccess().getLeftCurlyBracketKeyword_1_4_5());
 			}
 			(
 				(
-					LiteralsN4EnumLiteralParserRuleCall_1_4_5_0=ruleN4EnumLiteral{
-						announce($LiteralsN4EnumLiteralParserRuleCall_1_4_5_0.start, $LiteralsN4EnumLiteralParserRuleCall_1_4_5_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_5());
+					LiteralsN4EnumLiteralParserRuleCall_1_4_6_0=ruleN4EnumLiteral{
+						announce($LiteralsN4EnumLiteralParserRuleCall_1_4_6_0.start, $LiteralsN4EnumLiteralParserRuleCall_1_4_6_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_6());
 					}
 				)
 			)
 			(
-				CommaKeyword_1_4_6_0=Comma
+				CommaKeyword_1_4_7_0=Comma
 				 {
-					announce($CommaKeyword_1_4_6_0, grammarAccess.getAnnotatedScriptElementAccess().getCommaKeyword_1_4_6_0());
+					announce($CommaKeyword_1_4_7_0, grammarAccess.getAnnotatedScriptElementAccess().getCommaKeyword_1_4_7_0());
 				}
 				(
 					(
-						LiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0=ruleN4EnumLiteral{
-							announce($LiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0.start, $LiteralsN4EnumLiteralParserRuleCall_1_4_6_1_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_6_1());
+						LiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0=ruleN4EnumLiteral{
+							announce($LiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0.start, $LiteralsN4EnumLiteralParserRuleCall_1_4_7_1_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_7_1());
 						}
 					)
 				)
 			)*
-			RightCurlyBracketKeyword_1_4_7=RightCurlyBracket
+			RightCurlyBracketKeyword_1_4_8=RightCurlyBracket
 			 {
-				announce($RightCurlyBracketKeyword_1_4_7, grammarAccess.getAnnotatedScriptElementAccess().getRightCurlyBracketKeyword_1_4_7());
+				announce($RightCurlyBracketKeyword_1_4_8, grammarAccess.getAnnotatedScriptElementAccess().getRightCurlyBracketKeyword_1_4_8());
 			}
 		)
 	)

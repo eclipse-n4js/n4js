@@ -404,16 +404,8 @@ The syntax of the version is given by:
 
 ----
 +
-We use `qualifier=SNAPSHOT` in our Maven builds so that each build uses the latest available version of a project.
-The qualifier is only supported for this tooling and is removed during deployment.
-The lengths of the major, minor and micro numbers is additionally limited to four digits.
-
-////
-  %\Rightarrowdo[wk: micro versions]{Should we support micro versions at all?}A: Yes we should since they are part of the spec on code and data versioning.
-  \Rightarrowdo[jr: qualifier]{Do we need support for distinction of build numbers and qualifier?}
-////
-
-In general based on OSGi version and version ranges are described in chapters 3.2.5 resp. 3.2.6 (see http://www.osgi.org/download/r4v43/osgi.core-4.3.0.pdf[OSGi core 4.3.0] ).
+Semantics of the version are based on the https://semver.org/[Semantic Versioning 2.0.0], but build meta data
+is currently not supported (see https://semver.org/#spec-item-10[build meta data]).
 
 MainModule ::
 (optional) A plain module specifier defining the project’s 'main module'.

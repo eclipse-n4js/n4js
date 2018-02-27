@@ -188,7 +188,7 @@ public class ProjectImportEnablingScope implements IScope {
 
 		final EObject originalProxy = (EObject) this.importDeclaration.get()
 				.eGet(N4JSPackage.eINSTANCE.getImportDeclaration_Module(), false);
-		return new InvalidImportTargetModuleDescription(EObjectDescription.create("impDecl", originalProxy),
+		return new IssueCodeBasedEObjectDescription(EObjectDescription.create("impDecl", originalProxy),
 				sbErrrorMessage.toString(), IssueCodes.IMP_UNRESOLVED);
 	}
 

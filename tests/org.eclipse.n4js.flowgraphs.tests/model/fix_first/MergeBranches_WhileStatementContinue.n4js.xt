@@ -30,9 +30,9 @@
 	F2: [{ 2; continue; 3; }](exit) -> [while (1) { 2; continue; 3; }](continueCatch),
 	F3: [continue;](jump) -Continue-> [while (1) { 2; continue; 3; }](continueCatch),
 	F3: [{ 2; continue; 3; }](exit) -> [while (1) { 2; continue; 3; }](continueCatch),
-	F5: [1](entryExit) -LoopExit-> [while (1) { 2; continue; 3; }](exit),
-	F5: [1](entryExit) -LoopExit-> [while (1) { 2; continue; 3; }](exit),
-	F5: [1](entryExit) -LoopExit-> [while (1) { 2; continue; 3; }](exit)
+	F5: [while (1) { 2; continue; 3; }](conditionFork) -LoopExit-> [while (1) { 2; continue; 3; }](exit),
+	F5: [while (1) { 2; continue; 3; }](conditionFork) -LoopExit-> [while (1) { 2; continue; 3; }](exit),
+	F5: [while (1) { 2; continue; 3; }](conditionFork) -LoopExit-> [while (1) { 2; continue; 3; }](exit)
 --- */
 function WhileStatementContinue() {
 	"start";

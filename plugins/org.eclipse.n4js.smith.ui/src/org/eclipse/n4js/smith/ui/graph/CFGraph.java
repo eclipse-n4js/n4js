@@ -19,7 +19,9 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.ui.CFGraphProvider;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
@@ -59,13 +61,32 @@ public class CFGraph extends Graph<CFGraphProvider> {
 
 		Collection<ControlFlowElement> cfes = gProvider.getElements(input);
 		for (ControlFlowElement cfe : cfes) {
-			CFNode node = (CFNode) gProvider.getNode(cfe);
-			nodes.add(node);
-			nodeMap.put(node, cfe);
 
-			List<Edge> succs = gProvider.getConnectedEdges(node, null);
-			edges.addAll(succs);
+			if (cfe instanceof Script) {
+				continue;
+			}
+
+			if (FGUtils.isCFContainer(cfe)) {
+				CFNode entryNode = gProvider.getEntryNode(cfe);
+				CFNode exitNode = gProvider.getExitNode(cfe);
+				nodeMap.put(entryNode, entryNode.getControlFlowElement());
+				nodeMap.put(exitNode, exitNode.getControlFlowElement());
+				nodes.add(entryNode);
+				nodes.add(exitNode);
+
+				List<Edge> succs = gProvider.getConnectedEdges(entryNode, null);
+				edges.addAll(succs);
+
+			} else {
+				CFNode node = gProvider.getNode(cfe);
+				nodes.add(node);
+				nodeMap.put(node, cfe);
+
+				List<Edge> succs = gProvider.getConnectedEdges(node, null);
+				edges.addAll(succs);
+			}
 		}
+
 	}
 
 	@Override
@@ -74,12 +95,14 @@ public class CFGraph extends Graph<CFGraphProvider> {
 			return;
 
 		int lastLine = 0;
-		int posInLine = 10;
+		int posInLine = 70;
 		int lineCounter = 0;
+		int entryLineCounter = 0;
 
 		Set<Entry<CFNode, ControlFlowElement>> entries = nodeMap.entrySet();
 		Iterator<Entry<CFNode, ControlFlowElement>> entriesIt = entries.iterator();
 
+		CFNode lastNode = null;
 		while (entriesIt.hasNext()) {
 			Entry<CFNode, ControlFlowElement> entry = entriesIt.next();
 			CFNode node = entry.getKey();
@@ -87,23 +110,53 @@ public class CFGraph extends Graph<CFGraphProvider> {
 
 			int line = getLineEnd(cfe);
 			boolean lineChange = lastLine != line;
-			lastLine = line;
 			if (lineChange) {
-				posInLine = 10;
-				lineCounter++;
+				posInLine = 70;
+
+				boolean lastIsContainer = lastNode != null && (lastNode.isEntry || lastNode.isExit);
+				boolean isContainer = node.isEntry || node.isExit;
+				if (!lastIsContainer && !isContainer) {
+					lineCounter++; // normal lines
+				}
+				if (lastIsContainer && isContainer) {
+					lineCounter += 2; // lines between two functions
+				}
+				if (node.isExit && entryLineCounter == lineCounter) {
+					lineCounter++; // line iff function consists of one line only
+				}
 			}
-			node.x = posInLine;
+
+			node.x = node.isEntry || node.isExit ? 0 : posInLine;
 			node.y = lineCounter * 100;
+
 			node.trim(gc);
 			posInLine += node.width + 50;
+
+			lastNode = node;
+			lastLine = line;
+			if (node.isEntry) {
+				entryLineCounter = lineCounter;
+			}
 		}
 		layoutDone = true;
+	}
+
+	/** @return offset end of the source code region of the given {@link ControlFlowElement} */
+	private int getOffsetStart(ControlFlowElement cfe) {
+		ITextRegion tr = locFileProvider.getFullTextRegion(cfe);
+		return tr.getOffset();
 	}
 
 	/** @return offset end of the source code region of the given {@link ControlFlowElement} */
 	private int getOffsetEnd(ControlFlowElement cfe) {
 		ITextRegion tr = locFileProvider.getFullTextRegion(cfe);
 		return tr.getOffset() + tr.getLength();
+	}
+
+	/** @return line number of the source code region's end of the given {@link ControlFlowElement} */
+	private int getLineStart(ControlFlowElement cfe) {
+		int line = styledText.getLineAtOffset(getOffsetStart(cfe));
+		return line;
 	}
 
 	/** @return line number of the source code region's end of the given {@link ControlFlowElement} */
@@ -126,8 +179,8 @@ public class CFGraph extends Graph<CFGraphProvider> {
 			ControlFlowElement cfe1 = cfn1.getControlFlowElement();
 			ControlFlowElement cfe2 = cfn2.getControlFlowElement();
 
-			int line1 = getLineEnd(cfe1);
-			int line2 = getLineEnd(cfe2);
+			int line1 = cfn1.isEntry ? getLineStart(cfe1) : getLineEnd(cfe1);
+			int line2 = cfn2.isEntry ? getLineStart(cfe2) : getLineEnd(cfe2);
 			int offset = line1 - line2;
 
 			if (offset == 0) {

@@ -53,6 +53,7 @@ Sources {
 	}
 }
 
+
 // XPECT noerrors --> "Only RE can extend and another RE project."
 ExtendedRuntimeEnvironment: test.data.re.project
 
@@ -60,9 +61,9 @@ ExtendedRuntimeEnvironment: test.data.re.project
 ProvidedRuntimeLibraries {
 	// XPECT warnings --> "Project test.data.system.project.one type of library cannot be declared among the provided runtime libraries." at "test.data.system.project.one"
 	test.data.system.project.one,
-	// XPECT errors -->	"Duplicate project reference." at "test.data.rl.project.one"
+	// XPECT noerrors --> "error is reported on subsequent occurances"
 	test.data.rl.project.one,
-	// XPECT errors -->	"Duplicate project reference." at "test.data.rl.project.one"
+	// XPECT errors --> "Duplicate project reference org.eclipse.n4js:test.data.rl.project.one." at "test.data.rl.project.one"
 	test.data.rl.project.one,
 	// XPECT warnings --> "Project test.data.re.project type of runtime environment cannot be declared among the provided runtime libraries." at "test.data.re.project"
 	test.data.re.project,

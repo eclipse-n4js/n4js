@@ -12,21 +12,24 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4TypeDeclaration
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.ScriptElement
+import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VersionedElement
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
-import org.eclipse.n4js.n4JS.Statement
-import org.eclipse.n4js.n4JS.ScriptElement
-import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.n4js.n4JS.Script
 
 /**
  * Validate the use of version in N4IDL
@@ -38,11 +41,14 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
 
+	@Inject
+	private N4JSElementKeywordProvider elementKeywordProvider;
+
 	/**
-	 * NEEEDED
+	 * NEEDED
 	 *
-	 * when removed check methods will be called twice once by N4JSValidator, and once by
-	 * AbstractDeclarativeN4JSValidator
+	 * When removed check methods will be called twice once by N4JSValidator, and once by
+	 * AbstractDeclarativeN4JSValidator.
 	 */
 	override void register(EValidatorRegistrar registrar) {
 		// nop
@@ -57,9 +63,14 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		if (context !== null) {
 			val requestedVersion = if (ref.requestedVersion === null) 0 else ref.requestedVersion.intValue
 			val maxVersion = versionHelper.computeMaximumVersion(context)
+
+			// if no context-version can be determined, do not validate anything
+			if (!maxVersion.present) {
+				return;
+			}
 			// The referenced version cannot exceed the maximum version of the context
-			if (requestedVersion > maxVersion) {
-				val message = IssueCodes.getMessageForIDL_INVALID_VERSION(requestedVersion, maxVersion);
+			if (requestedVersion > maxVersion.get()) {
+				val message = IssueCodes.getMessageForIDL_INVALID_VERSION(requestedVersion, maxVersion.get());
 				addIssue(
 					message,
 					context,
@@ -69,19 +80,64 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	/** Checks that an explicit type version request is valid in the current context. */
+	@Check
+	def checkExplicitVersionDeclaration(VersionedReference ref) {
+		// this validation is only active for variants that actually support versioned types
+		if (!variantHelper.allowVersionedTypes(ref)) {
+			return;
+		}
+
+		if (!VersionUtils.isVersionAwareContext(ref)) {
+			val message = IssueCodes.messageForIDL_EXPLICIT_VERSION_DECLARATION_NOT_ALLOWED;
+			addIssue(message, ref, TypeRefsPackage.Literals.VERSIONED_REFERENCE__REQUESTED_VERSION,
+				IssueCodes.IDL_EXPLICIT_VERSION_DECLARATION_NOT_ALLOWED);
+		}
+	}
+
+	/** Checks that type declarations in language variants that allow versioned types
+	 * always explicitly declare a type version. */
+	@Check
+	def checkTypeDeclaration(N4TypeDeclaration n4TypeDeclaration) {
+		// early exit for variants that do not support versioned types
+		if (!variantHelper.allowVersionedTypes(n4TypeDeclaration)) {
+			return;
+		}
+
+		// make sure all type declarations explicitly declare a type version
+		if (n4TypeDeclaration instanceof VersionedElement) {
+			// if non-version-aware and has no declared version
+			if (!n4TypeDeclaration.hasDeclaredVersion && !VersionUtils.hasVersionAwarenessAnnotation(n4TypeDeclaration)) {
+				val message = IssueCodes.getMessageForIDL_VERSIONED_ELEMENT_MISSING_VERSION(
+					elementKeywordProvider.keyword(n4TypeDeclaration), n4TypeDeclaration.name);
+				// add an issue for un-versioned type declarations
+				addIssue(message, n4TypeDeclaration, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+					IssueCodes.IDL_VERSIONED_ELEMENT_MISSING_VERSION);
+			}
+			
+			// if version-aware and has declared version
+			if (n4TypeDeclaration.hasDeclaredVersion && VersionUtils.hasVersionAwarenessAnnotation(n4TypeDeclaration)) {
+				addIssue(IssueCodes.messageForIDL_VERSION_AWARE_CLASSIFIER_MUST_NOT_DECLARE_VERSION, n4TypeDeclaration, 
+					N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+					IssueCodes.IDL_VERSION_AWARE_CLASSIFIER_MUST_NOT_DECLARE_VERSION);
+			}
+		}
+	}
+
 	/**
 	 * Adds an issue in case of missing support for type versions in
 	 * the current JavaScript variant.
 	 *
-	 * This validation only applies to {@link VersionedElement}s (e.g. classifiers, enums).
+	 * This validation only applies to {@link VersionedElement}s (e.g. classifier, enum declarations).
 	 */
 	@Check
-	def checkVersionedElementsSupported(VersionedElement versionedElement) {
-		if (!variantHelper.allowVersionedTypes(versionedElement) &&
+	def checkVersionedElements(VersionedElement versionedElement) {
+		// versioned types are *not* supported
+		if (!variantHelper.allowVersionedTypes(versionedElement)) {
 			// check for non-zero version
-			VersionUtils.isVersioned(versionedElement)
-		) {
-			addIssueForUnsupportedVersionedTypes(versionedElement);
+			if (VersionUtils.isVersioned(versionedElement)) {
+				addIssueForUnsupportedVersionedTypes(versionedElement);
+			}
 		}
 	}
 
@@ -114,32 +170,8 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 		)
 	}
 
-	/**
-	 * Adds an issue in case of missing support for type versions and therefore migrations in
-	 * the current JavaScript variant.
-	 */
-	@Check
-	def checkMigrationAnnotationSupport(FunctionDeclaration migrationDeclaration) {
-		if (AnnotationDefinition.MIGRATION.hasAnnotation(migrationDeclaration) &&
-			// annotations are enabled in the current variant
-			variantHelper.allowAnnotation(migrationDeclaration) &&
-			// versioned types are disabled in the current variant
-			!variantHelper.allowVersionedTypes(migrationDeclaration)
-		) {
-			val variantName = variantHelper.getVariantName(migrationDeclaration);
-
-			addIssue(
-				IssueCodes.getMessageForIDL_MIGRATIONS_NOT_SUPPORTED(variantName),
-				migrationDeclaration,
-				IssueCodes.IDL_MIGRATIONS_NOT_SUPPORTED
-			);
-		}
-	}
-
-	/**
-	 * Checks whether the current {@link JavaScriptVariant} allows for top-level statements and issues errors
-	 * accordingly.
-	 */
+	/** Checks whether the current {@link JavaScriptVariant} allows for top-level statements and issues errors
+	 * accordingly. */
 	@Check
 	public def void checkTopLevelElements(Script script) {
 		if (!variantHelper.allowTopLevelStatements(script)) {
@@ -164,4 +196,5 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	private def boolean isStatement(EObject element) {
 		return element instanceof Statement && !(element instanceof FunctionDeclaration);
 	}
+
 }

@@ -10,3 +10,12 @@
  */
 
 export public class Something#1 {}
+
+@VersionAware
+export public class SomethingVersionAware#1 {}
+@VersionAware
+export public function migrationHelper() {}
+@Migration
+export public function migration() {}
+
+export public function plainFunction() {}

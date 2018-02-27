@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -60,30 +59,29 @@ public class GuardStructureFactory {
 
 		Node previousNode = edge.start;
 		ControlFlowElement previousCFE = previousNode.getControlFlowElement();
-		EObject parent = previousCFE.eContainer();
 
-		if (parent instanceof ConditionalExpression) {
-			ConditionalExpression ce = (ConditionalExpression) parent;
+		if (previousCFE instanceof ConditionalExpression) {
+			ConditionalExpression ce = (ConditionalExpression) previousCFE;
 			condition = ce.getExpression();
 
-		} else if (parent instanceof BinaryLogicalExpression) {
-			BinaryLogicalExpression ble = (BinaryLogicalExpression) parent;
+		} else if (previousCFE instanceof BinaryLogicalExpression) {
+			BinaryLogicalExpression ble = (BinaryLogicalExpression) previousCFE;
 			condition = ble.getLhs();
 
-		} else if (parent instanceof IfStatement) {
-			IfStatement is = (IfStatement) parent;
+		} else if (previousCFE instanceof IfStatement) {
+			IfStatement is = (IfStatement) previousCFE;
 			condition = is.getExpression();
 
-		} else if (parent instanceof WhileStatement) {
-			WhileStatement ws = (WhileStatement) parent;
+		} else if (previousCFE instanceof WhileStatement) {
+			WhileStatement ws = (WhileStatement) previousCFE;
 			condition = ws.getExpression();
 
-		} else if (parent instanceof DoStatement) {
-			DoStatement ws = (DoStatement) parent;
+		} else if (previousCFE instanceof DoStatement) {
+			DoStatement ws = (DoStatement) previousCFE;
 			condition = ws.getExpression();
 
-		} else if (parent instanceof ForStatement) {
-			ForStatement ws = (ForStatement) parent;
+		} else if (previousCFE instanceof ForStatement) {
+			ForStatement ws = (ForStatement) previousCFE;
 			condition = ws.getExpression();
 		}
 		return condition;

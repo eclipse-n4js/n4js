@@ -16,7 +16,6 @@ import com.google.inject.name.Named
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.Expression
@@ -43,8 +42,11 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
+import org.eclipse.n4js.n4idl.scoping.FailedToInferContextVersionWrappingScope
 import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScope
+import org.eclipse.n4js.n4idl.scoping.NonVersionAwareContextScope
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
@@ -88,6 +90,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.validation.ValidatorMessageHelper
 
 /**
  * This class contains custom scoping description.
@@ -130,7 +133,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject extension SourceElementExtensions
 
 	@Inject EObjectDescriptionHelper descriptionsHelper;
-	
+
 	@Inject extension ReactHelper;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
@@ -144,7 +147,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject ScopesHelper scopesHelper
 
 	@Inject private VersionHelper versionHelper;
-
+	
+	@Inject private ValidatorMessageHelper messageHelper;
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -347,7 +351,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	protected def IScope scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
 		val declaration = EcoreUtil2.getContainerOfType(specifier, ImportDeclaration);
-		return scope_AllTopLevelElementsFromModule(declaration.module, declaration.eResource);
+		return scope_AllTopLevelElementsFromModule(declaration.module, declaration);
 	}
 
 	/**
@@ -440,15 +444,24 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * Used for elements imported with named import and to access elements vi namespace import.
 	 *
 	 * @param importedModule target {@link TModule} from which elements are imported
-	 * @param contextResource receiver {@link Resource} importing elements
+	 * @param contextResource Receiver context {@link EObject} which is importing elements
 	 */
-	private def IScope scope_AllTopLevelElementsFromModule(TModule importedModule, Resource contextResource) {
+	private def IScope scope_AllTopLevelElementsFromModule(TModule importedModule, EObject context) {
 		if (importedModule === null) {
 			return IScope.NULLSCOPE;
 		}
-
-		scopesHelper.mapBasedScopeFor(importedModule, IScope.NULLSCOPE,
-			topLevelElementCollector.getTopLevelElements(importedModule, contextResource));
+		
+		// get regular top-level elements scope
+		val topLevelElementsScope = scopesHelper.mapBasedScopeFor(importedModule, IScope.NULLSCOPE,
+			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource));
+		
+		// if the context resource does not allow for versioned types but the imported module does...
+		if (!jsVariantHelper.allowVersionedTypes(context) && jsVariantHelper.allowVersionedTypes(importedModule)) {
+			// ...make sure that all results are validated according to @VersionAware reference constraints
+			return new NonVersionAwareContextScope(topLevelElementsScope, false, messageHelper);
+		}
+		
+		return topLevelElementsScope;
 	}
 
 	/*
@@ -463,7 +476,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (receiver instanceof IdentifierRef) {
 			if (receiver.id instanceof ModuleNamespaceVirtualType) {
 				val namespace = receiver.id as ModuleNamespaceVirtualType;
-				val result = scope_AllTopLevelElementsFromModule(namespace.module, propertyAccess.eResource);
+				val result = scope_AllTopLevelElementsFromModule(namespace.module, propertyAccess);
 				if (namespace.declaredDynamic && !(result instanceof DynamicPseudoScope)) {
 					return new DynamicPseudoScope(result);
 				}
@@ -566,6 +579,25 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	private def getN4IDLScope(EObject context, EReference reference) {
+		// get a scope filtering by the context version as specified by {@param context}.
+		val contextVersionScope = getN4IDLContextVersionScope(context, reference);
+		
+		// Make sure that references to version-aware contexts, from non-version-aware contexts
+		// are detected and prevented.
+		if (!VersionUtils.isVersionAwareContext(context)) {
+			return new NonVersionAwareContextScope(contextVersionScope, true, messageHelper);
+		}
+		
+		return contextVersionScope;
+	}
+	
+	/**
+	 * Returns a version-aware scope based on the context version that is specified in {@param context}.
+	 * 
+	 * If no context version can be inferred from {@param context}, all versionable results will 
+	 * be wrapped in a {@link FailedToInferContextVersionWrappingScope}.
+	 */
+	private def getN4IDLContextVersionScope(EObject context, EReference reference) {
 		val IScope scope = getN4JSScope(context, reference);
 
 		// If the N4JS scope is a NULLSCOPE there
@@ -577,8 +609,16 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (reference === TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE ||
 			reference === N4JSPackage.Literals.IDENTIFIER_REF__ID
 		) {
-			val int contextVersion = versionHelper.computeMaximumVersion(context);
-			return new N4IDLVersionAwareScope(scope, contextVersion);
+			val contextVersion = versionHelper.computeMaximumVersion(context);
+			val versionAwareScope = new N4IDLVersionAwareScope(scope, contextVersion.or(Integer.MAX_VALUE));
+
+			if (contextVersion.present) {
+				return versionAwareScope;
+			} else {
+				// If the context version cannot be determined, wrap all results in a
+				// corresponding ({@link FailedToInferContextVersionDescription}).
+				return new FailedToInferContextVersionWrappingScope(scope)
+			}
 		}
 
 		return scope;

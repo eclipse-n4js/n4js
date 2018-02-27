@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.analysis.GraphExplorerInternal.Quantor;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * Paths begin when a {@link BranchWalkerInternal} gets active or when forked from another path. Paths end when no
@@ -143,7 +144,9 @@ abstract public class BranchWalkerInternal {
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
 	final BranchWalkerInternal callFork() {
 		BranchWalkerInternal forkedPath = fork();
-		forkedPath.callInitialize(pathExplorer, this);
+		if (forkedPath != null) {
+			forkedPath.callInitialize(pathExplorer, this);
+		}
 		return forkedPath;
 	}
 
@@ -173,9 +176,14 @@ abstract public class BranchWalkerInternal {
 		return getExplorer().getGraphVisitorInternal();
 	}
 
+	/** @return the control flow container of this {@link BranchWalkerInternal}. */
+	final public ControlFlowElement getContainer() {
+		return getGraphVisitor().getCurrentContainer();
+	}
+
 	/** @return the current {@link TraverseDirection} */
 	final public TraverseDirection getDirection() {
-		return getExplorer().getGraphVisitorInternal().getCurrentDirection();
+		return getGraphVisitor().getCurrentDirection();
 	}
 
 	/** @return the number of this {@link BranchWalkerInternal}. */

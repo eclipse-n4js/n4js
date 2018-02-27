@@ -32,6 +32,7 @@ class B#2 {
 // some function that accepts constructors as parameter
 function some(ctor : constructor{N4Object}) {}
 
+@Migration
 function f() {
 	// XPECT noerrors
 	console.log(A#1.staticField1)

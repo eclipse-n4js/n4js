@@ -15,7 +15,7 @@ import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.n4js.n4JS.ArrowFunction
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
@@ -33,14 +33,12 @@ import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TStructSetter
-import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.N4JSLanguageHelper
@@ -48,22 +46,22 @@ import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess
 import org.eclipse.n4js.utils.nodemodel.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
+import static org.eclipse.n4js.N4JSLanguageConstants.*
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
-import static org.eclipse.n4js.N4JSLanguageConstants.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
 import static org.eclipse.xtext.util.Strings.toFirstUpper
 
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
+import org.eclipse.n4js.typesystem.TypeSystemHelper
 
 /**
  */
@@ -73,7 +71,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 
 	@Inject
-	private ReturnOrThrowAnalysis returnOrThrowAnalysis
+	private TypeSystemHelper tsh;
 
 	@Inject
 	private HiddenLeafAccess hla;
@@ -133,144 +131,14 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
+	 * Given a function/method with return type void, checking the lack of returns or presence of empty returns
 	 *
-	 * TODO once ISSUE-666 is resolved this method could be dropped when
-	 * the check is carried out with #checkFunctionReturn(FunctionOrFieldAccessor)
-	 *
-	 * Return-Type checking.
-     *
-     * [N4JSSpec] 7.1.4 Return Statement
-     *
-     * Constraint 111
-	 *
-	 * @see #checkFunctionReturn(FunctionOrFieldAccessor)
-	 */
-	@Check
-	def checkGetter(GetterDeclaration getterDeclaration) {
-		holdsFunctionReturn(getterDeclaration)
-	}
-
-	/**
-	 *
-	 * TODO once ISSUE-666 is resolved this method could be dropped when
-	 * the check is carried out with #checkFunctionReturn(FunctionOrFieldAccessor)
-	 *
-	 * Return-Type checking.
-     *
-     * [N4JSSpec] 7.1.4 Return Statement
-     *
-     * Constraint 111
-	 *
-	 * @see #checkFunctionReturn(FunctionOrFieldAccessor)
-	 */
-	@Check
-	def checkFunctionReturn(FunctionDefinition functionDefinition) {
-		if (!jsVariantHelper.requireCheckFunctionReturn(functionDefinition)) {
-			return; // cf. 13.1
-		}
-		holdsFunctionReturn(functionDefinition as FunctionOrFieldAccessor);
-	}
-
-	/**
-     * Return-Type checking.
-     *
-     * [N4JSSpec] 7.1.4 Return Statement
-     *
-     * Constraint 111
-     *
-     * @param functionDefinition of for Methods and Functions
-     *
-     */
-	// @Check Disabled because setter still claim to be of type ANY.  IDE-666
-	// IF setter claims to be of type VOID/NULL this method could serve as entry point for the
-	// three checks above.
-	private def boolean holdsFunctionReturn(FunctionOrFieldAccessor functionOrFieldAccessor) {
-		// simple inference without context: we only need to check IF there is a return type declared (or inferred), we do not need the concrete type
-		val inferredType = ts.tau(functionOrFieldAccessor)
-		val TypeRef retTypeRef = switch inferredType {
-			// note: order is important, because FunctionTypeRef IS a ParameterizedTypeRef as well
-			FunctionTypeExprOrRef: getActualReturnTypeRef(functionOrFieldAccessor, inferredType)
-			ParameterizedTypeRef: inferredType
-			default: null
-		}
-
-		if (retTypeRef === null) return true; // probably consequential error
-
-		// obtain the built-in void-Type
-		val _void = newRuleEnvironment(functionOrFieldAccessor).voidType
-
-		val isDeclaredVoid = if(functionOrFieldAccessor instanceof FieldAccessor) {
-			TypeUtils.isOrContainsType(functionOrFieldAccessor.declaredTypeRef, _void)
-		} else if(functionOrFieldAccessor instanceof FunctionDefinition) {
-			TypeUtils.isOrContainsType(functionOrFieldAccessor.returnTypeRef, _void)
-		} else false
-		val isVoid = TypeUtils.isOrContainsType(retTypeRef, _void);
-		val isNotVoid =  !isVoid ||
-			(retTypeRef instanceof ComposedTypeRef && (retTypeRef as ComposedTypeRef).typeRefs.size>1);
-		val isOptionalReturnType = functionOrFieldAccessor.isReturnValueOptional;
-
-
-		val FunctionFullReport analysis = returnOrThrowAnalysis.exitBehaviourWithFullReport(functionOrFieldAccessor.body?.statements)
-
-		if (isOptionalReturnType) {
-			// anything goes!
-			// (function may or may not leave with return statement; return statements may or may not have an expression)
-			return true;
-		}
-		if (isVoid && isNotVoid) {
-			return true; // union{any,void} --> everything is ok
-		}
-		if (isDeclaredVoid || (isVoid && !(functionOrFieldAccessor instanceof GetterDeclaration))) {
-			// Only if the return type is explicitly set to void
-			// 1. Search for all explicit return statements
-			// 2. Implicit returns: ( No implicit return given )
-			return holdsFunctionReturnsVoid(functionOrFieldAccessor, false)
-		}
-
-		// isNotVoid:
-		return holdsFunctionReturnsSomething(functionOrFieldAccessor, retTypeRef, analysis)
-	}
-
-	private def TypeRef getActualReturnTypeRef(FunctionOrFieldAccessor functionOrFieldAccessor, FunctionTypeExprOrRef inferredType) {
-		var typeRef = inferredType?.returnTypeRef;
-		if(functionOrFieldAccessor instanceof FunctionDefinition) {
-			val tFun = functionOrFieldAccessor.definedType;
-			if (functionOrFieldAccessor.isAsync) {
-				typeRef = getTypeArgumentOfReturnType(functionOrFieldAccessor, tFun, 0);
-			}
-			if (functionOrFieldAccessor.isGenerator) {
-				typeRef = getTypeArgumentOfReturnType(functionOrFieldAccessor, tFun, 1);
-			}
-		}
-		return typeRef;
-	}
-
-	private def getTypeArgumentOfReturnType(FunctionOrFieldAccessor functionOrFieldAccessor, Type tFun, int idx) {
-		if (tFun instanceof TFunction) {
-			val actualReturnTypeRef = tFun.returnTypeRef;
-			if (actualReturnTypeRef.typeArgs.length > idx) {
-				val tReturn = actualReturnTypeRef.typeArgs.get(idx);
-				val ruleEnv = newRuleEnvironment(functionOrFieldAccessor);
-				var typeRef = ts.resolveType(ruleEnv, tReturn);
-				if (TypeUtils.isUndefined(typeRef)) {
-					typeRef = newRuleEnvironment(functionOrFieldAccessor).voidTypeRef;
-				}
-				return typeRef;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Given a function/method with returntype void, checking the lack of returns or presence of empty returns
-	 *
-	 * @param functionDefinition definition whith void-returntype
-	 * @param _void precomputed builtin void type
+	 * @param functionDefinition definition with void-return-type
+	 * @param _void precomputed built-in void type
 	 * @param isSetter true for setter and therefore ensuring no return at all, false in case of ordinary function/methods
 	 * 			where TS already does the job
 	 */
 	private def boolean holdsFunctionReturnsVoid(FunctionOrFieldAccessor functionOrFieldAccessor, boolean isSetter) {
-
 		val retstatements = allReturnstatementsAsList(functionOrFieldAccessor)
 		val _void = newRuleEnvironment(functionOrFieldAccessor).voidType
 
@@ -308,73 +176,6 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	/**
-	 *
-	 * Constraint 111.3 Item 2 "all control flows must either end with a return or throw statement"
-	 *
-	 * @param functionDefinition functionDefinition with return type not void
-	 * @param returnTypeRef only used for error message
-	 */
-	private def boolean holdsFunctionReturnsSomething(FunctionOrFieldAccessor functionOrFieldAccessor,
-		TypeRef returnTypeRef, FunctionFullReport analysis) {
-
-		if (functionOrFieldAccessor.body === null) {
-			return true;
-		}
-		if (functionOrFieldAccessor instanceof N4MethodDeclaration) {
-			if(functionOrFieldAccessor.isConstructor) {
-				// we have a non-void constructor -> there will already be an error elsewhere -> avoid duplicate errors
-				return true;
-			}
-		}
-
-		// Constraint 111.3.a
-		holdsAllReturnStatementsContainExpression(functionOrFieldAccessor, returnTypeRef);
-
-		// ok, but maybe a control flow ends without a return or throw:
-
-		// Constrain 111.3.b
-		var bFoundControlFlowWOReturn = switch ( analysis.returnMode ) {
-			case ReturnMode.noReturnsMode: isMissingReturnDisallowed(functionOrFieldAccessor)
-			BreakOrContinue: false // should not happen.
-			case ReturnMode.throwsMode: false // all fine - no check for throws.
-			case ReturnMode.returnsMode: false // all fine - TS doing the check.
-		}
-
-		return ! bFoundControlFlowWOReturn;
-	}
-
-	/**
-	 * Helper method. The argument does contain a control-flow path where no value is returned.
-	 * However, before raising an error (due to breaking Constraint 111.3.a)
-	 * it's necessary to check whether we're dealing with an arrow function of the single-expression variety,
-	 * to which ES6 grants an implicit-return, thus allowing them.
-	 */
-	private def boolean isMissingReturnDisallowed(FunctionOrFieldAccessor accessor) {
-		// ES6 arrow functions allow single-exprs to lack an explicit return
-		if (accessor instanceof ArrowFunction) {
-			if (accessor.isSingleExprImplicitReturn) {
-				return false
-			}
-		}
-		// Return statements are optional in generator functions
- 		if (accessor instanceof FunctionDefinition) {
-			if (accessor.isGenerator) {
-				return false;
-			}
-		}
-		// at least one leaking control-flow path out of Method w/o returning anything:
-		val highlightFeature = switch accessor {
-			FunctionDeclaration: N4JSPackage.Literals.FUNCTION_DECLARATION__NAME
-			N4MethodDeclaration: N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME
-			FunctionExpression: N4JSPackage.Literals.FUNCTION_EXPRESSION__NAME
-			GetterDeclaration: N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER
-			default: null
-		}
-		val String msg = messageForFUN_MISSING_RETURN_OR_THROW_STATEMENT
-		addIssue(msg, accessor, highlightFeature, FUN_MISSING_RETURN_OR_THROW_STATEMENT)
-		return true;
-	}
 
 	/**
 	 * Method for checking whether the name of a function definition such as:
@@ -432,37 +233,69 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	 * 				(=function-definition or field accessor) (nested) but not in included functionExpressions, function definitions ....
 	 */
 	private def Iterable<ReturnStatement> allReturnstatementsAsList(FunctionOrFieldAccessor functionOrFieldAccessor) {
-		val retsByEcore = if (functionOrFieldAccessor.body === null)
+		val retsByEcore = if (functionOrFieldAccessor.body === null) {
 				#[]
-			else
-				functionOrFieldAccessor.body.getAllContentsFiltered(
-					[! ( it instanceof Expression || it instanceof FunctionOrFieldAccessor)]).filter(ReturnStatement).
-					toList()
+		} else {
+				functionOrFieldAccessor.body
+					.getAllContentsFiltered([ !(it instanceof Expression || it instanceof FunctionOrFieldAccessor) ])
+					.filter(ReturnStatement)
+					.toList()
+		};
 		return retsByEcore
 	}
+
 
 	/**
 	 * Assuring all return statements do have an expression
 	 * @param returnTypeRef only used for error message
 	 */
-	private def boolean holdsAllReturnStatementsContainExpression(FunctionOrFieldAccessor definition, TypeRef returnTypeRef) {
+	@Check
+	def boolean checkReturnExpression(ReturnStatement retStmt) {
+		val fofa = EcoreUtil2.getContainerOfType(retStmt, FunctionOrFieldAccessor);
+		if (!jsVariantHelper.requireCheckFunctionReturn(fofa)) {
+			// cf. 13.1
+			return false;
+		}
 
-		val retstatements = allReturnstatementsAsList(definition)
-		var errorsFound = false;
-		for (ReturnStatement rst : retstatements) {
+		if (fofa instanceof SetterDeclaration) {
+			return false;
+		}
 
-			// check missing return-expression
-			if (rst.expression === null) {
-				val String msg = getMessageForFUN_MISSING_RETURN_EXPRESSION(returnTypeRef.typeRefAsString)
-				addIssue(msg, rst, FUN_MISSING_RETURN_EXPRESSION)
-				errorsFound = true;
-			}
+		if (fofa === null) {
+			return false;
+		}
+
+		if (fofa.isReturnValueOptional) {
+			return false;
+		}
+
+		val _void = newRuleEnvironment(fofa).voidType;
+		val returnTypeRef = tsh.getExpectedTypeOfFunctionOrFieldAccessor(null, fofa);
+		val isDeclaredVoid = if (fofa instanceof FieldAccessor) {
+				TypeUtils.isOrContainsType(fofa.declaredTypeRef, _void)
+			} else if (fofa instanceof FunctionDefinition) {
+				TypeUtils.isOrContainsType(returnTypeRef, _void)
+			} else false;
+
+		val isUndefined = TypeUtils.isUndefined(returnTypeRef);
+		val isVoid = TypeUtils.isOrContainsType(returnTypeRef, _void);
+		val isComposed = (returnTypeRef instanceof ComposedTypeRef && (returnTypeRef as ComposedTypeRef).typeRefs.size>1);
+		val isGetter = fofa instanceof GetterDeclaration;
+
+		if (!isGetter && (isDeclaredVoid || isVoid || isUndefined || isComposed)) {
+			return false;
+		}
+
+		// check missing return-expression
+		if (returnTypeRef !== null && retStmt.expression === null) {
+			val String msg = getMessageForFUN_MISSING_RETURN_EXPRESSION(returnTypeRef.typeRefAsString);
+			addIssue(msg, retStmt, FUN_MISSING_RETURN_EXPRESSION);
+			return true;
+		}
 
 		// given return-expressions will be checked by xsemantics.
 		// TODO what about null - tests with primitives (builtin types) expected ?
-		}
-		return errorsFound;
-
+		return false;
 	}
 
 	/** additional check on top of {@link #checkFunctionName()} */

@@ -53,6 +53,7 @@ import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -396,10 +397,21 @@ public final class AnnotationDefinition {
 	public final static AnnotationDefinition SINGLETON = define("Singleton").targets(N4_CLASS_DECLARATION)
 			.retention(RUNTIME).end();
 
+	// <---- N4IDL specific ---->
+
 	/**
 	 * Annotation to mark function declarations as migrations in the context of N4IDL.
 	 */
 	public final static AnnotationDefinition MIGRATION = define("Migration").targets(FUNCTION_DECLARATION)
+			.javaScriptVariants(N4JSJavaScriptVariantHelper.EXT_N4IDL)
+			.retention(RUNTIME).end();
+
+	/**
+	 * Annotation to mark classifier and function declarations as version aware in the context of N4IDL.
+	 */
+	public final static AnnotationDefinition VERSION_AWARE = define("VersionAware")
+			.targets(FUNCTION_DECLARATION, N4_CLASSIFIER_DECLARATION)
+			.javaScriptVariants(N4JSJavaScriptVariantHelper.EXT_N4IDL)
 			.retention(RUNTIME).end();
 
 	// <---- miscellaneous ---->
@@ -480,6 +492,11 @@ public final class AnnotationDefinition {
 	public final EClass[] targets;
 	/** Possible wrong targets (AST node types) of the annotation for which a special error message is created. */
 	public final EClass[] targetsWithCustomError;
+	/**
+	 * JavaScript Variants in which this annotation applies (list of file extensions according to
+	 * {@link N4JSJavaScriptVariantHelper}). If empty, the annotation can be used everywhere
+	 */
+	public final String[] javaScriptVariants;
 	/** Flag whether annotation is repeatable per element, false by default */
 	public final boolean repeatable;
 	/** Retention policy, not used yet */
@@ -510,6 +527,7 @@ public final class AnnotationDefinition {
 	static class AnnotationDefinitionBuilder {
 		String name;
 		EClass[] targets;
+		String[] javaScriptVariants;
 		EClass[] targetsWithCustomError = {};
 		boolean repeatable = false;
 		RetentionPolicy retention = RetentionPolicy.AST;
@@ -520,6 +538,11 @@ public final class AnnotationDefinition {
 
 		AnnotationDefinitionBuilder targets(final EClass... _targets) {
 			this.targets = _targets;
+			return this;
+		}
+
+		AnnotationDefinitionBuilder javaScriptVariants(final String... variants) {
+			this.javaScriptVariants = variants;
 			return this;
 		}
 
@@ -571,9 +594,9 @@ public final class AnnotationDefinition {
 		}
 
 		AnnotationDefinition end() {
-			return new AnnotationDefinition(name, targets, targetsWithCustomError, transitive, repeatable, retention,
-					argtypes,
-					argsOptional, argsVariadic);
+			return new AnnotationDefinition(name, targets, targetsWithCustomError, javaScriptVariants,
+					transitive, repeatable, retention,
+					argtypes, argsOptional, argsVariadic);
 		}
 
 	}
@@ -581,7 +604,9 @@ public final class AnnotationDefinition {
 	/**
 	 * Creates a definition, called only ba {@link AnnotationDefinitionBuilder#end}
 	 */
-	private AnnotationDefinition(final String name, final EClass[] targets, final EClass[] targetsWithCustomError,
+	private AnnotationDefinition(final String name, final EClass[] targets,
+			final EClass[] targetsWithCustomError,
+			final String[] javaScriptVariants,
 			final boolean transitive,
 			final boolean repeatable,
 			final RetentionPolicy retention,
@@ -589,6 +614,7 @@ public final class AnnotationDefinition {
 		this.name = name;
 		this.targets = targets;
 		this.targetsWithCustomError = targetsWithCustomError;
+		this.javaScriptVariants = javaScriptVariants;
 		this.transitive = transitive;
 		this.repeatable = repeatable;
 		this.retention = retention;

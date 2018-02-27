@@ -38,7 +38,9 @@ class Version implements Comparable<Version> {
 	val int major;
 	val int minor;
 	val int micro;
-	val transient String qualifier; // TODO remove transient to include in equals hash code once versions are supported.
+	// TODO build meta data not supported https://semver.org/#spec-item-10
+	// remove transient to include in equals hash code once versions are supported.
+	val transient String qualifier;
 
 	/**
 	 * Returns with {@code true} if the version argument is neither {@code null}, nor the {@link #MISSING} one.
@@ -152,7 +154,7 @@ class Version implements Comparable<Version> {
 			return result;
 		}
 
-		return 0; // TODO consider qualifier once we support versions: Strings.nullToEmpty(qualifier).compareTo(o.qualifier);
+		return 0; // TODO consider qualifier once we support versions, see Precedence :: https://semver.org/#spec-item-11
 	}
 
 	override toString() {
