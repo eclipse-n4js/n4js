@@ -93,9 +93,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String fileFooTest = pathToDemoTest + "/test/FooTest.n4js";
 
 		String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tw", "nodejs_mangelhaft",
-				"--test", fileFooTest,
+				"-t", fileFooTest,
 				"-v"
 		};
 
@@ -122,9 +122,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String fileFooTest = pathToDemoTest + "/test/BazTest.n4js";
 
 		String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tw", "nodejs_mangelhaft",
-				"--test", fileFooTest,
+				"-t", fileFooTest,
 				"-v"
 		};
 
@@ -150,9 +150,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String fileFooTest = pathToDemoTest + "/test/BarTest.n4js";
 
 		String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tw", "nodejs_mangelhaft",
-				"--test", fileFooTest,
+				"-t", fileFooTest,
 				"-v"
 		};
 
@@ -177,9 +177,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String testReportRoot = pathToDemoTest + "/src-gen";
 
 		String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tw", "nodejs_mangelhaft",
-				"--test", pathToDemoTest,
+				"-t", pathToDemoTest,
 				"--testReportRoot", testReportRoot,
 				"-v"
 		};
@@ -222,9 +222,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String pathToDemoTest = proot + "/" + projectDemoTest;
 
 		String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tw", "nodejs_mangelhaft",
-				"--test", pathToDemoTest,
+				"-t", pathToDemoTest,
 				"-v"
 		};
 
@@ -243,7 +243,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		final File tempDir = Files.createTempDir();
 		tempDir.deleteOnExit();
 		final String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tc", tempDir + "/test-catalog.json",
 				"-v"
 		};
@@ -264,7 +264,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 			throws ExitCodeException, FileNotFoundException, IOException {
 		String proot = workspace.getAbsolutePath().toString();
 		final String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tc", "test-catalog.json",
 				"-v"
 		};
@@ -290,7 +290,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		existingFile.deleteOnExit();
 
 		final String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tc", "test-catalog.json",
 				"-v"
 		};
@@ -310,7 +310,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	public void testInvalidTestCatalogLocation() {
 		String proot = workspace.getAbsolutePath().toString();
 		final String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tc", "some/fake/folder/test-catalog.json",
 				"-v"
 		};
@@ -327,7 +327,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		final File tempDir = Files.createTempDir();
 		tempDir.deleteOnExit();
 		final String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tc", tempDir.toString(),
 				"-v"
 		};
