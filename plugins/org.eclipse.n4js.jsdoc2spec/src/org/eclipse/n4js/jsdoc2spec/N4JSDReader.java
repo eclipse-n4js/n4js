@@ -182,6 +182,7 @@ public class N4JSDReader {
 			if (tlt instanceof SyntaxRelatedTElement) {
 				SyntaxRelatedTElement srte = (SyntaxRelatedTElement) tlt;
 				EObject astElem = srte.getAstElement();
+				astElem = astElem != null ? astElem.eContainer() : null;
 				FunctionOrFieldAccessor fofa = EcoreUtil2.getContainerOfType(astElem, FunctionOrFieldAccessor.class);
 				if (fofa != null) {
 					continue;
