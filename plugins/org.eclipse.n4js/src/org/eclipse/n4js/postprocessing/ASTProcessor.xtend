@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
@@ -241,7 +242,7 @@ public class ASTProcessor extends AbstractProcessor {
 
 	def private boolean isPostponedNode(EObject node) {
 		return isPostponedInitializer(node)
-			|| isBodyOfFunctionOrFieldAccessor(node);
+			|| N4JSASTUtils.isBodyOfFunctionOrFieldAccessor(node);
 	}
 
 	/**
@@ -517,13 +518,5 @@ public class ASTProcessor extends AbstractProcessor {
 		result.removeAll(elemSanitized);
 		result.addAll(0, elemSanitized);
 		return result;
-	}
-
-	def private boolean isBodyOfFunctionOrFieldAccessor(EObject node) {
-		val parent = node.eContainer;
-		if (parent instanceof FunctionOrFieldAccessor) {
-			return node === parent.body;
-		}
-		return false;
 	}
 }
