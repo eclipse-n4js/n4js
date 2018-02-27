@@ -106,19 +106,24 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 		zipOutputStream.putNextEntry(new ZipEntry("src/sub/leaf/D.js"));
 
 		zipOutputStream.putNextEntry(new ZipEntry(IN4JSProject.N4MF_MANIFEST));
-		zipOutputStream.write(("ProjectId: " + host.archiveProjectId + "\n" +
-				"ProjectType: library\n" +
-				"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-				"VendorId: org.eclipse.n4js\n" +
-				"VendorName: \"Eclipse N4JS Project\"\n" +
-				"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
-				"Output: \"src-gen\"" +
-				"Sources {\n" +
-				"	source { " +
-				"		\"src\"\n" +
-				"	}\n" +
-				"}\n").getBytes(Charsets.UTF_8));
-		zipOutputStream.close();
+
+		try {
+			zipOutputStream.write(("ProjectId: " + host.archiveProjectId + "\n" +
+					"ProjectType: library\n" +
+					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
+					"VendorId: org.eclipse.n4js\n" +
+					"VendorName: \"Eclipse N4JS Project\"\n" +
+					"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
+					"Output: \"src-gen\"" +
+					"Sources {\n" +
+					"	source { " +
+					"		\"src\"\n" +
+					"	}\n" +
+					"}\n").getBytes(Charsets.UTF_8));
+
+		} finally {
+			zipOutputStream.close();
+		}
 		archiveFile.create(new ByteArrayInputStream(byteArrayOutputSteam.toByteArray()), false, null);
 
 		host.setArchiveFileURI(URI.createPlatformResourceURI(archiveFile.getFullPath().toString(), true));

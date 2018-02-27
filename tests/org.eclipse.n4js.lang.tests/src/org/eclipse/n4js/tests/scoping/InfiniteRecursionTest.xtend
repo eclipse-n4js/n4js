@@ -165,8 +165,7 @@ class InfiniteRecursionTest {
 	@Test //(timeout = 3500)
 	def void testComputationFinishes_02() {
 		val fileURL = class.getResource("InfiniteComputationTest_02.txt")
-		val charSrc = Resources.asCharSource(fileURL, Charsets.UTF_8);
-		val scriptAsString = charSrc.read
+		val scriptAsString = Resources.toString(fileURL, Charsets.UTF_8)
 
 		val script = scriptAsString.parse
 		EcoreUtil.resolveAll(script)
