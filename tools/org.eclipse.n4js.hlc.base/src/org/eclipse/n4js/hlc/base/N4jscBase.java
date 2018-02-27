@@ -154,6 +154,12 @@ public class N4jscBase implements IApplication {
 			+ "Use with care, because no checks will be performed whether the location actually contains all required dependencies.")
 	boolean targetPlatformSkipInstall = false;
 
+	@Option(name = "--installMissingDependencies", aliases = "-imd", required = false, usage = "usually projects have dependencies that have to be fetched before the compilation. "
+			+ "If this flag is provided, compiler will calculate missing dependencies based on the manifest files of the projects provided as input to the compilation."
+			+ "Calculated missing dependencies will be fetched by Library Manager priori to the compilation.")
+	// , forbids = "--targetPlatformSkipInstall" // TODO new versions(>3.5.2014) of arg4j allow exclusions
+	boolean installMissingDependencies = false;
+
 	@Option(name = "--keepCompiling", usage = "keep compiling - even if errors are encountered")
 	boolean keepCompiling = false;
 
@@ -476,6 +482,16 @@ public class N4jscBase implements IApplication {
 			}
 
 			checkTargetPlatformConfigurations();
+			if (targetPlatformSkipInstall && installMissingDependencies) {
+				/**
+				 * note that targetPlatformSkipInstall can be set to true by {@link checkTargetPlatformConfigurations}
+				 */
+				System.out.println(
+						"Conflicting arguments: must not provide both '--targetPlatformSkipInstall' and --installMissingDependencies");
+				printExtendedUsage(parser, System.out);
+				throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS);
+			}
+
 			if (null != nodeJsBinaryRoot) {
 				binariesPreferenceStore.setPath(nodeJsBinaryProvider.get(), nodeJsBinaryRoot.toURI());
 				binariesPreferenceStore.save();
