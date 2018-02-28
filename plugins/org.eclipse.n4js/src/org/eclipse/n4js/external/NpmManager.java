@@ -224,9 +224,7 @@ public class NpmManager {
 	}
 
 	private Set<String> getOldNPMs(final IProgressMonitor monitor, final Set<String> requestedNPMs) {
-		logger.logInfo(LINE_DOUBLE);
-		logger.logInfo("Installing  npm packages : " + String.join(", ", requestedNPMs));
-		logger.logInfo(LINE_DOUBLE);
+		logger.logInfo("Installing npm packages: " + String.join(", ", requestedNPMs) + ". NPM output:");
 
 		monitor.beginTask("Installing npm packages...", 10);
 
@@ -241,8 +239,6 @@ public class NpmManager {
 	private void installUninstallNPMs(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
 			final MultiStatus status, final Set<String> requestedNPMs, final Set<String> oldNPMs) {
 
-		logger.logInfo(LINE_SINGLE);
-		logger.logInfo("Installing packages... [step 1 of 4]");
 		monitor.setTaskName("Installing packages... [step 1 of 4]");
 		// calculate already installed to skip
 		final Set<String> npmNamesToInstall = difference(requestedNPMs, oldNPMs);
@@ -267,8 +263,6 @@ public class NpmManager {
 	private Pair<Collection<String>, Iterable<java.net.URI>> getChangedDependencies(final IProgressMonitor monitor,
 			Set<String> oldNPMs) {
 
-		logger.logInfo(LINE_SINGLE);
-		logger.logInfo("Calculating dependency changes... [step 2 of 4]");
 		monitor.setTaskName("Calculating dependency changes... [step 2 of 4]");
 
 		externalLibraryWorkspace.updateState();
@@ -295,7 +289,6 @@ public class NpmManager {
 		final Iterable<java.net.URI> toBeDeleted = from(deletedDependencies)
 				.transform(name -> new File(nodeModulesFolder, name).toURI());
 		monitor.worked(1);
-		logger.logInfo("Dependency changes have been successfully calculated.");
 
 		Pair<Collection<String>, Iterable<java.net.URI>> changedDeps = Tuples.pair(addedDependencies, toBeDeleted);
 
@@ -305,8 +298,6 @@ public class NpmManager {
 	private Collection<File> adaptNPMPackages(final IProgressMonitor monitor, final MultiStatus status,
 			final Collection<String> addedDependencies) {
 
-		logger.logInfo(LINE_SINGLE);
-		logger.logInfo("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
 		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
 		final Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter.adaptPackages(addedDependencies);
 		final IStatus adaptionStatus = result.getFirst();
@@ -319,10 +310,7 @@ public class NpmManager {
 		}
 
 		final Collection<File> adaptedPackages = result.getSecond();
-		logger.logInfo("Packages structures has been adapted to N4JS project structure.");
 		monitor.worked(2);
-
-		logger.logInfo(LINE_SINGLE);
 		return adaptedPackages;
 	}
 
@@ -330,29 +318,19 @@ public class NpmManager {
 			final Iterable<java.net.URI> toBeDeleted, final Collection<File> adaptedPackages,
 			boolean triggerCleanbuild) {
 
-		logger.logInfo("Registering new projects... [step 4 of 4]");
 		monitor.setTaskName("Registering new projects... [step 4 of 4]");
 		// nothing to do in the headless case. TODO inject logic instead?
 		if (Platform.isRunning()) {
-			logger.logInfo("Platform is running.");
 			final Iterable<java.net.URI> toBeUpdated = from(adaptedPackages).transform(file -> file.toURI());
 			final NpmProjectAdaptionResult adaptionResult = NpmProjectAdaptionResult.newOkResult(toBeUpdated,
 					toBeDeleted);
-			logger.logInfo("Call " + externalLibraryWorkspace + " to register " + toBeUpdated + " and de-register "
-					+ toBeDeleted);
 
 			externalLibraryWorkspace.registerProjects(adaptionResult, monitor, triggerCleanbuild);
-		} else {
-			logger.logInfo("Platform is not running.");
 		}
-		logger.logInfo("Finished registering projects.");
 
-		if (status.isOK())
-			logger.logInfo("Successfully finished installing  packages.");
-		else
+		if (!status.isOK()) {
 			logger.logInfo("There were errors during installation, see logs for details.");
-
-		logger.logInfo(LINE_DOUBLE);
+		}
 	}
 
 	private Set<String> getOverwrittenShippedLibs(Set<String> newNpmProjectNames) {
@@ -416,9 +394,7 @@ public class NpmManager {
 		final Set<String> requestedPackages = new HashSet<>(packageNames);
 		try {
 
-			logger.logInfo(LINE_DOUBLE);
-			logger.logInfo("Uninstalling  npm packages : " + String.join(", ", requestedPackages));
-			logger.logInfo(LINE_DOUBLE);
+			logger.logInfo("Uninstalling  npm packages : " + String.join(", ", requestedPackages) + ". NPM output:");
 
 			monitor.beginTask("Uninstalling npm packages...", 10);
 
@@ -427,9 +403,6 @@ public class NpmManager {
 							.getProjects(locationProvider.getTargetPlatformNodeModulesLocation()));
 
 			monitor.worked(1); // Intentionally cheating for better user experience.
-
-			logger.logInfo(LINE_SINGLE);
-			logger.logInfo("Uninstalling packages... [step 1 of 4]");
 			monitor.setTaskName("Uninstalling packages... [step 1 of 4]");
 
 			IStatus installStatus = batchInstallUninstall(monitor, requestedPackages, false);
@@ -442,15 +415,9 @@ public class NpmManager {
 			}
 
 			monitor.worked(2);
-
-			logger.logInfo(LINE_SINGLE);
-			logger.logInfo("Calculating dependency changes... [step 2 of 4]");
 			monitor.setTaskName("Calculating dependency changes... [step 2 of 4]");
 			externalLibraryWorkspace.updateState();
 			monitor.worked(1);
-
-			logger.logInfo(LINE_SINGLE);
-			logger.logInfo("Calculating dependency changes... [3 of 4]");
 			monitor.setTaskName("Calculating dependency changes... [3 of 4]");
 
 			final Map<IProject, Collection<IProject>> afterExternalsWithDependees = collector
@@ -470,23 +437,14 @@ public class NpmManager {
 				}
 			});
 
-			logger.logInfo("Dependency changes have been successfully calculated.");
 			monitor.worked(2);
-
-			logger.logInfo(LINE_SINGLE);
-			logger.logInfo("Scheduling build of affected projects... [4 of 4]");
 			monitor.setTaskName("Scheduling build of projects... [4 of 4]");
 
 			scheduler.scheduleBuildIfNecessary(affectedEclipseProjects);
 
-			logger.logInfo("Finished scheduling build of the affected projects.");
-
-			if (status.isOK())
-				logger.logInfo("Successfully finished uninstalling  packages.");
-			else
+			if (!status.isOK()) {
 				logger.logInfo("There were errors during installation, see logs for details.");
-
-			logger.logInfo(LINE_DOUBLE);
+			}
 
 			return OK_STATUS;
 
@@ -605,9 +563,9 @@ public class NpmManager {
 
 		final AtomicInteger index = new AtomicInteger(0);
 		packageNames.forEach(packageName -> {
-			final String msg = (install ? "Fetching '" : "Removing '") + packageName + "' package... [package "
+			String msg = (install ? "Fetching '" : "Removing '") + packageName + "' package... [package "
 					+ index.incrementAndGet() + " of " + packagesCount + "]";
-			logger.logInfo(msg);
+			// logger.logInfo(msg);
 			subMonitor.setTaskName(msg);
 			subMonitor.worked(1);
 
@@ -617,8 +575,8 @@ public class NpmManager {
 					: uninstall(packageName, installPath);
 
 			if (packageProcessingStatus.isOK()) {
-				logger.logInfo(
-						"Package '" + packageName + "' has been successfully " + (install ? "fetched." : "removed"));
+				msg = "Package '" + packageName + "' has been successfully " + (install ? "fetched." : "removed");
+				// logger.logInfo(msg);
 			} else {
 				logger.logError(packageProcessingStatus);
 				batchStatus.merge(packageProcessingStatus);
