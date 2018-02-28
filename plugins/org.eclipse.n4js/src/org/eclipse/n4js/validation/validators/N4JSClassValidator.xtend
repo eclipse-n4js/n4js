@@ -27,6 +27,7 @@ import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
@@ -47,6 +48,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -71,6 +73,8 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject private extension ContainerTypesHelper containerTypesHelper;
 
 	@Inject private MemberVisibilityChecker memberVisibilityChecker;
+
+	@Inject private N4JSElementKeywordProvider n4jsElementKeywordProvider;
 
 	/**
 	 * NEEEDED
@@ -277,10 +281,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				}
 
 				// ctor of super class must be accessible
-				val superCtor = containerTypesHelper.fromContext(n4Class).findConstructor(superType);
-				if(superCtor!==null && !memberVisibilityChecker.isVisible(n4Class, superTypeRef, superCtor).visibility) {
-					val message = getMessageForCLF_EXTEND_NON_ACCESSIBLE_CTOR(superType.name);
-					addIssue(message, n4Class, N4_CLASS_DEFINITION__SUPER_CLASS_REF, CLF_EXTEND_NON_ACCESSIBLE_CTOR);
+				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superTypeRef, superType)) {
 					return false;
 				}
 
@@ -290,7 +291,24 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(message, n4Class, N4_TYPE_DECLARATION__NAME, CLF_OBSERVABLE_MISSING);
 					return false;
 				}
+			} else if (superType instanceof TObjectPrototype) {
+				// the following applies to TObjectPrototype as well (not just to TClass)
+				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superTypeRef, superType)) {
+					return false;
+				}
 			}
+		}
+		return true;
+	}
+
+	def private holdsCtorOfSuperTypeIsAccessible(N4ClassDeclaration n4Class, TypeRef superTypeRef, TClassifier superType) {
+		val superCtor = containerTypesHelper.fromContext(n4Class).findConstructor(superType);
+		if(superCtor!==null && !memberVisibilityChecker.isVisible(n4Class, superTypeRef, superCtor).visibility) {
+			val message = getMessageForCLF_EXTEND_NON_ACCESSIBLE_CTOR(
+				n4jsElementKeywordProvider.keyword(superType),
+				superType.name);
+			addIssue(message, n4Class, N4_CLASS_DEFINITION__SUPER_CLASS_REF, CLF_EXTEND_NON_ACCESSIBLE_CTOR);
+			return false;
 		}
 		return true;
 	}
