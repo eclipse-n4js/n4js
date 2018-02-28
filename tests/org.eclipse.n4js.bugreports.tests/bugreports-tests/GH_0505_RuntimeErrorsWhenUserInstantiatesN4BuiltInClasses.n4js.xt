@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
+
+
+// XPECT errors --> "Cannot instantiate abstract class N4Element." at "N4Element"
+console.log(new N4Element())
+// XPECT errors --> "Cannot instantiate abstract class N4NamedElement." at "N4NamedElement"
+console.log(new N4NamedElement())
+// XPECT errors --> "Cannot instantiate abstract class N4Type." at "N4Type"
+console.log(new N4Type())
+// XPECT errors --> "Cannot instantiate abstract class N4Classifier." at "N4Classifier"
+console.log(new N4Classifier())
+// XPECT errors --> "The constructor of N4Class is not visible." at "N4Class"
+console.log(new N4Class())
+// XPECT errors --> "The constructor of N4Interface is not visible." at "N4Interface"
+console.log(new N4Interface())
+// XPECT errors --> "The constructor of N4EnumType is not visible." at "N4EnumType"
+console.log(new N4EnumType())
+// XPECT errors --> "The constructor of N4StringBasedEnumType is not visible." at "N4StringBasedEnumType"
+console.log(new N4StringBasedEnumType())
+// XPECT errors --> "Cannot instantiate abstract class N4Member." at "N4Member"
+console.log(new N4Member())
+// XPECT errors --> "The constructor of N4DataField is not visible." at "N4DataField"
+console.log(new N4DataField())
+// XPECT errors --> "The constructor of N4Accessor is not visible." at "N4Accessor"
+console.log(new N4Accessor())
+// XPECT errors --> "The constructor of N4Method is not visible." at "N4Method"
+console.log(new N4Method())
+// XPECT errors --> "The constructor of N4Annotation is not visible." at "N4Annotation"
+console.log(new N4Annotation())
+
+
+// XPECT errors --> "Cannot extend final class N4Class." at "N4Class"
+class X1 extends N4Class {}
+// XPECT errors --> "Cannot extend final class N4Interface." at "N4Interface"
+class X2 extends N4Interface {}
+// XPECT errors --> "Cannot extend final class N4EnumType." at "N4EnumType"
+class X3 extends N4EnumType {}
+// XPECT errors --> "Cannot extend final class N4StringBasedEnumType." at "N4StringBasedEnumType"
+class X4 extends N4StringBasedEnumType {}
+// XPECT errors --> "Cannot extend final class N4DataField." at "N4DataField"
+class X5 extends N4DataField {}
+// XPECT errors --> "Cannot extend final class N4Accessor." at "N4Accessor"
+class X6 extends N4Accessor {}
+// XPECT errors --> "Cannot extend final class N4Method." at "N4Method"
+class X7 extends N4Method {}
+// XPECT errors --> "Cannot extend final class N4Annotation." at "N4Annotation"
+class X8 extends N4Annotation {}
+
+
+// X-PECT errors --> "TODO" at "N4Enum"
+console.log(new N4Enum())
+// X-PECT errors --> "TODO" at "N4Enum"
+class X9 extends N4Enum {}
