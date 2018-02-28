@@ -44,6 +44,9 @@ import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
@@ -68,6 +71,8 @@ public class NpmManager {
 	private static final String LINE_DOUBLE = "================================================================";
 
 	private static final String LINE_SINGLE = "----------------------------------------------------------------";
+
+	private static final DataCollector dcLibMngr = DataCollectors.INSTANCE.getOrCreateDataCollector("Library Manager");
 
 	@Inject
 	private BinaryCommandFactory commandFactory;
@@ -185,6 +190,7 @@ public class NpmManager {
 	private IStatus installDependenciesInternal(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
 			boolean triggerCleanbuild) {
 
+		Measurement mes = dcLibMngr.getMeasurement("installDependenciesInternal");
 		MultiStatus status = statusHelper.createMultiStatus("Status of installing multiple npm dependencies.");
 
 		IStatus binaryStatus = checkNPM();
@@ -213,6 +219,7 @@ public class NpmManager {
 
 		} finally {
 			monitor.done();
+			mes.end();
 		}
 	}
 

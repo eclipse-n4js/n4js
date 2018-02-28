@@ -49,6 +49,9 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
@@ -73,6 +76,11 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 @Singleton
 public class ExternalLibraryBuilderHelper {
+	@SuppressWarnings("unused") // necessary for dcBuildExt
+	private static final DataCollector dcLibMngr = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Library Manager");
+	private static final DataCollector dcBuildExt = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Build External Library", "Library Manager");
 
 	private static final Logger LOGGER = Logger.getLogger(ExternalLibraryBuilderHelper.class);
 
@@ -427,8 +435,8 @@ public class ExternalLibraryBuilderHelper {
 		 *            monitor for the operation.
 		 */
 		private void run(final ExternalLibraryBuilderHelper helper, IProject project, IProgressMonitor monitor) {
-
 			checkArgument(project instanceof ExternalProject, "Expected external project: " + project);
+			Measurement mesBE = dcBuildExt.getMeasurement("BuildExt_" + project.getName());
 
 			final SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 			final ToBeBuiltComputer computer = helper.builtComputer;
@@ -470,7 +478,7 @@ public class ExternalLibraryBuilderHelper {
 							resourceSet,
 							toBeBuilt,
 							queuedBuildData,
-							true /* indexingOnly */);
+							false /* indexingOnly */);
 
 					monitor.setTaskName("Building '" + project.getName() + "'...");
 					final IProgressMonitor buildMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
@@ -490,6 +498,8 @@ public class ExternalLibraryBuilderHelper {
 						+ project.getName() + ".";
 				LOGGER.error(message, e);
 				throw new RuntimeException(message, e);
+			} finally {
+				mesBE.end();
 			}
 
 		}
