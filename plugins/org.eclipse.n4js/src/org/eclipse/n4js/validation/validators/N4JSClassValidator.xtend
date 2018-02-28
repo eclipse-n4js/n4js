@@ -281,6 +281,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				if(superCtor!==null && !memberVisibilityChecker.isVisible(n4Class, superTypeRef, superCtor).visibility) {
 					val message = getMessageForCLF_EXTEND_NON_ACCESSIBLE_CTOR(superType.name);
 					addIssue(message, n4Class, N4_CLASS_DEFINITION__SUPER_CLASS_REF, CLF_EXTEND_NON_ACCESSIBLE_CTOR);
+					return false;
 				}
 
 				// if super class is observable, then this class must be observable as well
