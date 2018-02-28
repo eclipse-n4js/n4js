@@ -11,8 +11,6 @@
 package org.eclipse.n4js.flowgraphs;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -23,10 +21,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analysis.DirectPathAnalyses;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorAnalysis;
-import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analysis.SuccessorPredecessorAnalysis;
-import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
-import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitorHost;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -75,15 +71,15 @@ public class N4JSFlowAnalyser {
 	 * <p/>
 	 * Never completes abruptly, i.e. throws an exception.
 	 */
-	public void createGraphs(Script script, boolean enableDataFlow) {
+	public void createGraphs(Script script) {
 		Objects.requireNonNull(script);
 		String uriString = script.eResource().getURI().toString();
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
 		Measurement msmnt2 = dcCreateGraph.getMeasurement("createGraph_" + uriString);
 		symbolFactory = new SymbolFactory();
-		cfg = ControlFlowGraphFactory.build(symbolFactory, script, enableDataFlow);
+		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
-		gva = new GraphVisitorAnalysis(cfg);
+		gva = new GraphVisitorAnalysis(this, cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
 		msmnt2.end();
 		msmnt1.end();
@@ -187,24 +183,41 @@ public class N4JSFlowAnalyser {
 	 * then backward beginning from an arbitrary element.
 	 */
 	public void accept(FlowAnalyser... flowAnalysers) {
-		List<GraphVisitorInternal> controlflowVisitorList = new LinkedList<>();
-		List<DataFlowVisitor> dataflowVisitorList = new LinkedList<>();
-		for (FlowAnalyser flowAnalyser : flowAnalysers) {
-			if (flowAnalyser instanceof GraphVisitorInternal) {
-				controlflowVisitorList.add((GraphVisitorInternal) flowAnalyser);
-			}
-			if (flowAnalyser instanceof DataFlowVisitor) {
-				dataflowVisitorList.add((DataFlowVisitor) flowAnalyser);
-			}
-		}
-		if (!dataflowVisitorList.isEmpty()) {
-			DataFlowVisitorHost dfvh = new DataFlowVisitorHost(dataflowVisitorList);
-			controlflowVisitorList.add(dfvh);
-		}
+		acceptForwardAnalysers(flowAnalysers);
+		augmentEffectInformation();
+		acceptBackwardAnalysers(flowAnalysers);
+	}
 
+	/**
+	 * Performs all given {@link FlowAnalyser}s in a single run. Only instances of {@link TraverseDirection#Forward} are
+	 * supported. This analysis must be performed before {@link #acceptBackwardAnalysers(FlowAnalyser...)} is invoked.
+	 */
+	public void acceptForwardAnalysers(FlowAnalyser... flowAnalysers) {
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
-		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("createGraph_" + cfg.getScriptName());
-		gva.analyseScript(this, controlflowVisitorList);
+		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("performAnalysis_" + cfg.getScriptName());
+		gva.forwardAnalysis(flowAnalysers);
+		msmnt2.end();
+		msmnt1.end();
+	}
+
+	/**
+	 * Performs all given {@link FlowAnalyser}s in a single run. Only instances of {@link TraverseDirection#Backward}
+	 * are supported. This analysis must be performed after {@link #acceptForwardAnalysers(FlowAnalyser...)} was
+	 * performed.
+	 */
+	public void acceptBackwardAnalysers(FlowAnalyser... flowAnalysers) {
+		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
+		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("performAnalysis_" + cfg.getScriptName());
+		gva.backwardAnalysis(flowAnalysers);
+		msmnt2.end();
+		msmnt1.end();
+	}
+
+	/** Augments the flow graph with effect and symbol information. */
+	public void augmentEffectInformation() {
+		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
+		Measurement msmnt2 = dcCreateGraph.getMeasurement("createGraph_" + cfg.getScriptName());
+		gva.augmentEffectInformation(symbolFactory);
 		msmnt2.end();
 		msmnt1.end();
 	}

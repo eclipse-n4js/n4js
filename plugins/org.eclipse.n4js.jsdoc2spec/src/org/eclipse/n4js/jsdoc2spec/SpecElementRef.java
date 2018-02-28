@@ -33,9 +33,9 @@ public class SpecElementRef {
 	public final IdentifiableElement identifiableElement;
 
 	/**
-	 * In case of types, it may happen that the original element is filled with a poly fill.
+	 * In case of types, it may happen that this element is filling a polyfill aware class.
 	 */
-	public Type polyfill = null;
+	public Type polyfillAware = null;
 
 	/**
 	 * The requirement ID.
@@ -65,11 +65,11 @@ public class SpecElementRef {
 	 */
 	public List<Type> getTypes() {
 		ArrayList<Type> types = new ArrayList<>(2);
+		if (polyfillAware != null) {
+			types.add(polyfillAware);
+		}
 		if (identifiableElement instanceof Type) {
 			types.add((Type) identifiableElement);
-		}
-		if (polyfill != null) {
-			types.add(polyfill);
 		}
 		return types;
 	}
