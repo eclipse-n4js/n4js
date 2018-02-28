@@ -285,6 +285,11 @@ public final class N4EnumType extends N4Type {
 public object N4Enum {
 
 	/**
+	 * Disallow instantiation of this type by user code.
+	 */
+	private constructor():void;
+
+	/**
 	 * Returns the name of a concrete literal
 	 */
 	public get name(): string
@@ -380,6 +385,11 @@ public final class N4StringBasedEnumType extends N4Type {
  * @see N4Enum
  */
 public object N4StringBasedEnum extends string {
+
+	/**
+	 * Disallow instantiation of this type by user code.
+	 */
+	private constructor():void;
 
 	// - IDE-1221 Commented out since not applicable to Stringbased Enums
 	///**
