@@ -243,12 +243,6 @@ public final class N4Method extends N4Member {
 }
 
 /**
- * Description of a field, that is either a data field or an accessor.
- */
-public final class N4Field extends N4Member {
-}
-
-/**
  * Description of a simple data field.
  */
 public final class N4DataField extends N4Member {

@@ -144,10 +144,6 @@
         this.jsFunction = spec.jsFunction;
     };
 
-    var N4Field = function N4Field(spec) {
-        N4Member.prototype.constructor.call(this, spec);
-    };
-
     var N4DataField = function N4DataField(spec) {
         N4Member.prototype.constructor.call(this, spec);
     };
@@ -813,7 +809,6 @@
     global.N4Interface = N4Interface;
     global.N4Member = N4Member;
     global.N4Method = N4Method;
-    global.N4Field = N4Field;
     global.N4DataField = N4DataField;
     global.N4Accessor = N4Accessor;
     global.N4EnumType = N4EnumType;
