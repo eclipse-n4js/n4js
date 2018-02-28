@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
@@ -63,11 +64,13 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  */
 class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
-	@Inject N4JSTypeSystem ts;
+	@Inject private N4JSTypeSystem ts;
 
-	@Inject PolyfillValidatorFragment polyfillValidatorFragment;
+	@Inject private PolyfillValidatorFragment polyfillValidatorFragment;
 
-	@Inject extension ContainerTypesHelper containerTypesHelper;
+	@Inject private extension ContainerTypesHelper containerTypesHelper;
+
+	@Inject private MemberVisibilityChecker memberVisibilityChecker;
 
 	/**
 	 * NEEEDED
@@ -241,7 +244,8 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private boolean holdsSuperClass(N4ClassDeclaration n4Class) {
-		val superType = n4Class.superClassRef?.declaredType;
+		val superTypeRef = n4Class.superClassRef;
+		val superType = superTypeRef?.declaredType;
 		if (superType !== null && superType.name !== null) { // note: in case superType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 
 			if (superType instanceof PrimitiveType) {
@@ -270,6 +274,13 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
 					addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI,superClassUri);
 					return false;
+				}
+
+				// ctor of super class must be accessible
+				val superCtor = containerTypesHelper.fromContext(n4Class).findConstructor(superType);
+				if(superCtor!==null && !memberVisibilityChecker.isVisible(n4Class, superTypeRef, superCtor).visibility) {
+					val message = getMessageForCLF_EXTEND_NON_ACCESSIBLE_CTOR(superType.name);
+					addIssue(message, n4Class, N4_CLASS_DEFINITION__SUPER_CLASS_REF, CLF_EXTEND_NON_ACCESSIBLE_CTOR);
 				}
 
 				// if super class is observable, then this class must be observable as well
