@@ -38,6 +38,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
@@ -258,17 +259,23 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					return false;
 				}
 			} else if (superType instanceof TClass) {
-
-
-
 				// (got a super class; now validate it ...)
+
 				// super class must not be final
 				if (superType.final) {
 					val message = getMessageForCLF_EXTEND_FINAL(superType.name);
 
-					val superClassUri = EcoreUtil.getURI(superType.astElement).toString;
+					val superTypeAstElement = superType.eGet(TypesPackage.eINSTANCE.syntaxRelatedTElement_AstElement,
+						false) as EObject;
+					val superClassUri = if (superTypeAstElement!==null) EcoreUtil.getURI(superTypeAstElement).toString;
 
-					addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI,superClassUri);
+					if (superClassUri !== null) {
+						addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,
+							IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI, superClassUri);
+					} else {
+						addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,
+							IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI);
+					}
 					return false;
 				}
 

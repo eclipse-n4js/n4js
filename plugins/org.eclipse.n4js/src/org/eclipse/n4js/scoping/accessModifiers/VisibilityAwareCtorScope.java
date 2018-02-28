@@ -20,10 +20,9 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
-
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Scope used to check accessibility of constructor in new-expressions.
@@ -64,6 +63,9 @@ public class VisibilityAwareCtorScope extends FilterWithErrorMarkerScope {
 		if (proxyOrInstance != null && !proxyOrInstance.eIsProxy()) {
 			if (proxyOrInstance instanceof TClassifier) {
 				TClassifier ctorClassifier = (TClassifier) proxyOrInstance;
+				if (ctorClassifier.isAbstract()) {
+					return true; // avoid duplicate error messages
+				}
 				// If the class is found, check if the visibility of the constructor is valid
 				TMethod usedCtor = containerTypesHelper.fromContext(context).findConstructor(ctorClassifier);
 				if (usedCtor != null && usedCtor.isConstructor()) {
