@@ -135,6 +135,7 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 		tokenNameToValue.put("Default", "'default'");
 		tokenNameToValue.put("Extends", "'extends'");
 		tokenNameToValue.put("Finally", "'finally'");
+		tokenNameToValue.put("Migrate", "'migrate'");
 		tokenNameToValue.put("Private", "'private'");
 		tokenNameToValue.put("Project", "'project'");
 		tokenNameToValue.put("Abstract", "'abstract'");
@@ -14194,39 +14195,45 @@ rule__UnaryOperator__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getUnaryOperatorAccess().getIncEnumLiteralDeclaration_3()); }
+		{ before(grammarAccess.getUnaryOperatorAccess().getMigrateEnumLiteralDeclaration_3()); }
+		(Migrate)
+		{ after(grammarAccess.getUnaryOperatorAccess().getMigrateEnumLiteralDeclaration_3()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getUnaryOperatorAccess().getIncEnumLiteralDeclaration_4()); }
 		(PlusSignPlusSign)
-		{ after(grammarAccess.getUnaryOperatorAccess().getIncEnumLiteralDeclaration_3()); }
+		{ after(grammarAccess.getUnaryOperatorAccess().getIncEnumLiteralDeclaration_4()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getUnaryOperatorAccess().getDecEnumLiteralDeclaration_4()); }
+		{ before(grammarAccess.getUnaryOperatorAccess().getDecEnumLiteralDeclaration_5()); }
 		(HyphenMinusHyphenMinus)
-		{ after(grammarAccess.getUnaryOperatorAccess().getDecEnumLiteralDeclaration_4()); }
+		{ after(grammarAccess.getUnaryOperatorAccess().getDecEnumLiteralDeclaration_5()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getUnaryOperatorAccess().getPosEnumLiteralDeclaration_5()); }
+		{ before(grammarAccess.getUnaryOperatorAccess().getPosEnumLiteralDeclaration_6()); }
 		(PlusSign)
-		{ after(grammarAccess.getUnaryOperatorAccess().getPosEnumLiteralDeclaration_5()); }
+		{ after(grammarAccess.getUnaryOperatorAccess().getPosEnumLiteralDeclaration_6()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getUnaryOperatorAccess().getNegEnumLiteralDeclaration_6()); }
+		{ before(grammarAccess.getUnaryOperatorAccess().getNegEnumLiteralDeclaration_7()); }
 		(HyphenMinus)
-		{ after(grammarAccess.getUnaryOperatorAccess().getNegEnumLiteralDeclaration_6()); }
+		{ after(grammarAccess.getUnaryOperatorAccess().getNegEnumLiteralDeclaration_7()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getUnaryOperatorAccess().getInvEnumLiteralDeclaration_7()); }
+		{ before(grammarAccess.getUnaryOperatorAccess().getInvEnumLiteralDeclaration_8()); }
 		(Tilde)
-		{ after(grammarAccess.getUnaryOperatorAccess().getInvEnumLiteralDeclaration_7()); }
+		{ after(grammarAccess.getUnaryOperatorAccess().getInvEnumLiteralDeclaration_8()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getUnaryOperatorAccess().getNotEnumLiteralDeclaration_8()); }
+		{ before(grammarAccess.getUnaryOperatorAccess().getNotEnumLiteralDeclaration_9()); }
 		(ExclamationMark)
-		{ after(grammarAccess.getUnaryOperatorAccess().getNotEnumLiteralDeclaration_8()); }
+		{ after(grammarAccess.getUnaryOperatorAccess().getNotEnumLiteralDeclaration_9()); }
 	)
 ;
 finally {

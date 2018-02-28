@@ -1301,6 +1301,7 @@ enum UnaryOperator {
 	neg as "-" = 6
 	inv as "~" = 7
 	not as "!" = 8
+	migrate = 9
 }
 
 enum MultiplicativeOperator {

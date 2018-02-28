@@ -32,15 +32,24 @@ public class N4IDLGlobals {
 	public static final String VERSION_SEPARATOR = "#";
 
 	/**
+	 * The set of annotations that enable a context to declare explicit type version requests (declare a context to be
+	 * version-aware).
+	 */
+	public static final Set<AnnotationDefinition> VERSION_AWARENESS_ANNOTATIONS = Sets
+			.newHashSet(AnnotationDefinition.MIGRATION, AnnotationDefinition.VERSION_AWARE);
+
+	// ****************************************************************************************************
+	// N4IDL transpilation related globals
+	// ****************************************************************************************************
+
+	/**
 	 * The version separator that is used in compiled code to separate a type name from the declared/requested version.
 	 * E.g. A#1
 	 */
 	public static final String COMPILED_VERSION_SEPARATOR = "$";
 
 	/**
-	 * The set of annotations that enable a context to declare explicit type version requests (declare a context to be
-	 * version-aware).
+	 * The static field name that holds the available migrations for a given N4 classifier.
 	 */
-	public static final Set<AnnotationDefinition> VERSION_AWARENESS_ANNOTATIONS = Sets
-			.newHashSet(AnnotationDefinition.MIGRATION, AnnotationDefinition.VERSION_AWARE);
+	public static final String MIGRATIONS_STATIC_FIELD = "$migrations__n4";
 }

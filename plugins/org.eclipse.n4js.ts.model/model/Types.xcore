@@ -858,6 +858,13 @@ abstract class TVersionable {
 	}
 }
 
+abstract class TMigratable {
+	/**
+	 * The declared migrations for this {@link TMigratable} element.
+	 */
+	refers TFunction[] migrations
+}
+
 /*
  * Base class for N4 specific classifiers, i.e., class, interface, or role.
  */
@@ -956,7 +963,7 @@ abstract class ArrayLike {
 	op TypeRef getElementType()
 }
 
-class TN4Classifier extends TClassifier, DeclaredTypeWithAccessModifier {
+class TN4Classifier extends TClassifier, DeclaredTypeWithAccessModifier, TMigratable {
 	/*
 	 * Flag indicating whether references to this type may be flagged as dynamic.
 	 */
@@ -1548,7 +1555,7 @@ class TStructSetter extends TSetter, TStructMember {
  * Represents a user defined enumeration type. All enums implicitly (and transparently
  * to the user) inherit from N4Enum, which provides properties shared by all enums.
  */
-class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
+class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable, TMigratable {
 
 	boolean external
 	contains TEnumLiteral[] literals

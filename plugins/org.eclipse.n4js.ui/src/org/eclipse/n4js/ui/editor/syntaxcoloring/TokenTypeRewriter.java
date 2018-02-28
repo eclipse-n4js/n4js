@@ -114,6 +114,11 @@ public class TokenTypeRewriter implements PseudoTokens {
 				"async",
 				"await", // future reserved keyword in ECMAScript 2015, but only in modules
 				"out");
+
+		/** Public for testing */
+		public static final ImmutableSet<String> n4idlKeywords = ImmutableSet.of(
+				"migrate");
+
 		/** Public for testing */
 		public static final ImmutableSet<String> keywordFromTypeRef = ImmutableSet.of(
 				"type",
@@ -136,6 +141,7 @@ public class TokenTypeRewriter implements PseudoTokens {
 			type = getTokenType(text, nullLiteral, NULL_TOKEN, type);
 			type = getTokenType(text, booleanLiteral, BOOLEAN_TOKEN, type);
 			type = getTokenType(text, n4jsKeyword, N4JS_KW_TOKEN, type);
+			type = getTokenType(text, n4idlKeywords, N4JS_KW_TOKEN, type);
 			return type;
 		}
 

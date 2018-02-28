@@ -811,7 +811,7 @@ CastExpression <Yield> returns Expression: PostfixExpression<Yield>
 UnaryExpression <Yield> returns Expression:
 	  CastExpression<Yield>
 	| ({UnaryExpression} op=UnaryOperator expression=UnaryExpression<Yield>);
-enum UnaryOperator:	delete | void | typeof | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!';
+enum UnaryOperator:	delete | void | typeof | migrate | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!';
 
 /* Multiplicative operators ([ECM11] 11.5) */
 MultiplicativeExpression <Yield> returns Expression: UnaryExpression<Yield>

@@ -114,7 +114,17 @@ public enum UnaryOperator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	NOT(8, "not", "!");
+	NOT(8, "not", "!"),
+
+	/**
+	 * The '<em><b>Migrate</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #MIGRATE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	MIGRATE(9, "migrate", "migrate");
 
 	/**
 	 * The '<em><b>Delete</b></em>' literal value.
@@ -252,6 +262,21 @@ public enum UnaryOperator implements Enumerator {
 	public static final int NOT_VALUE = 8;
 
 	/**
+	 * The '<em><b>Migrate</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>Migrate</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #MIGRATE
+	 * @model name="migrate"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int MIGRATE_VALUE = 9;
+
+	/**
 	 * An array of all the '<em><b>Unary Operator</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -268,6 +293,7 @@ public enum UnaryOperator implements Enumerator {
 			NEG,
 			INV,
 			NOT,
+			MIGRATE,
 		};
 
 	/**
@@ -333,6 +359,7 @@ public enum UnaryOperator implements Enumerator {
 			case NEG_VALUE: return NEG;
 			case INV_VALUE: return INV;
 			case NOT_VALUE: return NOT;
+			case MIGRATE_VALUE: return MIGRATE;
 		}
 		return null;
 	}

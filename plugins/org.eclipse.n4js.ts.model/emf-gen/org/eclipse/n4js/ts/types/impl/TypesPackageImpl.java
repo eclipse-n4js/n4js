@@ -68,6 +68,7 @@ import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TMigratable;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
@@ -304,6 +305,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tVersionableEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tMigratableEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1705,6 +1713,24 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	public EOperation getTVersionable__GetVersion() {
 		return tVersionableEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTMigratable() {
+		return tMigratableEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTMigratable_Migrations() {
+		return (EReference)tMigratableEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3236,6 +3262,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tVersionableEClass, TVERSIONABLE__DECLARED_VERSION);
 		createEOperation(tVersionableEClass, TVERSIONABLE___GET_VERSION);
 
+		tMigratableEClass = createEClass(TMIGRATABLE);
+		createEReference(tMigratableEClass, TMIGRATABLE__MIGRATIONS);
+
 		tClassifierEClass = createEClass(TCLASSIFIER);
 		createEAttribute(tClassifierEClass, TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR);
 		createEOperation(tClassifierEClass, TCLASSIFIER___IS_ABSTRACT);
@@ -3506,6 +3535,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tObjectPrototypeEClass.getESuperTypes().add(this.getArrayLike());
 		tn4ClassifierEClass.getESuperTypes().add(this.getTClassifier());
 		tn4ClassifierEClass.getESuperTypes().add(this.getDeclaredTypeWithAccessModifier());
+		tn4ClassifierEClass.getESuperTypes().add(this.getTMigratable());
 		tClassEClass.getESuperTypes().add(this.getTN4Classifier());
 		tInterfaceEClass.getESuperTypes().add(this.getTN4Classifier());
 		tMemberEClass.getESuperTypes().add(this.getIdentifiableElement());
@@ -3539,6 +3569,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tEnumEClass.getESuperTypes().add(this.getDeclaredTypeWithAccessModifier());
 		tEnumEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		tEnumEClass.getESuperTypes().add(this.getTVersionable());
+		tEnumEClass.getESuperTypes().add(this.getTMigratable());
 		tEnumLiteralEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		tEnumLiteralEClass.getESuperTypes().add(this.getIdentifiableElement());
 		tVariableEClass.getESuperTypes().add(this.getTExportableElement());
@@ -3764,6 +3795,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTVersionable_DeclaredVersion(), theEcorePackage.getEInt(), "declaredVersion", null, 0, 1, TVersionable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTVersionable__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(tMigratableEClass, TMigratable.class, "TMigratable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTMigratable_Migrations(), this.getTFunction(), null, "migrations", null, 0, -1, TMigratable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tClassifierEClass, TClassifier.class, "TClassifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTClassifier_DeclaredCovariantConstructor(), theEcorePackage.getEBoolean(), "declaredCovariantConstructor", null, 0, 1, TClassifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

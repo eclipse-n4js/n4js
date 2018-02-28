@@ -722,4 +722,18 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 		acceptor.accept(issue, 'Install npm package to workspace', 'Download and install missing dependency from npm.', null, modification);
 	}
+	
+	/**
+	 * N4IDL-related quick-fix which adds a "@VersionAware" annotation to 
+	 * classes which do not declare an explicit type version.
+	 */
+	@Fix(IssueCodes.IDL_VERSIONED_ELEMENT_MISSING_VERSION)
+	def addVersionAwareAnnotation(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Declare this type as @VersionAware', 'Add @VersionAware annotation.', ImageNames.ANNOTATION_ADD) [ context, marker, offset, length, element |
+			return #[
+				insertLineAbove(context.xtextDocument, offset, "@"+AnnotationDefinition.VERSION_AWARE.name, true)
+			];
+		]
+	}
+	
 }

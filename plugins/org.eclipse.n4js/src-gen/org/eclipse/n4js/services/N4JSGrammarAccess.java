@@ -9720,24 +9720,26 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cVoidVoidKeyword_1_0 = (Keyword)cVoidEnumLiteralDeclaration_1.eContents().get(0);
 		private final EnumLiteralDeclaration cTypeofEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
 		private final Keyword cTypeofTypeofKeyword_2_0 = (Keyword)cTypeofEnumLiteralDeclaration_2.eContents().get(0);
-		private final EnumLiteralDeclaration cIncEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
-		private final Keyword cIncPlusSignPlusSignKeyword_3_0 = (Keyword)cIncEnumLiteralDeclaration_3.eContents().get(0);
-		private final EnumLiteralDeclaration cDecEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
-		private final Keyword cDecHyphenMinusHyphenMinusKeyword_4_0 = (Keyword)cDecEnumLiteralDeclaration_4.eContents().get(0);
-		private final EnumLiteralDeclaration cPosEnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
-		private final Keyword cPosPlusSignKeyword_5_0 = (Keyword)cPosEnumLiteralDeclaration_5.eContents().get(0);
-		private final EnumLiteralDeclaration cNegEnumLiteralDeclaration_6 = (EnumLiteralDeclaration)cAlternatives.eContents().get(6);
-		private final Keyword cNegHyphenMinusKeyword_6_0 = (Keyword)cNegEnumLiteralDeclaration_6.eContents().get(0);
-		private final EnumLiteralDeclaration cInvEnumLiteralDeclaration_7 = (EnumLiteralDeclaration)cAlternatives.eContents().get(7);
-		private final Keyword cInvTildeKeyword_7_0 = (Keyword)cInvEnumLiteralDeclaration_7.eContents().get(0);
-		private final EnumLiteralDeclaration cNotEnumLiteralDeclaration_8 = (EnumLiteralDeclaration)cAlternatives.eContents().get(8);
-		private final Keyword cNotExclamationMarkKeyword_8_0 = (Keyword)cNotEnumLiteralDeclaration_8.eContents().get(0);
+		private final EnumLiteralDeclaration cMigrateEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
+		private final Keyword cMigrateMigrateKeyword_3_0 = (Keyword)cMigrateEnumLiteralDeclaration_3.eContents().get(0);
+		private final EnumLiteralDeclaration cIncEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
+		private final Keyword cIncPlusSignPlusSignKeyword_4_0 = (Keyword)cIncEnumLiteralDeclaration_4.eContents().get(0);
+		private final EnumLiteralDeclaration cDecEnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
+		private final Keyword cDecHyphenMinusHyphenMinusKeyword_5_0 = (Keyword)cDecEnumLiteralDeclaration_5.eContents().get(0);
+		private final EnumLiteralDeclaration cPosEnumLiteralDeclaration_6 = (EnumLiteralDeclaration)cAlternatives.eContents().get(6);
+		private final Keyword cPosPlusSignKeyword_6_0 = (Keyword)cPosEnumLiteralDeclaration_6.eContents().get(0);
+		private final EnumLiteralDeclaration cNegEnumLiteralDeclaration_7 = (EnumLiteralDeclaration)cAlternatives.eContents().get(7);
+		private final Keyword cNegHyphenMinusKeyword_7_0 = (Keyword)cNegEnumLiteralDeclaration_7.eContents().get(0);
+		private final EnumLiteralDeclaration cInvEnumLiteralDeclaration_8 = (EnumLiteralDeclaration)cAlternatives.eContents().get(8);
+		private final Keyword cInvTildeKeyword_8_0 = (Keyword)cInvEnumLiteralDeclaration_8.eContents().get(0);
+		private final EnumLiteralDeclaration cNotEnumLiteralDeclaration_9 = (EnumLiteralDeclaration)cAlternatives.eContents().get(9);
+		private final Keyword cNotExclamationMarkKeyword_9_0 = (Keyword)cNotEnumLiteralDeclaration_9.eContents().get(0);
 		
 		//enum UnaryOperator:
-		//	delete | void | typeof | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!';
+		//	delete | void | typeof | migrate | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!';
 		public EnumRule getRule() { return rule; }
 		
-		//delete | void | typeof | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!'
+		//delete | void | typeof | migrate | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//delete
@@ -9758,41 +9760,47 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//"typeof"
 		public Keyword getTypeofTypeofKeyword_2_0() { return cTypeofTypeofKeyword_2_0; }
 		
+		//migrate
+		public EnumLiteralDeclaration getMigrateEnumLiteralDeclaration_3() { return cMigrateEnumLiteralDeclaration_3; }
+		
+		//"migrate"
+		public Keyword getMigrateMigrateKeyword_3_0() { return cMigrateMigrateKeyword_3_0; }
+		
 		//inc='++'
-		public EnumLiteralDeclaration getIncEnumLiteralDeclaration_3() { return cIncEnumLiteralDeclaration_3; }
+		public EnumLiteralDeclaration getIncEnumLiteralDeclaration_4() { return cIncEnumLiteralDeclaration_4; }
 		
 		//'++'
-		public Keyword getIncPlusSignPlusSignKeyword_3_0() { return cIncPlusSignPlusSignKeyword_3_0; }
+		public Keyword getIncPlusSignPlusSignKeyword_4_0() { return cIncPlusSignPlusSignKeyword_4_0; }
 		
 		//dec='--'
-		public EnumLiteralDeclaration getDecEnumLiteralDeclaration_4() { return cDecEnumLiteralDeclaration_4; }
+		public EnumLiteralDeclaration getDecEnumLiteralDeclaration_5() { return cDecEnumLiteralDeclaration_5; }
 		
 		//'--'
-		public Keyword getDecHyphenMinusHyphenMinusKeyword_4_0() { return cDecHyphenMinusHyphenMinusKeyword_4_0; }
+		public Keyword getDecHyphenMinusHyphenMinusKeyword_5_0() { return cDecHyphenMinusHyphenMinusKeyword_5_0; }
 		
 		//pos='+'
-		public EnumLiteralDeclaration getPosEnumLiteralDeclaration_5() { return cPosEnumLiteralDeclaration_5; }
+		public EnumLiteralDeclaration getPosEnumLiteralDeclaration_6() { return cPosEnumLiteralDeclaration_6; }
 		
 		//'+'
-		public Keyword getPosPlusSignKeyword_5_0() { return cPosPlusSignKeyword_5_0; }
+		public Keyword getPosPlusSignKeyword_6_0() { return cPosPlusSignKeyword_6_0; }
 		
 		//neg='-'
-		public EnumLiteralDeclaration getNegEnumLiteralDeclaration_6() { return cNegEnumLiteralDeclaration_6; }
+		public EnumLiteralDeclaration getNegEnumLiteralDeclaration_7() { return cNegEnumLiteralDeclaration_7; }
 		
 		//'-'
-		public Keyword getNegHyphenMinusKeyword_6_0() { return cNegHyphenMinusKeyword_6_0; }
+		public Keyword getNegHyphenMinusKeyword_7_0() { return cNegHyphenMinusKeyword_7_0; }
 		
 		//inv='~'
-		public EnumLiteralDeclaration getInvEnumLiteralDeclaration_7() { return cInvEnumLiteralDeclaration_7; }
+		public EnumLiteralDeclaration getInvEnumLiteralDeclaration_8() { return cInvEnumLiteralDeclaration_8; }
 		
 		//'~'
-		public Keyword getInvTildeKeyword_7_0() { return cInvTildeKeyword_7_0; }
+		public Keyword getInvTildeKeyword_8_0() { return cInvTildeKeyword_8_0; }
 		
 		//not='!'
-		public EnumLiteralDeclaration getNotEnumLiteralDeclaration_8() { return cNotEnumLiteralDeclaration_8; }
+		public EnumLiteralDeclaration getNotEnumLiteralDeclaration_9() { return cNotEnumLiteralDeclaration_9; }
 		
 		//'!'
-		public Keyword getNotExclamationMarkKeyword_8_0() { return cNotExclamationMarkKeyword_8_0; }
+		public Keyword getNotExclamationMarkKeyword_9_0() { return cNotExclamationMarkKeyword_9_0; }
 	}
 	public class MultiplicativeOperatorElements extends AbstractEnumRuleElementFinder {
 		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.MultiplicativeOperator");
@@ -11777,7 +11785,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//enum UnaryOperator:
-	//	delete | void | typeof | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!';
+	//	delete | void | typeof | migrate | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!';
 	public UnaryOperatorElements getUnaryOperatorAccess() {
 		return eUnaryOperator;
 	}

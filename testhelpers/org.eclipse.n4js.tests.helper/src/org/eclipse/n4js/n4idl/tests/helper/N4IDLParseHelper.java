@@ -28,7 +28,7 @@ public class N4IDLParseHelper extends ParseHelper<Script> {
 	private ResourceHelper resourceHelper;
 
 	/**
-	 * Parses n4jsx file (using n4jsx as file extension).
+	 * Parses n4idl file (using n4idl as file extension).
 	 */
 	public Script parseN4IDL(CharSequence text) throws Exception {
 		setFileExtension("n4idl");
