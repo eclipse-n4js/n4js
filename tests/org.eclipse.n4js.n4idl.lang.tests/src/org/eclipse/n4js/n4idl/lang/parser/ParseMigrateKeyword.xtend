@@ -13,6 +13,8 @@ package org.eclipse.n4js.n4idl.lang.parser
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4idl.lang.AbstractN4IDLParserTest
 import org.junit.Test
+import org.eclipse.n4js.n4JS.UnaryOperator
+import org.eclipse.n4js.n4JS.UnaryExpression
 
 public class ParseMigrateKeyword extends AbstractN4IDLParserTest {
 
@@ -26,7 +28,9 @@ public class ParseMigrateKeyword extends AbstractN4IDLParserTest {
 				return migrate c1;
 			}
 		'''.parseSuccessfully
-		println(script);
+		assertNotNull("The migrate operator is parsed correctly", script.eAllContents
+			.filter(UnaryExpression)
+			.findFirst[exp | exp.op == UnaryOperator.MIGRATE]);
 	}
 
 }

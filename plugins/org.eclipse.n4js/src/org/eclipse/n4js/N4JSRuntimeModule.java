@@ -31,6 +31,7 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.parser.BadEscapementAwareMessageProvider;
 import org.eclipse.n4js.parser.N4JSHiddenTokenHelper;
 import org.eclipse.n4js.parser.N4JSSemicolonInjectingParser;
+import org.eclipse.n4js.parser.N4JSVariantAwareResourceFactory;
 import org.eclipse.n4js.parser.PropertyNameAwareElementFactory;
 import org.eclipse.n4js.parser.RegExLiteralAwareLexer;
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
@@ -98,7 +99,9 @@ import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
 import org.eclipse.xtext.resource.DescriptionUtils;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.XtextResourceFactory;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
@@ -548,6 +551,12 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/** Bind N4JS composite generator */
 	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
 		return N4JSCompositeGenerator.class;
+	}
+
+	/** Bind language variants aware {@link XtextResourceFactory} */
+	@Override
+	public Class<? extends IResourceFactory> bindIResourceFactory() {
+		return N4JSVariantAwareResourceFactory.class;
 	}
 
 	//// N4IDL specific bindings
