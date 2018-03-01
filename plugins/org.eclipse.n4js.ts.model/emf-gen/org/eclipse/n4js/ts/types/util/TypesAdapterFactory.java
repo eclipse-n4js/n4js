@@ -198,6 +198,10 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTMigratableAdapter();
 			}
 			@Override
+			public Adapter caseTMigration(TMigration object) {
+				return createTMigrationAdapter();
+			}
+			@Override
 			public Adapter caseTClassifier(TClassifier object) {
 				return createTClassifierAdapter();
 			}
@@ -738,6 +742,20 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTMigratableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TMigration <em>TMigration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.TMigration
+	 * @generated
+	 */
+	public Adapter createTMigrationAdapter() {
 		return null;
 	}
 

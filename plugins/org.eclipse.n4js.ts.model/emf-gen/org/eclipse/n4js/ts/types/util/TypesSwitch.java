@@ -369,6 +369,22 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.TMIGRATION: {
+				TMigration tMigration = (TMigration)theEObject;
+				T result = caseTMigration(tMigration);
+				if (result == null) result = caseTFunction(tMigration);
+				if (result == null) result = caseDeclaredTypeWithAccessModifier(tMigration);
+				if (result == null) result = caseSyntaxRelatedTElement(tMigration);
+				if (result == null) result = caseType(tMigration);
+				if (result == null) result = caseAccessibleTypeElement(tMigration);
+				if (result == null) result = caseTExportableElement(tMigration);
+				if (result == null) result = caseTAnnotableElement(tMigration);
+				if (result == null) result = caseVersionable(tMigration);
+				if (result == null) result = caseIdentifiableElement(tMigration);
+				if (result == null) result = caseTypableElement(tMigration);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TCLASSIFIER: {
 				TClassifier tClassifier = (TClassifier)theEObject;
 				T result = caseTClassifier(tClassifier);
@@ -1162,6 +1178,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTMigratable(TMigratable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TMigration</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TMigration</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTMigration(TMigration object) {
 		return null;
 	}
 

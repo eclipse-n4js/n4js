@@ -69,6 +69,7 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TMigratable;
+import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
@@ -312,6 +313,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tMigratableEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tMigrationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1731,6 +1739,51 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	public EReference getTMigratable_Migrations() {
 		return (EReference)tMigratableEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTMigration() {
+		return tMigrationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTMigration_SourceVersion() {
+		return (EAttribute)tMigrationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTMigration_TargetVersion() {
+		return (EAttribute)tMigrationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTMigration_SourceTypeRefs() {
+		return (EReference)tMigrationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTMigration_TargetTypeRefs() {
+		return (EReference)tMigrationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -3265,6 +3318,12 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tMigratableEClass = createEClass(TMIGRATABLE);
 		createEReference(tMigratableEClass, TMIGRATABLE__MIGRATIONS);
 
+		tMigrationEClass = createEClass(TMIGRATION);
+		createEAttribute(tMigrationEClass, TMIGRATION__SOURCE_VERSION);
+		createEAttribute(tMigrationEClass, TMIGRATION__TARGET_VERSION);
+		createEReference(tMigrationEClass, TMIGRATION__SOURCE_TYPE_REFS);
+		createEReference(tMigrationEClass, TMIGRATION__TARGET_TYPE_REFS);
+
 		tClassifierEClass = createEClass(TCLASSIFIER);
 		createEAttribute(tClassifierEClass, TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR);
 		createEOperation(tClassifierEClass, TCLASSIFIER___IS_ABSTRACT);
@@ -3522,6 +3581,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tStructuralTypeEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getSyntaxRelatedTElement());
 		tStructuralTypeEClass.getEGenericSuperTypes().add(g1);
+		tMigrationEClass.getESuperTypes().add(this.getTFunction());
 		g1 = createEGenericType(this.getContainerType());
 		g2 = createEGenericType(this.getTMember());
 		g1.getETypeArguments().add(g2);
@@ -3798,6 +3858,12 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(tMigratableEClass, TMigratable.class, "TMigratable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTMigratable_Migrations(), this.getTFunction(), null, "migrations", null, 0, -1, TMigratable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(tMigrationEClass, TMigration.class, "TMigration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTMigration_SourceVersion(), theEcorePackage.getEInt(), "sourceVersion", null, 0, 1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTMigration_TargetVersion(), theEcorePackage.getEInt(), "targetVersion", null, 0, 1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTMigration_SourceTypeRefs(), theTypeRefsPackage.getTypeRef(), null, "sourceTypeRefs", null, 0, -1, TMigration.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getTMigration_TargetTypeRefs(), theTypeRefsPackage.getTypeRef(), null, "targetTypeRefs", null, 0, -1, TMigration.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
 		initEClass(tClassifierEClass, TClassifier.class, "TClassifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTClassifier_DeclaredCovariantConstructor(), theEcorePackage.getEBoolean(), "declaredCovariantConstructor", null, 0, 1, TClassifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

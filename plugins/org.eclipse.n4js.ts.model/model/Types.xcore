@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
@@ -865,6 +866,43 @@ abstract class TMigratable {
 	refers TFunction[] migrations
 }
 
+/**
+ * Represents an N4IDL migration declaration.
+ */
+class TMigration extends TFunction {
+	
+	int sourceVersion
+	int targetVersion
+	
+	/**
+	 * Returns the source TypeRefs of this migration.
+	 */
+	refers derived TypeRef[] sourceTypeRefs get {
+		return this.fpars.map[p | p.typeRef ]
+	}
+	
+	/**
+	 * Returns the target TypeRefs of this migration.
+	 */
+	refers derived TypeRef[] targetTypeRefs get {
+		val returnTypeRef = this.returnTypeRef
+		
+		if (returnTypeRef === null) {
+			return emptyEList;
+		}
+		
+		if (returnTypeRef instanceof StructuralTypeRef) {
+			return this.returnTypeRef.structuralMembers
+				.filter(TStructField)
+				.map[f | f.typeRef]
+				.toEList;
+		} else {
+			return this.returnTypeRef.singletonEList;
+		}
+	}
+	
+}
+
 /*
  * Base class for N4 specific classifiers, i.e., class, interface, or role.
  */
@@ -1559,6 +1597,7 @@ class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVers
 
 	boolean external
 	contains TEnumLiteral[] literals
+	
 	op TypeVariable[] getTypeVars() {
 		return emptyEList();
 	}

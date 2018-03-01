@@ -237,6 +237,15 @@ public interface TypesFactory extends EFactory {
 	TStructuralType createTStructuralType();
 
 	/**
+	 * Returns a new object of class '<em>TMigration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>TMigration</em>'.
+	 * @generated
+	 */
+	TMigration createTMigration();
+
+	/**
 	 * Returns a new object of class '<em>TObject Prototype</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
