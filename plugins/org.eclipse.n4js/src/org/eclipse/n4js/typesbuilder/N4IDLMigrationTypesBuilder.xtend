@@ -14,6 +14,7 @@ import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMigration
@@ -66,29 +67,9 @@ class N4IDLMigrationTypesBuilder {
 	 */
 	private static def int computeVersion(List<TypeRef> typeRefs) {
 		return typeRefs.stream()
-				.map[typeRef | getVersion(typeRef)]
-				.filter[v | v != 0] // find non-0 version
-				.findAny()
-				.orElse(0);
-	}
-	
-	/**
-	 * Returns the version of the given {@link TypeRef}.
-	 * 
-	 * Also considers type arguments if the type ref does not declare a 
-	 * version on its own.
-	 */
-	private static def int getVersion(TypeRef typeRef) {
-		return switch(typeRef) {
-			// use declared version if present
-			case typeRef.version != 0: typeRef.version
-			// recursively look into type arguments which represent TypeRefs themselves
-			case !typeRef.typeArgs.empty: typeRef.typeArgs
-				.filter(TypeRef)
-				.map[getVersion(it)]
-				.head
-			default: 0
-		}
+			.map([ref | VersionUtils.getVersion(ref)])
+			.filter[v | v != 0]
+			.findFirst().orElse(0);
 	}
 	
 }

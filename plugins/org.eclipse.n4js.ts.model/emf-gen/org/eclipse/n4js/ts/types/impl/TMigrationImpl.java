@@ -12,6 +12,8 @@ package org.eclipse.n4js.ts.types.impl;
 
 import com.google.common.collect.Iterables;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ECollections;
@@ -30,7 +32,9 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TStructField;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.ts.types.VoidType;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
@@ -46,8 +50,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getSourceVersion <em>Source Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getTargetVersion <em>Target Version</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getSourceTypeRefs <em>Source Type Refs</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getTargetTypeRefs <em>Target Type Refs</em>}</li>
  * </ul>
  *
  * @generated
@@ -165,7 +167,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return p.getTypeRef();
 			}
 		};
-		return XcoreEListExtensions.<TFormalParameter, TypeRef>map(this.getFpars(), _function);
+		return ECollections.<TypeRef>toEList(XcoreEListExtensions.<TFormalParameter, TypeRef>map(this.getFpars(), _function));
 	}
 
 	/**
@@ -187,7 +189,13 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 			return ECollections.<TypeRef>toEList(IterableExtensions.<TStructField, TypeRef>map(Iterables.<TStructField>filter(this.getReturnTypeRef().getStructuralMembers(), TStructField.class), _function));
 		}
 		else {
-			return ECollections.<TypeRef>singletonEList(this.getReturnTypeRef());
+			Type _declaredType = this.getReturnTypeRef().getDeclaredType();
+			if ((_declaredType instanceof VoidType)) {
+				return XcoreCollectionLiterals.<TypeRef>emptyEList();
+			}
+			else {
+				return ECollections.<TypeRef>asEList(this.getReturnTypeRef());
+			}
 		}
 	}
 
@@ -203,10 +211,6 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return getSourceVersion();
 			case TypesPackage.TMIGRATION__TARGET_VERSION:
 				return getTargetVersion();
-			case TypesPackage.TMIGRATION__SOURCE_TYPE_REFS:
-				return getSourceTypeRefs();
-			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
-				return getTargetTypeRefs();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -259,12 +263,24 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return sourceVersion != SOURCE_VERSION_EDEFAULT;
 			case TypesPackage.TMIGRATION__TARGET_VERSION:
 				return targetVersion != TARGET_VERSION_EDEFAULT;
-			case TypesPackage.TMIGRATION__SOURCE_TYPE_REFS:
-				return !getSourceTypeRefs().isEmpty();
-			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
-				return !getTargetTypeRefs().isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.TMIGRATION___GET_SOURCE_TYPE_REFS:
+				return getSourceTypeRefs();
+			case TypesPackage.TMIGRATION___GET_TARGET_TYPE_REFS:
+				return getTargetTypeRefs();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

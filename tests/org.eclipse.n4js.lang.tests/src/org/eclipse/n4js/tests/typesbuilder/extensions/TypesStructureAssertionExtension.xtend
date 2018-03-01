@@ -10,10 +10,11 @@
  */
 package org.eclipse.n4js.tests.typesbuilder.extensions
 
-import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.TypedElement
-import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
@@ -21,20 +22,20 @@ import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
-import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TMigration
+import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAccessModifier
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 
 /**
  */
@@ -234,6 +235,26 @@ class TypesStructureAssertionExtension {
 		assertEquals(phase + ": Should be named", name, tFunction.name)
 		assertEquals(phase + ": TFunction should have expected parameter count", parameterCount, tFunction.fpars.size)
 		tFunction
+	}
+	
+	def assertTMigration(String phase, Resource newN4jsResource, String name,
+		int sourceVersion, int targetVersion, 
+		int sourceTypeRefCount, int targetTypeRefCount) {
+		val type = assertTypeForName(newN4jsResource, name, phase)
+		assertTrue(phase + ": TMigration expected", type instanceof TMigration)
+		val tMigration = type as TMigration
+		assertEquals(phase + ": Should be named", name, tMigration.name)
+		
+		val sourceTypeRefs = tMigration.sourceTypeRefs;
+		val targetTypeRefs = tMigration.targetTypeRefs;
+		
+		assertEquals(phase + ": TMigration " + name +  " source type ref count", sourceTypeRefCount, sourceTypeRefs.size)
+		assertEquals(phase + ": TMigration " + name +  " target type ref count", targetTypeRefCount, targetTypeRefs.size)
+		
+		assertEquals(phase + ": TMigration " + name +  " target version", targetVersion, tMigration.targetVersion)
+		assertEquals(phase + ": TMigration " + name +  " source version", sourceVersion, tMigration.sourceVersion)
+		
+		tMigration
 	}
 
 	def assertTypeVariables(String phase, TFunction function, Resource resource, String... expectedTypeVarNames) {

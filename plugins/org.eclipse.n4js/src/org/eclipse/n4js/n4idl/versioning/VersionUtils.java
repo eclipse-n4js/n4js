@@ -16,10 +16,15 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.xtext.EcoreUtil2;
+
+import com.google.common.base.Optional;
 
 /**
  * Static utility class with regard to versioned and versionable elements.
@@ -113,6 +118,48 @@ public class VersionUtils {
 		return N4IDLGlobals.VERSION_AWARENESS_ANNOTATIONS.stream()
 				.anyMatch(anno -> anno.hasAnnotation(element));
 
+	}
+
+	/**
+	 * Returns the declared version for the given {@link TypeRef}.
+	 *
+	 * This method only works with explicitly declared type requests. Therefore, it is safe to use it in a pre-linking
+	 * phase of AST processing/ type model building.
+	 */
+	public static int getVersion(TypeRef typeRef) {
+		return findFirstVersionedSubRef(typeRef)
+				.transform(s -> s.getVersion()).or(0);
+	}
+
+	/**
+	 * Traverses the given {@link TypeRef} and looks for the first reference with an explicitly declared version
+	 * request.
+	 */
+	private static Optional<TypeRef> findFirstVersionedSubRef(TypeRef typeRef) {
+		// first look into
+		if (typeRef instanceof VersionedParameterizedTypeRef &&
+				((VersionedParameterizedTypeRef) typeRef).hasRequestedVersion()) {
+			return Optional.of(typeRef);
+		}
+
+		// traverse operands for composed type refs
+		if (typeRef instanceof ComposedTypeRef) {
+			return ((ComposedTypeRef) typeRef).getTypeRefs().stream()
+					.map(t -> findFirstVersionedSubRef(t))
+					// find first present sub-reference
+					.filter(to -> to.isPresent())
+					// otherwise return an absent optional
+					.findFirst().orElse(Optional.absent());
+		}
+
+		// traverse type arguments for parameterized types
+		return typeRef.getTypeArgs().stream()
+				.filter(t -> t instanceof TypeRef)
+				.map(t -> findFirstVersionedSubRef((TypeRef) t))
+				// find first present sub-reference
+				.filter(to -> to.isPresent())
+				// otherwise return an absent optional
+				.findFirst().orElse(Optional.absent());
 	}
 
 	private VersionUtils() {

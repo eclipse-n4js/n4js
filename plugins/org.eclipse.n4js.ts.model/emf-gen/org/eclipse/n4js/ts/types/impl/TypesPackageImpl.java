@@ -1773,8 +1773,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTMigration_SourceTypeRefs() {
-		return (EReference)tMigrationEClass.getEStructuralFeatures().get(2);
+	public EOperation getTMigration__GetSourceTypeRefs() {
+		return tMigrationEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1782,8 +1782,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTMigration_TargetTypeRefs() {
-		return (EReference)tMigrationEClass.getEStructuralFeatures().get(3);
+	public EOperation getTMigration__GetTargetTypeRefs() {
+		return tMigrationEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -3321,8 +3321,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tMigrationEClass = createEClass(TMIGRATION);
 		createEAttribute(tMigrationEClass, TMIGRATION__SOURCE_VERSION);
 		createEAttribute(tMigrationEClass, TMIGRATION__TARGET_VERSION);
-		createEReference(tMigrationEClass, TMIGRATION__SOURCE_TYPE_REFS);
-		createEReference(tMigrationEClass, TMIGRATION__TARGET_TYPE_REFS);
+		createEOperation(tMigrationEClass, TMIGRATION___GET_SOURCE_TYPE_REFS);
+		createEOperation(tMigrationEClass, TMIGRATION___GET_TARGET_TYPE_REFS);
 
 		tClassifierEClass = createEClass(TCLASSIFIER);
 		createEAttribute(tClassifierEClass, TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR);
@@ -3862,8 +3862,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(tMigrationEClass, TMigration.class, "TMigration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTMigration_SourceVersion(), theEcorePackage.getEInt(), "sourceVersion", null, 0, 1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTMigration_TargetVersion(), theEcorePackage.getEInt(), "targetVersion", null, 0, 1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTMigration_SourceTypeRefs(), theTypeRefsPackage.getTypeRef(), null, "sourceTypeRefs", null, 0, -1, TMigration.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getTMigration_TargetTypeRefs(), theTypeRefsPackage.getTypeRef(), null, "targetTypeRefs", null, 0, -1, TMigration.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTMigration__GetSourceTypeRefs(), theTypeRefsPackage.getTypeRef(), "getSourceTypeRefs", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTMigration__GetTargetTypeRefs(), theTypeRefsPackage.getTypeRef(), "getTargetTypeRefs", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tClassifierEClass, TClassifier.class, "TClassifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTClassifier_DeclaredCovariantConstructor(), theEcorePackage.getEBoolean(), "declaredCovariantConstructor", null, 0, 1, TClassifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

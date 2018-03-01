@@ -26,18 +26,19 @@ import com.google.common.collect.Iterables
 import java.util.Collections
 import java.util.HashMap
 import java.util.List
+import org.eclipse.emf.common.util.ECollections
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EMap
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
+import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
@@ -877,27 +878,33 @@ class TMigration extends TFunction {
 	/**
 	 * Returns the source TypeRefs of this migration.
 	 */
-	refers derived TypeRef[] sourceTypeRefs get {
-		return this.fpars.map[p | p.typeRef ]
+	op TypeRef[] getSourceTypeRefs() {
+		// map function parameter type refs
+		return this.fpars.map[p | p.typeRef ].toEList;
 	}
 	
 	/**
 	 * Returns the target TypeRefs of this migration.
 	 */
-	refers derived TypeRef[] targetTypeRefs get {
+	op TypeRef[] getTargetTypeRefs() {
 		val returnTypeRef = this.returnTypeRef
 		
 		if (returnTypeRef === null) {
 			return emptyEList;
 		}
 		
+		// if structural type ref, use structural fields as multiple target type refs
 		if (returnTypeRef instanceof StructuralTypeRef) {
 			return this.returnTypeRef.structuralMembers
 				.filter(TStructField)
-				.map[f | f.typeRef]
+				.map[f | f.typeRef ]
 				.toEList;
+		} else if (this.returnTypeRef.declaredType instanceof VoidType) {
+			// special handling for void return type
+			return emptyEList;
 		} else {
-			return this.returnTypeRef.singletonEList;
+			// otherwise use single target type
+			return ECollections.asEList(this.returnTypeRef);
 		}
 	}
 	
