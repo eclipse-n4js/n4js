@@ -19,13 +19,16 @@ import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
  *
  * @see InternalN4JSLexer
  */
-public class N4IDLKeywordFilteringTokenSource implements TokenSource {
+public class N4IDLKeywordFilteringTokenSource implements RegExLiteralAwareTokenSource {
 
 	private final TokenSource delegate;
+	/** indicates whether #delegate is an instance of {@link RegExLiteralAwareTokenSource}. */
+	private final boolean regExLiteralAware;
 
 	/** Instantiates a new {@link N4IDLKeywordFilteringTokenSource} */
 	public N4IDLKeywordFilteringTokenSource(TokenSource delegate) {
 		this.delegate = delegate;
+		this.regExLiteralAware = delegate instanceof RegExLiteralAwareTokenSource;
 	}
 
 	@Override
@@ -45,10 +48,29 @@ public class N4IDLKeywordFilteringTokenSource implements TokenSource {
 		return delegate.getSourceName();
 	}
 
+	/** Returns the delegate of this filtering {@link TokenSource}. */
+	public TokenSource getDelegate() {
+		return this.delegate;
+	}
+
 	@Override
 	public String toString() {
 		// Delegate toString, since this is used to obtain text of
 		// tokens by offset and length
 		return delegate.toString();
+	}
+
+	@Override
+	public void setInRegularExpression() {
+		if (this.delegate instanceof RegExLiteralAwareTokenSource) {
+			((RegExLiteralAwareTokenSource) this.delegate).setInRegularExpression();
+		}
+	}
+
+	@Override
+	public void setInTemplateSegment() {
+		if (this.regExLiteralAware) {
+			((RegExLiteralAwareTokenSource) this.delegate).setInTemplateSegment();
+		}
 	}
 }

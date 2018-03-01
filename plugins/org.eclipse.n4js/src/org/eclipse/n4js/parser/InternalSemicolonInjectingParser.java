@@ -24,13 +24,12 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
+import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser;
-
-import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
 
 /**
  * <p>
@@ -132,7 +131,7 @@ public class InternalSemicolonInjectingParser extends InternalN4JSParser impleme
 	@Override
 	protected void setInRegularExpression() {
 		if (!hasBufferedTokens()) {
-			RegExLiteralAwareLexer lexer = (RegExLiteralAwareLexer) this.input.getTokenSource();
+			final RegExLiteralAwareTokenSource lexer = (RegExLiteralAwareTokenSource) this.input.getTokenSource();
 			lexer.setInRegularExpression();
 		}
 	}
@@ -148,7 +147,7 @@ public class InternalSemicolonInjectingParser extends InternalN4JSParser impleme
 	@Override
 	protected void setInTemplateSegment() {
 		if (!hasBufferedTokens()) {
-			RegExLiteralAwareLexer lexer = (RegExLiteralAwareLexer) this.input.getTokenSource();
+			RegExLiteralAwareTokenSource lexer = (RegExLiteralAwareTokenSource) this.input.getTokenSource();
 			lexer.setInTemplateSegment();
 		}
 	}

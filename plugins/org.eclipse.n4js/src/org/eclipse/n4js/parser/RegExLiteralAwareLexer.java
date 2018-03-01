@@ -13,7 +13,6 @@ package org.eclipse.n4js.parser;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.Token;
-
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 
 /**
@@ -24,7 +23,7 @@ import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
  * which cloaked as the expected token type {@link #RULE_REGEX_TAIL}.
  * </p>
  */
-public class RegExLiteralAwareLexer extends InternalN4JSLexer {
+public class RegExLiteralAwareLexer extends InternalN4JSLexer implements RegExLiteralAwareTokenSource {
 
 	/**
 	 * <p>
@@ -53,6 +52,7 @@ public class RegExLiteralAwareLexer extends InternalN4JSLexer {
 	 * Announce the next token to be expected as a regular expression tail.
 	 * </p>
 	 */
+	@Override
 	public void setInRegularExpression() {
 		inRegularExpression = true;
 	}
@@ -62,6 +62,7 @@ public class RegExLiteralAwareLexer extends InternalN4JSLexer {
 	 * Announce the next token to be expected as a part of a template literal
 	 * </p>
 	 */
+	@Override
 	public void setInTemplateSegment() {
 		inTemplateSegment = true;
 	}
