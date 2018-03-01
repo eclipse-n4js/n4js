@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2018 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,9 +33,8 @@ import org.eclipse.n4js.jsdoc.dom.util.DomSwitch;
 import org.eclipse.xtext.util.Strings;
 
 /**
- * Reproduces comment string from doclet, basically for debugging and testing purposes. This serializer tries to create
- * the original doclet as close as possible. It uses the {@link MD2HTMLConvertingBuilder} to convert the markdown to
- * HTML.
+ * Creates a HTML version of the JSDoc string to be shown in the hover. It uses the {@link MD2HTMLConvertingBuilder} to
+ * convert markdown to HTML.
  * <p>
  * Tags are added as items of a definition list with the tag name as title.
  */
