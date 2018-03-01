@@ -139,13 +139,21 @@ public class JSDocCharScanner {
 	}
 
 	private void skipJSDocStart() {
-		if (nextOffset == 0 && s.startsWith(JSDOC_START)) {
-			nextOffset += 3;
-			skipWhiteSpaces();
-			skipLineStart();
-		} else if (nextOffset == 0 && s.startsWith(MLDOC_START)) {
-			nextOffset += 2;
-			skipWhiteSpaces();
+		if (nextOffset == 0) {
+			if (s.startsWith(JSDOC_START)) {
+				nextOffset += 3;
+			} else if (s.startsWith(MLDOC_START)) {
+				nextOffset += 2;
+			} else {
+				return;
+			}
+			// skip white spaces after doc start
+			while (hasNext() && isWhitespaceNoNL(peek())) {
+				next();
+			}
+			if (isNL(peek())) {
+				next();
+			}
 			skipLineStart();
 		}
 	}
@@ -196,17 +204,6 @@ public class JSDocCharScanner {
 		}
 	}
 
-	private void skipWhiteSpaces() {
-		while (more()) {
-			char c = peekNextChar();
-			if (Character.isWhitespace(c)) {
-				nextOffset++;
-			} else {
-				break;
-			}
-		}
-	}
-
 	int findLineTagEnd() {
 		int oldNextOffset = nextOffset; // use nextOffset to enable better debugging thanks to toString
 		try {
@@ -246,17 +243,32 @@ public class JSDocCharScanner {
 	}
 
 	private void skipLineStart() {
-		skipWhiteSpaces();
+		int savedNextOffset = nextOffset;
+		while (more()) {
+			char c = peekNextChar();
+			if (isWhitespaceNoNL(c)) {
+				nextOffset++;
+			} else {
+				break;
+			}
+		}
 		if (!more())
 			return;
+
 		char c = peekNextChar();
-		if (c != COMMENT_LINE_PREFIX)
-			return;
-		nextOffset++;
-		if (more() && isWhitespaceNoNL(peekNextChar())) {
-			nextOffset++;
+		if (c != COMMENT_LINE_PREFIX) {
+			// no COMMENT_LINE_PREFIX found, do not skip in order to enable markdown formatting
+			nextOffset = savedNextOffset;
+		} else {
+			nextOffset++; // consume COMMENT_LINE_PREFIX
+
+			// consume whitespace after COMMENT_LINE_PREFIX
+			if (more() && isWhitespaceNoNL(peekNextChar())) {
+				nextOffset++;
+			}
 		}
-		int savedNextOffset = nextOffset;
+
+		savedNextOffset = nextOffset;
 		while (more() && isWhitespaceNoNL(peekNextChar())) {
 			nextOffset++;
 		}
