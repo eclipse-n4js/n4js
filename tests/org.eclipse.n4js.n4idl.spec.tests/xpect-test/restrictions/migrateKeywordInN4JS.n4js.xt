@@ -11,4 +11,5 @@
 
 /* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
 
+// migrate keyword may be used as identifier in N4JS XPECT noerrors
 var migrate = 3;
