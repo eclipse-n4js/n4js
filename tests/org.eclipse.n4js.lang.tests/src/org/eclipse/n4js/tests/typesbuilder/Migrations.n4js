@@ -55,3 +55,9 @@ export public function noInputMethodStructuralOutput() : ~Object with {m() : int
 
 @Migration 
 export public function noInputNestedStructuralOutput() : ~Object with {s : ~Object with {s : int}} { return null; }
+
+@Migration(3,4)
+export public function explicitMigration1(a1 : int) : string { return ""; }
+
+@Migration(5,6)
+export public function explicitMigration2(a1 : A#2) : A#3 { return a1; }

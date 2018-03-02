@@ -13,26 +13,18 @@ package org.eclipse.n4js.typesbuilder
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.utils.Log
 
 /**
  * A types builder to create and initialise {@link TMigration}s from {@link FunctionDeclaration} instances. 
  */
+@Log
 class N4IDLMigrationTypesBuilder {
-	
-	/**
-	 * Returns {@code true} if the given {@link FunctionDeclaration} is a 
-	 * migration declaration.
-	 */
-	public def boolean isMigrationDeclaration(FunctionDefinition functionDef) {
-		return functionDef instanceof FunctionDeclaration && 
-			AnnotationDefinition.MIGRATION.hasAnnotation(functionDef);
-	}
 	
 	/**
 	 * Initialises a {@link TMigration} instance based on a {@link FunctionDeclaration}.
@@ -40,12 +32,36 @@ class N4IDLMigrationTypesBuilder {
 	 * This method assumes that all {@link TFunction} related attributes of tMigration were already
 	 * initialised appropriately.
 	 * 
-	 * This method also assumes that functionDecl is a migration. 
+	 * This method also assumes that functionDecl is a migration (and therefore annotated as {@code @Migration}. 
 	 */
 	public def void initialiseTMigration(FunctionDeclaration functionDecl, TMigration tMigration) {
-		// set source and target version
-		tMigration.sourceVersion = computeVersion(tMigration.sourceTypeRefs)
-		tMigration.targetVersion = computeVersion(tMigration.targetTypeRefs)
+		val migrationAnno = AnnotationDefinition.MIGRATION.getAnnotation(tMigration);
+		
+		// if the migration explicitly declares a source and target version
+		if (migrationAnno.args.length == 2) {
+			
+			try {
+				val Integer sourceVersion = Integer.parseInt(migrationAnno.args.get(0).argAsString);
+				val Integer targetVersion = Integer.parseInt(migrationAnno.args.get(1).argAsString);
+				
+				tMigration.sourceVersion = sourceVersion;
+				tMigration.targetVersion = targetVersion;
+				
+				tMigration.hasDeclaredSourceAndTargetVersion = true;
+			} catch (NumberFormatException e) {
+				logger.error("Failed to infer source/target version for migration " + tMigration.name + " in file " + tMigration.eResource.URI, e);
+	
+				// fail-safe to source and target versions 0
+				tMigration.sourceVersion = 0;
+				tMigration.sourceVersion = 0;
+			}
+		} else {
+			// set source and target version by inferring them from source and target type refs
+			tMigration.sourceVersion = computeVersion(tMigration.sourceTypeRefs)
+			tMigration.targetVersion = computeVersion(tMigration.targetTypeRefs)
+			
+			tMigration.hasDeclaredSourceAndTargetVersion = false;
+		}
 	}
 	
 	
@@ -66,10 +82,7 @@ class N4IDLMigrationTypesBuilder {
 	 * to populate the type model with. 
 	 */
 	private static def int computeVersion(List<TypeRef> typeRefs) {
-		return typeRefs.stream()
-			.map([ref | VersionUtils.getVersion(ref)])
-			.filter[v | v != 0]
-			.findFirst().orElse(0);
+		VersionUtils.getVersion(typeRefs);
 	}
 	
 }

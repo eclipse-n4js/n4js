@@ -50,6 +50,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getSourceVersion <em>Source Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getTargetVersion <em>Target Version</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#isHasDeclaredSourceAndTargetVersion <em>Has Declared Source And Target Version</em>}</li>
  * </ul>
  *
  * @generated
@@ -94,6 +95,26 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * @ordered
 	 */
 	protected int targetVersion = TARGET_VERSION_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isHasDeclaredSourceAndTargetVersion() <em>Has Declared Source And Target Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isHasDeclaredSourceAndTargetVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean HAS_DECLARED_SOURCE_AND_TARGET_VERSION_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isHasDeclaredSourceAndTargetVersion() <em>Has Declared Source And Target Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isHasDeclaredSourceAndTargetVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean hasDeclaredSourceAndTargetVersion = HAS_DECLARED_SOURCE_AND_TARGET_VERSION_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -161,13 +182,34 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isHasDeclaredSourceAndTargetVersion() {
+		return hasDeclaredSourceAndTargetVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setHasDeclaredSourceAndTargetVersion(boolean newHasDeclaredSourceAndTargetVersion) {
+		boolean oldHasDeclaredSourceAndTargetVersion = hasDeclaredSourceAndTargetVersion;
+		hasDeclaredSourceAndTargetVersion = newHasDeclaredSourceAndTargetVersion;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION, oldHasDeclaredSourceAndTargetVersion, hasDeclaredSourceAndTargetVersion));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<TypeRef> getSourceTypeRefs() {
 		final Function1<TFormalParameter, TypeRef> _function = new Function1<TFormalParameter, TypeRef>() {
 			public TypeRef apply(final TFormalParameter p) {
 				return p.getTypeRef();
 			}
 		};
-		return ECollections.<TypeRef>toEList(XcoreEListExtensions.<TFormalParameter, TypeRef>map(this.getFpars(), _function));
+		return ECollections.<TypeRef>toEList(IterableExtensions.<TypeRef>filterNull(XcoreEListExtensions.<TFormalParameter, TypeRef>map(this.getFpars(), _function)));
 	}
 
 	/**
@@ -186,7 +228,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 					return f.getTypeRef();
 				}
 			};
-			return ECollections.<TypeRef>toEList(IterableExtensions.<TStructField, TypeRef>map(Iterables.<TStructField>filter(this.getReturnTypeRef().getStructuralMembers(), TStructField.class), _function));
+			return ECollections.<TypeRef>toEList(IterableExtensions.<TypeRef>filterNull(IterableExtensions.<TStructField, TypeRef>map(Iterables.<TStructField>filter(this.getReturnTypeRef().getStructuralMembers(), TStructField.class), _function)));
 		}
 		else {
 			Type _declaredType = this.getReturnTypeRef().getDeclaredType();
@@ -194,7 +236,14 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return XcoreCollectionLiterals.<TypeRef>emptyEList();
 			}
 			else {
-				return ECollections.<TypeRef>asEList(this.getReturnTypeRef());
+				TypeRef _returnTypeRef = this.getReturnTypeRef();
+				boolean _tripleEquals = (null == _returnTypeRef);
+				if (_tripleEquals) {
+					return XcoreCollectionLiterals.<TypeRef>emptyEList();
+				}
+				else {
+					return ECollections.<TypeRef>singletonEList(this.getReturnTypeRef());
+				}
 			}
 		}
 	}
@@ -211,6 +260,8 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return getSourceVersion();
 			case TypesPackage.TMIGRATION__TARGET_VERSION:
 				return getTargetVersion();
+			case TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION:
+				return isHasDeclaredSourceAndTargetVersion();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -228,6 +279,9 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return;
 			case TypesPackage.TMIGRATION__TARGET_VERSION:
 				setTargetVersion((Integer)newValue);
+				return;
+			case TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION:
+				setHasDeclaredSourceAndTargetVersion((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -247,6 +301,9 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 			case TypesPackage.TMIGRATION__TARGET_VERSION:
 				setTargetVersion(TARGET_VERSION_EDEFAULT);
 				return;
+			case TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION:
+				setHasDeclaredSourceAndTargetVersion(HAS_DECLARED_SOURCE_AND_TARGET_VERSION_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -263,6 +320,8 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return sourceVersion != SOURCE_VERSION_EDEFAULT;
 			case TypesPackage.TMIGRATION__TARGET_VERSION:
 				return targetVersion != TARGET_VERSION_EDEFAULT;
+			case TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION:
+				return hasDeclaredSourceAndTargetVersion != HAS_DECLARED_SOURCE_AND_TARGET_VERSION_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -297,6 +356,8 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 		result.append(sourceVersion);
 		result.append(", targetVersion: ");
 		result.append(targetVersion);
+		result.append(", hasDeclaredSourceAndTargetVersion: ");
+		result.append(hasDeclaredSourceAndTargetVersion);
 		result.append(')');
 		return result.toString();
 	}

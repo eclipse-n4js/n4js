@@ -23,6 +23,7 @@ import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 
 /**
  * Type builder for function declaration or expression builder.
@@ -88,7 +89,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		target.topLevelTypes += functionType
 		
 		// if applicable initialise function as TMigration
-		if (isMigrationDeclaration(functionDecl)) {
+		if (VersionUtils.isMigrationDeclaration(functionDecl)) {
 			initialiseTMigration(functionDecl, functionType as TMigration)
 		}
 	}
@@ -184,7 +185,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * @see N4IDLMigrationTypesBuilder#isMigrationDeclaration
 	 */
 	def private TFunction createTFunction(FunctionDefinition functionDef) {
-		if (isMigrationDeclaration(functionDef)) {
+		if (VersionUtils.isMigrationDeclaration(functionDef)) {
 			return createTMigration();
 		} else {
 			return TypesFactory::eINSTANCE.createTFunction();

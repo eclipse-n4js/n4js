@@ -18,6 +18,8 @@ import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
 import org.eclipse.n4js.validation.validators.IDEBUGValidator
+import org.eclipse.n4js.validation.validators.N4IDLMigrationValidator
+import org.eclipse.n4js.validation.validators.N4IDLValidator
 import org.eclipse.n4js.validation.validators.N4JSAccessModifierValidator
 import org.eclipse.n4js.validation.validators.N4JSAnnotationValidator
 import org.eclipse.n4js.validation.validators.N4JSClassValidator
@@ -51,7 +53,6 @@ import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 import org.eclipse.xtext.validation.ComposedChecks
-import org.eclipse.n4js.validation.validators.N4IDLValidator
 
 /**
  * Validation rules for N4JS.
@@ -106,7 +107,8 @@ import org.eclipse.n4js.validation.validators.N4IDLValidator
 	N4JSXValidator,
 	ThirdPartyValidator,
 	UnsupportedFeatureValidator,
-	N4IDLValidator
+	N4IDLValidator,
+	N4IDLMigrationValidator
 ])
 @Log
 class N4JSValidator extends InternalTypeSystemValidator {

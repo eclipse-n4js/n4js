@@ -74,6 +74,7 @@ import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.xtext.validation.ValidationMessageAcceptor
 
 /**
  * Common base class for all N4JS validators. Provides some convenience methods and
@@ -504,6 +505,39 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 				node.offset -> node.length
 			}
 		offsetAndLength
+	}
+	
+	/**
+	 * Returns the offset and length for a list feature.
+	 * 
+	 * That is the offset of the first list element and the length
+	 * from the first feature node to the last feature node (cf. {@link NodeModelUtils#findNodeForFeature}).
+	 */
+	def Pair<Integer, Integer> findListFeatureOffsetAndLength(EObject obj, EStructuralFeature feature) {
+		val nodes = NodeModelUtils.findNodesForFeature(obj, feature);
+		
+		if (nodes.empty) {
+			return 0 -> 0;
+		}
+		
+		val start = nodes.head.offset;
+		val end = nodes.last.offset + nodes.last.length;
+		return start -> end - start;
+	}
+	
+	/**
+	 * Fixes behavior of the overridden method to conform with {@link org.eclipse.xtext.validation.ValidationMessageAcceptor#acceptError}
+	 * with regard to the {@code index} parameter being {@code -1}.
+	 * 
+	 * In all other cases this method delegates to the super-implementation {@link addIssue(String message, EObject source, EStructuralFeature feature, int index, String issueCode, String... issueData)}.
+	 */
+	override protected addIssue(String message, EObject source, EStructuralFeature feature, int index, String issueCode, String... issueData) {
+		if (index == -1) {
+			val offsetAndLength = findListFeatureOffsetAndLength(source, feature);
+			super.addIssue(message, source, offsetAndLength.key, offsetAndLength.value, issueCode, issueData);
+		} else {
+			super.addIssue(message, source, feature, index, issueCode, issueData)
+		}
 	}
 
 	def private INode findChildNode(ICompositeNode compositeNode, EObject grammarElement) {

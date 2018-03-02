@@ -4737,13 +4737,22 @@ public interface TypesPackage extends EPackage {
 	int TMIGRATION__TARGET_VERSION = TFUNCTION_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Has Declared Source And Target Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION = TFUNCTION_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>TMigration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMIGRATION_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 2;
+	int TMIGRATION_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -13647,6 +13656,17 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTMigration_TargetVersion();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TMigration#isHasDeclaredSourceAndTargetVersion <em>Has Declared Source And Target Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Has Declared Source And Target Version</em>'.
+	 * @see org.eclipse.n4js.ts.types.TMigration#isHasDeclaredSourceAndTargetVersion()
+	 * @see #getTMigration()
+	 * @generated
+	 */
+	EAttribute getTMigration_HasDeclaredSourceAndTargetVersion();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getSourceTypeRefs() <em>Get Source Type Refs</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16318,6 +16338,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMIGRATION__TARGET_VERSION = eINSTANCE.getTMigration_TargetVersion();
+
+		/**
+		 * The meta object literal for the '<em><b>Has Declared Source And Target Version</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION = eINSTANCE.getTMigration_HasDeclaredSourceAndTargetVersion();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Source Type Refs</b></em>' operation.

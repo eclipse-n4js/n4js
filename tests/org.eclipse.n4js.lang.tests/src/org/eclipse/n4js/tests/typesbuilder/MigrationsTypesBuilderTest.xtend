@@ -50,7 +50,9 @@ class MigrationsTypesBuilderTest extends AbstractTypesBuilderTest {
 			typeof(TMigration) -> "noInputPrimitiveOutput",
 			typeof(TMigration) -> "structuralInputNoOutput",
 			typeof(TMigration) -> "noInputMethodStructuralOutput",
-			typeof(TMigration) -> "noInputNestedStructuralOutput"
+			typeof(TMigration) -> "noInputNestedStructuralOutput",
+			typeof(TMigration) -> "explicitMigration1",
+			typeof(TMigration) -> "explicitMigration2"
 		]
 
 		val expectedExportedTypeToNamePairsOnIndex = #[
@@ -71,7 +73,9 @@ class MigrationsTypesBuilderTest extends AbstractTypesBuilderTest {
 			typeof(TMigration) -> "noInputPrimitiveOutput",
 			typeof(TMigration) -> "structuralInputNoOutput",
 			typeof(TMigration) -> "noInputMethodStructuralOutput",
-			typeof(TMigration) -> "noInputNestedStructuralOutput"
+			typeof(TMigration) -> "noInputNestedStructuralOutput",
+			typeof(TMigration) -> "explicitMigration1",
+			typeof(TMigration) -> "explicitMigration2"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size
@@ -89,20 +93,23 @@ class MigrationsTypesBuilderTest extends AbstractTypesBuilderTest {
 		Assert.assertFalse("Non-migrations do not translate to TMigration instances", tFunction instanceof TMigration);
 		
 		// the following assertion check for (in that order): sourceVersion, targetVerison, sourceTypeRef.size, targetTypeRef.size
-		assertTMigration(phase, resource, "noInputNoOutput", 0, 0, 0, 0);
-		assertTMigration(phase, resource, "singleInputNoOutput", 1, 0, 1, 0);
-		assertTMigration(phase, resource, "noInputSingleOutput", 0, 2, 0, 1);
-		assertTMigration(phase, resource, "singleInputSingleOutput", 1, 2, 1, 1);
-		assertTMigration(phase, resource, "twoInputNoOutput", 1, 0, 2, 1); // target type is any
-		assertTMigration(phase, resource, "noInputTwoOutput", 0, 2, 0, 2);
-		assertTMigration(phase, resource, "twoInputSingleOutput", 2, 2, 2, 1);
-		assertTMigration(phase, resource, "singleInputTwoOutput", 1, 2, 1, 2);
-		assertTMigration(phase, resource, "twoInputTwoOutput", 1, 2, 2, 2);
-		assertTMigration(phase, resource, "primitiveInputNoOutput", 0, 0, 1, 0);
-		assertTMigration(phase, resource, "noInputPrimitiveOutput", 0, 0, 0, 1);
-		assertTMigration(phase, resource, "structuralInputNoOutput", 0, 0, 1, 0);
-		assertTMigration(phase, resource, "noInputMethodStructuralOutput", 0, 0, 0, 0);
-		assertTMigration(phase, resource, "noInputNestedStructuralOutput", 0, 0, 0, 1);
+		assertTMigration(phase, resource, "noInputNoOutput", 0, 0, 0, 0, false);
+		assertTMigration(phase, resource, "singleInputNoOutput", 1, 0, 1, 0, false);
+		assertTMigration(phase, resource, "noInputSingleOutput", 0, 2, 0, 1, false);
+		assertTMigration(phase, resource, "singleInputSingleOutput", 1, 2, 1, 1, false);
+		assertTMigration(phase, resource, "twoInputNoOutput", 1, 0, 2, 1, false); // target type is any
+		assertTMigration(phase, resource, "noInputTwoOutput", 0, 2, 0, 2, false);
+		assertTMigration(phase, resource, "twoInputSingleOutput", 2, 2, 2, 1, false);
+		assertTMigration(phase, resource, "singleInputTwoOutput", 1, 2, 1, 2, false);
+		assertTMigration(phase, resource, "twoInputTwoOutput", 1, 2, 2, 2, false);
+		assertTMigration(phase, resource, "primitiveInputNoOutput", 0, 0, 1, 0, false);
+		assertTMigration(phase, resource, "noInputPrimitiveOutput", 0, 0, 0, 1, false);
+		assertTMigration(phase, resource, "structuralInputNoOutput", 0, 0, 1, 0, false);
+		assertTMigration(phase, resource, "noInputMethodStructuralOutput", 0, 0, 0, 0, false);
+		assertTMigration(phase, resource, "noInputNestedStructuralOutput", 0, 0, 0, 1, false);
+		
+		assertTMigration(phase, resource, "explicitMigration1", 3, 4, 1, 1, true);
+		assertTMigration(phase, resource, "explicitMigration2", 5, 6, 1, 1, true);
 	}
 	
 	override assertExampleJSStructure(String phase, Resource resource) {

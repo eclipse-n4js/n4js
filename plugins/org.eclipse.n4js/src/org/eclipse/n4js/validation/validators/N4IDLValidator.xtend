@@ -32,7 +32,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 /**
- * Validate the use of version in N4IDL
+ * Validate the use of versions (versioned types, type version requests) in N4IDL.
  */
 class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject

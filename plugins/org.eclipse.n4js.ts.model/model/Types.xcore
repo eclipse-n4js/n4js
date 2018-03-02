@@ -26,7 +26,6 @@ import com.google.common.collect.Iterables
 import java.util.Collections
 import java.util.HashMap
 import java.util.List
-import org.eclipse.emf.common.util.ECollections
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EMap
 import org.eclipse.emf.ecore.EObject
@@ -872,15 +871,29 @@ abstract class TMigratable {
  */
 class TMigration extends TFunction {
 	
+	/**
+	 * The source model version of this migration.
+	 */
 	int sourceVersion
+	/**
+	 * The target model version of this migration.
+	 */
 	int targetVersion
+	
+	/**
+	 * Returns {@code true} iff migration has an explicitly declared
+	 * source and target version.
+	 */
+	boolean hasDeclaredSourceAndTargetVersion
 	
 	/**
 	 * Returns the source TypeRefs of this migration.
 	 */
 	op TypeRef[] getSourceTypeRefs() {
 		// map function parameter type refs
-		return this.fpars.map[p | p.typeRef ].toEList;
+		return this.fpars
+			.map[p | p.typeRef ]
+			.filterNull.toEList;
 	}
 	
 	/**
@@ -898,13 +911,17 @@ class TMigration extends TFunction {
 			return this.returnTypeRef.structuralMembers
 				.filter(TStructField)
 				.map[f | f.typeRef ]
+				.filterNull
 				.toEList;
 		} else if (this.returnTypeRef.declaredType instanceof VoidType) {
 			// special handling for void return type
 			return emptyEList;
-		} else {
-			// otherwise use single target type
-			return ECollections.asEList(this.returnTypeRef);
+		} else if (null === this.returnTypeRef) {
+			// special handling for null
+			return emptyEList;
+		} else { // otherwise use single target type 
+			
+			return this.returnTypeRef.singletonEList;
 		}
 	}
 	

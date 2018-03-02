@@ -11,13 +11,17 @@
 package org.eclipse.n4js.n4idl.versioning;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -124,14 +128,38 @@ public class VersionUtils {
 	}
 
 	/**
+	 * Returns {@code true} if the given {@link FunctionDeclaration} is a migration declaration.
+	 */
+	public static boolean isMigrationDeclaration(FunctionDefinition functionDef) {
+		return functionDef instanceof FunctionDeclaration &&
+				AnnotationDefinition.MIGRATION.hasAnnotation(functionDef);
+	}
+
+	/**
 	 * Returns the declared version for the given {@link TypeRef}.
 	 *
 	 * This method only works with explicitly declared type requests. Therefore, it is safe to use it in a pre-linking
 	 * phase of AST processing/ type model building.
+	 *
+	 * Returns {@code 0} if {@code typeRef} is {@code null}.
 	 */
 	public static int getVersion(TypeRef typeRef) {
 		return streamVersionedSubReferences(typeRef).findFirst()
 				.map(s -> s.getVersion()).orElse(0);
+	}
+
+	/**
+	 * Returns the declared version of the given list of {@link TypeRef}.
+	 *
+	 * Returns the first version that can be inferred from the given list of {@link TypeRef}
+	 *
+	 * @see #getVersion(TypeRef)
+	 */
+	public static int getVersion(List<TypeRef> typeRefs) {
+		return typeRefs.stream()
+				.map(ref -> VersionUtils.getVersion(ref))
+				.filter(v -> v != 0)
+				.findFirst().orElse(0);
 	}
 
 	/**

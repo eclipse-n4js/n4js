@@ -239,7 +239,8 @@ class TypesStructureAssertionExtension {
 	
 	def assertTMigration(String phase, Resource newN4jsResource, String name,
 		int sourceVersion, int targetVersion, 
-		int sourceTypeRefCount, int targetTypeRefCount) {
+		int sourceTypeRefCount, int targetTypeRefCount,
+		boolean hasDeclaredSourceAndTargetVersion) {
 		val type = assertTypeForName(newN4jsResource, name, phase)
 		assertTrue(phase + ": TMigration expected", type instanceof TMigration)
 		val tMigration = type as TMigration
@@ -253,6 +254,8 @@ class TypesStructureAssertionExtension {
 		
 		assertEquals(phase + ": TMigration " + name +  " target version", targetVersion, tMigration.targetVersion)
 		assertEquals(phase + ": TMigration " + name +  " source version", sourceVersion, tMigration.sourceVersion)
+		
+		assertEquals(phase + ": TMigration " + name + " has an explicitly declared source and target version", hasDeclaredSourceAndTargetVersion, tMigration.hasDeclaredSourceAndTargetVersion);
 		
 		tMigration
 	}
