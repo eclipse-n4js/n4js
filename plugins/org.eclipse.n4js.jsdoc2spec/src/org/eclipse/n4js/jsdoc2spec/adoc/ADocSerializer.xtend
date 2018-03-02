@@ -585,8 +585,7 @@ class ADocSerializer {
 	}
 
 	private def String small(CharSequence smallString) {
-		return '''[.small]#«smallString»#'''; // continue here!
-//		return smallString.toString;
+		return '''[.small]#«smallString»#''';
 	}
 
 	private def String removePrecedingNumber(String key) {
