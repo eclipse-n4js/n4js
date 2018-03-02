@@ -283,9 +283,6 @@ class ADocSerializer {
 		for (a: member.annotations.filter[it.name!=AnnotationDefinition.INTERNAL.name]) {
 			strb.append(a.annotationAsString + " ");
 		}
-		if (member.final && !member.field) {
-			strb.append("@Final ");
-		}
 		strb.append(keywordProvider.keyword(member.memberAccessModifier) + " ");
 		if (member.abstract) {
 			strb.append("@abstract ");
