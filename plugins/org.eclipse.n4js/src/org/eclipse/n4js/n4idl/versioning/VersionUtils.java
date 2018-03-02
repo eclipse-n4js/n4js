@@ -10,13 +10,16 @@
  */
 package org.eclipse.n4js.n4idl.versioning;
 
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
@@ -24,7 +27,7 @@ import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.xtext.EcoreUtil2;
 
-import com.google.common.base.Optional;
+import com.google.common.collect.Iterators;
 
 /**
  * Static utility class with regard to versioned and versionable elements.
@@ -127,39 +130,35 @@ public class VersionUtils {
 	 * phase of AST processing/ type model building.
 	 */
 	public static int getVersion(TypeRef typeRef) {
-		return findFirstVersionedSubRef(typeRef)
-				.transform(s -> s.getVersion()).or(0);
+		return streamVersionedSubReferences(typeRef).findFirst()
+				.map(s -> s.getVersion()).orElse(0);
 	}
 
 	/**
-	 * Traverses the given {@link TypeRef} and looks for the first reference with an explicitly declared version
-	 * request.
+	 * Returns a stream of all versioned sub-references of the given {@link TypeRef}.
+	 *
+	 * If {@code typeRef} happens to be versioned itself, the stream starts with it.
 	 */
-	private static Optional<TypeRef> findFirstVersionedSubRef(TypeRef typeRef) {
-		// first look into
-		if (typeRef instanceof VersionedParameterizedTypeRef &&
-				((VersionedParameterizedTypeRef) typeRef).hasRequestedVersion()) {
-			return Optional.of(typeRef);
-		}
+	public static Stream<VersionedParameterizedTypeRef> streamVersionedSubReferences(TypeRef typeRef) {
+		return streamSubReferences(typeRef)
+				.filter(t -> t instanceof VersionedParameterizedTypeRef)
+				.map(t -> (VersionedParameterizedTypeRef) t);
+	}
 
-		// traverse operands for composed type refs
-		if (typeRef instanceof ComposedTypeRef) {
-			return ((ComposedTypeRef) typeRef).getTypeRefs().stream()
-					.map(t -> findFirstVersionedSubRef(t))
-					// find first present sub-reference
-					.filter(to -> to.isPresent())
-					// otherwise return an absent optional
-					.findFirst().orElse(Optional.absent());
-		}
+	/**
+	 * Returns a stream of all sub-references of the given {@link TypeRef}.
+	 *
+	 * The (ordered) stream starts with {@code typeRef} itself.
+	 */
+	private static Stream<TypeRef> streamSubReferences(TypeRef typeRef) {
+		// create iterator over reference itself, followed by all its children according to #eAllContents()
+		final Iterator<EObject> refAndChildren = Iterators.concat(Iterators.singletonIterator(typeRef),
+				typeRef.eAllContents());
 
-		// traverse type arguments for parameterized types
-		return typeRef.getTypeArgs().stream()
-				.filter(t -> t instanceof TypeRef)
-				.map(t -> findFirstVersionedSubRef((TypeRef) t))
-				// find first present sub-reference
-				.filter(to -> to.isPresent())
-				// otherwise return an absent optional
-				.findFirst().orElse(Optional.absent());
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(refAndChildren, Spliterator.ORDERED), false)
+				.filter(TypeRef.class::isInstance)
+				.map(TypeRef.class::cast);
+
 	}
 
 	private VersionUtils() {
