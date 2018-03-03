@@ -4953,13 +4953,22 @@ public interface TypesPackage extends EPackage {
 	int TMIGRATION___GET_TARGET_TYPE_REFS = TFUNCTION_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Migration As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION___GET_MIGRATION_AS_STRING = TFUNCTION_OPERATION_COUNT + 2;
+
+	/**
 	 * The number of operations of the '<em>TMigration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMIGRATION_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 2;
+	int TMIGRATION_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl <em>TClassifier</em>}' class.
@@ -13687,6 +13696,16 @@ public interface TypesPackage extends EPackage {
 	EOperation getTMigration__GetTargetTypeRefs();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getMigrationAsString() <em>Get Migration As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Migration As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TMigration#getMigrationAsString()
+	 * @generated
+	 */
+	EOperation getTMigration__GetMigrationAsString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TClassifier <em>TClassifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16362,6 +16381,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TMIGRATION___GET_TARGET_TYPE_REFS = eINSTANCE.getTMigration__GetTargetTypeRefs();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Migration As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMIGRATION___GET_MIGRATION_AS_STRING = eINSTANCE.getTMigration__GetMigrationAsString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl <em>TClassifier</em>}' class.

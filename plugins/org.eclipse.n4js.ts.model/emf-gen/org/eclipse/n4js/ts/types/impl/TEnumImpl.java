@@ -37,8 +37,8 @@ import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
-import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMigratable;
+import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -100,7 +100,7 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TFunction> migrations;
+	protected EList<TMigration> migrations;
 
 	/**
 	 * The default value of the '{@link #isExternal() <em>External</em>}' attribute.
@@ -215,9 +215,9 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<TFunction> getMigrations() {
+	public EList<TMigration> getMigrations() {
 		if (migrations == null) {
-			migrations = new EObjectResolvingEList<TFunction>(TFunction.class, this, TypesPackage.TENUM__MIGRATIONS);
+			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TENUM__MIGRATIONS);
 		}
 		return migrations;
 	}
@@ -327,7 +327,7 @@ public class TEnumImpl extends DeclaredTypeWithAccessModifierImpl implements TEn
 				return;
 			case TypesPackage.TENUM__MIGRATIONS:
 				getMigrations().clear();
-				getMigrations().addAll((Collection<? extends TFunction>)newValue);
+				getMigrations().addAll((Collection<? extends TMigration>)newValue);
 				return;
 			case TypesPackage.TENUM__EXTERNAL:
 				setExternal((Boolean)newValue);

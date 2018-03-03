@@ -28,8 +28,8 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier;
-import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMigratable;
+import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -102,7 +102,7 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TFunction> migrations;
+	protected EList<TMigration> migrations;
 
 	/**
 	 * The default value of the '{@link #isDynamizable() <em>Dynamizable</em>}' attribute.
@@ -210,9 +210,9 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<TFunction> getMigrations() {
+	public EList<TMigration> getMigrations() {
 		if (migrations == null) {
-			migrations = new EObjectResolvingEList<TFunction>(TFunction.class, this, TypesPackage.TN4_CLASSIFIER__MIGRATIONS);
+			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TN4_CLASSIFIER__MIGRATIONS);
 		}
 		return migrations;
 	}
@@ -327,7 +327,7 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return;
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				getMigrations().clear();
-				getMigrations().addAll((Collection<? extends TFunction>)newValue);
+				getMigrations().addAll((Collection<? extends TMigration>)newValue);
 				return;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				setDynamizable((Boolean)newValue);

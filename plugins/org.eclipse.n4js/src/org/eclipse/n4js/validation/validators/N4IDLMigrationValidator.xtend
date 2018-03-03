@@ -15,9 +15,12 @@ import java.util.Collection
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4TypeDeclaration
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
+import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -46,7 +49,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		
 		// this validation only applies for migrations
-		if (!VersionUtils.isMigrationDeclaration(functionDeclaration)) {
+		if (!MigrationUtils.isMigrationDeclaration(functionDeclaration)) {
 			return;
 		}
 		
@@ -160,6 +163,52 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		
 		return true;
 	}
+
+	@Check
+	public def checkMigratableTypeDeclaration(N4TypeDeclaration typeDeclaration) {
+		val declaredType = typeDeclaration.definedType;
+		
+		// do not validate a broken AST
+		if (null === declaredType) {
+			return;
+		}
+		
+		// this validation only applies to {@link TMigratable} types
+		if (!(declaredType instanceof TMigratable)) {
+			return;
+		}
+		
+		val migratable = declaredType as TMigratable;
+		val migrationsByTargetVersion = migratable.migrations.groupBy[targetVersion];
+		
+		migrationsByTargetVersion.forEach[targetVersion, migrations|
+			// skip invalid target versions
+			if (targetVersion < 1) { return; }
+			// if there is only one migration for this target version, it cannot conflict with any other migration
+			if (migrations.size == 1) { return; }
+			
+			// otherwise there is a conflict
+			migrations.forEach[ m |
+				val argumentDescription = MigrationUtils.getMigrationArgumentsDescription(m.sourceTypeRefs);
+				val conflictingMigrationsDescription = listOrSingleMigrationDescription(migrations.filter[other | other == m]);
+
+				val msg = IssueCodes.getMessageForIDL_MIGRATION_CONFLICT_WITH(m.name, argumentDescription, m.targetVersion, conflictingMigrationsDescription);
+				addIssue(msg, m.astElement, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, IssueCodes.IDL_MIGRATION_CONFLICT_WITH);
+			]
+		];
+	}
+	
+	/** 
+	 * Returns either a bullet-list description of multiple migrations, 
+	 * or in the case of a single migration just the description of that migration. 
+	 */
+	private def String listOrSingleMigrationDescription(Iterable<TMigration> migrations) {
+		if (migrations.size == 1) {
+			return migrations.head.migrationAsString;
+		} else {
+			return migrations.map[m | "\n\t - " + m.migrationAsString].join(", ");
+		}
+	} 
 	
 	/**
 	 * Returns {@code true} if the given list of {@link TypeRef}s do not mix mulitple

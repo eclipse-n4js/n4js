@@ -143,4 +143,19 @@ public interface TMigration extends TFunction {
 	 */
 	EList<TypeRef> getTargetTypeRefs();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns string representation of this migration.
+	 * 
+	 * This includes source types and target types.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.typeRefs.TypeRef%>, <%java.lang.String%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.typeRefs.TypeRef%>, <%java.lang.String%>>()\n{\n\tpublic <%java.lang.String%> apply(final <%org.eclipse.n4js.ts.typeRefs.TypeRef%> t)\n\t{\n\t\treturn t.getTypeRefAsString();\n\t}\n};\nfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.typeRefs.TypeRef%>, <%java.lang.String%>> _function_1 = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.typeRefs.TypeRef%>, <%java.lang.String%>>()\n{\n\tpublic <%java.lang.String%> apply(final <%org.eclipse.n4js.ts.typeRefs.TypeRef%> t)\n\t{\n\t\treturn t.getTypeRefAsString();\n\t}\n};\nreturn <%java.lang.String%>.format(\"%s (%s) => (%s)\", \n\tthis.getName(), \n\t<%org.eclipse.xtext.xbase.lib.IterableExtensions%>.join(<%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%>.<<%org.eclipse.n4js.ts.typeRefs.TypeRef%>, <%java.lang.String%>>map(this.getSourceTypeRefs(), _function), \", \"), \n\t<%org.eclipse.xtext.xbase.lib.IterableExtensions%>.join(<%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%>.<<%org.eclipse.n4js.ts.typeRefs.TypeRef%>, <%java.lang.String%>>map(this.getTargetTypeRefs(), _function_1), \", \"));'"
+	 * @generated
+	 */
+	String getMigrationAsString();
+
 } // TMigration

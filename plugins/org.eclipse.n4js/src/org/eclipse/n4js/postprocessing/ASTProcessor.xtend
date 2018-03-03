@@ -16,12 +16,14 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.FormalParameter
+import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
@@ -33,6 +35,7 @@ import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
@@ -42,7 +45,11 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.ts.types.TMigratable
+import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.EcoreUtilN4
@@ -393,6 +400,12 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 
 		typeDeferredProcessor.handleDeferredTypeRefs_preChildren(G, node, cache);
+		
+		// register migrations with their source types
+		if (node instanceof FunctionDeclaration && 
+			AnnotationDefinition.MIGRATION.hasAnnotation(node as FunctionDeclaration)) {
+			this.registerMigrationWithTypes((node as FunctionDeclaration).definedFunction as TMigration)
+		}
 	}
 
 	/**
@@ -444,6 +457,10 @@ public class ASTProcessor extends AbstractProcessor {
 			ForStatement: {
 				// process expression before varDeclOrBindings
 				obj.eContents.bringToFront(obj.expression)
+			}
+			ParameterizedCallExpression case MigrationUtils.isMigrateCall(obj): {
+				// link and type migration arguments first 
+				obj.eContents.bringToFront(obj.arguments)
 			}
 			default: {
 				// standard case: order is insignificant (so we simply use the order provided by EMF)
@@ -497,6 +514,27 @@ public class ASTProcessor extends AbstractProcessor {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Registers the given {@link TMigration} with the corresponding
+	 * source types.
+	 */
+	def private void registerMigrationWithTypes(TMigration migration) {
+		if (null === migration) { return; }
+		
+		migration.sourceTypeRefs.stream
+			// TODO: narrow down the set of TMigratable a migration is actually registered with
+			.flatMap[s | VersionUtils.streamVersionedSubReferences(s)] // map to declared types
+			.map[ref | ref.declaredType]
+			.filter[ref | ref instanceof TMigratable] // filter non-migratable types 
+			.forEach[t | registerMigrationWithType(migration, t as TMigratable) ]
+	}
+	
+	def private void registerMigrationWithType(TMigration migration, TMigratable migratable) {
+		EcoreUtilN4.doWithDeliver(true, [
+					migratable.migrations += migration 
+		], migratable)
 	}
 
 	def private recordReferencesToLocalVariables(EReference reference, EObject sourceNode, EObject targetNode,

@@ -18,8 +18,8 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
-import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMigratable;
+import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -46,7 +46,7 @@ public abstract class TMigratableImpl extends ProxyResolvingEObjectImpl implemen
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TFunction> migrations;
+	protected EList<TMigration> migrations;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -72,9 +72,9 @@ public abstract class TMigratableImpl extends ProxyResolvingEObjectImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<TFunction> getMigrations() {
+	public EList<TMigration> getMigrations() {
 		if (migrations == null) {
-			migrations = new EObjectResolvingEList<TFunction>(TFunction.class, this, TypesPackage.TMIGRATABLE__MIGRATIONS);
+			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TMIGRATABLE__MIGRATIONS);
 		}
 		return migrations;
 	}
@@ -104,7 +104,7 @@ public abstract class TMigratableImpl extends ProxyResolvingEObjectImpl implemen
 		switch (featureID) {
 			case TypesPackage.TMIGRATABLE__MIGRATIONS:
 				getMigrations().clear();
-				getMigrations().addAll((Collection<? extends TFunction>)newValue);
+				getMigrations().addAll((Collection<? extends TMigration>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

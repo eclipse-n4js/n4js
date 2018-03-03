@@ -52,4 +52,9 @@ public class N4IDLGlobals {
 	 * The static field name that holds the available migrations for a given N4 classifier.
 	 */
 	public static final String MIGRATIONS_STATIC_FIELD = "$migrations__n4";
+
+	/**
+	 * The migrate call keyword in N4IDL migrations.
+	 */
+	public static final String MIGRATE_CALL_KEYWORD = "mig";
 }

@@ -42,9 +42,11 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
+import org.eclipse.n4js.n4idl.MigrationLocator
 import org.eclipse.n4js.n4idl.scoping.FailedToInferContextVersionWrappingScope
 import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScope
 import org.eclipse.n4js.n4idl.scoping.NonVersionAwareContextScope
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.n4jsx.ReactHelper
@@ -75,6 +77,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.EObjectDescription
@@ -90,7 +93,6 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.validation.ValidatorMessageHelper
 
 /**
  * This class contains custom scoping description.
@@ -149,6 +151,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject private VersionHelper versionHelper;
 	
 	@Inject private ValidatorMessageHelper messageHelper;
+	
+	@Inject private MigrationLocator migrationLocator;
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -586,7 +590,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		// are detected and prevented.
 		if (!VersionUtils.isVersionAwareContext(context)) {
 			return new NonVersionAwareContextScope(contextVersionScope, true, messageHelper);
-		}
+		} else if (context instanceof IdentifierRef && 
+			MigrationUtils.isInMigration(context) && 
+			MigrationUtils.isMigrateCallIdentifier(context as IdentifierRef)) {
+				val callExpression = context.eContainer as ParameterizedCallExpression;
+				return migrationLocator.migrationScope(callExpression.arguments, context);
+			}
 		
 		return contextVersionScope;
 	}

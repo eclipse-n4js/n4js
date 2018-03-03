@@ -863,7 +863,7 @@ abstract class TMigratable {
 	/**
 	 * The declared migrations for this {@link TMigratable} element.
 	 */
-	refers TFunction[] migrations
+	refers TMigration[] migrations
 }
 
 /**
@@ -925,6 +925,17 @@ class TMigration extends TFunction {
 		}
 	}
 	
+	/**
+	 * Returns string representation of this migration.
+	 * 
+	 * This includes source types and target types.
+	 */
+	op String getMigrationAsString() {
+		return String.format("%s (%s) => (%s)",
+				this.name,
+				this.sourceTypeRefs.map[t | t.getTypeRefAsString()].join(", "),
+				this.targetTypeRefs.map[t | t.getTypeRefAsString()].join(", "));
+	}
 }
 
 /*

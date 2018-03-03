@@ -17,13 +17,13 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.n4idl.versioning.VersionUtils
 
 /**
  * Type builder for function declaration or expression builder.
@@ -89,7 +89,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		target.topLevelTypes += functionType
 		
 		// if applicable initialise function as TMigration
-		if (VersionUtils.isMigrationDeclaration(functionDecl)) {
+		if (MigrationUtils.isMigrationDeclaration(functionDecl)) {
 			initialiseTMigration(functionDecl, functionType as TMigration)
 		}
 	}
@@ -185,7 +185,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * @see N4IDLMigrationTypesBuilder#isMigrationDeclaration
 	 */
 	def private TFunction createTFunction(FunctionDefinition functionDef) {
-		if (VersionUtils.isMigrationDeclaration(functionDef)) {
+		if (MigrationUtils.isMigrationDeclaration(functionDef)) {
 			return createTMigration();
 		} else {
 			return TypesFactory::eINSTANCE.createTFunction();

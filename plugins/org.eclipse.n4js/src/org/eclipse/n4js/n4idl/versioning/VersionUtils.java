@@ -18,10 +18,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.AnnotableElement;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -125,14 +122,6 @@ public class VersionUtils {
 		return N4IDLGlobals.VERSION_AWARENESS_ANNOTATIONS.stream()
 				.anyMatch(anno -> anno.hasAnnotation(element));
 
-	}
-
-	/**
-	 * Returns {@code true} if the given {@link FunctionDeclaration} is a migration declaration.
-	 */
-	public static boolean isMigrationDeclaration(FunctionDefinition functionDef) {
-		return functionDef instanceof FunctionDeclaration &&
-				AnnotationDefinition.MIGRATION.hasAnnotation(functionDef);
 	}
 
 	/**

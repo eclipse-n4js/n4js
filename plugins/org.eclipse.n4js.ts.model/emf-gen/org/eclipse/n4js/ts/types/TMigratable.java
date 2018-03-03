@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface TMigratable extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Migrations</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TFunction}.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TMigration}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -45,6 +45,6 @@ public interface TMigratable extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<TFunction> getMigrations();
+	EList<TMigration> getMigrations();
 
 } // TMigratable

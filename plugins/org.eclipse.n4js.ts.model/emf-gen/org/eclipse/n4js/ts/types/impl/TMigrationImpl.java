@@ -253,6 +253,28 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getMigrationAsString() {
+		final Function1<TypeRef, String> _function = new Function1<TypeRef, String>() {
+			public String apply(final TypeRef t) {
+				return t.getTypeRefAsString();
+			}
+		};
+		final Function1<TypeRef, String> _function_1 = new Function1<TypeRef, String>() {
+			public String apply(final TypeRef t) {
+				return t.getTypeRefAsString();
+			}
+		};
+		return String.format("%s (%s) => (%s)", 
+			this.getName(), 
+			IterableExtensions.join(XcoreEListExtensions.<TypeRef, String>map(this.getSourceTypeRefs(), _function), ", "), 
+			IterableExtensions.join(XcoreEListExtensions.<TypeRef, String>map(this.getTargetTypeRefs(), _function_1), ", "));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -338,6 +360,8 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return getSourceTypeRefs();
 			case TypesPackage.TMIGRATION___GET_TARGET_TYPE_REFS:
 				return getTargetTypeRefs();
+			case TypesPackage.TMIGRATION___GET_MIGRATION_AS_STRING:
+				return getMigrationAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
