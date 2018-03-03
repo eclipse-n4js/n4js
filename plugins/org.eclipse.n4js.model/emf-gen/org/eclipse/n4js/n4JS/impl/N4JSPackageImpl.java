@@ -8499,7 +8499,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		addEEnumLiteral(unaryOperatorEEnum, UnaryOperator.NEG);
 		addEEnumLiteral(unaryOperatorEEnum, UnaryOperator.INV);
 		addEEnumLiteral(unaryOperatorEEnum, UnaryOperator.NOT);
-		addEEnumLiteral(unaryOperatorEEnum, UnaryOperator.MIGRATE);
 
 		initEEnum(multiplicativeOperatorEEnum, MultiplicativeOperator.class, "MultiplicativeOperator");
 		addEEnumLiteral(multiplicativeOperatorEEnum, MultiplicativeOperator.TIMES);

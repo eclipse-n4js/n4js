@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.n4idl.lang.parser
 
+import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.n4idl.lang.AbstractN4IDLParserTest
 import org.junit.Test
-import org.eclipse.n4js.n4JS.UnaryOperator
-import org.eclipse.n4js.n4JS.UnaryExpression
 
 public class ParseMigrateKeyword extends AbstractN4IDLParserTest {
 
@@ -25,12 +25,12 @@ public class ParseMigrateKeyword extends AbstractN4IDLParserTest {
 			class C # 2 {}
 			@Migration
 			function (c1: C#1) : C#2 {
-				return migrate c1;
+				return migrate (c1);
 			}
 		'''.parseSuccessfully
 		assertNotNull("The migrate operator is parsed correctly", script.eAllContents
-			.filter(UnaryExpression)
-			.findFirst[exp | exp.op == UnaryOperator.MIGRATE]);
+			.filter(IdentifierRef)
+			.findFirst[ref | ref.idAsText.equals(N4IDLGlobals.MIGRATE_CALL_KEYWORD)]);
 	}
 
 }

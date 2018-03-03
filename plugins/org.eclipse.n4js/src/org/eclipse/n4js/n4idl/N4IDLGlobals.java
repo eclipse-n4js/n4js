@@ -56,5 +56,5 @@ public class N4IDLGlobals {
 	/**
 	 * The migrate call keyword in N4IDL migrations.
 	 */
-	public static final String MIGRATE_CALL_KEYWORD = "mig";
+	public static final String MIGRATE_CALL_KEYWORD = "migrate";
 }

@@ -15,11 +15,11 @@ import java.io.Reader;
 
 import org.antlr.runtime.TokenSource;
 import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.n4js.parser.antlr.N4JSParser;
-import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
-import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.antlr.XtextTokenStream;
+
+import org.eclipse.n4js.parser.antlr.N4JSParser;
+import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
 
 /**
  * <p>
@@ -28,9 +28,6 @@ import org.eclipse.xtext.parser.antlr.XtextTokenStream;
  * </p>
  */
 public class N4JSSemicolonInjectingParser extends N4JSParser {
-
-	/** The N4JS-variant to parse. */
-	private String variant = N4JSJavaScriptVariantHelper.EXT_N4JS;
 
 	/**
 	 * Disable partial parsing.
@@ -71,22 +68,7 @@ public class N4JSSemicolonInjectingParser extends N4JSParser {
 	 */
 	@Override
 	protected LazyTokenStream createTokenStream(TokenSource tokenSource) {
-		TokenSource source = tokenSource;
-
-		if (!variant.equals(N4JSJavaScriptVariantHelper.EXT_N4IDL)) {
-			source = new N4IDLKeywordFilteringTokenSource(source);
-		}
-
-		return new LazyTokenStream(source, getTokenDefProvider());
-	}
-
-	/**
-	 * Sets the N4JS-variant this parser expects.
-	 *
-	 * Default is {@link N4JSJavaScriptVariantHelper#EXT_N4JS}.
-	 */
-	protected void setVariant(String variant) {
-		this.variant = variant;
+		return new LazyTokenStream(tokenSource, getTokenDefProvider());
 	}
 
 }

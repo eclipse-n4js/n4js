@@ -4718,8 +4718,6 @@ ruleForStatement
 									    |
 									Typeof
 									    |
-									Migrate
-									    |
 									PlusSignPlusSign
 									    |
 									HyphenMinusHyphenMinus
@@ -4828,7 +4826,6 @@ ruleForStatement
 									Delete | 
 									Void | 
 									Typeof | 
-									Migrate | 
 									PlusSignPlusSign | 
 									HyphenMinusHyphenMinus | 
 									PlusSign | 
@@ -5232,8 +5229,6 @@ norm1_ForStatement
 									    |
 									Typeof
 									    |
-									Migrate
-									    |
 									PlusSignPlusSign
 									    |
 									HyphenMinusHyphenMinus
@@ -5342,7 +5337,6 @@ norm1_ForStatement
 									Delete | 
 									Void | 
 									Typeof | 
-									Migrate | 
 									PlusSignPlusSign | 
 									HyphenMinusHyphenMinus | 
 									PlusSign | 
@@ -10831,8 +10825,6 @@ ruleRelationalExpression
 				    |
 				Typeof
 				    |
-				Migrate
-				    |
 				PlusSignPlusSign
 				    |
 				HyphenMinusHyphenMinus
@@ -10922,7 +10914,6 @@ ruleRelationalExpression
 				Delete | 
 				Void | 
 				Typeof | 
-				Migrate | 
 				PlusSignPlusSign | 
 				HyphenMinusHyphenMinus | 
 				PlusSign | 
@@ -11044,8 +11035,6 @@ norm1_RelationalExpression
 				    |
 				Typeof
 				    |
-				Migrate
-				    |
 				PlusSignPlusSign
 				    |
 				HyphenMinusHyphenMinus
@@ -11135,7 +11124,6 @@ norm1_RelationalExpression
 				Delete | 
 				Void | 
 				Typeof | 
-				Migrate | 
 				PlusSignPlusSign | 
 				HyphenMinusHyphenMinus | 
 				PlusSign | 
@@ -11255,8 +11243,6 @@ norm2_RelationalExpression
 				    |
 				Typeof
 				    |
-				Migrate
-				    |
 				PlusSignPlusSign
 				    |
 				HyphenMinusHyphenMinus
@@ -11345,7 +11331,6 @@ norm2_RelationalExpression
 				Delete | 
 				Void | 
 				Typeof | 
-				Migrate | 
 				PlusSignPlusSign | 
 				HyphenMinusHyphenMinus | 
 				PlusSign | 
@@ -11465,8 +11450,6 @@ norm3_RelationalExpression
 				    |
 				Typeof
 				    |
-				Migrate
-				    |
 				PlusSignPlusSign
 				    |
 				HyphenMinusHyphenMinus
@@ -11555,7 +11538,6 @@ norm3_RelationalExpression
 				Delete | 
 				Void | 
 				Typeof | 
-				Migrate | 
 				PlusSignPlusSign | 
 				HyphenMinusHyphenMinus | 
 				PlusSign | 
@@ -13349,7 +13331,6 @@ ruleYieldExpression
 		Delete | 
 		Void | 
 		Typeof | 
-		Migrate | 
 		PlusSignPlusSign | 
 		HyphenMinusHyphenMinus | 
 		PlusSign | 
@@ -13433,7 +13414,6 @@ norm1_YieldExpression
 		Delete | 
 		Void | 
 		Typeof | 
-		Migrate | 
 		PlusSignPlusSign | 
 		HyphenMinusHyphenMinus | 
 		PlusSign | 
@@ -21007,44 +20987,38 @@ ruleUnaryOperator
 	)
 	    |
 	(
-		MigrateMigrateKeyword_3_0=Migrate {
-			announce($MigrateMigrateKeyword_3_0, grammarAccess.getUnaryOperatorAccess().getMigrateEnumLiteralDeclaration_3());
+		IncPlusSignPlusSignKeyword_3_0=PlusSignPlusSign {
+			announce($IncPlusSignPlusSignKeyword_3_0, grammarAccess.getUnaryOperatorAccess().getIncEnumLiteralDeclaration_3());
 		}
 	)
 	    |
 	(
-		IncPlusSignPlusSignKeyword_4_0=PlusSignPlusSign {
-			announce($IncPlusSignPlusSignKeyword_4_0, grammarAccess.getUnaryOperatorAccess().getIncEnumLiteralDeclaration_4());
+		DecHyphenMinusHyphenMinusKeyword_4_0=HyphenMinusHyphenMinus {
+			announce($DecHyphenMinusHyphenMinusKeyword_4_0, grammarAccess.getUnaryOperatorAccess().getDecEnumLiteralDeclaration_4());
 		}
 	)
 	    |
 	(
-		DecHyphenMinusHyphenMinusKeyword_5_0=HyphenMinusHyphenMinus {
-			announce($DecHyphenMinusHyphenMinusKeyword_5_0, grammarAccess.getUnaryOperatorAccess().getDecEnumLiteralDeclaration_5());
+		PosPlusSignKeyword_5_0=PlusSign {
+			announce($PosPlusSignKeyword_5_0, grammarAccess.getUnaryOperatorAccess().getPosEnumLiteralDeclaration_5());
 		}
 	)
 	    |
 	(
-		PosPlusSignKeyword_6_0=PlusSign {
-			announce($PosPlusSignKeyword_6_0, grammarAccess.getUnaryOperatorAccess().getPosEnumLiteralDeclaration_6());
+		NegHyphenMinusKeyword_6_0=HyphenMinus {
+			announce($NegHyphenMinusKeyword_6_0, grammarAccess.getUnaryOperatorAccess().getNegEnumLiteralDeclaration_6());
 		}
 	)
 	    |
 	(
-		NegHyphenMinusKeyword_7_0=HyphenMinus {
-			announce($NegHyphenMinusKeyword_7_0, grammarAccess.getUnaryOperatorAccess().getNegEnumLiteralDeclaration_7());
+		InvTildeKeyword_7_0=Tilde {
+			announce($InvTildeKeyword_7_0, grammarAccess.getUnaryOperatorAccess().getInvEnumLiteralDeclaration_7());
 		}
 	)
 	    |
 	(
-		InvTildeKeyword_8_0=Tilde {
-			announce($InvTildeKeyword_8_0, grammarAccess.getUnaryOperatorAccess().getInvEnumLiteralDeclaration_8());
-		}
-	)
-	    |
-	(
-		NotExclamationMarkKeyword_9_0=ExclamationMark {
-			announce($NotExclamationMarkKeyword_9_0, grammarAccess.getUnaryOperatorAccess().getNotEnumLiteralDeclaration_9());
+		NotExclamationMarkKeyword_8_0=ExclamationMark {
+			announce($NotExclamationMarkKeyword_8_0, grammarAccess.getUnaryOperatorAccess().getNotEnumLiteralDeclaration_8());
 		}
 	)
 )
