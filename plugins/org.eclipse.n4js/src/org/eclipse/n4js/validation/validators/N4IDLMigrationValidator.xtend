@@ -26,6 +26,7 @@ import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.validation.Check
+import org.eclipse.xtext.validation.EValidatorRegistrar
 
 /**
  * Validates N4IDL migration declarations.
@@ -34,6 +35,16 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
+	
+	/**
+	 * NEEDED
+	 *
+	 * When removed check methods will be called twice once by N4JSValidator, and once by
+	 * AbstractDeclarativeN4JSValidator.
+	 */
+	override void register(EValidatorRegistrar registrar) {
+		// nop
+	}
 
 	/** Validates migration declarations (function declarations annotated as {@code @Migration}. */
 	@Check
@@ -97,14 +108,14 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	/** Checks that the given migration source and target types allow to infer a source and target version. */
 	private def boolean holdsMigrationHasValidSourceAndTargetVersion(TMigration migration) {
 		if (migration.sourceVersion == 0) {
-			val message = IssueCodes.getMessageForIDL_MIGRATION_VERSION_CANNOT_BE_INFERRED("source version", migration.name);
-			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, -1,
+			val message = IssueCodes.getMessageForIDL_MIGRATION_VERSION_CANNOT_BE_INFERRED("source", migration.name);
+			addIssueToMultiValueFeature(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, 
 				IssueCodes.IDL_MIGRATION_VERSION_CANNOT_BE_INFERRED);
 			return false;
 		}
 		
 		if (migration.targetVersion == 0) {
-			val message = IssueCodes.getMessageForIDL_MIGRATION_VERSION_CANNOT_BE_INFERRED("target version", migration.name);
+			val message = IssueCodes.getMessageForIDL_MIGRATION_VERSION_CANNOT_BE_INFERRED("target", migration.name);
 			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__RETURN_TYPE_REF,
 				IssueCodes.IDL_MIGRATION_VERSION_CANNOT_BE_INFERRED);
 			return false;
@@ -125,14 +136,14 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		
 		if (!isVersionExclusive(migration.sourceTypeRefs)) {
-			val message = IssueCodes.getMessageForIDL_MIGRATION_AMBIGUOUS_VERSION("source version", migration.name);
-			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, -1,
+			val message = IssueCodes.getMessageForIDL_MIGRATION_AMBIGUOUS_VERSION("source", migration.name);
+			addIssueToMultiValueFeature(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS,
 				IssueCodes.IDL_MIGRATION_VERSION_CANNOT_BE_INFERRED);
 			return false;
 		}
 		
 		if (!isVersionExclusive(migration.targetTypeRefs)) {
-			val message = IssueCodes.getMessageForIDL_MIGRATION_AMBIGUOUS_VERSION("target version", migration.name);
+			val message = IssueCodes.getMessageForIDL_MIGRATION_AMBIGUOUS_VERSION("target", migration.name);
 			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__RETURN_TYPE_REF,
 				IssueCodes.IDL_MIGRATION_VERSION_CANNOT_BE_INFERRED);
 			return false;
@@ -149,8 +160,8 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			// add an issue to the @Migration annotation or to the migration name
 			if (migration.hasDeclaredSourceAndTargetVersion) {
 				val migrationAnno = AnnotationDefinition.MIGRATION.getAnnotation(declaration);
-				addIssue(msg, migrationAnno, 
-					N4JSPackage.Literals.ANNOTATION__ARGS, -1,
+				addIssueToMultiValueFeature(msg, migrationAnno, 
+					N4JSPackage.Literals.ANNOTATION__ARGS,
 					IssueCodes.IDL_MIGRATION_SAME_SOURCE_AND_TARGET_VERSION);
 				return false;
 			} else {

@@ -11,7 +11,6 @@
 package org.eclipse.n4js.validation
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.lang.reflect.Method
 import java.util.List
 import org.eclipse.emf.common.util.EList
@@ -66,6 +65,7 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -74,7 +74,6 @@ import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.xtext.validation.ValidationMessageAcceptor
 
 /**
  * Common base class for all N4JS validators. Provides some convenience methods and
@@ -526,20 +525,16 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 	}
 	
 	/**
-	 * Fixes behavior of the overridden method to conform with {@link org.eclipse.xtext.validation.ValidationMessageAcceptor#acceptError}
-	 * with regard to the {@code index} parameter being {@code -1}.
+	 * Adds an issues, just as {@link #addIssue} but marks all nodes associated with the multi-value feature {@code feature}
+	 * as an error.
 	 * 
-	 * In all other cases this method delegates to the super-implementation {@link addIssue(String message, EObject source, EStructuralFeature feature, int index, String issueCode, String... issueData)}.
+	 * For multi-value features (such as list attributes), this results in all list elements to be marked as error.
 	 */
-	override protected addIssue(String message, EObject source, EStructuralFeature feature, int index, String issueCode, String... issueData) {
-		if (index == -1) {
-			val offsetAndLength = findListFeatureOffsetAndLength(source, feature);
-			super.addIssue(message, source, offsetAndLength.key, offsetAndLength.value, issueCode, issueData);
-		} else {
-			super.addIssue(message, source, feature, index, issueCode, issueData)
-		}
+	protected def void addIssueToMultiValueFeature(String message, EObject source, EStructuralFeature feature, String issueCode, String... issueData) {
+		val offsetAndLength = findListFeatureOffsetAndLength(source, feature);
+			this.addIssue(message, source, offsetAndLength.key, offsetAndLength.value, issueCode, issueData);
 	}
-
+	
 	def private INode findChildNode(ICompositeNode compositeNode, EObject grammarElement) {
 		for (childNode : compositeNode.children) {
 			if (childNode.grammarElement == grammarElement) {

@@ -37,9 +37,10 @@ export public function insiderFunction() {
 	// I am a @VersionAware function		
 }
 
-@Migration
-export public function migration() {
+@Migration(1,2)
+export public function migration(a : any = undefined) : any {
 	// as a migration I am also in the @VersionAware world
+	return null;
 }
 
 function outside() {

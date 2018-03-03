@@ -31,7 +31,7 @@ export public function f3() : void {}
 function f4() : void {}
 
 @Migration
-// non-exported migration without parameters and implicit void return value XPECT errors --> "Migration must explicitly declare a return type." at "f5"
+// non-exported migration without parameters and implicit void return value XPECT errors --> "Migrations must explicitly declare a return type." at "f5"
 function f5() { return null; }
 
 
@@ -63,5 +63,5 @@ function f9(in1 : A#2, in2 : A#2) {}
 export public function f10(in1 : A#1) : void {}
 
 @Migration
-// non-exported migration with parameters but with (implicit) void return value XPECT errors --> "Migration must explicitly declare a return type." at "f11"
+// non-exported migration with parameters but with (implicit) void return value XPECT errors --> "Migrations must explicitly declare a return type." at "f11"
 function f11(in1 : A#2, in2 : A#2) { return null; }
