@@ -60,7 +60,6 @@ class TokenTypeRewriterTest {
 			es6Keywords +
 			futureKeywords +
 			n4jsKeyword +
-			n4idlKeywords +
 			nullLiteral +
 			keywordFromTypeRef +
 			hardcodedAnnotationAndSemanticKeywords).toSet

@@ -42,7 +42,7 @@ class ContentAssistTokenTypeMapperTest {
 
 	@Test
 	def void testKeyword_01() {
-		val kw = grammarAccess.unaryOperatorAccess.notExclamationMarkKeyword_9_0
+		val kw = grammarAccess.unaryOperatorAccess.notExclamationMarkKeyword_8_0
 		val i = testMe.getInternalTokenType(kw)
 		val p = new AccessibleInternalN4JSParserStub()
 		val v = p.getValueForTokenName('ExclamationMark')
