@@ -11,26 +11,20 @@
 package org.eclipse.n4js.n4idl.versioning
 
 import com.google.inject.Inject
-import java.util.List
 import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.n4idl.tests.helper.N4IDLParseHelper
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * N4JSX version of N4JS' AbstractParserTest
+ * Unit tests wrt to class {@link VersionUtils}.
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
 public class VersionUtilsTest extends Assert {
-	@Inject extension private N4IDLParseHelper
-	@Inject extension private ValidationTestHelper
+	@Inject extension private TypeRefTestExtension
 	
 	@Test
 	public def void testVersionedTypeArgument() {
@@ -61,31 +55,4 @@ public class VersionUtilsTest extends Assert {
 		Assert.assertEquals("constructor{A#1} TypeRef", 1, VersionUtils.getVersion(makeTypeRef("constructor{A#1}", #["A#1", "A#2"])));
 		Assert.assertEquals("constructor{A#2} TypeRef", 2, VersionUtils.getVersion(makeTypeRef("constructor{A#2}", #["A#1", "A#2"])));
 	}
-	
-	
-	/**
-	 * Creates an N4IDL-module containing the given type expression, extracts the corresponding {@link TypeRef}
-	 * element from the AST and returns it.
-	 * 
-	 * @param typeExpression A type expression as it may occur in a variable declaration
-	 * @param existingTypes A list of class names (with version, e.g. "A#1") which are assumed to exist in the namespace of the module.
-	 */
-	private def TypeRef makeTypeRef(String typeExpression, List<String> existingTypes) {
-		val module = '''
-		«FOR t : existingTypes»
-			class «t» {}
-		«ENDFOR»
-		@VersionAware
-		function f() { var a : «typeExpression» }''';
-		
-		val script = module.parseN4IDL
-		script.assertNoErrors
-		
-		val variableDeclaration = script.eAllContents.filter(VariableDeclaration).head
-		
-		if (variableDeclaration === null) {
-			fail('''Failed to create TypeRef "«typeExpression»": The type expression did not yield a well-formed N4IDL module.''');
-		}
-		return variableDeclaration.declaredTypeRef
-	} 
 }
