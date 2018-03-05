@@ -19,5 +19,4 @@ export public function f1(){
     console.log("react is not undefined", typeof React !== "undefined")
     console.log("react-dom is not undefined", typeof createPortal !== "undefined")
     console.log("imports from libs are different", React as Object !== createPortal as Object)
-
 }
