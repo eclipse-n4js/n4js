@@ -114,6 +114,8 @@ mvn clean deploy -Dlocal-snapshot-deploy-folder=/var/lib/my/folder/local-mvn-dep
 
 The existence of `local-snapshot-deploy-folder` will trigger a profile enabling the deploy-goal for the project `org.eclipse.n4js.releng.util`
 
+dummy change
+
 == License
 
 Copyright (c) 2017 NumberFour AG.
