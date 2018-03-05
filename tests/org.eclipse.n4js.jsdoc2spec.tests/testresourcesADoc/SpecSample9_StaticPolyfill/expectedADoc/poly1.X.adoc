@@ -30,14 +30,9 @@ include::{find}config.adoc[]
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:poly1/X:X#bar++[``++project bar(): void++``]
 
 
-
 ==== Semantics
 
-[TODO, title="test ++X.bar++"]
---
-Add tests specifying semantics for ``++bar(): void++``
---
-
+. *++test++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:tests/XTest:XTest#test++[Test]#)
 
 
 [[gsec:spec_X.X.foo]]
