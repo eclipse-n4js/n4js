@@ -43,7 +43,7 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Process p = createAndStartProcess(
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-pl", WSP,
 				"-rw", "nodejs",
 				"-r", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js",
@@ -65,7 +65,7 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Process p = createAndStartProcess(
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-pl", WSP,
 				"-rw", "nodejs",
 				"-r", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js",
@@ -87,7 +87,7 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Process p = createAndStartProcess(
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-pl", WSP,
 				"-rw", "nodejs",
 				"-r", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
@@ -115,7 +115,7 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 		deleteProject("org.eclipse.n4js.sample.nasty");
 
 		Process p = createAndStartProcess(
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-pl", WSP,
 				"-rw", "nodejs",
 				"-r", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
@@ -137,7 +137,7 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Process p = createAndStartProcess(
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-pl", WSP,
 				"-rw", "nodejs",
 				"-r", WSP + "/" + "org.eclipse.n4js.client/src/CornerCase.n4js",
@@ -162,7 +162,7 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Process p = createAndStartProcess(
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-pl", WSP,
 				"-rw", "nodejs",
 				"-r", WSP + "/" + "org.eclipse.n4js.client/src/MetaInfoForExternalSuperClass.n4js",

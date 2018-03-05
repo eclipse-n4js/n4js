@@ -62,7 +62,7 @@ public class MissingReturnOrThrowAnalyser extends GraphVisitor {
 	}
 
 	@Override
-	protected void initializeMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void initializeContainer(ControlFlowElement curContainer) {
 		EObject parentContainer = curContainer.eContainer();
 
 		if (parentContainer instanceof FunctionOrFieldAccessor) {

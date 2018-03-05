@@ -51,7 +51,7 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		// Compile
 		final String[] args_precompile = { "-pl", wsRoot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-v"
 		};
 		new N4jscBase().doMain(args_precompile);
@@ -59,7 +59,7 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 		// run without compile
 		final String fileToRun = wsRoot + "/IDEBUG-695/src/Main.n4js";
 		final String[] args = { "-pl", wsRoot,
-				"-t", "dontcompile",
+				"-bt", "dontcompile",
 				"-rw", "nodejs",
 				"-r", fileToRun,
 				"-v"

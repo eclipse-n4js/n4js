@@ -20,7 +20,7 @@ Output: "src-gen"
 Sources {
     //those are your project production sources (usually N4JS code)
     source {
-        "src", "poly"
+        "src", "poly1", "poly2"
     }
     test {
         "tests"

@@ -183,7 +183,7 @@ abstract public class BranchWalkerInternal {
 
 	/** @return the current {@link TraverseDirection} */
 	final public TraverseDirection getDirection() {
-		return getGraphVisitor().getCurrentDirection();
+		return getGraphVisitor().getDirection();
 	}
 
 	/** @return the number of this {@link BranchWalkerInternal}. */

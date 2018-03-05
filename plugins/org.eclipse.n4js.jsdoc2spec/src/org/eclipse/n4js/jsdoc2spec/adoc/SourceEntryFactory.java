@@ -12,7 +12,6 @@ package org.eclipse.n4js.jsdoc2spec.adoc;
 
 import java.io.File;
 
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
 import org.eclipse.n4js.jsdoc2spec.SpecTestInfo;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -40,13 +39,13 @@ public class SourceEntryFactory {
 		String element = info.testMethodTypeName();
 		String delimiter = "#";
 		String property = info.testMethodName();
-		return newInstance(info.rrp, module, element, delimiter, property, null);
+		return newInstance(info.rrp, info.rrp, module, element, delimiter, property, null);
 	}
 
 	/**
 	 * Factory method used for any source element.
 	 */
-	static SourceEntry create(RepoRelativePath rrp, IdentifiableElement idElement) {
+	static SourceEntry create(RepoRelativePathHolder rrph, RepoRelativePath rrpType, IdentifiableElement idElement) {
 		TModule containingModule = idElement.getContainingModule();
 		if (containingModule == null)
 			return null;
@@ -54,7 +53,8 @@ public class SourceEntryFactory {
 		String elName = getElementName(idElement);
 		String delimiter = getDelimiter(idElement);
 		String property = getProperty(idElement);
-		return newInstance(rrp, module, elName, delimiter, property, idElement);
+		RepoRelativePath rrpElement = rrph.get(idElement);
+		return newInstance(rrpType, rrpElement, module, elName, delimiter, property, idElement);
 	}
 
 	private static String getElementName(IdentifiableElement ie) {
@@ -90,7 +90,8 @@ public class SourceEntryFactory {
 	}
 
 	static SourceEntry newInstance(
-			RepoRelativePath rrp,
+			RepoRelativePath rrpType,
+			RepoRelativePath rrpElement,
 			String moduleSpecifier,
 			String element,
 			String delimiter,
@@ -98,17 +99,18 @@ public class SourceEntryFactory {
 			IdentifiableElement idElement) {
 
 		String module = trim(moduleSpecifier);
-		String repository = getRepository(rrp);
-		String path = getPath(rrp, repository);
-		String project = getProject(rrp);
-		String folder = getFolder(rrp, module);
-		String trueFolder = getTrueFolder(idElement, folder, module);
-		String extension = getExtension(rrp);
+		String repository = getRepository(rrpType);
+		String path = getPath(rrpType, repository);
+		String project = getProject(rrpType);
+		String folder = getFolder(rrpType, module);
+		boolean isStaticPolyfillAware = getIsStaticPolyfillAware(idElement);
+		String trueFolder = getTrueFolder(rrpElement, idElement, folder, module);
+		String extension = getExtension(rrpType);
 		String packageName = getPackageName(module);
 		String moduleName = getModuleName(module);
-		int sourceLine = rrp.lineNumber;
+		int sourceLine = rrpElement.lineNumber;
 		int modulePackageCount = StringCountUtils.countFolderDepth(module);
-		String[] fileNames = getFileNames(rrp, module);
+		String[] fileNames = getFileNames(rrpType, module);
 		String fileName = getFileName(fileNames);
 
 		SourceEntry sed = new SourceEntry(
@@ -116,6 +118,7 @@ public class SourceEntryFactory {
 				path,
 				project,
 				folder,
+				isStaticPolyfillAware,
 				trueFolder,
 				module,
 				extension,
@@ -157,16 +160,27 @@ public class SourceEntryFactory {
 		return getFolderInUriString(rrp.pathInProject, module);
 	}
 
-	static private String getTrueFolder(IdentifiableElement idElement, String folder, String module) {
+	private static boolean getIsStaticPolyfillAware(IdentifiableElement idElement) {
+		if (idElement == null) {
+			return false;
+		}
+		TModule containingModule = idElement.getContainingModule();
+		if (containingModule == null) {
+			return false;
+		}
+		return containingModule.isStaticPolyfillAware();
+	}
+
+	static private String getTrueFolder(RepoRelativePath rrpElement, IdentifiableElement idElement, String folder,
+			String module) {
+
 		if (idElement == null
 				|| idElement.getContainingModule() == null
-				|| !idElement.getContainingModule().isStaticPolyfillModule())
+				|| !getIsStaticPolyfillAware(idElement))
 			return folder;
 
-		Resource res = idElement.eResource();
-		String trueResourceUri = res.getURI().toString();
-
-		return getFolderInUriString(trueResourceUri, module);
+		String trueFolder = getFolder(rrpElement, module);
+		return trueFolder;
 	}
 
 	static private String getFolderInUriString(String uriString, String module) {

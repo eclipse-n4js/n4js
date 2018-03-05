@@ -74,24 +74,24 @@ public class GraphVisitorGuideInternal {
 		walkthrough(cn, TraverseDirection.Backward);
 	}
 
-	private void walkthrough(ComplexNode cn, TraverseDirection mode) {
+	private void walkthrough(ComplexNode cn, TraverseDirection direction) {
 		walkerVisitedNodes.clear();
 		cn.getEntry().setReachable();
 		cn.getExit().setReachable();
 
 		for (GraphVisitorInternal walker : visitors) {
 			walker.setFlowAnalyses(flowAnalyzer);
-			walker.setContainerAndMode(cn.getControlFlowContainer(), mode);
-			walker.callInitializeModeInternal();
+			walker.setContainer(cn.getControlFlowContainer());
+			walker.callInitializeContainerInternal();
 		}
 
-		List<NextEdgesProvider> edgeProviders = getEdgeProviders(mode);
+		List<NextEdgesProvider> edgeProviders = getEdgeProviders(direction);
 		for (NextEdgesProvider edgeProvider : edgeProviders) {
 			walkthrough(cn, edgeProvider);
 		}
 
 		for (GraphVisitorInternal walker : visitors) {
-			walker.callTerminateMode();
+			walker.callTerminateContainer();
 		}
 	}
 

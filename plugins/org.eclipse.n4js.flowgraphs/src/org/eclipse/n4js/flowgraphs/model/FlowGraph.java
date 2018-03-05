@@ -49,8 +49,8 @@ public class FlowGraph {
 	}
 
 	/** @return all {@link ComplexNode}s of the script. */
-	public Collection<ComplexNode> getAllComplexNodes() {
-		return cnMap.values();
+	public Map<ControlFlowElement, ComplexNode> getMap() {
+		return cnMap;
 	}
 
 	/** @return the {@link ComplexNode} for the given {@link ControlFlowElement} cfe. */
@@ -70,7 +70,7 @@ public class FlowGraph {
 	/** see {@link N4JSFlowAnalyser#getAllContainers()}. */
 	public Collection<ControlFlowElement> getAllContainers() {
 		// The order of containers is reversed.
-		// This causes fail-fast behavior regarding the assertion 'isVisited()'
+		// This provokes fail-fast behavior regarding the assertion 'isVisited()'
 		// in {@link DeadFlowContext.Backward#setDeadCode(Node)}
 		List<ControlFlowElement> containerList = new LinkedList<>();
 		for (ControlFlowElement cfe : cfContainers) {
