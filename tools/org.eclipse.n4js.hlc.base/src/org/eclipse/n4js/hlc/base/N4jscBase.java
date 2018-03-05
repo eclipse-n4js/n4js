@@ -19,6 +19,7 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSE
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
 import static org.eclipse.n4js.utils.git.GitUtils.hardReset;
 import static org.eclipse.n4js.utils.git.GitUtils.pull;
+import static org.eclipse.n4js.utils.io.FileUtils.createTempDirectory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -141,6 +142,7 @@ public class N4jscBase implements IApplication {
 			+ "will be downloaded, installed and made available for all the N4JS projects before the compile (and run) phase. If the target platform file is given but the "
 			+ "target platform install location is not specified (via the --targetPlatformInstallLocation flag), then a the compilation phase will be aborted and the execution will be interrupted."
 			+ "If --targetPlatformSkipInstall is provided this parameter is ignored.")
+	@Deprecated /* TODO GH-651 */
 	File targetPlatformFile;
 
 	@Option(name = "--targetPlatformInstallLocation", aliases = "-tl", required = false, usage = "if specified and the target platform file is given as well, then all third party dependencies "
@@ -152,12 +154,12 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--targetPlatformSkipInstall", required = false, usage = "usually dependencies defined in the target platform file will be installed into the folder defined by option --targetPlatformInstallLocation. "
 			+ "If this flag is provided, this installation will be skipped, assuming the given folder already contains the required files and everything is up-to-date."
 			+ "Use with care, because no checks will be performed whether the location actually contains all required dependencies.")
+	@Deprecated /* TODO GH-651 */
 	boolean targetPlatformSkipInstall = false;
 
 	@Option(name = "--installMissingDependencies", aliases = "-imd", required = false, usage = "usually projects have dependencies that have to be fetched before the compilation. "
 			+ "If this flag is provided, compiler will calculate missing dependencies based on the manifest files of the projects provided as input to the compilation."
 			+ "Calculated missing dependencies will be fetched by Library Manager priori to the compilation.")
-	// , forbids = "--targetPlatformSkipInstall" // TODO new versions(>3.5.2014) of arg4j allow exclusions
 	boolean installMissingDependencies = false;
 
 	@Option(name = "--keepCompiling", usage = "keep compiling - even if errors are encountered")
@@ -284,6 +286,9 @@ public class N4jscBase implements IApplication {
 
 	@Inject
 	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
+
+	@Inject
+	private DependenciesHelper dependencyHelper;
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -482,16 +487,6 @@ public class N4jscBase implements IApplication {
 			}
 
 			checkTargetPlatformConfigurations();
-			if (targetPlatformSkipInstall && installMissingDependencies) {
-				/**
-				 * note that targetPlatformSkipInstall can be set to true by {@link checkTargetPlatformConfigurations}
-				 */
-				System.out.println(
-						"Conflicting arguments: must not provide both '--targetPlatformSkipInstall' and --installMissingDependencies");
-				printExtendedUsage(parser, System.out);
-				throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS);
-			}
-
 			if (null != nodeJsBinaryRoot) {
 				binariesPreferenceStore.setPath(nodeJsBinaryProvider.get(), nodeJsBinaryRoot.toURI());
 				binariesPreferenceStore.save();
@@ -508,6 +503,22 @@ public class N4jscBase implements IApplication {
 				// clean without compiling anything.
 				clean();
 			} else {
+				if (installMissingDependencies) {
+					Map<String, String> dependencies = dependencyHelper.discoverMissingDependencies(projectLocations,
+							srcFiles);
+					if(verbose){
+						System.out.println("installing missing dependencies:");
+						dependencies.forEach((name, version) -> {
+							System.out.println("  # " + name + version);
+						});
+					}
+
+					IStatus status = npmManager.installDependencies(dependencies, new NullProgressMonitor(), false);
+					// just warn let
+					if (!status.isOK())
+						warn(status.getMessage());
+				}
+
 				// run and dispatch.
 				doCompileAndTestAndRun();
 			}
@@ -581,46 +592,44 @@ public class N4jscBase implements IApplication {
 	private void cloneGitRepositoryAndInstallNpmPackages() throws ExitCodeException {
 		checkState(installLocationProvider instanceof HeadlessTargetPlatformInstallLocationProvider);
 
-		if (targetPlatformSkipInstall) {
+		/**
+		 * TLDR; Silent check in case of invocation `--targetPlatformInstallLocation foo --targetPlatformSkipInstall`,
+		 * provided <code>foo</code> can be used as location of extra resources (i.e. external libraries).
+		 *
+		 *
+		 * With `targetPlatformSkipInstall` {@link #checkTargetPlatformConfigurations} is not validating install
+		 * location but we might want to use it for extra sources (we assume user have manually prepared that, e.g. by
+		 * previous invocation of the compiler). In such case subsequent invocations can skip installing, skip normal
+		 * validation of the location (i.e. one that throws errors), but need to consider
+		 * `targetPlatformInstallLocation`. Thus we set provided value in the
+		 * HeadlessTargetPlatformInstallLocationProvider, other wise
+		 * {@link #convertToFilesAddTargetPlatformAndCheckWritableDir} will not add resources to build.
+		 *
+		 * Note that {@link #convertToFilesAddTargetPlatformAndCheckWritableDir} cannot use raw user input (i.e.
+		 * {@link #targetPlatformInstallLocation}) as it would get NPE when compiler is invoked without
+		 * `targetPlatformInstallLocation` but with `targetPlatformSkipInstall`.
+		 *
+		 */
 
-			/**
-			 * TLDR; Silent check in case of invocation `--targetPlatformInstallLocation foo
-			 * --targetPlatformSkipInstall`, provided <code>foo</code> can be used as location of extra resources (i.e.
-			 * external libraries).
-			 *
-			 *
-			 * With `targetPlatformSkipInstall` {@link #checkTargetPlatformConfigurations} is not validating install
-			 * location but we might want to use it for extra sources (we assume user have manually prepared that, e.g.
-			 * by previous invocation of the compiler). In such case subsequent invocations can skip installing, skip
-			 * normal validation of the location (i.e. one that throws errors), but need to consider
-			 * `targetPlatformInstallLocation`. Thus we set provided value in the
-			 * HeadlessTargetPlatformInstallLocationProvider, other wise
-			 * {@link #convertToFilesAddTargetPlatformAndCheckWritableDir} will not add resources to build.
-			 *
-			 * Note that {@link #convertToFilesAddTargetPlatformAndCheckWritableDir} cannot use raw user input (i.e.
-			 * {@link #targetPlatformInstallLocation}) as it would get NPE when compiler is invoked without
-			 * `targetPlatformInstallLocation` but with `targetPlatformSkipInstall`.
-			 *
-			 */
+		if (null != targetPlatformInstallLocation
+				&& targetPlatformInstallLocation.exists()
+				&& targetPlatformInstallLocation.isDirectory()
+				&& targetPlatformInstallLocation.canRead()
+				&& targetPlatformInstallLocation.canWrite()) {
+			((HeadlessTargetPlatformInstallLocationProvider) installLocationProvider)
+					.setTargetPlatformInstallLocation(targetPlatformInstallLocation.toURI());
+		} else {
+			final Path tempRoot = createTempDirectory("hlcTmpDepsLocation-time-" + System.currentTimeMillis());
+			targetPlatformInstallLocation = tempRoot.toFile();
+			((HeadlessTargetPlatformInstallLocationProvider) installLocationProvider)
+					.setTargetPlatformInstallLocation(tempRoot.toUri());
+		}
 
-			if (null != targetPlatformInstallLocation
-					&& targetPlatformInstallLocation.exists()
-					&& targetPlatformInstallLocation.isDirectory()
-					&& targetPlatformInstallLocation.canRead()
-					&& targetPlatformInstallLocation.canWrite()) {
-				((HeadlessTargetPlatformInstallLocationProvider) installLocationProvider)
-						.setTargetPlatformInstallLocation(targetPlatformInstallLocation.toURI());
-			}
+		if (targetPlatformSkipInstall && !installMissingDependencies) {
 			return;// no git setup, no package.json creation, no npm install
 		}
 
-		// at this point `targetPlatformSkipInstall=false`, `targetPlatformInstallLocation!=null`,
-		// `targetPlatformFile=null` -> see {@link #checkTargetPlatformConfigurations}
-
 		try {
-
-			((HeadlessTargetPlatformInstallLocationProvider) installLocationProvider)
-					.setTargetPlatformInstallLocation(targetPlatformInstallLocation.toURI());
 
 			// pull n4jsd to install location
 			java.net.URI gitRepositoryLocation = installLocationProvider
@@ -642,17 +651,20 @@ public class N4jscBase implements IApplication {
 					((HeadlessTargetPlatformInstallLocationProvider) installLocationProvider)
 							.setTargetPlatformFileLocation(packageJsonFile.toURI());
 
-					// install dependencies if needed
-					final Map<String, String> versionedPackages = TargetPlatformModel
-							.npmVersionedPackageNamesFrom(targetPlatformFile.toURI());
-					if (null != versionedPackages) {
-						final Iterable<Entry<String, String>> packageData = versionedPackages.entrySet();
-						for (final Entry<String, String> name2version : packageData) {
-							final IStatus status = npmManager.installDependency(name2version.getKey(),
-									name2version.getValue(), new NullProgressMonitor());
-							if (!status.isOK()) {
-								throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(),
-										status.getException());
+					// GH-651 remove
+					if (targetPlatformFile != null) {
+						// install dependencies if needed
+						final Map<String, String> versionedPackages = TargetPlatformModel
+								.npmVersionedPackageNamesFrom(targetPlatformFile.toURI());
+						if (null != versionedPackages) {
+							final Iterable<Entry<String, String>> packageData = versionedPackages.entrySet();
+							for (final Entry<String, String> name2version : packageData) {
+								final IStatus status = npmManager.installDependency(name2version.getKey(),
+										name2version.getValue(), new NullProgressMonitor());
+								if (!status.isOK()) {
+									throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(),
+											status.getException());
+								}
 							}
 						}
 					}
@@ -740,9 +752,12 @@ public class N4jscBase implements IApplication {
 			}
 
 			if (null == targetPlatformFile) {
-				throw new ExitCodeException(
-						EXITCODE_CONFIGURATION_ERROR,
-						"Target platform install location should be specified when a target platform file is configured.");
+				// TODO GH-651 in transition phase allow null targetplatform file
+				if (!installMissingDependencies) {
+					throw new ExitCodeException(
+							EXITCODE_CONFIGURATION_ERROR,
+							"Target platform install location should be specified when a target platform file is configured.");
+				}
 			} else {
 				if (!targetPlatformFile.exists()) {
 					throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
