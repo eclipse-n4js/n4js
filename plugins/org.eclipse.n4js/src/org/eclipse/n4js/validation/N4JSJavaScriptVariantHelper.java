@@ -23,11 +23,16 @@ import com.google.inject.Singleton;
 @Singleton
 public class N4JSJavaScriptVariantHelper extends BaseJavaScriptVariantHelper {
 
-	private final static String EXT_N4JSX = N4JSGlobals.N4JSX_FILE_EXTENSION;
-	private final static String EXT_JSX = N4JSGlobals.JSX_FILE_EXTENSION;
-	private final static String EXT_N4JS = N4JSGlobals.N4JS_FILE_EXTENSION;
-	private final static String EXT_N4JSD = N4JSGlobals.N4JSD_FILE_EXTENSION;
-	private final static String EXT_N4IDL = N4IDLGlobals.N4IDL_FILE_EXTENSION;
+	/** N4JSX variant */
+	public final static String EXT_N4JSX = N4JSGlobals.N4JSX_FILE_EXTENSION;
+	/** JSX variant */
+	public final static String EXT_JSX = N4JSGlobals.JSX_FILE_EXTENSION;
+	/** N4JS variant */
+	public final static String EXT_N4JS = N4JSGlobals.N4JS_FILE_EXTENSION;
+	/** N4JSD variant */
+	public final static String EXT_N4JSD = N4JSGlobals.N4JSD_FILE_EXTENSION;
+	/** N4IDL variant */
+	public final static String EXT_N4IDL = N4IDLGlobals.N4IDL_FILE_EXTENSION;
 
 	/**
 	 * Constructor

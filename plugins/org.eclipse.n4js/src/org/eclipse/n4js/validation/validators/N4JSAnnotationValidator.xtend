@@ -57,6 +57,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.validation.IssueCodes
 
 /**
  * Annotation validation rules for N4JS.
@@ -149,7 +150,8 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def void internalCheckAnnotation(AnnotationDefinition definition, Annotation annotation) {
 
-		if (holdsTargets(definition, annotation) && holdsArgumentTypes(definition, annotation)) {
+		if (holdsJavaScriptVariants(definition, annotation) && holdsTargets(definition, annotation) 
+			&& holdsArgumentTypes(definition, annotation)) {
 			checkUnnecessaryAnnotation(definition, annotation)
 
 			// special validations:
@@ -243,6 +245,23 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		return valid;
+	}
+	
+	/** Checks whether the given annotation conforms with the {@link AnnotationDefinition#javaScriptVariants} of the 
+	 * given AnnotationDefinition.*/
+	private def boolean holdsJavaScriptVariants(AnnotationDefinition definition, Annotation annotation) {
+		if (definition.javaScriptVariants.nullOrEmpty) {
+			return true; // nothing to validate against
+		}
+		val element = annotation.annotatedElement;
+		
+		if (!definition.javaScriptVariants.contains(jsVariantHelper.variantMode(element))) {
+			val message = IssueCodes.getMessageForANN_ONL_ALLOWED_IN_VARIANTS(definition.name, 
+				orList(definition.javaScriptVariants.map[v | jsVariantHelper.getVariantName(v)]));
+			addIssue(message, annotation, IssueCodes.ANN_ONL_ALLOWED_IN_VARIANTS);
+			return false;
+		}
+		return true;
 	}
 
 	private def boolean holdsTargets(AnnotationDefinition definition, Annotation annotation) {

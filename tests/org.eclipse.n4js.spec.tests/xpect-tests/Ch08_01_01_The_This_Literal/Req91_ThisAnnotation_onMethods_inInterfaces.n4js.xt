@@ -63,16 +63,16 @@ cc.m02();
 // XPECT noerrors -->
 cc1.m02();
 
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m03: C is not a subtype of CC." at "m03"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m03: C is not a subtype of CC." at "m03"
 c.m03();
 // XPECT noerrors -->
 cc.m03();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m03: CC1 is not a subtype of CC." at "m03"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m03: CC1 is not a subtype of CC." at "m03"
 cc1.m03();
 
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m04: C is not a subtype of intersection{C,I}." at "m04"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m04: C is not a subtype of intersection{C,I}." at "m04"
 c.m04();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m04: CC is not a subtype of intersection{C,I}." at "m04"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m04: CC is not a subtype of intersection{C,I}." at "m04"
 cc.m04();
 // XPECT noerrors -->
 cc1.m04();

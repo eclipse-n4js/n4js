@@ -66,7 +66,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_CONFIGURATION_ERROR);
 	}
@@ -83,7 +83,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_CONFIGURATION_ERROR);
 	}
@@ -108,7 +108,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
@@ -135,7 +135,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
@@ -157,7 +157,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString(),
+				"-bt", BuildType.allprojects.toString(),
 				"--targetPlatformSkipInstall"
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
@@ -175,7 +175,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString(),
+				"-bt", BuildType.allprojects.toString(),
 				"--targetPlatformSkipInstall"
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
@@ -193,7 +193,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
 	}
@@ -210,7 +210,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString(),
+				"-bt", BuildType.allprojects.toString(),
 				"--targetPlatformSkipInstall"
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
@@ -233,7 +233,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		new N4jscBase().doMain(argsInstall);
 		SuccessExitStatus statusInstall = new N4jscBase().doMain(argsInstall);
@@ -246,7 +246,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformSkipInstall",
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus statusSkipInstall = new N4jscBase().doMain(argsSkipInstall);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, statusSkipInstall.code);

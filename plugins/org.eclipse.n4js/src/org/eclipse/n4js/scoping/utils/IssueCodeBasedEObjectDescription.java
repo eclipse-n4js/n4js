@@ -10,16 +10,20 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
-/** Custom {@link IEObjectDescriptionWithError} for nicer user message */
-public class InvalidImportTargetModuleDescription extends AbstractDescriptionWithError {
+/**
+ * A custom {@link IEObjectDescriptionWithError} that allows to specify a custom error message and code to display to
+ * users (@See {@link IssueCodes}).
+ */
+public class IssueCodeBasedEObjectDescription extends AbstractDescriptionWithError {
 	private final String message;
 	private final String issueCode;
 
-	@SuppressWarnings("javadoc")
-	public InvalidImportTargetModuleDescription(IEObjectDescription delegate, String message, String issueCode) {
+	/** Instantiates a new {@link IssueCodeBasedEObjectDescription} with the given issue message and code. */
+	public IssueCodeBasedEObjectDescription(IEObjectDescription delegate, String message, String issueCode) {
 		super(delegate);
 		this.issueCode = issueCode;
 		this.message = message;

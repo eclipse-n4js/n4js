@@ -673,7 +673,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
-					sequence_AnnotatedScriptElement_ClassExtendsClause_ClassImplementsList_Members_TypeVariables(context, (N4ClassDeclaration) semanticObject); 
+					sequence_AnnotatedScriptElement_ClassExtendsClause_ClassImplementsList_Members_TypeVariables_VersionDeclaration(context, (N4ClassDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4ClassDeclarationRule()) {
@@ -741,12 +741,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedExportableElement_N4EnumDeclaration_VersionDeclaration(context, (N4EnumDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
-					sequence_AnnotatedScriptElement(context, (N4EnumDeclaration) semanticObject); 
-					return; 
-				}
 				else if (rule == grammarAccess.getScriptElementRule()) {
 					sequence_AnnotatedScriptElement_N4EnumDeclaration_VersionDeclaration(context, (N4EnumDeclaration) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
+					sequence_AnnotatedScriptElement_VersionDeclaration(context, (N4EnumDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4EnumDeclarationRule()) {
@@ -799,7 +799,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
-					sequence_AnnotatedScriptElement_InterfaceExtendsList_Members_TypeVariables(context, (N4InterfaceDeclaration) semanticObject); 
+					sequence_AnnotatedScriptElement_InterfaceExtendsList_Members_TypeVariables_VersionDeclaration(context, (N4InterfaceDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4InterfaceDeclarationRule()) {
@@ -3448,13 +3448,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             )
+	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -3880,8 +3880,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 typingStrategy=TypingStrategyDefSiteOperator? 
 	 *                 name=BindingIdentifier
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=VERSION?)
+	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier?)
 	 *         ) 
+	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
 	 *         (
@@ -3912,6 +3913,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4Modifier* 
 	 *         typingStrategy=TypingStrategyDefSiteOperator? 
 	 *         name=BindingIdentifier 
+	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
 	 *         (
@@ -3927,7 +3929,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
 	 */
-	protected void sequence_AnnotatedScriptElement_ClassExtendsClause_ClassImplementsList_Members_TypeVariables(ISerializationContext context, N4ClassDeclaration semanticObject) {
+	protected void sequence_AnnotatedScriptElement_ClassExtendsClause_ClassImplementsList_Members_TypeVariables_VersionDeclaration(ISerializationContext context, N4ClassDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4025,8 +4027,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 typingStrategy=TypingStrategyDefSiteOperator? 
 	 *                 name=BindingIdentifier
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=VERSION?)
+	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier?)
 	 *         ) 
+	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
@@ -4047,30 +4050,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4Modifier* 
 	 *         typingStrategy=TypingStrategyDefSiteOperator? 
 	 *         name=BindingIdentifier 
+	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
 	 */
-	protected void sequence_AnnotatedScriptElement_InterfaceExtendsList_Members_TypeVariables(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     AnnotatedScriptElement returns N4EnumDeclaration
-	 *
-	 * Constraint:
-	 *     (
-	 *         annotationList=AnnotatedScriptElement_N4EnumDeclaration_1_4_0 
-	 *         declaredModifiers+=N4Modifier* 
-	 *         name=BindingIdentifier 
-	 *         literals+=N4EnumLiteral 
-	 *         literals+=N4EnumLiteral*
-	 *     )
-	 */
-	protected void sequence_AnnotatedScriptElement(ISerializationContext context, N4EnumDeclaration semanticObject) {
+	protected void sequence_AnnotatedScriptElement_InterfaceExtendsList_Members_TypeVariables_VersionDeclaration(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4085,13 +4071,41 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             annotationList=AnnotatedScriptElement_N4EnumDeclaration_1_4_0 
 	 *             declaredModifiers+=N4Modifier* 
 	 *             name=BindingIdentifier 
-	 *             literals+=N4EnumLiteral 
-	 *             literals+=N4EnumLiteral*
+	 *             (
+	 *                 (declaredVersion=VERSION? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?) | 
+	 *                 (declaredVersion=VERSION? literals+=N4EnumLiteral literals+=N4EnumLiteral*)
+	 *             )
 	 *         ) | 
-	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? declaredVersion=VERSION? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
+	 *         (
+	 *             declaredModifiers+=N4Modifier* 
+	 *             name=BindingIdentifier? 
+	 *             (
+	 *                 (declaredVersion=VERSION? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?) | 
+	 *                 (declaredVersion=VERSION? literals+=N4EnumLiteral literals+=N4EnumLiteral*)
+	 *             )
+	 *         )
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_N4EnumDeclaration_VersionDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedScriptElement returns N4EnumDeclaration
+	 *
+	 * Constraint:
+	 *     (
+	 *         annotationList=AnnotatedScriptElement_N4EnumDeclaration_1_4_0 
+	 *         declaredModifiers+=N4Modifier* 
+	 *         name=BindingIdentifier 
+	 *         declaredVersion=VERSION? 
+	 *         literals+=N4EnumLiteral 
+	 *         literals+=N4EnumLiteral*
+	 *     )
+	 */
+	protected void sequence_AnnotatedScriptElement_VersionDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

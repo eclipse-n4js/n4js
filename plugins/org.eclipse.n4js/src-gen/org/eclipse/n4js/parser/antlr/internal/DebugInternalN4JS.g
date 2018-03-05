@@ -120,6 +120,7 @@ ruleAnnotatedScriptElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
+			ruleVersionDeclaration?
 			ruleTypeVariables?
 			ruleClassExtendsImplements?
 			    |
@@ -129,6 +130,7 @@ ruleAnnotatedScriptElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
+			ruleVersionDeclaration?
 			ruleTypeVariables?
 			ruleInterfaceExtendsList?
 		)
@@ -138,6 +140,7 @@ ruleAnnotatedScriptElement:
 		*
 		'enum'
 		ruleBindingIdentifier
+		ruleVersionDeclaration?
 		'{'
 		ruleN4EnumLiteral
 		(

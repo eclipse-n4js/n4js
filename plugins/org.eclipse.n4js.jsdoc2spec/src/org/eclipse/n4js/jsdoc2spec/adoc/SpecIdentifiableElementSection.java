@@ -18,8 +18,10 @@ import java.io.File;
 import java.util.Map;
 
 import org.eclipse.n4js.jsdoc.dom.Doclet;
+import org.eclipse.n4js.jsdoc2spec.KeyUtils;
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
 import org.eclipse.n4js.jsdoc2spec.SpecInfo;
+import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
 
@@ -28,6 +30,7 @@ import org.eclipse.n4js.ts.types.TMember;
  * elements.
  */
 public class SpecIdentifiableElementSection extends SpecSection {
+	final IdentifiableElement typeElement;
 	final IdentifiableElement idElement;
 	final String specModuleKey;
 	final String specKey;
@@ -37,6 +40,7 @@ public class SpecIdentifiableElementSection extends SpecSection {
 
 	SpecIdentifiableElementSection(SpecInfo specInfo, File rootDir, RepoRelativePathHolder repoPathHolder) {
 		super(specInfo, rootDir);
+		this.typeElement = specInfo.specElementRef.identifiableElement;
 		this.idElement = specInfo.specElementRef.identifiableElement;
 		this.specModuleKey = KeyUtils.getSpecModuleKey(repoPathHolder, specInfo);
 		this.sourceEntry = getSourceEntry(repoPathHolder);
@@ -46,6 +50,7 @@ public class SpecIdentifiableElementSection extends SpecSection {
 	SpecIdentifiableElementSection(SpecInfo specInfo, TMember idElement, File rootDir,
 			RepoRelativePathHolder repoPathHolder) {
 		super(specInfo, rootDir);
+		this.typeElement = specInfo.specElementRef.identifiableElement;
 		this.idElement = idElement;
 		this.specModuleKey = KeyUtils.getSpecModuleKey(repoPathHolder, specInfo);
 		this.sourceEntry = getSourceEntry(repoPathHolder);
@@ -57,6 +62,12 @@ public class SpecIdentifiableElementSection extends SpecSection {
 	 */
 	public SpecIdentifiableElementSection(IdentifiableElement element, RepoRelativePathHolder repoPathHolder) {
 		super(null, null);
+		if (element instanceof TMember) {
+			ContainerType<?> containingType = ((TMember) element).getContainingType();
+			this.typeElement = containingType;
+		} else {
+			this.typeElement = element;
+		}
 		this.idElement = element;
 		this.specModuleKey = element.getName();
 		this.specKey = KeyUtils.getSpecKey(repoPathHolder, idElement);
@@ -96,8 +107,8 @@ public class SpecIdentifiableElementSection extends SpecSection {
 	}
 
 	private SourceEntry getSourceEntry(RepoRelativePathHolder repoPathHolder) {
-		RepoRelativePath rrp = repoPathHolder.get(idElement);
-		SourceEntry se = SourceEntryFactory.create(rrp, idElement);
+		RepoRelativePath rrp = repoPathHolder.get(typeElement);
+		SourceEntry se = SourceEntryFactory.create(repoPathHolder, rrp, idElement);
 		return se;
 	}
 

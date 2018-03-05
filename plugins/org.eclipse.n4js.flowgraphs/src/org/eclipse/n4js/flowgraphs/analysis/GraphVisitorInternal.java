@@ -28,26 +28,24 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 	/** Container, specified in constructor */
 	protected final ControlFlowElement container;
 	/** Modes, specified in constructor */
-	protected final TraverseDirection[] directions;
+	protected final TraverseDirection direction;
 
 	private final List<GraphExplorerInternal> activationRequests = new LinkedList<>();
 	private final List<GraphExplorerInternal> activatedExplorers = new LinkedList<>();
 	private final List<GraphExplorerInternal> activeExplorers = new LinkedList<>();
 
 	private ControlFlowElement currentContainer;
-	private TraverseDirection currentDirection;
 	private boolean activeMode = false;
 	private boolean lastVisitedNodeIsDead = false;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param directions
-	 *            sets the {@link TraverseDirection}s for this instance. Default direction is {@literal Mode.Forward} if
-	 *            no direction is given.
+	 * @param direction
+	 *            sets the direction for this instance. Default direction is {@literal Mode.Forward}.
 	 */
-	protected GraphVisitorInternal(TraverseDirection... directions) {
-		this(null, directions);
+	protected GraphVisitorInternal(TraverseDirection direction) {
+		this(null, direction);
 	}
 
 	/**
@@ -56,15 +54,14 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 	 * @param container
 	 *            sets the containing {@link ControlFlowElement} for this instance. Iff the given container is
 	 *            {@code null}, this {@link GraphVisitorInternal} is applied on all containers.
-	 * @param directions
-	 *            sets the directions for this instance. Default directions are {@literal Mode.Forward} and
-	 *            {@literal Mode.CatchBlocks} if no direction is given.
+	 * @param direction
+	 *            sets the direction for this instance. Default direction is {@literal Mode.Forward}.
 	 */
-	protected GraphVisitorInternal(ControlFlowElement container, TraverseDirection... directions) {
-		if (directions.length == 0) {
-			directions = new TraverseDirection[] { TraverseDirection.Forward };
+	protected GraphVisitorInternal(ControlFlowElement container, TraverseDirection direction) {
+		if (direction == null) {
+			direction = TraverseDirection.Forward;
 		}
-		this.directions = directions;
+		this.direction = direction;
 		this.container = container;
 	}
 
@@ -78,12 +75,10 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 	/**
 	 * Called after {@link #initialize()} and before any visit-method is called.
 	 *
-	 * @param curDirection
-	 *            direction of succeeding calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	protected void initializeModeInternal(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void initializeContainerInternal(ControlFlowElement curContainer) {
 		// overwrite me
 	}
 
@@ -118,12 +113,10 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 	/**
 	 * Called before {@link #terminate()} and after any visit-method is called.
 	 *
-	 * @param curDirection
-	 *            direction of previous calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of previous calls to visit-methods
 	 */
-	protected void terminateMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void terminateContainer(ControlFlowElement curContainer) {
 		// overwrite me
 	}
 
@@ -146,21 +139,20 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link #initializeModeInternal(TraverseDirection, ControlFlowElement)}.
+	 * {@link #initializeContainerInternal(ControlFlowElement)}.
 	 */
-	final void callInitializeModeInternal() {
+	final void callInitializeContainerInternal() {
 		if (activeMode) {
-			initializeModeInternal(getCurrentDirection(), getCurrentContainer());
+			initializeContainerInternal(getCurrentContainer());
 		}
 	}
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link #terminateMode(TraverseDirection, ControlFlowElement)}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #terminateContainer(ControlFlowElement)}.
 	 */
-	final void callTerminateMode() {
+	final void callTerminateContainer() {
 		if (activeMode) {
-			terminateMode(getCurrentDirection(), null);
+			terminateContainer(null);
 		}
 	}
 
@@ -189,26 +181,15 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 	}
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Sets {@link #currentDirection} and {@link #currentContainer}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Sets {@link #currentContainer}.
 	 */
-	final void setContainerAndMode(ControlFlowElement curContainer, TraverseDirection curDirection) {
+	final void setContainer(ControlFlowElement curContainer) {
 		this.currentContainer = curContainer;
-		this.currentDirection = curDirection;
 		checkActive();
 	}
 
 	private void checkActive() {
-		activeMode = false;
-		boolean containerActive = (container == null || container == currentContainer);
-
-		if (containerActive) {
-			for (TraverseDirection dir : directions) {
-				if (dir == currentDirection) {
-					activeMode = true;
-					break;
-				}
-			}
-		}
+		activeMode = (container == null || container == currentContainer);
 	}
 
 	/**
@@ -263,9 +244,9 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 		return getActiveExplorers().size();
 	}
 
-	/** @return the current direction */
-	final public TraverseDirection getCurrentDirection() {
-		return currentDirection;
+	/** @return the direction */
+	final public TraverseDirection getDirection() {
+		return direction;
 	}
 
 	/** @return true iff the last visited node was not dead. */

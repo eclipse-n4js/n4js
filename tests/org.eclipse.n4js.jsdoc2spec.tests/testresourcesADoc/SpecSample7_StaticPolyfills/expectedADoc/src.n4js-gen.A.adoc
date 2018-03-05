@@ -21,27 +21,6 @@ include::{find}config.adoc[]
 
 
 
-[[gsec:spec_A.A.bar]]
-[role=memberdoc]
-=== ++Method bar++
-
-[.small]#(Polyfilled from n4js:testresources)#
-
-==== Signature
-
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample7_StaticPolyfills:src/n4js/A:A#bar++[``++public bar(): void++``]
-
-
-
-==== Semantics
-
-[TODO, title="test ++A.bar++"]
---
-Add tests specifying semantics for ``++bar(): void++``
---
-
-
-
 [[gsec:spec_A.A.base]]
 [role=memberdoc]
 === ++Method base++
@@ -65,11 +44,9 @@ Add tests specifying semantics for ``++base(x: number): void++``
 [role=memberdoc]
 === ++Method foo++
 
-[.small]#(Polyfilled from n4js:testresources)#
-
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample7_StaticPolyfills:src/n4js/A:A#foo++[``++public foo(x: any, n: number=…): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample7_StaticPolyfills:src/n4js-gen/A:A#foo++[``++public foo(x: string): void++``]
 
 
 
@@ -77,7 +54,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 [TODO, title="test ++A.foo++"]
 --
-Add tests specifying semantics for ``++foo(x: any, n: number=…): void++``
+Add tests specifying semantics for ``++foo(x: string): void++``
 --
 
 

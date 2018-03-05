@@ -91,7 +91,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 
 		final String[] args = {
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString(),
+				"-bt", BuildType.allprojects.toString(),
 				"--systemLoader", COMMON_JS.getId(),
 				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
