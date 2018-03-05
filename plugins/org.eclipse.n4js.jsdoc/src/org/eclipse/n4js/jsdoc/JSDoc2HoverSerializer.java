@@ -178,21 +178,25 @@ public class JSDoc2HoverSerializer extends DomSwitch<Boolean> {
 				}
 				if (tagHandler != null) {
 					List<LineTag> lineTags = groupedLineTags.get(tagDef);
-					if (lineTags != null && !lineTags.isEmpty()) {
-						tagHandler.open(tagDef, this);
-						boolean first = true;
-						for (LineTag lineTag : lineTags) {
-							md2HtmlBuilder.resetMarkdownConverter();
-							tagHandler.content(lineTag, this, first);
-							first = false;
-						}
-						tagHandler.close(tagDef, this);
-					}
+					handleLineTags(tagDef, tagHandler, lineTags);
 				}
 			}
 			md2HtmlBuilder.append("\n</dl>");
 		}
 		return false;
+	}
+
+	private void handleLineTags(ITagDefinition tagDef, TagHandler tagHandler, List<LineTag> lineTags) {
+		if (lineTags != null && !lineTags.isEmpty()) {
+			tagHandler.open(tagDef, this);
+			boolean first = true;
+			for (LineTag lineTag : lineTags) {
+				md2HtmlBuilder.resetMarkdownConverter();
+				tagHandler.content(lineTag, this, first);
+				first = false;
+			}
+			tagHandler.close(tagDef, this);
+		}
 	}
 
 	@Override

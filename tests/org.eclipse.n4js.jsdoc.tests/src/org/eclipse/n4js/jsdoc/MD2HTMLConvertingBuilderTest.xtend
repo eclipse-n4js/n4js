@@ -70,8 +70,8 @@ class MD2HTMLConvertingBuilderTest {
 			'''
 			This is a list:
 			<ul>
-			<li> hello
-			<li> world
+			<li>hello
+			<li>world
 			</ul>
 			''');	
 	}
@@ -88,9 +88,9 @@ class MD2HTMLConvertingBuilderTest {
 			'''
 			This is a list:
 			<ul>
-			<li> hello
+			<li>hello
 			hallo
-			<li> world
+			<li>world
 			</ul>
 			''');	
 	}
@@ -102,15 +102,18 @@ class MD2HTMLConvertingBuilderTest {
 			This is a list:
 			- hello
 			- world
+			cont
+			
 			More text
 			''',
 			'''
 			This is a list:
 			<ul>
-			<li> hello
-			<li> world
+			<li>hello
+			<li>world
+			cont
 			</ul>
-			More text
+			<p>More text
 			''');	
 	}
 
@@ -125,22 +128,23 @@ class MD2HTMLConvertingBuilderTest {
 				- is
 			- world
 				- some text
+				
 			More text
 			''',
 			'''
 			This is a list:
 			<ul>
-			<li> hello
+			<li>hello
 			<ul>
-			<li> this
-			<li> is
+			<li>this
+			<li>is
 			</ul>
-			<li> world
+			<li>world
 			<ul>
-			<li> some text
+			<li>some text
 			</ul>
 			</ul>
-			More text
+			<p>More text
 			''');	
 	}
 	

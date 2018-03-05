@@ -169,14 +169,6 @@ public class MD2HTMLConvertingBuilder {
 		pos = 0;
 	}
 
-	private void handleChar() {
-		if (bol) {
-			closeNestedBlocks(null);
-			bol = false;
-		}
-		html.append(current);
-	}
-
 	/**
 	 * Opens a new block, emitting the opening html tag.
 	 */
@@ -207,10 +199,10 @@ public class MD2HTMLConvertingBuilder {
 	}
 
 	/**
-	 * Closes all blocks with a greater depth than the current depth, if depth is similar it is closed if it contains
-	 * the same markdown tag. The latter case is used for detecting list item siblings.
+	 * Closes all blocks with a greater depth than the current depth. If depth is similar it is closed if it contains
+	 * the same markdown tag; this is used for detecting list item siblings.
 	 *
-	 * @return current block or null, if no block is found.
+	 * @return current block (i.e. block that was not closed) or null, if no block is found.
 	 */
 	private Block closeNestedBlocks(String mdTag) {
 		for (int i = blocks.size() - 1; i >= 0; i--) {
@@ -261,6 +253,7 @@ public class MD2HTMLConvertingBuilder {
 	 */
 	private void handleEOL() {
 		html.append("\n");
+		int currentDepth = depth;
 		depth = 0;
 		boolean parFound = false;
 		char s = peek();
@@ -283,7 +276,14 @@ public class MD2HTMLConvertingBuilder {
 			s = peek();
 		}
 		if (parFound) {
-			html.append("<p>");
+			if (depth > currentDepth) {
+				html.append("<p>");
+			} else {
+				Block b = closeNestedBlocks(null);
+				if (b == null) {
+					html.append("<p>");
+				}
+			}
 		}
 		bol = true;
 	}
@@ -292,6 +292,10 @@ public class MD2HTMLConvertingBuilder {
 	 * Handles unsorted lists (UL), that is, list items in markdown.
 	 */
 	private void handleUL() {
+		if (!Character.isWhitespace(peek())) {
+			handleChar();
+		}
+
 		if (!bol) {
 			html.append(current);
 			return;
@@ -302,7 +306,21 @@ public class MD2HTMLConvertingBuilder {
 			openBlock(depth, mdTag, "<ul>\n", "</ul>");
 		}
 		html.append("<li>");
+		next(); // consume whitespace after the list item
 		bol = false;
+	}
+
+	/**
+	 * Handles a character or white space character (except at beginning of line).
+	 */
+	private void handleChar() {
+		if (bol) {
+			if (depth > 0) { // similar to github md
+				closeNestedBlocks(null);
+			}
+			bol = false;
+		}
+		html.append(current);
 	}
 
 	/**
