@@ -22,17 +22,17 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  * Does nothing. Can be used to trigger the control flow graph to be walked through. Walks in {@literal Mode#Forward}
  * and {@literal Mode#Backward} direction through the code.
  */
-public class DummyForwardBackwardVisitor extends GraphVisitor {
+public class DummyBackwardVisitor extends GraphVisitor {
 
 	/**
 	 * Constructor.
 	 */
-	public DummyForwardBackwardVisitor() {
-		super(TraverseDirection.Forward, TraverseDirection.Backward);
+	public DummyBackwardVisitor() {
+		super(TraverseDirection.Backward);
 	}
 
 	@Override
-	protected void initializeMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void initializeContainer(ControlFlowElement curContainer) {
 		super.requestActivation(new DummyExplorer());
 	}
 

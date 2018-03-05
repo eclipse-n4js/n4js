@@ -50,14 +50,14 @@ public class SpecADocXpectMethod {
 	 * Checks that an element/expression produces a certain specification string. Usage:
 	 *
 	 * <pre>
-	 * /* XPECT specADoc at 'location' ---
+	 * /* X-PECT specADoc at 'location' ---
 	 * expected spec output
 	 * --- * /
 	 * </pre>
 	 *
 	 * The location (at) is optional.
 	 *
-	 * Note that the XPECT comment must be written <b>before</b> the JSDoc comment of the element.
+	 * Note that the X-PECT comment must be written <b>before</b> the JSDoc comment of the element.
 	 *
 	 * @param arg1
 	 *            the location identified by the offset.

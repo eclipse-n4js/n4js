@@ -107,7 +107,7 @@ class WebContentFileWriter {
 			PackageEntry pe = allPackages.get(packageName);
 
 			String moduleName = ie.moduleName;
-			if (!pe.modules.containsKey(moduleName)) {
+			if (!ie.isStaticPolyfillAware && !pe.modules.containsKey(moduleName)) {
 				pe.modules.put(moduleName, new ModuleEntry(moduleName, ie));
 			}
 		}
