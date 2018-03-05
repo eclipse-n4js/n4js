@@ -27,7 +27,6 @@ import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
@@ -248,8 +247,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private boolean holdsSuperClass(N4ClassDeclaration n4Class) {
-		val superTypeRef = n4Class.superClassRef;
-		val superType = superTypeRef?.declaredType;
+		val superType = n4Class.superClassRef?.declaredType;
 		if (superType !== null && superType.name !== null) { // note: in case superType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 
 			if (superType instanceof PrimitiveType) {
@@ -281,7 +279,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				}
 
 				// ctor of super class must be accessible
-				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superTypeRef, superType)) {
+				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superType)) {
 					return false;
 				}
 
@@ -293,7 +291,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			} else if (superType instanceof TObjectPrototype) {
 				// the following applies to TObjectPrototype as well (not just to TClass)
-				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superTypeRef, superType)) {
+				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superType)) {
 					return false;
 				}
 			}
@@ -301,9 +299,10 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	def private holdsCtorOfSuperTypeIsAccessible(N4ClassDeclaration n4Class, TypeRef superTypeRef, TClassifier superType) {
+	def private holdsCtorOfSuperTypeIsAccessible(N4ClassDeclaration n4Class, TClassifier superType) {
+		val receiverTypeRef = TypeUtils.createTypeRef(n4Class.definedType);
 		val superCtor = containerTypesHelper.fromContext(n4Class).findConstructor(superType);
-		if(superCtor!==null && !memberVisibilityChecker.isVisible(n4Class, superTypeRef, superCtor).visibility) {
+		if(superCtor!==null && !memberVisibilityChecker.isVisible(n4Class, receiverTypeRef, superCtor).visibility) {
 			val message = getMessageForCLF_EXTEND_NON_ACCESSIBLE_CTOR(
 				n4jsElementKeywordProvider.keyword(superType),
 				superType.name);
