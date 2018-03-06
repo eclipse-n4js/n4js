@@ -7,7 +7,7 @@
 // Scenario 11: Invisible dependency to something which was build in the same go. --> should not compile
 // 
 export public class A {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+A)
 	}
 }
@@ -28,7 +28,7 @@ Sources {
 # wsp1/B/src/packB/B.n4js
 import { A } from "packA/A"
 export public class B extends A {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+B)
 	}
 }
