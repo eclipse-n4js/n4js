@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -33,9 +32,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.GeneratorException;
-import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
@@ -53,7 +50,6 @@ import org.eclipse.n4js.utils.collections.Collections2;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
-import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
@@ -103,12 +99,9 @@ import com.google.inject.Provider;
  */
 public class N4HeadlessCompiler {
 
-	/** The composite generator that manages all subgenerators. */
+	/** Helper for configuring {@link JavaIoFileSystemAccess} */
 	@Inject
-	private ICompositeGenerator compositeGenerator;
-
-	/** Abstraction to the file system, used by the generators */
-	private final JavaIoFileSystemAccess fsa;
+	private ConfiguredGeneratorFactory generatorFactory;
 
 	/** N4JS-Implementation of a workspace without OSGI */
 	@Inject
@@ -144,29 +137,6 @@ public class N4HeadlessCompiler {
 
 	/** if set additional log will be written to this filename */
 	private String logFile = null;
-
-	private Map<String, OutputConfiguration> initialOutputConfiguration;
-
-	/**
-	 * Private constructor to prevent accidental instantiation.
-	 */
-	@Inject
-	private N4HeadlessCompiler(JavaIoFileSystemAccess fsa) {
-		this.fsa = fsa;
-	}
-
-	/** Build an output configuration from a composite generator. */
-	private Map<String, OutputConfiguration> getInitialOutputConfigurations() {
-		if (initialOutputConfiguration == null) {
-			initialOutputConfiguration = new HashMap<>();
-			for (CompilerDescriptor desc : compositeGenerator.getCompilerDescriptors()) {
-				initialOutputConfiguration.put(desc.getIdentifier(), desc.getOutputConfiguration());
-			}
-
-		}
-		return initialOutputConfiguration;
-		// return result;
-	}
 
 	/*
 	 * ===============================================================================================================
@@ -877,7 +847,6 @@ public class N4HeadlessCompiler {
 			// Only load a project if it was requested to be compile or if other requested projects depend on it.
 			if (markedProject.hasMarkers()) {
 				recorder.markProcessing(markedProject.project);
-				configureFSA(markedProject.project);
 
 				try {
 					// Add to loaded projects immediately so that the project gets unloaded even if loading fails.
@@ -1309,8 +1278,6 @@ public class N4HeadlessCompiler {
 	/**
 	 * Generates code for all resources in the given project.
 	 *
-	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject)}
-	 *
 	 * @param markedProject
 	 *            project to compile.
 	 * @param resSet
@@ -1322,9 +1289,8 @@ public class N4HeadlessCompiler {
 	 * @throws N4JSCompileException
 	 *             in case of compile-problems. Possibly wrapping other N4SJCompileExceptions.
 	 */
-	private void generateProject(MarkedProject markedProject, ResourceSet resSet, Predicate<URI> compileFilter,
-			N4ProgressStateRecorder rec)
-			throws N4JSCompileException {
+	private void generateProject(MarkedProject markedProject, ResourceSet resSet,
+			Predicate<URI> compileFilter, N4ProgressStateRecorder rec) throws N4JSCompileException {
 		rec.markStartCompiling(markedProject);
 
 		final String projectId = markedProject.project.getProjectId();
@@ -1335,6 +1301,8 @@ public class N4HeadlessCompiler {
 		Lazy<N4JSCompoundCompileException> collectedErrors = Lazy.create(() -> {
 			return new N4JSCompoundCompileException("Errors during generation of project " + projectId);
 		});
+
+		ConfiguredGenerator generator = generatorFactory.getConfiguredGenerator(markedProject.project);
 
 		// then compile each file.
 		for (Resource resource : markedProject.resources) {
@@ -1349,10 +1317,7 @@ public class N4HeadlessCompiler {
 						}
 
 						// Ask composite generator to try to generate the current resource
-						if (logger.isVerbose()) {
-							logger.info("  generating  " + compositeGenerator.getClass().getName());
-						}
-						compositeGenerator.doGenerate(resource, fsa);
+						generator.generate(resource);
 
 						rec.markEndCompile(resource);
 					} catch (GeneratorException e) {
@@ -1418,62 +1383,6 @@ public class N4HeadlessCompiler {
 				loadedIter.remove();
 			}
 		}
-	}
-
-	/*
-	 * ===============================================================================================================
-	 *
-	 * OUTPUT CONFIGURATION
-	 *
-	 * ===============================================================================================================
-	 */
-
-	/**
-	 * Setting the compile output-configurations to contain path-locations relative to the user.dir: Wrapper function
-	 * written against Xtext 2.7.1.
-	 *
-	 * In Eclipse-compile mode there are "projects" and the FSA is configured relative to these projects. In this
-	 * filebasedWorkspace here there is no "project"-concept for the generator. So the paths of the FSA need to be
-	 * reconfigured to contain the navigation to the IN4JSProject-root.
-	 *
-	 * @param project
-	 *            project to be compiled
-	 */
-	private void configureFSA(IN4JSProject project) {
-		Map<String, OutputConfiguration> outputConfigToBeWrapped = getInitialOutputConfigurations();
-		File currentDirectory = new File(".");
-		File projectLocation = new File(project.getLocation().toFileString());
-
-		// If project is not in a sub directory of the current directory an absolute path is computed.
-		final java.net.URI projectURI = currentDirectory.toURI().relativize(projectLocation.toURI());
-		final String projectPath = projectURI.getPath();
-		if (projectPath.length() == 0) {
-			// same directory, skip
-			return;
-		}
-
-		// set different output configuration.
-		fsa.setOutputConfigurations(transformedOutputConfiguration(projectPath, outputConfigToBeWrapped));
-	}
-
-	/**
-	 * Wraps the output-configurations with a delegate that transparently injects the relative path to the project-root.
-	 *
-	 * @param projectPath
-	 *            relative path to the project-root
-	 * @return wrapped configurations.
-	 */
-	private Map<String, OutputConfiguration> transformedOutputConfiguration(String projectPath,
-			Map<String, OutputConfiguration> outputConfigToBeWrapped) {
-		Map<String, OutputConfiguration> result = new HashMap<>();
-
-		for (Entry<String, OutputConfiguration> pair : outputConfigToBeWrapped.entrySet()) {
-			final OutputConfiguration input = pair.getValue();
-			OutputConfiguration transOC = new WrappedOutputConfiguration(input, projectPath);
-			result.put(pair.getKey(), transOC);
-		}
-
-		return result;
 	}
 
 	/*
