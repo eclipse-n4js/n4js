@@ -41,7 +41,7 @@ class N4IDLTypeRefTestHelper {
 		function f() { var «expressionName» : «typeExpression» }''';
 		
 		val script = parseN4IDL(module);
-		script.assertNoErrors
+		script.assertNoIssues;
 		
 		val variableDeclaration = script.eAllContents.filter(VariableDeclaration).findFirst[decl | decl.name.equals(expressionName)];
 		

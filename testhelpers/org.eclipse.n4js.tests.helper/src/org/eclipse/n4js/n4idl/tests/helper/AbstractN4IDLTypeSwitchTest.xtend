@@ -62,8 +62,8 @@ class AbstractN4IDLTypeSwitchTest extends Assert {
 	 * Disambiguates the given {@link SwitchCondition} by creating a new {@link SwitchCondition}
 	 * for each branch of any contained {@link OrSwitchCondition} condition.
 	 */
-	public def Iterable<? extends SwitchCondition> disambiguate(SwitchCondition switchCondition) {
-		return switchComputer.disambiguate(switchCondition)
+	public def Iterable<? extends SwitchCondition> toDNF(SwitchCondition switchCondition) {
+		return switchComputer.toDNF(switchCondition)
 	}
 	
 	/** Returns the context {@link Resource} of the given {@link SwitchCondition} or

@@ -11,7 +11,7 @@
 package org.eclipse.n4js.n4idl.versioning
 
 import com.google.inject.Inject
-import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4idl.tests.helper.N4IDLTypeRefTestHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
  * Unit tests wrt to class {@link VersionUtils}.
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProvider)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression)
 public class VersionUtilsTest extends Assert {
 	@Inject private extension N4IDLTypeRefTestHelper
 	
@@ -41,11 +41,17 @@ public class VersionUtilsTest extends Assert {
 	
 	@Test
 	public def void testVersionedComposedTypeRef() {
-		Assert.assertEquals("Versioned union type", 1, VersionUtils.getVersion(makeTypeRef("union{A#1, string}", #["A#1", "A#2"])));
-		Assert.assertEquals("Versioned union type", 2, VersionUtils.getVersion(makeTypeRef("union{A#2, string}", #["A#1", "A#2"])));
+		val preamble = '''
+		class A#1 {}
+		class A#2 {}
+		interface I#1 {}
+		''';
 		
-		Assert.assertEquals("Versioned intersection type", 1, VersionUtils.getVersion(makeTypeRef("intersection{A#1, A#2}", #["A#1", "A#2"])));
-		Assert.assertEquals("Versioned intersection type", 2, VersionUtils.getVersion(makeTypeRef("intersection{A#2, any}", #["A#1", "A#2"])));
+		Assert.assertEquals("Versioned union type", 1, VersionUtils.getVersion(makeTypeRef("union{A#1, string}", preamble)));
+		Assert.assertEquals("Versioned union type", 2, VersionUtils.getVersion(makeTypeRef("union{A#2, string}", preamble)));
+		
+		Assert.assertEquals("Versioned intersection type", 1, VersionUtils.getVersion(makeTypeRef("intersection{A#1, I#2}", preamble)));
+		Assert.assertEquals("Versioned intersection type", 2, VersionUtils.getVersion(makeTypeRef("intersection{A#2, Function}", preamble)));
 	}
 	
 	@Test

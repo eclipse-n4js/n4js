@@ -10,28 +10,24 @@
  */
 package org.eclipse.n4js.n4idl.versioning
 
-import com.google.inject.Inject
-import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4idl.MigrationSwitchComputer
 import org.eclipse.n4js.n4idl.SwitchCondition
 import org.eclipse.n4js.n4idl.tests.helper.AbstractN4IDLTypeSwitchTest
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 
 /**
  * Unit tests wrt to class {@link MigrationSwitchComputer}.
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProvider)
+@InjectWith(N4JSInjectorProviderWithIssueSuppression)
 public class MigrationSwitchComputerTest extends AbstractN4IDLTypeSwitchTest {
-	
-	@Inject private TypeSystemHelper typeSystemHelper;
 	
 	@Test
 	public def testBasicTypeExpressions() {
@@ -43,8 +39,8 @@ public class MigrationSwitchComputerTest extends AbstractN4IDLTypeSwitchTest {
 	public def testBasicArrayExpressions() {
 		val preamble = classes("A#1", "A#2")
 		
-		assertEquals("Array type ref", "(v instanceof Array && v.length > 0 && (v[0] instanceof A#2))", compute("[A#2]", preamble));
-		assertEquals("Array type ref (using Array<>)", "(v instanceof Array && v.length > 0 && (v[0] instanceof A#2))", compute("Array<A#2>", preamble));
+		assertEquals("Array type ref", "(v array with (v[0] instanceof A#2))", compute("[A#2]", preamble));
+		assertEquals("Array type ref (using Array<>)", "(v array with (v[0] instanceof A#2))", compute("Array<A#2>", preamble));
 	}
 	
 	@Test
@@ -100,12 +96,12 @@ public class MigrationSwitchComputerTest extends AbstractN4IDLTypeSwitchTest {
 		interface I#2 {}
 		'''
 		
-		assertEquals("Nested composed type: (A#2|[A#1])&(A#3|Array<A#5>)", 
-			"((v instanceof A#2) || ((v instanceof Array && v.length > 0 && (v[0] instanceof A#1)))) && ((v instanceof A#3) || ((v instanceof Array && v.length > 0 && (v[0] instanceof A#5))))", 
+		assertEquals("Nested composed type 1: (A#2|[A#1])&(A#3|Array<A#5>)", 
+			"((v instanceof A#2) || ((v array with (v[0] instanceof A#1)))) && ((v instanceof A#3) || ((v array with (v[0] instanceof A#5))))", 
 			compute("(A#2|[A#1])&(A#3|Array<A#5>)", preamble));
 			
-		assertEquals("Nested composed type: ", 
-			"(((v instanceof Array && v.length > 0 && ((v[0] instanceof A#2) || (v[0] instanceof A#1)))) && (((v instanceof I#1) && (v instanceof A#3)) || (v instanceof A#5))) || (v instanceof I#1)",
+		assertEquals("Nested composed type 2: (([A#2|A#1])&((I#1&A#3|A#5)))|I#1", 
+			"((((v array with (v[0] instanceof A#2))) || ((v array with (v[0] instanceof A#1)))) && (((v instanceof I#1) && (v instanceof A#3)) || (v instanceof A#5))) || (v instanceof I#1)",
 			compute("(([A#2|A#1])&((I#1&A#3|A#5)))|I#1", preamble));
 	}
 	
@@ -142,16 +138,19 @@ public class MigrationSwitchComputerTest extends AbstractN4IDLTypeSwitchTest {
 		
 		
 		assertEquals("Unparameterized composed type ref 1", 
-			"union{intersection{Array<union{A#2,A#1}>,union{intersection{I#1,A#3},A#5}},I#1}", 
+			"union{intersection{union{Array<A#2>,Array<A#1>},union{intersection{I#1,A#3},A#5}},I#1}", 
 			computeAndConvertToTypeRef("(([A#2|A#1])&((I#1&A#3|A#5)))|I#1", preamble))
 			
 		assertEquals("Parameterized composed type ref 1", 
-			"union{intersection{Array<union{B#2,B#1}>,union{intersection{J#2,J#2},B#3}},J#2}",
+			"union{intersection{union{Array<B#2>,Array<B#1>},union{intersection{J#2,J#2},B#3}},J#2}",
 			computeAndConvertToTypeRef("(([B#2<A#2>|B#1<A#1>])&((J#2<I#1, I#2>&J#2<A#1, A#2>|B#3<B#3<A#3>>)))|J#2<I#1, I#2>", preamble))
 	}
 	
+	/**
+	 * Test which checks, that the {@link MigrationSwitchComputer#toCNF} does not produce any
+	 * non-equivalent switch conditions. */
 	@Test
-	public def void testSwitchConditionDisambiguation() {
+	public def void testSwitchConditionCNFConversion() {
 		val preamble = '''
 		class A#1 {}
 		class A#2 {}
@@ -169,28 +168,75 @@ public class MigrationSwitchComputerTest extends AbstractN4IDLTypeSwitchTest {
 		interface J#1<T> {}
 		interface J#2<T1, T2> {}
 		'''
-//		val typeExpression = "(([B#2<A#2>|B#1<A#1>])&((J#2<I#1, I#2>&J#2<A#1, A#2>|B#3<B#3<A#3>>)))|J#2<I#1, I#2>";
-		val typeExpression = "[B#1<A#1>|J#1<I#1>]";
-
+	
+		assertDNFConversionDoesNotAlterType("Non-parameterized type ref", "A#1", preamble);
+		assertDNFConversionDoesNotAlterType("Parameterized type ref", "B#1<A#1>", preamble);
+		
+		assertDNFConversionDoesNotAlterType("Simple array reference", "Array<A#1>", preamble);
+		assertDNFConversionDoesNotAlterType("Simple array reference '[]' syntax", "[A#1]", preamble);
+		
+		assertDNFConversionDoesNotAlterType("Simple union type ref", "A#1|I#2", preamble);
+		assertDNFConversionDoesNotAlterType("Simple intersection type ref ", "A#1&I#2", preamble);
+		
+		assertDNFConversionDoesNotAlterType("Array union type ref", "[A#1|I#2]", preamble);
+		assertDNFConversionDoesNotAlterType("Array intersection type ref", "[A#1&I#2]", preamble);
+		
+		assertDNFConversionDoesNotAlterType("Intersection type with array argument", "[A#1]&A#2", preamble);
+		assertDNFConversionDoesNotAlterType("Union type with array argument", "[A#1]|A#2", preamble);
+		
+		// TODO enable test case
+//		assertDNFConversionDoesNotAlterType("Intersection type with composed array argument", "[A#1|I#2]&A#2", preamble);
+		assertDNFConversionDoesNotAlterType("Union type with array argument", "[A#1|I#2]|A#2", preamble);
+		
+		assertDNFConversionDoesNotAlterType("Nested composed type reference", "(([A#1|I#2]|A#2)&A#3&(I#2|I#4))|I#3", preamble);
+		
+		// TODO enable the following test case
+//		assertDNFConversionDoesNotAlterType("Complex nested composed type reference", "(([B#2<A#2>|B#1<A#1>])&((J#2<I#1, I#2>&J#2<A#1, A#2>|B#3<B#3<A#3>>)))|J#2<I#1, I#2>", preamble);
+//		assertDNFConversionDoesNotAlterType("([B#1<A#1>|J#1<I#1>]|A#2&I#2)", preamble)
+	}
+	
+	/**
+	 * Asserts that {@link SwitchCondition} type reference inferred from the given type expression 
+	 * is not altered by converting it a DNF switch condition using {@link MigrationSwitchComputer#toDNF}.
+	 */
+	public def void assertDNFConversionDoesNotAlterType(String testDescription, String typeExpression, String preamble) {
 		val condition = computeSwitch(typeExpression, preamble)
-		val disambiguatedConditions = disambiguate(condition);
+		val dnfConditionClauses = toDNF(condition);
+		
 		// make sure all OR conditions have been factored out
-		disambiguatedConditions.forEach[c | assertSwitchDoesNotContainOr(c) ];
+		dnfConditionClauses.forEach[c | assertSwitchDoesNotContainOr(c) ];
 		
-		// create corresponding type refs
-		val typeRefs = disambiguatedConditions.map[c | toTypeRef(c) ].toList;
-		val disambiguatedTypeRef = TypeUtils.createNonSimplifiedUnionType(typeRefs);
-		val ambiguousTypeRef = toTypeRef(condition);
+		// create corresponding DNF clause type refs
+		val typeRefs = dnfConditionClauses.map[c | toTypeRef(c) ].toList;
+		// combine clauses using a union type
+		val dnfTypeRef = normalize(TypeUtils.createNonSimplifiedUnionType(typeRefs));
 		
-		//val normAmb = typeSystemHelper.simplify(condition.createRuleEnvironment, ambiguousTypeRef as ComposedTypeRef);
-		val normDisamb = typeSystemHelper.simplify(condition.createRuleEnvironment, disambiguatedTypeRef);
+		// create non-DNF type ref
+		val originalTypeRef = normalize(toTypeRef(condition));
 		
-		val result = typeSystem.equaltypeSucceeded(condition.createRuleEnvironment, ambiguousTypeRef, normDisamb);
+		val ruleEnv = condition.createRuleEnvironment;
 		
-		println(typeRefs.join("\n"))
-		println(ambiguousTypeRef);
-		println(normDisamb);
-		
-		assertTrue("Disambiguation does not alter type reference", result);
+		// check type-refs to be equal
+		if (!typeSystem.equaltypeSucceeded(ruleEnv, dnfTypeRef, originalTypeRef)) {
+			println("After DNF conversion:	" + dnfTypeRef);
+			println("Original TypeRef:	" + originalTypeRef);
+			fail(testDescription + " '" + typeExpression + "': DNF conversion does not maintain equivalence.");
+		}
+	}
+	
+	/** Normalizes a composed type reference by unpacking composed
+	 * type refs with a single argument (e.g. union{A#1} -> A#2). 
+	 * 
+	 * Normally, the type system would do that on its own, however currently a bug, 
+	 * prevents some tests from passing. Therefore, this normalization 
+	 * works around that issue.
+	 */
+	private def TypeRef normalize(TypeRef ref) {
+		if (ref instanceof ComposedTypeRef) {
+			if (ref.typeRefs.size == 1) {
+				return normalize(ref.typeRefs.get(0));
+			}
+		}
+		return ref;
 	}
 }

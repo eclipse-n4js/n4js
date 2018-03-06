@@ -32,7 +32,7 @@ abstract class SwitchCondition implements Iterable<SwitchCondition> {
 	 * 
 	 * @param operands The OR operands. At least 2.
 	 */
-	public static def SwitchCondition or(List<SwitchCondition> operands) {
+	public static def SwitchCondition or(List<? extends SwitchCondition> operands) {
 		if (operands.size < 1) {
 			throw new IllegalArgumentException("Cannot create or-switch-condition with less than one operand.")
 		} else if (operands.size == 1) {
@@ -46,7 +46,7 @@ abstract class SwitchCondition implements Iterable<SwitchCondition> {
 	 * 
 	 * @param operands The AND operands. At least 2.
 	 */
-	public static def SwitchCondition and(List<SwitchCondition> operands) {
+	public static def SwitchCondition and(List<? extends SwitchCondition> operands) {
 		if (operands.size < 1) {
 			throw new IllegalArgumentException("Cannot create and-switch-condition with less than one operand.")
 		} else if (operands.size == 1) {
@@ -131,7 +131,7 @@ class SwitchConditionIterator implements Iterator<SwitchCondition> {
 class OrSwitchCondition extends SwitchCondition {
 	public List<SwitchCondition> operands;
 	
-	new (SwitchCondition operand1, SwitchCondition operand2, Iterable<SwitchCondition> remainingOperands) {
+	new (SwitchCondition operand1, SwitchCondition operand2, Iterable<? extends SwitchCondition> remainingOperands) {
 		this.operands = Iterables.concat(#[operand1, operand2], remainingOperands).toList
 	}
 	
@@ -202,7 +202,7 @@ class ArrayTypeSwitchCondition extends SwitchCondition {
 	}
 	
 	override getConditionAsString(String valueIdentifier) {
-		return String.format("(%s instanceof Array && v.length > 0 && (%s))", 
+		return String.format("(%s array with (%s))", 
 			valueIdentifier, 
 			this.elementTypeCondition.getConditionAsString(valueIdentifier + "[0]"))
 	}
