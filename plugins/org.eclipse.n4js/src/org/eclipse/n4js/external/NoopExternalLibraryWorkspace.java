@@ -15,13 +15,13 @@ import static java.util.Collections.emptyList;
 
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.utils.resources.ExternalProject;
 
 /**
  * NOOP implementation of the external library workspace.
@@ -29,18 +29,19 @@ import org.eclipse.n4js.n4mf.ProjectReference;
 public class NoopExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
-	public void registerProjects(final NpmProjectAdaptionResult result, final IProgressMonitor monitor,
+	public RegisterResult registerProjects(final NpmProjectAdaptionResult result, final IProgressMonitor monitor,
 			boolean triggerCleanbuild) {
 		// NOOP
+		return new RegisterResult();
 	}
 
 	@Override
-	public Iterable<IProject> getProjects() {
+	public Iterable<ExternalProject> getProjects() {
 		return emptyList();
 	}
 
 	@Override
-	public Iterable<IProject> getProjects(final java.net.URI rootLocation) {
+	public Iterable<ExternalProject> getProjects(final java.net.URI rootLocation) {
 		return emptyList();
 	}
 
@@ -50,7 +51,7 @@ public class NoopExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public IProject getProject(final String projectName) {
+	public N4JSExternalProject getProject(final String projectName) {
 		return null;
 	}
 

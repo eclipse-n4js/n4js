@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui.external;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.n4js.external.N4JSExternalProject;
 
 import com.google.inject.Inject;
 
@@ -33,7 +33,7 @@ import com.google.inject.Inject;
 public class ExternalLibraryBuildJobProvider {
 
 	@Inject
-	private ExternalLibraryBuilderHelper builderHelper;
+	private ExternalLibraryBuilder builderHelper;
 
 	/**
 	 * Creates a new build job that cleans and builds the given external projects.
@@ -44,18 +44,20 @@ public class ExternalLibraryBuildJobProvider {
 	 *            the projects that has to be cleaned.
 	 * @return a job for building and cleaning the projects.
 	 */
-	public Job createBuildJob(final Iterable<IProject> toBuild, final Iterable<IProject> toClean) {
+	public Job createBuildJob(final Iterable<N4JSExternalProject> toBuild,
+			final Iterable<N4JSExternalProject> toClean) {
+
 		return new ExternalLibraryBuildJob(builderHelper, toBuild, toClean);
 	}
 
 	private static class ExternalLibraryBuildJob extends WorkspaceJob {
 
-		private final Iterable<IProject> toBuild;
-		private final Iterable<IProject> toClean;
-		private final ExternalLibraryBuilderHelper builderHelper;
+		private final Iterable<N4JSExternalProject> toBuild;
+		private final Iterable<N4JSExternalProject> toClean;
+		private final ExternalLibraryBuilder builderHelper;
 
-		private ExternalLibraryBuildJob(final ExternalLibraryBuilderHelper builderHelper,
-				final Iterable<IProject> toBuild, final Iterable<IProject> toClean) {
+		private ExternalLibraryBuildJob(final ExternalLibraryBuilder builderHelper,
+				final Iterable<N4JSExternalProject> toBuild, final Iterable<N4JSExternalProject> toClean) {
 
 			super("External library build");
 			this.builderHelper = checkNotNull(builderHelper, "builderHelper");
@@ -69,10 +71,10 @@ public class ExternalLibraryBuildJobProvider {
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 			monitor.beginTask("Building external libraries...", IProgressMonitor.UNKNOWN);
 
-			for (final IProject project : toClean) {
+			for (final N4JSExternalProject project : toClean) {
 				builderHelper.clean(project, monitor);
 			}
-			for (final IProject project : toBuild) {
+			for (final N4JSExternalProject project : toBuild) {
 				builderHelper.build(project, monitor);
 			}
 

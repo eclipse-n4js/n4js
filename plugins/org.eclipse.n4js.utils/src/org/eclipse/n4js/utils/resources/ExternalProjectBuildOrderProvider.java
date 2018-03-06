@@ -20,10 +20,9 @@ import java.util.TreeSet;
 import org.eclipse.core.internal.resources.Project;
 import org.eclipse.core.internal.resources.Workspace.ProjectBuildConfigOrder;
 import org.eclipse.core.resources.IBuildConfiguration;
+import org.eclipse.n4js.utils.resources.ComputeProjectOrder.VertexOrder;
 
 import com.google.common.collect.Iterables;
-
-import org.eclipse.n4js.utils.resources.ComputeProjectOrder.VertexOrder;
 
 /**
  * Utility class for providing build order (as {@link IBuildConfiguration build configuration} instances) for external
@@ -40,7 +39,8 @@ public abstract class ExternalProjectBuildOrderProvider {
 	 * @return the build order as an array of build configuration instances.
 	 */
 	public static IBuildConfiguration[] getBuildOrder(final Iterable<ExternalProject> projects) {
-		return vertexOrderToProjectBuildConfigOrder(computeActiveBuildConfigOrder(projects)).buildConfigurations;
+		VertexOrder computeActiveBuildConfigOrder = computeActiveBuildConfigOrder(projects);
+		return vertexOrderToProjectBuildConfigOrder(computeActiveBuildConfigOrder).buildConfigurations;
 	}
 
 	/**
@@ -94,10 +94,11 @@ public abstract class ExternalProjectBuildOrderProvider {
 
 			// If the active build configuration hasn't already been explored
 			// perform a depth first search rooted at it
-			if (!allAccessibleBuildConfigs.contains(project.unsafeGetActiveBuildConfig())) {
-				allAccessibleBuildConfigs.add(project.unsafeGetActiveBuildConfig());
+			IBuildConfiguration activeBuildConfig = project.unsafeGetActiveBuildConfig();
+			if (!allAccessibleBuildConfigs.contains(activeBuildConfig)) {
+				allAccessibleBuildConfigs.add(activeBuildConfig);
 				final Stack<IBuildConfiguration> stack = new Stack<>();
-				stack.push(project.unsafeGetActiveBuildConfig());
+				stack.push(activeBuildConfig);
 
 				while (!stack.isEmpty()) {
 					final IBuildConfiguration buildConfiguration = stack.pop();
@@ -111,7 +112,7 @@ public abstract class ExternalProjectBuildOrderProvider {
 						final IBuildConfiguration ref = refs[j];
 
 						// Ignore self references and references to projects that are not accessible
-						if (ref.equals(buildConfiguration)) {
+						if (ref.equals(buildConfiguration) || !ref.getProject().isAccessible()) {
 							continue;
 						}
 

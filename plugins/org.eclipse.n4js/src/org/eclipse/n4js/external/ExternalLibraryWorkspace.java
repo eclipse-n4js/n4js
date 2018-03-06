@@ -10,12 +10,16 @@
  */
 package org.eclipse.n4js.external;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.inject.ImplementedBy;
 
@@ -25,6 +29,25 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(NoopExternalLibraryWorkspace.class)
 public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
+
+	static public class RegisterResult {
+		final public Set<? extends IProject> externalProjectsCleaned;
+		final public Set<? extends IProject> externalProjectsBuilt;
+		final public Set<? extends IProject> workspaceProjectsScheduled;
+
+		public RegisterResult() {
+			this(Collections.emptySet(), Collections.emptySet(), Collections.emptySet());
+		}
+
+		public RegisterResult(Set<? extends IProject> externalProjectsCleaned,
+				Set<? extends IProject> externalProjectsBuilt,
+				Set<? extends IProject> workspaceProjectsScheduled) {
+
+			this.externalProjectsCleaned = Collections.unmodifiableSet(externalProjectsCleaned);
+			this.externalProjectsBuilt = Collections.unmodifiableSet(externalProjectsBuilt);
+			this.workspaceProjectsScheduled = Collections.unmodifiableSet(workspaceProjectsScheduled);
+		}
+	}
 
 	/**
 	 * Registers the new projects and removed the deleted ones based on the project adaption result. The projects will
@@ -37,7 +60,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * @param triggerCleanbuild
 	 *            if true, a clean build is triggered on all affected workspace projects.
 	 */
-	public abstract void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
+	public abstract RegisterResult registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
 			boolean triggerCleanbuild);
 
 	/**
@@ -45,7 +68,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *
 	 * @return the external projects.
 	 */
-	public abstract Iterable<IProject> getProjects();
+	public abstract Iterable<ExternalProject> getProjects();
 
 	/**
 	 * Returns with all existing external projects that are contained in the given external library root location.
@@ -54,7 +77,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the location of the external library root.
 	 * @return an iterable of external projects available from the given external library root location.
 	 */
-	public abstract Iterable<IProject> getProjects(java.net.URI rootLocation);
+	public abstract Iterable<ExternalProject> getProjects(java.net.URI rootLocation);
 
 	/**
 	 * Returns with all existing external project descriptions that are contained in the given external library root
@@ -73,7 +96,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the unique name of the project.
 	 * @return the project, or {@code null} if does not exist.
 	 */
-	public abstract IProject getProject(final String projectName);
+	public abstract ExternalProject getProject(final String projectName);
 
 	/**
 	 * Returns with the file given with the file location URI argument. This method returns with {@code null} if the

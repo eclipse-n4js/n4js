@@ -33,7 +33,7 @@ import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuilderHelper;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -80,7 +80,7 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 	@Inject
-	private ExternalLibraryBuilderHelper externalLibraryBuilderHelper;
+	private ExternalLibraryBuilder externalLibraryBuilderHelper;
 
 	/***/
 	@Before

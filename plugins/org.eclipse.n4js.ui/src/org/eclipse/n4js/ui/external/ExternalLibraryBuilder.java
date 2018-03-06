@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.external;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -46,7 +45,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.n4js.external.ExternalProjectsCollector;
+import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.external.N4JSExternalProjectProvider3;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.DataCollector;
@@ -75,14 +75,14 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("restriction")
 @Singleton
-public class ExternalLibraryBuilderHelper {
+public class ExternalLibraryBuilder {
 	@SuppressWarnings("unused") // necessary for dcBuildExt
 	private static final DataCollector dcLibMngr = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Library Manager");
 	private static final DataCollector dcBuildExt = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Build External Library", "Library Manager");
 
-	private static final Logger LOGGER = Logger.getLogger(ExternalLibraryBuilderHelper.class);
+	private static final Logger LOGGER = Logger.getLogger(ExternalLibraryBuilder.class);
 
 	/**
 	 * Function for converting a {@link IProject project} into the corresponding {@link IBuildConfiguration build
@@ -119,7 +119,7 @@ public class ExternalLibraryBuilderHelper {
 	private ToBeBuiltComputer builtComputer;
 
 	@Inject
-	private ExternalProjectsCollector collector;
+	private N4JSExternalProjectProvider3 projectProvider;
 
 	/**
 	 * Performs a full build on all registered and available external libraries.
@@ -131,13 +131,13 @@ public class ExternalLibraryBuilderHelper {
 	}
 
 	/**
-	 * Sugar for {@link #build()} but the operation can be monitored via the monitor argument.
+	 * Builds all external projects. The operation can be monitored via the monitor argument.
 	 *
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
 	 */
 	public void build(final IProgressMonitor monitor) {
-		build(collector.collectExternalProjects(), monitor);
+		build(projectProvider.getProjects(), monitor);
 	}
 
 	/**
@@ -146,20 +146,20 @@ public class ExternalLibraryBuilderHelper {
 	 * @param project
 	 *            the project to build.
 	 */
-	public void build(final IProject project) {
+	public void build(final N4JSExternalProject project) {
 		build(project, new NullProgressMonitor());
 	}
 
 	/**
-	 * Performs a full build on the given project. Same as {@link #build(IProject)} but a monitor can be provided for
-	 * the running process.
+	 * Performs a full build on the given project. Same as {@link #build(N4JSExternalProject)} but a monitor can be
+	 * provided for the running process.
 	 *
 	 * @param project
 	 *            the project to build.
 	 * @param monitor
 	 *            the monitor for the full build operation.
 	 */
-	public void build(final IProject project, final IProgressMonitor monitor) {
+	public void build(final N4JSExternalProject project, final IProgressMonitor monitor) {
 		build(new IBuildConfiguration[] { new BuildConfiguration(project) }, monitor);
 	}
 
@@ -171,7 +171,7 @@ public class ExternalLibraryBuilderHelper {
 	 * @param monitor
 	 *            monitor for the build process.
 	 */
-	public void build(final Iterable<? extends IProject> projects, final IProgressMonitor monitor) {
+	public void build(final Iterable<N4JSExternalProject> projects, final IProgressMonitor monitor) {
 		build(TO_CONFIGS_FUNC.apply(projects), monitor);
 	}
 
@@ -203,13 +203,13 @@ public class ExternalLibraryBuilderHelper {
 	}
 
 	/**
-	 * Sugar for {@link #clean()} but the operation can be monitored via the monitor argument.
+	 * Cleans all external projects. The operation can be monitored via the monitor argument.
 	 *
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
 	 */
 	public void clean(final IProgressMonitor monitor) {
-		clean(collector.collectExternalProjects(), monitor);
+		clean(projectProvider.getProjects(), monitor);
 	}
 
 	/**
@@ -218,20 +218,20 @@ public class ExternalLibraryBuilderHelper {
 	 * @param project
 	 *            the project that has to be cleaned (without rebuilding it).
 	 */
-	public void clean(final IProject project) {
+	public void clean(final N4JSExternalProject project) {
 		clean(project, new NullProgressMonitor());
 	}
 
 	/**
-	 * Cleans the given project. Same as {@link #clean(IProject)} but additional {@link IProgressMonitor monitor} can be
-	 * provided for the operation.
+	 * Cleans the given project. Same as {@link #clean(N4JSExternalProject)} but additional {@link IProgressMonitor
+	 * monitor} can be provided for the operation.
 	 *
 	 * @param project
 	 *            the project that has to be cleaned (without rebuilding it).
 	 * @param monitor
 	 *            monitor for the clean process.
 	 */
-	public void clean(final IProject project, final IProgressMonitor monitor) {
+	public void clean(final N4JSExternalProject project, final IProgressMonitor monitor) {
 		clean(new IBuildConfiguration[] { getBuildConfiguration(project) }, monitor);
 	}
 
@@ -243,7 +243,7 @@ public class ExternalLibraryBuilderHelper {
 	 * @param monitor
 	 *            monitor for the clean process.
 	 */
-	public void clean(final Iterable<? extends IProject> projects, final IProgressMonitor monitor) {
+	public void clean(final Iterable<N4JSExternalProject> projects, final IProgressMonitor monitor) {
 		clean(TO_CONFIGS_FUNC.apply(projects), monitor);
 	}
 
@@ -292,10 +292,10 @@ public class ExternalLibraryBuilderHelper {
 				}
 			}
 
-			checkState(buildOrder.size() == configs.length,
-					"Inconsistency between build configuration and the ordered projects:" +
-							"\n\tInput was: " + getProjectNames(configs) +
-							"\n\tOrdered was: " + getProjectNames(buildOrder));
+			// checkState(buildOrder.size() == configs.length,
+			// "Inconsistency between build configuration and the ordered projects:" +
+			// "\n\tInput was: " + getProjectNames(configs) +
+			// "\n\tOrdered was: " + getProjectNames(buildOrder));
 
 			ensureDynamicDependenciesSetForWorkspaceProjects();
 			final String prefix = Strings.toFirstUpper(operation.toString().toLowerCase());
@@ -313,7 +313,7 @@ public class ExternalLibraryBuilderHelper {
 	}
 
 	/**
-	 * Returns the {@link ISchedulingRule scheduling rule} used by {@link ExternalLibraryBuilderHelper} while
+	 * Returns the {@link ISchedulingRule scheduling rule} used by {@link ExternalLibraryBuilder} while
 	 * {@link #clean(IBuildConfiguration[], IProgressMonitor) cleaning} or
 	 * {@link #build(IBuildConfiguration[], IProgressMonitor) building} external libraries.
 	 * <p>
@@ -434,7 +434,7 @@ public class ExternalLibraryBuilderHelper {
 		 * @param monitor
 		 *            monitor for the operation.
 		 */
-		private void run(final ExternalLibraryBuilderHelper helper, IProject project, IProgressMonitor monitor) {
+		private void run(final ExternalLibraryBuilder helper, IProject project, IProgressMonitor monitor) {
 			checkArgument(project instanceof ExternalProject, "Expected external project: " + project);
 			Measurement mesBE = dcBuildExt.getMeasurement("BuildExt_" + project.getName());
 

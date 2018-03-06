@@ -24,8 +24,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -42,6 +45,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.smith.DataCollector;
@@ -56,6 +60,7 @@ import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -88,6 +93,9 @@ public class NpmManager {
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private N4JSExternalProjectProvider3 projectProvider;
 
 	@Inject
 	private ExternalProjectsCollector collector;
@@ -229,7 +237,7 @@ public class NpmManager {
 		monitor.beginTask("Installing npm packages...", 10);
 
 		URI targetPlatformNodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		final Set<String> oldNPMs = from(externalLibraryWorkspace.getProjects(targetPlatformNodeModulesLocation))
+		final Set<String> oldNPMs = from(projectProvider.getProjectsIn(targetPlatformNodeModulesLocation))
 				.transform(p -> p.getName()).toSet();
 
 		monitor.worked(1); // Intentionally cheating for better user experience.
@@ -275,7 +283,7 @@ public class NpmManager {
 		final Set<String> newDependencies = new HashSet<>(afterDependencies.keySet());
 
 		Set<String> newNpmProjectNames = new HashSet<>();
-		Iterable<IProject> newNPMs = externalLibraryWorkspace.getProjects(targetPlatformNodeModulesLocation);
+		Iterable<N4JSExternalProject> newNPMs = projectProvider.getProjectsIn(targetPlatformNodeModulesLocation);
 		for (IProject newNPM : newNPMs) {
 			newNpmProjectNames.add(newNPM.getName());
 		}
@@ -299,8 +307,8 @@ public class NpmManager {
 			final Collection<String> addedDependencies) {
 
 		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
-		final Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter.adaptPackages(addedDependencies);
-		final IStatus adaptionStatus = result.getFirst();
+		Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter.adaptPackages(addedDependencies);
+		IStatus adaptionStatus = result.getFirst();
 
 		// log possible errors, but proceed with the process
 		// assume that at least some packages were installed correctly and can be adapted
@@ -309,23 +317,23 @@ public class NpmManager {
 			status.merge(adaptionStatus);
 		}
 
-		final Collection<File> adaptedPackages = result.getSecond();
+		Collection<File> adaptedPackages = result.getSecond();
 		monitor.worked(2);
 		return adaptedPackages;
 	}
 
 	private void cleanBuildDependencies(final IProgressMonitor monitor, final MultiStatus status,
 			final Iterable<java.net.URI> toBeDeleted, final Collection<File> adaptedPackages,
-			boolean triggerCleanbuild) {
+			final boolean triggerCleanbuild) {
 
 		monitor.setTaskName("Registering new projects... [step 4 of 4]");
 		// nothing to do in the headless case. TODO inject logic instead?
 		if (Platform.isRunning()) {
-			final Iterable<java.net.URI> toBeUpdated = from(adaptedPackages).transform(file -> file.toURI());
-			final NpmProjectAdaptionResult adaptionResult = NpmProjectAdaptionResult.newOkResult(toBeUpdated,
-					toBeDeleted);
+			Iterable<java.net.URI> toBeUpdated = from(adaptedPackages).transform(file -> file.toURI());
+			NpmProjectAdaptionResult adaptionResult = NpmProjectAdaptionResult.newOkResult(toBeUpdated, toBeDeleted);
 
-			externalLibraryWorkspace.registerProjects(adaptionResult, monitor, triggerCleanbuild);
+			RegisterResult rr = externalLibraryWorkspace.registerProjects(adaptionResult, monitor, triggerCleanbuild);
+			printRegisterResults(rr);
 		}
 
 		if (!status.isOK()) {
@@ -333,12 +341,35 @@ public class NpmManager {
 		}
 	}
 
+	private void printRegisterResults(RegisterResult rr) {
+		if (!rr.externalProjectsCleaned.isEmpty()) {
+			SortedSet<String> prjNames = getProjectNames(rr.externalProjectsCleaned);
+			logger.logInfo("External libraries cleaned: " + String.join(", ", prjNames));
+		}
+
+		if (!rr.externalProjectsBuilt.isEmpty()) {
+			SortedSet<String> prjNames = getProjectNames(rr.externalProjectsBuilt);
+			logger.logInfo("External libraries built: " + String.join(", ", prjNames));
+		}
+
+		if (!rr.workspaceProjectsScheduled.isEmpty()) {
+			SortedSet<String> prjNames = getProjectNames(rr.workspaceProjectsScheduled);
+			logger.logInfo("Workspace projects scheduled: " + String.join(", ", prjNames));
+		}
+	}
+
+	private SortedSet<String> getProjectNames(Collection<? extends IProject> projects) {
+		SortedSet<String> prjNames = new TreeSet<>();
+		prjNames.addAll(projects.stream().map(p -> p.getName()).collect(Collectors.toSet()));
+		return prjNames;
+	}
+
 	private Set<String> getOverwrittenShippedLibs(Set<String> newNpmProjectNames) {
 		Set<String> overwrittenShippedLibNames = new HashSet<>();
 		Iterable<String> ps = ShippedCodeAccess.getAllShippedPaths();
 		for (String shippedLibPath : ps) {
 			URI uri = new File(shippedLibPath).toURI();
-			Iterable<IProject> slProjects = externalLibraryWorkspace.getProjects(uri);
+			Iterable<N4JSExternalProject> slProjects = projectProvider.getProjectsIn(uri);
 
 			for (IProject slProject : slProjects) {
 				String slpName = slProject.getName();
@@ -381,9 +412,7 @@ public class NpmManager {
 	}
 
 	private IStatus uninstallDependenciesInternal(Collection<String> packageNames, final IProgressMonitor monitor) {
-
-		final MultiStatus status = statusHelper
-				.createMultiStatus("Status of uninstalling multiple npm dependencies.");
+		MultiStatus status = statusHelper.createMultiStatus("Status of uninstalling multiple npm dependencies.");
 
 		IStatus binaryStatus = checkNPM();
 		if (!binaryStatus.isOK()) {
@@ -391,21 +420,37 @@ public class NpmManager {
 			return status;
 		}
 
-		final Set<String> requestedPackages = new HashSet<>(packageNames);
+		Set<String> requestedPackages = new HashSet<>(packageNames);
 		try {
 
-			logger.logInfo("Uninstalling  npm packages : " + String.join(", ", requestedPackages) + ". NPM output:");
+			logger.logInfo("Uninstalling npm packages: " + String.join(", ", requestedPackages) + ". NPM output:");
 
 			monitor.beginTask("Uninstalling npm packages...", 10);
 
-			final Map<IProject, Collection<IProject>> beforeExternalsWithDependees = collector
-					.collectExternalProjectDependents(externalLibraryWorkspace
-							.getProjects(locationProvider.getTargetPlatformNodeModulesLocation()));
+			URI npmLocation = locationProvider.getTargetPlatformNodeModulesLocation();
+			Iterable<N4JSExternalProject> externalProjects = projectProvider.getProjectsIn(npmLocation);
+			Multimap<N4JSExternalProject, IProject> beforeExternalsWithDependees = collector
+					.getWSProjectDependents(externalProjects);
+			Multimap<N4JSExternalProject, N4JSExternalProject> beforeExtExternalsWithDependees = collector
+					.getExtProjectDependents(externalProjects);
 
 			monitor.worked(1); // Intentionally cheating for better user experience.
 			monitor.setTaskName("Uninstalling packages... [step 1 of 4]");
 
+			URI targetPlatformNodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
+			File nodeModulesFolder = new File(targetPlatformNodeModulesLocation);
+			Iterable<java.net.URI> toBeDeleted = from(packageNames)
+					.transform(name -> new File(nodeModulesFolder, name).toURI());
+			// Iterable<java.net.URI> toBeDeleted = new LinkedList<>();
+
+			Iterable<java.net.URI> toBeUpdated = new LinkedList<>();
+			NpmProjectAdaptionResult adaptionResult = NpmProjectAdaptionResult.newOkResult(toBeUpdated, toBeDeleted);
+			RegisterResult rr = externalLibraryWorkspace.registerProjects(adaptionResult, monitor, true);
+			printRegisterResults(rr);
+
 			IStatus installStatus = batchInstallUninstall(monitor, requestedPackages, false);
+
+			externalLibraryWorkspace.updateState();
 
 			// log possible errors, but proceed with the process
 			// assume that at least some packages were installed correctly and can be adapted
@@ -416,17 +461,30 @@ public class NpmManager {
 
 			monitor.worked(2);
 			monitor.setTaskName("Calculating dependency changes... [step 2 of 4]");
-			externalLibraryWorkspace.updateState();
+
+			externalProjects = projectProvider.getProjectsIn(npmLocation);
+			Multimap<N4JSExternalProject, IProject> afterExternalsWithDependees = collector
+					.getWSProjectDependents(externalProjects);
+			Multimap<N4JSExternalProject, N4JSExternalProject> afterExtExternalsWithDependees = collector
+					.getExtProjectDependents(externalProjects);
+
+			Set<IProject> affectedExtEclipseProjects = new HashSet<>();
+			for (N4JSExternalProject p : beforeExtExternalsWithDependees.keySet()) {
+				if (!afterExtExternalsWithDependees.containsKey(p)) {
+					// external project p was uninstalled
+					Collection<N4JSExternalProject> collection = beforeExtExternalsWithDependees.get(p);
+					if (collection != null) {
+						// external project p had dependent workspace projects
+						affectedExtEclipseProjects.addAll(collection);
+					}
+				}
+			}
+
 			monitor.worked(1);
 			monitor.setTaskName("Calculating dependency changes... [3 of 4]");
 
-			final Map<IProject, Collection<IProject>> afterExternalsWithDependees = collector
-					.collectExternalProjectDependents(externalLibraryWorkspace
-							.getProjects(locationProvider.getTargetPlatformNodeModulesLocation()));
-
-			final Set<IProject> affectedEclipseProjects = new HashSet<>();
-
-			beforeExternalsWithDependees.forEach((p, deps) -> {
+			Set<IProject> affectedEclipseProjects = new HashSet<>();
+			for (N4JSExternalProject p : beforeExternalsWithDependees.keySet()) {
 				if (!afterExternalsWithDependees.containsKey(p)) {
 					// external project p was uninstalled
 					Collection<IProject> collection = beforeExternalsWithDependees.get(p);
@@ -435,17 +493,20 @@ public class NpmManager {
 						affectedEclipseProjects.addAll(collection);
 					}
 				}
-			});
+			}
 
 			monitor.worked(2);
 			monitor.setTaskName("Scheduling build of projects... [4 of 4]");
 
-			scheduler.scheduleBuildIfNecessary(affectedEclipseProjects);
+			// scheduler.scheduleBuildIfNecessary(affectedEclipseProjects);
+			// logger.logInfo("Scheduling re-builds for the following affected projects:");
+			// for (IProject affPrj : affectedEclipseProjects) {
+			// logger.logInfo(" - " + affPrj.getName());
+			// }
 
 			if (!status.isOK()) {
 				logger.logInfo("There were errors during installation, see logs for details.");
 			}
-
 			return OK_STATUS;
 
 		} finally {
@@ -721,7 +782,7 @@ public class NpmManager {
 		final Map<String, URI> mappings = newHashMap();
 
 		// Intentionally might include projects that are already in the workspace
-		for (final IProject project : externalLibraryWorkspace.getProjects(nodeModulesLocation)) {
+		for (final IProject project : projectProvider.getProjectsIn(nodeModulesLocation)) {
 			if (project.isAccessible() && project instanceof ExternalProject) {
 				final URI location = ((ExternalProject) project).getExternalResource().toURI();
 				mappings.put(project.getName(), location);
@@ -750,4 +811,5 @@ public class NpmManager {
 			return operation.get();
 		}
 	}
+
 }
