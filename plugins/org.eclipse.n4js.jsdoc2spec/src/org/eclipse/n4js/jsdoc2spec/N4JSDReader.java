@@ -436,6 +436,7 @@ public class N4JSDReader {
 		String regionName = KeyUtils.getSpecKeyWithoutProjectFolder(rrp, fullTypeName);
 		Collection<SpecInfo> specInfos = typesByName.get(regionName);
 
+		boolean testeeMemberFound = false;
 		for (SpecInfo specInfo : specInfos) {
 			for (Type testee : specInfo.specElementRef.getTypes()) {
 				if (testee instanceof ContainerType<?> && ref.memberNameSet()) {
@@ -445,17 +446,22 @@ public class N4JSDReader {
 						SpecTestInfo testSpecInfo = createTestSpecInfo(testeeName, testMethodDoclet, testMember, rrp);
 						specInfo.addMemberTestInfo(testeeMember, testSpecInfo);
 					}
-					return;
+					testeeMemberFound = true;
 				}
 			}
-			// Type, TFunction of TVariable
-			String elementName = specInfo.specElementRef.identifiableElement.getName();
-			SpecTestInfo testSpecInfo = createTestSpecInfo(elementName, testMethodDoclet, testMember, rrp);
-			specInfo.addTypeTestInfo(testSpecInfo);
 		}
 
-		if (specInfos.isEmpty()) {
-			issueAcceptor.addWarning("Testee " + fullTypeName + " not found", testMember);
+		if (!testeeMemberFound) {
+			for (SpecInfo specInfo : specInfos) {
+				// Type, TFunction of TVariable
+				String elementName = specInfo.specElementRef.identifiableElement.getName();
+				SpecTestInfo testSpecInfo = createTestSpecInfo(elementName, testMethodDoclet, testMember, rrp);
+				specInfo.addTypeTestInfo(testSpecInfo);
+			}
+
+			if (specInfos.isEmpty()) {
+				issueAcceptor.addWarning("Testee " + fullTypeName + " not found", testMember);
+			}
 		}
 	}
 
