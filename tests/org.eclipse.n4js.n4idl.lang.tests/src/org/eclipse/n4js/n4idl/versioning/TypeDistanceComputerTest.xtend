@@ -19,7 +19,6 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.google.common.collect.Maps
 
 /**
  * Unit tests with regard to class {@link TypeDistanceComputer}.
@@ -146,19 +145,18 @@ class TypeDistanceComputerTest extends AbstractN4IDLTypeSwitchTest {
 		val a2_b2 = #["A2#1", "B2#1"].makeTypeRefs(module);
 		
 		val allPairs = #[a_b, a1_b, a_b1, a1_b1, a_b2, a2_b, a2_b1, a1_b2, a2_b2].toSet;
-		val norms = Maps.asMap(allPairs, [p | p.norm]);
 		
-		assertTrue("a_b more generic than a1_b", norms.get(a_b) < norms.get(a1_b));
-		assertTrue("a_b more generic than a_b1", norms.get(a_b) < norms.get(a_b1));
-		assertTrue("a_b more generic than a1_b1", norms.get(a_b) < norms.get(a1_b1));
-		assertTrue("a_b more generic than a2_b1", norms.get(a_b) < norms.get(a2_b1));
+		assertTrue("a_b more generic than a1_b", a_b.norm < a1_b.norm);
+		assertTrue("a_b more generic than a_b1", a_b.norm < a_b1.norm);
+		assertTrue("a_b more generic than a1_b1", a_b.norm < a1_b1.norm);
+		assertTrue("a_b more generic than a2_b1", a_b.norm < a2_b1.norm);
 		
-		assertTrue("a1_b equally generic as a_b1", norms.get(a1_b) == norms.get(a_b1));
-		assertTrue("a1_b1 more specific than a_b1", norms.get(a_b1) < norms.get(a1_b1));
+		assertTrue("a1_b equally generic as a_b1", a1_b.norm == a_b1.norm);
+		assertTrue("a1_b1 more specific than a_b1", a_b1.norm < a1_b1.norm);
 		
 		val sortedPairs = allPairs.map[pair | 
 			"|(" + pair.map[typeRefAsString].join(", ") + ")|" +
-			" = " + norms.get(pair) ]
+			" = " + pair.norm ]
 			.join(",\n");
 		
 		assertEquals("Order on type pairs is as expected", 
@@ -180,7 +178,10 @@ class TypeDistanceComputerTest extends AbstractN4IDLTypeSwitchTest {
 	}
 	
 	private def double norm(Iterable<TypeRef> refs) {
-		val heightVector = distanceComputer.computeHeight(refs.map[it.declaredType]);
+		if (refs.empty) {
+			return -1;
+		}
+		val heightVector = refs.map[it.height];
 		return distanceComputer.computeNorm(heightVector);
 	}
 	
