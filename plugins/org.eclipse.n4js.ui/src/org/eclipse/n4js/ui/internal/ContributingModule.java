@@ -30,7 +30,7 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectCacheLoader;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.GitCloneSupplier;
-import org.eclipse.n4js.external.N4JSExternalProjectProvider3;
+import org.eclipse.n4js.external.N4JSExternalProjectProvider;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
@@ -122,7 +122,7 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);
 		binder.bind(ExternalProjectsCollector.class);
 		binder.bind(ExternalProjectProvider.class);
-		binder.bind(N4JSExternalProjectProvider3.class);
+		binder.bind(N4JSExternalProjectProvider.class);
 		binder.bind(RebuildWorkspaceProjectsScheduler.class);
 		binder.bind(N4JSEclipseModel.class);
 		binder.bind(ExternalLibraryUriHelper.class);

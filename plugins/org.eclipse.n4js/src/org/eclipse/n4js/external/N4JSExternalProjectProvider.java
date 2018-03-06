@@ -24,9 +24,11 @@ import com.google.inject.Singleton;
 
 /**
  * This provider wraps {@link ExternalProject}s into {@link N4JSExternalProject}s.
+ * <p>
+ * Always use this provider to deal with external projects.
  */
 @Singleton
-public class N4JSExternalProjectProvider3 {
+public class N4JSExternalProjectProvider {
 
 	@Inject
 	private ExternalLibraryWorkspace extLibWS;
@@ -34,11 +36,13 @@ public class N4JSExternalProjectProvider3 {
 	@Inject
 	private N4JSModel model;
 
+	/** @return project with the given name */
 	public N4JSExternalProject getProject(String projectName) {
 		ExternalProject extPrj = extLibWS.getProject(projectName);
 		return createN4JSExternalProject(extPrj);
 	}
 
+	/** @return all projects */
 	public Collection<N4JSExternalProject> getProjects() {
 		Collection<N4JSExternalProject> n4extPrjs = new HashSet<>();
 		for (ExternalProject extPrj : extLibWS.getProjects()) {
@@ -48,6 +52,7 @@ public class N4JSExternalProjectProvider3 {
 		return n4extPrjs;
 	}
 
+	/** @return all projects in the given location */
 	public Collection<N4JSExternalProject> getProjectsIn(Iterable<java.net.URI> rootLocations) {
 		Collection<N4JSExternalProject> n4extPrjs = new HashSet<>();
 		for (java.net.URI rLoc : rootLocations) {
@@ -56,6 +61,7 @@ public class N4JSExternalProjectProvider3 {
 		return n4extPrjs;
 	}
 
+	/** @return all projects in the given locations */
 	public Collection<N4JSExternalProject> getProjectsIn(java.net.URI rootLocations) {
 		Collection<N4JSExternalProject> n4extPrjs = new HashSet<>();
 		Iterable<ExternalProject> extPrjs = extLibWS.getProjects(rootLocations);

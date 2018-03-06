@@ -48,7 +48,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.N4JSExternalProjectProvider3;
+import org.eclipse.n4js.external.N4JSExternalProjectProvider;
 import org.eclipse.n4js.external.NpmProjectAdaptionResult;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
@@ -91,7 +91,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	/** This provider wraps {@link ExternalProject}s into {@link N4JSExternalProject}s */
 	@Inject
-	private N4JSExternalProjectProvider3 n4extPP;
+	private N4JSExternalProjectProvider n4extPP;
 
 	@Override
 	public ProjectDescription getProjectDescription(URI location) {

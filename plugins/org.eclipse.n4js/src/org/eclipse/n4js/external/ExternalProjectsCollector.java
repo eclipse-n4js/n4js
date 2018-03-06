@@ -47,7 +47,7 @@ import com.google.inject.Singleton;
 public class ExternalProjectsCollector {
 
 	@Inject
-	private N4JSExternalProjectProvider3 n3extPP;
+	private N4JSExternalProjectProvider n3extPP;
 
 	@Inject
 	private IN4JSCore core;

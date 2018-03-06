@@ -32,7 +32,7 @@ public class N4JSExternalProject extends ExternalProject {
 	private final IN4JSProject externalPackage;
 	private final Collection<IBuildConfiguration> referencedBuildConfigs;
 
-	public N4JSExternalProject(final File file, final IN4JSProject externalPackage) {
+	/* default */ N4JSExternalProject(final File file, final IN4JSProject externalPackage) {
 		super(file, NATURE_ID, BUILDER_ID);
 		this.externalPackage = externalPackage;
 		referencedBuildConfigs = newHashSet();

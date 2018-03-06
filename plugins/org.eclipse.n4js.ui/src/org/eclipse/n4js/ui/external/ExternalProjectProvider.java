@@ -30,13 +30,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalProjectCacheLoader;
-import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.ExternalProjectLocationsProvider;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.n4js.utils.Procedure;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Pair;
@@ -59,9 +56,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Inject
 	private ProjectStateChangeListener projectStateChangeListener;
-
-	@Inject
-	private N4JSEclipseModel model;
 
 	private final Collection<java.net.URI> rootLocations;
 	private LoadingCache<URI, Optional<Pair<ExternalProject, ProjectDescription>>> projectCache;
@@ -168,7 +162,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 					if (null != pair) {
 						ExternalProject project = pair.getFirst();
 						if (!projectIdProjectMap.containsKey(project.getName())) {
-							// N4JSExternalProject n4jsExternalProject = createN4JSExternalProject(project);
 							projectIdProjectMap.put(project.getName(), project);
 						}
 					}
@@ -185,16 +178,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		for (java.net.URI projectRoot : projectRoots) {
 			procedure.apply(new File(projectRoot));
 		}
-	}
-
-	private N4JSExternalProject createN4JSExternalProject(ExternalProject externalProject) {
-		if (externalProject != null) {
-			File projectLocation = externalProject.getLocation().toFile();
-			URI projectURI = org.eclipse.emf.common.util.URI.createFileURI(projectLocation.getAbsolutePath());
-			IN4JSProject in4jsProject = model.getN4JSProject(projectURI);
-			return new N4JSExternalProject(projectLocation, in4jsProject);
-		}
-		return null;
 	}
 
 	Collection<URI> getProjectURIs() {
@@ -238,7 +221,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 				Pair<ExternalProject, ProjectDescription> pair = entry.getValue().orNull();
 				if (null != pair && null != pair.getFirst()) {
 					ExternalProject project = pair.getFirst();
-					// N4JSExternalProject n4jsExternalProject = createN4JSExternalProject(project);
 					projectsMapping.put(project.getName(), project);
 				}
 			}

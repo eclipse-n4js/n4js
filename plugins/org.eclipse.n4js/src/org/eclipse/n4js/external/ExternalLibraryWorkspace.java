@@ -30,15 +30,20 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(NoopExternalLibraryWorkspace.class)
 public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
+	/** Contains the projects that were built and scheduled. */
 	static public class RegisterResult {
+		/** All external projects that were cleaned */
 		final public Set<? extends IProject> externalProjectsCleaned;
+		/** All external projects that were built */
 		final public Set<? extends IProject> externalProjectsBuilt;
+		/** All workspace projects that were scheduled */
 		final public Set<? extends IProject> workspaceProjectsScheduled;
 
-		public RegisterResult() {
+		RegisterResult() {
 			this(Collections.emptySet(), Collections.emptySet(), Collections.emptySet());
 		}
 
+		/** Constructor */
 		public RegisterResult(Set<? extends IProject> externalProjectsCleaned,
 				Set<? extends IProject> externalProjectsBuilt,
 				Set<? extends IProject> workspaceProjectsScheduled) {

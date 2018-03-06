@@ -46,7 +46,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.N4JSExternalProjectProvider3;
+import org.eclipse.n4js.external.N4JSExternalProjectProvider;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.DataCollector;
@@ -119,7 +119,7 @@ public class ExternalLibraryBuilder {
 	private ToBeBuiltComputer builtComputer;
 
 	@Inject
-	private N4JSExternalProjectProvider3 projectProvider;
+	private N4JSExternalProjectProvider projectProvider;
 
 	/**
 	 * Performs a full build on all registered and available external libraries.
@@ -349,10 +349,6 @@ public class ExternalLibraryBuilder {
 
 	private String getProjectNames(final Iterable<IBuildConfiguration> buildOrder) {
 		return Iterables.toString(from(buildOrder).transform(c -> c.getProject().getName()));
-	}
-
-	private String getProjectNames(final IBuildConfiguration[] buildOrder) {
-		return Iterables.toString(transform(buildOrder, c -> c.getProject().getName()));
 	}
 
 	private IBuildConfiguration getBuildConfiguration(final IProject project) {

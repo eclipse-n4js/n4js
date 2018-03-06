@@ -95,7 +95,7 @@ public class NpmManager {
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private N4JSExternalProjectProvider3 projectProvider;
+	private N4JSExternalProjectProvider projectProvider;
 
 	@Inject
 	private ExternalProjectsCollector collector;
@@ -108,9 +108,6 @@ public class NpmManager {
 
 	@Inject
 	private NpmLogger logger;
-
-	@Inject
-	private RebuildWorkspaceProjectsScheduler scheduler;
 
 	/**
 	 * Installs the given npm package in a blocking fashion.
