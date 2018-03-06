@@ -30,4 +30,4 @@ var b = new B();
 console.log(B.n4type.fqn);
 console.log(b.constructor.n4type.fqn);
 console.log(b.constructor.n4type.n4superType.fqn);
-console.log(B.n4type.constructor.n4type.fqn);
+console.log(N4Type.of(B.n4type).fqn);
