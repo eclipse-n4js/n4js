@@ -29,6 +29,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.DependenciesCollectingUtil;
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -43,7 +44,8 @@ class DependenciesHelper {
 	@Inject
 	private FileBasedWorkspace n4jsFileBasedWorkspace;
 
-	// TODO copied from org.eclipse.n4js.generator.headless.N4HeadlessCompiler.collectAndRegisterProjects(List<File>,
+	// TODO GH-651 partially copied from
+	// org.eclipse.n4js.generator.headless.N4HeadlessCompiler.collectAndRegisterProjects(List<File>,
 	// List<File>, List<File>)
 	Map<String, String> discoverMissingDependencies(String projectLocations, List<File> srcFiles) {
 
@@ -58,15 +60,8 @@ class DependenciesHelper {
 		try {
 			singleSourceProjectLocations.addAll(findProjectsForSingleFiles(srcFiles));
 		} catch (N4JSCompileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println(Throwables.getStackTraceAsString(e));
 		}
-
-		System.out.println("discoveredProjectLocations");
-		discoveredProjectLocations.forEach(f -> System.out.println(" - " + f));
-
-		System.out.println("singleSourceProjectLocations");
-		singleSourceProjectLocations.forEach(f -> System.out.println(" - " + f));
 
 		allProjectsRoots.addAll(discoveredProjectLocations);
 		allProjectsRoots.addAll(singleSourceProjectLocations);
@@ -77,7 +72,6 @@ class DependenciesHelper {
 				getAvailableProjectsDescriptions(allProjectsRoots));
 
 		return dependencies;
-
 	}
 
 	private Iterable<ProjectDescription> getAvailableProjectsDescriptions(List<File> allProjectsRoots) {
@@ -85,7 +79,7 @@ class DependenciesHelper {
 		allProjectsRoots.forEach(root -> {
 			File manifest = new File(root, IN4JSProject.N4MF_MANIFEST);
 			if (!manifest.isFile()) {
-				System.out.println("CANNOT READ MANIFEST AT " + root);
+				System.out.println("Cannot read manifest at " + root);
 				return;
 			}
 			ProjectDescription projectDescription = ProjectDescriptionProviderUtil.getFromFile(manifest);
@@ -104,7 +98,8 @@ class DependenciesHelper {
 	 * @throws N4JSCompileException
 	 *             if no project cannot be found for one of the given files
 	 */
-	// TODO copied from org.eclipse.n4js.generator.headless.N4HeadlessCompiler.findProjectsForSingleFiles(List<File>)
+	// TODO GH-651 copied from
+	// org.eclipse.n4js.generator.headless.N4HeadlessCompiler.findProjectsForSingleFiles(List<File>)
 	private List<File> findProjectsForSingleFiles(List<File> sourceFiles)
 			throws N4JSCompileException {
 
@@ -130,7 +125,7 @@ class DependenciesHelper {
 	 *            all project root (must be absolute)
 	 * @return list of directories being a project
 	 */
-	// TODO copied org.eclipse.n4js.generator.headless.HeadlessHelper.collectAllProjectPaths(List<File>)
+	// TODO GH-651 copied org.eclipse.n4js.generator.headless.HeadlessHelper.collectAllProjectPaths(List<File>)
 	static ArrayList<File> collectAllProjectPaths(List<File> absProjectRoots) {
 		ArrayList<File> pDir = new ArrayList<>();
 		for (File projectRoot : absProjectRoots) {
@@ -151,7 +146,8 @@ class DependenciesHelper {
 	 * @param dirpaths
 	 *            one or more paths separated by {@link File#pathSeparatorChar} OR empty string if no paths given.
 	 */
-	// TODO copied from org.eclipse.n4js.hlc.base.N4jscBase.convertToFilesAddTargetPlatformAndCheckWritableDir(String)
+	// TODO GH-651 copied from
+	// org.eclipse.n4js.hlc.base.N4jscBase.convertToFilesAddTargetPlatformAndCheckWritableDir(String)
 	private List<File> convertToFilesAddTargetPlatformAndCheckWritableDir(String dirpaths) {
 		final List<File> retList = new ArrayList<>();
 		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
