@@ -12,25 +12,31 @@ package org.eclipse.n4js.n4idl
 
 import com.google.common.collect.Iterables
 import com.google.common.hash.HashCode
+import java.util.Iterator
 import java.util.List
+import java.util.Queue
 import java.util.stream.Collectors
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.ts.types.Type
+import java.util.ArrayDeque
+import java.util.NoSuchElementException
 
 /**
  * Type-switch conditions.
  * 
- * See sub-classes for concrete conditions (e.g. type, and, or...).
+ * See sub-classes for concrete conditions (e.g. type, and, or, etc.).
  */
-abstract class SwitchCondition {
+abstract class SwitchCondition implements Iterable<SwitchCondition> {
 	/** 
 	 * Returns a new {@link OrSwitchCondition} of the given left-hand side and right-hand side.
 	 * 
 	 * @param operands The OR operands. At least 2.
 	 */
-	public static def OrSwitchCondition or(List<SwitchCondition> operands) {
-		if (operands.size < 2) {
-			throw new IllegalArgumentException("Cannot create or-switch-condition with less than 2 operands.")
+	public static def SwitchCondition or(List<SwitchCondition> operands) {
+		if (operands.size < 1) {
+			throw new IllegalArgumentException("Cannot create or-switch-condition with less than one operand.")
+		} else if (operands.size == 1) {
+			return operands.get(0);
 		}
 		return new OrSwitchCondition(operands.get(0), operands.get(1), operands.drop(2));
 	}
@@ -40,9 +46,11 @@ abstract class SwitchCondition {
 	 * 
 	 * @param operands The AND operands. At least 2.
 	 */
-	public static def AndSwitchCondition and(List<SwitchCondition> operands) {
-		if (operands.size < 2) {
-			throw new IllegalArgumentException("Cannot create and-switch-condition with less than 2 operands.")
+	public static def SwitchCondition and(List<SwitchCondition> operands) {
+		if (operands.size < 1) {
+			throw new IllegalArgumentException("Cannot create and-switch-condition with less than one operand.")
+		} else if (operands.size == 1) {
+			return operands.get(0);
 		}
 		return new AndSwitchCondition(operands.get(0), operands.get(1), operands.drop(2));
 	}
@@ -78,15 +86,50 @@ abstract class SwitchCondition {
 	 */
 	public abstract def String getConditionAsString(String valueIdentifier);
 	
+	public abstract def Iterable<? extends SwitchCondition> subConditions();
+	
 	override toString() {
 		// use default value identifier "v" for native toString representation
 		return this.getConditionAsString("v");
 	}
 	
+	public override Iterator<SwitchCondition> iterator() {
+		return new SwitchConditionIterator(this);
+	}
 }
 
+/**
+ * A depth-first iterator for {@link SwitchCondition}s.
+ */
+class SwitchConditionIterator implements Iterator<SwitchCondition> {
+	private Queue<SwitchCondition> queue = new ArrayDeque();
+	
+	
+	new(SwitchCondition root) {
+		this.queue.add(root);
+	}
+	
+	override hasNext() {
+		return !queue.isEmpty;
+	}
+	
+	override next() {
+		val nextElement = this.queue.poll();
+		if (null === nextElement) {
+			throw new NoSuchElementException();
+		}
+		// add all sub-conditions
+		nextElement.subConditions.forEach[this.queue.add(it)]
+		
+		return nextElement;
+	}
+	
+}
+
+/** {@link SwitchCondition} which assures that at least one of the {@link #operands} conditions
+ * evaluates to true. */
 class OrSwitchCondition extends SwitchCondition {
-	private List<SwitchCondition> operands;
+	public List<SwitchCondition> operands;
 	
 	new (SwitchCondition operand1, SwitchCondition operand2, Iterable<SwitchCondition> remainingOperands) {
 		this.operands = Iterables.concat(#[operand1, operand2], remainingOperands).toList
@@ -100,12 +143,17 @@ class OrSwitchCondition extends SwitchCondition {
 	override getConditionAsString(String valueIdentifier) {
 		return this.operands.stream.map[o | "(" + o.getConditionAsString(valueIdentifier) + ")"].collect(Collectors.joining(" || "));
 	}
+	
+	override subConditions() { return operands; }
+	
 }
 
+/** {@link SwitchCondition} which assures that all of the {@link #operands} conditions 
+ * evaluate to true. */
 class AndSwitchCondition extends SwitchCondition {
-	private List<SwitchCondition> operands;
+	public List<SwitchCondition> operands;
 	
-	new (SwitchCondition operand1, SwitchCondition operand2, Iterable<SwitchCondition> remainingOperands) {
+	new (SwitchCondition operand1, SwitchCondition operand2, Iterable<? extends SwitchCondition> remainingOperands) {
 		this.operands = Iterables.concat(#[operand1, operand2], remainingOperands).toList
 	}
 	
@@ -117,10 +165,14 @@ class AndSwitchCondition extends SwitchCondition {
 	override getConditionAsString(String valueIdentifier) {
 		return this.operands.stream.map[o | "(" + o.getConditionAsString(valueIdentifier) + ")"].collect(Collectors.joining(" && "));
 	}
+	
+	override subConditions() { return this.operands }
+	
 }
 
+/** {@link SwitchCondition} which assures that a given value is an instanceof of {@link #type}. */
 class TypeSwitchCondition extends SwitchCondition {
-	private val Type type
+	public val Type type
 	
 	new(Type type) { this.type = type; }
 	
@@ -131,10 +183,16 @@ class TypeSwitchCondition extends SwitchCondition {
 	override getConditionAsString(String valueIdentifier) {
 		return String.format("%s instanceof %s", valueIdentifier, this.type.typeDescription);
 	}
+	
+	override subConditions() { return #[] }
+	
 }
 
+/** {@link SwitchCondition} which assures that a given value is a (non-empty) array
+ * whose elements fulfill the given {@link #elementTypeCondition}.
+ */
 class ArrayTypeSwitchCondition extends SwitchCondition {
-	private val SwitchCondition elementTypeCondition
+	public val SwitchCondition elementTypeCondition
 	
 	new(SwitchCondition elementTypeCondition) { this.elementTypeCondition = elementTypeCondition }
 	
@@ -149,21 +207,25 @@ class ArrayTypeSwitchCondition extends SwitchCondition {
 			this.elementTypeCondition.getConditionAsString(valueIdentifier + "[0]"))
 	}
 	
+	override subConditions() { return #[elementTypeCondition] }
+	
 }
 
 /**
  * A {@link ConstantSwitchCondition} always checks for the same property, 
- * independant from the given {@code valueIdentifier}.
+ * independent from the given {@code valueIdentifier}.
  */
 class ConstantSwitchCondition extends SwitchCondition {
 	public static ConstantSwitchCondition TRUE = new ConstantSwitchCondition("true");
 	public static ConstantSwitchCondition FALSE = new ConstantSwitchCondition("true");
 	
-	private String constant;
+	public val String constant;
 	
 	new(String constant) { this.constant = constant; }
 	
 	override getConditionAsString(String valueIdentifier) {
 		return this.constant;
 	}
+	
+	override subConditions() { return #[] }
 }

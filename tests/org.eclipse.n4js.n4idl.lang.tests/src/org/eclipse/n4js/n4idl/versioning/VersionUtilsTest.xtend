@@ -12,6 +12,7 @@ package org.eclipse.n4js.n4idl.versioning
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.n4idl.tests.helper.N4IDLTypeRefTestHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
@@ -24,7 +25,7 @@ import org.junit.runner.RunWith
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
 public class VersionUtilsTest extends Assert {
-	@Inject extension private TypeRefTestExtension
+	@Inject private extension N4IDLTypeRefTestHelper
 	
 	@Test
 	public def void testVersionedTypeArgument() {

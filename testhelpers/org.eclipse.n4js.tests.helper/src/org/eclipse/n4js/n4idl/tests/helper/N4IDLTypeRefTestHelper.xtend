@@ -8,21 +8,20 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4idl.versioning
+package org.eclipse.n4js.n4idl.tests.helper
 
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.n4idl.tests.helper.N4IDLParseHelper
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Assert
 
 /**
- * A test extension class for N4IDL-related tests, which allows to create valid
- * {@link TypeRef} instances from a given (N4IDL complient) type-expression string.
+ * N4IDL test-helper to create valid {@link TypeRef} instances from a given 
+ * type expression string.
  */
-class TypeRefTestExtension {
+class N4IDLTypeRefTestHelper {
 	@Inject extension private N4IDLParseHelper
 	@Inject extension private ValidationTestHelper
 	
@@ -41,7 +40,7 @@ class TypeRefTestExtension {
 		@VersionAware
 		function f() { var «expressionName» : «typeExpression» }''';
 		
-		val script = module.parseN4IDL
+		val script = parseN4IDL(module);
 		script.assertNoErrors
 		
 		val variableDeclaration = script.eAllContents.filter(VariableDeclaration).findFirst[decl | decl.name.equals(expressionName)];
@@ -60,10 +59,17 @@ class TypeRefTestExtension {
 	 * @param existingClasses A list of class names (with version, e.g. "A#1") which are assumed to exist in the namespace of the module.
 	 */
 	def TypeRef makeTypeRef(String typeExpression, List<String> existingClasses) {
-		return makeTypeRef(typeExpression, '''
-			«FOR e : existingClasses»
+		return makeTypeRef(typeExpression, classes(existingClasses));
+	}
+	
+	/**
+	 * Returns N4IDL code which declares the given list of classes (incl. version).
+	 * 
+	 * Example: <code> classes(#["A#1"]) -> "class A#1 {}" </code>
+	 */
+	public def String classes(String... classNames) {
+		return '''«FOR e : classNames»
 			class «e» {}
-			«ENDFOR»
-		''');
+			«ENDFOR»''';
 	}
 }

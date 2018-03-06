@@ -12,21 +12,32 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
 import java.util.Collection
+import java.util.HashMap
+import java.util.HashSet
+import java.util.Iterator
+import java.util.List
+import java.util.Map
+import java.util.Set
+import java.util.stream.Stream
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
+import org.eclipse.n4js.n4idl.MigrationSwitchComputer
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure2
 
 /**
  * Validates N4IDL migration declarations.
@@ -35,6 +46,12 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
+	
+	@Inject
+	private N4JSTypeSystem typeSystem;
+	
+	@Inject
+	private MigrationSwitchComputer switchComputer;
 	
 	/**
 	 * NEEDED
@@ -190,23 +207,158 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		
 		val migratable = declaredType as TMigratable;
-		val migrationsByTargetVersion = migratable.migrations.groupBy[targetVersion];
 		
-		migrationsByTargetVersion.forEach[targetVersion, migrations|
-			// skip invalid target versions
-			if (targetVersion < 1) { return; }
-			// if there is only one migration for this target version, it cannot conflict with any other migration
-			if (migrations.size == 1) { return; }
-			
-			// otherwise there is a conflict
-			migrations.forEach[ m |
-				val argumentDescription = MigrationUtils.getMigrationArgumentsDescription(m.sourceTypeRefs);
-				val conflictingMigrationsDescription = listOrSingleMigrationDescription(migrations.filter[other | other == m]);
-
-				val msg = IssueCodes.getMessageForIDL_MIGRATION_CONFLICT_WITH(m.name, argumentDescription, m.targetVersion, conflictingMigrationsDescription);
-				addIssue(msg, m.astElement, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, IssueCodes.IDL_MIGRATION_CONFLICT_WITH);
+		val migrationGroups = migratable.migrations
+			// first, group the migrations by target version and source type count 
+			.groupBy[targetVersion -> sourceTypeRefs.size]
+			// filter groups with invalid targetVersion and groups of one
+			.filter[groupKey, migrations| groupKey.key /* targetVersion */ > 0 && migrations.size > 1];
+	
+		// check remaining groups for being distinguishable by a type switch (adds issue otherwise)		
+		migrationGroups.forEach[groupKey, migrations | holdsTypeSwitchDistinguishable(migrations)]	
+	
+	}
+	
+	private def RuleEnvironment ruleEnvironment(TypeRef ref) {
+		return typeSystem.createRuleEnvironmentForContext(ref, ref.eResource);
+	}
+	
+	/** Returns a stream of all pairs that can be formed with the elements of the given collection. */
+	private def <T> Stream<Pair<T, T>> pairs(Collection<T> collection) {
+		return collection.stream.flatMap[ e1 | 
+			collection.stream.map[ e2 | 
+				return e1 -> e2;
 			]
+		]
+	}
+	
+	/**
+	 * Returns an {@link Iterable} which aligns values of iterable1 and iterable2 by their indices.
+	 * 
+	 * The size of the resulting iterable is the minimum of iterable1.size and iterable2.size.
+	 */
+	private def <T1, T2> Iterable<Pair<T1, T2>> align(Iterable<T1> iterable1, Iterable<T2> iterable2) {
+		return [
+				val it1 = iterable1.iterator;
+				val it2 = iterable2.iterator;
+				
+				return new Iterator<Pair<T1, T2>>() {
+					
+					override hasNext() {
+						return it1.hasNext || it2.hasNext;
+					}
+					
+					override next() {
+						return it1.next -> it2.next
+					}
+					
+				}
+		]
+	}
+	
+	/** Convenience method to enable the use of {@link Procedure2} when iterating over {@link Pair} streams. */
+	private def <T1, T2> void forPair(Stream<Pair<T1, T2>> stream, Procedure2<T1, T2> procedure) {
+		stream.forEach[pair |
+			procedure.apply(pair.key, pair.value);
+		]
+	}
+	
+	/** 
+	 * Returns {@code true} iff all type references in left are equaltype (cf. {@link N4JSTypeSystem#equalType}) of 
+	 * the corresponding type references in right. 
+	 * 
+	 * Always returns {@code false} if left holds a different number of type reference than right.
+	 * */
+	private def boolean areEqualTypes(RuleEnvironment ruleEnv, Iterable<TypeRef> left, Iterable<TypeRef> right) {
+		if (left.size != right.size) {
+			return false;
+		}
+		
+		val firstNonSubtype = align(left, right).findFirst[ pair |
+			val l = pair.key;
+			val r = pair.value;
+			val subtypingResult = typeSystem.equaltype(ruleEnv, l, r);
+			
+			return subtypingResult.failed || subtypingResult.value == false;
 		];
+		
+		// if no non-subtype can be found, left must be subtypes of right
+		return firstNonSubtype === null;
+	}
+	
+	/**
+	 * Returns {@code true} iff the given list of migrations is distinguishable by a type switch.
+	 * 
+	 * This method assumes that all of the given migrations, already have the same number of source types.
+	 */
+	private def boolean holdsTypeSwitchDistinguishable(Iterable<TMigration> migrations) {
+		// Generalize the migration source type refs using {@link MigrationSwitchComputer#toSwitchRecognizableTypeRef}.
+		val List<Pair<TMigration, List<TypeRef>>> migrationAndSwitchTypes = migrations
+			.map[migration | 
+				migration ->
+				migration.sourceTypeRefs.map[s | switchComputer.toSwitchRecognizableTypeRef(s.ruleEnvironment, s)]
+		].toList;
+		
+		val conflictGroups = new HashMap<TMigration, Set<TMigration>>();
+		
+		migrationAndSwitchTypes.pairs.forPair[ m1, m2 |
+			val tMigration1 = m1.key;
+			val switchTypes1 = m1.value;
+			
+			val tMigration2 = m2.key;
+			val switchTypes2 = m2.value;
+			
+			val ruleEnv = tMigration1.sourceTypeRefs.head.ruleEnvironment;
+			
+			// check whether the simplified SwitchCondition types are equal
+			if (areEqualTypes(ruleEnv, switchTypes1, switchTypes2)) {
+				// if so add a migration conflict group
+				conflictGroups.addMigrationConflict(tMigration1, tMigration2);
+			}
+		];
+		
+		// add issues to all migrations of a conflict group
+		conflictGroups.values.toSet.forEach[conflictGroup | addIssueMigrationConflict(conflictGroup)];
+		
+		// constraint is fulfilled if there are no conflicts
+		return conflictGroups.empty;
+	}
+	
+	/**
+	 * Adds a migration conflict to given map of conflictGroups.
+	 * 
+	 * That is, if m1 and m2 were not yet known to conflict, there corresponding set associated via conflictGroups
+	 * are merged and re-assigned to their entries in the map.
+	 * 
+	 * Otherwise, this method does nothing.  
+	 */
+	private def void addMigrationConflict(Map<TMigration, Set<TMigration>> conflictGroups, TMigration m1, TMigration m2) {
+		// merge conflict groups of migration 1 and 2
+		val mergedGroup = conflictGroups.getOrDefault(m1, new HashSet(#[m1]))
+		
+		// if conflict group of m1 already contains m2, there is nothing to do
+		if (mergedGroup.contains(m2)) { return; }
+
+		// merge the conflict groups
+		mergedGroup.addAll(conflictGroups.getOrDefault(m2, new HashSet(#[m2])));
+		
+		conflictGroups.put(m1, mergedGroup);
+		conflictGroups.put(m2, mergedGroup);
+	}
+	
+	/** Adds an {@link IssueCodes#IDL_MIGRATION_CONFLICT_WITH} issue for all given migrations,
+	 * if the list of migration exceeds a length of 1. */
+	private def void addIssueMigrationConflict(Iterable<TMigration> migrations) {
+		// no conflict
+		if (migrations.size <= 1) { return; }
+		
+		migrations.forEach[ m |
+			val argumentDescription = MigrationUtils.getMigrationArgumentsDescription(m.sourceTypeRefs);
+			val conflictingMigrationsDescription = listOrSingleMigrationDescription(migrations.filter[other | other != m]);
+
+			val msg = IssueCodes.getMessageForIDL_MIGRATION_CONFLICT_WITH(m.name, argumentDescription, m.targetVersion, conflictingMigrationsDescription);
+			addIssue(msg, m.astElement, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, IssueCodes.IDL_MIGRATION_CONFLICT_WITH);
+		]
 	}
 	
 	/** 

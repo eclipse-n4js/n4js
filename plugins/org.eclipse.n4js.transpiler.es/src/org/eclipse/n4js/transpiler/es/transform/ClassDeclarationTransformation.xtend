@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import javax.swing.text.html.HTML.Tag
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4FieldAccessor
@@ -25,8 +26,6 @@ import org.eclipse.n4js.transpiler.es.assistants.ClassConstructorAssistant
 import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TField
-import java.util.List
-import javax.swing.text.html.HTML.Tag
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -97,7 +96,7 @@ class ClassDeclarationTransformation extends Transformation {
 
 	/** returns pairs of a new {@code Statement} and it's associated initializer-procedure to
 	 * establish tracing - once the statement was inserted into the IM-model*/
-	def private List<Statement> createStaticInitialisers(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
+	def protected Iterable<Statement> createStaticInitialisers(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
 		// apply only to static members
 		val statements = classDecl.ownedMembers.filter[isStatic].map[createStaticInitialiserCode(steClass)].filterNull.toList;
 		return statements;

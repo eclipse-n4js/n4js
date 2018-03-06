@@ -7,6 +7,7 @@ import java.util.List;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.es.EcmaScriptTranspiler;
+import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
 
 import com.google.inject.Inject;
@@ -28,23 +29,32 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 	@Inject
 	private Provider<N4IDLVersionedTypesTransformation> versionedTypesTransformation;
 
+	@Inject
+	private Provider<N4IDLClassDeclarationTransformation> classDeclarationTransformation;
+
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		List<Transformation> transformations = new ArrayList<>(
 				Arrays.asList(super.computeTransformationsToBeExecuted(state)));
 
+		// add additional N4IDL-specific transformations
 		transformations.addAll(0, Arrays.asList(
 				// add versioned types transformation as first step
 				versionedTypesTransformation.get(),
 				// add versioned imports transformation as second step
 				versionedImportsTransformationProvider.get()));
 
-		// replace ModuleWrappingTransformation with custom implementation
+		// replace some N4JS transformations with N4IDL-specific transformations
 		transformations.replaceAll(t -> {
 			if (t instanceof ModuleWrappingTransformation) {
 				return moduleWrappingTransformationProvider.get();
 			}
 
+			if (t instanceof ClassDeclarationTransformation) {
+				return classDeclarationTransformation.get();
+			}
+
+			// otherwise, keep the existing transformation
 			return t;
 		});
 
