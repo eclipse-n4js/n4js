@@ -59,7 +59,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends BaseN
 				// "--verbose",
 				// "--debug",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(
