@@ -44,51 +44,61 @@ public class RepoRelativePath {
 	public static RepoRelativePath compute(Resource resource, IN4JSCore n4jsCore) {
 		URI uri = resource.getURI();
 		Optional<? extends IN4JSProject> optProj = n4jsCore.findProject(uri);
-		if (optProj.isPresent()) {
-			IN4JSProject project = optProj.get();
-			Path path = project.getLocationPath();
-
-			String uriFileString = uri.toString();
-			String uriProjString = project.getLocation().toString();
-			String fileRelString = uriFileString.substring(uriProjString.length());
-
-			String absFileName = path.toAbsolutePath() + fileRelString;
-			File file = new File(absFileName);
-			if (!file.exists()) {
-				return null;
-			}
-			File currentFolder = file.getParentFile();
-			while (currentFolder != null && currentFolder.isDirectory() && currentFolder.exists()) {
-				String repoName = getRepoName(currentFolder);
-				if (Strings.isNullOrEmpty(repoName)) {
-					currentFolder = currentFolder.getParentFile();
-					continue;
-				}
-
-				// git clone folder name might be different than
-				// git repository name
-				String cloneFolder = currentFolder.getName();
-				String projName = project.getProjectId();
-				String repoPath = getRepoPath(absFileName, projName, cloneFolder);
-
-				String projPath = fileRelString;
-				if (File.separatorChar != '/') {
-					projPath = projPath.replace(File.separatorChar, '/');
-					repoPath = repoPath.replace(File.separatorChar, '/');
-				}
-				return new RepoRelativePath(repoName, repoPath, projName, projPath, -1);
-			}
+		if (!optProj.isPresent()) {
+			return null;
 		}
-		return null;
+
+		IN4JSProject project = optProj.get();
+		Path path = project.getLocationPath();
+
+		String uriFileString = uri.toString();
+		String uriProjString = project.getLocation().toString();
+		String fileRelString = uriFileString.substring(uriProjString.length());
+
+		String absFileName = path.toAbsolutePath() + fileRelString;
+		File file = new File(absFileName);
+		if (!file.exists()) {
+			return null;
+		}
+
+		File repoFolder = getRepoFolder(file);
+		String repoName = getRepoName(repoFolder);
+		String cloneFolder = repoFolder == null ? "NO_FOLDER" : repoFolder.getName();
+		String projName = project.getProjectId();
+		String repoPath = getRepoPath(absFileName, projName, cloneFolder);
+
+		String projPath = fileRelString;
+		if (File.separatorChar != '/') {
+			projPath = projPath.replace(File.separatorChar, '/');
+			repoPath = repoPath.replace(File.separatorChar, '/');
+		}
+		return new RepoRelativePath(repoName, repoPath, projName, projPath, -1);
+	}
+
+	private static File getRepoFolder(File file) {
+		File currentFolder = file.getParentFile();
+		while (currentFolder != null && currentFolder.isDirectory() && currentFolder.exists()) {
+			String repoName = getRepoName(currentFolder);
+			if (!Strings.isNullOrEmpty(repoName)) {
+				return currentFolder;
+			}
+			currentFolder = currentFolder.getParentFile();
+		}
+		return currentFolder;
 	}
 
 	/**
 	 * Tries to obtain repository name from the provided directory by reading git config in
 	 * {@code currendDir/.git/config}
-	 *
+	 * <p>
+	 * Git clone folder name might be different from git repository name
+	 * 
 	 * @return string with repo name or {@code null}
 	 */
 	private static String getRepoName(File currentDir) {
+		if (currentDir == null) {
+			return "NO_REPO";
+		}
 		File gitFolder = new File(currentDir, ".git");
 		if (!gitFolder.isDirectory()) {
 			if (LOGGER.isDebugEnabled())

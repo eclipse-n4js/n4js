@@ -54,21 +54,30 @@ public class JSDocCharScannerTest {
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testWhitespaces() {
-		doTestContent(" Test", new JSDocCharScanner(" Test")); // preserve leading ws
-		doTestContent("Test", new JSDocCharScanner("Test ")); // remove trailing ws at end
-		doTestContent(" Test", new JSDocCharScanner(" Test ")); // preserve leading ws only
-		doTestContent(" Test", new JSDocCharScanner("/**\n *  Test\n */")); // end of JSDoc
-		doTestContent("Test", new JSDocCharScanner("/**\n * Test\n */")); // start and end
+		doTestContent(" Test", new JSDocCharScanner(" Test"), "preserve leading ws");
+		doTestContent("Test", new JSDocCharScanner("Test "), "remove trailing ws at end");
+		doTestContent(" Test", new JSDocCharScanner(" Test "), "preserve leading ws only");
+		doTestContent(" Test", new JSDocCharScanner("/**\n *  Test\n */"), "only skip one space after *");
+		doTestContent("Test", new JSDocCharScanner("/**\n * Test\n */"), "start and end");
 	}
 
-	/***/
+	/**
+	 * Tests whether next scanner token is as expected.
+	 */
 	protected void doTestContent(String expected, JSDocCharScanner scanner) {
+		doTestContent(expected, scanner, null);
+	}
+
+	/**
+	 * Tests whether next scanner token is as expected, shows message in case of failure.
+	 */
+	protected void doTestContent(String expected, JSDocCharScanner scanner, String message) {
 		String actual = "";
 		while (scanner.hasNext()) {
 			actual += scanner.next();
 		}
 
-		assertEquals(expected, actual);
+		assertEquals(message, expected, actual);
 
 	}
 

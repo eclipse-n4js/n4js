@@ -26,14 +26,14 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 
-	/** see {@link GraphVisitorInternal#GraphVisitorInternal(TraverseDirection...)} */
-	protected GraphVisitor(TraverseDirection... directions) {
-		this(null, directions);
+	/** see {@link GraphVisitorInternal#GraphVisitorInternal(TraverseDirection )} */
+	protected GraphVisitor(TraverseDirection direction) {
+		this(null, direction);
 	}
 
-	/** see {@link GraphVisitorInternal#GraphVisitorInternal(ControlFlowElement, TraverseDirection...)} */
-	public GraphVisitor(ControlFlowElement container, TraverseDirection... directions) {
-		super(container, directions);
+	/** see {@link GraphVisitorInternal#GraphVisitorInternal(ControlFlowElement, TraverseDirection)} */
+	public GraphVisitor(ControlFlowElement container, TraverseDirection direction) {
+		super(container, direction);
 	}
 
 	@Override
@@ -50,21 +50,19 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	@Override
-	final protected void initializeModeInternal(TraverseDirection curMode, ControlFlowElement curContainer) {
+	final protected void initializeContainerInternal(ControlFlowElement curContainer) {
 		visitedEdgesInternal.clear();
 		visitedEdges.clear();
-		initializeMode(curMode, curContainer);
+		initializeContainer(curContainer);
 	}
 
 	/**
 	 * Called after {@link #initialize()} and before any visit-method is called.
 	 *
-	 * @param curDirection
-	 *            direction of succeeding calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	protected void initializeMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void initializeContainer(ControlFlowElement curContainer) {
 		// overwrite me
 	}
 

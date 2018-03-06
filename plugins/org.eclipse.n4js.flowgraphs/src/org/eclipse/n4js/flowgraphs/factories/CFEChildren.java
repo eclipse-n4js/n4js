@@ -90,13 +90,15 @@ final class CFEChildren {
 		return new InternalExpressionChildren(astIter).doSwitch(expr);
 	}
 
-	static void addDelegatingNode(ReentrantASTIterator astIter, List<Node> cfc, String name, ControlFlowElement cfe,
+	static Node addDelegatingNode(ReentrantASTIterator astIter, List<Node> cfc, String name, ControlFlowElement cfe,
 			ControlFlowElement delegate) {
 
 		if (delegate != null) {
 			DelegatingNode delegatingNode = DelegatingNodeFactory.create(astIter, name, cfe, delegate);
 			cfc.add(delegatingNode);
+			return delegatingNode;
 		}
+		return null;
 	}
 
 	static private class InternalExpressionChildren extends N4JSSwitch<List<Node>> {
@@ -106,15 +108,16 @@ final class CFEChildren {
 			this.astIter = astIter;
 		}
 
-		void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe,
+		Node addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe,
 				ControlFlowElement delegate) {
 
-			CFEChildren.addDelegatingNode(astIter, cfc, name, cfe, delegate);
+			return CFEChildren.addDelegatingNode(astIter, cfc, name, cfe, delegate);
 		}
 
-		void addHelperNode(List<Node> cfc, String name, ControlFlowElement cfe) {
+		Node addHelperNode(List<Node> cfc, String name, ControlFlowElement cfe) {
 			Node node = new HelperNode(name, astIter.pos(), cfe);
 			cfc.add(node);
+			return node;
 		}
 
 		@Override

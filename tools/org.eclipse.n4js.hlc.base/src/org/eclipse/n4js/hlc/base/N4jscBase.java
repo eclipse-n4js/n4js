@@ -124,7 +124,7 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--preferences", usage = "provide custom compiler preference settings stored in a *.properties file")
 	File preferencesProperties;
 
-	@Option(name = "-t", metaVar = "type", usage = "provide the type to build (defaults to dontcompile). "
+	@Option(name = "--buildType", aliases = "-bt", metaVar = "type", usage = "provide the type to build (defaults to dontcompile). "
 			+ "\n'allprojects' compiles all projects found in the projectlocations, no other argument required. "
 			+ "\n'projects' interprets the arguments as projects-folders and compiles them. "
 			+ "\n'singlefile' interprets the arguments as paths to N4JS-source files and compiles only those both."
@@ -169,8 +169,8 @@ public class N4jscBase implements IApplication {
 	boolean verbose = false;
 
 	@Option(name = "--clean", aliases = "-c", required = false, usage = "use this flag to indicate that the output folder should be cleaned before compilation. "
-			+ "If this flag is activated, the flag -t must be activated as well. "
-			+ "This flag can NOT be used in combination with -t singlefile.")
+			+ "If this flag is activated, the flag -bt must be activated as well. "
+			+ "This flag can NOT be used in combination with -bt singlefile.")
 	boolean clean = false;
 
 	// -- --- --- - -- --- --- - -- --- --- - -- --- --- - -- --- --- - -- --- --- -
@@ -200,7 +200,7 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--list-runners", aliases = "-lr", usage = "show list of available runners.")
 	boolean listRunners = false;
 
-	@Option(name = "--test", /* aliases = "-t", */metaVar = "path", usage = "path must point to a project, folder, or file containing tests.")
+	@Option(name = "--test", aliases = "-t", metaVar = "path", usage = "path must point to a project, folder, or file containing tests.")
 	File testThisLocation = null;
 
 	@Option(name = "--testReportRoot", required = false, usage = "when provided, it is expected to be directory in which test report will be written."
@@ -231,10 +231,10 @@ public class N4jscBase implements IApplication {
 	String logFile = "n4jsc.log";
 
 	/**
-	 * Catch all last arguments as files. The actual meaning of these files depends on the {@link #buildtype} (-t)
+	 * Catch all last arguments as files. The actual meaning of these files depends on the {@link #buildtype} (-bt)
 	 * option
 	 */
-	@Argument(multiValued = true, usage = "filename of source (or project, see -t) to compile")
+	@Argument(multiValued = true, usage = "filename of source (or project, see -bt) to compile")
 	List<File> srcFiles = new ArrayList<>();
 
 	@Inject
@@ -461,9 +461,9 @@ public class N4jscBase implements IApplication {
 			if (clean && ((buildtype == BuildType.dontcompile) || (buildtype == BuildType.singlefile))) {
 				String msg = "";
 				if (buildtype == BuildType.dontcompile) {
-					msg = "The flag -t must be specified when --clean/-c is activated";
+					msg = "The flag -bt must be specified when --clean/-c is activated";
 				} else if (buildtype == BuildType.singlefile) {
-					msg = "The flag --clean/-c flag can not be used in combination with -t singlefile";
+					msg = "The flag --clean/-c flag can not be used in combination with -bt singlefile";
 				}
 				System.out.println(msg);
 				printExtendedUsage(parser, System.out);
@@ -510,7 +510,7 @@ public class N4jscBase implements IApplication {
 	private void clean() throws ExitCodeException {
 		if (buildtype == BuildType.dontcompile) {
 			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
-					"The flag -t must be specified when cleaning");
+					"The flag -bt must be specified when cleaning");
 		}
 		try {
 			switch (buildtype) {

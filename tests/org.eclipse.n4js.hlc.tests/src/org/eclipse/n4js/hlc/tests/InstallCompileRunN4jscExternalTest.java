@@ -64,7 +64,7 @@ public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
 				"-r", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(

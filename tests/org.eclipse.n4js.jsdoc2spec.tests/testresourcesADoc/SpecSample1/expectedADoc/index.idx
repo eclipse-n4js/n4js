@@ -14,11 +14,15 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 		NO_PACKAGE
 			A.n4jsd
 				A::15::21::24
-				A#bar::20::25::42
-				A#baz::27::43::65
-				B::30::68::69
-				B#foo::31::70::88
-				D::36::91::121
+				A#<finalGetter::30::40::62
+				A#>finalSetter::33::63::85
+				A#bar::20::86::103
+				A#baz::27::104::126
+				A#field::36::25::39
+				A#method::39::127::149
+				B::42::152::153
+				B#foo::43::154::172
+				D::48::175::205
 	SpecSample1#test
 		NO_PACKAGE
 			ATests.n4js

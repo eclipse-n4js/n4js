@@ -20,10 +20,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -35,10 +34,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.xtext.ui.resource.IResourceSetProvider;
-
-import com.google.common.base.Optional;
-
 import org.eclipse.n4js.jsdoc2spec.CheckCanceled;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SpecInfo;
@@ -51,6 +46,9 @@ import org.eclipse.n4js.jsdoc2spec.ui.SpecProcessPage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.xtext.ui.resource.IResourceSetProvider;
+
+import com.google.common.base.Optional;
 
 /**
  * This class contains methods to generate adoc files.
@@ -63,7 +61,7 @@ class TaskGenerateAdoc implements IRunnableWithProgress {
 	final SpecConfigAdocPage configAdocPage;
 	final SpecProcessPage processAdocPage;
 	/** Types by name extracted from selected projects. Map is filled on demand and cached. */
-	final Map<String, SpecInfo> typesByName = new HashMap<>();
+	final Collection<SpecInfo> specInfos = new LinkedList<>();
 	private Set<SpecFile> specChangeSet;
 
 	private ConfigAdoc configAdoc;
@@ -134,14 +132,16 @@ class TaskGenerateAdoc implements IRunnableWithProgress {
 
 		int changedModuleFiles = 0;
 		int updatedModuleFiles = 0;
-		if (specChangeSet != null)
+		if (specChangeSet != null) {
 			for (SpecFile specFile : specChangeSet) {
 				if (specFile instanceof SpecModuleFile) {
 					changedModuleFiles++;
-					if (moduleFileNames.contains(specFile.getFile().getName()))
+					if (moduleFileNames.contains(specFile.getFile().getName())) {
 						updatedModuleFiles++;
+					}
 				}
 			}
+		}
 
 		return moduleFileNames.size() + changedModuleFiles - updatedModuleFiles;
 	}
@@ -152,7 +152,7 @@ class TaskGenerateAdoc implements IRunnableWithProgress {
 		FileSystem.ensureFileStructure(rootDir);
 
 		int workload = 0;
-		if (typesByName.isEmpty())
+		if (specInfos.isEmpty())
 			workload += 2;
 		if (specChangeSet == null)
 			workload += 2;
@@ -163,7 +163,7 @@ class TaskGenerateAdoc implements IRunnableWithProgress {
 				processAdocPage::displayMessageRed,
 				CheckCanceled::checkUserCanceled);
 
-		if (typesByName.isEmpty()) {
+		if (specInfos.isEmpty()) {
 			SubMonitorMsg subMonitor = cmplProgAcceptor.newChild(2);
 			computeTypes(subMonitor);
 			subMonitor.done();
@@ -182,7 +182,7 @@ class TaskGenerateAdoc implements IRunnableWithProgress {
 	}
 
 	/**
-	 * Side effect: sets {@link #typesByName}
+	 * Side effect: sets {@link #specInfos}
 	 */
 	private void computeTypes(SubMonitorMsg completeProgress) throws IllegalStateException, InterruptedException {
 		Set<IN4JSProject> projects = getProjects();
@@ -191,10 +191,10 @@ class TaskGenerateAdoc implements IRunnableWithProgress {
 		}
 
 		completeProgress.subTask("Parsing code base ...");
-		Map<String, SpecInfo> m = jsDoc2SpecProcessor.readN4JSDs(projects, resourceSetMapper(), completeProgress);
+		Collection<SpecInfo> m = jsDoc2SpecProcessor.readN4JSDs(projects, resourceSetMapper(), completeProgress);
 		CheckCanceled.checkUserCanceled(completeProgress);
 
-		typesByName.putAll(m);
+		specInfos.addAll(m);
 		processAdocPage.displayMessageRed(jsDoc2SpecProcessor.getWarnings());
 		jsDoc2SpecProcessor.resetIssues();
 	}
@@ -230,7 +230,7 @@ class TaskGenerateAdoc implements IRunnableWithProgress {
 
 		completeProgress.subTask("Computing updates ...");
 		SubMonitorMsg compUpdtsProgress = completeProgress.newChild(1);
-		Collection<SpecFile> changes = jsDoc2SpecProcessor.computeUpdates(typesByName, compUpdtsProgress);
+		Collection<SpecFile> changes = jsDoc2SpecProcessor.computeUpdates(specInfos, compUpdtsProgress);
 		CheckCanceled.checkUserCanceled(compUpdtsProgress);
 		compUpdtsProgress.done();
 

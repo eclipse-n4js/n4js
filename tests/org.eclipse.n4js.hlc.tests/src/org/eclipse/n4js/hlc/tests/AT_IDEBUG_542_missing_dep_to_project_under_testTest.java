@@ -51,7 +51,7 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 		String proot = workspace.getAbsolutePath().toString();
 
 		String[] args = { "-pl", proot,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-v"
 		};
 
