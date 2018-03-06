@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -277,6 +278,10 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	private RegisterResult registerProjectsInternal(NpmProjectAdaptionResult result, IProgressMonitor monitor,
 			boolean triggerCleanbuild) {
+
+		Collection<IBuildConfiguration> extPrjCleaned = null;
+		Collection<IBuildConfiguration> extPrjBuilt = null;
+
 		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
 			logger.warn("Built-in libraries and NPM support are disabled.");
 		}
@@ -292,7 +297,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 				.toSet();
 
 		if (!Iterables.isEmpty(projectsToClean)) {
-			builder.clean(projectsToClean, subMonitor.newChild(1));
+			extPrjCleaned = builder.clean(projectsToClean, subMonitor.newChild(1));
 		}
 		subMonitor.worked(1);
 
@@ -309,7 +314,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		// Build recently added projects that do not exist in workspace.
 		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(allProjectsToBuild)) {
-			builder.build(allProjectsToBuild, subMonitor.newChild(1));
+			extPrjBuilt = builder.build(allProjectsToBuild, subMonitor.newChild(1));
 		}
 		subMonitor.worked(1);
 
@@ -318,14 +323,12 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 			Set<N4JSExternalProject> affectedProjects = new HashSet<>();
 			affectedProjects.addAll(newHashSet(projectsToClean));
 			affectedProjects.addAll(newHashSet(allProjectsToBuild));
-
-			wsPrjToRebuild.addAll(
-					newHashSet(collector.getWSProjectsDependendingOn(affectedProjects)));
+			wsPrjToRebuild.addAll(newHashSet(collector.getWSProjectsDependendingOn(affectedProjects)));
 
 			scheduler.scheduleBuildIfNecessary(wsPrjToRebuild);
 		}
 
-		return new RegisterResult(projectsToClean, allProjectsToBuild, wsPrjToRebuild);
+		return new RegisterResult(extPrjCleaned, extPrjBuilt, wsPrjToRebuild);
 	}
 
 	private Set<N4JSExternalProject> getExternalProjects(NpmProjectAdaptionResult result) {

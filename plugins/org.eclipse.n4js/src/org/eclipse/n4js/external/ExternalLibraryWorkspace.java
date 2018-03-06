@@ -11,8 +11,10 @@
 package org.eclipse.n4js.external;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,17 +42,38 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 		final public Set<? extends IProject> workspaceProjectsScheduled;
 
 		RegisterResult() {
-			this(Collections.emptySet(), Collections.emptySet(), Collections.emptySet());
+			this.externalProjectsCleaned = Collections.unmodifiableSet(Collections.emptySet());
+			this.externalProjectsBuilt = Collections.unmodifiableSet(Collections.emptySet());
+			this.workspaceProjectsScheduled = Collections.unmodifiableSet(Collections.emptySet());
 		}
 
 		/** Constructor */
-		public RegisterResult(Set<? extends IProject> externalProjectsCleaned,
-				Set<? extends IProject> externalProjectsBuilt,
-				Set<? extends IProject> workspaceProjectsScheduled) {
+		public RegisterResult(Set<? extends IProject> extPrjsCleaned,
+				Set<? extends IProject> extPrjsBuilt,
+				Set<? extends IProject> wsPrjsScheduled) {
 
-			this.externalProjectsCleaned = Collections.unmodifiableSet(externalProjectsCleaned);
-			this.externalProjectsBuilt = Collections.unmodifiableSet(externalProjectsBuilt);
-			this.workspaceProjectsScheduled = Collections.unmodifiableSet(workspaceProjectsScheduled);
+			this.externalProjectsCleaned = Collections.unmodifiableSet(extPrjsCleaned);
+			this.externalProjectsBuilt = Collections.unmodifiableSet(extPrjsBuilt);
+			this.workspaceProjectsScheduled = Collections.unmodifiableSet(wsPrjsScheduled);
+		}
+
+		/** Constructor */
+		public RegisterResult(Iterable<IBuildConfiguration> extPrjsCleaned,
+				Iterable<IBuildConfiguration> extPrjsBuilt,
+				Set<? extends IProject> wsPrjsScheduled) {
+
+			this(toProjectSet(extPrjsCleaned), toProjectSet(extPrjsBuilt), wsPrjsScheduled);
+		}
+
+		static private Set<? extends IProject> toProjectSet(Iterable<IBuildConfiguration> bConfigs) {
+			Set<IProject> prjSet = new HashSet<>();
+			if (bConfigs == null) {
+				return prjSet;
+			}
+			for (IBuildConfiguration bConfig : bConfigs) {
+				prjSet.add(bConfig.getProject());
+			}
+			return Collections.unmodifiableSet(prjSet);
 		}
 	}
 
