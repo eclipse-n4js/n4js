@@ -13,13 +13,10 @@ package org.eclipse.n4js.ui.external;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterators.emptyIterator;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static com.google.common.collect.Sets.difference;
 import static com.google.common.collect.Sets.newHashSet;
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static java.util.Collections.emptyList;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.core.runtime.SubMonitor.convert;
 import static org.eclipse.n4js.internal.N4JSSourceContainerType.PROJECT;
@@ -28,6 +25,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -56,14 +54,10 @@ import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.util.Pair;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -74,7 +68,9 @@ import com.google.inject.Singleton;
  * platform}.
  */
 @Singleton
-public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace implements StoreUpdatedListener {
+public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
+		implements ExternalLocationsUpdatedListener {
+
 	private static Logger logger = Logger.getLogger(EclipseExternalLibraryWorkspace.class);
 
 	@Inject
@@ -93,6 +89,13 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 	/** This provider wraps {@link ExternalProject}s into {@link N4JSExternalProject}s */
 	@Inject
 	private N4JSExternalProjectProvider n4extPP;
+
+	/**
+	 */
+	@Inject
+	void init() {
+		extPP.addExternalLocationsUpdatedListener(this);
+	}
 
 	@Override
 	public ProjectDescription getProjectDescription(URI location) {
@@ -208,60 +211,47 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 	}
 
 	@Override
-	public void storeUpdated(ExternalLibraryPreferenceStore store, IProgressMonitor monitor) {
+	public void locationsUpdated(Set<java.net.URI> oldRootLocs, Set<java.net.URI> newRootLocs,
+			IProgressMonitor monitor) {
+
 		ISchedulingRule rule = builder.getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
-			storeUpdatedInternal(store, monitor);
+			storeUpdatedInternal(oldRootLocs, newRootLocs, monitor);
 		} finally {
 			Job.getJobManager().endRule(rule);
 		}
 	}
 
-	private void storeUpdatedInternal(ExternalLibraryPreferenceStore store, IProgressMonitor monitor) {
+	private void storeUpdatedInternal(Set<java.net.URI> oldLocations, Set<java.net.URI> newLocations,
+			IProgressMonitor monitor) {
+
 		extPP.ensureInitialized();
-		Set<java.net.URI> oldLocations = newLinkedHashSet(extPP.getRootLocations());
-		Set<java.net.URI> newLocation = newLinkedHashSet(store.getLocations());
-		Collection<java.net.URI> removedLocations = difference(oldLocations, newLocation);
-		Collection<java.net.URI> addedLocations = difference(newLocation, oldLocations);
+		Collection<java.net.URI> removedLocations = difference(oldLocations, newLocations);
+		Collection<java.net.URI> addedLocations = difference(newLocations, oldLocations);
 
 		SubMonitor subMonitor = convert(monitor, 3);
 
-		Iterable<N4JSExternalProject> projectsToClean = n4extPP.getProjectsIn(removedLocations);
+		Iterable<N4JSExternalProject> removedProjects = n4extPP.getProjectsIn(removedLocations);
+		Iterable<N4JSExternalProject> addedProjects = n4extPP.getProjectsIn(addedLocations);
 
 		// Clean projects.
-		if (!Iterables.isEmpty(projectsToClean)) {
-			builder.clean(projectsToClean, subMonitor.newChild(1));
-		}
+		builder.clean(removedProjects, subMonitor.newChild(1));
 		subMonitor.worked(1);
 
-		// Invalidate before collecting dependencies.
-		extPP.updateCache(store);
-
-		Collection<IProject> workspaceProjectsToRebuild = newHashSet(
-				collector.getWSProjectsDependendingOn(projectsToClean));
-
-		// Cache could be polluted with external projects while collecting associated workspace ones.
-		extPP.updateCache(store);
-
-		// Rebuild whole external workspace. Filter out projects that are present in the Eclipse workspace (if any).
-		Collection<String> eclipseWorkspaceProjectNames = getAllEclipseWorkspaceProjectNames();
-		Predicate<String> eclipseWorkspaceProjectNamesFilter = Predicates.in(eclipseWorkspaceProjectNames);
-
-		Iterable<N4JSExternalProject> projectsToBuild = from(
-				n4extPP.getProjectsIn(addedLocations))
-						.filter(p -> !eclipseWorkspaceProjectNamesFilter.apply(p.getName()));
-
-		// Build recently added projects that do not exist in workspace.
-		// XXX akitta: consider filtering out external projects that exists in index already. (@ higher priority level)
-		if (!Iterables.isEmpty(projectsToBuild)) {
-			builder.build(projectsToBuild, subMonitor.newChild(1));
-		}
+		// Build external workspace. Filter out projects that are present in the Eclipse workspace.
+		Collection<N4JSExternalProject> extProjectsToBuild = newHashSet();
+		extProjectsToBuild.addAll(getNonWSProjects(addedProjects));
+		extProjectsToBuild.addAll(collector.getExtProjectsDependendingOn(addedProjects));
+		builder.build(extProjectsToBuild, subMonitor.newChild(1));
 		subMonitor.worked(1);
 
-		addAll(workspaceProjectsToRebuild,
-				collector.getWSProjectsDependendingOn(projectsToBuild));
-		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+		// Schedule rebuild of workspace projects
+		Collection<IProject> wsProjectsToRebuild = newHashSet();
+		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(addedProjects));
+		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(removedProjects));
+		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(extProjectsToBuild));
+		scheduler.scheduleBuildIfNecessary(wsProjectsToRebuild);
 	}
 
 	@Override
@@ -305,7 +295,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		updateState();
 
 		// Rebuild whole external workspace. Filter out projects that are present in the Eclipse workspace (if any).
-		Set<N4JSExternalProject> projectsToBuild = getExternalProjects(result);
+		Collection<N4JSExternalProject> projectsToBuild = getExternalProjects(result);
 		Set<N4JSExternalProject> allProjectsToBuild = new HashSet<>();
 		allProjectsToBuild.addAll(projectsToBuild);
 		allProjectsToBuild.addAll(newHashSet(collector.getExtProjectsDependendingOn(projectsToBuild)));
@@ -331,16 +321,13 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		return new RegisterResult(extPrjCleaned, extPrjBuilt, wsPrjToRebuild);
 	}
 
-	private Set<N4JSExternalProject> getExternalProjects(NpmProjectAdaptionResult result) {
-		Collection<String> eclipseWorkspaceProjectNames = getAllEclipseWorkspaceProjectNames();
-		Predicate<String> eclipseWorkspaceProjectNamesFilter = Predicates.in(eclipseWorkspaceProjectNames);
+	private Collection<N4JSExternalProject> getExternalProjects(NpmProjectAdaptionResult result) {
+		Set<N4JSExternalProject> projectsToBeUpdated = from(result.getToBeBuilt().getToBeUpdated())
+				.transform(uri -> n4extPP.getProject(new File(uri).getName())).toSet();
 
-		Set<N4JSExternalProject> projectsToBuild = from(result.getToBeBuilt().getToBeUpdated())
-				.transform(uri -> n4extPP.getProject(new File(uri).getName()))
-				.filter(notNull())
-				.filter(p -> !eclipseWorkspaceProjectNamesFilter.apply(p.getName()))
-				.toSet();
-		return projectsToBuild;
+		Collection<N4JSExternalProject> nonWSProjects = getNonWSProjects(projectsToBeUpdated);
+
+		return nonWSProjects;
 	}
 
 	@Override
@@ -416,14 +403,25 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		extPP.updateCache();
 	}
 
-	private Collection<String> getAllEclipseWorkspaceProjectNames() {
+	private Collection<N4JSExternalProject> getNonWSProjects(Iterable<N4JSExternalProject> addedProjects) {
+		Set<String> eclipseWorkspaceProjectNames = getAllEclipseWorkspaceProjectNames();
+		Collection<N4JSExternalProject> projectsToBuild = newHashSet();
+		for (N4JSExternalProject addedProject : addedProjects) {
+			if (!eclipseWorkspaceProjectNames.contains(addedProject.getName())) {
+				projectsToBuild.add(addedProject);
+			}
+		}
+		return projectsToBuild;
+	}
+
+	private Set<String> getAllEclipseWorkspaceProjectNames() {
 		if (Platform.isRunning()) {
 			return from(Arrays.asList(getWorkspace().getRoot().getProjects()))
 					.filter(p -> p.isAccessible())
 					.transform(p -> p.getName())
 					.toSet();
 		}
-		return emptyList();
+		return Collections.emptySet();
 	}
 
 }

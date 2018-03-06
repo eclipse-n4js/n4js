@@ -20,6 +20,8 @@ import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -57,6 +59,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	@Inject
 	private ProjectStateChangeListener projectStateChangeListener;
 
+	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
 	private final Collection<java.net.URI> rootLocations;
 	private LoadingCache<URI, Optional<Pair<ExternalProject, ProjectDescription>>> projectCache;
 	private Map<String, ExternalProject> projectNameMapping;
@@ -86,14 +89,24 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		}
 	}
 
+	/** Adds the given listener. Listener gets called after locations of external workspaces changed. */
+	public void addExternalLocationsUpdatedListener(ExternalLocationsUpdatedListener listener) {
+		locListeners.add(listener);
+	}
+
 	Collection<java.net.URI> getRootLocations() {
 		return rootLocations;
 	}
 
 	@Override
 	public void storeUpdated(final ExternalLibraryPreferenceStore store, final IProgressMonitor monitor) {
+		Set<java.net.URI> oldLocations = new HashSet<>(rootLocations);
 		ensureInitialized();
 		updateCache(store);
+		Set<java.net.URI> newLocations = new HashSet<>(rootLocations);
+		for (ExternalLocationsUpdatedListener locListener : locListeners) {
+			locListener.locationsUpdated(oldLocations, newLocations, monitor);
+		}
 	}
 
 	void ensureInitialized() {
