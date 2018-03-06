@@ -329,8 +329,6 @@
 
     $makeN4BuiltInClass(N4Method, N4Member, {}, {});
 
-    $makeN4BuiltInClass(N4Field, N4Member, {}, {});
-
     $makeN4BuiltInClass(N4DataField, N4Member, {}, {});
 
     $makeN4BuiltInClass(N4Accessor, N4Member, {
@@ -596,18 +594,6 @@
             consumedMemebers: []
         }));
 
-    $createMetaInfo(N4Field,
-        new N4Class({
-            name: 'N4Field',
-            origin: 'n4js-es5',
-            fqn: 'N4BuiltInClasses.N4Field',
-            n4superType: N4Member.n4type,
-            allImplementedInterfaces: [],
-            annotations: [],
-            ownedMembers: [],
-            consumedMemebers: []
-        }));
-
     $createMetaInfo(N4DataField,
         new N4Class({
             name: 'N4DataField',
@@ -788,7 +774,6 @@
     Object.freeze(N4Interface);
     Object.freeze(N4Member);
     Object.freeze(N4Method);
-    Object.freeze(N4Field);
     Object.freeze(N4DataField);
     Object.freeze(N4Accessor);
     Object.freeze(N4EnumType);
