@@ -159,6 +159,10 @@ public class JSDoc2HoverSerializer extends DomSwitch<Boolean> {
 		md2HtmlBuilder.resetMarkdownConverter();
 		appendContents(doclet.getContents());
 
+		// Reset md2HtmlBuilder to enforce all open blocks to closes, so that we have a defined status when
+		// handling the line tags.
+		md2HtmlBuilder.resetMarkdownConverter();
+
 		Map<ITagDefinition, List<LineTag>> groupedLineTags = new HashMap<>();
 		for (LineTag lineTag : doclet.getLineTags()) {
 			ITagDefinition tagDef = lineTag.getTagDefinition();
