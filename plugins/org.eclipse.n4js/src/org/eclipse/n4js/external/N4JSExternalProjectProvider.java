@@ -11,8 +11,8 @@
 package org.eclipse.n4js.external;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSModel;
@@ -43,8 +43,8 @@ public class N4JSExternalProjectProvider {
 	}
 
 	/** @return all projects */
-	public Collection<N4JSExternalProject> getProjects() {
-		Collection<N4JSExternalProject> n4extPrjs = new HashSet<>();
+	public Set<N4JSExternalProject> getProjects() {
+		Set<N4JSExternalProject> n4extPrjs = new HashSet<>();
 		for (ExternalProject extPrj : extLibWS.getProjects()) {
 			N4JSExternalProject n4extPrj = createN4JSExternalProject(extPrj);
 			n4extPrjs.add(n4extPrj);
@@ -53,8 +53,8 @@ public class N4JSExternalProjectProvider {
 	}
 
 	/** @return all projects in the given location */
-	public Collection<N4JSExternalProject> getProjectsIn(Iterable<java.net.URI> rootLocations) {
-		Collection<N4JSExternalProject> n4extPrjs = new HashSet<>();
+	public Set<N4JSExternalProject> getProjectsIn(Iterable<java.net.URI> rootLocations) {
+		Set<N4JSExternalProject> n4extPrjs = new HashSet<>();
 		for (java.net.URI rLoc : rootLocations) {
 			n4extPrjs.addAll(getProjectsIn(rLoc));
 		}
@@ -62,8 +62,8 @@ public class N4JSExternalProjectProvider {
 	}
 
 	/** @return all projects in the given locations */
-	public Collection<N4JSExternalProject> getProjectsIn(java.net.URI rootLocations) {
-		Collection<N4JSExternalProject> n4extPrjs = new HashSet<>();
+	public Set<N4JSExternalProject> getProjectsIn(java.net.URI rootLocations) {
+		Set<N4JSExternalProject> n4extPrjs = new HashSet<>();
 		Iterable<ExternalProject> extPrjs = extLibWS.getProjects(rootLocations);
 		for (ExternalProject extPrj : extPrjs) {
 			N4JSExternalProject n4extPrj = createN4JSExternalProject(extPrj);

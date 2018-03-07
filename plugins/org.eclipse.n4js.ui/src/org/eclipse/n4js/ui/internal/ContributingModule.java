@@ -46,6 +46,7 @@ import org.eclipse.n4js.ui.containers.N4JSExternalLibraryStorage2UriMapperContri
 import org.eclipse.n4js.ui.containers.N4JSToBeBuiltComputer;
 import org.eclipse.n4js.ui.containers.NfarStorageMapper;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
+import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
@@ -116,7 +117,7 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalProjectCacheLoader.class);
 		binder.bind(ExternalLibraryWorkspace.class).to(EclipseExternalLibraryWorkspace.class).in(SINGLETON);
 		binder.bind(ProjectStateChangeListener.class);
-		// binder.bind(N4JSExternalProjectProvider.class);
+		binder.bind(ExternalIndexUpdater.class);
 		binder.bind(ExternalLibraryBuildJobProvider.class);
 		binder.bind(ExternalLibraryBuilder.class);
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);

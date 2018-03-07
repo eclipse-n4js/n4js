@@ -15,17 +15,13 @@ import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterators.emptyIterator;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
-import static com.google.common.collect.Sets.difference;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.core.runtime.SubMonitor.convert;
 import static org.eclipse.n4js.internal.N4JSSourceContainerType.PROJECT;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -68,10 +64,11 @@ import com.google.inject.Singleton;
  * platform}.
  */
 @Singleton
-public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
-		implements ExternalLocationsUpdatedListener {
-
+public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	private static Logger logger = Logger.getLogger(EclipseExternalLibraryWorkspace.class);
+
+	@Inject
+	private ExternalIndexUpdater indexUpdater;
 
 	@Inject
 	private ExternalLibraryBuilder builder;
@@ -94,7 +91,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	 */
 	@Inject
 	void init() {
-		extPP.addExternalLocationsUpdatedListener(this);
+		extPP.addExternalLocationsUpdatedListener(indexUpdater);
 	}
 
 	@Override
@@ -211,50 +208,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	}
 
 	@Override
-	public void locationsUpdated(Set<java.net.URI> oldRootLocs, Set<java.net.URI> newRootLocs,
-			IProgressMonitor monitor) {
-
-		ISchedulingRule rule = builder.getRule();
-		try {
-			Job.getJobManager().beginRule(rule, monitor);
-			storeUpdatedInternal(oldRootLocs, newRootLocs, monitor);
-		} finally {
-			Job.getJobManager().endRule(rule);
-		}
-	}
-
-	private void storeUpdatedInternal(Set<java.net.URI> oldLocations, Set<java.net.URI> newLocations,
-			IProgressMonitor monitor) {
-
-		extPP.ensureInitialized();
-		Collection<java.net.URI> removedLocations = difference(oldLocations, newLocations);
-		Collection<java.net.URI> addedLocations = difference(newLocations, oldLocations);
-
-		SubMonitor subMonitor = convert(monitor, 3);
-
-		Iterable<N4JSExternalProject> removedProjects = n4extPP.getProjectsIn(removedLocations);
-		Iterable<N4JSExternalProject> addedProjects = n4extPP.getProjectsIn(addedLocations);
-
-		// Clean projects.
-		builder.clean(removedProjects, subMonitor.newChild(1));
-		subMonitor.worked(1);
-
-		// Build external workspace. Filter out projects that are present in the Eclipse workspace.
-		Collection<N4JSExternalProject> extProjectsToBuild = newHashSet();
-		extProjectsToBuild.addAll(getNonWSProjects(addedProjects));
-		extProjectsToBuild.addAll(collector.getExtProjectsDependendingOn(addedProjects));
-		builder.build(extProjectsToBuild, subMonitor.newChild(1));
-		subMonitor.worked(1);
-
-		// Schedule rebuild of workspace projects
-		Collection<IProject> wsProjectsToRebuild = newHashSet();
-		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(addedProjects));
-		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(removedProjects));
-		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(extProjectsToBuild));
-		scheduler.scheduleBuildIfNecessary(wsProjectsToRebuild);
-	}
-
-	@Override
 	public RegisterResult registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
 			boolean triggerCleanbuild) {
 		ISchedulingRule rule = builder.getRule();
@@ -325,7 +278,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 		Set<N4JSExternalProject> projectsToBeUpdated = from(result.getToBeBuilt().getToBeUpdated())
 				.transform(uri -> n4extPP.getProject(new File(uri).getName())).toSet();
 
-		Collection<N4JSExternalProject> nonWSProjects = getNonWSProjects(projectsToBeUpdated);
+		Collection<N4JSExternalProject> nonWSProjects = collector.filterNonWSProjects(projectsToBeUpdated);
 
 		return nonWSProjects;
 	}
@@ -401,27 +354,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	@Override
 	public void updateState() {
 		extPP.updateCache();
-	}
-
-	private Collection<N4JSExternalProject> getNonWSProjects(Iterable<N4JSExternalProject> addedProjects) {
-		Set<String> eclipseWorkspaceProjectNames = getAllEclipseWorkspaceProjectNames();
-		Collection<N4JSExternalProject> projectsToBuild = newHashSet();
-		for (N4JSExternalProject addedProject : addedProjects) {
-			if (!eclipseWorkspaceProjectNames.contains(addedProject.getName())) {
-				projectsToBuild.add(addedProject);
-			}
-		}
-		return projectsToBuild;
-	}
-
-	private Set<String> getAllEclipseWorkspaceProjectNames() {
-		if (Platform.isRunning()) {
-			return from(Arrays.asList(getWorkspace().getRoot().getProjects()))
-					.filter(p -> p.isAccessible())
-					.transform(p -> p.getName())
-					.toSet();
-		}
-		return Collections.emptySet();
 	}
 
 }

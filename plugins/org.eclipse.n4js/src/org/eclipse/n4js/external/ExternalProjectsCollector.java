@@ -11,11 +11,14 @@
 package org.eclipse.n4js.external;
 
 import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -51,6 +54,37 @@ public class ExternalProjectsCollector {
 
 	@Inject
 	private IN4JSCore core;
+
+	/** @return a new set that contains only those projects of the given set that <b>are</b> in the workspace */
+	public <P extends IProject> Set<P> filterWSProjects(Iterable<P> addedProjects) {
+		return filterWSProjects(addedProjects, true);
+	}
+
+	/** @return a new set that contains only those projects of the given set that <b>are not</b> in the workspace */
+	public <P extends IProject> Set<P> filterNonWSProjects(Iterable<P> projects) {
+		return filterWSProjects(projects, false);
+	}
+
+	private <P extends IProject> Set<P> filterWSProjects(Iterable<P> addedProjects, boolean positive) {
+		Set<String> eclipseWorkspaceProjectNames = getAllEclipseWorkspaceProjectNames();
+		Set<P> projectsToBuild = newHashSet();
+		for (P addedProject : addedProjects) {
+			if (positive == eclipseWorkspaceProjectNames.contains(addedProject.getName())) {
+				projectsToBuild.add(addedProject);
+			}
+		}
+		return projectsToBuild;
+	}
+
+	private Set<String> getAllEclipseWorkspaceProjectNames() {
+		if (Platform.isRunning()) {
+			return from(Arrays.asList(getWorkspace().getRoot().getProjects()))
+					.filter(p -> p.isAccessible())
+					.transform(p -> p.getName())
+					.toSet();
+		}
+		return Collections.emptySet();
+	}
 
 	/**
 	 * Returns with all {@link IProject project} instances that are available from the {@link IWorkspaceRoot workspace

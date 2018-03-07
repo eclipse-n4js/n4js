@@ -100,12 +100,25 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Override
 	public void storeUpdated(final ExternalLibraryPreferenceStore store, final IProgressMonitor monitor) {
-		Set<java.net.URI> oldLocations = new HashSet<>(rootLocations);
 		ensureInitialized();
-		updateCache(store);
-		Set<java.net.URI> newLocations = new HashSet<>(rootLocations);
+
+		Set<java.net.URI> oldLocations = new HashSet<>(rootLocations);
+		Set<java.net.URI> newLocations = new HashSet<>(store.getLocations());
+
+		Set<java.net.URI> removedLocations = new HashSet<>(oldLocations);
+		removedLocations.removeAll(newLocations);
+
+		Set<java.net.URI> addedLocations = new HashSet<>(newLocations);
+		addedLocations.removeAll(oldLocations);
+
 		for (ExternalLocationsUpdatedListener locListener : locListeners) {
-			locListener.locationsUpdated(oldLocations, newLocations, monitor);
+			locListener.beforeLocationsUpdated(removedLocations, monitor);
+		}
+
+		updateCache(newLocations);
+
+		for (ExternalLocationsUpdatedListener locListener : locListeners) {
+			locListener.afterLocationsUpdated(addedLocations, monitor);
 		}
 	}
 
@@ -124,9 +137,9 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return projectNameMapping;
 	}
 
-	private void updateCache(ExternalLibraryPreferenceStore store) {
+	private void updateCache(Set<java.net.URI> newLocations) {
 		rootLocations.clear();
-		rootLocations.addAll(store.getLocations());
+		rootLocations.addAll(newLocations);
 
 		updateCache();
 	}

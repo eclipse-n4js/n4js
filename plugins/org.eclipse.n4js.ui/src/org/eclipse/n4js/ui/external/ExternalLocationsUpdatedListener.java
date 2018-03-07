@@ -20,7 +20,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ExternalLocationsUpdatedListener {
 
+	/** Gets called before external store locations changed. */
+	public void beforeLocationsUpdated(Set<URI> removedLocations, IProgressMonitor monitor);
+
 	/** Gets called after external store locations changed. */
-	public void locationsUpdated(Set<URI> oldRootLocs, Set<URI> newRootLocs, IProgressMonitor monitor);
+	public void afterLocationsUpdated(Set<URI> addedLocations, IProgressMonitor monitor);
 
 }

@@ -29,7 +29,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
-
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 
@@ -68,6 +67,7 @@ public class IndexableFilesDiscoveryUtil {
 			@Override
 			public FileVisitResult visitFile(Path file,
 					BasicFileAttributes attrs) throws IOException {
+
 				if (filter(file)) {
 					result.add(file.toString());
 				}
@@ -76,8 +76,8 @@ public class IndexableFilesDiscoveryUtil {
 
 			@Override
 			public FileVisitResult visitFileFailed(Path file,
-					IOException exc)
-							throws IOException {
+					IOException exc) throws IOException {
+
 				LOGGER.error("failed to scan path :" + file, exc);
 				return FileVisitResult.CONTINUE;
 
@@ -86,6 +86,7 @@ public class IndexableFilesDiscoveryUtil {
 			@Override
 			public FileVisitResult postVisitDirectory(Path dir,
 					IOException exc) {
+
 				if (exc != null) {
 					LOGGER.error("failed to scan :" + dir, exc);
 				}
