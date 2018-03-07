@@ -17,8 +17,6 @@
 stdout:
 Ch07_04_Reflection_Meta_Information.ReflectionClassifiers.C
 class
-Ch07_04_Reflection_Meta_Information.ReflectionClassifiers.R
-interface
 Ch07_04_Reflection_Meta_Information.ReflectionClassifiers.I
 interface
 stderr:
@@ -27,14 +25,10 @@ stderr:
 
 class C {}
 interface I {}
-interface R {}
 
 function logKind(n4type : N4Class) {
 	if (n4type.isClass) {
 		console.log("class")
-	}
-	if (n4type.isRole) {
-		console.log("interface")
 	}
 	if (n4type.isInterface) {
 		console.log("interface")
@@ -43,7 +37,5 @@ function logKind(n4type : N4Class) {
 
 console.log(C.n4type.fqn)
 logKind(C.n4type)
-console.log(R.n4type.fqn)
-logKind(R.n4type)
 console.log(I.n4type.fqn)
 logKind(I.n4type)
