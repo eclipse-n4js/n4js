@@ -24,7 +24,6 @@ import org.eclipse.xtext.validation.Issue;
 import com.google.common.base.Joiner;
 
 import org.eclipse.n4js.generator.GeneratorException;
-import org.eclipse.n4js.generator.headless.N4HeadlessCompiler.MarkedProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 
 /**
