@@ -10,7 +10,7 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest
 
    ResourceSet {
 		ThisFile {}

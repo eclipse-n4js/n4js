@@ -10,7 +10,7 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest END_SETUP */
 
 /** This test assures that explicit type version requests are only allowed
    in contexts that are explicitly specified to be version aware (e.g. @Migration, @VersionAware).

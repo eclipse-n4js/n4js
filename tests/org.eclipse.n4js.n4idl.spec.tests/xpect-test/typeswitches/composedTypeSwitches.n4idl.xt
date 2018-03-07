@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest END_SETUP */
+
+class A#1 {}
+class A#2 {}
+interface I#1 {}
+interface I#2 {}
+
+@VersionAware
+function f() {
+	// Union type using '|' XPECT typeSwitch of a1 --> "(v instanceof A#2) || (v instanceof A#1)" 
+	let a1 : A#2|A#1
+	// Union type using 'union'XPECT typeSwitch of a2 --> "(v instanceof A#2) || (v instanceof A#1)" 
+	let a2 : union{A#2, A#1}
+	
+	// Intersection type using '&' XPECT typeSwitch of a3 --> "(v instanceof I#2) && (v instanceof I#1)" 
+	let a3 : I#2&I#1
+	// Intersection type using 'intersection' XPECT typeSwitch of a4 --> "(v instanceof I#2) && (v instanceof I#1)" 
+	let a4 : intersection{I#2, I#1}
+	
+	// Intersection with class and interface XPECT typeSwitch of a5 --> "(v instanceof A#2) && (v instanceof I#1)" 
+	let a5 : A#2&I#1
+	
+	// Intersection with class and virtual versioned interface typeSwitch of a6 --> "(v instanceof A#2) && (v instanceof I#1)" 
+	let a6 : A#2&I#9
+}
+
