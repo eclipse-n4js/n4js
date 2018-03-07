@@ -57,7 +57,7 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"-rw", "nodejs",
 				"-r", fileToRun,

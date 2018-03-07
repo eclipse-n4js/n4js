@@ -10,14 +10,12 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
@@ -47,49 +45,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		return singletonMap("express", "@4.13.4");
-	}
-
-	// ===== normal failures
-
-	/**
-	 * Test failure when compiling without target platform file.
-	 */
-	@Test
-	public void testCompileFailsIfNoTargetPlatformFile() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_CONFIGURATION_ERROR);
-	}
-
-	/**
-	 * Test failure when compiling without target platform file.
-	 */
-	@Test
-	public void testCompileFailsIfNoInstallLocation() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_CONFIGURATION_ERROR);
-	}
-
-	// test install location management
-
 	/**
 	 * Test creating install location.
 	 *
@@ -104,7 +59,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		FileDeleter.delete(getTargetPlatformInstallLocation());
 
 		final String[] args = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
@@ -131,7 +86,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		assertTrue("setup error, test file should exist yet at " + testFile.getAbsolutePath(), testFile.exists());
 
 		final String[] args = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
@@ -143,13 +98,11 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				testFile.exists());
 	}
 
-	// ===== skip installation
-
 	/**
 	 * Test skip install when compiling without target platform file.
 	 */
 	@Test
-	public void testCompileFailsIfNoTargetPlatformFileWithSkipped() {
+	public void testCompileFailsIfNoDependenciesNotInstalled() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 
 		final String[] args = {
@@ -163,60 +116,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
 	}
 
-	/**
-	 * Test skip install when compiling without target platform file.
-	 */
-	@Test
-	public void testCompileFailsIfNoInstallLocationWithSkipped() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString(),
-				"--targetPlatformSkipInstall"
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
-	}
-
-	/**
-	 * Test skip install forced
-	 */
-	@Test
-	public void testCompileForceSkippInstall() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
-	}
-
-	/**
-	 * Test skip install combined with forced
-	 */
-	@Test
-	public void testCompileSkippInstallAndForceSkipInstall() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString(),
-				"--targetPlatformSkipInstall"
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
-	}
-
-	// combined compiler invocations
 	/**
 	 * Test compiling with external libraries installation, then invoke compilation without installing. We expect second
 	 * invocation to re-use installed external libraries in first invocation.
@@ -229,7 +128,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 
 		final String[] argsInstall = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
@@ -241,9 +140,8 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		assertTrue("install location was not created", getTargetPlatformInstallLocation().exists());
 
 		final String[] argsSkipInstall = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				// "--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--targetPlatformSkipInstall",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-bt", BuildType.allprojects.toString()

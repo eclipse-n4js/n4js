@@ -10,12 +10,10 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static java.util.Collections.singletonMap;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -42,11 +40,6 @@ public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		return singletonMap("express", "@4.13.4");
-	}
-
 	/**
 	 * Test for checking the npm support in the headless case by downloading third party package, importing it and
 	 * running it with Common JS.
@@ -58,7 +51,7 @@ public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"-rw", "nodejs",
 				"-r", fileToRun,

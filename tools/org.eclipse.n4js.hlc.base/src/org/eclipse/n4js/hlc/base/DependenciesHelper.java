@@ -155,7 +155,8 @@ class DependenciesHelper {
 			FileUtils.isExistingWriteableDir(tpLoc);
 			retList.add(tpLoc);
 		}
-		if (!dirpaths.isEmpty()) {
+		// TODO GH-651 unlike N4jscBase version, we do null check
+		if (dirpaths != null && !dirpaths.isEmpty()) {
 			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
 				final File ret = new File(dirpath);
 				FileUtils.isExistingWriteableDir(ret);
