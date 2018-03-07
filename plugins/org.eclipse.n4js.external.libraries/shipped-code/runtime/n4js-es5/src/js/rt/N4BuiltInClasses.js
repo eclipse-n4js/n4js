@@ -95,7 +95,7 @@
     };
 
     var N4Element = function N4Element(spec) {
-        Object.prototype.constructor.call(this, spec);
+        N4Object.prototype.constructor.call(this, spec);
         this.origin = spec.origin;
         this.annotations = spec.annotations || [];
         setTargetOfAnnotations(this);
@@ -170,7 +170,7 @@
     };
 
     var N4Annotation = function N4Annotation(spec) {
-        Object.prototype.constructor.call(this, spec);
+        N4Object.prototype.constructor.call(this, spec);
         this.name = spec.name;
         this.details = spec.details;
         this.target = spec.target;
@@ -188,7 +188,7 @@
 
     $makeN4BuiltInClass(N4Object, Object, {}, {});
 
-    $makeN4BuiltInClass(N4Element, Object, {
+    $makeN4BuiltInClass(N4Element, N4Object, {
         hasAnnotation: {
             value: function
             hasAnnotation(name) {
@@ -412,7 +412,7 @@
         }
     });
 
-    $makeN4BuiltInClass(N4Annotation, Object, {}, {});
+    $makeN4BuiltInClass(N4Annotation, N4Object, {}, {});
 
     $makeN4BuiltInClass(N4ApiNotImplementedError, Error, {}, {});
 
@@ -435,7 +435,7 @@
             name: 'N4Element',
             origin: 'n4js-es5',
             fqn: 'N4BuiltInClasses.N4Element',
-            n4superType: Object,
+            n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
             annotations: [],
             ownedMembers: [new N4DataField({
@@ -727,7 +727,7 @@
             name: 'N4Annotation',
             origin: 'n4js-es5',
             fqn: 'N4BuiltInClasses.N4Annotation',
-            n4superType: undefined,
+            n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
             annotations: [],
             ownedMembers: [new N4DataField({

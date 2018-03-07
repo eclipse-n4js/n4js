@@ -24,7 +24,7 @@
 /**
  * Base class for all N4 reflective elements.
  */
-public abstract class N4Element extends Object {
+public abstract class N4Element extends N4Object {
 
 	/**
 	 * Disallow instantiation of this class and its subclasses by user code.
@@ -335,7 +335,7 @@ public object N4Enum {
 /**
  * Annotation with value.
  */
-public final class N4Annotation extends Object {
+public final class N4Annotation extends N4Object {
 
 	/**
 	 * Disallow instantiation of this class by user code.
@@ -363,7 +363,7 @@ public class N4Object extends Object {
 	 * Returns the meta class object of this class for reflection.
 	 * The very same meta class object can be retrieved from an instance by calling
 	 * <code>instance.constructor.n4type</code> or, preferred, via
-	 * <code>N4Class.of(instance)</code>
+	 * <code>N4Type.of(instance)</code>
 	 */
 	public static get n4type(): N4Class
 }
