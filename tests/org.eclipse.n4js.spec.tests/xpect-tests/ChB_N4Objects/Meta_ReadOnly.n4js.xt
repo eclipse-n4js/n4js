@@ -39,8 +39,6 @@ a.isInterface = false;
 a.isEnum = false;
 // XPECT errors --> "The accessor n4superType is read-only." at "n4superType"
 a.n4superType = null;
-// XPECT errors --> "The accessor allConsumedRoles is read-only." at "allConsumedRoles"
-a.allConsumedRoles = [];
 // XPECT errors --> "The accessor allImplementedInterfaces is read-only." at "allImplementedInterfaces"
 a.allImplementedInterfaces = [];
 

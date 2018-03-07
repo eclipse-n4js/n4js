@@ -690,7 +690,6 @@
             origin: 'n4js-es5',
             fqn: 'N4BuiltInClasses.N4StringBasedEnumType',
             n4superType: N4Type.n4type,
-            allConsumedRoles: [],
             allImplementedInterfaces: [],
             annotations: [],
             ownedMembers: [new N4Accessor({
@@ -706,7 +705,6 @@
             origin: 'n4js-es5',
             fqn: 'N4BuiltInClasses.N4StringBasedEnum',
             n4superType: undefined,
-            allConsumedRoles: [],
             allImplementedInterfaces: [],
             annotations: [],
             ownedMembers: [new N4Method({

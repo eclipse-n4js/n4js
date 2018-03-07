@@ -88,11 +88,6 @@ public abstract class N4Type extends N4NamedElement {
 	public get isClass(): boolean
 
 	/**
-	 * Returns true if this N4Class describes an N4-role declaration.
-	 */
-	public get isRole(): boolean
-
-	/**
 	 * Returns true if this N4Class describes an N4-interface declaration.
 	 */
 	public get isInterface(): boolean
@@ -104,7 +99,7 @@ public abstract class N4Type extends N4NamedElement {
 }
 
 /**
- * Base class for meta types of classes, interfaces, or roles.
+ * Base class for meta types of classes and interfaces.
  */
 public abstract class N4Classifier extends N4Type {
 
@@ -112,12 +107,6 @@ public abstract class N4Classifier extends N4Type {
 	 * The N4Class of the super type, may be null if super type is a not an N4Class.
 	 */
 	public get n4superType(): N4Class
-
-	/**
-	 * Array of the FQN of all (transitively) consumed roles, i.e. roles directly consumed by this class, its super
-	 * class or roles consumed by directly consumed roles.
-	 */
-	public get allConsumedRoles(): Array<string>
 
 	/**
 	 * Array of the FQN of all (transitively) implemented interfaces, i.e. interfaces directly implemented by this class, its super
