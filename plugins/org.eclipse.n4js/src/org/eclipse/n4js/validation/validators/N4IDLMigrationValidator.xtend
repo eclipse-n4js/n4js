@@ -24,8 +24,11 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4idl.MigrationSwitchComputer
+import org.eclipse.n4js.n4idl.MigrationSwitchComputer.UnhandledTypeRefException
+import org.eclipse.n4js.n4idl.SwitchCondition
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TMigratable
@@ -89,7 +92,8 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		val migration = functionDeclaration.definedFunction as TMigration;
 		
 		if (holdsExplicitlyDeclaresReturnType(functionDeclaration, migration) 
-			&& holdsMigrationHasSourceAndTargetTypes(migration)) {
+			&& holdsMigrationHasSourceAndTargetTypes(migration)
+			&& holdsNoComposedSourceAndTargetTypes(migration)) {
 			
 			// only validate source and target version for non-generic migrations 
 			if (migration.typeVars.empty) {
@@ -118,6 +122,26 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(IssueCodes.messageForIDL_MIGRATION_MUST_DECLARE_IN_AND_OUTPUT, migration.astElement,
 				N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, IssueCodes.IDL_MIGRATION_MUST_DECLARE_IN_AND_OUTPUT);
 			return false;
+		}
+		return true;
+	}
+	
+	/** Checks that the source and target types of the given migration do not contain any {@link ComposedTypeRef}. */
+	private def boolean holdsNoComposedSourceAndTargetTypes(TMigration migration) {
+		val sourceTypesHoldNoComposedTypes = migration.sourceTypeRefs.exists[ref | holdsIsNotComposedTypeRef(migration, ref)]
+		val targetTypesHoldNoComposedTypes = migration.targetTypeRefs.exists[ref | holdsIsNotComposedTypeRef(migration, ref)]
+		
+		return sourceTypesHoldNoComposedTypes && targetTypesHoldNoComposedTypes;
+	}
+	
+	/** Checks that the given {@link TypeRef} is not an {@link ComposedTypeRef}. */
+	private def boolean holdsIsNotComposedTypeRef(TMigration migration, TypeRef typeRef) {
+		if (typeRef instanceof ComposedTypeRef) {
+			val parameterIndex = migration.fpars.indexOf(typeRef);
+			
+			addIssue(IssueCodes.messageForIDL_MIGRATION_SIGNATURE_NO_COMPOSED_TYPES, migration.astElement,
+				N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, parameterIndex, IssueCodes.IDL_MIGRATION_SIGNATURE_NO_COMPOSED_TYPES);
+			return false
 		}
 		return true;
 	}
@@ -211,8 +235,12 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		val migrationGroups = migratable.migrations
 			// first, group the migrations by target version and source type count 
 			.groupBy[targetVersion -> sourceTypeRefs.size]
-			// filter groups with invalid targetVersion and groups of one
-			.filter[groupKey, migrations| groupKey.key /* targetVersion */ > 0 && migrations.size > 1];
+			// filter out groups with invalid targetVersion, sourceTypeRef count and groups of one
+			.filter[groupKey, migrations| 
+				groupKey.key /* targetVersion */ > 0 
+				&& groupKey.value /* sourceTypeRefs.size */ > 0 
+				&& migrations.size > 1
+			];
 	
 		// check remaining groups for being distinguishable by a type switch (adds issue otherwise)		
 		migrationGroups.forEach[groupKey, migrations | holdsTypeSwitchDistinguishable(migrations)]	
@@ -287,17 +315,14 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	/**
-	 * Returns {@code true} iff the given list of migrations is distinguishable by a type switch.
+	 * Returns {@code true} iff the given list of migrations is distinguishable by type switches.
 	 * 
-	 * This method assumes that all of the given migrations, already have the same number of source types.
+	 * This method assumes that all of the given migrations already have the same number of source types.
 	 */
 	private def boolean holdsTypeSwitchDistinguishable(Iterable<TMigration> migrations) {
-		// Generalize the migration source type refs using {@link MigrationSwitchComputer#toSwitchRecognizableTypeRef}.
+		// generalize the migration source type refs using {@link MigrationSwitchComputer#toSwitchRecognizableTypeRef}.
 		val List<Pair<TMigration, List<TypeRef>>> migrationAndSwitchTypes = migrations
-			.map[migration | 
-				migration ->
-				migration.sourceTypeRefs.map[s | switchComputer.toSwitchRecognizableTypeRef(s.ruleEnvironment, s)]
-		].toList;
+			.map[migration | migration -> migration.sourceTypeRefs.switchRecognizableTypeRefs ].toList;
 		
 		val conflictGroups = new HashMap<TMigration, Set<TMigration>>();
 		
@@ -307,6 +332,9 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			
 			val tMigration2 = m2.key;
 			val switchTypes2 = m2.value;
+			
+			// skip migrations with invalid switch types
+			if (switchTypes1.size == 0 || switchTypes2.size == 0) { return; }
 			
 			val ruleEnv = tMigration1.sourceTypeRefs.head.ruleEnvironment;
 			
@@ -322,6 +350,27 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		
 		// constraint is fulfilled if there are no conflicts
 		return conflictGroups.empty;
+	}
+	
+	/**
+	 * Returns a list of switch-recognizable {@link TypeRef}s based on the given iterable of {@link TypeRef}s.
+	 * 
+	 * Returns an empty list if any of the given {@link TypeRef} cannot be handled by a {@link SwitchCondition} 
+	 * (cf. {@link MigrationSwitchComputer#UnhandledTypeRefException}).
+	 */
+	private def List<TypeRef> getSwitchRecognizableTypeRefs(List<TypeRef> typeRefs) {
+		val refs = typeRefs.map[s | 
+			try {
+				switchComputer.toSwitchRecognizableTypeRef(s.ruleEnvironment, s)
+			} catch (UnhandledTypeRefException e) {
+				null
+			}
+		].filterNull.toList;
+		
+		if (refs.size != typeRefs.size) {
+			return #[];
+		}
+		return refs;
 	}
 	
 	/**

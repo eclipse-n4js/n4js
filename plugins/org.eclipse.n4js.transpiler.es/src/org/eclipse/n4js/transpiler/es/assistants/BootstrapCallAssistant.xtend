@@ -251,7 +251,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 			};
 		}
 		
-		// special '$migrations' static field for versioned classifiers
+		// special static field wrt migrations for versioned classifiers in N4IDL
 		val staticMigrationsField = if (_static
 			&& classDecl instanceof VersionedElement 
 			&& (classDecl as VersionedElement).hasDeclaredVersion) {

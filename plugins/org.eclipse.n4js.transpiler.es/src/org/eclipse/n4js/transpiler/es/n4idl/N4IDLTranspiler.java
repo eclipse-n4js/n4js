@@ -8,6 +8,7 @@ import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.es.EcmaScriptTranspiler;
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
+import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
 
 import com.google.inject.Inject;
@@ -32,6 +33,9 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 	@Inject
 	private Provider<N4IDLClassDeclarationTransformation> classDeclarationTransformation;
 
+	@Inject
+	private Provider<N4IDLInterfaceDeclarationTransformation> interfaceDeclarationTransformation;
+
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		List<Transformation> transformations = new ArrayList<>(
@@ -52,6 +56,10 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 
 			if (t instanceof ClassDeclarationTransformation) {
 				return classDeclarationTransformation.get();
+			}
+
+			if (t instanceof InterfaceDeclarationTransformation) {
+				return interfaceDeclarationTransformation.get();
 			}
 
 			// otherwise, keep the existing transformation

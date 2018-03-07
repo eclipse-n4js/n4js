@@ -19,12 +19,27 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.n4idl.MigrationSwitchComputer.UnhandledTypeRefException
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 
 /**
  * The MigrationSwitchComputer can be used to compute a {@link SwitchCondition} which 
  * recognizes values of a given compile-time {@link TypeRef} at runtime (within limits).
  */
 class MigrationSwitchComputer {
+	
+	/**
+	 * This exception is thrown when a {@link TypeRef} is passed to a {@link MigrationSwitchComputer}
+	 * but the type of {@link TypeRef} is not handled by the current implementation of the computer.
+	 * 
+	 * For instance, this may happen for {@link ComposedTypeRef}s.
+	 */
+	public static final class UnhandledTypeRefException extends Exception {
+		new(TypeRef typeRef) {
+			super(String.format("The (sub-)expression %s cannot be handled by the TypeSwitch computer", typeRef.typeRefAsString));
+		}
+		
+	}
 	
 	/** 
 	 * Computes a {@link SwitchCondition which detects the given {@link TypeRef} 
@@ -43,7 +58,7 @@ class MigrationSwitchComputer {
 	 * 
 	 * All other possible {@link TypeRef}s will lead to an {@link IllegalArgumentException}.
 	 */
-	public def SwitchCondition compute(TypeRef ref) {
+	public def SwitchCondition compute(TypeRef ref) throws UnhandledTypeRefException {
 		switch(ref) {
 			ParameterizedTypeRef case isParameterizedArrayTypeRef(ref): {
 				return SwitchCondition.arrayOf(compute(ref.typeArgs.get(0) as TypeRef));
@@ -54,7 +69,7 @@ class MigrationSwitchComputer {
 				return SwitchCondition.trueCondition;
 			}
 			default: {
-				throw new IllegalArgumentException("Cannot handle (sub-)type ref '" + ref.typeRefAsString + "'");
+				throw new UnhandledTypeRefException(ref);
 			}
 		}
 	}
@@ -67,7 +82,7 @@ class MigrationSwitchComputer {
 	 * only limited type information is available (e.g. usually no type arguments). However, it always 
 	 * holds true that the returned type reference is a subtype of the given type reference typeRef. 
 	 */
-	public def TypeRef toSwitchRecognizableTypeRef(RuleEnvironment ruleEnv, TypeRef typeRef) {
+	public def TypeRef toSwitchRecognizableTypeRef(RuleEnvironment ruleEnv, TypeRef typeRef) throws UnhandledTypeRefException {
 		val condition = this.compute(typeRef);
 		return toTypeRef(ruleEnv, condition);
 	}

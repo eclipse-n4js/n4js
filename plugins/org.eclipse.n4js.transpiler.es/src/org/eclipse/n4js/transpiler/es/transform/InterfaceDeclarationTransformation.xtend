@@ -58,7 +58,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 
 		val varDecl = createVarDecl(ifcDecl);
 		val fieldInitFun = createInstanceFieldInitializationFunction(ifcDecl, ifcSTE);
-		val staticFieldInits = createStaticFieldInitializations(ifcDecl, ifcSTE);
+		val staticFieldInits = createStaticInitialisers(ifcSTE, ifcDecl);
 		val memberDefs = bootstrapCallAssistant.createInterfaceMemberDefinitionSection(ifcDecl);
 		val makeIfcCall = bootstrapCallAssistant.createMakeInterfaceCall(ifcDecl);
 
@@ -172,7 +172,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		return result;
 	}
 
-	def private ExpressionStatement[] createStaticFieldInitializations(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
+	def protected Iterable<Statement> createStaticInitialisers(SymbolTableEntry ifcSTE, N4InterfaceDeclaration ifcDecl) {
 		// for an interface 'I' with a static field 'field' we here create something like:
 		// I.field = "initial value";
 		return ifcDecl.ownedMembers.filter(N4FieldDeclaration).filter[static].filter[expression!==null].map[fieldDecl|

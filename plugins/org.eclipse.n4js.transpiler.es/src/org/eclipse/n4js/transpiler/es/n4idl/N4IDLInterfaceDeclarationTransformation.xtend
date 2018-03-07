@@ -11,22 +11,22 @@
 package org.eclipse.n4js.transpiler.es.n4idl
 
 import com.google.inject.Inject
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.transpiler.es.n4idl.assistants.MigrationTransformationAssistant
-import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation
+import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 
 /**
- * N4IDL-specific {@link ClassDeclarationTransformation} which additionally
- * initializes a class declaration with migration-support related static fields. 
+ * N4IDL-specific {@link InterfaceDeclarationTransformation} which additionally
+ * initializes an interface declaration with migration-support related static fields. 
  */
-class N4IDLClassDeclarationTransformation extends ClassDeclarationTransformation {
+class N4IDLInterfaceDeclarationTransformation extends InterfaceDeclarationTransformation {
 	
 	@Inject private extension MigrationTransformationAssistant
 	
-	override protected createStaticInitialisers(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
-		val statements = super.createStaticInitialisers(steClass, classDecl);
+	override protected createStaticInitialisers(SymbolTableEntry steClass, N4InterfaceDeclaration interfaceDecl) {
+		val statements = super.createStaticInitialisers(steClass, interfaceDecl);
 		
-		return statements + createMigrationSupportInitializer(steClass, classDecl);
+		return statements + createMigrationSupportInitializer(steClass, interfaceDecl);
 	}	
 }
