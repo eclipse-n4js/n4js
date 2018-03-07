@@ -438,8 +438,9 @@
             n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
             annotations: [],
-            ownedMembers: [new N4DataField({
-                name: 'annotations'
+            ownedMembers: [new N4Accessor({
+                name: 'annotations',
+                getter: true
             }), new N4Method({
                 name: 'hasAnnotation',
                 jsFunction: N4Element['hasAnnotation']
@@ -449,6 +450,9 @@
             }), new N4Method({
                 name: 'allAnnotations',
                 jsFunction: N4Element['allAnnotations']
+            }), new N4Accessor({
+                name: 'origin',
+                getter: true
             })],
             consumedMemebers: []
         }));
@@ -461,8 +465,9 @@
             n4superType: N4Element.n4type,
             allImplementedInterfaces: [],
             annotations: [],
-            ownedMembers: [new N4DataField({
-                name: 'name'
+            ownedMembers: [new N4Accessor({
+                name: 'name',
+                getter: true
             })],
             consumedMemebers: []
         }));
@@ -475,8 +480,9 @@
             n4superType: N4NamedElement.n4type,
             allImplementedInterfaces: [],
             annotations: [],
-            ownedMembers: [new N4DataField({
-                name: 'fqn'
+            ownedMembers: [new N4Accessor({
+                name: 'fqn',
+                getter: true
             }), new N4Method({
                 name: 'of',
                 jsFunction: N4Type['of'],
@@ -502,10 +508,12 @@
             n4superType: N4Type.n4type,
             allImplementedInterfaces: [],
             annotations: [],
-            ownedMembers: [new N4DataField({
-                name: 'n4superType'
-            }), new N4DataField({
-                name: 'allImplementedInterfaces'
+            ownedMembers: [new N4Accessor({
+                name: 'n4superType',
+                getter: true
+            }), new N4Accessor({
+                name: 'allImplementedInterfaces',
+                getter: true
             }), new N4DataField({
                 name: 'ownedMembers'
             }), new N4DataField({
@@ -572,10 +580,12 @@
             n4superType: N4NamedElement.n4type,
             allImplementedInterfaces: [],
             annotations: [],
-            ownedMembers: [new N4DataField({
-                name: 'owner'
-            }), new N4DataField({
-                name: 'isStatic'
+            ownedMembers: [new N4Accessor({
+                name: 'owner',
+                getter: true
+            }), new N4Accessor({
+                name: 'isStatic',
+                getter: true
             })],
             consumedMemebers: []
         }));
@@ -588,8 +598,9 @@
             n4superType: N4Member.n4type,
             allImplementedInterfaces: [],
             annotations: [],
-            ownedMembers: [new N4DataField({
-                name: 'jsFunction'
+            ownedMembers: [new N4Accessor({
+                name: 'jsFunction',
+                getter: true
             })],
             consumedMemebers: []
         }));
@@ -730,12 +741,15 @@
             n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
             annotations: [],
-            ownedMembers: [new N4DataField({
-                name: 'name'
-            }), new N4DataField({
-                name: 'details'
-            }), new N4DataField({
-                name: 'target'
+            ownedMembers: [new N4Accessor({
+                name: 'name',
+                getter: true
+            }), new N4Accessor({
+                name: 'details',
+                getter: true
+            }), new N4Accessor({
+                name: 'target',
+                getter: true
             })],
             consumedMemebers: []
         }));
