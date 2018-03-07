@@ -106,7 +106,11 @@ class JSDoc2HoverSerializerTest {
 			''',
 			'''
 			<ul>
+<<<<<<< HEAD
+			<li>item <code> inline</code>.</ul>
+=======
 			<li> item <code> inline</code>.</ul>
+>>>>>>> master
 			'''
 		);
 	}
@@ -119,7 +123,7 @@ class JSDoc2HoverSerializerTest {
 			 * First par.
 			 * - some
 			 * - details 
-			 * Second par.
+			 * Lazy par.
 			 * @param p string
 			 * @author Nobody
 			 * @specFromDecscription
@@ -130,10 +134,10 @@ class JSDoc2HoverSerializerTest {
 			'''
 			First par.
 			<ul>
-			<li> some
-			<li> details 
-			</ul>
-			Second par.
+			<li>some
+			<li>details 
+			Lazy par.</ul>
+			
 			<dl>
 			<dt>Param:</dt>
 			<dd>
