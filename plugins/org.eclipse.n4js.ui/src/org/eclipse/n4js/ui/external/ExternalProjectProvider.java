@@ -124,7 +124,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return projectNameMapping;
 	}
 
-	void updateCache(ExternalLibraryPreferenceStore store) {
+	private void updateCache(ExternalLibraryPreferenceStore store) {
 		rootLocations.clear();
 		rootLocations.addAll(store.getLocations());
 

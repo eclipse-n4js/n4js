@@ -1,8 +1,5 @@
 package org.eclipse.n4js.ui.handler;
 
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
-import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -17,7 +14,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -32,6 +28,7 @@ import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
+import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.wizard.dependencies.ProjectsSettingsFillesLocator;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -54,8 +51,6 @@ public class LibrariesFixHandler extends AbstractHandler {
 			.getOrCreateDataCollector("install npms", DC_SETUP);
 	static private final DataCollector DC_BUILD_NPMS = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("build npms", DC_SETUP);
-
-	private boolean wasAutoBuilding;
 
 	private final Object lock = new Object();
 
@@ -109,9 +104,9 @@ public class LibrariesFixHandler extends AbstractHandler {
 		final SubMonitor monitor = SubMonitor.convert(pmonitor, 100);
 		final MultiStatus multistatus = statusHelper
 				.createMultiStatus("Status of setting up dependnecies.");
-		wasAutoBuilding = getAutobuildSetting();
-		if (wasAutoBuilding)
-			turnOffAutobuild();
+
+		final boolean wasAutoBuilding = AutobuildUtils.get();
+		AutobuildUtils.turnOff();
 
 		final SubMonitor subMonitor0 = monitor.split(5);
 		refreshWorkspace(subMonitor0);
@@ -190,8 +185,9 @@ public class LibrariesFixHandler extends AbstractHandler {
 		measurement3.end();
 
 		// turn on autobuild
-		if (wasAutoBuilding)
-			turnOnAutobuild();
+		if (wasAutoBuilding) {
+			AutobuildUtils.turnOn();
+		}
 
 		measurement.end();
 		return multistatus;
@@ -250,36 +246,6 @@ public class LibrariesFixHandler extends AbstractHandler {
 			} catch (CoreException e) {
 				LOGGER.error("Error when refreshing workspace", e);
 			}
-		}
-	}
-
-	private boolean getAutobuildSetting() {
-		return getWorkspace().getDescription().isAutoBuilding();
-	}
-
-	private void turnOffAutobuild() {
-		toggleAutobuild(false);
-	}
-
-	private void turnOnAutobuild() {
-		toggleAutobuild(true);
-	}
-
-	private void toggleAutobuild(final boolean enable) {
-		if (isWorkbenchRunning()) {
-			final IWorkspaceDescription workspaceDescription = getWorkspace().getDescription();
-			if (null != workspaceDescription) {
-				if (workspaceDescription.isAutoBuilding() != enable) {
-					workspaceDescription.setAutoBuilding(enable);
-					try {
-						getWorkspace().setDescription(workspaceDescription);
-					} catch (final CoreException e) {
-						throw new IllegalStateException("Error while trying to turn workspace autobuild "
-								+ (enable ? "on" : "off") + ".", e);
-					}
-				}
-			}
-
 		}
 	}
 

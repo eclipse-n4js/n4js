@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.organize.imports;
 
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
@@ -21,8 +19,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -32,6 +28,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.n4js.organize.imports.FileContainerFilter;
 import org.eclipse.n4js.organize.imports.FileExtensionFilter;
+import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -80,12 +77,12 @@ public class N4JSOrganizeImportsHandler extends AbstractHandler {
 				return null;
 			}
 
-			final boolean wasAutobuilding = getWorkspaceAutobuild();
+			final boolean wasAutobuilding = AutobuildUtils.get();
 
 			try {
 				// avoid auto-build when modifying batch of documents
 				// restore state later
-				setAutobuild(false);
+				AutobuildUtils.turnOff();
 
 				// Query unsaved
 				IWorkbench wbench = PlatformUI.getWorkbench();
@@ -103,7 +100,7 @@ public class N4JSOrganizeImportsHandler extends AbstractHandler {
 			} catch (InterruptedException e) {
 				// user cancelled, ok
 			} finally {
-				setAutobuild(wasAutobuilding);
+				AutobuildUtils.set(wasAutobuilding);
 			}
 		}
 		return null;
@@ -161,20 +158,4 @@ public class N4JSOrganizeImportsHandler extends AbstractHandler {
 		return op;
 	}
 
-	/** Sets workspace auto-build according to the provided flag. Thrown exceptions are handled by logging. */
-	private static void setAutobuild(boolean on) {
-		try {
-			final IWorkspace workspace = getWorkspace();
-			final IWorkspaceDescription description = workspace.getDescription();
-			description.setAutoBuilding(on);
-			workspace.setDescription(description);
-		} catch (CoreException e) {
-			LOGGER.debug("Organize imports cannot set auto build to " + on + ".");
-		}
-	}
-
-	/** returns current setting of workspace auto-build */
-	private static boolean getWorkspaceAutobuild() {
-		return getWorkspace().getDescription().isAutoBuilding();
-	}
 }

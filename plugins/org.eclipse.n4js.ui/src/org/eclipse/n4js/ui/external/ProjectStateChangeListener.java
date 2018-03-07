@@ -56,6 +56,8 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 		}
 
 		try {
+			toClean.clear();
+			toBuild.clear();
 			event.getDelta().accept(this::visit); // fill toClean and toBuild
 
 			if (!toClean.isEmpty() || !toBuild.isEmpty()) {
@@ -72,9 +74,6 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 	}
 
 	boolean visit(IResourceDelta delta) {
-		toClean.clear();
-		toBuild.clear();
-
 		IResource resource = delta.getResource();
 		if (resource instanceof IProject) {
 

@@ -12,6 +12,10 @@ package org.eclipse.n4js.ui.external;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -44,25 +48,24 @@ public class ExternalLibraryBuildJobProvider {
 	 *            the projects that has to be cleaned.
 	 * @return a job for building and cleaning the projects.
 	 */
-	public Job createBuildJob(final Iterable<N4JSExternalProject> toBuild,
-			final Iterable<N4JSExternalProject> toClean) {
+	public Job createBuildJob(final Collection<N4JSExternalProject> toBuild,
+			final Collection<N4JSExternalProject> toClean) {
 
 		return new ExternalLibraryBuildJob(builderHelper, toBuild, toClean);
 	}
 
 	private static class ExternalLibraryBuildJob extends WorkspaceJob {
-
 		private final Iterable<N4JSExternalProject> toBuild;
 		private final Iterable<N4JSExternalProject> toClean;
 		private final ExternalLibraryBuilder builderHelper;
 
 		private ExternalLibraryBuildJob(final ExternalLibraryBuilder builderHelper,
-				final Iterable<N4JSExternalProject> toBuild, final Iterable<N4JSExternalProject> toClean) {
+				final Collection<N4JSExternalProject> toBuild, final Collection<N4JSExternalProject> toClean) {
 
 			super("External library build");
 			this.builderHelper = checkNotNull(builderHelper, "builderHelper");
-			this.toBuild = checkNotNull(toBuild, "toBuild");
-			this.toClean = checkNotNull(toClean, "toClean");
+			this.toBuild = checkNotNull(Collections.unmodifiableCollection(new LinkedList<>(toBuild)), "toBuild");
+			this.toClean = checkNotNull(Collections.unmodifiableCollection(new LinkedList<>(toClean)), "toClean");
 			setSystem(true);
 			setRule(builderHelper.getRule());
 		}
