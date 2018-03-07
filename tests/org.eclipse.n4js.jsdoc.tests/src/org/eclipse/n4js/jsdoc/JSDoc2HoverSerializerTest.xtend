@@ -106,11 +106,7 @@ class JSDoc2HoverSerializerTest {
 			''',
 			'''
 			<ul>
-<<<<<<< HEAD
 			<li>item <code> inline</code>.</ul>
-=======
-			<li> item <code> inline</code>.</ul>
->>>>>>> master
 			'''
 		);
 	}
