@@ -10,14 +10,11 @@
  */
 package org.eclipse.n4js.n4idl
 
-import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
-import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
@@ -25,23 +22,19 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 
 /**
  * The MigrationSwitchComputer can be used to compute a {@link SwitchCondition} which 
- * recognizes values of a given compile-time {@link TypeRef} at runtime (with limits).
+ * recognizes values of a given compile-time {@link TypeRef} at runtime (within limits).
  */
 class MigrationSwitchComputer {
 	
 	/** 
 	 * Computes a {@link SwitchCondition which detects the given {@link TypeRef} 
-	 * at runtime (with limits).
+	 * at runtime (within limits).
 	 * 
 	 *  Currently the generated switch conditions support the following {@link TypeRef} features:
-	 * - union and intersection types (such as (A#1|A#2))
 	 * - parameterized array types (such as [A#1] or Array<A#1>)
 	 * - plain non-parameterized types (such as A#1)
 	 * 
-	 * Also the nesting of all above-mentioned type refs is supported.
-	 * 
-	 * Support for union array element types (such as [A#1|A#2) is limited. The computed type switch condition
-	 * will only check for arrays of element type A#1 or A#2 respectively ("v arrayof A#1 || v arrayof A#2").
+	 * There is currently no support for composed type references (such as [A#1|A#2).
 	 * 
 	 * Furthermore, the following {@link TypeRef}s are ignored and therefore always evaluate to true
 	 * in the generated switch condition:
@@ -52,17 +45,8 @@ class MigrationSwitchComputer {
 	 */
 	public def SwitchCondition compute(TypeRef ref) {
 		switch(ref) {
-			UnionTypeExpression: {
-				return SwitchCondition.or(ref.typeRefs.map[this.compute(it)]);
-			}
-			IntersectionTypeExpression: {
-				return SwitchCondition.and(ref.typeRefs.map[this.compute(it)]);
-			}
 			ParameterizedTypeRef case isParameterizedArrayTypeRef(ref): {
-				val elementTypeRef = ref.typeArgs.get(0) as TypeRef;
-				val elementDNFClauses = SwitchCondition2DNFConverter.toDNF(compute(elementTypeRef));
-				
-				return SwitchCondition.or(elementDNFClauses.map[clause | SwitchCondition.arrayOf(clause)].toList)
+				return SwitchCondition.arrayOf(compute(ref.typeArgs.get(0) as TypeRef));
 			}
 			ParameterizedTypeRef:
 				return SwitchCondition.instanceOf(ref.declaredType)
@@ -120,67 +104,6 @@ class MigrationSwitchComputer {
 		public static dispatch def TypeRef toTypeRef(RuleEnvironment env, ArrayTypeSwitchCondition condition) {
 			return RuleEnvironmentExtensions.arrayTypeRef(env, toTypeRef(env, condition.elementTypeCondition));
 		}
-	}
-	
-	/**
-	 * Returns a {@link SwitchCondition} in disjunctive normal form which is equivalent
-	 * to the given {@link SwitchCondition}.  
-	 */
-	public def List<? extends SwitchCondition> toDNF(SwitchCondition condition) {
-		return SwitchCondition2DNFConverter.toDNF(condition).toList;
-	}
-	
-	/**
-	 * Normalizes {@link SwitchCondition}s to be in the disjunctive normal form. That is, it outputs a list of
-	 * DNF-clauses (conditions which do not contain {@link OrSwitchCondition} instances).
-	 * 
-	 * Combining the resulting DNF-clauses with an {@link OrSwitchCondition} yields a {@link SwitchCondition}
-	 * which is equivalent to the input condition.
-	 */
-	private final static class SwitchCondition2DNFConverter {
-		public static def Iterable<? extends SwitchCondition> toDNF(SwitchCondition condition) {
-			return doTransform(condition);
-		}
-		
-		private static dispatch def Iterable<? extends SwitchCondition> doTransform(OrSwitchCondition or) {
-			return or.operands.map[op | return doTransform(op)].flatten.toList
-		}
-		
-		private static dispatch def Iterable<? extends SwitchCondition> doTransform(AndSwitchCondition and) {
-			val operandResults = and.operands.map[op | return doTransform(op)].reverseView;
-			
-			return combinations(operandResults).map[ operands |
-				new AndSwitchCondition(operands.get(0), operands.get(1), operands.drop(2))
-			].toList;
-		}
-		
-		private static dispatch def Iterable<? extends SwitchCondition> doTransform(ArrayTypeSwitchCondition array) {
-			return doTransform(array.elementTypeCondition).map[c | SwitchCondition.arrayOf(c)];
-		}
-		
-		private static dispatch def Iterable<? extends SwitchCondition> doTransform(SwitchCondition switchCondition) {
-			return #[switchCondition];
-		}
-	}
-	
-	private static def <T> Iterable<Iterable<? extends T>> combinations(List<Iterable<? extends T>> lists) {
-		var Iterable<Iterable<? extends T>> remainingPools = lists.tail;
-		var Iterable<Iterable<? extends T>> combinations = lists.head.map[e | #[e] ]; 
-		
-		while (!remainingPools.empty) {
-			val current = remainingPools.head;
-			remainingPools = remainingPools.tail;
-			
-			val previousCombinations = combinations;
-			
-			combinations = current.map[e |
-				previousCombinations.map[combination |
-					return #[e] + combination;
-				]
-			].flatten
-		}
-		
-		return combinations;
 	}
 	
 	/** Returns {@code true} if the given {@link TypeRef} should be ignored
