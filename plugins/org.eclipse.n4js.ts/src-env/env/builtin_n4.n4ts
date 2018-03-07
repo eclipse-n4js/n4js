@@ -121,7 +121,9 @@ public abstract class N4Classifier extends N4Type {
 	private ownedMembers: Array<N4Member>;
 
 	/**
-	 * Array of all consumed members, that is members mixed into the classifier via role consumption.
+	 * Array of all members consumed from implemented interfaces, i.e. fields and accessors/methods with a body defined
+	 * in an implemented interface iff(!) the receiving classifier does not own or inherit a corresponding member (i.e.
+	 * same name and access).
 	 * This field is private as it is an internal detail, members are accessed via methods defined in this class.
 	 */
 	private consumedMembers: Array<N4Member>;
