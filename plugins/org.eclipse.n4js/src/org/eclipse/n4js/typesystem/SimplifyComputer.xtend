@@ -52,28 +52,33 @@ class SimplifyComputer extends TypeSystemHelperStrategy {
 	}
 
 	/**
-	 * Returns a simplified copy of a given composed type, i.e. union or intersection type.
-	 * The returned type may be one of the elements, without cloning it.
-	 * So clients need to clone the result if necessary.
-	 * @see [N4JS Spec], 4.13 Intersection Type
+	 * Returns a simplified copy of a given composed type, i.e. union or intersection type. This simplification may lead
+	 * to the result no longer being a union/intersection type (for example, when given "A|A"), so any kind of type
+	 * reference may be returned by this method.
+	 * <p>
+	 * The result will be,
+	 * <ul>
+	 * <li>a copy of one of the original's successors,
+	 * <li>a newly created composed type reference, possibly containing copies of some of the original's successors, or
+	 * <li>a newly created trivial type reference, such as 'null' or 'undefined'.
+	 * </ul>
+	 * Thus, this method will never directly return the passed-in original type reference or one of its successors
+	 * (without creating a copy, first).
 	 */
 	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType) {
-		val List<TypeRef> tRs = getSimplifiedTypeRefs(G, composedType, true);
-		val eClass = composedType.eClass
-		val simplified = EcoreUtil.create(eClass) as ComposedTypeRef
-		val typeRefs = simplified.typeRefs
-		typeRefs.addAll(tRs);
-
-		switch (typeRefs.size()) {
+		val List<TypeRef> simplifiedAndCopiedTypeRefs = getSimplifiedTypeRefs(G, composedType, true);
+		switch (simplifiedAndCopiedTypeRefs.size()) {
 			case 0:
 				return G.undefinedTypeRef
 			case 1:
-				return typeRefs.head
+				return simplifiedAndCopiedTypeRefs.head
 			default: {
-				return simplified;
+				val eClass = composedType.eClass
+				val result = EcoreUtil.create(eClass) as ComposedTypeRef
+				result.typeRefs.addAll(simplifiedAndCopiedTypeRefs);
+				return result;
 			}
 		}
-
 	}
 
 	/**

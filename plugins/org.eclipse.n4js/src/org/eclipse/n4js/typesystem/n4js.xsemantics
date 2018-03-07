@@ -1491,51 +1491,22 @@ from {
 	}
 }
 
-/* @see [N4JS] 4.12. Union Type */
-rule subtypeUnion_Left
-	G|- UnionTypeExpression U <: TypeRef S
+rule subtypeComposed_Left
+	G |- ComposedTypeRef L <: TypeRef R
 from {
-	U.typeRefs.forall[T|
-		G |- T <: S
-	]
-
+	typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)
 }
 
-/* @see [N4JS] 4.12. Union Type */
-rule subtypeUnion_Right
-	G|- TypeRef S <: UnionTypeExpression U
+rule subtypeComposed_Right
+	G |- TypeRef L <: ComposedTypeRef R
 from {
-	U.typeRefs.exists[T|
-		G |- S <: T
-	]
+	typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)
 }
 
-// this rule is a copy of rule 'subtypeIntersection_Right'
-// (only purpose is to give rule 'subtypeIntersection_Right' priority over rule 'subtypeIntersection_Left')
-rule subtypeIntersection_LeftRight
-	G|- IntersectionTypeExpression S <: IntersectionTypeExpression I
+rule subtypeComposed_LeftRight
+	G |- ComposedTypeRef L <: ComposedTypeRef R
 from {
-	I.typeRefs.forall[T|
-		G |- S <: T
-	]
-}
-
-/* @see [N4JS] 4.13. Intersection Type */
-rule subtypeIntersection_Left
-	G|- IntersectionTypeExpression I <: TypeRef S
-from {
-	I.typeRefs.exists[T|
-		G |- T <: S
-	]
-}
-
-/* @see [N4JS] 4.13. Intersection Type */
-rule subtypeIntersection_Right
-	G|- TypeRef S <: IntersectionTypeExpression I
-from {
-	I.typeRefs.forall[T|
-		G |- S <: T
-	]
+	typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)
 }
 
 /*

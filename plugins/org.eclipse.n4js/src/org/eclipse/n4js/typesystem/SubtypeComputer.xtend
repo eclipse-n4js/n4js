@@ -13,9 +13,12 @@ package org.eclipse.n4js.typesystem
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
@@ -294,6 +297,171 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 		return true
 	}
 
+
+	/**
+	 * Subtype check for {@link ComposedTypeRef}s. Will throw an {@link IllegalArgumentException} if neither
+	 * {@code left} nor {@code right} is a {@code ComposedTypeRef}.
+	 */
+	def public boolean isSubtypeComposedTypeRef(RuleEnvironment G, TypeRef left, TypeRef right) { // TODO better TypeArgument instead of TypeRef?
+		// general rule:
+		// splitting an intersection on LHS and splitting a union on RHS is illegal
+
+		val leftIsUnion = left instanceof UnionTypeExpression;
+		val leftIsIntersection = left instanceof IntersectionTypeExpression;
+		val leftIsComposed = leftIsUnion || leftIsIntersection;
+		val rightIsUnion = right instanceof UnionTypeExpression;
+		val rightIsIntersection = right instanceof IntersectionTypeExpression;
+		val rightIsComposed = rightIsUnion || rightIsIntersection;
+
+		val result = if(leftIsComposed && rightIsComposed) {
+			// both sides are a ComposedTypeRef
+			if(leftIsUnion && rightIsUnion) {
+				// must not split union on RHS
+				checkUnionOther(G, left as UnionTypeExpression, right)
+			} else if(leftIsUnion && rightIsIntersection) {
+				// doesn't matter which side we split (could split union on LHS as well as intersection on RHS)
+				checkOtherIntersection(G, left, right as IntersectionTypeExpression)
+			} else if(leftIsIntersection && rightIsUnion) {
+				// TRICKY CASE: we must neither split the intersection on the LHS nor the union on the RHS
+				// -> try to apply law of distributivity to change either ...
+				//    a) the LHS from an intersection to a union, or
+				//    b) the RHS from a union to an intersection.
+				val leftMultiplied = convertToOpposingKind(G, left as IntersectionTypeExpression);
+				if(leftMultiplied instanceof UnionTypeExpression) {
+					// success: multiplication turned the intersection on LHS into a union!
+					checkUnionOther(G, leftMultiplied, right)
+				} else {
+					val rightMultiplied = convertToOpposingKind(G, right as UnionTypeExpression);
+					if(rightMultiplied instanceof IntersectionTypeExpression) {
+						// success: multiplication turned the union on RHS into an intersection!
+						checkOtherIntersection(G, left, rightMultiplied)
+					} else {
+						// multiplication does not change anything -> fall back to old behavior
+						checkIntersectionOther(G, left as IntersectionTypeExpression, right)
+						|| checkOtherUnion(G, left, right as UnionTypeExpression)
+					}
+				}
+			} else if(leftIsIntersection && rightIsIntersection) {
+				// must not split intersection on LHS
+				checkOtherIntersection(G, left, right as IntersectionTypeExpression)
+			} else {
+				throw new AssertionError("cannot happen")
+			}
+		} else if(leftIsComposed !== rightIsComposed) {
+			// one side is a ComposedTypeRef, the other isn't
+			if(leftIsUnion) {
+				checkUnionOther(G, left as UnionTypeExpression, right)
+			} else if(rightIsUnion) {
+				checkOtherUnion(G, left, right as UnionTypeExpression)
+			} else if(leftIsIntersection) {
+				checkIntersectionOther(G, left as IntersectionTypeExpression, right)
+			} else if(rightIsIntersection) {
+				checkOtherIntersection(G, left, right as IntersectionTypeExpression)
+			} else {
+				throw new AssertionError("cannot happen")
+			}
+		} else {
+			// neither side is a ComposedTypeRef
+			throw new IllegalArgumentException();
+		};
+
+		return result;
+	}
+
+	def private boolean checkUnionOther(RuleEnvironment G, UnionTypeExpression left, TypeRef right) {
+		return left.typeRefs.forall[T|
+			isSubtype(G, T, right)
+		];
+	}
+
+	def private boolean checkOtherUnion(RuleEnvironment G, TypeRef left, UnionTypeExpression right) {
+		return right.typeRefs.exists[T|
+			isSubtype(G, left, T)
+		];
+	}
+
+	def private boolean checkIntersectionOther(RuleEnvironment G, IntersectionTypeExpression left, TypeRef right) {
+		return left.typeRefs.exists[T|
+			isSubtype(G, T, right)
+		];
+	}
+
+	def private boolean checkOtherIntersection(RuleEnvironment G, TypeRef left, IntersectionTypeExpression right) {
+		return right.typeRefs.forall[T|
+			isSubtype(G, left, T)
+		];
+	}
+
+	/**
+	 * Given any composed type reference, this method will try to convert it into a new composed type reference of
+	 * opposing kind, i.e. converting a union into an intersection and vice versa.
+	 * <p>
+	 * For example, given an intersection {@code T1 & T2 & ... & Tn}, this method will first simplify* the intersection
+	 * and will then search for a {@code Ti} with {@code 0 < i <= n} of the form {@code Ti1 | Ti2 | ... | Tim}. Then it
+	 * will apply commutativity and associativity to obtain
+	 * <pre>
+	 * (Ti1 | Ti2 | ... | Tim) & (T1 & ... & Ti-1 & Ti+1 & ... & Tn)
+	 * </pre>
+	 * and further apply distributivity to obtain
+	 * <pre>
+	 * (Ti1 & (T1 & ... & Ti-1 & Ti+1 & ... & Tn)) | ... | (Tim & (T1 & ... & Ti-1 & Ti+1 & ... & Tn))
+	 * </pre>
+	 * If no {@code Ti} of the above form can be found, the given composed type reference is returned unchanged, i.e.
+	 * the conversion from intersection to union failed.
+	 * <p>
+	 * (* simplification is done via {@link SimplifyComputer#simplify(RuleEnvironment,ComposedTypeRef)})
+	 */
+	def private TypeRef convertToOpposingKind(RuleEnvironment G, ComposedTypeRef composedTypeRef) {
+		val isIntersection = composedTypeRef instanceof IntersectionTypeExpression;
+		val isUnion = !isIntersection;
+
+		// simplify to remove nested composed type refs of the same kind
+		val composedTypeRefSimple = simplify(G, composedTypeRef);
+		if((isIntersection && !(composedTypeRefSimple instanceof IntersectionTypeExpression))
+			|| (isUnion && !(composedTypeRefSimple instanceof UnionTypeExpression))) {
+			// the composed type reference changed its kind due to simplification
+			// -> just return it without change
+			return composedTypeRefSimple;
+		}
+		val composedTypeRefSimpleCasted = composedTypeRefSimple as ComposedTypeRef;
+
+		// prepare the source type references (unfortunately we have to copy, here)
+		// TODO consider refactoring to avoid copying (but this will make code less readable)
+		val sourceTypeRefs = TypeUtils.copyAll(composedTypeRefSimpleCasted.typeRefs).toList;
+
+		// find first member type that is a union (if isIntersection) / is an intersection (if isUnion)
+		val toBeMultiplied = sourceTypeRefs.findFirst[
+			(isIntersection && it instanceof UnionTypeExpression)
+			|| (isUnion && it instanceof IntersectionTypeExpression)
+		] as ComposedTypeRef;
+		if(toBeMultiplied===null) {
+			// not found, cannot apply distributivity
+			return composedTypeRef;
+		}
+
+		// remove 'toBeMultiplied' from typeRefs
+		sourceTypeRefs.remove(toBeMultiplied);
+
+		// multiply
+		val resultTypeRefs = newArrayList;
+		for(TypeRef currTypeRef : toBeMultiplied.typeRefs) {
+			val multipliedTypeRef = if(isIntersection) {
+				TypeUtils.createNonSimplifiedIntersectionType(#[currTypeRef] + TypeUtils.copyAll(sourceTypeRefs))
+			} else { // isUnion
+				TypeUtils.createNonSimplifiedUnionType(#[currTypeRef] + TypeUtils.copyAll(sourceTypeRefs))
+			};
+			resultTypeRefs += multipliedTypeRef;
+		}
+
+		return if(isIntersection) {
+			TypeUtils.createNonSimplifiedUnionType(resultTypeRefs)
+		} else { // isUnion
+			TypeUtils.createNonSimplifiedIntersectionType(resultTypeRefs)
+		};
+	}
+
+
+	/** Delegate back to the main subtype judgment. */
 	private def boolean isSubtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		ts.subtype(G, left, right).value ?: false
 	}

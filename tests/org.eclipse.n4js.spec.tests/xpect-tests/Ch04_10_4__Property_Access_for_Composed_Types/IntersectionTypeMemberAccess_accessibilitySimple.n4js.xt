@@ -9,14 +9,24 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export class A {
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+class A {
 	private s;
+	private m() {}
 }
 
-export class B {
+interface B {
 	s;
+	m() {}
 }
 
-export class C {
+interface C {
 	public s;
+	public m() {}
 }
+
+var ab: A&B;
+
+//XPECT noerrors
+ab.s = null;

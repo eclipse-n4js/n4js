@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+interface A {}
+interface B {}
+
+
+let a : A;
+let b : B;
+let aub : A | B;
+let aib : A & B;
+
+
+// should work
+
+// XPECT noerrors -->
+aub = a;
+// XPECT noerrors -->
+aub = b;
+
+
+// should not work
+
+// XPECT errors --> "union{A,B} is not a subtype of A." at "aub"
+a = aub;
+
+// XPECT errors --> "union{A,B} is not a subtype of B." at "aub"
+b = aub;
