@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ui.handler;
+package org.eclipse.n4js.projectModel.dependencies;
 
 import static org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat;
 
@@ -17,17 +17,21 @@ import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.TestedProject;
 
 /** Custom type for {@code Pair<String, String>} that is used to describe dependency (i.e. npm package). */
-class DependencyInfo {
+public class DependencyInfo {
 	/**
 	 * version representation for projects with no declared versions, mimics behavior of
 	 * {@link org.eclipse.n4js.external.version.VersionConstraintFormatUtil#npmFormat}
 	 */
 	private static String NO_VERSION = "";
-	final String id;
-	final String version;
 
-	private DependencyInfo(String id, String version) {
-		this.id = id;
+	/** name of the dependency */
+	final public String name;
+	/** version of the dependency */
+	final public String version;
+
+	/** Simple constructor, client might need to use {@link #create(ProjectReference)} */
+	public DependencyInfo(String id, String version) {
+		this.name = id;
 		this.version = version;
 	}
 
@@ -36,11 +40,12 @@ class DependencyInfo {
 		return NO_VERSION.equals(version1) ? version2 : version1;
 	}
 
+	/** factory method to create instances form {@code ProjectReference} */
 	public static DependencyInfo create(ProjectReference projectReference) {
-		return new DependencyInfo(toID(projectReference), toVersion(projectReference));
+		return new DependencyInfo(toName(projectReference), toVersion(projectReference));
 	}
 
-	private static String toID(ProjectReference projectReference) {
+	private static String toName(ProjectReference projectReference) {
 		return projectReference.getProject().getProjectId();
 	}
 

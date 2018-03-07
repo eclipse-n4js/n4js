@@ -25,11 +25,9 @@ include::{find}config.adoc[]
 [role=memberdoc]
 === ++Method bar++
 
-[.small]#(Polyfilled from n4js:testresourcesADoc/SpecSample9_StaticPolyfill/poly)#
-
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:src/X:X#bar++[``++project bar(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:poly1/X:X#bar++[``++project bar(): void++``]
 
 
 ==== Semantics
@@ -41,11 +39,9 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 [role=memberdoc]
 === ++Method foo++
 
-[.small]#(Polyfilled from n4js:testresourcesADoc/SpecSample9_StaticPolyfill/poly)#
-
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:src/X:X#foo++[``++project foo(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:poly1/X:X#foo++[``++project foo(): void++``]
 
 
 
@@ -61,6 +57,8 @@ Add tests specifying semantics for ``++foo(): void++``
 [[gsec:spec_X.X.my]]
 [role=memberdoc]
 === ++Method my++
+
+[.small]#(Integrated from static polyfill aware class in: n4js:src)#
 
 ==== Signature
 

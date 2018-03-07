@@ -178,7 +178,6 @@ function findMemberType(m : N4Member){
 	if(m instanceof N4Method) {return "N4Method"}
 	if(m instanceof N4DataField) {return "N4DataField"}
 	if(m instanceof N4Accessor) {return "N4Accessor"}
-	if(m instanceof N4Field) {return "N4Field"}
 	if(m instanceof N4Member) {return "N4Member"}
 	return "unknown type of member"
 }

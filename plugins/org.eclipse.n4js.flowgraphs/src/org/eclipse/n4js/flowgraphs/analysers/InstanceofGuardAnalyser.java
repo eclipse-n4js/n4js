@@ -75,7 +75,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 	}
 
 	@Override
-	protected void initializeModeInternal(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void initializeContainerInternal(ControlFlowElement curContainer) {
 		requestActivation(new InstanceofGraphExplorer());
 	}
 

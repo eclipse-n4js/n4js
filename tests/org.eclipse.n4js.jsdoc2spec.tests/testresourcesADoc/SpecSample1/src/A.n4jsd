@@ -25,6 +25,18 @@ export external public class A {
 	 * @spec spec for method A.baz from source code
 	 */
 	baz(): string;
+
+	/** @spec This is some documentation for a final getter. */
+	@Final public get finalGetter() : string { return "hallo"; }
+
+	/** @spec This is some documentation for a final setter. */
+	@Final public set finalSetter(n) { }
+
+	/** @spec This is some documentation for a final field. */
+	@Final public field;
+
+	/** @spec This is some documentation for a final method. */
+	@Final public method() {}
 }
 
 export external public class B {

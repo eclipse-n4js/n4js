@@ -13,7 +13,7 @@ import { A } from "A";
 
 export public class B extends A {
 	
-	constructor() {
+	public constructor() {
 		console.log('Workspace B<init>');
 	}
 	

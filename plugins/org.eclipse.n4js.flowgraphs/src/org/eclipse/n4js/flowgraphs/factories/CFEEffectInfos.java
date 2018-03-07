@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,9 @@ import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
@@ -113,7 +117,7 @@ class CFEEffectInfos {
 
 			clearEffectsOfExitNode(feature.getExpression());
 			Node exitNode = cNode.getExit();
-			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
+			Node expressionNode = cnMap.get(feature.getExpression()).getExit();
 
 			addEffect(EffectType.Read, feature.getExpression(), expressionNode);
 			addEffect(EffectType.Write, feature.getExpression(), exitNode);
@@ -136,7 +140,7 @@ class CFEEffectInfos {
 
 			clearEffectsOfExitNode(feature.getExpression());
 			Node exitNode = cNode.getExit();
-			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
+			Node expressionNode = cnMap.get(feature.getExpression()).getExit();
 
 			addEffect(EffectType.Write, feature.getExpression(), expressionNode);
 			addEffect(EffectType.Read, feature.getExpression(), exitNode);
@@ -189,6 +193,9 @@ class CFEEffectInfos {
 		}
 
 		private void addEffect(EffectType effectType, ControlFlowElement expr, Node node) {
+			boolean supportsEffectInfo = node instanceof HelperNode || node instanceof RepresentingNode;
+			checkState(supportsEffectInfo, "Effect info can be attached to Helper-/Representing- nodes only");
+
 			Symbol symbol = symbolFactory.create(expr);
 			if (symbol != null) {
 				EffectInfo eiDecl = new EffectInfo(effectType, expr, symbol);

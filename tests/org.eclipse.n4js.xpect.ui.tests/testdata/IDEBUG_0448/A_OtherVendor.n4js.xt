@@ -55,16 +55,40 @@ var p5 : P_public_internal = new P_public_internal();
 var p6 : P_public = new P_public();
 
 
-class PSv_protected extends P_protected {
+// XPECT noerrors -->
+class PSv_public extends P_public {
 	public constructor() {
+		// XPECT noerrors -->
+	 	var p : P_public = new P_public();
+	}
+}
+
+// XPECT noerrors -->
+class PSv_protected extends P_protected {
+	public constructor() { // must work
+		// XPECT noerrors -->
+		super();
 		// XPECT errors --> "The constructor of P_protected is not visible." at "P_protected"
 	 	var p : P_protected = new P_protected();
 	}
 }
 
-class PSv_prorected_intern extends P_protected_intern {
+// XPECT errors --> "Cannot extend class P_protected_intern because its constructor is not accessible." at "P_protected_intern"
+class PSv_protected_intern extends P_protected_intern {
 	public constructor() { // must not work (super not accessible.)
+		// XPECT noerrors -->
+		super(); // actually an error, but we do not show a message because it would duplicate the above message "Cannot extend class ..."
 		// XPECT errors --> "The constructor of P_protected_intern is not visible." at "P_protected_intern"
 	 	var p : P_protected_intern = new P_protected_intern();
+	}
+}
+
+// XPECT errors --> "Cannot extend class P_private because its constructor is not accessible." at "P_private"
+class PSv_private extends P_private {
+	public constructor() {
+		// XPECT noerrors -->
+		super(); // actually an error, but we do not show a message because it would duplicate the above message "Cannot extend class ..."
+		// XPECT errors --> "The constructor of P_private is not visible." at "P_private"
+	 	var p : P_private = new P_private();
 	}
 }

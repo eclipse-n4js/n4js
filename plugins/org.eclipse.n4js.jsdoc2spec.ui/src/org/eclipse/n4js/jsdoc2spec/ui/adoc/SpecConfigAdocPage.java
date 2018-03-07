@@ -94,12 +94,6 @@ public class SpecConfigAdocPage extends SpecPage {
 		gridDataChkb.grabExcessHorizontalSpace = true;
 		gridDataChkb.horizontalAlignment = SWT.FILL;
 
-		chkGenAdoc = new Button(composite, SWT.CHECK);
-		chkGenAdoc.setLayoutData(gridDataChkb);
-		chkGenAdoc.setText("Generate adoc files");
-		chkGenAdoc.addListener(SWT.Selection, chkboxListener);
-		chkGenAdoc.setSelection(true);
-
 		IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(PreferenceKeys.EXPORTER_PREF_NODE);
 		String value = prefs.get(PreferenceKeys.EXPORT_ADOC_ROOT_DIR, "");
 		txtDocRootDirName.setText(value);
@@ -109,7 +103,7 @@ public class SpecConfigAdocPage extends SpecPage {
 	}
 
 	ConfigAdoc getConfig() {
-		ConfigAdoc ca = new ConfigAdoc(txtDocRootDirName.getText(), chkGenAdoc.getSelection());
+		ConfigAdoc ca = new ConfigAdoc(txtDocRootDirName.getText());
 		return ca;
 	}
 

@@ -90,6 +90,20 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * Tells if given AST node is the body of a {@link FunctionOrFieldAccessor}. Returns <code>false</code> if
+	 * <code>null</code> is passed in.
+	 */
+	public static boolean isBodyOfFunctionOrFieldAccessor(EObject astNode) {
+		if (astNode != null) {
+			final EObject parent = astNode.eContainer();
+			if (parent instanceof FunctionOrFieldAccessor) {
+				return astNode == ((FunctionOrFieldAccessor) parent).getBody();
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * To get from a variable declaration to its "containing" {@link VariableDeclarationContainer} use this method.
 	 * Details on why this is required are given {@link VariableDeclarationContainer here}.
 	 */

@@ -190,6 +190,7 @@ export function inspectAsN4Type(test : any) {
 
     console.log(" =", "inspect test as N4Type")
     var _test = test as N4Type;
+	var _testCtor = _test.__proto__.constructor as constructor{N4Type};
 
     if (_test.hasOwnProperty('fqn')) {
         inspectPropertyAsString(_test.fqn, "fqn");
@@ -197,7 +198,7 @@ export function inspectAsN4Type(test : any) {
         console.log("  -", "test.fqn is not own property of test");
     }
 
-    inspectPropertyAsMethod(_test.constructor.of, 'of');
+    inspectPropertyAsMethod(_testCtor.of, 'of');
 }
 
 export function inspectAsN4Classifier(test : any) {
@@ -207,8 +208,9 @@ export function inspectAsN4Classifier(test : any) {
     }
     console.log(" =", "inspect test as N4Classifier")
     var _test = test as N4Classifier;
+    var _testCtor = _test.__proto__.constructor as constructor{N4Classifier};
 
-    inspectPropertyAsMethod(_test.constructor, 'test.constructor')
+    inspectPropertyAsMethod(_testCtor, 'test.constructor')
     inspectPropertyAsArray(_test.allImplementedInterfaces, 'allImplementedInterfaces')
     inspectPropertyAsMethod(_test.dataFields, 'dataFields')
     inspectPropertyAsMethod(_test.dataFieldsWithAnnotation, 'dataFieldsWithAnnotation')

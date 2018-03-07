@@ -65,7 +65,7 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	}
 
 	/** Since N4JSC.jar does not provide built ins, we need to get them from npm. */
-	// TODO https://github.com/NumberFour/n4js/issues/167
+	// TODO https://github.com/eclipse/n4js/issues/611
 	protected Map<String, String> getNpmDependencies() {
 		Map<String, String> deps = new HashMap<>();
 
@@ -82,7 +82,7 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	 *             in Error cases
 	 */
 	@Test
-	@Ignore("https://github.com/NumberFour/n4js/issues/167")
+	@Ignore("https://github.com/eclipse/n4js/issues/611")
 	public void testCompileAllAndRunWithNodeWithOutput() throws Exception {
 		logFile();
 
@@ -94,9 +94,9 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 				"--targetPlatformFile", platformFiles.targetPlatformFile.getAbsolutePath(),
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"-pl", WSP,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tw", "nodejs_mangelhaft",
-				"--test", pathToDemoTest,
+				"-t", pathToDemoTest,
 				"-v");
 
 		int exitCode = p.waitFor();
@@ -138,9 +138,9 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 				"--targetPlatformFile", platformFiles.targetPlatformFile.getAbsolutePath(),
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"-pl", WSP,
-				"-t", "allprojects",
+				"-bt", "allprojects",
 				"-tw", "nodejs_mangelhaft",
-				"--test", pathToDemoTest,
+				"-t", pathToDemoTest,
 				"--testReportRoot", testReportRoot,
 				"-v");
 
