@@ -25,7 +25,9 @@ import org.junit.Test;
 import com.google.common.base.Predicates;
 
 /**
- * Downloads, installs, compiles and runs 'express'.
+ * Tells N4JSC to build few projects and run one of them. Projects being built have missing dependencies, so N4JSC is
+ * instructed to discover missing dependencies and to install them before compilation, which is done with
+ * {@code --installMissingDependencies} flag.
  */
 public class InstallFromManifestCompileRunN4jscExternalImportsTest extends BaseN4jscExternalTest {
 	File workspace;
