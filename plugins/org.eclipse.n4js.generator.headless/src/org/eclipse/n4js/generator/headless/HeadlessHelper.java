@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
@@ -42,13 +43,10 @@ public class HeadlessHelper {
 		List<File> absProjectRoots = HeadlessHelper.toAbsoluteFileList(projectLocations);
 
 		// Collect all Projects in first Level
-		ArrayList<File> pDir = HeadlessHelper.collectAllProjectPaths(absProjectRoots);
-
-		ArrayList<URI> projectURIs = new ArrayList<>(pDir.size());
+		List<File> pDir = HeadlessHelper.collectAllProjectPaths(absProjectRoots);
 
 		for (File pdir : pDir) {
 			URI puri = URI.createFileURI(pdir.toString());
-			projectURIs.add(puri);
 
 			try {
 				n4jsFileBasedWorkspace.registerProject(puri);
@@ -56,7 +54,6 @@ public class HeadlessHelper {
 				throw new N4JSCompileException("Unable to register project '" + puri + "'", e);
 			}
 		}
-
 	}
 
 	/**
@@ -87,20 +84,13 @@ public class HeadlessHelper {
 	 *            all project root (must be absolute)
 	 * @return list of directories being a project
 	 */
-	static ArrayList<File> collectAllProjectPaths(List<File> absProjectRoots) {
-		ArrayList<File> pDir = new ArrayList<>();
-		for (File projectRoot : absProjectRoots) {
-			Arrays.asList(projectRoot.listFiles(f -> {
-				return f.isDirectory(); // all directrories
-			}))//
-					.stream() //
-					.filter(f -> {
-						File[] list = f.listFiles(f2 -> f2.getName().equals(IN4JSProject.N4MF_MANIFEST));
-						return list != null && list.length > 0; // only those with manifest.n4mf
-					}) //
-					.forEach(f -> pDir.add(f));
-		}
-		return pDir;
+	static List<File> collectAllProjectPaths(List<File> absProjectRoots) {
+		return absProjectRoots.stream()
+				// find all contained folders
+				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
+				// only those with manifest
+				.filter(dir -> new File(dir, IN4JSProject.N4MF_MANIFEST).isFile())
+				.collect(Collectors.toList());
 	}
 
 }
