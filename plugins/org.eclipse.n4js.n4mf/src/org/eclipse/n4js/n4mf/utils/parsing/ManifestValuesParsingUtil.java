@@ -40,8 +40,8 @@ public class ManifestValuesParsingUtil {
 	 * @throws ParseException
 	 *             when provided data has parse error
 	 */
-	public static ParserResults<ProjectDescription> parseProjectDescription(String projectDescriotion) throws Exception {
-		return parse(ProjectDescription.class.getSimpleName(), projectDescriotion);
+	public static ParserResults<ProjectDescription> parseProjectDescription(String manifestText) throws Exception {
+		return parse(ProjectDescription.class.getSimpleName(), manifestText);
 	}
 
 	/**
@@ -50,23 +50,23 @@ public class ManifestValuesParsingUtil {
 	 * @throws ParseException
 	 *             when provided data has parse error
 	 */
-	public static ParserResults<ProjectDependency> parseDependency(String projectDependency) throws Exception {
-		return parse(ProjectDependency.class.getSimpleName(), projectDependency);
+	public static ParserResults<ProjectDependency> parseDependency(String manifestText) throws Exception {
+		return parse(ProjectDependency.class.getSimpleName(), manifestText);
 	}
 
 	/**
 	 * Creates instance of {@link DeclaredVersion} from provided value or null if it cannot be created.
 	 */
-	public static ParserResults<DeclaredVersion> parseDeclaredVersion(String declaredVersion) {
-		return parse(DeclaredVersion.class.getSimpleName(), declaredVersion);
+	public static ParserResults<DeclaredVersion> parseDeclaredVersion(String manifestText) {
+		return parse(DeclaredVersion.class.getSimpleName(), manifestText);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> ParserResults<T> parse(String parseRuleName, String versionNo) {
+	private static <T> ParserResults<T> parse(String parseRuleName, String manifestText) {
 		final ParserRule parserRule = XtextFactory.eINSTANCE.createParserRule();
 		parserRule.setName(parseRuleName);
 		final N4MFParser parser = getService(N4MFParser.class, getRandomURI());
-		final IParseResult result = parser.parse(parserRule, new StringReader(versionNo));
+		final IParseResult result = parser.parse(parserRule, new StringReader(manifestText));
 		final ParserResults<T> res = new ParserResults<>();
 		res.ast = (T) result.getRootASTElement();
 		result.getSyntaxErrors().forEach(n -> {
