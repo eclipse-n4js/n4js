@@ -41,6 +41,7 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 
 /**
  * Validates N4IDL migration declarations.
@@ -108,7 +109,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	
 	/** Checks that the #targetTypeRefs of TMigration aren't inferred but explicitly declared. */
 	private def boolean holdsExplicitlyDeclaresReturnType(FunctionDeclaration migrationDeclaration, TMigration tMigration) {
-		if (null === migrationDeclaration.returnTypeRef && !tMigration.targetTypeRefs.empty) {
+		if (null === migrationDeclaration.returnTypeRef) {
 			addIssue(IssueCodes.messageForIDL_MIGRATION_MUST_EXPLICITLY_DECLARE_RETURN_TYPE, migrationDeclaration,
 				N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, IssueCodes.IDL_MIGRATION_MUST_EXPLICITLY_DECLARE_RETURN_TYPE);
 				return false;
@@ -116,9 +117,10 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 	
-	/** Checks that the given migration has at least one source type and one target type. */
+	/** Checks that the given migration has at least one source type and one (non-void) target type. */
 	private def boolean holdsMigrationHasSourceAndTargetTypes(TMigration migration) {
-		if (migration.sourceTypeRefs.empty || migration.targetTypeRefs.empty) {
+		if (migration.sourceTypeRefs.empty || migration.targetTypeRefs.empty 
+			|| (migration.targetTypeRefs.size == 1 && migration.targetTypeRefs.head.isVoidTypeRef)) {
 			addIssue(IssueCodes.messageForIDL_MIGRATION_MUST_DECLARE_IN_AND_OUTPUT, migration.astElement,
 				N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, IssueCodes.IDL_MIGRATION_MUST_DECLARE_IN_AND_OUTPUT);
 			return false;
@@ -214,6 +216,12 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		
 		return true;
+	}
+	
+	/** Returns {@code true} iff the given type reference refers to the built-in void type. */
+	private def boolean isVoidTypeRef(TypeRef typeRef) {
+		val builtInTypes = BuiltInTypeScope.get(typeRef.eResource.resourceSet);
+		return typeRef.declaredType == builtInTypes.voidType;
 	}
 
 	@Check

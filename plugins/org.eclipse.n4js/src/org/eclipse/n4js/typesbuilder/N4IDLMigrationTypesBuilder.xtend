@@ -14,9 +14,11 @@ import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMigration
+import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.Log
 
@@ -34,12 +36,17 @@ class N4IDLMigrationTypesBuilder {
 	 * 
 	 * This method also assumes that functionDecl is a migration (and therefore annotated as {@code @Migration}. 
 	 */
-	public def void initialiseTMigration(FunctionDeclaration functionDecl, TMigration tMigration) {
+	public def void initialiseTMigration(FunctionDeclaration functionDecl, TMigration tMigration, boolean preLinkingPhase) {
 		val migrationAnno = AnnotationDefinition.MIGRATION.getAnnotation(tMigration);
+		
+		if (!preLinkingPhase) {
+			// initialize source and target type refs
+			tMigration.sourceTypeRefs.addAll(computeSourceTypeRefs(tMigration));
+			tMigration.targetTypeRefs.addAll(computeTargetTypeRefs(tMigration));
+		}
 		
 		// if the migration explicitly declares a source and target version
 		if (migrationAnno.args.length == 2) {
-			
 			try {
 				val Integer sourceVersion = Integer.parseInt(migrationAnno.args.get(0).argAsString);
 				val Integer targetVersion = Integer.parseInt(migrationAnno.args.get(1).argAsString);
@@ -63,13 +70,47 @@ class N4IDLMigrationTypesBuilder {
 			tMigration.hasDeclaredSourceAndTargetVersion = false;
 		}
 	}
-	
-	
 	/**
 	 * Returns a new instance of {@link TMigration}.
 	 */
 	public def TMigration createTMigration() {
 		return TypesFactory::eINSTANCE.createTMigration();
+	}
+	
+	/** Computes the list of source types of the given migration. */
+	private static def List<TypeRef> computeSourceTypeRefs(TMigration migration) {
+		if (null === migration.fpars) {
+			return #[];
+		}
+		
+		if (!migration.fpars.empty && migration.fpars.head.name.equals("context")) {
+			return migration.fpars.tail.map[fpar | fpar.typeRef].toList;
+		} else {
+			return migration.fpars.map[fpar | fpar.typeRef].toList;
+		}
+	}
+	
+	/** Computes the list of target types of the given migration. */
+	private static def List<TypeRef> computeTargetTypeRefs(TMigration migration) {
+		val returnTypeRef = migration.returnTypeRef
+		
+		if (returnTypeRef === null) {
+			return emptyList;
+		}
+		
+		// if structural type ref, use structural fields as multiple target type refs
+		if (returnTypeRef instanceof StructuralTypeRef) {
+			return migration.returnTypeRef.structuralMembers
+				.filter(TStructField)
+				.map[f | f.typeRef ]
+				.filterNull
+				.toList;
+		} else if (null === migration.returnTypeRef) {
+			// special handling for null
+			return emptyList;
+		} else { // otherwise use single target type 
+			return #[migration.returnTypeRef]
+		}
 	}
 	
 	/**

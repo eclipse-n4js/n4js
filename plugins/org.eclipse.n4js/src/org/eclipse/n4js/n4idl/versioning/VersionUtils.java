@@ -19,6 +19,7 @@ import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -86,19 +87,19 @@ public class VersionUtils {
 			}
 		}
 
+		// exception for import declarations
+		if (context instanceof ImportDeclaration) {
+			return true;
+		}
+
 		// Otherwise traverse the containment tree of context:
 		// Find the first container which has any of the version-awareness annotations
-		final EObject versionAwareContainer = StreamSupport
+		return StreamSupport
 				.stream(EcoreUtil2.getAllContainers(context).spliterator(), false)
 				// filter and cast to AnnotableElement
 				.filter(AnnotableElement.class::isInstance).map(e -> (AnnotableElement) e)
-				// check whether the element has one of the version-awareness annotations
-				.filter(VersionUtils::hasVersionAwarenessAnnotation)
-				// find any such container
-				.findAny().orElse(null);
-
-		// the context is version aware if any of the containers is
-		return versionAwareContainer != null;
+				// check whether the container has one of the version-awareness annotations
+				.findAny().map(VersionUtils::isVersionAwareContext).orElse(false);
 	}
 
 	/**

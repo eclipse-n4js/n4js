@@ -15,11 +15,11 @@
 ///// migrations without parameter nor return value
 
 @Migration
-// exported migration without parameters nor return value XPECT errors --> "Migrations must declare at least one parameter and a (non-void) return value." at "f1"
+// exported migration without parameters nor return value XPECT errors --> "Migrations must explicitly declare a return type." at "f1"
 export public function f1() {}
 
 @Migration
-// non-exported migration without parameters nor return value XPECT errors --> "Migrations must declare at least one parameter and a (non-void) return value." at "f2"
+// non-exported migration without parameters nor return value XPECT errors --> "Migrations must explicitly declare a return type." at "f2"
 function f2() {}
 
 @Migration
@@ -51,11 +51,11 @@ function f7() : A#2 { return null; }
 ///// migrations with parameter(s) but without return value
 
 @Migration
-// exported migration with parameters but without return value XPECT errors --> "Migrations must declare at least one parameter and a (non-void) return value." at "f8"
+// exported migration with parameters but without return value XPECT errors --> "Migrations must explicitly declare a return type." at "f8"
 export public function f8(in1 : A#1) {}
 
 @Migration
-// non-exported migration with parameters but without return value XPECT errors --> "Migrations must declare at least one parameter and a (non-void) return value." at "f9"
+// non-exported migration with parameters but without return value XPECT errors --> "Migrations must explicitly declare a return type." at "f9"
 function f9(in1 : A#2, in2 : A#2) {}
 
 @Migration

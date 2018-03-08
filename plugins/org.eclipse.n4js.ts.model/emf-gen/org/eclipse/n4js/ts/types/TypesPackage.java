@@ -4746,13 +4746,31 @@ public interface TypesPackage extends EPackage {
 	int TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION = TFUNCTION_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Source Type Refs</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION__SOURCE_TYPE_REFS = TFUNCTION_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Target Type Refs</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION__TARGET_TYPE_REFS = TFUNCTION_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>TMigration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMIGRATION_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 3;
+	int TMIGRATION_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -4935,31 +4953,13 @@ public interface TypesPackage extends EPackage {
 	int TMIGRATION___IS_FINAL = TFUNCTION___IS_FINAL;
 
 	/**
-	 * The operation id for the '<em>Get Source Type Refs</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_SOURCE_TYPE_REFS = TFUNCTION_OPERATION_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Target Type Refs</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_TARGET_TYPE_REFS = TFUNCTION_OPERATION_COUNT + 1;
-
-	/**
 	 * The operation id for the '<em>Get Migration As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMIGRATION___GET_MIGRATION_AS_STRING = TFUNCTION_OPERATION_COUNT + 2;
+	int TMIGRATION___GET_MIGRATION_AS_STRING = TFUNCTION_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>TMigration</em>' class.
@@ -4968,7 +4968,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMIGRATION_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 3;
+	int TMIGRATION_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl <em>TClassifier</em>}' class.
@@ -13676,24 +13676,26 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTMigration_HasDeclaredSourceAndTargetVersion();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getSourceTypeRefs() <em>Get Source Type Refs</em>}' operation.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TMigration#getSourceTypeRefs <em>Source Type Refs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Source Type Refs</em>' operation.
+	 * @return the meta object for the reference list '<em>Source Type Refs</em>'.
 	 * @see org.eclipse.n4js.ts.types.TMigration#getSourceTypeRefs()
+	 * @see #getTMigration()
 	 * @generated
 	 */
-	EOperation getTMigration__GetSourceTypeRefs();
+	EReference getTMigration_SourceTypeRefs();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getTargetTypeRefs() <em>Get Target Type Refs</em>}' operation.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TMigration#getTargetTypeRefs <em>Target Type Refs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Target Type Refs</em>' operation.
+	 * @return the meta object for the reference list '<em>Target Type Refs</em>'.
 	 * @see org.eclipse.n4js.ts.types.TMigration#getTargetTypeRefs()
+	 * @see #getTMigration()
 	 * @generated
 	 */
-	EOperation getTMigration__GetTargetTypeRefs();
+	EReference getTMigration_TargetTypeRefs();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getMigrationAsString() <em>Get Migration As String</em>}' operation.
@@ -16367,20 +16369,20 @@ public interface TypesPackage extends EPackage {
 		EAttribute TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION = eINSTANCE.getTMigration_HasDeclaredSourceAndTargetVersion();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Source Type Refs</b></em>' operation.
+		 * The meta object literal for the '<em><b>Source Type Refs</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TMIGRATION___GET_SOURCE_TYPE_REFS = eINSTANCE.getTMigration__GetSourceTypeRefs();
+		EReference TMIGRATION__SOURCE_TYPE_REFS = eINSTANCE.getTMigration_SourceTypeRefs();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Target Type Refs</b></em>' operation.
+		 * The meta object literal for the '<em><b>Target Type Refs</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TMIGRATION___GET_TARGET_TYPE_REFS = eINSTANCE.getTMigration__GetTargetTypeRefs();
+		EReference TMIGRATION__TARGET_TYPE_REFS = eINSTANCE.getTMigration_TargetTypeRefs();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Migration As String</b></em>' operation.

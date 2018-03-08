@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
-import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
@@ -887,44 +886,14 @@ class TMigration extends TFunction {
 	boolean hasDeclaredSourceAndTargetVersion
 	
 	/**
-	 * Returns the source TypeRefs of this migration.
+	 * The source TypeRefs of this migration.
 	 */
-	op TypeRef[] getSourceTypeRefs() {
-		// map function parameter type refs
-		return this.fpars
-			.map[p | p.typeRef ]
-			.filterNull.toEList;
-	}
+	refers TypeRef[] sourceTypeRefs
 	
 	/**
-	 * Returns the target TypeRefs of this migration.
+	 * The target TypeRefs of this migration.
 	 */
-	op TypeRef[] getTargetTypeRefs() {
-		val returnTypeRef = this.returnTypeRef
-		
-		if (returnTypeRef === null) {
-			return emptyEList;
-		}
-		
-		// if structural type ref, use structural fields as multiple target type refs
-		if (returnTypeRef instanceof StructuralTypeRef) {
-			return this.returnTypeRef.structuralMembers
-				.filter(TStructField)
-				.map[f | f.typeRef ]
-				.filterNull
-				.toEList;
-		} else if (this.returnTypeRef.declaredType instanceof VoidType) {
-			// special handling for void return type
-			return emptyEList;
-		} else if (null === this.returnTypeRef) {
-			// special handling for null
-			return emptyEList;
-		} else { // otherwise use single target type 
-			
-			return this.returnTypeRef.singletonEList;
-		}
-	}
-	
+	refers TypeRef[] targetTypeRefs	
 	/**
 	 * Returns string representation of this migration.
 	 * 

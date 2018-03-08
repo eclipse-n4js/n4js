@@ -1782,8 +1782,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTMigration__GetSourceTypeRefs() {
-		return tMigrationEClass.getEOperations().get(0);
+	public EReference getTMigration_SourceTypeRefs() {
+		return (EReference)tMigrationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1791,8 +1791,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTMigration__GetTargetTypeRefs() {
-		return tMigrationEClass.getEOperations().get(1);
+	public EReference getTMigration_TargetTypeRefs() {
+		return (EReference)tMigrationEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1801,7 +1801,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	public EOperation getTMigration__GetMigrationAsString() {
-		return tMigrationEClass.getEOperations().get(2);
+		return tMigrationEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -3340,8 +3340,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tMigrationEClass, TMIGRATION__SOURCE_VERSION);
 		createEAttribute(tMigrationEClass, TMIGRATION__TARGET_VERSION);
 		createEAttribute(tMigrationEClass, TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION);
-		createEOperation(tMigrationEClass, TMIGRATION___GET_SOURCE_TYPE_REFS);
-		createEOperation(tMigrationEClass, TMIGRATION___GET_TARGET_TYPE_REFS);
+		createEReference(tMigrationEClass, TMIGRATION__SOURCE_TYPE_REFS);
+		createEReference(tMigrationEClass, TMIGRATION__TARGET_TYPE_REFS);
 		createEOperation(tMigrationEClass, TMIGRATION___GET_MIGRATION_AS_STRING);
 
 		tClassifierEClass = createEClass(TCLASSIFIER);
@@ -3883,10 +3883,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTMigration_SourceVersion(), theEcorePackage.getEInt(), "sourceVersion", null, 0, 1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTMigration_TargetVersion(), theEcorePackage.getEInt(), "targetVersion", null, 0, 1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTMigration_HasDeclaredSourceAndTargetVersion(), theEcorePackage.getEBoolean(), "hasDeclaredSourceAndTargetVersion", null, 0, 1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getTMigration__GetSourceTypeRefs(), theTypeRefsPackage.getTypeRef(), "getSourceTypeRefs", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTMigration__GetTargetTypeRefs(), theTypeRefsPackage.getTypeRef(), "getTargetTypeRefs", 0, -1, !IS_UNIQUE, IS_ORDERED);
+		initEReference(getTMigration_SourceTypeRefs(), theTypeRefsPackage.getTypeRef(), null, "sourceTypeRefs", null, 0, -1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTMigration_TargetTypeRefs(), theTypeRefsPackage.getTypeRef(), null, "targetTypeRefs", null, 0, -1, TMigration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTMigration__GetMigrationAsString(), theEcorePackage.getEString(), "getMigrationAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

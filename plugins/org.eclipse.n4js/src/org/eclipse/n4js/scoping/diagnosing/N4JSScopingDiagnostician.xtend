@@ -85,7 +85,7 @@ class N4JSScopingDiagnostician {
 	}
 	
 	private def Optional<DiagnosticMessage> handleNoMigrationCandidate(QualifiedName name, IdentifierRef context) {
-		if (MigrationUtils.isMigrateCallIdentifier(context)) {
+		if (MigrationUtils.isInMigration(context) && MigrationUtils.isMigrateCallIdentifier(context)) {
 			return Optional.of(noMatchingMigrationCandidateDiagnosis.diagnose(name, context));
 		}
 		return Optional.empty();

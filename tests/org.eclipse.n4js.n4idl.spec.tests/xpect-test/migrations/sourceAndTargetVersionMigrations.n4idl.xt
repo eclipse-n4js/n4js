@@ -29,7 +29,6 @@ function migratePrimitiveToA2(a : int) : A#1 {
 
 @Migration
 /* Multiple model versions in the source types are disallowed XPECT errors ---
-	 "Migration ambiguousSourceMigration with arguments (A#1, A#2) and target version 1 conflicts with ambiguousSourceMigration (A#1, A#2) => (A#1)." at "ambiguousSourceMigration"
 	 "The source version of migration ambiguousSourceMigration is ambiguous." at "a1 : A#1, a2 : A#2"
  * ---
  */
@@ -39,7 +38,6 @@ function ambiguousSourceMigration(a1 : A#1, a2 : A#2) : A#1 {
 
 @Migration
 /* Multiple model versions in the target types are disallowed XPECT errors ---
-	"Migration ambiguousTargetMigration with arguments (A#1) and target version 1 conflicts with ambiguousTargetMigration (A#1) => (A#1, A#2)." at "ambiguousTargetMigration"
 	"The target version of migration ambiguousTargetMigration is ambiguous." at "~Object with {a1: A#1, a2: A#2}"
 --- */
 function ambiguousTargetMigration(a1 : A#1) : ~Object with {a1: A#1, a2: A#2} {

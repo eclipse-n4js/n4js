@@ -52,6 +52,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.relinkFormalParameters(functionDecl, preLinkingPhase)
 		functionType.astElement = functionDecl
 		functionDecl.definedType = functionType
+		
 		return true;
 	}
 
@@ -90,7 +91,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		
 		// if applicable initialise function as TMigration
 		if (MigrationUtils.isMigrationDeclaration(functionDecl)) {
-			initialiseTMigration(functionDecl, functionType as TMigration)
+			initialiseTMigration(functionDecl, functionType as TMigration, preLinkingPhase)
 		}
 	}
 

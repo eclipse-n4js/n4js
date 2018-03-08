@@ -10,31 +10,26 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
-import com.google.common.collect.Iterables;
-
 import java.lang.reflect.InvocationTargetException;
+
+import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
-import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
-import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMigration;
-import org.eclipse.n4js.ts.types.TStructField;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.ts.types.VoidType;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
@@ -51,6 +46,8 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getSourceVersion <em>Source Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getTargetVersion <em>Target Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#isHasDeclaredSourceAndTargetVersion <em>Has Declared Source And Target Version</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getSourceTypeRefs <em>Source Type Refs</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getTargetTypeRefs <em>Target Type Refs</em>}</li>
  * </ul>
  *
  * @generated
@@ -115,6 +112,26 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * @ordered
 	 */
 	protected boolean hasDeclaredSourceAndTargetVersion = HAS_DECLARED_SOURCE_AND_TARGET_VERSION_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSourceTypeRefs() <em>Source Type Refs</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSourceTypeRefs()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TypeRef> sourceTypeRefs;
+
+	/**
+	 * The cached value of the '{@link #getTargetTypeRefs() <em>Target Type Refs</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTargetTypeRefs()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TypeRef> targetTypeRefs;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -204,12 +221,10 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * @generated
 	 */
 	public EList<TypeRef> getSourceTypeRefs() {
-		final Function1<TFormalParameter, TypeRef> _function = new Function1<TFormalParameter, TypeRef>() {
-			public TypeRef apply(final TFormalParameter p) {
-				return p.getTypeRef();
-			}
-		};
-		return ECollections.<TypeRef>toEList(IterableExtensions.<TypeRef>filterNull(XcoreEListExtensions.<TFormalParameter, TypeRef>map(this.getFpars(), _function)));
+		if (sourceTypeRefs == null) {
+			sourceTypeRefs = new EObjectResolvingEList<TypeRef>(TypeRef.class, this, TypesPackage.TMIGRATION__SOURCE_TYPE_REFS);
+		}
+		return sourceTypeRefs;
 	}
 
 	/**
@@ -218,34 +233,10 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * @generated
 	 */
 	public EList<TypeRef> getTargetTypeRefs() {
-		final TypeRef returnTypeRef = this.getReturnTypeRef();
-		if ((returnTypeRef == null)) {
-			return XcoreCollectionLiterals.<TypeRef>emptyEList();
+		if (targetTypeRefs == null) {
+			targetTypeRefs = new EObjectResolvingEList<TypeRef>(TypeRef.class, this, TypesPackage.TMIGRATION__TARGET_TYPE_REFS);
 		}
-		if ((returnTypeRef instanceof StructuralTypeRef)) {
-			final Function1<TStructField, TypeRef> _function = new Function1<TStructField, TypeRef>() {
-				public TypeRef apply(final TStructField f) {
-					return f.getTypeRef();
-				}
-			};
-			return ECollections.<TypeRef>toEList(IterableExtensions.<TypeRef>filterNull(IterableExtensions.<TStructField, TypeRef>map(Iterables.<TStructField>filter(this.getReturnTypeRef().getStructuralMembers(), TStructField.class), _function)));
-		}
-		else {
-			Type _declaredType = this.getReturnTypeRef().getDeclaredType();
-			if ((_declaredType instanceof VoidType)) {
-				return XcoreCollectionLiterals.<TypeRef>emptyEList();
-			}
-			else {
-				TypeRef _returnTypeRef = this.getReturnTypeRef();
-				boolean _tripleEquals = (null == _returnTypeRef);
-				if (_tripleEquals) {
-					return XcoreCollectionLiterals.<TypeRef>emptyEList();
-				}
-				else {
-					return ECollections.<TypeRef>singletonEList(this.getReturnTypeRef());
-				}
-			}
-		}
+		return targetTypeRefs;
 	}
 
 	/**
@@ -284,6 +275,10 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return getTargetVersion();
 			case TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION:
 				return isHasDeclaredSourceAndTargetVersion();
+			case TypesPackage.TMIGRATION__SOURCE_TYPE_REFS:
+				return getSourceTypeRefs();
+			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
+				return getTargetTypeRefs();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -293,6 +288,7 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -304,6 +300,14 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return;
 			case TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION:
 				setHasDeclaredSourceAndTargetVersion((Boolean)newValue);
+				return;
+			case TypesPackage.TMIGRATION__SOURCE_TYPE_REFS:
+				getSourceTypeRefs().clear();
+				getSourceTypeRefs().addAll((Collection<? extends TypeRef>)newValue);
+				return;
+			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
+				getTargetTypeRefs().clear();
+				getTargetTypeRefs().addAll((Collection<? extends TypeRef>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -326,6 +330,12 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 			case TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION:
 				setHasDeclaredSourceAndTargetVersion(HAS_DECLARED_SOURCE_AND_TARGET_VERSION_EDEFAULT);
 				return;
+			case TypesPackage.TMIGRATION__SOURCE_TYPE_REFS:
+				getSourceTypeRefs().clear();
+				return;
+			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
+				getTargetTypeRefs().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -344,6 +354,10 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return targetVersion != TARGET_VERSION_EDEFAULT;
 			case TypesPackage.TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION:
 				return hasDeclaredSourceAndTargetVersion != HAS_DECLARED_SOURCE_AND_TARGET_VERSION_EDEFAULT;
+			case TypesPackage.TMIGRATION__SOURCE_TYPE_REFS:
+				return sourceTypeRefs != null && !sourceTypeRefs.isEmpty();
+			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
+				return targetTypeRefs != null && !targetTypeRefs.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -356,10 +370,6 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.TMIGRATION___GET_SOURCE_TYPE_REFS:
-				return getSourceTypeRefs();
-			case TypesPackage.TMIGRATION___GET_TARGET_TYPE_REFS:
-				return getTargetTypeRefs();
 			case TypesPackage.TMIGRATION___GET_MIGRATION_AS_STRING:
 				return getMigrationAsString();
 		}
