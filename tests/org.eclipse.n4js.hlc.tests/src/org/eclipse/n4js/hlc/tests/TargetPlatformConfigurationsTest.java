@@ -63,7 +63,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
@@ -86,11 +86,11 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		assertTrue("setup error, test file should exist yet at " + testFile.getAbsolutePath(), testFile.exists());
 
 		final String[] args = {
-				"--installMissingDependencies",
+				"--clean",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
@@ -110,8 +110,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString(),
-				"--targetPlatformSkipInstall"
+				"--buildType", BuildType.allprojects.toString()
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
 	}
@@ -132,9 +131,8 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
-		new N4jscBase().doMain(argsInstall);
 		SuccessExitStatus statusInstall = new N4jscBase().doMain(argsInstall);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, statusInstall.code);
 		assertTrue("install location was not created", getTargetPlatformInstallLocation().exists());
@@ -144,7 +142,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus statusSkipInstall = new N4jscBase().doMain(argsSkipInstall);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, statusSkipInstall.code);
