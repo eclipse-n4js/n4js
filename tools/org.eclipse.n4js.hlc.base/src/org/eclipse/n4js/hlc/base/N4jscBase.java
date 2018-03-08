@@ -191,7 +191,7 @@ public class N4jscBase implements IApplication {
 			+ "specified. If not set, then the default to value specified by 'user.home' property value returned by java.lang.System ")
 	File npmrcRoot;
 
-	@Option(name = "--list-runners", aliases = "-lr", usage = "show list of available runners.")
+	@Option(name = "--listRunners", aliases = "-lr", usage = "show list of available runners.")
 	boolean listRunners = false;
 
 	@Option(name = "--test", aliases = "-t", metaVar = "path", usage = "path must point to a project, folder, or file containing tests.")
@@ -204,7 +204,7 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--testWith", aliases = "-tw", metaVar = "testerId", usage = "ID of tester to use, last segment is sufficient, e.g. nodejs_mangelhaft")
 	String tester = "nodejs_mangelhaft";
 
-	@Option(name = "--list-testers", aliases = "-lt", usage = "show list of available testers")
+	@Option(name = "--listTesters", aliases = "-lt", usage = "show list of available testers")
 	boolean listTesters = false;
 
 	@Option(name = "--implementationId", aliases = "-impl", metaVar = "ID", required = false, usage = "if there are API projects among the dependencies of the module to run, this specifies the ID of the "
@@ -505,7 +505,7 @@ public class N4jscBase implements IApplication {
 							warn(status.getMessage());
 						else
 							throw new ExitCodeException(EXITCODE_DEPENDENCY_NOT_FOUND,
-									"The flag -bt must be specified when cleaning");
+									"Cannot install dependencies.");
 				}
 
 				// run and dispatch.

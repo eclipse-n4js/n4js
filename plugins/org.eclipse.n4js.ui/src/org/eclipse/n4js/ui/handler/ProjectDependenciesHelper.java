@@ -98,9 +98,9 @@ class ProjectDependenciesHelper {
 	@SuppressWarnings("javadoc")
 	private ProjectDescription getProjectDescription(URI location) {
 		ProjectDescription description = workspace.getProjectDescription(location);
-		if (null == description) {
+		if (null == description)
 			description = externalLibraryWorkspace.getProjectDescription(location);
-		}
+
 		return description;
 	}
 

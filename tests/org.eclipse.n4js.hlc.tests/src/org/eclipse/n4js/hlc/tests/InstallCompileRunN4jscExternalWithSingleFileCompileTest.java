@@ -56,10 +56,10 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Bas
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose",
-				"-bt", BuildType.singlefile.toString(),
+				"--buildType", BuildType.singlefile.toString(),
 				fileToCompile
 		};
 		final String out = runAndCaptureOutput(args);

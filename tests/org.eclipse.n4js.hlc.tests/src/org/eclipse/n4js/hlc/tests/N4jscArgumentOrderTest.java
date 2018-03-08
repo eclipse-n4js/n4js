@@ -59,7 +59,7 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 				"--testCatalogFile " + currentPath + "/build/test-catalog.json",
 				"--targetPlatformInstallLocation " + currentPath + "/build/npm",
 				"--installMissingDependencies",
-				"-bt projects",
+				"--buildType projects",
 				currentPath + "/PA",
 				currentPath + "/PB",
 				currentPath + "/PC",

@@ -50,7 +50,7 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
 
 		String proot = workspace.getAbsolutePath().toString();
 
-		String[] args = { "-pl", proot, "-bt", "allprojects", "-v" };
+		String[] args = { "--projectlocations", proot, "--buildType", "allprojects", "--verbose" };
 
 		// compile
 		new N4jscBase().doMain(args);

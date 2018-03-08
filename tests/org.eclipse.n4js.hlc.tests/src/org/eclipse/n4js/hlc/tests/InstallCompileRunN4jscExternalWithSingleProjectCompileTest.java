@@ -56,10 +56,10 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose",
-				"-bt", BuildType.projects.toString(),
+				"--buildType", BuildType.projects.toString(),
 				projectToCompile
 		};
 		final String out = runAndCaptureOutput(args);

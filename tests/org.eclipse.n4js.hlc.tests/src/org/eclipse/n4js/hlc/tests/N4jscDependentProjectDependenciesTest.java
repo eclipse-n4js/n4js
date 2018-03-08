@@ -66,7 +66,7 @@ public class N4jscDependentProjectDependenciesTest extends BaseN4jscExternalTest
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);

@@ -56,11 +56,11 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.projects.toString(),
+				"--buildType", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JS
 		};
 		final String out = runAndCaptureOutput(args);
@@ -82,11 +82,11 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.projects.toString(),
+				"--buildType", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JSX
 		};
 
