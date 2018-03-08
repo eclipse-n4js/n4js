@@ -51,8 +51,7 @@ import * as N from "ChB_N4Objects/N4Inspection"
 
 
 console.log("#", "inspect N4Type");
-class TestN4Type extends N4Type {}
-var testN4Type : N4Type = TestN4Type.n4type.n4superType;
+var testN4Type : N4Type = N4Type.n4type;
 
 N.inspectAsN4Type(testN4Type);
 N.inspectAsN4NamedElement(testN4Type);

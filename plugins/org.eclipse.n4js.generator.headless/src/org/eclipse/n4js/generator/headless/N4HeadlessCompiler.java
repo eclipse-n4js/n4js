@@ -17,15 +17,12 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -35,9 +32,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.GeneratorException;
-import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
@@ -55,7 +50,6 @@ import org.eclipse.n4js.utils.collections.Collections2;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
-import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
@@ -105,20 +99,9 @@ import com.google.inject.Provider;
  */
 public class N4HeadlessCompiler {
 
-	/** The composite generator that manages all subgenerators. */
+	/** Helper for configuring {@link JavaIoFileSystemAccess} */
 	@Inject
-	private ICompositeGenerator compositeGenerator;
-
-	/** Abstraction to the file system, used by the generators */
-	private final JavaIoFileSystemAccess fsa;
-
-	/** Compares two N4JS projects. Used for sorting and comparing project dependencies. */
-	private final static Comparator<IN4JSProject> n4JSProjComparator = new Comparator<IN4JSProject>() {
-		@Override
-		public int compare(IN4JSProject o1, IN4JSProject o2) {
-			return o1.getProjectId().compareTo(o2.getProjectId());
-		}
-	};
+	private ConfiguredGeneratorFactory generatorFactory;
 
 	/** N4JS-Implementation of a workspace without OSGI */
 	@Inject
@@ -154,29 +137,6 @@ public class N4HeadlessCompiler {
 
 	/** if set additional log will be written to this filename */
 	private String logFile = null;
-
-	private Map<String, OutputConfiguration> initialOutputConfiguration;
-
-	/**
-	 * Private constructor to prevent accidental instantiation.
-	 */
-	@Inject
-	private N4HeadlessCompiler(JavaIoFileSystemAccess fsa) {
-		this.fsa = fsa;
-	}
-
-	/** Build an output configuration from a composite generator. */
-	private Map<String, OutputConfiguration> getInitialOutputConfigurations() {
-		if (initialOutputConfiguration == null) {
-			initialOutputConfiguration = new HashMap<>();
-			for (CompilerDescriptor desc : compositeGenerator.getCompilerDescriptors()) {
-				initialOutputConfiguration.put(desc.getIdentifier(), desc.getOutputConfiguration());
-			}
-
-		}
-		return initialOutputConfiguration;
-		// return result;
-	}
 
 	/*
 	 * ===============================================================================================================
@@ -380,41 +340,6 @@ public class N4HeadlessCompiler {
 	public void compileProjects(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles)
 			throws N4JSCompileException {
 		compileProjects(searchPaths, projectPaths, singleSourceFiles, new DismissingIssueAcceptor());
-	}
-
-	/**
-	 * Encapsulates the result of {@link N4HeadlessCompiler#collectAndRegisterProjects(List, List, List)}.
-	 */
-	private static class BuildSet {
-
-		/**
-		 * The projects which the user explicitly requested to be compiled. If the user requested compilation of
-		 * specific single files, then this list contains the projects containing the files.
-		 */
-		public final List<N4JSProject> requestedProjects;
-
-		/**
-		 * The projects which were discovered as dependencies of the above projects, without having been requested to be
-		 * compiled by the user. In other words, these projects are only being compiled because a requested project
-		 * depends on them.
-		 */
-		public final List<N4JSProject> discoveredProjects;
-
-		/**
-		 * A predicate that indicates whether or not a given resource, identified by its URI, should be processed. If
-		 * the user requested compilation of specific single files, then this predicate applies only to those files, and
-		 * no others. In all other cases, the predicate applies to every file, i.e., it always returns
-		 * <code>true</code>.
-		 */
-		public final Predicate<URI> resourceFilter;
-
-		public BuildSet(List<N4JSProject> requestedProjects, List<N4JSProject> discoveredProjects,
-				Predicate<URI> projectFilter) {
-			this.requestedProjects = requestedProjects;
-			this.discoveredProjects = discoveredProjects;
-			this.resourceFilter = projectFilter;
-		}
-
 	}
 
 	/**
@@ -676,13 +601,15 @@ public class N4HeadlessCompiler {
 		allProjectsToCompile.stream().forEach(project -> markedProjects.put(project, new MarkedProject(project)));
 
 		// Maps a project to the projects that depend on it.
-		Multimap<IN4JSProject, IN4JSProject> pendencies = TreeMultimap.create(n4JSProjComparator, n4JSProjComparator);
+		Multimap<IN4JSProject, IN4JSProject> pendencies = TreeMultimap.create(N4JSProjectComparator.INSTANCE,
+				N4JSProjectComparator.INSTANCE);
 
 		// Maps a project to the projects it depends on.
-		Multimap<IN4JSProject, IN4JSProject> dependencies = TreeMultimap.create(n4JSProjComparator, n4JSProjComparator);
+		Multimap<IN4JSProject, IN4JSProject> dependencies = TreeMultimap.create(N4JSProjectComparator.INSTANCE,
+				N4JSProjectComparator.INSTANCE);
 
 		// Sorted set of projects without dependencies (starting points) to determine their order.
-		SortedSet<IN4JSProject> independentProjects = new TreeSet<>(n4JSProjComparator);
+		SortedSet<IN4JSProject> independentProjects = new TreeSet<>(N4JSProjectComparator.INSTANCE);
 
 		// Initialize preconditions, dependencies, and independent projects.
 		computeDependencyGraph(markedProjects.keySet(), pendencies, dependencies, independentProjects);
@@ -920,7 +847,6 @@ public class N4HeadlessCompiler {
 			// Only load a project if it was requested to be compile or if other requested projects depend on it.
 			if (markedProject.hasMarkers()) {
 				recorder.markProcessing(markedProject.project);
-				configureFSA(markedProject.project);
 
 				try {
 					// Add to loaded projects immediately so that the project gets unloaded even if loading fails.
@@ -1352,8 +1278,6 @@ public class N4HeadlessCompiler {
 	/**
 	 * Generates code for all resources in the given project.
 	 *
-	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject)}
-	 *
 	 * @param markedProject
 	 *            project to compile.
 	 * @param resSet
@@ -1365,9 +1289,8 @@ public class N4HeadlessCompiler {
 	 * @throws N4JSCompileException
 	 *             in case of compile-problems. Possibly wrapping other N4SJCompileExceptions.
 	 */
-	private void generateProject(MarkedProject markedProject, ResourceSet resSet, Predicate<URI> compileFilter,
-			N4ProgressStateRecorder rec)
-			throws N4JSCompileException {
+	private void generateProject(MarkedProject markedProject, ResourceSet resSet,
+			Predicate<URI> compileFilter, N4ProgressStateRecorder rec) throws N4JSCompileException {
 		rec.markStartCompiling(markedProject);
 
 		final String projectId = markedProject.project.getProjectId();
@@ -1378,6 +1301,8 @@ public class N4HeadlessCompiler {
 		Lazy<N4JSCompoundCompileException> collectedErrors = Lazy.create(() -> {
 			return new N4JSCompoundCompileException("Errors during generation of project " + projectId);
 		});
+
+		ConfiguredGenerator generator = generatorFactory.getConfiguredGenerator(markedProject.project);
 
 		// then compile each file.
 		for (Resource resource : markedProject.resources) {
@@ -1392,10 +1317,7 @@ public class N4HeadlessCompiler {
 						}
 
 						// Ask composite generator to try to generate the current resource
-						if (logger.isVerbose()) {
-							logger.info("  generating  " + compositeGenerator.getClass().getName());
-						}
-						compositeGenerator.doGenerate(resource, fsa);
+						generator.generate(resource);
 
 						rec.markEndCompile(resource);
 					} catch (GeneratorException e) {
@@ -1461,62 +1383,6 @@ public class N4HeadlessCompiler {
 				loadedIter.remove();
 			}
 		}
-	}
-
-	/*
-	 * ===============================================================================================================
-	 *
-	 * OUTPUT CONFIGURATION
-	 *
-	 * ===============================================================================================================
-	 */
-
-	/**
-	 * Setting the compile output-configurations to contain path-locations relative to the user.dir: Wrapper function
-	 * written against Xtext 2.7.1.
-	 *
-	 * In Eclipse-compile mode there are "projects" and the FSA is configured relative to these projects. In this
-	 * filebasedWorkspace here there is no "project"-concept for the generator. So the paths of the FSA need to be
-	 * reconfigured to contain the navigation to the IN4JSProject-root.
-	 *
-	 * @param project
-	 *            project to be compiled
-	 */
-	private void configureFSA(IN4JSProject project) {
-		Map<String, OutputConfiguration> outputConfigToBeWrapped = getInitialOutputConfigurations();
-		File currentDirectory = new File(".");
-		File projectLocation = new File(project.getLocation().toFileString());
-
-		// If project is not in a sub directory of the current directory an absolute path is computed.
-		final java.net.URI projectURI = currentDirectory.toURI().relativize(projectLocation.toURI());
-		final String projectPath = projectURI.getPath();
-		if (projectPath.length() == 0) {
-			// same directory, skip
-			return;
-		}
-
-		// set different output configuration.
-		fsa.setOutputConfigurations(transformedOutputConfiguration(projectPath, outputConfigToBeWrapped));
-	}
-
-	/**
-	 * Wraps the output-configurations with a delegate that transparently injects the relative path to the project-root.
-	 *
-	 * @param projectPath
-	 *            relative path to the project-root
-	 * @return wrapped configurations.
-	 */
-	private Map<String, OutputConfiguration> transformedOutputConfiguration(String projectPath,
-			Map<String, OutputConfiguration> outputConfigToBeWrapped) {
-		Map<String, OutputConfiguration> result = new HashMap<>();
-
-		for (Entry<String, OutputConfiguration> pair : outputConfigToBeWrapped.entrySet()) {
-			final OutputConfiguration input = pair.getValue();
-			OutputConfiguration transOC = new WrappedOutputConfiguration(input, projectPath);
-			result.put(pair.getKey(), transOC);
-		}
-
-		return result;
 	}
 
 	/*
@@ -1649,193 +1515,5 @@ public class N4HeadlessCompiler {
 	 */
 	public void setLogFile(String logFile) {
 		this.logFile = logFile;
-	}
-
-	/*
-	 * ===============================================================================================================
-	 *
-	 * MARKED PROJECT UTILITY CLASS
-	 *
-	 * ===============================================================================================================
-	 */
-	/**
-	 * A wrapper around N4JS projects that has the ability to track dependent projects in the form of markers. A project
-	 * is added as a marker of this project if it has an active dependency on it. A dependency is active as long as the
-	 * dependent project is not yet built.
-	 * <p>
-	 * Additionally, projects that have been explicitly requested to be compiled by the user are added as markers to
-	 * themselves, as opposed to projects that have been discovered solely due to dependencies of explicitly requested
-	 * projects.
-	 * </p>
-	 * <p>
-	 * Furthermore, this class tracks the loaded resources of the wrapped projects in order to be able to unload them as
-	 * soon as possible.
-	 * </p>
-	 */
-	static class MarkedProject {
-		/**
-		 * The wrapped project.
-		 */
-		final IN4JSProject project;
-
-		/**
-		 * Contains the active markers, i.e., dependent projects that have not yet been built themselves.
-		 */
-		final Set<IN4JSProject> markers = new TreeSet<>(n4JSProjComparator);
-
-		/**
-		 * All loaded resources of this project.
-		 */
-		final Set<Resource> resources = new LinkedHashSet<>();
-
-		/**
-		 * All loaded external resources of this project. This is a subset of {@link #resources}.
-		 */
-		final Set<Resource> externalResources = new HashSet<>();
-
-		/**
-		 * All loaded test resources of this project. This is a subset of {@link #resources}.
-		 */
-		final Set<Resource> testResources = new HashSet<>();
-
-		/**
-		 * Create a wrapper around a project;
-		 */
-		public MarkedProject(IN4JSProject project) {
-			this.project = project;
-		}
-
-		/**
-		 * Indicates whether the given resource is external in the context of this project.
-		 *
-		 * @param resource
-		 *            the resource to check
-		 * @return <code>true</code> if the given resource is external and <code>false</code> otherwise
-		 */
-		public boolean isExternal(Resource resource) {
-			return externalResources.contains(resource);
-		}
-
-		/**
-		 * Indicates whether the given resource is a test in the context of this project.
-		 *
-		 * @param resource
-		 *            the resource to check
-		 * @return <code>true</code> if the given resource is a test and <code>false</code> otherwise
-		 */
-		public boolean isTest(Resource resource) {
-			return testResources.contains(resource);
-		}
-
-		/**
-		 * Adds the given project as a marker, indicating that it depends on this project.
-		 *
-		 * @param marker
-		 *            the project to mark this project with
-		 */
-		public void markWith(IN4JSProject marker) {
-			markers.add(marker);
-		}
-
-		/**
-		 * Indicates whether or not the given project is a marker of this project.
-		 *
-		 * @param marker
-		 *            the project to check
-		 * @return <code>true</code> if the given project is a marker of this project and <code>false</code> otherwise
-		 */
-		public boolean hasMarker(IN4JSProject marker) {
-			return markers.contains(marker);
-		}
-
-		/**
-		 * Indicates whether or not this project still has markers.
-		 *
-		 * @return <code>true</code> if this project still has markers and <code>false</code> otherwise
-		 */
-		public boolean hasMarkers() {
-			return !markers.isEmpty();
-		}
-
-		/**
-		 * Remove the given project as a marker of this project, indicating that it is no longer has an active
-		 * dependency on this project.
-		 *
-		 * @param marker
-		 *            dependent project to be removed
-		 * @return <code>true</code> if the given project was a marker of this project and <code>false</code> otherwise
-		 */
-		public boolean remove(IN4JSProject marker) {
-			return markers.remove(marker);
-		}
-
-		/**
-		 * Unload all resources associated with this marked project and remove them from the given resource set.
-		 *
-		 * @param resourceSet
-		 *            the resource set containing the resources of this project
-		 * @param recorder
-		 *            the progress state recorder
-		 */
-		public void unload(ResourceSet resourceSet, N4ProgressStateRecorder recorder) {
-			recorder.markStartUnloading(this);
-
-			ResourceDescriptionsData index = ResourceDescriptionsData.ResourceSetAdapter
-					.findResourceDescriptionsData(resourceSet);
-
-			unloadResources(resourceSet, index, recorder);
-			unloadManifestResource(resourceSet, index, recorder);
-			clearResources();
-
-			recorder.markFinishedUnloading(this);
-		}
-
-		private void unloadResources(ResourceSet resourceSet, ResourceDescriptionsData index,
-				N4ProgressStateRecorder recorder) {
-			for (Resource res : resources)
-				unloadResource(res, resourceSet, index, recorder);
-		}
-
-		private void unloadManifestResource(ResourceSet resourceSet, ResourceDescriptionsData index,
-				N4ProgressStateRecorder recorder) {
-			Optional<URI> manifestLocation = project.getManifestLocation();
-			if (manifestLocation.isPresent()) {
-				Resource resource = resourceSet.getResource(manifestLocation.get(), false);
-				if (resource != null)
-					unloadResource(resource, resourceSet, index, recorder);
-			}
-		}
-
-		private void unloadResource(Resource resource, ResourceSet resourceSet, ResourceDescriptionsData index,
-				N4ProgressStateRecorder recorder) {
-			recorder.markUnloadingOf(resource);
-			if (index != null)
-				index.removeDescription(resource.getURI());
-			resource.unload();
-			resourceSet.getResources().remove(resource);
-		}
-
-		private void clearResources() {
-			resources.clear();
-			externalResources.clear();
-			testResources.clear();
-		}
-
-		/**
-		 * Unload the ASTs and clear the resource scope caches of all resources that belong to this marked project.
-		 */
-		public void unloadASTAndClearCaches() {
-			Iterables.filter(resources, resource -> resource.isLoaded()).forEach(resource -> {
-				if (resource instanceof N4JSResource) {
-					N4JSResource n4jsResource = (N4JSResource) resource;
-					n4jsResource.unloadAST();
-				}
-			});
-		}
-
-		@Override
-		public String toString() {
-			return project.toString();
-		}
 	}
 }

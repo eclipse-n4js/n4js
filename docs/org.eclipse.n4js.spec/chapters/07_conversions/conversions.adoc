@@ -345,7 +345,7 @@ var x = new Sub();
 All N4JS classes, interfaces and enumerations provide meta-information
 that is used by the runtime and standard library.
 //% All reflection (meta) classes are described in <<N4JSObjects>>, an overview is provided in {fig:cd_reflectionModel}.
-All classifiers (including enums) provide meta-information by means of a static getter `n4class`.
+All classifiers (including enums) provide meta-information by means of a static getter `n4type`.
 Since it is static getter, it is actually an instance getter of the
 constructor (or classifier) of a type, which is the only way to retrieve
 that information in case of interfaces. For enums, this can be retrieved
@@ -374,7 +374,11 @@ True if the type is an N4Interface.
 === Reflection for Classes
 
 The meta-information for classes is available by means of `N4Object`’s static
-getter `n4class`. Since it is static getter, it is actually an instance getter of the constructor of a type.
+getter `n4type`. Since it is static getter, it is actually an instance getter of the constructor of a type.
+
+In addition, the static method `of` in `N4Type` is available to retrieve the meta-information for a given instance or
+constructor. This also allows to retrieve meta-information directly for an instance of some class `C` without having
+the constructor of `C` available, for example because the constructor is not accessible.
 
 .Reflection with `N4class`
 [example]
@@ -388,10 +392,11 @@ This example demonstrates how these reflective features are accessed:
 class A {}
 class B extends A {}
 var b = new B();
-console.log(B.n4class.fqn);
-console.log(b.constructor.n4class.fqn);
-console.log(b.constructor.n4class.n4superType.fqn);
-console.log(B.n4class.constructor.n4class.fqn);
+console.log(B.n4type.fqn);
+console.log(b.constructor.n4type.fqn);
+console.log(b.constructor.n4type.n4superType.fqn);
+console.log(N4Type.of(b));
+console.log(N4Type.of(B.n4type).fqn);
 ----
 
 Assuming this code is defined in file `A`, this will output
@@ -401,7 +406,8 @@ Assuming this code is defined in file `A`, this will output
 A.B
 A.B
 A.A
-N4Class
+A.B
+N4BuiltInClasses.N4Class
 ----
 --
 
