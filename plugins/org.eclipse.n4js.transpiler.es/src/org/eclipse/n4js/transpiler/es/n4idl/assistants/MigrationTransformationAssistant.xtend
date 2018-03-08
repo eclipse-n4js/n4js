@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es.n4idl.assistants
 
 import com.google.inject.Inject
 import java.util.List
+import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -19,17 +20,22 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4idl.MigrationSwitchComputer
+import org.eclipse.n4js.n4idl.MigrationSwitchComputer.UnhandledTypeRefException
 import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.n4idl.TypeSwitchCondition
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
+import org.eclipse.n4js.ts.types.TN4Classifier
+import org.eclipse.n4js.ts.types.TObjectPrototype
+import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.n4idl.MigrationSwitchComputer.UnhandledTypeRefException
 
 /**
  * Transformation assistant for generating migration-support related ES code.
@@ -159,17 +165,41 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 	
 	private def Expression _MigrationCandidateElement(TMigration migration) {
 		val migrationSTE = getSymbolTableEntryOriginal(migration, true);
-		val sourceTypeArrayElements = migration.sourceTypeRefs
-			.map[typeRef | typeRef.declaredType]
-			.map[type | getSymbolTableEntryOriginal(type, true)]
-			.map[ste | _ArrayElement(_IdentRef(ste))]
 		
-		// {migration: <migrationFunctionRef>, parameterTypes: [<sourceTypeRefSTEs>] }
+		// map the migration source type refs to their runtime representation
+		val sourceTypeArrayElements = migration.sourceTypeRefs
+			.map[typeRef | _ParameterTypeArrayElement(typeRef)]
+		
+		// {migration: <migrationFunctionRef>, parameterTypes: [<sourceTypeArrayElements>] }
 		return _ObjLit(
 			"migration" -> _IdentRef(migrationSTE),
 			"parameterTypes" -> _ArrLit(sourceTypeArrayElements)
 		);
 	}
+	
+	/** 
+	 * Returns an {@link ArrayElement} which represents the given {@link Type} at runtime.
+	 * 
+	 * For instance, for {@link TN4Classifier}s or {@link TObjectPrototype}s that is an 
+	 * instance of {@code type{Object} and for primitive types that is a string {@code "primitive"}.
+	 * 
+	 * Unhandled type reference types will throw an {@link IllegalStateException}.
+	 */
+	private def ArrayElement _ParameterTypeArrayElement(TypeRef typeRef) {
+		switch (typeRef) {
+			case typeRef.declaredType !== null:
+				switch(typeRef.declaredType) {
+					TN4Classifier:
+						_ArrayElement(_IdentRef(getSymbolTableEntryOriginal(typeRef.declaredType, true)))
+					PrimitiveType:
+						_ArrayElement(_StringLiteral("primitive"))
+					TObjectPrototype:
+						_ArrayElement(_IdentRef(getSymbolTableEntryOriginal(typeRef.declaredType, true)))
+				}
+			default:
+				throw new IllegalStateException("Unhandled migration source type reference " + typeRef)
+		}
+	} 
 	
 	/** Creates a {@code <arraySTE>.push(<element>)} expression which adds the element expression to the array
 	 * referenced by arraySTE. */

@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.transpiler.es.n4idl.assistants
 
+import com.google.inject.Inject
 import java.util.List
+import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.RelationalOperator
+import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4idl.AndSwitchCondition
 import org.eclipse.n4js.n4idl.ArrayTypeSwitchCondition
 import org.eclipse.n4js.n4idl.ConstantSwitchCondition
@@ -20,6 +23,11 @@ import org.eclipse.n4js.n4idl.OrSwitchCondition
 import org.eclipse.n4js.n4idl.SwitchCondition
 import org.eclipse.n4js.n4idl.TypeSwitchCondition
 import org.eclipse.n4js.transpiler.TransformationAssistant
+import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -31,6 +39,8 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  * given {@link SwitchCondition}. 
  */
 class TypeSwitchTranspiler extends TransformationAssistant {
+	
+	@Inject private ResourceNameComputer resourceNameComputer; 
 	
 	/**
 	 * Transforms the given {@link SwitchCondition} to a corresponding IM model {@link Expression}.
@@ -64,8 +74,54 @@ class TypeSwitchTranspiler extends TransformationAssistant {
 	}
 	
 	private dispatch def List<Expression> doTransform(TypeSwitchCondition typeCondition, Expression lhs) {
-		val typeSTE = state.steCache.mapOriginal.get(typeCondition.type);
-		return #[_RelationalExpr(lhs, RelationalOperator.INSTANCEOF, _IdentRef(typeSTE))];
+		#[runtimeTypeCheck(typeCondition.type, lhs)];
+	}
+	
+	/** Creates a runtime type-check expression for the given type and lhs. */
+	private dispatch def Expression runtimeTypeCheck(TClassifier type, Expression lhs) {
+		val typeSTE = state.steCache.mapOriginal.get(type);
+		return _RelationalExpr(lhs, RelationalOperator.INSTANCEOF, _IdentRef(typeSTE));
+	}
+	
+	private dispatch def Expression runtimeTypeCheck(TInterface tInterface, Expression lhs) {
+		// use N4JS $implements function for instanceof checks with interfaces.
+		val $implementsSTE = steFor_$implements;
+		val fqn = resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(tInterface)
+		_CallExpr(_IdentRef($implementsSTE), lhs, _StringLiteral(fqn))
+	}
+	
+	/** @see {@link #runtimeTypeCheck(TClassifier, Expression) } */
+	private dispatch def Expression runtimeTypeCheck(PrimitiveType type, Expression lhs) {
+		switch (type.name) {
+			case "any":
+				_TRUE
+			case "int":
+				_TypeOfCheck(lhs, "number")
+			case "number":
+				_TypeOfCheck(lhs, "number")
+			case "string":
+				_TypeOfCheck(lhs, "string")
+			case "boolean":
+				_TypeOfCheck(lhs, "boolean")
+			default:
+				throw new IllegalStateException("Unhandled primitive type in TypeSwitchTranspiler: " + type)
+		}
+	}
+	
+	/** 
+	 * Creates a new typeof check using the given lhs and typeofResult:
+	 * {@code typeof <lhs> === "<typeofResult>"}.
+	 * 
+	 * @param lhs The left-hand side to check the type of
+	 * @param typeofResult The desired result of the typeof operator
+	 */
+	private def Expression _TypeOfCheck(Expression lhs, String typeofResult) {
+		_EqualityExpr(_UnaryExpr(UnaryOperator.TYPEOF, lhs), EqualityOperator.SAME, _StringLiteral(typeofResult))  
+	}
+	
+	/** @see {@link #runtimeTypeCheck(TClassifier, Expression) } */
+	private dispatch def Expression runtimeTypeCheck(Type type, Expression lhs) {
+		throw new IllegalStateException("Cannot produce runtime type-check for type " + type);
 	}
 	
 	private dispatch def List<Expression> doTransform(ConstantSwitchCondition constantCondition, Expression lhs) {
@@ -82,4 +138,3 @@ class TypeSwitchTranspiler extends TransformationAssistant {
 		throw new IllegalStateException("Encountered unhandled switch-condition of type " + unhandledCondition.class.simpleName + " in transpiler: " + unhandledCondition.toString);
 	}
 }
-						

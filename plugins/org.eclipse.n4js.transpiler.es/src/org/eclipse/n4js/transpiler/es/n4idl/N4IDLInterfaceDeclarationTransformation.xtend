@@ -13,6 +13,7 @@ package org.eclipse.n4js.transpiler.es.n4idl
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.transpiler.es.n4idl.assistants.MigrationTransformationAssistant
+import org.eclipse.n4js.transpiler.es.n4idl.assistants.N4IDLClassifierTransformationAssistant
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 
@@ -22,11 +23,14 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
  */
 class N4IDLInterfaceDeclarationTransformation extends InterfaceDeclarationTransformation {
 	
-	@Inject private extension MigrationTransformationAssistant
+	@Inject private extension MigrationTransformationAssistant;
+	@Inject private extension N4IDLClassifierTransformationAssistant;
 	
-	override protected createStaticInitialisers(SymbolTableEntry steClass, N4InterfaceDeclaration interfaceDecl) {
-		val statements = super.createStaticInitialisers(steClass, interfaceDecl);
+	override protected createStaticInitialisers(SymbolTableEntry steInterface, N4InterfaceDeclaration interfaceDecl) {
+		val statements = super.createStaticInitialisers(steInterface, interfaceDecl);
 		
-		return statements + createMigrationSupportInitializer(steClass, interfaceDecl);
-	}	
+		return statements 
+			+ createMigrationSupportInitializer(steInterface, interfaceDecl)
+			+ #[createImplementedInterfaceStaticInitializer(steInterface, interfaceDecl)];
+	}
 }

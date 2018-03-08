@@ -49,9 +49,14 @@ public class N4IDLGlobals {
 	public static final String COMPILED_VERSION_SEPARATOR = "$";
 
 	/**
-	 * The static field name that holds the available migrations for a given N4 classifier.
+	 * The static field name which holds the available migrations for a given N4 classifier.
 	 */
 	public static final String MIGRATIONS_STATIC_FIELD = "$migrations__n4";
+
+	/**
+	 * That static field name of a class or interface constructor which holds all implemented interface of the type.
+	 */
+	public static final String N4_SUPER_INTERFACE_STATIC_FIELD = "$implementedInterfaces__n4";
 
 	/**
 	 * The migrate call keyword in N4IDL migrations.
