@@ -183,6 +183,9 @@ public class JSDoc2HoverSerializer extends DomSwitch<Boolean> {
 				if (tagHandler != null) {
 					List<LineTag> lineTags = groupedLineTags.get(tagDef);
 					handleLineTags(tagDef, tagHandler, lineTags);
+					// open/close dt/dd tags is handled appending tags directly
+					// reset state to isolate tag line from each other
+					md2HtmlBuilder.resetMarkdownConverter();
 				}
 			}
 			md2HtmlBuilder.append("\n</dl>");
