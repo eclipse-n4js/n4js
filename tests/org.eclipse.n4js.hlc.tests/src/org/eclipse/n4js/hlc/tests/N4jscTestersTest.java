@@ -181,7 +181,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"--testWith", "nodejs_mangelhaft",
 				"--test", pathToDemoTest,
 				"--testReportRoot", testReportRoot,
-				"-verbose"
+				"--verbose"
 		};
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
@@ -243,7 +243,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		final File tempDir = Files.createTempDir();
 		tempDir.deleteOnExit();
 		final String[] args = { "--projectlocations", proot,
-				"--buildWith", "allprojects",
+				"--buildType", "allprojects",
 				"--testCatalogFile", tempDir + "/test-catalog.json",
 				"--verbose"
 		};
@@ -264,8 +264,8 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 			throws ExitCodeException, FileNotFoundException, IOException {
 		String proot = workspace.getAbsolutePath().toString();
 		final String[] args = { "--projectlocations", proot,
-				"-buildType", "allprojects",
-				"-testCatalogFile", "test-catalog.json",
+				"--buildType", "allprojects",
+				"--testCatalogFile", "test-catalog.json",
 				"--verbose"
 		};
 
