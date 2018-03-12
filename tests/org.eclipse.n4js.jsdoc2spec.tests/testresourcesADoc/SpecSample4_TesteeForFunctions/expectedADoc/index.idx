@@ -20,6 +20,6 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 		NO_PACKAGE
 			ATests.n4js
 				ATest::12::21::22
-				ATest#testBarBasics::23::23::39
-				ATest#testCAPITALS::29::40::56
-				ATest#testFuncBasics::17::57::73
+				ATest#testBarBasics::23::23::41
+				ATest#testCAPITALS::29::42::60
+				ATest#testFuncBasics::17::61::79

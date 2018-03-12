@@ -13,10 +13,13 @@
 
 class X {}
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "fu1"
+// XPECT errors --> "Missing return or throw statement." at "fu1"
 function fu1(): union{string,int} {}
 
-// XPECT errors --> "Type void may only be used to declare the return type of functions and methods." at "void"
+/* XPECT errors ---
+   "Missing return or throw statement." at "fu2"
+   "Type void may only be used to declare the return type of functions and methods." at "void"
+--- */
 function fu2(): union{string,void} {}
 
 // XPECT noerrors --> "string is one possible solution" at "fu3"

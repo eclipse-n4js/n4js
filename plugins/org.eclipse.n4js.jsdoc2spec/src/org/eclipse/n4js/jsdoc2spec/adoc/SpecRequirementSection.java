@@ -16,6 +16,7 @@ import static org.eclipse.n4js.jsdoc2spec.adoc.FileSystem.SEP;
 import java.io.File;
 import java.util.Map;
 
+import org.eclipse.n4js.jsdoc2spec.KeyUtils;
 import org.eclipse.n4js.jsdoc2spec.SpecInfo;
 
 /**

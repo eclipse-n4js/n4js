@@ -27,7 +27,8 @@ import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyserDataRecorder;
 import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
-import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
+import org.eclipse.n4js.flowgraphs.analysers.DummyBackwardVisitor;
+import org.eclipse.n4js.flowgraphs.analysers.DummyForwardVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
@@ -58,7 +59,7 @@ public class FlowgraphsXpectMethod {
 	N4JSFlowAnalyser getFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
 		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
-		flowAnalyzer.createGraphs(script, true);
+		flowAnalyzer.createGraphs(script);
 		return flowAnalyzer;
 	}
 
@@ -225,9 +226,10 @@ public class FlowgraphsXpectMethod {
 			IEObjectCoveringRegion referenceOffset) {
 
 		N4JSFlowAnalyserDataRecorder.setEnabled(true);
-		GraphVisitor gv = new DummyForwardBackwardVisitor();
+		GraphVisitor dfv = new DummyForwardVisitor();
+		GraphVisitor dbv = new DummyBackwardVisitor();
 		ControlFlowElement referenceCFE = getCFE(referenceOffset);
-		getFlowAnalyzer(referenceCFE).accept(gv);
+		getFlowAnalyzer(referenceCFE).accept(dfv, dbv);
 		N4JSFlowAnalyserDataRecorder.setEnabled(false);
 		performBranchAnalysis(referenceOffset, null, referenceOffset);
 		List<String> edgeStrings = new LinkedList<>();

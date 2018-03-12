@@ -19,11 +19,21 @@
 class A {
 	public s : string;
 	public f () : void { console.log("old f called")}
-	public constructor(@Spec spec : ~this) {}
+	public constructor(@Spec spec : ~i~this) {}
 }
 
-// overriding a method on instantiation XPECT noerrors -->
+// overriding methods via spec constructor must not be possible XPECT warnings --> "f is not defined in ~i~this[A]." at "f"
 var a1 : A = new A({ s: "set by ctor", f: function (){ console.log("new f called");  this.s = "set by f()";}});
 
 a1.f();
 console.log(a1.s);
+
+
+/* XPECT output ---
+<==
+stdout:
+old f called
+set by ctor
+stderr:
+==>
+--- */

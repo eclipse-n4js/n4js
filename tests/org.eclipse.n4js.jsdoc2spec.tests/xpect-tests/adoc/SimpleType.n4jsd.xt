@@ -36,7 +36,7 @@ export external public class C {
 
 
 	   ==== Semantics
-	   [.todo, label="test ++C.foo++"]
+	   [TODO, title="test ++C.foo++"]
 	   --
 	   Add tests specifying semantics for ``++foo(): void++``
 	   --
@@ -80,10 +80,11 @@ export external public class D {
 
 
 	   ==== Semantics
-	   [.todo, label="test ++D.foo++"]
+	   [TODO, title="test ++D.foo++"]
 	   --
 	   Add tests specifying semantics for ``++foo(): void++``
 	   --
+
 
 	   ---
 	 */
@@ -114,10 +115,11 @@ export external public class D {
 
 
 	   ==== Semantics
-	   [.todo, label="test ++D.bar++"]
+	   [TODO, title="test ++D.bar++"]
 	   --
 	   Add tests specifying semantics for ``++bar(): void++``
 	   --
+
 
 	   ---
 	 */

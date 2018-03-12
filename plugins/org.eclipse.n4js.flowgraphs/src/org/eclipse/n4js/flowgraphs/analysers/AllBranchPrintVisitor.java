@@ -83,7 +83,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initializeMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void initializeContainer(ControlFlowElement curContainer) {
 		if (startElement == null) {
 			super.requestActivation(new AllBranchPrintExplorer());
 		}
@@ -177,7 +177,12 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 
 		@Override
 		protected void visit(FlowEdge edge) {
-			branchString += " -> ";
+			boolean considerEdge = true;
+			considerEdge &= edge.start != getContainer();
+			considerEdge &= edge.end != getContainer();
+			if (considerEdge) {
+				branchString += " -> ";
+			}
 		}
 
 		@Override

@@ -123,12 +123,13 @@ public class N4JSDocletParser extends DocletParser {
 	public final static LineTagWithSimpleTextDefinition TAG_REQID = new LineTagWithSimpleTextDefinition("reqid");
 
 	/**
-	 * All N4JS tag comments.
+	 * All N4JS tag comments. The order of these tags also define the default order in which the
+	 * {@link JSDoc2HoverSerializer} orders them.
 	 */
 	final static AbstractLineTagDefinition[] N4JS_LINE_TAGS = {
-			TAG_SPEC, TAG_AUTHOR, TAG_TODO, TAG_PARAM, TAG_RETURN, TAG_SPECFROMDESCR, TAG_TASK, TAG_REQID,
+			TAG_SPEC, TAG_PARAM, TAG_RETURN, TAG_AUTHOR, TAG_TODO, TAG_TASK, TAG_REQID,
 			TAG_API_NOTE,
-			TAG_API_STATE,
+			TAG_API_STATE, TAG_SPECFROMDESCR,
 			TAG_TESTEE, TAG_TESTEEFROMTYPE, TAG_TESTEETYPE, TAG_TESTEEMEMBER
 	};
 

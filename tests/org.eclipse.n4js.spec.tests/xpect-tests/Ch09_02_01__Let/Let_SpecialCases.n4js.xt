@@ -33,7 +33,7 @@ function case1c() {
 	for(;;) {
 		let test;
 	}
-	// XPECT warnings --> "Dead code. No execution possible after for statement." at "test;"
+	// XPECT warnings --> "Dead code." at "test;"
 	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'test'." at "test"
 	test;
 }
@@ -57,7 +57,7 @@ function case2b() {
 		// XPECT noerrors -->
 		let test: string;
 	}
-	// XPECT warnings --> "Dead code. No execution possible after for statement." at "test;"
+	// XPECT warnings --> "Dead code." at "test;"
 	// XPECT type of 'test' --> number
 	test;
 }
@@ -75,7 +75,7 @@ function case3a() {
 		// XPECT type of 'i' --> string
 		i;
 	}
-	// XPECT warnings --> "Dead code. No execution possible after for statement." at "i;"
+	// XPECT warnings --> "Dead code." at "i;"
 	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'i'." at "i"
 	i;
 }

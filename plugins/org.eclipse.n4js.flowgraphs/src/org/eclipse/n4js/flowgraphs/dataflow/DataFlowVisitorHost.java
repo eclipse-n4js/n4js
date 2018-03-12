@@ -10,10 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
@@ -29,22 +26,9 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 	private DataFlowGraphExplorer dfExplorer;
 	private AssignmentRelationFactory assignmentFactory;
 
-	static private TraverseDirection[] getDirections(Collection<DataFlowVisitor> dfVisitors) {
-		Set<TraverseDirection> directions = new HashSet<>();
-		for (DataFlowVisitor dfv : dfVisitors) {
-			directions.add(dfv.direction);
-		}
-		return directions.toArray(new TraverseDirection[directions.size()]);
-	}
-
 	/** Constructor */
-	public DataFlowVisitorHost(DataFlowVisitor... dfVisitors) {
-		this(Arrays.asList(dfVisitors));
-	}
-
-	/** Constructor */
-	public DataFlowVisitorHost(Collection<DataFlowVisitor> dfVisitors) {
-		super(getDirections(dfVisitors));
+	public DataFlowVisitorHost(TraverseDirection direction, Collection<DataFlowVisitor> dfVisitors) {
+		super(direction);
 		this.dfVisitors = dfVisitors;
 	}
 
@@ -59,7 +43,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 	}
 
 	@Override
-	protected void initializeModeInternal(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void initializeContainerInternal(ControlFlowElement curContainer) {
 		for (DataFlowVisitor dfVisitor : dfVisitors) {
 			dfVisitor.setSymbolFactory(getSymbolFactory());
 		}
@@ -68,4 +52,11 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		requestActivation(dfExplorer);
 	}
 
+	@Override
+	protected void terminateContainer(ControlFlowElement curContainer) {
+		DataFlowBranchWalker dfb = (DataFlowBranchWalker) dfExplorer.getLastBranch();
+		for (Assumption ass : dfb.assumptions.values()) {
+			ass.terminate();
+		}
+	}
 }

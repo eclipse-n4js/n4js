@@ -50,7 +50,7 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
+	protected void initializeContainer(ControlFlowElement curContainer) {
 		requestActivation(new AllNodesAndEdgesExplorer());
 	}
 
@@ -63,7 +63,7 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void terminateMode(TraverseDirection curMode, ControlFlowElement curContainer) {
+	protected void terminateContainer(ControlFlowElement curContainer) {
 		checkState(allDeadNodesGV.size() == allDeadNodesBW.size());
 		checkState(allDeadNodesGV.containsAll(allDeadNodesBW));
 
@@ -101,7 +101,11 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 
 		@Override
 		protected void visit(FlowEdge edge) {
-			if (!edge.isDead()) {
+			boolean considerEdge = true;
+			considerEdge &= !edge.isDead();
+			considerEdge &= edge.start != getContainer();
+			considerEdge &= edge.end != getContainer();
+			if (considerEdge) {
 				allEdges.add(edge);
 			}
 		}

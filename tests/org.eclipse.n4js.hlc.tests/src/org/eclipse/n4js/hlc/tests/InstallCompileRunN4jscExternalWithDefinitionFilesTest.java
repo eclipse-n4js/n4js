@@ -67,7 +67,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				"-r", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.projects.toString(),
+				"-bt", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JS
 		};
 		final String out = runAndCaptureOutput(args);
@@ -97,7 +97,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				"-r", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.projects.toString(),
+				"-bt", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JSX
 		};
 

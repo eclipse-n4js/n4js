@@ -28,7 +28,11 @@ class C # 1 {
 }
 
 class C # 2 {
-	// XPECT errors --> "Requested version 3 exceeds the maximal version 2 of the current context." at "E # 3"
+	/* XPECT errors ---
+		"Requested version 3 exceeds the maximal version 2 of the current context." at "E # 3"
+		"The explicit declaration of type version requests is only allowed in functions/classifiers annotated as @Migration or @VersionAware." at "# 3"
+		---
+	 */
 	e: E # 3;
 }
 

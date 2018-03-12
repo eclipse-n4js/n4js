@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
@@ -38,6 +39,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
@@ -46,6 +48,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -63,11 +66,15 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  */
 class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
-	@Inject N4JSTypeSystem ts;
+	@Inject private N4JSTypeSystem ts;
 
-	@Inject PolyfillValidatorFragment polyfillValidatorFragment;
+	@Inject private PolyfillValidatorFragment polyfillValidatorFragment;
 
-	@Inject extension ContainerTypesHelper containerTypesHelper;
+	@Inject private extension ContainerTypesHelper containerTypesHelper;
+
+	@Inject private MemberVisibilityChecker memberVisibilityChecker;
+
+	@Inject private N4JSElementKeywordProvider n4jsElementKeywordProvider;
 
 	/**
 	 * NEEEDED
@@ -258,17 +265,28 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					return false;
 				}
 			} else if (superType instanceof TClass) {
-
-
-
 				// (got a super class; now validate it ...)
+
 				// super class must not be final
 				if (superType.final) {
 					val message = getMessageForCLF_EXTEND_FINAL(superType.name);
 
-					val superClassUri = EcoreUtil.getURI(superType.astElement).toString;
+					val superTypeAstElement = superType.eGet(TypesPackage.eINSTANCE.syntaxRelatedTElement_AstElement,
+						false) as EObject;
+					val superClassUri = if (superTypeAstElement!==null) EcoreUtil.getURI(superTypeAstElement).toString;
 
-					addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI,superClassUri);
+					if (superClassUri !== null) {
+						addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,
+							IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI, superClassUri);
+					} else {
+						addIssue(message, n4Class.superClassRef, null, CLF_EXTEND_FINAL,
+							IssueUserDataKeys.CLF_EXTEND_FINAL.SUPER_TYPE_DECLARATION_URI);
+					}
+					return false;
+				}
+
+				// ctor of super class must be accessible
+				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superType)) {
 					return false;
 				}
 
@@ -278,7 +296,25 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(message, n4Class, N4_TYPE_DECLARATION__NAME, CLF_OBSERVABLE_MISSING);
 					return false;
 				}
+			} else if (superType instanceof TObjectPrototype) {
+				// the following applies to TObjectPrototype as well (not just to TClass)
+				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superType)) {
+					return false;
+				}
 			}
+		}
+		return true;
+	}
+
+	def private holdsCtorOfSuperTypeIsAccessible(N4ClassDeclaration n4Class, TClassifier superType) {
+		val receiverTypeRef = TypeUtils.createTypeRef(n4Class.definedType);
+		val superCtor = containerTypesHelper.fromContext(n4Class).findConstructor(superType);
+		if(superCtor!==null && !memberVisibilityChecker.isVisible(n4Class, receiverTypeRef, superCtor).visibility) {
+			val message = getMessageForCLF_EXTEND_NON_ACCESSIBLE_CTOR(
+				n4jsElementKeywordProvider.keyword(superType),
+				superType.name);
+			addIssue(message, n4Class, N4_CLASS_DEFINITION__SUPER_CLASS_REF, CLF_EXTEND_NON_ACCESSIBLE_CTOR);
+			return false;
 		}
 		return true;
 	}
@@ -314,10 +350,9 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				val annSpec = SPEC.getAnnotation(currFPar);
 				if (annSpec !== null) {
 					specAnnotations.add(annSpec);
-					if (!(currFPar.declaredTypeRef instanceof ThisTypeRef &&
-						(STRUCTURAL_FIELD_INITIALIZER === currFPar.declaredTypeRef.typingStrategy
-							|| STRUCTURAL === currFPar.declaredTypeRef.typingStrategy
-						))) {
+					val correctType = currFPar.declaredTypeRef instanceof ThisTypeRef
+						&& STRUCTURAL_FIELD_INITIALIZER === currFPar.declaredTypeRef.typingStrategy;
+					if (!correctType) {
 						val message = messageForCLF_SPEC_WRONG_TYPE;
 						addIssue(message, annSpec, null, CLF_SPEC_WRONG_TYPE);
 					} else { // prevent consequential errors

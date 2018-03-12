@@ -27,7 +27,7 @@
 function ForStatement1() {
 	// ForStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement1 XPECT allEdges ---
-		"start" -LoopEnter-> ;, ; -LoopInfinite-> ;
+		"start" -LoopEnter-> ;, ; -LoopEnter|LoopInfinite-> ;
 	--- */
 	/* ForStatement1 XPECT allBranches ---
 		B0: "start" -> ;[B1|b2], B1: [B0] -> ;[b3], b2: [B0] -> [b4], b3: [B1] -> [b4],
@@ -50,14 +50,14 @@ function ForStatement1() {
 	// ForStatement1 XPECT succs at 'for' --> "end"
 	"start";
 	for (;;) ;
-	// ForStatement1 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	// ForStatement1 XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 
 function ForStatement2() {
 	// ForStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement2 XPECT allEdges ---
-		"start" -LoopEnter-> 5, 5 -LoopInfinite-> 5
+		"start" -LoopEnter-> 5, 5 -LoopEnter|LoopInfinite-> 5
 	--- */
 	/* ForStatement2 XPECT allBranches ---
 		B0: "start" -> 5[B1|b2], B1: [B0] -> 5[b3], b2: [B0] -> [b4], b3: [B1] -> [b4],
@@ -80,7 +80,7 @@ function ForStatement2() {
 	// ForStatement2 XPECT succs at 'for' --> "end"
 	"start";
 	for (;;) 5;
-	// ForStatement2 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	// ForStatement2 XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 
@@ -132,7 +132,7 @@ function ForStatement3() {
 function ForStatement4() {
 	// ForStatement4 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement4 XPECT allEdges ---
-		"start" --> 1, 1 -LoopEnter-> 5, 3 -LoopInfinite-> 5, 5 --> 3
+		"start" --> 1, 1 -LoopEnter-> 5, 3 -LoopEnter|LoopInfinite-> 5, 5 --> 3
 	--- */
 	/* ForStatement4 XPECT allBranches ---
 		B0: "start" -> 1 -> 5 -> 3[B1|b2], B1: [B0] -> 5 -> 3[b3], b2: [B0] -> [b4],
@@ -157,7 +157,7 @@ function ForStatement4() {
 	// ForStatement4 XPECT succs at 'for' --> "end"
 	"start";
 	for (1;;3) 5;
-	// ForStatement4 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	// ForStatement4 XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 
@@ -252,7 +252,7 @@ function ForStatement6() {
 function ForStatement7() {
 	// ForStatement7 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement7 XPECT allEdges ---
-		"start" -LoopEnter-> 5, 3 -LoopInfinite-> 5, 5 --> 3
+		"start" -LoopEnter-> 5, 3 -LoopEnter|LoopInfinite-> 5, 5 --> 3
 	--- */
 	/* ForStatement7 XPECT allBranches ---
 		B0: "start" -> 5 -> 3[B1|b2], B1: [B0] -> 5 -> 3[b3], b2: [B0] -> [b4],
@@ -274,7 +274,7 @@ function ForStatement7() {
 	// ForStatement7 XPECT succs at 'for' --> "end"
 	"start";
 	for (;;3) 5;
-	// ForStatement7 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	// ForStatement7 XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 
@@ -322,7 +322,7 @@ function ForStatement8() {
 function ForStatement9() {
 	// ForStatement9 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement9 XPECT allEdges ---
-		"start" --> 1, 1 -LoopEnter-> 5, 5 -LoopInfinite-> 5
+		"start" --> 1, 1 -LoopEnter-> 5, 5 -LoopEnter|LoopInfinite-> 5
 	--- */
 	/* ForStatement9 XPECT allBranches ---
 		B0: "start" -> 1 -> 5[B1|b2], B1: [B0] -> 5[b3], b2: [B0] -> [b4],
@@ -346,7 +346,7 @@ function ForStatement9() {
 	// ForStatement9 XPECT succs at 'for' --> "end"
 	"start";
 	for (1;;) 5;
-	// ForStatement9 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	// ForStatement9 XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 
@@ -757,7 +757,7 @@ function ForStatementBreak1() {
 	// ForStatementBreak1 XPECT preds at 'for' --> "start"
 	// ForStatementBreak1 XPECT succs at 'for' --> "end"
 	"start";
-	// ForStatementBreak1 XPECT warnings --> "Dead code. No execution possible after expression statement." at "3"
+	// ForStatementBreak1 XPECT warnings --> "Dead code." at "3"
 	for (1;2;3) break;
 	"end";
 }
@@ -900,12 +900,12 @@ function ForStatementContinue3() {
 function ForStatementContinue4() {
 	// ForStatementContinue4 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementContinue4 XPECT allEdges ---
-		"start" -LoopEnter-> continue;, continue; -Continue|LoopInfinite-> continue;
+		"start" -LoopEnter-> continue;, continue; -Continue|LoopEnter|LoopInfinite-> continue;
 	--- */
 	/* ForStatementContinue4 XPECT allBranches ---
-		B0: "start" -> continue;[b1|B2], B10: [b5|b9]"end", B2: [B0] -> [B3],
-		B3: [b1|B2][B4|b5], B4: [B3]continue;[b6|B7], B7: [B4][B8], B8: [b6|B7][b9], b1: [B0] -> [B3],
-		b5: [B3] ->  -> [B10], b6: [B4][B8], b9: [B8] ->  -> [B10]
+		B0: "start" -> continue;[b1|B2], B2: [B0] -> [B3], B3: [b1|B2][B4|b5],
+		B4: [B3]continue;[b6|B7], B7: [B4][B8], B8: [b6|B7][b9], b10: [b5|b9]"end", b1: [B0] -> [B3],
+		b5: [B3] ->  -> [b10], b6: [B4][B8], b9: [B8] ->  -> [b10]
 	--- */
 	/* ForStatementContinue4 backward XPECT allBranches direction 'Backward' ---
 		B10: [b9] -> [B11], B11: [B8|B10]continue; -> [B12], B12: [B6|B11]"start",
@@ -924,46 +924,44 @@ function ForStatementContinue4() {
 	// ForStatementContinue4 XPECT succs at 'for' --> "end"
 	"start";
 	for (;;) continue;
-	// ForStatementContinue4 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	// ForStatementContinue4 XPECT warnings --> "Dead code." at ""end";"
 	"end";
 }
 
 function ForStatementInContinue1() {
 	// ForStatementInContinue1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementInContinue1 XPECT allEdges ---
-		"start" --> i,
-		1 --> [1],
-		[1] -LoopEnter-> continue;,
-		[1] -LoopExit-> "end",
-		i --> 1
+		"start" --> i, 1 --> [1], [1] -LoopEnter-> continue;, [1] -LoopExit-> "end",
+		continue; -Continue|LoopEnter|LoopRepeat-> continue;, continue; -Continue|LoopExit|LoopRepeat-> "end", i --> 1
 	--- */
 	/* ForStatementInContinue1 XPECT allBranches ---
-		B0: "start" -> i -> 1 -> [1][B1|B2], B10: [B4|B8|B9],
-		B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B9], B4: [B1][B10], B5: [b3] -> continue;[b7|B8],
-		B6: [b3] -> [B9], B8: [B5][B10], B9: [B2|B6|b7]"end"[B10], b3: [B1][B5|B6], b7: [B5] -> [B9]
+		B0: "start" -> i -> 1 -> [1][B1|B2], B10: [b8|B9][B11], B11: [B2|B7|B10]"end",
+		B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B11], B4: [B1] ->  -> [B5], B5: [b3|B4][B6|B7],
+		B6: [B5]continue;[b8|B9], B7: [B5][B11], B9: [B6] -> [B10], b3: [B1] ->  -> [B5], b8: [B6] -> [B10]
 	--- */
 	/* ForStatementInContinue1 backward XPECT allBranches direction 'Backward' ---
-		B0: [B1|B2], B10: [B4|B7|B9][1] -> 1 -> i -> "start",
-		B1: [B0]continue; -> [B3], B2: [B0]"end" -> [B3], B3: [B1|B2][B4|b5], B4: [B3][B10],
-		B6: [b5] ->  -> continue;[B7|b8], B7: [B6] -> [B10], B9: [b8] -> continue; -> [B10], b5: [B3][B6], b8: [B6][B9]
+		B0: "end"[B1|B2], B11: [b10] -> [B12], B12: [B9|B11]continue; -> [B13],
+		B13: [B1|B7|B12][1] -> 1 -> i -> "start", B1: [B0] -> [B13], B2: [B0][B3|b4], B3: [B2] -> [B6], B5: [b4] -> [B6],
+		B6: [B3|B5]continue;[B7|B8], B7: [B6] -> [B13], B8: [B6][B9|b10], B9: [B8] -> [B12], b10: [B8][B11],
+		b4: [B2][B5]
 	--- */
 	/* ForStatementInContinue1 XPECT allPaths ---
 		"start" -> i -> 1 -> [1] -> "end",
-		"start" -> i -> 1 -> [1] -> continue;
+		"start" -> i -> 1 -> [1] -> continue; -> "end", "start" -> i -> 1 -> [1] -> continue; -> continue; -> "end"
 	--- */
 	/* ForStatementInContinue1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> [1] -> 1 -> i -> "start",
-		continue; -> [1] -> 1 -> i -> "start"
+		"end" -> continue; -> [1] -> 1 -> i -> "start", "end" -> continue; -> continue; -> [1] -> 1 -> i -> "start"
 	--- */
 	// ForStatementInContinue1 XPECT path from '"start"' to '"end"' -->
-	// ForStatementInContinue1 XPECT path from 'continue;' notTo '"end"' -->
+	// ForStatementInContinue1 XPECT path from 'continue;' to '"end"' -->
 	// ForStatementInContinue1 XPECT commonPreds of 'continue;' and '[1]' --> [1]
-	// ForStatementInContinue1 XPECT commonPreds of '"end"' and 'continue;' --> [1]
+	// ForStatementInContinue1 XPECT commonPreds of '"end"' and 'continue;' --> [1], continue;
 	// ForStatementInContinue1 XPECT succs at '"start"' --> i
 	// ForStatementInContinue1 XPECT succs at '[1]' --> continue;, "end"
 	// ForStatementInContinue1 XPECT succs type 'LoopEnter' at '[1]' --> continue;
-	// ForStatementInContinue1 XPECT succs type 'Continue' at 'continue;' -->
-	// ForStatementInContinue1 XPECT succs at 'continue;' -->
+	// ForStatementInContinue1 XPECT succs type 'Continue' at 'continue;' -->"end"
+	// ForStatementInContinue1 XPECT succs at 'continue;' -->"end", continue;
 	// ForStatementInContinue1 XPECT preds at 'for' --> "start"
 	// ForStatementInContinue1 XPECT succs at 'for' --> "end"
 	"start";

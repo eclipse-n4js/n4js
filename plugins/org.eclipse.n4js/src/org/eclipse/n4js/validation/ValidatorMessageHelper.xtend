@@ -31,6 +31,8 @@ import javax.inject.Singleton
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.IdentifierRef
+import java.util.List
 
 /**
  */
@@ -90,21 +92,21 @@ class ValidatorMessageHelper {
 	/**
 	 * Returns with the keyword and the name of the function definition.
 	 */
-	public def String description(FunctionDefinition definition) {
+	public dispatch def String description(FunctionDefinition definition) {
 		'''«definition.keyword» «definition.name»'''
 	}
 
 	/**
 	 * Returns keyword and name of a named element; this method is seldom called, usually more concrete methods are used instead.
 	 */
-	public def String description(NamedElement namedElement) {
+	public dispatch def String description(NamedElement namedElement) {
 		'''«namedElement.keyword» «namedElement.name»'''
 	}
 
 	/**
 	 * Returns keyword and name of an identifiable element; this method is seldom called, usually more concrete methods are used instead.
 	 */
-	public def String description(IdentifiableElement identifiableElement) {
+	public dispatch def String description(IdentifiableElement identifiableElement) {
 		if (identifiableElement === null) {
 			return "unknown "
 		}
@@ -114,13 +116,28 @@ class ValidatorMessageHelper {
 	/**
 	 * Returns type of member and short qualified name.
 	 */
-	public def String description(TMember member) {
+	public dispatch def String description(TMember member) {
 		if(member.isConstructor) {
 			val container = member.containingType;
 			val preposition = if(container instanceof TInterface) "in" else "of";
 			return '''«member.keyword» «preposition» «container?.description»''';
 		}
 		return '''«member.prefixedKeyword» «member.shortQualifiedName»''';
+	}
+	
+	/**
+	 * Returns type of classifier and short qualified name.
+	 */
+	public dispatch def String description(TClassifier classifier) {
+		'''«classifier.keyword» «classifier.name»'''
+	}
+	
+	public dispatch def String description(IdentifierRef identifierRef) {
+		'''identifier «identifierRef.idAsText»'''
+	}
+	
+	public dispatch def String description(EObject eObject) {
+		'''<unnamed>'''
 	}
 
 	/**
@@ -168,13 +185,6 @@ class ValidatorMessageHelper {
 
 	public def String shortQualifiedName(TVariable tvar) {
 		return tvar.name;
-	}
-
-	/**
-	 * Returns type of classifier and short qualified name.
-	 */
-	public def String description(TClassifier classifier) {
-		'''«classifier.keyword» «classifier.name»'''
 	}
 
 	/**
@@ -308,6 +318,32 @@ class ValidatorMessageHelper {
 		strb.append(": ");
 		appendPromisedReturnType(strb, tfunction)
 		return strb.toString();
+	}
+	
+	/**
+	 * Returns nicely worded enumeration of the given items.
+	 * 
+	 * Examples
+	 * <code>
+	 * "A" -> "A"
+	 * "A", "B" -> "A or B"
+	 * "A", "B", "C" -> "A, B or C"
+	 * </code>
+	 */
+	public def String orList(List<String> items) {
+		// if there is nothing to enumerate
+		if (items.empty) 	 { return ""; }
+		if (items.size == 1) { return items.head }
+		if (items.size >= 2)  { 
+			return new StringBuilder()
+			// add first element
+			.append(items.head)
+			// add middle elements with prepended "or" (possible empty sublist)
+			.append(items.tail.take(items.size - 2).join(", ", ", ", "", [it]))
+			// add last element with prepended "or"
+			.append(" or " + items.last)
+			.toString;
+		}
 	}
 
 	/**

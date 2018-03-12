@@ -21,6 +21,6 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 		NO_PACKAGE
 			ATests.n4js
 				ATest::15::21::22
-				ATest#testBarBasics::20::23::39
-				ATest#testOnlyInA::26::40::56
-				BTest::33::59::60
+				ATest#testBarBasics::20::23::41
+				ATest#testOnlyInA::26::42::60
+				BTest::33::63::64

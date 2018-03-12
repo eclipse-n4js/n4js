@@ -23,15 +23,25 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /** see {@link BranchWalkerInternal} */
 abstract public class BranchWalker extends BranchWalkerInternal {
-	private RepresentingNode lastRN;
+	private Node lastRN;
 	Set<ControlFlowType> pEdgeTypes = new HashSet<>();
 
 	@Override
 	final protected void visit(Node node) {
 		if (node instanceof RepresentingNode) {
-			lastRN = (RepresentingNode) node;
+			lastRN = node;
 			ControlFlowElement cfe = node.getRepresentedControlFlowElement();
 			visit(cfe);
+			return;
+		}
+		if (this.getContainer() == node.getControlFlowElement()) {
+			ControlFlowElement cfe = node.getControlFlowElement();
+			if (lastRN == null) {
+				enterContainer(cfe);
+			} else {
+				exitContainer(cfe);
+			}
+			lastRN = node;
 		}
 	}
 
@@ -39,10 +49,13 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 	final protected void visit(Node start, Node end, ControlFlowEdge edge) {
 		pEdgeTypes.add(edge.cfType);
 
-		if (end instanceof RepresentingNode) {
+		if (end instanceof RepresentingNode || this.getContainer() == end.getControlFlowElement()) {
+			ControlFlowElement endCFE = end.getRepresentedControlFlowElement();
+			endCFE = endCFE == null ? end.getControlFlowElement() : endCFE;
+
 			if (lastRN != null) {
 				ControlFlowElement startCFE = lastRN.getRepresentedControlFlowElement();
-				ControlFlowElement endCFE = end.getRepresentedControlFlowElement();
+				startCFE = startCFE == null ? lastRN.getControlFlowElement() : startCFE;
 				FlowEdge flowEdge = new FlowEdge(startCFE, endCFE, pEdgeTypes);
 				visit(flowEdge);
 				pEdgeTypes.clear();
@@ -52,17 +65,17 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 				addPredecedingRepNodes(this, edgeInfos, new EdgeInfo(this));
 				for (EdgeInfo edgeInfo : edgeInfos) {
 					ControlFlowElement startCFE = edgeInfo.startNode.getRepresentedControlFlowElement();
-					ControlFlowElement endCFE = end.getRepresentedControlFlowElement();
+					startCFE = startCFE == null ? edgeInfo.startNode.getControlFlowElement() : startCFE;
 					FlowEdge flowEdge = new FlowEdge(startCFE, endCFE, edgeInfo.pEdgeTypes);
 					edgeInfo.edgeOwner.visit(flowEdge);
-					pEdgeTypes.clear();
 				}
+				pEdgeTypes.clear();
 			}
 		}
 	}
 
 	static class EdgeInfo {
-		RepresentingNode startNode = null;
+		Node startNode = null;
 		boolean isDead = false;
 		Set<ControlFlowType> pEdgeTypes = new HashSet<>();
 		BranchWalker edgeOwner = null;
@@ -116,6 +129,26 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 	}
 
 	/**
+	 * Called after {@link #initialize()} and before {@link #visit(ControlFlowElement)}.
+	 *
+	 * @param cfContainer
+	 *            the control flow container that is entered
+	 */
+	protected void enterContainer(ControlFlowElement cfContainer) {
+		// overwrite me
+	}
+
+	/**
+	 * Called after {@link #visit(ControlFlowElement)} and before {@link #terminate()}.
+	 *
+	 * @param cfContainer
+	 *            the control flow container that is exited
+	 */
+	protected void exitContainer(ControlFlowElement cfContainer) {
+		// overwrite me
+	}
+
+	/**
 	 * Called for each node in direction of a path.
 	 *
 	 * @param cfe
@@ -141,10 +174,12 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 
 	@Override
 	final protected BranchWalker fork() {
-		BranchWalker ap2 = forkPath();
-		ap2.lastRN = lastRN;
-		ap2.pEdgeTypes.addAll(pEdgeTypes);
-		return ap2;
+		BranchWalker forkedPath = forkPath();
+		if (forkedPath != null) {
+			forkedPath.lastRN = lastRN;
+			forkedPath.pEdgeTypes.addAll(pEdgeTypes);
+		}
+		return forkedPath;
 	}
 
 	/**

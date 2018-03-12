@@ -321,4 +321,5 @@ public class N4JSTypeSystem {
 			return null;
 		}
 	}
+
 }

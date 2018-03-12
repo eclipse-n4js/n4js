@@ -49,7 +49,7 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	@Test
 	public void testCompilationFailsDueToMissingDependency() {
 		String proot = workspace.getAbsolutePath().toString();
-		String[] args = { "-pl", proot, "-t", "allprojects" };
+		String[] args = { "-pl", proot, "-bt", "allprojects" };
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
 		// Assert that at most 19 files are compiled. The actual number depends on the chosen algorithm for the build
@@ -88,7 +88,7 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Test if --clean/-c is on, -t flag must be on as well.
+	 * Test if --clean/-c is on, -bt flag must be on as well.
 	 */
 	@Test
 	public void testWhenCleanThenBuildType() {
@@ -98,25 +98,25 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Test that --clean/-c can not be used with -t singlefile.
+	 * Test that --clean/-c can not be used with -bt singlefile.
 	 */
 	@Test
 	public void testCleanAndTypeSingleFileNotAllowed() {
 		String proot = workspace.getAbsolutePath().toString();
 		String project = "TestCleanPrj1";
 		String pathToFile = proot + "/" + project + "/src/C.n4js";
-		String[] args = { "--clean", "-pl", proot, "-t", "singlefile", pathToFile };
+		String[] args = { "--clean", "-pl", proot, "-bt", "singlefile", pathToFile };
 		expectCompilerException(args, ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS);
 	}
 
 	/**
 	 *
-	 * Test that it is not allowed to use --clean/-c flag with -t other than allprojects/dontcompile
+	 * Test that it is not allowed to use --clean/-c flag with -bt other than allprojects/dontcompile
 	 */
 	@Test
 	public void testCleanProjectsWithoutProjectLocation() {
 		String proot = workspace.getAbsolutePath().toString();
-		String[] args = { "-c", "-t", "projects" };
+		String[] args = { "-c", "-bt", "projects" };
 		expectCompilerException(args, ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS);
 		// freshly setup workspace contains compiled files in TestCleanPrj1 and TestCleanPrj2
 		assertEquals(3, countFilesCompiledToES(proot));

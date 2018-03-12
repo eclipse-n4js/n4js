@@ -70,7 +70,7 @@ function func10(b : boolean) : number {
 }
 
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "func11"
+// XPECT errors --> "Missing return or throw statement." at "func11"
 function func11(b : boolean) : number {
 	if( b )
 	{  } else {
@@ -89,7 +89,7 @@ function func12(b : boolean) : number {
 	return 4;
 }
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "func13"
+// XPECT errors --> "Missing return or throw statement." at "func13"
 function func13(b : number) : number {
 
 	while( b < 4 ) {
@@ -98,7 +98,7 @@ function func13(b : number) : number {
 }
 
 // Last statement must be a return or ((try & catch) | finally) have a return.
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "func14"
+// XPECT errors --> "Missing return or throw statement." at "func14"
 function func14(b : number) : number {
 	try {
 		// do something
@@ -113,7 +113,7 @@ function func14(b : number) : number {
 
 }
 
-// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "func15"
+// XPECT errors --> "Missing return or throw statement." at "func15"
 function func15(b : number) : number {
 	try
 	{

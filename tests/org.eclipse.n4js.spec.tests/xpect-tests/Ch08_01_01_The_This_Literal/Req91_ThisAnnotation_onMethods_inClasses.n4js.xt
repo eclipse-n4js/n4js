@@ -88,16 +88,16 @@ cc.m02();
 // XPECT noerrors -->
 cc1.m02();
 
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m03: C is not a subtype of CC." at "m03"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m03: C is not a subtype of CC." at "m03"
 c.m03();
 // XPECT noerrors -->
 cc.m03();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m03: CC1 is not a subtype of CC." at "m03"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m03: CC1 is not a subtype of CC." at "m03"
 cc1.m03();
 
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m04: C is not a subtype of intersection{C,I}." at "m04"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m04: C is not a subtype of intersection{C,I}." at "m04"
 c.m04();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m04: CC is not a subtype of intersection{C,I}." at "m04"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.m04: CC is not a subtype of intersection{C,I}." at "m04"
 cc.m04();
 // XPECT noerrors -->
 cc1.m04();
@@ -113,21 +113,21 @@ CC3.m12();
 
 // XPECT noerrors -->
 CC.m13();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m13: type{CC2} is not a subtype of type{CC}." at "m13"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static method C.m13: type{CC2} is not a subtype of type{CC}." at "m13"
 CC2.m13();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m13: constructor{CC3} is not a subtype of type{CC}." at "m13"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static method C.m13: constructor{CC3} is not a subtype of type{CC}." at "m13"
 CC3.m13();
 
 // XPECT noerrors -->
 CC.m14();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m14: type{CC2} is not a subtype of constructor{? extends C}." at "m14"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static method C.m14: type{CC2} is not a subtype of constructor{? extends C}." at "m14"
 CC2.m14();
 // XPECT noerrors -->
 CC3.m14();
 
 // XPECT noerrors -->
 CC.m15();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m15: type{CC2} is not a subtype of constructor{C}." at "m15"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static method C.m15: type{CC2} is not a subtype of constructor{C}." at "m15"
 CC2.m15();
-// XPECT errors --> "Target of property access not a subtype of the declared @This type of method m15: constructor{CC3} is not a subtype of constructor{C}." at "m15"
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of static method C.m15: constructor{CC3} is not a subtype of constructor{C}." at "m15"
 CC3.m15();

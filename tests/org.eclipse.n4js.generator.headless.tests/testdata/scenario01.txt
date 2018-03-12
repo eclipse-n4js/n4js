@@ -4,7 +4,7 @@
 // After the Hashmark up to the end of the line is the relative path of the file to create.
 // all other characters till the next HASH are the content of this file.
 export public class A {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+A)
 	}
 }
@@ -25,7 +25,7 @@ Sources {
 # wsp1/notAproject
 # nest/wsp2/B/src/packB/B.n4js
 export public class B {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+B)
 	}
 }
@@ -46,7 +46,7 @@ Sources {
 # wsp3/C/src/packC/C.n4js
 import { B } from "packB/B"
 export public class C extends B {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+C)
 	}
 }
@@ -68,7 +68,7 @@ Sources {
 # nest/wsp2/D/src/packD/D.n4js
 import { A } from "packA/A"
 export public class D extends A {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+D)
 	}
 }
@@ -76,7 +76,7 @@ export public class D extends A {
 # nest/wsp2/D/src/packD/D2.n4js
 import { B } from "packB/B"
 export public class D2 extends B {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+D2)
 	}
 }
@@ -98,7 +98,7 @@ Sources {
 # nest/nest/wsp4/E/src/packE/E.n4js
 import { D } from "packD/D"
 export public class E extends D {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+E)
 	}
 }
@@ -106,7 +106,7 @@ export public class E extends D {
 # nest/nest/wsp4/E/src/packE/E2.n4js
 import { C } from "packC/C"
 export public class E2 extends C {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+E2)
 	}
 }
@@ -128,7 +128,7 @@ Sources {
 # nest/wsp5/F/src/packF/F.n4js
 import { D } from "packD/D"
 export public class F extends D {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+F)
 	}
 }
@@ -150,7 +150,7 @@ Sources {
 # wsp6/G/src/packG/G.n4js
 import { F } from "packF/F"
 export public class G extends F {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+G)
 	}
 }
@@ -172,7 +172,7 @@ Sources {
 # nest/nest/wsp4/H/src/packH/H.n4js
 import { C } from "packC/C"
 export public class H extends C {
-	constructor() {
+	public constructor() {
 		console.log(" in class "+H)
 	}
 }

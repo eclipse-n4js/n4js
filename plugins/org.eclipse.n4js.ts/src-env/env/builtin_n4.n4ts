@@ -24,11 +24,17 @@
 /**
  * Base class for all N4 reflective elements.
  */
-public abstract class N4Element extends Object {
+public abstract class N4Element extends N4Object {
+
+	/**
+	 * Disallow instantiation of this class and its subclasses by user code.
+	 */
+	private constructor():void;
+
 	/**
 	 * Annotations attached to this element.
 	 */
-	public annotations: Array<N4Annotation>;
+	public get annotations(): Array<N4Annotation>
 
 	/**
 	 * Returns true if an annotation with the given name is attached to the element.
@@ -47,7 +53,7 @@ public abstract class N4Element extends Object {
 	/**
 	 * The origin string formed as <ID-VERSION>, where ID is containing project artifact id, and VERSION is its version
 	 */
-	public origin: string;
+	public get origin(): string
 }
 
 /**
@@ -57,7 +63,7 @@ public abstract class N4NamedElement extends N4Element {
 	/**
 	 * The simple name of a named element.
 	 */
-	public name: string;
+	public get name(): string
 }
 
 /**
@@ -67,7 +73,7 @@ public abstract class N4Type extends N4NamedElement {
 	/**
 	 * The FQN of the type.
 	 */
-	public fqn: string;
+	public get fqn(): string
 
 	/**
 	 * Given an instance of <code>N4Object</code> or a value of type <code>type{N4Object}</code>
@@ -82,11 +88,6 @@ public abstract class N4Type extends N4NamedElement {
 	public get isClass(): boolean
 
 	/**
-	 * Returns true if this N4Class describes an N4-role declaration.
-	 */
-	public get isRole(): boolean
-
-	/**
 	 * Returns true if this N4Class describes an N4-interface declaration.
 	 */
 	public get isInterface(): boolean
@@ -98,26 +99,20 @@ public abstract class N4Type extends N4NamedElement {
 }
 
 /**
- * Base class for meta types of classes, interfaces, or roles.
+ * Base class for meta types of classes and interfaces.
  */
 public abstract class N4Classifier extends N4Type {
 
 	/**
 	 * The N4Class of the super type, may be null if super type is a not an N4Class.
 	 */
-	public n4superType: N4Class;
-
-	/**
-	 * Array of the FQN of all (transitively) consumed roles, i.e. roles directly consumed by this class, its super
-	 * class or roles consumed by directly consumed roles.
-	 */
-	public allConsumedRoles: Array<string>;
+	public get n4superType(): N4Class
 
 	/**
 	 * Array of the FQN of all (transitively) implemented interfaces, i.e. interfaces directly implemented by this class, its super
 	 * class or interfaces extended by directly implemented interfaces.
 	 */
-	public allImplementedInterfaces: Array<string>;
+	public get allImplementedInterfaces(): Array<string>
 
 	/**
 	 * Array of all owned members, that is members defined in the class directly.
@@ -126,7 +121,9 @@ public abstract class N4Classifier extends N4Type {
 	private ownedMembers: Array<N4Member>;
 
 	/**
-	 * Array of all consumed members, that is members mixed into the classifier via role consumption.
+	 * Array of all members consumed from implemented interfaces, i.e. fields and accessors/methods with a body defined
+	 * in an implemented interface iff(!) the receiving classifier does not own or inherit a corresponding member (i.e.
+	 * same name and access).
 	 * This field is private as it is an internal detail, members are accessed via methods defined in this class.
 	 */
 	private consumedMembers: Array<N4Member>;
@@ -201,7 +198,7 @@ public abstract class N4Classifier extends N4Type {
 /**
  * Meta information of an n4 class.
  */
-public /* @Final */ class N4Class extends N4Classifier {
+public final class N4Class extends N4Classifier {
 
 	/**
 	 * Returns true if this N4Class describes an N4-class declaration.
@@ -211,20 +208,9 @@ public /* @Final */ class N4Class extends N4Classifier {
 }
 
 /**
- * Meta information of an n4 role.
- */
-public /* @Final */ class N4Role extends N4Classifier {
-	/**
-	 * Returns true if this N4Class describes an N4-role declaration.
-	 */
-	/* @Override */
-	public get isRole(): boolean
-}
-
-/**
  * Meta information of an n4 interface.
  */
-public /* @Final */ class N4Interface extends N4Classifier {
+public final class N4Interface extends N4Classifier {
 	/**
 	 * Returns true if this N4Class describes an N4-interface declaration.
 	 */
@@ -236,41 +222,37 @@ public /* @Final */ class N4Interface extends N4Classifier {
  * Description of a member, that is a method or field.
  */
 public abstract class N4Member extends N4NamedElement {
-	public owner: N4Classifier;
+	public get owner(): N4Classifier
 	public get isStatic(): boolean
 }
 
 /**
  * Description of a method.
  */
- public /* @Final */ class N4Method extends N4Member {
-	public jsFunction: Function;
-}
-
-/**
- * Description of a field, that is either a data field or an accessor.
- */
-public abstract class N4Field extends N4Member {
+public final class N4Method extends N4Member {
+	public get jsFunction(): Function
 }
 
 /**
  * Description of a simple data field.
  */
- public /* @Final */ class N4DataField extends N4Member {
+public final class N4DataField extends N4Member {
 }
 
 /**
  * Description of an accessor, that is a getter or setter.
  */
- public /* @Final */ class N4Accessor extends N4Member {
+public final class N4Accessor extends N4Member {
 	/**
 	 * Flag indicating whether accessor is a getter or setter, internal detail.
 	 */
 	private getter: boolean;
+
 	/**
 	 * Returns true if accessor is a getter.
 	 */
 	public isGetter(): boolean
+
 	/**
 	 * Returns true if accessor is a setter.
 	 */
@@ -280,7 +262,7 @@ public abstract class N4Field extends N4Member {
 /**
  * Description of an N4Enum
  */
-public /* @Final */ class N4EnumType extends N4Type {
+public final class N4EnumType extends N4Type {
 	/**
 	 * Returns true if this N4Clasifier describes an N4-enumeration declaration.
 	 */
@@ -292,6 +274,11 @@ public /* @Final */ class N4EnumType extends N4Type {
  * Base class for all enumerations, literals are assumed to be static constant fields of concrete subclasses with the type of these subclasses.
  */
 public object N4Enum {
+
+	/**
+	 * Disallow instantiation of this type by user code.
+	 */
+	private constructor():void;
 
 	/**
 	 * Returns the name of a concrete literal
@@ -339,10 +326,16 @@ public object N4Enum {
 /**
  * Annotation with value.
  */
-public /* @Final */ class N4Annotation extends Object {
-	public name: string;
-	public details: Array<string>;
-	public target: N4Element;
+public final class N4Annotation extends N4Object {
+
+	/**
+	 * Disallow instantiation of this class by user code.
+	 */
+	private constructor():void;
+
+	public get name(): string
+	public get details(): Array<string>
+	public get target(): N4Element
 }
 
 /**
@@ -361,7 +354,7 @@ public class N4Object extends Object {
 	 * Returns the meta class object of this class for reflection.
 	 * The very same meta class object can be retrieved from an instance by calling
 	 * <code>instance.constructor.n4type</code> or, preferred, via
-	 * <code>N4Class.of(instance)</code>
+	 * <code>N4Type.of(instance)</code>
 	 */
 	public static get n4type(): N4Class
 }
@@ -370,7 +363,7 @@ public class N4Object extends Object {
 /**
  * Description of an N4StringBasedEnum
  */
-public /* @Final */ class N4StringBasedEnumType extends N4Type {
+public final class N4StringBasedEnumType extends N4Type {
 	/**
 	 * Returns true if this N4Clasifier describes an N4-enumeration declaration.
 	 */
@@ -383,6 +376,11 @@ public /* @Final */ class N4StringBasedEnumType extends N4Type {
  * @see N4Enum
  */
 public object N4StringBasedEnum extends string {
+
+	/**
+	 * Disallow instantiation of this type by user code.
+	 */
+	private constructor():void;
 
 	// - IDE-1221 Commented out since not applicable to Stringbased Enums
 	///**
@@ -464,4 +462,3 @@ public interface ~N4Provider<out T> {
 	 */
 	public abstract get(): T
 }
-

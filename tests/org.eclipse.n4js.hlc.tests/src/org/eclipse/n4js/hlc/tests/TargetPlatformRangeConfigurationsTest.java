@@ -63,7 +63,7 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 				"-r", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-bt", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
 		// note: express version 4.16.0 introduced more properties, so by checking for the following properties we can

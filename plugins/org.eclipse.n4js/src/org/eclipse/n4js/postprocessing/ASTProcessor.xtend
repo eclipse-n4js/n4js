@@ -16,7 +16,6 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
@@ -29,9 +28,8 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
-import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
@@ -243,13 +241,8 @@ public class ASTProcessor extends AbstractProcessor {
 	}
 
 	def private boolean isPostponedNode(EObject node) {
-		return
-			isPostponedInitializer(node)
-		||	(node instanceof Block
-			 && (  node.eContainer instanceof FunctionExpression
-				|| node.eContainer instanceof PropertyGetterDeclaration
-				|| node.eContainer instanceof PropertySetterDeclaration
-				|| node.eContainer instanceof PropertyMethodDeclaration));
+		return isPostponedInitializer(node)
+			|| N4JSASTUtils.isBodyOfFunctionOrFieldAccessor(node);
 	}
 
 	/**
@@ -339,8 +332,6 @@ public class ASTProcessor extends AbstractProcessor {
 				node instanceof VariableDeclaration
 				|| node instanceof N4ClassifierDeclaration
 				|| node instanceof N4FieldDeclaration
-				|| node instanceof FunctionDefinition // includes methods
-				|| node instanceof N4GetterDeclaration || node instanceof N4SetterDeclaration
 				|| (node instanceof PropertyNameValuePair && (node as PropertyNameValuePair).expression instanceof FunctionExpression)
 				|| node instanceof PropertyGetterDeclaration || node instanceof PropertySetterDeclaration
 				|| (node instanceof Expression && node.eContainer instanceof YieldExpression)

@@ -38,14 +38,17 @@ import org.eclipse.n4js.smith.ui.graph.GraphProvider;
 import org.eclipse.n4js.smith.ui.graph.Node;
 import org.eclipse.xtext.EcoreUtil2;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 /**
  * The graph provider creates {@link Node}s and {@link CFEdge}s for a given {@link Script}. Moreover, it provides some
  * calls to the {@link N4JSFlowAnalyser} API by delegating to it.
  */
 public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement> {
-	N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
-	Map<ControlFlowElement, CFNode> nodeMap = new HashMap<>();
-	Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
+	final N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
+	final Multimap<ControlFlowElement, CFNode> nodeMap = HashMultimap.create();
+	final Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
 	final NodesEdgesCollector nodesEdgesCollector = new NodesEdgesCollector();
 
 	@Override
@@ -56,8 +59,9 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	}
 
 	@Override
-	public Node getNode(ControlFlowElement element) {
-		return nodeMap.get(element);
+	public CFNode getNode(ControlFlowElement element) {
+		Collection<CFNode> nodes = nodeMap.get(element);
+		return nodes.isEmpty() ? null : nodes.iterator().next();
 	}
 
 	@Override
@@ -68,6 +72,28 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			return Collections.emptyList();
 		}
 		return succs;
+	}
+
+	/** @return the entry node of the CFG */
+	public CFNode getEntryNode(ControlFlowElement container) {
+		Collection<CFNode> nodes = nodeMap.get(container);
+		for (CFNode node : nodes) {
+			if (node.isEntry) {
+				return node;
+			}
+		}
+		return null;
+	}
+
+	/** @return the exit node of the CFG */
+	public CFNode getExitNode(ControlFlowElement container) {
+		Collection<CFNode> nodes = nodeMap.get(container);
+		for (CFNode node : nodes) {
+			if (node.isExit) {
+				return node;
+			}
+		}
+		return null;
 	}
 
 	/** @return a reference to {@link N4JSFlowAnalyser} of the current {@link Script} */
@@ -85,7 +111,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	private void performFlowAnalyses(Object input) {
 		Script script = findScript(input);
 		if (script != null) {
-			flowAnalyzer.createGraphs(script, false);
+			flowAnalyzer.createGraphs(script);
 		}
 	}
 
@@ -119,7 +145,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
+		protected void initializeContainer(ControlFlowElement curContainer) {
 			requestActivation(new EdgesExplorer());
 		}
 
@@ -132,10 +158,30 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			if (!nodeMap.containsKey(cfe)) {
 				String label = FGUtils.getSourceText(cfe);
 				String description = cfe.getClass().getSimpleName();
-				CFNode node = new CFNode(cfe, label, description, nodeIdx++, isDeadCode);
+				CFNode node = new CFNode(cfe, label, description, nodeIdx++, isDeadCode, false, false);
 				nodeMap.put(cfe, node);
 			}
 		}
+
+		private void addEntryNode(ControlFlowElement cfe, boolean isDeadCode) {
+			if (getEntryNode(cfe) == null) {
+				String label = "ENTRY";
+				String description = cfe.getClass().getSimpleName();
+				CFNode node = new CFNode(cfe, label, description, nodeIdx++, isDeadCode, true, false);
+				nodeMap.put(cfe, node);
+			}
+		}
+
+		private void addExitNode(ControlFlowElement cfe, boolean isDeadCode) {
+			if (getExitNode(cfe) == null) {
+				String label = "EXIT";
+				String description = cfe.getClass().getSimpleName();
+				CFNode node = new CFNode(cfe, label, description, nodeIdx++, isDeadCode, false, true);
+				nodeMap.put(cfe, node);
+			}
+		}
+
+		// continue here: es gibt mehrere ENTRY/EXIT-Knoten!!!
 
 		class EdgesExplorer extends GraphExplorer {
 
@@ -160,10 +206,23 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 			@Override
 			protected void visit(FlowEdge edge) {
-				addNode(edge.start, isDeadCodeNode());
-				addNode(edge.end, isDeadCodeNode());
-				Node sNode = nodeMap.get(edge.start);
-				Node eNode = nodeMap.get(edge.end);
+				Node sNode = null;
+				Node eNode = null;
+				if (edge.start == getContainer()) {
+					addEntryNode(edge.start, isDeadCodeNode());
+					sNode = getEntryNode(edge.start);
+				} else {
+					addNode(edge.start, isDeadCodeNode());
+					sNode = getNode(edge.start);
+				}
+				if (edge.end == getContainer()) {
+					addExitNode(edge.end, isDeadCodeNode());
+					eNode = getExitNode(edge.end);
+				} else {
+					addNode(edge.end, isDeadCodeNode());
+					eNode = getNode(edge.end);
+				}
+
 				CFEdge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes, isDeadCodeNode());
 
 				if (!edgesMap.containsKey(edge.start)) {
