@@ -118,7 +118,7 @@ public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 				"--buildType", "allprojects",
 				"--projectlocations", WSP,
 				"--runWith", "nodejs",
-				"---run", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
+				"--run", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
 
 		int exitCode = p.waitFor();
 
