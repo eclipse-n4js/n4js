@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.N4JSExternalProjectProvider;
 import org.eclipse.n4js.external.NpmManager;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.utils.Cancelable;
@@ -51,7 +50,7 @@ public class ExternalLibrariesReloadHelper {
 	private ExternalProjectsCollector collector;
 
 	@Inject
-	private N4JSExternalProjectProvider projectProvider;
+	private ExternalProjectProvider projectProvider;
 
 	@Inject
 	private ExternalLibraryBuilder builderHelper;
@@ -114,10 +113,10 @@ public class ExternalLibrariesReloadHelper {
 				.toSet();
 
 		// And build all those externals that has no corresponding workspace project.
-		final Iterable<N4JSExternalProject> toBuild = from(projectProvider.getProjects())
-				.filter(p -> !workspaceProjectNames.contains(p.getName()));
+		final Collection<N4JSExternalProject> toBuild = from(projectProvider.getProjects())
+				.filter(p -> !workspaceProjectNames.contains(p.getName())).toList();
 
-		final Iterable<IProject> workspaceProjectsToRebuild = collector
+		final Collection<IProject> workspaceProjectsToRebuild = collector
 				.getWSProjectsDependendingOn(toBuild);
 
 		builderHelper.build(toBuild, subMonitor.newChild(1));

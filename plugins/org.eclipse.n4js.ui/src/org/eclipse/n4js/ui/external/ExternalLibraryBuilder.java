@@ -10,26 +10,23 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.core.runtime.SubMonitor.SUPPRESS_BEGINTASK;
 import static org.eclipse.core.runtime.SubMonitor.SUPPRESS_NONE;
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
-import static org.eclipse.n4js.utils.collections.Arrays2.transform;
-import static org.eclipse.n4js.utils.resources.ExternalProjectBuildOrderProvider.getBuildOrder;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.events.BuildManager;
-import org.eclipse.core.internal.resources.BuildConfiguration;
-import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -46,14 +43,13 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.N4JSExternalProjectProvider;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
+import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
@@ -63,7 +59,6 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -77,34 +72,12 @@ import com.google.inject.Singleton;
 @Singleton
 public class ExternalLibraryBuilder {
 	@SuppressWarnings("unused") // necessary for dcBuildExt
-	private static final DataCollector dcLibMngr = DataCollectors.INSTANCE
+	private static DataCollector dcLibMngr = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Library Manager");
-	private static final DataCollector dcBuildExt = DataCollectors.INSTANCE
+	private static DataCollector dcBuildExt = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Build External Library", "Library Manager");
 
-	private static final Logger LOGGER = Logger.getLogger(ExternalLibraryBuilder.class);
-
-	/**
-	 * Function for converting a {@link IProject project} into the corresponding {@link IBuildConfiguration build
-	 * configuration}.
-	 */
-	private static Function<IProject, IBuildConfiguration> TO_CONFIG_FUNC = project -> {
-		try {
-			return project.getActiveBuildConfig();
-		} catch (final CoreException e) {
-			LOGGER.error("Error while getting active build configuration for project: " + project, e);
-			return new BuildConfiguration(project);
-		}
-	};
-
-	/**
-	 * Function for converting several {@link IProject project} instances into their corresponding
-	 * {@link IBuildConfiguration build configuration} representations. The order of the build configuration elements
-	 * will be identical with the order of the projects argument.
-	 */
-	private static Function<Iterable<? extends IProject>, IBuildConfiguration[]> TO_CONFIGS_FUNC = projects -> {
-		return from(projects).transform(TO_CONFIG_FUNC).toArray(IBuildConfiguration.class);
-	};
+	private static Logger LOGGER = Logger.getLogger(ExternalLibraryBuilder.class);
 
 	@Inject
 	private IN4JSCore core;
@@ -116,17 +89,20 @@ public class ExternalLibraryBuilder {
 	private QueuedBuildData queuedBuildData;
 
 	@Inject
+	private BuildOrderComputer builtOrderComputer;
+
+	@Inject
 	private ToBeBuiltComputer builtComputer;
 
 	@Inject
-	private N4JSExternalProjectProvider projectProvider;
+	private ExternalProjectProvider projectProvider;
 
 	/**
 	 * Performs a full build on all registered and available external libraries.
 	 * <p>
 	 * This is a blocking operation.
 	 */
-	public List<IBuildConfiguration> build() {
+	public List<IProject> build() {
 		return build(new NullProgressMonitor());
 	}
 
@@ -136,7 +112,7 @@ public class ExternalLibraryBuilder {
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
 	 */
-	public List<IBuildConfiguration> build(final IProgressMonitor monitor) {
+	public List<IProject> build(IProgressMonitor monitor) {
 		return build(projectProvider.getProjects(), monitor);
 	}
 
@@ -146,7 +122,7 @@ public class ExternalLibraryBuilder {
 	 * @param project
 	 *            the project to build.
 	 */
-	public List<IBuildConfiguration> build(final N4JSExternalProject project) {
+	public List<IProject> build(N4JSExternalProject project) {
 		return build(project, new NullProgressMonitor());
 	}
 
@@ -159,8 +135,8 @@ public class ExternalLibraryBuilder {
 	 * @param monitor
 	 *            the monitor for the full build operation.
 	 */
-	public List<IBuildConfiguration> build(final N4JSExternalProject project, final IProgressMonitor monitor) {
-		return build(new IBuildConfiguration[] { new BuildConfiguration(project) }, monitor);
+	public List<IProject> build(N4JSExternalProject project, IProgressMonitor monitor) {
+		return build(new N4JSExternalProject[] { project }, monitor);
 	}
 
 	/**
@@ -171,9 +147,8 @@ public class ExternalLibraryBuilder {
 	 * @param monitor
 	 *            monitor for the build process.
 	 */
-	public List<IBuildConfiguration> build(final Iterable<N4JSExternalProject> projects,
-			final IProgressMonitor monitor) {
-		return build(TO_CONFIGS_FUNC.apply(projects), monitor);
+	public List<IProject> build(Collection<N4JSExternalProject> projects, IProgressMonitor monitor) {
+		return build(projects.toArray(new N4JSExternalProject[0]), monitor);
 	}
 
 	/**
@@ -190,7 +165,7 @@ public class ExternalLibraryBuilder {
 	 *             if a scheduling rule is in effect that does not contain the rule returned by {@link #getRule()}. For
 	 *             more info, see {@link #getRule() here}.
 	 */
-	public List<IBuildConfiguration> build(final IBuildConfiguration[] buildConfigs, final IProgressMonitor monitor) {
+	public List<IProject> build(N4JSExternalProject[] buildConfigs, IProgressMonitor monitor) {
 		return doPerformOperation(buildConfigs, BuildOperation.BUILD, monitor);
 	}
 
@@ -199,7 +174,7 @@ public class ExternalLibraryBuilder {
 	 * <p>
 	 * This is a blocking operation.
 	 */
-	public List<IBuildConfiguration> clean() {
+	public List<IProject> clean() {
 		return clean(new NullProgressMonitor());
 	}
 
@@ -209,7 +184,7 @@ public class ExternalLibraryBuilder {
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
 	 */
-	public List<IBuildConfiguration> clean(final IProgressMonitor monitor) {
+	public List<IProject> clean(IProgressMonitor monitor) {
 		return clean(projectProvider.getProjects(), monitor);
 	}
 
@@ -219,7 +194,7 @@ public class ExternalLibraryBuilder {
 	 * @param project
 	 *            the project that has to be cleaned (without rebuilding it).
 	 */
-	public List<IBuildConfiguration> clean(final N4JSExternalProject project) {
+	public List<IProject> clean(N4JSExternalProject project) {
 		return clean(project, new NullProgressMonitor());
 	}
 
@@ -232,21 +207,8 @@ public class ExternalLibraryBuilder {
 	 * @param monitor
 	 *            monitor for the clean process.
 	 */
-	public List<IBuildConfiguration> clean(final N4JSExternalProject project, final IProgressMonitor monitor) {
-		return clean(new IBuildConfiguration[] { getBuildConfiguration(project) }, monitor);
-	}
-
-	/**
-	 * Sugar for cleaning multiple {@link IProject project} instances.
-	 *
-	 * @param projects
-	 *            the projects that has to be cleaned (without rebuilding it).
-	 * @param monitor
-	 *            monitor for the clean process.
-	 */
-	public List<IBuildConfiguration> clean(final Iterable<N4JSExternalProject> projects,
-			final IProgressMonitor monitor) {
-		return clean(TO_CONFIGS_FUNC.apply(projects), monitor);
+	public List<IProject> clean(N4JSExternalProject project, IProgressMonitor monitor) {
+		return clean(new N4JSExternalProject[] { project }, monitor);
 	}
 
 	/**
@@ -255,8 +217,8 @@ public class ExternalLibraryBuilder {
 	 * <p>
 	 * For information on locking see {@link #getRule()}.
 	 *
-	 * @param buildConfigs
-	 *            the build configurations representing the the projects to be cleaned.
+	 * @param projects
+	 *            the projects representing the the projects to be cleaned.
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
 	 *
@@ -264,31 +226,49 @@ public class ExternalLibraryBuilder {
 	 *             if a scheduling rule is in effect that does not contain the rule returned by {@link #getRule()}. For
 	 *             more info, see {@link #getRule() here}.
 	 */
-	public List<IBuildConfiguration> clean(final IBuildConfiguration[] buildConfigs, final IProgressMonitor monitor) {
-		return doPerformOperation(buildConfigs, BuildOperation.CLEAN, monitor);
+	public List<IProject> clean(Collection<N4JSExternalProject> projects, IProgressMonitor monitor) {
+		return clean(projects.toArray(new N4JSExternalProject[0]), monitor);
 	}
 
-	private List<IBuildConfiguration> doPerformOperation(final IBuildConfiguration[] configs,
-			final BuildOperation operation,
-			final IProgressMonitor monitor) {
+	/**
+	 * Performs a clean (without rebuild) on the projects given as an array of build configuration. The clean order is
+	 * identical with the order of the elements in the {@code buildOrder} argument.
+	 * <p>
+	 * For information on locking see {@link #getRule()}.
+	 *
+	 * @param projects
+	 *            the projects representing the the projects to be cleaned.
+	 * @param monitor
+	 *            the monitor for the progress. Must not be {@code null}.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if a scheduling rule is in effect that does not contain the rule returned by {@link #getRule()}. For
+	 *             more info, see {@link #getRule() here}.
+	 */
+	public List<IProject> clean(N4JSExternalProject[] projects, IProgressMonitor monitor) {
+		return doPerformOperation(projects, BuildOperation.CLEAN, monitor);
+	}
 
-		if (Arrays2.isEmpty(configs)) {
+	private List<IProject> doPerformOperation(N4JSExternalProject[] projects, BuildOperation operation,
+			IProgressMonitor monitor) {
+
+		if (projects == null || projects.length == 0) {
 			return Collections.emptyList();
 		}
 
-		final ISchedulingRule rule = getRule();
+		ISchedulingRule rule = getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
 
-			final List<ExternalProject> projects = transform(configs, config -> (ExternalProject) config.getProject());
-			final List<IBuildConfiguration> buildOrder = newArrayList(getBuildOrder(projects));
+			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
+			List<IN4JSProject> buildOrderList = Arrays.asList(buildOrder.vertexes);
 			if (BuildOperation.CLEAN.equals(operation)) {
-				Collections.reverse(buildOrder);
+				Collections.reverse(buildOrderList);
 			}
 
 			// Remove external projects that have the workspace counterpart if it is a build operation.
 			if (BuildOperation.BUILD.equals(operation)) {
-				for (final Iterator<IBuildConfiguration> itr = buildOrder.iterator(); itr.hasNext(); /**/) {
+				for (Iterator<IN4JSProject> itr = buildOrderList.iterator(); itr.hasNext();) {
 					if (hasWorkspaceCounterpart(itr.next())) {
 						itr.remove();
 					}
@@ -296,17 +276,23 @@ public class ExternalLibraryBuilder {
 			}
 
 			ensureDynamicDependenciesSetForWorkspaceProjects();
-			final String prefix = Strings.toFirstUpper(operation.toString().toLowerCase());
-			final String projectNames = getProjectNames(buildOrder);
+			String prefix = Strings.toFirstUpper(operation.toString().toLowerCase());
+			String projectNames = getProjectNames(buildOrderList);
 			LOGGER.info(prefix + "ing external libraries: " + projectNames);
-			final SubMonitor subMonitor = SubMonitor.convert(monitor, buildOrder.size());
-			for (final IBuildConfiguration configuration : buildOrder) {
-				final IProject project = configuration.getProject();
-				LOGGER.info(prefix + "ing external library: " + project.getName());
-				operation.run(this, project, subMonitor.newChild(1));
+			SubMonitor subMonitor = SubMonitor.convert(monitor, buildOrderList.size());
+
+			List<IProject> actualBuildOrderList = new LinkedList<>();
+			for (IN4JSProject project : buildOrderList) {
+				LOGGER.info(prefix + "ing external library: " + project.getProjectId());
+
+				N4JSEclipseProject n4EclPrj = (N4JSEclipseProject) project; // bold cast
+				operation.run(this, n4EclPrj, subMonitor.newChild(1));
+
+				IProject iProject = n4EclPrj.getProject();
+				actualBuildOrderList.add(iProject);
 			}
 
-			return buildOrder;
+			return actualBuildOrderList;
 		} finally {
 			Job.getJobManager().endRule(rule);
 		}
@@ -314,8 +300,8 @@ public class ExternalLibraryBuilder {
 
 	/**
 	 * Returns the {@link ISchedulingRule scheduling rule} used by {@link ExternalLibraryBuilder} while
-	 * {@link #clean(IBuildConfiguration[], IProgressMonitor) cleaning} or
-	 * {@link #build(IBuildConfiguration[], IProgressMonitor) building} external libraries.
+	 * {@link #clean(N4JSExternalProject[], IProgressMonitor) cleaning} or
+	 * {@link #build(N4JSExternalProject[], IProgressMonitor) building} external libraries.
 	 * <p>
 	 * Clients that want to use a custom scheduling rule around several invocations of the clean/build methods of
 	 * {@code ExternalLibraryBuilderHelper} must use a scheduling rule at least as wide as the rule returned by this
@@ -341,18 +327,14 @@ public class ExternalLibraryBuilder {
 	/**
 	 * Returns with {@code true} if the external project is accessible in the workspace as well.
 	 */
-	private boolean hasWorkspaceCounterpart(IBuildConfiguration config) {
-		final URI uri = URI.createPlatformResourceURI(config.getProject().getName(), true);
-		final IN4JSProject n4Project = core.findProject(uri).orNull();
+	private boolean hasWorkspaceCounterpart(IN4JSProject project) {
+		URI uri = URI.createPlatformResourceURI(project.getProjectId(), true);
+		IN4JSProject n4Project = core.findProject(uri).orNull();
 		return null != n4Project && n4Project.exists() && !n4Project.isExternal();
 	}
 
-	private String getProjectNames(final Iterable<IBuildConfiguration> buildOrder) {
-		return Iterables.toString(from(buildOrder).transform(c -> c.getProject().getName()));
-	}
-
-	private IBuildConfiguration getBuildConfiguration(final IProject project) {
-		return TO_CONFIG_FUNC.apply(project);
+	private String getProjectNames(Iterable<IN4JSProject> projects) {
+		return Iterables.toString(from(projects).transform(p -> p.getProjectId()));
 	}
 
 	/**
@@ -363,9 +345,9 @@ public class ExternalLibraryBuilder {
 	 * See: ProjectDescriptionLoadListener#updateProjectReferencesIfNecessary(IProject)
 	 */
 	private void ensureDynamicDependenciesSetForWorkspaceProjects() {
-		for (final IProject project : getWorkspace().getRoot().getProjects()) {
-			final org.eclipse.emf.common.util.URI uri = createPlatformResourceURI(project.getName(), true);
-			final IN4JSProject n4Project = core.findProject(uri).get();
+		for (IProject project : getWorkspace().getRoot().getProjects()) {
+			org.eclipse.emf.common.util.URI uri = createPlatformResourceURI(project.getName(), true);
+			IN4JSProject n4Project = core.findProject(uri).get();
 			if (null != n4Project) {
 				n4Project.getProjectId(); // This will trigger dynamic project reference update.
 			}
@@ -387,7 +369,7 @@ public class ExternalLibraryBuilder {
 				try {
 					return computer.updateProject(project, monitor);
 				} catch (OperationCanceledException | CoreException e) {
-					final String name = project.getName();
+					String name = project.getName();
 					LOGGER.error("Error occurred while calculating to be build data for '" + name + "' project.", e);
 					throw Exceptions.sneakyThrow(e);
 				}
@@ -425,20 +407,20 @@ public class ExternalLibraryBuilder {
 		 *
 		 * @param helper
 		 *            the build helper to get the injected services.
-		 * @param project
+		 * @param n4EclPrj
 		 *            the project to clean/build.
 		 * @param monitor
 		 *            monitor for the operation.
 		 */
-		private void run(final ExternalLibraryBuilder helper, IProject project, IProgressMonitor monitor) {
-			checkArgument(project instanceof ExternalProject, "Expected external project: " + project);
-			Measurement mesBE = dcBuildExt.getMeasurement("BuildExt_" + project.getName());
+		private void run(ExternalLibraryBuilder helper, N4JSEclipseProject n4EclPrj, IProgressMonitor monitor) {
+			Measurement mesBE = dcBuildExt.getMeasurement("BuildExt_" + n4EclPrj.getProjectId());
+			monitor.setTaskName("Collecting resource for '" + n4EclPrj.getProjectId() + "'...");
+			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
+			IProgressMonitor computeMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
 
-			final SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-			final ToBeBuiltComputer computer = helper.builtComputer;
-			final IProgressMonitor computeMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
-			monitor.setTaskName("Collecting resource for '" + project.getName() + "'...");
-			final ToBeBuilt toBeBuilt = getToBeBuilt(computer, project, computeMonitor);
+			IProject project = n4EclPrj.getProject();
+			ToBeBuiltComputer computer = helper.builtComputer;
+			ToBeBuilt toBeBuilt = getToBeBuilt(computer, project, computeMonitor);
 
 			if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
 				subMonitor.newChild(1, SUPPRESS_NONE).worked(1);
@@ -446,21 +428,14 @@ public class ExternalLibraryBuilder {
 			}
 
 			try {
-
-				final IN4JSCore core = helper.core;
-				final QueuedBuildData queuedBuildData = helper.queuedBuildData;
-				final IBuilderState builderState = helper.builderState;
-
-				final ExternalProject externalProject = (ExternalProject) project;
-				final String path = externalProject.getExternalResource().getAbsolutePath();
-				final URI uri = URI.createFileURI(path);
-				final IN4JSProject n4Project = core.findProject(uri).orNull();
-
+				IN4JSCore core = helper.core;
+				QueuedBuildData queuedBuildData = helper.queuedBuildData;
+				IBuilderState builderState = helper.builderState;
 				ResourceSet resourceSet = null;
 
 				try {
 
-					resourceSet = core.createResourceSet(Optional.of(n4Project));
+					resourceSet = core.createResourceSet(Optional.of(n4EclPrj));
 					if (!resourceSet.getLoadOptions().isEmpty()) {
 						resourceSet.getLoadOptions().clear();
 					}
@@ -469,7 +444,7 @@ public class ExternalLibraryBuilder {
 						((ResourceSetImpl) resourceSet).setURIResourceMap(newHashMap());
 					}
 
-					final BuildData buildData = new BuildData(
+					BuildData buildData = new BuildData(
 							project.getName(),
 							resourceSet,
 							toBeBuilt,
@@ -477,7 +452,7 @@ public class ExternalLibraryBuilder {
 							false /* indexingOnly */);
 
 					monitor.setTaskName("Building '" + project.getName() + "'...");
-					final IProgressMonitor buildMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
+					IProgressMonitor buildMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
 					builderState.update(buildData, buildMonitor);
 
 				} finally {
@@ -489,7 +464,7 @@ public class ExternalLibraryBuilder {
 				}
 
 			} catch (Exception e) {
-				final String message = "Error occurred while " + toString().toLowerCase() + "ing external library "
+				String message = "Error occurred while " + toString().toLowerCase() + "ing external library "
 						+ project.getName() + ".";
 				LOGGER.error(message, e);
 				throw new RuntimeException(message, e);

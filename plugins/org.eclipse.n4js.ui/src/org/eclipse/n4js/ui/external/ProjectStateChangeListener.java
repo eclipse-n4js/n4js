@@ -27,7 +27,6 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.N4JSExternalProjectProvider;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -41,7 +40,7 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 	private static final Logger logger = Logger.getLogger(ProjectStateChangeListener.class);
 
 	@Inject
-	private N4JSExternalProjectProvider n4extPP;
+	private ExternalProjectProvider projectProvider;
 
 	@Inject
 	private ExternalLibraryBuildJobProvider buildJobProvider;
@@ -79,7 +78,7 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 
 			IProject project = (IProject) resource;
 			String name = project.getName();
-			N4JSExternalProject externalProject = n4extPP.getProject(name);
+			N4JSExternalProject externalProject = projectProvider.getProject(name);
 
 			if (null != externalProject && externalProject.exists()) {
 

@@ -33,7 +33,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
@@ -43,14 +42,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Service for collecting available {@link ExternalProject external project} instances based on the configured external
- * library locations.
+ * Service for collecting available {@link N4JSExternalProject external project} instances based on the configured
+ * external library locations.
  */
 @Singleton
 public class ExternalProjectsCollector {
 
 	@Inject
-	private N4JSExternalProjectProvider n3extPP;
+	private ExternalLibraryWorkspace extWS;
 
 	@Inject
 	private IN4JSCore core;
@@ -103,7 +102,7 @@ public class ExternalProjectsCollector {
 	 * @return an iterable of Eclipse workspace projects that has direct dependency any external projects.
 	 */
 	public Collection<IProject> getWSProjectsDependendingOn() {
-		return getWSProjectsDependendingOn(n3extPP.getProjects());
+		return getWSProjectsDependendingOn(extWS.getProjects());
 	}
 
 	/**
@@ -131,8 +130,7 @@ public class ExternalProjectsCollector {
 	 */
 	public Collection<N4JSExternalProject> getExtProjectsDependendingOn(
 			Iterable<N4JSExternalProject> externalProjects) {
-
-		return getProjectsDependendingOn(n3extPP.getProjects(), externalProjects);
+		return getProjectsDependendingOn(extWS.getProjects(), externalProjects);
 	}
 
 	/**
@@ -201,7 +199,7 @@ public class ExternalProjectsCollector {
 	 * @return a map where each entry maps an external project to the workspace projects that depend on it.
 	 */
 	public Multimap<N4JSExternalProject, IProject> getWSProjectDependents() {
-		return getWSProjectDependents(n3extPP.getProjects());
+		return getWSProjectDependents(extWS.getProjects());
 	}
 
 	/**
@@ -215,21 +213,20 @@ public class ExternalProjectsCollector {
 	 * @return a map where each entry maps an external project to the workspace projects that depend on it.
 	 */
 	public Multimap<N4JSExternalProject, IProject> getWSProjectDependents(
-			final Iterable<N4JSExternalProject> externalProjects) {
-
+			Iterable<N4JSExternalProject> externalProjects) {
 		return getProjectDependents(asList(getWorkspace().getRoot().getProjects()), externalProjects);
 	}
 
 	/***/
 	public Multimap<N4JSExternalProject, N4JSExternalProject> getExtProjectDependents(
-			final Iterable<N4JSExternalProject> externalProjects) {
+			Iterable<N4JSExternalProject> externalProjects) {
 
-		return getProjectDependents(n3extPP.getProjects(), externalProjects);
+		return getProjectDependents(extWS.getProjects(), externalProjects);
 	}
 
 	/***/
-	private <P extends IProject> Multimap<N4JSExternalProject, P> getProjectDependents(
-			Iterable<P> wsProjects, Iterable<N4JSExternalProject> externalProjects) {
+	private <P extends IProject> Multimap<N4JSExternalProject, P> getProjectDependents(Iterable<P> wsProjects,
+			Iterable<N4JSExternalProject> externalProjects) {
 
 		Multimap<N4JSExternalProject, P> mapping = HashMultimap.create();
 
@@ -267,7 +264,7 @@ public class ExternalProjectsCollector {
 	/**
 	 * Returns with all external project dependency project IDs for a particular non-external, accessible project.
 	 */
-	private Iterable<String> getDirectExternalDependencyIds(final IProject project) {
+	private Iterable<String> getDirectExternalDependencyIds(IProject project) {
 
 		if (null == project || !project.isAccessible()) {
 			return emptyList();

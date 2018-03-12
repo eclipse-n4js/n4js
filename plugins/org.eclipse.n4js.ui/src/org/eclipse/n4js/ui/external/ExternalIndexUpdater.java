@@ -22,34 +22,28 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.N4JSExternalProjectProvider;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.inject.Inject;
 
 /**
- *
+ * Updates the index when locations of external libraries change.
  */
 public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 	private Collection<N4JSExternalProject> extProjectsDependingOnRemovedProjects;
 	private Collection<IProject> wsProjectsDependingOnRemovedProjects;
 
 	@Inject
-	private ExternalLibraryBuilder builder;
-
-	/** This provider creates {@link ExternalProject}s */
-	@Inject
-	private ExternalProjectProvider extPP;
-
-	/** This provider wraps {@link ExternalProject}s into {@link N4JSExternalProject}s */
-	@Inject
-	private N4JSExternalProjectProvider n4extPP;
+	private ExternalLibraryWorkspace extWS;
 
 	@Inject
 	private ExternalProjectsCollector collector;
+
+	@Inject
+	private ExternalLibraryBuilder builder;
 
 	@Inject
 	private RebuildWorkspaceProjectsScheduler scheduler;
@@ -60,7 +54,6 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
 
-			extPP.ensureInitialized();
 			cleanRemovedLocations(removedLocations, monitor);
 		} finally {
 			Job.getJobManager().endRule(rule);
@@ -81,7 +74,7 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 
 	/** Removes projects from Index that were in a removed location */
 	private void cleanRemovedLocations(Set<URI> removedLocations, IProgressMonitor monitor) {
-		Set<N4JSExternalProject> removedProjects = n4extPP.getProjectsIn(removedLocations);
+		Collection<N4JSExternalProject> removedProjects = extWS.getProjectsIn(removedLocations);
 		SubMonitor subMonitor = convert(monitor, 1);
 
 		// Clean removed projects from Index
@@ -98,7 +91,7 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 
 	/** Adds projects to Index that are in a added location or depend on removed/added projects */
 	private void buildAddedLocations(Set<URI> addedLocations, IProgressMonitor monitor) {
-		Set<N4JSExternalProject> addedProjects = n4extPP.getProjectsIn(addedLocations);
+		Collection<N4JSExternalProject> addedProjects = extWS.getProjectsIn(addedLocations);
 		SubMonitor subMonitor = convert(monitor, 2);
 
 		// Build external projects that depend on added projects. (only non-user-workspace)

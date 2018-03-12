@@ -19,31 +19,35 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.utils.resources.ExternalProject;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Representation of an external N4JS project.
  */
 public class N4JSExternalProject extends ExternalProject {
+	/** Nature ID of N4JS external projects */
+	public static final String NATURE_ID = "org.eclipse.xtext.ui.shared.xtextNature";
 
-	/* default */static final String NATURE_ID = "org.eclipse.xtext.ui.shared.xtextNature";
-	/* default */static final String BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
+	/** Builder ID of N4JS external projects */
+	public static final String BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
 	private final IN4JSProject externalPackage;
 	private final Collection<IBuildConfiguration> referencedBuildConfigs;
 
-	/* default */ N4JSExternalProject(final File file, final IN4JSProject externalPackage) {
+	/** Constructor */
+	public N4JSExternalProject(final File file, final IN4JSProject externalPackage) {
 		super(file, NATURE_ID, BUILDER_ID);
 		this.externalPackage = externalPackage;
 		referencedBuildConfigs = newHashSet();
 	}
 
 	@Override
-	public IBuildConfiguration[] internalGetReferencedBuildConfigs(final String configName,
-			final boolean includeMissing) {
-
+	public IBuildConfiguration[] internalGetReferencedBuildConfigs(String configName, boolean includeMissing) {
 		final IBuildConfiguration[] filteredConfigs = from(referencedBuildConfigs)
-				.filter(config -> !includeMissing ? config.getProject().exists() : true)
+				.filter(config -> includeMissing ? true : config.getProject().exists())
 				.toArray(IBuildConfiguration.class);
 		return filteredConfigs;
 	}
@@ -65,12 +69,8 @@ public class N4JSExternalProject extends ExternalProject {
 	 *
 	 * @return an iterable of direct dependency project IDs.
 	 */
-	Iterable<IN4JSProject> getAllDirectDependencies() {
-
-		return from(externalPackage.getAllDirectDependencies())
-				.filter(IN4JSProject.class)
-				.filter(p -> p.exists())
-				.toSet();
+	public ImmutableList<? extends IN4JSSourceContainerAware> getAllDirectDependencies() {
+		return externalPackage.getAllDirectDependencies();
 	}
 
 	/**

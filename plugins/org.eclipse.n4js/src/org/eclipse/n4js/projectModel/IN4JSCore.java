@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.projectModel;
 
+import java.util.Map;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4mf.ModuleFilter;
@@ -60,6 +63,11 @@ public interface IN4JSCore {
 	 * @return List containing n4js projects in scope
 	 */
 	Iterable<IN4JSProject> findAllProjects();
+
+	/**
+	 * @return a map that maps {@link IProject#getName()} to {@link IProject}.
+	 */
+	Map<String, IN4JSProject> findAllProjectMappings();
 
 	/**
 	 * returns the source container that covers the given location.

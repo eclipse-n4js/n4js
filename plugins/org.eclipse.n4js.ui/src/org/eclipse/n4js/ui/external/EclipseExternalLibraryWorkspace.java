@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -43,7 +42,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.N4JSExternalProjectProvider;
 import org.eclipse.n4js.external.NpmProjectAdaptionResult;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
@@ -83,9 +81,9 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Inject
 	private ExternalProjectProvider extPP;
 
-	/** This provider wraps {@link ExternalProject}s into {@link N4JSExternalProject}s */
-	@Inject
-	private N4JSExternalProjectProvider n4extPP;
+	// /** This provider wraps {@link ExternalProject}s into {@link N4JSExternalProject}s */
+	// @Inject
+	// private N4JSExternalProjectProvider n4extPP;
 
 	/**
 	 */
@@ -97,7 +95,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Override
 	public ProjectDescription getProjectDescription(URI location) {
 		extPP.ensureInitialized();
-		Pair<ExternalProject, ProjectDescription> pair = extPP.getProjectWithDescription(location);
+		Pair<N4JSExternalProject, ProjectDescription> pair = extPP.getProjectWithDescription(location);
 		return null == pair ? null : pair.getSecond();
 	}
 
@@ -117,7 +115,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 			File referencedProject = new File(project.getLocationURI());
 			URI referencedLocation = URI.createFileURI(referencedProject.getAbsolutePath());
-			Pair<ExternalProject, ProjectDescription> pair = extPP.getProjectWithDescription(referencedLocation);
+			Pair<N4JSExternalProject, ProjectDescription> pair = extPP.getProjectWithDescription(referencedLocation);
 			if (null != pair) {
 				return referencedLocation;
 			}
@@ -222,8 +220,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	private RegisterResult registerProjectsInternal(NpmProjectAdaptionResult result, IProgressMonitor monitor,
 			boolean triggerCleanbuild) {
 
-		Collection<IBuildConfiguration> extPrjCleaned = null;
-		Collection<IBuildConfiguration> extPrjBuilt = null;
+		Collection<IProject> extPrjCleaned = null;
+		Collection<IProject> extPrjBuilt = null;
 
 		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
 			logger.warn("Built-in libraries and NPM support are disabled.");
@@ -235,7 +233,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 		// Clean projects.
 		Set<N4JSExternalProject> projectsToClean = from(result.getToBeBuilt().getToBeDeleted())
-				.transform(uri -> n4extPP.getProject(new File(uri).getName()))
+				.transform(uri -> extPP.getProject(new File(uri).getName()))
 				.filter(notNull())
 				.toSet();
 
@@ -276,7 +274,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	private Collection<N4JSExternalProject> getExternalProjects(NpmProjectAdaptionResult result) {
 		Set<N4JSExternalProject> projectsToBeUpdated = from(result.getToBeBuilt().getToBeUpdated())
-				.transform(uri -> n4extPP.getProject(new File(uri).getName())).toSet();
+				.transform(uri -> extPP.getProject(new File(uri).getName())).toSet();
 
 		Collection<N4JSExternalProject> nonWSProjects = collector.filterNonWSProjects(projectsToBeUpdated);
 
@@ -284,17 +282,22 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Iterable<ExternalProject> getProjects() {
+	public Collection<N4JSExternalProject> getProjects() {
 		return extPP.getProjects();
 	}
 
 	@Override
-	public Iterable<ExternalProject> getProjects(java.net.URI rootLocation) {
+	public Collection<N4JSExternalProject> getProjectsIn(java.net.URI rootLocation) {
 		return extPP.getProjectsIn(rootLocation);
 	}
 
 	@Override
-	public Iterable<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
+	public Collection<N4JSExternalProject> getProjectsIn(final Collection<java.net.URI> rootLocations) {
+		return extPP.getProjectsIn(rootLocations);
+	}
+
+	@Override
+	public Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
 		return extPP.getProjectsDescriptions(rootLocation);
 	}
 

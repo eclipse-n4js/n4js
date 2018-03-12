@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.external;
+package org.eclipse.n4js.ui.internal;
 
 import static org.eclipse.n4js.external.N4JSExternalProject.BUILDER_ID;
 import static org.eclipse.n4js.external.N4JSExternalProject.NATURE_ID;
@@ -16,6 +16,7 @@ import static org.eclipse.n4js.external.N4JSExternalProject.NATURE_ID;
 import java.io.File;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -34,13 +35,16 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ExternalProjectCacheLoader
-		extends CacheLoader<URI, Optional<Pair<ExternalProject, ProjectDescription>>> {
+		extends CacheLoader<URI, Optional<Pair<N4JSExternalProject, ProjectDescription>>> {
+
+	@Inject
+	private N4JSEclipseModel model;
 
 	@Inject
 	private FileBasedExternalPackageManager packageManager;
 
 	@Override
-	public Optional<Pair<ExternalProject, ProjectDescription>> load(final URI rootLocation) throws Exception {
+	public Optional<Pair<N4JSExternalProject, ProjectDescription>> load(final URI rootLocation) throws Exception {
 
 		if (null != rootLocation && rootLocation.isFile()) {
 			final File projectRoot = new File(rootLocation.toFileString());
@@ -48,8 +52,11 @@ public class ExternalProjectCacheLoader
 				final URI manifestLocation = rootLocation.appendSegment(IN4JSProject.N4MF_MANIFEST);
 				final ProjectDescription projectDescription = packageManager.loadManifest(manifestLocation);
 				if (null != projectDescription) {
-					final ExternalProject project = new ExternalProject(projectRoot, NATURE_ID, BUILDER_ID);
-					return Optional.of(Tuples.create(project, projectDescription));
+					ExternalProject project = new ExternalProject(projectRoot, NATURE_ID, BUILDER_ID);
+					IN4JSProject p = new N4JSEclipseProject(project, rootLocation, model);
+					N4JSExternalProject pp = new N4JSExternalProject(projectRoot, p);
+
+					return Optional.of(Tuples.create(pp, projectDescription));
 				}
 			}
 		}

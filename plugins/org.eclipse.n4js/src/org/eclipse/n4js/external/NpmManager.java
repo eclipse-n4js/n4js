@@ -95,9 +95,6 @@ public class NpmManager {
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
-	private N4JSExternalProjectProvider projectProvider;
-
-	@Inject
 	private ExternalProjectsCollector collector;
 
 	@Inject
@@ -234,7 +231,7 @@ public class NpmManager {
 		monitor.beginTask("Installing npm packages...", 10);
 
 		URI targetPlatformNodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		final Set<String> oldNPMs = from(projectProvider.getProjectsIn(targetPlatformNodeModulesLocation))
+		final Set<String> oldNPMs = from(externalLibraryWorkspace.getProjectsIn(targetPlatformNodeModulesLocation))
 				.transform(p -> p.getName()).toSet();
 
 		monitor.worked(1); // Intentionally cheating for better user experience.
@@ -280,7 +277,7 @@ public class NpmManager {
 		final Set<String> newDependencies = new HashSet<>(afterDependencies.keySet());
 
 		Set<String> newNpmProjectNames = new HashSet<>();
-		Iterable<N4JSExternalProject> newNPMs = projectProvider.getProjectsIn(targetPlatformNodeModulesLocation);
+		Iterable<N4JSExternalProject> newNPMs = externalLibraryWorkspace.getProjectsIn(targetPlatformNodeModulesLocation);
 		for (IProject newNPM : newNPMs) {
 			newNpmProjectNames.add(newNPM.getName());
 		}
@@ -366,7 +363,7 @@ public class NpmManager {
 		Iterable<String> ps = ShippedCodeAccess.getAllShippedPaths();
 		for (String shippedLibPath : ps) {
 			URI uri = new File(shippedLibPath).toURI();
-			Iterable<N4JSExternalProject> slProjects = projectProvider.getProjectsIn(uri);
+			Iterable<N4JSExternalProject> slProjects = externalLibraryWorkspace.getProjectsIn(uri);
 
 			for (IProject slProject : slProjects) {
 				String slpName = slProject.getName();
@@ -425,7 +422,7 @@ public class NpmManager {
 			monitor.beginTask("Uninstalling npm packages...", 10);
 
 			URI npmLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-			Iterable<N4JSExternalProject> externalProjects = projectProvider.getProjectsIn(npmLocation);
+			Iterable<N4JSExternalProject> externalProjects = externalLibraryWorkspace.getProjectsIn(npmLocation);
 			Multimap<N4JSExternalProject, IProject> beforeExternalsWithDependees = collector
 					.getWSProjectDependents(externalProjects);
 			Multimap<N4JSExternalProject, N4JSExternalProject> beforeExtExternalsWithDependees = collector
@@ -459,7 +456,7 @@ public class NpmManager {
 			monitor.worked(2);
 			monitor.setTaskName("Calculating dependency changes... [step 2 of 4]");
 
-			externalProjects = projectProvider.getProjectsIn(npmLocation);
+			externalProjects = externalLibraryWorkspace.getProjectsIn(npmLocation);
 			Multimap<N4JSExternalProject, IProject> afterExternalsWithDependees = collector
 					.getWSProjectDependents(externalProjects);
 			Multimap<N4JSExternalProject, N4JSExternalProject> afterExtExternalsWithDependees = collector
@@ -779,7 +776,7 @@ public class NpmManager {
 		final Map<String, URI> mappings = newHashMap();
 
 		// Intentionally might include projects that are already in the workspace
-		for (final IProject project : projectProvider.getProjectsIn(nodeModulesLocation)) {
+		for (final IProject project : externalLibraryWorkspace.getProjectsIn(nodeModulesLocation)) {
 			if (project.isAccessible() && project instanceof ExternalProject) {
 				final URI location = ((ExternalProject) project).getExternalResource().toURI();
 				mappings.put(project.getName(), location);

@@ -13,6 +13,7 @@ package org.eclipse.n4js.external;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IResource;
@@ -36,22 +37,27 @@ public class NoopExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Iterable<ExternalProject> getProjects() {
+	public Collection<N4JSExternalProject> getProjects() {
 		return emptyList();
 	}
 
 	@Override
-	public Iterable<ExternalProject> getProjects(final java.net.URI rootLocation) {
+	public Collection<N4JSExternalProject> getProjectsIn(final java.net.URI rootLocation) {
 		return emptyList();
 	}
 
 	@Override
-	public Iterable<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
+	public Collection<N4JSExternalProject> getProjectsIn(final Collection<java.net.URI> rootLocations) {
 		return emptyList();
 	}
 
 	@Override
-	public N4JSExternalProject getProject(final String projectName) {
+	public Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
+		return emptyList();
+	}
+
+	@Override
+	public ExternalProject getProject(final String projectName) {
 		return null;
 	}
 

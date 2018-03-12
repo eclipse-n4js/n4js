@@ -338,7 +338,6 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		affectedURIs.removeAll(allRemainingURIs);
 
 		for (URI currAffURI : affectedURIs) {
-			final IResourceDescription resDesc = this.getResourceDescription(currAffURI);
 			if (!N4MF_MANIFEST.equals(currAffURI.lastSegment())) {
 
 				/*-
@@ -377,8 +376,9 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 				 * code, we make sure that the cached TModule of C (in the user data of C's resource description) won't be
 				 * used while processing B during proxy resolution.
 				 */
-				newState.register(new DefaultResourceDescriptionDelta(resDesc,
-						new ResourceDescriptionWithoutModuleUserData(resDesc)));
+				IResourceDescription resDesc = this.getResourceDescription(currAffURI);
+				ResourceDescriptionWithoutModuleUserData rdwmud = new ResourceDescriptionWithoutModuleUserData(resDesc);
+				newState.register(new DefaultResourceDescriptionDelta(resDesc, rdwmud));
 			}
 		}
 	}
