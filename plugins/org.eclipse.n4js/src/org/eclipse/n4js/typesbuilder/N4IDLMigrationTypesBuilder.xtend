@@ -83,6 +83,11 @@ class N4IDLMigrationTypesBuilder {
 			return #[];
 		}
 		
+		// skip broken TFunctions
+		if (!migration.fpars.empty && null === migration.fpars.head.name) {
+			return #[];
+		}
+		
 		if (!migration.fpars.empty && migration.fpars.head.name.equals("context")) {
 			return migration.fpars.tail.map[fpar | fpar.typeRef].toList;
 		} else {

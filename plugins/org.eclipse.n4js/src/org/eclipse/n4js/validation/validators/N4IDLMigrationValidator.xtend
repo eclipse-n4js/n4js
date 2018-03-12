@@ -80,6 +80,11 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		
+		// skip invalid FunctionDeclarations
+		if (null === functionDeclaration.body) {
+			return;
+		}
+		
 		// this validation only applies for migrations
 		if (!MigrationUtils.isMigrationDeclaration(functionDeclaration)) {
 			return;
