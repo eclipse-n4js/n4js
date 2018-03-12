@@ -88,11 +88,7 @@ class N4IDLMigrationTypesBuilder {
 			return #[];
 		}
 		
-		if (!migration.fpars.empty && migration.fpars.head.name.equals("context")) {
-			return migration.fpars.tail.map[fpar | fpar.typeRef].toList;
-		} else {
-			return migration.fpars.map[fpar | fpar.typeRef].toList;
-		}
+		return migration.fpars.map[fpar | fpar.typeRef].toList;
 	}
 	
 	/** Computes the list of target types of the given migration. */

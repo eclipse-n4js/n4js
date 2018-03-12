@@ -49,7 +49,7 @@ public class N4IDLNoMatchingMigrationCandidateDiagnosis extends ScopingDiagnosis
 		final String candidatesDescription = MigrationUtils.getMigrationCandidatesList(candidates);
 		final String candidateClause = candidatesDescription.isEmpty()
 				? "" // if there are no candidates, do not add candidates clause
-				: "Candidates are: \n" + candidatesDescription; // otherwise list candidates
+				: "Candidates are:" + candidatesDescription; // otherwise list candidates
 
 		final String message = IssueCodes.getMessageForIDL_MIGRATION_NO_MATCHING_CANDIDATE(argumentsDescription,
 				contextTargetVersionDescription, candidateClause);

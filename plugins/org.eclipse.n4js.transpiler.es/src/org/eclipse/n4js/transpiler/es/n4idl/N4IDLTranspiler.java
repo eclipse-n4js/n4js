@@ -36,6 +36,9 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 	@Inject
 	private Provider<N4IDLInterfaceDeclarationTransformation> interfaceDeclarationTransformation;
 
+	@Inject
+	private Provider<N4IDLMigrationTransformation> migrationTransformation;
+
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		List<Transformation> transformations = new ArrayList<>(
@@ -46,7 +49,9 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 				// add versioned types transformation as first step
 				versionedTypesTransformation.get(),
 				// add versioned imports transformation as second step
-				versionedImportsTransformationProvider.get()));
+				versionedImportsTransformationProvider.get(),
+				// add migration transformation
+				migrationTransformation.get()));
 
 		// replace some N4JS transformations with N4IDL-specific transformations
 		transformations.replaceAll(t -> {

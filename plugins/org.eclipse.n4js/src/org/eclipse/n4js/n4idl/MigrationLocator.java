@@ -96,7 +96,9 @@ public class MigrationLocator {
 	 */
 	private Optional<TMigration> selectMigrationCandidate(List<TypeRef> arguments, Stream<TMigration> candidates,
 			TMigration contextMigration) {
-		return candidates
+		List<TMigration> c = candidates.collect(Collectors.toList());
+
+		return c.stream()
 				// filter candidates by target version
 				.filter(migration -> migration.getTargetVersion() == contextMigration.getTargetVersion())
 				// filter candidates by argument type compatibility

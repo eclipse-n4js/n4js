@@ -256,7 +256,10 @@ public class ASTProcessor extends AbstractProcessor {
 			 && (  node.eContainer instanceof FunctionExpression
 				|| node.eContainer instanceof PropertyGetterDeclaration
 				|| node.eContainer instanceof PropertySetterDeclaration
-				|| node.eContainer instanceof PropertyMethodDeclaration));
+				|| node.eContainer instanceof PropertyMethodDeclaration))
+		|| (node instanceof ParameterizedCallExpression 
+			&& MigrationUtils.isMigrateCall(node)
+		);
 	}
 
 	/**
