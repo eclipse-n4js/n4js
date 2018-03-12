@@ -665,8 +665,11 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			return OverrideCompatibilityResult.ERROR;
 		}
 
+		final boolean mIsField = m instanceof TField;
+		final boolean sIsField = s instanceof TField;
+
 		// 4. if m is a field, then m not final
-		if (m instanceof TField && m.isFinal()) {
+		if (mIsField && m.isFinal()) {
 			if (!consumptionConflict) { // avoid consequential errors
 				messageOverrideFinalField(redefinitionType, m, s);
 			}
@@ -674,11 +677,11 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		}
 
 		// 5. s not const
-		if (s instanceof TField) { // const only defined on TField & TStructuralField
+		if (sIsField) { // const only defined on TField & TStructuralField
 			TField sF = (TField) s;
 			if (sF.isConst()) {
 				// By GHOLD-186 const redefinition is allowed for const fields
-				if (!((m instanceof TField)
+				if (!((mIsField)
 						&& ((TField) m).isConst())) {
 					if (!consumptionConflict) { // avoid consequential errors
 						messageOverrideConst(redefinitionType, m, sF);
@@ -686,7 +689,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 					return OverrideCompatibilityResult.ERROR;
 				}
 			} else {
-				if (m instanceof TField) {
+				if (mIsField) {
 					TField fM = (TField) m;
 					if (fM.isConst()) {
 						if (!consumptionConflict) { // avoid consequential errors
@@ -718,7 +721,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		}
 
 		boolean sIsConst = false;
-		if (s instanceof TField) {
+		if (sIsField) {
 			sIsConst = ((TField) s).isConst();
 		}
 
