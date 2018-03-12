@@ -16,20 +16,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Argument;
-import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.n4idl.versioning.VersionUtils;
-import org.eclipse.n4js.resource.N4JSEObjectDescription;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TMigratable;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.impl.SingletonScope;
 
 import com.google.inject.Inject;
 
@@ -39,27 +33,6 @@ import com.google.inject.Inject;
 public class MigrationLocator {
 	@Inject
 	private N4JSTypeSystem typeSystem;
-
-	/** Returns a new migration scope for the given list of arguments and context. */
-	public IScope migrationScope(List<Argument> arguments, EObject context) {
-		final Optional<TMigration> contextMigration = MigrationUtils.getTMigrationOf(context);
-
-		// only proceed with a valid context migration
-		if (!contextMigration.isPresent()) {
-			return IScope.NULLSCOPE;
-		}
-		final TMigration contextTMigration = contextMigration.get();
-		final Optional<TMigration> targetMigration = this.findMigration(arguments, contextTMigration);
-
-		if (targetMigration.isPresent()) {
-			return new SingletonScope(
-					N4JSEObjectDescription.create(QualifiedName.create(N4IDLGlobals.MIGRATE_CALL_KEYWORD),
-							targetMigration.get()),
-					IScope.NULLSCOPE);
-		} else {
-			return IScope.NULLSCOPE;
-		}
-	}
 
 	/**
 	 * Types the return value of a {@code migrate} operator.

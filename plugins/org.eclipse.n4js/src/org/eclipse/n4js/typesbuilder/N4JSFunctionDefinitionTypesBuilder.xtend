@@ -90,7 +90,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		target.topLevelTypes += functionType
 		
 		// if applicable initialise function as TMigration
-		if (MigrationUtils.isMigrationDeclaration(functionDecl)) {
+		if (MigrationUtils.isMigrationDefinition(functionDecl)) {
 			initialiseTMigration(functionDecl, functionType as TMigration, preLinkingPhase)
 		}
 	}
@@ -186,7 +186,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * @see N4IDLMigrationTypesBuilder#isMigrationDeclaration
 	 */
 	def private TFunction createTFunction(FunctionDefinition functionDef) {
-		if (MigrationUtils.isMigrationDeclaration(functionDef)) {
+		if (MigrationUtils.isMigrationDefinition(functionDef)) {
 			return createTMigration();
 		} else {
 			return TypesFactory::eINSTANCE.createTFunction();

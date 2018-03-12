@@ -100,6 +100,7 @@ import org.eclipse.n4js.n4JS.IntLiteral
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
+import org.eclipse.n4js.n4JS.MigrationContextVariable
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
@@ -1258,6 +1259,8 @@ from {
 		T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 	}
 }
+
+axiom typeMigrationContextVariable G |- MigrationContextVariable lmigrationContextVar : G.migrationContextTypeRef
 
 
 

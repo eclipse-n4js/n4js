@@ -42,8 +42,8 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
-import org.eclipse.n4js.n4idl.MigrationLocator
 import org.eclipse.n4js.n4idl.scoping.FailedToInferContextVersionWrappingScope
+import org.eclipse.n4js.n4idl.scoping.MigrationScopeHelper
 import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScope
 import org.eclipse.n4js.n4idl.scoping.NonVersionAwareContextScope
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
@@ -152,7 +152,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	
 	@Inject private ValidatorMessageHelper messageHelper;
 	
-	@Inject private MigrationLocator migrationLocator;
+	@Inject private MigrationScopeHelper migrationScopeHelper;
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -590,12 +590,20 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		// are detected and prevented.
 		if (!VersionUtils.isVersionAwareContext(context)) {
 			return new NonVersionAwareContextScope(contextVersionScope, true, messageHelper);
-		} else if (context instanceof IdentifierRef && 
-			MigrationUtils.isInMigration(context) && 
-			MigrationUtils.isMigrateCallIdentifier(context as IdentifierRef)) {
-				val callExpression = context.eContainer as ParameterizedCallExpression;
-				return migrationLocator.migrationScope(callExpression.arguments, context);
+		} else {
+			// detect whether this scope is lexically contained by migration declaration
+			val migrationDeclaration = MigrationUtils.getMigrationDeclaration(context)
+			if (migrationDeclaration.present) {
+				// if the context is a 'migrate' calls
+				if (context instanceof IdentifierRef && MigrationUtils.isMigrateCallIdentifier(context as IdentifierRef)) {
+					// provide an argument-sensitive migration scope 
+					val callExpression = context.eContainer as ParameterizedCallExpression;
+					return migrationScopeHelper.migrationScope(callExpression.arguments, context);
+				} else { // otherwise make sure to include the MigrationContext 'context' identifier
+					return migrationScopeHelper.migrationContextAwareScope(migrationDeclaration.get(), contextVersionScope);
+				}
 			}
+		}
 		
 		return contextVersionScope;
 	}

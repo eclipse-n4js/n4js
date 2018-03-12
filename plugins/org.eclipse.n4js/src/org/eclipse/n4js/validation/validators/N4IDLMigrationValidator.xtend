@@ -86,7 +86,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		
 		// this validation only applies for migrations
-		if (!MigrationUtils.isMigrationDeclaration(functionDeclaration)) {
+		if (!MigrationUtils.isMigrationDefinition(functionDeclaration)) {
 			return;
 		}
 		

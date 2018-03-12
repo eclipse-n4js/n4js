@@ -41,7 +41,7 @@ public class MigrationUtils {
 	/**
 	 * Returns {@code true} if the given {@link FunctionDeclaration} is a migration declaration.
 	 */
-	public static boolean isMigrationDeclaration(FunctionDefinition functionDef) {
+	public static boolean isMigrationDefinition(FunctionDefinition functionDef) {
 		return functionDef instanceof FunctionDeclaration &&
 				AnnotationDefinition.MIGRATION.hasAnnotation(functionDef);
 	}
@@ -65,7 +65,7 @@ public class MigrationUtils {
 				.filter(EcoreUtil2.getAllContainers(context), FunctionDeclaration.class);
 		// filter by {@code @Migration} annotation
 		Iterable<FunctionDeclaration> migrationContainers = Iterables.filter(functionDeclarationContainers,
-				MigrationUtils::isMigrationDeclaration);
+				MigrationUtils::isMigrationDefinition);
 
 		Iterator<FunctionDeclaration> iterator = migrationContainers.iterator();
 		return iterator.hasNext() ? Optional.of(iterator.next()) : Optional.empty();

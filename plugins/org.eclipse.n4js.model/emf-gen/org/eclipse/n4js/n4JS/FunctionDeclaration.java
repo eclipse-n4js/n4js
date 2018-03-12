@@ -27,6 +27,7 @@ package org.eclipse.n4js.n4JS;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDeclaration#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.FunctionDeclaration#get_migrationContext <em>migration Context</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDeclaration()
@@ -61,6 +62,31 @@ public interface FunctionDeclaration extends AnnotableScriptElement, ModifiableE
 	void setName(String value);
 
 	/**
+	 * Returns the value of the '<em><b>migration Context</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Transient {@code MigrationContext} arguments variable. Access through #getMigrationContextVariable()
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>migration Context</em>' containment reference.
+	 * @see #set_migrationContext(MigrationContextVariable)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDeclaration__migrationContext()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	MigrationContextVariable get_migrationContext();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionDeclaration#get_migrationContext <em>migration Context</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>migration Context</em>' containment reference.
+	 * @see #get_migrationContext()
+	 * @generated
+	 */
+	void set_migrationContext(MigrationContextVariable value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -72,5 +98,17 @@ public interface FunctionDeclaration extends AnnotableScriptElement, ModifiableE
 	 * @generated
 	 */
 	boolean isExternal();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Lazy initialized reference to transient localArgurmentsVariable
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.n4JS.MigrationContextVariable%> __migrationContext = this.get_migrationContext();\nboolean _tripleEquals = (__migrationContext == null);\nif (_tripleEquals)\n{\n\tfinal <%org.eclipse.n4js.n4JS.MigrationContextVariable%> newMigrationContext = <%org.eclipse.n4js.n4JS.N4JSFactory%>.eINSTANCE.createMigrationContextVariable();\n\tnewMigrationContext.setName(\"context\");\n\tfinal <%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%> _function = new <%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%>()\n\t{\n\t\tpublic void apply()\n\t\t{\n\t\t\t<%this%>.set_migrationContext(newMigrationContext);\n\t\t}\n\t};\n\t<%org.eclipse.n4js.utils.EcoreUtilN4%>.doWithDeliver(false, _function, this);\n}\nreturn this.get_migrationContext();'"
+	 * @generated
+	 */
+	MigrationContextVariable getMigrationContextVariable();
 
 } // FunctionDeclaration

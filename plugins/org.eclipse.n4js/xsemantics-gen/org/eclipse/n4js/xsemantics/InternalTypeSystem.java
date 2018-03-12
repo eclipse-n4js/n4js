@@ -57,6 +57,7 @@ import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
+import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
@@ -345,6 +346,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   public final static String TYPEMODULENAMESPACE = "org.eclipse.n4js.xsemantics.TypeModuleNamespace";
   
   public final static String TYPEJSXELEMENT = "org.eclipse.n4js.xsemantics.TypeJSXElement";
+  
+  public final static String TYPEMIGRATIONCONTEXTVARIABLE = "org.eclipse.n4js.xsemantics.TypeMigrationContextVariable";
   
   public final static String SUBTYPETYPEARGUMENT = "org.eclipse.n4js.xsemantics.SubtypeTypeArgument";
   
@@ -3608,6 +3611,35 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
     }
     return new Result<TypeRef>(T);
+  }
+  
+  protected Result<TypeRef> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final MigrationContextVariable lmigrationContextVar) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final Result<TypeRef> _result_ = applyRuleTypeMigrationContextVariable(G, _subtrace_, lmigrationContextVar);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return ruleName("typeMigrationContextVariable") + stringRepForEnv(G) + " |- " + stringRep(lmigrationContextVar) + " : " + stringRep(_result_.getFirst());
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyRuleTypeMigrationContextVariable) {
+    	typeThrowException(ruleName("typeMigrationContextVariable") + stringRepForEnv(G) + " |- " + stringRep(lmigrationContextVar) + " : " + "ParameterizedTypeRef",
+    		TYPEMIGRATIONCONTEXTVARIABLE,
+    		e_applyRuleTypeMigrationContextVariable, lmigrationContextVar, new ErrorInformation[] {new ErrorInformation(lmigrationContextVar)});
+    	return null;
+    }
+  }
+  
+  protected Result<TypeRef> applyRuleTypeMigrationContextVariable(final RuleEnvironment G, final RuleApplicationTrace _trace_, final MigrationContextVariable lmigrationContextVar) throws RuleFailedException {
+    
+    return new Result<TypeRef>(_applyRuleTypeMigrationContextVariable_1(G, lmigrationContextVar));
+  }
+  
+  private ParameterizedTypeRef _applyRuleTypeMigrationContextVariable_1(final RuleEnvironment G, final MigrationContextVariable lmigrationContextVar) throws RuleFailedException {
+    ParameterizedTypeRef _migrationContextTypeRef = RuleEnvironmentExtensions.migrationContextTypeRef(G);
+    return _migrationContextTypeRef;
   }
   
   protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeArgument left, final TypeArgument right) throws RuleFailedException {

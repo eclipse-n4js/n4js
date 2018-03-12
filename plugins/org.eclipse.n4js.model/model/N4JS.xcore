@@ -556,6 +556,22 @@ class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Sta
 	op boolean isExternal() {
 		declaredModifiers.contains(N4Modifier.EXTERNAL)
 	}
+	
+	
+	/** Transient {@code MigrationContext} arguments variable. Access through #getMigrationContextVariable()  */
+	contains transient MigrationContextVariable _migrationContext
+	/** Lazy initialized reference to transient localArgurmentsVariable */
+	op MigrationContextVariable getMigrationContextVariable() {
+		if (_migrationContext === null) {
+			val newMigrationContext = N4JSFactory::eINSTANCE.createMigrationContextVariable;
+			newMigrationContext.name = "context";
+			EcoreUtilN4.doWithDeliver(false,
+				[|
+					_migrationContext = newMigrationContext;
+				], this);
+		}
+		return _migrationContext;
+	}
 }
 
 class FunctionExpression extends FunctionDefinition, AnnotableExpression, GenericDeclaration, NamedElement {
@@ -2279,5 +2295,12 @@ class VersionedIdentifierRef extends IdentifierRef, VersionedReference {
 	 */
 	op int getVersion() {
 		return requestedVersionOrZero
+	}
+}
+
+/**  Implicit variable in migration bodies referencing the current {@code MigrationContext}. */
+class MigrationContextVariable extends Variable {
+	op String getName() {
+		return "context";
 	}
 }

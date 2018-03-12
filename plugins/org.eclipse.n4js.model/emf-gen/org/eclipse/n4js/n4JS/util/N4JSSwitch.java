@@ -1852,6 +1852,18 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.MIGRATION_CONTEXT_VARIABLE: {
+				MigrationContextVariable migrationContextVariable = (MigrationContextVariable)theEObject;
+				T result = caseMigrationContextVariable(migrationContextVariable);
+				if (result == null) result = caseVariable(migrationContextVariable);
+				if (result == null) result = caseTypedElement(migrationContextVariable);
+				if (result == null) result = caseIdentifiableElement(migrationContextVariable);
+				if (result == null) result = caseNamedElement(migrationContextVariable);
+				if (result == null) result = caseTypeProvidingElement(migrationContextVariable);
+				if (result == null) result = caseTypableElement(migrationContextVariable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -4418,6 +4430,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseVersionedIdentifierRef(VersionedIdentifierRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Migration Context Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Migration Context Variable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMigrationContextVariable(MigrationContextVariable object) {
 		return null;
 	}
 

@@ -1,0 +1,28 @@
+/**
+ * A {@link MigrationContext} is used to execute migrations
+ * in a managed fashion.
+ */
+public interface ~MigrationContext {
+	/** 
+	 * Returns the targets of all outgoing trace links of the given migration argument.
+	 * 
+	 * Returns an {@code null} if no such trace link exists.
+	 * 
+	 * The type of the targets of a trace link is expected to be in accordance with the
+	 * correspondingly declared migrations.
+	 */
+	public abstract getTrace(argument : Object) : Array<N4Object>
+	
+	/**
+	 * Migrate the given migration arguments to the given
+	 * target model version.
+	 * 
+	 * Returns the migration results.
+	 * 
+	 * @param targetVersion The target model version.
+	 * @param args The migration arguments.
+	 * 
+	 * @returns The migration result (possibly a structural ~Object with {out1 : N4Object, out2 : N4Object}) etc.
+	 */
+	public abstract migrate(targetVersion : int, args : Array<any>) : Object
+}

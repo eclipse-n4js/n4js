@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
@@ -86,9 +87,13 @@ public class VersionUtils {
 				return true;
 			}
 		}
-
 		// exception for import declarations
 		if (context instanceof ImportDeclaration) {
+			return true;
+		}
+
+		// check whether the context is the built-in MigrationContext (which is considered version-aware)
+		if (context == BuiltInTypeScope.get(context.eResource().getResourceSet()).getMigrationContextType()) {
 			return true;
 		}
 
