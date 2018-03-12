@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {
+	field: string;
+}
+interface I {
+	field2: number;
+}
+class B extends A implements I {
+	// XPECT errors --> "Cannot override non-final field A.field with a final field." at "field"
+	@Final @Override field: string = 'hello';
+
+	// XPECT errors --> "Cannot override non-final field I.field2 with a final field." at "field2"
+	@Final @Override field2: number = 42;
+}
