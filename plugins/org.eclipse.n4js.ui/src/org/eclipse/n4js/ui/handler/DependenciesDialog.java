@@ -62,10 +62,12 @@ public class DependenciesDialog extends ProgressMonitorDialog {
 	}
 
 	/** @return table created with the provided data and tool tip, or {@code null} if no data. */
-	private static Table createTable(Composite parent, Map<String, String> data, String toolTipText) {
+	private static Table createTable(Composite parent, Map<String, String> data, String toolTipText, String label) {
 		if (data == null || data.isEmpty())
 			return null;
 
+		new Label(parent, SWT.HORIZONTAL | SWT.SEPARATOR).setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		new Label(parent, SWT.NONE).setText(label);
 		Table table = new Table(parent, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -119,12 +121,11 @@ public class DependenciesDialog extends ProgressMonitorDialog {
 
 		callerLock = lock;
 
-		new Label(configsContainer, SWT.NONE).setText("Please select configuration for '.npmrc'.");
-		tNPMRC = createTable(configsContainer, npmrcs, ".npmrc configurations");
-		new Label(configsContainer, SWT.HORIZONTAL | SWT.SEPARATOR)
-				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		new Label(configsContainer, SWT.NONE).setText("Please select configuration for '.n4tp'.");
-		tN4TP = createTable(configsContainer, n4tps, "*.n4tp configurations");
+		tNPMRC = createTable(configsContainer, npmrcs, ".npmrc configurations",
+				"Please select configuration for '.npmrc'.");
+
+		tN4TP = createTable(configsContainer, n4tps, "*.n4tp configurations",
+				"Please select configuration for '.n4tp'.");
 
 		configsContainer.setVisible(true);
 		configsContainer.getParent().getParent().pack(true);
