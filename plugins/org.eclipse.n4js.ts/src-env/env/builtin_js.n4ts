@@ -1962,24 +1962,30 @@ public providedByRuntime interface Generator<out TYield, out TReturn, in TNext>
  */
 public providedByRuntime class Promise<out S, out F> extends Object @Global {
 
-    public constructor(executor:
-            {function(
-                resolveFn:{function(arg: S = undefined):void},
-                rejectFn: {function(arg: F = undefined):void}): void
-            }): void
+    public constructor(
+        executor: {function(
+            resolveFn:{function(arg: S = undefined):void},
+            rejectFn: {function(arg: F = undefined):void}
+        ): void}
+    ): void
 
     public <Snew, Fnew> then(
         onFulfilled: {function(arg:S = undefined): union{Snew, Promise<Snew, Fnew>}?},
         onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?} = undefined
     ): Promise<Snew, Fnew>
 
-    public <Snew, Fnew> catch(onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?}): Promise<Snew, Fnew>
+    public <Snew, Fnew> catch(
+        onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?}
+    ): Promise<Snew, Fnew>
 
     public static <S, F> reject(f: F): Promise<S, F>
-    public static <S, F> resolve(s: union{ Promise<S, F>,
-	                                    ~Object with { // i.e. thenable
-	                                        then(...args: any): Promise<S, F>;},
-                                        S}): Promise<S, F>
+    public static <S, F> resolve(
+        s: union{
+            Promise<S, F>,
+            ~Object with { then(...args: any): Promise<S, F>; }, // i.e. thenable
+            S
+        }
+    ): Promise<S, F>
 
     public static <T> all(iterable: Iterable<union{Promise<T,?>, T}>): Promise<Array<T>, any>
     public static <T> race(iterable: Iterable<union{Promise<T,?>, T}>): Promise<T, any>
