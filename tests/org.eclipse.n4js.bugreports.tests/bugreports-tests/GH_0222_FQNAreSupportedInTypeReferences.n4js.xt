@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2018 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest
+
+	ResourceSet {
+		ThisFile "ThisModule.n4js" { from="GH_0222_FQNAreSupportedInTypeReferences.n4js.xt" }
+		File "OtherModule.n4js" { from="GH_0222_FQNAreSupportedInTypeReferences_OtherModule.n4js" }
+	}
+
+   END_SETUP
+*/
+
+
+import * as N from "OtherModule";
+
+
+// XPECT noerrors -->
+let v01: N.OtherClass;
+
+// XPECT noerrors -->
+class C01 extends N.OtherClass {
+	// XPECT noerrors -->
+	field: N.OtherClass;
+	// XPECT noerrors -->
+	m1(p: N.OtherClass) {}
+	// XPECT noerrors -->
+	m2(): N.OtherClass { return null; }
+}
+
+
+
+// XPECT errors --> "Couldn't resolve reference to Type 'OtherModule.OtherClass'." at "OtherModule.OtherClass"
+let v02: OtherModule.OtherClass;
+
+// XPECT errors --> "Couldn't resolve reference to Type 'OtherModule.OtherClass'." at "OtherModule.OtherClass"
+class C02 extends OtherModule.OtherClass {
+	// XPECT errors --> "Couldn't resolve reference to Type 'OtherModule.OtherClass'." at "OtherModule.OtherClass"
+	field: OtherModule.OtherClass;
+	// XPECT errors --> "Couldn't resolve reference to Type 'OtherModule.OtherClass'." at "OtherModule.OtherClass"
+	m1(p: OtherModule.OtherClass) {}
+	// XPECT errors --> "Couldn't resolve reference to Type 'OtherModule.OtherClass'." at "OtherModule.OtherClass"
+	m2(): OtherModule.OtherClass { return null; }
+}
+
+
+
+class Here {}
+
+// XPECT errors --> "Couldn't resolve reference to Type 'ThisModule.Here'." at "ThisModule.Here"
+let v03: ThisModule.Here;
+
+// XPECT errors --> "Couldn't resolve reference to Type 'ThisModule.Here'." at "ThisModule.Here"
+class C03 extends ThisModule.Here {
+	// XPECT errors --> "Couldn't resolve reference to Type 'ThisModule.Here'." at "ThisModule.Here"
+	field: ThisModule.Here;
+	// XPECT errors --> "Couldn't resolve reference to Type 'ThisModule.Here'." at "ThisModule.Here"
+	m1(p: ThisModule.Here) {}
+	// XPECT errors --> "Couldn't resolve reference to Type 'ThisModule.Here'." at "ThisModule.Here"
+	m2(): ThisModule.Here { return null; }
+}
