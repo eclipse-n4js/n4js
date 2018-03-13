@@ -102,7 +102,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 					"Setting up external libraries failed.",
 					"Error while setting up external libraries.\n"
 							+ "Please check your Error Log view for the detailed log about the failure.\n" +
-							" (note that autobuild is " + wasAutoBuilding + ")"));
+							" (note that autobuild is " + getAutobuildSetting() + ")"));
 		}
 
 		return null;
