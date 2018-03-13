@@ -58,7 +58,7 @@ public class RebuildWorkspaceProjectsJob extends WorkspaceJob {
 	@Override
 	public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 		try {
-			ResourcesPlugin.getWorkspace().build(configs, CLEAN_BUILD, true, monitor);
+			ResourcesPlugin.getWorkspace().build(configs, CLEAN_BUILD, false, monitor);
 			return OK_STATUS;
 		} catch (final CoreException e) {
 			final String message = "Error while rebuilding workspace content.";

@@ -449,7 +449,7 @@ public class ExternalLibraryBuilder {
 							resourceSet,
 							toBeBuilt,
 							queuedBuildData,
-							false /* indexingOnly */);
+							true /* indexingOnly */);
 
 					monitor.setTaskName("Building '" + project.getName() + "'...");
 					IProgressMonitor buildMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);

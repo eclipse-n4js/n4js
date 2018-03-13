@@ -118,6 +118,11 @@ class N4JSValidator extends InternalTypeSystemValidator {
 	 * Override to improve error message in case of abnormal termination of validation.
 	 */
 	override MethodWrapperCancelable createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
+		// when running tests (e.g. org.eclipse.n4js.tests.scoping.ErrorTest)
+		// the following data collectors need to be created here
+		DataCollectors.INSTANCE.getOrCreateDataCollector("Build");
+		DataCollectors.INSTANCE.getOrCreateDataCollector("Validations", "Build");
+
 		return new N4JSMethodWrapperCancelable(instanceToUse, method, operationCanceledManager);
 	}
 
@@ -130,7 +135,6 @@ class N4JSValidator extends InternalTypeSystemValidator {
 		}
 
 		override handleInvocationTargetException(Throwable targetException, State state) {
-
 			// ignore GuardException, check is just not evaluated if guard is false
 			// ignore NullPointerException, as not having to check for NPEs all the time is a convenience feature
 			super.handleInvocationTargetException(targetException, state);
