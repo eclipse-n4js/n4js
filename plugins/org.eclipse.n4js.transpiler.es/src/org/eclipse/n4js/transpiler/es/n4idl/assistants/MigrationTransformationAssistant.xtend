@@ -19,10 +19,10 @@ import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
-import org.eclipse.n4js.n4idl.MigrationSwitchComputer
-import org.eclipse.n4js.n4idl.MigrationSwitchComputer.UnhandledTypeRefException
 import org.eclipse.n4js.n4idl.N4IDLGlobals
-import org.eclipse.n4js.n4idl.TypeSwitchCondition
+import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer
+import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer.UnhandledTypeRefException
+import org.eclipse.n4js.n4idl.migrations.TypeSwitchCondition
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal

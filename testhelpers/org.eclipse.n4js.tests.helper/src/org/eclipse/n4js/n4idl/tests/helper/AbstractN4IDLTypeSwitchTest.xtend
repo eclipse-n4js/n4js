@@ -12,10 +12,10 @@ package org.eclipse.n4js.n4idl.tests.helper
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.n4idl.MigrationSwitchComputer
-import org.eclipse.n4js.n4idl.OrSwitchCondition
-import org.eclipse.n4js.n4idl.SwitchCondition
-import org.eclipse.n4js.n4idl.TypeSwitchCondition
+import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer
+import org.eclipse.n4js.n4idl.migrations.OrSwitchCondition
+import org.eclipse.n4js.n4idl.migrations.SwitchCondition
+import org.eclipse.n4js.n4idl.migrations.TypeSwitchCondition
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.xsemantics.runtime.RuleEnvironment

@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import java.util.Collection
 import java.util.HashMap
 import java.util.HashSet
-import java.util.Iterator
 import java.util.List
 import java.util.Map
 import java.util.Set
@@ -23,17 +22,20 @@ import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
-import org.eclipse.n4js.n4idl.MigrationSwitchComputer
-import org.eclipse.n4js.n4idl.MigrationSwitchComputer.UnhandledTypeRefException
-import org.eclipse.n4js.n4idl.SwitchCondition
+import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer
+import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer.UnhandledTypeRefException
+import org.eclipse.n4js.n4idl.migrations.SwitchCondition
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.utils.collections.Collections2
+import org.eclipse.n4js.utils.collections.Iterables2
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -41,7 +43,6 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 
 /**
  * Validates N4IDL migration declarations.
@@ -264,41 +265,8 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		return typeSystem.createRuleEnvironmentForContext(ref, ref.eResource);
 	}
 	
-	/** Returns a stream of all pairs that can be formed with the elements of the given collection. */
-	private def <T> Stream<Pair<T, T>> pairs(Collection<T> collection) {
-		return collection.stream.flatMap[ e1 | 
-			collection.stream.map[ e2 | 
-				return e1 -> e2;
-			]
-		]
-	}
-	
-	/**
-	 * Returns an {@link Iterable} which aligns values of iterable1 and iterable2 by their indices.
-	 * 
-	 * The size of the resulting iterable is the minimum of iterable1.size and iterable2.size.
-	 */
-	private def <T1, T2> Iterable<Pair<T1, T2>> align(Iterable<T1> iterable1, Iterable<T2> iterable2) {
-		return [
-				val it1 = iterable1.iterator;
-				val it2 = iterable2.iterator;
-				
-				return new Iterator<Pair<T1, T2>>() {
-					
-					override hasNext() {
-						return it1.hasNext || it2.hasNext;
-					}
-					
-					override next() {
-						return it1.next -> it2.next
-					}
-					
-				}
-		]
-	}
-	
 	/** Convenience method to enable the use of {@link Procedure2} when iterating over {@link Pair} streams. */
-	private def <T1, T2> void forPair(Stream<Pair<T1, T2>> stream, Procedure2<T1, T2> procedure) {
+	private static def <T1, T2> void forPair(Stream<Pair<T1, T2>> stream, Procedure2<T1, T2> procedure) {
 		stream.forEach[pair |
 			procedure.apply(pair.key, pair.value);
 		]
@@ -315,7 +283,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			return false;
 		}
 		
-		val firstNonSubtype = align(left, right).findFirst[ pair |
+		val firstNonSubtype = Iterables2.align(left, right).findFirst[ pair |
 			val l = pair.key;
 			val r = pair.value;
 			val subtypingResult = typeSystem.equaltype(ruleEnv, l, r);
@@ -339,7 +307,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		
 		val conflictGroups = new HashMap<TMigration, Set<TMigration>>();
 		
-		migrationAndSwitchTypes.pairs.forPair[ m1, m2 |
+		Collections2.pairs(migrationAndSwitchTypes).forPair[ m1, m2 |
 			val tMigration1 = m1.key;
 			val switchTypes1 = m1.value;
 			

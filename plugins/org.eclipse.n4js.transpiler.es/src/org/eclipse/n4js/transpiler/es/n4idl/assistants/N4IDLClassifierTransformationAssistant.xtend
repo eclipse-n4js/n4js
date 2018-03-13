@@ -18,9 +18,10 @@ import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.types.TN4Classifier
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TypingStrategy
 
 /**
@@ -54,7 +55,21 @@ class N4IDLClassifierTransformationAssistant extends TransformationAssistant {
 	 */
 	private def Iterable<ParameterizedTypeRef> getNonStructuralSuperClassifiers(N4ClassifierDeclaration declaration) {
 		declaration.implementedOrExtendedInterfaceRefs
-			.filter[ref | ref.declaredType instanceof TN4Classifier]
-			.filter[ref | (ref.declaredType as TN4Classifier).typingStrategy == TypingStrategy.NOMINAL];
-	} 
+			.filter[ref | includeInImplementedInterfaces(ref as ParameterizedTypeRef_IM)];
+	}
+	
+	private def boolean includeInImplementedInterfaces(ParameterizedTypeRef_IM interfaceRef) {
+		val interfaceSTE = interfaceRef.rewiredTarget;
+	
+		// make sure the interface uses a nominal typing-strategy
+		if (interfaceSTE instanceof SymbolTableEntryOriginal) {
+			val declaredType = interfaceSTE.originalTarget as TInterface;
+			if (declaredType.typingStrategy == TypingStrategy.DEFAULT ||
+				declaredType.typingStrategy == TypingStrategy.NOMINAL) {
+					return true;
+				}
+		}
+		
+		return false;
+	}
 }

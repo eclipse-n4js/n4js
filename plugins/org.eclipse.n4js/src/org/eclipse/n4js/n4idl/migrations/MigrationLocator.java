@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4idl;
+package org.eclipse.n4js.n4idl.migrations;
 
 import java.util.Collections;
 import java.util.List;

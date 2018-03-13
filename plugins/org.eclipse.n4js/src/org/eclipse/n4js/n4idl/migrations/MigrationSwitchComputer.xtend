@@ -8,10 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4idl
+package org.eclipse.n4js.n4idl.migrations
 
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -19,8 +20,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.n4js.n4idl.MigrationSwitchComputer.UnhandledTypeRefException
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 
 /**
  * The MigrationSwitchComputer can be used to compute a {@link SwitchCondition} which 

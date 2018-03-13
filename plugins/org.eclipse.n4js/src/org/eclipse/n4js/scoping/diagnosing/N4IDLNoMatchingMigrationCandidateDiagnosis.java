@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
-import org.eclipse.n4js.n4idl.MigrationLocator;
+import org.eclipse.n4js.n4idl.migrations.MigrationLocator;
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TMigration;
