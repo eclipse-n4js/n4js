@@ -48,9 +48,9 @@ import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
@@ -192,7 +192,6 @@ public class NpmManager {
 	private IStatus installDependenciesInternal(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
 			boolean triggerCleanbuild) {
 
-		Measurement mes = dcLibMngr.getMeasurement("installDependenciesInternal");
 		MultiStatus status = statusHelper.createMultiStatus("Status of installing multiple npm dependencies.");
 
 		IStatus binaryStatus = checkNPM();
@@ -203,7 +202,7 @@ public class NpmManager {
 
 		Set<String> requestedNPMs = versionedNPMs.keySet();
 
-		try {
+		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
 
 			Set<String> oldNPMs = getOldNPMs(monitor, requestedNPMs);
 
@@ -221,7 +220,6 @@ public class NpmManager {
 
 		} finally {
 			monitor.done();
-			mes.end();
 		}
 	}
 
@@ -277,7 +275,8 @@ public class NpmManager {
 		final Set<String> newDependencies = new HashSet<>(afterDependencies.keySet());
 
 		Set<String> newNpmProjectNames = new HashSet<>();
-		Iterable<N4JSExternalProject> newNPMs = externalLibraryWorkspace.getProjectsIn(targetPlatformNodeModulesLocation);
+		Iterable<N4JSExternalProject> newNPMs = externalLibraryWorkspace
+				.getProjectsIn(targetPlatformNodeModulesLocation);
 		for (IProject newNPM : newNPMs) {
 			newNpmProjectNames.add(newNPM.getName());
 		}

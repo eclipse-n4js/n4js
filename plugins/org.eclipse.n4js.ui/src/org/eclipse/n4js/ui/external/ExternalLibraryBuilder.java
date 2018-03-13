@@ -45,9 +45,9 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
@@ -413,7 +413,7 @@ public class ExternalLibraryBuilder {
 		 *            monitor for the operation.
 		 */
 		private void run(ExternalLibraryBuilder helper, N4JSEclipseProject n4EclPrj, IProgressMonitor monitor) {
-			Measurement mesBE = dcBuildExt.getMeasurement("BuildExt_" + n4EclPrj.getProjectId());
+
 			monitor.setTaskName("Collecting resource for '" + n4EclPrj.getProjectId() + "'...");
 			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 			IProgressMonitor computeMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
@@ -427,7 +427,7 @@ public class ExternalLibraryBuilder {
 				return;
 			}
 
-			try {
+			try (ClosableMeasurement mesBE = dcBuildExt.getClosableMeasurement("BuildExt_" + n4EclPrj.getProjectId())) {
 				IN4JSCore core = helper.core;
 				QueuedBuildData queuedBuildData = helper.queuedBuildData;
 				IBuilderState builderState = helper.builderState;
@@ -449,7 +449,7 @@ public class ExternalLibraryBuilder {
 							resourceSet,
 							toBeBuilt,
 							queuedBuildData,
-							true /* indexingOnly */);
+							false /* indexingOnly */);
 
 					monitor.setTaskName("Building '" + project.getName() + "'...");
 					IProgressMonitor buildMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
@@ -468,8 +468,6 @@ public class ExternalLibraryBuilder {
 						+ project.getName() + ".";
 				LOGGER.error(message, e);
 				throw new RuntimeException(message, e);
-			} finally {
-				mesBE.end();
 			}
 		}
 
