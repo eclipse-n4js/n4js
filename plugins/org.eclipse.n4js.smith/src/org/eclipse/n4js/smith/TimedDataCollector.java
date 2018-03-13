@@ -55,6 +55,11 @@ class TimedDataCollector extends DataCollector {
 		return new TimedMeasurement(name, this::consume);
 	}
 
+	@Override
+	public ClosableMeasurement getClosableMeasurement(String name) {
+		return (TimedMeasurement) getMeasurement(name);
+	}
+
 	private void consume(TimedMeasurement measurement) {
 		TimedMeasurement timed = measurement;
 		data.add(new DataPoint(timed.name, timed.sw.elapsed(NANOSECONDS)));
