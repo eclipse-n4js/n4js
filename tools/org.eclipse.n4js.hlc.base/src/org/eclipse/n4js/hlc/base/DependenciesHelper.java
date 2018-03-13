@@ -55,7 +55,9 @@ class DependenciesHelper {
 
 		List<File> locations = new ArrayList<>();
 		locations.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
-		locations.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+		if (projectLocations != null) {
+			locations.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+		}
 		// Discover projects in search paths.
 		List<File> discoveredProjectLocations = HeadlessHelper.collectAllProjectPaths(locations);
 

@@ -74,4 +74,34 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends BaseN
 				out);
 	}
 
+	/**
+	 * Similar to the {@link #testCompileAndRunWithExternalDependencies()} but instead of using
+	 * {@link BuildType#allprojects} with common root, it is using {@link BuildType#projects} with concrete list of
+	 * projects.
+	 */
+	@Test
+	public void testCompileAndRunWithExternalDependencies2() throws IOException, ExitCodeException {
+		final String wsRoot = workspace.getAbsolutePath().toString();
+		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
+
+		final String[] args = {
+				"--systemLoader", COMMON_JS.getId(),
+				"--installMissingDependencies",
+				"-rw", "nodejs",
+				"-r", fileToRun,
+				// "--verbose",
+				// "--debug",
+				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"
+		};
+		final String out = runAndCaptureOutput(args);
+		N4CliHelper.assertExpectedOutput(
+				"P1\n" +
+						"react is not undefined true\n" +
+						"react-dom is not undefined true\n" +
+						"imports from libs are different true\n" +
+						"P2\n" +
+						"React is not undefined true",
+				out);
+	}
+
 }
