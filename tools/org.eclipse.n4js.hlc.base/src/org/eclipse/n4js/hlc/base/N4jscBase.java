@@ -86,7 +86,6 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 import com.google.common.base.Throwables;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -542,8 +541,10 @@ public class N4jscBase implements IApplication {
 						warn("The list of projects are ignored because we are cleaning all projects in  "
 								+ projectLocations);
 					}
-					headless.cleanProjectsInSearchPath(
-							convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations));
+					List<File> toClean = new ArrayList<>();
+					toClean.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
+					toClean.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+					headless.cleanProjectsInSearchPath(toClean);
 				}
 				break;
 			default:
@@ -892,11 +893,14 @@ public class N4jscBase implements IApplication {
 	private void compileArgumentsAsSingleFiles() throws ExitCodeException, N4JSCompileException {
 		srcFiles.stream().forEach(FileUtils::isExistingReadibleFile);
 
+		List<File> toBuild = new ArrayList<>();
+
 		if (projectLocations == null)
-			headless.compileSingleFiles(convertToFilesAddTargetPlatformAndCheckWritableDir(""), srcFiles);
+			toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
 		else
-			headless.compileSingleFiles(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
-					srcFiles);
+			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+
+		headless.compileSingleFiles(toBuild);
 	}
 
 	/**
@@ -908,11 +912,14 @@ public class N4jscBase implements IApplication {
 	 *             in error cases
 	 */
 	private void compileArgumentsAsProjects() throws ExitCodeException, N4JSCompileException {
+		List<File> toBuild = new ArrayList<>();
+
 		if (projectLocations == null)
-			headless.compileProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(""), srcFiles);
+			toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
 		else
-			headless.compileProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
-					srcFiles);
+			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+
+		headless.compileProjects(toBuild);
 	}
 
 	/**
@@ -932,7 +939,8 @@ public class N4jscBase implements IApplication {
 			warn("The list of source files is obsolete for built all projects. The following will be ignored: "
 					+ Joiner.on(", ").join(srcFiles));
 		}
-		headless.compileAllProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations));
+
+		headless.compileAllProjects(ProjectLocationsUtil.convertToFiles(projectLocations));
 
 	}
 
@@ -944,8 +952,7 @@ public class N4jscBase implements IApplication {
 			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
 					"Require option for projectlocations.");
 
-		HeadlessHelper.registerProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
-				n4jsFileBasedWorkspace);
+		HeadlessHelper.registerProjects(ProjectLocationsUtil.convertToFiles(projectLocations), n4jsFileBasedWorkspace);
 	}
 
 	/**
@@ -993,28 +1000,6 @@ public class N4jscBase implements IApplication {
 					"Cannot load preference-properties from given file " + preferencesProperties, e);
 		}
 		return ret;
-	}
-
-	/**
-	 * @param dirpaths
-	 *            one or more paths separated by {@link File#pathSeparatorChar} OR empty string if no paths given.
-	 */
-	private List<File> convertToFilesAddTargetPlatformAndCheckWritableDir(String dirpaths) {
-		final List<File> retList = new ArrayList<>();
-		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
-			final File tpLoc = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
-			FileUtils.isExistingWriteableDir(tpLoc);
-			retList.add(tpLoc);
-		}
-		if (!dirpaths.isEmpty()) {
-			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
-				final File ret = new File(dirpath);
-				FileUtils.isExistingWriteableDir(ret);
-				retList.add(ret);
-			}
-		}
-
-		return retList;
 	}
 
 	/**
