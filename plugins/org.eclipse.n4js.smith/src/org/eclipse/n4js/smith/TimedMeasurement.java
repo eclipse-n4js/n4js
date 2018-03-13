@@ -41,4 +41,8 @@ class TimedMeasurement implements Measurement {
 		stopHandler = null;
 	}
 
+	@Override
+	public void close() {
+		end();
+	}
 }

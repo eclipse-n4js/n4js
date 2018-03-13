@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.smith;
 
+import java.io.Closeable;
+
 /**
  * Generic interface for measurements. Obtained instance should be considered {@code started}. Caller can end given
  * measurement by calling {@link #end()}. Concrete implementations will track different data.
  */
-public interface Measurement {
+public interface Measurement extends Closeable {
 
 	/**
 	 * Ends given measurement. Concrete implementations can do some data processing in this step. Collected data is
