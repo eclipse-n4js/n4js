@@ -28,6 +28,7 @@ import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
@@ -36,7 +37,7 @@ import org.eclipse.n4js.smith.Measurement;
  * Facade for all control and data flow related methods.
  */
 public class N4JSFlowAnalyser {
-	static private final Logger LOGGER = Logger.getLogger(N4JSFlowAnalyser.class);
+	static private final Logger logger = Logger.getLogger(N4JSFlowAnalyser.class);
 	static private final DataCollector dcFlowGraphs = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Flow Graphs");
 	static private final DataCollector dcCreateGraph = DataCollectors.INSTANCE
@@ -95,7 +96,7 @@ public class N4JSFlowAnalyser {
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
-			LOGGER.warn("Unknown exception", e);
+			logger.warn("Unknown exception", e);
 		}
 	}
 
@@ -193,11 +194,12 @@ public class N4JSFlowAnalyser {
 	 * supported. This analysis must be performed before {@link #acceptBackwardAnalysers(FlowAnalyser...)} is invoked.
 	 */
 	public void acceptForwardAnalysers(FlowAnalyser... flowAnalysers) {
-		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
-		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("performAnalysis_" + cfg.getScriptName());
-		gva.forwardAnalysis(flowAnalysers);
-		msmnt2.end();
-		msmnt1.end();
+		String name = cfg.getScriptName();
+		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + name);
+				ClosableMeasurement m2 = dcPerformAnalyses.getClosableMeasurement("performAnalysis_" + name);) {
+
+			gva.forwardAnalysis(flowAnalysers);
+		}
 	}
 
 	/**
@@ -206,20 +208,22 @@ public class N4JSFlowAnalyser {
 	 * performed.
 	 */
 	public void acceptBackwardAnalysers(FlowAnalyser... flowAnalysers) {
-		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
-		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("performAnalysis_" + cfg.getScriptName());
-		gva.backwardAnalysis(flowAnalysers);
-		msmnt2.end();
-		msmnt1.end();
+		String name = cfg.getScriptName();
+		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + name);
+				ClosableMeasurement m2 = dcPerformAnalyses.getClosableMeasurement("performAnalysis_" + name);) {
+
+			gva.backwardAnalysis(flowAnalysers);
+		}
 	}
 
 	/** Augments the flow graph with effect and symbol information. */
 	public void augmentEffectInformation() {
-		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
-		Measurement msmnt2 = dcCreateGraph.getMeasurement("createGraph_" + cfg.getScriptName());
-		gva.augmentEffectInformation(symbolFactory);
-		msmnt2.end();
-		msmnt1.end();
+		String name = cfg.getScriptName();
+		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + name);
+				ClosableMeasurement m2 = dcCreateGraph.getClosableMeasurement("createGraph_" + name);) {
+
+			gva.augmentEffectInformation(symbolFactory);
+		}
 	}
 
 	/** @return the containing {@link ControlFlowElement} for the given cfe. */

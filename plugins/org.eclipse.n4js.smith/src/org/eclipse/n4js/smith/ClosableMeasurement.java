@@ -23,6 +23,6 @@ public interface ClosableMeasurement extends AutoCloseable {
 	 * times, i.e. subsequent calls have no effects.
 	 */
 	@Override
-	public void close() throws Exception;
+	public void close();
 
 }
