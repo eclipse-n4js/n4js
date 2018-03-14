@@ -43,7 +43,7 @@ public class DependenciesDialog extends ProgressMonitorDialog {
 	private static final Logger LOGGER = Logger.getLogger(DependenciesDialog.class);
 
 	/** simple input data validation */
-	private static boolean isDataValid(Map<String, String> npmrcs, Map<String, String> n4tps, Object lock) {
+	private static boolean isDataValid(Map<String, String> npmrcs, Object lock) {
 		boolean res = true;
 		if (lock == null) {
 			LOGGER.error("Passed caller lock was null.");
@@ -51,10 +51,6 @@ public class DependenciesDialog extends ProgressMonitorDialog {
 		}
 		if (npmrcs == null) {
 			LOGGER.error("Passed npmrcs data was null.");
-			res = false;
-		}
-		if (n4tps == null) {
-			LOGGER.error("Passed n4tps data was null.");
 			res = false;
 		}
 
@@ -96,10 +92,8 @@ public class DependenciesDialog extends ProgressMonitorDialog {
 
 	private Composite configsContainer = null;
 	private Button proceed = null;
-	private String selectedN4TP = null;
 	private String selectedNPMRC = null;
 	private Object callerLock = null;
-	private Table tN4TP = null;
 	private Table tNPMRC = null;
 
 	/** */
@@ -109,11 +103,11 @@ public class DependenciesDialog extends ProgressMonitorDialog {
 
 	/**
 	 * Adds new controls to the UI, that allow user to select configuration to be used in underlying operations. Calling
-	 * (non-UI) thread provides data to update config tables ({@link #tNPMRC} and {@link #tN4TP}). Additionally caller
-	 * passes reference to itself, so later this UI thread can notify the caller to resume processing.
+	 * (non-UI) thread provides data to update config tables ({@link #tNPMRC}. Additionally caller passes reference to
+	 * itself, so later this UI thread can notify the caller to resume processing.
 	 */
-	public void updateConfigs(Map<String, String> npmrcs, Map<String, String> n4tps, Object lock) {
-		if (!isDataValid(npmrcs, n4tps, lock)) {
+	public void updateConfigs(Map<String, String> npmrcs, Object lock) {
+		if (!isDataValid(npmrcs, lock)) {
 			getProgressMonitor().setCanceled(true);
 			notifyCaller();
 			return;
@@ -124,17 +118,9 @@ public class DependenciesDialog extends ProgressMonitorDialog {
 		tNPMRC = createTable(configsContainer, npmrcs, ".npmrc configurations",
 				"Please select configuration for '.npmrc'.");
 
-		tN4TP = createTable(configsContainer, n4tps, "*.n4tp configurations",
-				"Please select configuration for '.n4tp'.");
-
 		configsContainer.setVisible(true);
 		configsContainer.getParent().getParent().pack(true);
 		configsContainer.setCursor(arrowCursor);
-	}
-
-	/** gets user selection for {@code *.n4tp}, may be {@code null} */
-	public String getN4TP() {
-		return this.selectedN4TP;
 	}
 
 	/** gets user selection for {@code .npmrc}, may be {@code null} */
@@ -211,19 +197,16 @@ public class DependenciesDialog extends ProgressMonitorDialog {
 
 	/**
 	 * Selection handler for user clicking {@link #proceed} button. Main responsibilities of this handler are: process
-	 * state of the {@link #tNPMRC} and {@link #tN4TP} tables to allow non-UI threads to read user decision, and to
-	 * notify non-UI thread that it can resume.
+	 * state of the {@link #tNPMRC} table to allow non-UI threads to read user decision, and to notify non-UI thread
+	 * that it can resume.
 	 *
 	 */
 	private void handleUserWantsToProceed(@SuppressWarnings("unused") final SelectionEvent e) {
 		proceed.setEnabled(false);
 		if (tNPMRC != null)
 			tNPMRC.setEnabled(false);
-		if (tN4TP != null)
-			tN4TP.setEnabled(false);
 		configsContainer.setCursor(super.dialogArea.getCursor());
 
-		this.selectedN4TP = getTableItem(tN4TP);
 		this.selectedNPMRC = getTableItem(tNPMRC);
 
 		notifyCaller();

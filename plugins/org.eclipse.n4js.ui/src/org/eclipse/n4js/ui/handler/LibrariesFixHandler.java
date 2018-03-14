@@ -105,7 +105,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 	public IStatus setupWorkspaceDependnecies(IProgressMonitor pmonitor, DependenciesDialog dependneciesDialog) {
 		final SubMonitor monitor = SubMonitor.convert(pmonitor, 100);
 		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Status of setting up dependnecies.");
+				.createMultiStatus("Status of setting up dependencies.");
 		wasAutoBuilding = getAutobuildSetting();
 		if (wasAutoBuilding)
 			turnOffAutobuild();
@@ -118,20 +118,16 @@ public class LibrariesFixHandler extends AbstractHandler {
 		ProjectsSettingsFillesLocator files = ProjectsSettingsFillesLocator.findFiles(subMonitor1);
 
 		Collection<File> fNPMRCs = files.getNPMRCs();
-		Collection<File> fN4TPs = files.getN4TPs();
 
 		File selectedNPMRC = null;
-		File selectedN4TP = null;
 
-		if (!fNPMRCs.isEmpty() || !fN4TPs.isEmpty()) {
+		if (!fNPMRCs.isEmpty()) {
 			userLogger.logInfo("detected custom settings, needs user input");
 			Map<String, String> npmrcs = new HashMap<>();
-			Map<String, String> n4tps = new HashMap<>();
 
 			fNPMRCs.forEach(f -> npmrcs.put(f.getName(), f.getAbsolutePath()));
-			fN4TPs.forEach(f -> n4tps.put(f.getName(), f.getAbsolutePath()));
 
-			UIUtils.getDisplay().asyncExec(() -> dependneciesDialog.updateConfigs(npmrcs, n4tps, lock));
+			UIUtils.getDisplay().asyncExec(() -> dependneciesDialog.updateConfigs(npmrcs, lock));
 
 			// at this point UI is updated with detected settings,
 			// and this thread waits to be notified by the UI thread
@@ -151,7 +147,6 @@ public class LibrariesFixHandler extends AbstractHandler {
 			}
 
 			// get selection from the UI
-			selectedN4TP = getFileOrNull(dependneciesDialog.getN4TP());
 			selectedNPMRC = getFileOrNull(dependneciesDialog.getNPMRC());
 
 		}
@@ -162,7 +157,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 
 		final SubMonitor subMonitor2 = monitor.split(1);
 
-		calculateAndInstallDependnecies(subMonitor2, multistatus, selectedN4TP);
+		calculateAndInstallDependnecies(subMonitor2, multistatus);
 
 		// turn on autobuild
 		if (wasAutoBuilding)
@@ -172,7 +167,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 	}
 
 	/** Streamlined process of calculating and installing the dependencies. */
-	public void calculateAndInstallDependnecies(SubMonitor monitor, MultiStatus multistatus, File selectedN4TP) {
+	public void calculateAndInstallDependnecies(SubMonitor monitor, MultiStatus multistatus) {
 		final SubMonitor subMonitor2 = monitor.split(1);
 
 		// remove npm cache
@@ -185,7 +180,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 		externals.maintenanceDeleteNpms(multistatus);
 
 		// install npms from target platform
-		Map<String, String> versionedPackages = dependneciesHelper.calculateDependenciesToInstall(selectedN4TP);
+		Map<String, String> versionedPackages = dependneciesHelper.calculateDependenciesToInstall();
 		final SubMonitor subMonitor3 = monitor.split(45);
 
 		externals.installNoUpdate(versionedPackages, multistatus, subMonitor3);
