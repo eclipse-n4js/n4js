@@ -894,13 +894,12 @@ public class N4jscBase implements IApplication {
 		srcFiles.stream().forEach(FileUtils::isExistingReadibleFile);
 
 		List<File> toBuild = new ArrayList<>();
+		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
 
-		if (projectLocations == null)
-			toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
-		else
+		if (projectLocations != null)
 			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 
-		headless.compileSingleFiles(toBuild);
+		headless.compileSingleFiles(toBuild, srcFiles);
 	}
 
 	/**
@@ -913,13 +912,12 @@ public class N4jscBase implements IApplication {
 	 */
 	private void compileArgumentsAsProjects() throws ExitCodeException, N4JSCompileException {
 		List<File> toBuild = new ArrayList<>();
+		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
 
-		if (projectLocations == null)
-			toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
-		else
+		if (projectLocations != null)
 			toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 
-		headless.compileProjects(toBuild);
+		headless.compileProjects(toBuild, srcFiles);
 	}
 
 	/**
@@ -940,7 +938,10 @@ public class N4jscBase implements IApplication {
 					+ Joiner.on(", ").join(srcFiles));
 		}
 
-		headless.compileAllProjects(ProjectLocationsUtil.convertToFiles(projectLocations));
+		List<File> toBuild = new ArrayList<>();
+		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
+		toBuild.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
+		headless.compileAllProjects(toBuild);
 
 	}
 
@@ -952,6 +953,8 @@ public class N4jscBase implements IApplication {
 			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
 					"Require option for projectlocations.");
 
+		HeadlessHelper.registerProjects(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider),
+				n4jsFileBasedWorkspace);
 		HeadlessHelper.registerProjects(ProjectLocationsUtil.convertToFiles(projectLocations), n4jsFileBasedWorkspace);
 	}
 
