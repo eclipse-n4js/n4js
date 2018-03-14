@@ -42,7 +42,7 @@ public enum ErrorExitCode {
 	/** Exit with 10, if required tester could not be loaded. */
 	EXITCODE_TESTER_NOT_FOUND(10, "required tester could not be loaded"),
 	/** Exit with 10, if required tester could not be loaded. */
-	EXITCODE_DEPENDENCY_NOT_FOUND(10, "required tester could not be loaded");
+	EXITCODE_DEPENDENCY_NOT_FOUND(10, "required dependency is missing");
 
 	private static final Map<Integer, ErrorExitCode> lookup = new HashMap<>();
 
