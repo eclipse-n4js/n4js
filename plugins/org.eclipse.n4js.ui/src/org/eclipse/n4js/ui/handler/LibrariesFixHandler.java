@@ -1,5 +1,8 @@
 package org.eclipse.n4js.ui.handler;
 
+import static org.eclipse.jface.dialogs.MessageDialog.openError;
+import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -90,6 +93,12 @@ public class LibrariesFixHandler extends AbstractHandler {
 			dependenciesDialog.run(true, true, iRunnableWithProgress);
 		} catch (InvocationTargetException | InterruptedException | SWTException err) {
 			LOGGER.error("unhandled error while setting up dependencies", err);
+			getDisplay().asyncExec(() -> openError(
+					UIUtils.getShell(),
+					"Setting up external libraries failed.",
+					"Error while setting up external libraries.\n"
+							+ "Please check your Error Log view for the detailed log about the failure.\n" +
+							" (note that autobuild is " + AutobuildUtils.get() + ")"));
 		}
 
 		return null;

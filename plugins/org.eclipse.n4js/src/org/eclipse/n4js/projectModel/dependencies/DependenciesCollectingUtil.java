@@ -44,8 +44,12 @@ public class DependenciesCollectingUtil {
 			Iterable<ProjectDescription> projectDescriptions) {
 		final Set<String> availableProjectsIds = new HashSet<>();
 		projectDescriptions.forEach(pd -> {
-			availableProjectsIds.add(pd.getProjectId());
-			updateFromProjectDescription(versionedPackages, pd);
+			// in case we get non N4JS projects, user docs projects that are not N4JS projects, or something created by
+			// the plugins e.g RemoteSystemsTempFiles (see https://stackoverflow.com/q/3627463/52564 )
+			if (pd != null) {
+				availableProjectsIds.add(pd.getProjectId());
+				updateFromProjectDescription(versionedPackages, pd);
+			}
 		});
 		availableProjectsIds.forEach(versionedPackages::remove);
 	}
