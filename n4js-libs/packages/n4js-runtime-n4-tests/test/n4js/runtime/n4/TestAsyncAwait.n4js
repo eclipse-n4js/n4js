@@ -66,7 +66,7 @@ export public class TestAsyncAwait {
 
     @Test @Description("basics - multiple")
     public async basicsMultiple() {
-        let waited: Array<any> = await Promise.all([this.createPromise(5), this.createPromise(6), this.createPromise(7)]);
+        let waited: Array<int> = await Promise.all([this.createPromise(5), this.createPromise(6), this.createPromise(7)]);
         Assert.deepEqual(waited, [5, 6, 7]);
         Assert.equal(await this.createPromise("foo"), "foo");
     }

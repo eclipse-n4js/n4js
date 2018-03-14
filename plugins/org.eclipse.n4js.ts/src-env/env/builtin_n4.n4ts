@@ -34,7 +34,7 @@ public abstract class N4Element extends N4Object {
 	/**
 	 * Annotations attached to this element.
 	 */
-	public annotations: Array<N4Annotation>;
+	public get annotations(): Array<N4Annotation>
 
 	/**
 	 * Returns true if an annotation with the given name is attached to the element.
@@ -53,7 +53,7 @@ public abstract class N4Element extends N4Object {
 	/**
 	 * The origin string formed as <ID-VERSION>, where ID is containing project artifact id, and VERSION is its version
 	 */
-	public origin: string;
+	public get origin(): string
 }
 
 /**
@@ -63,7 +63,7 @@ public abstract class N4NamedElement extends N4Element {
 	/**
 	 * The simple name of a named element.
 	 */
-	public name: string;
+	public get name(): string
 }
 
 /**
@@ -73,7 +73,7 @@ public abstract class N4Type extends N4NamedElement {
 	/**
 	 * The FQN of the type.
 	 */
-	public fqn: string;
+	public get fqn(): string
 
 	/**
 	 * Given an instance of <code>N4Object</code> or a value of type <code>type{N4Object}</code>
@@ -88,11 +88,6 @@ public abstract class N4Type extends N4NamedElement {
 	public get isClass(): boolean
 
 	/**
-	 * Returns true if this N4Class describes an N4-role declaration.
-	 */
-	public get isRole(): boolean
-
-	/**
 	 * Returns true if this N4Class describes an N4-interface declaration.
 	 */
 	public get isInterface(): boolean
@@ -104,26 +99,20 @@ public abstract class N4Type extends N4NamedElement {
 }
 
 /**
- * Base class for meta types of classes, interfaces, or roles.
+ * Base class for meta types of classes and interfaces.
  */
 public abstract class N4Classifier extends N4Type {
 
 	/**
 	 * The N4Class of the super type, may be null if super type is a not an N4Class.
 	 */
-	public n4superType: N4Class;
-
-	/**
-	 * Array of the FQN of all (transitively) consumed roles, i.e. roles directly consumed by this class, its super
-	 * class or roles consumed by directly consumed roles.
-	 */
-	public allConsumedRoles: Array<string>;
+	public get n4superType(): N4Class
 
 	/**
 	 * Array of the FQN of all (transitively) implemented interfaces, i.e. interfaces directly implemented by this class, its super
 	 * class or interfaces extended by directly implemented interfaces.
 	 */
-	public allImplementedInterfaces: Array<string>;
+	public get allImplementedInterfaces(): Array<string>
 
 	/**
 	 * Array of all owned members, that is members defined in the class directly.
@@ -132,7 +121,9 @@ public abstract class N4Classifier extends N4Type {
 	private ownedMembers: Array<N4Member>;
 
 	/**
-	 * Array of all consumed members, that is members mixed into the classifier via role consumption.
+	 * Array of all members consumed from implemented interfaces, i.e. fields and accessors/methods with a body defined
+	 * in an implemented interface iff(!) the receiving classifier does not own or inherit a corresponding member (i.e.
+	 * same name and access).
 	 * This field is private as it is an internal detail, members are accessed via methods defined in this class.
 	 */
 	private consumedMembers: Array<N4Member>;
@@ -231,7 +222,7 @@ public final class N4Interface extends N4Classifier {
  * Description of a member, that is a method or field.
  */
 public abstract class N4Member extends N4NamedElement {
-	public owner: N4Classifier;
+	public get owner(): N4Classifier
 	public get isStatic(): boolean
 }
 
@@ -239,7 +230,7 @@ public abstract class N4Member extends N4NamedElement {
  * Description of a method.
  */
 public final class N4Method extends N4Member {
-	public jsFunction: Function;
+	public get jsFunction(): Function
 }
 
 /**
@@ -342,9 +333,9 @@ public final class N4Annotation extends N4Object {
 	 */
 	private constructor():void;
 
-	public name: string;
-	public details: Array<string>;
-	public target: N4Element;
+	public get name(): string
+	public get details(): Array<string>
+	public get target(): N4Element
 }
 
 /**
