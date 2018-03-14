@@ -8,7 +8,6 @@ import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +29,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.wizard.dependencies.ProjectsSettingsFillesLocator;
@@ -49,13 +45,6 @@ import com.google.inject.Provider;
  */
 public class LibrariesFixHandler extends AbstractHandler {
 	private static final Logger LOGGER = Logger.getLogger(LibrariesFixHandler.class);
-
-	static private final DataCollector DC_SETUP = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Setup Dependencies");
-	static private final DataCollector DC_INTALL_NPMS = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("install npms", DC_SETUP);
-	static private final DataCollector DC_BUILD_NPMS = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("build npms", DC_SETUP);
 
 	private boolean wasAutoBuilding;
 
@@ -171,7 +160,19 @@ public class LibrariesFixHandler extends AbstractHandler {
 		if (!multistatus.isOK())
 			return multistatus;
 
-		Measurement measurement = DC_SETUP.getMeasurement("setup npms " + Instant.now());
+		final SubMonitor subMonitor2 = monitor.split(1);
+
+		calculateAndInstallDependnecies(subMonitor2, multistatus, selectedN4TP);
+
+		// turn on autobuild
+		if (wasAutoBuilding)
+			turnOnAutobuild();
+
+		return multistatus;
+	}
+
+	/** Streamlined process of calculating and installing the dependencies. */
+	public void calculateAndInstallDependnecies(SubMonitor monitor, MultiStatus multistatus, File selectedN4TP) {
 		final SubMonitor subMonitor2 = monitor.split(1);
 
 		// remove npm cache
@@ -183,26 +184,15 @@ public class LibrariesFixHandler extends AbstractHandler {
 		// remove npms
 		externals.maintenanceDeleteNpms(multistatus);
 
-		Measurement measurement2 = DC_INTALL_NPMS.getMeasurement("install npms " + Instant.now());
 		// install npms from target platform
 		Map<String, String> versionedPackages = dependneciesHelper.calculateDependenciesToInstall(selectedN4TP);
 		final SubMonitor subMonitor3 = monitor.split(45);
 
 		externals.installNoUpdate(versionedPackages, multistatus, subMonitor3);
-		measurement2.end();
 
-		Measurement measurement3 = DC_BUILD_NPMS.getMeasurement("build npms " + Instant.now());
 		// rebuild externals & schedule full rebuild
 		final SubMonitor subMonitor4 = monitor.split(35);
 		externals.maintenanceUpateState(multistatus, subMonitor4);
-		measurement3.end();
-
-		// turn on autobuild
-		if (wasAutoBuilding)
-			turnOnAutobuild();
-
-		measurement.end();
-		return multistatus;
 	}
 
 	/**
