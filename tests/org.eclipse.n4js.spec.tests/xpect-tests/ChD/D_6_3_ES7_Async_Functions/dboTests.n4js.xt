@@ -170,7 +170,7 @@ async function T1 () :void{
 
 
 async function T2(): void{
-	var waited : Array<any> = await Promise.all([createPromise(5), createPromise(6), createPromise(7)]);
+	var waited : Array<int> = await Promise.all([createPromise(5), createPromise(6), createPromise(7)]);
 	Assert.deepEqual(waited, [5, 6, 7]);
 	console.log(" -", "array was (so deeply) equal");
 	Assert.equal(await createPromise("foo"), "foo");

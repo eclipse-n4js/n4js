@@ -50,11 +50,13 @@ class DependenciesHelper {
 	Map<String, String> discoverMissingDependencies(String projectLocations, List<File> srcFiles) {
 
 		List<File> allProjectsRoots = new ArrayList<>();
+		List<File> discoveredProjectLocations = new ArrayList<>();
 
-		List<File> locations = convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations);
-		// Discover projects in search paths.
-		List<File> discoveredProjectLocations = collectAllProjectPaths(locations);
-
+		if (projectLocations != null) {
+			List<File> locations = convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations);
+			// Discover projects in search paths.
+			discoveredProjectLocations = collectAllProjectPaths(locations);
+		}
 		// Discover projects for single source files.
 		List<File> singleSourceProjectLocations = new ArrayList<>();
 		try {

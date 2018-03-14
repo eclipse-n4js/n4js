@@ -159,24 +159,6 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	}
 
 	/**
-	 * Just a negative test, capturing correct test-behavior
-	 */
-	@Test
-	public void testListAllRunnersPlugins_notexpecting_XXX() throws Exception {
-		logFile();
-
-		// -rw run with
-		// -lr list runners.
-		Process p = createAndStartProcess("-lr");
-
-		int exitCode = p.waitFor();
-
-		assertEquals("successful termination", 0, exitCode);
-
-		N4CliHelper.assertNotContainsString("XXX", outputLogFile);
-	}
-
-	/**
 	 * Trying to run an uncompiled module: should result in a failure
 	 *
 	 * @throws IOException
