@@ -36,7 +36,7 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Override
-	public boolean isExternalProjectRoot(URI rootLocation) {
+	public boolean isN4ProjectRoot(URI rootLocation) {
 		return loadManifestFromProjectRoot(rootLocation) != null;
 	}
 

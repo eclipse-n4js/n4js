@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
+import org.eclipse.n4js.ui.utils.URIUtils;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -83,32 +84,34 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 
 			IProject project = (IProject) resource;
 			String name = project.getName();
-
-			URI uri = org.eclipse.emf.common.util.URI.createURI(project.getLocationURI().toString());
-			boolean isExternalProject = packageManager.isExternalProjectRoot(uri);
 			N4JSExternalProject externalProject = projectProvider.getProject(name);
 
-			if (isExternalProject && null != externalProject && externalProject.exists()) {
+			if (null != externalProject && externalProject.exists()) {
+				URI uri = URIUtils.convert(externalProject);
+				boolean isN4Project = packageManager.isN4ProjectRoot(uri);
 
-				if (CHANGED == delta.getKind() && (delta.getFlags() & OPEN) != 0) {
+				if (isN4Project) {
 
-					// Workspace project close/open
-					if (project.isOpen()) {
-						toClean.add(externalProject);
-					} else {
+					if (CHANGED == delta.getKind() && (delta.getFlags() & OPEN) != 0) {
+
+						// Workspace project close/open
+						if (project.isOpen()) {
+							toClean.add(externalProject);
+						} else {
+							toBuild.add(externalProject);
+						}
+
+					} else if (REMOVED == delta.getKind()) {
+
+						// Workspace project deletion
 						toBuild.add(externalProject);
+
+					} else if (ADDED == delta.getKind()) {
+
+						// Workspace project creation
+						toClean.add(externalProject);
+
 					}
-
-				} else if (REMOVED == delta.getKind()) {
-
-					// Workspace project deletion
-					toBuild.add(externalProject);
-
-				} else if (ADDED == delta.getKind()) {
-
-					// Workspace project creation
-					toClean.add(externalProject);
-
 				}
 			}
 		}

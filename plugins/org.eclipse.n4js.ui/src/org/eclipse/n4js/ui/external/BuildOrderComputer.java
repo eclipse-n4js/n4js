@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,6 +29,7 @@ import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexFilter;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexMapper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.ui.utils.URIUtils;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
@@ -82,8 +82,7 @@ public class BuildOrderComputer {
 		N4JSProject[] n4jsPrjs = new N4JSProject[projects.length];
 		for (int i = 0; i < projects.length; i++) {
 			N4JSExternalProject project = projects[i];
-			File locationFile = project.getLocation().toFile();
-			URI locationURI = org.eclipse.emf.common.util.URI.createFileURI(locationFile.getAbsolutePath());
+			URI locationURI = URIUtils.convert(project);
 			N4JSProject prjDependency = (N4JSProject) core.findProject(locationURI).orNull();
 			n4jsPrjs[i] = prjDependency;
 		}
