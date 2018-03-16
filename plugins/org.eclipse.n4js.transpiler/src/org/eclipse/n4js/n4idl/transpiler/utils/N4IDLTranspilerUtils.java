@@ -10,6 +10,7 @@ import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TVersionable;
+import org.eclipse.n4js.ts.versions.VersionableUtils;
 
 /**
  * Transpiler utilities for handling versioned elements in N4IDL.
@@ -22,7 +23,7 @@ public class N4IDLTranspilerUtils {
 	 * Returns the plain name if the given identifiable isn't versioned.
 	 */
 	public static String getVersionedInternalName(NamedElement element) {
-		if (VersionUtils.isTVersionable(element)) {
+		if (VersionableUtils.isTVersionable(element)) {
 			return element.getName() + "$" + ((Versionable) element).getVersion();
 		} else if (VersionUtils.isVersioned(element)) {
 			return element.getName() + "$" + ((VersionedElement) element).getDeclaredVersion();
@@ -37,7 +38,7 @@ public class N4IDLTranspilerUtils {
 	 * Returns the plain name if the given identifiable isn't versioned.
 	 */
 	public static String getVersionedInternalName(IdentifiableElement element) {
-		if (VersionUtils.isTVersionable(element)) {
+		if (VersionableUtils.isTVersionable(element)) {
 			return element.getName() + "$" + ((Versionable) element).getVersion();
 		} else {
 			return element.getName();
@@ -59,7 +60,7 @@ public class N4IDLTranspilerUtils {
 		final String importedName = null != alias ? alias : importedElement.getExportedName();
 
 		// for non-versionable elements apply
-		if (!VersionUtils.isTVersionable(importedElement)) {
+		if (!VersionableUtils.isTVersionable(importedElement)) {
 			return importedName;
 		}
 
@@ -77,7 +78,7 @@ public class N4IDLTranspilerUtils {
 	 *            The versionable that is aliased.
 	 */
 	public static String getVersionedInternalAlias(String alias, TVersionable aliasedVersionable) {
-		if (!VersionUtils.isTVersionable(aliasedVersionable)) {
+		if (!VersionableUtils.isTVersionable(aliasedVersionable)) {
 			return alias;
 		}
 		return getVersionedInternalName(alias, aliasedVersionable.getVersion());
@@ -98,14 +99,14 @@ public class N4IDLTranspilerUtils {
 	 * Returns {@code true} iff the given import specifier imports a versioned type.
 	 */
 	public static boolean isVersionedImportSpecifier(NamedImportSpecifier specifier) {
-		return VersionUtils.isTVersionable(specifier.getImportedElement());
+		return VersionableUtils.isTVersionable(specifier.getImportedElement());
 	}
 
 	/**
 	 * Returns {@code true} iff the given {@link SymbolTableEntryOriginal} represents a versioned type.
 	 */
 	public static boolean refersToVersionedType(SymbolTableEntryOriginal entry) {
-		return VersionUtils.isTVersionable(entry.getOriginalTarget());
+		return VersionableUtils.isTVersionable(entry.getOriginalTarget());
 	}
 
 }

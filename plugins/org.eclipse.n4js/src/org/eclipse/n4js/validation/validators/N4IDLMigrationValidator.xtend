@@ -26,13 +26,14 @@ import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer
 import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer.UnhandledTypeRefException
 import org.eclipse.n4js.n4idl.migrations.SwitchCondition
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
-import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
+import org.eclipse.n4js.ts.versions.MigratableUtils
+import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.collections.Collections2
 import org.eclipse.n4js.utils.collections.Iterables2
@@ -104,7 +105,8 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			
 			// only validate source and target version for non-generic migrations 
 			if (migration.typeVars.empty) {
-				holdsMigrationHasValidSourceAndTargetVersion(migration)
+				holdsHasPrincipalArgumentType(migration)
+				&& holdsMigrationHasValidSourceAndTargetVersion(migration)
 				&& holdsMigrationHasVersionExclusiveSourceAndTargetVersion(migration)
 				&& holdsMigrationHasDifferentSourceAndTargetVersions(functionDeclaration, migration);
 			}
@@ -131,6 +133,17 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 				N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, IssueCodes.IDL_MIGRATION_MUST_DECLARE_IN_AND_OUTPUT);
 			return false;
 		}
+		
+		// check that the migration does not declare an explicit {@code MigrationContext} parameter
+		migration.fpars
+			.filter[p | isMigrationContextTypeRef(p.typeRef)]
+			.forEach[p | 
+				addIssue(IssueCodes.messageForIDL_MIGRATION_NO_EXPLICIT_CONTEXT_PARAMETER, migration.astElement,
+					N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, migration.fpars.indexOf(p),
+					IssueCodes.IDL_MIGRATION_NO_EXPLICIT_CONTEXT_PARAMETER);
+			]
+		
+		
 		return true;
 	}
 	
@@ -140,6 +153,16 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		val targetTypesHoldNoComposedTypes = migration.targetTypeRefs.exists[ref | holdsIsNotComposedTypeRef(migration, ref)]
 		
 		return sourceTypesHoldNoComposedTypes && targetTypesHoldNoComposedTypes;
+	}
+	
+	/** Checks that the given migration has a valid principal argument type (non-null). */
+	private def boolean holdsHasPrincipalArgumentType(TMigration migration) {
+		if (null === migration.principalArgumentType) {
+			addIssueToMultiValueFeature(IssueCodes.messageForIDL_MIGRATION_HAS_PRINCIPAL_ARGUMENT, migration.astElement,
+				N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, IssueCodes.IDL_MIGRATION_HAS_PRINCIPAL_ARGUMENT);
+			return false;
+		}
+		return true;
 	}
 	
 	/** Checks that the given {@link TypeRef} is not an {@link ComposedTypeRef}. */
@@ -224,10 +247,16 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 	
-	/** Returns {@code true} iff the given type reference refers to the built-in void type. */
+	/** Returns {@code true} iff the given type reference refers to the built-in {@code void} type. */
 	private def boolean isVoidTypeRef(TypeRef typeRef) {
 		val builtInTypes = BuiltInTypeScope.get(typeRef.eResource.resourceSet);
 		return typeRef.declaredType == builtInTypes.voidType;
+	}
+	
+	/** Returns {@code true} iff the given type reference refers to the built-in {@code MigrationContext} type. */
+	private def boolean isMigrationContextTypeRef(TypeRef typeRef) {
+		val builtInTypes = BuiltInTypeScope.get(typeRef.eResource.resourceSet);
+		return typeRef.declaredType == builtInTypes.migrationContextType;
 	}
 
 	@Check
@@ -383,7 +412,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		if (migrations.size <= 1) { return; }
 		
 		migrations.forEach[ m |
-			val argumentDescription = MigrationUtils.getMigrationArgumentsDescription(m.sourceTypeRefs);
+			val argumentDescription = MigratableUtils.getMigrationArgumentsDescription(m.sourceTypeRefs);
 			val conflictingMigrationsDescription = listOrSingleMigrationDescription(migrations.filter[other | other != m]);
 
 			val msg = IssueCodes.getMessageForIDL_MIGRATION_CONFLICT_WITH(m.name, argumentDescription, m.targetVersion, conflictingMigrationsDescription);
@@ -409,7 +438,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def boolean isVersionExclusive(Collection<TypeRef> typeRefs) {
 		val versions = typeRefs.stream
-			.flatMap[ref | VersionUtils.streamVersionedSubReferences(ref)]
+			.flatMap[ref | VersionableUtils.streamVersionedSubReferences(ref)]
 			.mapToInt([versionedRef | versionedRef.version.intValue])
 			.distinct.limit(2).toArray;
 		

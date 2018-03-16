@@ -46,7 +46,6 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
-import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
@@ -521,17 +520,14 @@ public class ASTProcessor extends AbstractProcessor {
 	
 	/**
 	 * Registers the given {@link TMigration} with the corresponding
-	 * source types.
+	 * principal argument.
 	 */
 	def private void registerMigrationWithTypes(TMigration migration) {
 		if (null === migration) { return; }
 		
-		migration.sourceTypeRefs.stream
-			// TODO: narrow down the set of TMigratable a migration is actually registered with
-			.flatMap[s | VersionUtils.streamVersionedSubReferences(s)] // map to declared types
-			.map[ref | ref.declaredType]
-			.filter[ref | ref instanceof TMigratable] // filter non-migratable types 
-			.forEach[t | registerMigrationWithType(migration, t as TMigratable) ]
+		if (null !== migration.principalArgumentType) {
+			registerMigrationWithType(migration, migration.principalArgumentType);
+		}
 	}
 	
 	def private void registerMigrationWithType(TMigration migration, TMigratable migratable) {

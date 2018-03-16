@@ -55,9 +55,14 @@ abstract class SwitchCondition implements Iterable<SwitchCondition> {
 		return new AndSwitchCondition(operands.get(0), operands.get(1), operands.drop(2));
 	}
 	
-	/** Returns a new {@link TypeSwitchCondition} for the given type */
+	/** Returns a new {@link TypeSwitchCondition} for the given type. */
 	public static def TypeSwitchCondition instanceOf(Type type) {
 		return new TypeSwitchCondition(type);
+	}
+	
+	/** Returns a new {@link TypeTypeCondition} for the given type. */
+	public static def TypeTypeCondition type(Type type) {
+		return new TypeTypeCondition(type);
 	}
 	
 	/** Returns a new {@link ArrayTypeSwitchCondition} for the given element type. */
@@ -187,6 +192,24 @@ class TypeSwitchCondition extends SwitchCondition {
 	override subConditions() { return #[] }
 	
 }
+
+/** {@link SwitchCondition} which assures that a given value is a reference to a type which is a subtype of {@link #type} (type reference). */
+class TypeTypeCondition extends SwitchCondition {
+	public val Type type;
+	
+	new(Type type) { this.type = type; }
+	
+	override hashCode() {
+		return HashCode.fromString(EcoreUtil.getURI(this.type).toString).asInt;
+	}
+	
+	override getConditionAsString(String valueIdentifier) {
+		return String.format("(%s.constructor instanceof type{%s}", valueIdentifier, this.type.typeDescription);
+	}
+	
+	override subConditions() { return #[] }
+}
+
 
 /** {@link SwitchCondition} which assures that a given value is a (non-empty) array
  * whose elements fulfill the given {@link #elementTypeCondition}.

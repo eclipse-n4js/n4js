@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4idl.migrations.ConstantSwitchCondition
 import org.eclipse.n4js.n4idl.migrations.OrSwitchCondition
 import org.eclipse.n4js.n4idl.migrations.SwitchCondition
 import org.eclipse.n4js.n4idl.migrations.TypeSwitchCondition
+import org.eclipse.n4js.n4idl.migrations.TypeTypeCondition
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClassifier
@@ -73,6 +74,11 @@ class TypeSwitchTranspiler extends TransformationAssistant {
 		return #[_AND(#[isArrayExpression, notEmptyExpression] + elementTypeExpression)]
 	}
 	
+	private dispatch def List<Expression> doTransform(TypeTypeCondition typeTypeCondition, Expression lhs) {
+		// simply check whether the value has te "n4type" property
+		#[_PropertyAccessExpr(lhs, getSymbolTableEntryInternal("n4type", true))];
+	}
+	
 	private dispatch def List<Expression> doTransform(TypeSwitchCondition typeCondition, Expression lhs) {
 		#[runtimeTypeCheck(typeCondition.type, lhs)];
 	}
@@ -108,6 +114,10 @@ class TypeSwitchTranspiler extends TransformationAssistant {
 		}
 	}
 	
+	private dispatch def Expression runtimeTypeCheck(Type type, Expression lhs) {
+		throw new IllegalStateException("Cannot produce runtime type-check for type " + type);
+	}
+
 	/** 
 	 * Creates a new typeof check using the given lhs and typeofResult:
 	 * {@code typeof <lhs> === "<typeofResult>"}.
@@ -120,9 +130,6 @@ class TypeSwitchTranspiler extends TransformationAssistant {
 	}
 	
 	/** @see {@link #runtimeTypeCheck(TClassifier, Expression) } */
-	private dispatch def Expression runtimeTypeCheck(Type type, Expression lhs) {
-		throw new IllegalStateException("Cannot produce runtime type-check for type " + type);
-	}
 	
 	private dispatch def List<Expression> doTransform(ConstantSwitchCondition constantCondition, Expression lhs) {
 		if (constantCondition.constant.equals("true")) {

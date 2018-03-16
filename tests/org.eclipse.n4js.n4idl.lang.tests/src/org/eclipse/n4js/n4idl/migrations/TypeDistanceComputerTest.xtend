@@ -80,6 +80,6 @@ class TypeDistanceComputerTest extends Assert {
 	 */
 	private def double d(String typeRef1, String typeRef2, String preamble) {
 		val typeRefs = makeTypeRefs(#[typeRef1, typeRef2], preamble);
-		return computeDistance(typeRefs.get(0).declaredType, typeRefs.get(1).declaredType);
+		return computeDistance(typeRefs.get(0), typeRefs.get(1));
 	}
 }

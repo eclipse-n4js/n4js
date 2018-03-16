@@ -27,6 +27,7 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -130,7 +131,7 @@ class VersionHelper {
 	 */
 	def <T extends Type> Iterable<? extends T> findTypeVersions(T type) {
 		if (type instanceof TObjectPrototype || // TObjectPrototypes are unversioned -> there exists only a single version
-			!VersionUtils.isTVersionable(type) // There are no other versions for an unversioned classifier
+			!VersionableUtils.isTVersionable(type) // There are no other versions for an unversioned classifier
 		) {
 			return Collections.singleton(type);
 		}

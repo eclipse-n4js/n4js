@@ -11,6 +11,7 @@
 package org.eclipse.n4js.n4idl.spec.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
+import org.eclipse.n4js.xpect.methods.MigrateScopeXpectMethod;
 import org.eclipse.n4js.xpect.methods.ModelVersionXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeSwitchXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
@@ -33,7 +34,8 @@ import org.junit.runner.RunWith;
 	ValidationTest.class,
 	OutputXpectMethod.class,
 	TypeXpectMethod.class,
-	TypeSwitchXpectMethod.class
+	TypeSwitchXpectMethod.class,
+	MigrateScopeXpectMethod.class
 })
 
 @RunWith(XpectRunner.class)

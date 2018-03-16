@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 
 /**
  * Transformation assistant for generating migration-support related ES code.
@@ -196,10 +197,21 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 					TObjectPrototype:
 						_ArrayElement(_IdentRef(getSymbolTableEntryOriginal(typeRef.declaredType, true)))
 				}
+			TypeTypeRef:
+						_ArrayElement(_ObjLit("ctor" -> _IdentRef(getSymbolTableEntryOriginal(getType(typeRef), true))))
 			default:
 				throw new IllegalStateException("Unhandled migration source type reference " + typeRef)
 		}
-	} 
+	}
+	
+	/** Returns the type which is referred to by the given {@link TypeTypeRef}. */
+	private def Type getType(TypeTypeRef ref) {
+		val typeArg = ref.typeArg;
+		if (typeArg instanceof TypeRef) {
+			return typeArg.declaredType;
+		}
+		return null;
+	}
 	
 	/** Creates a {@code <arraySTE>.push(<element>)} expression which adds the element expression to the array
 	 * referenced by arraySTE. */

@@ -33,7 +33,7 @@ class B#2 {
 function some(ctor : constructor{N4Object}) {}
 
 @Migration(1,2)
-function f(a : any) : any {
+function f(a : A#1) : A#2 {
 	// XPECT noerrors
 	console.log(A#1.staticField1)
 	// XPECT noerrors

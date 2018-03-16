@@ -64,8 +64,10 @@ class MigrationSwitchComputer {
 			}
 			ParameterizedTypeRef:
 				return SwitchCondition.instanceOf(ref.declaredType)
-			case isIgnoredTypeRef(ref): {
-				return SwitchCondition.trueCondition;
+			
+			TypeTypeRef case ref.typeArg instanceof TypeRef 
+				&& (ref.typeArg as TypeRef).declaredType !== null: {
+				return SwitchCondition.type((ref.typeArg as TypeRef).declaredType);
 			}
 			default: {
 				throw new UnhandledTypeRefException(ref);
@@ -111,6 +113,10 @@ class MigrationSwitchComputer {
 			return TypeUtils.createTypeRef(condition.type, TypingStrategy.DEFAULT, true);
 		}
 		
+		public static dispatch def TypeRef toTypeRef(RuleEnvironment env, TypeTypeCondition condition) {
+			return TypeUtils.createTypeTypeRef(condition.type, false);
+		}
+		
 		public static dispatch def TypeRef toTypeRef(RuleEnvironment env, ConstantSwitchCondition condition) {
 			return TypeUtils.createTypeRef(RuleEnvironmentExtensions.anyType(env));
 		}
@@ -118,13 +124,6 @@ class MigrationSwitchComputer {
 		public static dispatch def TypeRef toTypeRef(RuleEnvironment env, ArrayTypeSwitchCondition condition) {
 			return RuleEnvironmentExtensions.arrayTypeRef(env, toTypeRef(env, condition.elementTypeCondition));
 		}
-	}
-	
-	/** Returns {@code true} if the given {@link TypeRef} should be ignored
-	 * by the generated {@link SwitchCondition}s.
-	 */
-	private def boolean isIgnoredTypeRef(TypeRef ref) {
-		return ref instanceof TypeTypeRef;
 	}
 	
 	/** Returns the BuiltInTypeScope that is used for the given context object. */

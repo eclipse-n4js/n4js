@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.ts.versions.MigratableUtils
 
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
@@ -894,6 +895,24 @@ class TMigration extends TFunction {
 	 * The target TypeRefs of this migration.
 	 */
 	refers TypeRef[] targetTypeRefs	
+	
+	
+	/** Transient principal argument type. Access through #getPrincipalArgumentType() */
+	refers transient TMigratable _principalArgumentType
+	
+	/**
+	 * The principal argument of this migration.
+	 */
+	op TMigratable getPrincipalArgumentType() {
+		if (_principalArgumentType === null) {
+			EcoreUtilN4.doWithDeliver(false,
+				[|
+					_principalArgumentType = MigratableUtils.findPrincipalMigrationArgument(sourceTypeRefs).orElse(null);
+				], this);
+		}
+		return _principalArgumentType;
+	}
+	
 	/**
 	 * Returns string representation of this migration.
 	 * 

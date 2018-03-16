@@ -154,8 +154,8 @@ class MigrationLocatorDistanceTest extends Assert {
 	private def double d(List<String> argumentValueInitializers, List<String> parameterTypes) {
 		val refs = makeTypeRefs(argumentValueInitializers, parameterTypes, preamble);
 		
-		val lhsTypes = refs.take(argumentValueInitializers.size).map[ref | ref.declaredType].toList;
-		val rhsTypes = refs.drop(argumentValueInitializers.size).map[ref | ref.declaredType].toList;
+		val lhsTypes = refs.take(argumentValueInitializers.size).toList;
+		val rhsTypes = refs.drop(argumentValueInitializers.size).toList;
 		
 		return distanceComputer.computeDistance(lhsTypes, rhsTypes);
 	}

@@ -33,6 +33,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  *   <li>{@link org.eclipse.n4js.ts.types.TMigration#isHasDeclaredSourceAndTargetVersion <em>Has Declared Source And Target Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TMigration#getSourceTypeRefs <em>Source Type Refs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TMigration#getTargetTypeRefs <em>Target Type Refs</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TMigration#get_principalArgumentType <em>principal Argument Type</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTMigration()
@@ -150,6 +151,44 @@ public interface TMigration extends TFunction {
 	 * @generated
 	 */
 	EList<TypeRef> getTargetTypeRefs();
+
+	/**
+	 * Returns the value of the '<em><b>principal Argument Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Transient principal argument type. Access through #getPrincipalArgumentType()
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>principal Argument Type</em>' reference.
+	 * @see #set_principalArgumentType(TMigratable)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTMigration__principalArgumentType()
+	 * @model transient="true"
+	 * @generated
+	 */
+	TMigratable get_principalArgumentType();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TMigration#get_principalArgumentType <em>principal Argument Type</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>principal Argument Type</em>' reference.
+	 * @see #get_principalArgumentType()
+	 * @generated
+	 */
+	void set_principalArgumentType(TMigratable value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * The principal argument of this migration.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.TMigratable%> __principalArgumentType = this.get_principalArgumentType();\nboolean _tripleEquals = (__principalArgumentType == null);\nif (_tripleEquals)\n{\n\tfinal <%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%> _function = new <%org.eclipse.xtext.xbase.lib.Procedures.Procedure0%>()\n\t{\n\t\tpublic void apply()\n\t\t{\n\t\t\t<%this%>.set_principalArgumentType(<%org.eclipse.n4js.ts.versions.MigratableUtils%>.findPrincipalMigrationArgument(<%this%>.getSourceTypeRefs()).orElse(null));\n\t\t}\n\t};\n\t<%org.eclipse.n4js.utils.EcoreUtilN4%>.doWithDeliver(false, _function, this);\n}\nreturn this.get_principalArgumentType();'"
+	 * @generated
+	 */
+	TMigratable getPrincipalArgumentType();
 
 	/**
 	 * <!-- begin-user-doc -->

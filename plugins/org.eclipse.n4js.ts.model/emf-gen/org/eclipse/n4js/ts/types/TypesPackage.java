@@ -4764,13 +4764,22 @@ public interface TypesPackage extends EPackage {
 	int TMIGRATION__TARGET_TYPE_REFS = TFUNCTION_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>principal Argument Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION__PRINCIPAL_ARGUMENT_TYPE = TFUNCTION_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>TMigration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMIGRATION_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 5;
+	int TMIGRATION_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -4953,13 +4962,22 @@ public interface TypesPackage extends EPackage {
 	int TMIGRATION___IS_FINAL = TFUNCTION___IS_FINAL;
 
 	/**
+	 * The operation id for the '<em>Get Principal Argument Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION___GET_PRINCIPAL_ARGUMENT_TYPE = TFUNCTION_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Migration As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMIGRATION___GET_MIGRATION_AS_STRING = TFUNCTION_OPERATION_COUNT + 0;
+	int TMIGRATION___GET_MIGRATION_AS_STRING = TFUNCTION_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>TMigration</em>' class.
@@ -4968,7 +4986,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMIGRATION_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 1;
+	int TMIGRATION_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl <em>TClassifier</em>}' class.
@@ -13698,6 +13716,27 @@ public interface TypesPackage extends EPackage {
 	EReference getTMigration_TargetTypeRefs();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.TMigration#get_principalArgumentType <em>principal Argument Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>principal Argument Type</em>'.
+	 * @see org.eclipse.n4js.ts.types.TMigration#get_principalArgumentType()
+	 * @see #getTMigration()
+	 * @generated
+	 */
+	EReference getTMigration__principalArgumentType();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getPrincipalArgumentType() <em>Get Principal Argument Type</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Principal Argument Type</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TMigration#getPrincipalArgumentType()
+	 * @generated
+	 */
+	EOperation getTMigration__GetPrincipalArgumentType();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getMigrationAsString() <em>Get Migration As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16383,6 +16422,22 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TMIGRATION__TARGET_TYPE_REFS = eINSTANCE.getTMigration_TargetTypeRefs();
+
+		/**
+		 * The meta object literal for the '<em><b>principal Argument Type</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMIGRATION__PRINCIPAL_ARGUMENT_TYPE = eINSTANCE.getTMigration__principalArgumentType();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Principal Argument Type</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMIGRATION___GET_PRINCIPAL_ARGUMENT_TYPE = eINSTANCE.getTMigration__GetPrincipalArgumentType();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Migration As String</b></em>' operation.

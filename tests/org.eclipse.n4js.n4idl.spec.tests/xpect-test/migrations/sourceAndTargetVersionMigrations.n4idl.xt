@@ -13,6 +13,7 @@
 
 class A#1 {}
 class A#2 {}
+class A#3 {}
 
 
 @Migration
@@ -22,7 +23,7 @@ function migrate1to2(a1 : A#1) : A#2 {
 }
 
 @Migration
-// Primitive parameters only are insufficient to infer the source version XPECT errors --> "The source version of migration migratePrimitiveToA2 cannot be inferred." at "a : int"
+// Primitive parameters only are insufficient to infer the source version XPECT errors --> "Migrations must declare at least one versioned source type." at "a : int"
 function migratePrimitiveToA2(a : int) : A#1 {
 	return null;
 }
@@ -45,8 +46,8 @@ function ambiguousTargetMigration(a1 : A#1) : ~Object with {a1: A#1, a2: A#2} {
 }
 
 @Migration(1,2)
-// Explicitly declared source and target version allow arbitrary source and target types XPECT noerrors 
-function explicitlyDeclaredSourceAndTargetVersion(a : any) : ~Object with {a1 : A#1, n : number} {
+// Explicitly declared source and target version allow arbitrarily versioned source and target types XPECT noerrors 
+function explicitlyDeclaredSourceAndTargetVersion(a : A#3) : ~Object with {a1 : A#1, n : number} {
 	return null;
 }
 

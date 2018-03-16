@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
@@ -28,12 +29,19 @@ import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
+import org.eclipse.n4js.ts.types.TMigratable;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TypesPackage;
+
+import org.eclipse.n4js.ts.versions.MigratableUtils;
+
+import org.eclipse.n4js.utils.EcoreUtilN4;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
+
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 
 /**
  * <!-- begin-user-doc -->
@@ -48,6 +56,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#isHasDeclaredSourceAndTargetVersion <em>Has Declared Source And Target Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getSourceTypeRefs <em>Source Type Refs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#getTargetTypeRefs <em>Target Type Refs</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl#get_principalArgumentType <em>principal Argument Type</em>}</li>
  * </ul>
  *
  * @generated
@@ -132,6 +141,16 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * @ordered
 	 */
 	protected EList<TypeRef> targetTypeRefs;
+
+	/**
+	 * The cached value of the '{@link #get_principalArgumentType() <em>principal Argument Type</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #get_principalArgumentType()
+	 * @generated
+	 * @ordered
+	 */
+	protected TMigratable _principalArgumentType;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -244,6 +263,63 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public TMigratable get_principalArgumentType() {
+		if (_principalArgumentType != null && _principalArgumentType.eIsProxy()) {
+			InternalEObject old_principalArgumentType = (InternalEObject)_principalArgumentType;
+			_principalArgumentType = (TMigratable)eResolveProxy(old_principalArgumentType);
+			if (_principalArgumentType != old_principalArgumentType) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.TMIGRATION__PRINCIPAL_ARGUMENT_TYPE, old_principalArgumentType, _principalArgumentType));
+			}
+		}
+		return _principalArgumentType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TMigratable basicGet_principalArgumentType() {
+		return _principalArgumentType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void set_principalArgumentType(TMigratable new_principalArgumentType) {
+		TMigratable old_principalArgumentType = _principalArgumentType;
+		_principalArgumentType = new_principalArgumentType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMIGRATION__PRINCIPAL_ARGUMENT_TYPE, old_principalArgumentType, _principalArgumentType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TMigratable getPrincipalArgumentType() {
+		TMigratable __principalArgumentType = this.get_principalArgumentType();
+		boolean _tripleEquals = (__principalArgumentType == null);
+		if (_tripleEquals) {
+			final Procedure0 _function = new Procedure0() {
+				public void apply() {
+					TMigrationImpl.this.set_principalArgumentType(MigratableUtils.findPrincipalMigrationArgument(TMigrationImpl.this.getSourceTypeRefs()).orElse(null));
+				}
+			};
+			EcoreUtilN4.doWithDeliver(false, _function, this);
+		}
+		return this.get_principalArgumentType();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getMigrationAsString() {
 		final Function1<TypeRef, String> _function = new Function1<TypeRef, String>() {
 			public String apply(final TypeRef t) {
@@ -279,6 +355,9 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return getSourceTypeRefs();
 			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
 				return getTargetTypeRefs();
+			case TypesPackage.TMIGRATION__PRINCIPAL_ARGUMENT_TYPE:
+				if (resolve) return get_principalArgumentType();
+				return basicGet_principalArgumentType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -309,6 +388,9 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				getTargetTypeRefs().clear();
 				getTargetTypeRefs().addAll((Collection<? extends TypeRef>)newValue);
 				return;
+			case TypesPackage.TMIGRATION__PRINCIPAL_ARGUMENT_TYPE:
+				set_principalArgumentType((TMigratable)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -336,6 +418,9 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
 				getTargetTypeRefs().clear();
 				return;
+			case TypesPackage.TMIGRATION__PRINCIPAL_ARGUMENT_TYPE:
+				set_principalArgumentType((TMigratable)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -358,6 +443,8 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 				return sourceTypeRefs != null && !sourceTypeRefs.isEmpty();
 			case TypesPackage.TMIGRATION__TARGET_TYPE_REFS:
 				return targetTypeRefs != null && !targetTypeRefs.isEmpty();
+			case TypesPackage.TMIGRATION__PRINCIPAL_ARGUMENT_TYPE:
+				return _principalArgumentType != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -370,6 +457,8 @@ public class TMigrationImpl extends TFunctionImpl implements TMigration {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.TMIGRATION___GET_PRINCIPAL_ARGUMENT_TYPE:
+				return getPrincipalArgumentType();
 			case TypesPackage.TMIGRATION___GET_MIGRATION_AS_STRING:
 				return getMigrationAsString();
 		}

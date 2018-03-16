@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.dialogs.ProgressMonitorDialog
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.binaries.IllegalBinaryStateException
 import org.eclipse.n4js.external.NpmManager
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
@@ -40,6 +41,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4mf.ProjectDependency
+import org.eclipse.n4js.n4mf.SimpleProjectDependency
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -62,7 +64,6 @@ import org.eclipse.n4js.ui.utils.UIUtils
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
@@ -76,7 +77,6 @@ import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
-import org.eclipse.n4js.n4mf.SimpleProjectDependency
 
 /**
  * N4JS quick fixes.
@@ -732,6 +732,19 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		acceptor.accept(issue, 'Declare this type as @VersionAware', 'Add @VersionAware annotation.', ImageNames.ANNOTATION_ADD) [ context, marker, offset, length, element |
 			return #[
 				insertLineAbove(context.xtextDocument, offset, "@"+AnnotationDefinition.VERSION_AWARE.name, true)
+			];
+		]
+	}
+	
+	/**
+	 * N4IDL-related quick-fix which removes a parameter of type {@code MigrationContext} 
+	 * from a migraiton declaration.
+	 */
+	@Fix(IssueCodes.IDL_MIGRATION_NO_EXPLICIT_CONTEXT_PARAMETER)
+	def removeMigrationContextParemeter(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, "Remove MigrationContext parameter", "Removes the parameter of type MigrationContext.", ImageNames.ANNOTATION_REMOVE) [ context, marker, offset, length, element |
+			return #[
+				removeText(context.xtextDocument, offset, length, true)
 			];
 		]
 	}

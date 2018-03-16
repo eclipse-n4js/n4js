@@ -13,13 +13,13 @@ package org.eclipse.n4js.typesbuilder
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.utils.Log
 
 /**
@@ -124,7 +124,7 @@ class N4IDLMigrationTypesBuilder {
 	 * to populate the type model with. 
 	 */
 	private static def int computeVersion(List<TypeRef> typeRefs) {
-		VersionUtils.getVersion(typeRefs);
+		VersionableUtils.getVersion(typeRefs);
 	}
 	
 }

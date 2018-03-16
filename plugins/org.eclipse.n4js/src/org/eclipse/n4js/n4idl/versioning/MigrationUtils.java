@@ -11,9 +11,7 @@
 package org.eclipse.n4js.n4idl.versioning;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
@@ -23,7 +21,6 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.xtext.EcoreUtil2;
@@ -106,34 +103,5 @@ public class MigrationUtils {
 	public static boolean isMigrateCallIdentifier(IdentifierRef identifierRef) {
 		return isMigrateCall(identifierRef.eContainer())
 				&& identifierRef.eContainingFeature() == N4JSPackage.Literals.PARAMETERIZED_CALL_EXPRESSION__TARGET;
-	}
-
-	/**
-	 * Returns a user-faced description of the given list of migration argument {@link TypeRef}s.
-	 *
-	 * The description may be used in error messages.
-	 */
-	public static String getMigrationArgumentsDescription(List<TypeRef> argumentTypeRefs) {
-		return String.format("(%s)", argumentTypeRefs.stream()
-				.map(ref -> ref.getTypeRefAsString())
-				.collect(Collectors.joining(", ")));
-	}
-
-	/**
-	 * Returns a user-faced description of a given list of {@link TMigration} candidates.
-	 *
-	 * The description may be used in error messages.
-	 *
-	 * Example: <code>
-	 *  - (A#1) => (A#2)
-	 *  - (Array<A#1>) => (Array<A#2>)
-	 * </code>
-	 *
-	 */
-	public static String getMigrationCandidatesList(List<TMigration> candidates) {
-		return candidates.stream()
-				.distinct()
-				.map(c -> "\n\t - " + c.getMigrationAsString())
-				.collect(Collectors.joining());
 	}
 }

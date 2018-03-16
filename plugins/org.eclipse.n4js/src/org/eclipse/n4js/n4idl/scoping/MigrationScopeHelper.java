@@ -21,8 +21,13 @@ import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.n4idl.migrations.MigrationLocator;
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.resource.N4JSEObjectDescription;
+import org.eclipse.n4js.scoping.utils.IssueCodeBasedEObjectDescription;
 import org.eclipse.n4js.ts.types.TMigration;
+import org.eclipse.n4js.ts.versions.MigratableUtils;
+import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.SingletonScope;
 
@@ -45,16 +50,28 @@ public class MigrationScopeHelper {
 			return IScope.NULLSCOPE;
 		}
 		final TMigration contextTMigration = contextMigration.get();
-		final Optional<TMigration> targetMigration = migrationLocator.findMigration(arguments, contextTMigration);
+		final List<TMigration> targetMigrations = migrationLocator.findMigration(arguments, contextTMigration);
 
-		if (targetMigration.isPresent()) {
-			return new SingletonScope(
-					N4JSEObjectDescription.create(QualifiedName.create(N4IDLGlobals.MIGRATE_CALL_KEYWORD),
-							targetMigration.get()),
-					IScope.NULLSCOPE);
-		} else {
+		// if no matching migration can be found, we cannot link this migrate-call
+		if (targetMigrations.isEmpty()) {
 			return IScope.NULLSCOPE;
 		}
+
+		// create a description for the first migration match
+		IEObjectDescription migrationDescription = N4JSEObjectDescription.create(
+				QualifiedName.create(N4IDLGlobals.MIGRATE_CALL_KEYWORD),
+				targetMigrations.get(0));
+
+		if (targetMigrations.size() > 1) {
+			// if we have found multiple candidates, wrap the description in an ambiguous-migrate-call error description
+			migrationDescription = new IssueCodeBasedEObjectDescription(migrationDescription,
+					IssueCodes.getMessageForIDL_MIGRATE_CALL_AMBIGUOUS(
+							MigratableUtils.getMigrationCandidatesList(targetMigrations)),
+					IssueCodes.IDL_MIGRATE_CALL_AMBIGUOUS, Severity.WARNING);
+		}
+
+		// return singleton scope which only contains the designated migration candidate
+		return new SingletonScope(migrationDescription, IScope.NULLSCOPE);
 	}
 
 	/**

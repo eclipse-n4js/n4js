@@ -12,18 +12,19 @@ package org.eclipse.n4js.n4idl.migrations;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Argument;
-import org.eclipse.n4js.n4idl.versioning.VersionUtils;
+import org.eclipse.n4js.n4idl.migrations.TypeDistanceComputer.UnsupportedTypeDistanceOperandsException;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMigratable;
 import org.eclipse.n4js.ts.types.TMigration;
+import org.eclipse.n4js.ts.versions.VersionableUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 import com.google.inject.Inject;
 
@@ -34,18 +35,27 @@ public class MigrationLocator {
 	@Inject
 	private N4JSTypeSystem typeSystem;
 
+	@Inject
+	private TypeDistanceComputer typeDistanceComputer;
+
 	/**
-	 * Types the return value of a {@code migrate} operator.
+	 * Returns the {@link TMigration} instances which fit the given list of arguments the best (in terms of type
+	 * distance).
+	 *
+	 * Returns an empty list if no compatible migration can be found.
+	 *
+	 * Returns more than one {@link TMigration} if there exist multiple equally-well matching migrations for the given
+	 * list of arguments.
 	 *
 	 * @param arguments
 	 *            The migration arguments
 	 * @param contextMigration
 	 *            The context migration from which the migration is invoked
 	 */
-	public Optional<TMigration> findMigration(List<Argument> arguments, TMigration contextMigration) {
+	public List<TMigration> findMigration(List<Argument> arguments, TMigration contextMigration) {
 		// we cannot find a migration for an empty list of arguments
 		if (arguments.isEmpty()) {
-			return Optional.empty();
+			return Collections.emptyList();
 		}
 
 		final List<TypeRef> argumentTypeRefs = getTypeRefsFromArguments(arguments);
@@ -63,23 +73,56 @@ public class MigrationLocator {
 				.collect(Collectors.toList());
 	}
 
-	private Stream<TMigration> migrationCandidates(List<TypeRef> argumentTypeRefs) {
-		return argumentTypeRefs.stream()
-				.flatMap(ref -> VersionUtils.streamVersionedSubReferences(ref))
+	/**
+	 * Returns a lazily initialized {@link Iterable} over all migration candidates for the given list of argument
+	 * {@link TypeRef}s.
+	 *
+	 * @param argumentTypeRefs
+	 *            The argument type references
+	 */
+	private Iterable<TMigration> migrationCandidates(List<TypeRef> argumentTypeRefs) {
+		return () -> argumentTypeRefs.stream()
+				// obtain all versioned sub-references from the given list of arguments
+				.flatMap(ref -> VersionableUtils.streamVersionedSubReferences(ref))
+				// get their declared types
 				.map(ref -> ref.getDeclaredType())
-				.filter(type -> null != type)
-				.filter(type -> type instanceof TMigratable)
-				.flatMap(migratable -> ((TMigratable) migratable).getMigrations().stream());
+				// make sure the current type is non-null and migratable
+				.filter(type -> null != type).filter(type -> type instanceof TMigratable)
+				// get all migrations for this migratable type (includes migrations of super-classifiers)
+				.flatMap(migratable -> getAllMigrations((TMigratable) migratable))
+				.iterator();
+	}
+
+	/**
+	 * Returns a stream of all {@link TMigration}s associated with the given {@link TMigratable}.
+	 *
+	 * In case of classifiers, the stream will first yield the migrations associated with the closest classifier and
+	 * then continue to also return the migration of super-classifiers.
+	 *
+	 * Otherwise, this method just returns migrations directly associated with the given migratable.
+	 */
+	private Stream<TMigration> getAllMigrations(TMigratable migratable) {
+		// if the migratable may have super classifiers
+		if (migratable instanceof TClassifier) {
+			// return stream of migrations of this classifier followed by all migrations
+			// of all migratable super-classifiers
+			return Stream.concat(migratable.getMigrations().stream(),
+					StreamSupport.stream(((TClassifier) migratable).getSuperClassifiers().spliterator(), false)
+							.filter(classifier -> classifier instanceof TMigratable)
+							.flatMap(superClassifier -> getAllMigrations((TMigratable) superClassifier)));
+		} else {
+			return migratable.getMigrations().stream();
+		}
 	}
 
 	/**
 	 * Returns a list of all migration candidates for the given list of migration arguments.
 	 */
-	public List<TMigration> getMigrationCandidates(List<Argument> arguments) {
+	public Iterable<TMigration> getMigrationCandidates(List<Argument> arguments) {
 		if (arguments.isEmpty()) {
 			return Collections.emptyList();
 		}
-		return migrationCandidates(getTypeRefsFromArguments(arguments)).collect(Collectors.toList());
+		return migrationCandidates(getTypeRefsFromArguments(arguments));
 	}
 
 	/**
@@ -94,37 +137,36 @@ public class MigrationLocator {
 	 * @return The migration out of {@code candidates} that is most compatible. If no candidate is compatible, this
 	 *         method returns and absent optional.
 	 */
-	private Optional<TMigration> selectMigrationCandidate(List<TypeRef> arguments, Stream<TMigration> candidates,
+	private List<TMigration> selectMigrationCandidate(List<TypeRef> arguments, Iterable<TMigration> candidates,
 			TMigration contextMigration) {
-		List<TMigration> c = candidates.collect(Collectors.toList());
+		MigrationMatcher matcher = MigrationMatcher.emptyMatcher();
 
-		return c.stream()
-				// filter candidates by target version
-				.filter(migration -> migration.getTargetVersion() == contextMigration.getTargetVersion())
-				// filter candidates by argument type compatibility
-				.filter(migration -> migrationCompatible(migration, arguments, contextMigration.eResource()))
-				.findFirst();
-	}
+		for (TMigration migration : candidates) {
+			try {
+				final double distance = typeDistanceComputer.computeDistance(arguments, migration.getSourceTypeRefs());
 
-	private boolean migrationCompatible(TMigration migration, List<TypeRef> arguments, Resource contextResource) {
-		// if the argument count does not match, the migration can not be compatible
-		if (arguments.size() != migration.getSourceTypeRefs().size()) {
-			return false;
-		}
+				// skip un-related migrations
+				if (distance == TypeDistanceComputer.MAX_DISTANCE) {
+					continue;
+				}
 
-		for (int argumentIndex = 0; argumentIndex < migration.getSourceTypeRefs().size(); argumentIndex++) {
-			final TypeRef migrationTypeRef = migration.getSourceTypeRefs().get(argumentIndex);
-			final TypeRef argumentTypeRef = arguments.get(argumentIndex);
+				matcher = matcher.match(migration, distance);
 
-			final RuleEnvironment ruleEnv = typeSystem.createRuleEnvironmentForContext(argumentTypeRef,
-					contextResource);
-
-			// if subtype-check for this argument fails, return false
-			if (typeSystem.subtype(ruleEnv, argumentTypeRef, migrationTypeRef).failed()) {
-				return false;
+				// early-exit if we already found a perfect match
+				if (matcher.hasPerfectMatch() && matcher.getAllMatches().size() == 0) {
+					// There can always only be one perfect match, since otherwise the migration
+					// declarations will conflict on the validation level.
+					return Collections.singletonList(migration);
+				}
+			} catch (UnsupportedTypeDistanceOperandsException e) {
+				// If we encounter invalid type distance operands
+				// we fail-safe since we reside in scoping.
+				// User-facing error markers for this case ought
+				// to be created in validation.
+				continue;
 			}
 		}
 
-		return true;
+		return matcher.getAllMatches();
 	}
 }
