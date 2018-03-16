@@ -175,7 +175,6 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	
 	/** Checks that the given {@link TypeRef} is not an {@link ComposedTypeRef}. */
 	private def boolean holdsIsNotComposedTypeRef(TMigration migration, TypeRef typeRef) {
-		println("Checking " + typeRef + " to not be a composed type reference.");
 		if (typeRef instanceof ComposedTypeRef) {
 			addIssueToMigrationTypeRef(IssueCodes.messageForIDL_MIGRATION_SIGNATURE_NO_COMPOSED_TYPES, typeRef,
 				IssueCodes.IDL_MIGRATION_SIGNATURE_NO_COMPOSED_TYPES);
