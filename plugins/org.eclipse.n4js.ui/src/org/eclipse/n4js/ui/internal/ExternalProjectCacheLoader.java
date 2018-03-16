@@ -45,20 +45,15 @@ public class ExternalProjectCacheLoader
 
 	@Override
 	public Optional<Pair<N4JSExternalProject, ProjectDescription>> load(final URI rootLocation) throws Exception {
+		ProjectDescription projectDescription = packageManager.loadManifestFromProjectRoot(rootLocation);
 
-		if (null != rootLocation && rootLocation.isFile()) {
-			final File projectRoot = new File(rootLocation.toFileString());
-			if (projectRoot.exists() && projectRoot.isDirectory()) {
-				final URI manifestLocation = rootLocation.appendSegment(IN4JSProject.N4MF_MANIFEST);
-				final ProjectDescription projectDescription = packageManager.loadManifest(manifestLocation);
-				if (null != projectDescription) {
-					ExternalProject project = new ExternalProject(projectRoot, NATURE_ID, BUILDER_ID);
-					IN4JSProject p = new N4JSEclipseProject(project, rootLocation, model);
-					N4JSExternalProject pp = new N4JSExternalProject(projectRoot, p);
+		if (null != projectDescription) {
+			File projectRoot = new File(rootLocation.toFileString());
+			ExternalProject p = new ExternalProject(projectRoot, NATURE_ID, BUILDER_ID);
+			IN4JSProject pp = new N4JSEclipseProject(p, rootLocation, model);
+			N4JSExternalProject ppp = new N4JSExternalProject(projectRoot, pp);
 
-					return Optional.of(Tuples.create(pp, projectDescription));
-				}
-			}
+			return Optional.of(Tuples.create(ppp, projectDescription));
 		}
 
 		return Optional.absent();

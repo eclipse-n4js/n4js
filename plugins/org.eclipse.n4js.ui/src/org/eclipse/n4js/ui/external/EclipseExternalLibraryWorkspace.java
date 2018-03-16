@@ -79,23 +79,19 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	/** This provider creates {@link ExternalProject}s */
 	@Inject
-	private ExternalProjectProvider extPP;
-
-	// /** This provider wraps {@link ExternalProject}s into {@link N4JSExternalProject}s */
-	// @Inject
-	// private N4JSExternalProjectProvider n4extPP;
+	private ExternalProjectProvider projectProvider;
 
 	/**
 	 */
 	@Inject
 	void init() {
-		extPP.addExternalLocationsUpdatedListener(indexUpdater);
+		projectProvider.ensureInitialized();
+		projectProvider.addExternalLocationsUpdatedListener(indexUpdater);
 	}
 
 	@Override
 	public ProjectDescription getProjectDescription(URI location) {
-		extPP.ensureInitialized();
-		Pair<N4JSExternalProject, ProjectDescription> pair = extPP.getProjectWithDescription(location);
+		Pair<N4JSExternalProject, ProjectDescription> pair = projectProvider.getProjectWithDescription(location);
 		return null == pair ? null : pair.getSecond();
 	}
 
@@ -103,21 +99,20 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	public URI getLocation(URI projectURI, ProjectReference reference,
 			N4JSSourceContainerType expectedN4JSSourceContainerType) {
 
-		extPP.ensureInitialized();
 		if (PROJECT.equals(expectedN4JSSourceContainerType)) {
 
 			String name = reference.getProject().getProjectId();
-			ExternalProject project = extPP.getProject(name);
+			ExternalProject project = projectProvider.getProject(name);
 
 			if (null == project) {
 				return null;
 			}
 
 			File referencedProject = new File(project.getLocationURI());
-			URI referencedLocation = URI.createFileURI(referencedProject.getAbsolutePath());
-			Pair<N4JSExternalProject, ProjectDescription> pair = extPP.getProjectWithDescription(referencedLocation);
+			URI refLocation = URI.createFileURI(referencedProject.getAbsolutePath());
+			Pair<N4JSExternalProject, ProjectDescription> pair = projectProvider.getProjectWithDescription(refLocation);
 			if (null != pair) {
-				return referencedLocation;
+				return refLocation;
 			}
 
 		}
@@ -127,17 +122,15 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public Iterator<URI> getArchiveIterator(URI archiveLocation, String archiveRelativeLocation) {
-		extPP.ensureInitialized();
 		return emptyIterator();
 	}
 
 	@Override
 	public Iterator<URI> getFolderIterator(URI folderLocation) {
-		extPP.ensureInitialized();
 		URI findProjectWith = findProjectWith(folderLocation);
 		if (null != findProjectWith) {
 			String projectName = findProjectWith.lastSegment();
-			ExternalProject project = extPP.getProject(projectName);
+			ExternalProject project = projectProvider.getProject(projectName);
 			if (null != project) {
 				String projectPath = new File(project.getLocationURI()).getAbsolutePath();
 				String folderPath = folderLocation.toFileString();
@@ -164,7 +157,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public URI findArtifactInFolder(URI folderLocation, String folderRelativePath) {
-		extPP.ensureInitialized();
 		IResource folder = getResource(folderLocation);
 		if (folder instanceof IFolder) {
 			IFile file = ((IFolder) folder).getFile(folderRelativePath);
@@ -191,7 +183,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 		Path nestedResourcePath = nestedResource.toPath();
 
-		Iterable<URI> registeredProjectUris = extPP.getProjectURIs();
+		Iterable<URI> registeredProjectUris = projectProvider.getProjectURIs();
 		for (URI projectUri : registeredProjectUris) {
 			if (projectUri.isFile()) {
 				File projectRoot = new File(projectUri.toFileString());
@@ -228,12 +220,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		}
 
 		checkState(result.isOK(), "Expected: OK, but actual was: " + result);
-		extPP.ensureInitialized();
 		SubMonitor subMonitor = convert(monitor, 3);
 
 		// Clean projects.
 		Set<N4JSExternalProject> projectsToClean = from(result.getToBeBuilt().getToBeDeleted())
-				.transform(uri -> extPP.getProject(new File(uri).getName()))
+				.transform(uri -> projectProvider.getProject(new File(uri).getName()))
 				.filter(notNull())
 				.toSet();
 
@@ -274,7 +265,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	private Collection<N4JSExternalProject> getExternalProjects(NpmProjectAdaptionResult result) {
 		Set<N4JSExternalProject> projectsToBeUpdated = from(result.getToBeBuilt().getToBeUpdated())
-				.transform(uri -> extPP.getProject(new File(uri).getName())).toSet();
+				.transform(uri -> projectProvider.getProject(new File(uri).getName())).toSet();
 
 		Collection<N4JSExternalProject> nonWSProjects = collector.filterNonWSProjects(projectsToBeUpdated);
 
@@ -283,32 +274,31 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public Collection<N4JSExternalProject> getProjects() {
-		return extPP.getProjects();
+		return projectProvider.getProjects();
 	}
 
 	@Override
 	public Collection<N4JSExternalProject> getProjectsIn(java.net.URI rootLocation) {
-		return extPP.getProjectsIn(rootLocation);
+		return projectProvider.getProjectsIn(rootLocation);
 	}
 
 	@Override
 	public Collection<N4JSExternalProject> getProjectsIn(final Collection<java.net.URI> rootLocations) {
-		return extPP.getProjectsIn(rootLocations);
+		return projectProvider.getProjectsIn(rootLocations);
 	}
 
 	@Override
 	public Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
-		return extPP.getProjectsDescriptions(rootLocation);
+		return projectProvider.getProjectsDescriptions(rootLocation);
 	}
 
 	@Override
 	public ExternalProject getProject(String projectName) {
-		return extPP.getProject(projectName);
+		return projectProvider.getProject(projectName);
 	}
 
 	@Override
 	public IResource getResource(URI location) {
-		extPP.ensureInitialized();
 		String path = location.toFileString();
 		if (null == path) {
 			return null;
@@ -356,7 +346,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	 */
 	@Override
 	public void updateState() {
-		extPP.updateCache();
+		projectProvider.updateCache();
 	}
 
 }

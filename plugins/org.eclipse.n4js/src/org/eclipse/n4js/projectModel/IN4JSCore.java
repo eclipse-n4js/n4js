@@ -44,7 +44,8 @@ public interface IN4JSCore {
 	IN4JSProject create(URI location);
 
 	/**
-	 * Returns the N4JS project that contains the element at the given location.
+	 * Returns the N4JS project that contains the element at the given location. The returned instance might be created
+	 * on the fly to wrap another project instance. Consequently, it should not be used for identity comparisons.
 	 *
 	 * @param nestedLocation
 	 *            the project location

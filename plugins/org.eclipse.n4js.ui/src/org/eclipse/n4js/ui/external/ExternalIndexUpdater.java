@@ -37,7 +37,7 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 	private Collection<IProject> wsProjectsDependingOnRemovedProjects;
 
 	@Inject
-	private ExternalLibraryWorkspace extWS;
+	private ExternalLibraryWorkspace externalWorkspace;
 
 	@Inject
 	private ExternalProjectsCollector collector;
@@ -74,8 +74,8 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 
 	/** Removes projects from Index that were in a removed location */
 	private void cleanRemovedLocations(Set<URI> removedLocations, IProgressMonitor monitor) {
-		Collection<N4JSExternalProject> removedProjects = extWS.getProjectsIn(removedLocations);
-		SubMonitor subMonitor = convert(monitor, 1);
+		Collection<N4JSExternalProject> removedProjects = externalWorkspace.getProjectsIn(removedLocations);
+		SubMonitor subMonitor = convert(monitor, 3);
 
 		// Clean removed projects from Index
 		builder.clean(removedProjects, subMonitor.newChild(1));
@@ -84,14 +84,16 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 		// Remember affected workspace and external projects
 		extProjectsDependingOnRemovedProjects = collector.getExtProjectsDependendingOn(removedProjects);
 		extProjectsDependingOnRemovedProjects.removeAll(removedProjects);
+		subMonitor.worked(1);
 
 		wsProjectsDependingOnRemovedProjects = collector.getWSProjectsDependendingOn(removedProjects);
 		wsProjectsDependingOnRemovedProjects.removeAll(removedProjects);
+		subMonitor.worked(1);
 	}
 
 	/** Adds projects to Index that are in a added location or depend on removed/added projects */
 	private void buildAddedLocations(Set<URI> addedLocations, IProgressMonitor monitor) {
-		Collection<N4JSExternalProject> addedProjects = extWS.getProjectsIn(addedLocations);
+		Collection<N4JSExternalProject> addedProjects = externalWorkspace.getProjectsIn(addedLocations);
 		SubMonitor subMonitor = convert(monitor, 2);
 
 		// Build external projects that depend on added projects. (only non-user-workspace)
@@ -108,6 +110,7 @@ public class ExternalIndexUpdater implements ExternalLocationsUpdatedListener {
 		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(addedProjects));
 		wsProjectsToRebuild.addAll(collector.getWSProjectsDependendingOn(extProjectsToBuild));
 		scheduler.scheduleBuildIfNecessary(wsProjectsToRebuild);
+		subMonitor.worked(1);
 	}
 
 }

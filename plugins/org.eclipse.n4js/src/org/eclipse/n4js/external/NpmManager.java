@@ -491,12 +491,6 @@ public class NpmManager {
 			monitor.worked(2);
 			monitor.setTaskName("Scheduling build of projects... [4 of 4]");
 
-			// scheduler.scheduleBuildIfNecessary(affectedEclipseProjects);
-			// logger.logInfo("Scheduling re-builds for the following affected projects:");
-			// for (IProject affPrj : affectedEclipseProjects) {
-			// logger.logInfo(" - " + affPrj.getName());
-			// }
-
 			if (!status.isOK()) {
 				logger.logInfo("There were errors during installation, see logs for details.");
 			}

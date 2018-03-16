@@ -26,7 +26,9 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -44,6 +46,9 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 
 	@Inject
 	private ExternalLibraryBuildJobProvider buildJobProvider;
+
+	@Inject
+	private FileBasedExternalPackageManager packageManager;
 
 	final private Collection<N4JSExternalProject> toClean = newLinkedHashSet();
 	final private Collection<N4JSExternalProject> toBuild = newLinkedHashSet();
@@ -78,9 +83,12 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 
 			IProject project = (IProject) resource;
 			String name = project.getName();
+
+			URI uri = org.eclipse.emf.common.util.URI.createURI(project.getLocationURI().toString());
+			boolean isExternalProject = packageManager.isExternalProjectRoot(uri);
 			N4JSExternalProject externalProject = projectProvider.getProject(name);
 
-			if (null != externalProject && externalProject.exists()) {
+			if (isExternalProject && null != externalProject && externalProject.exists()) {
 
 				if (CHANGED == delta.getKind() && (delta.getFlags() & OPEN) != 0) {
 
