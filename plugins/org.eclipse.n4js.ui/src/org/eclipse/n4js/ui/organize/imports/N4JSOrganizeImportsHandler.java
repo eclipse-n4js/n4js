@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.n4js.organize.imports.FileContainerFilter;
 import org.eclipse.n4js.organize.imports.FileExtensionFilter;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
+import org.eclipse.n4js.ui.utils.AutobuildUtils.ClosableAutobuild;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -77,12 +78,7 @@ public class N4JSOrganizeImportsHandler extends AbstractHandler {
 				return null;
 			}
 
-			final boolean wasAutobuilding = AutobuildUtils.get();
-
-			try {
-				// avoid auto-build when modifying batch of documents
-				// restore state later
-				AutobuildUtils.turnOff();
+			try (ClosableAutobuild ca = AutobuildUtils.suppressAutobuild();) {
 
 				// Query unsaved
 				IWorkbench wbench = PlatformUI.getWorkbench();
@@ -99,8 +95,6 @@ public class N4JSOrganizeImportsHandler extends AbstractHandler {
 				throw new ExecutionException("Error during organizing imports", e);
 			} catch (InterruptedException e) {
 				// user cancelled, ok
-			} finally {
-				AutobuildUtils.set(wasAutobuilding);
 			}
 		}
 		return null;

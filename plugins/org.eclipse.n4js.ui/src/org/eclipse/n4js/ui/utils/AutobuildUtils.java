@@ -56,4 +56,25 @@ public class AutobuildUtils {
 		}
 	}
 
+	/** Remembers the original auto-build setting and sets it back when closed. */
+	static public class ClosableAutobuild implements AutoCloseable {
+		private final boolean originalSetting;
+
+		ClosableAutobuild(boolean originalSetting) {
+			this.originalSetting = originalSetting;
+		}
+
+		@Override
+		public void close() {
+			set(originalSetting);
+		}
+	}
+
+	/** Turns off the auto-build and returns an auto-closable handle that reverts the original setting */
+	static public ClosableAutobuild suppressAutobuild() {
+		ClosableAutobuild closableAutobuild = new ClosableAutobuild(get());
+		turnOff();
+		return closableAutobuild;
+	}
+
 }
