@@ -30,6 +30,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
+import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.versions.MigratableUtils
@@ -41,9 +42,11 @@ import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2
+import java.util.function.Function
 
 /**
  * Validates N4IDL migration declarations.
@@ -137,9 +140,8 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		// check that the migration does not declare an explicit {@code MigrationContext} parameter
 		migration.fpars
 			.filter[p | isMigrationContextTypeRef(p.typeRef)]
-			.forEach[p | 
-				addIssue(IssueCodes.messageForIDL_MIGRATION_NO_EXPLICIT_CONTEXT_PARAMETER, migration.astElement,
-					N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, migration.fpars.indexOf(p),
+			.forEach[p |
+				addIssueToMigrationTypeRef(IssueCodes.messageForIDL_MIGRATION_NO_EXPLICIT_CONTEXT_PARAMETER, p.typeRef,
 					IssueCodes.IDL_MIGRATION_NO_EXPLICIT_CONTEXT_PARAMETER);
 			]
 		
@@ -149,10 +151,16 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	
 	/** Checks that the source and target types of the given migration do not contain any {@link ComposedTypeRef}. */
 	private def boolean holdsNoComposedSourceAndTargetTypes(TMigration migration) {
-		val sourceTypesHoldNoComposedTypes = migration.sourceTypeRefs.exists[ref | holdsIsNotComposedTypeRef(migration, ref)]
-		val targetTypesHoldNoComposedTypes = migration.targetTypeRefs.exists[ref | holdsIsNotComposedTypeRef(migration, ref)]
+		val sourceTypesHoldNoComposedTypes = migration.sourceTypeRefs.allHold[ref | holdsIsNotComposedTypeRef(migration, ref)]
+		val targetTypesHoldNoComposedTypes = migration.targetTypeRefs.allHold[ref | holdsIsNotComposedTypeRef(migration, ref)]
 		
 		return sourceTypesHoldNoComposedTypes && targetTypesHoldNoComposedTypes;
+	}
+	
+	/** Returns {@code true} iff the {@code constraintChecker} function returns true for all elements in {@code elements}. 
+	 * Always executes {@code constraintChecker} for all {@code elements}.*/
+	private def <T> boolean allHold(Iterable<T> elements, Function<T, Boolean> constraintChecker) {
+		return elements.fold(true, [previousResult, element | return constraintChecker.apply(element) && previousResult; ]);
 	}
 	
 	/** Checks that the given migration has a valid principal argument type (non-null). */
@@ -167,11 +175,10 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	
 	/** Checks that the given {@link TypeRef} is not an {@link ComposedTypeRef}. */
 	private def boolean holdsIsNotComposedTypeRef(TMigration migration, TypeRef typeRef) {
+		println("Checking " + typeRef + " to not be a composed type reference.");
 		if (typeRef instanceof ComposedTypeRef) {
-			val parameterIndex = migration.fpars.indexOf(typeRef);
-			
-			addIssue(IssueCodes.messageForIDL_MIGRATION_SIGNATURE_NO_COMPOSED_TYPES, migration.astElement,
-				N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, parameterIndex, IssueCodes.IDL_MIGRATION_SIGNATURE_NO_COMPOSED_TYPES);
+			addIssueToMigrationTypeRef(IssueCodes.messageForIDL_MIGRATION_SIGNATURE_NO_COMPOSED_TYPES, typeRef,
+				IssueCodes.IDL_MIGRATION_SIGNATURE_NO_COMPOSED_TYPES);
 			return false
 		}
 		return true;
@@ -443,5 +450,28 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			.distinct.limit(2).toArray;
 		
 		return versions.size == 1;
+	}
+	
+	/**
+	 * Adds an issue to a migration source or target type ref.
+	 * 
+	 * Makes sure to only mark the relevant offset in the code (e.g. only the parameter declaration at the correct index).
+	 */
+	private def addIssueToMigrationTypeRef(String message, TypeRef typeRef, String issueCode) {
+		val migration = EcoreUtil2.getContainerOfType(typeRef, TMigration);
+		if (null === migration) {
+			// if the given type reference is not contained by a migration, fall-back to EObject based issue marking 
+			addIssue(message, typeRef, issueCode);
+		}
+		
+		if (typeRef.eContainer instanceof TFormalParameter) {
+			val parameterIndex = migration.fpars.indexOf(typeRef.eContainer);
+			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, parameterIndex, issueCode);
+		} else if (typeRef.eContainer instanceof TMigration) {
+			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__RETURN_TYPE_REF, issueCode);
+		} else {
+			// Unknown case. Fall-back to EObject based issue marking.
+			addIssue(message, typeRef, issueCode); 
+		}
 	}	
 }

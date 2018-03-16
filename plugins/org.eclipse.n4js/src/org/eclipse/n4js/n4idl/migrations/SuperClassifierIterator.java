@@ -28,6 +28,8 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *
  * The iterator returns the classifiers as well as the current traversal level (distance from the base classifier) in
  * the class hierarchy.
+ *
+ * This iterator will not iterate over the implicit super-class (N4Object).
  */
 public class SuperClassifierIterator implements Iterator<SuperClassifierEntry> {
 	/** Iterator entry of a {@link SuperClassifierIterator}. */
