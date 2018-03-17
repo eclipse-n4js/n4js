@@ -1446,16 +1446,19 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeVariablesParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameBindingIdentifierParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final RuleCall cStrictFormalParametersParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
-		private final RuleCall cColonSepReturnTypeRefParserRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
+		private final RuleCall cVersionDeclarationParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final RuleCall cStrictFormalParametersParserRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
+		private final RuleCall cColonSepReturnTypeRefParserRuleCall_4 = (RuleCall)cGroup.eContents().get(4);
 		
 		//fragment FunctionHeader <Yield, Generator> *:
 		//	TypeVariables?
 		//	name=BindingIdentifier<Yield>?
+		//	VersionDeclaration?
 		//	StrictFormalParameters<Yield=Generator> -> ColonSepReturnTypeRef?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//TypeVariables? name=BindingIdentifier<Yield>? StrictFormalParameters<Yield=Generator> -> ColonSepReturnTypeRef?
+		//TypeVariables? name=BindingIdentifier<Yield>? VersionDeclaration? StrictFormalParameters<Yield=Generator> ->
+		//ColonSepReturnTypeRef?
 		public Group getGroup() { return cGroup; }
 		
 		//TypeVariables?
@@ -1467,11 +1470,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingIdentifier<Yield>
 		public RuleCall getNameBindingIdentifierParserRuleCall_1_0() { return cNameBindingIdentifierParserRuleCall_1_0; }
 		
+		//VersionDeclaration?
+		public RuleCall getVersionDeclarationParserRuleCall_2() { return cVersionDeclarationParserRuleCall_2; }
+		
 		//StrictFormalParameters<Yield=Generator>
-		public RuleCall getStrictFormalParametersParserRuleCall_2() { return cStrictFormalParametersParserRuleCall_2; }
+		public RuleCall getStrictFormalParametersParserRuleCall_3() { return cStrictFormalParametersParserRuleCall_3; }
 		
 		//-> ColonSepReturnTypeRef?
-		public RuleCall getColonSepReturnTypeRefParserRuleCall_3() { return cColonSepReturnTypeRefParserRuleCall_3; }
+		public RuleCall getColonSepReturnTypeRefParserRuleCall_4() { return cColonSepReturnTypeRefParserRuleCall_4; }
 	}
 	public class FunctionBodyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.FunctionBody");
@@ -10791,6 +10797,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//fragment FunctionHeader <Yield, Generator> *:
 	//	TypeVariables?
 	//	name=BindingIdentifier<Yield>?
+	//	VersionDeclaration?
 	//	StrictFormalParameters<Yield=Generator> -> ColonSepReturnTypeRef?;
 	public FunctionHeaderElements getFunctionHeaderAccess() {
 		return pFunctionHeader;

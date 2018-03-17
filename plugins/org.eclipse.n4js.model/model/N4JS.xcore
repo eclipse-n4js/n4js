@@ -472,7 +472,7 @@ abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnviron
 /* A function definition is either a FunctionDeclaration, a FunctionExpression or a MethodDeclaration.
  * Note that, since an anonymous function expression has no name, the function definition is not a named element.
  */
-abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
+abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement, VersionedElement {
 	contains FormalParameter[] fpars
 	/*
 	 * Tells if the return value is optional.

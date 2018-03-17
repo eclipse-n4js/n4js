@@ -7436,6 +7436,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		functionOrFieldAccessorEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		functionDefinitionEClass.getESuperTypes().add(this.getFunctionOrFieldAccessor());
 		functionDefinitionEClass.getESuperTypes().add(this.getTypeDefiningElement());
+		functionDefinitionEClass.getESuperTypes().add(this.getVersionedElement());
 		fieldAccessorEClass.getESuperTypes().add(this.getFunctionOrFieldAccessor());
 		fieldAccessorEClass.getESuperTypes().add(this.getTypeProvidingElement());
 		fieldAccessorEClass.getESuperTypes().add(this.getPropertyNameOwner());

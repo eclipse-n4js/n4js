@@ -14,6 +14,7 @@ import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.util.Collections
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
@@ -23,6 +24,7 @@ import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TObjectPrototype
@@ -84,6 +86,9 @@ class VersionHelper {
 				return computeMaximumVersion(object.definedType as TInterface)
 			N4EnumDeclaration case isVersioned(object):
 				return computeMaximumVersion(object.definedType as TEnum)
+			FunctionDeclaration case isVersioned(object):
+				// for now we do not support highest virtual versions of functions
+				return Optional.fromNullable(object.declaredVersion.intValue)
 			TClassifier:
 				return computeMaximumVersion(object)
 			default:

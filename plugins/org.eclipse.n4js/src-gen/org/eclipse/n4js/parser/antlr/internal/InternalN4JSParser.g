@@ -2837,15 +2837,28 @@ ruleFunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				}
 			)
 		)?
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
+				}
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getVersionDeclarationParserRuleCall_2());
+			}
+			this_VersionDeclaration_2=ruleVersionDeclaration[$current]
+			{
+				$current = $this_VersionDeclaration_2.current;
+				afterParserOrEnumRuleCall();
+			}
+		)?
 		{
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 			}
-			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2());
+			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_3());
 		}
-		this_StrictFormalParameters_2=ruleStrictFormalParameters[$current]
+		this_StrictFormalParameters_3=ruleStrictFormalParameters[$current]
 		{
-			$current = $this_StrictFormalParameters_2.current;
+			$current = $this_StrictFormalParameters_3.current;
 			afterParserOrEnumRuleCall();
 		}
 		(
@@ -2854,11 +2867,11 @@ ruleFunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_3());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4());
 			}
-			this_ColonSepReturnTypeRef_3=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepReturnTypeRef_4=ruleColonSepReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_3.current;
+				$current = $this_ColonSepReturnTypeRef_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -2907,15 +2920,28 @@ norm1_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				}
 			)
 		)?
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
+				}
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getVersionDeclarationParserRuleCall_2());
+			}
+			this_VersionDeclaration_2=ruleVersionDeclaration[$current]
+			{
+				$current = $this_VersionDeclaration_2.current;
+				afterParserOrEnumRuleCall();
+			}
+		)?
 		{
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 			}
-			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2());
+			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_3());
 		}
-		this_StrictFormalParameters_2=ruleStrictFormalParameters[$current]
+		this_StrictFormalParameters_3=ruleStrictFormalParameters[$current]
 		{
-			$current = $this_StrictFormalParameters_2.current;
+			$current = $this_StrictFormalParameters_3.current;
 			afterParserOrEnumRuleCall();
 		}
 		(
@@ -2924,11 +2950,11 @@ norm1_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_3());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4());
 			}
-			this_ColonSepReturnTypeRef_3=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepReturnTypeRef_4=ruleColonSepReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_3.current;
+				$current = $this_ColonSepReturnTypeRef_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -2977,15 +3003,28 @@ norm2_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				}
 			)
 		)?
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
+				}
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getVersionDeclarationParserRuleCall_2());
+			}
+			this_VersionDeclaration_2=ruleVersionDeclaration[$current]
+			{
+				$current = $this_VersionDeclaration_2.current;
+				afterParserOrEnumRuleCall();
+			}
+		)?
 		{
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 			}
-			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2());
+			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_3());
 		}
-		this_StrictFormalParameters_2=norm1_StrictFormalParameters[$current]
+		this_StrictFormalParameters_3=norm1_StrictFormalParameters[$current]
 		{
-			$current = $this_StrictFormalParameters_2.current;
+			$current = $this_StrictFormalParameters_3.current;
 			afterParserOrEnumRuleCall();
 		}
 		(
@@ -2994,11 +3033,11 @@ norm2_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_3());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4());
 			}
-			this_ColonSepReturnTypeRef_3=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepReturnTypeRef_4=ruleColonSepReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_3.current;
+				$current = $this_ColonSepReturnTypeRef_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -3047,15 +3086,28 @@ norm3_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				}
 			)
 		)?
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
+				}
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getVersionDeclarationParserRuleCall_2());
+			}
+			this_VersionDeclaration_2=ruleVersionDeclaration[$current]
+			{
+				$current = $this_VersionDeclaration_2.current;
+				afterParserOrEnumRuleCall();
+			}
+		)?
 		{
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 			}
-			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2());
+			newCompositeNode(grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_3());
 		}
-		this_StrictFormalParameters_2=norm1_StrictFormalParameters[$current]
+		this_StrictFormalParameters_3=norm1_StrictFormalParameters[$current]
 		{
-			$current = $this_StrictFormalParameters_2.current;
+			$current = $this_StrictFormalParameters_3.current;
 			afterParserOrEnumRuleCall();
 		}
 		(
@@ -3064,11 +3116,11 @@ norm3_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_3());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4());
 			}
-			this_ColonSepReturnTypeRef_3=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepReturnTypeRef_4=ruleColonSepReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_3.current;
+				$current = $this_ColonSepReturnTypeRef_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
