@@ -3590,6 +3590,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		inferenceVariableEClass.getESuperTypes().add(this.getTypeVariable());
 		tFunctionEClass.getESuperTypes().add(this.getDeclaredTypeWithAccessModifier());
 		tFunctionEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
+		tFunctionEClass.getESuperTypes().add(this.getTVersionable());
 		typeEClass.getESuperTypes().add(this.getTExportableElement());
 		typeEClass.getESuperTypes().add(this.getTAnnotableElement());
 		typeEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
@@ -3621,6 +3622,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tStructuralTypeEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getSyntaxRelatedTElement());
 		tStructuralTypeEClass.getEGenericSuperTypes().add(g1);
+		tVersionableEClass.getESuperTypes().add(this.getType());
 		tMigrationEClass.getESuperTypes().add(this.getTFunction());
 		g1 = createEGenericType(this.getContainerType());
 		g2 = createEGenericType(this.getTMember());

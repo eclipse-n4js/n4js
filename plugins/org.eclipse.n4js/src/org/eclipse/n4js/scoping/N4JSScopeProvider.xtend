@@ -591,7 +591,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (!VersionUtils.isVersionAwareContext(context)) {
 			return new NonVersionAwareContextScope(contextVersionScope, true, messageHelper);
 		} else {
-			// detect whether this scope is lexically contained by migration declaration
+			// detect whether this scope is lexically contained by a migration declaration
 			val migrationDeclaration = MigrationUtils.getMigrationDeclaration(context)
 			if (migrationDeclaration.present) {
 				// if the context is a 'migrate' calls

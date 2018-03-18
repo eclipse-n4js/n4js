@@ -389,7 +389,7 @@ class InferenceVariable extends TypeVariable {}
  * Represents a function declaration. In JavaScript, functions are first-class objects, hence
  * a function declaration also is a type declaration.
  */
-class TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement {
+class TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
 	boolean external
 	/*
 	 * Formal parameters
@@ -840,7 +840,10 @@ class TStructuralType extends ContainerType<TStructMember>, SyntaxRelatedTElemen
 	}
 }
 
-abstract class TVersionable {
+/**
+ * Base class for all versionable types.
+ */
+abstract class TVersionable extends Type {
 	/**
 	 * The declared version of the type. This is not used by N4JS at the moment but only
 	 * in derived languages such as N4IDL. It needs to be stored in the type model though as

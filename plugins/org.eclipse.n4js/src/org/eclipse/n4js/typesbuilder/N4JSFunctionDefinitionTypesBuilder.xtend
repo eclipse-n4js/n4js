@@ -86,6 +86,9 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.declaredAsync = functionDecl.async // TODO change to declaredAsync once the annotation is gone
 		functionType.declaredGenerator = functionDecl.generator
 
+		// set declared version
+		VersionedTypesBuilderUtil.setTypeVersion(functionType, functionDecl);
+
 		// set container
 		target.topLevelTypes += functionType
 		

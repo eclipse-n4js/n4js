@@ -1780,13 +1780,22 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION__AST_ELEMENT = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__DECLARED_VERSION = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__EXTERNAL = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 1;
+	int TFUNCTION__EXTERNAL = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
@@ -1795,7 +1804,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__FPARS = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 2;
+	int TFUNCTION__FPARS = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Return Value Marked Optional</b></em>' attribute.
@@ -1804,7 +1813,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__RETURN_VALUE_MARKED_OPTIONAL = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 3;
+	int TFUNCTION__RETURN_VALUE_MARKED_OPTIONAL = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Return Type Ref</b></em>' containment reference.
@@ -1813,7 +1822,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__RETURN_TYPE_REF = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 4;
+	int TFUNCTION__RETURN_TYPE_REF = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -1822,7 +1831,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__TYPE_VARS = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 5;
+	int TFUNCTION__TYPE_VARS = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Declared This Type</b></em>' containment reference.
@@ -1831,7 +1840,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_THIS_TYPE = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 6;
+	int TFUNCTION__DECLARED_THIS_TYPE = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -1840,7 +1849,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_ASYNC = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 7;
+	int TFUNCTION__DECLARED_ASYNC = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Declared Generator</b></em>' attribute.
@@ -1849,7 +1858,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_GENERATOR = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 8;
+	int TFUNCTION__DECLARED_GENERATOR = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Constructor</b></em>' attribute.
@@ -1858,7 +1867,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__CONSTRUCTOR = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 9;
+	int TFUNCTION__CONSTRUCTOR = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>TFunction</em>' class.
@@ -1867,7 +1876,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_FEATURE_COUNT = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 10;
+	int TFUNCTION_FEATURE_COUNT = DECLARED_TYPE_WITH_ACCESS_MODIFIER_FEATURE_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -1877,15 +1886,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFUNCTION___GET_CONTAINING_MODULE = DECLARED_TYPE_WITH_ACCESS_MODIFIER___GET_CONTAINING_MODULE;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_VERSION = DECLARED_TYPE_WITH_ACCESS_MODIFIER___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -2005,13 +2005,22 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___IS_EXPORTED = DECLARED_TYPE_WITH_ACCESS_MODIFIER___IS_EXPORTED;
 
 	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___GET_VERSION = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 0;
+	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
@@ -2020,7 +2029,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CALLABLE_CONSTRUCTOR = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 1;
+	int TFUNCTION___IS_CALLABLE_CONSTRUCTOR = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -2029,7 +2038,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 2;
+	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -2038,7 +2047,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FUNCTION_AS_STRING = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 3;
+	int TFUNCTION___GET_FUNCTION_AS_STRING = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2047,7 +2056,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_FINAL = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 4;
+	int TFUNCTION___IS_FINAL = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>TFunction</em>' class.
@@ -2056,7 +2065,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_OPERATION_COUNT = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 5;
+	int TFUNCTION_OPERATION_COUNT = DECLARED_TYPE_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AccessibleTypeElementImpl <em>Accessible Type Element</em>}' class.
@@ -4501,13 +4510,40 @@ public interface TypesPackage extends EPackage {
 	int TVERSIONABLE = 28;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE__NAME = TYPE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE__EXPORTED_NAME = TYPE__EXPORTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE__ANNOTATIONS = TYPE__ANNOTATIONS;
+
+	/**
 	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TVERSIONABLE__DECLARED_VERSION = 0;
+	int TVERSIONABLE__DECLARED_VERSION = TYPE_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>TVersionable</em>' class.
@@ -4516,7 +4552,142 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVERSIONABLE_FEATURE_COUNT = 1;
+	int TVERSIONABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_PROVIDED_BY_RUNTIME = TYPE___IS_PROVIDED_BY_RUNTIME;
+
+	/**
+	 * The operation id for the '<em>Is Polyfill</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_POLYFILL = TYPE___IS_POLYFILL;
+
+	/**
+	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_STATIC_POLYFILL = TYPE___IS_STATIC_POLYFILL;
+
+	/**
+	 * The operation id for the '<em>Is Final</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_FINAL = TYPE___IS_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Dynamizable</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_DYNAMIZABLE = TYPE___IS_DYNAMIZABLE;
+
+	/**
+	 * The operation id for the '<em>Is Array Like</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_ARRAY_LIKE = TYPE___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Get Element Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___GET_ELEMENT_TYPE = TYPE___GET_ELEMENT_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___GET_TYPE_ACCESS_MODIFIER = TYPE___GET_TYPE_ACCESS_MODIFIER;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___IS_GENERIC = TYPE___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
+
+	/**
+	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___GET_VARIANCE_OF_TYPE_VAR__INT = TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
+
+	/**
+	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVERSIONABLE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -4525,7 +4696,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVERSIONABLE___GET_VERSION = 0;
+	int TVERSIONABLE___GET_VERSION = TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>TVersionable</em>' class.
@@ -4534,7 +4705,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVERSIONABLE_OPERATION_COUNT = 1;
+	int TVERSIONABLE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMigratableImpl <em>TMigratable</em>}' class.
@@ -4636,6 +4807,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMIGRATION__AST_ELEMENT = TFUNCTION__AST_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION__DECLARED_VERSION = TFUNCTION__DECLARED_VERSION;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -4791,15 +4971,6 @@ public interface TypesPackage extends EPackage {
 	int TMIGRATION___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_VERSION = TFUNCTION___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4915,6 +5086,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMIGRATION___IS_EXPORTED = TFUNCTION___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMIGRATION___GET_VERSION = TFUNCTION___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -7906,6 +8086,15 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD__AST_ELEMENT = TFUNCTION__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD__DECLARED_VERSION = TFUNCTION__DECLARED_VERSION;
+
+	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8095,15 +8284,6 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_VERSION = TFUNCTION___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8219,6 +8399,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD___IS_EXPORTED = TFUNCTION___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_VERSION = TFUNCTION___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -8483,6 +8672,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD__AST_ELEMENT = TMETHOD__AST_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD__DECLARED_VERSION = TMETHOD__DECLARED_VERSION;
+
+	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8681,15 +8879,6 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_CONTAINING_MODULE = TMETHOD___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_VERSION = TMETHOD___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8805,6 +8994,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___IS_EXPORTED = TMETHOD___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___GET_VERSION = TMETHOD___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.

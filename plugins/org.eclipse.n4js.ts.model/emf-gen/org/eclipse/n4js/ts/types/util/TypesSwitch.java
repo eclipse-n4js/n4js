@@ -186,6 +186,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				T result = caseTFunction(tFunction);
 				if (result == null) result = caseDeclaredTypeWithAccessModifier(tFunction);
 				if (result == null) result = caseSyntaxRelatedTElement(tFunction);
+				if (result == null) result = caseTVersionable(tFunction);
 				if (result == null) result = caseType(tFunction);
 				if (result == null) result = caseAccessibleTypeElement(tFunction);
 				if (result == null) result = caseTExportableElement(tFunction);
@@ -360,6 +361,12 @@ public class TypesSwitch<T> extends Switch<T> {
 			case TypesPackage.TVERSIONABLE: {
 				TVersionable tVersionable = (TVersionable)theEObject;
 				T result = caseTVersionable(tVersionable);
+				if (result == null) result = caseType(tVersionable);
+				if (result == null) result = caseTExportableElement(tVersionable);
+				if (result == null) result = caseTAnnotableElement(tVersionable);
+				if (result == null) result = caseVersionable(tVersionable);
+				if (result == null) result = caseIdentifiableElement(tVersionable);
+				if (result == null) result = caseTypableElement(tVersionable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -375,6 +382,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTFunction(tMigration);
 				if (result == null) result = caseDeclaredTypeWithAccessModifier(tMigration);
 				if (result == null) result = caseSyntaxRelatedTElement(tMigration);
+				if (result == null) result = caseTVersionable(tMigration);
 				if (result == null) result = caseType(tMigration);
 				if (result == null) result = caseAccessibleTypeElement(tMigration);
 				if (result == null) result = caseTExportableElement(tMigration);
@@ -522,6 +530,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTFunction(tMethod);
 				if (result == null) result = caseTMemberWithAccessModifier(tMethod);
 				if (result == null) result = caseDeclaredTypeWithAccessModifier(tMethod);
+				if (result == null) result = caseTVersionable(tMethod);
 				if (result == null) result = caseTMember(tMethod);
 				if (result == null) result = caseType(tMethod);
 				if (result == null) result = caseAccessibleTypeElement(tMethod);
@@ -542,6 +551,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTFunction(tStructMethod);
 				if (result == null) result = caseTMemberWithAccessModifier(tStructMethod);
 				if (result == null) result = caseDeclaredTypeWithAccessModifier(tStructMethod);
+				if (result == null) result = caseTVersionable(tStructMethod);
 				if (result == null) result = caseTMember(tStructMethod);
 				if (result == null) result = caseType(tStructMethod);
 				if (result == null) result = caseAccessibleTypeElement(tStructMethod);

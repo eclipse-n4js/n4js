@@ -104,13 +104,23 @@ class LocallyKnownTypesScopingHelper {
 			var parent = delegate.getScope(script, reference);
 			// but imported types are preferred (or maybe renamed with aliases):
 			val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script);
-			val TModule local = script.module;
-			if (local === null || local.eIsProxy) {
-				return importScope;
-			}
-			return scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.map [ topLevelType |
-				EObjectDescription.create(topLevelType.name, topLevelType) ]);
+			// finally, add locally declared types as the outer scope
+			val localTypes = scopeWithLocallyDeclaredTypes(script, reference, importScope);
+			
+			return localTypes;
 		];
+	}
+	
+	/**
+	 * Returns scope with locally declared types (without import scope); the result is cached.
+	 */
+	def IScope scopeWithLocallyDeclaredTypes(Script script, EReference reference, IScope parent) {
+		val TModule local = script.module;
+		if (local === null || local.eIsProxy) {
+			return parent;
+		}
+		return scopesHelper.mapBasedScopeFor(script, parent, local.topLevelTypes.map [ topLevelType |
+			EObjectDescription.create(topLevelType.name, topLevelType) ]);
 	}
 
 	/**

@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TObjectPrototype
+import org.eclipse.n4js.ts.types.TVersionable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.utils.ContainerTypesHelper
@@ -74,59 +75,58 @@ class VersionHelper {
 	 * @return the maximum version of the given object or {@link Optional.absent()} if no context version can be determined for the given object.
 	 */
 	def Optional<Integer> computeMaximumVersion(EObject object) {
-		if (object === null) // TODO: This may be an error!
+		if (object === null) 
 			return Optional.absent;
 
 		switch (object) {
 			VersionedReference case object.hasRequestedVersion:
 				return Optional.of(object.requestedVersionOrZero)
 			N4ClassDeclaration case isVersioned(object):
-				return computeMaximumVersion(object.definedType as TClass)
+				return computeMaximumVersionForVersionable(object.definedType as TClass)
 			N4InterfaceDeclaration case isVersioned(object):
-				return computeMaximumVersion(object.definedType as TInterface)
+				return computeMaximumVersionForVersionable(object.definedType as TInterface)
 			N4EnumDeclaration case isVersioned(object):
-				return computeMaximumVersion(object.definedType as TEnum)
+				return computeMaximumVersionForVersionable(object.definedType as TEnum)
 			FunctionDeclaration case isVersioned(object):
-				// for now we do not support highest virtual versions of functions
-				return Optional.fromNullable(object.declaredVersion.intValue)
+				return computeMaximumVersionForVersionable(object.definedType as TFunction)
 			TClassifier:
-				return computeMaximumVersion(object)
+				return computeMaximumVersionForVersionable(object)
 			default:
 				return computeMaximumVersion(object.eContainer)
 		}
 	}
 
 	/**
-	 * Computes the version range of the given classifier. The lower limit of the version range is determined by the
+	 * Computes the version range of the given versionable type. The lower limit of the version range is determined by the
 	 * declared version of the given classifier while the upper limit is computed via a call to
 	 * {@link #computeUpperLimit(TClassifier, int)}.
 	 */
-	private def Optional<Integer> computeMaximumVersion(TClassifier classifier) {
-		val int lowerLimit = classifier.version;
-		return computeUpperLimit(classifier, lowerLimit);
+	private def Optional<Integer> computeMaximumVersionForVersionable(TVersionable versionableType) {
+		val int lowerLimit = versionableType.version;
+		return computeUpperLimit(versionableType, lowerLimit);
 	}
 
 	/**
-	 * Computes the upper limit of the version range of the given classifier using the given lower limit.
+	 * Computes the upper limit of the version range of the given (versionable) type using the given lower limit.
 	 *
 	 * <p>
-	 * The upper limit is computed by looking at all versions of the given classifier that are visible in the module
+	 * The upper limit is computed by looking at all versions of the given type that are visible in the module
 	 * containing the given classifier and selecting the version with the lowest version number that is larger than the
 	 * given lower limit.
 	 * </p>
 	 *
 	 * <p>
-	 * If no such version of the given classifier can be found, then {@link Integer#MAX_VALUE} is returned.
+	 * If no such version of the given type can be found, then {@link Integer#MAX_VALUE} is returned.
 	 * </p>
 	 */
-	private def Optional<Integer> computeUpperLimit(TClassifier classifier, int lowerLimit) {
-		val IScope scope = versionScopeProvider.getVersionScope(classifier);
-		val QualifiedName name = nameConverter.toQualifiedName(classifier.name);
+	private def Optional<Integer> computeUpperLimit(TVersionable versionable, int lowerLimit) {
+		val IScope scope = versionScopeProvider.getVersionScope(versionable);
+		val QualifiedName name = nameConverter.toQualifiedName(versionable.name);
 		val Iterable<IEObjectDescription> elements = scope.getElements(name);
 
 		return Optional.of(elements
-			.filter[EObjectOrProxy instanceof TClassifier] // if the scope returned bogus elements
-			.map[EObjectOrProxy as TClassifier] // convert to classifiers
+			.filter[EObjectOrProxy instanceof Type && EObjectOrProxy instanceof TVersionable] // if the scope returned bogus elements
+			.map[EObjectOrProxy as Type] // convert to types
 			.filter[version > lowerLimit] // filter by their version
 			.fold(Integer.MAX_VALUE)[u, c|Integer.min(u, c.version - 1)]); // select the smallest one
 	}

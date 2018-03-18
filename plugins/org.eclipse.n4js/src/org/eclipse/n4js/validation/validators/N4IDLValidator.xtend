@@ -18,6 +18,8 @@ import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ScriptElement
 import org.eclipse.n4js.n4JS.Statement
+import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.VersionedElement
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
@@ -184,10 +186,20 @@ class N4IDLValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def void handleScriptElement(ScriptElement element) {
 		if (isStatement(element) && element.eContainer().eContainer() === null) {
+			// exception for const variable declarations
+			if (isConstVariableDeclaration(element)) { return; }
+			
 			val variantName = variantHelper.getVariantName(element);
 			addIssue(IssueCodes.getMessageForAST_TOP_LEVEL_STATEMENTS(variantName), element,
 					IssueCodes.AST_TOP_LEVEL_STATEMENTS);
 		}
+	}
+
+	/** 
+	 * Returns {@code true} iff the given element is a variable declaration using the {@code const} keyword.
+	 */
+	private def boolean isConstVariableDeclaration(EObject element) {
+		return element instanceof VariableStatement && (element as VariableStatement).varStmtKeyword == VariableStatementKeyword.CONST;
 	}
 
 	/**
