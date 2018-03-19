@@ -1874,7 +1874,7 @@ $\lnot S.final$
 .  Overridden member declared const can only be overridden (redefined) by const members: +
 $S.const \Leftrightarrow M.const$
 .  It is not possible to override a non-final / non-const field or a setter with a final / const field: +
-$\mu(S)\in\{\types{Field,Setter}\} \land \lnot S.final \land \lnot S.const \Rightarrow \lnot ( \mu(M)=\type{Field} \land (M.final \lor M.const) )$
+$(\mu(S)=\type{Field} \land \lnot (S.final \lor S.const)) \lor \mu(S)=\type{Setter} \Rightarrow \lnot ( \mu(M)=\type{Field} \land (M.final \lor M.const) )$
 .  It is not possible to override a non-abstract member with an abstract one: +
 $\lnot M.abstract \lor S.abstract$
 .  The types are compatible:
