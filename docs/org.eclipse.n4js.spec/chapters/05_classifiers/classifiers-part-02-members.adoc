@@ -1871,10 +1871,10 @@ $\mu(S)=\type{Getter} \spc \to \spc \mu(M) \in \type{Field, Getter} $
 $\mu(S)=\type{Setter} \spc \to \spc \mu(M) \in \type{Field, Setter} $
 . The overridden member must not be declared final: +
 $\lnot S.final$
-. It is not possible to override a non-final field with a final one: +
-$\mu(M) = \type{Field} \Rightarrow \lnot M.final \lor S.final$
 .  Overridden member declared const can only be overridden (redefined) by const members: +
 $S.const \Leftrightarrow M.const$
+.  It is not possible to override a non-final / non-const field or a setter with a final / const field: +
+$\mu(S)\in\{\types{Field,Setter}\} \land \lnot S.final \land \lnot S.const \Rightarrow \lnot ( \mu(M)=\type{Field} \land (M.final \lor M.const) )$
 .  It is not possible to override a non-abstract member with an abstract one: +
 $\lnot M.abstract \lor S.abstract$
 .  The types are compatible:

@@ -23,11 +23,11 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_ANNOTATION;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_CONST;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_FIELD_REQUIRES_ACCESSOR_PAIR;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_FINAL;
-import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_FINAL_FIELD;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_MEMBERTYPE_INCOMPATIBLE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_NON_EXISTENT;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_NON_EXISTENT_INTERFACE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_VISIBILITY;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_REDEFINED_MEMBER_TYPE_INVALID;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_REDEFINED_METHOD_TYPE_CONFLICT;
@@ -48,11 +48,11 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_A
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_CONST;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_FIELD_REQUIRES_ACCESSOR_PAIR;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_FINAL;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_FINAL_FIELD;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_MEMBERTYPE_INCOMPATIBLE;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_NON_EXISTENT;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_NON_EXISTENT_INTERFACE;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_VISIBILITY;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_REDEFINED_MEMBER_TYPE_INVALID;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_REDEFINED_METHOD_TYPE_CONFLICT;
@@ -665,21 +665,14 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			return OverrideCompatibilityResult.ERROR;
 		}
 
-		final boolean mIsField = m instanceof TField;
 		final boolean sIsField = s instanceof TField;
+		final boolean sIsSetter = s instanceof TSetter;
+		final boolean mIsField = m instanceof TField;
 
-		// 4. if m is a field, then m not final
-		if (mIsField && m.isFinal()) {
-			if (!consumptionConflict) { // avoid consequential errors
-				messageOverrideFinalField(redefinitionType, m, s);
-			}
-			return OverrideCompatibilityResult.ERROR;
-		}
-
-		// 5. s not const
+		// 4. s not const
 		if (sIsField) { // const only defined on TField & TStructuralField
 			TField sF = (TField) s;
-			if (sF.isConst()) {
+			if (sF.isConst()) { // 2. const
 				// By GHOLD-186 const redefinition is allowed for const fields
 				if (!((mIsField)
 						&& ((TField) m).isConst())) {
@@ -688,15 +681,17 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 					}
 					return OverrideCompatibilityResult.ERROR;
 				}
-			} else {
-				if (mIsField) {
-					TField fM = (TField) m;
-					if (fM.isConst()) {
-						if (!consumptionConflict) { // avoid consequential errors
-							messageOverrideConst(redefinitionType, m, sF);
-						}
-						return OverrideCompatibilityResult.ERROR;
+			}
+		}
+
+		// 5. must not override non-final/non-const field or setter with a @Final/const field
+		if (sIsField || sIsSetter) {
+			if (!s.isFinal() && !s.isConst()) {
+				if (mIsField && (m.isFinal() || m.isConst())) {
+					if (!consumptionConflict) { // avoid consequential errors
+						messageOverrideWithFinalOrConstField(redefinitionType, m, s);
 					}
+					return OverrideCompatibilityResult.ERROR;
 				}
 			}
 		}
@@ -1056,11 +1051,15 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				EcoreUtil.getURI(overridden).toString());
 	}
 
-	private void messageOverrideFinalField(RedefinitionType redefinitionType, TMember overriding, TMember overridden) {
-		String message = getMessageForCLF_OVERRIDE_FINAL_FIELD(
-				validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
+	private void messageOverrideWithFinalOrConstField(RedefinitionType redefinitionType, TMember overriding,
+			TMember overridden) {
+		String badModifier = overriding.isConst() ? "const" : "final";
+		String prefix = overridden instanceof TField ? "non-" + badModifier + " " : "";
+		String message = getMessageForCLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD(
+				prefix + validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
+				badModifier);
 		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
-				CLF_OVERRIDE_FINAL_FIELD);
+				CLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD);
 	}
 
 	private void messageOverrideConst(RedefinitionType redefinitionType, TMember overriding, TField overridden) {

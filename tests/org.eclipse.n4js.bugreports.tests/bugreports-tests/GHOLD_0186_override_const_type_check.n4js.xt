@@ -45,7 +45,7 @@ class B extends A {
     const Zsuper : A = new A();
 
     @Override
-    // XPECT errors --> "The const field B.H cannot override static field A.H." at "H"
+    // XPECT errors --> "Cannot override non-const static field A.H with a const field." at "H"
     const H = "dudu";
 
 }
