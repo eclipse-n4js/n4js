@@ -302,7 +302,7 @@ public class N4JSProjectExplorerHelper {
 	private Iterable<IN4JSProject> getBuiltInLibraries(String externalLibraryName) {
 		URI location = EXTERNAL_LIBRARIES_SUPPLIER.get().inverse().get(externalLibraryName);
 
-		return location != null ? from(externalLibraryWorkspace.getProjects(location))
+		return location != null ? from(externalLibraryWorkspace.getProjectsIn(location))
 				.filter(IExternalResource.class)
 				.transform(r -> r.getExternalResource())
 				.transform(file -> createFileURI(file.getAbsolutePath()))

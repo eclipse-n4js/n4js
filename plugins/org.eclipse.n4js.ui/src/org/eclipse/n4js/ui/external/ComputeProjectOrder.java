@@ -9,8 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *     Broadcom Corporation - ongoing development
  *******************************************************************************/
-package org.eclipse.n4js.utils.resources;
+package org.eclipse.n4js.ui.external;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -442,7 +443,7 @@ class ComputeProjectOrder {
 	/**
 	 * Data structure for holding the multi-part outcome of <code>ComputeVertexOrder.computeVertexOrder</code>.
 	 */
-	static final class VertexOrder {
+	static final class VertexOrder<T> {
 		/**
 		 * Creates an instance with the given values.
 		 *
@@ -453,7 +454,7 @@ class ComputeProjectOrder {
 		 * @param knots
 		 *            initial value of <code>knots</code> field
 		 */
-		public VertexOrder(Object[] vertexes, boolean hasCycles, Object[][] knots) {
+		public VertexOrder(T[] vertexes, boolean hasCycles, T[][] knots) {
 			this.vertexes = vertexes;
 			this.hasCycles = hasCycles;
 			this.knots = knots;
@@ -462,7 +463,7 @@ class ComputeProjectOrder {
 		/**
 		 * A list of vertexes ordered so as to honor the reference relationships between them wherever possible.
 		 */
-		public Object[] vertexes;
+		public T[] vertexes;
 		/**
 		 * <code>true</code> if any of the vertexes in <code>vertexes</code> are involved in non-trivial cycles in the
 		 * reference graph.
@@ -473,7 +474,7 @@ class ComputeProjectOrder {
 		 * the reference graph contains cycles, each element is a knot of two or more vertexes that are involved in a
 		 * cycle of mutually dependent references.
 		 */
-		public Object[][] knots;
+		public T[][] knots;
 	}
 
 	/**
@@ -498,7 +499,8 @@ class ComputeProjectOrder {
 	 *            a list of pairs [A,B] meaning that A references B
 	 * @return an object describing the resulting order
 	 */
-	static VertexOrder computeVertexOrder(SortedSet<? extends Object> vertexes, List<? extends Object[]> references) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	static <T> VertexOrder<Object> computeVertexOrder(SortedSet<? extends T> vertexes, List<? extends T[]> references) {
 
 		// Step 1: Create the graph object.
 		final Digraph g1 = new Digraph();
@@ -556,14 +558,72 @@ class ComputeProjectOrder {
 		return new VertexOrder(orderedVertexes, hasCycles, knots);
 	}
 
-	static interface VertexFilter {
-		boolean matches(Object vertex);
+	static interface VertexFilter<T> {
+		boolean matches(T vertex);
+	}
+
+	static interface VertexMapper<A, B> {
+		B get(A id);
+
+		Class<B> getTargetClass();
+	}
+
+	static class VertexCaster<B> implements VertexMapper<Object, B> {
+		private final Class<B> clazz;
+
+		VertexCaster(Class<B> clazz) {
+			this.clazz = clazz;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public B get(Object object) {
+			return (B) object;
+		}
+
+		@Override
+		public Class<B> getTargetClass() {
+			return clazz;
+		}
+	}
+
+	static <U> VertexOrder<U> castVertexOrder(VertexOrder<Object> order, Class<U> clazz) {
+		@SuppressWarnings("unused")
+		VertexCaster<U> caster = new VertexCaster<U>(clazz);
+		return mapVertexOrder(order, caster);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	static <T, U> VertexOrder<U> mapVertexOrder(VertexOrder<T> order, VertexMapper<T, U> mapper) {
+		// Otherwise we need to eliminate mention of vertexes matching the filter
+		// from the list of vertexes
+		U[] mappedVertexes = (U[]) Array.newInstance(mapper.getTargetClass(), order.vertexes.length);
+		for (int i = 0; i < order.vertexes.length; i++) {
+			mappedVertexes[i] = mapper.get(order.vertexes[i]);
+		}
+
+		// and from the knots list
+		U[][] mappedKnots = (U[][]) Array.newInstance(mapper.getTargetClass(), order.knots.length, 0);
+		for (int i = 0; i < order.knots.length; i++) {
+			T[] knot = order.knots[i];
+
+			U[] knotList = (U[]) Array.newInstance(mapper.getTargetClass(), knot.length);
+			for (int j = 0; j < knot.length; j++) {
+				U vertex = mapper.get(knot[j]);
+				knotList[j] = vertex;
+			}
+
+			mappedKnots[i] = knotList;
+		}
+
+		return new VertexOrder(mappedVertexes, order.hasCycles, mappedKnots);
 	}
 
 	/**
 	 * Given a VertexOrder and a VertexFilter, remove all vertexes matching the filter from the ordering.
 	 */
-	static VertexOrder filterVertexOrder(VertexOrder order, VertexFilter filter) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	static <T> VertexOrder<T> filterVertexOrder(VertexOrder<T> order, VertexFilter<T> filter) {
 		// Optimize common case where nothing is to be filtered
 		// and cache the results of applying the filter
 		int filteredCount = 0;
@@ -596,7 +656,7 @@ class ComputeProjectOrder {
 			List<Object> knotList = new ArrayList<>(knot.length);
 			for (int j = 0; j < knot.length; j++) {
 				Object vertex = knot[j];
-				if (!filter.matches(vertex)) {
+				if (!filter.matches((T) vertex)) {
 					knotList.add(vertex);
 				}
 			}

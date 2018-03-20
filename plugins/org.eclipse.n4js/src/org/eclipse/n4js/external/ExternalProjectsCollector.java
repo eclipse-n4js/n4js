@@ -11,87 +11,78 @@
 package org.eclipse.n4js.external;
 
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
-import org.eclipse.core.internal.resources.BuildConfiguration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.xbase.typesystem.util.Multimaps2;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.resources.ExternalProject;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
- * Service for collecting available {@link ExternalProject external project} instances based on the configured external
- * library locations.
+ * Service for collecting available {@link N4JSExternalProject external project} instances based on the configured
+ * external library locations.
  */
-@SuppressWarnings("restriction")
 @Singleton
 public class ExternalProjectsCollector {
 
 	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
-	private ExternalProjectProvider projectProvider;
+	private ExternalLibraryWorkspace extWS;
 
 	@Inject
 	private IN4JSCore core;
 
-	/**
-	 * On demand collects and returns with all {@link ExternalProject external project} instances based on the
-	 * configured external library locations. This method visits the configured external library locations in a priority
-	 * order, checks the existence of the projects and collects those. If an external project is already collected when
-	 * an other external project is being visited with the same project ID, then the latter visited one will be ignored
-	 * at all.
-	 *
-	 * @return an iterable of all external projects that can be resolved from the configured external library paths.
-	 */
-	public Iterable<ExternalProject> collectExternalProjects() {
-		return hookUpReferencedBuildConfigs(externalLibraryWorkspace.getProjects());
+	/** @return a new set that contains only those projects of the given set that <b>are</b> in the workspace */
+	public <P extends IProject> Set<P> filterWSProjects(Iterable<P> addedProjects) {
+		return filterWSProjects(addedProjects, true);
 	}
 
-	/**
-	 * Hooks up the {@link IProjectDescription#getDynamicReferences() dynamic project references} among the given subset
-	 * of external projects. If the dynamic projects are already set, then this method has no side effect.
-	 *
-	 * @param externalProjects
-	 *            an iterable of external projects to update with respect to their dynamic project references.
-	 * @return an iterable of external projects with the updated/configured dynamic project references.
-	 */
-	public Iterable<ExternalProject> hookUpReferencedBuildConfigs(Iterable<? extends IProject> externalProjects) {
+	/** @return a new set that contains only those projects of the given set that <b>are not</b> in the workspace */
+	public <P extends IProject> Set<P> filterNonWSProjects(Iterable<P> projects) {
+		return filterWSProjects(projects, false);
+	}
 
-		final Map<String, N4JSExternalProject> visitedProjects = newHashMap();
-		for (IProject project : externalLibraryWorkspace.getProjects()) {
-			final N4JSExternalProject externalProject = projectProvider.get(project.getLocationURI()).orNull();
-			if (null != externalProject && !visitedProjects.containsKey(externalProject.getName())) {
-				visitedProjects.put(project.getName(), externalProject);
+	private <P extends IProject> Set<P> filterWSProjects(Iterable<P> addedProjects, boolean positive) {
+		Set<String> eclipseWorkspaceProjectNames = getAllEclipseWorkspaceProjectNames();
+		Set<P> projectsToBuild = newHashSet();
+		for (P addedProject : addedProjects) {
+			if (positive == eclipseWorkspaceProjectNames.contains(addedProject.getName())) {
+				projectsToBuild.add(addedProject);
 			}
 		}
+		return projectsToBuild;
+	}
 
-		hookUpReferencedBuildConfigs(visitedProjects);
-
-		return from(visitedProjects.values()).filter(ExternalProject.class);
+	private Set<String> getAllEclipseWorkspaceProjectNames() {
+		if (Platform.isRunning()) {
+			return from(Arrays.asList(getWorkspace().getRoot().getProjects()))
+					.filter(p -> p.isAccessible())
+					.transform(p -> p.getName())
+					.toSet();
+		}
+		return Collections.emptySet();
 	}
 
 	/**
@@ -110,14 +101,14 @@ public class ExternalProjectsCollector {
 	 *
 	 * @return an iterable of Eclipse workspace projects that has direct dependency any external projects.
 	 */
-	public Iterable<IProject> collectProjectsWithDirectExternalDependencies() {
-		return collectProjectsWithDirectExternalDependencies(collectExternalProjects());
+	public Collection<IProject> getWSProjectsDependendingOn() {
+		return getWSProjectsDependendingOn(extWS.getProjects());
 	}
 
 	/**
 	 * Sugar for collecting {@link IWorkspace Eclipse workspace} projects that have any direct dependency to any
-	 * external projects. Same as {@link #collectProjectsWithDirectExternalDependencies()} but does not considers all
-	 * the available projects but only those that are given as the argument.
+	 * external projects. Same as {@link #getWSProjectsDependendingOn()} but does not considers all the available
+	 * projects but only those that are given as the argument.
 	 *
 	 * @param externalProjects
 	 *            the external projects that has to be considered as a possible dependency of an Eclipse workspace based
@@ -125,19 +116,70 @@ public class ExternalProjectsCollector {
 	 * @return an iterable of Eclipse workspace projects that has direct dependency to an external project given as the
 	 *         argument.
 	 */
-	public Iterable<IProject> collectProjectsWithDirectExternalDependencies(
-			final Iterable<? extends IProject> externalProjects) {
+	public Collection<IProject> getWSProjectsDependendingOn(Iterable<N4JSExternalProject> externalProjects) {
+		return getProjectsDependendingOn(asList(getWorkspace().getRoot().getProjects()), externalProjects);
+	}
+
+	/**
+	 *
+	 * @param externalProjects
+	 *            the external projects that has to be considered as a possible dependency of an Eclipse workspace based
+	 *            project.
+	 * @return an iterable of external workspace projects that has direct dependency to an external project given as the
+	 *         argument.
+	 */
+	public Collection<N4JSExternalProject> getExtProjectsDependendingOn(
+			Iterable<N4JSExternalProject> externalProjects) {
+		return getProjectsDependendingOn(extWS.getProjects(), externalProjects);
+	}
+
+	/**
+	 * Sugar for collecting {@link IWorkspace Eclipse workspace} projects that have any direct dependency to any
+	 * external projects. Same as {@link #getWSProjectsDependendingOn()} but does not considers all the available
+	 * projects but only those that are given as the argument.
+	 *
+	 * @param externalProjects
+	 *            the external projects that has to be considered as a possible dependency of an Eclipse workspace based
+	 *            project.
+	 * @return an iterable of Eclipse workspace projects that has direct dependency to an external project given as the
+	 *         argument.
+	 */
+	private <P extends IProject> Collection<P> getProjectsDependendingOn(Iterable<P> wsProjects,
+			Iterable<N4JSExternalProject> externalProjects) {
 
 		if (!Platform.isRunning()) {
 			return emptyList();
 		}
 
-		final Collection<String> externalIds = from(externalProjects).transform(p -> p.getName()).toSet();
-		final Predicate<String> externalIdsFilter = Predicates.in(externalIds);
+		Set<String> externalIds = from(externalProjects).transform(p -> p.getName()).toSet();
+		LinkedList<P> filteredProjects = new LinkedList<>();
 
-		return from(asList(getWorkspace().getRoot().getProjects()))
-				.filter(p -> Iterables.any(getDirectExternalDependencyIds(p), externalIdsFilter));
+		Map<String, IProject> externalsMapping = new HashMap<>();
+		for (IProject prj : externalProjects) {
+			externalsMapping.put(prj.getName(), prj);
+		}
 
+		for (P prj : wsProjects) {
+
+			if (prj instanceof N4JSExternalProject) {
+				N4JSExternalProject extPrj = (N4JSExternalProject) prj;
+				for (String eID : extPrj.getAllDirectDependencyIds()) {
+					IProject externalDependency = externalsMapping.get(eID);
+					if (externalDependency != null) {
+						filteredProjects.add(prj);
+					}
+				}
+			} else {
+
+				Set<String> deps = Sets.newHashSet(getDirectExternalDependencyIds(prj));
+				Iterables.retainAll(deps, externalIds);
+				if (!Iterables.isEmpty(deps)) {
+					filteredProjects.add(prj);
+				}
+			}
+		}
+
+		return filteredProjects;
 	}
 
 	/**
@@ -156,47 +198,73 @@ public class ExternalProjectsCollector {
 	 *
 	 * @return a map where each entry maps an external project to the workspace projects that depend on it.
 	 */
-	public Map<IProject, Collection<IProject>> collectExternalProjectDependents() {
-		return collectExternalProjectDependents(collectExternalProjects());
+	public Multimap<N4JSExternalProject, IProject> getWSProjectDependents() {
+		return getWSProjectDependents(extWS.getProjects());
 	}
 
 	/**
 	 * Sugar for collecting {@link IWorkspace Eclipse workspace} projects that have any direct dependency to any
-	 * external projects. Same as {@link #collectExternalProjectDependents()} but does not consider all the available
-	 * projects but only those that are given as the argument.
+	 * external projects. Same as {@link #getWSProjectDependents()} but does not consider all the available projects but
+	 * only those that are given as the argument.
 	 *
 	 * @param externalProjects
 	 *            the external projects that has to be considered as a possible dependency of an Eclipse workspace based
 	 *            project.
 	 * @return a map where each entry maps an external project to the workspace projects that depend on it.
 	 */
-	public Map<IProject, Collection<IProject>> collectExternalProjectDependents(
-			final Iterable<? extends IProject> externalProjects) {
-		final Multimap<IProject, IProject> mapping = Multimaps2.newLinkedHashListMultimap();
+	public Multimap<N4JSExternalProject, IProject> getWSProjectDependents(
+			Iterable<N4JSExternalProject> externalProjects) {
+		return getProjectDependents(asList(getWorkspace().getRoot().getProjects()), externalProjects);
+	}
 
-		if (Platform.isRunning()) {
+	/***/
+	public Multimap<N4JSExternalProject, N4JSExternalProject> getExtProjectDependents(
+			Iterable<N4JSExternalProject> externalProjects) {
 
-			final Map<String, IProject> externalsMapping = new HashMap<>();
-			externalProjects.forEach(p -> externalsMapping.put(p.getName(), p));
+		return getProjectDependents(extWS.getProjects(), externalProjects);
+	}
 
-			asList(getWorkspace().getRoot().getProjects()).forEach(p -> {
-				getDirectExternalDependencyIds(p).forEach(eID -> {
-					IProject externalDependency = externalsMapping.get(eID);
-					if (externalDependency != null) {
-						mapping.put(externalDependency, p);
-					}
-				});
-			});
+	/***/
+	private <P extends IProject> Multimap<N4JSExternalProject, P> getProjectDependents(Iterable<P> wsProjects,
+			Iterable<N4JSExternalProject> externalProjects) {
 
+		Multimap<N4JSExternalProject, P> mapping = HashMultimap.create();
+
+		if (!Platform.isRunning()) {
+			return mapping;
 		}
 
-		return mapping.asMap();
+		Map<String, N4JSExternalProject> externalsMapping = new HashMap<>();
+		for (N4JSExternalProject prj : externalProjects) {
+			externalsMapping.put(prj.getName(), prj);
+		}
+
+		for (P prj : wsProjects) {
+			if (prj instanceof N4JSExternalProject) {
+				N4JSExternalProject extPrj = (N4JSExternalProject) prj;
+				for (String eID : extPrj.getAllDirectDependencyIds()) {
+					N4JSExternalProject externalDependency = externalsMapping.get(eID);
+					if (externalDependency != null) {
+						mapping.put(externalDependency, prj);
+					}
+				}
+			} else {
+				for (String eID : getDirectExternalDependencyIds(prj)) {
+					N4JSExternalProject externalDependency = externalsMapping.get(eID);
+					if (externalDependency != null) {
+						mapping.put(externalDependency, prj);
+					}
+				}
+			}
+		}
+
+		return mapping;
 	}
 
 	/**
-	 * Returns with all external project dependency project ID for a particular non-external, accessible project.
+	 * Returns with all external project dependency project IDs for a particular non-external, accessible project.
 	 */
-	private Iterable<String> getDirectExternalDependencyIds(final IProject project) {
+	private Iterable<String> getDirectExternalDependencyIds(IProject project) {
 
 		if (null == project || !project.isAccessible()) {
 			return emptyList();
@@ -211,18 +279,6 @@ public class ExternalProjectsCollector {
 				.filter(IN4JSProject.class)
 				.filter(p -> p.exists() && p.isExternal())
 				.transform(p -> p.getProjectId());
-	}
-
-	private void hookUpReferencedBuildConfigs(final Map<String, N4JSExternalProject> visitedProjects) {
-		for (final N4JSExternalProject project : visitedProjects.values()) {
-			final Iterable<String> projectIds = project.getAllDirectDependencyIds();
-			for (final String projectId : projectIds) {
-				final N4JSExternalProject referencedProject = visitedProjects.get(projectId);
-				if (null != referencedProject) {
-					project.add(new BuildConfiguration(referencedProject));
-				}
-			}
-		}
 	}
 
 }
