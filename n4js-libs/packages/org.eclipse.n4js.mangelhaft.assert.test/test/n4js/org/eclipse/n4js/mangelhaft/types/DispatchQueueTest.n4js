@@ -27,8 +27,8 @@ export public class DispatchQueueTest {
         const prio1 = function prio1() { }
         const prio2 = function prio2() { }
         const listeners = [prio1, prio2];
-        dispatchQueue.add(prio1, "context for prio1", 1);
-        dispatchQueue.add(prio2, "context for prio2", 2);
+        dispatchQueue.add(prio1, null, 1);
+        dispatchQueue.add(prio2, null, 2);
         Assert.equal(listeners.length, dispatchQueue.getNumListeners());
     }
     
@@ -39,10 +39,10 @@ export public class DispatchQueueTest {
         const prio2 = function prio2() { }
         const prio3 = function prio3() { }
         const prio4 = function prio4() { }
-        dispatchQueue.add(prio4, "context for prio4", 4);
-        dispatchQueue.add(prio1, "context for prio1", 1);
-        dispatchQueue.add(prio3, "context for prio3", 3);
-        dispatchQueue.add(prio2, "context for prio2", 2);
+        dispatchQueue.add(prio4, null, 4);
+        dispatchQueue.add(prio1, null, 1);
+        dispatchQueue.add(prio3, null, 3);
+        dispatchQueue.add(prio2, null, 2);
         const actualListeners = dispatchQueue.getListOfListeners();
         
         const expectedListeners = new Array<Function>();
@@ -65,10 +65,10 @@ export public class DispatchQueueTest {
         const prio2 = function prio2() { }
         const prio3 = function prio3() { }
         const prio4 = function prio4() { }
-        dispatchQueue.add(prio4, "context for prio4", 1);
-        dispatchQueue.add(prio3, "context for prio3", 1);
-        dispatchQueue.add(prio2, "context for prio2", 1);
-        dispatchQueue.add(prio1, "context for prio1", 1);
+        dispatchQueue.add(prio4, {}, 1);
+        dispatchQueue.add(prio3, {}, 1);
+        dispatchQueue.add(prio2, {}, 1);
+        dispatchQueue.add(prio1, {}, 1);
         const actualListeners = dispatchQueue.getListOfListeners();
         
         const expectedListeners = new Array<Function>();
@@ -92,10 +92,10 @@ export public class DispatchQueueTest {
         const prio2 = function prio2() { }
         const prio3 = function prio3() { }
         const prio4 = function prio4() { }
-        dispatchQueue.add(prio4, "context for prio4", 4);
-        dispatchQueue.add(prio1, "context for prio1", 1);
-        dispatchQueue.add(prio3, "context for prio3", 3);
-        dispatchQueue.add(prio2, "context for prio2", 2);
+        dispatchQueue.add(prio4, {}, 4);
+        dispatchQueue.add(prio1, {}, 1);
+        dispatchQueue.add(prio3, {}, 3);
+        dispatchQueue.add(prio2, {}, 2);
         
         dispatchQueue.getListOfListeners();
         const actualListeners2 = dispatchQueue.getListOfListeners();
@@ -121,13 +121,14 @@ export public class DispatchQueueTest {
         const prio2 = function prio2() { }
         const prio3 = function prio3() { }
         const prio4 = function prio4() { }
-        dispatchQueue.add(prio4, "context for prio4", 4);
-        dispatchQueue.add(prio1, "context for prio1", 1);
-        dispatchQueue.add(prio3, "context for prio3", 3);
-        dispatchQueue.add(prio2, "context for prio2", 2);
+        const contextPrio4 = {};
+        dispatchQueue.add(prio4, contextPrio4, 4);
+        dispatchQueue.add(prio1, {}, 1);
+        dispatchQueue.add(prio3, {}, 3);
+        dispatchQueue.add(prio2, {}, 2);
         
         // Remove root
-        dispatchQueue.remove(prio4, "context for prio4");
+        dispatchQueue.remove(prio4, contextPrio4);
         const actualListeners = dispatchQueue.getListOfListeners();
         
         const expectedListeners = new Array<Function>();
@@ -135,19 +136,26 @@ export public class DispatchQueueTest {
         expectedListeners.push(prio2);
         expectedListeners.push(prio1);
         
-        var assertResult = (actualListeners.length == expectedListeners.length) && 
-                            actualListeners.every((elem,i) => {
-                                return (elem.listener === expectedListeners[i]);
-                            });
-        Assert.isTrue(assertResult);
+        Assert.deepEqual(actualListeners.map(l => l.listener), expectedListeners, "listeners array should match");;
 
         dispatchQueue.removeAll();
         var actualListenersAfterRemoveAll = dispatchQueue.getListOfListeners();
-        assertResult = (actualListenersAfterRemoveAll.length == 0) && (dispatchQueue.getNumListeners() == 0);
+        const assertResult = (actualListenersAfterRemoveAll.length == 0) && (dispatchQueue.getNumListeners() == 0);
         Assert.isTrue(assertResult);
     }
+
+    method(expCallContext): void {
+        Assert.equal(this, expCallContext, "call context should match");
+    }
     
-     @Test
+    @Test
+    async dispatch_queue_dispatch_call_context_test() {
+        const dispatchQueue = new DispatchQueue<Function>();
+        dispatchQueue.add(this.method, this, 4);
+        await dispatchQueue.dispatch([this]);
+    }
+    
+    @Test
     async dispatch_queue_dispatch_test() {
         const dispatchQueue = new DispatchQueue<Function>();
         var count = 0;
@@ -164,10 +172,10 @@ export public class DispatchQueueTest {
         const prio4 = function prio4() { 
             count++;
         }
-        dispatchQueue.add(prio4, "context for prio4", 4);
-        dispatchQueue.add(prio1, "context for prio1", 1);
-        dispatchQueue.add(prio3, "context for prio3", 3);
-        dispatchQueue.add(prio2, "context for prio2", 2);
+        dispatchQueue.add(prio4, {}, 4);
+        dispatchQueue.add(prio1, {}, 1);
+        dispatchQueue.add(prio3, {}, 3);
+        dispatchQueue.add(prio2, {}, 2);
 
         await dispatchQueue.dispatch([]);
         // Only two listeners should have been executed since the other two have been aborted
@@ -181,10 +189,10 @@ export public class DispatchQueueTest {
         const prio2 = function prio2() { }
         const prio3 = function prio3() { }
         const prio4 = function prio4() { }
-        dispatchQueue.add(prio4, "context for prio4", 4);
-        dispatchQueue.add(prio1, "context for prio1", 1);
-        dispatchQueue.addOnce(prio3, "context for prio3", 3);
-        dispatchQueue.add(prio2, "context for prio2", 2);
+        dispatchQueue.add(prio4, {}, 4);
+        dispatchQueue.add(prio1, {}, 1);
+        dispatchQueue.addOnce(prio3, {}, 3);
+        dispatchQueue.add(prio2, {}, 2);
 
         await dispatchQueue.dispatch([]);
         const actualListeners = dispatchQueue.getListOfListeners();
@@ -205,7 +213,8 @@ export public class DispatchQueueTest {
             const dispatchQueue = new DispatchQueue<Function>();
             var count = 0;
             const prio1 = async function prio1() {
-            count++;
+                await new Promise<any, any>(resolve => setTimeout(resolve, 50));
+                count++;
             }
             dispatchQueue.add(prio1);
             await dispatchQueue.dispatch([]);
