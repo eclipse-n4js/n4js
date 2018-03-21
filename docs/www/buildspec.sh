@@ -25,11 +25,11 @@ pushd $SRC_DIR
 	cp -r images chapters ./$GEN_FOLDER/
 
 	echo "[INFO] Building HTML Language Specification"
-	asciispec -D $GEN_FOLDER N4JSSpec.adoc
+	asciispec direct -D $GEN_FOLDER N4JSSpec.adoc
 
 	if [ "${1}" == "--pdf" ]; then
 		echo "[INFO] Building PDF via docbook toolchain"
-		asciispec -b docbook -D $GEN_FOLDER N4JSSpec.adoc && fopub $GEN_FOLDER/N4JSSpec.xml && rm $GEN_FOLDER/N4JSSpec.xml
+		asciispec direct -b docbook -D $GEN_FOLDER N4JSSpec.adoc && fopub $GEN_FOLDER/N4JSSpec.xml && rm $GEN_FOLDER/N4JSSpec.xml
 	fi
 popd
 
@@ -39,7 +39,7 @@ cp -r assets/scripts assets/styles assets/images web-html
 
 # Clean unwanted source files
 pushd $SPEC_DIR/chapters
-	rm -rf **/*.adoc **/*.graffle && find . -type d -empty -delete
+	rm -rf **/*.adoc **/*.graffle # && find . -type d -empty -delete
 popd
 
 echo "[INFO] N4JS Language Specification built"
