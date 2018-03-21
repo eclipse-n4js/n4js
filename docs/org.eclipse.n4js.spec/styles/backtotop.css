@@ -9,7 +9,7 @@ a.back-to-top {
 	z-index: 999;
 	right: 8%;
 	bottom: 5%;
-	background: #032c52 url("images/up-arrow.png") no-repeat center 43%;
+	background: #032c52 url("../images/up-arrow.png") no-repeat center 43%;
 	-webkit-border-radius: 30px;
 	-moz-border-radius: 30px;
 	border-radius: 30px;
@@ -40,7 +40,7 @@ body.toc2.toc-right a.back-to-top {
 	z-index: 1001;
 	right: 90px;
 	bottom: 20px;
-	background: #032c52 url("images/up-arrow.png") no-repeat center 43%;
+	background: #032c52 url("../images/up-arrow.png") no-repeat center 43%;
 	-webkit-border-radius: 30px;
 	-moz-border-radius: 30px;
 	border-radius: 30px;
