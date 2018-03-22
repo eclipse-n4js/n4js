@@ -23,15 +23,16 @@ import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.xtext.builder.impl.ToBeBuilt;
 
 /**
  * NOOP implementation of the external library workspace.
  */
+@SuppressWarnings("restriction")
 public class NoopExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
-	public RegisterResult registerProjects(final NpmProjectAdaptionResult result, final IProgressMonitor monitor,
-			boolean triggerCleanbuild) {
+	public RegisterResult registerProjects(ToBeBuilt result, IProgressMonitor monitor, boolean triggerCleanbuild) {
 		// NOOP
 		return new RegisterResult();
 	}

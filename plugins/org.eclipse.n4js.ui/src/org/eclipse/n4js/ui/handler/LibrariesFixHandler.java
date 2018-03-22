@@ -33,7 +33,7 @@ import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.ui.wizard.dependencies.ProjectsSettingsFillesLocator;
+import org.eclipse.n4js.ui.wizard.dependencies.ProjectsSettingsFilesLocator;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.swt.SWTException;
 
@@ -122,7 +122,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 
 		// search for .npmrc, targetplatform.n4tp
 		final SubMonitor subMonitor1 = monitor.split(5);
-		ProjectsSettingsFillesLocator files = ProjectsSettingsFillesLocator.findFiles(subMonitor1);
+		ProjectsSettingsFilesLocator files = ProjectsSettingsFilesLocator.findFiles(subMonitor1);
 
 		Collection<File> fNPMRCs = files.getNPMRCs();
 		Collection<File> fN4TPs = files.getN4TPs();

@@ -31,18 +31,18 @@ import com.google.common.io.Files;
  * Considers projects folders or their git repo folders as root folders to scan. Will avoid scanning same paths multiple
  * times, even if multiple workspace projects are contained in the same git repo.
  */
-public final class ProjectsSettingsFillesLocator {
+public final class ProjectsSettingsFilesLocator {
 	private static final String GIT = ".git";
 	private static final String N4TP = "n4tp";
 	private static final String NPMRC = "npmrc";
 	private static final String NODE_MODULES = "node_modules";
-	private static final Logger LOGGER = Logger.getLogger(ProjectsSettingsFillesLocator.class);
+	private static final Logger LOGGER = Logger.getLogger(ProjectsSettingsFilesLocator.class);
 
 	private final Set<File> foundNPMRC = new HashSet<>();
 	private final Set<File> foundN4TP = new HashSet<>();
 
 	/** force user to use {@link #findFiles(IProgressMonitor)} */
-	private ProjectsSettingsFillesLocator() {
+	private ProjectsSettingsFilesLocator() {
 	}
 
 	/** @return collected {@code .npmrc} files. */
@@ -60,7 +60,7 @@ public final class ProjectsSettingsFillesLocator {
 	 *
 	 * @return instance with all data found during scanning.
 	 */
-	public static ProjectsSettingsFillesLocator findFiles(IProgressMonitor monitor) {
+	public static ProjectsSettingsFilesLocator findFiles(IProgressMonitor monitor) {
 
 		Set<File> files = new HashSet<>();
 		final Set<File> roots = new HashSet<>();
@@ -78,7 +78,7 @@ public final class ProjectsSettingsFillesLocator {
 			}
 		}
 
-		ProjectsSettingsFillesLocator locator = new ProjectsSettingsFillesLocator();
+		ProjectsSettingsFilesLocator locator = new ProjectsSettingsFilesLocator();
 		locator.scan(roots, files, monitor);
 		return locator;
 	}

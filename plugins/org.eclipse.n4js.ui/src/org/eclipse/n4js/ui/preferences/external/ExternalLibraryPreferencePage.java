@@ -57,6 +57,7 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.GitCloneSupplier;
+import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.NpmManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
@@ -110,6 +111,9 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 	@Inject
 	private NpmManager npmManager;
+
+	@Inject
+	private NpmCLI npmCli;
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -345,7 +349,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private IInputValidator getBasicPackageValidator() {
 		return InputFunctionalValidator.from(
 				(final String name) -> {
-					if (npmManager.invalidPackageName(name))
+					if (npmCli.invalidPackageName(name))
 						return "The npm package name should be specified.";
 					for (int i = 0; i < name.length(); i++) {
 						if (Character.isWhitespace(name.charAt(i)))

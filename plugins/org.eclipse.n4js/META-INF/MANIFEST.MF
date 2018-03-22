@@ -83,4 +83,5 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.validation.validators.utils,
  org.eclipse.n4js.xsemantics,
  org.eclipse.n4js.xsemantics.validation
+Import-Package: org.eclipse.xtext.builder.impl
 

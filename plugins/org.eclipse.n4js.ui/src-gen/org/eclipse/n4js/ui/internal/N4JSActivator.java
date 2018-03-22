@@ -75,10 +75,11 @@ public class N4JSActivator extends AbstractUIPlugin {
 			Module mergedModule = Modules2.mixin(runtimeModule, sharedStateModule, uiModule);
 			return Guice.createInjector(mergedModule);
 		} catch (Exception e) {
-			// DON'T use the logger here, since this can create infinitive loops.
-			// Reason: The logger is created with dependency injection. When an exception is thrown
-			// in this phase, the not yet injected logger triggers itself.
-			throw new RuntimeException("Failed to create injector for " + language, e);
+			// Neither use the logger here, nor throw an exception, just return null.
+			// Reason: Otherwise an infinitive loop can occur and the IDE never finishes loading.
+			// Note that AbstractGuiceAwareExecutableExtensionFactory#create() line 59
+			// will deal with this.
+			return null;
 		}
 	}
 

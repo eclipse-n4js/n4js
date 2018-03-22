@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.xtext.builder.impl.ToBeBuilt;
 
 import com.google.inject.ImplementedBy;
 
@@ -30,6 +31,7 @@ import com.google.inject.ImplementedBy;
  * projects.
  */
 @ImplementedBy(NoopExternalLibraryWorkspace.class)
+@SuppressWarnings("restriction")
 public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
 	/** Contains the projects that were built and scheduled. */
@@ -78,7 +80,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * @param triggerCleanbuild
 	 *            if true, a clean build is triggered on all affected workspace projects.
 	 */
-	public abstract RegisterResult registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
+	public abstract RegisterResult registerProjects(ToBeBuilt result, IProgressMonitor monitor,
 			boolean triggerCleanbuild);
 
 	/**
