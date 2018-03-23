@@ -20,10 +20,12 @@ import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.events.BuildManager;
@@ -55,6 +57,8 @@ import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.builder.impl.ToBeBuiltComputer;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -473,4 +477,33 @@ public class ExternalLibraryBuilder {
 
 	}
 
+	/**
+	 * The all entries in the Xtext index that belong to one of the given project URIs will be cleaned from the index.
+	 *
+	 * @param toBeWiped
+	 *            URIs of project roots
+	 */
+	public void wipeIndex(IProgressMonitor monitor, Collection<URI> toBeWiped) {
+		Set<String> toBeWipedStrings = new HashSet<>();
+		for (URI toWipe : toBeWiped) {
+			toBeWipedStrings.add(toWipe.toString());
+		}
+
+		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
+		IResourceDescriptions index = core.getXtextIndex(resourceSet);
+
+		Set<URI> toBeRemoved = new HashSet<>();
+		for (IResourceDescription res : index.getAllResourceDescriptions()) {
+			URI resUri = res.getURI();
+			String resUriString = resUri.toString();
+			for (String toWipeProject : toBeWipedStrings) {
+				if (resUriString.startsWith(toWipeProject)) {
+					toBeRemoved.add(resUri);
+					break;
+				}
+			}
+		}
+
+		builderState.clean(toBeRemoved, monitor);
+	}
 }

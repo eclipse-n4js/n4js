@@ -13,7 +13,10 @@ package org.eclipse.n4js.external;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.util.Strings;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Use this listener to get updated whenever npm libraries in the {@code node_modules} folder change.
@@ -34,15 +37,19 @@ public interface NodeModulesFolderListener {
 	public class LibraryChange {
 		/** The type of the npm change */
 		public final LibraryChangeType type;
-		/** The name of the npm package that is changed */
+		/** The location of the npm package */
+		public final URI location;
+		/** The name of the npm package that */
 		public final String name;
 		/** The new version to be installed. Not defined when {@link #type} is {@link LibraryChangeType#Removed}. */
 		public final String version;
 
-		LibraryChange(LibraryChangeType type, String name, String version) {
+		LibraryChange(LibraryChangeType type, URI location, String name, String version) {
+			Preconditions.checkArgument(name != null && !name.isEmpty());
 			this.type = type;
+			this.location = location;
 			this.name = name;
-			this.version = version;
+			this.version = Strings.emptyIfNull(version);
 		}
 
 		@Override

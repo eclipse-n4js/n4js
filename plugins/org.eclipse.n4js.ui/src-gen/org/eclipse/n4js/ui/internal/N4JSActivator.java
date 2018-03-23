@@ -75,10 +75,8 @@ public class N4JSActivator extends AbstractUIPlugin {
 			Module mergedModule = Modules2.mixin(runtimeModule, sharedStateModule, uiModule);
 			return Guice.createInjector(mergedModule);
 		} catch (Exception e) {
-			// Neither use the logger here, nor throw an exception, just return null.
-			// Reason: Otherwise an infinitive loop can occur and the IDE never finishes loading.
-			// Note that AbstractGuiceAwareExecutableExtensionFactory#create() line 59
-			// will deal with this.
+			// An exception occurring here might be related to Guice:
+			// https://stackoverflow.com/questions/39918622/why-is-guice-throwing-computationexception-from-uncaughtexceptionhandler-in-mai.
 			return null;
 		}
 	}

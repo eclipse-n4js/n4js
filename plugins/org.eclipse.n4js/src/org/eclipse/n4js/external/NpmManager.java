@@ -11,9 +11,8 @@
 package org.eclipse.n4js.external;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Maps.newHashMap;
-import static org.eclipse.core.runtime.Status.OK_STATUS;
+import static org.eclipse.core.runtime.SubMonitor.convert;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 
 import java.io.File;
@@ -65,12 +64,12 @@ import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Strings;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
@@ -105,9 +104,6 @@ public class NpmManager {
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
-	private ExternalProjectsCollector collector;
 
 	@Inject
 	private StatusHelper statusHelper;
@@ -224,11 +220,7 @@ public class NpmManager {
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
 
 			installUninstallNPMs(monitor, status, versionedNPMs, Collections.emptyList());
-			List<LibraryChange> changeSet = identifyChangeSet();
-
-			indexSynchronizer.cleanOutdatedIndex(monitor, changeSet);
-			externalLibraryWorkspace.updateState();
-			indexSynchronizer.synchronizeIndex(monitor, changeSet);
+			synchronizeNpms(monitor, status, triggerCleanbuild);
 
 			return status;
 
@@ -240,8 +232,8 @@ public class NpmManager {
 	private List<LibraryChange> identifyChangeSet() {
 		List<LibraryChange> changes = new LinkedList<>();
 
-		Map<String, String> npmsOfIndex = findNpmsInIndex();
-		Map<String, String> npmsOfFolder = findNpmsInFolder();
+		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> npmsOfIndex = findNpmsInIndex();
+		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> npmsOfFolder = findNpmsInFolder();
 
 		Set<String> differences = new HashSet<>();
 		differences.addAll(npmsOfIndex.keySet());
@@ -250,28 +242,37 @@ public class NpmManager {
 		differences.removeAll(intersection);
 
 		for (String diff : differences) {
-			LibraryChangeType changeType = LibraryChangeType.Added;
+			LibraryChangeType changeType = null;
 			String name = diff;
+			org.eclipse.emf.common.util.URI location = null;
 			String version = null;
+
 			if (npmsOfFolder.containsKey(diff)) {
 				// new in folder, not in index
 				changeType = LibraryChangeType.Added;
-				version = npmsOfFolder.get(name);
+				location = npmsOfFolder.get(name).getKey();
+				version = npmsOfFolder.get(name).getValue();
 			}
 			if (npmsOfIndex.containsKey(diff)) {
 				// removed in folder, still in index
 				changeType = LibraryChangeType.Removed;
-				version = npmsOfIndex.get(name);
+				location = npmsOfIndex.get(name).getKey();
+				version = npmsOfIndex.get(name).getValue();
 			}
-			changes.add(new LibraryChange(changeType, name, version));
+			changes.add(new LibraryChange(changeType, location, name, version));
 		}
 
 		for (String name : npmsOfIndex.keySet()) {
 			if (npmsOfFolder.containsKey(name)) {
-				String versionIndex = npmsOfIndex.get(name);
-				String versionFolder = npmsOfFolder.get(name);
+				String versionIndex = npmsOfIndex.get(name).getValue();
+				String versionFolder = npmsOfFolder.get(name).getValue();
+				org.eclipse.emf.common.util.URI locationIndex = npmsOfIndex.get(name).getKey();
+				org.eclipse.emf.common.util.URI locationFolder = npmsOfFolder.get(name).getKey();
+
+				Preconditions.checkState(locationFolder.equals(locationIndex));
+
 				if (versionIndex != null && !versionIndex.equals(versionFolder)) {
-					changes.add(new LibraryChange(LibraryChangeType.Updated, name, versionFolder));
+					changes.add(new LibraryChange(LibraryChangeType.Updated, locationFolder, name, versionFolder));
 				}
 			}
 		}
@@ -279,42 +280,60 @@ public class NpmManager {
 		return changes;
 	}
 
-	private Map<String, String> findNpmsInIndex() {
-		Map<String, String> npmsIndex = new HashMap<>();
+	private Map<String, Pair<org.eclipse.emf.common.util.URI, String>> findNpmsInIndex() {
+		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> npmsIndex = new HashMap<>();
 
+		String nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation().toString();
 		ResourceSet resourceSet = n4jsCore.createResourceSet(Optional.absent());
 		IResourceDescriptions index = n4jsCore.getXtextIndex(resourceSet);
 
 		for (IResourceDescription res : index.getAllResourceDescriptions()) {
-			if (isNpmManifest(res)) {
+			String resLocation = res.getURI().toString();
+			boolean isNPM = resLocation.startsWith(nodeModulesLocation);
 
-				Iterable<IEObjectDescription> pds = res
-						.getExportedObjectsByType(N4mfPackage.Literals.PROJECT_DESCRIPTION);
-
-				// continue here: test the following change
-				IEObjectDescription pDescription = pds.iterator().next();
-				String name = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_ID_KEY);
-				String version = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_VERSION_KEY);
-				npmsIndex.put(name, version);
+			if (isNPM) {
+				addToIndex(npmsIndex, nodeModulesLocation, res, resLocation);
 			}
 		}
 
 		return npmsIndex;
 	}
 
-	private boolean isNpmManifest(IResourceDescription res) {
-		String nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation().toString();
-		String resLocation = res.getURI().toString();
+	private void addToIndex(Map<String, Pair<org.eclipse.emf.common.util.URI, String>> npmsIndex,
+			String nodeModulesLocation, IResourceDescription res, String resLocation) {
 
-		boolean isNpmManifest = true;
-		isNpmManifest &= resLocation.startsWith(nodeModulesLocation);
-		isNpmManifest &= resLocation.endsWith(IN4JSProject.N4MF_MANIFEST);
-		isNpmManifest &= resLocation.substring(resLocation.length()).split(File.separator).length == 1;
-		return isNpmManifest;
+		String version = "";
+		int endOfProjectFolder = resLocation.indexOf(File.separator, nodeModulesLocation.length() + 1);
+		String locationString = resLocation.substring(0, endOfProjectFolder);
+		org.eclipse.emf.common.util.URI location = org.eclipse.emf.common.util.URI
+				.createURI(locationString);
+		String name = locationString.substring(nodeModulesLocation.length());
+
+		boolean isManifest = true;
+		isManifest &= resLocation.endsWith(IN4JSProject.N4MF_MANIFEST);
+		isManifest &= resLocation.substring(resLocation.length()).split(File.separator).length == 1;
+		if (isManifest) {
+			Iterable<IEObjectDescription> pds = res
+					.getExportedObjectsByType(N4mfPackage.Literals.PROJECT_DESCRIPTION);
+
+			IEObjectDescription pDescription = pds.iterator().next();
+			String nameFromManifest = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_ID_KEY);
+			Preconditions.checkState(name.equals(nameFromManifest));
+
+			version = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_VERSION_KEY);
+		}
+
+		// continue here: consider every entry, not only manifest files. assume corrupt index!
+		// continue on workspace: some problem when uninstalling react, because it finds react-intl in the
+		// index! strange!
+
+		if (!npmsIndex.containsKey(name) || isManifest) {
+			npmsIndex.put(name, Pair.of(location, version));
+		}
 	}
 
-	private Map<String, String> findNpmsInFolder() {
-		Map<String, String> npmsFolder = new HashMap<>();
+	private Map<String, Pair<org.eclipse.emf.common.util.URI, String>> findNpmsInFolder() {
+		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> npmsFolder = new HashMap<>();
 
 		URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
 		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
@@ -325,7 +344,9 @@ public class NpmManager {
 					File manifest = npmLibrary.toPath().resolve(IN4JSProject.N4MF_MANIFEST).toFile();
 					String version = getVersionFromManifest(manifest);
 					if (version != null) {
-						npmsFolder.put(npmName, version);
+						String path = npmLibrary.getAbsolutePath();
+						org.eclipse.emf.common.util.URI location = org.eclipse.emf.common.util.URI.createFileURI(path);
+						npmsFolder.put(npmName, Pair.of(location, version));
 					}
 				}
 			}
@@ -373,22 +394,23 @@ public class NpmManager {
 
 		monitor.setTaskName("Installing packages... [step 1 of 4]");
 
-		Map<String, String> installedNpms = findNpmsInFolder();
+		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms = findNpmsInFolder();
 		List<String> toBeInstalled = new LinkedList<>();
 		List<String> toBeRemoved = new LinkedList<>();
 
 		for (Map.Entry<String, String> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
-			String version = Strings.emptyIfNull(reqestedNpm.getValue());
+			String versionRequested = Strings.emptyIfNull(reqestedNpm.getValue());
 			if (installedNpms.containsKey(name)) {
-				if (version.equals(Strings.emptyIfNull(installedNpms.get(name)))) {
+				String versionInstalled = installedNpms.get(name).getValue();
+				if (versionRequested.equals(Strings.emptyIfNull(versionInstalled))) {
 					// already installed
 				} else {
 					// wrong version installed -> update (uninstall, then install)
 					toBeRemoved.add(name);
 				}
 			} else {
-				String toInstallString = name + version;
+				String toInstallString = name + versionRequested;
 				toBeInstalled.add(toInstallString);
 			}
 		}
@@ -426,7 +448,9 @@ public class NpmManager {
 			Collection<String> addedDependencies) {
 
 		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
-		Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter.adaptPackages(addedDependencies);
+		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter
+				.adaptPackages(addedDependencies);
+
 		IStatus adaptionStatus = result.getFirst();
 
 		// log possible errors, but proceed with the process
@@ -448,10 +472,12 @@ public class NpmManager {
 	 *            the name of the package that has to be uninstalled via package manager.
 	 * @param monitor
 	 *            the monitor for the blocking uninstall process.
+	 * @param triggerWorkspace
+	 *            if true affected workspace projects are rebuild.
 	 * @return a status representing the outcome of the uninstall process.
 	 */
-	public IStatus uninstallDependency(String packageName, IProgressMonitor monitor) {
-		return uninstallDependencies(Arrays.asList(packageName), monitor);
+	public IStatus uninstallDependency(String packageName, IProgressMonitor monitor, boolean triggerWorkspace) {
+		return uninstallDependencies(Arrays.asList(packageName), monitor, triggerWorkspace);
 	}
 
 	/**
@@ -465,13 +491,17 @@ public class NpmManager {
 	 *            the names of the packages that has to be uninstalled via package manager.
 	 * @param monitor
 	 *            the monitor for the blocking uninstall process.
+	 * @param triggerWorkspace
+	 *            if true affected workspace projects are rebuild.
 	 * @return a status representing the outcome of the uninstall process.
 	 */
-	public IStatus uninstallDependencies(Collection<String> packageNames, IProgressMonitor monitor) {
-		return runWithWorkspaceLock(() -> uninstallDependenciesInternal(packageNames, monitor));
+	public IStatus uninstallDependencies(Collection<String> packageNames, IProgressMonitor monitor,
+			boolean triggerWorkspace) {
+		return runWithWorkspaceLock(() -> uninstallDependenciesInternal(packageNames, monitor, triggerWorkspace));
 	}
 
-	private IStatus uninstallDependenciesInternal(Collection<String> packageNames, IProgressMonitor monitor) {
+	private IStatus uninstallDependenciesInternal(Collection<String> packageNames, IProgressMonitor monitor,
+			boolean triggerWorkspace) {
 		MultiStatus status = statusHelper.createMultiStatus("Status of uninstalling multiple npm dependencies.");
 
 		IStatus binaryStatus = checkNPM();
@@ -483,11 +513,7 @@ public class NpmManager {
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("uninstallDependenciesInternal");) {
 
 			installUninstallNPMs(monitor, status, Collections.emptyMap(), packageNames);
-			List<LibraryChange> changeSet = identifyChangeSet();
-
-			indexSynchronizer.cleanOutdatedIndex(monitor, changeSet);
-			externalLibraryWorkspace.updateState();
-			indexSynchronizer.synchronizeIndex(monitor, changeSet);
+			synchronizeNpms(monitor, status, triggerWorkspace);
 
 			return status;
 
@@ -496,100 +522,20 @@ public class NpmManager {
 		}
 	}
 
-	private IStatus uninstallDependenciesInternal_OLD(Collection<String> packageNames, IProgressMonitor monitor) {
-		MultiStatus status = statusHelper.createMultiStatus("Status of uninstalling multiple npm dependencies.");
+	private void synchronizeNpms(IProgressMonitor monitor, MultiStatus status, boolean triggerCleanbuild) {
+		MultiStatus statusSync = statusHelper.createMultiStatus("Status of synchronizing npm dependencies.");
+		SubMonitor subMonitor = convert(monitor, 1);
 
-		IStatus binaryStatus = checkNPM();
-		if (!binaryStatus.isOK()) {
-			status.merge(binaryStatus);
-			return status;
-		}
+		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("synchronizeDependenciesInternal");) {
 
-		Set<String> requestedPackages = new HashSet<>(packageNames);
-		try {
-
-			logger.logInfo("Uninstalling npm packages: " + String.join(", ", requestedPackages) + ". NPM output:");
-
-			monitor.beginTask("Uninstalling npm packages...", 10);
-
-			URI npmLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-			Iterable<N4JSExternalProject> externalProjects = externalLibraryWorkspace.getProjectsIn(npmLocation);
-			Multimap<N4JSExternalProject, IProject> beforeExternalsWithDependees = collector
-					.getWSProjectDependents(externalProjects);
-			Multimap<N4JSExternalProject, N4JSExternalProject> beforeExtExternalsWithDependees = collector
-					.getExtProjectDependents(externalProjects);
-
-			monitor.worked(1); // Intentionally cheating for better user experience.
-			monitor.setTaskName("Uninstalling packages... [step 1 of 4]");
-
-			URI targetPlatformNodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-			File nodeModulesFolder = new File(targetPlatformNodeModulesLocation);
-			Iterable<java.net.URI> toBeDeleted = from(packageNames)
-					.transform(name -> new File(nodeModulesFolder, name).toURI());
-			// Iterable<java.net.URI> toBeDeleted = new LinkedList<>();
-
-			Iterable<java.net.URI> toBeUpdated = new LinkedList<>();
-			NpmProjectAdaptionResult adaptionResult = NpmProjectAdaptionResult.newOkResult(toBeUpdated, toBeDeleted);
-			// RegisterResult rr = externalLibraryWorkspace.registerProjects(adaptionResult, monitor, true);
-			// printRegisterResults(rr);
-
-			IStatus installStatus = npmCli.batchInstallUninstall(monitor, requestedPackages, null, false);
-
+			List<LibraryChange> changeSet = identifyChangeSet();
+			indexSynchronizer.cleanOutdatedIndex(subMonitor, status, changeSet);
 			externalLibraryWorkspace.updateState();
-
-			// log possible errors, but proceed with the process
-			// assume that at least some packages were installed correctly and can be adapted
-			if (!installStatus.isOK()) {
-				logger.logInfo("Some packages could not be installed due to errors, see log for details.");
-				status.merge(installStatus);
-			}
-
-			monitor.worked(2);
-			monitor.setTaskName("Calculating dependency changes... [step 2 of 4]");
-
-			externalProjects = externalLibraryWorkspace.getProjectsIn(npmLocation);
-			Multimap<N4JSExternalProject, IProject> afterExternalsWithDependees = collector
-					.getWSProjectDependents(externalProjects);
-			Multimap<N4JSExternalProject, N4JSExternalProject> afterExtExternalsWithDependees = collector
-					.getExtProjectDependents(externalProjects);
-
-			Set<IProject> affectedExtEclipseProjects = new HashSet<>();
-			for (N4JSExternalProject p : beforeExtExternalsWithDependees.keySet()) {
-				if (!afterExtExternalsWithDependees.containsKey(p)) {
-					// external project p was uninstalled
-					Collection<N4JSExternalProject> collection = beforeExtExternalsWithDependees.get(p);
-					if (collection != null) {
-						// external project p had dependent workspace projects
-						affectedExtEclipseProjects.addAll(collection);
-					}
-				}
-			}
-
-			monitor.worked(1);
-			monitor.setTaskName("Calculating dependency changes... [3 of 4]");
-
-			Set<IProject> affectedEclipseProjects = new HashSet<>();
-			for (N4JSExternalProject p : beforeExternalsWithDependees.keySet()) {
-				if (!afterExternalsWithDependees.containsKey(p)) {
-					// external project p was uninstalled
-					Collection<IProject> collection = beforeExternalsWithDependees.get(p);
-					if (collection != null) {
-						// external project p had dependent workspace projects
-						affectedEclipseProjects.addAll(collection);
-					}
-				}
-			}
-
-			monitor.worked(2);
-			monitor.setTaskName("Scheduling build of projects... [4 of 4]");
-
-			if (!status.isOK()) {
-				logger.logInfo("There were errors during installation, see logs for details.");
-			}
-			return OK_STATUS;
+			indexSynchronizer.synchronizeIndex(subMonitor, status, changeSet, triggerCleanbuild);
 
 		} finally {
-			monitor.done();
+			subMonitor.done();
+			status.merge(statusSync);
 		}
 	}
 

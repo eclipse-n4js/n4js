@@ -69,6 +69,7 @@ import org.eclipse.n4js.n4mf.utils.parsing.ParserResults;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
+import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
@@ -646,7 +647,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * @return status of the operation.
 	 */
 	private IStatus unintallAndUpdate(final Collection<String> packageNames, final IProgressMonitor monitor) {
-		IStatus status = npmManager.uninstallDependencies(packageNames, monitor);
+		boolean autobuild = AutobuildUtils.get();
+		IStatus status = npmManager.uninstallDependencies(packageNames, monitor, autobuild);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
 

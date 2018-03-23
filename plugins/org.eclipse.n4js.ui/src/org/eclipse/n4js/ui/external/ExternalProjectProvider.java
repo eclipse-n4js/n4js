@@ -189,7 +189,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 				.convertToProjectRootLocations(rootLocations);
 
 		for (java.net.URI projectRoot : projectRoots) {
-			URI projectLocation = URIUtils.convert(projectRoot);
+			URI projectLocation = URIUtils.toFileUri(projectRoot);
 			Pair<N4JSExternalProject, ProjectDescription> pair;
 			try {
 				pair = projectCache.get(projectLocation).orNull();
@@ -221,7 +221,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		Collections.reverse(projectRootsInReversedOrder);
 
 		for (java.net.URI projectRoot : projectRootsInReversedOrder) {
-			URI projectLocation = URIUtils.convert(projectRoot);
+			URI projectLocation = URIUtils.toFileUri(projectRoot);
 			if (cachedProjects.containsKey(projectLocation)) {
 				Pair<N4JSExternalProject, ProjectDescription> pair = cachedProjects.get(projectLocation).orNull();
 				if (null != pair) {

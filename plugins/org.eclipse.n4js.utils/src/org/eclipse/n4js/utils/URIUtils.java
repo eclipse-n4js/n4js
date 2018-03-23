@@ -11,7 +11,6 @@
 package org.eclipse.n4js.utils;
 
 import java.io.File;
-import java.net.URI;
 
 import org.eclipse.core.resources.IResource;
 
@@ -20,19 +19,32 @@ import org.eclipse.core.resources.IResource;
  */
 public class URIUtils {
 
-	/** @returns the a {@link org.eclipse.emf.common.util.URI} location for the given resource */
+	/**
+	 * Converts the given {@link IResource} to a {@link org.eclipse.emf.common.util.URI}. In case the given resource is
+	 * a workspace resource, a <i>platform resource URI</i> is returned. In case the given resource is a file based
+	 * resource (e.g. an external project), a <i>file URI</i> is returned.
+	 *
+	 * @returns the a {@link org.eclipse.emf.common.util.URI} location for the given resource
+	 */
 	static public org.eclipse.emf.common.util.URI convert(IResource iResource) {
 		if (iResource == null) {
 			return null;
 		}
 
-		URI locationURI = iResource.getLocationURI();
-		org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createURI(locationURI.toString());
+		String projectPath = iResource.toString();
+		String fullPathString = iResource.getFullPath().toString();
+
+		org.eclipse.emf.common.util.URI uri;
+		if (projectPath.startsWith("P/")) {
+			uri = org.eclipse.emf.common.util.URI.createPlatformResourceURI(fullPathString, true);
+		} else {
+			uri = org.eclipse.emf.common.util.URI.createFileURI(fullPathString);
+		}
 		return uri;
 	}
 
 	/** @returns the a {@link org.eclipse.emf.common.util.URI} location for the given {@link java.net.URI} */
-	static public org.eclipse.emf.common.util.URI convert(java.net.URI jnUri) {
+	static public org.eclipse.emf.common.util.URI toFileUri(java.net.URI jnUri) {
 		if (jnUri == null) {
 			return null;
 		}
