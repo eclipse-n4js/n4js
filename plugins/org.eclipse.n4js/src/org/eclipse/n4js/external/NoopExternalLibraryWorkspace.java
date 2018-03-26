@@ -41,6 +41,11 @@ public class NoopExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
+	public RegisterResult deregisterAllProjects(IProgressMonitor monitor) {
+		return new RegisterResult();
+	}
+
+	@Override
 	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<URI> toBeScheduled) {
 		// NOOP
 	}

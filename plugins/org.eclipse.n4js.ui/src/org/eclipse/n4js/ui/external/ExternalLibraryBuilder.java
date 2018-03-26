@@ -33,7 +33,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -372,7 +371,9 @@ public class ExternalLibraryBuilder {
 			protected ToBeBuilt getToBeBuilt(ToBeBuiltComputer computer, IProject project, IProgressMonitor monitor) {
 				try {
 					return computer.updateProject(project, monitor);
-				} catch (OperationCanceledException | CoreException e) {
+				} catch (OperationCanceledException e) {
+					throw e;
+				} catch (Exception e) {
 					String name = project.getName();
 					LOGGER.error("Error occurred while calculating to be build data for '" + name + "' project.", e);
 					throw Exceptions.sneakyThrow(e);
@@ -467,6 +468,8 @@ public class ExternalLibraryBuilder {
 					}
 				}
 
+			} catch (RuntimeException e) {
+				throw e;
 			} catch (Exception e) {
 				String message = "Error occurred while " + toString().toLowerCase() + "ing external library "
 						+ project.getName() + ".";
@@ -478,7 +481,7 @@ public class ExternalLibraryBuilder {
 	}
 
 	/**
-	 * The all entries in the Xtext index that belong to one of the given project URIs will be cleaned from the index.
+	 * The all entries in the Xtext index that start with one of the given project URIs will be cleaned from the index.
 	 *
 	 * @param toBeWiped
 	 *            URIs of project roots

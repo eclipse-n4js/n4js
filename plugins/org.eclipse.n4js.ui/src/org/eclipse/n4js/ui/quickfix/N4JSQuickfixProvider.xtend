@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.dialogs.ProgressMonitorDialog
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.binaries.IllegalBinaryStateException
-import org.eclipse.n4js.external.NpmManager
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ModifiableElement
@@ -77,6 +76,7 @@ import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
 import org.eclipse.n4js.n4mf.SimpleProjectDependency
+import org.eclipse.n4js.external.ExternalProjectsManager
 
 /**
  * N4JS quick fixes.
@@ -107,7 +107,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	static final String FINAL_ANNOTATION = AnnotationDefinition.FINAL.name;
 
 	@Inject
-	NpmManager npmManager;
+	ExternalProjectsManager npmManager;
 
 
 	// EXAMPLE FOR STYLE #1 (lambda expression)
@@ -660,16 +660,14 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			var boolean multipleInvocations;
 
 			override Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				multipleInvocations = false;
-				invokeNpmManager(element, !multipleInvocations);
+				invokeNpmManager(element);
 			}
 			override Collection<? extends IChange> computeOneOfMultipleChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				multipleInvocations = true;
-				invokeNpmManager(element, !multipleInvocations);
+				invokeNpmManager(element);
 			}
 			override void computeFinalChanges() throws Exception {
 				if (multipleInvocations) {
-					new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
+					new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
 						try {
 							ResourcesPlugin.getWorkspace().build(CLEAN_BUILD, monitor);
 						} catch (IllegalBinaryStateException e) {
@@ -679,7 +677,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				}
 			}
 
-			def Collection<? extends IChange> invokeNpmManager(EObject element, boolean triggerCleanbuild) throws Exception {
+			def Collection<? extends IChange> invokeNpmManager(EObject element) throws Exception {
 				val dependency = element as SimpleProjectDependency;
 				val packageName = dependency.project.projectId;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
@@ -694,7 +692,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<String, String> package = Collections.singletonMap(packageName, packageVersion);
-						val status = npmManager.installDependencies(package, monitor, triggerCleanbuild);
+						val status = npmManager.installNPMs(package, monitor);
 						if (!status.OK) {
 							errorStatusRef.set(status);
 						}

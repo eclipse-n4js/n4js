@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
-import static org.eclipse.n4js.N4JSPluginId.N4JS_PLUGIN_ID;
-import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
+import static org.eclipse.n4js.N4JSPluginId.N4JS_PLUGIN_ID;
+import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,12 +27,11 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
-
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.utils.UIUtils;
 
 /**
  * Button selection listener for opening up an {@link MessageDialog yes/no dialog}, where user can decide to delete type
@@ -109,11 +108,14 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 				});
 			} catch (final InvocationTargetException | InterruptedException exc) {
 				MultiStatus status = actionsStatus.get();
-				status.merge(
-						new Status(ERROR, N4JS_PLUGIN_ID, ERROR, "Error while executing maintenance actions.", exc));
+				if (status != null) {
+					String message = "Error while executing maintenance actions.";
+					status.merge(new Status(ERROR, N4JS_PLUGIN_ID, ERROR, message, exc));
+				}
+
 			} finally {
 				MultiStatus status = actionsStatus.get();
-				if (!status.isOK()) {
+				if (status != null && !status.isOK()) {
 					N4JSActivator.getInstance().getLog().log(status);
 					getDisplay().asyncExec(() -> openError(
 							UIUtils.getShell(),

@@ -214,13 +214,34 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		ISchedulingRule rule = builder.getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
-			return deregisterProjectsInternal(monitor, toBeDeleted);
+			return deregisterProjectsInternal(monitor, toBeDeleted, new HashSet<>());
 		} finally {
 			Job.getJobManager().endRule(rule);
 		}
 	}
 
-	private RegisterResult deregisterProjectsInternal(IProgressMonitor monitor, Set<URI> toBeDeleted) {
+	@Override
+	public RegisterResult deregisterAllProjects(IProgressMonitor monitor) {
+		ISchedulingRule rule = builder.getRule();
+		try {
+			Job.getJobManager().beginRule(rule, monitor);
+			Set<URI> toBeDeleted = new HashSet<>();
+			for (ExternalProject extProject : getProjects()) {
+				URI location = URIUtils.convert(extProject);
+				toBeDeleted.add(location);
+			}
+			Set<URI> toBeWiped = new HashSet<>();
+			for (java.net.URI rootLocation : projectProvider.getRootLocations()) {
+				toBeWiped.add(URIUtils.toFileUri(rootLocation));
+			}
+			return deregisterProjectsInternal(monitor, toBeDeleted, toBeWiped);
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
+	}
+
+	private RegisterResult deregisterProjectsInternal(IProgressMonitor monitor, Set<URI> toBeDeleted,
+			Set<URI> toBeWiped) {
 		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
 			logger.warn("Built-in libraries and NPM support are disabled.");
 		}
@@ -243,7 +264,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		Set<IProject> wsPrjAffected = newHashSet();
 		wsPrjAffected.addAll(collector.getWSProjectsDependendingOn(allProjectsToClean));
 
-		wipeIndex(monitor, toBeDeleted, allProjectsToClean);
+		toBeWiped.addAll(toBeDeleted);
+		wipeIndex(monitor, toBeWiped, allProjectsToClean);
 
 		return new RegisterResult(allProjectsToClean.toArray(new IProject[0]), wsPrjAffected.toArray(new IProject[0]));
 	}

@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
+import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 import static org.eclipse.n4js.ui.utils.UIUtils.getShell;
-import static org.eclipse.jface.dialogs.MessageDialog.openError;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -23,17 +22,17 @@ import java.util.function.Supplier;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.xtext.xbase.lib.StringExtensions;
-
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 /**
  * Button selection listener for opening up an {@link InputDialog input dialog}, where user can specify npm package name
@@ -69,22 +68,27 @@ public class InstallNpmDependencyButtonListener extends SelectionAdapter {
 		if (!StringExtensions.isNullOrEmpty(packageName) && dialog.getReturnCode() == Window.OK) {
 			try {
 				final String packageVersion = dialog.getVersionConstraint();
-				new ProgressMonitorDialog(getShell()).run(true, false, monitor -> {
-					multistatus
-							.merge(installAction.apply(Collections.singletonMap(packageName, packageVersion), monitor));
+				new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
+					Map<String, String> singletonMap = Collections.singletonMap(packageName, packageVersion);
+					multistatus.merge(installAction.apply(singletonMap, monitor));
 				});
-			} catch (final InvocationTargetException | InterruptedException exc) {
-				multistatus.merge(
-						statusHelper.createError("Error while installing npm dependency: '" + packageName + "'.",
-								exc));
+
+			} catch (final InterruptedException | OperationCanceledException exc) {
+				// canceled by user
+			} catch (final Exception exc) {
+				String msg = "Error while installing npm dependency: '" + packageName + "'.";
+				multistatus.merge(statusHelper.createError(msg, exc));
+
 			} finally {
 				if (!multistatus.isOK()) {
 					N4JSActivator.getInstance().getLog().log(multistatus);
-					getDisplay().asyncExec(() -> openError(
-							UIUtils.getShell(),
-							"npm Install Failed",
-							"Error while installing '" + packageName
-									+ "' npm package.\nPlease check your Error Log view for the detailed npm log about the failure."));
+
+					getDisplay().asyncExec(() -> {
+						String descr = "";
+						descr += "Error while installing '" + packageName + "' npm package.\n";
+						descr += "Please check your Error Log view for the detailed npm log about the failure.";
+						openError(UIUtils.getShell(), "npm Install Failed", descr);
+					});
 				}
 			}
 		}

@@ -18,9 +18,11 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
@@ -85,6 +87,8 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public abstract RegisterResult registerProjects(IProgressMonitor monitor, Set<URI> toBeUpdated);
 
 	/**
+	 * Deregisters all given project and cleans/builds affected workspace projects afterwards. This operation also wipes
+	 * the Xtext index clean of all given and affected external projects.
 	 *
 	 * @param monitor
 	 *            the monitor for the project registration process.
@@ -92,6 +96,14 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            if true, a clean build is triggered on all affected workspace projects.
 	 */
 	public abstract RegisterResult deregisterProjects(IProgressMonitor monitor, Set<URI> toBeDeleted);
+
+	/**
+	 * Deregisters all external projects and wipes the Xtext index clean.
+	 *
+	 * @param monitor
+	 *            the monitor for the project registration process.
+	 */
+	public abstract RegisterResult deregisterAllProjects(IProgressMonitor monitor);
 
 	/**
 	 * Schedules a rebuild of the given workspace projects.
@@ -168,7 +180,9 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
 	/**
 	 * Updates the internal state based on the available external project root locations.
-	 *
+	 * <p>
+	 * This method will remove/add available projects of {@link IN4JSCore}. It should only be invoked through
+	 * {@link NodeModulesIndexSynchronizer#synchronizeNpms(IProgressMonitor, MultiStatus)}.
 	 * <p>
 	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
 	 * available when injecting this instance.

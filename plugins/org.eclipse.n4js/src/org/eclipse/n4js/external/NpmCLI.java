@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.external;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
@@ -152,4 +154,43 @@ public class NpmCLI {
 				"Error while uninstalling npm package.");
 	}
 
+	/**
+	 * Cleans npm cache. Please note:
+	 * <p>
+	 * <i>"It should never be necessary to clear the cache for any reason other than reclaiming disk space"</i> (see
+	 * <a href="https://docs.npmjs.com/cli/cache}">NPM Doc</a>)
+	 *
+	 * @param monitor
+	 *            the monitor for the progress.
+	 * @return a status representing the outcome of the operation.
+	 */
+	public IStatus cleanCacheInternal(IProgressMonitor monitor) {
+		checkNotNull(monitor, "monitor");
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
+		try {
+
+			subMonitor.setTaskName("Cleaning npm cache");
+
+			File targetInstallLocation = new File(locationProvider.getTargetPlatformInstallLocation());
+			return clean(targetInstallLocation);
+
+		} finally {
+			subMonitor.done();
+		}
+	}
+
+	/**
+	 * Cleans npm cache. Note that normally this has global side effects, i.e. it will delete npm cache for the user
+	 * settings. While provided path does not have impact on effects of clean, it is used as working directory for
+	 * invoking the command.
+	 *
+	 * @param cleanPath
+	 *            to be uninstalled
+	 */
+	private IStatus clean(File cleanPath) {
+		return executor.execute(
+				() -> commandFactory.createCacheCleanCommand(cleanPath),
+				"Error while cleaning npm cache.");
+	}
 }

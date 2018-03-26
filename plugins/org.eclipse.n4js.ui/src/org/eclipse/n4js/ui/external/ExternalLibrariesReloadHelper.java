@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.NpmManager;
+import org.eclipse.n4js.external.ExternalProjectsManager;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.utils.Cancelable;
 
@@ -44,7 +44,7 @@ public class ExternalLibrariesReloadHelper {
 	private static final Logger LOGGER = Logger.getLogger(ExternalLibrariesReloadHelper.class);
 
 	@Inject
-	private NpmManager npmManager;
+	private ExternalProjectsManager npmManager;
 
 	@Inject
 	private ExternalProjectsCollector collector;

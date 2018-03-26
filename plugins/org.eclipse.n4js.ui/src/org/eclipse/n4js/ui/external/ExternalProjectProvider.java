@@ -62,7 +62,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	private ProjectStateChangeListener projectStateChangeListener;
 
 	private final Collection<ExternalLocationsUpdatedListener> locListeners = new LinkedList<>();
-	private final Collection<java.net.URI> rootLocations = new LinkedList<>();
+	private final List<java.net.URI> rootLocations = new LinkedList<>();
 	private LoadingCache<URI, Optional<Pair<N4JSExternalProject, ProjectDescription>>> projectCache;
 	private Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMapping;
 	private Map<String, N4JSExternalProject> projectNameMapping;
@@ -97,7 +97,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		locListeners.add(listener);
 	}
 
-	Collection<java.net.URI> getRootLocations() {
+	List<java.net.URI> getRootLocations() {
 		return rootLocations;
 	}
 

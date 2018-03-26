@@ -13,8 +13,6 @@ package org.eclipse.n4js.ui.internal;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
 import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -65,7 +63,7 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 							try {
 								externalLibraryWorkspace.updateState();
 								externalLibrariesReloadHelper.reloadLibraries(false, progress);
-							} catch (final InvocationTargetException e) {
+							} catch (final Exception e) {
 								throw new CoreException(statusHelper.createError(e));
 							}
 						}

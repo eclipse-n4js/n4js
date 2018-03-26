@@ -10,9 +10,15 @@
  */
 package org.eclipse.n4js.external;
 
+import static org.eclipse.core.runtime.SubMonitor.convert;
+
+import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -20,30 +26,46 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.NodeModulesFolderListener.LibraryChange;
+import org.eclipse.n4js.external.NodeModulesFolderListener.LibraryChangeType;
+import org.eclipse.n4js.n4mf.DeclaredVersion;
+import org.eclipse.n4js.n4mf.N4mfPackage;
+import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionStrategy;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 
 /**
- * The {@link NodeModulesIndexSynchronizer} must be called in the following way:
- * <ol>
- * <li>Call {@link #cleanOutdatedIndex(IProgressMonitor, MultiStatus, List)} as soon as a file change is detected in the
- * folder {@code node_modules} but before the {@link ExternalLibraryWorkspace#updateState()} is called.
- * <li>Call {@link #synchronizeIndex(IProgressMonitor, MultiStatus, List, boolean)} after
- * {@link ExternalLibraryWorkspace#updateState()} was called.
- * </ol>
+ * The {@link NodeModulesIndexSynchronizer} must be used to synchronize the Xtext index with all projects that are
+ * located in external workspace locations, such as the {@code node_modules} folder for npm projects.
  */
 public class NodeModulesIndexSynchronizer {
 	private RegisterResult cleanResults;
 
 	@Inject
 	private IN4JSCore core;
+
+	@Inject
+	private TargetPlatformInstallLocationProvider locationProvider;
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -55,11 +77,200 @@ public class NodeModulesIndexSynchronizer {
 	private NpmLogger logger;
 
 	/**
+	 * see {@link ExternalProjectsManager#isProjectsSynchronized()}.
+	 */
+	public boolean isProjectsSynchronized() {
+		List<LibraryChange> changeSet = identifyChangeSet();
+		return changeSet.isEmpty();
+	}
+
+	/**
+	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
+	 * library folders.
+	 */
+	public void synchronizeNpms(IProgressMonitor monitor, MultiStatus status) {
+		MultiStatus statusSync = statusHelper.createMultiStatus("Status of synchronizing npm dependencies.");
+		SubMonitor subMonitor = convert(monitor, 1);
+
+		try {
+
+			List<LibraryChange> changeSet = identifyChangeSet();
+			cleanOutdatedIndex(subMonitor, status, changeSet);
+
+			// Updates available projects in IN4JSCore, ExternalLibraryWorkspace, N4JSModel, ExternalProjectProvider
+			externalLibraryWorkspace.updateState();
+
+			synchronizeIndex(subMonitor, status, changeSet);
+
+		} finally {
+			subMonitor.done();
+			status.merge(statusSync);
+		}
+	}
+
+	private List<LibraryChange> identifyChangeSet() {
+		List<LibraryChange> changes = new LinkedList<>();
+
+		Map<String, Pair<URI, String>> npmsOfIndex = findNpmsInIndex();
+		Map<String, Pair<URI, String>> npmsOfFolder = findNpmsInFolder();
+
+		Set<String> differences = new HashSet<>();
+		differences.addAll(npmsOfIndex.keySet());
+		differences.addAll(npmsOfFolder.keySet());
+		SetView<String> intersection = Sets.intersection(npmsOfIndex.keySet(), npmsOfFolder.keySet());
+		differences.removeAll(intersection);
+
+		for (String diff : differences) {
+			LibraryChangeType changeType = null;
+			String name = diff;
+			URI location = null;
+			String version = null;
+
+			if (npmsOfFolder.containsKey(diff)) {
+				// new in folder, not in index
+				changeType = LibraryChangeType.Added;
+				location = npmsOfFolder.get(name).getKey();
+				version = npmsOfFolder.get(name).getValue();
+			}
+			if (npmsOfIndex.containsKey(diff)) {
+				// removed in folder, still in index
+				changeType = LibraryChangeType.Removed;
+				location = npmsOfIndex.get(name).getKey();
+				version = npmsOfIndex.get(name).getValue();
+			}
+			changes.add(new LibraryChange(changeType, location, name, version));
+		}
+
+		for (String name : npmsOfIndex.keySet()) {
+			if (npmsOfFolder.containsKey(name)) {
+				String versionIndex = npmsOfIndex.get(name).getValue();
+				String versionFolder = npmsOfFolder.get(name).getValue();
+				URI locationIndex = npmsOfIndex.get(name).getKey();
+				URI locationFolder = npmsOfFolder.get(name).getKey();
+
+				Preconditions.checkState(locationFolder.equals(locationIndex));
+
+				if (versionIndex != null && !versionIndex.equals(versionFolder)) {
+					changes.add(new LibraryChange(LibraryChangeType.Updated, locationFolder, name, versionFolder));
+				}
+			}
+		}
+
+		return changes;
+	}
+
+	private Map<String, Pair<URI, String>> findNpmsInIndex() {
+		Map<String, Pair<URI, String>> npmsIndex = new HashMap<>();
+
+		String nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation().toString();
+		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
+		IResourceDescriptions index = core.getXtextIndex(resourceSet);
+
+		for (IResourceDescription res : index.getAllResourceDescriptions()) {
+			String resLocation = res.getURI().toString();
+			boolean isNPM = resLocation.startsWith(nodeModulesLocation);
+
+			if (isNPM) {
+				addToIndex(npmsIndex, nodeModulesLocation, res, resLocation);
+			}
+		}
+
+		return npmsIndex;
+	}
+
+	private void addToIndex(Map<String, Pair<URI, String>> npmsIndex,
+			String nodeModulesLocation, IResourceDescription res, String resLocation) {
+
+		String version = "";
+		int endOfProjectFolder = resLocation.indexOf(File.separator, nodeModulesLocation.length() + 1);
+		String locationString = resLocation.substring(0, endOfProjectFolder);
+		URI location = URI.createURI(locationString);
+		String name = locationString.substring(nodeModulesLocation.length());
+
+		boolean isManifest = true;
+		isManifest &= resLocation.endsWith(IN4JSProject.N4MF_MANIFEST);
+		isManifest &= resLocation.substring(resLocation.length()).split(File.separator).length == 1;
+		if (isManifest) {
+			Iterable<IEObjectDescription> pds = res.getExportedObjectsByType(N4mfPackage.Literals.PROJECT_DESCRIPTION);
+
+			IEObjectDescription pDescription = pds.iterator().next();
+			String nameFromManifest = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_ID_KEY);
+			Preconditions.checkState(name.equals(nameFromManifest));
+
+			version = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_VERSION_KEY);
+		}
+
+		if (!npmsIndex.containsKey(name) || isManifest) {
+			npmsIndex.put(name, Pair.of(location, version));
+		}
+	}
+
+	/**
+	 * @return a map that maps projectIDs to their locations and versions
+	 */
+	public Map<String, Pair<URI, String>> findNpmsInFolder() {
+		Map<String, Pair<URI, String>> npmsFolder = new HashMap<>();
+
+		java.net.URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
+		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
+		if (nodeModulesFolder.exists() && nodeModulesFolder.isDirectory()) {
+			for (File npmLibrary : nodeModulesFolder.listFiles()) {
+				if (npmLibrary.exists() && npmLibrary.isDirectory()) {
+					String npmName = npmLibrary.getName();
+					File manifest = npmLibrary.toPath().resolve(IN4JSProject.N4MF_MANIFEST).toFile();
+					String version = getVersionFromManifest(manifest);
+					if (version != null) {
+						String path = npmLibrary.getAbsolutePath();
+						URI location = URI.createFileURI(path);
+						npmsFolder.put(npmName, Pair.of(location, version));
+					}
+				}
+			}
+		}
+
+		return npmsFolder;
+	}
+
+	private String getVersionFromManifest(File manifest) {
+		ProjectDescription pDescr = getProjectDescription(manifest);
+		if (pDescr != null) {
+			DeclaredVersion pV = pDescr.getProjectVersion();
+			String version = pV.getMajor() + "." + pV.getMinor() + "." + pV.getMicro();
+			if (pV.getQualifier() != null) {
+				version += ":" + pV.getQualifier();
+			}
+			return version;
+		}
+
+		return null;
+	}
+
+	private ProjectDescription getProjectDescription(File manifest) {
+		if (!manifest.exists() || !manifest.isFile()) {
+			return null;
+		}
+
+		ResourceSet resourceSet = core.createResourceSet(Optional.absent());
+		String pathStr = manifest.getPath();
+		URI manifestURI = URI.createFileURI(pathStr);
+		Resource resource = resourceSet.getResource(manifestURI, true);
+		if (resource != null) {
+			List<EObject> contents = resource.getContents();
+			if (contents.isEmpty() || !(contents.get(0) instanceof ProjectDescription)) {
+				return null;
+			}
+			ProjectDescription pDescr = (ProjectDescription) contents.get(0);
+			return pDescr;
+		}
+		return null;
+	}
+
+	/**
 	 * Call this method when the content of the {@code node_modules} folder changed. It must be called before
 	 * {@link ExternalLibraryWorkspace#updateState()} adapted these changes. Otherwise the clean operation is not
 	 * possible anymore, since the projects to clean will be removed from the {@link ExternalLibraryWorkspace} instance.
 	 */
-	public void cleanOutdatedIndex(IProgressMonitor monitor, MultiStatus status, List<LibraryChange> changeSet) {
+	private void cleanOutdatedIndex(IProgressMonitor monitor, MultiStatus status, List<LibraryChange> changeSet) {
 		if (!Platform.isRunning()) {
 			return;
 		}
@@ -88,8 +299,7 @@ public class NodeModulesIndexSynchronizer {
 	 * {@code node_modules} folder. Due to this adaption, new folders are already represented as external projects and
 	 * can be build and added to the index.
 	 */
-	public void synchronizeIndex(IProgressMonitor monitor, MultiStatus status, List<LibraryChange> changeSet,
-			boolean triggerCleanbuild) {
+	private void synchronizeIndex(IProgressMonitor monitor, MultiStatus status, List<LibraryChange> changeSet) {
 
 		if (!Platform.isRunning()) {
 			return;
@@ -117,11 +327,57 @@ public class NodeModulesIndexSynchronizer {
 			Set<URI> toBeScheduled = new HashSet<>();
 			toBeScheduled.addAll(cleanResults.affectedWorkspaceProjects);
 			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
-			if (triggerCleanbuild) {
-				externalLibraryWorkspace.scheduleWorkspaceProjects(monitor, toBeScheduled);
-			} else {
-				// clean only
+			externalLibraryWorkspace.scheduleWorkspaceProjects(monitor, toBeScheduled);
+
+			status.merge(status2);
+
+		} finally {
+			monitor.done();
+		}
+	}
+
+	/**
+	 * Call this method to re-index all external libraries. This means: All external libraries are cleaned and re-build.
+	 */
+	public void reindexAllExternalProjects(IProgressMonitor monitor, MultiStatus status) {
+		if (!Platform.isRunning()) {
+			return;
+		}
+
+		try {
+
+			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
+			MultiStatus status2 = statusHelper.createMultiStatus("Status of re-index all external projects.");
+
+			monitor.setTaskName("Cleaning all projects...");
+			RegisterResult cleanResult = externalLibraryWorkspace.deregisterAllProjects(monitor);
+			printRegisterResults(cleanResult, "clean");
+			if (!status2.isOK()) {
+				logger.logInfo("There were errors during cleaning, see logs for details.");
 			}
+			subMonitor.worked(1);
+
+			// Updates available projects in IN4JSCore, ExternalLibraryWorkspace, N4JSModel, ExternalProjectProvider
+			externalLibraryWorkspace.updateState();
+
+			Set<URI> toBeReindexed = new HashSet<>();
+			for (N4JSExternalProject n4ExtProject : externalLibraryWorkspace.getProjects()) {
+				URI uri = URIUtils.toFileUri(n4ExtProject.getLocationURI());
+				toBeReindexed.add(uri);
+			}
+
+			monitor.setTaskName("Building new projects...");
+			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(monitor, toBeReindexed);
+			printRegisterResults(buildResult, "built");
+			if (!status2.isOK()) {
+				logger.logInfo("There were errors during building, see logs for details.");
+			}
+			subMonitor.worked(1);
+
+			Set<URI> toBeScheduled = new HashSet<>();
+			toBeScheduled.addAll(cleanResult.affectedWorkspaceProjects);
+			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
+			externalLibraryWorkspace.scheduleWorkspaceProjects(monitor, toBeScheduled);
 
 			status.merge(status2);
 

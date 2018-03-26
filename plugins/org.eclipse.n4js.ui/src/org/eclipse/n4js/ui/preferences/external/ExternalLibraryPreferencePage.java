@@ -58,7 +58,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmCLI;
-import org.eclipse.n4js.external.NpmManager;
+import org.eclipse.n4js.external.ExternalProjectsManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
@@ -69,7 +69,6 @@ import org.eclipse.n4js.n4mf.utils.parsing.ParserResults;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
-import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
@@ -111,7 +110,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private Provider<ExternalLibraryTreeContentProvider> contentProvider;
 
 	@Inject
-	private NpmManager npmManager;
+	private ExternalProjectsManager npmManager;
 
 	@Inject
 	private NpmCLI npmCli;
@@ -467,7 +466,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 			externalLibraryWorkspace.updateState();
 			try {
 				externalLibrariesReloadHelper.reloadLibraries(true, monitor);
-			} catch (InvocationTargetException e) {
+			} catch (Exception e) {
 				multistatus.merge(
 						statusHelper.createError("Error when reloading libraries after maintenance actions.", e));
 			}
@@ -527,8 +526,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 			if (!npmFolder.exists()) {
 				// recreate npm folder
 				if (!repairNpmFolderState()) {
-					multistatus.merge(statusHelper
-							.createError("The npm folder was not recreated correctly."));
+					multistatus.merge(statusHelper.createError("The npm folder was not recreated correctly."));
 				}
 			} else {// should never happen
 				multistatus
@@ -634,7 +632,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * @return status of the operation.
 	 */
 	private IStatus intallAndUpdate(final Map<String, String> versionedPackages, final IProgressMonitor monitor) {
-		IStatus status = npmManager.installDependencies(versionedPackages, monitor);
+		IStatus status = npmManager.installNPMs(versionedPackages, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
 
@@ -647,8 +645,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * @return status of the operation.
 	 */
 	private IStatus unintallAndUpdate(final Collection<String> packageNames, final IProgressMonitor monitor) {
-		boolean autobuild = AutobuildUtils.get();
-		IStatus status = npmManager.uninstallDependencies(packageNames, monitor, autobuild);
+		IStatus status = npmManager.uninstallNPM(packageNames, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
 

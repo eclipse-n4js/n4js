@@ -1,0 +1,497 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.external;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.n4js.binaries.IllegalBinaryStateException;
+import org.eclipse.n4js.binaries.nodejs.NpmBinary;
+import org.eclipse.n4js.external.libraries.PackageJson;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.smith.ClosableMeasurement;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.git.GitUtils;
+import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.xtext.util.Strings;
+import org.eclipse.xtext.xbase.lib.Pair;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+
+/**
+ * Class for installing npm dependencies into the external library.
+ */
+@Singleton
+public class ExternalProjectsManager {
+
+	private static String NO_VERSION = "";
+
+	private static String LINE_DOUBLE = "================================================================";
+
+	private static String LINE_SINGLE = "----------------------------------------------------------------";
+
+	private static DataCollector dcLibMngr = DataCollectors.INSTANCE.getOrCreateDataCollector("Library Manager");
+
+	@Inject
+	private NpmPackageToProjectAdapter npmPackageToProjectAdapter;
+
+	@Inject
+	private TargetPlatformInstallLocationProvider locationProvider;
+
+	@Inject
+	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private StatusHelper statusHelper;
+
+	@Inject
+	private Provider<NpmBinary> npmBinaryProvider;
+
+	@Inject
+	private NpmLogger logger;
+
+	@Inject
+	private NpmCLI npmCli;
+
+	@Inject
+	private NodeModulesIndexSynchronizer indexSynchronizer;
+
+	/**
+	 * This method compares the external projects located in all external locations to the projects available through
+	 * {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
+	 * <p>
+	 * Note that this method will iterate through the complete Xtext index.
+	 *
+	 * @return true iff exactly those external projects in external locations are available through
+	 *         {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
+	 */
+	public boolean isProjectsSynchronized() {
+		return indexSynchronizer.isProjectsSynchronized();
+	}
+
+	/**
+	 * This method will query the current build state of all external projects that are available through
+	 * {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
+	 *
+	 * @return true iff all external projects have been built successfully.
+	 */
+	public boolean isProjectsBuilt() {
+		return true;
+	}
+
+	/**
+	 * Installs the given npm package in a blocking fashion.
+	 *
+	 * @param packageName
+	 *            the name of the package that has to be installed via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking install process.
+	 * @return a status representing the outcome of the install process.
+	 */
+	public IStatus installNPM(String packageName, IProgressMonitor monitor) {
+		return installNPM(packageName, NO_VERSION, monitor);
+	}
+
+	/**
+	 * Installs the given npm package in a blocking fashion.
+	 *
+	 * @param packageName
+	 *            the name of the package that has to be installed via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking install process.
+	 * @return a status representing the outcome of the install process.
+	 */
+	public IStatus installNPM(String packageName, String packageVersion, IProgressMonitor monitor) {
+		return installNPMs(Collections.singletonMap(packageName, packageVersion), monitor);
+	}
+
+	/**
+	 * Installs the given npm packages in a blocking fashion.
+	 *
+	 * This method tries to install all packages even if installation for some of them fail. In such cases it will try
+	 * log encountered errors but it will try to proceed for all remaining packages. Details about issues are in the
+	 * returned status.
+	 *
+	 * @param unversionedPackages
+	 *            map of name to version data for the packages to be installed via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking install process.
+	 * @return a status representing the outcome of the install process.
+	 */
+	public IStatus installNPMs(Collection<String> unversionedPackages, IProgressMonitor monitor) {
+		Map<String, String> versionedPackages = unversionedPackages.stream()
+				.collect(Collectors.toMap((String name) -> name, (String name) -> NO_VERSION));
+		return installNPMs(versionedPackages, monitor);
+	}
+
+	/**
+	 * Installs the given npm packages in a blocking fashion.
+	 *
+	 * This method tries to install all packages even if installation for some of them fail. In such cases it will try
+	 * log encountered errors but it will try to proceed for all remaining packages. Details about issues are in the
+	 * returned status.
+	 *
+	 * @param versionedNPMs
+	 *            map of name to version data for the packages to be installed via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking install process.
+	 * @return a status representing the outcome of the install process.
+	 */
+	public IStatus installNPMs(Map<String, String> versionedNPMs, IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, monitor));
+	}
+
+	private IStatus installNPMsInternal(Map<String, String> versionedNPMs, IProgressMonitor monitor) {
+
+		MultiStatus status = statusHelper.createMultiStatus("Status of installing multiple npm dependencies.");
+
+		IStatus binaryStatus = checkNPM();
+		if (!binaryStatus.isOK()) {
+			status.merge(binaryStatus);
+			return status;
+		}
+
+		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
+
+			installUninstallNPMs(monitor, status, versionedNPMs, Collections.emptyList());
+			indexSynchronizer.synchronizeNpms(monitor, status);
+
+			return status;
+
+		} finally {
+			monitor.done();
+		}
+	}
+
+	private void installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
+			Map<String, String> installRequested, Collection<String> removeRequested) {
+
+		monitor.setTaskName("Installing packages... [step 1 of 4]");
+
+		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms = indexSynchronizer.findNpmsInFolder();
+		List<String> toBeInstalled = new LinkedList<>();
+		List<String> toBeRemoved = new LinkedList<>();
+
+		for (Map.Entry<String, String> reqestedNpm : installRequested.entrySet()) {
+			String name = reqestedNpm.getKey();
+			String versionRequested = Strings.emptyIfNull(reqestedNpm.getValue());
+			if (installedNpms.containsKey(name)) {
+				String versionInstalled = installedNpms.get(name).getValue();
+				if (versionRequested.equals(Strings.emptyIfNull(versionInstalled))) {
+					// already installed
+				} else {
+					// wrong version installed -> update (uninstall, then install)
+					toBeRemoved.add(name);
+				}
+			} else {
+				String toInstallString = name + versionRequested;
+				toBeInstalled.add(toInstallString);
+			}
+		}
+
+		for (String name : removeRequested) {
+			if (installedNpms.containsKey(name)) {
+				toBeRemoved.add(name);
+			} else {
+				// already removed
+			}
+		}
+
+		// remove
+		IStatus removeStatus = npmCli.batchInstallUninstall(monitor, toBeRemoved, null, false);
+		if (!removeStatus.isOK()) {
+			logger.logInfo("Some packages could not be removed due to errors, see log for details.");
+			status.merge(removeStatus);
+		}
+		monitor.worked(1);
+
+		// install
+		IStatus installStatus = npmCli.batchInstallUninstall(monitor, toBeInstalled, installRequested, true);
+		if (!installStatus.isOK()) {
+			logger.logInfo("Some packages could not be installed due to errors, see log for details.");
+			status.merge(installStatus);
+		}
+		monitor.worked(1);
+
+		// adapt installed
+		adaptNPMPackages(monitor, status, toBeInstalled);
+		monitor.worked(1);
+	}
+
+	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,
+			Collection<String> addedDependencies) {
+
+		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
+		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter
+				.adaptPackages(addedDependencies);
+
+		IStatus adaptionStatus = result.getFirst();
+
+		// log possible errors, but proceed with the process
+		// assume that at least some packages were installed correctly and can be adapted
+		if (!adaptionStatus.isOK()) {
+			logger.logError(adaptionStatus);
+			status.merge(adaptionStatus);
+		}
+
+		Collection<File> adaptedPackages = result.getSecond();
+		monitor.worked(2);
+		return adaptedPackages;
+	}
+
+	/**
+	 * Uninstalls the given npm package in a blocking fashion.
+	 *
+	 * @param packageName
+	 *            the name of the package that has to be uninstalled via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking uninstall process.
+	 * @return a status representing the outcome of the uninstall process.
+	 */
+	public IStatus uninstallNPM(String packageName, IProgressMonitor monitor) {
+		return uninstallNPM(Arrays.asList(packageName), monitor);
+	}
+
+	/**
+	 * Uninstalls the given npm packages in a blocking fashion.
+	 *
+	 * This method tries to uninstall all packages even if uninstalling for some of them fails. In such cases it will
+	 * try to log encountered errors but it will try to proceed for all remaining packages. Details about issues are in
+	 * the returned status.
+	 *
+	 * @param packageNames
+	 *            the names of the packages that has to be uninstalled via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking uninstall process.
+	 * @return a status representing the outcome of the uninstall process.
+	 */
+	public IStatus uninstallNPM(Collection<String> packageNames, IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> uninstallDependenciesInternal(packageNames, monitor));
+	}
+
+	private IStatus uninstallDependenciesInternal(Collection<String> packageNames, IProgressMonitor monitor) {
+		MultiStatus status = statusHelper.createMultiStatus("Status of uninstalling multiple npm dependencies.");
+
+		IStatus binaryStatus = checkNPM();
+		if (!binaryStatus.isOK()) {
+			status.merge(binaryStatus);
+			return status;
+		}
+
+		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("uninstallDependenciesInternal");) {
+
+			installUninstallNPMs(monitor, status, Collections.emptyMap(), packageNames);
+			indexSynchronizer.synchronizeNpms(monitor, status);
+
+			return status;
+
+		} finally {
+			monitor.done();
+		}
+	}
+
+	/**
+	 * Refreshes the type definitions for all installed, available {@code npm} packages in the external workspace.
+	 * Performs a {@code git pull} before the actual refresh process. Returns with an {@link IStatus status}
+	 * representing the outcome of the refresh operation.
+	 *
+	 * @param monitor
+	 *            the monitor for the progress.
+	 * @return a status representing the outcome of the operation.
+	 */
+	public IStatus refreshInstalledNpmPackages(IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> refreshInstalledNpmPackagesInternal(monitor));
+	}
+
+	private IStatus refreshInstalledNpmPackagesInternal(IProgressMonitor monitor) {
+		checkNotNull(monitor, "monitor");
+
+		MultiStatus refreshStatus = statusHelper.createMultiStatus("Status of refreshing npm type definitions.");
+
+		Collection<String> packageNames = getAllNpmProjectsMapping().keySet();
+		if (packageNames.isEmpty()) {
+			return statusHelper.OK();
+		}
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, packageNames.size() + 1);
+		try {
+
+			logger.logInfo(LINE_DOUBLE);
+			logger.logInfo("Refreshing installed npm packages.");
+			subMonitor.setTaskName("Refreshing npm type definitions...");
+
+			performGitPull(subMonitor.newChild(1, SubMonitor.SUPPRESS_ALL_LABELS));
+
+			for (String packageName : packageNames) {
+				IStatus status = refreshInstalledNpmPackage(packageName, subMonitor.newChild(1));
+				if (!status.isOK()) {
+					logger.logError(status);
+					refreshStatus.merge(status);
+				}
+			}
+			logger.logInfo("Installed npm packages have been refreshed.");
+			logger.logInfo(LINE_DOUBLE);
+
+			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(1), refreshStatus);
+
+			return refreshStatus;
+
+		} finally {
+			subMonitor.done();
+		}
+	}
+
+	private IStatus refreshInstalledNpmPackage(String packageName, IProgressMonitor monitor) {
+		SubMonitor progress = SubMonitor.convert(monitor, 2);
+
+		logger.logInfo(LINE_SINGLE);
+		String taskName = "Refreshing npm type definitions for '" + packageName + "' ...";
+		logger.logInfo(taskName);
+		progress.setTaskName(taskName);
+
+		try {
+
+			URI uri = getAllNpmProjectsMapping().get(packageName);
+			if (null == uri) {
+				// No project with the given package name. Nothing to do.
+				return statusHelper.OK();
+			}
+
+			File definitionsFolder = npmPackageToProjectAdapter.getNpmsTypeDefinitionsFolder(false);
+			if (null == definitionsFolder) {
+				// No definitions are available at the moment.
+				return statusHelper.OK();
+			}
+
+			File packageRoot = new File(uri);
+			PackageJson packageJson = npmPackageToProjectAdapter.getPackageJson(packageRoot);
+			File manifest = new File(packageRoot, N4MF_MANIFEST);
+			if (!manifest.isFile()) {
+				String message = "Cannot locate N4JS manifest for '" + packageName + "' at '" + manifest + "'.";
+				IStatus error = statusHelper.createError(message);
+				logger.logError(error);
+			}
+
+			IStatus status = npmPackageToProjectAdapter.addTypeDefinitions(
+					packageRoot,
+					packageJson,
+					manifest,
+					definitionsFolder);
+
+			if (status.isOK()) {
+				logger.logInfo("Successfully refreshed npm type definitions for '" + packageName + "'.");
+				logger.logInfo(LINE_SINGLE);
+			} else {
+				logger.logError(status);
+			}
+
+			return status;
+
+		} catch (IOException e) {
+			String message = "Error while refreshing npm type definitions for '" + packageName + "'.";
+			IStatus error = statusHelper.createError(message, e);
+			logger.logError(error);
+			return error;
+		} finally {
+			monitor.done();
+		}
+	}
+
+	/**
+	 * Cleans npm cache. Please note:
+	 * <p>
+	 * <i>"It should never be necessary to clear the cache for any reason other than reclaiming disk space"</i> (see
+	 * <a href="https://docs.npmjs.com/cli/cache}">NPM Doc</a>)
+	 *
+	 * @param monitor
+	 *            the monitor for the progress.
+	 * @return a status representing the outcome of the operation.
+	 */
+	public IStatus cleanCache(IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> npmCli.cleanCacheInternal(monitor));
+	}
+
+	/**
+	 * Checks the npm binary.
+	 */
+	private IStatus checkNPM() {
+		NpmBinary npmBinary = npmBinaryProvider.get();
+		IStatus npmBinaryStatus = npmBinary.validate();
+		if (!npmBinaryStatus.isOK()) {
+			return statusHelper.createError("npm binary invalid",
+					new IllegalBinaryStateException(npmBinary, npmBinaryStatus));
+		}
+		return statusHelper.OK();
+	}
+
+	/**
+	 * A map of project (npm package) names to project location mappings.
+	 */
+	private Map<String, URI> getAllNpmProjectsMapping() {
+		Map<String, URI> mappings = newHashMap();
+
+		for (IProject project : externalLibraryWorkspace.getProjects()) {
+			if (project.isAccessible() && project instanceof ExternalProject) {
+				URI location = ((ExternalProject) project).getExternalResource().toURI();
+				mappings.put(project.getName(), location);
+			}
+		}
+
+		return ImmutableMap.copyOf(mappings);
+	}
+
+	private static <T> T runWithWorkspaceLock(Supplier<T> operation) {
+		if (Platform.isRunning()) {
+			ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
+			try {
+				Job.getJobManager().beginRule(rule, null);
+				return operation.get();
+			} finally {
+				Job.getJobManager().endRule(rule);
+			}
+		} else {
+			// locking not available/required in headless case
+			return operation.get();
+		}
+	}
+
+	private void performGitPull(IProgressMonitor monitor) {
+		URI repositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
+		GitUtils.pull(new File(repositoryLocation).toPath(), monitor);
+	}
+}

@@ -51,7 +51,7 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.NpmManager;
+import org.eclipse.n4js.external.ExternalProjectsManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.libraries.PackageJson;
@@ -264,7 +264,7 @@ public class N4jscBase implements IApplication {
 	private TargetPlatformInstallLocationProvider installLocationProvider;
 
 	@Inject
-	private NpmManager npmManager;
+	private ExternalProjectsManager npmManager;
 
 	@Inject
 	private TesterRegistry testerRegistry;
@@ -506,14 +506,14 @@ public class N4jscBase implements IApplication {
 				if (installMissingDependencies) {
 					Map<String, String> dependencies = dependencyHelper.discoverMissingDependencies(projectLocations,
 							srcFiles);
-					if(verbose){
+					if (verbose) {
 						System.out.println("installing missing dependencies:");
 						dependencies.forEach((name, version) -> {
 							System.out.println("  # " + name + version);
 						});
 					}
 
-					IStatus status = npmManager.installDependencies(dependencies, new NullProgressMonitor(), false);
+					IStatus status = npmManager.installNPMs(dependencies, new NullProgressMonitor());
 					// just warn let
 					if (!status.isOK())
 						warn(status.getMessage());
@@ -659,7 +659,7 @@ public class N4jscBase implements IApplication {
 						if (null != versionedPackages) {
 							final Iterable<Entry<String, String>> packageData = versionedPackages.entrySet();
 							for (final Entry<String, String> name2version : packageData) {
-								final IStatus status = npmManager.installDependency(name2version.getKey(),
+								final IStatus status = npmManager.installNPM(name2version.getKey(),
 										name2version.getValue(), new NullProgressMonitor());
 								if (!status.isOK()) {
 									throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(),
