@@ -5,7 +5,10 @@
     "email": "npm@numberfour.eu"
   },
   "license": "EPL-1.0",
-  "repository": "https://github.com/eclipse/n4js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse/n4js"
+  },
   "description": "N4JS Runtime Library for ECMA402.",
   "keywords": [
     "n4js",
