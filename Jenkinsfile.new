@@ -29,6 +29,14 @@ pipeline {
         timeout(time: 5, unit: 'HOURS')
         timestamps()
     }
+
+    environment {
+        MAVEN_OPTS = '-XX:+UnlockExperimentalVMOptions ' +
+                     '-XX:+UseCGroupMemoryLimitForHeap ' +
+                     '-XX:MaxRAMFraction=2 '             +
+                     '-XshowSettings:vm '
+    }
+
     triggers {
         pollSCM('H/5 * * * *') // every 5 minutes
         cron   ('H   1 * * *') // Nightly build every day a 1am
