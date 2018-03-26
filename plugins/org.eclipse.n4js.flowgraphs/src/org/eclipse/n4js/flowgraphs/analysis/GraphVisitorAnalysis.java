@@ -22,21 +22,11 @@ import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 
 /**
  * Contains algorithms that start {@link GraphVisitorInternal}s using the {@link GraphVisitorGuideInternal}.
  */
 public class GraphVisitorAnalysis {
-	static private final DataCollector dcForwardAnalyses = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Forward", "Flow Graphs", "Perform Analyses");
-	static private final DataCollector dcBackwardAnalyses = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Backward", "Flow Graphs", "Perform Analyses");
-	static private final DataCollector dcAugmentEffectInfo = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Augment Effect Information", "Flow Graphs", "Create Graphs");
-
 	final N4JSFlowAnalyser flowAnalyzer;
 	final FlowGraph cfg;
 	private boolean forwardAnalysisDone = false;
@@ -60,7 +50,7 @@ public class GraphVisitorAnalysis {
 
 		for (ControlFlowElement container : cfg.getAllContainers()) {
 			ComplexNode cnContainer = cfg.getComplexNode(container);
-			traverseForwards(guide, cnContainer);
+			guide.walkthroughForward(cnContainer);
 		}
 
 		guide.terminate();
@@ -79,7 +69,7 @@ public class GraphVisitorAnalysis {
 
 		for (ControlFlowElement container : cfg.getAllContainers()) {
 			ComplexNode cnContainer = cfg.getComplexNode(container);
-			traverseBackwards(guide, cnContainer);
+			guide.walkthroughBackward(cnContainer);
 		}
 
 		guide.terminate();
@@ -112,23 +102,9 @@ public class GraphVisitorAnalysis {
 	/** see {@link N4JSFlowAnalyser#augmentEffectInformation()} */
 	public void augmentEffectInformation(SymbolFactory symbolFactory) {
 		if (!symbolsAugmented) {
-			Measurement msmnt = dcAugmentEffectInfo.getMeasurement("AugmentEffectInfo_" + cfg.getScriptName());
 			ControlFlowGraphFactory.augmentDataflowInformation(cfg, symbolFactory);
 			symbolsAugmented = true;
-			msmnt.end();
 		}
-	}
-
-	private void traverseForwards(GraphVisitorGuideInternal guide, ComplexNode cnContainer) {
-		Measurement msmnt = dcForwardAnalyses.getMeasurement("Forward_" + cfg.getScriptName());
-		guide.walkthroughForward(cnContainer);
-		msmnt.end();
-	}
-
-	private void traverseBackwards(GraphVisitorGuideInternal guide, ComplexNode cnContainer) {
-		Measurement msmnt = dcBackwardAnalyses.getMeasurement("Forward_" + cfg.getScriptName());
-		guide.walkthroughBackward(cnContainer);
-		msmnt.end();
 	}
 
 }

@@ -10,12 +10,18 @@
  */
 package org.eclipse.n4js.external;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.inject.ImplementedBy;
 
@@ -25,6 +31,41 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(NoopExternalLibraryWorkspace.class)
 public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
+
+	/** Contains the projects that were built and scheduled. */
+	static public class RegisterResult {
+		/** All external projects that were cleaned */
+		final public Set<? extends IProject> externalProjectsCleaned;
+		/** All external projects that were built */
+		final public Set<? extends IProject> externalProjectsBuilt;
+		/** All workspace projects that were scheduled */
+		final public Set<? extends IProject> workspaceProjectsScheduled;
+
+		RegisterResult() {
+			this.externalProjectsCleaned = freeze(null);
+			this.externalProjectsBuilt = freeze(null);
+			this.workspaceProjectsScheduled = freeze(null);
+		}
+
+		/** Constructor */
+		public RegisterResult(Collection<? extends IProject> extPrjsCleaned,
+				Collection<? extends IProject> extPrjsBuilt,
+				Collection<? extends IProject> wsPrjsScheduled) {
+
+			this.externalProjectsCleaned = freeze(extPrjsCleaned);
+			this.externalProjectsBuilt = freeze(extPrjsBuilt);
+			this.workspaceProjectsScheduled = freeze(wsPrjsScheduled);
+		}
+
+		static private <P extends IProject> Set<P> freeze(Collection<P> prjs) {
+			if (prjs == null) {
+				return Collections.unmodifiableSet(Collections.emptySet());
+			}
+			@SuppressWarnings("unused")
+			HashSet<P> hashSet = new HashSet<P>(prjs);
+			return Collections.unmodifiableSet(hashSet);
+		}
+	}
 
 	/**
 	 * Registers the new projects and removed the deleted ones based on the project adaption result. The projects will
@@ -37,7 +78,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * @param triggerCleanbuild
 	 *            if true, a clean build is triggered on all affected workspace projects.
 	 */
-	public abstract void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
+	public abstract RegisterResult registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
 			boolean triggerCleanbuild);
 
 	/**
@@ -45,7 +86,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *
 	 * @return the external projects.
 	 */
-	public abstract Iterable<IProject> getProjects();
+	public abstract Collection<N4JSExternalProject> getProjects();
 
 	/**
 	 * Returns with all existing external projects that are contained in the given external library root location.
@@ -54,7 +95,16 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the location of the external library root.
 	 * @return an iterable of external projects available from the given external library root location.
 	 */
-	public abstract Iterable<IProject> getProjects(java.net.URI rootLocation);
+	public abstract Collection<N4JSExternalProject> getProjectsIn(java.net.URI rootLocation);
+
+	/**
+	 * Returns with all existing external projects that are contained in the given external library root locations.
+	 *
+	 * @param rootLocations
+	 *            the locations of the external library roots.
+	 * @return an iterable of external projects available from the given external library root locations.
+	 */
+	public abstract Collection<N4JSExternalProject> getProjectsIn(Collection<java.net.URI> rootLocations);
 
 	/**
 	 * Returns with all existing external project descriptions that are contained in the given external library root
@@ -64,7 +114,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the location of the external library root.
 	 * @return an iterable of external project descriptions available from the given external library root location.
 	 */
-	public abstract Iterable<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation);
+	public abstract Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation);
 
 	/**
 	 * Returns with the project with the given name. Or {@code null} if the project does not exist.
@@ -73,7 +123,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the unique name of the project.
 	 * @return the project, or {@code null} if does not exist.
 	 */
-	public abstract IProject getProject(final String projectName);
+	public abstract ExternalProject getProject(final String projectName);
 
 	/**
 	 * Returns with the file given with the file location URI argument. This method returns with {@code null} if the

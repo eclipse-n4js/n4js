@@ -30,9 +30,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
@@ -179,13 +179,12 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 	protected Collection<Delta> doUpdate(BuildData buildData, ResourceDescriptionsData newData,
 			IProgressMonitor monitor) {
 
-		Measurement mes = dcBuild.getMeasurement("build " + Instant.now());
-
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() >>>");
 		logBuildData(buildData, " of before #doUpdate");
 
 		IProject project = getProject(buildData);
-		try {
+		try (ClosableMeasurement m = dcBuild.getClosableMeasurement("build " + Instant.now());) {
+
 			BuildType buildType = N4JSBuildTypeTracker.getBuildType(project);
 			IBuildParticipantInstruction instruction;
 			if (buildType == null) {
@@ -204,7 +203,6 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		builderStateLogger.log("Modified deltas: " + modifiedDeltas);
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");
 
-		mes.end();
 		return modifiedDeltas;
 	}
 
@@ -231,23 +229,23 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
-		Measurement mes = dcValidations.getMeasurement("validation");
-		super.updateMarkers(delta, resourceSet, monitor);
-		mes.end();
+		try (ClosableMeasurement m = dcValidations.getClosableMeasurement("validation");) {
+			super.updateMarkers(delta, resourceSet, monitor);
+		}
 
 		if (resourceSet != null) { // resourceSet is null during clean build
-			mes = dcTranspilation.getMeasurement("transpilation");
+
 			IBuildParticipantInstruction instruction = (IBuildParticipantInstruction) EcoreUtil.getAdapter(
 					resourceSet.eAdapters(), IBuildParticipantInstruction.class);
 			if (instruction == null) {
 				throw new IllegalStateException();
 			}
-			try {
+			try (ClosableMeasurement m = dcTranspilation.getClosableMeasurement("transpilation");) {
+
 				instruction.process(delta, resourceSet, monitor);
 			} catch (CoreException e) {
 				handleCoreException(e);
 			}
-			mes.end();
 		}
 
 	}
@@ -338,7 +336,6 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		affectedURIs.removeAll(allRemainingURIs);
 
 		for (URI currAffURI : affectedURIs) {
-			final IResourceDescription resDesc = this.getResourceDescription(currAffURI);
 			if (!N4MF_MANIFEST.equals(currAffURI.lastSegment())) {
 
 				/*-
@@ -377,8 +374,9 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 				 * code, we make sure that the cached TModule of C (in the user data of C's resource description) won't be
 				 * used while processing B during proxy resolution.
 				 */
-				newState.register(new DefaultResourceDescriptionDelta(resDesc,
-						new ResourceDescriptionWithoutModuleUserData(resDesc)));
+				IResourceDescription resDesc = this.getResourceDescription(currAffURI);
+				ResourceDescriptionWithoutModuleUserData rdwmud = new ResourceDescriptionWithoutModuleUserData(resDesc);
+				newState.register(new DefaultResourceDescriptionDelta(resDesc, rdwmud));
 			}
 		}
 	}

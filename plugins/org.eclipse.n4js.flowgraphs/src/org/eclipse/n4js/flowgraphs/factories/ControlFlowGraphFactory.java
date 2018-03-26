@@ -34,9 +34,9 @@ import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -57,18 +57,21 @@ public class ControlFlowGraphFactory {
 	static public FlowGraph build(Script script) {
 		Set<ControlFlowElement> cfContainers = new LinkedHashSet<>();
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
+		String uriString = script.eResource().getURI().toString();
 
-		Measurement mes = dcCreateNodes.getMeasurement("createNodes_" + script.eResource().getURI().toString());
-		createComplexNodes(script, cfContainers, cnMap);
-		ComplexNodeMapper cnMapper = new ComplexNodeMapper(cnMap);
-		mes.end();
+		ComplexNodeMapper cnMapper = null;
+		try (ClosableMeasurement m = dcCreateNodes.getClosableMeasurement("createNodes_" + uriString);) {
+			createComplexNodes(script, cfContainers, cnMap);
+			cnMapper = new ComplexNodeMapper(cnMap);
+		}
 
-		mes = dcConnectNodes.getMeasurement("connectNodes_" + script.eResource().getURI().toString());
-		connectComplexNodes(cnMapper);
-		mes.end();
-		mes = dcJumpEdges.getMeasurement("jumpEdges_" + script.eResource().getURI().toString());
-		createJumpEdges(cnMapper);
-		mes.end();
+		try (ClosableMeasurement m = dcConnectNodes.getClosableMeasurement("connectNodes_" + uriString);) {
+			connectComplexNodes(cnMapper);
+		}
+
+		try (ClosableMeasurement m = dcJumpEdges.getClosableMeasurement("jumpEdges_" + uriString);) {
+			createJumpEdges(cnMapper);
+		}
 
 		FlowGraph cfg = new FlowGraph(script, cfContainers, cnMap);
 

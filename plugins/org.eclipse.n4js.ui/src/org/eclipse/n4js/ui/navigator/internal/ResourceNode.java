@@ -40,12 +40,17 @@ import com.google.common.collect.FluentIterable;
 	private static final Image FILE_IMG = getWorkbench().getSharedImages().getImage(IMG_OBJ_FILE);
 
 	private final File file;
+	private final String label;
 
 	static public ResourceNode create(final Node parent, final File file) {
+		return create(parent, file, file.getName());
+	}
+
+	static public ResourceNode create(final Node parent, final File file, final String label) {
 		if (file == null || !file.exists()) {
 			return null;
 		}
-		ResourceNode resourceNode = new ResourceNode(parent, file);
+		ResourceNode resourceNode = new ResourceNode(parent, file, label);
 		return resourceNode;
 	}
 
@@ -57,21 +62,22 @@ import com.google.common.collect.FluentIterable;
 	 * @param file
 	 *            the wrapped file that the new node instance represents.
 	 */
-	private ResourceNode(final Node parent, final File file) {
+	private ResourceNode(final Node parent, final File file, final String label) {
 		super(parent);
 		this.file = file;
+		this.label = label;
 	}
 
 	@Override
 	public String getText() {
-		return file.getName();
+		return label;
 	}
 
 	@Override
 	public Object[] getChildren() {
 		if (file.isDirectory()) {
 			final FluentIterable<File> subFiles = from(Arrays.asList(file.listFiles()));
-			return subFiles.transform(f -> new ResourceNode(this, f)).toArray(ResourceNode.class);
+			return subFiles.transform(f -> create(this, f)).toArray(ResourceNode.class);
 		}
 		return EMPTY_ARRAY;
 	}
@@ -97,7 +103,7 @@ import com.google.common.collect.FluentIterable;
 
 	@Override
 	public String getName() {
-		return file.getName();
+		return label;
 	}
 
 	@Override

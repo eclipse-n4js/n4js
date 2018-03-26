@@ -28,6 +28,7 @@ import org.eclipse.n4js.smith.ui.graph.Graph;
 import org.eclipse.n4js.smith.ui.graph.GraphList;
 import org.eclipse.n4js.smith.ui.graph.GraphProvider;
 import org.eclipse.n4js.smith.ui.graph.GraphType;
+import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -207,8 +208,33 @@ public class SourceGraphView extends ViewPart {
 			throw new IllegalArgumentException("root must be a ResourceSet, Resource, or EObject");
 		if (graphList.isDisposed())
 			return;
-		graph.build(graphProvider, root);
-		showGraph(label, graph, graphType);
+		ResourceType resourceType = null;
+		if (root instanceof ResourceSet) {
+			ResourceSet rs = (ResourceSet) root;
+			if (rs.getResources().isEmpty()) {
+				return;
+			}
+			resourceType = ResourceType.getResourceType(rs.getResources().get(0));
+		}
+		if (root instanceof Resource) {
+			Resource rs = (Resource) root;
+			resourceType = ResourceType.getResourceType(rs);
+		}
+		if (root instanceof EObject) {
+			EObject eo = (EObject) root;
+			resourceType = ResourceType.getResourceType(eo);
+		}
+		if (resourceType != null) {
+			boolean supportedCFG = false;
+			supportedCFG |= resourceType == ResourceType.JS;
+			supportedCFG |= resourceType == ResourceType.JSX;
+			supportedCFG |= resourceType == ResourceType.N4JS;
+			supportedCFG |= resourceType == ResourceType.N4JSX;
+			if (supportedCFG) {
+				graph.build(graphProvider, root);
+				showGraph(label, graph, graphType);
+			}
+		}
 	}
 
 	/**

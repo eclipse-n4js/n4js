@@ -46,7 +46,7 @@ export public class DispatchQueue<TListener extends Function> {
      * Listeners are invoked in order of the priority given (highest priority first), in case of equal priority in the
      * order they were added to the queue.
      */
-    public add(listener: TListener, listenerContext: any=, priority: number=0) {
+    public add(listener: TListener, listenerContext: Object=, priority: number=0) {
         this.addListener(listener, listenerContext, priority, false);
     }
 
@@ -54,14 +54,14 @@ export public class DispatchQueue<TListener extends Function> {
      * Add given listener to this queue and mark it for removal from this queue after its first invocation.
      * Hence, the given listener will be invoked only once.
      */
-    public addOnce(listener: TListener, listenerContext: any=, priority: number=) {
+    public addOnce(listener: TListener, listenerContext: Object=, priority: number=) {
         this.addListener(listener, listenerContext, priority, true);
     }
     
     /**
      * Remove given listener from this queue.
      */
-    public remove(listener: TListener, context: any) {
+    public remove(listener: TListener, context: Object=) {
         // Search the listener in the array
         var listenerIdx = this.listeners.findIndex((elem, index, array) => 
                 { return ((elem !== null) && (elem.listener === listener) && (elem.context === context)); }
@@ -108,7 +108,7 @@ export public class DispatchQueue<TListener extends Function> {
         for (var i = 0; i < listeners.length;  i++) {
             var current = listeners[i];
             if (!this.shouldHalt) {
-                await current.listener.apply(this, params);
+                await Promise.resolve(current.listener.apply(current.listenerContext, params));
                 // If the listener should be applied only once, remove it
                 if (current.applyOnlyOnce) {
                     this.remove(current.listener, current.listenerContext);
@@ -119,12 +119,12 @@ export public class DispatchQueue<TListener extends Function> {
         this.shouldHalt = false;
     }
     
-    public getListOfListeners(): Array<~Object with {listener: TListener, listenerContext: any, priority: int, insertionOrder: int, applyOnlyOnce: boolean}> {
+    public getListOfListeners(): Array<~Object with {listener: TListener, listenerContext: Object, priority: int, insertionOrder: int, applyOnlyOnce: boolean}> {
         var oldListeners = this.listeners.slice();
         var oldLastIndex = this.lastIndex;
         var oldLastInsertionOrder = this.lastInsertionOrder;
         
-        var result = new Array<~Object with {listener: TListener, listenerContext: any, priority: int, insertionOrder: int, applyOnlyOnce: boolean}>();
+        var result = new Array<~Object with {listener: TListener, listenerContext: Object, priority: int, insertionOrder: int, applyOnlyOnce: boolean}>();
         for (var i = 1; i <= oldLastIndex;  i++) {
             var current = this.removeListenerWithHighestPriority();
             result.push({listener: current.listener, listenerContext: current.context, 
@@ -157,7 +157,7 @@ export public class DispatchQueue<TListener extends Function> {
         return this.getListOfListeners().toString();
     }
     
-    private addListener(listener: TListener, listenerContext: any, priority: number, applyOnlyOnce: boolean) {
+    private addListener(listener: TListener, listenerContext: Object, priority: number, applyOnlyOnce: boolean) {
         if (this.isDispatching) {
             throw "Adding a listener while dispatching is forbidden."
         }
@@ -255,7 +255,7 @@ export public class DispatchQueue<TListener extends Function> {
 
 class ListenerDS<TListener extends Function> {
     public listener: TListener;
-    public context: any+;
+    public context: Object;
     public priority: int;
     public applyOnlyOnce: boolean;
     public insertionOrder: int;

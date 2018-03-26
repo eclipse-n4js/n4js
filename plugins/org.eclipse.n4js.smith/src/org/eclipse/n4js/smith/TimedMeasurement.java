@@ -17,7 +17,7 @@ import com.google.common.base.Stopwatch;
 /**
  * Simple measurement that tracks time between its creation and call to {@link #end()}.
  */
-class TimedMeasurement implements Measurement {
+class TimedMeasurement implements Measurement, ClosableMeasurement {
 	final String name;
 	final Stopwatch sw;
 	private boolean consumed = false;
@@ -41,4 +41,8 @@ class TimedMeasurement implements Measurement {
 		stopHandler = null;
 	}
 
+	@Override
+	public void close() {
+		end();
+	}
 }
