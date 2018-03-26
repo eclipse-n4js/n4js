@@ -1,6 +1,9 @@
 {
   "name": "org.eclipse.n4js.mangelhaft.test",
-  "author": "NumberFour AG <npm@numberfour.eu>",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
   "license": "EPL-1.0",
   "private": true,
   "repository": "https://github.com/NumberFour/n4js",
