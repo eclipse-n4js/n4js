@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -347,9 +347,14 @@ public final class InferenceContext {
 	 * At this time, no partial solutions are returned in case of unsolvable constraint systems.
 	 */
 	public Map<InferenceVariable, TypeRef> solve() {
-		Measurement mes = collector.getMeasurement("soleve " + new SimpleDateFormat("hh:mm:ss.SSS").format(new Date()));
+		String time = new SimpleDateFormat("hh:mm:ss.SSS").format(new Date());
+		try (ClosableMeasurement m = collector.getClosableMeasurement("solve " + time);) {
+			return internalSolve();
+		}
+	}
+
+	private Map<InferenceVariable, TypeRef> internalSolve() {
 		if (isSolved) {
-			mes.end();
 			return solution;
 		}
 		isSolved = true;
@@ -412,7 +417,6 @@ public final class InferenceContext {
 			action.accept(Optional.fromNullable(solution));
 		}
 
-		mes.end();
 		return solution;
 	}
 

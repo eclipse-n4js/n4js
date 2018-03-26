@@ -17,7 +17,9 @@ import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSI
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -93,6 +95,15 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		this.workspace.getAllProjectsLocations().forEachRemaining(
 				location -> projects.add(model.getN4JSProject(location)));
 		return projects;
+	}
+
+	@Override
+	public Map<String, IN4JSProject> findAllProjectMappings() {
+		Map<String, IN4JSProject> allProjectMappings = new HashMap<>();
+		for (IN4JSProject project : findAllProjects()) {
+			allProjectMappings.put(project.getProjectId(), project);
+		}
+		return allProjectMappings;
 	}
 
 	@Override

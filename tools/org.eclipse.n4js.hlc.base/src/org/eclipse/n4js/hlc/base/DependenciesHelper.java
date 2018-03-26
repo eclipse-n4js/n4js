@@ -29,6 +29,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.DependenciesCollectingUtil;
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -50,11 +51,13 @@ class DependenciesHelper {
 	Map<String, String> discoverMissingDependencies(String projectLocations, List<File> srcFiles) {
 
 		List<File> allProjectsRoots = new ArrayList<>();
+		List<File> discoveredProjectLocations = new ArrayList<>();
 
-		List<File> locations = convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations);
-		// Discover projects in search paths.
-		List<File> discoveredProjectLocations = collectAllProjectPaths(locations);
-
+		if (projectLocations != null) {
+			List<File> locations = convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations);
+			// Discover projects in search paths.
+			discoveredProjectLocations = collectAllProjectPaths(locations);
+		}
 		// Discover projects for single source files.
 		List<File> singleSourceProjectLocations = new ArrayList<>();
 		try {
@@ -155,7 +158,7 @@ class DependenciesHelper {
 			FileUtils.isExistingWriteableDir(tpLoc);
 			retList.add(tpLoc);
 		}
-		if (!dirpaths.isEmpty()) {
+		if (!Strings.isNullOrEmpty(dirpaths)) {
 			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
 				final File ret = new File(dirpath);
 				FileUtils.isExistingWriteableDir(ret);

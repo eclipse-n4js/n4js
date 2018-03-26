@@ -13,11 +13,19 @@ package org.eclipse.n4js.ui.internal;
 import static java.lang.Boolean.TRUE;
 import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS;
 
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.internal.AbstractN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
@@ -25,13 +33,6 @@ import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.internal.AbstractN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 
 /**
  */
@@ -90,6 +91,11 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	}
 
 	@Override
+	public Map<String, IN4JSProject> findAllProjectMappings() {
+		return this.model.findAllProjectMappings();
+	}
+
+	@Override
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI nestedLocation) {
 		if (nestedLocation == null) {
 			return Optional.absent();
@@ -142,8 +148,10 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 		final IProject eclipseProject = contextProject.isPresent()
 				? ((IN4JSEclipseProject) contextProject.get()).getProject() : null;
 		final ResourceSet resourceSet = resourceSetProvider.get(eclipseProject);
-		// note_1: it is different than org.eclipse.n4js.internal.N4JSRuntimeCore.createResourceSet(Optional<IN4JSProject>)
-		// note_2: the value passed to #get() in previous line is not used in case of our implementation (as said by SZ in
+		// note_1: it is different than
+		// org.eclipse.n4js.internal.N4JSRuntimeCore.createResourceSet(Optional<IN4JSProject>)
+		// note_2: the value passed to #get() in previous line is not used in case of our implementation (as said by SZ
+		// in
 		// summer 2015 and on December 10, 2015) so it is ok to pass in 'null' for now, but this will become an issue if
 		// this value will be used in the future! Therefore, client code should already pass in a valid contextProject,
 		// if possible.

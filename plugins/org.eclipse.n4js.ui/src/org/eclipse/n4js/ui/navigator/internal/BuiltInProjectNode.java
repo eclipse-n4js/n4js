@@ -12,13 +12,15 @@ package org.eclipse.n4js.ui.navigator.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.FluentIterable.from;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.graphics.Image;
@@ -61,13 +63,18 @@ import org.eclipse.swt.graphics.Image;
 	public Object[] getChildren() {
 
 		final ResourceNode manifestNode = getManifestResourceNode();
-		final ResourceNode[] children = from(project.getSourceContainers())
-				.transform(p -> p.getLocation())
-				.transform(uri -> uri.toFileString())
-				.transform(uri -> new File(uri))
-				.transform(file -> ResourceNode.create(this, file))
-				.filter(notNull())
-				.toArray(ResourceNode.class);
+
+		final List<ResourceNode> childrenList = new LinkedList<>();
+		for (IN4JSSourceContainer srcContainer : project.getSourceContainers()) {
+			URI location = srcContainer.getLocation();
+			File file = new File(location.toFileString());
+			String label = srcContainer.getRelativeLocation();
+			ResourceNode resourceNode = ResourceNode.create(this, file, label);
+			if (resourceNode != null) {
+				childrenList.add(resourceNode);
+			}
+		}
+		final ResourceNode[] children = childrenList.toArray(new ResourceNode[0]);
 
 		return null != manifestNode ? Arrays2.add(children, manifestNode) : children;
 
