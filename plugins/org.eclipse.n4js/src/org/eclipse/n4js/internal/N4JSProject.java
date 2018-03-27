@@ -391,8 +391,9 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public String toString() {
-		return "Project '" + getProjectId() + "' "
-				+ (exists() ? " type=" + getProjectType() + " " : " -doesn't exist!- ");
+		String str = getProjectId();
+		str += " (" + (exists() ? getProjectType() : "doesn't exist") + ")";
+		return str;
 	}
 
 	@Override

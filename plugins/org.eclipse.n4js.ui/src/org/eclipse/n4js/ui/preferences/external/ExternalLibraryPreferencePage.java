@@ -334,7 +334,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 	private boolean isNpmWithNameInstalled(final String packageName) {
 		final File root = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
-		return from(externalLibraryWorkspace.getProjects(root.toURI()))
+		return from(externalLibraryWorkspace.getProjectsIn(root.toURI()))
 				.transform(p -> p.getName())
 				.anyMatch(name -> name.equals(packageName));
 	}

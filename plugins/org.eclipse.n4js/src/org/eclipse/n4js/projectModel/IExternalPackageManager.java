@@ -27,4 +27,13 @@ public interface IExternalPackageManager {
 	 */
 	ProjectDescription loadManifest(URI manifest);
 
+	/**
+	 * Convenience method for {@link #loadManifest(URI)}
+	 */
+	ProjectDescription loadManifestFromProjectRoot(URI rootLocation);
+
+	/**
+	 * @return true iff the given location is the (existing) root folder of a project that contains a manifest.n4mf file
+	 */
+	public boolean isN4ProjectRoot(URI rootLocation);
 }

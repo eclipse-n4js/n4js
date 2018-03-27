@@ -81,13 +81,13 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 
 	// @formatter:off
 	final static String expectedOrder = "" +
-			"DEBUG: 1. Project Project 'PA'  type=RUNTIME_LIBRARY  used by [Project 'PA'  type=RUNTIME_LIBRARY , Project 'PB'  type=LIBRARY , Project 'PC'  type=RUNTIME_LIBRARY ]\n" +
-			"DEBUG: 2. Project Project 'PB'  type=LIBRARY  used by [Project 'PB'  type=LIBRARY ]\n" +
-			"DEBUG: 3. Project Project 'PC'  type=RUNTIME_LIBRARY  used by [Project 'PC'  type=RUNTIME_LIBRARY ]\n" +
-			"DEBUG: 4. Project Project 'PD'  type=RUNTIME_LIBRARY  used by [Project 'PD'  type=RUNTIME_LIBRARY ]\n" +
-			"DEBUG: 5. Project Project 'PE'  type=RUNTIME_LIBRARY  used by [Project 'PE'  type=RUNTIME_LIBRARY ]\n" +
-			"DEBUG: 6. Project Project 'PF'  type=RUNTIME_LIBRARY  used by [Project 'PF'  type=RUNTIME_LIBRARY ]\n" +
-			"DEBUG: 7. Project Project 'PG'  type=RUNTIME_LIBRARY  used by [Project 'PG'  type=RUNTIME_LIBRARY ]\n";
+			"DEBUG: 1. Project PA (RUNTIME_LIBRARY) used by [PA (RUNTIME_LIBRARY), PB (LIBRARY), PC (RUNTIME_LIBRARY)]\n"+
+			"DEBUG: 2. Project PB (LIBRARY) used by [PB (LIBRARY)]\n"+
+			"DEBUG: 3. Project PC (RUNTIME_LIBRARY) used by [PC (RUNTIME_LIBRARY)]\n"+
+			"DEBUG: 4. Project PD (RUNTIME_LIBRARY) used by [PD (RUNTIME_LIBRARY)]\n"+
+			"DEBUG: 5. Project PE (RUNTIME_LIBRARY) used by [PE (RUNTIME_LIBRARY)]\n"+
+			"DEBUG: 6. Project PF (RUNTIME_LIBRARY) used by [PF (RUNTIME_LIBRARY)]\n"+
+			"DEBUG: 7. Project PG (RUNTIME_LIBRARY) used by [PG (RUNTIME_LIBRARY)]\n";
 
 	final static int[][] shuffleOrders = {
 			{0,1,2,3,4,5,6,7,8,9,10,11},
@@ -130,7 +130,7 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 			String line = null;
 			String actualOrder = "";
 			while ((line = bufferedReader.readLine()) != null) {
-				if (line.contains(". Project Project '")) {
+				if (line.contains(". Project ")) {
 					old.println(line);
 					actualOrder += line + "\n";
 				}

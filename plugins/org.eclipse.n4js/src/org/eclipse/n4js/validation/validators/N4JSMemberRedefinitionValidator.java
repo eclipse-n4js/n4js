@@ -27,6 +27,7 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_MEMBERTYPE_INC
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_NON_EXISTENT;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_NON_EXISTENT_INTERFACE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_VISIBILITY;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_REDEFINED_MEMBER_TYPE_INVALID;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_REDEFINED_METHOD_TYPE_CONFLICT;
@@ -51,6 +52,7 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_M
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_NON_EXISTENT;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_NON_EXISTENT_INTERFACE;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_VISIBILITY;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_PSEUDO_REDEFINED_SPEC_CTOR_INCOMPATIBLE;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_REDEFINED_MEMBER_TYPE_INVALID;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_REDEFINED_METHOD_TYPE_CONFLICT;
@@ -75,15 +77,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.util.Arrays;
-import org.eclipse.xtext.validation.Check;
-import org.eclipse.xtext.validation.EValidatorRegistrar;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4JS.MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDefinition;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
@@ -126,6 +119,14 @@ import org.eclipse.n4js.validation.validators.utils.MemberMatrix.SourceAwareIter
 import org.eclipse.n4js.validation.validators.utils.MemberRedefinitionUtils;
 import org.eclipse.xsemantics.runtime.Result;
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.util.Arrays;
+import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.EValidatorRegistrar;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.inject.Inject;
 
 /**
  * Implementation of constraints in chapter 5.4. Redefinition of Members.
@@ -657,39 +658,45 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		}
 
 		// 3. s not final
-		if (s.isFinal()) { // 2. final
+		if (s.isFinal()) {
 			if (!consumptionConflict) { // avoid consequential errors
 				messageOverrideFinal(redefinitionType, m, s);
 			}
 			return OverrideCompatibilityResult.ERROR;
 		}
 
+		final boolean sIsField = s instanceof TField;
+		final boolean sIsSetter = s instanceof TSetter;
+		final boolean mIsField = m instanceof TField;
+
 		// 4. s not const
-		if (s instanceof TField) { // const only defined on TField & TStructuralField
+		if (sIsField) { // const only defined on TField & TStructuralField
 			TField sF = (TField) s;
 			if (sF.isConst()) { // 2. const
 				// By GHOLD-186 const redefinition is allowed for const fields
-				if (!((m instanceof TField)
+				if (!((mIsField)
 						&& ((TField) m).isConst())) {
 					if (!consumptionConflict) { // avoid consequential errors
 						messageOverrideConst(redefinitionType, m, sF);
 					}
 					return OverrideCompatibilityResult.ERROR;
 				}
-			} else {
-				if (m instanceof TField) {
-					TField fM = (TField) m;
-					if (fM.isConst()) {
-						if (!consumptionConflict) { // avoid consequential errors
-							messageOverrideConst(redefinitionType, m, sF);
-						}
-						return OverrideCompatibilityResult.ERROR;
+			}
+		}
+
+		// 5. must not override non-final/non-const field or setter with a @Final/const field
+		if (sIsField || sIsSetter) {
+			if (!s.isFinal() && !s.isConst()) {
+				if (mIsField && (m.isFinal() || m.isConst())) {
+					if (!consumptionConflict) { // avoid consequential errors
+						messageOverrideWithFinalOrConstField(redefinitionType, m, s);
 					}
+					return OverrideCompatibilityResult.ERROR;
 				}
 			}
 		}
 
-		// 5. abstract
+		// 6. abstract
 		if (m.isAbstract() && !s.isAbstract()) {
 			if (!consumptionConflict) { // avoid consequential errors
 				messageOverrideAbstract(redefinitionType, m, s);
@@ -697,10 +704,10 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			return OverrideCompatibilityResult.ERROR;
 		}
 
-		// 6. type compatible
+		// 7. type compatible
 		if (!m.isSetter() && !s.isSetter()) { // in Method (including constructor), Getter, Field
 			Result<Boolean> result = isSubTypeResult(m, s);
-			if (result.failed()) { // 4. subtype
+			if (result.failed()) {
 				if (!consumptionConflict) { // avoid consequential errors
 					messageOverrideMemberTypeConflict(redefinitionType, m, s, result, mm);
 				}
@@ -709,13 +716,13 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		}
 
 		boolean sIsConst = false;
-		if (s instanceof TField) {
+		if (sIsField) {
 			sIsConst = ((TField) s).isConst();
 		}
 
 		if ((m.isSetter() || m.isField()) && !s.isGetter() && !sIsConst) {
 			Result<Boolean> result = isSubTypeResult(s, m);
-			if (result.failed()) { // 4. subtype
+			if (result.failed()) {
 				if (!consumptionConflict) { // avoid consequential errors
 					messageOverrideMemberTypeConflict(redefinitionType, m, s, result, mm);
 				}
@@ -723,7 +730,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			}
 		}
 
-		// 7.1 accessibility must not be reduced
+		// 8.1 accessibility must not be reduced
 		if (AccessModifiers.checkedLess(m, s)) { // fix modifiers in order to avoid strange behavior
 			if (!consumptionConflict) { // avoid consequential errors
 				messageOverrideAccessibilityReduced(redefinitionType, m, s);
@@ -731,7 +738,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			return OverrideCompatibilityResult.ERROR;
 		}
 
-		// 7.2 special accessibility handling of public@Internal and protected as they reduce each other
+		// 8.2 special accessibility handling of public@Internal and protected as they reduce each other
 		MemberAccessModifier fixedLeft = AccessModifiers.fixed(m);
 		MemberAccessModifier fixedRight = AccessModifiers.fixed(s);
 		if ((fixedLeft == MemberAccessModifier.PROTECTED && fixedRight == MemberAccessModifier.PUBLIC_INTERNAL) ||
@@ -809,8 +816,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	}
 
 	/**
-	 * GHOLD-234 add warning for unused type variables in function and method declarations (unless the method overrides any
-	 * other method).
+	 * GHOLD-234 add warning for unused type variables in function and method declarations (unless the method overrides
+	 * any other method).
 	 */
 	private void unusedGenericTypeVariable(MemberMatrix mm) {
 		for (TMember member : mm.owned()) {
@@ -1042,6 +1049,17 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				CLF_OVERRIDE_FINAL,
 				IssueUserDataKeys.CLF_OVERRIDE_FINAL.OVERRIDDEN_MEMBER_URI,
 				EcoreUtil.getURI(overridden).toString());
+	}
+
+	private void messageOverrideWithFinalOrConstField(RedefinitionType redefinitionType, TMember overriding,
+			TMember overridden) {
+		String badModifier = overriding.isConst() ? "const" : "final";
+		String prefix = overridden instanceof TField ? "non-" + badModifier + " " : "";
+		String message = getMessageForCLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD(
+				prefix + validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
+				badModifier);
+		addIssueToMemberOrInterfaceReference(redefinitionType, overriding, overridden, message,
+				CLF_OVERRIDE_WITH_FINAL_OR_CONST_FIELD);
 	}
 
 	private void messageOverrideConst(RedefinitionType redefinitionType, TMember overriding, TField overridden) {

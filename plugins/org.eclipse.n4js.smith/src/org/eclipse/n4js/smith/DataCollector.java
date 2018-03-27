@@ -34,6 +34,12 @@ public abstract class DataCollector {
 	 */
 	public abstract Measurement getMeasurement(String name);
 
+	/**
+	 * returns new instance of the {@link ClosableMeasurement}. When user invokes {@link Measurement#end()} this
+	 * collector will collect its data.
+	 */
+	public abstract ClosableMeasurement getClosableMeasurement(String name);
+
 	/** returns list of collected data. */
 	public abstract List<DataPoint> getData();
 

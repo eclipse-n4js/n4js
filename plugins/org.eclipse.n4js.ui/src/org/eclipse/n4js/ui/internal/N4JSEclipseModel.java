@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newLinkedHashMap;
-import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.util.List;
@@ -31,26 +30,25 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.internal.N4JSSourceContainerType;
+import org.eclipse.n4js.n4mf.ProjectDependency;
+import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.SourceFragment;
+import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
+import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
-import org.eclipse.n4js.n4mf.ProjectDependency;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.SourceFragment;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 /**
  */
@@ -297,18 +295,25 @@ public class N4JSEclipseModel extends N4JSModel {
 	}
 
 	public Iterable<IN4JSProject> findAllProjects() {
+		return findAllProjectMappings().values();
+	}
 
-		final Map<String, IProject> workspaceProjectMapping = newLinkedHashMap();
-		for (final IProject workspaceProject : from(asList(workspace.getProjects())).filter(p -> p.isOpen())) {
-			workspaceProjectMapping.put(workspaceProject.getName(), workspaceProject);
-		}
-
-		for (final IProject project : externalLibraryWorkspace.getProjects()) {
-			if (!workspaceProjectMapping.containsKey(project.getName())) {
-				workspaceProjectMapping.put(project.getName(), project);
+	public Map<String, IN4JSProject> findAllProjectMappings() {
+		final Map<String, IN4JSProject> workspaceProjectMapping = newLinkedHashMap();
+		for (IProject project : workspace.getProjects()) {
+			if (project.isOpen()) {
+				N4JSEclipseProject n4jsProject = getN4JSProject(project);
+				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
 			}
 		}
 
-		return from(workspaceProjectMapping.values()).transform(p -> getN4JSProject(p));
+		for (IProject project : externalLibraryWorkspace.getProjects()) {
+			if (!workspaceProjectMapping.containsKey(project.getName())) {
+				N4JSEclipseProject n4jsProject = getN4JSProject(project);
+				workspaceProjectMapping.put(n4jsProject.getProjectId(), n4jsProject);
+			}
+		}
+
+		return workspaceProjectMapping;
 	}
 }
