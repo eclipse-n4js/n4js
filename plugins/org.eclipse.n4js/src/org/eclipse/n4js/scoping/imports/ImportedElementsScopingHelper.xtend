@@ -267,12 +267,12 @@ class ImportedElementsScopingHelper {
 
 			val qn = createImportedQualifiedTypeName(namespaceName, importedType)
 			if (typeVisibility.visibility) {
-				if (!importVariables) {
-					// when we are not importing variables we ask for types, types are not access expressions,
-					// so we add type with namespace name into the scope
-					val ieod = validImports.putOrError(importedType, qn, IssueCodes.IMP_AMBIGUOUS)
-					originatorMap.putWithOrigin(ieod, specifier)
-				}
+//				if (!importVariables) {
+//					// when we are not importing variables we ask for types, types are not access expressions,
+//					// so we add type with namespace name into the scope
+//					val ieod = validImports.putOrError(importedType, qn, IssueCodes.IMP_AMBIGUOUS)
+//					originatorMap.putWithOrigin(ieod, specifier)
+//				}
 				val originalName = createImportedQualifiedTypeName(importedType)
 				if (!invalidImports.containsElement(originalName)) {
 					importedType.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap, specifier)

@@ -500,11 +500,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context) {
 		val module = namespace.module;
-		if (module === null || module.eIsProxy()) {
-			// use same return value as MemberScopingHelper.members(UnknownTypeRef, MemberScopeRequest):
-			return new DynamicPseudoScope();
-		}
-		val result = scope_AllTopLevelElementsFromModule(module, context);
+		val result = if (module !== null && !module.eIsProxy) {
+				scope_AllTopLevelElementsFromModule(module, context)
+			} else {
+				IScope.NULLSCOPE
+			};
 		if (namespace.declaredDynamic && !(result instanceof DynamicPseudoScope)) {
 			return new DynamicPseudoScope(result);
 		}
