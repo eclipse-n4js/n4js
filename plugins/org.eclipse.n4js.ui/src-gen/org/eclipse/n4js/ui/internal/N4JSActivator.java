@@ -77,6 +77,8 @@ public class N4JSActivator extends AbstractUIPlugin {
 		} catch (Exception e) {
 			// An exception occurring here might be related to Guice:
 			// https://stackoverflow.com/questions/39918622/why-is-guice-throwing-computationexception-from-uncaughtexceptionhandler-in-mai.
+			e.printStackTrace();
+			System.exit(-1);
 			return null;
 		}
 	}
