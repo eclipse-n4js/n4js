@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
@@ -33,6 +34,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespace <em>Namespace</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeLiteral <em>Array Type Literal</em>}</li>
@@ -45,6 +47,32 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * @generated
  */
 public interface ParameterizedTypeRef extends BaseTypeRef {
+	/**
+	 * Returns the value of the '<em><b>Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Namespace</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Namespace</em>' reference.
+	 * @see #setNamespace(ModuleNamespaceVirtualType)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_Namespace()
+	 * @model
+	 * @generated
+	 */
+	ModuleNamespaceVirtualType getNamespace();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespace <em>Namespace</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Namespace</em>' reference.
+	 * @see #getNamespace()
+	 * @generated
+	 */
+	void setNamespace(ModuleNamespaceVirtualType value);
+
 	/**
 	 * Returns the value of the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->

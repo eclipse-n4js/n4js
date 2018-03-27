@@ -63,6 +63,7 @@ import org.eclipse.n4js.scoping.utils.ScopesHelper
 import org.eclipse.n4js.ts.scoping.ValidatingScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -75,6 +76,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.EObjectDescription
@@ -90,7 +92,6 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.validation.ValidatorMessageHelper
 
 /**
  * This class contains custom scoping description.
@@ -200,6 +201,13 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
 		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
+			val namespace = (context as ParameterizedTypeRef).namespace;
+			if (namespace!==null) {
+				return createScopeForNamespaceAccess(namespace, context);
+			}
+		}
+		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
+			|| reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__NAMESPACE) {
 			return new ValidatingScope(getTypeScope(context, reference, false),
 				context.getTypesFilterCriteria(reference));
 		}
@@ -474,13 +482,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		// if accessing namespace import
 		if (receiver instanceof IdentifierRef) {
-			if (receiver.id instanceof ModuleNamespaceVirtualType) {
-				val namespace = receiver.id as ModuleNamespaceVirtualType;
-				val result = scope_AllTopLevelElementsFromModule(namespace.module, propertyAccess);
-				if (namespace.declaredDynamic && !(result instanceof DynamicPseudoScope)) {
-					return new DynamicPseudoScope(result);
-				}
-				return result;
+			val id = receiver.id;
+			if (id instanceof ModuleNamespaceVirtualType) {
+				return createScopeForNamespaceAccess(id, propertyAccess);
 			}
 		}
 
@@ -492,6 +496,19 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val checkVisibility = true;
 		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess);
+	}
+
+	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context) {
+		val module = namespace.module;
+		if (module === null || module.eIsProxy()) {
+			// use same return value as MemberScopingHelper.members(UnknownTypeRef, MemberScopeRequest):
+			return new DynamicPseudoScope();
+		}
+		val result = scope_AllTopLevelElementsFromModule(module, context);
+		if (namespace.declaredDynamic && !(result instanceof DynamicPseudoScope)) {
+			return new DynamicPseudoScope(result);
+		}
+		return result;
 	}
 
 	/**

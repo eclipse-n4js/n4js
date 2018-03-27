@@ -2936,13 +2936,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__DYNAMIC = BASE_TYPE_REF__DYNAMIC;
 
 	/**
+	 * The feature id for the '<em><b>Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF__NAMESPACE = BASE_TYPE_REF_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__DECLARED_TYPE = BASE_TYPE_REF_FEATURE_COUNT + 0;
+	int PARAMETERIZED_TYPE_REF__DECLARED_TYPE = BASE_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
@@ -2951,7 +2960,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 1;
+	int PARAMETERIZED_TYPE_REF__TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
@@ -2960,7 +2969,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = BASE_TYPE_REF_FEATURE_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = BASE_TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -2969,7 +2978,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -2978,7 +2987,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>Parameterized Type Ref</em>' class.
@@ -2987,7 +2996,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -3341,6 +3350,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__DYNAMIC = PARAMETERIZED_TYPE_REF__DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__NAMESPACE = PARAMETERIZED_TYPE_REF__NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
@@ -4933,6 +4951,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__DYNAMIC = PARAMETERIZED_TYPE_REF__DYNAMIC;
 
 	/**
+	 * The feature id for the '<em><b>Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF__NAMESPACE = PARAMETERIZED_TYPE_REF__NAMESPACE;
+
+	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6072,6 +6099,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF__DYNAMIC = PARAMETERIZED_TYPE_REF__DYNAMIC;
 
 	/**
+	 * The feature id for the '<em><b>Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF__NAMESPACE = PARAMETERIZED_TYPE_REF__NAMESPACE;
+
+	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6404,6 +6440,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_FUNCTION_TYPE_REF__DYNAMIC = VERSIONED_PARAMETERIZED_TYPE_REF__DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_FUNCTION_TYPE_REF__NAMESPACE = VERSIONED_PARAMETERIZED_TYPE_REF__NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
@@ -6810,6 +6855,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__DYNAMIC = VERSIONED_PARAMETERIZED_TYPE_REF__DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__NAMESPACE = VERSIONED_PARAMETERIZED_TYPE_REF__NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
@@ -7827,6 +7881,17 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getParameterizedTypeRef();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespace <em>Namespace</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Namespace</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespace()
+	 * @see #getParameterizedTypeRef()
+	 * @generated
+	 */
+	EReference getParameterizedTypeRef_Namespace();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredType <em>Declared Type</em>}'.
@@ -9387,6 +9452,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass PARAMETERIZED_TYPE_REF = eINSTANCE.getParameterizedTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Namespace</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PARAMETERIZED_TYPE_REF__NAMESPACE = eINSTANCE.getParameterizedTypeRef_Namespace();
 
 		/**
 		 * The meta object literal for the '<em><b>Declared Type</b></em>' reference feature.

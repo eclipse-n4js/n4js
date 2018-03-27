@@ -233,7 +233,7 @@ class ImportedElementsScopingHelper {
 		}
 
 		// add namespace to scope
-		var namespaceName = specifier.alias;
+		val namespaceName = specifier.alias;
 		val namespaceQName = QualifiedName.create(namespaceName)
 		val Type namespaceType = script.module.internalTypes.findFirst [ interType |
 			interType instanceof ModuleNamespaceVirtualType &&

@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 
 // due to some bad linking / scoping behavior in Xcore for clean builds,
 // we need to define this data type here even though it's only usages are
@@ -481,6 +482,7 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
  * on use site. However, the latter is not allowed everywhere.
  */
 class ParameterizedTypeRef extends BaseTypeRef {
+	refers ModuleNamespaceVirtualType namespace
 	refers Type declaredType
 	contains TypeArgument[] typeArgs
 	boolean arrayTypeLiteral = "false"

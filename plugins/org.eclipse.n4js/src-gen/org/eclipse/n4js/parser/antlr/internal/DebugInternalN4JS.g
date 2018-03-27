@@ -6233,6 +6233,15 @@ ruleN4MemberAnnotationList:
 	+
 ;
 
+// Rule TypeReference
+ruleTypeReference:
+	(
+		ruleTypeReferenceName
+		'.'
+	)?
+	ruleTypeReferenceName
+;
+
 // Rule TypeReferenceName
 ruleTypeReferenceName:
 	(
@@ -6246,21 +6255,10 @@ ruleTypeReferenceName:
 		    |
 		'target'
 		    |
-		ruleQualifiedTypeReferenceName
+		'default'
+		    |
+		RULE_IDENTIFIER
 	)
-;
-
-// Rule QualifiedTypeReferenceName
-ruleQualifiedTypeReferenceName:
-	RULE_IDENTIFIER
-	(
-		'.'
-		(
-			RULE_IDENTIFIER
-			    |
-			'default'
-		)
-	)?
 ;
 
 // Rule N4ClassDeclaration
@@ -8448,24 +8446,26 @@ ruleParameterizedTypeRef:
 
 // Rule ParameterizedTypeRefNominal
 ruleParameterizedTypeRefNominal:
-	ruleTypeAndTypeArguments
-;
-
-// Rule ArrayTypeRef
-ruleArrayTypeRef:
-	'['
-	ruleTypeArgument
-	']'
+	(
+		ruleTypeReference
+		    |
+		ruleTypeReference
+		ruleVersionRequest
+	)
+	(
+		('<')=>
+		ruleTypeArguments
+	)?
 ;
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
 	(
 		ruleTypingStrategyUseSiteOperator
-		ruleTypeReferenceName
+		ruleTypeReference
 		    |
 		ruleTypingStrategyUseSiteOperator
-		ruleTypeReferenceName
+		ruleTypeReference
 		ruleVersionRequest
 	)
 	(
@@ -8478,18 +8478,11 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule TypeAndTypeArguments
-ruleTypeAndTypeArguments:
-	(
-		ruleTypeReferenceName
-		    |
-		ruleTypeReferenceName
-		ruleVersionRequest
-	)
-	(
-		('<')=>
-		ruleTypeArguments
-	)?
+// Rule ArrayTypeRef
+ruleArrayTypeRef:
+	'['
+	ruleTypeArgument
+	']'
 ;
 
 // Rule VersionRequest
