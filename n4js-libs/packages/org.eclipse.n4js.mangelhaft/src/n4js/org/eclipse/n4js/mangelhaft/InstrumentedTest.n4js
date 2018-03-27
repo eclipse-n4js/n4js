@@ -8,12 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-
-import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest"
-import {TestFunctionType} from "org/eclipse/n4js/mangelhaft/types/TestFunctionType"
-import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo"
-import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor"
-import {N4Injector} from "n4js/lang/N4Injector"
+import {N4Injector} from "n4js/lang/N4Injector";
+import {TestController} from "org/eclipse/n4js/mangelhaft/TestController";
+import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest";
+import {TestFunctionType} from "org/eclipse/n4js/mangelhaft/types/TestFunctionType";
+import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
+import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
 
 function getAllPropertyNames (objProt: constructor{? extends N4Object}, propNames: Map<string, boolean> =):Map<string, boolean> {
     propNames = propNames || new Map<string, boolean>;
@@ -122,7 +122,7 @@ export public class InstrumentedTest implements IInstrumentedTest{
      * processes a test class and gives a fully processed ready-to-run instrumented test group.
      */
     public static getInstrumentedTest(
-        testClass:constructor{N4Object}, info: TestInfo, testInjector:N4Injector
+        testClass:constructor{N4Object}, info: TestInfo, testInjector:N4Injector, controller: TestController
     ): IInstrumentedTest {
         let parameters: Array<Array<any>> = null;
         let nameTemplate: string = null;
@@ -138,7 +138,13 @@ export public class InstrumentedTest implements IInstrumentedTest{
         if (parameters) {
             parameterizedTests = this.getParameterizedInstrumentedTests(testClass, info, testInjector, parameters, nameTemplate);
         }
-        return new InstrumentedTest(testClass, info, testInjector.create(testClass), null, parameterizedTests)
+
+        // Make shared TestController instance be accessible to test instances (via injection):
+        const instance = testInjector.internalCreate(testClass, testInjector, new Map<string, N4Object>([
+            [`${TestController.n4type.origin}${TestController.n4type.fqn}`, controller]] as Iterable<Iterable2<string, N4Object>>
+        ));
+
+        return new InstrumentedTest(testClass, info, instance, null, parameterizedTests);
     }
     
     /**
