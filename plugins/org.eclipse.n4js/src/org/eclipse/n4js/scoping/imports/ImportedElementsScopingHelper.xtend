@@ -244,6 +244,7 @@ class ImportedElementsScopingHelper {
 
 		if (importVariables) {
 			// add vars to namespace
+			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 			for (importedVar : imp.module.variables) {
 				val varVisibility = variableVisibilityChecker.isVisible(contextResource, importedVar);
 				val varName = importedVar.exportedName
@@ -259,6 +260,7 @@ class ImportedElementsScopingHelper {
 		}
 
 		// add types
+		// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 		for (importedType : imp.module.topLevelTypes) {
 			val typeVisibility = typeVisibilityChecker.isVisible(contextResource, importedType);
 
