@@ -11,9 +11,6 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.EList
@@ -61,6 +58,7 @@ import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -85,6 +83,9 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -167,9 +168,35 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkParameterizedTypeRef(ParameterizedTypeRef paramTypeRef) {
+	def void checkIdentifierRef(IdentifierRef idRef) {
+		val id = idRef.id;
+		if (id === null || id.eIsProxy) {
+			return;
+		}
+
+		if (id instanceof ModuleNamespaceVirtualType) {
+			val parent = idRef.eContainer;
+			val isUsedToAccessTypeInNamespace = if (parent instanceof ParameterizedPropertyAccessExpression) {
+					idRef === parent.target
+				} else {
+					false
+				};
+			if (!isUsedToAccessTypeInNamespace) {
+				addIssue(IssueCodes.getMessageForIMP_PLAIN_ACCESS_OF_NAMESPACE("value"), idRef,
+					IMP_PLAIN_ACCESS_OF_NAMESPACE);
+				return;
+			}
+		}
+	}
+
+	@Check
+	def void checkParameterizedTypeRef(ParameterizedTypeRef paramTypeRef) {
 		val declaredType = paramTypeRef.declaredType;
 		if (declaredType === null || declaredType.eIsProxy) {
+			return;
+		}
+
+		if (!holdsNoPlainReferenceToNamespace(paramTypeRef, declaredType)) {
 			return;
 		}
 
@@ -194,6 +221,15 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		internalCheckDynamic(paramTypeRef);
 
 		internalCheckStructuralPrimitiveTypeRef(paramTypeRef);
+	}
+
+	def private boolean holdsNoPlainReferenceToNamespace(ParameterizedTypeRef typeRef, Type declaredType) {
+		if (declaredType instanceof ModuleNamespaceVirtualType) {
+			addIssue(IssueCodes.getMessageForIMP_PLAIN_ACCESS_OF_NAMESPACE("type"), typeRef,
+				IMP_PLAIN_ACCESS_OF_NAMESPACE);
+			return false;
+		}
+		return true;
 	}
 
 	/**
