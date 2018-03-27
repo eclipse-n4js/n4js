@@ -16,9 +16,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
-import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
@@ -27,6 +27,7 @@ import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -63,10 +64,14 @@ import org.eclipse.n4js.ui.editor.syntaxcoloring.TemplateAwarePartitionTokenScan
 import org.eclipse.n4js.ui.editor.syntaxcoloring.TemplateAwareTokenScanner;
 import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenToAttributeIdMapper;
 import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenTypeToPartitionMapper;
+import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
+import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
 import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
+import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
+import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
 import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
@@ -142,7 +147,6 @@ import org.eclipse.xtext.validation.IResourceValidator;
 
 import com.google.inject.Binder;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 /**
@@ -173,13 +177,21 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSBuilderParticipant.class;
 	}
 
-	/**
-	 * Re-binds the {@link Singleton @Singleton} {@link ExternalLibraryWorkspace N4JS external library workspace}
-	 * instance declared and created in the {@link N4JSRuntimeModule}.
-	 */
-	public Provider<ExternalLibraryWorkspace> provideN4JSExternalLibraryWorkspace() {
-		return Access.contributedProvider(ExternalLibraryWorkspace.class);
-	}
+	// /**
+	// * Re-binds the {@link Singleton @Singleton} {@link ExternalLibraryWorkspace N4JS external library workspace}
+	// * instance declared and created in the {@link N4JSRuntimeModule}.
+	// */
+	// public Provider<ExternalLibraryWorkspace> provideN4JSExternalLibraryWorkspace() {
+	// return Access.contributedProvider(ExternalLibraryWorkspace.class);
+	// }
+
+	// /**
+	// * Re-binds the {@link Singleton @Singleton} {@link ExternalIndexSynchronizer N4JS external index synchronizer}
+	// * instance.
+	// */
+	// public Provider<ExternalIndexSynchronizer> provideExternalIndexSynchronizer() {
+	// return Access.contributedProvider(ExternalIndexSynchronizer.class);
+	// }
 
 	/**
 	 * Re-binds the {@link GitCloneSupplier} to the singleton instance declared in the contribution module.
@@ -244,6 +256,26 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return IN4JSEclipseCore.class;
 	}
 
+	/** Binds the {@link IN4JSEclipseCore} */
+	public Class<? extends IN4JSEclipseCore> bindIN4JSEclipseCore() {
+		return N4JSEclipseCore.class;
+	}
+
+	/** Binds the {@link ExternalLibraryWorkspace} */
+	public Class<? extends ExternalLibraryWorkspace> bindExternalLibraryWorkspace() {
+		return EclipseExternalLibraryWorkspace.class;
+	}
+
+	/** Binds the {@link ExternalIndexSynchronizer} */
+	public Class<? extends ExternalIndexSynchronizer> bindExternalIndexSynchronizer() {
+		return EclipseExternalIndexSynchronizer.class;
+	}
+
+	/** Binds the {@link N4JSModel} */
+	public Class<? extends N4JSModel> bindN4JSEclipseModel() {
+		return N4JSEclipseModel.class;
+	}
+
 	/**
 	 * Binds the external library preference store to use the {@link OsgiExternalLibraryPreferenceStore OSGi} one. This
 	 * provider binding is required to share the same singleton instance between modules, hence injectors.
@@ -289,12 +321,12 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return Access.contributedProvider(TypeDefinitionGitLocationProvider.class);
 	}
 
-	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by the Eclipse workspace.
-	 */
-	public Provider<IN4JSEclipseCore> provideIN4JSEclipseCore() {
-		return Access.contributedProvider(IN4JSEclipseCore.class);
-	}
+	// /**
+	// * Configure the IN4JSCore instance to use the implementation that is backed by the Eclipse workspace.
+	// */
+	// public Provider<IN4JSEclipseCore> provideIN4JSEclipseCore() {
+	// return Access.contributedProvider(IN4JSEclipseCore.class);
+	// }
 
 	/**
 	 * Configure the IN4JSCore instance to use the implementation that is backed by the Eclipse workspace.

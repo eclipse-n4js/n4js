@@ -34,6 +34,7 @@ import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
@@ -127,6 +128,8 @@ import com.google.inject.Injector;
  * "invalidated" the serialized {@link TModule} information for module B we will consider class {@code B} as a changed
  * one and based on the above described workflow we will rebuild module B and queue module C.
  *
+ * <p>
+ * This class gets injected by {@link N4JSClusteringBuilderConfiguration}.
  */
 @SuppressWarnings("restriction")
 public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState {
@@ -142,6 +145,9 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 
 	@Inject
 	private ContributingResourceDescriptionPersister descriptionPersister;
+
+	// @Inject
+	// private ExternalLibraryWorkspace test;
 
 	@Inject
 	@BuilderState
