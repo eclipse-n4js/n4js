@@ -70,16 +70,15 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
-import static org.eclipse.jface.dialogs.MessageDialog.openError
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
 import org.eclipse.n4js.n4mf.SimpleProjectDependency
-import org.eclipse.n4js.external.ExternalProjectsManager
 import org.eclipse.n4js.utils.StatusHelper
 import org.eclipse.jface.dialogs.ErrorDialog
 import org.eclipse.n4js.utils.StatusUtils
+import org.eclipse.n4js.external.LibraryManager
 
 /**
  * N4JS quick fixes.
@@ -113,7 +112,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	static final String FINAL_ANNOTATION = AnnotationDefinition.FINAL.name;
 
 	@Inject
-	ExternalProjectsManager npmManager;
+	LibraryManager npmManager;
 
 
 	// EXAMPLE FOR STYLE #1 (lambda expression)

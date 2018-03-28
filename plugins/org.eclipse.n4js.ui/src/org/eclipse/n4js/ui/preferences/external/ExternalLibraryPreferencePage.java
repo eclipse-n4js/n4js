@@ -56,7 +56,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.ExternalProjectsManager;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
@@ -68,7 +68,6 @@ import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil;
 import org.eclipse.n4js.n4mf.utils.parsing.ParserResults;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
 import org.eclipse.n4js.ui.utils.UIUtils;
@@ -110,7 +109,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private Provider<ExternalLibraryTreeContentProvider> contentProvider;
 
 	@Inject
-	private ExternalProjectsManager npmManager;
+	private LibraryManager npmManager;
 
 	@Inject
 	private NpmCLI npmCli;
@@ -123,9 +122,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 	@Inject
 	private GitCloneSupplier gitSupplier;
-
-	@Inject
-	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
 
 	@Inject
 	private StatusHelper statusHelper;
@@ -465,10 +461,11 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm
 				|| userChoice.decisionResetTypeDefinitions) {
 
-			externalLibraryWorkspace.updateState();
+			// externalLibraryWorkspace.updateState();
 
 			try {
-				externalLibrariesReloadHelper.reloadLibraries(true, monitor);
+				// externalLibrariesReloadHelper.reloadLibraries(true, monitor);
+				npmManager.reloadAllExternalProjects(monitor);
 
 			} catch (Exception e) {
 				String msg = "Error when reloading external libraries.";

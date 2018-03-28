@@ -21,8 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution;
 import org.eclipse.n4js.utils.StatusHelper;
 
@@ -40,10 +39,7 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 			.getLogger(N4JSExternalLibraryResourceDescriptionsPersisterContribution.class);
 
 	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
-	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
+	private LibraryManager libraryManager;
 
 	@Inject
 	private StatusHelper statusHelper;
@@ -61,8 +57,9 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 						@Override
 						public void run(final IProgressMonitor progress) throws CoreException {
 							try {
-								externalLibraryWorkspace.updateState();
-								externalLibrariesReloadHelper.reloadLibraries(false, progress);
+								// externalLibraryWorkspace.updateState();
+								// externalLibrariesReloadHelper.reloadLibraries(false, progress);
+								libraryManager.reloadAllExternalProjects(progress);
 							} catch (final Exception e) {
 								throw new CoreException(statusHelper.createError(e));
 							}

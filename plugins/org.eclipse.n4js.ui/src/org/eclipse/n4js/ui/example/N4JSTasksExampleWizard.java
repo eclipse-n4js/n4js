@@ -26,7 +26,7 @@ import org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.ExternalProjectsManager;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -45,7 +45,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	public static final String ID = N4JSTasksExampleWizard.class.getName();
 
 	@Inject
-	private ExternalProjectsManager npmManager;
+	private LibraryManager npmManager;
 
 	@Inject
 	private TargetPlatformInstallLocationProvider installLocationProvider;

@@ -26,11 +26,13 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -57,7 +59,8 @@ import com.google.inject.Singleton;
  * Class for installing npm dependencies into the external library.
  */
 @Singleton
-public class ExternalProjectsManager {
+public class LibraryManager {
+	private static final Logger LOGGER = Logger.getLogger(LibraryManager.class);
 
 	private static String NO_VERSION = "";
 
@@ -320,19 +323,19 @@ public class ExternalProjectsManager {
 	}
 
 	/**
-	 * Refreshes the type definitions for all installed, available {@code npm} packages in the external workspace.
-	 * Performs a {@code git pull} before the actual refresh process. Returns with an {@link IStatus status}
+	 * Reloads the external libraries by re-indexing all external projects that not shadowed from projects in the
+	 * workspace. Performs a {@code git pull} before the actual refresh process. Returns with an {@link IStatus status}
 	 * representing the outcome of the refresh operation.
 	 *
 	 * @param monitor
 	 *            the monitor for the progress.
 	 * @return a status representing the outcome of the operation.
 	 */
-	public IStatus refreshInstalledNpmPackages(IProgressMonitor monitor) {
-		return runWithWorkspaceLock(() -> refreshInstalledNpmPackagesInternal(monitor));
+	public IStatus reloadAllExternalProjects(IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> reloadAllExternalProjectsInternal(monitor));
 	}
 
-	private IStatus refreshInstalledNpmPackagesInternal(IProgressMonitor monitor) {
+	private IStatus reloadAllExternalProjectsInternal(IProgressMonitor monitor) {
 		checkNotNull(monitor, "monitor");
 
 		MultiStatus refreshStatus = statusHelper.createMultiStatus("Refreshing npm type definitions.");
@@ -469,12 +472,15 @@ public class ExternalProjectsManager {
 		return ImmutableMap.copyOf(mappings);
 	}
 
-	private static <T> T runWithWorkspaceLock(Supplier<T> operation) {
+	private IStatus runWithWorkspaceLock(Supplier<IStatus> operation) {
 		if (Platform.isRunning()) {
 			ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
 			try {
 				Job.getJobManager().beginRule(rule, null);
 				return operation.get();
+			} catch (final OperationCanceledException e) {
+				LOGGER.info("User cancelled operation.");
+				return statusHelper.createInfo("User cancelled operation.");
 			} finally {
 				Job.getJobManager().endRule(rule);
 			}

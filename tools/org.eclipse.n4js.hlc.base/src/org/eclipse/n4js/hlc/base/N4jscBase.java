@@ -51,7 +51,7 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.ExternalProjectsManager;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.libraries.PackageJson;
@@ -264,7 +264,7 @@ public class N4jscBase implements IApplication {
 	private TargetPlatformInstallLocationProvider installLocationProvider;
 
 	@Inject
-	private ExternalProjectsManager npmManager;
+	private LibraryManager npmManager;
 
 	@Inject
 	private TesterRegistry testerRegistry;

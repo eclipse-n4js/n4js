@@ -22,7 +22,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.ExternalProjectsManager;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
@@ -64,7 +64,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	private ProcessExecutor processExecutor;
 
 	@Inject
-	private ExternalProjectsManager npmManager;
+	private LibraryManager npmManager;
 
 	/**
 	 * Checks whether the platform is running or not.
