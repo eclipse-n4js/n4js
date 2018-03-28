@@ -64,10 +64,6 @@ public class LibraryManager {
 
 	private static String NO_VERSION = "";
 
-	private static String LINE_DOUBLE = "================================================================";
-
-	private static String LINE_SINGLE = "----------------------------------------------------------------";
-
 	private static DataCollector dcLibMngr = DataCollectors.INSTANCE.getOrCreateDataCollector("Library Manager");
 
 	@Inject
@@ -174,8 +170,9 @@ public class LibraryManager {
 	}
 
 	private IStatus installNPMsInternal(Map<String, String> versionedNPMs, IProgressMonitor monitor) {
-
-		MultiStatus status = statusHelper.createMultiStatus("Status of installing multiple npm dependencies.");
+		String msg = "Installing NPM(s): " + String.join(", ", versionedNPMs.keySet());
+		MultiStatus status = statusHelper.createMultiStatus(msg);
+		logger.logInfo(msg);
 
 		IStatus binaryStatus = checkNPM();
 		if (!binaryStatus.isOK()) {
@@ -302,7 +299,9 @@ public class LibraryManager {
 	}
 
 	private IStatus uninstallDependenciesInternal(Collection<String> packageNames, IProgressMonitor monitor) {
-		MultiStatus status = statusHelper.createMultiStatus("Status of uninstalling multiple npm dependencies.");
+		String msg = "Uninstalling NPM(s): " + String.join(", ", packageNames);
+		MultiStatus status = statusHelper.createMultiStatus(msg);
+		logger.logInfo(msg);
 
 		IStatus binaryStatus = checkNPM();
 		if (!binaryStatus.isOK()) {
@@ -348,8 +347,7 @@ public class LibraryManager {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, packageNames.size() + 1);
 		try {
 
-			logger.logInfo(LINE_DOUBLE);
-			logger.logInfo("Refreshing installed npm packages.");
+			logger.logInfo("Refreshing installed all external projects (including NPMs).");
 			subMonitor.setTaskName("Refreshing npm type definitions...");
 
 			performGitPull(subMonitor.newChild(1, SubMonitor.SUPPRESS_ALL_LABELS));
@@ -361,8 +359,6 @@ public class LibraryManager {
 					refreshStatus.merge(status);
 				}
 			}
-			logger.logInfo("Installed npm packages have been refreshed.");
-			logger.logInfo(LINE_DOUBLE);
 
 			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(1));
 
@@ -376,9 +372,7 @@ public class LibraryManager {
 	private IStatus refreshInstalledNpmPackage(String packageName, IProgressMonitor monitor) {
 		SubMonitor progress = SubMonitor.convert(monitor, 2);
 
-		logger.logInfo(LINE_SINGLE);
 		String taskName = "Refreshing npm type definitions for '" + packageName + "' ...";
-		logger.logInfo(taskName);
 		progress.setTaskName(taskName);
 
 		try {
@@ -410,10 +404,7 @@ public class LibraryManager {
 					manifest,
 					definitionsFolder);
 
-			if (status.isOK()) {
-				logger.logInfo("Successfully refreshed npm type definitions for '" + packageName + "'.");
-				logger.logInfo(LINE_SINGLE);
-			} else {
+			if (!status.isOK()) {
 				logger.logError(status);
 			}
 

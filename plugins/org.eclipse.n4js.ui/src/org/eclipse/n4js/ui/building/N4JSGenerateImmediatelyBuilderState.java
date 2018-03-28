@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -29,7 +28,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
@@ -260,17 +258,6 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		N4JSResourceSetCleanerUtils.clearResourceSet(resourceSet);
 	}
 
-	private IProject getProject(BuildData buildData) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(buildData.getProjectName());
-		if (null == project || !project.isAccessible()) {
-			final IProject externalProject = getExternalLibraryWorkspace().getProject(buildData.getProjectName());
-			if (null != externalProject && externalProject.exists()) {
-				project = externalProject;
-			}
-		}
-		return project;
-	}
-
 	private N4JSBuilderParticipant findJSBuilderParticipant() {
 		ImmutableList<IXtextBuilderParticipant> all = builderParticipant.getParticipants();
 		for (IXtextBuilderParticipant candidate : all) {
@@ -386,25 +373,14 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		}
 	}
 
-	private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
-		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
-		return injector.getInstance(ExternalLibraryWorkspace.class);
-	}
-
-	// continue here: why is the following solution not working?
-	static private IProject getProject2(BuildData buildData) {
+	static private IProject getProject(BuildData buildData) {
+		// Since this class gets injected by {@link N4JSClusteringBuilderConfiguration}
+		// the reference to IN4JSEclipseCore is fetched in this hacky fashion.
 		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
 		IN4JSEclipseCore core = injector.getInstance(IN4JSEclipseCore.class);
 
 		String projectName = buildData.getProjectName();
 		IN4JSEclipseProject in4jsProject = (IN4JSEclipseProject) core.findAllProjectMappings().get(projectName);
-		// IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-		// if (null == project || !project.isAccessible()) {
-		// final IProject externalProject = in4jsProject.getProject();
-		// if (null != externalProject && externalProject.exists()) {
-		// project = externalProject;
-		// }
-		// }
 		return in4jsProject.getProject();
 	}
 
