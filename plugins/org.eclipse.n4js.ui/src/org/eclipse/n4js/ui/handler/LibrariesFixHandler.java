@@ -153,7 +153,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 
 		final SubMonitor subMonitor2 = monitor.split(1);
 
-		calculateAndInstallDependnecies(subMonitor2, multistatus);
+		calculateAndInstallDependencies(subMonitor2, multistatus);
 
 		// turn on autobuild
 		if (wasAutoBuilding)
@@ -163,7 +163,7 @@ public class LibrariesFixHandler extends AbstractHandler {
 	}
 
 	/** Streamlined process of calculating and installing the dependencies. */
-	public void calculateAndInstallDependnecies(SubMonitor monitor, MultiStatus multistatus) {
+	public void calculateAndInstallDependencies(SubMonitor monitor, MultiStatus multistatus) {
 		final SubMonitor subMonitor2 = monitor.split(1);
 
 		// remove npm cache
