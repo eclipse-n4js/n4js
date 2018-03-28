@@ -40,7 +40,9 @@ public enum ErrorExitCode {
 	/** Exit code 9 indicating an unsuccessful execution of the tests. */
 	EXITCODE_TESTER_STOPPED_WITH_ERROR(9, "unsuccessful execution of the tests"),
 	/** Exit with 10, if required tester could not be loaded. */
-	EXITCODE_TESTER_NOT_FOUND(10, "required tester could not be loaded");
+	EXITCODE_TESTER_NOT_FOUND(10, "required tester could not be loaded"),
+	/** Exit with 10, if required tester could not be loaded. */
+	EXITCODE_DEPENDENCY_NOT_FOUND(10, "required dependency is missing");
 
 	private static final Map<Integer, ErrorExitCode> lookup = new HashMap<>();
 

@@ -181,9 +181,9 @@ public class UpdateShippedCode implements IWorkflowComponent {
 				.collect(Collectors.joining(File.pathSeparator));
 		// Clean all projects first
 		final String[] cleanArgs = {
-				"-c",
-				"-bt", "allprojects",
-				"-pl", foldersContainingProjectsStr,
+				"--clean",
+				"--buildType", "allprojects",
+				"--projectlocations", foldersContainingProjectsStr,
 		};
 		try {
 			new N4jscBase().doMain(cleanArgs);
@@ -197,8 +197,8 @@ public class UpdateShippedCode implements IWorkflowComponent {
 
 		// Then compile the projects
 		final String[] args = {
-				"-bt", "allprojects",
-				"-pl", foldersContainingProjectsStr,
+				"--buildType", "allprojects",
+				"--projectlocations", foldersContainingProjectsStr,
 		};
 		try {
 			new N4jscBase().doMain(args);
