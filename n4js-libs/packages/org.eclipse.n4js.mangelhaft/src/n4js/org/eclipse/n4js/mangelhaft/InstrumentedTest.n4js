@@ -139,6 +139,8 @@ export public class InstrumentedTest implements IInstrumentedTest{
             parameterizedTests = this.getParameterizedInstrumentedTests(testClass, info, testInjector, parameters, nameTemplate);
         }
 
+        // TODO GH-709 this should use custom scope, once they are added
+        // TODO GH-710 expose different API
         // Make shared TestController instance be accessible to test instances (via injection):
         const instance = testInjector.internalCreate(testClass, testInjector, new Map<string, N4Object>([
             [`${TestController.n4type.origin}${TestController.n4type.fqn}`, controller]] as Iterable<Iterable2<string, N4Object>>
