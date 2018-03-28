@@ -72,7 +72,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	public void testSingleFileCompile() throws Exception {
 		logFile();
 
-		Process p = createAndStartProcess("-t", "singleFile", WSP + "/" + "PSingle/src/a/A.n4js");
+		Process p = createAndStartProcess("-bt", "singleFile", WSP + "/" + "PSingle/src/a/A.n4js");
 
 		int exitCode = p.waitFor();
 
@@ -91,7 +91,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 
 		// -rw run with
 		// -r run : file to run
-		Process p = createAndStartProcess("-t", "allprojects", "-pl",
+		Process p = createAndStartProcess("-bt", "allprojects", "-pl",
 				WSP, "-rw",
 				"nodejs", "-r",
 				WSP + "/" + "P1/src/A.n4js");
@@ -120,7 +120,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 				"-rw", "nodejs", // ----
 				"-r", WSP + "/"
 						+ "IDE-1510_Incomplete_API_Implementation/one.x.impl/src/AT_IDE-1510_Missing_Method.n4js", // ----
-				"-t", "allprojects", // ----
+				"-bt", "allprojects", // ----
 				"IDE-1510_Incomplete_API_Implementation/one.api",
 				"IDE-1510_Incomplete_API_Implementation/one.x.impl");
 
@@ -159,24 +159,6 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	}
 
 	/**
-	 * Just a negative test, capturing correct test-behavior
-	 */
-	@Test
-	public void testListAllRunnersPlugins_notexpecting_XXX() throws Exception {
-		logFile();
-
-		// -rw run with
-		// -lr list runners.
-		Process p = createAndStartProcess("-lr");
-
-		int exitCode = p.waitFor();
-
-		assertEquals("successful termination", 0, exitCode);
-
-		N4CliHelper.assertNotContainsString("XXX", outputLogFile);
-	}
-
-	/**
 	 * Trying to run an uncompiled module: should result in a failure
 	 *
 	 * @throws IOException
@@ -199,7 +181,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		String fileA = pathToP1 + "/src/A.n4js";
 
 		Process p = createAndStartProcess("-pl", proot,
-				"-t", "dontcompile",
+				"-bt", "dontcompile",
 				"-rw", "nodejs",
 				"-r", fileA,
 				"-v");

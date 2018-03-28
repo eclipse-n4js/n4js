@@ -120,7 +120,7 @@ abstract public class FastFlowVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void terminateMode(TraverseDirection curMode, ControlFlowElement curContainer) {
+	protected void terminateContainer(ControlFlowElement curContainer) {
 		this.ffExplorer = null;
 	}
 

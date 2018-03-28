@@ -168,7 +168,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		String projectId = projectReference.getProject().getProjectId();
 		if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
 			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
-			if (!baseHandle.isArchive()) {
+			if (baseHandle != null && !baseHandle.isArchive()) {
 				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
 				for (String libraryPath : baseHandle.createProjectElementHandle().getLibraryPaths()) {
 					URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });

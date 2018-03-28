@@ -32,19 +32,10 @@ public class FileSystem {
 	public static final String DIR_MODULES = "modules";
 	/** The location where adoc files are placed which list all modules of each package. */
 	public static final String DIR_PACKAGES = "packages";
-	/** Directory for predefined html related sources */
-	@Deprecated
-	public static final String DIR_HTML = "html";
-	/** Generated html files */
-	@Deprecated
-	public static final String DIR_HTML_GEN = "gen_html";
 	/** Generated adoc files */
 	public static final String DIR_ADOC_GEN = "api-gen";
 	/** File separator for convenience */
 	public static final String SEP = File.separator;
-	/** Relative path to the generated html directory */
-	@Deprecated
-	public static final String DIR_REL_HTML_GEN = "../" + DIR_HTML_GEN;
 	/** File name of the index file */
 	public static final String INDEX_FILE_NAME = "index.idx";
 

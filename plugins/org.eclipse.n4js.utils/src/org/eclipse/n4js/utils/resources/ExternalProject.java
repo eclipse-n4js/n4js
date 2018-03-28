@@ -46,10 +46,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.base.Objects;
-
-import org.eclipse.n4js.utils.io.FileDeleter;
 
 /**
  * External project resource implementation.
@@ -390,7 +389,7 @@ public class ExternalProject extends Project implements IExternalResource {
 	 *
 	 * @see #getActiveBuildConfig()
 	 */
-	/* default */ IBuildConfiguration unsafeGetActiveBuildConfig() {
+	public IBuildConfiguration unsafeGetActiveBuildConfig() {
 		String configName = internalGetDescription().getActiveBuildConfig();
 		try {
 			if (configName != null)

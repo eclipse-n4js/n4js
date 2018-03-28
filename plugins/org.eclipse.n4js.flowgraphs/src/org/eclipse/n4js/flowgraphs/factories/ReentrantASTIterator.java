@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ASTIterator;
-import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -32,21 +31,17 @@ import org.eclipse.n4js.n4JS.Script;
 public class ReentrantASTIterator {
 	static final String ASSERTION_MSG_AST_ORDER = "DelegatingNode or AST order erroneous";
 
-	final private SymbolFactory symbolFactory;
 	final private Set<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 	final private ASTIterator astIt;
-	final private boolean setSymbols;
 	private int astPositionCounter = 0;
 
 	/** Constructor */
-	ReentrantASTIterator(SymbolFactory symbolFactory, Set<ControlFlowElement> cfContainers,
-			Map<ControlFlowElement, ComplexNode> cnMap, Script script, boolean setSymbols) {
+	ReentrantASTIterator(Set<ControlFlowElement> cfContainers, Map<ControlFlowElement, ComplexNode> cnMap,
+			Script script) {
 
-		this.symbolFactory = symbolFactory;
 		this.cfContainers = cfContainers;
 		this.cnMap = cnMap;
-		this.setSymbols = setSymbols;
 		this.astIt = new ASTIterator(script);
 	}
 
@@ -69,10 +64,6 @@ public class ReentrantASTIterator {
 
 						cfContainers.add(cn.getControlFlowContainer());
 						cnMap.put(mappedCFE, cn);
-
-						if (setSymbols) {
-							CFEEffectInfos.set(symbolFactory, cnMap, cn, mappedCFE);
-						}
 					}
 				}
 				if (termNode == cfe || (termNode == mappedCFE && termNode != null)) {

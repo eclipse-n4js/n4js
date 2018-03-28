@@ -117,7 +117,7 @@ public class N4jscJarUtils {
 		cmdline.addAll(Arrays.asList(
 				"-jar", getAbsoluteRunnableN4jsc().getAbsolutePath(),
 				// "--debug", "-v", // generate more output
-				"-t", "allprojects"));
+				"-bt", "allprojects"));
 		cmdline.addAll(n4jscOpts);
 		cmdline.add("-pl");
 		cmdline.addAll(workspaceRootsAbsolute);

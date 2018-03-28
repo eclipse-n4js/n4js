@@ -2291,8 +2291,17 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTMember__IsPolyfilled() {
+	public EOperation getTMember__IsConst() {
 		return tMemberEClass.getEOperations().get(16);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getTMember__IsPolyfilled() {
+		return tMemberEClass.getEOperations().get(17);
 	}
 
 	/**
@@ -3309,6 +3318,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tMemberEClass, TMEMBER___GET_MEMBER_AS_STRING);
 		createEOperation(tMemberEClass, TMEMBER___IS_FINAL);
 		createEOperation(tMemberEClass, TMEMBER___IS_STATIC);
+		createEOperation(tMemberEClass, TMEMBER___IS_CONST);
 		createEOperation(tMemberEClass, TMEMBER___IS_POLYFILLED);
 
 		tMemberWithAccessModifierEClass = createEClass(TMEMBER_WITH_ACCESS_MODIFIER);
@@ -3876,6 +3886,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTMember__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTMember__IsStatic(), theEcorePackage.getEBoolean(), "isStatic", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTMember__IsConst(), theEcorePackage.getEBoolean(), "isConst", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTMember__IsPolyfilled(), theEcorePackage.getEBoolean(), "isPolyfilled", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

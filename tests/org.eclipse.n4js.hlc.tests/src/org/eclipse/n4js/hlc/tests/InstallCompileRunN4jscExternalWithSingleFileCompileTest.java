@@ -66,7 +66,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Bas
 				"-rw", "nodejs",
 				"-r", fileToRun,
 				"--verbose",
-				"-t", BuildType.singlefile.toString(),
+				"-bt", BuildType.singlefile.toString(),
 				fileToCompile
 		};
 		final String out = runAndCaptureOutput(args);

@@ -83,7 +83,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initializeMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
+	protected void initializeContainer(ControlFlowElement curContainer) {
 		if (startElement == null) {
 			super.requestActivation(new AllBranchPrintExplorer());
 		}

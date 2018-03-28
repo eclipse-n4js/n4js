@@ -378,6 +378,19 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
+	 * Returns true if this member is a const field.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
+	 * @generated
+	 */
+	boolean isConst();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
 	 * Convenience method returns true, if containing type is either a dynamic or static polyfill and therefore
 	 * this member has been poly-filled.
 	 * <!-- end-model-doc -->

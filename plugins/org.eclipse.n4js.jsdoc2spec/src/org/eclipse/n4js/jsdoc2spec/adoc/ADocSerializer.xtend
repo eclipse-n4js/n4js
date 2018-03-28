@@ -47,6 +47,7 @@ import java.util.SortedSet
 import static org.eclipse.n4js.jsdoc.N4JSDocletParser.*
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.jsdoc2spec.KeyUtils
 
 /**
  * Print AsciiDoc code of specification JSDoc. Start and end markers are printed by client.
@@ -69,7 +70,7 @@ class ADocSerializer {
 	def CharSequence process(SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
 		val strb = new StringBuilder();
 		strb.appendSpecElementPre(spec);
-		strb.appendSpec(spec, specsByKey);
+		strb.appendSpec(spec);
 		strb.appendSpecElementPost(spec, specsByKey);
 		return strb;
 	}
@@ -82,7 +83,7 @@ class ADocSerializer {
 		return strb
 	}
 
-	private def StringBuilder appendSpec(StringBuilder strb, SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
+	private def StringBuilder appendSpec(StringBuilder strb, SpecIdentifiableElementSection spec) {
 		strb.append("\n");
 
 		var addedTaskLinks = false;
@@ -237,6 +238,7 @@ class ADocSerializer {
 	private def StringBuilder appendMemberOrVarOrFuncPre(StringBuilder strb, String shortDescr, String shortQN,
 			String reqName, SyntaxRelatedTElement element, SpecIdentifiableElementSection spec) {
 
+		val boolean isIntegratedFromPolyfill = spec.sourceEntry.trueFolder != spec.sourceEntry.folder;
 		val String trueSrcFolder = spec.sourceEntry.repository + ":" + spec.sourceEntry.trueFolder;
 
 		strb.append(
@@ -248,9 +250,9 @@ class ADocSerializer {
 		«IF hasTodo(spec.doclet)»
 		«getTodoLink(spec.doclet)»
 		«ENDIF»
-		«IF element instanceof TMember && ((element as TMember).isPolyfilled())»
+		«IF isIntegratedFromPolyfill»
 
-		[.small]#(Polyfilled from «trueSrcFolder»)#
+		[.small]#(Integrated from static polyfill aware class in: «trueSrcFolder»)#
 		«ENDIF»
 
 		==== Signature
@@ -281,9 +283,6 @@ class ADocSerializer {
 		for (a: member.annotations.filter[it.name!=AnnotationDefinition.INTERNAL.name]) {
 			strb.append(a.annotationAsString + " ");
 		}
-		if (member.final && !member.field) {
-			strb.append("@Final ");
-		}
 		strb.append(keywordProvider.keyword(member.memberAccessModifier) + " ");
 		if (member.abstract) {
 			strb.append("@abstract ");
@@ -311,7 +310,7 @@ class ADocSerializer {
 		val strb = new StringBuilder();
 
 		if (rrp !== null) {
-			val SourceEntry se = SourceEntryFactory.create(rrp, element);
+			val SourceEntry se = SourceEntryFactory.create(repoPathHolder, rrp, element);
 			strb.appendSourceLink(se, passThenMonospace(signature));
 		}
 
@@ -482,7 +481,7 @@ class ADocSerializer {
 				val SpecTestInfo testSpec = iter.next;
 				strb.append(nfgitTest(testSpec));
 				if (iter.hasNext) {
-					strb.append(", ");
+					strb.append(", \n");
 				}
 			}
 			strb.append(")\n");
@@ -583,8 +582,7 @@ class ADocSerializer {
 	}
 
 	private def String small(CharSequence smallString) {
-		return '''[.small]#«smallString»#'''; // continue here!
-//		return smallString.toString;
+		return '''[.small]#«smallString»#''';
 	}
 
 	private def String removePrecedingNumber(String key) {
