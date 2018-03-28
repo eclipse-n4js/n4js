@@ -102,7 +102,13 @@ public class TypeDistanceComputer {
 	 *             type distance computation (e.g. null, unsupported TypeRef subclasses, etc.).
 	 */
 	public double computeDistance(TypeRef typeRef1, TypeRef typeRef2) throws UnsupportedTypeDistanceOperandsException {
-		// first obtain a valid pair of operands from the given type references
+		// in case the type reference do not match in their version, they cannot be equal (even in case of virtual
+		// types)
+		if (typeRef1.getVersion() != typeRef2.getVersion()) {
+			return MAX_DISTANCE;
+		}
+
+		// obtain a valid pair of operands from the given type references
 		final Optional<Pair<Type, Type>> operands = extractTypeDistanceOperands(typeRef1, typeRef2);
 		// if that fails already, we assume a maximum type distance
 		if (!operands.isPresent()) {

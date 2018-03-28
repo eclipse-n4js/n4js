@@ -23,6 +23,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.ts.types.TypeDefs
 
 /**
  * Transformation assistant for transforming N4IDL class and interface declarations.
@@ -64,10 +65,19 @@ class N4IDLClassifierTransformationAssistant extends TransformationAssistant {
 		// make sure the interface uses a nominal typing-strategy
 		if (interfaceSTE instanceof SymbolTableEntryOriginal) {
 			val declaredType = interfaceSTE.originalTarget as TInterface;
-			if (declaredType.typingStrategy == TypingStrategy.DEFAULT ||
-				declaredType.typingStrategy == TypingStrategy.NOMINAL) {
-					return true;
-				}
+			
+			// make sure the interface uses a compatible typing strategy
+			if (declaredType.typingStrategy !== TypingStrategy.DEFAULT &&
+				declaredType.typingStrategy !== TypingStrategy.NOMINAL) {
+					return false;
+			}
+			
+			// make sure the interface is not a built-in type
+			if (declaredType.eContainer instanceof TypeDefs) {
+				return false
+			}
+			
+			return true;
 		}
 		
 		return false;

@@ -16,8 +16,9 @@ import org.eclipse.n4js.n4JS.MigrationContextVariable
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.TranspilerBuilderBlocks
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
+import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
+import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.xtext.EcoreUtil2
@@ -44,8 +45,7 @@ class N4IDLMigrationTransformation extends Transformation {
 		
 		// replace migrate-calls with 'this.migrate' calls
 		EcoreUtil2.getAllContentsOfType(migrationDeclaration, ParameterizedCallExpression)
-			.filter[callExpr | MigrationUtils.isMigrateCall(callExpr)]
-			.forEach[callExpr | transformMigrateCallExpression(findTMigration(migrationDeclaration), callExpr)];
+			.forEach[callExpr | transformCallExpression(findTMigration(migrationDeclaration), callExpr)];
 	}
 	
 	/**
@@ -69,7 +69,7 @@ class N4IDLMigrationTransformation extends Transformation {
 	}
 	
 	/**
-	 * Replaces the given {@link IdentifierRef} with a {@code this} literal, 
+	 * Replaces the given {@link IdentifierRef} with a {@code this.context} expression, 
 	 * if it refers to a {@link MigrationContextVariable}.
 	 */
 	private def void transformIdentifierReference(IdentifierRef_IM ref) {
@@ -77,8 +77,43 @@ class N4IDLMigrationTransformation extends Transformation {
 		
 		if (refSTE instanceof SymbolTableEntryOriginal
 			&& (refSTE as SymbolTableEntryOriginal).originalTarget instanceof MigrationContextVariable) {
-			replace(ref, TranspilerBuilderBlocks._ThisLiteral)
+			val contextAccess = _PropertyAccessExpr(_ThisLiteral, getSymbolTableEntryInternal("context", true));
+			replace(ref, contextAccess)
 		}
+	}
+	
+	/**
+	 * Transforms the given call expression, in case the call-expression refers to a migration (implicitly via {@code migrate}-call
+	 * or explicitly via an explicit reference to a function annotated as {@code @Migration}).
+	 */
+	private def void transformCallExpression(TMigration contextMigration, ParameterizedCallExpression callExpression) {
+		if (MigrationUtils.isMigrateCall(callExpression)) {
+			transformMigrateCallExpression(contextMigration, callExpression);
+		} else {
+			val callTarget = callExpression.target;
+			
+			if (callTarget instanceof ParameterizedPropertyAccessExpression_IM) {
+				if (refersToMigration(callTarget.rewiredTarget)) {
+					transformExplicitMigrationCallExpression(contextMigration, callExpression);
+				}
+			}
+			if (callTarget instanceof IdentifierRef_IM) {
+				if (refersToMigration(callTarget.rewiredTarget)) {
+					transformExplicitMigrationCallExpression(contextMigration, callExpression);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Returns {@code true} iff the given {@code ste} refers to a {@link TMigration}.
+	 */
+	private def boolean refersToMigration(SymbolTableEntry ste) {
+		if (ste instanceof SymbolTableEntryOriginal) {
+			val originalTarget = ste.originalTarget;
+			return originalTarget instanceof TMigration;
+		}
+		return false;
 	}
 	
 	/**
@@ -88,9 +123,23 @@ class N4IDLMigrationTransformation extends Transformation {
 		val transpiledCall = _CallExpr()
 		transpiledCall.target = _PropertyAccessExpr(_ThisLiteral, getSymbolTableEntryInternal("migrate", true));
 		transpiledCall.arguments.addAll(#[
-			// first argument is the target version as inferred in contextMigration
-			_Argument(_NumericLiteral(contextMigration.targetVersion)),
-			// second argument is an array of all original migrate call arguments
+			// first and only argument is an array of all original migrate call arguments
+			_Argument(_ArrLit(callExpression.arguments.map[a | _ArrayElement(a.expression)]))
+		]);
+		replace(callExpression, transpiledCall);
+	}
+	
+	/**
+	 * Transforms explicit calls of migration functions to migrate-calls via the 
+	 * migration controller (e.g. {@code migrateA(a.b)} -> {@code this.migrateWith(migrateA, [a.b])}). 
+	 */
+	private def void transformExplicitMigrationCallExpression(TMigration contextMigration, ParameterizedCallExpression callExpression) {
+		val transpiledCall = _CallExpr()
+		transpiledCall.target = _PropertyAccessExpr(_ThisLiteral, getSymbolTableEntryInternal("migrateWith", true));
+		transpiledCall.arguments.addAll(#[
+			// first argument is the target of the call-expression (the migration function)
+			_Argument(callExpression.target),
+			// second argument is an array of all original arguments
 			_Argument(_ArrLit(callExpression.arguments.map[a | _ArrayElement(a.expression)]))
 		]);
 		replace(callExpression, transpiledCall);

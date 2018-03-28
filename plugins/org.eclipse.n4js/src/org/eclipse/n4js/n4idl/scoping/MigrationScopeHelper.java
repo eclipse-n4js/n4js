@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4idl.migrations.MigrationLocator;
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.resource.N4JSEObjectDescription;
 import org.eclipse.n4js.scoping.utils.IssueCodeBasedEObjectDescription;
+import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.versions.MigratableUtils;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -54,7 +55,8 @@ public class MigrationScopeHelper {
 
 		// if no matching migration can be found, we cannot link this migrate-call
 		if (targetMigrations.isEmpty()) {
-			return IScope.NULLSCOPE;
+			return new SingletonScope(new UnresolvableObjectDescription(QualifiedName.create("migrate")),
+					IScope.NULLSCOPE);
 		}
 
 		// create a description for the first migration match

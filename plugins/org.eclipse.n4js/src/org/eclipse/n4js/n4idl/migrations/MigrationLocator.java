@@ -161,8 +161,7 @@ public class MigrationLocator {
 			} catch (UnsupportedTypeDistanceOperandsException e) {
 				// If we encounter invalid type distance operands
 				// we fail-safe since we reside in scoping.
-				// User-facing error markers for this case ought
-				// to be created in validation.
+				// User-facing error markers for this case ought to be created in validation.
 				continue;
 			}
 		}
