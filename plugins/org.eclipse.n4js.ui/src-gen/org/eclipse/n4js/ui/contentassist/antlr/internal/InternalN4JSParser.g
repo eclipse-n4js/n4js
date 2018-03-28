@@ -57643,9 +57643,9 @@ rule__TypeReference__Group_0__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getTypeReferenceAccess().getNamespaceAssignment_0_0()); }
-	(rule__TypeReference__NamespaceAssignment_0_0)
-	{ after(grammarAccess.getTypeReferenceAccess().getNamespaceAssignment_0_0()); }
+	{ before(grammarAccess.getTypeReferenceAccess().getAstNamespaceAssignment_0_0()); }
+	(rule__TypeReference__AstNamespaceAssignment_0_0)
+	{ after(grammarAccess.getTypeReferenceAccess().getAstNamespaceAssignment_0_0()); }
 )
 ;
 finally {
@@ -81116,19 +81116,19 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__TypeReference__NamespaceAssignment_0_0
+rule__TypeReference__AstNamespaceAssignment_0_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getTypeReferenceAccess().getNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0()); }
+		{ before(grammarAccess.getTypeReferenceAccess().getAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0()); }
 		(
-			{ before(grammarAccess.getTypeReferenceAccess().getNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1()); }
+			{ before(grammarAccess.getTypeReferenceAccess().getAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1()); }
 			ruleTypeReferenceName
-			{ after(grammarAccess.getTypeReferenceAccess().getNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1()); }
+			{ after(grammarAccess.getTypeReferenceAccess().getAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1()); }
 		)
-		{ after(grammarAccess.getTypeReferenceAccess().getNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0()); }
+		{ after(grammarAccess.getTypeReferenceAccess().getAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0()); }
 	)
 ;
 finally {

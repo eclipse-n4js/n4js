@@ -202,14 +202,14 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	private def getScopeByShortcut(EObject context, EReference reference) {
 		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
-				val namespace = context.namespace;
+				val namespace = context.astNamespace;
 				if (namespace!==null) {
 					return createScopeForNamespaceAccess(namespace, context);
 				}
 			}
 		}
 		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
-			|| reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__NAMESPACE) {
+			|| reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
 			return new ValidatingScope(getTypeScope(context, reference, false),
 				context.getTypesFilterCriteria(reference));
 		}

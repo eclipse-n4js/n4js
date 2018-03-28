@@ -14873,8 +14873,8 @@ ruleTypeReference
 	(
 		(
 			(
-				NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1=ruleTypeReferenceName{
-					announce($NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1.start, $NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1.stop, grammarAccess.getTypeReferenceAccess().getNamespaceAssignment_0_0());
+				AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1=ruleTypeReferenceName{
+					announce($AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1.start, $AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1.stop, grammarAccess.getTypeReferenceAccess().getAstNamespaceAssignment_0_0());
 				}
 			)
 		)

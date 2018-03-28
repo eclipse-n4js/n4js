@@ -482,11 +482,16 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
  * on use site. However, the latter is not allowed everywhere.
  */
 class ParameterizedTypeRef extends BaseTypeRef {
-	refers ModuleNamespaceVirtualType namespace
 	refers Type declaredType
 	contains TypeArgument[] typeArgs
 	boolean arrayTypeLiteral = "false"
-	/**  */
+
+	/*
+	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
+	 * code, referred to via the namespace of a namespace import, then this is non-null and points to that namespace.
+	 */
+	refers transient ModuleNamespaceVirtualType astNamespace
+
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
 

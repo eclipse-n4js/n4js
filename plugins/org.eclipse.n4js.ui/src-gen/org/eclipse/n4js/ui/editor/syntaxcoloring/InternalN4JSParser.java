@@ -38654,7 +38654,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         retval.start = input.LT(1);
 
         Token FullStopKeyword_0_1=null;
-        InternalN4JSParser.ruleTypeReferenceName_return NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1 = null;
+        InternalN4JSParser.ruleTypeReferenceName_return AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1 = null;
 
         InternalN4JSParser.ruleTypeReferenceName_return DeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1 = null;
 
@@ -38672,13 +38672,13 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     pushFollow(FOLLOW_106);
-                    NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1=ruleTypeReferenceName();
+                    AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1=ruleTypeReferenceName();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                      					announce((NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1!=null?((Token)NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1.start):null), (NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1!=null?((Token)NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1.stop):null), grammarAccess.getTypeReferenceAccess().getNamespaceAssignment_0_0());
+                      					announce((AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1!=null?((Token)AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1.start):null), (AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1!=null?((Token)AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1.stop):null), grammarAccess.getTypeReferenceAccess().getAstNamespaceAssignment_0_0());
                       				
                     }
 
@@ -82541,7 +82541,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             this.transition = dfa_323;
         }
         public String getDescription() {
-            return "14873:2: ( ( (NamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1= ruleTypeReferenceName ) ) FullStopKeyword_0_1= FullStop )?";
+            return "14873:2: ( ( (AstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1= ruleTypeReferenceName ) ) FullStopKeyword_0_1= FullStop )?";
         }
     }
     static final String dfa_324s = "\1\4\1\uffff\30\0\2\uffff\54\0\4\uffff";

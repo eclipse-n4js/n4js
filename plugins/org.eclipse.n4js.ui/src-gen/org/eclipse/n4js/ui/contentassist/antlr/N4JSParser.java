@@ -876,7 +876,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getExpressionAnnotationListAccess().getAnnotationsAssignment_1(), "rule__ExpressionAnnotationList__AnnotationsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getPropertyAssignmentAnnotationListAccess().getAnnotationsAssignment_1(), "rule__PropertyAssignmentAnnotationList__AnnotationsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getN4MemberAnnotationListAccess().getAnnotationsAssignment_1(), "rule__N4MemberAnnotationList__AnnotationsAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeReferenceAccess().getNamespaceAssignment_0_0(), "rule__TypeReference__NamespaceAssignment_0_0");
+			nameMappingsBuilder.put(grammarAccess.getTypeReferenceAccess().getAstNamespaceAssignment_0_0(), "rule__TypeReference__AstNamespaceAssignment_0_0");
 			nameMappingsBuilder.put(grammarAccess.getTypeReferenceAccess().getDeclaredTypeAssignment_1(), "rule__TypeReference__DeclaredTypeAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getN4ClassDeclarationAccess().getDeclaredModifiersAssignment_0_0_0(), "rule__N4ClassDeclaration__DeclaredModifiersAssignment_0_0_0");
 			nameMappingsBuilder.put(grammarAccess.getN4ClassDeclarationAccess().getTypingStrategyAssignment_0_0_2(), "rule__N4ClassDeclaration__TypingStrategyAssignment_0_0_2");

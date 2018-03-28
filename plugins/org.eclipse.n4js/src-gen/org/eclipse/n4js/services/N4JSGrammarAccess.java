@@ -7578,33 +7578,33 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TypeReference");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
-		private final Assignment cNamespaceAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
-		private final CrossReference cNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0 = (CrossReference)cNamespaceAssignment_0_0.eContents().get(0);
-		private final RuleCall cNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1 = (RuleCall)cNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0.eContents().get(1);
+		private final Assignment cAstNamespaceAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final CrossReference cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0 = (CrossReference)cAstNamespaceAssignment_0_0.eContents().get(0);
+		private final RuleCall cAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1 = (RuleCall)cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0.eContents().get(1);
 		private final Keyword cFullStopKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cDeclaredTypeAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final CrossReference cDeclaredTypeTypeCrossReference_1_0 = (CrossReference)cDeclaredTypeAssignment_1.eContents().get(0);
 		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_1_0.eContents().get(1);
 		
 		//@ Override fragment TypeReference *:
-		//	(namespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+		//	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
 		//	declaredType=[types::Type|TypeReferenceName];
 		@Override public ParserRule getRule() { return rule; }
 		
-		//(namespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')? declaredType=[types::Type|TypeReferenceName]
+		//(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')? declaredType=[types::Type|TypeReferenceName]
 		public Group getGroup() { return cGroup; }
 		
-		//(namespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+		//(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//namespace=[types::ModuleNamespaceVirtualType|TypeReferenceName]
-		public Assignment getNamespaceAssignment_0_0() { return cNamespaceAssignment_0_0; }
+		//astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName]
+		public Assignment getAstNamespaceAssignment_0_0() { return cAstNamespaceAssignment_0_0; }
 		
 		//[types::ModuleNamespaceVirtualType|TypeReferenceName]
-		public CrossReference getNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0() { return cNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0; }
+		public CrossReference getAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0() { return cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0; }
 		
 		//TypeReferenceName
-		public RuleCall getNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1() { return cNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1; }
+		public RuleCall getAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1() { return cAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_0_1() { return cFullStopKeyword_0_1; }
@@ -12696,7 +12696,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//@ Override fragment TypeReference *:
-	//	(namespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+	//	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
 	//	declaredType=[types::Type|TypeReferenceName];
 	public TypeReferenceElements getTypeReferenceAccess() {
 		return pTypeReference;

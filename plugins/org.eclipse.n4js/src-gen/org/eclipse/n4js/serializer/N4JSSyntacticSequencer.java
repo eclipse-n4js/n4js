@@ -438,10 +438,10 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
 	 *     (rule start) (ambiguity) arrayTypeLiteral?='['
+	 *     (rule start) (ambiguity) astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
-	 *     (rule start) (ambiguity) namespace=[ModuleNamespaceVirtualType|TypeReferenceName]
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */

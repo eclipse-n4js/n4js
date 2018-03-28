@@ -34,10 +34,10 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespace <em>Namespace</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeLiteral <em>Array Type Literal</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -47,32 +47,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * @generated
  */
 public interface ParameterizedTypeRef extends BaseTypeRef {
-	/**
-	 * Returns the value of the '<em><b>Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Namespace</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Namespace</em>' reference.
-	 * @see #setNamespace(ModuleNamespaceVirtualType)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_Namespace()
-	 * @model
-	 * @generated
-	 */
-	ModuleNamespaceVirtualType getNamespace();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespace <em>Namespace</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Namespace</em>' reference.
-	 * @see #getNamespace()
-	 * @generated
-	 */
-	void setNamespace(ModuleNamespaceVirtualType value);
-
 	/**
 	 * Returns the value of the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -143,12 +117,38 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setArrayTypeLiteral(boolean value);
 
 	/**
+	 * Returns the value of the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
+	 * code, referred to via the namespace of a namespace import, then this is non-null and points to that namespace.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Ast Namespace</em>' reference.
+	 * @see #setAstNamespace(ModuleNamespaceVirtualType)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstNamespace()
+	 * @model transient="true"
+	 * @generated
+	 */
+	ModuleNamespaceVirtualType getAstNamespace();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Ast Namespace</em>' reference.
+	 * @see #getAstNamespace()
+	 * @generated
+	 */
+	void setAstNamespace(ModuleNamespaceVirtualType value);
+
+	/**
 	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * *
+	 *  @see TypeRef#getASTOptionalFieldStrategy()
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>AST Node Optional Field Strategy</em>' attribute.
 	 * @see org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
