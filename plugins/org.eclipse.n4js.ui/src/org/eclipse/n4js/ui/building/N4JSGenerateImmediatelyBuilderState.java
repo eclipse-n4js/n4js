@@ -39,6 +39,8 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -145,9 +147,6 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 
 	@Inject
 	private ContributingResourceDescriptionPersister descriptionPersister;
-
-	// @Inject
-	// private ExternalLibraryWorkspace test;
 
 	@Inject
 	@BuilderState
@@ -390,6 +389,23 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 	private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
 		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
 		return injector.getInstance(ExternalLibraryWorkspace.class);
+	}
+
+	// continue here: why is the following solution not working?
+	static private IProject getProject2(BuildData buildData) {
+		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
+		IN4JSEclipseCore core = injector.getInstance(IN4JSEclipseCore.class);
+
+		String projectName = buildData.getProjectName();
+		IN4JSEclipseProject in4jsProject = (IN4JSEclipseProject) core.findAllProjectMappings().get(projectName);
+		// IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		// if (null == project || !project.isAccessible()) {
+		// final IProject externalProject = in4jsProject.getProject();
+		// if (null != externalProject && externalProject.exists()) {
+		// project = externalProject;
+		// }
+		// }
+		return in4jsProject.getProject();
 	}
 
 }

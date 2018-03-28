@@ -56,9 +56,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.ExternalProjectsManager;
 import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmCLI;
-import org.eclipse.n4js.external.ExternalProjectsManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
@@ -177,24 +177,24 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		createPlaceHolderLabel(subComposite);
 
 		createEnabledPushButton(subComposite, "Install npm...",
-				new InstallNpmDependencyButtonListener(this::intallAndUpdate,
+				new InstallNpmDependencyButtonListener(this::installAndUpdate,
 						() -> getPackageNameToInstallValidator(), () -> getPackageVersionValidator(),
 						statusHelper));
 
 		createEnabledPushButton(subComposite, "Uninstall npm...",
-				new UninstallNpmDependencyButtonListener(this::unintallAndUpdate,
+				new UninstallNpmDependencyButtonListener(this::uninstallAndUpdate,
 						() -> getPackageNameToUninstallValidator(),
 						statusHelper,
 						this::getSelectedNpm));
 
 		createEnabledPushButton(subComposite, "Run maintenance actions...",
-				new MaintenanceActionsButtonListener(this::runMaintananceActions));
+				new MaintenanceActionsButtonListener(this::runMaintananceActions, statusHelper));
 
 		createEnabledPushButton(subComposite, "Export target platform...",
 				createSelectionListener(this::handleExportButtonSelection));
 
 		createEnabledPushButton(subComposite, "Import target platform...",
-				new ImportButtonListener(this::intallAndUpdate, statusHelper));
+				new ImportButtonListener(this::installAndUpdate, statusHelper));
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -410,7 +410,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 */
 	private MultiStatus runMaintananceActions(final MaintenanceActionsChoice userChoice, IProgressMonitor monitor) {
 		final MultiStatus multistatus = statusHelper
-				.createMultiStatus("Status of executing maintenance actions.");
+				.createMultiStatus("Executing maintenance actions.");
 
 		// persist state for reinstall
 		Map<String, String> oldPackages = new HashMap<>();
@@ -461,14 +461,18 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 */
 	private void maintenanceUpateState(final MaintenanceActionsChoice userChoice,
 			final MultiStatus multistatus, IProgressMonitor monitor) {
+
 		if (userChoice.decisionReload || userChoice.decisionReinstall || userChoice.decisionPurgeNpm
 				|| userChoice.decisionResetTypeDefinitions) {
+
 			externalLibraryWorkspace.updateState();
+
 			try {
 				externalLibrariesReloadHelper.reloadLibraries(true, monitor);
+
 			} catch (Exception e) {
-				multistatus.merge(
-						statusHelper.createError("Error when reloading libraries after maintenance actions.", e));
+				String msg = "Error when reloading external libraries.";
+				multistatus.merge(statusHelper.createError(msg, e));
 			}
 			updateInput(viewer, store.getLocations());
 		}
@@ -493,12 +497,12 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 			// unless all npms were purged, uninstall known ones
 			if (!userChoice.decisionPurgeNpm) {
-				IStatus uninstallStatus = unintallAndUpdate(packageNames.keySet(), monitor);
+				IStatus uninstallStatus = uninstallAndUpdate(packageNames.keySet(), monitor);
 				if (!uninstallStatus.isOK())
 					multistatus.merge(uninstallStatus);
 			}
 
-			IStatus installStatus = intallAndUpdate(packageNames, monitor);
+			IStatus installStatus = installAndUpdate(packageNames, monitor);
 			if (!installStatus.isOK())
 				multistatus.merge(installStatus);
 
@@ -631,7 +635,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 *
 	 * @return status of the operation.
 	 */
-	private IStatus intallAndUpdate(final Map<String, String> versionedPackages, final IProgressMonitor monitor) {
+	private IStatus installAndUpdate(final Map<String, String> versionedPackages, final IProgressMonitor monitor) {
 		IStatus status = npmManager.installNPMs(versionedPackages, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
@@ -644,7 +648,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 *
 	 * @return status of the operation.
 	 */
-	private IStatus unintallAndUpdate(final Collection<String> packageNames, final IProgressMonitor monitor) {
+	private IStatus uninstallAndUpdate(final Collection<String> packageNames, final IProgressMonitor monitor) {
 		IStatus status = npmManager.uninstallNPM(packageNames, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());

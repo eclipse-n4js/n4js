@@ -24,7 +24,7 @@ import com.google.common.base.Preconditions;
 public interface NodeModulesFolderListener {
 
 	/** The {@link LibraryChangeType} tells in which way an npm library changes */
-	public enum LibraryChangeType {
+	static public enum LibraryChangeType {
 		/** An npm package was newly added to the {@code node_modules} folder */
 		Added,
 		/** An npm package was removed from the {@code node_modules} folder */
@@ -34,7 +34,7 @@ public interface NodeModulesFolderListener {
 	}
 
 	/** Holds information how a npm library changed */
-	public class LibraryChange {
+	static public class LibraryChange {
 		/** The type of the npm change */
 		public final LibraryChangeType type;
 		/** The location of the npm package */
@@ -44,7 +44,8 @@ public interface NodeModulesFolderListener {
 		/** The new version to be installed. Not defined when {@link #type} is {@link LibraryChangeType#Removed}. */
 		public final String version;
 
-		LibraryChange(LibraryChangeType type, URI location, String name, String version) {
+		/** Constructor */
+		public LibraryChange(LibraryChangeType type, URI location, String name, String version) {
 			Preconditions.checkArgument(name != null && !name.isEmpty());
 			this.type = type;
 			this.location = location;

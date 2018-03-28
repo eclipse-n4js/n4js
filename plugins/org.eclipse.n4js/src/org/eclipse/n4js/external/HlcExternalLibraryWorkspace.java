@@ -25,10 +25,13 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
+import com.google.inject.Singleton;
+
 /**
  * NOOP implementation of the external library workspace.
  */
-public class NoopExternalLibraryWorkspace extends ExternalLibraryWorkspace {
+@Singleton
+public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public RegisterResult registerProjects(IProgressMonitor monitor, Set<URI> toBeUpdated) {

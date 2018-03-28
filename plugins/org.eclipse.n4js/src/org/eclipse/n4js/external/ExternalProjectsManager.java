@@ -89,16 +89,10 @@ public class ExternalProjectsManager {
 	private NpmCLI npmCli;
 
 	@Inject
-	private NodeModulesIndexSynchronizer indexSynchronizer;
+	private ExternalIndexSynchronizer indexSynchronizer;
 
 	/**
-	 * This method compares the external projects located in all external locations to the projects available through
-	 * {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
-	 * <p>
-	 * Note that this method will iterate through the complete Xtext index.
-	 *
-	 * @return true iff exactly those external projects in external locations are available through
-	 *         {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
+	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
 	 */
 	public boolean isProjectsSynchronized() {
 		return indexSynchronizer.isProjectsSynchronized();
@@ -189,7 +183,7 @@ public class ExternalProjectsManager {
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
 
 			installUninstallNPMs(monitor, status, versionedNPMs, Collections.emptyList());
-			indexSynchronizer.synchronizeNpms(monitor, status);
+			indexSynchronizer.synchronizeNpms(monitor);
 
 			return status;
 
@@ -316,7 +310,7 @@ public class ExternalProjectsManager {
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("uninstallDependenciesInternal");) {
 
 			installUninstallNPMs(monitor, status, Collections.emptyMap(), packageNames);
-			indexSynchronizer.synchronizeNpms(monitor, status);
+			indexSynchronizer.synchronizeNpms(monitor);
 
 			return status;
 
@@ -341,7 +335,7 @@ public class ExternalProjectsManager {
 	private IStatus refreshInstalledNpmPackagesInternal(IProgressMonitor monitor) {
 		checkNotNull(monitor, "monitor");
 
-		MultiStatus refreshStatus = statusHelper.createMultiStatus("Status of refreshing npm type definitions.");
+		MultiStatus refreshStatus = statusHelper.createMultiStatus("Refreshing npm type definitions.");
 
 		Collection<String> packageNames = getAllNpmProjectsMapping().keySet();
 		if (packageNames.isEmpty()) {
@@ -367,7 +361,7 @@ public class ExternalProjectsManager {
 			logger.logInfo("Installed npm packages have been refreshed.");
 			logger.logInfo(LINE_DOUBLE);
 
-			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(1), refreshStatus);
+			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(1));
 
 			return refreshStatus;
 

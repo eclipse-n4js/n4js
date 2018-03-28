@@ -18,7 +18,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
@@ -32,7 +31,7 @@ import com.google.inject.ImplementedBy;
  * Representation of a workspace (with possible multiple workspace roots) that is used for storing external library
  * projects.
  */
-@ImplementedBy(NoopExternalLibraryWorkspace.class)
+@ImplementedBy(HlcExternalLibraryWorkspace.class)
 public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
 	/** Contains the projects that were built/cleaned and affected. */
@@ -182,7 +181,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * Updates the internal state based on the available external project root locations.
 	 * <p>
 	 * This method will remove/add available projects of {@link IN4JSCore}. It should only be invoked through
-	 * {@link NodeModulesIndexSynchronizer#synchronizeNpms(IProgressMonitor, MultiStatus)}.
+	 * {@link HlcExternalIndexSynchronizer#synchronizeNpms(IProgressMonitor)}.
 	 * <p>
 	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
 	 * available when injecting this instance.
