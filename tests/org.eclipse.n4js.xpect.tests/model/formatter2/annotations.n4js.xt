@@ -56,7 +56,7 @@ class A1 {
 
 @Final export public class Annos2 extends Annos {
 
-	@Override @Final
+	@Override
 	@Parameter(4)
 	@Configurable(false)
 	field: any = 4;
@@ -76,7 +76,7 @@ class A1 {
 }
 
 @Final export public class Annos2 extends Annos {
-    @Override @Final @Parameter(4) @Configurable(false)
+    @Override @Parameter(4) @Configurable(false)
     field:any = 4;
     @Ignore @
     Group("X") @Group("Y") @Group("Xlkdsjfklasjdflkajsldfjasldkjflaksjdflkasjdflkjasdlkfjlsdkjflkasjdflkjasdlfkjasldkfjlasdkjflaksdjf")

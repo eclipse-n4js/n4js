@@ -111,7 +111,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	private void performFlowAnalyses(Object input) {
 		Script script = findScript(input);
 		if (script != null) {
-			flowAnalyzer.createGraphs(script, false);
+			flowAnalyzer.createGraphs(script);
 		}
 	}
 
@@ -145,7 +145,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
+		protected void initializeContainer(ControlFlowElement curContainer) {
 			requestActivation(new EdgesExplorer());
 		}
 

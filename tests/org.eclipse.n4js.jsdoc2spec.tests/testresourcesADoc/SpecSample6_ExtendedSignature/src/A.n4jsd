@@ -16,5 +16,8 @@ class A {
 	public foo(x: string, n: number=, ...p: string): void {}
 	async bar(): string {return null;}
 	@TestAPI @Final @Internal public baz(): string {return null;}
-	static xgreet(some: union{string,number}): void {}
+	static xgreet(some: union{string,number}): void {
+		function nestedDoesNotAppearInAPI() {
+		}
+	}
 }

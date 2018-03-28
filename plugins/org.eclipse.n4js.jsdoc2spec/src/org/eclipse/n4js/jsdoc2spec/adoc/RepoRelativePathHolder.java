@@ -13,17 +13,14 @@ package org.eclipse.n4js.jsdoc2spec.adoc;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
-import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TModule;
+
+import com.google.inject.Inject;
 
 /**
  * The {@link RepoRelativePathHolder} caches {@link RepoRelativePath}s for subsequent queries. <br/>
@@ -41,7 +38,7 @@ public class RepoRelativePathHolder {
 	 * The method returns the RepoRelativePath for a given SyntaxRelatedTElement. It caches the result for subsequent
 	 * queries.
 	 */
-	RepoRelativePath get(IdentifiableElement idElement) {
+	public RepoRelativePath get(IdentifiableElement idElement) {
 		Resource res = evadeStaticPolyfillResource(idElement);
 
 		if (res != null) {
@@ -70,25 +67,26 @@ public class RepoRelativePathHolder {
 			return null;
 
 		Resource res = module.eResource();
-		if (!module.isStaticPolyfillModule())
-			return res;
-
-		EObject container = idElement;
-		while (container != null && !(container instanceof TClass))
-			container = container.eContainer();
-		if (container == null)
-			return res;
-		TClass tClass = (TClass) container;
-		assert (tClass.isPolyfill());
-
-		TClass superClass = tClass.getSuperClass();
-		if (superClass == null) // happens when executing tests
-			return res;
-
-		TModule superClassModule = superClass.getContainingModule();
-		assert (superClassModule.isStaticPolyfillAware());
-
-		return superClassModule.eResource();
+		return res;
+		// if (!module.isStaticPolyfillModule())
+		// return res;
+		//
+		// EObject container = idElement;
+		// while (container != null && !(container instanceof TClass))
+		// container = container.eContainer();
+		// if (container == null)
+		// return res;
+		// TClass tClass = (TClass) container;
+		// assert (tClass.isPolyfill());
+		//
+		// TClass superClass = tClass.getSuperClass();
+		// if (superClass == null) // happens when executing tests
+		// return res;
+		//
+		// TModule superClassModule = superClass.getContainingModule();
+		// assert (superClassModule.isStaticPolyfillAware());
+		//
+		// return superClassModule.eResource();
 	}
 
 }

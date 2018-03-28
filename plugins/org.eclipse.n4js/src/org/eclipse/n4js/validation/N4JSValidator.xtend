@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -14,9 +14,9 @@ import com.google.inject.Inject
 import java.lang.reflect.Method
 import org.eclipse.emf.common.util.BasicDiagnostic
 import org.eclipse.emf.common.util.Diagnostic
+import org.eclipse.n4js.smith.DataCollectors
 import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
-import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
 import org.eclipse.n4js.validation.validators.IDEBUGValidator
 import org.eclipse.n4js.validation.validators.N4IDLMigrationValidator
 import org.eclipse.n4js.validation.validators.N4IDLValidator
@@ -51,12 +51,11 @@ import org.eclipse.n4js.validation.validators.UnsupportedFeatureValidator
 import org.eclipse.n4js.xsemantics.validation.InternalTypeSystemValidator
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
-import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 import org.eclipse.xtext.validation.ComposedChecks
 
 /**
  * Validation rules for N4JS.
- *
+ * 
  * Validation of type expression is defined in
  * {@link TypesValidator}. However, some context
  * sensitive validations such as type ref of formal parameters or return types
@@ -70,13 +69,12 @@ import org.eclipse.xtext.validation.ComposedChecks
  * }
  * </pre>
  * since otherwise they will check everything twice!
- *
+ * 
  * @see http://www.eclipse.org/Xtext/documentation.html#validation
  * @see <a name="N4JSSpec">[N4JSSpec]</a> N4JS Specification / NumberFour AG. Berlin, 2013 <a href="https://github.com/NumberFour/specs/">[GitHub]</a>
  * @see TypesValidator
  */
 @ComposedChecks(validators=#[
-
 	// N4JSStrictValidator,
 	IDEBUGValidator,
 	N4JSAccessModifierValidator,
@@ -111,41 +109,60 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4IDLMigrationValidator
 ])
 @Log
+/** validations are defined in composed validator classes */
 class N4JSValidator extends InternalTypeSystemValidator {
-
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
-	// validations are defined in composed validator classes
 	/**
 	 * Override to improve error message in case of abnormal termination of validation.
 	 */
 	override MethodWrapperCancelable createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
-		return new MethodWrapperCancelable(instanceToUse, method) {
+		// when running tests (e.g. org.eclipse.n4js.tests.scoping.ErrorTest)
+		// the following data collectors need to be created here
+		DataCollectors.INSTANCE.getOrCreateDataCollector("Build");
+		DataCollectors.INSTANCE.getOrCreateDataCollector("Validations", "Build");
 
-			override handleInvocationTargetException(Throwable targetException, State state) {
+		return new N4JSMethodWrapperCancelable(instanceToUse, method, operationCanceledManager);
+	}
 
-				// ignore GuardException, check is just not evaluated if guard is false
-				// ignore NullPointerException, as not having to check for NPEs all the time is a convenience feature
-				super.handleInvocationTargetException(targetException, state);
-				if (targetException instanceof NullPointerException) {
-					Exceptions.sneakyThrow(targetException)
-				}
+	static class N4JSMethodWrapperCancelable extends MethodWrapperCancelable {
+		private OperationCanceledManager operationCanceledManager;
+
+		protected new(AbstractDeclarativeValidator instance, Method m, OperationCanceledManager operationCanceledManager) {
+			super(instance, m)
+			this.operationCanceledManager = operationCanceledManager;
+		}
+
+		override handleInvocationTargetException(Throwable targetException, State state) {
+			// ignore GuardException, check is just not evaluated if guard is false
+			// ignore NullPointerException, as not having to check for NPEs all the time is a convenience feature
+			super.handleInvocationTargetException(targetException, state);
+			if (targetException instanceof NullPointerException) {
+				Exceptions.sneakyThrow(targetException)
 			}
+		}
 
-			// catch exceptions and create better error message as org.eclipse.xtext.validation.CompositeEValidator.validate(EClass, EObject, DiagnosticChain, Map<Object, Object>)
-			// note: cannot override validate method directly because it is final
-			override void invoke(State state) {
-				operationCanceledManager.checkCanceled(getCancelIndicator(state));
-				try {
-					super.invoke(state);
-				} catch (Exception e) {
-					operationCanceledManager.propagateIfCancelException(e);
-					logger.error("Error executing EValidator", e);
-					state.chain.add(
-						new BasicDiagnostic(Diagnostic.ERROR, state.currentObject.toString(), 0, e.message, #[e]));
-				}
+		// catch exceptions and create better error message as org.eclipse.xtext.validation.CompositeEValidator.validate(EClass, EObject, DiagnosticChain, Map<Object, Object>)
+		// note: cannot override validate method directly because it is final
+		override void invoke(State state) {
+			val valMethodName = this.method.name;
+			val dcValidator = DataCollectors.INSTANCE.getOrCreateDataCollector(valMethodName, "Build", "Validations");
+			val URI = state.currentObject.eResource.URI;
+
+			val mesVM = dcValidator.getMeasurement(valMethodName + "_" + URI.toString);
+
+			operationCanceledManager.checkCanceled(getCancelIndicator(state));
+			try {
+				super.invoke(state);
+			} catch (Exception e) {
+				operationCanceledManager.propagateIfCancelException(e);
+				logger.error("Error executing EValidator", e);
+				state.chain.add(
+					new BasicDiagnostic(Diagnostic.ERROR, state.currentObject.toString(), 0, e.message, #[e]));
+			} finally {
+				mesVM.end();
 			}
-		};
+		}
 	}
 }

@@ -35,8 +35,8 @@ public class ExternalWorkspaceTestUtils {
 	 */
 	public static final void setExternalLibrariesPreferenceStoreLocations(
 			ExternalLibraryPreferenceStore externalLibraryPreferenceStore, Path location) {
-		externalLibraryPreferenceStore
-				.remove((new File(USER_HOME)).toPath().toUri());// remove default
+
+		externalLibraryPreferenceStore.remove((new File(USER_HOME)).toPath().toUri());// remove default
 		externalLibraryPreferenceStore.add(location.toUri());
 		externalLibraryPreferenceStore.save(new NullProgressMonitor());
 		ProjectTestsUtils.waitForAutoBuild();
@@ -52,10 +52,10 @@ public class ExternalWorkspaceTestUtils {
 	 */
 	public static void removeExternalLibrariesPreferenceStoreLocations(
 			ExternalLibraryPreferenceStore externalLibraryPreferenceStore, Path dir) {
-		externalLibraryPreferenceStore
-				.add((new File(USER_HOME)).toPath().toUri());// add default
+
+		externalLibraryPreferenceStore.add((new File(USER_HOME)).toPath().toUri());// add default
 		externalLibraryPreferenceStore.remove(dir.toUri());
 		externalLibraryPreferenceStore.save(new NullProgressMonitor());
-
 	}
+
 }

@@ -32,14 +32,13 @@ public class SourceEntry {
 	final public String module;
 	/** The extension of the N4JS file. */
 	final public String extension;
-	/**
-	 * Polyfilling classes are mapped to the PolyfillAware classes. Hence the value of {@link #folder} always refers to
-	 * the PolyfillAware class, if one exists.
-	 */
+	/** The project folder. */
 	final public String folder;
+	/** True iff this SourceEntry is declared in a StaticPolyfillAware class */
+	final public boolean isStaticPolyfillAware;
 	/**
-	 * Since polyfilling classes are mapped to the PolyfillAware classes, the value of {@link #trueFolder} always refers
-	 * to the actual folder where the polyfilling class is located.
+	 * In case of a polyfill aware class, features are copied to the filling classes. Then, the {@code trueFolder}
+	 * refers to the polyfill aware class.
 	 */
 	final public String trueFolder;
 	/** The project name */
@@ -68,6 +67,7 @@ public class SourceEntry {
 			String path,
 			String project,
 			String folder,
+			boolean isStaticPolyfillAware,
 			String trueFolder,
 			String module,
 			String extension,
@@ -85,6 +85,7 @@ public class SourceEntry {
 		this.path = path;
 		this.project = project;
 		this.folder = folder;
+		this.isStaticPolyfillAware = isStaticPolyfillAware;
 		this.trueFolder = trueFolder;
 		this.module = module;
 		this.extension = extension;
@@ -107,6 +108,7 @@ public class SourceEntry {
 		this.path = se.path;
 		this.project = se.project;
 		this.folder = se.folder;
+		this.isStaticPolyfillAware = se.isStaticPolyfillAware;
 		this.trueFolder = se.trueFolder;
 		this.module = se.module;
 		this.extension = se.extension;

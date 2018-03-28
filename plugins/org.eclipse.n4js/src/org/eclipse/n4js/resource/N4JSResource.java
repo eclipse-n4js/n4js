@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.resource;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,9 +54,9 @@ import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
@@ -95,6 +96,7 @@ import com.google.inject.Inject;
  * contents class {@link ModuleAwareContentsList}.
  */
 public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource {
+	private final static Logger LOGGER = Logger.getLogger(N4JSResource.class);
 
 	/**
 	 * Special contents list which allows for the first slot to be a proxy in case the resource has been created by
@@ -955,10 +957,21 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 						}
 					}
 				}
-				// standard behavior:
-				// obtain target EObject from targetResource in the usual way
-				// (might load targetResource from disk if it wasn't loaded from index above)
-				final EObject targetObject = resSet.getEObject(targetUri, true);
+				final EObject targetObject;
+				try {
+					// standard behavior:
+					// obtain target EObject from targetResource in the usual way
+					// (might load targetResource from disk if it wasn't loaded from index above)
+					targetObject = resSet.getEObject(targetUri, true);
+				} catch (Exception fnf) {
+					if (fnf.getCause() instanceof FileNotFoundException) {
+						// This happens for instance when an external library was removed,
+						// but another external library depends on the removed one.
+						LOGGER.warn("File not found during proxy resolution", fnf);
+						return proxy;
+					}
+					throw fnf;
+				}
 				// special handling #2:
 				// if targetResource exists, make sure it is post-processed *iff* this resource is post-processed
 				// (only relevant in case targetResource wasn't loaded from index, because after loading from index it
@@ -1193,9 +1206,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// called from builder before resource descriptions are created + called from validator
 		final Script script = getScriptResolved(); // need to be called before resolve() since that one injects a proxy
 		// at resource.content[0]
-		final Measurement measurment = collector.getMeasurement(getURI().toString());
-		super.resolveLazyCrossReferences(mon);
-		measurment.end();
+		try (ClosableMeasurement m = collector.getClosableMeasurement(getURI().toString());) {
+			super.resolveLazyCrossReferences(mon);
+		}
+
 		if (script != null) {
 			// FIXME freezing of used imports tracking can/should now be moved to N4JSPostProcessor or ASTProcessor
 			EcoreUtilN4.doWithDeliver(false,

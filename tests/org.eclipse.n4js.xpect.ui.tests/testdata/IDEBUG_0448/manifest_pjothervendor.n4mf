@@ -11,7 +11,7 @@
 
 ProjectId: PjOtherVendor
 VendorId: eu.othervendor
-VendorName: "Eclipse N4JS Project"
+VendorName: "Other Vendor"
 ProjectType: library
 ProjectVersion: 0.0.1-SNAPSHOT
 Output: "src-gen"
@@ -20,4 +20,6 @@ Sources {
 		"src"
 	}
 }
-ProjectDependencies {PjDefine}
+ProjectDependencies {
+	PjDefine
+}

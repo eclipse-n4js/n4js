@@ -23,9 +23,7 @@
 /* XPECT output ---
 <==
 stdout:
-# inspect N4NamedElement
- = inspect test as N4NamedElement
-  - test.name is a string N4NamedElement
+# inspect N4Element
  = inspect test as N4Element
   - test.origin is a string n4js-es5
   - test.annotations is empty
@@ -47,10 +45,8 @@ stderr:
 import * as N from "ChB_N4Objects/N4Inspection"
 
 
-console.log("#", "inspect N4NamedElement");
-class TestN4NamedElement extends N4NamedElement {}
-var testN4NamedElement : N4NamedElement = TestN4NamedElement.n4type.n4superType;
+console.log("#", "inspect N4Element");
+var testN4Element : N4Element = N4Element.n4type;
 
-N.inspectAsN4NamedElement(testN4NamedElement);
-N.inspectAsN4Element(testN4NamedElement);
-N.inspectAsObject(testN4NamedElement);
+N.inspectAsN4Element(testN4Element);
+N.inspectAsObject(testN4Element);

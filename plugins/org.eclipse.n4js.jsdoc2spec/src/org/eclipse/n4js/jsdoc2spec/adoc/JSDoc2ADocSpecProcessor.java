@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -26,6 +25,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.n4js.jsdoc2spec.JSDoc2SpecProcessor;
+import org.eclipse.n4js.jsdoc2spec.KeyUtils;
 import org.eclipse.n4js.jsdoc2spec.SpecElementRef;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SpecInfo;
@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TN4Classifier;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 
@@ -51,13 +52,13 @@ import com.google.inject.Inject;
  * Jira: IDE-2336
  */
 public class JSDoc2ADocSpecProcessor extends JSDoc2SpecProcessor {
+	private File rootDir;
 
 	@Inject
 	private ADocFactory adocFactory;
+
 	@Inject
 	private RepoRelativePathHolder repoPathHolder;
-
-	File rootDir;
 
 	/**
 	 * This method is not needed in the processor for AsciiDoc
@@ -78,10 +79,10 @@ public class JSDoc2ADocSpecProcessor extends JSDoc2SpecProcessor {
 	 * @returns map with changed files as keys and new content.
 	 */
 	@Override
-	public Collection<SpecFile> computeUpdates(Map<String, SpecInfo> typesByName, SubMonitorMsg monitor)
+	public Collection<SpecFile> computeUpdates(Collection<SpecInfo> specInfos, SubMonitorMsg monitor)
 			throws IOException, InterruptedException {
 
-		Collection<SpecFile> newSpecSet = createNewEntries(typesByName, monitor);
+		Collection<SpecFile> newSpecSet = createNewEntries(specInfos, monitor);
 		List<SpecFile> indexChangeFiles = IndicesCreator.createIndexFiles(rootDir, newSpecSet);
 		newSpecSet.addAll(indexChangeFiles);
 		Collection<SpecFile> changeSpecSet = filterChangedFiles(newSpecSet);
@@ -93,15 +94,14 @@ public class JSDoc2ADocSpecProcessor extends JSDoc2SpecProcessor {
 	 * This method iterates through the entries of {@code typesByName} and creates {@link SpecFile}s from them. The
 	 * entries of {@code typeByName} contain e.g. requirements, or N4JS types like classes.
 	 */
-	private Collection<SpecFile> createNewEntries(Map<String, SpecInfo> typesByName, SubMonitorMsg monitor)
+	private Collection<SpecFile> createNewEntries(Collection<SpecInfo> specInfos, SubMonitorMsg monitor)
 			throws InterruptedException {
 
 		TreeMap<String, SpecFile> specChangeSet = new TreeMap<>();
 		Map<String, SpecSection> specsByKey = new HashMap<>();
 
-		SubMonitorMsg sub = monitor.convert(typesByName.size());
-		for (Entry<String, SpecInfo> entry : typesByName.entrySet()) {
-			SpecInfo specInfo = entry.getValue();
+		SubMonitorMsg sub = monitor.convert(specInfos.size());
+		for (SpecInfo specInfo : specInfos) {
 			SpecElementRef specElementRef = specInfo.specElementRef;
 
 			String specKey = KeyUtils.getSpecKey(repoPathHolder, specInfo);
@@ -120,8 +120,9 @@ public class JSDoc2ADocSpecProcessor extends JSDoc2SpecProcessor {
 			}
 			if (specElementRef.identifiableElement != null) {
 				specSection = new SpecIdentifiableElementSection(specInfo, rootDir, repoPathHolder);
-				insertIntoSpecModuleFile(specChangeSet, specsByKey, (SpecIdentifiableElementSection) specSection);
-				addMembers((SpecIdentifiableElementSection) specSection, specsByKey, specChangeSet);
+				SpecIdentifiableElementSection sies = (SpecIdentifiableElementSection) specSection;
+				insertIntoSpecModuleFile(specChangeSet, specsByKey, sies);
+				addMembers(sies.specInfo, specsByKey, specChangeSet);
 			}
 
 			sub.worked(1);
@@ -137,28 +138,38 @@ public class JSDoc2ADocSpecProcessor extends JSDoc2SpecProcessor {
 	 * This method iterates through all members of a N4JS type and creates corresponding {@link SpecFile}s from them.
 	 * During this process, member tests are linked if available.
 	 */
-	private void addMembers(SpecIdentifiableElementSection specRegion, Map<String, SpecSection> specsByKey,
+	private void addMembers(SpecInfo specInfo, Map<String, SpecSection> specsByKey,
 			TreeMap<String, SpecFile> specChangeSet) {
 
-		IdentifiableElement iE = specRegion.getIdentifiableElement();
-		if (!(iE instanceof TN4Classifier))
-			return;
+		IdentifiableElement element = specInfo.specElementRef.identifiableElement;
+		if (element instanceof TN4Classifier) {
 
-		// find non-private members
-		TN4Classifier classifier = (TN4Classifier) iE;
-		SpecInfo specInfo = specRegion.specInfo;
-		MemberCollector memberCollector = containerTypesHelper.fromContext(specInfo.specElementRef.identifiableElement);
-		MemberList<TMember> memberList = memberCollector.allMembers(classifier, false, true, false);
+			addMembers(specInfo, (TN4Classifier) element, specsByKey, specChangeSet);
+
+			Type pfaElement = specInfo.specElementRef.polyfillAware;
+			if (pfaElement instanceof TN4Classifier) {
+				addMembers(specInfo, (TN4Classifier) pfaElement, specsByKey, specChangeSet);
+			}
+		}
+	}
+
+	/**
+	 * This method iterates through all members of a N4JS type and creates corresponding {@link SpecFile}s from them.
+	 * During this process, member tests are linked if available.
+	 */
+	private void addMembers(SpecInfo specInfo, TN4Classifier classifier, Map<String, SpecSection> specsByKey,
+			TreeMap<String, SpecFile> specChangeSet) {
+
+		MemberCollector memberCollector = containerTypesHelper.fromContext(classifier);
+		MemberList<TMember> memberList = memberCollector.allMembers(classifier, false, false, false);
 		Stream<TMember> nonPrivMembs = memberList.stream().filter(isNonPrivate());
 
 		// add spec region for new members
 		for (TMember member : (Iterable<TMember>) nonPrivMembs::iterator) {
-			String memberKey = KeyUtils.getSpecKey(repoPathHolder, member);
 
-			if (!specsByKey.containsKey(memberKey)) {
-				SpecSection specSection = new SpecIdentifiableElementSection(specInfo, member, rootDir, repoPathHolder);
+			SpecSection specSection = new SpecIdentifiableElementSection(specInfo, member, rootDir, repoPathHolder);
+			if (!specsByKey.containsKey(specSection.getSpecKey())) {
 				specSection.setTestInfosForMember(specInfo.getTestsForMember(member));
-
 				insertIntoSpecModuleFile(specChangeSet, specsByKey, (SpecIdentifiableElementSection) specSection);
 			}
 		}
@@ -167,7 +178,8 @@ public class JSDoc2ADocSpecProcessor extends JSDoc2SpecProcessor {
 	private void insertIntoSpecModuleFile(TreeMap<String, SpecFile> specFiles,
 			Map<String, SpecSection> specsByKey, SpecIdentifiableElementSection specSection) {
 
-		specsByKey.put(specSection.getSpecKey(), specSection);
+		String specKey = specSection.getSpecKey();
+		specsByKey.put(specKey, specSection);
 		String moduleKey = specSection.getSpecModuleKey();
 		if (!specFiles.containsKey(moduleKey)) {
 			SpecModuleFile scf = new SpecModuleFile(specSection.getFile());
@@ -211,4 +223,5 @@ public class JSDoc2ADocSpecProcessor extends JSDoc2SpecProcessor {
 		if (monitor.isCanceled() || Thread.interrupted())
 			throw new InterruptedException("User canceled Operation.");
 	}
+
 }

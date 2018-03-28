@@ -13,15 +13,13 @@ package org.eclipse.n4js.jsdoc2spec;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
 import java.util.function.Function;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+
+import com.google.inject.Inject;
 
 /**
  * Main controller scanning project for JSDoc comments, reading existing doc files if necessary, and merging results to
@@ -59,7 +57,7 @@ abstract public class JSDoc2SpecProcessor {
 	 *
 	 * @returns map with changed files as keys and new content.
 	 */
-	abstract public Collection<SpecFile> computeUpdates(Map<String, SpecInfo> typesByName, SubMonitorMsg monitor)
+	abstract public Collection<SpecFile> computeUpdates(Collection<SpecInfo> specInfos, SubMonitorMsg monitor)
 			throws IOException, InterruptedException;
 
 	/**
@@ -75,8 +73,8 @@ abstract public class JSDoc2SpecProcessor {
 
 		setRootDir(docRoot);
 		SubMonitorMsg sub = monitor.convert(4 * 100);
-		Map<String, SpecInfo> typesByName = readN4JSDs(projects, resSetProvider, sub.newChild(200));
-		Collection<SpecFile> specChangeSet = computeUpdates(typesByName, sub.newChild(100));
+		Collection<SpecInfo> specInfos = readN4JSDs(projects, resSetProvider, sub.newChild(200));
+		Collection<SpecFile> specChangeSet = computeUpdates(specInfos, sub.newChild(100));
 		return specChangeSet;
 	}
 
@@ -99,7 +97,7 @@ abstract public class JSDoc2SpecProcessor {
 	 *             thrown when user cancels the operation
 	 * @see N4JSDReader#readN4JSDs(Collection, Function, SubMonitorMsg)
 	 */
-	public Map<String, SpecInfo> readN4JSDs(Collection<IN4JSProject> projects,
+	public Collection<SpecInfo> readN4JSDs(Collection<IN4JSProject> projects,
 			Function<IN4JSProject, ResourceSet> resSetProvider, SubMonitorMsg monitor) throws InterruptedException {
 
 		SubMonitorMsg sub = monitor.convert(100 * (projects.size() + 2));

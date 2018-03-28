@@ -18,14 +18,13 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-
 import org.eclipse.n4js.jsdoc2spec.CheckCanceled;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.adoc.FileSystem;
 import org.eclipse.n4js.jsdoc2spec.ui.SpecProcessPage;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 /**
  * This class contains methods to compute html from adoc files.
@@ -35,16 +34,14 @@ class TaskWriteFiles implements IRunnableWithProgress {
 	final TaskGenerateAdoc taskGenAdoc;
 
 	private ConfigAdoc configAdoc;
-	private ConfigOutput configOutput;
 
 	TaskWriteFiles(SpecProcessPage processHtmlPage, TaskGenerateAdoc taskGenAdoc) {
 		this.processOutputPage = processHtmlPage;
 		this.taskGenAdoc = taskGenAdoc;
 	}
 
-	void setConfig(ConfigAdoc configAdoc, ConfigOutput configOutput) {
+	void setConfig(ConfigAdoc configAdoc) {
 		this.configAdoc = configAdoc;
-		this.configOutput = configOutput;
 	}
 
 	@Override
@@ -66,9 +63,7 @@ class TaskWriteFiles implements IRunnableWithProgress {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, workload);
 
-		if (configOutput.writeAdocFiles) {
-			writeAdocFiles(subMonitor);
-		}
+		writeAdocFiles(subMonitor);
 
 		subMonitor.subTask("Finished.");
 		subMonitor.done();

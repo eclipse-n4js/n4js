@@ -90,7 +90,7 @@
 							for(var i = 0;i < listeners.length;i++) {
 								var current = listeners[i];
 								if (!this.shouldHalt) {
-									await current.listener.apply(this, params);
+									await Promise.resolve(current.listener.apply(current.listenerContext, params));
 									if (current.applyOnlyOnce) {
 										this.remove(current.listener, current.listenerContext);
 									}

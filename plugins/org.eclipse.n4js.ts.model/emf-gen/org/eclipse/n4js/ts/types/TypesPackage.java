@@ -7426,13 +7426,22 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER___IS_STATIC = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER___IS_CONST = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 16;
+
+	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_POLYFILLED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 16;
+	int TMEMBER___IS_POLYFILLED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The number of operations of the '<em>TMember</em>' class.
@@ -7441,7 +7450,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 17;
+	int TMEMBER_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMemberWithAccessModifierImpl <em>TMember With Access Modifier</em>}' class.
@@ -7704,6 +7713,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMEMBER_WITH_ACCESS_MODIFIER___IS_STATIC = TMEMBER___IS_STATIC;
+
+	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER___IS_CONST = TMEMBER___IS_CONST;
 
 	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
@@ -7975,6 +7993,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_MEMBER___IS_FINAL = TMEMBER___IS_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___IS_CONST = TMEMBER___IS_CONST;
 
 	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
@@ -8536,13 +8563,22 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___IS_STATIC = TFUNCTION_OPERATION_COUNT + 15;
 
 	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_CONST = TFUNCTION_OPERATION_COUNT + 16;
+
+	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___IS_POLYFILLED = TFUNCTION_OPERATION_COUNT + 16;
+	int TMETHOD___IS_POLYFILLED = TFUNCTION_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Get Member Access Modifier</em>' operation.
@@ -8551,7 +8587,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___GET_MEMBER_ACCESS_MODIFIER = TFUNCTION_OPERATION_COUNT + 17;
+	int TMETHOD___GET_MEMBER_ACCESS_MODIFIER = TFUNCTION_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -8560,7 +8596,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___IS_ABSTRACT = TFUNCTION_OPERATION_COUNT + 18;
+	int TMETHOD___IS_ABSTRACT = TFUNCTION_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Get Member Type</em>' operation.
@@ -8569,7 +8605,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___GET_MEMBER_TYPE = TFUNCTION_OPERATION_COUNT + 19;
+	int TMETHOD___GET_MEMBER_TYPE = TFUNCTION_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -8578,7 +8614,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___IS_CONSTRUCTOR = TFUNCTION_OPERATION_COUNT + 20;
+	int TMETHOD___IS_CONSTRUCTOR = TFUNCTION_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -8587,7 +8623,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___GET_FUNCTION_AS_STRING = TFUNCTION_OPERATION_COUNT + 21;
+	int TMETHOD___GET_FUNCTION_AS_STRING = TFUNCTION_OPERATION_COUNT + 22;
 
 	/**
 	 * The operation id for the '<em>Get Member As String</em>' operation.
@@ -8596,7 +8632,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___GET_MEMBER_AS_STRING = TFUNCTION_OPERATION_COUNT + 22;
+	int TMETHOD___GET_MEMBER_AS_STRING = TFUNCTION_OPERATION_COUNT + 23;
 
 	/**
 	 * The number of operations of the '<em>TMethod</em>' class.
@@ -8605,7 +8641,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 23;
+	int TMETHOD_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 24;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TStructMethodImpl <em>TStruct Method</em>}' class.
@@ -9120,6 +9156,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___IS_FINAL = TMETHOD___IS_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_CONST = TMETHOD___IS_CONST;
 
 	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
@@ -9782,6 +9827,15 @@ public interface TypesPackage extends EPackage {
 	int TFIELD___IS_FINAL = TMEMBER_WITH_ACCESS_MODIFIER___IS_FINAL;
 
 	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD___IS_CONST = TMEMBER_WITH_ACCESS_MODIFIER___IS_CONST;
+
+	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10123,6 +10177,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_FIELD___IS_FINAL = TFIELD___IS_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___IS_CONST = TFIELD___IS_CONST;
 
 	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
@@ -10486,6 +10549,15 @@ public interface TypesPackage extends EPackage {
 	int FIELD_ACCESSOR___IS_STATIC = TMEMBER_WITH_ACCESS_MODIFIER___IS_STATIC;
 
 	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___IS_CONST = TMEMBER_WITH_ACCESS_MODIFIER___IS_CONST;
+
+	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10800,6 +10872,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TGETTER___IS_STATIC = FIELD_ACCESSOR___IS_STATIC;
+
+	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER___IS_CONST = FIELD_ACCESSOR___IS_CONST;
 
 	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
@@ -11136,6 +11217,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_GETTER___IS_FINAL = TGETTER___IS_FINAL;
 
 	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___IS_CONST = TGETTER___IS_CONST;
+
+	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11470,6 +11560,15 @@ public interface TypesPackage extends EPackage {
 	int TSETTER___IS_STATIC = FIELD_ACCESSOR___IS_STATIC;
 
 	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER___IS_CONST = FIELD_ACCESSOR___IS_CONST;
+
+	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11802,6 +11901,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_SETTER___IS_FINAL = TSETTER___IS_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___IS_CONST = TSETTER___IS_CONST;
 
 	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
@@ -14608,6 +14716,16 @@ public interface TypesPackage extends EPackage {
 	EOperation getTMember__IsStatic();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMember#isConst() <em>Is Const</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Const</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TMember#isConst()
+	 * @generated
+	 */
+	EOperation getTMember__IsConst();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMember#isPolyfilled() <em>Is Polyfilled</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17170,6 +17288,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TMEMBER___IS_STATIC = eINSTANCE.getTMember__IsStatic();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Const</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMEMBER___IS_CONST = eINSTANCE.getTMember__IsConst();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Polyfilled</b></em>' operation.

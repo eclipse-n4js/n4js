@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-@@StaticPolyfillModule 
+@@StaticPolyfillModule
 @StaticPolyfill
 export public class A extends A {
 	@Override
