@@ -18,15 +18,14 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-
-import com.google.common.base.Supplier;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
+
+import com.google.common.base.Supplier;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Clones the remote Git repository with the N4JS definition files.
@@ -102,7 +101,11 @@ public class GitCloneSupplier implements Supplier<File> {
 		this.successfullyCloned = false;
 		File newRepo = get();
 		return newRepo.getAbsolutePath().equals(oldRepo.getAbsolutePath());
+	}
 
+	/** @return true iff the last {@link #get()} or {@link #repairTypeDefinitions()} call was successful. */
+	public synchronized boolean isSuccessfullyCloned() {
+		return successfullyCloned;
 	}
 
 }

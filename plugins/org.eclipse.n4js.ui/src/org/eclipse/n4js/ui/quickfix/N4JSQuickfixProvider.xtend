@@ -77,6 +77,9 @@ import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
 import org.eclipse.n4js.n4mf.SimpleProjectDependency
 import org.eclipse.n4js.external.ExternalProjectsManager
+import org.eclipse.n4js.utils.StatusHelper
+import org.eclipse.jface.dialogs.ErrorDialog
+import org.eclipse.n4js.utils.StatusUtils
 
 /**
  * N4JS quick fixes.
@@ -88,6 +91,9 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 	@Inject
 	extension ImportUtil
+
+	@Inject
+	extension StatusHelper
 
 	@Inject
 	extension QuickfixUtil.IssueUserDataKeysExtension
@@ -686,31 +692,32 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 						"";
 					};
 
-				val errorStatusRef = new AtomicReference;
 				val illegalBinaryExcRef = new AtomicReference
+				val multiStatus = createMultiStatus("Installing npm '" + packageName + "'.");
 
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<String, String> package = Collections.singletonMap(packageName, packageVersion);
-						val status = npmManager.installNPMs(package, monitor);
-						if (!status.OK) {
-							errorStatusRef.set(status);
-						}
+						multiStatus.merge(npmManager.installNPMs(package, monitor));
+
 					} catch (IllegalBinaryStateException e) {
 						illegalBinaryExcRef.set(e);
+
+					} catch (Exception e) {
+						val msg = "Error while uninstalling npm dependency: '" + packageName + "'.";
+						multiStatus.merge(createError(msg, e));
 					}
 				]);
 
 				if (null !== illegalBinaryExcRef.get) {
 					new IllegalBinaryStateDialog(illegalBinaryExcRef.get).open;
-				} else if (null !== errorStatusRef.get) {
-					N4JSActivator.getInstance().getLog().log(errorStatusRef.get());
+
+				} else if (!multiStatus.isOK()) {
+					N4JSActivator.getInstance().getLog().log(multiStatus);
 					UIUtils.display.asyncExec([
-						openError(
-							UIUtils.shell,
-							"npm Install Failed",
-							"Error while installing '" + packageName + "' npm package." +
-							"\nPlease check your Error Log view for the detailed npm log about the failure.");
+						val title = "NPM Install Failed";
+						val descr = StatusUtils.getErrorMessage(multiStatus, true);
+						ErrorDialog.openError(UIUtils.shell, title, descr, multiStatus);
 					]);
 				}
 
