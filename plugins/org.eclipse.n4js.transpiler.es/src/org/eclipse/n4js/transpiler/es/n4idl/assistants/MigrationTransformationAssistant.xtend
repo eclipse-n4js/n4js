@@ -16,7 +16,7 @@ import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionExpression
-import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
+import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4idl.N4IDLGlobals
@@ -28,6 +28,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
@@ -36,7 +37,6 @@ import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 
 /**
  * Transformation assistant for generating migration-support related ES code.
@@ -53,29 +53,29 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 	private static val MIGRATION_CANDIDATE_LIST = "migrationCandidates";
 	
 	/** 
-	 * Creates the initializer statement for the static field which holds migrations associated with this classifier
+	 * Creates the initializer statement for the static field which holds migrations associated with the given type declaration.
 	 * 
 	 * @see N4IDLGlobals#MIGRATIONS_STATIC_FIELD
 	 */
-	public def Iterable<Statement> createMigrationSupportInitializer(SymbolTableEntry steClass, N4ClassifierDeclaration classifierDecl) {
+	public def Iterable<Statement> createMigrationSupportInitializer(SymbolTableEntry steClass, N4TypeDeclaration typeDecl) {
 		val SymbolTableEntryOriginal originalSTE = if (steClass instanceof SymbolTableEntryOriginal) {
 			steClass
 		} else {
-			state.steCache.mapOriginal.get(classifierDecl);
+			state.steCache.mapOriginal.get(typeDecl);
 		}
-		val tClass = originalSTE?.originalTarget;
-		if (null === tClass) {
+		val typeModelElement = originalSTE?.originalTarget;
+		if (null === typeModelElement) {
 			// without the type model class declaration we cannot go any further 
 			return #[];
 		}
 		
-		if (!(tClass instanceof TMigratable)) {
+		if (!(typeModelElement instanceof TMigratable)) {
 			// only consider migratable elements
 			return #[];
 		}
 		
 		// <migration switch>
-		val Expression migrationsFieldValue = makeMigrationSwitch(tClass as TMigratable);
+		val Expression migrationsFieldValue = makeMigrationSwitch(typeModelElement as TMigratable);
 		// A.$migrations__n4
 		val staticFieldAccess =_PropertyAccessExpr(_IdentRef(steClass), getSymbolTableEntryInternal(N4IDLGlobals.MIGRATIONS_STATIC_FIELD, true))
 		

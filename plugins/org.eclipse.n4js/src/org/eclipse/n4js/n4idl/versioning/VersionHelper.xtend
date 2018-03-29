@@ -98,10 +98,12 @@ class VersionHelper {
 
 	/**
 	 * Computes the version range of the given versionable type. The lower limit of the version range is determined by the
-	 * declared version of the given classifier while the upper limit is computed via a call to
-	 * {@link #computeUpperLimit(TClassifier, int)}.
+	 * declared version of the given classifier while the upper limit is computed via a call to {@link #computeUpperLimit(TClassifier, int)}.
 	 */
 	private def Optional<Integer> computeMaximumVersionForVersionable(TVersionable versionableType) {
+		if (versionableType === null) {
+			return Optional.absent;
+		}
 		val int lowerLimit = versionableType.version;
 		return computeUpperLimit(versionableType, lowerLimit);
 	}
