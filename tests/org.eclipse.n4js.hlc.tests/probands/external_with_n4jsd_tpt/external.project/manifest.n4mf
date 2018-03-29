@@ -22,5 +22,5 @@ Sources {
 }
 
 ProjectDependencies {
-    express
+    express 4.13.4
 }

@@ -694,6 +694,15 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isConst() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isPolyfilled() {
 		final ContainerType<?> containingType = this.getContainingType();
 		if ((containingType == null)) {
@@ -946,6 +955,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				case TypesPackage.TMEMBER___GET_MEMBER_AS_STRING: return TypesPackage.TMETHOD___GET_MEMBER_AS_STRING;
 				case TypesPackage.TMEMBER___IS_FINAL: return TypesPackage.TMETHOD___IS_FINAL;
 				case TypesPackage.TMEMBER___IS_STATIC: return TypesPackage.TMETHOD___IS_STATIC;
+				case TypesPackage.TMEMBER___IS_CONST: return TypesPackage.TMETHOD___IS_CONST;
 				case TypesPackage.TMEMBER___IS_POLYFILLED: return TypesPackage.TMETHOD___IS_POLYFILLED;
 				default: return -1;
 			}
@@ -1001,6 +1011,8 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				return isFinal();
 			case TypesPackage.TMETHOD___IS_STATIC:
 				return isStatic();
+			case TypesPackage.TMETHOD___IS_CONST:
+				return isConst();
 			case TypesPackage.TMETHOD___IS_POLYFILLED:
 				return isPolyfilled();
 		}

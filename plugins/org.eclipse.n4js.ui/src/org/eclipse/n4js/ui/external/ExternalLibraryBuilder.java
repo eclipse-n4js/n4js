@@ -17,6 +17,7 @@ import static org.eclipse.core.runtime.SubMonitor.SUPPRESS_BEGINTASK;
 import static org.eclipse.core.runtime.SubMonitor.SUPPRESS_NONE;
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -264,7 +265,8 @@ public class ExternalLibraryBuilder {
 			Job.getJobManager().beginRule(rule, monitor);
 
 			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
-			List<IN4JSProject> buildOrderList = Arrays.asList(buildOrder.vertexes);
+			// wrap as Arrays.asList returns immutable list
+			List<IN4JSProject> buildOrderList = new ArrayList<>(Arrays.asList(buildOrder.vertexes));
 			if (BuildOperation.CLEAN.equals(operation)) {
 				Collections.reverse(buildOrderList);
 			}

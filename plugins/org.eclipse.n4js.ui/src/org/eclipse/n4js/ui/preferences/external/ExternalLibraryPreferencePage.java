@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.primitives.Ints.asList;
 import static java.util.Collections.singletonList;
@@ -19,20 +17,17 @@ import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.N4_NPM_FOLDER_SUPPLIER;
 import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.repairNpmFolderState;
-import static org.eclipse.n4js.external.libraries.TargetPlatformModel.TP_FILTER_EXTENSION;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createDisabledPushButton;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createEnabledPushButton;
 import static org.eclipse.n4js.ui.utils.DelegatingSelectionAdapter.createSelectionListener;
 import static org.eclipse.swt.SWT.END;
 import static org.eclipse.swt.SWT.FILL;
 import static org.eclipse.swt.SWT.OPEN;
-import static org.eclipse.swt.SWT.SAVE;
 import static org.eclipse.swt.SWT.Selection;
 import static org.eclipse.swt.SWT.TOP;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Collection;
@@ -56,11 +51,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.GitCloneSupplier;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ProjectDescription;
@@ -80,7 +74,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -186,12 +179,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		createEnabledPushButton(subComposite, "Run maintenance actions...",
 				new MaintenanceActionsButtonListener(this::runMaintananceActions, statusHelper));
 
-		createEnabledPushButton(subComposite, "Export target platform...",
-				createSelectionListener(this::handleExportButtonSelection));
-
-		createEnabledPushButton(subComposite, "Import target platform...",
-				new ImportButtonListener(this::installAndUpdate, statusHelper));
-
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
@@ -274,43 +261,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 	private Control createPlaceHolderLabel(final Composite parent) {
 		return new Label(parent, NONE);
-	}
-
-	/**
-	 * Creates new dialog for target platform export,
-	 */
-	private void handleExportButtonSelection(@SuppressWarnings("unused") final SelectionEvent event) {
-		final FileDialog dialog = new FileDialog(getShell(), SAVE);
-		dialog.setFilterExtensions(new String[] { TP_FILTER_EXTENSION });
-		dialog.setFileName(TargetPlatformModel.TP_FILE_NAME);
-		dialog.setText("Export N4JS Target Platform");
-		dialog.setOverwrite(true);
-		final String value = dialog.open();
-		if (!isNullOrEmpty(value)) {
-			exportTargetPlatform(new File(value));
-		}
-	}
-
-	/**
-	 * Based on installed npms creates {@link TargetPlatformModel} and writes it to the provided file.
-	 *
-	 * @param file
-	 *            the file to which {@link TargetPlatformModel} is written.
-	 */
-	private void exportTargetPlatform(final File file) {
-		final Map<String, String> installerNpms = getInstalledNpms();
-		final TargetPlatformModel model = TargetPlatformModel.createFromVersionedNpmProjectIds(installerNpms);
-		try {
-			if (!file.exists()) {
-				checkState(file.createNewFile(), "Error while exporting target platform file.");
-			}
-			try (final PrintWriter pw = new PrintWriter(file)) {
-				pw.write(model.toString());
-				pw.flush();
-			}
-		} catch (final IOException e) {
-			throw new RuntimeException("Error while exporting target platform file.", e);
-		}
 	}
 
 	/**

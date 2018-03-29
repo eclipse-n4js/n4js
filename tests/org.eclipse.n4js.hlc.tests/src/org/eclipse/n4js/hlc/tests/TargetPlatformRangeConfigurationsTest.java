@@ -57,13 +57,13 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
 		// note: express version 4.16.0 introduced more properties, so by checking for the following properties we can
