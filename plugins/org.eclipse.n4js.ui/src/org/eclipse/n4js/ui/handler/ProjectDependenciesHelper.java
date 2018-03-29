@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.handler;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -21,7 +19,6 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil;
@@ -58,8 +55,8 @@ class ProjectDependenciesHelper {
 	 *  <ul>
 	 * </pre>
 	 */
-	public Map<String, String> calculateDependenciesToInstall(File selectedN4TP) {
-		Map<String, String> versionedPackages = populateFromPlatformFile(selectedN4TP);
+	public Map<String, String> calculateDependenciesToInstall() {
+		Map<String, String> versionedPackages = new HashMap<>();
 		DependenciesCollectingUtil.updateMissingDependneciesMap(versionedPackages, getAvailableProjectsDescriptions());
 		if (LOGGER.isDebugEnabled()) {
 			StringJoiner messages = new StringJoiner(System.lineSeparator());
@@ -68,22 +65,6 @@ class ProjectDependenciesHelper {
 			LOGGER.debug(messages);
 		}
 		return versionedPackages;
-	}
-
-	/** @return dependencies to install based on the platform file. */
-	private Map<String, String> populateFromPlatformFile(File n4tp) {
-		if (n4tp != null) {
-			try {
-				final java.net.URI platformFileLocation = n4tp.toURI();
-				Map<String, String> n4tpPackages;
-				n4tpPackages = TargetPlatformModel
-						.npmVersionedPackageNamesFrom(platformFileLocation);
-				return n4tpPackages;
-			} catch (IOException e) {
-				LOGGER.error("Cannot read platform file", e);
-			}
-		}
-		return new HashMap<>();
 	}
 
 	private Iterable<ProjectDescription> getAvailableProjectsDescriptions() {
@@ -98,9 +79,9 @@ class ProjectDependenciesHelper {
 	@SuppressWarnings("javadoc")
 	private ProjectDescription getProjectDescription(URI location) {
 		ProjectDescription description = workspace.getProjectDescription(location);
-		if (null == description) {
+		if (null == description)
 			description = externalLibraryWorkspace.getProjectDescription(location);
-		}
+
 		return description;
 	}
 
