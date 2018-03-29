@@ -56,12 +56,12 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends BaseN
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				// "--verbose",
 				// "--debug",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(

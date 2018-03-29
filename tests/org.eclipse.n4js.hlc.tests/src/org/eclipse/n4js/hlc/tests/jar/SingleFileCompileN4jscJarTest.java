@@ -72,7 +72,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	public void testSingleFileCompile() throws Exception {
 		logFile();
 
-		Process p = createAndStartProcess("-bt", "singleFile", WSP + "/" + "PSingle/src/a/A.n4js");
+		Process p = createAndStartProcess("--buildType", "singleFile", WSP + "/" + "PSingle/src/a/A.n4js");
 
 		int exitCode = p.waitFor();
 
@@ -91,9 +91,9 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 
 		// -rw run with
 		// -r run : file to run
-		Process p = createAndStartProcess("-bt", "allprojects", "-pl",
-				WSP, "-rw",
-				"nodejs", "-r",
+		Process p = createAndStartProcess("--buildType", "allprojects", "--projectlocations",
+				WSP, "--runWith",
+				"nodejs", "--run",
 				WSP + "/" + "P1/src/A.n4js");
 
 		int exitCode = p.waitFor();
@@ -116,11 +116,11 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		logFile();
 
 		Process p = createAndStartProcess( // ----
-				"-pl", WSP + "/" + "IDE-1510_Incomplete_API_Implementation", // ----
-				"-rw", "nodejs", // ----
-				"-r", WSP + "/"
+				"--projectlocations", WSP + "/" + "IDE-1510_Incomplete_API_Implementation", // ----
+				"--runWith", "nodejs", // ----
+				"--run", WSP + "/"
 						+ "IDE-1510_Incomplete_API_Implementation/one.x.impl/src/AT_IDE-1510_Missing_Method.n4js", // ----
-				"-bt", "allprojects", // ----
+				"--buildType", "allprojects", // ----
 				"IDE-1510_Incomplete_API_Implementation/one.api",
 				"IDE-1510_Incomplete_API_Implementation/one.x.impl");
 
@@ -149,7 +149,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 
 		// -rw run with
 		// -lr list runners.
-		Process p = createAndStartProcess("-lr");
+		Process p = createAndStartProcess("--listRunners");
 
 		int exitCode = p.waitFor();
 
@@ -181,10 +181,10 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		String fileA = pathToP1 + "/src/A.n4js";
 
 		Process p = createAndStartProcess("-pl", proot,
-				"-bt", "dontcompile",
-				"-rw", "nodejs",
-				"-r", fileA,
-				"-v");
+				"--buildType", "dontcompile",
+				"--runWith", "nodejs",
+				"--run", fileA,
+				"--verbose");
 
 		int exitCode = p.waitFor();
 
