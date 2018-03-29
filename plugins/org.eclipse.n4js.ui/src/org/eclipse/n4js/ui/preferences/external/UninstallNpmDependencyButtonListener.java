@@ -76,7 +76,8 @@ public class UninstallNpmDependencyButtonListener extends SelectionAdapter {
 				// canceled by user
 			} catch (final Exception exc) {
 				String msg = "Error while uninstalling npm dependency: '" + packageName + "'.";
-				multistatus.merge(statusHelper.createError(msg, exc));
+				Throwable causingExc = exc.getCause() == null ? exc : exc.getCause();
+				multistatus.merge(statusHelper.createError(msg, causingExc));
 
 			} finally {
 				if (!multistatus.isOK()) {

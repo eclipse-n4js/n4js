@@ -10,16 +10,13 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
-import static org.eclipse.core.runtime.IStatus.ERROR;
-import static org.eclipse.n4js.N4JSPluginId.N4JS_PLUGIN_ID;
 import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiFunction;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -114,8 +111,12 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 					multistatus.merge(runActions.apply(userChoice, monitor));
 				});
 
-			} catch (final InvocationTargetException | InterruptedException exc) {
-				multistatus.merge(new Status(ERROR, N4JS_PLUGIN_ID, ERROR, exc.getMessage(), exc));
+			} catch (final InterruptedException | OperationCanceledException exc) {
+				// canceled by user
+			} catch (final Exception exc) {
+				String statusMsg = "Error while performing maintenance actions: " + userChoice + ".";
+				Throwable causingExc = exc.getCause() == null ? exc : exc.getCause();
+				multistatus.merge(statusHelper.createError(statusMsg, causingExc));
 
 			} finally {
 
