@@ -99,7 +99,7 @@ pipeline {
                             'execute-accesscontrol-tests '
                         ].join(',')
 
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        sh "${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }
