@@ -196,6 +196,7 @@ public class LibraryManager {
 			Map<String, String> installRequested, Collection<String> removeRequested) {
 
 		monitor.setTaskName("Installing packages... [step 1 of 4]");
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 3);
 
 		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms = indexSynchronizer.findNpmsInFolder();
 		List<String> toBeInstalled = new LinkedList<>();
@@ -227,24 +228,24 @@ public class LibraryManager {
 		}
 
 		// remove
-		IStatus removeStatus = npmCli.batchInstallUninstall(monitor, toBeRemoved, null, false);
+		IStatus removeStatus = npmCli.batchInstallUninstall(subMonitor, toBeRemoved, null, false);
 		if (!removeStatus.isOK()) {
 			logger.logInfo("Some packages could not be removed due to errors, see log for details.");
 			status.merge(removeStatus);
 		}
-		monitor.worked(1);
+		subMonitor.worked(1);
 
 		// install
-		IStatus installStatus = npmCli.batchInstallUninstall(monitor, toBeInstalled, installRequested, true);
+		IStatus installStatus = npmCli.batchInstallUninstall(subMonitor, toBeInstalled, installRequested, true);
 		if (!installStatus.isOK()) {
 			logger.logInfo("Some packages could not be installed due to errors, see log for details.");
 			status.merge(installStatus);
 		}
-		monitor.worked(1);
+		subMonitor.worked(1);
 
 		// adapt installed
 		adaptNPMPackages(monitor, status, toBeInstalled);
-		monitor.worked(1);
+		subMonitor.worked(1);
 	}
 
 	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,

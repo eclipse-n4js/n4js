@@ -41,12 +41,13 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.ui.DependencyDelegator;
 import org.eclipse.n4js.ui.containers.CompositeStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSExternalLibraryStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSToBeBuiltComputer;
 import org.eclipse.n4js.ui.containers.NfarStorageMapper;
 import org.eclipse.n4js.ui.external.BuildOrderComputer;
+import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
+import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
@@ -113,24 +114,29 @@ public class ContributingModule implements Module {
 		binder.bind(TypeDefinitionGitLocationProvider.class).to(TypeDefinitionGitLocationProviderImpl.class)
 				.in(SINGLETON);
 
-		DependencyDelegator.toN4JS(binder, IN4JSCore.class);
-		DependencyDelegator.toN4JS(binder, IN4JSEclipseCore.class);
-		DependencyDelegator.toN4JS(binder, N4JSModel.class);
-		DependencyDelegator.toN4JS(binder, N4JSEclipseModel.class);
+		binder.bind(IN4JSCore.class).to(N4JSEclipseCore.class);
+		binder.bind(IN4JSEclipseCore.class).to(N4JSEclipseCore.class);
+		binder.bind(N4JSEclipseCore.class);
+		binder.bind(N4JSModel.class).to(N4JSEclipseModel.class);
+		binder.bind(N4JSEclipseModel.class);
 
-		DependencyDelegator.toN4JS(binder, ExternalLibraryWorkspace.class);
-		DependencyDelegator.toN4JS(binder, ExternalIndexSynchronizer.class);
-		DependencyDelegator.toN4JS(binder, ExternalProjectCacheLoader.class);
-		DependencyDelegator.toN4JS(binder, ProjectStateChangeListener.class);
-		DependencyDelegator.toN4JS(binder, ExternalIndexUpdater.class);
-		DependencyDelegator.toN4JS(binder, ExternalLibraryBuildJobProvider.class);
-		DependencyDelegator.toN4JS(binder, ExternalLibraryBuilder.class);
-		DependencyDelegator.toN4JS(binder, BuildOrderComputer.class);
-		DependencyDelegator.toN4JS(binder, NpmLogger.class);
-		DependencyDelegator.toN4JS(binder, OutputStreamProvider.class);
-		DependencyDelegator.toN4JS(binder, ExternalProjectsCollector.class);
-		DependencyDelegator.toN4JS(binder, ExternalProjectProvider.class);
-		DependencyDelegator.toN4JS(binder, RebuildWorkspaceProjectsScheduler.class);
+		binder.bind(ExternalLibraryWorkspace.class).to(EclipseExternalLibraryWorkspace.class);
+		binder.bind(EclipseExternalLibraryWorkspace.class);
+		binder.bind(ExternalIndexSynchronizer.class).to(EclipseExternalIndexSynchronizer.class);
+		binder.bind(EclipseExternalIndexSynchronizer.class);
+
+		binder.bind(ExternalProjectCacheLoader.class);
+		binder.bind(ProjectStateChangeListener.class);
+		binder.bind(ExternalIndexUpdater.class);
+		binder.bind(ExternalLibraryBuildJobProvider.class);
+		binder.bind(ExternalLibraryBuilder.class);
+		binder.bind(BuildOrderComputer.class);
+		binder.bind(NpmLogger.class);
+		binder.bind(OutputStreamProvider.class).to(ConsoleOutputStreamProvider.class);
+		binder.bind(ConsoleOutputStreamProvider.class);
+		binder.bind(ExternalProjectsCollector.class);
+		binder.bind(ExternalProjectProvider.class);
+		binder.bind(RebuildWorkspaceProjectsScheduler.class);
 
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);
 		binder.bind(ExternalLibraryUriHelper.class);

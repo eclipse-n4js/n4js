@@ -61,7 +61,8 @@ public class N4JSActivator extends AbstractUIPlugin {
 		synchronized (injectors) {
 			Injector injector = injectors.get(language);
 			if (injector == null) {
-				injectors.put(language, injector = createInjector(language));
+				injector = createInjector(language);
+				injectors.put(language, injector);
 			}
 			return injector;
 		}

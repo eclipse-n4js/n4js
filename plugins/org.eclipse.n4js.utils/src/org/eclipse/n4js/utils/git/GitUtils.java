@@ -31,7 +31,10 @@ import static org.eclipse.n4js.utils.collections.Arrays2.isEmpty;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
@@ -82,6 +85,20 @@ public abstract class GitUtils {
 			((SshTransport) transport).setSshSessionFactory(new SshSessionFactory());
 		}
 	};
+
+	/** @return true iff a connection can be established to the given URL */
+	public static boolean netIsAvailable(final String remoteUrl) {
+		try {
+			final URL url = new URL(remoteUrl);
+			final URLConnection conn = url.openConnection();
+			conn.connect();
+			return true;
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			return false;
+		}
+	}
 
 	/**
 	 * Hard resets the {@code HEAD} of the reference in the locally cloned Git repository. If the repository does not
