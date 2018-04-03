@@ -542,6 +542,15 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isConst() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isPolyfilled() {
 		final ContainerType<?> containingType = this.getContainingType();
 		if ((containingType == null)) {
@@ -780,6 +789,8 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				return isFinal();
 			case TypesPackage.TMEMBER___IS_STATIC:
 				return isStatic();
+			case TypesPackage.TMEMBER___IS_CONST:
+				return isConst();
 			case TypesPackage.TMEMBER___IS_POLYFILLED:
 				return isPolyfilled();
 		}

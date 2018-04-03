@@ -22,5 +22,5 @@ Sources {
 }
 
 ProjectDependencies {
-    express
+    express [4.0.0, 4.16.0)
 }

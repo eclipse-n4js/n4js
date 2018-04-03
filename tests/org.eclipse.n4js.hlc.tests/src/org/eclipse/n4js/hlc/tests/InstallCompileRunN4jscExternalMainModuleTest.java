@@ -14,8 +14,6 @@ import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -46,40 +44,6 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		Map<String, String> deps = new HashMap<>();
-
-		// main is "index.js"
-		deps.put("express", "@4.13.4");
-
-		// main is "lib", there is index.js in lib folder
-		deps.put("jade", "@1.11.0");
-
-		// main is "lodash.js"
-		deps.put("lodash", "@4.6.0");
-
-		// TODO karma is commented out due to bumping up to Node.js 6.x and the below described deprecation warnings:
-		// (node) v8::ObjectTemplate::Set() with non-primitive values is deprecated
-		// (node) and will stop working in the next major release.
-		// // main is "./lib/index"
-		// deps.put("karma", "@0.13.21");
-
-		// main is "./lib/bar", but there is lib folder and lib.js file
-		deps.put("bar", "@0.1.2");
-
-		// main is "./lib/index.js"
-		deps.put("pouchdb-find", "@0.10.3");
-
-		// no main
-		deps.put("body-parser", "@1.15.0");
-
-		// broken main (defined in the package.json, but does not exist in the npm package)
-		deps.put("next", "@1.1.1");
-
-		return deps;
-	}
-
 	/**
 	 * Test for checking the npm support in the headless case by downloading third party package, importing it and
 	 * running it with Common JS.
@@ -91,12 +55,12 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 
 		final String[] args = {
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString(),
+				"--buildType", BuildType.allprojects.toString(),
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose"
 		};
 		final String actual = runAndCaptureOutput(args);
@@ -105,9 +69,8 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 				.append("express imported").append("\n")
 				.append("jade imported").append("\n")
 				.append("lodash imported").append("\n")
-				// TODO enable this when karma npm package is enabled again.
-				// .append("karma imported").append("\n")
-				.append("bar imported").append("\n") // Bar uses deprecated 'sys'
+				.append("karma imported").append("\n")
+				.append("bar imported").append("\n")
 				.append("pouchdb-find imported").append("\n")
 				.append("next imported").append("\n")
 				.append("body-parser imported");
