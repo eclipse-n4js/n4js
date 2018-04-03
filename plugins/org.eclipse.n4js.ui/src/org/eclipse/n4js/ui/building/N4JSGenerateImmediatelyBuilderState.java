@@ -20,6 +20,9 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -28,6 +31,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
@@ -37,8 +41,6 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -374,14 +376,22 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 	}
 
 	static private IProject getProject(BuildData buildData) {
-		// Since this class gets injected by {@link N4JSClusteringBuilderConfiguration}
-		// the reference to IN4JSEclipseCore is fetched in this hacky fashion.
-		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
-		IN4JSEclipseCore core = injector.getInstance(IN4JSEclipseCore.class);
-
 		String projectName = buildData.getProjectName();
-		IN4JSEclipseProject in4jsProject = (IN4JSEclipseProject) core.findAllProjectMappings().get(projectName);
-		return in4jsProject.getProject();
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot root = workspace.getRoot();
+		IProject project = root.getProject(projectName); // creates a project instance if not existing
+
+		if (null == project || !project.isAccessible()) {
+			final IProject externalProject = getExternalLibraryWorkspace().getProject(projectName);
+			if (null != externalProject && externalProject.exists()) {
+				project = externalProject;
+			}
+		}
+		return project;
 	}
 
+	static private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
+		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
+		return injector.getInstance(ExternalLibraryWorkspace.class);
+	}
 }
