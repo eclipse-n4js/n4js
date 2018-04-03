@@ -70,7 +70,7 @@ pipeline {
                             'execute-plugin-ui-tests'
                         ].join(',')
 
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        sh "${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }
