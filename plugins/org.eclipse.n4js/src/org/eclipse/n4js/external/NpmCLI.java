@@ -51,12 +51,12 @@ public class NpmCLI {
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
-		return packageName == null || packageName.trim().isEmpty();
+		return packageName == null || packageName.trim().isEmpty() || packageName.contains("@");
 	}
 
 	/** Simple validation if the package version is not null or empty */
 	public boolean invalidPackageVersion(String packageVersion) {
-		return packageVersion == null;
+		return packageVersion == null || (!packageVersion.isEmpty() && !packageVersion.startsWith("@"));
 	}
 
 	/**
@@ -81,25 +81,28 @@ public class NpmCLI {
 		String batchType = install ? "installing" : "uninstalling";
 		MultiStatus batchStatus = statusHelper.createMultiStatus("Status of " + batchType + " npm packages.");
 
-		int packagesCount = packageNames.size();
-		SubMonitor subMonitor = SubMonitor.convert(monitor, packagesCount + 1);
+		int pckCount = packageNames.size();
+		SubMonitor subMonitor = SubMonitor.convert(monitor, pckCount + 1);
 		File installPath = new File(locationProvider.getTargetPlatformInstallLocation());
 
 		int i = 0;
-		for (String packageName : packageNames) {
+		for (String pckName : packageNames) {
 			String jobType = install ? "Fetching '" : "Removing '";
-			String msg = jobType + packageName + "' package... [package " + i++ + " of " + packagesCount + "]";
-			subMonitor.setTaskName(msg);
-			subMonitor.worked(1);
+			String msgHead = jobType + pckName;
+			String msgTail = " [package " + i++ + " of " + pckCount + "]";
 
 			// switch between install and uninstall
 			IStatus packageProcessingStatus;
 			if (install) {
-				String packageVersion = Strings.nullToEmpty(versions.get(packageName));
-				packageProcessingStatus = install(packageName, packageVersion, installPath);
+				String packageVersion = Strings.nullToEmpty(versions.get(pckName));
+				String msgVersion = packageVersion.isEmpty() ? "" : "in version " + packageVersion;
+				subMonitor.setTaskName(msgHead + "' " + msgVersion + msgTail);
+				packageProcessingStatus = install(pckName, packageVersion, installPath);
 			} else {
-				packageProcessingStatus = uninstall(packageName, installPath);
+				subMonitor.setTaskName(msgHead + "' " + msgTail);
+				packageProcessingStatus = uninstall(pckName, installPath);
 			}
+			subMonitor.worked(1);
 
 			if (!packageProcessingStatus.isOK()) {
 				logger.logError(packageProcessingStatus);
@@ -128,7 +131,7 @@ public class NpmCLI {
 			return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
 		}
 
-		String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + "@" + packageVersion;
+		String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
 
 		return executor.execute(
 				() -> commandFactory.createInstallPackageCommand(installPath, nameAndVersion, true),

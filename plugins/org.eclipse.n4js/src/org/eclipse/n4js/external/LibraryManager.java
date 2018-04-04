@@ -214,8 +214,7 @@ public class LibraryManager {
 					toBeRemoved.add(name);
 				}
 			} else {
-				String toInstallString = name + versionRequested;
-				toBeInstalled.add(toInstallString);
+				toBeInstalled.add(name);
 			}
 		}
 

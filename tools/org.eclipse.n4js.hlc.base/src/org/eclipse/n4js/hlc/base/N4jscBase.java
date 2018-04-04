@@ -494,7 +494,7 @@ public class N4jscBase implements IApplication {
 					if (verbose) {
 						System.out.println("installing missing dependencies:");
 						dependencies.forEach((name, version) -> {
-							System.out.println("  # " + name + version);
+							System.out.println("  # " + name + "@" + version);
 						});
 					}
 
