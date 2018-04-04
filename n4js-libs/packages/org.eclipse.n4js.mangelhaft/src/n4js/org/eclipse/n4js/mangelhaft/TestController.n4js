@@ -24,16 +24,24 @@ import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
 import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet"
 import {N4Injector} from "n4js/lang/N4Injector"
 
-
 export public class TestController {
     static MAX_GROUPS_PER_TEST_BATCH = 10;
+
+    // TODO GH-710 make private again, expose different API
     @Inject
-    private spy: TestSpy;
+    public spy: TestSpy;
+    // TODO GH-710 make private again, expose different API
     @Inject
-    private executor: TestExecutor;
+    public executor: TestExecutor;
     @Inject
-    private injector: N4Injector;
+    public injector: N4Injector;
+
     private reportersVal: Array<? extends ITestReporter> = [];
+
+    // TODO GH-710 remove, expose different API
+    public get reporters(): Array<? extends ITestReporter> {
+        return this.reportersVal;
+    }
     public set reporters(reporters: Array<? extends ITestReporter>) {
         reporters.forEach(function(reporter) {
             let dummy: Promise<any, ?> = reporter.register(); dummy;
@@ -181,9 +189,9 @@ export public class TestController {
                                     if (!this.injector.canBeParentOf(diClass)) {
                                         throw new PreconditionNotMet("Test called with incompatible parent injector");
                                     }
-                                    testInjector = N4Injector.of.call(N4Injector, diClass, this.injector) as N4Injector;
+                                    testInjector = N4Injector.of(diClass, this.injector);
                                 }else{
-                                    testInjector = N4Injector.of.call(N4Injector, diClass) as N4Injector;
+                                    testInjector = N4Injector.of(diClass);
                                 }
                                 break;
                             }
@@ -191,7 +199,8 @@ export public class TestController {
                         if (!testType) {
                             testInjector = this.injector;
                         }
-                        let classITO = InstrumentedTest.getInstrumentedTest(testClass, info, testInjector);
+                        // TODO GH-710 expose different API, do not pass `this`
+                        let classITO = InstrumentedTest.getInstrumentedTest(testClass, info, testInjector, this);
                         instrumentedTestObjects.push(classITO);
                     } catch(ex2) {
                         instrumentedTestObjects.push(
