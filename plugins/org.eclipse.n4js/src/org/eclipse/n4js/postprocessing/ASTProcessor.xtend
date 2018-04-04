@@ -249,8 +249,7 @@ public class ASTProcessor extends AbstractProcessor {
 	def private boolean isPostponedNode(EObject node) {
 		return isPostponedInitializer(node)
 		||	N4JSASTUtils.isBodyOfFunctionOrFieldAccessor(node)
-		|| (node instanceof ParameterizedCallExpression 
-			&& MigrationUtils.isMigrateCall(node));
+		||	MigrationUtils.isMigrateCall(node);
 	}
 
 	/**
