@@ -681,7 +681,6 @@ public class N4HeadlessCompiler {
 		if (!visitedProjects.add(project))
 			return;
 
-		// continue here: the following method creates new instances, which is WRONG!
 		ImmutableList<? extends IN4JSProject> pendingProjects = project.getDependenciesAndImplementedApis();
 		if (pendingProjects.isEmpty()) {
 			independent.add(project);
