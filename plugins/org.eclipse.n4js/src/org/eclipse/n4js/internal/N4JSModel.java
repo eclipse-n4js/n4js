@@ -25,6 +25,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -554,8 +555,16 @@ public class N4JSModel {
 		if (null == project || null == references || isEmpty(references)) {
 			return emptyList();
 		}
-		return from(references).transform(ref -> resolveProjectReference(project, ref)).filter(opt -> opt.isPresent())
-				.transform(opt -> opt.get()).toList();
+
+		LinkedList<IN4JSProject> resolvedReferences = new LinkedList<>();
+		for (ProjectReference ref : references) {
+			IN4JSProject projectReference = resolveProjectReference(project, ref).orNull();
+			if (projectReference != null) {
+				resolvedReferences.add(projectReference);
+			}
+		}
+
+		return resolvedReferences;
 	}
 
 	/**

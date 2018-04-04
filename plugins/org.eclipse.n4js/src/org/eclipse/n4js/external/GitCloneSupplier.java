@@ -75,6 +75,8 @@ public class GitCloneSupplier implements Supplier<File> {
 
 	/** @return true iff the remote location of the type definition repository is available */
 	public boolean remoteRepoAvailable() {
+		initLocations();
+
 		final String remoteURL = currentGitLocation.getRepositoryRemoteURL();
 		final boolean netIsAvailable = GitUtils.netIsAvailable(remoteURL);
 		return netIsAvailable;

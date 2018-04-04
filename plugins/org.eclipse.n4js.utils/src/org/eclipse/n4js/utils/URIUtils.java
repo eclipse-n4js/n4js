@@ -11,8 +11,11 @@
 package org.eclipse.n4js.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.emf.common.util.URI;
 
 /**
  * Utilities for different URI types
@@ -53,5 +56,47 @@ public class URIUtils {
 		String path = file.getAbsolutePath();
 		org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createFileURI(path);
 		return uri;
+	}
+
+	/**
+	 * Compensates for the missing {@link URI#equals(Object)} implementation in {@link URI}. Adjusts paths that contain
+	 * symlinks.
+	 *
+	 * @return true iff the given {@link URI}s are equal
+	 */
+	static public boolean equals(org.eclipse.emf.common.util.URI uri1, org.eclipse.emf.common.util.URI uri2) {
+		String string1 = toString(uri1);
+		String string2 = toString(uri2);
+		return string1.equals(string2);
+	}
+
+	/**
+	 * Adjusts paths that contain symlinks.
+	 *
+	 * @return a hash code of the given {@link URI}s
+	 */
+	static public int hashCode(org.eclipse.emf.common.util.URI uri) {
+		return toString(uri).hashCode();
+	}
+
+	/**
+	 * Adjusts paths that contain symlinks.
+	 *
+	 * @return true iff the given {@link URI}s are equal
+	 */
+	static public String toString(org.eclipse.emf.common.util.URI uri) {
+		if (uri.isFile()) {
+			try {
+				String fileString = uri.toFileString();
+				File file = new File(fileString);
+				Path realPath = file.toPath().toRealPath();
+				return realPath.toString();
+			} catch (IOException e) {
+				return null;
+			}
+		} else {
+			String string = uri.toString();
+			return string;
+		}
 	}
 }
