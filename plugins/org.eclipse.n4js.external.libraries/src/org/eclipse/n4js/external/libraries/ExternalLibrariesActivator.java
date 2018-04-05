@@ -91,7 +91,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 	public static final String NPM_CATEGORY = "node_modules";
 
 	/** Unique name of the root npm folder for N4JS. */
-	private static final String NPM_ROOT = ".n4npm";
+	public static final String NPM_ROOT = ".n4npm";
 
 	private static final Function<URL, URL> URL_TO_FILE_URL_FUNC = url -> {
 		try {

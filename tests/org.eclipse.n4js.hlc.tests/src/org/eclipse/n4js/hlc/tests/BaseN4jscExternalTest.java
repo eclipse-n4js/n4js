@@ -10,11 +10,7 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static java.util.Collections.emptyMap;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,9 +27,8 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 	 * Performs a sanity check, neither install location, nor the target platform file should exist.
 	 */
 	@Before
-	public void beforeTest() throws IOException {
-		ExternalsUtiities.setupExternals(platformFiles, description.getMethodName(),
-				getNpmDependencies());
+	public void beforeTest() {
+		ExternalsUtilities.setupExternals(platformFiles, description.getMethodName());
 	}
 
 	/**
@@ -41,25 +36,7 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 	 */
 	@After
 	public void afterTest() {
-		ExternalsUtiities.cleanupExternals(platformFiles);
-	}
-
-	/**
-	 * Returns with a map of desired npm package dependencies. Keys are the package identifier, values are the desired
-	 * package versions. Values (versions), can be {@code null}. In such cases the version will not be specified for the
-	 * corresponding dependency. By default returns with an empty map.
-	 *
-	 * @return a map of npm dependencies. Keys are package names, values are the package versions.
-	 */
-	protected Map<String, String> getNpmDependencies() {
-		return emptyMap();
-	}
-
-	/**
-	 * Returns with the target platform file.
-	 */
-	protected File getTargetPlatformFile() {
-		return platformFiles.targetPlatformFile;
+		ExternalsUtilities.cleanupExternals(platformFiles);
 	}
 
 	/**

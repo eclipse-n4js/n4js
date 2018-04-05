@@ -15,13 +15,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
-import org.eclipse.n4js.hlc.tests.ExternalsUtiities;
+import org.eclipse.n4js.hlc.tests.ExternalsUtilities;
 import org.eclipse.n4js.hlc.tests.N4CliHelper;
 import org.eclipse.n4js.hlc.tests.TargetPlatformFiles;
 import org.junit.After;
@@ -51,9 +48,8 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	 * Performs a sanity check, neither install location, nor the target platform file should exist.
 	 */
 	@Before
-	public void beforeTest() throws IOException {
-		ExternalsUtiities.setupExternals(platformFiles, description.getMethodName(),
-				getNpmDependencies());
+	public void beforeTest() {
+		ExternalsUtilities.setupExternals(platformFiles, description.getMethodName());
 	}
 
 	/**
@@ -61,18 +57,7 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	 */
 	@After
 	public void afterTest() {
-		ExternalsUtiities.cleanupExternals(platformFiles);
-	}
-
-	/** Since N4JSC.jar does not provide built ins, we need to get them from npm. */
-	// TODO https://github.com/eclipse/n4js/issues/611
-	protected Map<String, String> getNpmDependencies() {
-		Map<String, String> deps = new HashMap<>();
-
-		deps.put("eu.numberfour.mangelhaft", "@0.5.0");
-		deps.put("eu.numberfour.mangelhaft.assert", "@0.5.0");
-
-		return deps;
+		ExternalsUtilities.cleanupExternals(platformFiles);
 	}
 
 	/**
@@ -91,7 +76,6 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", platformFiles.targetPlatformFile.getAbsolutePath(),
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", WSP,
 				"--buildType", "allprojects",
@@ -135,7 +119,6 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", platformFiles.targetPlatformFile.getAbsolutePath(),
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", WSP,
 				"--buildType", "allprojects",

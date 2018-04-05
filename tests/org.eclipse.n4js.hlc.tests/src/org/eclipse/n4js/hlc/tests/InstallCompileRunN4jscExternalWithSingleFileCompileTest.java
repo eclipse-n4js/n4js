@@ -55,7 +55,6 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Bas
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose",
@@ -63,8 +62,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Bas
 				fileToCompile
 		};
 		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"Application was created!", out);
+		N4CliHelper.assertExpectedOutput("Application was created!", out);
 	}
 
 }

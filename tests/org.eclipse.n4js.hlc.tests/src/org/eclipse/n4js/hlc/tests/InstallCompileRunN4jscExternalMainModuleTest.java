@@ -58,7 +58,6 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 				"--buildType", BuildType.allprojects.toString(),
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose"

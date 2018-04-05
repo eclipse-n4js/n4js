@@ -144,6 +144,7 @@ public class FileDeleter implements FileVisitor<Path> {
 
 	@Override
 	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+		System.out.println("DELETE " + dir.toAbsolutePath().toString());
 		Files.delete(dir);
 		return CONTINUE;
 	}

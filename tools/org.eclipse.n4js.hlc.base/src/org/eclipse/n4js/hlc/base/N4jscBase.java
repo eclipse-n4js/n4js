@@ -20,7 +20,6 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSE
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
 import static org.eclipse.n4js.utils.git.GitUtils.hardReset;
 import static org.eclipse.n4js.utils.git.GitUtils.pull;
-import static org.eclipse.n4js.utils.io.FileUtils.createTempDirectory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -585,7 +584,7 @@ public class N4jscBase implements IApplication {
 		checkState(installLocationProvider instanceof HeadlessTargetPlatformInstallLocationProvider);
 		HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
 
-		if (installMissingDependencies) {
+		if (!installMissingDependencies) {
 			if (verbose)
 				System.out.println("Skipping scanning and installation of dependencies.");
 			return;
@@ -674,10 +673,15 @@ public class N4jscBase implements IApplication {
 
 			locationProvider.setTargetPlatformInstallLocation(targetPlatformInstallLocation.toURI());
 		} else {
-			// create temp location
-			final Path tempRoot = createTempDirectory("hlcTmpDepsLocation_" + System.currentTimeMillis());
-			targetPlatformInstallLocation = tempRoot.toFile();
-			locationProvider.setTargetPlatformInstallLocation(tempRoot.toUri());
+			if (verbose)
+				System.out.println("Setting up tmp location for dependencies.");
+
+			try {
+				locationProvider.configureWithTempFolders();
+			} catch (IOException e1) {
+				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
+						"Error while creating temp locations for dependencies.", e1);
+			}
 		}
 
 	}
@@ -785,52 +789,70 @@ public class N4jscBase implements IApplication {
 		}
 
 		try {
-			switch (buildtype) {
-			case singlefile:
-				compileArgumentsAsSingleFiles();
-				break;
-			case projects:
-				compileArgumentsAsProjects();
-				break;
-			case allprojects:
-				compileAllProjects();
-				break;
-			case dontcompile:
-			default:
-				registerProjects();
-			}
-		} catch (N4JSCompileException e) {
-			// dump all information to error-stream.
-			e.userDump(System.err);
-			throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
-		}
 
-		if (null != testCatalogFile) {
-			final String catalog = testCatalogSupplier.get();
-			try (final FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
-				fos.write(catalog.getBytes());
-				fos.flush();
-			} catch (IOException e) {
-				System.out.println("Error while writing test catalog file at: " + testCatalogFile);
-				throw new ExitCodeException(EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
+			try {
+				switch (buildtype) {
+				case singlefile:
+					compileArgumentsAsSingleFiles();
+					break;
+				case projects:
+					compileArgumentsAsProjects();
+					break;
+				case allprojects:
+					compileAllProjects();
+					break;
+				case dontcompile:
+				default:
+					registerProjects();
+				}
+			} catch (N4JSCompileException e) {
+				// dump all information to error-stream.
+				e.userDump(System.err);
+				throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
+			}
+
+			if (null != testCatalogFile) {
+				final String catalog = testCatalogSupplier.get();
+				try (final FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
+					fos.write(catalog.getBytes());
+					fos.flush();
+				} catch (IOException e) {
+					System.out.println("Error while writing test catalog file at: " + testCatalogFile);
+					throw new ExitCodeException(EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
+				}
+			}
+
+			if (testThisLocation != null) {
+				if (buildtype != BuildType.dontcompile) {
+					flushAndIinsertMarkerInOutputs();
+				}
+				headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
+			}
+
+			if (runThisFile != null) {
+				if (buildtype != BuildType.dontcompile) {
+					flushAndIinsertMarkerInOutputs();
+				}
+				headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
+						new File(installLocationProvider.getTargetPlatformInstallLocation()));
+			}
+
+		} finally {
+			if (installLocationProvider != null) {
+				HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+				final java.net.URI uri = locationProvider.getTempRoot();
+				if (uri != null) {
+					File tempInstallToClean = new File(uri);
+					try {
+						if (tempInstallToClean.exists())
+							FileDeleter.delete(tempInstallToClean);
+					} catch (IOException e) {
+						warn("Cannot clean temp install locations");
+						e.printStackTrace();
+					}
+				}
 			}
 		}
-
-		if (testThisLocation != null) {
-			if (buildtype != BuildType.dontcompile) {
-				flushAndIinsertMarkerInOutputs();
-			}
-			headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
-		}
-
-		if (runThisFile != null) {
-			if (buildtype != BuildType.dontcompile) {
-				flushAndIinsertMarkerInOutputs();
-			}
-			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
-					targetPlatformInstallLocation);
-		}
-
 		if (debug) {
 			System.out.println("... done.");
 		}
@@ -858,7 +880,7 @@ public class N4jscBase implements IApplication {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
 
-		return FileUtils.fileToURI(runThisFile);
+		return HlcFileUtils.fileToURI(runThisFile);
 	}
 
 	/**
@@ -872,7 +894,7 @@ public class N4jscBase implements IApplication {
 		if (testThisLocation == null || !testThisLocation.exists()) {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
-		return FileUtils.fileToURI(testThisLocation);
+		return HlcFileUtils.fileToURI(testThisLocation);
 	}
 
 	/**
@@ -884,7 +906,7 @@ public class N4jscBase implements IApplication {
 	 *             signaling compile-errors.
 	 */
 	private void compileArgumentsAsSingleFiles() throws ExitCodeException, N4JSCompileException {
-		srcFiles.stream().forEach(FileUtils::isExistingReadibleFile);
+		srcFiles.stream().forEach(HlcFileUtils::isExistingReadibleFile);
 
 		List<File> toBuild = new ArrayList<>();
 		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));
