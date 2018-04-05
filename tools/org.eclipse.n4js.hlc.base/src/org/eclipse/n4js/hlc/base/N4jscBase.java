@@ -586,42 +586,35 @@ public class N4jscBase implements IApplication {
 		HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
 
 		if (installMissingDependencies) {
+			if (verbose)
+				System.out.println("Skipping scanning and installation of dependencies.");
+			return;
+		}
 
-			try {
+		// pull n4jsd to install location
+		java.net.URI gitRepositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
+		Path localClonePath = new File(gitRepositoryLocation).toPath();
+		hardReset(gitLocationProvider.getGitLocation().getRepositoryRemoteURL(), localClonePath,
+				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
+		pull(localClonePath);
 
-				// pull n4jsd to install location
-				java.net.URI gitRepositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
-				Path localClonePath = new File(gitRepositoryLocation).toPath();
-				hardReset(gitLocationProvider.getGitLocation().getRepositoryRemoteURL(), localClonePath,
-						gitLocationProvider.getGitLocation().getRemoteBranch(), true);
-				pull(localClonePath);
-
-				// generate n4tp file for NpmManager to use
-				PackageJson packageJson = TargetPlatformFactory.createN4Default();
-				java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
-				File packageJsonFile = new File(new File(platformLocation), PackageJson.PACKAGE_JSON);
-				try {
-					if (!packageJsonFile.exists()) {
-						packageJsonFile.createNewFile();
-					}
-					try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
-						pw.write(packageJson.toString());
-						pw.flush();
-						locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
-
-					}
-				} catch (IOException e) {
-					throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-							"Error while consuming target platform file.", e);
-				}
-
-			} catch (Exception e) {
-				locationProvider.setTargetPlatformFileLocation(null);
-				locationProvider.setTargetPlatformInstallLocation(null);
-				if (e instanceof ExitCodeException)
-					throw e;
-				Throwables.propagateIfPossible(e);
+		// generate n4tp file for NpmManager to use
+		PackageJson packageJson = TargetPlatformFactory.createN4Default();
+		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
+		File packageJsonFile = new File(new File(platformLocation), PackageJson.PACKAGE_JSON);
+		try {
+			if (!packageJsonFile.exists()) {
+				packageJsonFile.createNewFile();
 			}
+			try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
+				pw.write(packageJson.toString());
+				pw.flush();
+				locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
+
+			}
+		} catch (IOException e) {
+			throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
+					"Error while consuming target platform file.", e);
 		}
 	}
 
