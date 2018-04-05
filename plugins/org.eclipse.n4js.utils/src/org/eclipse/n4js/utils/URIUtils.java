@@ -86,13 +86,14 @@ public class URIUtils {
 	 */
 	static public String toString(org.eclipse.emf.common.util.URI uri) {
 		if (uri.isFile()) {
+			String fileString = uri.toFileString();
+			File file = new File(fileString);
+			Path path = file.toPath();
 			try {
-				String fileString = uri.toFileString();
-				File file = new File(fileString);
-				Path realPath = file.toPath().toRealPath();
+				Path realPath = path.toRealPath();
 				return realPath.toString();
 			} catch (IOException e) {
-				return null;
+				return fileString;
 			}
 		} else {
 			String string = uri.toString();
