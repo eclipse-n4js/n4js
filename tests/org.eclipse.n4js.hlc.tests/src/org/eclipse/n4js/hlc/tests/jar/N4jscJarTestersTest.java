@@ -76,7 +76,6 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", WSP,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
@@ -119,7 +118,6 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", WSP,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
