@@ -838,23 +838,31 @@ public class N4jscBase implements IApplication {
 			}
 
 		} finally {
-			if (installLocationProvider != null) {
-				HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
-				final java.net.URI uri = locationProvider.getTempRoot();
-				if (uri != null) {
-					File tempInstallToClean = new File(uri);
-					try {
-						if (tempInstallToClean.exists())
-							FileDeleter.delete(tempInstallToClean);
-					} catch (IOException e) {
-						warn("Cannot clean temp install locations");
-						e.printStackTrace();
-					}
-				}
-			}
+			cleanTemporaryArtifacts();
 		}
 		if (debug) {
 			System.out.println("... done.");
+		}
+	}
+
+	/** In some cases compiler is creating files and folders in temp locations. This method deletes those leftovers. */
+	private void cleanTemporaryArtifacts() {
+		// compiler
+		if (installLocationProvider != null) {
+			HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+			// TODO GH-521 reset state for HLC tests
+			locationProvider.resetState();
+			final java.net.URI uri = locationProvider.getTempRoot();
+			if (uri != null) {
+				File tempInstallToClean = new File(uri);
+				try {
+					if (tempInstallToClean.exists())
+						FileDeleter.delete(tempInstallToClean);
+				} catch (IOException e) {
+					warn("Cannot clean temp install locations " + tempInstallToClean);
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

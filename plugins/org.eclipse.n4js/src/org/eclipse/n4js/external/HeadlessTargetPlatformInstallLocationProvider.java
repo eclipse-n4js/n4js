@@ -21,6 +21,7 @@ import java.nio.file.Path;
 
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
+import org.eclipse.n4js.internal.N4JSModel;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -104,7 +105,7 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 		}
 		packageJson.deleteOnExit();
 		this.tempRoot = root.toUri();
-		this.targetPlatformInstallLocation = n4npm.toUri();
+		this.targetPlatformInstallLocation = n4npm.toFile().toURI();
 		this.targetPlatformFileLocation = packageJson.toURI();
 	}
 
@@ -124,6 +125,13 @@ public class HeadlessTargetPlatformInstallLocationProvider implements TargetPlat
 	 *
 	 * Resets state to fresh (as if instance was just created).
 	 *
+	 * We need to have this method as it seems that when running multiple HLC tests {@link N4JSModel} will use this
+	 * instance (bound via {@link TargetPlatformInstallLocationProvider}. The model is singleton and is obtained in
+	 * {@code org.eclipse.n4js.generator.headless.N4HeadlessCompiler} via generic Xtext facilities. In short we always
+	 * get the same model (it is a {@code Singleton}) with the same instance of this class. As a result locations set up
+	 * for one test are used in other test.
+	 *
+	 * @see <a href="https://github.com/eclipse/n4js/issues/521">GH-521</a>
 	 */
 	public void resetState() {
 		this.targetPlatformInstallLocation = null;
