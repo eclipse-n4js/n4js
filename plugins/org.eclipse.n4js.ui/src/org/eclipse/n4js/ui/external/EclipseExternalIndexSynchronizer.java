@@ -49,6 +49,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer {
+	/** Marker code for error when folder node_modules and N4JS index are out of sync */
+	public static final String NODE_MODULES_OUT_OF_SYNC = "NODE_MODULES_OUT_OF_SYNC";
 
 	@Inject
 	private IN4JSCore core;
@@ -89,7 +91,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			setOutOfSyncMarkers(false);
 
 		} catch (Throwable t) {
-			setOutOfSyncMarkers(true);
+			checkAndSetOutOfSyncMarkers();
 			throw t;
 		} finally {
 			subMonitor.done();
@@ -181,7 +183,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			setOutOfSyncMarkers(false);
 
 		} catch (Throwable t) {
-			setOutOfSyncMarkers(true);
+			checkAndSetOutOfSyncMarkers();
 			throw t;
 		} finally {
 			monitor.done();
@@ -263,13 +265,13 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		return prjNames;
 	}
 
-	/**
-	 * Sets error markers to every N4JS project.
-	 *
-	 * @param setMarkers
-	 *            when true markers are set, when false markers are removed
-	 */
-	public void setOutOfSyncMarkers(boolean setMarkers) {
+	/** Sets error markers to every N4JS project iff the folder node_modules and the N4JS index are out of sync. */
+	public void checkAndSetOutOfSyncMarkers() {
+		boolean inSync = isProjectsSynchronized();
+		setOutOfSyncMarkers(!inSync);
+	}
+
+	private void setOutOfSyncMarkers(boolean setMarkers) {
 		for (IN4JSProject prj : core.findAllProjects()) {
 			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
 				N4JSEclipseProject n4EclPrj = (N4JSEclipseProject) prj;
@@ -301,8 +303,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		IMarker marker = resource.createMarker("org.eclipse.xtext.ui.check.normal");
 
 		marker.setAttribute(IMarker.LOCATION, "N4JS Index");
-		marker.setAttribute(Issue.CODE_KEY, "NODE_MODULES_OUT_OF_SYNC");
-		// marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+		marker.setAttribute(Issue.CODE_KEY, NODE_MODULES_OUT_OF_SYNC);
+		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 		marker.setAttribute(IMarker.MESSAGE, "node_modules folder and N4JS index are out of sync");
 		marker.setAttribute(Issue.URI_KEY, resource.getLocation().toString());
 		marker.setAttribute("FIXABLE_KEY", true);
