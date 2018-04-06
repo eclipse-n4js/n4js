@@ -25,7 +25,7 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express' where target platform file specifies version range.
  */
-public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest {
+public class TargetPlatformRangeConfigurationsTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */

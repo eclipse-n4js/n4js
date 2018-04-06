@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express' for different target platform configurations.
  */
-public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
+public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */

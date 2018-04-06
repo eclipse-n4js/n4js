@@ -31,7 +31,7 @@ import org.junit.Test;
  * In this test, we have two external projects: nuka-carousel and react. nuka-carousel depends on react via a project
  * dependency, and file P1/src/X.n4jsx depends on both react and nuka-carousel via project dependencies.
  */
-public class N4jscDependentProjectDependenciesTest extends BaseN4jscExternalTest {
+public class N4jscDependentProjectDependenciesTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */

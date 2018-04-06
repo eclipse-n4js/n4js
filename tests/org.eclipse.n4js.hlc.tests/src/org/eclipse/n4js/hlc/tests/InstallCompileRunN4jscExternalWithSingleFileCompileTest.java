@@ -27,7 +27,7 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends BaseN4jscExternalTest {
+public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
