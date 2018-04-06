@@ -18,11 +18,7 @@ import java.io.File;
 import java.util.Scanner;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
-import org.eclipse.n4js.hlc.tests.ExternalsUtilities;
 import org.eclipse.n4js.hlc.tests.N4CliHelper;
-import org.eclipse.n4js.hlc.tests.TargetPlatformFiles;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -36,28 +32,9 @@ import org.junit.Test;
  */
 public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
-	private final TargetPlatformFiles platformFiles = new TargetPlatformFiles();
-
 	/***/
 	public N4jscJarTestersTest() {
 		super("probands/testers");
-	}
-
-	/**
-	 * Initializes the target platform install location and the target platform file with the desired dependencies.
-	 * Performs a sanity check, neither install location, nor the target platform file should exist.
-	 */
-	@Before
-	public void beforeTest() {
-		ExternalsUtilities.setupExternals(platformFiles, description.getMethodName());
-	}
-
-	/**
-	 * Cleans up the target platform install location and the actual target platform file.
-	 */
-	@After
-	public void afterTest() {
-		ExternalsUtilities.cleanupExternals(platformFiles);
 	}
 
 	/**

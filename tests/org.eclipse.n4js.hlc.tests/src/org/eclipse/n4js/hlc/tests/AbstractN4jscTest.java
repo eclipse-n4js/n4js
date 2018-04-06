@@ -36,7 +36,6 @@ import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -58,32 +57,6 @@ public abstract class AbstractN4jscTest {
 	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
-
-	private final TargetPlatformFiles platformFiles = new TargetPlatformFiles();
-
-	/**
-	 * Initializes the target platform install location and the target platform file with the desired dependencies.
-	 * Performs a sanity check, neither install location, nor the target platform file should exist.
-	 */
-	@Before
-	public void beforeTest() {
-		ExternalsUtilities.setupExternals(platformFiles, description.getMethodName());
-	}
-
-	/**
-	 * Cleans up the target platform install location and the actual target platform file.
-	 */
-	@After
-	public void afterTest() {
-		ExternalsUtilities.cleanupExternals(platformFiles);
-	}
-
-	/**
-	 * Returns with the target platform install location.
-	 */
-	protected File getTargetPlatformInstallLocation() {
-		return platformFiles.targetPlatformInstallLocation;
-	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
