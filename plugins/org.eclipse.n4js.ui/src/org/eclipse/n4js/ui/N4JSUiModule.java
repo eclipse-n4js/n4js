@@ -149,6 +149,7 @@ import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
+import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.util.IssueUtil;
@@ -188,16 +189,24 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/**
-	 * Re-binds the {@link Singleton @Singleton} {@link ExternalLibraryWorkspace external library workspace} instance
-	 * declared and created in the {@link ContributingModule}.
+	 * Re-binds the {@link Singleton @Singleton} {@link MarkerCreator} instance declared and created in the
+	 * {@link ContributingModule}.
+	 */
+	public Provider<MarkerCreator> provideMarkerCreator() {
+		return Access.contributedProvider(MarkerCreator.class);
+	}
+
+	/**
+	 * Re-binds the {@link Singleton @Singleton} {@link ExternalLibraryWorkspace} instance declared and created in the
+	 * {@link ContributingModule}.
 	 */
 	public Provider<ExternalLibraryWorkspace> provideExternalLibraryWorkspace() {
 		return Access.contributedProvider(ExternalLibraryWorkspace.class);
 	}
 
 	/**
-	 * Re-binds the {@link Singleton @Singleton} {@link EclipseExternalLibraryWorkspace external library workspace}
-	 * instance declared and created in the {@link ContributingModule}.
+	 * Re-binds the {@link Singleton @Singleton} {@link EclipseExternalLibraryWorkspace} instance declared and created
+	 * in the {@link ContributingModule}.
 	 */
 	public Provider<EclipseExternalLibraryWorkspace> provideEclipseExternalLibraryWorkspace() {
 		return Access.contributedProvider(EclipseExternalLibraryWorkspace.class);

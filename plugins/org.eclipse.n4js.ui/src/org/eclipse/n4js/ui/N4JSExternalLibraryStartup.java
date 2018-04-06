@@ -12,6 +12,7 @@ package org.eclipse.n4js.ui;
 
 import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.ui.IStartup;
 
 import com.google.inject.Inject;
@@ -24,10 +25,19 @@ public class N4JSExternalLibraryStartup implements IStartup {
 	@Inject
 	private GitCloneSupplier gitCloneSupplier;
 
+	@Inject
+	private EclipseExternalIndexSynchronizer indexSynchronizer;
+
 	@Override
 	public void earlyStartup() {
 		// Client code can still clone the repository on demand. (Mind plug-in UI tests.)
 		if (ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
+			new Thread(() -> {
+				if (!indexSynchronizer.isProjectsSynchronized()) {
+					indexSynchronizer.setOutOfSyncMarkers(true);
+				}
+			}).start();
+
 			new Thread(() -> {
 				gitCloneSupplier.synchronizeTypeDefinitions();
 			}).start();

@@ -11,9 +11,11 @@
 package org.eclipse.n4js.external;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,8 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.external.NodeModulesFolderListener.LibraryChange;
-import org.eclipse.n4js.external.NodeModulesFolderListener.LibraryChangeType;
+import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDescription;
@@ -63,6 +64,13 @@ public abstract class ExternalIndexSynchronizer {
 	abstract public void synchronizeNpms(IProgressMonitor monitor);
 
 	/**
+	 * see {@link #synchronizeNpms(IProgressMonitor)}
+	 * <p>
+	 * All affected projects are rebuild for the given set of changes.
+	 */
+	abstract public void synchronizeNpms(IProgressMonitor monitor, Collection<LibraryChange> forcedChangeSet);
+
+	/**
 	 * Call this method to re-index all external libraries. This means: All external libraries are cleaned and re-build.
 	 */
 	abstract public void reindexAllExternalProjects(IProgressMonitor monitor);
@@ -77,7 +85,7 @@ public abstract class ExternalIndexSynchronizer {
 	 *         {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
 	 */
 	final public boolean isProjectsSynchronized() {
-		List<LibraryChange> changeSet = identifyChangeSet();
+		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList());
 		return changeSet.isEmpty();
 	}
 
@@ -142,8 +150,8 @@ public abstract class ExternalIndexSynchronizer {
 	}
 
 	/** @return a set of all changes between the Xtext index and the external projects in all external locations */
-	final protected List<LibraryChange> identifyChangeSet() {
-		List<LibraryChange> changes = new LinkedList<>();
+	final protected Collection<LibraryChange> identifyChangeSet(Collection<LibraryChange> forcedChangeSet) {
+		Collection<LibraryChange> changes = new LinkedHashSet<>(forcedChangeSet);
 
 		Map<String, Pair<URI, String>> npmsOfIndex = findNpmsInIndex();
 		Map<String, Pair<URI, String>> npmsOfFolder = findNpmsInFolder();

@@ -12,6 +12,8 @@ package org.eclipse.n4js.external;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 
 import java.io.File;
@@ -39,6 +41,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
+import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.smith.ClosableMeasurement;
@@ -182,8 +185,8 @@ public class LibraryManager {
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
 
-			installUninstallNPMs(monitor, status, versionedNPMs, Collections.emptyList());
-			indexSynchronizer.synchronizeNpms(monitor);
+			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, versionedNPMs, emptyList());
+			indexSynchronizer.synchronizeNpms(monitor, actualChanges);
 
 			return status;
 
@@ -192,67 +195,77 @@ public class LibraryManager {
 		}
 	}
 
-	private void installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
+	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
 			Map<String, String> installRequested, Collection<String> removeRequested) {
 
 		monitor.setTaskName("Installing packages... [step 1 of 4]");
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 3);
 
+		Collection<LibraryChange> requestedChanges = getRequestedChanges(installRequested, removeRequested);
+		List<LibraryChange> actualChanges = new LinkedList<>();
+
+		// remove
+		actualChanges.addAll(npmCli.batchUninstall(subMonitor, status, requestedChanges));
+		subMonitor.worked(1);
+
+		// install
+		actualChanges.addAll(npmCli.batchInstall(subMonitor, status, requestedChanges));
+		subMonitor.worked(1);
+
+		// adapt installed
+		adaptNPMPackages(monitor, status, actualChanges);
+		subMonitor.worked(1);
+
+		return actualChanges;
+	}
+
+	private Collection<LibraryChange> getRequestedChanges(Map<String, String> installRequested,
+			Collection<String> removeRequested) {
+
 		Map<String, Pair<org.eclipse.emf.common.util.URI, String>> installedNpms = indexSynchronizer.findNpmsInFolder();
-		List<String> toBeInstalled = new LinkedList<>();
-		List<String> toBeRemoved = new LinkedList<>();
+		Collection<LibraryChange> requestedChanges = new LinkedList<>();
 
 		for (Map.Entry<String, String> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
 			String versionRequested = Strings.emptyIfNull(reqestedNpm.getValue());
 			if (installedNpms.containsKey(name)) {
+				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
 				String versionInstalled = installedNpms.get(name).getValue();
 				if (versionRequested.equals(Strings.emptyIfNull(versionInstalled))) {
 					// already installed
 				} else {
 					// wrong version installed -> update (uninstall, then install)
-					toBeRemoved.add(name);
+					LibraryChangeType uninstall = LibraryChangeType.Uninstall;
+					requestedChanges.add(new LibraryChange(uninstall, location, name, versionRequested));
 				}
 			} else {
-				toBeInstalled.add(name);
+				requestedChanges.add(new LibraryChange(LibraryChangeType.Install, null, name, versionRequested));
 			}
 		}
 
 		for (String name : removeRequested) {
 			if (installedNpms.containsKey(name)) {
-				toBeRemoved.add(name);
+				requestedChanges.add(new LibraryChange(LibraryChangeType.Uninstall, null, name, ""));
 			} else {
 				// already removed
 			}
 		}
 
-		// remove
-		IStatus removeStatus = npmCli.batchInstallUninstall(subMonitor, toBeRemoved, null, false);
-		if (!removeStatus.isOK()) {
-			logger.logInfo("Some packages could not be removed due to errors, see log for details.");
-			status.merge(removeStatus);
-		}
-		subMonitor.worked(1);
-
-		// install
-		IStatus installStatus = npmCli.batchInstallUninstall(subMonitor, toBeInstalled, installRequested, true);
-		if (!installStatus.isOK()) {
-			logger.logInfo("Some packages could not be installed due to errors, see log for details.");
-			status.merge(installStatus);
-		}
-		subMonitor.worked(1);
-
-		// adapt installed
-		adaptNPMPackages(monitor, status, toBeInstalled);
-		subMonitor.worked(1);
+		return requestedChanges;
 	}
 
 	private Collection<File> adaptNPMPackages(IProgressMonitor monitor, MultiStatus status,
-			Collection<String> addedDependencies) {
+			Collection<LibraryChange> changes) {
 
 		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
+		List<String> installedNpmNames = new LinkedList<>();
+		for (LibraryChange change : changes) {
+			if (change.type == LibraryChangeType.Added) {
+				installedNpmNames.add(change.name);
+			}
+		}
 		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter
-				.adaptPackages(addedDependencies);
+				.adaptPackages(installedNpmNames);
 
 		IStatus adaptionStatus = result.getFirst();
 
@@ -311,8 +324,8 @@ public class LibraryManager {
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("uninstallDependenciesInternal");) {
 
-			installUninstallNPMs(monitor, status, Collections.emptyMap(), packageNames);
-			indexSynchronizer.synchronizeNpms(monitor);
+			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, emptyMap(), packageNames);
+			indexSynchronizer.synchronizeNpms(monitor, actualChanges);
 
 			return status;
 

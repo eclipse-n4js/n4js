@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.external;
 
+import java.util.Collection;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.google.inject.Singleton;
@@ -22,6 +24,11 @@ public class HlcExternalIndexSynchronizer extends ExternalIndexSynchronizer {
 
 	@Override
 	public void synchronizeNpms(IProgressMonitor monitor) {
+		return;
+	}
+
+	@Override
+	public void synchronizeNpms(IProgressMonitor monitor, Collection<LibraryChange> forcedChangeSet) {
 		return;
 	}
 

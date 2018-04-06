@@ -75,6 +75,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.LiveShadowedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.resource.impl.ResourceSetBasedResourceDescriptions;
+import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.ui.resource.IResourceSetInitializer;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
 import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
@@ -119,6 +120,7 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSEclipseCore.class);
 		binder.bind(N4JSModel.class).to(N4JSEclipseModel.class);
 		binder.bind(N4JSEclipseModel.class);
+		binder.bind(MarkerCreator.class);
 
 		binder.bind(ExternalLibraryWorkspace.class).to(EclipseExternalLibraryWorkspace.class);
 		binder.bind(EclipseExternalLibraryWorkspace.class);
