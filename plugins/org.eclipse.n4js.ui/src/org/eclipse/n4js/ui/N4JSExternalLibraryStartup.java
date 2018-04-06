@@ -50,11 +50,11 @@ public class N4JSExternalLibraryStartup implements IStartup {
 		// Add listener to monitor Cut and Copy commands
 		ICommandService commandService = PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 		if (commandService != null) {
-			commandService.addExecutionListener(new X());
+			commandService.addExecutionListener(new CheckNodeModulesSyncOnRefresh());
 		}
 	}
 
-	class X implements IExecutionListener {
+	class CheckNodeModulesSyncOnRefresh implements IExecutionListener {
 
 		@Override
 		public void notHandled(String commandId, NotHandledException exception) {
