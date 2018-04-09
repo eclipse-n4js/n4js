@@ -74,10 +74,9 @@ timestamps {
                     String commonOptions = "-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}"
 
                     String commonProfiles = "-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests"
-                    //TODO GH-715 bring back nightly check
-                    //if (isNightly()) {
+                    if (isNightly()) {
                         commonProfiles = commonProfiles + ",execute-ecma-tests,execute-performance-tests,execute-swtbot-performance-tests,execute-accesscontrol-tests"
-                    //}
+                    }
 
                     timeout(time: 3, unit: 'HOURS') {
                         withEnv(["PATH+NODEJS=${nodeHome}/bin", "PATH+XVFB=${xvfbBin}"]) {
