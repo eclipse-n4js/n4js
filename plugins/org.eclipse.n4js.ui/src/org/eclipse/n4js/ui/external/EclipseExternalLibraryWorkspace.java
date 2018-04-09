@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterators.emptyIterator;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static com.google.common.collect.Sets.newHashSet;
@@ -338,8 +337,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	private Collection<N4JSExternalProject> getExternalProjects(Set<URI> toBeUpdated) {
-		Set<N4JSExternalProject> projectsToBeUpdated = from(toBeUpdated)
-				.transform(uri -> projectProvider.getProject(uri)).toSet();
+		Set<N4JSExternalProject> projectsToBeUpdated = new HashSet<>();
+		for (URI tbu : toBeUpdated) {
+			N4JSExternalProject n4Prj = projectProvider.getProject(tbu);
+			projectsToBeUpdated.add(n4Prj);
+		}
 
 		Collection<N4JSExternalProject> nonWSProjects = collector.filterNonWSProjects(projectsToBeUpdated);
 

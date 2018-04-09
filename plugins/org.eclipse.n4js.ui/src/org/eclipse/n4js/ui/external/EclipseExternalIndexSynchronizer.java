@@ -37,6 +37,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.validation.Issue;
 
@@ -49,8 +50,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer {
-	/** Marker code for error when folder node_modules and N4JS index are out of sync */
-	public static final String NODE_MODULES_OUT_OF_SYNC = "NODE_MODULES_OUT_OF_SYNC";
 
 	@Inject
 	private IN4JSCore core;
@@ -276,16 +275,25 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
 				N4JSEclipseProject n4EclPrj = (N4JSEclipseProject) prj;
 				IProject iProject = n4EclPrj.getProject();
+				IResource markerResource = iProject;
 
+				// delete markers
 				try {
-					iProject.deleteMarkers(null, true, 0);
+					markerResource.deleteMarkers(null, true, 0);
+					for (IMarker marker : markerResource.findMarkers(null, true, 0)) {
+						String issueCode = marker.getAttribute(Issue.CODE_KEY, "");
+						if (issueCode.equals(IssueCodes.NODE_MODULES_OUT_OF_SYNC)) {
+							marker.delete();
+						}
+					}
 				} catch (CoreException e1) {
 					// ignore
 				}
 
+				// add markers
 				if (setMarkers && !iProject.isHidden() && iProject.isAccessible()) {
 					try {
-						addMarker(iProject);
+						addMarker(markerResource);
 					} catch (CoreException e) {
 						e.printStackTrace();
 					}
@@ -300,13 +308,14 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 * Inspired by {@link MarkerCreator#createMarker(Issue, IResource, String)}
 	 */
 	private void addMarker(IResource resource) throws CoreException {
-		IMarker marker = resource.createMarker("org.eclipse.xtext.ui.check.normal");
+		IMarker marker = resource.createMarker("org.eclipse.n4js.n4mf.ui.n4mf.check.normal");
 
 		marker.setAttribute(IMarker.LOCATION, "N4JS Index");
-		marker.setAttribute(Issue.CODE_KEY, NODE_MODULES_OUT_OF_SYNC);
+		marker.setAttribute(Issue.CODE_KEY, IssueCodes.NODE_MODULES_OUT_OF_SYNC);
 		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 		marker.setAttribute(IMarker.MESSAGE, "node_modules folder and N4JS index are out of sync");
 		marker.setAttribute(Issue.URI_KEY, resource.getLocation().toString());
 		marker.setAttribute("FIXABLE_KEY", true);
+
 	}
 }

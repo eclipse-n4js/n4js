@@ -111,6 +111,14 @@ public class LibraryManager {
 	}
 
 	/**
+	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
+	 * library folders.
+	 */
+	public void synchronizeNpms(IProgressMonitor monitor) {
+		indexSynchronizer.synchronizeNpms(monitor);
+	}
+
+	/**
 	 * Installs the given npm package in a blocking fashion.
 	 *
 	 * @param packageName

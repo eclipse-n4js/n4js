@@ -106,6 +106,9 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Inject
 	protected JavaScriptVariantHelper jsVariantHelper;
 
+	@Inject
+	private LibraryManager libraryManager;
+
 	/** Retrieve annotation constants from AnnotationDefinition */
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
@@ -726,4 +729,30 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 		acceptor.accept(issue, 'Install npm package to workspace', 'Download and install missing dependency from npm.', null, modification);
 	}
+
+
+	@Fix(IssueCodes.NODE_MODULES_OUT_OF_SYNC)
+	def synchronizeIndexToNodeModules(Issue issue, IssueResolutionAcceptor acceptor) {
+		val title = "Synchronize N4JS Index to node_modules folder";
+		val descr = "This quickfix will scan and compare the node_modules folder and the N4JS Index to adjust the index to the node_modules folder.";
+		acceptor.accept(issue, title, descr, null, new N4Modification() {
+			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
+					try {
+						libraryManager.synchronizeNpms(monitor);
+					} catch (IllegalBinaryStateException e) {
+					} catch (CoreException e) {
+					}
+				]);
+				return #[];
+			}
+			override supportsMultiApply() {
+				return false;
+			}
+			override isApplicableTo(IMarker marker) {
+				return true;
+			}
+		});
+	}
+
 }
