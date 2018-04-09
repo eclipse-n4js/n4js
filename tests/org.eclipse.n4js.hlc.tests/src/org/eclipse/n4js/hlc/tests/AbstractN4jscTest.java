@@ -31,12 +31,17 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.utils.MemoryTracker;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.rules.TestName;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -48,6 +53,12 @@ import com.google.common.base.Strings;
 /**
  */
 public abstract class AbstractN4jscTest {
+
+	private static MemoryTracker MEM = new MemoryTracker();
+
+	/** name of the currently running test. */
+	@Rule
+	public TestName testName = new TestName();
 
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
@@ -217,6 +228,28 @@ public abstract class AbstractN4jscTest {
 	private static void setOutputfileSystemProperties(String errorFile, String outputFile) {
 		System.setProperty("org.eclipse.n4js.runner.RunnerFrontEnd.ERRORFILE", errorFile);
 		System.setProperty("org.eclipse.n4js.runner.RunnerFrontEnd.OUTPUTFILE", outputFile);
+	}
+
+	@BeforeClass
+	public static void setupMemoryTracking() {
+		MEM.startSeries("HLC tests");
+	}
+
+	@AfterClass
+	public static void printMemoryTracking() {
+		System.out.println(MEM.dataTable());
+	}
+
+	@Before
+	public void beforeGC() {
+		MEM.runGC();
+		MEM.addSeriesPoint("start " + testName.getMethodName());
+	}
+
+	@Before
+	public void afterGC() {
+		MEM.addSeriesPoint("end " + testName.getMethodName());
+		MEM.runGC();
 	}
 
 	/**
