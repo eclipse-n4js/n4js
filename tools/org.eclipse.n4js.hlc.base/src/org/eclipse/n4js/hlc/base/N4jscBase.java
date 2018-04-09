@@ -851,8 +851,8 @@ public class N4jscBase implements IApplication {
 		if (installLocationProvider != null) {
 			HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
 			// TODO GH-521 reset state for HLC tests
-			locationProvider.resetState();
 			final java.net.URI uri = locationProvider.getTempRoot();
+			locationProvider.resetState();
 			if (uri != null) {
 				File tempInstallToClean = new File(uri);
 				try {
