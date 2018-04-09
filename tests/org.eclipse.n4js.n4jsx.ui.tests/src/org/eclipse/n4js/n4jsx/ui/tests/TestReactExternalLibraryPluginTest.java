@@ -79,7 +79,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	 */
 	@Before
 	public void setup() throws Exception {
-		setupExternalLibraries(false);
+		setupExternalLibraries(false, true);
 	}
 
 	/**
