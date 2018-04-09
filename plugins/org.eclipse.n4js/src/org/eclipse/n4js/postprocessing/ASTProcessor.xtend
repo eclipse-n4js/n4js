@@ -52,6 +52,7 @@ import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.utils.WithMemoryPrint
 
 /**
  * Main processor used during {@link N4JSPostProcessor post-processing} of N4JS resources. It controls the overall
@@ -98,9 +99,14 @@ public class ASTProcessor extends AbstractProcessor {
 	 * @param cancelIndicator  may be null.
 	 */
 	def public void processAST(N4JSResource resource, CancelIndicator cancelIndicator) {
+			
+		
+		
 		if (resource === null)
 			throw new IllegalArgumentException("resource may not be null");
 
+		val mp = new WithMemoryPrint("processAST_" + resource.URI);
+		try{
 		// the following is required, because typing may have been initiated by resolution of a proxy
 		// -> when traversing the AST, we will sooner or later try to resolve this same proxy, which would be
 		// interpreted as a cyclic proxy resolution by method LazyLinkingResource#getEObject(String,Triple)
@@ -124,6 +130,10 @@ public class ASTProcessor extends AbstractProcessor {
 				log(4, resource.script, cache);
 			}
 			log(0, "### done: " + resource.URI);
+		}
+		
+		}finally{
+			mp.close
 		}
 	}
 

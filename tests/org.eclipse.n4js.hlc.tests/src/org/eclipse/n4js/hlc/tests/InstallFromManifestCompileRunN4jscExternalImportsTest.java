@@ -17,7 +17,6 @@ import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.utils.MemoryTracker;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -54,7 +53,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
-		dumpMem("ExternalDependencies");
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
 
@@ -77,7 +75,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 						"P2\n" +
 						"React is not undefined true",
 				out);
-
 	}
 
 	/**
@@ -87,7 +84,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies2() throws IOException, ExitCodeException {
-		dumpMem("ExternalDependencies2");
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
 
@@ -110,13 +106,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 						"P2\n" +
 						"React is not undefined true",
 				out);
-	}
-
-	private static void dumpMem(String testName) {
-		System.out.println("before test " + testName);
-		MemoryTracker.printCurrentMemoryUsage("before GC");
-		MemoryTracker.runGC();
-		MemoryTracker.printCurrentMemoryUsage("after GC");
 	}
 
 }
