@@ -17,10 +17,13 @@ import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.utils.MemoryTracker;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import com.google.common.base.Predicates;
 
@@ -29,6 +32,7 @@ import com.google.common.base.Predicates;
  * instructed to discover missing dependencies and to install them before compilation, which is done with
  * {@code --installMissingDependencies} flag.
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InstallFromManifestCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
 	File workspace;
 
@@ -50,6 +54,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
+		dumpMem("ExternalDependencies");
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
 
@@ -72,6 +77,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 						"P2\n" +
 						"React is not undefined true",
 				out);
+
 	}
 
 	/**
@@ -81,6 +87,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies2() throws IOException, ExitCodeException {
+		dumpMem("ExternalDependencies2");
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
 
@@ -91,6 +98,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"-r", fileToRun,
 				// "--verbose",
 				// "--debug",
+				"--projectlocations", wsRoot,
 				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"
 		};
 		final String out = runAndCaptureOutput(args);
@@ -102,6 +110,13 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 						"P2\n" +
 						"React is not undefined true",
 				out);
+	}
+
+	private static void dumpMem(String testName) {
+		System.out.println("before test " + testName);
+		MemoryTracker.printCurrentMemoryUsage("before GC");
+		MemoryTracker.runGC();
+		MemoryTracker.printCurrentMemoryUsage("after GC");
 	}
 
 }
