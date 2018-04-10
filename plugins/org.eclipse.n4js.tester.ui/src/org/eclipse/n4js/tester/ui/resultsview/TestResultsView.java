@@ -14,6 +14,10 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.primitives.Ints.asList;
+import static java.lang.System.lineSeparator;
+import static java.util.Arrays.copyOfRange;
+import static org.eclipse.core.runtime.IPath.SEPARATOR;
+import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import static org.eclipse.n4js.tester.domain.TestStatus.ERROR;
 import static org.eclipse.n4js.tester.domain.TestStatus.FAILED;
 import static org.eclipse.n4js.tester.domain.TestStatus.PASSED;
@@ -23,19 +27,27 @@ import static org.eclipse.n4js.tester.domain.TestStatus.SKIPPED_IGNORE;
 import static org.eclipse.n4js.tester.domain.TestStatus.SKIPPED_NOT_IMPLEMENTED;
 import static org.eclipse.n4js.tester.domain.TestStatus.SKIPPED_PRECONDITION;
 import static org.eclipse.n4js.ui.utils.UIUtils.getShell;
-import static java.lang.System.lineSeparator;
-import static java.util.Arrays.copyOfRange;
-import static org.eclipse.core.runtime.IPath.SEPARATOR;
-import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import static org.eclipse.swt.SWT.NONE;
 import static org.eclipse.swt.widgets.Display.getDefault;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
+import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.debug.ui.ILaunchGroup;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -60,6 +72,31 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.n4js.tester.TestConfiguration;
+import org.eclipse.n4js.tester.TesterEventBus;
+import org.eclipse.n4js.tester.TesterFrontEnd;
+import org.eclipse.n4js.tester.domain.ID;
+import org.eclipse.n4js.tester.domain.TestCase;
+import org.eclipse.n4js.tester.domain.TestElement;
+import org.eclipse.n4js.tester.domain.TestResult;
+import org.eclipse.n4js.tester.domain.TestStatus;
+import org.eclipse.n4js.tester.domain.TestSuite;
+import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.tester.events.SessionEndedEvent;
+import org.eclipse.n4js.tester.events.SessionFailedEvent;
+import org.eclipse.n4js.tester.events.SessionFinishedEvent;
+import org.eclipse.n4js.tester.events.SessionStartedEvent;
+import org.eclipse.n4js.tester.events.TestEndedEvent;
+import org.eclipse.n4js.tester.events.TestEvent;
+import org.eclipse.n4js.tester.events.TestStartedEvent;
+import org.eclipse.n4js.tester.ui.TestConfigurationConverter;
+import org.eclipse.n4js.tester.ui.TesterFrontEndUI;
+import org.eclipse.n4js.tester.ui.TesterUiActivator;
+import org.eclipse.n4js.ui.editor.EditorContentExtractor;
+import org.eclipse.n4js.ui.editor.StyledTextDescriptor;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.ui.viewer.TreeViewerBuilder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
@@ -96,35 +133,11 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.tester.TestConfiguration;
-import org.eclipse.n4js.tester.TesterEventBus;
-import org.eclipse.n4js.tester.TesterFrontEnd;
-import org.eclipse.n4js.tester.domain.ID;
-import org.eclipse.n4js.tester.domain.TestCase;
-import org.eclipse.n4js.tester.domain.TestElement;
-import org.eclipse.n4js.tester.domain.TestResult;
-import org.eclipse.n4js.tester.domain.TestStatus;
-import org.eclipse.n4js.tester.domain.TestSuite;
-import org.eclipse.n4js.tester.domain.TestTree;
-import org.eclipse.n4js.tester.events.SessionEndedEvent;
-import org.eclipse.n4js.tester.events.SessionFailedEvent;
-import org.eclipse.n4js.tester.events.SessionFinishedEvent;
-import org.eclipse.n4js.tester.events.SessionStartedEvent;
-import org.eclipse.n4js.tester.events.TestEndedEvent;
-import org.eclipse.n4js.tester.events.TestEvent;
-import org.eclipse.n4js.tester.events.TestStartedEvent;
-import org.eclipse.n4js.tester.ui.TesterFrontEndUI;
-import org.eclipse.n4js.tester.ui.TesterUiActivator;
-import org.eclipse.n4js.ui.editor.EditorContentExtractor;
-import org.eclipse.n4js.ui.editor.StyledTextDescriptor;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
-import org.eclipse.n4js.ui.viewer.TreeViewerBuilder;
-
 /**
  * An Eclipse {@link IViewPart view} showing test results. This UI is independent of the particular tester being used
  * (node.js, Chrome, etc.).
  */
+@SuppressWarnings("restriction")
 public class TestResultsView extends ViewPart {
 
 	/**
@@ -150,6 +163,12 @@ public class TestResultsView extends ViewPart {
 	@Inject
 	private IN4JSEclipseCore core;
 
+	/**
+	 * Needed to convert configuration to ILaunchConfiguraton
+	 */
+	@Inject
+	private TestConfigurationConverter testConfigConverter;
+
 	private final List<TestSession> registeredSessions = new ArrayList<>();
 
 	/**
@@ -172,6 +191,7 @@ public class TestResultsView extends ViewPart {
 	private Action actionClearTerminated;
 	private Action doubleClickAction;
 	private Action singleClickAction;
+	private Action actionOpenLaunchConfig;
 
 	private class CodeSnippetToolTip extends ToolTip {
 
@@ -512,6 +532,7 @@ public class TestResultsView extends ViewPart {
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
+		manager.add(actionOpenLaunchConfig);
 		manager.add(actionRelaunch);
 		manager.add(actionRelaunchFailed);
 		manager.add(actionStop);
@@ -523,6 +544,7 @@ public class TestResultsView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
+		manager.add(actionOpenLaunchConfig);
 		manager.add(actionRelaunch);
 		manager.add(actionRelaunchFailed);
 		manager.add(actionStop);
@@ -538,6 +560,8 @@ public class TestResultsView extends ViewPart {
 		manager.add(actionRelaunch);
 		manager.add(actionRelaunchFailed);
 		manager.add(actionStop);
+		manager.add(new Separator());
+		manager.add(actionOpenLaunchConfig);
 	}
 
 	private void fillCustomToolBar(IToolBarManager manager) {
@@ -553,6 +577,11 @@ public class TestResultsView extends ViewPart {
 				"Do not jump to test case when its status is updated.",
 				TesterUiActivator.getImageDescriptor(TesterUiActivator.ICON_LOCK),
 				null); // nothing to be done when toggled (will read state when necessary)
+		actionOpenLaunchConfig = createAction(
+				"Open Configuration", IAction.AS_PUSH_BUTTON,
+				"Open the launch configuration for this test.",
+				TesterUiActivator.getImageDescriptor(TesterUiActivator.ICON_LAUNCHCONFIG),
+				this::performOpenLaunchConfig);
 		actionRelaunch = createAction(
 				"Relaunch", IAction.AS_PUSH_BUTTON,
 				"Relaunch entire test session.",
@@ -615,6 +644,7 @@ public class TestResultsView extends ViewPart {
 	 */
 	protected void refreshActions() {
 		actionLock.setEnabled(true);
+		actionOpenLaunchConfig.setEnabled(null != currentRoot);
 		actionRelaunch.setEnabled(null != currentRoot && !currentRoot.isRunning());
 		actionRelaunchFailed.setEnabled(false);
 		// actionStop.setEnabled(currentRoot != null && currentRoot.isRunning());
@@ -642,6 +672,39 @@ public class TestResultsView extends ViewPart {
 					}
 					MessageDialog.openError(getShell(), "Cannot open editor", message);
 				}
+			}
+		}
+	}
+
+	/**
+	 * Invoked when user performs {@link #actionOpenLaunchConfig}.
+	 */
+	protected void performOpenLaunchConfig() {
+		if (null != currentRoot) {
+			final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
+			if (null != session) {
+				final TestConfiguration testConfig = session.configuration;
+				ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+				ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(
+						testConfig.getLaunchConfigurationTypeIdentifier());
+				ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type,
+						testConfig);
+				Set<String> modes;
+				try {
+					modes = launchConfig.getModes();
+				} catch (CoreException e) {
+					modes = new HashSet<>();
+				}
+				if (modes.isEmpty()) {
+					modes.add(ILaunchManager.RUN_MODE);
+				}
+				LaunchConfigurationManager configManager = DebugUIPlugin.getDefault().getLaunchConfigurationManager();
+				ILaunchGroup group = configManager.getLaunchGroup(type, modes);
+
+				int ret = DebugUITools.openLaunchConfigurationPropertiesDialog(
+						this.getViewSite().getShell(),
+						launchConfig, group.getIdentifier());
+				System.out.println(ret);
 			}
 		}
 	}
@@ -680,29 +743,62 @@ public class TestResultsView extends ViewPart {
 
 		TestElement testElement = resultNode.getElement();
 		if (testElement instanceof TestCase) {
-
-			final URI testCaseURI = ((TestCase) testElement).getURI();
-			if (testCaseURI == null) {
-				return;
-			}
-
-			final IN4JSEclipseProject project = core.findProject(testCaseURI).orNull();
-			if (null != project && project.exists()) {
-				final URI moduleLocation = testCaseURI.trimFragment();
-				final String[] projectRelativeSegments = moduleLocation.deresolve(project.getLocation()).segments();
-				final String path = Joiner.on(SEPARATOR)
-						.join(copyOfRange(projectRelativeSegments, 1, projectRelativeSegments.length));
-				final IFile module = project.getProject().getFile(path);
-				if (null != module && module.isAccessible()) {
-					uriOpener.open(testCaseURI, true);
-				} else {
-					openError(getShell(), "Cannot open editor", "Test class not found in selected project.");
-				}
-			} else {
-				openError(getShell(), "Cannot open editor", "The container project not found in the workspace.");
-			}
-
+			openTestMethod((TestCase) testElement);
+		} else if (testElement instanceof TestSuite) {
+			openTestClass((TestSuite) testElement);
 		}
+	}
+
+	private void openTestClass(TestSuite testSuite) {
+		Optional<TestCase> foundTestCase = testSuite.getTestCases().stream().findFirst();
+		if (foundTestCase.isPresent()) {
+			final URI testCaseURI = foundTestCase.get().getURI();
+			final URI moduleLocation = testCaseURI.trimFragment();
+			if (!openErrorIfProblem(moduleLocation)) {
+				String caseFragment = testCaseURI.fragment();
+				if (caseFragment != null) {
+					int lastAt = caseFragment.lastIndexOf("/@");
+					if (lastAt >= 0) { // open at class
+						String classFragment = caseFragment.substring(0, lastAt);
+						URI classLocation = moduleLocation.appendFragment(classFragment);
+						uriOpener.open(classLocation, true);
+					}
+				} else { // just open the file
+					uriOpener.open(moduleLocation, true);
+				}
+			}
+		}
+	}
+
+	private void openTestMethod(TestCase testCase) {
+		final URI testCaseURI = testCase.getURI();
+		if (testCaseURI == null) {
+			return;
+		}
+		final URI moduleLocation = testCaseURI.trimFragment();
+		if (!openErrorIfProblem(moduleLocation)) {
+			uriOpener.open(testCaseURI, true);
+		}
+	}
+
+	/**
+	 * Returns true and shows an error message if the specified URI cannot be openend. Otherwise, false is returned.
+	 */
+	private boolean openErrorIfProblem(URI moduleLocationURI) {
+		final IN4JSEclipseProject project = core.findProject(moduleLocationURI).orNull();
+		if (project == null || !project.exists()) {
+			openError(getShell(), "Cannot open editor", "The container project not found in the workspace.");
+			return true;
+		}
+		final String[] projectRelativeSegments = moduleLocationURI.deresolve(project.getLocation()).segments();
+		final String path = Joiner.on(SEPARATOR)
+				.join(copyOfRange(projectRelativeSegments, 1, projectRelativeSegments.length));
+		final IFile module = project.getProject().getFile(path);
+		if (module == null || !module.isAccessible()) {
+			openError(getShell(), "Cannot open editor", "Test class not found in selected project.");
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -926,8 +1022,13 @@ public class TestResultsView extends ViewPart {
 		while (i.hasNext())
 			if (!i.next().isRunning())
 				i.remove();
+
+		Optional<TestSession> registeredSessionOfRoot = currentRoot != null
+				? registeredSessions.stream().filter(testSession -> testSession.root == currentRoot).findAny()
+				: Optional.empty();
+
 		// if the currently shown root was among the purged ones, clear the UI
-		if (currentRoot != null && !registeredSessions.contains(currentRoot))
+		if (currentRoot != null && !registeredSessionOfRoot.isPresent())
 			setShownTestTree(null);
 		// if nothing is shown, show the newest session
 		if (currentRoot == null && !registeredSessions.isEmpty())
