@@ -22,7 +22,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.NpmManager;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
@@ -64,7 +64,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	private ProcessExecutor processExecutor;
 
 	@Inject
-	private NpmManager npmManager;
+	private LibraryManager npmManager;
 
 	/**
 	 * Checks whether the platform is running or not.
@@ -79,7 +79,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	 */
 	@Before
 	public void setup() throws Exception {
-		setupExternalLibraries(false);
+		setupExternalLibraries(false, true);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		assertMarkers("Expected exactly 5 errors in client module.", clientModule, 5);
 		assertMarkers("Expected exactly one error in manifest.", manifest, 1);
 
-		npmManager.installDependency(PACKAGE_REACT, new NullProgressMonitor());
+		npmManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -134,7 +134,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile manifest = project.getFile(getResourceName(N4MF_MANIFEST));
 		assertTrue(manifest + " B module is not accessible.", manifest.isAccessible());
 
-		npmManager.installDependency(PACKAGE_REACT, new NullProgressMonitor());
+		npmManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 

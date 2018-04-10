@@ -119,8 +119,7 @@ public class NodeProcessBuilder {
 			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), "cache", "clean", "--force");
 		} else {
 			builder.add(NIX_SHELL_COMAMNDS);
-			builder.add(
-					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " cache clean --force");
+			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " cache clean --force");
 		}
 
 		return create(builder.build(), npmBinary, invokationPath, false);

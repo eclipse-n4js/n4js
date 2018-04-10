@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
-import org.eclipse.n4js.ui.utils.URIUtils;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;

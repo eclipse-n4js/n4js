@@ -163,8 +163,8 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			}
 		}
 
-		private void addEntryNode(ControlFlowElement cfe, boolean isDeadCode) {
-			if (getEntryNode(cfe) == null) {
+		private void createEntryNode(ControlFlowElement cfe, boolean isDeadCode) {
+			if (!(cfe instanceof Script) && getEntryNode(cfe) == null) {
 				String label = "ENTRY";
 				String description = cfe.getClass().getSimpleName();
 				CFNode node = new CFNode(cfe, label, description, nodeIdx++, isDeadCode, true, false);
@@ -172,16 +172,14 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			}
 		}
 
-		private void addExitNode(ControlFlowElement cfe, boolean isDeadCode) {
-			if (getExitNode(cfe) == null) {
+		private void createExitNode(ControlFlowElement cfe, boolean isDeadCode) {
+			if (!(cfe instanceof Script) && getExitNode(cfe) == null) {
 				String label = "EXIT";
 				String description = cfe.getClass().getSimpleName();
 				CFNode node = new CFNode(cfe, label, description, nodeIdx++, isDeadCode, false, true);
 				nodeMap.put(cfe, node);
 			}
 		}
-
-		// continue here: es gibt mehrere ENTRY/EXIT-Knoten!!!
 
 		class EdgesExplorer extends GraphExplorer {
 
@@ -209,29 +207,31 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 				Node sNode = null;
 				Node eNode = null;
 				if (edge.start == getContainer()) {
-					addEntryNode(edge.start, isDeadCodeNode());
+					createEntryNode(edge.start, isDeadCodeNode());
 					sNode = getEntryNode(edge.start);
 				} else {
 					addNode(edge.start, isDeadCodeNode());
 					sNode = getNode(edge.start);
 				}
 				if (edge.end == getContainer()) {
-					addExitNode(edge.end, isDeadCodeNode());
+					createExitNode(edge.end, isDeadCodeNode());
 					eNode = getExitNode(edge.end);
 				} else {
 					addNode(edge.end, isDeadCodeNode());
 					eNode = getNode(edge.end);
 				}
 
-				CFEdge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes, isDeadCodeNode());
+				if (sNode != null && eNode != null) {
+					CFEdge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes, isDeadCodeNode());
 
-				if (!edgesMap.containsKey(edge.start)) {
-					edgesMap.put(edge.start, new LinkedList<>());
+					if (!edgesMap.containsKey(edge.start)) {
+						edgesMap.put(edge.start, new LinkedList<>());
+					}
+					List<Edge> cfEdges = edgesMap.get(edge.start);
+					cfEdges.add(cfEdge);
+
+					removeDuplicatedDeadEdge(eNode, cfEdge, cfEdges);
 				}
-				List<Edge> cfEdges = edgesMap.get(edge.start);
-				cfEdges.add(cfEdge);
-
-				removeDuplicatedDeadEdge(eNode, cfEdge, cfEdges);
 			}
 
 			private void removeDuplicatedDeadEdge(Node eNode, CFEdge cfEdge, List<Edge> cfEdges) {

@@ -177,7 +177,7 @@ class ForFactory {
 		}
 
 		// catch for short-circuits
-		conditionForkNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue));
+		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue, ControlFlowType.LoopEnter));
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse, ControlFlowType.LoopExit));
 
 		cNode.setEntryNode(entryNode);

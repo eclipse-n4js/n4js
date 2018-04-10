@@ -113,16 +113,17 @@ public class CFGraph extends Graph<CFGraphProvider> {
 			if (lineChange) {
 				posInLine = 70;
 
-				boolean lastIsContainer = lastNode != null && (lastNode.isEntry || lastNode.isExit);
+				boolean lastIsEntry = lastNode != null && lastNode.isEntry;
+				boolean lastIsExit = lastNode != null && lastNode.isExit;
 				boolean isContainer = node.isEntry || node.isExit;
-				if (!lastIsContainer && !isContainer) {
+				if (!lastIsEntry && !lastIsExit && !isContainer) {
 					lineCounter++; // normal lines
 				}
-				if (lastIsContainer && isContainer) {
+				if (lastIsExit || node.isEntry) {
 					lineCounter += 2; // lines between two functions
 				}
 				if (node.isExit && entryLineCounter == lineCounter) {
-					lineCounter++; // line iff function consists of one line only
+					lineCounter++; // line if function consists of one line only
 				}
 			}
 
