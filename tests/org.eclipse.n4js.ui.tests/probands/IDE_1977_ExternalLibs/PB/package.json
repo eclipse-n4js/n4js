@@ -1,0 +1,19 @@
+{
+  "name": "PB",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js-libs"
+  },
+  "description": "Test Project",
+  "keywords": [
+    "n4js"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

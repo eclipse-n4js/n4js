@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -89,6 +90,14 @@ public class ExternalLibrariesActivator implements BundleActivator {
 
 	/** Unique name of the {@code npm} category. */
 	public static final String NPM_CATEGORY = "node_modules";
+
+	/** List of all categories. Latter entries shadow former entries. */
+	public static final List<String> CATEGORY_SHADOWING_ORDER = ImmutableList.<String> builder()
+			.add(LANG_CATEGORY)
+			.add(RUNTIME_CATEGORY)
+			.add(MANGELHAFT_CATEGORY)
+			.add(NPM_CATEGORY)
+			.build();
 
 	/** Unique name of the root npm folder for N4JS. */
 	private static final String NPM_ROOT = ".n4npm";

@@ -1,10 +1,16 @@
 {
   "name": "n4js-runtime-node-tests",
   "version": "0.3.0",
-  "author": "NumberFour AG <npm@numberfour.eu>",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
   "license": "EPL-1.0",
   "private": true,
-  "repository": "https://github.com/NumberFour/n4js-libs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js-libs"
+  },
   "description": "N4JS node runtime tests.",
   "scripts": {
     "build": "./npm-build.sh"
