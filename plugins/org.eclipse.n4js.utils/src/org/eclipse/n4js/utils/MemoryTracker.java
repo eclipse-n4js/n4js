@@ -141,6 +141,8 @@ public class MemoryTracker {
 
 	/** Utility, run finalizations and GC. */
 	public static void runGC() {
+		// see http://www.fasterj.com/articles/gcnotifs.shtml
+		// for notification if GC ran
 		Runtime.getRuntime().runFinalization();
 		Runtime.getRuntime().gc();
 		Thread.yield();

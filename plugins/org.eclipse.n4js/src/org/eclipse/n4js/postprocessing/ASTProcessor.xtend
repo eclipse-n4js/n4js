@@ -52,7 +52,7 @@ import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.utils.WithMemoryPrint
+import org.eclipse.n4js.utils.WithMemoryPrinter
 
 /**
  * Main processor used during {@link N4JSPostProcessor post-processing} of N4JS resources. It controls the overall
@@ -105,7 +105,7 @@ public class ASTProcessor extends AbstractProcessor {
 		if (resource === null)
 			throw new IllegalArgumentException("resource may not be null");
 
-		val mp = new WithMemoryPrint("\nprocessAST_" + resource.URI, true, true);
+		val mp = new WithMemoryPrinter("\nprocessAST_" + resource.URI);
 		try{
 		// the following is required, because typing may have been initiated by resolution of a proxy
 		// -> when traversing the AST, we will sooner or later try to resolve this same proxy, which would be
