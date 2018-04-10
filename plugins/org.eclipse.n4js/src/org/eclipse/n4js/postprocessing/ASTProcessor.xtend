@@ -105,7 +105,7 @@ public class ASTProcessor extends AbstractProcessor {
 		if (resource === null)
 			throw new IllegalArgumentException("resource may not be null");
 
-		val mp = new WithMemoryPrint("processAST_" + resource.URI);
+		val mp = new WithMemoryPrint("\nprocessAST_" + resource.URI, true, true);
 		try{
 		// the following is required, because typing may have been initiated by resolution of a proxy
 		// -> when traversing the AST, we will sooner or later try to resolve this same proxy, which would be

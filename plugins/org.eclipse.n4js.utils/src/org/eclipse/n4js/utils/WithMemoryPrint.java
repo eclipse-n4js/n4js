@@ -51,7 +51,7 @@ public class WithMemoryPrint implements AutoCloseable {
 		if (runGC) {
 			MemoryTracker.printCurrentMemoryUsage("before GC");
 			MemoryTracker.runGC();
-			MemoryTracker.printCurrentMemoryUsage("after GC");
+			MemoryTracker.printCurrentMemoryUsage("after  GC");
 		} else
 			MemoryTracker.printCurrentMemoryUsage("memory");
 	}

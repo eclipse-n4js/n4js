@@ -134,7 +134,7 @@ public class MemoryTracker {
 
 	/** Utility, print to std out current memory usage (no data recording). */
 	public static void printCurrentMemoryUsage(String label) {
-		System.out.println(String.format("\n| %s | %s |",
+		System.out.println(String.format("| %s | %s |",
 				formatLabelToWidth(" " + label, label.length() + 2),
 				formatMemory(bytesToHuman(getUsedMemory()))));
 	}
