@@ -45,7 +45,7 @@ public class WithMemoryPrinter implements AutoCloseable {
 
 		// Unfortunately that is the only way to run code when
 		// entering try-with-resources block
-		printMem(label + "_init", gcOnEnter);
+		printMem(label + "_enter", gcOnEnter);
 	}
 
 	/** Prints memory information. */
@@ -60,7 +60,7 @@ public class WithMemoryPrinter implements AutoCloseable {
 
 	@Override
 	public void close() {
-		printMem(label + "_close", gcOnClose);
+		printMem(label + "_exit", gcOnClose);
 	}
 
 	private static void printMem(String label, boolean runGC) {
