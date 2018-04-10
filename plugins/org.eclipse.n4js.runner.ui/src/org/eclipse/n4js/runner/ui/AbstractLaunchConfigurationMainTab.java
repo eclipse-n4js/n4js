@@ -20,6 +20,9 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -36,10 +39,6 @@ import org.eclipse.ui.dialogs.ResourceListSelectionDialog;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.runner.RunConfiguration;
 
 /**
  * Base implementation for the main tab of Eclipse launch configurations for N4JS runners and testers.
@@ -58,6 +57,19 @@ public abstract class AbstractLaunchConfigurationMainTab extends AbstractLaunchC
 	protected Button btnSearch;
 	/** Text widget for the implementation ID to use. */
 	protected Text txtImplementationId;
+
+	/**
+	 * Returns the "Resource to Run", using the workspace relative location retrieved via the attribute in
+	 * {@link RunConfiguration#USER_SELECTION} If attribute is not present, an empty string is returned.
+	 */
+	public static String getResourceRunAsText(ILaunchConfiguration configuration) throws CoreException {
+		String uriStr;
+		uriStr = configuration.getAttribute(RunConfiguration.USER_SELECTION, "");
+		final URI uri = uriStr.trim().length() > 0 ? URI.createURI(uriStr) : null;
+		final String wsRelativePath = uri != null ? uri.toPlatformString(true) : null;
+		return wsRelativePath != null ? wsRelativePath : "";
+
+	}
 
 	/**
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
@@ -192,10 +204,8 @@ public abstract class AbstractLaunchConfigurationMainTab extends AbstractLaunchC
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
-			final String uriStr = configuration.getAttribute(getResourceRunConfigKey(), "");
-			final URI uri = uriStr.trim().length() > 0 ? URI.createURI(uriStr) : null;
-			final String wsRelativePath = uri != null ? uri.toPlatformString(true) : null;
-			txtResource.setText(wsRelativePath != null ? wsRelativePath : "");
+			final String wsRelativePath = getResourceRunAsText(configuration);
+			txtResource.setText(wsRelativePath);
 
 			final String implId = configuration.getAttribute(RunConfiguration.IMPLEMENTATION_ID, "");
 			txtImplementationId.setText(implId);

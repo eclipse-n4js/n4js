@@ -14,10 +14,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.runner.RunConfiguration;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.runner.RunConfiguration;
 
 /**
  * Main tab for runner launch configurations.
