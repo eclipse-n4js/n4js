@@ -18,7 +18,7 @@ pipeline {
         }
     }
     options {
-        ansiColor('xterm')
+        // ansiColor('xterm')
         buildDiscarder(
             logRotator(
                 numToKeepStr:          '15',
