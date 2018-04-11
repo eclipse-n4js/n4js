@@ -20,9 +20,7 @@ import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import com.google.common.base.Predicates;
 
@@ -31,7 +29,6 @@ import com.google.common.base.Predicates;
  * instructed to discover missing dependencies and to install them before compilation, which is done with
  * {@code --installMissingDependencies} flag.
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InstallFromManifestCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
 	File workspace;
 
@@ -63,7 +60,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"--run", fileToRun,
 				// "--verbose",
 				// "--debug",
-				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
@@ -94,7 +90,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"-r", fileToRun,
 				// "--verbose",
 				// "--debug",
-				"--projectlocations", wsRoot,
 				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"
 		};
 		final String out = runAndCaptureOutput(args);
