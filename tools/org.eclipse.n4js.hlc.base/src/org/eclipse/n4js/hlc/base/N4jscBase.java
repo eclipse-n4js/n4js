@@ -789,65 +789,77 @@ public class N4jscBase implements IApplication {
 		}
 
 		try {
-
-			try {
-				switch (buildtype) {
-				case singlefile:
-					compileArgumentsAsSingleFiles();
-					break;
-				case projects:
-					compileArgumentsAsProjects();
-					break;
-				case allprojects:
-					compileAllProjects();
-					break;
-				case dontcompile:
-				default:
-					registerProjects();
-				}
-			} catch (N4JSCompileException e) {
-				// dump all information to error-stream.
-				e.userDump(System.err);
-				throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
-			}
-
-			if (null != testCatalogFile) {
-				final String catalog = testCatalogSupplier.get();
-				try (final FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
-					fos.write(catalog.getBytes());
-					fos.flush();
-				} catch (IOException e) {
-					System.out.println("Error while writing test catalog file at: " + testCatalogFile);
-					throw new ExitCodeException(EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
-				}
-			}
-
-			if (testThisLocation != null) {
-				if (buildtype != BuildType.dontcompile) {
-					flushAndIinsertMarkerInOutputs();
-				}
-				headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
-			}
-
-			if (runThisFile != null) {
-				if (buildtype != BuildType.dontcompile) {
-					flushAndIinsertMarkerInOutputs();
-				}
-				headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
-						new File(installLocationProvider.getTargetPlatformInstallLocation()));
-			}
+			compile();
+			writeTestCatalog();
+			testAndRun();
 
 		} finally {
 			cleanTemporaryArtifacts();
 		}
+
 		if (debug) {
 			System.out.println("... done.");
 		}
 	}
 
+	/** dispatch to proper build method based on {@link #buildtype} */
+	private void compile() throws ExitCodeException {
+		try {
+			switch (buildtype) {
+			case singlefile:
+				compileArgumentsAsSingleFiles();
+				break;
+			case projects:
+				compileArgumentsAsProjects();
+				break;
+			case allprojects:
+				compileAllProjects();
+				break;
+			case dontcompile:
+			default:
+				registerProjects();
+			}
+		} catch (N4JSCompileException e) {
+			// dump all information to error-stream.
+			e.userDump(System.err);
+			throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
+		}
+	}
+
+	/** writes test catalog based on {@link #testCatalogFile} */
+	private void writeTestCatalog() throws ExitCodeException {
+		if (null != testCatalogFile) {
+			final String catalog = testCatalogSupplier.get();
+			try (final FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
+				fos.write(catalog.getBytes());
+				fos.flush();
+			} catch (IOException e) {
+				System.out.println("Error while writing test catalog file at: " + testCatalogFile);
+				throw new ExitCodeException(EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
+			}
+		}
+	}
+
+	/** triggers runners and testers based on {@link #testThisLocation} and {@link #runThisFile} */
+	private void testAndRun() throws ExitCodeException {
+		if (testThisLocation != null) {
+			if (buildtype != BuildType.dontcompile) {
+				flushAndIinsertMarkerInOutputs();
+			}
+			headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
+		}
+
+		if (runThisFile != null) {
+			if (buildtype != BuildType.dontcompile) {
+				flushAndIinsertMarkerInOutputs();
+			}
+			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
+					new File(installLocationProvider.getTargetPlatformInstallLocation()));
+		}
+	}
+
 	/** In some cases compiler is creating files and folders in temp locations. This method deletes those leftovers. */
 	private void cleanTemporaryArtifacts() {
-		// compiler
 		if (installLocationProvider != null) {
 			HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
 			// TODO GH-521 reset state for HLC tests
