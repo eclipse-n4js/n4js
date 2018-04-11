@@ -37,7 +37,6 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
 import org.junit.Rule;
-import org.junit.rules.TestName;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -49,10 +48,6 @@ import com.google.common.base.Strings;
 /**
  */
 public abstract class AbstractN4jscTest {
-
-	/** name of the currently running test. */
-	@Rule
-	public TestName testName = new TestName();
 
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
