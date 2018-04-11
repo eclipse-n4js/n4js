@@ -60,6 +60,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"--run", fileToRun,
 				// "--verbose",
 				// "--debug",
+				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
