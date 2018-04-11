@@ -132,8 +132,9 @@ public class NodeRunner implements IRunner {
 			String nodePaths = on(NODE_PATH_SEP).join(paths);
 
 			Map<String, String> env = new LinkedHashMap<>();
-			env.put(NODE_PATH, nodePaths);
+			env.putAll(runOptions.getEnvironmentVariables());
 
+			env.put(NODE_PATH, nodePaths);
 			env = nodeJsBinary.updateEnvironment(env);
 
 			process = executor.exec(cmds, workingDirectory.toFile(), env);
@@ -154,6 +155,7 @@ public class NodeRunner implements IRunner {
 		runOptions.addInitModules(runConfig.getInitModules());
 		runOptions.setCoreProjectPaths(on(NODE_PATH_SEP).join(runConfig.getCoreProjectPaths()));
 		runOptions.setEngineOptions(runConfig.getEngineOptions());
+		runOptions.setEnvironmentVariables(runConfig.getEnvironmentVariables());
 		runOptions.setCustomEnginePath(runConfig.getCustomEnginePath());
 		runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
 		runOptions.setSystemLoader(SystemLoaderInfo.fromString(runConfig.getSystemLoader()));
