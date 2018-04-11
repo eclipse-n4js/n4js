@@ -38,7 +38,7 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	}
 
 	/**
-	 * Compile All & Test project. Assert test output, test report, and proper exit code.
+	 * Compile All and Test project. Assert test output, test report, and proper exit code.
 	 *
 	 * @throws Exception
 	 *             in Error cases
@@ -79,7 +79,7 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	}
 
 	/**
-	 * Compile All & Test project. Assert test output, test report, and proper exit code.
+	 * Compile All and Test project. Assert test output, test report, and proper exit code.
 	 *
 	 * @throws Exception
 	 *             in Error cases
