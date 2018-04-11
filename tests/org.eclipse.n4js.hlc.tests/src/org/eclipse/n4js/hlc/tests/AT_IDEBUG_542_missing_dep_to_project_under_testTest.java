@@ -50,10 +50,7 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 
 		String proot = workspace.getAbsolutePath().toString();
 
-		String[] args = { "-pl", proot,
-				"-bt", "allprojects",
-				"-v"
-		};
+		String[] args = { "--projectlocations", proot, "--buildType", "allprojects", "--verbose" };
 
 		// compile
 		new N4jscBase().doMain(args);

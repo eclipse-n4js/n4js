@@ -19,13 +19,12 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.common.util.WrappedException;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterFrontEnd;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Converts a {@link TestConfiguration} to an {@link ILaunchConfiguration} and vice versa.
@@ -50,7 +49,9 @@ public class TestConfigurationConverter {
 			// in case the name of the launch configuration has been changed after the launch configuration
 			// was created via method #toLaunchConfiguration()
 			properties.put(RunConfiguration.NAME, launchConfig.getName());
-			return testerFrontEnd.createConfiguration(properties);
+			TestConfiguration testConfig = testerFrontEnd.createConfiguration(properties);
+			testConfig.setLaunchConfigurationTypeIdentifier(launchConfig.getType().getIdentifier());
+			return testConfig;
 		} catch (Exception e) {
 			throw new WrappedException("could not convert Eclipse ILaunchConfiguration to N4JS TestConfiguration", e);
 		}

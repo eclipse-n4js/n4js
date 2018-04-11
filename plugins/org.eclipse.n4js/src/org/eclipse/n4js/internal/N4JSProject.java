@@ -37,6 +37,7 @@ import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -73,14 +74,14 @@ public class N4JSProject implements IN4JSProject {
 			return true;
 		}
 		if (obj instanceof N4JSProject) {
-			return location.equals(((N4JSProject) obj).getLocation());
+			return URIUtils.equals(getLocation(), ((N4JSProject) obj).getLocation());
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return location.hashCode();
+		return URIUtils.hashCode(getLocation());
 	}
 
 	protected N4JSModel getModel() {
@@ -391,8 +392,9 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public String toString() {
-		return "Project '" + getProjectId() + "' "
-				+ (exists() ? " type=" + getProjectType() + " " : " -doesn't exist!- ");
+		String str = getProjectId();
+		str += " (" + (exists() ? getProjectType() : "doesn't exist") + ")";
+		return str;
 	}
 
 	@Override

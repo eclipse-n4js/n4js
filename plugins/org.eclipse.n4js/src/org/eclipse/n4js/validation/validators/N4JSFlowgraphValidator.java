@@ -16,9 +16,9 @@ import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
@@ -102,13 +102,14 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		flowAnalyzer.accept(fAnalysers);
 
 		String uriString = script.eResource().getURI().toString();
-		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
-		Measurement msmnt2 = dcPostprocessing.getMeasurement("createGraph_" + uriString);
-		for (FlowValidator fValidator : fValidators) {
-			fValidator.checkResults(this);
+
+		try (ClosableMeasurement m1 = dcFlowGraphs.getClosableMeasurement("flowGraphs_" + uriString);
+				ClosableMeasurement m2 = dcPostprocessing.getClosableMeasurement("createGraph_" + uriString);) {
+
+			for (FlowValidator fValidator : fValidators) {
+				fValidator.checkResults(this);
+			}
 		}
-		msmnt2.end();
-		msmnt1.end();
 	}
 
 	@Override

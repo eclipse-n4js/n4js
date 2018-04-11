@@ -40,6 +40,9 @@ class N4MFResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy
 
 	/** The key of the user data for retrieving the project ID. */
 	public static val PROJECT_ID_KEY = 'prjectId';
+	
+	/** The key of the user data for retrieving the project version. */
+	public static val PROJECT_VERSION_KEY = 'prjectVersion';
 
 	/** The key of the user data for retrieving the library dependencies for a particular project. */
 	public static val LIB_DEPENDENCIES_KEY = 'libDependencies';
@@ -116,6 +119,15 @@ class N4MFResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy
 		builder.put(PROJECT_TYPE_KEY, '''«projectType»''');
 		builder.put(PROJECT_ID_KEY, projectId.nullToEmpty);
 		builder.put(IMPLEMENTATION_ID_KEY, implementationId.nullToEmpty);
+
+		val vers = projectVersion;
+		if (vers !== null) {
+			val versionStr = '''«vers.major».«vers.minor».«vers.micro»''';
+			val versionWithQualifierStr = if (vers.qualifier.nullOrEmpty)
+					versionStr else '''«versionStr»:«vers.qualifier.nullToEmpty»''';
+
+			builder.put(PROJECT_VERSION_KEY, versionWithQualifierStr);
+		}
 
 		val testedProjects = allTestedProjects;
 		if (!testedProjects.nullOrEmpty) {

@@ -18,10 +18,9 @@ import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.collect.Iterables;
-
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Schedules on-demand Eclipse workspace project builds. Requires running platform.

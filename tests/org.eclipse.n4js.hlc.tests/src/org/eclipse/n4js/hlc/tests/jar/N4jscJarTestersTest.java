@@ -93,11 +93,11 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 				"--systemLoader", COMMON_JS.getId(),
 				"--targetPlatformFile", platformFiles.targetPlatformFile.getAbsolutePath(),
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
-				"-pl", WSP,
-				"-bt", "allprojects",
-				"-tw", "nodejs_mangelhaft",
-				"-t", pathToDemoTest,
-				"-v");
+				"--projectlocations", WSP,
+				"--buildType", "allprojects",
+				"--testWith", "nodejs_mangelhaft",
+				"--test", pathToDemoTest,
+				"--verbose");
 
 		int exitCode = p.waitFor();
 
@@ -137,12 +137,12 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 				"--systemLoader", COMMON_JS.getId(),
 				"--targetPlatformFile", platformFiles.targetPlatformFile.getAbsolutePath(),
 				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
-				"-pl", WSP,
-				"-bt", "allprojects",
-				"-tw", "nodejs_mangelhaft",
-				"-t", pathToDemoTest,
+				"--projectlocations", WSP,
+				"--buildType", "allprojects",
+				"--testWith", "nodejs_mangelhaft",
+				"--test", pathToDemoTest,
 				"--testReportRoot", testReportRoot,
-				"-v");
+				"--verbose");
 
 		int exitCode = p.waitFor();
 

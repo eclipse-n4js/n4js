@@ -51,7 +51,7 @@ class DoWhileFactory {
 		cNode.setExitNode(exitNode);
 
 		// catch for short-circuits
-		conditionForkNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue));
+		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue, ControlFlowType.LoopReenter));
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse, ControlFlowType.LoopExit));
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(doStmt);

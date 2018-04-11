@@ -13,11 +13,14 @@ package org.eclipse.n4js.runner.nodejs;
 import static com.google.common.base.Strings.nullToEmpty;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
-
-import com.google.common.base.CharMatcher;
+import java.util.Map;
 
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+
+import com.google.common.base.CharMatcher;
 
 /**
  * Run options for node. Unlike configuration that is stored, this is just group of runtime options that are passed to
@@ -32,6 +35,7 @@ public class NodeRunOptions {
 	private final List<String> initModules = new ArrayList<>();
 	private String customEnginePath;
 	private String engineOptions;
+	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 	private SystemLoaderInfo systemLoader = null;
 
 	/** set name of the module to run. */
@@ -157,6 +161,26 @@ public class NodeRunOptions {
 	 */
 	public void setEngineOptions(final String engineOptions) {
 		this.engineOptions = nullToEmpty(engineOptions);
+	}
+
+	/**
+	 * Returns unmodifiable map of environment variables.
+	 */
+	public Map<String, String> getEnvironmentVariables() {
+		return Collections.unmodifiableMap(environmentVariables);
+	}
+
+	/**
+	 * Counterpart of the {@link #getEnvironmentVariables()}.
+	 *
+	 * @param environmentVariables
+	 *            the new values to be set. The map will be copied to internal map.
+	 */
+	public void setEnvironmentVariables(Map<String, String> environmentVariables) {
+		this.environmentVariables.clear();
+		if (environmentVariables != null) {
+			this.environmentVariables.putAll(environmentVariables);
+		}
 	}
 
 	/**

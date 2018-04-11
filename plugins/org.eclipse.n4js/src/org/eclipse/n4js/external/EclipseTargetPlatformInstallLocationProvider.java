@@ -24,7 +24,7 @@ import com.google.inject.Singleton;
 
 /**
  * Target platform install location and target platform file location provider that is used when the platform is
- * running, hence the Eclipse workspace exists and available..
+ * running, hence the Eclipse workspace exists and available.
  */
 @Singleton
 public class EclipseTargetPlatformInstallLocationProvider implements TargetPlatformInstallLocationProvider {
