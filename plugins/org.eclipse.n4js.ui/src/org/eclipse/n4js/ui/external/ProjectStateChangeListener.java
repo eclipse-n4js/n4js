@@ -24,85 +24,99 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
  * Resource change listener implementation for listening project open/close event and running the
- * {@link ExternalLibraryBuilderHelper external library build helper} according to the changes. Also got notified if new
+ * {@link ExternalLibraryBuilder external library build helper} according to the changes. Also got notified if new
  * workspace project is being created or an existing, accessible project is being deleted.
  */
 public class ProjectStateChangeListener implements IResourceChangeListener {
-
-	private static final Logger LOGGER = Logger.getLogger(ProjectStateChangeListener.class);
+	private static final Logger logger = Logger.getLogger(ProjectStateChangeListener.class);
 
 	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
+	private ExternalProjectProvider projectProvider;
 
 	@Inject
 	private ExternalLibraryBuildJobProvider buildJobProvider;
 
+	@Inject
+	private FileBasedExternalPackageManager packageManager;
+
+	final private Collection<N4JSExternalProject> toClean = newLinkedHashSet();
+	final private Collection<N4JSExternalProject> toBuild = newLinkedHashSet();
+
 	@Override
 	public void resourceChanged(final IResourceChangeEvent event) {
-
 		if (null == event || null == event.getDelta()) {
 			return;
 		}
 
-		final Collection<IProject> toClean = newLinkedHashSet();
-		final Collection<IProject> toBuild = newLinkedHashSet();
-
 		try {
-			event.getDelta().accept(delta -> {
-
-				final IResource resource = delta.getResource();
-				if (resource instanceof IProject) {
-
-					final IProject project = (IProject) resource;
-					// XXX What if project is not accessible and/or not Xtext project with the corresponding builder?
-					final IProject externalProject = externalLibraryWorkspace.getProject(project.getName());
-					if (null != externalProject && externalProject.exists()) {
-
-						if (CHANGED == delta.getKind() && (delta.getFlags() & OPEN) != 0) {
-
-							// Workspace project close/open
-							if (project.isOpen()) {
-								toClean.add(externalProject);
-							} else {
-								toBuild.add(externalProject);
-							}
-
-						} else if (REMOVED == delta.getKind()) {
-
-							// Workspace project deletion
-							toBuild.add(externalProject);
-
-						} else if (ADDED == delta.getKind()) {
-
-							// Workspace project creation
-							toClean.add(externalProject);
-
-						}
-					}
-				}
-
-				return true;
-			});
+			toClean.clear();
+			toBuild.clear();
+			event.getDelta().accept(this::visit); // fill toClean and toBuild
 
 			if (!toClean.isEmpty() || !toBuild.isEmpty()) {
-				LOGGER.info("Received project open/close change.");
-				LOGGER.info("Opened projects: " + Iterables.toString(from(toClean).transform(p -> p.getName())));
-				LOGGER.info("Closed projects: " + Iterables.toString(from(toBuild).transform(p -> p.getName())));
+				logger.info("Received project open/close change.");
+				logger.info("Opened projects: " + Iterables.toString(from(toClean).transform(p -> p.getName())));
+				logger.info("Closed projects: " + Iterables.toString(from(toBuild).transform(p -> p.getName())));
 
 				buildJobProvider.createBuildJob(toBuild, toClean).schedule();
 			}
 
 		} catch (final CoreException e) {
-			LOGGER.error("Error while visiting resource change event.", e);
+			logger.error("Error while visiting resource change event.", e);
 		}
+	}
+
+	boolean visit(IResourceDelta delta) {
+		IResource resource = delta.getResource();
+		if (resource instanceof IProject) {
+
+			IProject project = (IProject) resource;
+			String name = project.getName();
+			N4JSExternalProject externalProject = projectProvider.getProject(name);
+
+			if (null != externalProject && externalProject.exists()) {
+				URI uri = URIUtils.convert(externalProject);
+				boolean isN4Project = packageManager.isN4ProjectRoot(uri);
+
+				if (isN4Project) {
+
+					if (CHANGED == delta.getKind() && (delta.getFlags() & OPEN) != 0) {
+
+						// Workspace project close/open
+						if (project.isOpen()) {
+							toClean.add(externalProject);
+						} else {
+							toBuild.add(externalProject);
+						}
+
+					} else if (REMOVED == delta.getKind()) {
+
+						// Workspace project deletion
+						toBuild.add(externalProject);
+
+					} else if (ADDED == delta.getKind()) {
+
+						// Workspace project creation
+						toClean.add(externalProject);
+
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 
 }

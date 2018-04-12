@@ -361,6 +361,7 @@ Contributors:
                      commandId="org.eclipse.n4js.ui.handler.LibrariesFix"
                      icon="icons/debugt_obj.png"
                      label="Fix Libraries setup"
+                     tooltip="Install missing dependencies"
                      style="push">
                </command>
                <command

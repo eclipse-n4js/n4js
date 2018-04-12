@@ -91,7 +91,7 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 	}
 
 	private Iterable<IN4JSProject> getProjects(URI location) {
-		return from(externalLibraryWorkspace.getProjects(location))
+		return from(externalLibraryWorkspace.getProjectsIn(location))
 				.filter(p -> p.exists())
 				.transform(p -> core.findProject(convertUri(p.getLocationURI())).orNull())
 				.filter(IN4JSProject.class)

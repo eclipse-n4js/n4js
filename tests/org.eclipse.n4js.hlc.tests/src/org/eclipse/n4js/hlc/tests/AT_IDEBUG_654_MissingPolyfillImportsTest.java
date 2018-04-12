@@ -49,19 +49,16 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractN4jscTest 
 		// pre compile
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		// Compile
-		final String[] args_precompile = { "-pl", wsRoot,
-				"-bt", "allprojects",
-				"-v"
-		};
+		final String[] args_precompile = { "--projectlocations", wsRoot, "--buildType", "allprojects", "--verbose" };
 		new N4jscBase().doMain(args_precompile);
 
 		// run without compile
 		final String fileToRun = wsRoot + "/IDEBUG-654_2/src/Main.n4js";
-		final String[] args = { "-pl", wsRoot,
-				"-bt", "dontcompile",
-				"-rw", "nodejs",
-				"-r", fileToRun,
-				"-v"
+		final String[] args = { "--projectlocations", wsRoot,
+				"--buildType", "dontcompile",
+				"--runWith", "nodejs",
+				"--run", fileToRun,
+				"--verbose"
 		};
 
 		// Run

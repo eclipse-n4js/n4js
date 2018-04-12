@@ -16,8 +16,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -52,14 +50,6 @@ public class N4jscDependentProjectDependenciesTest extends BaseN4jscExternalTest
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		Map<String, String> deps = new HashMap<>();
-		deps.put("nuka-carousel", "");
-		deps.put("react", "");
-		return deps;
-	}
-
 	/**
 	 * Test failure when compiling without target platform file.
 	 *
@@ -72,11 +62,11 @@ public class N4jscDependentProjectDependenciesTest extends BaseN4jscExternalTest
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);

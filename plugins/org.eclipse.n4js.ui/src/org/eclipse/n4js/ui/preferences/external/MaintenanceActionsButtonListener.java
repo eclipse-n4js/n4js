@@ -10,29 +10,27 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
-import static org.eclipse.n4js.N4JSPluginId.N4JS_PLUGIN_ID;
 import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
-import static org.eclipse.core.runtime.IStatus.ERROR;
-import static org.eclipse.jface.dialogs.MessageDialog.openError;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.ui.dialogs.ListSelectionDialog;
-
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.StatusUtils;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 
 /**
  * Button selection listener for opening up an {@link MessageDialog yes/no dialog}, where user can decide to delete type
@@ -44,29 +42,33 @@ import org.eclipse.n4js.ui.utils.UIUtils;
 public class MaintenanceActionsButtonListener extends SelectionAdapter {
 
 	final private BiFunction<MaintenanceActionsChoice, IProgressMonitor, MultiStatus> runActions;
+	final private StatusHelper statusHelper;
 
-	private static final String ACTION_NPM_RELOAD = "Reload npm libraries from disk.";
-	private static final String ACTION_NPM_REINSTALL = "Reinstall npm libraries.";
-	private static final String ACTION_NPM_CACHE_CLEAN = "Clean npm cache.";
-	private static final String ACTION_NPM_PACKAGES_DELETE = "Delete npm packages (deletes npm folder).";
-	private static final String ACTION_TYPE_DEFINITIONS_RESET = "Reset type definitions (creates fresh clone).";
+	static final String ACTION_NPM_RELOAD = "Reload npm libraries from disk.";
+	static final String ACTION_NPM_REINSTALL = "Reinstall npm libraries.";
+	static final String ACTION_NPM_CACHE_CLEAN = "Clean npm cache.";
+	static final String ACTION_NPM_PACKAGES_DELETE = "Delete npm packages (deletes npm folder).";
+	static final String ACTION_TYPE_DEFINITIONS_RESET = "Reset type definitions (creates fresh clone).";
 
-	MaintenanceActionsButtonListener(BiFunction<MaintenanceActionsChoice, IProgressMonitor, MultiStatus> runActions) {
+	MaintenanceActionsButtonListener(BiFunction<MaintenanceActionsChoice, IProgressMonitor, MultiStatus> runActions,
+			StatusHelper statusHelper) {
 		this.runActions = runActions;
+		this.statusHelper = statusHelper;
 	}
 
 	@Override
 	public void widgetSelected(final SelectionEvent e) {
 
-		ListSelectionDialog dialog = new ListSelectionDialog(UIUtils.getShell(),
-				new String[] {
-						ACTION_NPM_CACHE_CLEAN,
-						ACTION_NPM_RELOAD,
-						ACTION_NPM_REINSTALL,
-						ACTION_TYPE_DEFINITIONS_RESET,
-						ACTION_NPM_PACKAGES_DELETE },
-				ArrayContentProvider.getInstance(), new LabelProvider(),
-				"Select maintenance actions to perform.");
+		String[] options = new String[] {
+				ACTION_NPM_CACHE_CLEAN,
+				ACTION_NPM_RELOAD,
+				ACTION_NPM_REINSTALL,
+				ACTION_TYPE_DEFINITIONS_RESET,
+				ACTION_NPM_PACKAGES_DELETE };
+		String msg = "Select maintenance actions to perform.";
+		Shell shell = UIUtils.getShell();
+		ArrayContentProvider contentProvider = ArrayContentProvider.getInstance();
+		ListSelectionDialog dialog = new ListSelectionDialog(shell, options, contentProvider, new LabelProvider(), msg);
 		dialog.setTitle("External libraries maintenance actions.");
 
 		if (dialog.open() == Window.OK) {
@@ -75,6 +77,7 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 			boolean reinstall = false;
 			boolean reclone = false;
 			boolean reload = false;
+
 			Object[] result = dialog.getResult();
 			for (int i = 0; i < result.length; i++) {
 				String dialogItem = (String) result[i];
@@ -96,29 +99,34 @@ public class MaintenanceActionsButtonListener extends SelectionAdapter {
 					reclone = true;
 					break;
 				}
-
 			}
 
 			final MaintenanceActionsChoice userChoice = new MaintenanceActionsChoice(reclone, cleanCache, reinstall,
 					deleteNPM, reload);
+			String statusText = "Perform Maintenance Actions: " + userChoice;
+			final MultiStatus multistatus = statusHelper.createMultiStatus(statusText);
 
-			final AtomicReference<MultiStatus> actionsStatus = new AtomicReference<>();
 			try {
-				new ProgressMonitorDialog(UIUtils.getShell()).run(true, false, monitor -> {
-					actionsStatus.set(runActions.apply(userChoice, monitor));
+				new ProgressMonitorDialog(shell).run(true, true, monitor -> {
+					multistatus.merge(runActions.apply(userChoice, monitor));
 				});
-			} catch (final InvocationTargetException | InterruptedException exc) {
-				MultiStatus status = actionsStatus.get();
-				status.merge(
-						new Status(ERROR, N4JS_PLUGIN_ID, ERROR, "Error while executing maintenance actions.", exc));
+
+			} catch (final InterruptedException | OperationCanceledException exc) {
+				// canceled by user
+			} catch (final Exception exc) {
+				String statusMsg = "Error while performing maintenance actions: " + userChoice + ".";
+				Throwable causingExc = exc.getCause() == null ? exc : exc.getCause();
+				multistatus.merge(statusHelper.createError(statusMsg, causingExc));
+
 			} finally {
-				MultiStatus status = actionsStatus.get();
-				if (!status.isOK()) {
-					N4JSActivator.getInstance().getLog().log(status);
-					getDisplay().asyncExec(() -> openError(
-							UIUtils.getShell(),
-							"external libraries maintenance Failed",
-							"Error while performing external libraries maintenance actions.\nPlease check your Error Log view for the detailed log about the failure."));
+
+				if (!multistatus.isOK()) {
+					N4JSActivator.getInstance().getLog().log(multistatus);
+					getDisplay().asyncExec(() -> {
+						String title = "Maintenance Action Failed";
+						String descr = StatusUtils.getErrorMessage(multistatus, true);
+						ErrorDialog.openError(shell, title, descr, multistatus);
+					});
 				}
 			}
 

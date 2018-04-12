@@ -20,6 +20,7 @@ import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -29,6 +30,7 @@ import com.google.common.base.Predicates;
  * instructed to discover missing dependencies and to install them before compilation, which is done with
  * {@code --installMissingDependencies} flag.
  */
+@Ignore("GH-715")
 public class InstallFromManifestCompileRunN4jscExternalImportsTest extends BaseN4jscExternalTest {
 	File workspace;
 
@@ -56,12 +58,42 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends BaseN
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
+				"--runWith", "nodejs",
+				"--run", fileToRun,
+				// "--verbose",
+				// "--debug",
+				"--projectlocations", wsRoot,
+				"--buildType", BuildType.allprojects.toString()
+		};
+		final String out = runAndCaptureOutput(args);
+		N4CliHelper.assertExpectedOutput(
+				"P1\n" +
+						"react is not undefined true\n" +
+						"react-dom is not undefined true\n" +
+						"imports from libs are different true\n" +
+						"P2\n" +
+						"React is not undefined true",
+				out);
+	}
+
+	/**
+	 * Similar to the {@link #testCompileAndRunWithExternalDependencies()} but instead of using
+	 * {@link BuildType#allprojects} with common root, it is using {@link BuildType#projects} with concrete list of
+	 * projects.
+	 */
+	@Test
+	public void testCompileAndRunWithExternalDependencies2() throws IOException, ExitCodeException {
+		final String wsRoot = workspace.getAbsolutePath().toString();
+		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
+
+		final String[] args = {
+				"--systemLoader", COMMON_JS.getId(),
+				"--installMissingDependencies",
 				"-rw", "nodejs",
 				"-r", fileToRun,
 				// "--verbose",
 				// "--debug",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(

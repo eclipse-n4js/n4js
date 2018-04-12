@@ -1170,6 +1170,12 @@ abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRel
 	op boolean isStatic() {
 		return declaredStatic;
 	}
+	/**
+	 * Returns true if this member is a const field.
+	 */
+	op boolean isConst() {
+		return false;
+	}
 
 	/**
 	 * Convenience method returns true, if containing type is either a dynamic or static polyfill and therefore

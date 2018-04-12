@@ -27,7 +27,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
-import org.eclipse.n4js.external.NpmManager;
+import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.utils.Cancelable;
 
@@ -43,13 +44,16 @@ public class ExternalLibrariesReloadHelper {
 	private static final Logger LOGGER = Logger.getLogger(ExternalLibrariesReloadHelper.class);
 
 	@Inject
-	private NpmManager npmManager;
+	private LibraryManager npmManager;
 
 	@Inject
 	private ExternalProjectsCollector collector;
 
 	@Inject
-	private ExternalLibraryBuilderHelper builderHelper;
+	private ExternalProjectProvider projectProvider;
+
+	@Inject
+	private ExternalLibraryBuilder builderHelper;
 
 	@Inject
 	private RebuildWorkspaceProjectsScheduler scheduler;
@@ -95,7 +99,7 @@ public class ExternalLibrariesReloadHelper {
 
 		// Refresh the type definitions for the npm packages if required.
 		if (refreshNpmDefinitions) {
-			final IStatus refreshStatus = npmManager.refreshInstalledNpmPackages(subMonitor.newChild(1));
+			final IStatus refreshStatus = npmManager.reloadAllExternalProjects(subMonitor.newChild(1));
 			if (!refreshStatus.isOK()) {
 				throw new InvocationTargetException(new CoreException(refreshStatus));
 			}
@@ -109,12 +113,11 @@ public class ExternalLibrariesReloadHelper {
 				.toSet();
 
 		// And build all those externals that has no corresponding workspace project.
-		final Iterable<IProject> toBuild = from(collector.collectExternalProjects())
-				.filter(p -> !workspaceProjectNames.contains(p.getName()))
-				.filter(IProject.class);
+		final Collection<N4JSExternalProject> toBuild = from(projectProvider.getProjects())
+				.filter(p -> !workspaceProjectNames.contains(p.getName())).toList();
 
-		final Iterable<IProject> workspaceProjectsToRebuild = collector
-				.collectProjectsWithDirectExternalDependencies(toBuild);
+		final Collection<IProject> workspaceProjectsToRebuild = collector
+				.getWSProjectsDependendingOn(toBuild);
 
 		builderHelper.build(toBuild, subMonitor.newChild(1));
 

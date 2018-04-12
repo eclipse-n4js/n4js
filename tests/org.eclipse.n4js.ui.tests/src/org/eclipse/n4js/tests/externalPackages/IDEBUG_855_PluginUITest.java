@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import org.eclipse.core.resources.IFile;
@@ -26,10 +25,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.EMFBasedPersister;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
@@ -65,7 +64,7 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 	private ContributingResourceDescriptionPersister persister;
 
 	@Inject
-	private ExternalLibrariesReloadHelper reloadHelper;
+	private LibraryManager npmManager;
 
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
@@ -103,7 +102,7 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 	 * See description at class declaration.
 	 */
 	@Test
-	public void testAllIndexElementsCanBeAddedToAResource() throws InvocationTargetException, CoreException {
+	public void testAllIndexElementsCanBeAddedToAResource() throws CoreException {
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 		assertTrue(PROJECT + " project is not accessible.", project.isAccessible());
 
@@ -124,7 +123,7 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 		assertMarkers("Expected exactly zero errors in client module.", clientModule, 0);
 
 		resource.getContents().clear();
-		reloadHelper.reloadLibraries(true, new NullProgressMonitor());
+		npmManager.reloadAllExternalProjects(new NullProgressMonitor());
 
 		final int builderStateAfterReloadSize = Iterables.size(builderState.getAllResourceDescriptions());
 		persister.saveToResource(resource, builderState.getAllResourceDescriptions());

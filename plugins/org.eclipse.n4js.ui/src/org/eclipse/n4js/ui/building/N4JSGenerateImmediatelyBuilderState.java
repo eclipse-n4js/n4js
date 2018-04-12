@@ -20,6 +20,8 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,11 +33,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.NoopExternalLibraryWorkspace;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
@@ -129,6 +132,8 @@ import com.google.inject.Injector;
  * "invalidated" the serialized {@link TModule} information for module B we will consider class {@code B} as a changed
  * one and based on the above described workflow we will rebuild module B and queue module C.
  *
+ * <p>
+ * This class gets injected by {@link N4JSClusteringBuilderConfiguration}.
  */
 @SuppressWarnings("restriction")
 public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderState {
@@ -181,14 +186,13 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	protected Collection<Delta> doUpdate(BuildData buildData, ResourceDescriptionsData newData,
 			IProgressMonitor monitor) {
 
-		Measurement mes = dcBuild.getMeasurement("build " + Instant.now());
-
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() >>>");
 		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
 
 		IProject project = getProject(buildData);
-		try {
+		try (ClosableMeasurement m = dcBuild.getClosableMeasurement("build " + Instant.now());) {
+
 			BuildType buildType = N4JSBuildTypeTracker.getBuildType(project);
 			IBuildParticipantInstruction instruction;
 			if (buildType == null) {
@@ -207,7 +211,6 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		builderStateLogger.log("Modified deltas: " + modifiedDeltas);
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");
 
-		mes.end();
 		return modifiedDeltas;
 	}
 
@@ -234,43 +237,30 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
-		Measurement mes = dcValidations.getMeasurement("validation");
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-		super.updateMarkers(delta, resourceSet, subMonitor.split(1));
+		try (ClosableMeasurement m = dcValidations.getClosableMeasurement("validation");) {
+			super.updateMarkers(delta, resourceSet, monitor);
+		}
 
 		if (resourceSet != null) { // resourceSet is null during clean build
-			mes = dcTranspilation.getMeasurement("transpilation");
+
 			IBuildParticipantInstruction instruction = (IBuildParticipantInstruction) EcoreUtil.getAdapter(
 					resourceSet.eAdapters(), IBuildParticipantInstruction.class);
 			if (instruction == null) {
 				throw new IllegalStateException();
 			}
-			try {
+			try (ClosableMeasurement m = dcTranspilation.getClosableMeasurement("transpilation");) {
 				instruction.process(delta, resourceSet, subMonitor.split(1));
+
 			} catch (CoreException e) {
 				handleCoreException(e);
 			}
 		}
-		mes.end();
 	}
 
 	@Override
 	protected void clearResourceSet(final ResourceSet resourceSet) {
 		N4JSResourceSetCleanerUtils.clearResourceSet(resourceSet);
-	}
-
-	// TODO IDE-2493 multiple languages topic
-	// this duplicates IN4JSCore logic, especially
-	// IN4JSCore#findAllProjects() with filtering by name
-	private IProject getProject(BuildData buildData) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(buildData.getProjectName());
-		if (null == project || !project.isAccessible()) {
-			final IProject externalProject = getExternalLibraryWorkspace().getProject(buildData.getProjectName());
-			if (null != externalProject && externalProject.exists()) {
-				project = externalProject;
-			}
-		}
-		return project;
 	}
 
 	private N4JSBuilderParticipant findJSBuilderParticipant() {
@@ -338,7 +328,6 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		affectedURIs.removeAll(allRemainingURIs);
 
 		for (URI currAffURI : affectedURIs) {
-			final IResourceDescription resDesc = this.getResourceDescription(currAffURI);
 			if (!N4MF_MANIFEST.equals(currAffURI.lastSegment())) {
 
 				/*-
@@ -377,34 +366,39 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 				 * code, we make sure that the cached TModule of C (in the user data of C's resource description) won't be
 				 * used while processing B during proxy resolution.
 				 */
-				newState.register(new DefaultResourceDescriptionDelta(resDesc,
-						new ResourceDescriptionWithoutModuleUserData(resDesc)));
+				IResourceDescription resDesc = this.getResourceDescription(currAffURI);
+				ResourceDescriptionWithoutModuleUserData rdwmud = new ResourceDescriptionWithoutModuleUserData(resDesc);
+				newState.register(new DefaultResourceDescriptionDelta(resDesc, rdwmud));
 			}
 		}
 	}
 
 	// TODO IDE-2493 multiple languages topic
-	// Instead of asking concrete injector we should have
-	// language independent IN4JSCore instance injected
-	private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
+	// we are in the context of shared xtext injector
+	// if we just inject IN4JSCore we get different @Singleton
+	// instance then the one obtained from N4Injector, which
+	// in turn gives us different state of workspace
 
-		final Injector injector = getN4JSInjector();
-		if (injector == null)
-			return new NoopExternalLibraryWorkspace();
+	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */
+	static private IProject getProject(BuildData buildData) {
+		String projectName = buildData.getProjectName();
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot root = workspace.getRoot();
+		IProject project = root.getProject(projectName); // creates a project instance if not existing
 
+		if (null == project || !project.isAccessible()) {
+			final IProject externalProject = getExternalLibraryWorkspace().getProject(projectName);
+			if (null != externalProject && externalProject.exists()) {
+				project = externalProject;
+			}
+		}
+
+		return project;
+	}
+
+	/** delegate to N4JS injector stored in activator to get the same @Singletons */
+	static private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
+		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
 		return injector.getInstance(ExternalLibraryWorkspace.class);
 	}
-
-	private Injector n4jsInjector = null;
-
-	private Injector getN4JSInjector() {
-		if (n4jsInjector != null) {
-
-			final N4JSActivator n4jsActivator = N4JSActivator.getInstance();
-			if (n4jsActivator != null)
-				n4jsInjector = n4jsActivator.getInjector(ORG_ECLIPSE_N4JS_N4JS);
-		}
-		return n4jsInjector;
-	}
-
 }

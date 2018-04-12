@@ -1,8 +1,14 @@
 {
   "name": "n4js-node-mangelhaft",
-  "author": "NumberFour AG <npm@numberfour.eu>",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
   "license": "EPL-1.0",
-  "repository": "https://github.com/NumberFour/n4js-libs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js-libs"
+  },
   "description": "N4JS node.js mangelhaft runtime environment.",
   "keywords": [
     "n4js",

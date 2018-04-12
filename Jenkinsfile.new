@@ -15,6 +15,7 @@ pipeline {
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
             args '-v n4js-m2-repository:/usr/share/maven/ref/repository/'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
+            label 'mesos-xlarge'
         }
     }
     options {
@@ -29,6 +30,15 @@ pipeline {
         timeout(time: 5, unit: 'HOURS')
         timestamps()
     }
+
+    environment {
+        MAVEN_OPTS = '-XX:+UseConcMarkSweepGC '          +
+                     '-XX:+UnlockExperimentalVMOptions ' +
+                     '-XX:+UseCGroupMemoryLimitForHeap ' +
+                     '-XX:MaxRAMFraction=2 '             +
+                     '-XshowSettings:vm '
+    }
+
     triggers {
         pollSCM('H/5 * * * *') // every 5 minutes
         cron   ('H   1 * * *') // Nightly build every day a 1am
@@ -62,7 +72,7 @@ pipeline {
                             'execute-plugin-ui-tests'
                         ].join(',')
 
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        sh "${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }
@@ -90,7 +100,7 @@ pipeline {
                             'execute-accesscontrol-tests '
                         ].join(',')
 
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        sh "${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }

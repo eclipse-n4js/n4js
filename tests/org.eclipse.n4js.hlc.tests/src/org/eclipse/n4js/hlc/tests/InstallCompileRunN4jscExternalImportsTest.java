@@ -14,8 +14,6 @@ import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -44,14 +42,6 @@ public class InstallCompileRunN4jscExternalImportsTest extends BaseN4jscExternal
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		Map<String, String> deps = new HashMap<>();
-		deps.put("react", "@16.2.0");
-		deps.put("react-dom", "@16.2.0");
-		return deps;
-	}
-
 	/**
 	 * Test for checking the npm support in the headless case by downloading third party package, importing it and
 	 * running it with Common JS.
@@ -63,13 +53,13 @@ public class InstallCompileRunN4jscExternalImportsTest extends BaseN4jscExternal
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(

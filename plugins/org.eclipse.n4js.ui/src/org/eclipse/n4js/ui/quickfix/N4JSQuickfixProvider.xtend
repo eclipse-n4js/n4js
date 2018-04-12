@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.dialogs.ProgressMonitorDialog
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.binaries.IllegalBinaryStateException
-import org.eclipse.n4js.external.NpmManager
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ModifiableElement
@@ -71,12 +70,15 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
-import static org.eclipse.jface.dialogs.MessageDialog.openError
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
 import org.eclipse.n4js.n4mf.SimpleProjectDependency
+import org.eclipse.n4js.utils.StatusHelper
+import org.eclipse.jface.dialogs.ErrorDialog
+import org.eclipse.n4js.utils.StatusUtils
+import org.eclipse.n4js.external.LibraryManager
 
 /**
  * N4JS quick fixes.
@@ -90,6 +92,9 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	extension ImportUtil
 
 	@Inject
+	extension StatusHelper
+
+	@Inject
 	extension QuickfixUtil.IssueUserDataKeysExtension
 
 	@Inject
@@ -101,13 +106,16 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Inject
 	protected JavaScriptVariantHelper jsVariantHelper;
 
+	@Inject
+	private LibraryManager libraryManager;
+
 	/** Retrieve annotation constants from AnnotationDefinition */
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	static final String FINAL_ANNOTATION = AnnotationDefinition.FINAL.name;
 
 	@Inject
-	NpmManager npmManager;
+	LibraryManager npmManager;
 
 
 	// EXAMPLE FOR STYLE #1 (lambda expression)
@@ -660,16 +668,14 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			var boolean multipleInvocations;
 
 			override Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				multipleInvocations = false;
-				invokeNpmManager(element, !multipleInvocations);
+				invokeNpmManager(element);
 			}
 			override Collection<? extends IChange> computeOneOfMultipleChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				multipleInvocations = true;
-				invokeNpmManager(element, !multipleInvocations);
+				invokeNpmManager(element);
 			}
 			override void computeFinalChanges() throws Exception {
 				if (multipleInvocations) {
-					new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
+					new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
 						try {
 							ResourcesPlugin.getWorkspace().build(CLEAN_BUILD, monitor);
 						} catch (IllegalBinaryStateException e) {
@@ -679,7 +685,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				}
 			}
 
-			def Collection<? extends IChange> invokeNpmManager(EObject element, boolean triggerCleanbuild) throws Exception {
+			def Collection<? extends IChange> invokeNpmManager(EObject element) throws Exception {
 				val dependency = element as SimpleProjectDependency;
 				val packageName = dependency.project.projectId;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
@@ -688,31 +694,32 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 						"";
 					};
 
-				val errorStatusRef = new AtomicReference;
 				val illegalBinaryExcRef = new AtomicReference
+				val multiStatus = createMultiStatus("Installing npm '" + packageName + "'.");
 
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<String, String> package = Collections.singletonMap(packageName, packageVersion);
-						val status = npmManager.installDependencies(package, monitor, triggerCleanbuild);
-						if (!status.OK) {
-							errorStatusRef.set(status);
-						}
+						multiStatus.merge(npmManager.installNPMs(package, monitor));
+
 					} catch (IllegalBinaryStateException e) {
 						illegalBinaryExcRef.set(e);
+
+					} catch (Exception e) {
+						val msg = "Error while uninstalling npm dependency: '" + packageName + "'.";
+						multiStatus.merge(createError(msg, e));
 					}
 				]);
 
 				if (null !== illegalBinaryExcRef.get) {
 					new IllegalBinaryStateDialog(illegalBinaryExcRef.get).open;
-				} else if (null !== errorStatusRef.get) {
-					N4JSActivator.getInstance().getLog().log(errorStatusRef.get());
+
+				} else if (!multiStatus.isOK()) {
+					N4JSActivator.getInstance().getLog().log(multiStatus);
 					UIUtils.display.asyncExec([
-						openError(
-							UIUtils.shell,
-							"npm Install Failed",
-							"Error while installing '" + packageName + "' npm package." +
-							"\nPlease check your Error Log view for the detailed npm log about the failure.");
+						val title = "NPM Install Failed";
+						val descr = StatusUtils.getErrorMessage(multiStatus, true);
+						ErrorDialog.openError(UIUtils.shell, title, descr, multiStatus);
 					]);
 				}
 
@@ -722,4 +729,30 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 		acceptor.accept(issue, 'Install npm package to workspace', 'Download and install missing dependency from npm.', null, modification);
 	}
+
+
+	@Fix(IssueCodes.NODE_MODULES_OUT_OF_SYNC)
+	def synchronizeIndexToNodeModules(Issue issue, IssueResolutionAcceptor acceptor) {
+		val title = "Synchronize N4JS Index to node_modules folder";
+		val descr = "This quickfix will scan and compare the node_modules folder and the N4JS Index to adjust the index to the node_modules folder.";
+		acceptor.accept(issue, title, descr, null, new N4Modification() {
+			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
+					try {
+						libraryManager.synchronizeNpms(monitor);
+					} catch (IllegalBinaryStateException e) {
+					} catch (CoreException e) {
+					}
+				]);
+				return #[];
+			}
+			override supportsMultiApply() {
+				return false;
+			}
+			override isApplicableTo(IMarker marker) {
+				return true;
+			}
+		});
+	}
+
 }

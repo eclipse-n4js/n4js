@@ -13,44 +13,73 @@ package org.eclipse.n4js.external;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.utils.resources.ExternalProject;
+
+import com.google.inject.Singleton;
 
 /**
  * NOOP implementation of the external library workspace.
  */
-public class NoopExternalLibraryWorkspace extends ExternalLibraryWorkspace {
+@Singleton
+public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
-	public void registerProjects(final NpmProjectAdaptionResult result, final IProgressMonitor monitor,
-			boolean triggerCleanbuild) {
+	public RegisterResult registerProjects(IProgressMonitor monitor, Set<URI> toBeUpdated) {
+		return new RegisterResult();
+	}
+
+	@Override
+	public RegisterResult deregisterProjects(IProgressMonitor monitor, Set<URI> toBeDeleted) {
+		return new RegisterResult();
+	}
+
+	@Override
+	public RegisterResult deregisterAllProjects(IProgressMonitor monitor) {
+		return new RegisterResult();
+	}
+
+	@Override
+	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<URI> toBeScheduled) {
 		// NOOP
 	}
 
 	@Override
-	public Iterable<IProject> getProjects() {
+	public Collection<N4JSExternalProject> getProjects() {
 		return emptyList();
 	}
 
 	@Override
-	public Iterable<IProject> getProjects(final java.net.URI rootLocation) {
+	public Collection<N4JSExternalProject> getProjectsIn(final java.net.URI rootLocation) {
 		return emptyList();
 	}
 
 	@Override
-	public Iterable<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
+	public Collection<N4JSExternalProject> getProjectsIn(final Collection<java.net.URI> rootLocations) {
 		return emptyList();
 	}
 
 	@Override
-	public IProject getProject(final String projectName) {
+	public Collection<ProjectDescription> getProjectsDescriptions(java.net.URI rootLocation) {
+		return emptyList();
+	}
+
+	@Override
+	public ExternalProject getProject(final String projectName) {
+		return null;
+	}
+
+	@Override
+	public ExternalProject getProject(URI projectLocation) {
 		return null;
 	}
 

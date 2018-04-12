@@ -299,12 +299,12 @@ public class ProjectCompareHelper {
 						IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(apiImplModule.eResource()
 								.getResourceSet());
 						IResourceDescription resourceDescription = xtextIndex.getResourceDescription(apiURI);
-						if (resourceDescription == null)
-							return null;
-						apiModule = n4jsCore.loadModuleFromIndex(apiImplModule.eResource().getResourceSet(),
-								resourceDescription, false);
-						if (apiModule != null)
-							break labelA;
+						if (resourceDescription != null) {
+							apiModule = n4jsCore.loadModuleFromIndex(apiImplModule.eResource().getResourceSet(),
+									resourceDescription, false);
+							if (apiModule != null)
+								break labelA;
+						}
 					}
 				}
 
