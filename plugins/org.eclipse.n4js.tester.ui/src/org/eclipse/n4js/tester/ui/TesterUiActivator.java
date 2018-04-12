@@ -60,6 +60,13 @@ public class TesterUiActivator extends AbstractUIPlugin {
 
 	public static final String ICON_HISTORY = "history_list.gif";
 
+	public static final String ICON_TH_VERTICAL = "th_vertical.gif";
+	public static final String ICON_TH_HORIZONTAL = "th_horizontal.gif";
+	public static final String ICON_TH_AUTOMATIC = "th_automatic.gif";
+
+	public static final String ICON_SHOW_FAILURES_ONLY = "failures.gif";
+	public static final String ICON_SHOW_SKIPPED_ONLY = "testignored.gif";
+
 	// The shared instance
 	private static TesterUiActivator plugin;
 
@@ -97,6 +104,13 @@ public class TesterUiActivator extends AbstractUIPlugin {
 		reg.put(ICON_SUITE_ERROR, imageDescriptor(ICON_SUITE_ERROR));
 		reg.put(ICON_SUITE_RUNNING, imageDescriptor(ICON_SUITE_RUNNING));
 		reg.put(ICON_SUITE, imageDescriptor(ICON_SUITE));
+		reg.put(ICON_LOCK, imageDescriptor(ICON_LOCK));
+		reg.put(ICON_TH_AUTOMATIC, imageDescriptor(ICON_TH_AUTOMATIC));
+		reg.put(ICON_TH_HORIZONTAL, imageDescriptor(ICON_TH_HORIZONTAL));
+		reg.put(ICON_TH_VERTICAL, imageDescriptor(ICON_TH_VERTICAL));
+		reg.put(ICON_SHOW_FAILURES_ONLY, imageDescriptor(ICON_SHOW_FAILURES_ONLY));
+		reg.put(ICON_SHOW_SKIPPED_ONLY, imageDescriptor(ICON_SHOW_SKIPPED_ONLY));
+		reg.put(ICON_LOCK, imageDescriptor(ICON_LOCK));
 		reg.put(ICON_LOCK, imageDescriptor(ICON_LOCK));
 		reg.put(ICON_LAUNCHCONFIG, imageDescriptor(ICON_LAUNCHCONFIG));
 		reg.put(ICON_RELAUNCH, imageDescriptor(ICON_RELAUNCH));
