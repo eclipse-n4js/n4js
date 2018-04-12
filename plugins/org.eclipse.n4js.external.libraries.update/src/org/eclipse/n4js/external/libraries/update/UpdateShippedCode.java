@@ -131,6 +131,7 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		final File[] n4jsLibsSubfolders = n4jsLibsRoot.listFiles(file -> file.isDirectory());
 		copyN4jsLibsToShippedCodeFolder(n4jsLibsSubfolders, actualTargetPath);
 		// step 4: run "npm install" in project "n4js-node"
+		// TODO let HLC resolve missing dependencies
 		println("==== STEP 4/4: running \"" + N4JSGlobals.NPM_INSTALL + "\" in runtime project \""
 				+ N4JS_NODE_PROJECT_NAME + "\"");
 		final File n4jsNodeFolder = actualTargetPath.resolve(ExternalLibrariesActivator.RUNTIME_CATEGORY)

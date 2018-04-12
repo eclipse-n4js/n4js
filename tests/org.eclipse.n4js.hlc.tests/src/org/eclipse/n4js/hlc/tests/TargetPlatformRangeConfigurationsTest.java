@@ -10,12 +10,10 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static java.util.Collections.singletonMap;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -27,7 +25,7 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express' where target platform file specifies version range.
  */
-public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest {
+public class TargetPlatformRangeConfigurationsTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -42,11 +40,6 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		return singletonMap("express", "@\">=4.0.0 <4.16.0\"");
-	}
-
 	/**
 	 * Test for compiling project with external dependency specified within version range.
 	 */
@@ -58,7 +51,6 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose",
