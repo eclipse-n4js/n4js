@@ -28,14 +28,14 @@ export public class TestExecutorAsyncOrderTest extends BaseClass {
         this.collected.push("before");
     }
 
-    @Test
+    @Test @Fixme("GH-731")
     test_before(): void {
         Assert.deepEqual(this.collected, ["baseBeforeAll", "beforeAll" , "baseBefore", "before"], "should follow order");
     }
 }
     
 export public class TestExecutorAsyncOrderTest_Sub extends TestExecutorAsyncOrderTest {
-    @Test
+    @Test @Fixme("GH-731")
     test_before_sub(): void {
         super.test_before();
     }
