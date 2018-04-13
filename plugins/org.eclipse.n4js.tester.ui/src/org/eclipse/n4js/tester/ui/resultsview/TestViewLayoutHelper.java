@@ -18,8 +18,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
 
+/**
+ * Helper class for {@link TestResultsView} providing actions and managing state of view layout (orientation).
+ *
+ * Restoring and saving the state from the memento and triggering state changes is handled in the
+ * {@link TestResultsView}.
+ */
 class TestViewLayoutHelper {
 
+	/**
+	 * Actions for view layout (orientation) modeled as radio buttons.
+	 */
 	private class ToggleOrientationAction extends Action {
 		private final int actionOrientation;
 
@@ -46,7 +55,10 @@ class TestViewLayoutHelper {
 	static final String[] ICON_IDS = { TesterUiActivator.ICON_TH_VERTICAL, TesterUiActivator.ICON_TH_HORIZONTAL,
 			TesterUiActivator.ICON_TH_AUTOMATIC };
 
+	/** The actions created in the constructor. */
 	private final ToggleOrientationAction[] actions;
+
+	/** The submenu created in the constructor and shown in the view's toolbar. */
 	final IMenuManager orientationMenu;
 
 	/**
@@ -56,9 +68,9 @@ class TestViewLayoutHelper {
 
 	/**
 	 * The current orientation; either <code>VIEW_ORIENTATION_HORIZONTAL</code> <code>VIEW_ORIENTATION_VERTICAL</code>,
-	 * or <code>VIEW_ORIENTATION_AUTOMATIC</code>.
+	 * or <code>VIEW_ORIENTATION_AUTOMATIC</code>. Set via {@link #setOrientation(int)}.
 	 */
-	int orientation = TestViewLayoutHelper.VIEW_ORIENTATION_AUTOMATIC;
+	private int orientation = TestViewLayoutHelper.VIEW_ORIENTATION_AUTOMATIC;
 
 	TestViewLayoutHelper(SashForm sash) {
 		this.sash = sash;
@@ -70,17 +82,29 @@ class TestViewLayoutHelper {
 		}
 	}
 
+	/**
+	 * Returns orientation state, that is either {@link #VIEW_ORIENTATION_AUTOMATIC},
+	 * {@link #VIEW_ORIENTATION_HORIZONTAL}, or {@link #VIEW_ORIENTATION_VERTICAL}.
+	 */
+	int getOrientation() {
+		return this.orientation;
+	}
+
+	/**
+	 * Sets the orientation and updates the sash and actions accordingly.
+	 */
 	void setOrientation(int orientation) {
 		this.orientation = orientation;
 		if ((sash == null) || sash.isDisposed())
 			return;
 		updateSashLayout();
 		udpateActions();
-		// GridLayout layout = (GridLayout) fCounterComposite.getLayout();
-		// setCounterColumns(layout);
 		sash.getParent().layout();
 	}
 
+	/**
+	 * Updates the sash layout to match the layout state.
+	 */
 	void updateSashLayout() {
 		int sashLayout = SWT.VERTICAL;
 		switch (orientation) {
@@ -98,6 +122,9 @@ class TestViewLayoutHelper {
 		}
 	}
 
+	/**
+	 * Updates actions to reflect proper state.
+	 */
 	public void udpateActions() {
 		for (int i = 0; i < actions.length; ++i)
 			actions[i].setChecked(orientation == actions[i].actionOrientation);

@@ -137,16 +137,23 @@ import com.google.inject.Inject;
 /**
  * An Eclipse {@link IViewPart view} showing test results. This UI is independent of the particular tester being used
  * (node.js, Chrome, etc.). Implementation was guided by org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart
+ *
+ * State of layout and filters is stored in a memento.
  */
 @SuppressWarnings("restriction")
 public class TestResultsView extends ViewPart {
-
-	private static final String TESTSUITE_NAME_SEGMENT_SEP = "/\\ ,";
 
 	/**
 	 * ID of this view as defined in the plugin.xml
 	 */
 	public static final String ID = "org.eclipse.n4js.tester.ui.TestResultsView";
+
+	/**
+	 * Characters used to separate segments in a test suite name. Typically the test suites are the fully qualified
+	 * module names in which we find the tests, so file separators are used. But also spaces and "," are recognized as
+	 * separates.
+	 */
+	private static final String TESTSUITE_NAME_SEGMENT_SEP = "/\\ ,";
 
 	/** Memento tag */
 	private static final String TAG_TEST_HOVER = "showTestHover";
@@ -208,17 +215,16 @@ public class TestResultsView extends ViewPart {
 	private Action doubleClickAction;
 	private Action singleClickAction;
 	private Action actionOpenLaunchConfig;
-
 	private Action actionShowTestHover;
 	private Action actionOmitCommonPrefix;
 
 	/**
-	 * Actions and state of sash layout.
+	 * Actions and state of sash layout, extracted to helper class.
 	 */
 	private TestViewLayoutHelper viewLayoutHelper;
 
 	/**
-	 * Actions and state of test filter.
+	 * Actions and state of test filter, extracted to helper class.
 	 */
 	private TestViewFilterHelper viewFilterHelper;
 
@@ -227,6 +233,9 @@ public class TestResultsView extends ViewPart {
 	 */
 	private SashForm sashForm;
 
+	/**
+	 * Memento loaded before the view has been created.
+	 */
 	private IMemento storedMemento;
 
 	/**
@@ -239,6 +248,10 @@ public class TestResultsView extends ViewPart {
 	 */
 	private ResultNode lastStartedNode;
 
+	/**
+	 * The tool tip shown when hovering over a test case with the source code of the test. This is only shown if action
+	 * "show test hover" is checked.
+	 */
 	private class CodeSnippetToolTip extends ToolTip {
 
 		private StyledTextDescriptor lastDescriptor;
@@ -303,10 +316,14 @@ public class TestResultsView extends ViewPart {
 			return ((ResultNode) parent).hasChildren();
 		}
 
+		/**
+		 * Returns children of a node, using current filter settings (see {@link TestViewFilterHelper}) to omit nodes
+		 * that are not to be shown.
+		 */
 		@Override
 		public Object[] getChildren(Object parent) {
 			ResultNode[] children = ((ResultNode) parent).getChildren();
-			if (viewFilterHelper.filter != TestViewFilterHelper.SHOW_ALL) {
+			if (viewFilterHelper.getFilter() != TestViewFilterHelper.SHOW_ALL) {
 				List<ResultNode> filteredChildren = new ArrayList<>(children.length);
 				for (ResultNode node : children) {
 					TestStatus result = node.getStatus();
@@ -315,7 +332,7 @@ public class TestResultsView extends ViewPart {
 					}
 					if (viewFilterHelper.match(result)) {
 						filteredChildren.add(node);
-					} else if (viewFilterHelper.filter == TestViewFilterHelper.SHOW_SKIPPED) {
+					} else if (viewFilterHelper.getFilter() == TestViewFilterHelper.SHOW_SKIPPED) {
 						if (node.getTestSuite() != null) {
 							result = node.getChildrenStatus().containsSkipped();
 							if (viewFilterHelper.match(result)) {
@@ -345,6 +362,10 @@ public class TestResultsView extends ViewPart {
 		}
 	}
 
+	/**
+	 * Provides labels for the test suites and test cases. The names of the test suites may be shortened by removing
+	 * common prefixes to make the view more condensed; this is only done if action "omit common prefix" is checked.
+	 */
 	private class TestTreeViewerLabelProvider extends LabelProvider
 			implements ITableLabelProvider, ITableColorProvider {
 
@@ -476,41 +497,55 @@ public class TestResultsView extends ViewPart {
 		}
 	}
 
-	private String updateCommonPrefix() {
+	/**
+	 * Updates the common prefix which is removed from all test suites to shorten the name. The test suite name is
+	 * interpreted as a path consisting of segments separated by a character contained in #TESTSUITE_NAME_SEGMENT_SEP.
+	 * The name of the test suites may be shortened by omitting a common prefix, which always consists of full segments.
+	 */
+	private void updateCommonPrefix() {
 		commonPrefix = "";
 		for (ResultNode node : currentRoot.getChildren()) {
 			TestSuite suite = node.getTestSuite();
 			if (suite != null) {
 				String name = suite.getName();
-				if (commonPrefix.length() == 0) {
+				if (commonPrefix.length() == 0) { // first test suite
 					int sep = lastTestSuiteNameSegmentSep(name, -1);
 					if (sep > 0 && sep + 1 < name.length()) {
 						commonPrefix = name.substring(0, sep + 1);
-					} else
-						return "";
-				} else {
+					} else { // no segments found.
+						commonPrefix = "";
+						return;
+					}
+				} else { // we already have a prefix from a previous suite
 					final int min = Math.min(commonPrefix.length(), name.length());
 					int i = 0;
-					for (; i < min; i++) {
+					for (; i < min; i++) { // find matching part
 						if (name.charAt(i) != commonPrefix.charAt(i)) {
 							break;
 						}
 					}
-					if (i == 0) {
-						return "";
+					if (i == 0) { // no common part found
+						commonPrefix = "";
+						return;
 					}
-					if (i < min) {
+					if (i < min) { // we found a common part, shorter than the current prefix
 						int sep = lastTestSuiteNameSegmentSep(name, i);
-						if (sep > 0)
+						if (sep > 0) { // it still contains full segments
 							commonPrefix = commonPrefix.substring(0, sep + 1);
+						} else { // no full segments in common prefix, so we do not use a prefix at all
+							commonPrefix = "";
+							return;
+						}
 					}
 				}
 			}
 		}
-		return commonPrefix;
 	}
 
-	static int lastTestSuiteNameSegmentSep(String s, int startAt) {
+	/**
+	 * Helper for {@link #updateCommonPrefix()}, returns last segment separator position.
+	 */
+	private static int lastTestSuiteNameSegmentSep(String s, int startAt) {
 		if (startAt < 0 || startAt >= s.length()) {
 			startAt = s.length() - 1;
 		}
@@ -522,6 +557,9 @@ public class TestResultsView extends ViewPart {
 		return -1;
 	}
 
+	/**
+	 * Removes common prefix from given name and returns the shortened name.
+	 */
 	private String trimCommonPrefix(String name) {
 		if (commonPrefix == null || commonPrefix.length() == 0 || name.length() <= commonPrefix.length()) {
 			return name;
@@ -550,9 +588,9 @@ public class TestResultsView extends ViewPart {
 		int weigths[] = sashForm.getWeights();
 		int ratio = (weigths[0] * 1000) / (weigths[0] + weigths[1]);
 		memento.putInteger(TAG_RATIO, ratio);
-		memento.putInteger(TAG_ORIENTATION, viewLayoutHelper.orientation);
+		memento.putInteger(TAG_ORIENTATION, viewLayoutHelper.getOrientation());
 
-		memento.putInteger(TAG_SHOW_FILTER, viewFilterHelper.filter);
+		memento.putInteger(TAG_SHOW_FILTER, viewFilterHelper.getFilter());
 	}
 
 	private void restoreLayoutState(IMemento memento) {
@@ -1171,7 +1209,7 @@ public class TestResultsView extends ViewPart {
 				updateProgressBar();
 				setFocusNode(node, true);
 			}
-			if (viewFilterHelper.filter != TestViewFilterHelper.SHOW_ALL) {
+			if (viewFilterHelper.getFilter() != TestViewFilterHelper.SHOW_ALL) {
 				testTreeViewer.refresh();
 				showNode(lastStartedNode);
 			}
