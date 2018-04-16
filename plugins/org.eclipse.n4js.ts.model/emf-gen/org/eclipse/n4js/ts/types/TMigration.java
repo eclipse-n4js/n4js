@@ -21,7 +21,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  *
  * <!-- begin-model-doc -->
  * *
- * Represents an N4IDL migration declaration.
+ * Represents an N4IDL migration.
  * <!-- end-model-doc -->
  *
  * <p>

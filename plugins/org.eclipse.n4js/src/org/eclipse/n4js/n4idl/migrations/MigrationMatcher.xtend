@@ -16,7 +16,7 @@ import org.eclipse.n4js.ts.types.TMigration
 import java.util.List
 
 /**
- * A {@link MigrationMatcher} accumulates all matches handed to its {@link #match}
+ * A {@link MigrationMatcher} accumulates all migration candidates handed to its {@link #match}
  * method and keeps track of the best match (and thus distance) matched so far.
  */
 class MigrationMatcher {
@@ -25,7 +25,7 @@ class MigrationMatcher {
 	 * Creates a new empty {@link MigrationMatcher}.
 	 */
 	public static def MigrationMatcher emptyMatcher() {
-		return new MigrationMatcher(null, TypeDistanceComputer.MAX_DISTANCE);
+		return new MigrationMatcher();
 	}
 
 	private double bestDistance
@@ -37,9 +37,8 @@ class MigrationMatcher {
 	 * @param match The first migration match or {@code null} for an empty matcher.
 	 * @param distance The initially best distance (for empty matcher, pass {@link TypeDistanceComputer#MAX_DISTANCE}).
 	 */
-	private new(TMigration match, double distance) {
-		this.bestDistance = distance;
-		this.matches = new HashSet<TMigration>(if (match !== null) { #[match] } else  #[]);
+	private new() {
+		this.bestDistance = TypeDistanceComputer.MAX_DISTANCE;
 	}
 	
 	/**
@@ -48,17 +47,16 @@ class MigrationMatcher {
 	 * Returns an {@link MigrationMatcher} which also considers the given
 	 * match.
 	 */
-	public def MigrationMatcher match(TMigration match, double distance) {
+	public def void match(TMigration match, double distance) {
 		if (this.bestDistance < distance) {
 			// the match is worse than existing matches, do not record it
-			return this;
 		} else if (this.bestDistance == distance) {
 			// we found an equally-good match
 			this.matches.add(match);
-			return this;
 		} else { // this.bestDistance > distance
-			// we found a better match
-			return new MigrationMatcher(match, distance);
+			// we found a better match, replace current matches and bestDistance
+			this.matches = new HashSet(#[match]);
+			this.bestDistance = distance;
 		}
 	}
 	

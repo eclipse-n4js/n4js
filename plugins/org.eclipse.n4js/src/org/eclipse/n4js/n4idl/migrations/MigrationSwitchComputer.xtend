@@ -23,7 +23,8 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 
 /**
  * The MigrationSwitchComputer can be used to compute a {@link SwitchCondition} which 
- * recognizes values of a given compile-time {@link TypeRef} at runtime (within limits).
+ * represents a runtime condition that matches values of a given compile-time {@link TypeRef} 
+ * at runtime (within limits).
  */
 class MigrationSwitchComputer {
 	

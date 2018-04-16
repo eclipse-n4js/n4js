@@ -11,17 +11,21 @@
 package org.eclipse.n4js.transpiler.es.n4idl.tests
 
 import java.util.Map
+import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.FunctionExpression
+import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.transpiler.TranspilerState
+import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
 import org.junit.Test
-import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
-import org.eclipse.n4js.n4JS.IfStatement
+import org.junit.runner.RunWith
 
 /**
  * Transpiler tests which make sure that the generated structure of the {@link N4IDLGlobals#MIGRATIONS_STATIC_FIELD}
@@ -30,6 +34,8 @@ import org.eclipse.n4js.n4JS.IfStatement
  * This includes the number of generated type switch functions (one per target version) and the number 
  * of if-statements in those type switches (one per registered migration).
  */
+@RunWith(XtextRunner)
+@InjectWith(N4JSInjectorProviderWithMockProject)
 class MigrationTransformationTranspilerTest extends AbstractN4IDLTranspilerTest {
 	@Test
 	def void testSimpleMigrationTransformation() {

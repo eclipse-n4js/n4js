@@ -59,8 +59,8 @@ public class MigrationLocator {
 		}
 
 		final List<TypeRef> argumentTypeRefs = getTypeRefsFromArguments(arguments);
-
-		return selectMigrationCandidate(argumentTypeRefs, migrationCandidates(argumentTypeRefs), contextMigration);
+		final Iterable<TMigration> allMigrationCandidates = getAllMigrationCandidates(argumentTypeRefs);
+		return selectMigrationCandidate(argumentTypeRefs, allMigrationCandidates, contextMigration);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class MigrationLocator {
 	 * @param argumentTypeRefs
 	 *            The argument type references
 	 */
-	private Iterable<TMigration> migrationCandidates(List<TypeRef> argumentTypeRefs) {
+	private Iterable<TMigration> getAllMigrationCandidates(List<TypeRef> argumentTypeRefs) {
 		return () -> argumentTypeRefs.stream()
 				// obtain all versioned sub-references from the given list of arguments
 				.flatMap(ref -> VersionableUtils.streamVersionedSubReferences(ref))
@@ -122,7 +122,7 @@ public class MigrationLocator {
 		if (arguments.isEmpty()) {
 			return Collections.emptyList();
 		}
-		return migrationCandidates(getTypeRefsFromArguments(arguments));
+		return getAllMigrationCandidates(getTypeRefsFromArguments(arguments));
 	}
 
 	/**
@@ -143,17 +143,18 @@ public class MigrationLocator {
 
 		for (TMigration migration : candidates) {
 			try {
+				// compute migration distance
 				final double distance = typeDistanceComputer.computeDistance(arguments, migration.getSourceTypeRefs());
 
-				// skip un-related migrations
+				// skip unrelated migrations
 				if (distance == TypeDistanceComputer.MAX_DISTANCE) {
 					continue;
 				}
 
-				matcher = matcher.match(migration, distance);
+				matcher.match(migration, distance);
 
 				// early-exit if we already found a perfect match
-				if (matcher.hasPerfectMatch() && matcher.getAllMatches().size() == 0) {
+				if (matcher.hasPerfectMatch() && matcher.getAllMatches().size() == 1) {
 					// There can always only be one perfect match, since otherwise the migration
 					// declarations will conflict on the validation level.
 					return Collections.singletonList(migration);

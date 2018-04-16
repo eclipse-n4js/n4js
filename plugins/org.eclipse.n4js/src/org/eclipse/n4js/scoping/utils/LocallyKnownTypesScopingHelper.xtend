@@ -112,7 +112,7 @@ class LocallyKnownTypesScopingHelper {
 	}
 	
 	/**
-	 * Returns scope with locally declared types (without import scope); the result is cached.
+	 * Returns scope with locally declared types (without import scope).
 	 */
 	def IScope scopeWithLocallyDeclaredTypes(Script script, EReference reference, IScope parent) {
 		val TModule local = script.module;

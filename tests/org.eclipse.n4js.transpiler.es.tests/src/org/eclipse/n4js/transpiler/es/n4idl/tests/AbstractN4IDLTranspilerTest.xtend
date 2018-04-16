@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.common.util.WrappedException
 import org.eclipse.emf.ecore.resource.ResourceSet
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.n4idl.tests.helper.N4IDLParseHelper
@@ -22,15 +21,10 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLTranspiler
 import org.eclipse.n4js.transpiler.es.tests.AbstractTranspilerTest
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
-import org.junit.runner.RunWith
 
 /**
  * Abstract base class for N4IDL-transpiler tests.
  */
-@RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
 class AbstractN4IDLTranspilerTest extends AbstractTranspilerTest {
 	@Inject private extension N4IDLParseHelper
 	@Inject private N4IDLTranspiler transpiler

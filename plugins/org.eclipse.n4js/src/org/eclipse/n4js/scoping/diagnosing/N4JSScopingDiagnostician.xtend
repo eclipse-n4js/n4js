@@ -11,7 +11,6 @@
 package org.eclipse.n4js.scoping.diagnosing
 
 import com.google.inject.Inject
-import java.util.Optional
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -21,7 +20,6 @@ import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
 import org.eclipse.n4js.n4JS.SuperLiteral
-import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.resource.ErrorAwareLinkingService
 import org.eclipse.xtext.diagnostics.DiagnosticMessage
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -43,9 +41,6 @@ class N4JSScopingDiagnostician {
 	@Inject
 	N4JSScopingInstanceOfPrimitivTypeDiagnosis instanceOfPrimitiveTypeDiagnosis;
 	
-	@Inject
-	N4IDLNoMatchingMigrationCandidateDiagnosis noMatchingMigrationCandidateDiagnosis;
-
 	@Inject
 	ErrorAwareLinkingService linkingService;
 
@@ -80,15 +75,7 @@ class N4JSScopingDiagnostician {
 
 	// Handle {@link IdentifierRef}s
 	private def dispatch DiagnosticMessage diagnose(QualifiedName name, IdentifierRef context, EReference reference) {
-		return handleNoMigrationCandidate(name, context)
-			.orElseGet[handleInstanceOfPrimitiveType(name, context, reference)]
-	}
-	
-	private def Optional<DiagnosticMessage> handleNoMigrationCandidate(QualifiedName name, IdentifierRef context) {
-		if (MigrationUtils.isInMigration(context) && MigrationUtils.isMigrateCallIdentifier(context)) {
-			return Optional.of(noMatchingMigrationCandidateDiagnosis.diagnose(name, context));
-		}
-		return Optional.empty();
+		return handleInstanceOfPrimitiveType(name, context, reference);
 	}
 	
 	private def DiagnosticMessage handleInstanceOfPrimitiveType(QualifiedName name, IdentifierRef context, EReference reference) {

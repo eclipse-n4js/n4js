@@ -10,16 +10,16 @@
  */
 package org.eclipse.n4js.tests.typesbuilder
 
+import com.google.inject.Inject
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.tests.typesbuilder.extensions.TypesStructureAssertionExtension
 import org.eclipse.n4js.tests.typesbuilder.utils.AbstractTypesBuilderTest
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TModule
-import org.junit.Test
-import org.eclipse.n4js.tests.typesbuilder.extensions.TypesStructureAssertionExtension
-import com.google.inject.Inject
 import org.junit.Assert
+import org.junit.Test
 
 /**
  * This test assures, that {@link TMigration} instances are populated 
@@ -80,7 +80,7 @@ class MigrationsTypesBuilderTest extends AbstractTypesBuilderTest {
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size
 		
-		executeTest("Migrations.n4js", expectedExportedTypeToNamePairsOnIndex, 
+		executeTest("Migrations.n4idl", expectedExportedTypeToNamePairsOnIndex, 
 			expectedTypesCount, expectedExportedElementsCount);
 	}
 	
@@ -93,8 +93,8 @@ class MigrationsTypesBuilderTest extends AbstractTypesBuilderTest {
 		Assert.assertFalse("Non-migrations do not translate to TMigration instances", tFunction instanceof TMigration);
 		
 		// the following assertion check for (in that order): sourceVersion, targetVerison, sourceTypeRef.size, targetTypeRef.size
-		assertTMigration(phase, resource, "noInputNoOutput", 0, 0, 0, 0, false);
-		assertTMigration(phase, resource, "singleInputNoOutput", 1, 0, 1, 0, false);
+		assertTMigration(phase, resource, "noInputNoOutput", 0, 0, 0, 1, false); // implicit target type is void
+		assertTMigration(phase, resource, "singleInputNoOutput", 1, 0, 1, 1, false); // implicit target type is void
 		assertTMigration(phase, resource, "noInputSingleOutput", 0, 2, 0, 1, false);
 		assertTMigration(phase, resource, "singleInputSingleOutput", 1, 2, 1, 1, false);
 		assertTMigration(phase, resource, "twoInputNoOutput", 1, 0, 2, 1, false); // target type is any
@@ -102,9 +102,9 @@ class MigrationsTypesBuilderTest extends AbstractTypesBuilderTest {
 		assertTMigration(phase, resource, "twoInputSingleOutput", 2, 2, 2, 1, false);
 		assertTMigration(phase, resource, "singleInputTwoOutput", 1, 2, 1, 2, false);
 		assertTMigration(phase, resource, "twoInputTwoOutput", 1, 2, 2, 2, false);
-		assertTMigration(phase, resource, "primitiveInputNoOutput", 0, 0, 1, 0, false);
+		assertTMigration(phase, resource, "primitiveInputNoOutput", 0, 0, 1, 1, false); // implicit target type is void
 		assertTMigration(phase, resource, "noInputPrimitiveOutput", 0, 0, 0, 1, false);
-		assertTMigration(phase, resource, "structuralInputNoOutput", 0, 0, 1, 0, false);
+		assertTMigration(phase, resource, "structuralInputNoOutput", 0, 0, 1, 1, false); // implicit target type is void
 		assertTMigration(phase, resource, "noInputMethodStructuralOutput", 0, 0, 0, 0, false);
 		assertTMigration(phase, resource, "noInputNestedStructuralOutput", 0, 0, 0, 1, false);
 		

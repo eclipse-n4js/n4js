@@ -19,6 +19,13 @@ import org.eclipse.emf.ecore.EObject;
  * A representation of the model object '<em><b>TMigratable</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * *
+ * A migratable element represent a type that can be subject to N4IDL migrations.
+ * 
+ * @see TMigration
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>

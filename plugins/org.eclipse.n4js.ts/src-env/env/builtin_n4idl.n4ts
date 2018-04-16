@@ -39,11 +39,11 @@ public interface MigrationController {
 }
 
 /**
- * The {@link MigrationContext} is the central storage for information. 
+ * The {@link MigrationContext} is the central storage for information during the 
+ * execution of migrations.. 
  * 
  * It provides migrations with traceability information such as trace links 
- * and modification detection. It may further serveas a storage for arbitrary user 
- * data and as a means for migrations to exchange informationwith each other.
+ * and modification detection. It may further serve as a storage for arbitrary user data.
  */
 public interface MigrationContext {
 	/** 

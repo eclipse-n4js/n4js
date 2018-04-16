@@ -12,17 +12,19 @@ package org.eclipse.n4js.n4idl.migrations
 
 import com.google.common.collect.Iterables
 import com.google.common.hash.HashCode
+import java.util.ArrayDeque
 import java.util.Iterator
 import java.util.List
+import java.util.NoSuchElementException
 import java.util.Queue
 import java.util.stream.Collectors
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.Type
-import java.util.ArrayDeque
-import java.util.NoSuchElementException
 
 /**
- * Type-switch conditions.
+ * A {@link SwitchCondition} represents a runtime condition that matches a given 
+ * compile-time {@link TypeRef} at runtime.
  * 
  * See sub-classes for concrete conditions (e.g. type, and, or, etc.).
  */
@@ -193,7 +195,8 @@ class TypeSwitchCondition extends SwitchCondition {
 	
 }
 
-/** {@link SwitchCondition} which assures that a given value is a reference to a type which is a subtype of {@link #type} (type reference). */
+/** {@link SwitchCondition} which assures that a given value is a reference to a type which is 
+ * a subtype of {@link #type} (type reference). */
 class TypeTypeCondition extends SwitchCondition {
 	public val Type type;
 	

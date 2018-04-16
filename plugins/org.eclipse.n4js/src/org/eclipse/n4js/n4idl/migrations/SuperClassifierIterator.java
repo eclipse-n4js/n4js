@@ -23,7 +23,7 @@ import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
 /**
- * An iterator which allows to iterate over the super-classifier structure of a given base {@link TClassifier} in a
+ * An iterator which allows to iterate over the super-classifier hierarchy of a given base {@link TClassifier} in a
  * breadth-first fashion.
  *
  * The iterator returns the classifiers as well as the current traversal level (distance from the base classifier) in

@@ -862,6 +862,11 @@ abstract class TVersionable extends Type {
 	}
 }
 
+/**
+ * A migratable element represent a type that can be subject to N4IDL migrations.
+ * 
+ * @see TMigration
+ */
 abstract class TMigratable {
 	/**
 	 * The declared migrations for this {@link TMigratable} element.
@@ -870,7 +875,7 @@ abstract class TMigratable {
 }
 
 /**
- * Represents an N4IDL migration declaration.
+ * Represents an N4IDL migration.
  */
 class TMigration extends TFunction {
 	

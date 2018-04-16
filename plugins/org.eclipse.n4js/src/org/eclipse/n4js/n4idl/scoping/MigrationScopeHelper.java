@@ -42,8 +42,13 @@ public class MigrationScopeHelper {
 	@Inject
 	private MigrationLocator migrationLocator;
 
-	/** Returns a new migration scope for the given list of arguments and context. */
-	public IScope migrationScope(List<Argument> arguments, EObject context) {
+	/** 
+	 * Returns a new scope which contains the {@link TMigration}s that can be bound
+	 * for the given list of arguments. 
+	 * 
+	 * @param context The context to create the scope for. 
+	 * */
+	public IScope migrationsScope(List<Argument> arguments, EObject context) {
 		final Optional<TMigration> contextMigration = MigrationUtils.getTMigrationOf(context);
 
 		// only proceed with a valid context migration
@@ -55,6 +60,7 @@ public class MigrationScopeHelper {
 
 		// if no matching migration can be found, we cannot link this migrate-call
 		if (targetMigrations.isEmpty()) {
+			// defensively return a UnresolvableObjectDescription instead of raising a linking issue
 			return new SingletonScope(new UnresolvableObjectDescription(QualifiedName.create("migrate")),
 					IScope.NULLSCOPE);
 		}

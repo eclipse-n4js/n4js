@@ -27,7 +27,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 /**
  * A compile-time type-distance computer based on the minimum distance of two types in the class hierarchy.
  *
- * This type distance computer support {@link TClassifier}s, {@link TypeTypeRef}s, {@link BuiltInType} and
+ * This type distance computer supports {@link TClassifier}s, {@link TypeTypeRef}s, {@link BuiltInType}s and
  * {@link PrimitiveType}s.
  */
 public class TypeDistanceComputer {
@@ -35,12 +35,12 @@ public class TypeDistanceComputer {
 	/**
 	 * The maximum type distance of two types.
 	 *
-	 * This value indicates that the two types are unrelated.
+	 * This value indicates that two types are unrelated.
 	 */
 	public static final double MAX_DISTANCE = Double.POSITIVE_INFINITY;
 
 	/**
-	 * Distinguished exception which may be raised by a type distance computation, in case the given type reference do
+	 * Distinguished exception which may be raised by a type distance computation, in case the given type references do
 	 * not represent types which are a valid pair of operands for a type distance computation.
 	 */
 	public static final class UnsupportedTypeDistanceOperandsException extends Exception {
@@ -51,9 +51,9 @@ public class TypeDistanceComputer {
 	}
 
 	/**
-	 * Computes the overall type distance from {@code fromTypes} to {@code toTypes}.
+	 * Computes the overall type distance from {@code fromTypeRefs} to {@code toTypeRefs}.
 	 *
-	 * Returns {@link #MAX_DISTANCE} if one or all of the types in {@code fromTypes} are infinitely distant from the
+	 * Returns {@link #MAX_DISTANCE} if one or all of the types in {@code fromTypes} are infinitely distant (unrelated) from the
 	 * types in {@code toTypes}.
 	 *
 	 * @param fromTypeRefs
@@ -125,7 +125,6 @@ public class TypeDistanceComputer {
 
 		if (type1 instanceof PrimitiveType || type2 instanceof PrimitiveType) {
 			// if one of the types is primitive but not equal (see above), they must be unrelated
-			// TODO handle number vs int and auto-boxing
 			return MAX_DISTANCE;
 		}
 

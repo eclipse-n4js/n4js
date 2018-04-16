@@ -39,7 +39,7 @@ import static org.junit.Assert.*
 
 /**
  */
-class TypesStructureAssertionExtension {
+public class TypesStructureAssertionExtension {
 
 	def assertTypeRef(String phase, TypedElement typedElement, Resource resource) {
 		assertTrue(phase + ": Should have parameterized type ref", typedElement.declaredTypeRef instanceof ParameterizedTypeRef)

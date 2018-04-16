@@ -44,7 +44,7 @@ public class MigrationUtils {
 	}
 
 	/**
-	 * Returns {@code true} if the given context element is a child element of a migration declaration.
+	 * Returns {@code true} if the given context element is contained in a migration declaration.
 	 */
 	public static boolean isInMigration(EObject context) {
 		return MigrationUtils.getMigrationDeclaration(context).isPresent();

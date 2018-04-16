@@ -23,18 +23,18 @@ import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.utils.Log
 
 /**
- * A types builder to create and initialise {@link TMigration}s from {@link FunctionDeclaration} instances. 
+ * A types builder to create and initialize {@link TMigration} instances based on {@link FunctionDeclaration}s. 
  */
 @Log
 class N4IDLMigrationTypesBuilder {
 	
 	/**
-	 * Initialises a {@link TMigration} instance based on a {@link FunctionDeclaration}.
+	 * Initializes a {@link TMigration} instance based on a {@link FunctionDeclaration}.
 	 * 
-	 * This method assumes that all {@link TFunction} related attributes of tMigration were already
-	 * initialised appropriately.
+	 * This method assumes that all {@link TFunction} related attributes of {@code tMigration} were already
+	 * initialized appropriately.
 	 * 
-	 * This method also assumes that functionDecl is a migration (and therefore annotated as {@code @Migration}. 
+	 * This method also assumes that {@code functionDecl} is a migration (and therefore annotated as {@code @Migration}. 
 	 */
 	public def void initialiseTMigration(FunctionDeclaration functionDecl, TMigration tMigration, boolean preLinkingPhase) {
 		val migrationAnno = AnnotationDefinition.MIGRATION.getAnnotation(tMigration);

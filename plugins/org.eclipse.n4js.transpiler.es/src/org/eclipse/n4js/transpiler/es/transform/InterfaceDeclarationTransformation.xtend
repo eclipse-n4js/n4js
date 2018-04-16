@@ -172,14 +172,14 @@ class InterfaceDeclarationTransformation extends Transformation {
 		return result;
 	}
 
-	def protected Iterable<Statement> createStaticInitialisers(SymbolTableEntry ifcSTE, N4InterfaceDeclaration ifcDecl) {
+	def protected Iterable<? extends Statement> createStaticInitialisers(SymbolTableEntry ifcSTE, N4InterfaceDeclaration ifcDecl) {
 		// for an interface 'I' with a static field 'field' we here create something like:
 		// I.field = "initial value";
-		return ifcDecl.ownedMembers.filter(N4FieldDeclaration).filter[static].filter[expression!==null].map[fieldDecl|
+		return  ifcDecl.ownedMembers.filter(N4FieldDeclaration).filter[static].filter[expression!==null].map[fieldDecl|
 			_ExprStmnt(_AssignmentExpr()=>[
 				lhs = _PropertyAccessExpr(ifcSTE, findSymbolTableEntryForElement(fieldDecl,true));
 				rhs = fieldDecl.expression;
 			]);
-		];
+		].toList;
 	}
 }

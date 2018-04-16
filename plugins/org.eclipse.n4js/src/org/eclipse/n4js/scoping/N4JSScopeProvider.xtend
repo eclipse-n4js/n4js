@@ -598,7 +598,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				if (context instanceof IdentifierRef && MigrationUtils.isMigrateCallIdentifier(context as IdentifierRef)) {
 					// provide an argument-sensitive migration scope 
 					val callExpression = context.eContainer as ParameterizedCallExpression;
-					return migrationScopeHelper.migrationScope(callExpression.arguments, context);
+					return migrationScopeHelper.migrationsScope(callExpression.arguments, context);
 				} else { // otherwise make sure to include the MigrationContext 'context' identifier
 					return migrationScopeHelper.migrationContextAwareScope(migrationDeclaration.get(), contextVersionScope);
 				}
