@@ -29,28 +29,12 @@ pipeline {
     stages {
         stage('fs browse') {
             steps {
-                    sh """\
-                            pwd
-                            ls -la
-                        """
-            }
-        }
-        stage('git clone') {
-            steps {
-                deleteDir()
-                sh  """\
-                        mkdir n4js
-                        cd n4js
-                    """
-                git 'https://github.com/eclipse/n4js'
                 sh """\
                         pwd
                         ls -la
-                        git status
-                        cd ..
                     """
-                }
             }
+        }
         stage('build'){
             steps{
                 script {
@@ -100,6 +84,7 @@ pipeline {
             // platform independent headless jar
             archive '**/tools/**/target/n4jsc.jar'
             junit '**/surefire-reports/**/*.xml'
+            cleanWs()
         }
     }
 }
