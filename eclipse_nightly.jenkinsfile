@@ -53,7 +53,8 @@ pipeline {
 
                     timeout(time: 3, unit: 'HOURS') {
                         wrap([$class: 'Xvnc', useXauthority: true]) {
-                            withEnv([ "PATH+NODEJS=/shared/common/node-v7.10.0-linux-x64/bin"
+                            withEnv([ "MAVEN_OPTS=-Xmx2048M"
+                                    , "PATH+NODEJS=/shared/common/node-v7.10.0-linux-x64/bin"
                                     , "PATH+ANT=/shared/common/apache-ant-1.9.6/bin/"
                                     , "PATH+MVN=/shared/common/apache-maven-3.5.0/bin/"
                                     , "PATH+JAVA=/shared/common/java/oracle/jdk1.8.0_162_x64/bin/"]) {
@@ -68,7 +69,7 @@ pipeline {
                                         echo "==================================="
                                     """
 
-                                sh """mvn clean verify -Xms512m -Xmx2048M -P${profiles} """
+                                sh """mvn clean verify -P${profiles} """
                             }
                         }
                     }
