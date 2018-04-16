@@ -210,7 +210,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
 			|| reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
-			return new ValidatingScope(getTypeScope(context, reference, false),
+			return new ValidatingScope(getTypeScope(context, false),
 				context.getTypesFilterCriteria(reference));
 		}
 
@@ -516,25 +516,25 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/**
 	 * Is entered (and later recursively called) to initially bind "T" in <pre>var x : T;</pre> or other parameterized type references.
 	 */
-	def public IScope getTypeScope(EObject context, EReference reference, boolean fromStaticContext) {
+	def public IScope getTypeScope(EObject context, boolean fromStaticContext) {
 		switch context {
 			Script: {
-				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, reference, delegate);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, delegate);
 			}
 			TModule: {
-				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context.astElement as Script, reference, delegate);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context.astElement as Script, delegate);
 			}
 			N4FieldDeclaration: {
 				val isStaticContext = context.static;
-				return getTypeScope(context.eContainer, reference, isStaticContext); // use new static access status for parent scope
+				return getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
 			}
 			N4FieldAccessor: {
 				val isStaticContext = context.static;
-				return getTypeScope(context.eContainer, reference, isStaticContext); // use new static access status for parent scope
+				return getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
 			}
 			TypeDefiningElement: {
 				val isStaticContext = context instanceof N4MemberDeclaration && (context as N4MemberDeclaration).static;
-				val IScope parent = getTypeScope(context.eContainer, reference, isStaticContext); // use new static access status for parent scope
+				val IScope parent = getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
 				if (context instanceof N4ClassDeclaration) {
 					if ( context.isPolyfill
 						||	context.isStaticPolyfill ) { // in polyfill? delegate to filled type and its type variables
@@ -546,11 +546,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				return scopeWithTypeAndItsTypeVariables(parent, context.definedType, fromStaticContext); // use old static access status for current scope
 			}
 			TStructMethod: {
-				val parent = getTypeScope(context.eContainer, reference, fromStaticContext);
+				val parent = getTypeScope(context.eContainer, fromStaticContext);
 				return scopeWithTypeVarsOfTStructMethod(parent, context);
 			}
 			FunctionTypeExpression: {
-				val parent = getTypeScope(context.eContainer, reference, fromStaticContext);
+				val parent = getTypeScope(context.eContainer, fromStaticContext);
 				return scopeWithTypeVarsOfFunctionTypeExpression(parent, context);
 			}
 			TypeDefs: {
@@ -569,21 +569,21 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 							// area #1: upper/lower bound of type parameter of polyfill, e.g. the 2nd 'T' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T,S extends T> extends ToBeFilled<T,S> {}
-							val IScope parent = getTypeScope(context.eContainer, reference, false);
+							val IScope parent = getTypeScope(context.eContainer, false);
 							return scopeWithTypeAndItsTypeVariables(parent, container.definedType, fromStaticContext);
 						} else if (container.superClassRef === context) {
 							// area #2: super type reference of polyfill, e.g. everything after 'extends' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T> extends ToBeFilled<T> {}
 							val script = EcoreUtil2.getContainerOfType(container, Script);
-							val parent = scopeWithLocallyKnownTypesForPolyfillSuperRef(script, reference, delegate,
+							val parent = scopeWithLocallyKnownTypesForPolyfillSuperRef(script, delegate,
 								container.definedType);
 							return parent;
 						}
 					}
 				}
 
-				return getTypeScope(container, reference, fromStaticContext);
+				return getTypeScope(container, fromStaticContext);
 			}
 		}
 	}
