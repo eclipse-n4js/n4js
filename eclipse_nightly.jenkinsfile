@@ -38,7 +38,8 @@ pipeline {
         stage('build'){
             steps{
                 script {
-                    String targetPomFile = "--file ./n4js/pom.xml"
+                    // String targetPomFile = "--file ./n4js/pom.xml"
+                    String targetPomFile = ""
                     //String commonOptions = "-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}"
                     String commonOptions = ""
 
@@ -70,7 +71,7 @@ pipeline {
                                     echo "==================================="
                                 """
 
-                            sh """xvfb-run -a --server-args="-screen 0 1600x1200x32" mvn clean verify ${targetPomFile} ${commonProfiles} ${commonOptions} -Xms512m -Xmx2048M"""
+                            sh """Xvfb -a --server-args="-screen 0 1600x1200x32" mvn clean verify ${targetPomFile} ${commonProfiles} ${commonOptions} -Xms512m -Xmx2048M"""
                         }
                      }
                 }
