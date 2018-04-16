@@ -32,6 +32,8 @@ pipeline {
                 sh """\
                         pwd
                         ls -la
+                        git status
+                        git log -n 1
                     """
             }
         }
@@ -66,7 +68,7 @@ pipeline {
                                         echo "==================================="
                                     """
 
-                                sh """mvn clean verify ${profiles} -Xms512m -Xmx2048M"""
+                                sh """mvn clean verify -Xms512m -Xmx2048M -P${profiles} """
                             }
                         }
                     }
