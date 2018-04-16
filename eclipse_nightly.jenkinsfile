@@ -56,24 +56,26 @@ pipeline {
 
 
                     timeout(time: 3, unit: 'HOURS') {
-                        withEnv([ "PATH+NODEJS=/shared/common/node-v7.10.0-linux-x64/bin"
-                                , "PATH+ANT=/shared/common/apache-ant-1.9.6/bin/"
-                                , "PATH+MVN=/shared/common/apache-maven-3.5.0/bin/"
-                                , "PATH+JAVA=/shared/common/java/oracle/jdk1.8.0_162_x64/bin/"]) {
+                        wrap([$class: 'Xvnc', useXauthority: true]) {
+                            withEnv([ "PATH+NODEJS=/shared/common/node-v7.10.0-linux-x64/bin"
+                                    , "PATH+ANT=/shared/common/apache-ant-1.9.6/bin/"
+                                    , "PATH+MVN=/shared/common/apache-maven-3.5.0/bin/"
+                                    , "PATH+JAVA=/shared/common/java/oracle/jdk1.8.0_162_x64/bin/"]) {
 
-                            sh """pwd"""
-                            sh 'printenv'
-                            sh """\
-                                    echo "===== checking tools versions ====="
-                                    mvn -v
-                                    node -v
-                                    npm -v
-                                    echo "==================================="
-                                """
+                                sh """pwd"""
+                                sh 'printenv'
+                                sh """\
+                                        echo "===== checking tools versions ====="
+                                        mvn -v
+                                        node -v
+                                        npm -v
+                                        echo "==================================="
+                                    """
 
-                            sh """Xvfb-run -a --server-args="-screen 0 1600x1200x32" mvn clean verify ${targetPomFile} ${commonProfiles} ${commonOptions} -Xms512m -Xmx2048M"""
+                                sh """mvn clean verify ${targetPomFile} ${commonProfiles} ${commonOptions} -Xms512m -Xmx2048M"""
+                            }
                         }
-                     }
+                    }
                 }
             }
         }
