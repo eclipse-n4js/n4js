@@ -26,7 +26,7 @@ import org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.NpmManager;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -45,7 +45,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	public static final String ID = N4JSTasksExampleWizard.class.getName();
 
 	@Inject
-	private NpmManager npmManager;
+	private LibraryManager npmManager;
 
 	@Inject
 	private TargetPlatformInstallLocationProvider installLocationProvider;
@@ -83,10 +83,10 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 							IStatus status;
 							if (!version.isEmpty()) {
 								monitor.subTask("Installing dependency '" + name + "' in version " + version);
-								status = npmManager.installDependency(name, version, monitor);
+								status = npmManager.installNPM(name, version, monitor);
 							} else {
 								monitor.subTask("Installing dependency '" + name + "'");
-								status = npmManager.installDependency(name, monitor);
+								status = npmManager.installNPM(name, monitor);
 							}
 							if (status.matches(IStatus.ERROR))
 								throw status.getException();

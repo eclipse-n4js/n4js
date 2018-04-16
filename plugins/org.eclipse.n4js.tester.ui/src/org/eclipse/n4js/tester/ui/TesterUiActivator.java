@@ -27,7 +27,8 @@ import org.osgi.framework.BundleContext;
 public class TesterUiActivator extends AbstractUIPlugin {
 
 	/**
-	 * The unique ID of the N4 Tester UI activator. <br> {@value}
+	 * The unique ID of the N4 Tester UI activator. <br>
+	 * {@value}
 	 */
 	public static final String PLUGIN_ID = "org.eclipse.n4js.tester.ui"; //$NON-NLS-1$
 
@@ -52,6 +53,7 @@ public class TesterUiActivator extends AbstractUIPlugin {
 	public static final String ICON_SUITE_RUNNING = "tsuiterunning.gif";
 
 	public static final String ICON_LOCK = "lock.gif";
+	public static final String ICON_LAUNCHCONFIG = "launchconfig.gif";
 	public static final String ICON_RELAUNCH = "relaunch.gif";
 	public static final String ICON_RELAUNCH_FAILED = "relaunchf.gif";
 	public static final String ICON_STOP = "stop.gif";
@@ -96,6 +98,7 @@ public class TesterUiActivator extends AbstractUIPlugin {
 		reg.put(ICON_SUITE_RUNNING, imageDescriptor(ICON_SUITE_RUNNING));
 		reg.put(ICON_SUITE, imageDescriptor(ICON_SUITE));
 		reg.put(ICON_LOCK, imageDescriptor(ICON_LOCK));
+		reg.put(ICON_LAUNCHCONFIG, imageDescriptor(ICON_LAUNCHCONFIG));
 		reg.put(ICON_RELAUNCH, imageDescriptor(ICON_RELAUNCH));
 		reg.put(ICON_RELAUNCH_FAILED, imageDescriptor(ICON_RELAUNCH_FAILED));
 		reg.put(ICON_STOP, imageDescriptor(ICON_STOP));

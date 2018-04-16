@@ -10,12 +10,10 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static java.util.Collections.singletonMap;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -27,7 +25,7 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express' with N4JS definition file support.
  */
-public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN4jscExternalTest {
+public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends AbstractN4jscTest {
 	File workspace;
 
 	private static final String PROJECT_NAME_N4JS = "project.using.external.from.n4js";
@@ -45,11 +43,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		return singletonMap("express", "@4.15.3");
-	}
-
 	/**
 	 * Test for checking the npm support in the headless case by downloading third party package, importing it and
 	 * running it with Common JS.
@@ -61,13 +54,12 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--installMissingDependencies",
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.projects.toString(),
+				"--buildType", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JS
 		};
 		final String out = runAndCaptureOutput(args);
@@ -77,11 +69,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 	}
 
 	/**
-	 * Same test as above, but with two changes:
-	 * <ol>
-	 * <li>importing the external dependency from an N4JSX file (instead of an N4JS file),
-	 * <li>using a target platform definition file and letting the 'n4jsc.jar' install the dependency.
-	 * </ol>
+	 * Same test as above, but importing the external dependency from an N4JSX file (instead of an N4JS file).
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependenciesAndDefinitionFilesFromN4JSX()
@@ -91,13 +79,12 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", wsRoot + "/targetplatform.n4tp",
-				"--targetPlatformInstallLocation", wsRoot + "/targetPlatformInstallLocation",
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--installMissingDependencies",
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.projects.toString(),
+				"--buildType", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JSX
 		};
 

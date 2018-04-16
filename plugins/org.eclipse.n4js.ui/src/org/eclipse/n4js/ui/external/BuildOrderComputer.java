@@ -29,7 +29,7 @@ import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexFilter;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexMapper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
-import org.eclipse.n4js.ui.utils.URIUtils;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;

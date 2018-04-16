@@ -29,7 +29,7 @@ import com.google.common.base.Predicates;
  * instructed to discover missing dependencies and to install them before compilation, which is done with
  * {@code --installMissingDependencies} flag.
  */
-public class InstallFromManifestCompileRunN4jscExternalImportsTest extends BaseN4jscExternalTest {
+public class InstallFromManifestCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -56,12 +56,12 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends BaseN
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"-rw", "nodejs",
-				"-r", fileToRun,
+				"--runWith", "nodejs",
+				"--run", fileToRun,
 				// "--verbose",
 				// "--debug",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(

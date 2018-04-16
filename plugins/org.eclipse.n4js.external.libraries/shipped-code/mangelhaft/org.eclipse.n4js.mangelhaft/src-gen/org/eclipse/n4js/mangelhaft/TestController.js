@@ -191,9 +191,9 @@
 														if (!this.injector.canBeParentOf(diClass)) {
 															throw new PreconditionNotMet("Test called with incompatible parent injector");
 														}
-														testInjector = N4Injector.of.call(N4Injector, diClass, this.injector);
+														testInjector = N4Injector.of(diClass, this.injector);
 													} else {
-														testInjector = N4Injector.of.call(N4Injector, diClass);
+														testInjector = N4Injector.of(diClass);
 													}
 													break;
 												}
@@ -201,7 +201,7 @@
 											if (!testType) {
 												testInjector = this.injector;
 											}
-											let classITO = InstrumentedTest.getInstrumentedTest(testClass, info, testInjector);
+											let classITO = InstrumentedTest.getInstrumentedTest(testClass, info, testInjector, this);
 											instrumentedTestObjects.push(classITO);
 										} catch(ex2) {
 											instrumentedTestObjects.push(new InstrumentedTest(testClass, info).setTestObject(new N4Object()).setError(ex2));
@@ -217,6 +217,9 @@
 						}
 					},
 					reporters: {
+						get: function getReporters___n4() {
+							return this.reportersVal;
+						},
 						set: function setReporters___n4(reporters) {
 							reporters.forEach(function(reporter) {
 								let dummy = reporter.register();
@@ -291,6 +294,12 @@
 							}),
 							new N4DataField({
 								name: 'reportersVal',
+								isStatic: false,
+								annotations: []
+							}),
+							new N4Accessor({
+								name: 'reporters',
+								getter: true,
 								isStatic: false,
 								annotations: []
 							}),

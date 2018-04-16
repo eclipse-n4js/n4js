@@ -19,10 +19,10 @@ import org.eclipse.core.internal.resources.WorkManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
 import org.junit.After;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 	private static final int ITERATION_COUNT = 30;
 
 	@Inject
-	private ExternalLibrariesReloadHelper reloadHelper;
+	private LibraryManager npmManager;
 
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
@@ -86,8 +86,8 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 			LOGGER.info("| Iteration " + i + " of " + ITERATION_COUNT + ".");
 			LOGGER.info("------------------------------------------------------------");
 			setupWorkspace();
-			reloadHelper.reloadLibraries(true, new NullProgressMonitor());
-			reloadHelper.reloadLibraries(true, new NullProgressMonitor());
+			npmManager.reloadAllExternalProjects(new NullProgressMonitor());
+			npmManager.reloadAllExternalProjects(new NullProgressMonitor());
 			tearDown();
 		}
 	}

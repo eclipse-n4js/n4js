@@ -25,6 +25,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -33,7 +34,7 @@ import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.NoopExternalLibraryWorkspace;
+import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment;
 import org.eclipse.n4js.n4mf.ImplementedProjects;
@@ -411,7 +412,7 @@ public class N4JSModel {
 			if (sourceContainer.getProject().isExternal() && Platform.isRunning()) {
 				// The `Platform.isRunning()` is not valid check for the OSGI headless compiler
 				// it may still be valid in some scenarios (maybe some test scenarios)
-				if (externalLibraryWorkspace instanceof NoopExternalLibraryWorkspace
+				if (externalLibraryWorkspace instanceof HlcExternalLibraryWorkspace
 						&& workspace instanceof FileBasedWorkspace
 						&& workspace.findProjectWith(sourceContainer.getLocation()) != null) {
 					return workspace.getFolderIterator(sourceContainer.getLocation());
@@ -554,8 +555,16 @@ public class N4JSModel {
 		if (null == project || null == references || isEmpty(references)) {
 			return emptyList();
 		}
-		return from(references).transform(ref -> resolveProjectReference(project, ref)).filter(opt -> opt.isPresent())
-				.transform(opt -> opt.get()).toList();
+
+		LinkedList<IN4JSProject> resolvedReferences = new LinkedList<>();
+		for (ProjectReference ref : references) {
+			IN4JSProject projectReference = resolveProjectReference(project, ref).orNull();
+			if (projectReference != null) {
+				resolvedReferences.add(projectReference);
+			}
+		}
+
+		return resolvedReferences;
 	}
 
 	/**

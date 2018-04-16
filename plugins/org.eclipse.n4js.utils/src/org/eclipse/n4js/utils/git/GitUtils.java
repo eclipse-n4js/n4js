@@ -16,7 +16,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterables.toArray;
-import static org.eclipse.n4js.utils.collections.Arrays2.isEmpty;
 import static java.nio.file.Files.createDirectories;
 import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.jgit.api.Git.cloneRepository;
@@ -27,11 +26,15 @@ import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.eclipse.jgit.lib.Constants.MASTER;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
+import static org.eclipse.n4js.utils.collections.Arrays2.isEmpty;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,14 +59,13 @@ import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.StringUtils;
+import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
-
-import org.eclipse.n4js.utils.io.FileDeleter;
 
 /**
  * Contains a bunch of utility methods for performing Git operations.
@@ -83,6 +85,20 @@ public abstract class GitUtils {
 			((SshTransport) transport).setSshSessionFactory(new SshSessionFactory());
 		}
 	};
+
+	/** @return true iff a connection can be established to the given URL */
+	public static boolean netIsAvailable(final String remoteUrl) {
+		try {
+			final URL url = new URL(remoteUrl);
+			final URLConnection conn = url.openConnection();
+			conn.connect();
+			return true;
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			return false;
+		}
+	}
 
 	/**
 	 * Hard resets the {@code HEAD} of the reference in the locally cloned Git repository. If the repository does not
@@ -239,18 +255,22 @@ public abstract class GitUtils {
 		}
 
 		try (final Git git = open(localCloneRoot)) {
-			try {
-				git.pull().setProgressMonitor(gitMonitor).setTransportConfigCallback(TRANSPORT_CALLBACK).call();
-			} catch (final GitAPIException e) {
-				LOGGER.error("Error when trying to pull on repository  '" + localClonePath + ".");
-				Throwables.propagate(e);
-			}
+			git.pull().setProgressMonitor(gitMonitor).setTransportConfigCallback(TRANSPORT_CALLBACK).call();
+
+		} catch (final GitAPIException e) {
+			LOGGER.error("Error when trying to pull on repository  '" + localClonePath + ".");
+			Throwables.propagate(e);
+
+		} catch (final RepositoryNotFoundException e) {
+			Throwables.propagate(e);
+
 		} catch (final IOException e) {
 			LOGGER.warn("Git repository does not exists at " + localCloneRoot + ". Aborting git pull.");
 			LOGGER.warn("Perform git clone first, then try to pull from remote.");
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.error("Error when trying to open repository  '" + localClonePath + ".");
 			}
+			Throwables.propagate(e);
 		}
 	}
 
