@@ -18,15 +18,14 @@ import java.nio.file.Path;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.ui.XtextProjectHelper;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.xtext.ui.XtextProjectHelper;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 /**
  */
@@ -73,17 +72,6 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 		} else {
 			return absent();
 		}
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj instanceof N4JSEclipseProject) {
-			return getLocation().equals(((N4JSEclipseProject) obj).getLocation());
-		}
-		return false;
 	}
 
 	@Override

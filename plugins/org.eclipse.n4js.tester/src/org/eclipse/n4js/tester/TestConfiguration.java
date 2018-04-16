@@ -37,6 +37,8 @@ public class TestConfiguration extends RunConfiguration {
 
 	private int resultReportingPort; // volatile
 
+	private String launchConfigurationTypeIdentifier;
+
 	/**
 	 * Identifier of the tester to use.
 	 */
@@ -87,6 +89,22 @@ public class TestConfiguration extends RunConfiguration {
 	 */
 	public int getResultReportingPort() {
 		return this.resultReportingPort;
+	}
+
+	/**
+	 * Sets the launch configuration type identifier, required to enable shortcuts for opening the launch configuration.
+	 */
+	public void setLaunchConfigurationTypeIdentifier(String identifier) {
+		this.launchConfigurationTypeIdentifier = identifier;
+
+	}
+
+	/**
+	 * Returns the launchConfigurationTypeIdentifier previously set via
+	 * {@link #setLaunchConfigurationTypeIdentifier(String)}
+	 */
+	public String getLaunchConfigurationTypeIdentifier() {
+		return launchConfigurationTypeIdentifier;
 	}
 
 }

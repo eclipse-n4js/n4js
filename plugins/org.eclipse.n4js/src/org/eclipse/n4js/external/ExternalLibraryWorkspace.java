@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.inject.ImplementedBy;
@@ -29,41 +31,46 @@ import com.google.inject.ImplementedBy;
  * Representation of a workspace (with possible multiple workspace roots) that is used for storing external library
  * projects.
  */
-@ImplementedBy(NoopExternalLibraryWorkspace.class)
+@ImplementedBy(HlcExternalLibraryWorkspace.class)
 public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
-	/** Contains the projects that were built and scheduled. */
+	/** Contains the projects that were built/cleaned and affected. */
 	static public class RegisterResult {
-		/** All external projects that were cleaned */
-		final public Set<? extends IProject> externalProjectsCleaned;
-		/** All external projects that were built */
-		final public Set<? extends IProject> externalProjectsBuilt;
-		/** All workspace projects that were scheduled */
-		final public Set<? extends IProject> workspaceProjectsScheduled;
+		/** All external projects that were built/cleaned */
+		final public Set<URI> externalProjectsDone;
+		/** All workspace projects that were affected */
+		final public Set<URI> affectedWorkspaceProjects;
 
 		RegisterResult() {
-			this.externalProjectsCleaned = freeze(null);
-			this.externalProjectsBuilt = freeze(null);
-			this.workspaceProjectsScheduled = freeze(null);
+			this.externalProjectsDone = freeze(null);
+			this.affectedWorkspaceProjects = freeze(null);
 		}
 
 		/** Constructor */
-		public RegisterResult(Collection<? extends IProject> extPrjsCleaned,
-				Collection<? extends IProject> extPrjsBuilt,
-				Collection<? extends IProject> wsPrjsScheduled) {
-
-			this.externalProjectsCleaned = freeze(extPrjsCleaned);
-			this.externalProjectsBuilt = freeze(extPrjsBuilt);
-			this.workspaceProjectsScheduled = freeze(wsPrjsScheduled);
+		public RegisterResult(Collection<URI> extPrjsDone, Collection<URI> wsPrjsAffected) {
+			this.externalProjectsDone = freeze(extPrjsDone);
+			this.affectedWorkspaceProjects = freeze(wsPrjsAffected);
 		}
 
-		static private <P extends IProject> Set<P> freeze(Collection<P> prjs) {
+		/** Constructor */
+		public RegisterResult(IProject[] allProjectsToClean, IProject[] wsPrjAffected) {
+			this.externalProjectsDone = freeze(getURIs(allProjectsToClean));
+			this.affectedWorkspaceProjects = freeze(getURIs(wsPrjAffected));
+		}
+
+		static private Set<URI> freeze(Collection<URI> prjs) {
 			if (prjs == null) {
 				return Collections.unmodifiableSet(Collections.emptySet());
 			}
-			@SuppressWarnings("unused")
-			HashSet<P> hashSet = new HashSet<P>(prjs);
-			return Collections.unmodifiableSet(hashSet);
+			return Collections.unmodifiableSet(new HashSet<>(prjs));
+		}
+
+		static private Collection<URI> getURIs(IProject[] projects) {
+			HashSet<URI> uris = new HashSet<>();
+			for (IProject project : projects) {
+				uris.add(URIUtils.convert(project));
+			}
+			return uris;
 		}
 	}
 
@@ -71,15 +78,41 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 * Registers the new projects and removed the deleted ones based on the project adaption result. The projects will
 	 * be built/cleaned based on the differences given in the result.
 	 *
-	 * @param result
-	 *            the project adaption result to update/delete projects.
 	 * @param monitor
 	 *            the monitor for the project registration process.
-	 * @param triggerCleanbuild
+	 * @param toBeUpdated
+	 *            the project adaption result to update/delete projects.
+	 */
+	public abstract RegisterResult registerProjects(IProgressMonitor monitor, Set<URI> toBeUpdated);
+
+	/**
+	 * Deregisters all given project and cleans/builds affected workspace projects afterwards. This operation also wipes
+	 * the Xtext index clean of all given and affected external projects.
+	 *
+	 * @param monitor
+	 *            the monitor for the project registration process.
+	 * @param toBeDeleted
 	 *            if true, a clean build is triggered on all affected workspace projects.
 	 */
-	public abstract RegisterResult registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
-			boolean triggerCleanbuild);
+	public abstract RegisterResult deregisterProjects(IProgressMonitor monitor, Set<URI> toBeDeleted);
+
+	/**
+	 * Deregisters all external projects and wipes the Xtext index clean.
+	 *
+	 * @param monitor
+	 *            the monitor for the project registration process.
+	 */
+	public abstract RegisterResult deregisterAllProjects(IProgressMonitor monitor);
+
+	/**
+	 * Schedules a rebuild of the given workspace projects.
+	 *
+	 * @param monitor
+	 *            the monitor for the project registration process.
+	 * @param toBeScheduled
+	 *            the workspace projects that should be rebuild.
+	 */
+	public abstract void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<URI> toBeScheduled);
 
 	/**
 	 * Returns with all available external projects.
@@ -126,6 +159,15 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public abstract ExternalProject getProject(final String projectName);
 
 	/**
+	 * Returns with the project with the given location. Or {@code null} if the project does not exist.
+	 *
+	 * @param projectLocation
+	 *            the location of the project.
+	 * @return the project, or {@code null} if does not exist.
+	 */
+	public abstract ExternalProject getProject(final URI projectLocation);
+
+	/**
 	 * Returns with the file given with the file location URI argument. This method returns with {@code null} if the
 	 * file cannot be found at the given location.
 	 *
@@ -137,7 +179,9 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
 	/**
 	 * Updates the internal state based on the available external project root locations.
-	 *
+	 * <p>
+	 * This method will remove/add available projects of {@link IN4JSCore}. It should only be invoked through
+	 * {@link HlcExternalIndexSynchronizer#synchronizeNpms(IProgressMonitor)}.
 	 * <p>
 	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
 	 * available when injecting this instance.

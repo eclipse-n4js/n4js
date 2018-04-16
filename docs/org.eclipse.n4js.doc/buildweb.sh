@@ -11,7 +11,7 @@
 #
 
 # Location of source asciidoctor files
-ADOC_DIR="../org.eclipse.n4js.doc/src"
+ADOC_DIR="src"
 
 # Where to generate the website HTML
 GEN_FOLDER="web-html"
@@ -20,14 +20,15 @@ if [ ! -d "$GEN_FOLDER" ]; then
 	mkdir -p $GEN_FOLDER
 fi
 
-cp -r assets/scripts assets/styles assets/images $ADOC_DIR/. ./web-html
+cp -r ../org.eclipse.n4js.spec/scripts ../org.eclipse.n4js.spec/styles ../org.eclipse.n4js.spec/images $ADOC_DIR/. ./web-html
 
 pushd $GEN_FOLDER
 	FILES=`find .  -name "*.adoc" -print`
 popd
 
 for f in $FILES;
-do 
+do
+	echo processing $f
 	ADOC_FILE=$GEN_FOLDER/$f
 	HEADER_DIR=../../assets/headers/$(basename $(dirname $f))
 	ATTRS="-a doctype=book -a experimental=true -a sectlinks -a docinfo1=true -a linkcss=true -a !source-highlighter -a reproducible -a icons=font -a !webfonts -a !stylesheet"

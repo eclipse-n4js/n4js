@@ -12,8 +12,7 @@
 import * as express+ from 'express';
 import * as jade+ from 'jade';
 import * as lodash+ from 'lodash';
-// TODO enable this when karma npm package is enabled again.
-//import * as karma+ from 'karma';
+import * as karma+ from 'karma';
 import * as bar+ from 'bar';
 import * as pouchdbFind+ from 'pouchdb-find';
 //this is for install test on npms with no main module (or broken one)
@@ -22,14 +21,13 @@ import * as bodyparser+ from 'body-parser';
 
 
 function check(imported:any, module:string){
-	console.log(module, typeof imported !== 'undefined' ? 'imported' : 'not imported')
+    console.log(module, typeof imported !== 'undefined' ? 'imported' : 'not imported')
 }
 
 check(express, 'express')
 check(jade, 'jade')
 check(lodash, 'lodash')
-// TODO enable this when karma npm package is enabled again.
-//check(karma, 'karma')
+check(karma, 'karma')
 check(bar, 'bar')
 check(pouchdbFind, 'pouchdb-find')
 check(nextHead, 'next') //check we can still import non main modules

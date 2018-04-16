@@ -12,12 +12,9 @@ package org.eclipse.n4js.hlc.tests;
 
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -32,12 +29,9 @@ import org.junit.Test;
  * Tests a project with two project dependencies A,B such that A depends on B.
  *
  * In this test, we have two external projects: nuka-carousel and react. nuka-carousel depends on react via a project
- * dependency, and file P1/src/X.n4jsx depends on both react and nuka-carousel via project dependencies. By GH-448, this
- * setup has errors when compiling X.n4jsx because the subtype check for NukaCarousel <: React.Component fails.
- *
- * See https://github.com/eclipse/n4js/issues/448.
+ * dependency, and file P1/src/X.n4jsx depends on both react and nuka-carousel via project dependencies.
  */
-public class N4jscDependentProjectDependenciesTest extends BaseN4jscExternalTest {
+public class N4jscDependentProjectDependenciesTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -52,14 +46,6 @@ public class N4jscDependentProjectDependenciesTest extends BaseN4jscExternalTest
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		Map<String, String> deps = new HashMap<>();
-		deps.put("nuka-carousel", "");
-		deps.put("react", "");
-		return deps;
-	}
-
 	/**
 	 * Test failure when compiling without target platform file.
 	 *
@@ -72,15 +58,13 @@ public class N4jscDependentProjectDependenciesTest extends BaseN4jscExternalTest
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
+				"--installMissingDependencies",
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
-		assertTrue("install location was not created", getTargetPlatformInstallLocation().exists());
 	}
 
 }

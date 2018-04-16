@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Predicates.notNull;
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterators.emptyIterator;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static com.google.common.collect.Sets.newHashSet;
@@ -24,6 +21,8 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -42,12 +41,15 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.NpmProjectAdaptionResult;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.util.Pair;
@@ -66,6 +68,9 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	private static Logger logger = Logger.getLogger(EclipseExternalLibraryWorkspace.class);
 
 	@Inject
+	private IN4JSCore core;
+
+	@Inject
 	private ExternalIndexUpdater indexUpdater;
 
 	@Inject
@@ -77,7 +82,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Inject
 	private RebuildWorkspaceProjectsScheduler scheduler;
 
-	/** This provider creates {@link ExternalProject}s */
 	@Inject
 	private ExternalProjectProvider projectProvider;
 
@@ -177,10 +181,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		}
 
 		File nestedResource = new File(path);
-		if (!nestedResource.exists()) {
-			return null;
-		}
-
 		Path nestedResourcePath = nestedResource.toPath();
 
 		Iterable<URI> registeredProjectUris = projectProvider.getProjectURIs();
@@ -198,74 +198,150 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public RegisterResult registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
-			boolean triggerCleanbuild) {
+	public RegisterResult registerProjects(IProgressMonitor monitor, Set<URI> toBeUpdated) {
 		ISchedulingRule rule = builder.getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
-			return registerProjectsInternal(result, monitor, triggerCleanbuild);
+			return registerProjectsInternal(monitor, toBeUpdated);
 		} finally {
 			Job.getJobManager().endRule(rule);
 		}
 	}
 
-	private RegisterResult registerProjectsInternal(NpmProjectAdaptionResult result, IProgressMonitor monitor,
-			boolean triggerCleanbuild) {
+	@Override
+	public RegisterResult deregisterProjects(IProgressMonitor monitor, Set<URI> toBeDeleted) {
+		ISchedulingRule rule = builder.getRule();
+		try {
+			Job.getJobManager().beginRule(rule, monitor);
+			return deregisterProjectsInternal(monitor, toBeDeleted, new HashSet<>());
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
+	}
 
-		Collection<IProject> extPrjCleaned = null;
-		Collection<IProject> extPrjBuilt = null;
+	@Override
+	public RegisterResult deregisterAllProjects(IProgressMonitor monitor) {
+		ISchedulingRule rule = builder.getRule();
+		try {
+			Job.getJobManager().beginRule(rule, monitor);
+			Set<URI> toBeDeleted = new HashSet<>();
+			for (ExternalProject extProject : getProjects()) {
+				URI location = URIUtils.convert(extProject);
+				toBeDeleted.add(location);
+			}
+			Set<URI> toBeWiped = new HashSet<>();
+			for (java.net.URI rootLocation : projectProvider.getRootLocations()) {
+				toBeWiped.add(URIUtils.toFileUri(rootLocation));
+			}
+			return deregisterProjectsInternal(monitor, toBeDeleted, toBeWiped);
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
+	}
+
+	private RegisterResult deregisterProjectsInternal(IProgressMonitor monitor, Set<URI> toBeDeleted,
+			Set<URI> toBeWiped) {
+		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
+			logger.warn("Built-in libraries and NPM support are disabled.");
+		}
+
+		SubMonitor subMonitor = convert(monitor, 1);
+
+		// Clean projects.
+		Set<N4JSExternalProject> allProjectsToClean = getAllToBeCleaned(toBeDeleted);
+
+		if (!allProjectsToClean.isEmpty()) {
+			List<IProject> extPrjCleaned = builder.clean(allProjectsToClean, subMonitor.newChild(1));
+
+			HashSet<URI> actuallyCleaned = new HashSet<>();
+			for (IProject cleaned : extPrjCleaned) {
+				actuallyCleaned.add(URIUtils.toFileUri(cleaned.getLocationURI()));
+			}
+		}
+		subMonitor.worked(1);
+
+		Set<IProject> wsPrjAffected = newHashSet();
+		wsPrjAffected.addAll(collector.getWSProjectsDependendingOn(allProjectsToClean));
+
+		toBeWiped.addAll(toBeDeleted);
+		wipeIndex(monitor, toBeWiped, allProjectsToClean);
+
+		return new RegisterResult(allProjectsToClean.toArray(new IProject[0]), wsPrjAffected.toArray(new IProject[0]));
+	}
+
+	private Set<N4JSExternalProject> getAllToBeCleaned(Set<URI> toBeDeleted) {
+		Set<N4JSExternalProject> allProjectsToClean = new HashSet<>();
+		Set<N4JSExternalProject> projectsToClean = new HashSet<>();
+		for (URI toBeDeletedLocation : toBeDeleted) {
+			N4JSExternalProject project = projectProvider.getProject(toBeDeletedLocation);
+			if (project != null) {
+				projectsToClean.add(project);
+			}
+		}
+		allProjectsToClean.addAll(projectsToClean);
+		allProjectsToClean.addAll(newHashSet(collector.getExtProjectsDependendingOn(projectsToClean)));
+		return allProjectsToClean;
+	}
+
+	private void wipeIndex(IProgressMonitor monitor, Set<URI> toBeDeleted,
+			Set<N4JSExternalProject> allProjectsToClean) {
+
+		HashSet<URI> toBeWiped = new HashSet<>(toBeDeleted);
+		for (N4JSExternalProject project : allProjectsToClean) {
+			toBeWiped.add(URIUtils.toFileUri(project.getLocationURI()));
+		}
+		builder.wipeIndex(monitor, toBeWiped);
+	}
+
+	private RegisterResult registerProjectsInternal(IProgressMonitor monitor, Set<URI> toBeUpdated) {
+		Collection<IProject> extPrjBuilt = new LinkedList<>();
 
 		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
 			logger.warn("Built-in libraries and NPM support are disabled.");
 		}
 
-		checkState(result.isOK(), "Expected: OK, but actual was: " + result);
-		SubMonitor subMonitor = convert(monitor, 3);
+		SubMonitor subMonitor = convert(monitor, 2);
 
-		// Clean projects.
-		Set<N4JSExternalProject> projectsToClean = from(result.getToBeBuilt().getToBeDeleted())
-				.transform(uri -> projectProvider.getProject(new File(uri).getName()))
-				.filter(notNull())
-				.toSet();
-
-		if (!Iterables.isEmpty(projectsToClean)) {
-			extPrjCleaned = builder.clean(projectsToClean, subMonitor.newChild(1));
-		}
-		subMonitor.worked(1);
-
-		// Update internal state.
-		updateState();
-
-		// Rebuild whole external workspace. Filter out projects that are present in the Eclipse workspace (if any).
-		Collection<N4JSExternalProject> projectsToBuild = getExternalProjects(result);
+		// Rebuild whole external workspace. Filter out projects that are present in the Eclipse workspace.
+		Collection<N4JSExternalProject> projectsToBuild = getExternalProjects(toBeUpdated);
 		Set<N4JSExternalProject> allProjectsToBuild = new HashSet<>();
 		allProjectsToBuild.addAll(projectsToBuild);
-		allProjectsToBuild.addAll(newHashSet(collector.getExtProjectsDependendingOn(projectsToBuild)));
-		allProjectsToBuild.addAll(newHashSet(collector.getExtProjectsDependendingOn(projectsToClean)));
+		allProjectsToBuild.addAll(collector.getExtProjectsDependendingOn(projectsToBuild));
 
 		// Build recently added projects that do not exist in workspace.
 		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(allProjectsToBuild)) {
-			extPrjBuilt = builder.build(allProjectsToBuild, subMonitor.newChild(1));
+			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor.newChild(1)));
 		}
 		subMonitor.worked(1);
 
-		Set<IProject> wsPrjToRebuild = newHashSet();
-		if (triggerCleanbuild) {
-			Set<N4JSExternalProject> affectedProjects = new HashSet<>();
-			affectedProjects.addAll(newHashSet(projectsToClean));
-			affectedProjects.addAll(newHashSet(allProjectsToBuild));
-			wsPrjToRebuild.addAll(newHashSet(collector.getWSProjectsDependendingOn(affectedProjects)));
+		Set<IProject> wsPrjAffected = newHashSet();
+		Set<N4JSExternalProject> affectedProjects = new HashSet<>();
+		affectedProjects.addAll(allProjectsToBuild);
+		wsPrjAffected.addAll(collector.getWSProjectsDependendingOn(affectedProjects));
 
-			scheduler.scheduleBuildIfNecessary(wsPrjToRebuild);
-		}
-
-		return new RegisterResult(extPrjCleaned, extPrjBuilt, wsPrjToRebuild);
+		return new RegisterResult(extPrjBuilt.toArray(new IProject[0]), wsPrjAffected.toArray(new IProject[0]));
 	}
 
-	private Collection<N4JSExternalProject> getExternalProjects(NpmProjectAdaptionResult result) {
-		Set<N4JSExternalProject> projectsToBeUpdated = from(result.getToBeBuilt().getToBeUpdated())
-				.transform(uri -> projectProvider.getProject(new File(uri).getName())).toSet();
+	@Override
+	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<URI> toBeScheduled) {
+		Set<IProject> scheduledProjects = newHashSet();
+		for (URI scheduledURI : toBeScheduled) {
+			IN4JSProject wsProject = core.findProject(scheduledURI).orNull();
+			if (wsProject instanceof N4JSEclipseProject) {
+				N4JSEclipseProject n4EclProject = (N4JSEclipseProject) wsProject;
+				scheduledProjects.add(n4EclProject.getProject());
+			}
+		}
+		scheduler.scheduleBuildIfNecessary(scheduledProjects);
+	}
+
+	private Collection<N4JSExternalProject> getExternalProjects(Set<URI> toBeUpdated) {
+		Set<N4JSExternalProject> projectsToBeUpdated = new HashSet<>();
+		for (URI tbu : toBeUpdated) {
+			N4JSExternalProject n4Prj = projectProvider.getProject(tbu);
+			projectsToBeUpdated.add(n4Prj);
+		}
 
 		Collection<N4JSExternalProject> nonWSProjects = collector.filterNonWSProjects(projectsToBeUpdated);
 
@@ -295,6 +371,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	@Override
 	public ExternalProject getProject(String projectName) {
 		return projectProvider.getProject(projectName);
+	}
+
+	@Override
+	public ExternalProject getProject(URI projectLocation) {
+		return projectProvider.getProject(projectLocation);
 	}
 
 	@Override

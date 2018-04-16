@@ -15,11 +15,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+
+import com.google.common.collect.Sets;
 
 /**
  * Helper Methods to deal with projects and FileBasedWorkspace.
@@ -42,21 +48,26 @@ public class HeadlessHelper {
 		List<File> absProjectRoots = HeadlessHelper.toAbsoluteFileList(projectLocations);
 
 		// Collect all Projects in first Level
-		ArrayList<File> pDir = HeadlessHelper.collectAllProjectPaths(absProjectRoots);
+		List<URI> pUris = collectAllProjectUris(absProjectRoots);
 
-		ArrayList<URI> projectURIs = new ArrayList<>(pDir.size());
+		registerProjectsToFileBasedWorkspace(pUris, n4jsFileBasedWorkspace, null);
+	}
 
-		for (File pdir : pDir) {
-			URI puri = URI.createFileURI(pdir.toString());
-			projectURIs.add(puri);
-
+	/** Registers provided project uris in a given workspace. Logger (if provided) used to log errors. */
+	public static void registerProjectsToFileBasedWorkspace(Iterable<URI> projectURIs,
+			FileBasedWorkspace n4jsFileBasedWorkspace, IHeadlessLogger logger)
+			throws N4JSCompileException {
+		// Register all projects with the file based workspace.
+		for (URI projectURI : projectURIs) {
 			try {
-				n4jsFileBasedWorkspace.registerProject(puri);
+				if (logger != null && logger.isCreateDebugOutput()) {
+					logger.debug("Registering project '" + projectURI + "'");
+				}
+				n4jsFileBasedWorkspace.registerProject(projectURI);
 			} catch (N4JSBrokenProjectException e) {
-				throw new N4JSCompileException("Unable to register project '" + puri + "'", e);
+				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);
 			}
 		}
-
 	}
 
 	/**
@@ -81,26 +92,69 @@ public class HeadlessHelper {
 	}
 
 	/**
+	 * Collects the projects containing the given single source files.
+	 *
+	 * @param sourceFiles
+	 *            the list of single source files
+	 * @param n4jsFileBasedWorkspace
+	 *            the workspace to be checked for containing projects
+	 * @return list of N4JS project locations
+	 * @throws N4JSCompileException
+	 *             if no project cannot be found for one of the given files
+	 */
+	public static List<File> findProjectsForSingleFiles(List<File> sourceFiles,
+			FileBasedWorkspace n4jsFileBasedWorkspace)
+			throws N4JSCompileException {
+
+		Set<URI> result = Sets.newLinkedHashSet();
+
+		for (File sourceFile : sourceFiles) {
+			URI sourceFileURI = URI.createFileURI(sourceFile.toString());
+			URI projectURI = n4jsFileBasedWorkspace.findProjectWith(sourceFileURI);
+			if (projectURI == null) {
+				throw new N4JSCompileException("No project for file '" + sourceFile.toString() + "' found.");
+			}
+			result.add(projectURI);
+		}
+
+		// convert back to Files:
+		return result.stream().map(u -> new File(u.toFileString())).collect(Collectors.toList());
+	}
+
+	/**
 	 * Searches for direct sub-folders containing a File named {@link IN4JSProject#N4MF_MANIFEST}
 	 *
 	 * @param absProjectRoots
 	 *            all project root (must be absolute)
 	 * @return list of directories being a project
 	 */
-	static ArrayList<File> collectAllProjectPaths(List<File> absProjectRoots) {
-		ArrayList<File> pDir = new ArrayList<>();
-		for (File projectRoot : absProjectRoots) {
-			Arrays.asList(projectRoot.listFiles(f -> {
-				return f.isDirectory(); // all directrories
-			}))//
-					.stream() //
-					.filter(f -> {
-						File[] list = f.listFiles(f2 -> f2.getName().equals(IN4JSProject.N4MF_MANIFEST));
-						return list != null && list.length > 0; // only those with manifest.n4mf
-					}) //
-					.forEach(f -> pDir.add(f));
-		}
-		return pDir;
+	public static List<File> collectAllProjectPaths(List<File> absProjectRoots) {
+		return getProjectStream(absProjectRoots)
+				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Searches for direct sub-folders containing a File named {@link IN4JSProject#N4MF_MANIFEST}
+	 *
+	 * @param absProjectRoots
+	 *            all project root (must be absolute)
+	 * @return list of directories being a project
+	 */
+	public static List<URI> collectAllProjectUris(List<File> absProjectRoots) {
+		return getProjectStream(absProjectRoots)
+				.map(HeadlessHelper::fileToURI)
+				.collect(Collectors.toList());
+	}
+
+	private static Stream<File> getProjectStream(List<File> absProjectRoots) {
+		return absProjectRoots.stream()
+				// find all contained folders
+				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
+				// only those with manifest
+				.filter(dir -> new File(dir, IN4JSProject.N4MF_MANIFEST).isFile());
+	}
+
+	private static URI fileToURI(File file) {
+		return URI.createFileURI(file.toString());
+	}
 }

@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.tests.builder;
 
-import static org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation.PUBLIC_DEFINITION_LOCATION;
-import static org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation.TEST_DEFINITION_LOCATION;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 
 import java.io.File;
@@ -32,22 +30,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocationProviderImpl;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -78,16 +68,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	private ResourceSet resourceSet = null;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
-
-	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
-
-	@Inject
-	private TypeDefinitionGitLocationProvider gitLocationProvider;
-
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+	private ExternalLibrariesSetupHelper externalLibrariesSetupHelper;
 
 	@Inject
 	private IssueUtil issueUtil;
@@ -262,48 +243,13 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	protected void setupExternalLibraries(boolean initShippedCode) throws Exception {
-		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(TEST_DEFINITION_LOCATION);
-
-		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		File nodeModuleLocationFile = new File(nodeModulesLocation);
-		if (!nodeModuleLocationFile.exists()) {
-			nodeModuleLocationFile.createNewFile();
-		}
-		assertTrue("Provided npm location should be available.", nodeModuleLocationFile.exists());
-
-		if (initShippedCode) {
-			shippedCodeInitializeTestHelper.setupBuiltIns();
-		} else {
-			externalLibraryPreferenceStore.add(nodeModulesLocation);
-			final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-			assertTrue("Error while saving external library preference changes.", result.isOK());
-		}
-		waitForAutoBuild();
+	protected void setupExternalLibraries(boolean initShippedCode, boolean useSandboxN4JD) throws Exception {
+		externalLibrariesSetupHelper.setupExternalLibraries(initShippedCode, useSandboxN4JD);
 	}
 
 	/** Tears down the external libraries. */
 	protected void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
-		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(PUBLIC_DEFINITION_LOCATION);
-
-		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		externalLibraryPreferenceStore.remove(nodeModulesLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
-
-		if (tearDownShippedCode) {
-			shippedCodeInitializeTestHelper.teardowneBuiltIns();
-		}
-
-		// cleanup leftovers in the file system
-		File nodeModuleLocationFile = new File(nodeModulesLocation);
-		assertTrue("Provided npm location does not exist.", nodeModuleLocationFile.exists());
-		assertTrue("Provided npm location is not a folder.", nodeModuleLocationFile.isDirectory());
-		FileDeleter.delete(nodeModuleLocationFile);
-		assertFalse("Provided npm location should be deleted.", nodeModuleLocationFile.exists());
-
-		waitForAutoBuild();
-
+		externalLibrariesSetupHelper.tearDownExternalLibraries(tearDownShippedCode);
 		super.tearDown();
 	}
 

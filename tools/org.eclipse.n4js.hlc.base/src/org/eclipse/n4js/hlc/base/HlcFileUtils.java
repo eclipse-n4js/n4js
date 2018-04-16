@@ -17,7 +17,7 @@ import org.eclipse.emf.common.util.URI;
 /**
  * Utilities for working with IO.
  */
-public class FileUtils {
+public class HlcFileUtils {
 
 	/**
 	 * Ensure given file is plain, existing and readable file.
