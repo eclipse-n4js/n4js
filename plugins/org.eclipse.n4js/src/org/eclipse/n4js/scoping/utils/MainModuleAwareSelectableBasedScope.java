@@ -12,14 +12,13 @@ package org.eclipse.n4js.scoping.utils;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
+import org.eclipse.n4js.ts.scoping.N4JSSelectableBasedScope;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.impl.SelectableBasedScope;
 
 import com.google.common.base.Predicate;
-
-import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 
 /**
  * MainModule aware scope adjusting shadowing of main modules.
@@ -29,7 +28,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
  * {@link EObject} (e.g. TModule). This can happen when different scopes in parent chain process the same EObjects.
  * Clients need to handle those duplicates on their own.
  */
-public class MainModuleAwareSelectableBasedScope extends SelectableBasedScope {
+public class MainModuleAwareSelectableBasedScope extends N4JSSelectableBasedScope {
 
 	/**
 	 * Creates new scope with given ISelectable.

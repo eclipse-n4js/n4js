@@ -15,14 +15,13 @@ import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.impl.SelectableBasedScope;
 
 import com.google.common.base.Predicate;
 
 /**
  * Polyfill aware scope disabling shadowing of polyfills.
  */
-public class PolyfillAwareSelectableBasedScope extends SelectableBasedScope {
+public class PolyfillAwareSelectableBasedScope extends N4JSSelectableBasedScope {
 
 	/**
 	 * Creates this scope if container is present, otherwise parent is returned.

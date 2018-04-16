@@ -18,16 +18,17 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
+import org.eclipse.n4js.ts.scoping.N4JSSelectableBasedScope;
+import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.scoping.impl.ImportedNamespaceAwareLocalScopeProvider;
 
 import com.google.common.base.Predicate;
-
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
-import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * Adapts {@link ImportedNamespaceAwareLocalScopeProvider} to filter ArgumentsType & EnumBaseType from globalScobe,
@@ -44,6 +45,15 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 	protected IScope getLocalElementsScope(IScope parent, final EObject context, final EReference reference) {
 		// nothing to do
 		return parent;
+	}
+
+	@Override
+	protected IScope getResourceScope(final IScope parent, final EObject context, final EReference reference) {
+		if (context.eResource() == null)
+			return parent;
+		ISelectable allDescriptions = getAllDescriptions(context.eResource());
+		return N4JSSelectableBasedScope.createScope(parent, allDescriptions, reference.getEReferenceType(),
+				isIgnoreCase(reference));
 	}
 
 	@Override
