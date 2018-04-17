@@ -34,8 +34,9 @@ pipeline {
                         ls -la
                     """
                 step([$class: 'WsCleanup'])
-                //TODO for branch config use scm.branches[0].name
-                checkout([$class: 'GitSCM', branches: [[name: '*/GH-718']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CloneOption', honorRefspec: true, noTags: false, reference: '', shallow: true, timeout: 30], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']], submoduleCfg: [], userRemoteConfigs: scm.userRemoteConfigs])
+
+                //TODO after merge use master
+                checkout([$class: 'GitSCM', branches: [[name: '*/GH-718']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CloneOption', honorRefspec: true, noTags: false, reference: '', shallow: true, timeout: 30], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/eclipse/n4js']]])
 
                 sh """\
                         pwd
