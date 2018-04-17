@@ -2836,13 +2836,26 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ParameterizedTypeRefNominal ParameterizedTypeRef:
-	//	TypeAndTypeArguments;
+	//	(TypeReference
+	//	| {VersionedParameterizedTypeRef} TypeReference VersionRequest) -> TypeArguments?;
 	public TypeExpressionsGrammarAccess.ParameterizedTypeRefNominalElements getParameterizedTypeRefNominalAccess() {
 		return gaTypeExpressions.getParameterizedTypeRefNominalAccess();
 	}
 	
 	public ParserRule getParameterizedTypeRefNominalRule() {
 		return getParameterizedTypeRefNominalAccess().getRule();
+	}
+	
+	//ParameterizedTypeRefStructural:
+	//	(definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+	//	| {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+	//	VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
+	public TypeExpressionsGrammarAccess.ParameterizedTypeRefStructuralElements getParameterizedTypeRefStructuralAccess() {
+		return gaTypeExpressions.getParameterizedTypeRefStructuralAccess();
+	}
+	
+	public ParserRule getParameterizedTypeRefStructuralRule() {
+		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
 	//ArrayTypeRef ParameterizedTypeRef:
@@ -2855,29 +2868,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getArrayTypeRefAccess().getRule();
 	}
 	
-	//ParameterizedTypeRefStructural:
-	//	(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|super::TypeReferenceName] |
-	//	{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-	//	declaredType=[Type|super::TypeReferenceName] VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
-	public TypeExpressionsGrammarAccess.ParameterizedTypeRefStructuralElements getParameterizedTypeRefStructuralAccess() {
-		return gaTypeExpressions.getParameterizedTypeRefStructuralAccess();
-	}
-	
-	public ParserRule getParameterizedTypeRefStructuralRule() {
-		return getParameterizedTypeRefStructuralAccess().getRule();
-	}
-	
-	//TypeAndTypeArguments ParameterizedTypeRef:
-	//	(declaredType=[Type|super::TypeReferenceName] | {VersionedParameterizedTypeRef}
-	//	declaredType=[Type|super::TypeReferenceName] VersionRequest) -> TypeArguments?;
-	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
-		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
-	}
-	
-	public ParserRule getTypeAndTypeArgumentsRule() {
-		return getTypeAndTypeArgumentsAccess().getRule();
-	}
-	
 	//fragment VersionRequest *:
 	//	requestedVersion=VERSION;
 	public TypeExpressionsGrammarAccess.VersionRequestElements getVersionRequestAccess() {
@@ -2886,6 +2876,16 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getVersionRequestRule() {
 		return getVersionRequestAccess().getRule();
+	}
+	
+	//fragment TypeReference *:
+	//	declaredType=[Type|super::TypeReferenceName];
+	public TypeExpressionsGrammarAccess.TypeReferenceElements getTypeReferenceAccess() {
+		return gaTypeExpressions.getTypeReferenceAccess();
+	}
+	
+	public ParserRule getTypeReferenceRule() {
+		return getTypeReferenceAccess().getRule();
 	}
 	
 	//fragment TypeArguments *:

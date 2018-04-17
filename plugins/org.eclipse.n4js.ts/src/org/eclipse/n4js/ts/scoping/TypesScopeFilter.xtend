@@ -12,8 +12,11 @@ package org.eclipse.n4js.ts.scoping
 
 import com.google.common.base.Predicate
 import com.google.common.base.Predicates
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
@@ -21,8 +24,6 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.resource.IEObjectDescription
 
 /**
@@ -41,6 +42,9 @@ class TypesScopeFilter {
 	}
 
 	protected def getTypesFilterCriteria(ParameterizedTypeRef context, EReference reference) {
+		if (reference === TypeRefsPackage.eINSTANCE.parameterizedTypeRef_AstNamespace) {
+			return namespaceCriterion;
+		}
 		var EObject container = context
 		var EReference containmentFeature = null
 		while(container instanceof TypeRef) {
@@ -67,6 +71,12 @@ class TypesScopeFilter {
 			default:
 				Predicates.alwaysTrue
 		}
+	}
+
+	protected def Predicate<? super IEObjectDescription> getNamespaceCriterion() {
+		[
+			TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(EClass)
+		]
 	}
 
 	protected def Predicate<? super IEObjectDescription> getParameterTypeCriteria() {
