@@ -51,6 +51,9 @@ pipeline {
                             'execute-accesscontrol-tests '
                         ].join(',')
 
+                    // https://issues.jenkins-ci.org/browse/JENKINS-48300
+                    def exteraOptions = '-Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=300'
+
                     timeout(time: 3, unit: 'HOURS') {
                         wrap([$class: 'Xvnc', useXauthority: true]) {
                             withEnv([ "MAVEN_OPTS=-Xmx2048M"
@@ -69,7 +72,7 @@ pipeline {
                                         echo "==================================="
                                     """
 
-                                sh """mvn clean verify -P${profiles} """
+                                sh """mvn clean verify -P${profiles} ${extraOptions}"""
                             }
                         }
                     }
