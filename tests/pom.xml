@@ -326,7 +326,7 @@ Contributors:
 							<phase />
 							<configuration>
 								<!-- 15 Minutes timeout -->
-								<forkedProcessTimeoutInSeconds>900</forkedProcessTimeoutInSeconds>
+								<forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
 								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
 								<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
 								<!-- different for mac/not mac -->
