@@ -13,10 +13,6 @@ package org.eclipse.n4js.scoping.members;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
-import com.google.common.base.Predicate;
-
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.NameAndAccess;
@@ -26,6 +22,9 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypingStrategy;
+import org.eclipse.xtext.resource.IEObjectDescription;
+
+import com.google.common.base.Predicate;
 
 /**
  * Filter used in {@link TypingStrategyAwareMemberScope} to filter out results not available for a given typing
@@ -108,8 +107,11 @@ class TypingStrategyFilter implements Predicate<IEObjectDescription> {
 			case STRUCTURAL_WRITE_ONLY_FIELDS:
 				return true;
 			case STRUCTURAL_READ_ONLY_FIELDS:
-			case STRUCTURAL_FIELD_INITIALIZER:
 				return false;
+			case STRUCTURAL_FIELD_INITIALIZER:
+				// ~i~ turns a setter into a getter, i.e. we keep the member in case of read access and filter it out
+				// otherwise
+				return !isWriteAccess;
 			}
 		}
 
