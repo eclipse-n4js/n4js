@@ -121,7 +121,7 @@ ci.accRead = 5;
 ci.accRead;
 // XPECT errors --> "setter accWrite is not available for structurally referenced type ~i~C." at "accWrite"
 ci.accWrite = 5;
-// IDE-2345 XPECT FIXME noerrors
+// XPECT noerrors -->
 ci.accWrite;
 // XPECT errors --> "method foo is not available for structurally referenced type ~i~C." at "foo"
 ci.foo();
