@@ -33,7 +33,7 @@ public class ProjectLocationsUtil {
 		final List<File> retList = new ArrayList<>();
 		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
 			final File tpLoc = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
-			FileUtils.isExistingWriteableDir(tpLoc);
+			HlcFileUtils.isExistingWriteableDir(tpLoc);
 			retList.add(tpLoc);
 		}
 		return retList;
@@ -48,7 +48,7 @@ public class ProjectLocationsUtil {
 		if (!Strings.isNullOrEmpty(dirpaths)) {
 			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
 				final File ret = new File(dirpath);
-				FileUtils.isExistingWriteableDir(ret);
+				HlcFileUtils.isExistingWriteableDir(ret);
 				retList.add(ret);
 			}
 		}

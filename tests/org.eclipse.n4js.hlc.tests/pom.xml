@@ -105,17 +105,14 @@ Contributors:
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>default-test</id>
-						<configuration>
-							<systemProperties>
-								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-							</systemProperties>
-						</configuration>
-					</execution>
-				</executions>
+				<configuration>
+					<argLine>-Xmx2048m</argLine>
+					<systemProperties>
+						<log4j.configuration>file:${project.build.outputDirectory}/NODEBUGlog4j.xml</log4j.configuration>
+						<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+						<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+					</systemProperties>
+			</configuration>
 			</plugin>
 
 		</plugins>

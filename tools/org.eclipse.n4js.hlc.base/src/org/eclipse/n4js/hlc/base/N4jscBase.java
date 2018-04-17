@@ -20,7 +20,6 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSE
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
 import static org.eclipse.n4js.utils.git.GitUtils.hardReset;
 import static org.eclipse.n4js.utils.git.GitUtils.pull;
-import static org.eclipse.n4js.utils.io.FileUtils.createTempDirectory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -585,43 +584,36 @@ public class N4jscBase implements IApplication {
 		checkState(installLocationProvider instanceof HeadlessTargetPlatformInstallLocationProvider);
 		HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
 
-		if (installMissingDependencies) {
+		if (!installMissingDependencies) {
+			if (verbose)
+				System.out.println("Skipping scanning and installation of dependencies.");
+			return;
+		}
 
-			try {
+		// pull n4jsd to install location
+		java.net.URI gitRepositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
+		Path localClonePath = new File(gitRepositoryLocation).toPath();
+		hardReset(gitLocationProvider.getGitLocation().getRepositoryRemoteURL(), localClonePath,
+				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
+		pull(localClonePath);
 
-				// pull n4jsd to install location
-				java.net.URI gitRepositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
-				Path localClonePath = new File(gitRepositoryLocation).toPath();
-				hardReset(gitLocationProvider.getGitLocation().getRepositoryRemoteURL(), localClonePath,
-						gitLocationProvider.getGitLocation().getRemoteBranch(), true);
-				pull(localClonePath);
-
-				// generate n4tp file for NpmManager to use
-				PackageJson packageJson = TargetPlatformFactory.createN4Default();
-				java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
-				File packageJsonFile = new File(new File(platformLocation), PackageJson.PACKAGE_JSON);
-				try {
-					if (!packageJsonFile.exists()) {
-						packageJsonFile.createNewFile();
-					}
-					try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
-						pw.write(packageJson.toString());
-						pw.flush();
-						locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
-
-					}
-				} catch (IOException e) {
-					throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
-							"Error while consuming target platform file.", e);
-				}
-
-			} catch (Exception e) {
-				locationProvider.setTargetPlatformFileLocation(null);
-				locationProvider.setTargetPlatformInstallLocation(null);
-				if (e instanceof ExitCodeException)
-					throw e;
-				Throwables.propagateIfPossible(e);
+		// generate n4tp file for NpmManager to use
+		PackageJson packageJson = TargetPlatformFactory.createN4Default();
+		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
+		File packageJsonFile = new File(new File(platformLocation), PackageJson.PACKAGE_JSON);
+		try {
+			if (!packageJsonFile.exists()) {
+				packageJsonFile.createNewFile();
 			}
+			try (PrintWriter pw = new PrintWriter(packageJsonFile)) {
+				pw.write(packageJson.toString());
+				pw.flush();
+				locationProvider.setTargetPlatformFileLocation(packageJsonFile.toURI());
+
+			}
+		} catch (IOException e) {
+			throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
+					"Error while consuming target platform file.", e);
 		}
 	}
 
@@ -681,10 +673,15 @@ public class N4jscBase implements IApplication {
 
 			locationProvider.setTargetPlatformInstallLocation(targetPlatformInstallLocation.toURI());
 		} else {
-			// create temp location
-			final Path tempRoot = createTempDirectory("hlcTmpDepsLocation_" + System.currentTimeMillis());
-			targetPlatformInstallLocation = tempRoot.toFile();
-			locationProvider.setTargetPlatformInstallLocation(tempRoot.toUri());
+			if (verbose)
+				System.out.println("Setting up tmp location for dependencies.");
+
+			try {
+				locationProvider.configureWithTempFolders();
+			} catch (IOException e1) {
+				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
+						"Error while creating temp locations for dependencies.", e1);
+			}
 		}
 
 	}
@@ -792,6 +789,22 @@ public class N4jscBase implements IApplication {
 		}
 
 		try {
+			compile();
+			writeTestCatalog();
+			testAndRun();
+
+		} finally {
+			cleanTemporaryArtifacts();
+		}
+
+		if (debug) {
+			System.out.println("... done.");
+		}
+	}
+
+	/** dispatch to proper build method based on {@link #buildtype} */
+	private void compile() throws ExitCodeException {
+		try {
 			switch (buildtype) {
 			case singlefile:
 				compileArgumentsAsSingleFiles();
@@ -811,7 +824,10 @@ public class N4jscBase implements IApplication {
 			e.userDump(System.err);
 			throw new ExitCodeException(EXITCODE_COMPILE_ERROR);
 		}
+	}
 
+	/** writes test catalog based on {@link #testCatalogFile} */
+	private void writeTestCatalog() throws ExitCodeException {
 		if (null != testCatalogFile) {
 			final String catalog = testCatalogSupplier.get();
 			try (final FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
@@ -822,7 +838,10 @@ public class N4jscBase implements IApplication {
 				throw new ExitCodeException(EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
 			}
 		}
+	}
 
+	/** triggers runners and testers based on {@link #testThisLocation} and {@link #runThisFile} */
+	private void testAndRun() throws ExitCodeException {
 		if (testThisLocation != null) {
 			if (buildtype != BuildType.dontcompile) {
 				flushAndIinsertMarkerInOutputs();
@@ -835,11 +854,27 @@ public class N4jscBase implements IApplication {
 				flushAndIinsertMarkerInOutputs();
 			}
 			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(),
-					targetPlatformInstallLocation);
+					new File(installLocationProvider.getTargetPlatformInstallLocation()));
 		}
+	}
 
-		if (debug) {
-			System.out.println("... done.");
+	/** In some cases compiler is creating files and folders in temp locations. This method deletes those leftovers. */
+	private void cleanTemporaryArtifacts() {
+		if (installLocationProvider != null) {
+			HeadlessTargetPlatformInstallLocationProvider locationProvider = (HeadlessTargetPlatformInstallLocationProvider) installLocationProvider;
+			// TODO GH-521 reset state for HLC tests
+			final java.net.URI uri = locationProvider.getTempRoot();
+			locationProvider.resetState();
+			if (uri != null) {
+				File tempInstallToClean = new File(uri);
+				try {
+					if (tempInstallToClean.exists())
+						FileDeleter.delete(tempInstallToClean);
+				} catch (IOException e) {
+					warn("Cannot clean temp install locations " + tempInstallToClean);
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -865,7 +900,7 @@ public class N4jscBase implements IApplication {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
 
-		return FileUtils.fileToURI(runThisFile);
+		return HlcFileUtils.fileToURI(runThisFile);
 	}
 
 	/**
@@ -879,7 +914,7 @@ public class N4jscBase implements IApplication {
 		if (testThisLocation == null || !testThisLocation.exists()) {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
-		return FileUtils.fileToURI(testThisLocation);
+		return HlcFileUtils.fileToURI(testThisLocation);
 	}
 
 	/**
@@ -891,7 +926,7 @@ public class N4jscBase implements IApplication {
 	 *             signaling compile-errors.
 	 */
 	private void compileArgumentsAsSingleFiles() throws ExitCodeException, N4JSCompileException {
-		srcFiles.stream().forEach(FileUtils::isExistingReadibleFile);
+		srcFiles.stream().forEach(HlcFileUtils::isExistingReadibleFile);
 
 		List<File> toBuild = new ArrayList<>();
 		toBuild.addAll(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider));

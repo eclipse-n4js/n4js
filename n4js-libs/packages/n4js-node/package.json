@@ -29,8 +29,8 @@
   "browser": "./src-gen/browser.js",
   "react-native": "./src-gen/react-native.js",
   "dependencies": {
-    "node-fetch": "^1.6.3",
-    "systemjs": "^0.19.39"
+    "node-fetch": "~1.6.3",
+    "systemjs": "~0.19.40"
   },
   "files": [
     "manifest.n4mf",

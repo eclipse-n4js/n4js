@@ -15,17 +15,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
-import org.eclipse.n4js.hlc.tests.ExternalsUtiities;
 import org.eclipse.n4js.hlc.tests.N4CliHelper;
-import org.eclipse.n4js.hlc.tests.TargetPlatformFiles;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -39,44 +32,13 @@ import org.junit.Test;
  */
 public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
-	private final TargetPlatformFiles platformFiles = new TargetPlatformFiles();
-
 	/***/
 	public N4jscJarTestersTest() {
 		super("probands/testers");
 	}
 
 	/**
-	 * Initializes the target platform install location and the target platform file with the desired dependencies.
-	 * Performs a sanity check, neither install location, nor the target platform file should exist.
-	 */
-	@Before
-	public void beforeTest() throws IOException {
-		ExternalsUtiities.setupExternals(platformFiles, description.getMethodName(),
-				getNpmDependencies());
-	}
-
-	/**
-	 * Cleans up the target platform install location and the actual target platform file.
-	 */
-	@After
-	public void afterTest() {
-		ExternalsUtiities.cleanupExternals(platformFiles);
-	}
-
-	/** Since N4JSC.jar does not provide built ins, we need to get them from npm. */
-	// TODO https://github.com/eclipse/n4js/issues/611
-	protected Map<String, String> getNpmDependencies() {
-		Map<String, String> deps = new HashMap<>();
-
-		deps.put("eu.numberfour.mangelhaft", "@0.5.0");
-		deps.put("eu.numberfour.mangelhaft.assert", "@0.5.0");
-
-		return deps;
-	}
-
-	/**
-	 * Compile All & Test project. Assert test output, test report, and proper exit code.
+	 * Compile All and Test project. Assert test output, test report, and proper exit code.
 	 *
 	 * @throws Exception
 	 *             in Error cases
@@ -91,8 +53,6 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", platformFiles.targetPlatformFile.getAbsolutePath(),
-				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", WSP,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
@@ -119,7 +79,7 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	}
 
 	/**
-	 * Compile All & Test project. Assert test output, test report, and proper exit code.
+	 * Compile All and Test project. Assert test output, test report, and proper exit code.
 	 *
 	 * @throws Exception
 	 *             in Error cases
@@ -135,8 +95,6 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
 		Process p = createAndStartProcess(
 				"--systemLoader", COMMON_JS.getId(),
-				"--targetPlatformFile", platformFiles.targetPlatformFile.getAbsolutePath(),
-				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", WSP,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",

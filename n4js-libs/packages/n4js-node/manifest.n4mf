@@ -25,6 +25,11 @@ ProvidedRuntimeLibraries {
     n4js-runtime-ecma402
 }
 
+ProjectDependencies {
+    node-fetch 1.6.3,
+    systemjs 0.19.40
+}
+
 Output: "src-gen"
 Sources {
     external {

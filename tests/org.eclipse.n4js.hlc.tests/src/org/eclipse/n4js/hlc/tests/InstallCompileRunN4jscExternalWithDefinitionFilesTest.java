@@ -25,7 +25,7 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express' with N4JS definition file support.
  */
-public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN4jscExternalTest {
+public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends AbstractN4jscTest {
 	File workspace;
 
 	private static final String PROJECT_NAME_N4JS = "project.using.external.from.n4js";
@@ -55,7 +55,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose",
@@ -81,7 +80,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose",
