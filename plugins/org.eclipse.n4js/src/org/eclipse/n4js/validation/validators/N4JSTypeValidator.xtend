@@ -11,9 +11,6 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.EList
@@ -85,6 +82,9 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -335,7 +335,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			val staticAccess = genDecl instanceof N4MemberDeclaration && (genDecl as N4MemberDeclaration).static;
 			val scope = n4jsScopeProvider.getTypeScope( // note: calling #getTypeScope() here, NOT #getScope()!
 			genDecl.eContainer, // use container, because we do not want to see type variables we are currently validating
-			TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType, // provide any reference that expects instances of Type as target objects
 			staticAccess);
 			genDecl.typeVars.forEach [
 				if (!it.name.nullOrEmpty) {
