@@ -32,8 +32,6 @@ pipeline {
                 sh """\
                         pwd
                         ls -la
-                        git status
-                        git log -n 1
                     """
                 step([$class: 'WsCleanup'])
                 //TODO for branch config use scm.branches[0].name
@@ -73,18 +71,18 @@ pipeline {
                                     , "PATH+ANT=/shared/common/apache-ant-1.9.6/bin/"
                                     , "PATH+MVN=/shared/common/apache-maven-3.5.0/bin/"
                                     , "PATH+JAVA=/shared/common/java/oracle/jdk1.8.0_162_x64/bin/"]) {
-
-                                sh """pwd"""
-                                sh 'printenv'
-                                sh """\
-                                        echo "===== checking tools versions ====="
-                                        mvn -v
-                                        node -v
-                                        npm -v
-                                        echo "==================================="
-                                    """
-
-                                sh """mvn clean verify -P${profiles} ${extraOptions}"""
+                                dir('n4js') {
+                                    sh """pwd"""
+                                    sh 'printenv'
+                                    sh """\
+                                            echo "===== checking tools versions ====="
+                                            mvn -v
+                                            node -v
+                                            npm -v
+                                            echo "==================================="
+                                        """
+                                    sh """mvn clean verify -P${profiles} ${extraOptions}"""
+                                }
                             }
                         }
                     }
