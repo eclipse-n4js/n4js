@@ -58,7 +58,7 @@ pipeline {
                         '-Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=300',
                         // less verbous, more stable Jenkins
                         '--quiet',
-                        '--batch-mode'
+                        '--batch-mode',
                         '--update-snapshots'
                         ].join(' ')
 
