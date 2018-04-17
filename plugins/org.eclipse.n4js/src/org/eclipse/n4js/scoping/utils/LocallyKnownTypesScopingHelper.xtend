@@ -130,7 +130,7 @@ class LocallyKnownTypesScopingHelper {
 
 		// locally defined types except polyfillType itself
 		val local = script.module
-		var IScope localTypesScope = scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.filter [
+		val IScope localTypesScope = scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.filter [
 			it !== polyfillType
 		].map[EObjectDescription.create(name, it)]);
 
