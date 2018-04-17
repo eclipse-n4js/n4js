@@ -36,8 +36,13 @@ pipeline {
                         git log -n 1
                     """
                 step([$class: 'WsCleanup'])
+                //TODO for branch config use scm.branches[0].name
+                checkout([$class: 'GitSCM', branches: [[name: '*/GH-718']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CloneOption', honorRefspec: true, noTags: false, reference: '', shallow: true, timeout: 30], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']], submoduleCfg: [], userRemoteConfigs: scm.userRemoteConfigs])
+
                 sh """\
                         pwd
+                        ls -la
+                        cd n4js
                         ls -la
                         git status
                         git log -n 1
@@ -98,3 +103,6 @@ pipeline {
         }
     }
 }
+
+
+/
