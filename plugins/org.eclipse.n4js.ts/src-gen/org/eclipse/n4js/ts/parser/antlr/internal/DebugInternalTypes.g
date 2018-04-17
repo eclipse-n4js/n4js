@@ -861,24 +861,26 @@ ruleParameterizedTypeRef:
 
 // Rule ParameterizedTypeRefNominal
 ruleParameterizedTypeRefNominal:
-	ruleTypeAndTypeArguments
-;
-
-// Rule ArrayTypeRef
-ruleArrayTypeRef:
-	'['
-	ruleTypeArgument
-	']'
+	(
+		ruleTypeReference
+		    |
+		ruleTypeReference
+		ruleVersionRequest
+	)
+	(
+		('<')=>
+		ruleTypeArguments
+	)?
 ;
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
 	(
 		ruleTypingStrategyUseSiteOperator
-		ruleTypeReferenceName
+		ruleTypeReference
 		    |
 		ruleTypingStrategyUseSiteOperator
-		ruleTypeReferenceName
+		ruleTypeReference
 		ruleVersionRequest
 	)
 	(
@@ -891,23 +893,21 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule TypeAndTypeArguments
-ruleTypeAndTypeArguments:
-	(
-		ruleTypeReferenceName
-		    |
-		ruleTypeReferenceName
-		ruleVersionRequest
-	)
-	(
-		('<')=>
-		ruleTypeArguments
-	)?
+// Rule ArrayTypeRef
+ruleArrayTypeRef:
+	'['
+	ruleTypeArgument
+	']'
 ;
 
 // Rule VersionRequest
 ruleVersionRequest:
 	RULE_VERSION
+;
+
+// Rule TypeReference
+ruleTypeReference:
+	ruleTypeReferenceName
 ;
 
 // Rule TypeArguments

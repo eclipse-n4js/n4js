@@ -27,7 +27,7 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-public class InstallCompileRunN4jscExternalImportsTest extends BaseN4jscExternalTest {
+public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -54,7 +54,6 @@ public class InstallCompileRunN4jscExternalImportsTest extends BaseN4jscExternal
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose",

@@ -29,7 +29,7 @@ import com.google.common.base.Predicates;
  * Downloads, installs, compiles and runs several packages that are known to be problematic in terms of how they define
  * main module.
  */
-public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExternalTest {
+public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractN4jscTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -58,7 +58,6 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 				"--buildType", BuildType.allprojects.toString(),
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose"

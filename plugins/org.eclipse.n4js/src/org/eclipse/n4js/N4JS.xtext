@@ -1214,13 +1214,17 @@ N4MemberAnnotationList:
 // N4JS versions of type references and expressions, overriding rules in Types.xtext
 // ****************************************************************************************************
 
+// override to support referencing types via the namespace of namespace imports
 @Override
-TypeReferenceName:
-	'void' | 'This' | 'await' | 'Promisify' | 'target' | QualifiedTypeReferenceName
+fragment TypeReference*:
+	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+	declaredType=[types::Type|TypeReferenceName]
 ;
 
-QualifiedTypeReferenceName:
-	IDENTIFIER ('.' (IDENTIFIER | 'default' ))?
+// override to disallow fully-qualified names in N4JS
+@Override
+TypeReferenceName:
+	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
 ;
 
 // ****************************************************************************************************
