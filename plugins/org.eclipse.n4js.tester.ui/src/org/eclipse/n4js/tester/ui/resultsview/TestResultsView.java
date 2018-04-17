@@ -41,10 +41,16 @@ import java.util.stream.Collectors;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.commands.ITerminateHandler;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.ITerminate;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.commands.actions.DebugCommandService;
 import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchGroup;
@@ -57,7 +63,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -75,7 +80,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterEventBus;
-import org.eclipse.n4js.tester.TesterFrontEnd;
 import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
 import org.eclipse.n4js.tester.domain.TestElement;
@@ -91,7 +95,6 @@ import org.eclipse.n4js.tester.events.TestEndedEvent;
 import org.eclipse.n4js.tester.events.TestEvent;
 import org.eclipse.n4js.tester.events.TestStartedEvent;
 import org.eclipse.n4js.tester.ui.TestConfigurationConverter;
-import org.eclipse.n4js.tester.ui.TesterFrontEndUI;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.ui.editor.EditorContentExtractor;
 import org.eclipse.n4js.ui.editor.StyledTextDescriptor;
@@ -129,7 +132,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -176,12 +178,6 @@ public class TestResultsView extends ViewPart {
 
 	@Inject
 	private EditorContentExtractor editorContentExtractor;
-
-	@Inject
-	private TesterFrontEndUI testerFrontEndUI;
-
-	@Inject
-	private TesterFrontEnd testerFrontEnd;
 
 	@Inject
 	private IN4JSEclipseCore core;
@@ -821,12 +817,9 @@ public class TestResultsView extends ViewPart {
 				this::performRelaunchFailed);
 		actionStop = createAction(
 				"Stop", IAction.AS_PUSH_BUTTON,
-				/* "Stop currently running test session.", */
-				"Stopping the running test session is currently not supported.",
+				"Stop currently running test session.",
 				TesterUiActivator.getImageDescriptor(TesterUiActivator.ICON_STOP),
 				this::performStop);
-		// Disable stop action for now since testing framework doesn't support stopping yet.
-		// TODO re-enable stop action (also see to-do in method #refreshActions(), below!)
 		actionStop.setEnabled(false);
 
 		actionShowHistory = new ShowHistoryAction(this);
@@ -893,7 +886,9 @@ public class TestResultsView extends ViewPart {
 	protected void refreshActions() {
 		actionScrollLock.setEnabled(true);
 		actionOpenLaunchConfig.setEnabled(null != currentRoot);
-		actionRelaunch.setEnabled(null != currentRoot && !currentRoot.isRunning());
+		boolean isRunningOrNoRoot = null == currentRoot || currentRoot.isRunning();
+		actionRelaunch.setEnabled(!isRunningOrNoRoot);
+		actionStop.setEnabled(isRunningOrNoRoot);
 		actionRelaunchFailed.setEnabled(false);
 		// actionStop.setEnabled(currentRoot != null && currentRoot.isRunning());
 		// TODO
@@ -908,20 +903,21 @@ public class TestResultsView extends ViewPart {
 		if (null != currentRoot) {
 			final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
 			if (null != session) {
-				final TestConfiguration configurationToReRun = session.configuration;
 				registeredSessions.remove(session);
-				try {
-					final TestConfiguration newConfiguration = testerFrontEnd.createConfiguration(configurationToReRun);
-					testerFrontEndUI.runInUI(newConfiguration);
-				} catch (Exception e) {
-					String message = "Test class not found in the workspace.";
-					if (!Strings.isNullOrEmpty(e.getMessage())) {
-						message += " Reason: " + e.getMessage();
-					}
-					MessageDialog.openError(getShell(), "Cannot open editor", message);
-				}
+				ILaunchConfiguration launchConfig = getLaunchConfigForSession(session);
+				DebugUITools.launch(launchConfig, ILaunchManager.RUN_MODE, true);
 			}
 		}
+	}
+
+	private ILaunchConfiguration getLaunchConfigForSession(TestSession session) {
+		final TestConfiguration testConfig = session.configuration;
+		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(
+				testConfig.getLaunchConfigurationTypeIdentifier());
+		ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type,
+				testConfig);
+		return launchConfig;
 	}
 
 	/**
@@ -949,10 +945,9 @@ public class TestResultsView extends ViewPart {
 				LaunchConfigurationManager configManager = DebugUIPlugin.getDefault().getLaunchConfigurationManager();
 				ILaunchGroup group = configManager.getLaunchGroup(type, modes);
 
-				int ret = DebugUITools.openLaunchConfigurationPropertiesDialog(
+				DebugUITools.openLaunchConfigurationDialog(
 						this.getViewSite().getShell(),
-						launchConfig, group.getIdentifier());
-				System.out.println(ret);
+						launchConfig, group.getIdentifier(), null);
 			}
 		}
 	}
@@ -968,7 +963,53 @@ public class TestResultsView extends ViewPart {
 	 * Invoked when user performs {@link #actionStop}.
 	 */
 	protected void performStop() {
-		// TODO
+
+		final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
+		if (null != session) {
+			IProcess process = DebugUITools.getCurrentProcess();
+			ILaunch launch = process.getLaunch();
+			ILaunchConfiguration runningConfig = launch.getLaunchConfiguration();
+			ILaunchConfiguration sessionConfig = getLaunchConfigForSession(session);
+			if (runningConfig.getName() == sessionConfig.getName()) {
+				List<ITerminate> targets = collectTargets(process);
+				targets.add(process);
+				DebugCommandService service = DebugCommandService
+						.getService(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+				service.executeCommand(ITerminateHandler.class, targets.toArray(), null);
+
+				session.root.stopRunning();
+				refreshActions();
+			}
+
+		}
+	}
+
+	/**
+	 * Collects targets associated with a process. -- copies from ConsoleTerminateAction
+	 *
+	 * @param process
+	 *            the process to collect {@link IDebugTarget}s for
+	 * @return associated targets
+	 */
+	private List<ITerminate> collectTargets(IProcess process) {
+		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunch[] launches = launchManager.getLaunches();
+		List<ITerminate> targets = new ArrayList<>();
+		for (int i = 0; i < launches.length; i++) {
+			ILaunch launch = launches[i];
+			IProcess[] processes = launch.getProcesses();
+			for (int j = 0; j < processes.length; j++) {
+				IProcess process2 = processes[j];
+				if (process2.equals(process)) {
+					IDebugTarget[] debugTargets = launch.getDebugTargets();
+					for (int k = 0; k < debugTargets.length; k++) {
+						targets.add(debugTargets[k]);
+					}
+					return targets; // all possible targets have been terminated for the launch.
+				}
+			}
+		}
+		return targets;
 	}
 
 	/**
