@@ -505,7 +505,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val result = if (module !== null && !module.eIsProxy) {
 				scope_AllTopLevelElementsFromModule(module, context)
 			} else {
-				new DynamicPseudoScope() // avoid duplicate error messages (cf. MemberScopingHelper#members(UnknownTypeRef, MemberScopeRequest))
+				// error cases
+				if (namespace.eIsProxy) {
+					// name space does not exist -> avoid duplicate error messages
+					// (cf. MemberScopingHelper#members(UnknownTypeRef, MemberScopeRequest))
+					new DynamicPseudoScope()
+				} else {
+					// name space exists, but imported module does not -> show additional error at location of reference
+					IScope.NULLSCOPE
+				}
 			};
 		if (namespace.declaredDynamic && !(result instanceof DynamicPseudoScope)) {
 			return new DynamicPseudoScope(result);
