@@ -23,21 +23,12 @@ pipeline {
         timestamps()
     }
     triggers {
-        pollSCM('H   1 * * *') // Nightly build every day a 1am
+        pollSCM('H   1 * * *') // Nightly build - poll scm for changes every day a 1am
     }
 
     stages {
         stage('prepare workspace') {
             steps {
-                sh """\
-                        pwd
-                        ls -la
-                    """
-                // step([$class: 'WsCleanup'])
-
-                // //TODO after merge use master
-                // checkout([$class: 'GitSCM', branches: [[name: '*/GH-718']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CloneOption', honorRefspec: true, noTags: false, reference: '', shallow: true, timeout: 30], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/eclipse/n4js']]])
-
                 sh """\
                         pwd
                         ls -la
@@ -62,8 +53,14 @@ pipeline {
                             'execute-accesscontrol-tests '
                         ].join(',')
 
-                    // https://issues.jenkins-ci.org/browse/JENKINS-48300
-                    def extraOptions = '-Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=300'
+                    def extraOptions = [
+                        // https://issues.jenkins-ci.org/browse/JENKINS-48300
+                        '-Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=300',
+                        // less verbous, more stable Jenkins
+                        '--quiet',
+                        '--batch-mode'
+                        '--update-snapshots'
+                        ].join(' ')
 
                     timeout(time: 3, unit: 'HOURS') {
                         wrap([$class: 'Xvnc', useXauthority: true]) {
@@ -73,7 +70,6 @@ pipeline {
                                     , "PATH+MVN=/shared/common/apache-maven-3.5.0/bin/"
                                     , "PATH+JAVA=/shared/common/java/oracle/jdk1.8.0_162_x64/bin/"]) {
                                 dir('n4js') {
-                                    sh """pwd"""
                                     sh 'printenv'
                                     sh """\
                                             echo "===== checking tools versions ====="
