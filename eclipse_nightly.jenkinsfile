@@ -27,8 +27,15 @@ pipeline {
     }
 
     stages {
-        stage('fs browse') {
+        stage('prepare workspace') {
             steps {
+                sh """\
+                        pwd
+                        ls -la
+                        git status
+                        git log -n 1
+                    """
+                step([$class: 'WsCleanup'])
                 sh """\
                         pwd
                         ls -la
