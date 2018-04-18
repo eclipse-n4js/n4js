@@ -289,7 +289,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			.filter[groupKey, migrations| 
 				groupKey.key /* targetVersion */ > 0 
 				&& groupKey.value /* sourceTypeRefs.size */ > 0 
-				&& migrations.size > 1
+				&& migrations.size > 0
 			];
 	
 		// check remaining groups for being distinguishable by a type switch (adds issue otherwise)		
