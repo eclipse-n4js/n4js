@@ -16,10 +16,13 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.n4js.ts.types.TInterface
 
 /**
  * The MigrationSwitchComputer can be used to compute a {@link SwitchCondition} which 
@@ -49,7 +52,7 @@ class MigrationSwitchComputer {
 	 * - parameterized array types (such as [A#1] or Array<A#1>)
 	 * - plain non-parameterized types (such as A#1)
 	 * 
-	 * There is currently no support for composed type references (such as [A#1|A#2).
+	 * There is currently no support for composed type references (such as A#1|A#2).
 	 * 
 	 * Furthermore, the following {@link TypeRef}s are ignored and therefore always evaluate to true
 	 * in the generated switch condition:
@@ -62,6 +65,10 @@ class MigrationSwitchComputer {
 		switch(ref) {
 			ParameterizedTypeRef case isParameterizedArrayTypeRef(ref): {
 				return SwitchCondition.arrayOf(compute(ref.typeArgs.get(0) as TypeRef));
+			}
+			ParameterizedTypeRef case isUnhandledBuiltInType(ref.declaredType): {
+				// built-in types that are provided by the runtime are not supported apart from 'Array'
+				throw new UnhandledTypeRefException(ref);
 			}
 			ParameterizedTypeRef:
 				return SwitchCondition.instanceOf(ref.declaredType)
@@ -142,5 +149,15 @@ class MigrationSwitchComputer {
 			&& typeRef.typeArgs.size > 0
 			// TODO support for wildcards with bounds
 			&& typeRef.typeArgs.get(0) instanceof TypeRef;
+	}
+	
+	/** Returns {@code true} iff the given {@code type} is an unhandled built-in type. */
+	private def boolean isUnhandledBuiltInType(Type type) {
+		// We cannot check for instances of interfaces that are 
+		// provided by the runtime (e.g. Iterable).
+		return type !== null &&
+			!(type instanceof PrimitiveType) &&
+			type instanceof TInterface && 
+			type.providedByRuntime;
 	}
 }

@@ -23,6 +23,7 @@ import org.eclipse.xpect.expectation.IStringExpectation
 import org.eclipse.xpect.expectation.StringExpectation
 import org.eclipse.xpect.parameter.ParameterParser
 import org.eclipse.xpect.runner.Xpect
+import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer.UnhandledTypeRefException
 
 /**
  * Provides X!PECT methods for testing the computation of {@link SwitchCondition}s 
@@ -56,6 +57,8 @@ class TypeSwitchXpectMethod {
 	 * 
 	 * This forth-and-back conversion may result in the generalization of a type reference, since switch conditions
 	 * are not as expressive as compile-time type reference.
+	 * 
+	 * Assert string expectation {@code "unsupported"} to check that a given type reference is not supported. 
 	 */
 	@ParameterParser(syntax = "'of' arg1=OFFSET ")
 	@Xpect
@@ -66,8 +69,15 @@ class TypeSwitchXpectMethod {
 			throw new IllegalStateException("No expectation specified, add '--> <type switch string representation>'");
 
 		val EObject object = arg1.getEObject();
-		val TypeRef typeSwitchTypeRef = getTypeSwitchTypeRef(object);
-		expectation.assertEquals(String.format("\"%s\"", typeSwitchTypeRef.typeRefAsString));
+		
+		// obtain actual computed type-switch-distinguishable type reference 
+		val actual = try { 
+			getTypeSwitchTypeRef(object).typeRefAsString
+		} catch (UnhandledTypeRefException e) {
+			"unsupported"
+		}
+		
+		expectation.assertEquals(String.format("\"%s\"", actual));
 	}
 	
 	private def TypeRef findTypeRefAtOffset(EObject offsetObject) {
@@ -94,5 +104,6 @@ class TypeSwitchXpectMethod {
 		
 		val ruleEnv = typeSystem.createRuleEnvironmentForContext(contextTypeRef, contextTypeRef.eResource);
 		return switchComputer.toTypeRef(ruleEnv, condition);
+		
 	}
 }

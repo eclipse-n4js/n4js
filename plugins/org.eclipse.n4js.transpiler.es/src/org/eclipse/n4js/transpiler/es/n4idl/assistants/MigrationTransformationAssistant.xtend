@@ -182,7 +182,9 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 	 * Returns an {@link ArrayElement} which represents the given {@link Type} at runtime.
 	 * 
 	 * For instance, for {@link TN4Classifier}s or {@link TObjectPrototype}s that is an 
-	 * instance of {@code type{Object} and for primitive types that is a string {@code "primitive"}.
+	 * instance of {@code type{Object}} and for primitive types that is a string {@code "primitive"}.
+	 * 
+	 * {@link TypeTypeRef}s are represented as plain object of the form <code>{type: <constructor/type ref>}</code>
 	 * 
 	 * Unhandled type reference types will throw an {@link IllegalStateException}.
 	 */
@@ -198,7 +200,7 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 						_ArrayElement(_IdentRef(getSymbolTableEntryOriginal(typeRef.declaredType, true)))
 				}
 			TypeTypeRef:
-						_ArrayElement(_ObjLit("ctor" -> _IdentRef(getSymbolTableEntryOriginal(getType(typeRef), true))))
+						_ArrayElement(_ObjLit("type" -> _IdentRef(getSymbolTableEntryOriginal(getType(typeRef), true))))
 			default:
 				throw new IllegalStateException("Unhandled migration source type reference " + typeRef)
 		}

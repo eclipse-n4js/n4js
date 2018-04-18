@@ -17,8 +17,10 @@ import java.util.HashSet
 import java.util.List
 import java.util.Map
 import java.util.Set
+import java.util.function.Function
 import java.util.stream.Stream
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -46,7 +48,6 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2
-import java.util.function.Function
 
 /**
  * Validates N4IDL migration declarations.
@@ -338,7 +339,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	private def boolean holdsTypeSwitchDistinguishable(Iterable<TMigration> migrations) {
 		// generalize the migration source type refs using {@link MigrationSwitchComputer#toSwitchRecognizableTypeRef}.
 		val List<Pair<TMigration, List<TypeRef>>> migrationAndSwitchTypes = migrations
-			.map[migration | migration -> migration.sourceTypeRefs.switchRecognizableTypeRefs ].toList;
+			.map[migration | migration -> migration.switchRecognizableSourceTypeRefs ].toList;
 		
 		val conflictGroups = new HashMap<TMigration, Set<TMigration>>();
 		
@@ -369,24 +370,41 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	/**
-	 * Returns a list of switch-recognizable {@link TypeRef}s based on the given iterable of {@link TypeRef}s.
+	 * Returns a list of switch-recognizable {@link TypeRef}s based on the source type refs of the given {@code migration}.
 	 * 
 	 * Returns an empty list if any of the given {@link TypeRef} cannot be handled by a {@link SwitchCondition} 
 	 * (cf. {@link MigrationSwitchComputer#UnhandledTypeRefException}).
+	 * 
+	 * Adds issues for unsupported type refs using {@link #addUnhandledParameterTypeRefIssue}.
 	 */
-	private def List<TypeRef> getSwitchRecognizableTypeRefs(List<TypeRef> typeRefs) {
-		val refs = typeRefs.map[s | 
+	private def List<TypeRef> getSwitchRecognizableSourceTypeRefs(TMigration migration) {
+		val refs = migration.sourceTypeRefs.map[s | 
 			try {
 				switchComputer.toSwitchRecognizableTypeRef(s.ruleEnvironment, s)
 			} catch (UnhandledTypeRefException e) {
-				null
+				addUnsupportedParameterTypeRefIssue(migration.fpars.findFirst[par | par.typeRef == s]);
+				return null
 			}
 		].filterNull.toList;
 		
-		if (refs.size != typeRefs.size) {
+		if (refs.size != migration.sourceTypeRefs.size) {
 			return #[];
 		}
 		return refs;
+	}
+	
+	/** Adds an IDL_MIGRATION_UNSUPPORTED_PARAMETER_TYPE issue to the given {@link TFormalParameter}'s TypeRef. */
+	private def void addUnsupportedParameterTypeRefIssue(TFormalParameter tParam) {
+		// Obtain AST-model TypeRef from TFormalParameter.
+		// This is ensured to not trigger any proxy resolution since the validation that uses this method 
+		// only concerns elements local to the module the validated type declaration resides in. 
+		val astTypeRef = (tParam.astElement as FormalParameter).declaredTypeRef;
+		
+		// skip composed type references, as there is validation for that case in {@link #checkMigration}.
+		if (astTypeRef instanceof ComposedTypeRef) { return; }
+		
+		addIssue(IssueCodes.getMessageForIDL_MIGRATION_UNSUPPORTED_PARAMETER_TYPE(astTypeRef.typeRefAsString), 
+			astTypeRef, IssueCodes.IDL_MIGRATION_UNSUPPORTED_PARAMETER_TYPE)
 	}
 	
 	/**

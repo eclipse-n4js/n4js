@@ -36,7 +36,7 @@ function f() {
 	
 	// Parameterized type ref 1 XPECT typeSwitchTypeRef of a3 --> "B#1"
 	let a3 : B#1<A#1>
-	// Parameterized type ref 2 XPECT typeSwitchTypeRef of a4 --> "Iterable2<?,?>"
+	// Parameterized type ref 2 XPECT typeSwitchTypeRef of a4 --> "unsupported"
 	let a4 : Iterable2<A#1, A#1>
 	
 	// Parameterized array type ref 1 XPECT typeSwitchTypeRef of a5 --> "Array<A#1>"

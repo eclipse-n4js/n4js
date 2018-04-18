@@ -75,7 +75,7 @@ class TypeSwitchTranspiler extends TransformationAssistant {
 	}
 	
 	private dispatch def List<Expression> doTransform(TypeTypeCondition typeTypeCondition, Expression lhs) {
-		// simply check whether the value has te "n4type" property
+		// simply check whether the value has the "n4type" property
 		#[_PropertyAccessExpr(lhs, getSymbolTableEntryInternal("n4type", true))];
 	}
 	
