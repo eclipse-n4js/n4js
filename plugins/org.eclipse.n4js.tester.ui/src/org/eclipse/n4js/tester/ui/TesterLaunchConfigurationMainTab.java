@@ -23,7 +23,7 @@ public class TesterLaunchConfigurationMainTab extends AbstractLaunchConfiguratio
 
 	@Override
 	protected String getResourceLabel() {
-		return "Resource to Test (Project, Folder, File, Method)";
+		return "Resource to Test (Project, Folder, File)";
 	}
 
 	@Override

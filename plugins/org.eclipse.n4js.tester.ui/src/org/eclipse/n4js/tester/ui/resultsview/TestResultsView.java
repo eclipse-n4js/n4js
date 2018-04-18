@@ -888,9 +888,9 @@ public class TestResultsView extends ViewPart {
 		actionOpenLaunchConfig.setEnabled(null != currentRoot);
 		boolean isRunningOrNoRoot = null == currentRoot || currentRoot.isRunning();
 		actionRelaunch.setEnabled(!isRunningOrNoRoot);
+		actionRelaunchFailed.setEnabled(!isRunningOrNoRoot);
 		actionStop.setEnabled(isRunningOrNoRoot);
-		actionRelaunchFailed.setEnabled(false);
-		// actionStop.setEnabled(currentRoot != null && currentRoot.isRunning());
+
 		// TODO
 		actionShowHistory.setEnabled(true);
 		actionClearTerminated.setEnabled(containsTerminated());
@@ -904,19 +904,37 @@ public class TestResultsView extends ViewPart {
 			final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
 			if (null != session) {
 				registeredSessions.remove(session);
-				ILaunchConfiguration launchConfig = getLaunchConfigForSession(session);
+				ILaunchConfiguration launchConfig = getLaunchConfigForSession(session, null);
 				DebugUITools.launch(launchConfig, ILaunchManager.RUN_MODE, true);
 			}
 		}
 	}
 
-	private ILaunchConfiguration getLaunchConfigForSession(TestSession session) {
+	/**
+	 * Invoked when user performs {@link #performRelaunchFailed()}.
+	 */
+	protected void performRelaunchFailed() {
+		if (null != currentRoot) {
+			final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
+			if (null != session) {
+				List<TestCase> failed = session.root.getFailed();
+				if (failed.isEmpty()) {
+					return;
+				}
+				registeredSessions.remove(session);
+				ILaunchConfiguration launchConfig = getLaunchConfigForSession(session, failed);
+				DebugUITools.launch(launchConfig, ILaunchManager.RUN_MODE, true);
+			}
+		}
+	}
+
+	private ILaunchConfiguration getLaunchConfigForSession(TestSession session, List<TestCase> failed) {
 		final TestConfiguration testConfig = session.configuration;
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(
 				testConfig.getLaunchConfigurationTypeIdentifier());
 		ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type,
-				testConfig);
+				testConfig, failed);
 		return launchConfig;
 	}
 
@@ -932,7 +950,7 @@ public class TestResultsView extends ViewPart {
 				ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(
 						testConfig.getLaunchConfigurationTypeIdentifier());
 				ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type,
-						testConfig);
+						testConfig, null);
 				Set<String> modes;
 				try {
 					modes = launchConfig.getModes();
@@ -953,13 +971,6 @@ public class TestResultsView extends ViewPart {
 	}
 
 	/**
-	 * Invoked when user performs {@link #performRelaunchFailed()}.
-	 */
-	protected void performRelaunchFailed() {
-		// TODO
-	}
-
-	/**
 	 * Invoked when user performs {@link #actionStop}.
 	 */
 	protected void performStop() {
@@ -969,23 +980,21 @@ public class TestResultsView extends ViewPart {
 			IProcess process = DebugUITools.getCurrentProcess();
 			ILaunch launch = process.getLaunch();
 			ILaunchConfiguration runningConfig = launch.getLaunchConfiguration();
-			ILaunchConfiguration sessionConfig = getLaunchConfigForSession(session);
-			if (runningConfig.getName() == sessionConfig.getName()) {
+			ILaunchConfiguration sessionConfig = getLaunchConfigForSession(session, null);
+			if (runningConfig.getName() == sessionConfig.getName()) { // we use "==" since the name is the same instance
 				List<ITerminate> targets = collectTargets(process);
 				targets.add(process);
 				DebugCommandService service = DebugCommandService
 						.getService(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 				service.executeCommand(ITerminateHandler.class, targets.toArray(), null);
-
 				session.root.stopRunning();
 				refreshActions();
 			}
-
 		}
 	}
 
 	/**
-	 * Collects targets associated with a process. -- copies from ConsoleTerminateAction
+	 * Collects targets associated with a process. -- copied from ConsoleTerminateAction
 	 *
 	 * @param process
 	 *            the process to collect {@link IDebugTarget}s for
