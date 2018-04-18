@@ -4025,6 +4025,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(typingStrategyEEnum, TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS);
 		addEEnumLiteral(typingStrategyEEnum, TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS);
 		addEEnumLiteral(typingStrategyEEnum, TypingStrategy.STRUCTURAL_FIELD_INITIALIZER);
+		addEEnumLiteral(typingStrategyEEnum, TypingStrategy.EMPTY);
 
 		initEEnum(typeAccessModifierEEnum, TypeAccessModifier.class, "TypeAccessModifier");
 		addEEnumLiteral(typeAccessModifierEEnum, TypeAccessModifier.UNDEFINED);

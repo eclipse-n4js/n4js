@@ -501,6 +501,126 @@ public class TypeUtils {
 	}
 
 	/**
+	 * Merges typing strategy of 'source' into 'target', assuming the type modification represented by the typing
+	 * strategy in 'target' took place before the one represented by the typing strategy in 'source'. This method will
+	 * copy 'target' on demand, i.e. 'target' will be copied if and only if its typing strategy actually changes due to
+	 * this operation.
+	 * <p>
+	 * Returns target unchanged if
+	 * <ol>
+	 * <li>the typing strategy in 'target' is the same before and after the merge operation, or
+	 * <li>the merge operation is not supported yet (e.g. merging a typing strategy into a type reference that does not
+	 * support structural typing).
+	 * </ol>
+	 * 
+	 * @see #concatTypingStrategies(TypingStrategy, TypingStrategy)
+	 */
+	public static TypeRef mergeTypingStrategies(TypeRef target, TypeRef source) {
+		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source.getTypingStrategy());
+		if (combined != target.getTypingStrategy()) {
+			if (target instanceof ParameterizedTypeRef) {
+				final ParameterizedTypeRefStructural ptrs = copyToParameterizedTypeRefStructural(
+						(ParameterizedTypeRef) target);
+				ptrs.setTypingStrategy(combined);
+				target = ptrs;
+			} else {
+				// TODO IDE-2965 support for other kinds of type references
+			}
+		}
+		return target;
+	}
+
+	/**
+	 * Concatenates the two given typing strategies, forming a new typing strategy that represents this concatenation.
+	 * Order matters, e.g. ~i~(~w~C) results to ~i~C whereas ~w~(~i~C) results to ~∅~C.
+	 */
+	public static TypingStrategy concatTypingStrategies(TypingStrategy first, TypingStrategy second) {
+		if (first == null) {
+			return second;
+		} else if (second == null) {
+			return first;
+		}
+		switch (first) {
+		case DEFAULT:
+		case NOMINAL:
+			return second;
+		case EMPTY:
+			return TypingStrategy.EMPTY;
+		case STRUCTURAL:
+			switch (second) {
+			case DEFAULT:
+				return first;
+			case NOMINAL:
+				return first; // disallow going back to nominal!
+			case EMPTY:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL:
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_READ_ONLY_FIELDS:
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return second;
+			}
+			break;
+		case STRUCTURAL_FIELDS:
+			switch (second) {
+			case DEFAULT:
+				return first;
+			case NOMINAL:
+				return first; // disallow going back to nominal!
+			case EMPTY:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL:
+				return TypingStrategy.STRUCTURAL_FIELDS;
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_READ_ONLY_FIELDS:
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return second;
+			}
+			break;
+		case STRUCTURAL_WRITE_ONLY_FIELDS:
+			switch (second) {
+			case DEFAULT:
+				return first;
+			case NOMINAL:
+				return first; // disallow going back to nominal!
+			case EMPTY:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL:
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+				return TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS;
+			case STRUCTURAL_READ_ONLY_FIELDS:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+			}
+			break;
+		case STRUCTURAL_READ_ONLY_FIELDS:
+		case STRUCTURAL_FIELD_INITIALIZER:
+			switch (second) {
+			case DEFAULT:
+				return first;
+			case NOMINAL:
+				return first; // disallow going back to nominal!
+			case EMPTY:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL:
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_READ_ONLY_FIELDS:
+				return first;
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return TypingStrategy.EMPTY;
+			}
+			break;
+		}
+		throw new UnsupportedOperationException(
+				"unsupported combination of typing strategies: first==" + first + ", second==" + second);
+	}
+
+	/**
 	 * Copies all properties related to structural typing from 'src' to 'dest', taking care of the special handling
 	 * required for 'astStructuralTypeRef'.
 	 * <p>

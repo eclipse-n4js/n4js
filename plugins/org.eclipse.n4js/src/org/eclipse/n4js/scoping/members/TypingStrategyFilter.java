@@ -76,6 +76,8 @@ class TypingStrategyFilter implements Predicate<IEObjectDescription> {
 				return false;
 			case STRUCTURAL:
 				return true; // including constructors
+			case EMPTY:
+				return false;
 			}
 		}
 
@@ -95,6 +97,8 @@ class TypingStrategyFilter implements Predicate<IEObjectDescription> {
 				Map<NameAndAccess, ? extends TMember> members = type.getOwnedMembersByNameAndAccess();
 				boolean hasSetter = members.containsKey(naa);
 				return hasSetter;
+			case EMPTY:
+				return false;
 			}
 		}
 
@@ -112,6 +116,8 @@ class TypingStrategyFilter implements Predicate<IEObjectDescription> {
 				// ~i~ turns a setter into a getter, i.e. we keep the member in case of read access and filter it out
 				// otherwise
 				return !isWriteAccess;
+			case EMPTY:
+				return false;
 			}
 		}
 
@@ -130,6 +136,8 @@ class TypingStrategyFilter implements Predicate<IEObjectDescription> {
 			case STRUCTURAL_FIELD_INITIALIZER:
 				boolean isAccessable = !isWriteAccess && (!field.isFinal() || !field.isHasExpression());
 				return isAccessable;
+			case EMPTY:
+				return false;
 			}
 		}
 
