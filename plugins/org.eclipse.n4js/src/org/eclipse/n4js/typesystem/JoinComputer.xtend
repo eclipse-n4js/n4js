@@ -13,6 +13,11 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.Iterables
 import com.google.common.collect.Lists
 import com.google.inject.Inject
+import java.util.HashMap
+import java.util.HashSet
+import java.util.List
+import java.util.Set
+import org.eclipse.n4js.scoping.members.TypingStrategyFilter
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
@@ -40,13 +45,9 @@ import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.xsemantics.runtime.RuleEnvironment
-import java.util.HashMap
-import java.util.HashSet
-import java.util.List
-import java.util.Set
 
-import static org.eclipse.n4js.ts.utils.SuperTypesList.*
 import static java.util.Collections.*
+import static org.eclipse.n4js.ts.utils.SuperTypesList.*
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*

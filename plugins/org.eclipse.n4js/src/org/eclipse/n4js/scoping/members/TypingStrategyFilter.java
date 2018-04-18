@@ -12,7 +12,6 @@ package org.eclipse.n4js.scoping.members;
 
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.NameAndAccess;
@@ -22,7 +21,6 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Predicate;
 
@@ -30,14 +28,31 @@ import com.google.common.base.Predicate;
  * Filter used in {@link TypingStrategyAwareMemberScope} to filter out results not available for a given typing
  * strategy.
  */
-class TypingStrategyFilter implements Predicate<IEObjectDescription> {
+public class TypingStrategyFilter implements Predicate<TMember> {
 
-	final TypingStrategy typingStrategy;
-	final boolean isWriteAccess;
+	private final TypingStrategy typingStrategy;
+	private final boolean isWriteAccess;
+	private final boolean inSpecCtor;
 
-	TypingStrategyFilter(TypingStrategy typingStrategy, boolean isWriteAccess) {
+	/**
+	 * Creates new instance intended for read access and without <code>@Spec</code>-constructor semantics.
+	 */
+	public TypingStrategyFilter(TypingStrategy typingStrategy) {
+		this(typingStrategy, false, false);
+	}
+
+	/**
+	 * Creates new instance.
+	 *
+	 * @param inSpecCtor
+	 *            For <code>@Spec</code>-constructors (as opposed to ordinary constructors), <code>@Final</code> fields
+	 *            are writable even if they have an initializer expression. This semantics can be activated by setting
+	 *            this flag to <code>true</code>.
+	 */
+	public TypingStrategyFilter(TypingStrategy typingStrategy, boolean isWriteAccess, boolean inSpecCtor) {
 		this.typingStrategy = typingStrategy;
 		this.isWriteAccess = isWriteAccess;
+		this.inSpecCtor = inSpecCtor;
 	}
 
 	/**
@@ -48,18 +63,7 @@ class TypingStrategyFilter implements Predicate<IEObjectDescription> {
 	}
 
 	@Override
-	public boolean apply(IEObjectDescription description) {
-		if (typingStrategy == TypingStrategy.DEFAULT || typingStrategy == TypingStrategy.NOMINAL) {
-			return true;
-		}
-		EObject proxyOrInstance = description.getEObjectOrProxy();
-		if (proxyOrInstance == null || proxyOrInstance.eIsProxy()) {
-			return true;
-		}
-		if (!(proxyOrInstance instanceof TMember)) {
-			return true;
-		}
-		TMember member = (TMember) proxyOrInstance;
+	public boolean apply(TMember member) {
 		if (member.isStatic() || member.getMemberAccessModifier() != MemberAccessModifier.PUBLIC) {
 			return false;
 		}
@@ -134,7 +138,7 @@ class TypingStrategyFilter implements Predicate<IEObjectDescription> {
 			case STRUCTURAL_WRITE_ONLY_FIELDS:
 				return isWriteAccess;
 			case STRUCTURAL_FIELD_INITIALIZER:
-				boolean isAccessable = !isWriteAccess && (!field.isFinal() || !field.isHasExpression());
+				boolean isAccessable = !isWriteAccess && (!field.isFinal() || !field.isHasExpression() || inSpecCtor);
 				return isAccessable;
 			case EMPTY:
 				return false;
