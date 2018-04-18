@@ -792,4 +792,3 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		return false;
 	}
 }
-	
