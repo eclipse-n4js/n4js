@@ -11,11 +11,11 @@
 package org.eclipse.n4js.scoping.utils
 
 import com.google.inject.Inject
-import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
@@ -98,14 +98,15 @@ class LocallyKnownTypesScopingHelper {
 	/**
 	 * Returns scope with locally known types and (as parent) import scope; the result is cached.
 	 */
-	def IScope scopeWithLocallyKnownTypes(Script script, EReference reference, IScopeProvider delegate) {
+	def IScope scopeWithLocallyKnownTypes(Script script, IScopeProvider delegate) {
 		return cache.get(script -> 'locallyKnownTypes', script.eResource) [|
 			// all types in the index:
-			var parent = delegate.getScope(script, reference);
+			val parent = delegate.getScope(script,
+				TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
 			// but imported types are preferred (or maybe renamed with aliases):
 			val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script);
 			// finally, add locally declared types as the outer scope
-			val localTypes = scopeWithLocallyDeclaredTypes(script, reference, importScope);
+			val localTypes = scopeWithLocallyDeclaredTypes(script, importScope);
 			
 			return localTypes;
 		];
@@ -114,7 +115,7 @@ class LocallyKnownTypesScopingHelper {
 	/**
 	 * Returns scope with locally declared types (without import scope).
 	 */
-	def IScope scopeWithLocallyDeclaredTypes(Script script, EReference reference, IScope parent) {
+	def IScope scopeWithLocallyDeclaredTypes(Script script, IScope parent) {
 		val TModule local = script.module;
 		if (local === null || local.eIsProxy) {
 			return parent;
@@ -129,16 +130,17 @@ class LocallyKnownTypesScopingHelper {
 	 * add the polyfillType itself. Instead, only its type variables are added, which are otherwise hidden in case of polyfills.
 	 * The result is not cached as this scope is needed only one time.
 	 */
-	def IScope scopeWithLocallyKnownTypesForPolyfillSuperRef(Script script, EReference reference,
+	def IScope scopeWithLocallyKnownTypesForPolyfillSuperRef(Script script,
 		IScopeProvider delegate, Type polyfillType) {
-		var IScope parent = delegate.getScope(script, reference);
+		val IScope parent = delegate.getScope(script,
+			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
 
 		// imported and locally defined types are preferred (or maybe renamed with aliases):
 		val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script)
 
 		// locally defined types except polyfillType itself
 		val local = script.module
-		var IScope localTypesScope = scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.filter [
+		val IScope localTypesScope = scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.filter [
 			it !== polyfillType
 		].map[EObjectDescription.create(name, it)]);
 

@@ -45,7 +45,7 @@ function PureFnComponent(props: Props): React.Element {
 class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
 	@Override
 	public render() : React.Element{
-		// XPECT linkedFragment at 'this.props.|whatTextShouldIShow' --> /1/@exposedInternalTypes.0/@ownedMembers.0
+		// XPECT linkedFragment at 'this.props.|whatTextShouldIShow' --> /1/@exposedInternalTypes.1/@ownedMembers.0
 		return (<div>{this.props.whatTextShouldIShow}</div>);
 	}
 }
@@ -56,7 +56,7 @@ class MyComponent extends
 	@Override
 	public render() : React.Element{
 		const constText = "some text";
-		// XPECT linkedFragment at '<LowerComponent| whatTextShouldIShow' --> /1/@exposedInternalTypes.0/@ownedMembers.0
+		// XPECT linkedFragment at '<LowerComponent| whatTextShouldIShow' --> /1/@exposedInternalTypes.1/@ownedMembers.0
 		return (<LowerComponent whatTextShouldIShow ="Hallo">{constText}</LowerComponent>
 		);
 	}

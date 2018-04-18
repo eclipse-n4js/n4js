@@ -64,7 +64,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(
-				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
+				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, source, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
 				out);
 	}
 
@@ -90,7 +90,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(
-				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
+				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, source, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
 				out);
 	}
 }

@@ -35,8 +35,7 @@ class VersionScopeProvider {
 			// Only return locally declared types, to avoid issues with cyclic dependencies
 			// via module imports.
 			val script = type.containingModule.astElement as Script;
-			return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(script,
-				TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, IScope.NULLSCOPE);
+			return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(script, IScope.NULLSCOPE);
 		} else {
 			// For built-in types, there is no containing module and thus the
 			// type itself is used as context. In this special case, this strategy is valid, 

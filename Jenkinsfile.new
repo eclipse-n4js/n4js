@@ -62,7 +62,7 @@ pipeline {
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
             }
             steps {
-                sshagent(['github-n4js-sandbox']) {
+                sshagent(['github-com-ssh-key']) {
                     script {
                         def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                         def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
@@ -86,7 +86,7 @@ pipeline {
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
             }
             steps {
-                sshagent(['github-n4js-sandbox']) {
+                sshagent(['github-com-ssh-key']) {
                     script {
                         def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                         def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE

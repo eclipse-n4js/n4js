@@ -920,6 +920,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
 
 	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE = TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+
+	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1270,6 +1279,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_NAMESPACE = PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -3071,6 +3089,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
 
 	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE = PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE;
+
+	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3448,6 +3475,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_NAMESPACE = PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.

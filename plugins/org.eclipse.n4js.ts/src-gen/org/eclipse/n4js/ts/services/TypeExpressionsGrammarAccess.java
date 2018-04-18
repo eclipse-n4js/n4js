@@ -837,14 +837,120 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class ParameterizedTypeRefNominalElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
-		private final RuleCall cTypeAndTypeArgumentsParserRuleCall = (RuleCall)rule.eContents().get(1);
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final RuleCall cTypeReferenceParserRuleCall_0_0 = (RuleCall)cAlternatives_0.eContents().get(0);
+		private final Group cGroup_0_1 = (Group)cAlternatives_0.eContents().get(1);
+		private final Action cVersionedParameterizedTypeRefAction_0_1_0 = (Action)cGroup_0_1.eContents().get(0);
+		private final RuleCall cTypeReferenceParserRuleCall_0_1_1 = (RuleCall)cGroup_0_1.eContents().get(1);
+		private final RuleCall cVersionRequestParserRuleCall_0_1_2 = (RuleCall)cGroup_0_1.eContents().get(2);
+		private final RuleCall cTypeArgumentsParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		
 		//ParameterizedTypeRefNominal ParameterizedTypeRef:
-		//	TypeAndTypeArguments;
+		//	(TypeReference
+		//	| {VersionedParameterizedTypeRef} TypeReference VersionRequest) -> TypeArguments?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//TypeAndTypeArguments
-		public RuleCall getTypeAndTypeArgumentsParserRuleCall() { return cTypeAndTypeArgumentsParserRuleCall; }
+		//(TypeReference | {VersionedParameterizedTypeRef} TypeReference VersionRequest) -> TypeArguments?
+		public Group getGroup() { return cGroup; }
+		
+		//TypeReference | {VersionedParameterizedTypeRef} TypeReference VersionRequest
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
+		
+		//TypeReference
+		public RuleCall getTypeReferenceParserRuleCall_0_0() { return cTypeReferenceParserRuleCall_0_0; }
+		
+		//{VersionedParameterizedTypeRef} TypeReference VersionRequest
+		public Group getGroup_0_1() { return cGroup_0_1; }
+		
+		//{VersionedParameterizedTypeRef}
+		public Action getVersionedParameterizedTypeRefAction_0_1_0() { return cVersionedParameterizedTypeRefAction_0_1_0; }
+		
+		//TypeReference
+		public RuleCall getTypeReferenceParserRuleCall_0_1_1() { return cTypeReferenceParserRuleCall_0_1_1; }
+		
+		//VersionRequest
+		public RuleCall getVersionRequestParserRuleCall_0_1_2() { return cVersionRequestParserRuleCall_0_1_2; }
+		
+		//-> TypeArguments?
+		public RuleCall getTypeArgumentsParserRuleCall_1() { return cTypeArgumentsParserRuleCall_1; }
+	}
+	public class ParameterizedTypeRefStructuralElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefStructural");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final Group cGroup_0_0 = (Group)cAlternatives_0.eContents().get(0);
+		private final Assignment cDefinedTypingStrategyAssignment_0_0_0 = (Assignment)cGroup_0_0.eContents().get(0);
+		private final RuleCall cDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0 = (RuleCall)cDefinedTypingStrategyAssignment_0_0_0.eContents().get(0);
+		private final RuleCall cTypeReferenceParserRuleCall_0_0_1 = (RuleCall)cGroup_0_0.eContents().get(1);
+		private final Group cGroup_0_1 = (Group)cAlternatives_0.eContents().get(1);
+		private final Action cVersionedParameterizedTypeRefStructuralAction_0_1_0 = (Action)cGroup_0_1.eContents().get(0);
+		private final Assignment cDefinedTypingStrategyAssignment_0_1_1 = (Assignment)cGroup_0_1.eContents().get(1);
+		private final RuleCall cDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0 = (RuleCall)cDefinedTypingStrategyAssignment_0_1_1.eContents().get(0);
+		private final RuleCall cTypeReferenceParserRuleCall_0_1_2 = (RuleCall)cGroup_0_1.eContents().get(2);
+		private final RuleCall cVersionRequestParserRuleCall_0_1_3 = (RuleCall)cGroup_0_1.eContents().get(3);
+		private final RuleCall cTypeArgumentsParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cWithKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final RuleCall cTStructMemberListParserRuleCall_2_1 = (RuleCall)cGroup_2.eContents().get(1);
+		
+		//ParameterizedTypeRefStructural:
+		//	(definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+		//	| {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+		//	VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//(definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference | {VersionedParameterizedTypeRefStructural}
+		//definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference VersionRequest) -> TypeArguments? ('with'
+		//TStructMemberList)?
+		public Group getGroup() { return cGroup; }
+		
+		//definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference | {VersionedParameterizedTypeRefStructural}
+		//definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference VersionRequest
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
+		
+		//definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+		public Group getGroup_0_0() { return cGroup_0_0; }
+		
+		//definedTypingStrategy=TypingStrategyUseSiteOperator
+		public Assignment getDefinedTypingStrategyAssignment_0_0_0() { return cDefinedTypingStrategyAssignment_0_0_0; }
+		
+		//TypingStrategyUseSiteOperator
+		public RuleCall getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0() { return cDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0; }
+		
+		//TypeReference
+		public RuleCall getTypeReferenceParserRuleCall_0_0_1() { return cTypeReferenceParserRuleCall_0_0_1; }
+		
+		//{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+		//VersionRequest
+		public Group getGroup_0_1() { return cGroup_0_1; }
+		
+		//{VersionedParameterizedTypeRefStructural}
+		public Action getVersionedParameterizedTypeRefStructuralAction_0_1_0() { return cVersionedParameterizedTypeRefStructuralAction_0_1_0; }
+		
+		//definedTypingStrategy=TypingStrategyUseSiteOperator
+		public Assignment getDefinedTypingStrategyAssignment_0_1_1() { return cDefinedTypingStrategyAssignment_0_1_1; }
+		
+		//TypingStrategyUseSiteOperator
+		public RuleCall getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0() { return cDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0; }
+		
+		//TypeReference
+		public RuleCall getTypeReferenceParserRuleCall_0_1_2() { return cTypeReferenceParserRuleCall_0_1_2; }
+		
+		//VersionRequest
+		public RuleCall getVersionRequestParserRuleCall_0_1_3() { return cVersionRequestParserRuleCall_0_1_3; }
+		
+		//-> TypeArguments?
+		public RuleCall getTypeArgumentsParserRuleCall_1() { return cTypeArgumentsParserRuleCall_1; }
+		
+		//('with' TStructMemberList)?
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//'with'
+		public Keyword getWithKeyword_2_0() { return cWithKeyword_2_0; }
+		
+		//TStructMemberList
+		public RuleCall getTStructMemberListParserRuleCall_2_1() { return cTStructMemberListParserRuleCall_2_1; }
 	}
 	public class ArrayTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ArrayTypeRef");
@@ -877,158 +983,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//"]"
 		public Keyword getRightSquareBracketKeyword_2() { return cRightSquareBracketKeyword_2; }
 	}
-	public class ParameterizedTypeRefStructuralElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefStructural");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
-		private final Group cGroup_0_0 = (Group)cAlternatives_0.eContents().get(0);
-		private final Assignment cDefinedTypingStrategyAssignment_0_0_0 = (Assignment)cGroup_0_0.eContents().get(0);
-		private final RuleCall cDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0 = (RuleCall)cDefinedTypingStrategyAssignment_0_0_0.eContents().get(0);
-		private final Assignment cDeclaredTypeAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
-		private final CrossReference cDeclaredTypeTypeCrossReference_0_0_1_0 = (CrossReference)cDeclaredTypeAssignment_0_0_1.eContents().get(0);
-		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_0_0_1_0.eContents().get(1);
-		private final Group cGroup_0_1 = (Group)cAlternatives_0.eContents().get(1);
-		private final Action cVersionedParameterizedTypeRefStructuralAction_0_1_0 = (Action)cGroup_0_1.eContents().get(0);
-		private final Assignment cDefinedTypingStrategyAssignment_0_1_1 = (Assignment)cGroup_0_1.eContents().get(1);
-		private final RuleCall cDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0 = (RuleCall)cDefinedTypingStrategyAssignment_0_1_1.eContents().get(0);
-		private final Assignment cDeclaredTypeAssignment_0_1_2 = (Assignment)cGroup_0_1.eContents().get(2);
-		private final CrossReference cDeclaredTypeTypeCrossReference_0_1_2_0 = (CrossReference)cDeclaredTypeAssignment_0_1_2.eContents().get(0);
-		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_0_1_2_0.eContents().get(1);
-		private final RuleCall cVersionRequestParserRuleCall_0_1_3 = (RuleCall)cGroup_0_1.eContents().get(3);
-		private final RuleCall cTypeArgumentsParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
-		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
-		private final Keyword cWithKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
-		private final RuleCall cTStructMemberListParserRuleCall_2_1 = (RuleCall)cGroup_2.eContents().get(1);
-		
-		//ParameterizedTypeRefStructural:
-		//	(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName] |
-		//	{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-		//	declaredType=[Type|TypeReferenceName] VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName] |
-		//{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-		//declaredType=[Type|TypeReferenceName] VersionRequest) -> TypeArguments? ('with' TStructMemberList)?
-		public Group getGroup() { return cGroup; }
-		
-		//definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName] |
-		//{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-		//declaredType=[Type|TypeReferenceName] VersionRequest
-		public Alternatives getAlternatives_0() { return cAlternatives_0; }
-		
-		//definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName]
-		public Group getGroup_0_0() { return cGroup_0_0; }
-		
-		//definedTypingStrategy=TypingStrategyUseSiteOperator
-		public Assignment getDefinedTypingStrategyAssignment_0_0_0() { return cDefinedTypingStrategyAssignment_0_0_0; }
-		
-		//TypingStrategyUseSiteOperator
-		public RuleCall getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0() { return cDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0; }
-		
-		//declaredType=[Type|TypeReferenceName]
-		public Assignment getDeclaredTypeAssignment_0_0_1() { return cDeclaredTypeAssignment_0_0_1; }
-		
-		//[Type|TypeReferenceName]
-		public CrossReference getDeclaredTypeTypeCrossReference_0_0_1_0() { return cDeclaredTypeTypeCrossReference_0_0_1_0; }
-		
-		//TypeReferenceName
-		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1; }
-		
-		//{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-		//declaredType=[Type|TypeReferenceName] VersionRequest
-		public Group getGroup_0_1() { return cGroup_0_1; }
-		
-		//{VersionedParameterizedTypeRefStructural}
-		public Action getVersionedParameterizedTypeRefStructuralAction_0_1_0() { return cVersionedParameterizedTypeRefStructuralAction_0_1_0; }
-		
-		//definedTypingStrategy=TypingStrategyUseSiteOperator
-		public Assignment getDefinedTypingStrategyAssignment_0_1_1() { return cDefinedTypingStrategyAssignment_0_1_1; }
-		
-		//TypingStrategyUseSiteOperator
-		public RuleCall getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0() { return cDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0; }
-		
-		//declaredType=[Type|TypeReferenceName]
-		public Assignment getDeclaredTypeAssignment_0_1_2() { return cDeclaredTypeAssignment_0_1_2; }
-		
-		//[Type|TypeReferenceName]
-		public CrossReference getDeclaredTypeTypeCrossReference_0_1_2_0() { return cDeclaredTypeTypeCrossReference_0_1_2_0; }
-		
-		//TypeReferenceName
-		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1; }
-		
-		//VersionRequest
-		public RuleCall getVersionRequestParserRuleCall_0_1_3() { return cVersionRequestParserRuleCall_0_1_3; }
-		
-		//-> TypeArguments?
-		public RuleCall getTypeArgumentsParserRuleCall_1() { return cTypeArgumentsParserRuleCall_1; }
-		
-		//('with' TStructMemberList)?
-		public Group getGroup_2() { return cGroup_2; }
-		
-		//'with'
-		public Keyword getWithKeyword_2_0() { return cWithKeyword_2_0; }
-		
-		//TStructMemberList
-		public RuleCall getTStructMemberListParserRuleCall_2_1() { return cTStructMemberListParserRuleCall_2_1; }
-	}
-	public class TypeAndTypeArgumentsElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TypeAndTypeArguments");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
-		private final Assignment cDeclaredTypeAssignment_0_0 = (Assignment)cAlternatives_0.eContents().get(0);
-		private final CrossReference cDeclaredTypeTypeCrossReference_0_0_0 = (CrossReference)cDeclaredTypeAssignment_0_0.eContents().get(0);
-		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_0_0_0.eContents().get(1);
-		private final Group cGroup_0_1 = (Group)cAlternatives_0.eContents().get(1);
-		private final Action cVersionedParameterizedTypeRefAction_0_1_0 = (Action)cGroup_0_1.eContents().get(0);
-		private final Assignment cDeclaredTypeAssignment_0_1_1 = (Assignment)cGroup_0_1.eContents().get(1);
-		private final CrossReference cDeclaredTypeTypeCrossReference_0_1_1_0 = (CrossReference)cDeclaredTypeAssignment_0_1_1.eContents().get(0);
-		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_0_1_1_0.eContents().get(1);
-		private final RuleCall cVersionRequestParserRuleCall_0_1_2 = (RuleCall)cGroup_0_1.eContents().get(2);
-		private final RuleCall cTypeArgumentsParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
-		
-		//TypeAndTypeArguments ParameterizedTypeRef:
-		//	(declaredType=[Type|TypeReferenceName] | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName]
-		//	VersionRequest) -> TypeArguments?;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//(declaredType=[Type|TypeReferenceName] | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName]
-		//VersionRequest) -> TypeArguments?
-		public Group getGroup() { return cGroup; }
-		
-		//declaredType=[Type|TypeReferenceName] | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName]
-		//VersionRequest
-		public Alternatives getAlternatives_0() { return cAlternatives_0; }
-		
-		//declaredType=[Type|TypeReferenceName]
-		public Assignment getDeclaredTypeAssignment_0_0() { return cDeclaredTypeAssignment_0_0; }
-		
-		//[Type|TypeReferenceName]
-		public CrossReference getDeclaredTypeTypeCrossReference_0_0_0() { return cDeclaredTypeTypeCrossReference_0_0_0; }
-		
-		//TypeReferenceName
-		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_0_1; }
-		
-		//{VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName] VersionRequest
-		public Group getGroup_0_1() { return cGroup_0_1; }
-		
-		//{VersionedParameterizedTypeRef}
-		public Action getVersionedParameterizedTypeRefAction_0_1_0() { return cVersionedParameterizedTypeRefAction_0_1_0; }
-		
-		//declaredType=[Type|TypeReferenceName]
-		public Assignment getDeclaredTypeAssignment_0_1_1() { return cDeclaredTypeAssignment_0_1_1; }
-		
-		//[Type|TypeReferenceName]
-		public CrossReference getDeclaredTypeTypeCrossReference_0_1_1_0() { return cDeclaredTypeTypeCrossReference_0_1_1_0; }
-		
-		//TypeReferenceName
-		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_1_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_1_0_1; }
-		
-		//VersionRequest
-		public RuleCall getVersionRequestParserRuleCall_0_1_2() { return cVersionRequestParserRuleCall_0_1_2; }
-		
-		//-> TypeArguments?
-		public RuleCall getTypeArgumentsParserRuleCall_1() { return cTypeArgumentsParserRuleCall_1; }
-	}
 	public class VersionRequestElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.VersionRequest");
 		private final Assignment cRequestedVersionAssignment = (Assignment)rule.eContents().get(0);
@@ -1043,6 +997,25 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//VERSION
 		public RuleCall getRequestedVersionVERSIONTerminalRuleCall_0() { return cRequestedVersionVERSIONTerminalRuleCall_0; }
+	}
+	public class TypeReferenceElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TypeReference");
+		private final Assignment cDeclaredTypeAssignment = (Assignment)rule.eContents().get(0);
+		private final CrossReference cDeclaredTypeTypeCrossReference_0 = (CrossReference)cDeclaredTypeAssignment.eContents().get(0);
+		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_0.eContents().get(1);
+		
+		//fragment TypeReference *:
+		//	declaredType=[Type|TypeReferenceName];
+		@Override public ParserRule getRule() { return rule; }
+		
+		//declaredType=[Type|TypeReferenceName]
+		public Assignment getDeclaredTypeAssignment() { return cDeclaredTypeAssignment; }
+		
+		//[Type|TypeReferenceName]
+		public CrossReference getDeclaredTypeTypeCrossReference_0() { return cDeclaredTypeTypeCrossReference_0; }
+		
+		//TypeReferenceName
+		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1; }
 	}
 	public class TypeArgumentsElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TypeArguments");
@@ -2173,10 +2146,10 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final IntersectionTypeExpressionOLDElements pIntersectionTypeExpressionOLD;
 	private final ParameterizedTypeRefElements pParameterizedTypeRef;
 	private final ParameterizedTypeRefNominalElements pParameterizedTypeRefNominal;
-	private final ArrayTypeRefElements pArrayTypeRef;
 	private final ParameterizedTypeRefStructuralElements pParameterizedTypeRefStructural;
-	private final TypeAndTypeArgumentsElements pTypeAndTypeArguments;
+	private final ArrayTypeRefElements pArrayTypeRef;
 	private final VersionRequestElements pVersionRequest;
+	private final TypeReferenceElements pTypeReference;
 	private final TypeArgumentsElements pTypeArguments;
 	private final TStructMemberListElements pTStructMemberList;
 	private final TStructMemberElements pTStructMember;
@@ -2242,10 +2215,10 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pIntersectionTypeExpressionOLD = new IntersectionTypeExpressionOLDElements();
 		this.pParameterizedTypeRef = new ParameterizedTypeRefElements();
 		this.pParameterizedTypeRefNominal = new ParameterizedTypeRefNominalElements();
-		this.pArrayTypeRef = new ArrayTypeRefElements();
 		this.pParameterizedTypeRefStructural = new ParameterizedTypeRefStructuralElements();
-		this.pTypeAndTypeArguments = new TypeAndTypeArgumentsElements();
+		this.pArrayTypeRef = new ArrayTypeRefElements();
 		this.pVersionRequest = new VersionRequestElements();
+		this.pTypeReference = new TypeReferenceElements();
 		this.pTypeArguments = new TypeArgumentsElements();
 		this.pTStructMemberList = new TStructMemberListElements();
 		this.pTStructMember = new TStructMemberElements();
@@ -2556,13 +2529,26 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ParameterizedTypeRefNominal ParameterizedTypeRef:
-	//	TypeAndTypeArguments;
+	//	(TypeReference
+	//	| {VersionedParameterizedTypeRef} TypeReference VersionRequest) -> TypeArguments?;
 	public ParameterizedTypeRefNominalElements getParameterizedTypeRefNominalAccess() {
 		return pParameterizedTypeRefNominal;
 	}
 	
 	public ParserRule getParameterizedTypeRefNominalRule() {
 		return getParameterizedTypeRefNominalAccess().getRule();
+	}
+	
+	//ParameterizedTypeRefStructural:
+	//	(definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+	//	| {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+	//	VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
+	public ParameterizedTypeRefStructuralElements getParameterizedTypeRefStructuralAccess() {
+		return pParameterizedTypeRefStructural;
+	}
+	
+	public ParserRule getParameterizedTypeRefStructuralRule() {
+		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
 	//ArrayTypeRef ParameterizedTypeRef:
@@ -2575,29 +2561,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getArrayTypeRefAccess().getRule();
 	}
 	
-	//ParameterizedTypeRefStructural:
-	//	(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName] |
-	//	{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-	//	declaredType=[Type|TypeReferenceName] VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
-	public ParameterizedTypeRefStructuralElements getParameterizedTypeRefStructuralAccess() {
-		return pParameterizedTypeRefStructural;
-	}
-	
-	public ParserRule getParameterizedTypeRefStructuralRule() {
-		return getParameterizedTypeRefStructuralAccess().getRule();
-	}
-	
-	//TypeAndTypeArguments ParameterizedTypeRef:
-	//	(declaredType=[Type|TypeReferenceName] | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName]
-	//	VersionRequest) -> TypeArguments?;
-	public TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
-		return pTypeAndTypeArguments;
-	}
-	
-	public ParserRule getTypeAndTypeArgumentsRule() {
-		return getTypeAndTypeArgumentsAccess().getRule();
-	}
-	
 	//fragment VersionRequest *:
 	//	requestedVersion=VERSION;
 	public VersionRequestElements getVersionRequestAccess() {
@@ -2606,6 +2569,16 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getVersionRequestRule() {
 		return getVersionRequestAccess().getRule();
+	}
+	
+	//fragment TypeReference *:
+	//	declaredType=[Type|TypeReferenceName];
+	public TypeReferenceElements getTypeReferenceAccess() {
+		return pTypeReference;
+	}
+	
+	public ParserRule getTypeReferenceRule() {
+		return getTypeReferenceAccess().getRule();
 	}
 	
 	//fragment TypeArguments *:

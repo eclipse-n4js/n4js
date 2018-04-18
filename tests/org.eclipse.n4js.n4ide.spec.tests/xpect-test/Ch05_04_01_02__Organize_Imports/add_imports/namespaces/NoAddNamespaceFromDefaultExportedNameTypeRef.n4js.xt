@@ -36,6 +36,6 @@
 var placeholder:string;
 
 /* XPECT errors ---
-"Couldn't resolve reference to Type 'namespace.A'." at "namespace.A"
+"Couldn't resolve reference to ModuleNamespaceVirtualType 'namespace'." at "namespace"
 --- */
 let r : namespace.A;
