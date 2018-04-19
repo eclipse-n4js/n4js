@@ -22,3 +22,21 @@ let
 // XPECT errors --> "A variable statement must at least contain one variable declaration." at "var"
 var
 5
+
+// XPECT errors --> "A variable statement must at least contain one variable declaration." at "var"
+var /*
+  */
+5;
+
+// XPECT errors --> "A variable statement must at least contain one variable declaration." at "let"
+let 
+const b = 3
+
+// XPECT noerrors
+var 
+a1 = 5;
+
+// XPECT noerrors
+let 
+a2;
+
