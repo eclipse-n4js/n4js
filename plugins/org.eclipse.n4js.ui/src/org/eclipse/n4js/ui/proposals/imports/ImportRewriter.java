@@ -315,12 +315,18 @@ public class ImportRewriter {
 					result = importNode.getTotalOffset() + getLengthWithoutAutomaticSemicolon(importNode);
 				}
 			} else {
-				// Otherwise, we assume there is no import declarations yet. Use {@link ImportsRegionHelper}
-				// to obtain an offset for the insertion of a new import declaration.
-				return importsRegionHelper.getImportOffset(script);
+				// We assume that all import declarations are to be found in one place, thus
+				// at this point we must have seen all of them.
+				break;
 			}
 		}
-		return result;
+		// If previously, an existing import declaration could be found, use it as offset.
+		if (result != 0) {
+			return result;
+		}
+		// Otherwise, we assume there is no import declarations yet. Use {@link ImportsRegionHelper}
+		// to obtain an offset for the insertion of a new import declaration.
+		return importsRegionHelper.getImportOffset(script);
 	}
 
 	/**
