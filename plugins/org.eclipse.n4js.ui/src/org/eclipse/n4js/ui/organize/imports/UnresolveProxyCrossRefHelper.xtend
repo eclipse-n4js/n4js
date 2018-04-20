@@ -89,7 +89,7 @@ class UnresolveProxyCrossRefHelper {
 		return script
 					.eAllContents
 					.filter(JSXElement)
-					.map[jsxe |jsxe->reactHelper.getJSXElementBindingType(jsxe)]
+					.map[jsxe |jsxe->reactHelper.getJsxElementBindingType(jsxe)]
 					.filter[value instanceof UnknownTypeRef]
 					.map[key.jsxElementName]
 					.toIterable

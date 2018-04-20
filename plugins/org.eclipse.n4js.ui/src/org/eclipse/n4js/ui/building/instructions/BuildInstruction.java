@@ -140,6 +140,10 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 
 	private void deleteEmptyDirectories(IProgressMonitor progressMonitor) throws CoreException {
 		for (OutputConfiguration config : outputConfigurations.values()) {
+			// skip output-configurations that emit files to the project root
+			if (".".equals(config.getOutputDirectory())) {
+				continue;
+			}
 			IFolder folder = project.getFolder(config.getOutputDirectory());
 			if (null != folder && folder.exists()) {
 				deleteEmptyDirectories(folder, progressMonitor);
