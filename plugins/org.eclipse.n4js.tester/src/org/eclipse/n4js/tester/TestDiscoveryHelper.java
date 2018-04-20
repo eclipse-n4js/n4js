@@ -13,14 +13,11 @@ package org.eclipse.n4js.tester;
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.valueOf;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static java.util.UUID.randomUUID;
 import static org.eclipse.n4js.AnnotationDefinition.TEST_METHOD;
 import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.ABSTRACT_KEY;
@@ -28,8 +25,8 @@ import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.EXPORTED
 import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.TEST_CLASS_KEY;
 import static org.eclipse.xtext.EcoreUtil2.getContainerOfType;
 
-import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -166,16 +163,16 @@ public class TestDiscoveryHelper {
 	 * method is represented by a {@link TestCase}. The location may point to an N4JS project or a folder or file within
 	 * an N4JS project.
 	 *
-	 * @param locations
+	 * @param uris
 	 *            the locations referencing to a resource. Can be an N4JS project, or a folder or a file within an N4JS
 	 *            project.
 	 * @return The test tree representing one or more test cases. Never returns with {@code null}, but the returned test
 	 *         tree may be empty.
 	 */
-	public TestTree collectTests(final URI... locations) {
+	public TestTree collectTests(final List<URI> uris) {
 		final ResourceSet resSet = n4jsCore.createResourceSet(Optional.absent());
 		final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
-		return collectTests(resSet, index, locations).sort();
+		return collectTests(resSet, index, uris).sort();
 	}
 
 	/**
@@ -186,7 +183,7 @@ public class TestDiscoveryHelper {
 	 */
 	public TestTree collectAllTestsFromWorkspace() {
 		return collectTests(from(n4jsCore.findAllProjects()).filter(p -> p.exists()).transform(p -> p.getLocation())
-				.filter(uri -> isTestable(uri)).toArray(URI.class));
+				.filter(uri -> isTestable(uri)).toList());
 	}
 
 	private ID createTestCaseId(final String testClassFqn, final TMethod testMethod) {
@@ -194,25 +191,25 @@ public class TestDiscoveryHelper {
 	}
 
 	/**
-	 * Most clients should use method {@link #collectTests(URI...)} instead!
+	 * Most clients should use method {@link #collectTests(List)} instead.
 	 * <p>
 	 * Low-level method to collect all test modules, i.e. N4JS files containing classes containing at least one method
 	 * annotated with &#64;Test, as {@link IResourceDescription}s.
 	 */
 	private List<URI> collectDistinctTestLocations(final IResourceDescriptions index, final ResourceSet resSet,
-			final URI... locations) {
+			List<URI> locations) {
 		return newArrayList(
-				newHashSet(Stream.of(locations).flatMap(loc -> collectTestLocations(index, resSet, loc)).iterator()));
+				newHashSet(locations.stream().flatMap(loc -> collectTestLocations(index, resSet, loc)).iterator()));
 	}
 
 	/**
-	 * Most clients should use method {@link #collectTests(URI...)} instead!
+	 * Most clients should use method {@link #collectTests(List)} instead!
 	 * <p>
 	 * Low-level method to collect all test modules, i.e. N4JS files containing classes containing at least one method
 	 * annotated with &#64;Test, as {@link IResourceDescription}s.
 	 */
 	private Stream<URI> collectTestLocations(final IResourceDescriptions index, final ResourceSet resSet,
-			final URI location) {
+			URI location) {
 
 		if (null == location) {
 			return Stream.empty();
@@ -265,17 +262,19 @@ public class TestDiscoveryHelper {
 	}
 
 	private TestTree collectTests(final ResourceSet resSet, final IResourceDescriptions index,
-			final URI... locations) {
+			final List<URI> locations) {
 
 		// create test cases (aggregated in test suites)
-		final List<TestSuite> suites = newArrayList();
+		final Map<String, TestSuite> suites = new LinkedHashMap<>();
 
 		// create MultiMap from trimmed(!) URI -> original URIs for this prefix URI
 		final List<URI> testLocations = collectDistinctTestLocations(index, resSet, locations);
+		// module URI --> test case URIs
 		final HashMultimap<URI, URI> testLocationMapping = createTestLocationMapping(testLocations);
+		// module URI --> module
 		final Map<URI, TModule> moduleUri2Modules = loadModules(testLocationMapping.asMap().keySet(), index, resSet);
 
-		for (final URI moduleLocation : testLocationMapping.keys()) {
+		for (final URI moduleLocation : testLocationMapping.keySet()) {
 
 			final TModule module = moduleUri2Modules.get(moduleLocation);
 			if (null == module) {
@@ -293,66 +292,72 @@ public class TestDiscoveryHelper {
 			if (testLocationsForModule.get(0).equals(moduleLocation)) {
 				// The first item is referencing the entire module
 				// --> collect all test methods in module and ignore remaining URIs
-				suites.addAll(collectSuitsForModule(module));
+				collectTestCasesAndSuitesForModule(module, suites);
 			} else {
 				// we have URIs pointing to individual test methods -> collect all URIs
 				for (final URI uri : testLocationsForModule) {
-					suites.addAll(collectSuitsForMethod(uri, module));
+					collectTestSuiteAndTestCaseForMethod(uri, module, suites);
 				}
 			}
 		}
 
-		// TODO what should be the name of the test tree is multiple test locations are available?
-		// Improve the way how we got the name of the test tree.
+		// if test cases are selected, name of tree is first test method and number of more tests
 		final ID sessionId = createTestSessionId();
 		String name = valueOf(sessionId);
-		if (locations.length > 0) {
-			final URI uri = locations[0];
+		if (!locations.isEmpty()) {
+			final URI uri = locations.get(0);
 			name = valueOf(uri.trimFragment()).replaceFirst("platform:/resource/", "");
-			// name = name.replace("." + N4JS_FILE_EXTENSION, "");
 			if (name.lastIndexOf('.') > 0) {
 				name = name.substring(0, name.lastIndexOf('.'));
 			}
 			// Assuming one single test case.
-			if (uri.hasFragment() && !suites.isEmpty() && !suites.get(0).getTestCases().isEmpty()) {
-				name = name + "#" + suites.get(0).getTestCases().get(0).getDisplayName();
+			if (uri.hasFragment() && !suites.isEmpty() && !suites.values().iterator().next().getTestCases().isEmpty()) {
+				name += "#" + suites.values().iterator().next().getTestCases().get(0).getDisplayName();
+			}
+			if (locations.size() > 1) {
+				name += " and " + (locations.size() - 1) + " more";
 			}
 		}
-		return new TestTree(sessionId, suites, name);
+		return new TestTree(sessionId, suites.values(), name);
 	}
 
-	private Collection<TestSuite> collectSuitsForMethod(final URI uri, final TModule module) {
+	private void collectTestSuiteAndTestCaseForMethod(final URI uri, final TModule module,
+			Map<String, TestSuite> suites) {
 		final EObject object = module.eResource().getResourceSet().getEObject(uri, true);
-		if (object instanceof N4MethodDeclaration) {
-			final Type type = ((N4MethodDeclaration) object).getDefinedType();
-			if (type instanceof TMethod) {
-				final TMethod method = (TMethod) type;
-				final TestSuite testSuite = new TestSuite(getClassName(method));
-				testSuite.add(createTestCase(method, module));
-				return singletonList(testSuite);
-			}
+		final Type type = (object instanceof N4MethodDeclaration) ? ((N4MethodDeclaration) object).getDefinedType()
+				: (object instanceof TMethod) ? (TMethod) object : null;
+		if (type instanceof TMethod) {
+			final TMethod method = (TMethod) type;
+			TestSuite testSuite = addOrCreateSuite((TClass) method.getContainingType(), suites);
+			testSuite.add(createTestCase(method, module));
 		}
-		return emptyList();
 	}
 
-	private Collection<TestSuite> collectSuitsForModule(final TModule module) {
-
-		final List<TestSuite> suites = newArrayList();
-
-		// Collect all top level non-abstract exported classes, exclude everything else.
+	/**
+	 * Collect test cases for all all top level non-abstract exported classes, exclude everything else.
+	 */
+	private void collectTestCasesAndSuitesForModule(final TModule module, Map<String, TestSuite> suites) {
 		for (final TClass clazz : from(module.getTopLevelTypes()).filter(TClass.class)
 				.filter(c -> !c.isAbstract() && c.isExported())) {
-			final TestSuite testSuite = new TestSuite(getClassName(clazz));
-			for (final TMethod method : getAllTestMethodsOfClass(clazz)) {
-				final TestCase testCase = createTestCase(method, module, getClassName(clazz));
-				testSuite.add(testCase);
-			}
-			if (!isEmpty(testSuite)) {
-				suites.add(testSuite);
+			Iterable<TMethod> testMethods = getAllTestMethodsOfClass(clazz);
+			if (testMethods.iterator().hasNext()) {
+				TestSuite testSuite = addOrCreateSuite(clazz, suites);
+				for (final TMethod method : testMethods) {
+					final TestCase testCase = createTestCase(method, module, getTestCatalogNameFor(clazz));
+					testSuite.add(testCase);
+				}
 			}
 		}
+	}
 
-		return suites;
+	private TestSuite addOrCreateSuite(TClass clazz, Map<String, TestSuite> suites) {
+		String suiteKey = getTestCatalogNameFor(clazz);
+		TestSuite suite = suites.get(suiteKey);
+		if (suite == null) {
+			suite = new TestSuite(suiteKey);
+			suites.put(suiteKey, suite);
+		}
+		return suite;
 	}
 
 	private TestCase createTestCase(final TMethod method, final TModule module) {
@@ -366,14 +371,14 @@ public class TestDiscoveryHelper {
 	}
 
 	private String getClassName(final TMethod method) {
-		return getClassName(getContainerOfType(method, TClass.class));
+		return getTestCatalogNameFor(getContainerOfType(method, TClass.class));
 	}
 
 	/**
 	 * Returns the name to be used in the test catalog for the given {@link TClass}. We use the fully qualified name for
 	 * this purpose.
 	 */
-	private String getClassName(TClass clazz) {
+	private String getTestCatalogNameFor(TClass clazz) {
 		String classStr = "";
 		if (clazz.getDeclaredVersion() > 0) {
 			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz) + N4IDLGlobals.COMPILED_VERSION_SEPARATOR
