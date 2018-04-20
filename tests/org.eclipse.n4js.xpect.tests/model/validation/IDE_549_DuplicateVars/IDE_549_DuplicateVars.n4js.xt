@@ -286,11 +286,10 @@ class DB {
 var eval = function(){};
 
 // case #3b
-/*
-XPECT errors ---
+/* XPECT errors ---
+"A variable statement must at least contain one variable declaration." at "var"
 "no viable alternative at input 'this'" at "this"
----
-*/
+--- */
 var this = 42;
 
 // case #3d
