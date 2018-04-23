@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.tester.ui;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
@@ -22,6 +24,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterFrontEnd;
+import org.eclipse.n4js.tester.domain.TestCase;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,9 +64,12 @@ public class TestConfigurationConverter {
 	 * Converts a {@link TestConfiguration} to an {@link ILaunchConfiguration}. Will throw a {@link WrappedException} in
 	 * case of error.
 	 *
+	 * @param failed
+	 *            may be null, only used in test view to execute failed tests
 	 * @see TestConfiguration#readPersistentValues()
 	 */
-	public ILaunchConfiguration toLaunchConfiguration(ILaunchConfigurationType type, TestConfiguration testConfig) {
+	public ILaunchConfiguration toLaunchConfiguration(ILaunchConfigurationType type, TestConfiguration testConfig,
+			List<TestCase> failed) {
 		try {
 			final ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager()
 					.getLaunchConfigurations(type);
@@ -77,6 +83,13 @@ public class TestConfigurationConverter {
 			final ILaunchConfigurationWorkingCopy workingCopy = type.newInstance(container, testConfig.getName());
 
 			workingCopy.setAttributes(testConfig.readPersistentValues());
+			if (failed != null && !failed.isEmpty()) {
+				workingCopy.setAttribute(TestConfiguration.TESTCASE_SELECTION,
+						failed.stream().map(tc -> {
+							String s = tc.getURI().toString();
+							return s;
+						}).collect(Collectors.toList()));
+			}
 
 			return workingCopy.doSave();
 		} catch (Exception e) {
