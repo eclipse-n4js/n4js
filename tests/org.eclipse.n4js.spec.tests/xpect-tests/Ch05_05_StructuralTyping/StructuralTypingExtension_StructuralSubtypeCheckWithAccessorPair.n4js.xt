@@ -57,7 +57,7 @@ ai = as;
 ai = afs;
 // XPECT noerrors --> ""
 ai = aro;
-// XPECT errors --> "~w~A is not a structural subtype of ~i~A: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "awo"
+// XPECT errors --> "~w~A is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "awo"
 ai = awo;
 // XPECT noerrors --> ""
 ai = ai;
