@@ -41,17 +41,26 @@ class ImportsRegionHelper {
 	@Inject
 	private TypeExpressionsGrammarAccess typeExpressionGrammmarAccess;
 
-	/** Calculates import region offset by analyzing the provided resource. */
+	/** 
+	 * Calculates import offset by analyzing the provided resource.
+	 * @See {@link #getImportRegion(Script)}
+	 */
 	public def int getImportOffset(XtextResource resource) {
 		getImportRegion(resource).offset;
 	}
 	
-	/** Calculates import region offset by analyzing the provided script. */
+	/** 
+	 * Calculates import offset by analyzing the provided script.
+	 * @See {@link #getImportRegion(Script)}
+	 */
 	public def int getImportOffset(Script script) {
 		getImportRegion(script).offset;
 	}
 	
-	/** Convenience access to {@link #getImportRegion(Script)}. */
+	/** 
+	 * Calculates import region by analyzing the provided resource.
+	 * @See {@link #getImportRegion(Script)}
+	 */
 	package def InsertionPoint getImportRegion(XtextResource xtextResource) {
 		return getImportRegion(getScript(xtextResource))
 	}
