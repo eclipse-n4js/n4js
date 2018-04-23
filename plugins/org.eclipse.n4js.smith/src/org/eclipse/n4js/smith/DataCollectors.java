@@ -124,7 +124,7 @@ public enum DataCollectors {
 	}
 
 	/** sets {@code paused} state for all data collectors. */
-	void setPaused(boolean paused) {
+	synchronized void setPaused(boolean paused) {
 		this.pauseAllCollectors.set(paused);
 		collectors.values().forEach(collector -> collector.setPaused(paused));
 	}
