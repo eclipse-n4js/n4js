@@ -11,12 +11,24 @@
 
 import * as express from 'express';
 
-var props = "";
-for (var prop in express.application) {
-	if (props.length > 0) {
-		props += ', ';
-	}
-	props += prop;
+let app = express.application;
+
+function hasProp(name: string): string {
+	if (app && app.hasOwnProperty(name)) return `has own prop ${ name }`;
+	return `own prop ${ name } is not present`;
 }
 
-console.log('express properties: ' + props);
+let res = ['express',
+		hasProp('init'),
+		hasProp('defaultConfiguration'),
+		hasProp('lazyrouter'),
+		hasProp('handle'),
+		hasProp('use'),
+		hasProp('route'),
+		hasProp('engine'),
+		hasProp('param'),
+		hasProp('listen'),
+		hasProp('render')
+	].join('\n ');
+
+console.log(res);

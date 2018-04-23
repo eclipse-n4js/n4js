@@ -7574,6 +7574,50 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//Annotation
 		public RuleCall getAnnotationsAnnotationParserRuleCall_1_0() { return cAnnotationsAnnotationParserRuleCall_1_0; }
 	}
+	public class TypeReferenceElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TypeReference");
+		private final Group cGroup = (Group)rule.eContents().get(0);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final Assignment cAstNamespaceAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final CrossReference cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0 = (CrossReference)cAstNamespaceAssignment_0_0.eContents().get(0);
+		private final RuleCall cAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1 = (RuleCall)cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0.eContents().get(1);
+		private final Keyword cFullStopKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Assignment cDeclaredTypeAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final CrossReference cDeclaredTypeTypeCrossReference_1_0 = (CrossReference)cDeclaredTypeAssignment_1.eContents().get(0);
+		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_1_0.eContents().get(1);
+		
+		//@ Override fragment TypeReference *:
+		//	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+		//	declaredType=[types::Type|TypeReferenceName];
+		@Override public ParserRule getRule() { return rule; }
+		
+		//(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')? declaredType=[types::Type|TypeReferenceName]
+		public Group getGroup() { return cGroup; }
+		
+		//(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName]
+		public Assignment getAstNamespaceAssignment_0_0() { return cAstNamespaceAssignment_0_0; }
+		
+		//[types::ModuleNamespaceVirtualType|TypeReferenceName]
+		public CrossReference getAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0() { return cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0; }
+		
+		//TypeReferenceName
+		public RuleCall getAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1() { return cAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1; }
+		
+		//'.'
+		public Keyword getFullStopKeyword_0_1() { return cFullStopKeyword_0_1; }
+		
+		//declaredType=[types::Type|TypeReferenceName]
+		public Assignment getDeclaredTypeAssignment_1() { return cDeclaredTypeAssignment_1; }
+		
+		//[types::Type|TypeReferenceName]
+		public CrossReference getDeclaredTypeTypeCrossReference_1_0() { return cDeclaredTypeTypeCrossReference_1_0; }
+		
+		//TypeReferenceName
+		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1; }
+	}
 	public class TypeReferenceNameElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TypeReferenceName");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -7582,13 +7626,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cAwaitKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		private final Keyword cPromisifyKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cTargetKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
-		private final RuleCall cQualifiedTypeReferenceNameParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final Keyword cDefaultKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final RuleCall cIDENTIFIERTerminalRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
 		
 		//@ Override TypeReferenceName:
-		//	'void' | 'This' | 'await' | 'Promisify' | 'target' | QualifiedTypeReferenceName;
+		//	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'void' | 'This' | 'await' | 'Promisify' | 'target' | QualifiedTypeReferenceName
+		//'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'void'
@@ -7606,43 +7651,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'target'
 		public Keyword getTargetKeyword_4() { return cTargetKeyword_4; }
 		
-		//QualifiedTypeReferenceName
-		public RuleCall getQualifiedTypeReferenceNameParserRuleCall_5() { return cQualifiedTypeReferenceNameParserRuleCall_5; }
-	}
-	public class QualifiedTypeReferenceNameElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.QualifiedTypeReferenceName");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cIDENTIFIERTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Keyword cFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
-		private final RuleCall cIDENTIFIERTerminalRuleCall_1_1_0 = (RuleCall)cAlternatives_1_1.eContents().get(0);
-		private final Keyword cDefaultKeyword_1_1_1 = (Keyword)cAlternatives_1_1.eContents().get(1);
-		
-		//QualifiedTypeReferenceName:
-		//	IDENTIFIER ('.' (IDENTIFIER | 'default'))?;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//IDENTIFIER ('.' (IDENTIFIER | 'default'))?
-		public Group getGroup() { return cGroup; }
-		
-		//IDENTIFIER
-		public RuleCall getIDENTIFIERTerminalRuleCall_0() { return cIDENTIFIERTerminalRuleCall_0; }
-		
-		//('.' (IDENTIFIER | 'default'))?
-		public Group getGroup_1() { return cGroup_1; }
-		
-		//'.'
-		public Keyword getFullStopKeyword_1_0() { return cFullStopKeyword_1_0; }
-		
-		//IDENTIFIER | 'default'
-		public Alternatives getAlternatives_1_1() { return cAlternatives_1_1; }
-		
-		//IDENTIFIER
-		public RuleCall getIDENTIFIERTerminalRuleCall_1_1_0() { return cIDENTIFIERTerminalRuleCall_1_1_0; }
-		
 		//'default'
-		public Keyword getDefaultKeyword_1_1_1() { return cDefaultKeyword_1_1_1; }
+		public Keyword getDefaultKeyword_5() { return cDefaultKeyword_5; }
+		
+		//IDENTIFIER
+		public RuleCall getIDENTIFIERTerminalRuleCall_6() { return cIDENTIFIERTerminalRuleCall_6; }
 	}
 	public class N4ClassDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4ClassDeclaration");
@@ -10170,8 +10183,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final ExpressionAnnotationListElements pExpressionAnnotationList;
 	private final PropertyAssignmentAnnotationListElements pPropertyAssignmentAnnotationList;
 	private final N4MemberAnnotationListElements pN4MemberAnnotationList;
+	private final TypeReferenceElements pTypeReference;
 	private final TypeReferenceNameElements pTypeReferenceName;
-	private final QualifiedTypeReferenceNameElements pQualifiedTypeReferenceName;
 	private final N4ClassDeclarationElements pN4ClassDeclaration;
 	private final MembersElements pMembers;
 	private final ClassExtendsImplementsElements pClassExtendsImplements;
@@ -10425,8 +10438,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pExpressionAnnotationList = new ExpressionAnnotationListElements();
 		this.pPropertyAssignmentAnnotationList = new PropertyAssignmentAnnotationListElements();
 		this.pN4MemberAnnotationList = new N4MemberAnnotationListElements();
+		this.pTypeReference = new TypeReferenceElements();
 		this.pTypeReferenceName = new TypeReferenceNameElements();
-		this.pQualifiedTypeReferenceName = new QualifiedTypeReferenceNameElements();
 		this.pN4ClassDeclaration = new N4ClassDeclarationElements();
 		this.pMembers = new MembersElements();
 		this.pClassExtendsImplements = new ClassExtendsImplementsElements();
@@ -12682,24 +12695,25 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getN4MemberAnnotationListAccess().getRule();
 	}
 	
+	//@ Override fragment TypeReference *:
+	//	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+	//	declaredType=[types::Type|TypeReferenceName];
+	public TypeReferenceElements getTypeReferenceAccess() {
+		return pTypeReference;
+	}
+	
+	public ParserRule getTypeReferenceRule() {
+		return getTypeReferenceAccess().getRule();
+	}
+	
 	//@ Override TypeReferenceName:
-	//	'void' | 'This' | 'await' | 'Promisify' | 'target' | QualifiedTypeReferenceName;
+	//	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER;
 	public TypeReferenceNameElements getTypeReferenceNameAccess() {
 		return pTypeReferenceName;
 	}
 	
 	public ParserRule getTypeReferenceNameRule() {
 		return getTypeReferenceNameAccess().getRule();
-	}
-	
-	//QualifiedTypeReferenceName:
-	//	IDENTIFIER ('.' (IDENTIFIER | 'default'))?;
-	public QualifiedTypeReferenceNameElements getQualifiedTypeReferenceNameAccess() {
-		return pQualifiedTypeReferenceName;
-	}
-	
-	public ParserRule getQualifiedTypeReferenceNameRule() {
-		return getQualifiedTypeReferenceNameAccess().getRule();
 	}
 	
 	//// ****************************************************************************************************
@@ -13482,13 +13496,26 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ParameterizedTypeRefNominal ParameterizedTypeRef:
-	//	TypeAndTypeArguments;
+	//	(super::TypeReference
+	//	| {VersionedParameterizedTypeRef} super::TypeReference VersionRequest) -> TypeArguments?;
 	public TypeExpressionsGrammarAccess.ParameterizedTypeRefNominalElements getParameterizedTypeRefNominalAccess() {
 		return gaTypeExpressions.getParameterizedTypeRefNominalAccess();
 	}
 	
 	public ParserRule getParameterizedTypeRefNominalRule() {
 		return getParameterizedTypeRefNominalAccess().getRule();
+	}
+	
+	//ParameterizedTypeRefStructural:
+	//	(definedTypingStrategy=TypingStrategyUseSiteOperator super::TypeReference
+	//	| {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator super::TypeReference
+	//	VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
+	public TypeExpressionsGrammarAccess.ParameterizedTypeRefStructuralElements getParameterizedTypeRefStructuralAccess() {
+		return gaTypeExpressions.getParameterizedTypeRefStructuralAccess();
+	}
+	
+	public ParserRule getParameterizedTypeRefStructuralRule() {
+		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
 	//ArrayTypeRef ParameterizedTypeRef:
@@ -13499,29 +13526,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getArrayTypeRefRule() {
 		return getArrayTypeRefAccess().getRule();
-	}
-	
-	//ParameterizedTypeRefStructural:
-	//	(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|super::TypeReferenceName] |
-	//	{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-	//	declaredType=[Type|super::TypeReferenceName] VersionRequest) -> TypeArguments? ('with' TStructMemberList)?;
-	public TypeExpressionsGrammarAccess.ParameterizedTypeRefStructuralElements getParameterizedTypeRefStructuralAccess() {
-		return gaTypeExpressions.getParameterizedTypeRefStructuralAccess();
-	}
-	
-	public ParserRule getParameterizedTypeRefStructuralRule() {
-		return getParameterizedTypeRefStructuralAccess().getRule();
-	}
-	
-	//TypeAndTypeArguments ParameterizedTypeRef:
-	//	(declaredType=[Type|super::TypeReferenceName] | {VersionedParameterizedTypeRef}
-	//	declaredType=[Type|super::TypeReferenceName] VersionRequest) -> TypeArguments?;
-	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
-		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
-	}
-	
-	public ParserRule getTypeAndTypeArgumentsRule() {
-		return getTypeAndTypeArgumentsAccess().getRule();
 	}
 	
 	//fragment VersionRequest *:

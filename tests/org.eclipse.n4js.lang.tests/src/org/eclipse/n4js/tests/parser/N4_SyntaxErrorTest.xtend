@@ -316,11 +316,11 @@ class N4_SyntaxErrorTest extends AbstractParserTest {
 		val resource = script.eResource as N4JSResource
 
 		val errors = resource.errors
-		assertEquals(errors.join('\n'), 2, errors.size)
+		assertEquals(errors.join('\n'), 4, errors.size)
 		resource.update(insertHere, 0, 'a')
-		assertEquals(1, errors.size)
+		assertEquals(2, errors.size)
 		resource.update(insertHere, 0, 'a')
-		assertEquals(1, errors.size)
+		assertEquals(2, errors.size)
 	}
 
 	@Test

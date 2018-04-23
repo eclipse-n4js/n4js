@@ -146,29 +146,32 @@ ParameterizedTypeRef returns ParameterizedTypeRef:
 	ParameterizedTypeRefNominal | ParameterizedTypeRefStructural;
 
 ParameterizedTypeRefNominal returns ParameterizedTypeRef:
-	TypeAndTypeArguments;
+	(
+		TypeReference
+	|	{VersionedParameterizedTypeRef}
+		TypeReference VersionRequest
+	)
+	(-> TypeArguments)?
+;
+
+ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
+	(
+		definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+	|	{VersionedParameterizedTypeRefStructural}
+		definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference VersionRequest
+	)
+	(-> TypeArguments)?
+	('with' TStructMemberList)?
+;
 
 ArrayTypeRef returns ParameterizedTypeRef:
 	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
 
-ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
-	(
-		definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName]
-	  | {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
-		 declaredType=[Type|TypeReferenceName] VersionRequest
-	)
-	(-> TypeArguments)?
-	('with' TStructMemberList)?;
-
-TypeAndTypeArguments returns ParameterizedTypeRef:
-	(
-		declaredType=[Type|TypeReferenceName]
-	  | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName] VersionRequest
-	)
-	(->TypeArguments)?
-;
-
 fragment VersionRequest*: requestedVersion=VERSION;
+
+fragment TypeReference *:
+	declaredType=[Type|TypeReferenceName]
+;
 
 fragment TypeArguments *:
 	'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>'

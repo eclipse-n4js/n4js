@@ -23,6 +23,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
@@ -37,8 +38,6 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.IOutlineNodeComparer;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-
 /**
  * Copied and adapted from http://git.eclipse.org/c/tmf/org.eclipse.xtext.git/plain/tests/
  * org.eclipse.xtext.ui.tests/tests/org/eclipse/xtext/ui/tests/editor/outline/ AbstractOutlineWorkbenchTest.java
@@ -48,7 +47,7 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 @SuppressWarnings("javadoc")
 public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderParticipantTest {
 	protected static final int ERROR_TIMEOUT = 10000;
-	protected static final int EXPECTED_TIMEOUT = 500;
+	protected static final int EXPECTED_TIMEOUT = 1000;
 	protected IOutlineNodeComparer nodeComparer = new IOutlineNodeComparer.Default();
 	protected IFile file;
 	protected XtextEditor editor;

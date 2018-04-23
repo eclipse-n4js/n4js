@@ -45,8 +45,8 @@ Contributors:
 								<id>TychoSurefirePluginUITest</id>
 								<phase>integration-test</phase>
 								<configuration>
-									<!-- 15 Minutes timeout (plus 7sec to simplify search for this timeout in log) -->
-									<forkedProcessTimeoutInSeconds>907</forkedProcessTimeoutInSeconds>
+									<!-- 30 Minutes timeout (plus 7sec to simplify search for this timeout in log) -->
+									<forkedProcessTimeoutInSeconds>1807</forkedProcessTimeoutInSeconds>
 								</configuration>
 							</execution>
 						</executions>

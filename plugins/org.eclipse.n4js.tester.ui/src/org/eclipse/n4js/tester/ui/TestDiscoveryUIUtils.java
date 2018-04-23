@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.tester.ui;
 
+import static java.lang.Thread.currentThread;
 import static org.eclipse.n4js.AnnotationDefinition.TEST_METHOD;
 import static org.eclipse.n4js.ui.utils.HandlerServiceUtils.getActiveEditor;
-import static java.lang.Thread.currentThread;
 import static org.eclipse.swt.widgets.Display.getDefault;
+
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -23,6 +25,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.n4js.n4JS.N4MethodDeclaration;
+import org.eclipse.n4js.n4JS.impl.LiteralOrComputedPropertyNameImpl;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.tester.TestDiscoveryHelper;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -30,18 +37,13 @@ import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 
-import org.eclipse.n4js.n4JS.N4MethodDeclaration;
-import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.tester.TestDiscoveryHelper;
-import org.eclipse.n4js.ts.types.TModule;
-
 /**
  * Some UI-related utility methods for working with {@link TestDiscoveryHelper}.
  */
 public class TestDiscoveryUIUtils {
 
 	/**
-	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(URI...)} from a UI object such as a
+	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(List)} from a UI object such as a
 	 * IProject, IFolder, IFile, IEditorPart, etc.
 	 */
 	public static final URI getLocationForSelectedObject(Object selectedObject) {
@@ -57,7 +59,7 @@ public class TestDiscoveryUIUtils {
 	}
 
 	/**
-	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(URI...)} from a selection.
+	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(List)} from a selection.
 	 */
 	public static final URI getLocationForSelection(ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
@@ -69,7 +71,7 @@ public class TestDiscoveryUIUtils {
 	}
 
 	/**
-	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(URI...)} from a workspace resource.
+	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(List)} from a workspace resource.
 	 */
 	public static final URI getLocationForResource(IResource resource) {
 		final String pathName = resource.getFullPath().toString();
@@ -77,7 +79,7 @@ public class TestDiscoveryUIUtils {
 	}
 
 	/**
-	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(URI...)} from an editor.
+	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(List)} from an editor.
 	 */
 	public static final URI getLocationForEditor(IEditorPart editor) {
 		final IEditorInput input = editor.getEditorInput();
@@ -87,7 +89,7 @@ public class TestDiscoveryUIUtils {
 	}
 
 	/**
-	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(URI...)} from an editor input.
+	 * Derives a location URI as expected by {@link TestDiscoveryHelper#collectTests(List)} from an editor input.
 	 */
 	public static final URI getLocationForEditorInput(IFileEditorInput fileEditorInput) {
 
@@ -101,12 +103,14 @@ public class TestDiscoveryUIUtils {
 				if (editor.getSelectionProvider().getSelection() instanceof ITextSelection) {
 					final ITextSelection textSelection = (ITextSelection) editor.getSelectionProvider().getSelection();
 					final EObject selectedElement = getSelectedElement(editor, textSelection);
-					if (selectedElement instanceof N4MethodDeclaration) {
-						final N4MethodDeclaration method = (N4MethodDeclaration) selectedElement;
+					if (selectedElement instanceof LiteralOrComputedPropertyNameImpl
+							&& selectedElement.eContainer() instanceof N4MethodDeclaration) {
+						final N4MethodDeclaration method = (N4MethodDeclaration) (selectedElement.eContainer());
 						if (!method.eIsProxy() && TEST_METHOD.hasAnnotation(method)) {
 							final TModule module = N4JSResource.getModule(method.eResource());
 							if (null != module) {
-								return EcoreUtil.getURI(method);
+								URI uri = EcoreUtil.getURI(method);
+								return uri;
 							}
 						}
 					}
