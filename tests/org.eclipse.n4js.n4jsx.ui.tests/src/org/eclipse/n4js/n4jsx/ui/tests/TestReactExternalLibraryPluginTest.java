@@ -64,7 +64,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	private ProcessExecutor processExecutor;
 
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	/**
 	 * Checks whether the platform is running or not.
@@ -104,7 +104,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		assertMarkers("Expected exactly 5 errors in client module.", clientModule, 5);
 		assertMarkers("Expected exactly one error in manifest.", manifest, 1);
 
-		npmManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -134,7 +134,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile manifest = project.getFile(getResourceName(N4MF_MANIFEST));
 		assertTrue(manifest + " B module is not accessible.", manifest.isAccessible());
 
-		npmManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
