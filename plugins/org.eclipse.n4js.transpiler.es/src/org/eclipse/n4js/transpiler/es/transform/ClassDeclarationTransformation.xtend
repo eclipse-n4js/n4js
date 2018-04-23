@@ -30,6 +30,7 @@ import org.eclipse.n4js.ts.types.TField
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
+import java.util.List
 
 /**
  * Transforms {@link N4ClassDeclaration}s into a constructor function and a <code>$makeClass</code> call.
@@ -77,7 +78,7 @@ class ClassDeclarationTransformation extends Transformation {
 
 		val ctorDecl = classConstructorAssistant.createCtorDecl(classDecl, superClassSTE);
 		val makeClassCall = bootstrapCallAssistant.createMakeClassCall(classDecl, superClassSTE);
-		val staticInits = createStaticInitialisers(classSTE, classDecl);
+		val staticInits = createStaticFieldInitializations(classSTE, classDecl);
 
 		state.tracer.copyTrace(classDecl, ctorDecl);
 		state.tracer.copyTrace(classDecl, makeClassCall);
@@ -94,12 +95,14 @@ class ClassDeclarationTransformation extends Transformation {
 	// ################################################################################################################
 	// STATIC INITIALIZERS
 
-	/** returns pairs of a new {@code Statement} and it's associated initializer-procedure to
-	 * establish tracing - once the statement was inserted into the IM-model*/
-	def protected Iterable<Statement> createStaticInitialisers(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
+	/**
+	 * Creates a new list of statements to initialize the static fields of the given {@code classDecl}.
+	 * 
+	 * Clients of this method may modify the returned list.
+	 */
+	def protected List<Statement> createStaticFieldInitializations(SymbolTableEntry steClass, N4ClassDeclaration classDecl) {
 		// apply only to static members
-		val statements = classDecl.ownedMembers.filter[isStatic].map[createStaticInitialiserCode(steClass)].filterNull.toList;
-		return statements;
+		return classDecl.ownedMembers.filter[isStatic].map[createStaticInitialiserCode(steClass)].filterNull.toList;
 	}
 
 	def private dispatch Statement createStaticInitialiserCode(N4FieldDeclaration fieldDecl, SymbolTableEntry steClass) {

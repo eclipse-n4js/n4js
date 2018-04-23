@@ -24,6 +24,7 @@ import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.n4idl.N4IDLGlobals
 
 /**
  * N4IDL Migration declaration transformation which replaces all MigrationContext
@@ -77,7 +78,9 @@ class N4IDLMigrationTransformation extends Transformation {
 		
 		if (refSTE instanceof SymbolTableEntryOriginal
 			&& (refSTE as SymbolTableEntryOriginal).originalTarget instanceof MigrationContextVariable) {
-			val contextAccess = _PropertyAccessExpr(_ThisLiteral, getSymbolTableEntryInternal("context", true));
+			
+			val contextSTE = getSymbolTableEntryInternal(N4IDLGlobals.MIGRATION_CONTROLLER_CONTEXT_PROPERTY_NAME, true);
+			val contextAccess = _PropertyAccessExpr(_ThisLiteral, contextSTE);
 			replace(ref, contextAccess)
 		}
 	}
@@ -121,7 +124,9 @@ class N4IDLMigrationTransformation extends Transformation {
 	 */
 	private def void transformMigrateCallExpression(TMigration contextMigration, ParameterizedCallExpression callExpression) {
 		val transpiledCall = _CallExpr()
-		transpiledCall.target = _PropertyAccessExpr(_ThisLiteral, getSymbolTableEntryInternal("migrate", true));
+		val migrateSTE = getSymbolTableEntryInternal(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER, true);
+		
+		transpiledCall.target = _PropertyAccessExpr(_ThisLiteral, migrateSTE);
 		transpiledCall.arguments.addAll(#[
 			// first and only argument is an array of all original migrate call arguments
 			_Argument(_ArrLit(callExpression.arguments.map[a | _ArrayElement(a.expression)]))
@@ -135,7 +140,9 @@ class N4IDLMigrationTransformation extends Transformation {
 	 */
 	private def void transformExplicitMigrationCallExpression(TMigration contextMigration, ParameterizedCallExpression callExpression) {
 		val transpiledCall = _CallExpr()
-		transpiledCall.target = _PropertyAccessExpr(_ThisLiteral, getSymbolTableEntryInternal("migrateWith", true));
+		val migrateWithSTE = getSymbolTableEntryInternal(N4IDLGlobals.MIGRATION_CONTROLLER_MIGRATE_WITH_FUNCTION_NAME, true);
+		
+		transpiledCall.target = _PropertyAccessExpr(_ThisLiteral, migrateWithSTE);
 		transpiledCall.arguments.addAll(#[
 			// first argument is the target of the call-expression (the migration function)
 			_Argument(callExpression.target),

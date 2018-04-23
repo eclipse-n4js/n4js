@@ -30,7 +30,7 @@ public class ParseMigrateKeyword extends AbstractN4IDLParserTest {
 		'''.parseSuccessfully
 		assertNotNull("The migrate operator is parsed correctly", script.eAllContents
 			.filter(IdentifierRef)
-			.findFirst[ref | ref.idAsText.equals(N4IDLGlobals.MIGRATE_CALL_KEYWORD)]);
+			.findFirst[ref | ref.idAsText.equals(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER)]);
 	}
 
 }

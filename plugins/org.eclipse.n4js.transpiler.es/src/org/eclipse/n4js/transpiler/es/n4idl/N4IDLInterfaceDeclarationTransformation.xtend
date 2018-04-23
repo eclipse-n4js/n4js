@@ -26,11 +26,12 @@ class N4IDLInterfaceDeclarationTransformation extends InterfaceDeclarationTransf
 	@Inject private extension MigrationTransformationAssistant;
 	@Inject private extension N4IDLClassifierTransformationAssistant;
 	
-	override protected createStaticInitialisers(SymbolTableEntry steInterface, N4InterfaceDeclaration interfaceDecl) {
-		val statements = super.createStaticInitialisers(steInterface, interfaceDecl);
+	override protected createStaticFieldInitializations(SymbolTableEntry steInterface, N4InterfaceDeclaration interfaceDecl) {
+		val statements = super.createStaticFieldInitializations(steInterface, interfaceDecl);
 		
-		return statements 
-			+ createMigrationSupportInitializer(steInterface, interfaceDecl)
-			+ #[createImplementedInterfaceStaticInitializer(steInterface, interfaceDecl)];
+		statements.add(createMigrationSupportInitializer(steInterface, interfaceDecl));
+		statements.add(createImplementedInterfaceStaticInitializer(steInterface, interfaceDecl));
+		
+		return statements;
 	}
 }

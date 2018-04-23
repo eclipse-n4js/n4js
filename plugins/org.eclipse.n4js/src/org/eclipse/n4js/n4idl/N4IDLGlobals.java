@@ -59,7 +59,23 @@ public class N4IDLGlobals {
 	public static final String N4_SUPER_INTERFACE_STATIC_FIELD = "$implementedInterfaces__n4";
 
 	/**
-	 * The migrate call keyword in N4IDL migrations.
+	 * The migration call identifier in N4IDL migrations.
+	 *
+	 * Also the name of the function of the N4IDL contract interface {@code MigrationController} that can be used to
+	 * implicitly invoke the migration of given arguments.
 	 */
-	public static final String MIGRATE_CALL_KEYWORD = "migrate";
+	public static final String MIGRATION_CALL_IDENTIFIER = "migrate";
+
+	/**
+	 * The name of the function of the N4IDL contract interface {@code MigrationController} that can be used to invoke a
+	 * specified migration function using the controller.
+	 */
+	public static final String MIGRATION_CONTROLLER_MIGRATE_WITH_FUNCTION_NAME = "migrateWith";
+
+	/**
+	 * The name of the property of the N4IDL contract interface {@code MigrationController} that can be used to access
+	 * the current {@code MigrationContext}.
+	 */
+	public static final String MIGRATION_CONTROLLER_CONTEXT_PROPERTY_NAME = "context";
+
 }

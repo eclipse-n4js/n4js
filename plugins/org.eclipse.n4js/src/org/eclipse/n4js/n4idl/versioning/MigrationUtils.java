@@ -94,7 +94,7 @@ public class MigrationUtils {
 		return object instanceof ParameterizedCallExpression
 				&& ((ParameterizedCallExpression) object).getTarget() instanceof IdentifierRef
 				&& ((IdentifierRef) ((ParameterizedCallExpression) object).getTarget()).getIdAsText()
-						.equals(N4IDLGlobals.MIGRATE_CALL_KEYWORD);
+						.equals(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER);
 	}
 
 	/**

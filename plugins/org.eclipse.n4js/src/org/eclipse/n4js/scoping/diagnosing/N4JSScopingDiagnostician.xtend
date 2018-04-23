@@ -40,7 +40,7 @@ class N4JSScopingDiagnostician {
 
 	@Inject
 	N4JSScopingInstanceOfPrimitivTypeDiagnosis instanceOfPrimitiveTypeDiagnosis;
-	
+
 	@Inject
 	ErrorAwareLinkingService linkingService;
 
@@ -75,10 +75,6 @@ class N4JSScopingDiagnostician {
 
 	// Handle {@link IdentifierRef}s
 	private def dispatch DiagnosticMessage diagnose(QualifiedName name, IdentifierRef context, EReference reference) {
-		return handleInstanceOfPrimitiveType(name, context, reference);
-	}
-	
-	private def DiagnosticMessage handleInstanceOfPrimitiveType(QualifiedName name, IdentifierRef context, EReference reference) {
 		var container = context.eContainer;
 		var containingFeature = context.eContainingFeature();
 		// Skip all parenthesis-expression containers to allow
@@ -96,8 +92,6 @@ class N4JSScopingDiagnostician {
 				return instanceOfPrimitiveTypeDiagnosis.diagnose(name, container);
 			}
 		}
-		
-		return null;
 	}
 
 

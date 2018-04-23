@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import java.util.Optional
 
 /**
  * Transformation assistant for generating migration-support related ES code.
@@ -55,9 +56,12 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 	/** 
 	 * Creates the initializer statement for the static field which holds migrations associated with the given type declaration.
 	 * 
+	 * Returns an absent {@link Optional} if for the given type declaration, no migration support initializer 
+	 * can be provided (e.g. non-migratable type).
+	 * 
 	 * @see N4IDLGlobals#MIGRATIONS_STATIC_FIELD
 	 */
-	public def Iterable<Statement> createMigrationSupportInitializer(SymbolTableEntry steClass, N4TypeDeclaration typeDecl) {
+	public def Statement createMigrationSupportInitializer(SymbolTableEntry steClass, N4TypeDeclaration typeDecl) {
 		val SymbolTableEntryOriginal originalSTE = if (steClass instanceof SymbolTableEntryOriginal) {
 			steClass
 		} else {
@@ -65,13 +69,13 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 		}
 		val typeModelElement = originalSTE?.originalTarget;
 		if (null === typeModelElement) {
-			// without the type model class declaration we cannot go any further 
-			return #[];
+			// without the type model class declaration we cannot go any further
+			throw new IllegalStateException("Failed to generate migration meta-information for type " + typeDecl.name + ".");
 		}
 		
 		if (!(typeModelElement instanceof TMigratable)) {
-			// only consider migratable elements
-			return #[];
+			// at this point we do expect migratable types only
+			throw new IllegalStateException("Failed to generate migration meta-information for non-migratable type " + typeDecl.name + ".");
 		}
 		
 		// <migration switch>
@@ -80,7 +84,7 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 		val staticFieldAccess =_PropertyAccessExpr(_IdentRef(steClass), getSymbolTableEntryInternal(N4IDLGlobals.MIGRATIONS_STATIC_FIELD, true))
 		
 		// A.$migration__n4 = function() { <migration switch> }
-		return #[_ExprStmnt(_AssignmentExpr(staticFieldAccess, migrationsFieldValue))];
+		return _ExprStmnt(_AssignmentExpr(staticFieldAccess, migrationsFieldValue));
 	}
 	
 	private def Expression makeMigrationSwitch(TMigratable migratable) {

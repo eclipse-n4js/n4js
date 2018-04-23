@@ -513,9 +513,13 @@ public class ASTProcessor extends AbstractProcessor {
 	 */
 	def private void registerMigrationWithTypes(TMigration migration) {
 		// skip invalid migrations
-		if (null === migration) { return; }
+		if (null === migration) {
+			return;
+		}
 		// ignore (do not register) generic migrations for now
-		if (!migration.typeVars.empty) { return;}
+		if (!migration.typeVars.empty) {
+			return;
+		}
 		
 		if (null !== migration.principalArgumentType) {
 			registerMigrationWithType(migration, migration.principalArgumentType);

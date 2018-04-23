@@ -42,12 +42,12 @@ public class MigrationScopeHelper {
 	@Inject
 	private MigrationLocator migrationLocator;
 
-	/** 
-	 * Returns a new scope which contains the {@link TMigration}s that can be bound
-	 * for the given list of arguments. 
-	 * 
-	 * @param context The context to create the scope for. 
-	 * */
+	/**
+	 * Returns a new scope which contains the {@link TMigration}s that can be bound for the given list of arguments.
+	 *
+	 * @param context
+	 *            The context to create the scope for.
+	 */
 	public IScope migrationsScope(List<Argument> arguments, EObject context) {
 		final Optional<TMigration> contextMigration = MigrationUtils.getTMigrationOf(context);
 
@@ -61,13 +61,14 @@ public class MigrationScopeHelper {
 		// if no matching migration can be found, we cannot link this migrate-call
 		if (targetMigrations.isEmpty()) {
 			// defensively return a UnresolvableObjectDescription instead of raising a linking issue
-			return new SingletonScope(new UnresolvableObjectDescription(QualifiedName.create("migrate")),
+			return new SingletonScope(
+					new UnresolvableObjectDescription(QualifiedName.create(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER)),
 					IScope.NULLSCOPE);
 		}
 
 		// create a description for the first migration match
 		IEObjectDescription migrationDescription = N4JSEObjectDescription.create(
-				QualifiedName.create(N4IDLGlobals.MIGRATE_CALL_KEYWORD),
+				QualifiedName.create(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER),
 				targetMigrations.get(0));
 
 		if (targetMigrations.size() > 1) {
