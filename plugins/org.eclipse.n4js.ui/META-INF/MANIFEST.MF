@@ -47,7 +47,9 @@ Require-Bundle: org.eclipse.n4js;visibility:=reexport,
  com.ibm.icu,
  org.eclipse.n4js.smith,
  org.eclipse.n4js.transpiler.es,
- org.eclipse.core.commands
+ org.eclipse.core.commands,
+ org.eclipse.search;bundle-version="3.11.1",
+ com.google.inject
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.ui,
  org.eclipse.n4js.ui.building,
