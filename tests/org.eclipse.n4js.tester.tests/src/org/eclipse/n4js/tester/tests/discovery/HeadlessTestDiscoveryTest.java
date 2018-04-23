@@ -46,6 +46,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -114,14 +115,15 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@Test
 	public void testDiscoveryExpectNonNullTestTree() {
-		assertNotNull(TEST_PROJECT + "", helper.collectTests(toURI(TEST_PROJECT)));
-		assertNotNull(TEST_PROJECT_IDEBUG_572 + "", helper.collectTests(toURI(TEST_PROJECT_IDEBUG_572)));
+		assertNotNull(TEST_PROJECT + "", helper.collectTests(Lists.newArrayList(toURI(TEST_PROJECT))));
+		assertNotNull(TEST_PROJECT_IDEBUG_572 + "",
+				helper.collectTests(Lists.newArrayList(toURI(TEST_PROJECT_IDEBUG_572))));
 	}
 
 	/***/
 	@Test
 	public void testDiscoveryForSingleExistingFile() {
-		final TestTree actual = helper.collectTests(toURI(TEST_CLASS_FILE));
+		final TestTree actual = helper.collectTests(Lists.newArrayList(toURI(TEST_CLASS_FILE)));
 		assertTestSuiteCount(actual, 3);
 		String suiteA = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "A");
 		String suiteB = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "B");
@@ -139,7 +141,7 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@Test
 	public void testDiscoveryForSingleExistingProject() {
-		final TestTree actual = helper.collectTests(toURI(TEST_PROJECT));
+		final TestTree actual = helper.collectTests(Lists.newArrayList(toURI(TEST_PROJECT)));
 		assertTestSuiteCount(actual, 3);
 		String suiteA = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "A");
 		String suiteB = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "B");
@@ -157,7 +159,8 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@Test
 	public void testDiscoveryForSameExistingFile() {
-		final TestTree actual = helper.collectTests(toURI(TEST_CLASS_FILE), toURI(TEST_CLASS_FILE));
+		final TestTree actual = helper.collectTests(
+				Lists.newArrayList(toURI(TEST_CLASS_FILE), toURI(TEST_CLASS_FILE)));
 		assertTestSuiteCount(actual, 3);
 		String suiteA = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "A");
 		String suiteB = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "B");
@@ -175,7 +178,7 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@Test
 	public void testDiscoveryForExistingProjectAndItsContainmentFile() {
-		final TestTree actual = helper.collectTests(toURI(TEST_PROJECT), toURI(TEST_CLASS_FILE));
+		final TestTree actual = helper.collectTests(Lists.newArrayList(toURI(TEST_PROJECT), toURI(TEST_CLASS_FILE)));
 		assertTestSuiteCount(actual, 3);
 		String suiteA = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "A");
 		String suiteB = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "B");
@@ -193,8 +196,8 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@Test
 	public void testDiscoveryForExistingProjectFolderAndFile() {
-		final TestTree actual = helper.collectTests(
-				toURI(TEST_PROJECT_IDEBUG_572), toURI(TEST_SRC_FOLDER_IDEBUG_572), toURI(TEST_CLASS_FILE_IDEBUG_572));
+		final TestTree actual = helper.collectTests(Lists.newArrayList(
+				toURI(TEST_PROJECT_IDEBUG_572), toURI(TEST_SRC_FOLDER_IDEBUG_572), toURI(TEST_CLASS_FILE_IDEBUG_572)));
 		assertTestSuiteCount(actual, 2);
 		String suiteC = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_2, "C");
 		String suiteF = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_2, "F");
@@ -209,8 +212,8 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@Test
 	public void testDiscoveryForSameExistingFile_WithExportFiltering() {
-		final TestTree actual = helper.collectTests(toURI(TEST_CLASS_FILE_IDEBUG_572),
-				toURI(TEST_CLASS_FILE_IDEBUG_572));
+		final TestTree actual = helper.collectTests(Lists.newArrayList(toURI(TEST_CLASS_FILE_IDEBUG_572),
+				toURI(TEST_CLASS_FILE_IDEBUG_572)));
 		assertTestSuiteCount(actual, 2);
 		String suiteC = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_2, "C");
 		String suiteF = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_2, "F");
@@ -225,7 +228,8 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@Test
 	public void testDiscoveryForExistingProjectAndItsContainmentFile_WithExportFiltering() {
-		final TestTree actual = helper.collectTests(toURI(TEST_PROJECT_IDEBUG_572), toURI(TEST_CLASS_FILE_IDEBUG_572));
+		final TestTree actual = helper
+				.collectTests(Lists.newArrayList(toURI(TEST_PROJECT_IDEBUG_572), toURI(TEST_CLASS_FILE_IDEBUG_572)));
 		assertTestSuiteCount(actual, 2);
 		String suiteC = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_2, "C");
 		String suiteF = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_2, "F");
@@ -240,8 +244,8 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@Test
 	public void testDiscoveryForExistingProjectFolderAndFile_WithExportFiltering() {
-		final TestTree actual = helper.collectTests(
-				toURI(TEST_PROJECT), toURI(TEST_SRC_FOLDER), toURI(TEST_CLASS_FILE));
+		final TestTree actual = helper.collectTests(Lists.newArrayList(
+				toURI(TEST_PROJECT), toURI(TEST_SRC_FOLDER), toURI(TEST_CLASS_FILE)));
 		assertTestSuiteCount(actual, 3);
 		String suiteA = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "A");
 		String suieB = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_CLASS_1, "B");
@@ -259,13 +263,13 @@ public class HeadlessTestDiscoveryTest {
 	/** N4JSX test discovery tests */
 	@Test
 	public void testDiscoveryN4JSXExpectNonNullTestTree() {
-		assertNotNull(TEST_N4JSX_PROJECT + "", helper.collectTests(toURI(TEST_N4JSX_PROJECT)));
+		assertNotNull(TEST_N4JSX_PROJECT + "", helper.collectTests(Lists.newArrayList(toURI(TEST_N4JSX_PROJECT))));
 	}
 
 	/***/
 	@Test
 	public void testDiscoveryN4JSXForSingleExistingProject() {
-		final TestTree actual = helper.collectTests(toURI(TEST_N4JSX_PROJECT));
+		final TestTree actual = helper.collectTests(Lists.newArrayList(toURI(TEST_N4JSX_PROJECT)));
 		String suiteD = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "D");
 		String suiteE = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "E");
 		String suiteF = createFqn(DEFAULT_PROJECT_OUTPUT, TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_4, "F");
