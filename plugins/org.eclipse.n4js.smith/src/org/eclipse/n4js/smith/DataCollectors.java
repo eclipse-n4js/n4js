@@ -56,6 +56,24 @@ public enum DataCollectors {
 			throw new RuntimeException("DataCollector key cannot be null or empty");
 		}
 
+		DataCollector parent = getParent(parentKeys);
+		return get(key, parent);
+	}
+
+	/**
+	 * returns collector for a given key, that is child of the provided parent collector. If no keys are provided
+	 * returns behaves as {@link #getOrCreateDataCollector(String)}
+	 */
+	public DataCollector getOrCreateDataCollector(String key, DataCollector parent) {
+
+		if (Strings.isNullOrEmpty(key)) {
+			throw new RuntimeException("DataCollector key cannot be null or empty");
+		}
+
+		return get(key, parent);
+	}
+
+	private synchronized DataCollector getParent(String... parentKeys) {
 		DataCollector parent = null;
 		if (parentKeys != null) {
 			String parentKey = parentKeys[0];
@@ -74,26 +92,12 @@ public enum DataCollectors {
 				prevParentKey = parentKey;
 			}
 		}
-
-		return get(key, parent);
+		return parent;
 	}
 
-	/**
-	 * returns collector for a given key, that is child of the provided parent collector. If no keys are provided
-	 * returns behaves as {@link #getOrCreateDataCollector(String)}
-	 */
-	public DataCollector getOrCreateDataCollector(String key, DataCollector parent) {
-
-		if (Strings.isNullOrEmpty(key)) {
-			throw new RuntimeException("DataCollector key cannot be null or empty");
-		}
-
-		return get(key, parent);
-	}
-
-	private DataCollector get(String key, DataCollector parent) {
-
+	private synchronized DataCollector get(String key, DataCollector parent) {
 		DataCollector collector = null;
+
 		if (parent == null) {
 			collector = collectors.get(key);
 			if (collector == null) {
@@ -109,6 +113,7 @@ public enum DataCollectors {
 				parent.addChild(key, collector);
 			}
 		}
+
 		return collector;
 	}
 
@@ -119,7 +124,7 @@ public enum DataCollectors {
 	}
 
 	/** sets {@code paused} state for all data collectors. */
-	void setPaused(boolean paused) {
+	synchronized void setPaused(boolean paused) {
 		this.pauseAllCollectors.set(paused);
 		collectors.values().forEach(collector -> collector.setPaused(paused));
 	}
