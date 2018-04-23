@@ -57,8 +57,6 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 						@Override
 						public void run(final IProgressMonitor progress) throws CoreException {
 							try {
-								// externalLibraryWorkspace.updateState();
-								// externalLibrariesReloadHelper.reloadLibraries(false, progress);
 								libraryManager.reloadAllExternalProjects(progress);
 							} catch (final Exception e) {
 								throw new CoreException(statusHelper.createError(e));
