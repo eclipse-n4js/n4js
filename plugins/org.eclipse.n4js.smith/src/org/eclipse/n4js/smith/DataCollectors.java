@@ -14,8 +14,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import com.google.common.base.Strings;
 
@@ -34,7 +32,7 @@ public enum DataCollectors {
 	private final Map<String, DataCollector> collectors = new HashMap<>();
 	private final AtomicBoolean pauseAllCollectors = new AtomicBoolean(true);
 	/** Deal with multiple threads competing to access {@link DataCollectors#collectors} concurrently. */
-	private final Lock lock = new ReentrantLock(true);
+	private final Object lock = new Object();
 
 	/**
 	 * returns existing collector for the provided key. If there is no collector corresponding to the key creates new
@@ -62,8 +60,7 @@ public enum DataCollectors {
 
 		DataCollector parent = null;
 		// acquire lock to avoid other thread modifying {@link collectors}
-		try {
-			lock.lock();
+		synchronized (lock) {
 			if (parentKeys != null) {
 				String parentKey = parentKeys[0];
 				String prevParentKey = parentKey;
@@ -81,8 +78,6 @@ public enum DataCollectors {
 					prevParentKey = parentKey;
 				}
 			}
-		} finally {
-			lock.unlock();
 		}
 
 		return get(key, parent);
@@ -104,8 +99,7 @@ public enum DataCollectors {
 	private synchronized DataCollector get(String key, DataCollector parent) {
 		DataCollector collector = null;
 		// acquire lock to avoid other thread modifying {@link collectors}
-		try {
-			this.lock.lock();
+		synchronized (lock) {
 			if (parent == null) {
 				collector = collectors.get(key);
 				if (collector == null) {
@@ -121,8 +115,6 @@ public enum DataCollectors {
 					parent.addChild(key, collector);
 				}
 			}
-		} finally {
-			lock.unlock();
 		}
 		return collector;
 	}
