@@ -58,6 +58,7 @@ import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 /**
  * Main processor used during {@link N4JSPostProcessor post-processing} of N4JS resources. It controls the overall
@@ -91,6 +92,8 @@ public class ASTProcessor extends AbstractProcessor {
 	private TypeDeferredProcessor typeDeferredProcessor;
 	@Inject
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
+	@Inject
+	private JavaScriptVariantHelper variantHelper;
 
 	/**
 	 * Entry point for processing of the entire AST of the given resource.
@@ -248,8 +251,7 @@ public class ASTProcessor extends AbstractProcessor {
 
 	def private boolean isPostponedNode(EObject node) {
 		return isPostponedInitializer(node)
-		||	N4JSASTUtils.isBodyOfFunctionOrFieldAccessor(node)
-		||	MigrationUtils.isMigrateCall(node);
+		||	N4JSASTUtils.isBodyOfFunctionOrFieldAccessor(node);
 	}
 
 	/**
@@ -391,12 +393,6 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 
 		typeDeferredProcessor.handleDeferredTypeRefs_preChildren(G, node, cache);
-		
-		// register migrations with their source types
-		if (node instanceof FunctionDeclaration && 
-			AnnotationDefinition.MIGRATION.hasAnnotation(node as FunctionDeclaration)) {
-			this.registerMigrationWithTypes((node as FunctionDeclaration).definedFunction as TMigration)
-		}
 	}
 
 	/**
@@ -418,6 +414,12 @@ public class ASTProcessor extends AbstractProcessor {
 				// all the logic from method TypeProcessor#getType() for handling references to other resources
 				tsCorrect.type(G, elem);
 			}
+		}
+		
+		// register migrations with their source types
+		if (node instanceof FunctionDeclaration && 
+			AnnotationDefinition.MIGRATION.hasAnnotation(node as FunctionDeclaration)) {
+			this.registerMigrationWithTypes((node as FunctionDeclaration).definedFunction as TMigration)
 		}
 	}
 
@@ -452,6 +454,13 @@ public class ASTProcessor extends AbstractProcessor {
 			ParameterizedCallExpression case MigrationUtils.isMigrateCall(obj): {
 				// link and type migration arguments first 
 				obj.eContents.bringToFront(obj.arguments)
+			}
+			Script case variantHelper.allowVersionedTypes(obj): {
+				// For variants that support versioned types and therefore migrations,
+				// process the migrations first.
+				obj.eContents.bringToFront(obj.scriptElements
+					.filter(FunctionDeclaration)
+					.filter[MigrationUtils.isMigrationDefinition(it)])
 			}
 			default: {
 				// standard case: order is insignificant (so we simply use the order provided by EMF)
@@ -527,7 +536,7 @@ public class ASTProcessor extends AbstractProcessor {
 	}
 	
 	def private void registerMigrationWithType(TMigration migration, TMigratable migratable) {
-		EcoreUtilN4.doWithDeliver(true, [
+		EcoreUtilN4.doWithDeliver(false, [
 					migratable.migrations += migration 
 		], migratable)
 	}
