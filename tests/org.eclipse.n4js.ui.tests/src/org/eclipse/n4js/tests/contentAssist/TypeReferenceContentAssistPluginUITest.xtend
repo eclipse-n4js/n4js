@@ -88,8 +88,8 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 		newBuilder().append('''
 			/* some comment */
 			var varName: MLiFi''').applyProposal("path.MoreLibs.MoreLibFirstClass").expectContent('''
-			import {MoreLibFirstClass} from "path/MoreLibs";
 			/* some comment */
+			import {MoreLibFirstClass} from "path/MoreLibs";
 			var varName: MoreLibFirstClass''')
 	}
 
