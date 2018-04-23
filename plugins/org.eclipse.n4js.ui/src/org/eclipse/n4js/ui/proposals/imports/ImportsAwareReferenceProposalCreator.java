@@ -20,6 +20,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ui.contentassist.N4JSCandidateFilter;
 import org.eclipse.xtext.conversion.IValueConverter;
@@ -33,6 +34,7 @@ import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposa
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
+import org.eclipse.xtext.util.Arrays;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -62,6 +64,11 @@ public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
 	private IN4JSCore n4jsCore;
+
+	private static final EReference[] referencesSupportingImportedElements = {
+			N4JSPackage.Literals.IDENTIFIER_REF__ID,
+			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
+	};
 
 	@Inject
 	private void setValueConverter(IValueConverterService service, N4JSGrammarAccess grammarAccess) {
@@ -194,7 +201,8 @@ public class ImportsAwareReferenceProposalCreator {
 		// and make sure that the import is inserted as soon as the proposal is applied
 		QualifiedName inputQN = candidate.getName();
 		int inputNameSegmentCount = inputQN.getSegmentCount();
-		if (reference == N4JSPackage.Literals.IDENTIFIER_REF__ID && inputNameSegmentCount > 1)
+		if (inputNameSegmentCount > 1
+				&& Arrays.contains(referencesSupportingImportedElements, reference))
 			return new AliasedEObjectDescription(QualifiedName.create(inputQN.getLastSegment()), candidate);
 
 		// filter out non-importable things:

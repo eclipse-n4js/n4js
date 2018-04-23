@@ -13,7 +13,6 @@ package org.eclipse.n4js.tester.ui;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.emf.common.util.URI;
-
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.ui.AbstractLaunchConfigurationMainTab;
 
@@ -24,7 +23,7 @@ public class TesterLaunchConfigurationMainTab extends AbstractLaunchConfiguratio
 
 	@Override
 	protected String getResourceLabel() {
-		return "Resource to Test (Project, Folder, or File)";
+		return "Resource to Test (Project, Folder, File)";
 	}
 
 	@Override

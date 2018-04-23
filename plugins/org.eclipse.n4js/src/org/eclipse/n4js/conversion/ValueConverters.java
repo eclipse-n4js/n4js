@@ -58,8 +58,6 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 
 	@Inject
 	private KeywordAlternativeConverter typeReferenceNameValueConverter;
-	@Inject
-	private QualifiedTypeReferenceNameValueConverter qualifiedTypeReferenceNameValueConverter;
 
 	@Inject
 	private RegExLiteralConverter regExLiteralConverter;
@@ -202,14 +200,6 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 	@ValueConverter(rule = "TypeReferenceName")
 	public IValueConverter<String> TypeReferenceName() {
 		return typeReferenceNameValueConverter;
-	}
-
-	/**
-	 * @return the registered value converter for the rule {@code QualifiedTypeReferenceName}
-	 */
-	@ValueConverter(rule = "QualifiedTypeReferenceName")
-	public IValueConverter<String> QualifiedTypeReferenceName() {
-		return qualifiedTypeReferenceNameValueConverter;
 	}
 
 	/**
