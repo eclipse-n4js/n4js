@@ -18,7 +18,7 @@ Contributors:
   <extension
         point="org.eclipse.xtext.ui.shared.overridingGuiceModule">
      <module
-           class="org.eclipse.n4js.ui.MyCustomModule">
+           class="org.eclipse.n4js.ui.MyReferenceSearchResultContentProviderCustomModule">
      </module>
    </extension>  
   
