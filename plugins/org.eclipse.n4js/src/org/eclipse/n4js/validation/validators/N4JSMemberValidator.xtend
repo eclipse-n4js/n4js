@@ -568,6 +568,81 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		]
 	}
+//@Inject
+//private StructuralTypesHelper structuralTypingComputer;
+//@Inject
+//private TypeSystemHelper tsh;
+//@Inject
+//private MemberScopingHelper memberScopingHelper;
+//
+//	private def internalCheckDuplicateFieldsIn(TClass tclass, ThisTypeRefStructural thisTypeRefStructural,
+//		boolean isInSameClass) {
+////		val members = LazyOverrideAwareMemberCollector.collectAllMembers(tclass)
+//
+//val G = thisTypeRefStructural.newRuleEnvironment;
+//val thisTypeRefWithoutStructuralMembers = TypeUtils.copyPartial(thisTypeRefStructural,
+//	TypeRefsPackage.eINSTANCE.structuralTypeRef_StructuralType,
+//	TypeRefsPackage.eINSTANCE.structuralTypeRef_AstStructuralMembers,
+//	TypeRefsPackage.eINSTANCE.structuralTypeRef_GenStructuralMembers);
+//val boundThisTypeRef = tsh.bindAndSubstituteThisTypeRef(G, thisTypeRefStructural, thisTypeRefWithoutStructuralMembers);
+////var strategy = thisTypeRefStructural.typingStrategy;
+////if (strategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER) {
+////	strategy = TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS;
+////}
+////val members = structuralTypingComputer.collectStructuralMembers(G, boundThisTypeRef, strategy).toList;
+////println(members.map[name + "(" + eClass.name + ")"]);
+////		val membersByNameAndStatic = members.groupBy[Tuples.pair(name, static)];
+////		val structuralMembersByNameAndStatic = thisTypeRefStructural.structuralMembers.groupBy [
+////			Tuples.pair(name, static)
+////		];
+////		structuralMembersByNameAndStatic.keySet.forEach [
+////			if (membersByNameAndStatic.containsKey(it)) {
+////				val structuralFieldDuplicate = structuralMembersByNameAndStatic.get(it).head
+////				val existingClassifierMember = membersByNameAndStatic.get(it).head
+////				if (existingClassifierMember.memberAccessModifier == MemberAccessModifier.PUBLIC) {
+////					if (isInSameClass) {
+////						val message = getMessageForCLF_DUP_MEMBER(structuralFieldDuplicate.descriptionWithLine,
+////							existingClassifierMember.descriptionWithLine);
+////						val index = thisTypeRefStructural.structuralMembers.indexOf(structuralFieldDuplicate)
+////						addIssue(message, thisTypeRefStructural,
+////							TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS, index, CLF_DUP_MEMBER)
+////					} else {
+////						val message = getMessageForCLF_DUP_WITH_MEMBER(existingClassifierMember.description)
+////						addIssue(message, existingClassifierMember.astElement,
+////							N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_DUP_WITH_MEMBER)
+////					}
+////				}
+////			}
+////		]
+//
+//
+//val memberScope = memberScopingHelper.createMemberScopeAllowingNonContainedMembers(boundThisTypeRef, thisTypeRefStructural, false /* or true? */, false, false /* or true? */);
+//println(memberScope.allElements.filter[!(it instanceof IEObjectDescriptionWithError)]);
+//
+//		val structuralMembersByNameAndStatic = thisTypeRefStructural.structuralMembers.groupBy [
+//			Tuples.pair(name, static)
+//		];
+//		structuralMembersByNameAndStatic.keySet.forEach [
+//			val desc = memberScope.getSingleElement(QualifiedName.create(it.first));
+//			if (desc !== null && !(desc instanceof IEObjectDescriptionWithError)) {
+//				val structuralFieldDuplicate = structuralMembersByNameAndStatic.get(it).head
+//				val existingClassifierMember = desc.EObjectOrProxy as TMember // membersByNameAndStatic.get(it).head
+//				if (existingClassifierMember.memberAccessModifier == MemberAccessModifier.PUBLIC) {
+//					if (isInSameClass) {
+//						val message = getMessageForCLF_DUP_MEMBER(structuralFieldDuplicate.descriptionWithLine,
+//							existingClassifierMember.descriptionWithLine);
+//						val index = thisTypeRefStructural.structuralMembers.indexOf(structuralFieldDuplicate)
+//						addIssue(message, thisTypeRefStructural,
+//							TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS, index, CLF_DUP_MEMBER)
+//					} else {
+//						val message = getMessageForCLF_DUP_WITH_MEMBER(existingClassifierMember.description)
+//						addIssue(message, existingClassifierMember.astElement,
+//							N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_DUP_WITH_MEMBER)
+//					}
+//				}
+//			}
+//		]
+//	}
 
 	/**
 	 * A list of annotations that requires {@code @Test} annotation as well.
