@@ -31,8 +31,6 @@ public enum DataCollectors {
 
 	private final Map<String, DataCollector> collectors = new HashMap<>();
 	private final AtomicBoolean pauseAllCollectors = new AtomicBoolean(true);
-	/** Deal with multiple threads competing to access {@link DataCollectors#collectors} concurrently. */
-	private final Object lock = new Object();
 
 	/**
 	 * returns existing collector for the provided key. If there is no collector corresponding to the key creates new
@@ -58,28 +56,7 @@ public enum DataCollectors {
 			throw new RuntimeException("DataCollector key cannot be null or empty");
 		}
 
-		DataCollector parent = null;
-		// acquire lock to avoid other thread modifying {@link collectors}
-		synchronized (lock) {
-			if (parentKeys != null) {
-				String parentKey = parentKeys[0];
-				String prevParentKey = parentKey;
-				parent = collectors.get(parentKey);
-				if (parent == null)
-					throw new RuntimeException("Cannot find parent for key " + parentKey);
-				// we have root parent, iterate over its children
-				for (int i = 1; i < parentKeys.length; i++) {
-					parentKey = parentKeys[i];
-					parent = parent.getChild(parentKey);
-					// since we have parent keys we break at key with no mapping to parent
-					if (parent == null)
-						throw new RuntimeException(
-								"Cannot find collector for key " + parentKey + " and parent " + prevParentKey);
-					prevParentKey = parentKey;
-				}
-			}
-		}
-
+		DataCollector parent = getParent(parentKeys);
 		return get(key, parent);
 	}
 
@@ -96,26 +73,47 @@ public enum DataCollectors {
 		return get(key, parent);
 	}
 
-	private synchronized DataCollector get(String key, DataCollector parent) {
-		DataCollector collector = null;
-		// acquire lock to avoid other thread modifying {@link collectors}
-		synchronized (lock) {
-			if (parent == null) {
-				collector = collectors.get(key);
-				if (collector == null) {
-					collector = new TimedDataCollector();
-					collector.setPaused(this.pauseAllCollectors.get());
-					collectors.put(key, collector);
-				}
-			} else {
-				collector = parent.getChild(key);
-				if (collector == null) {
-					collector = new TimedDataCollector();
-					collector.setPaused(this.pauseAllCollectors.get());
-					parent.addChild(key, collector);
-				}
+	private synchronized DataCollector getParent(String... parentKeys) {
+		DataCollector parent = null;
+		if (parentKeys != null) {
+			String parentKey = parentKeys[0];
+			String prevParentKey = parentKey;
+			parent = collectors.get(parentKey);
+			if (parent == null)
+				throw new RuntimeException("Cannot find parent for key " + parentKey);
+			// we have root parent, iterate over its children
+			for (int i = 1; i < parentKeys.length; i++) {
+				parentKey = parentKeys[i];
+				parent = parent.getChild(parentKey);
+				// since we have parent keys we break at key with no mapping to parent
+				if (parent == null)
+					throw new RuntimeException(
+							"Cannot find collector for key " + parentKey + " and parent " + prevParentKey);
+				prevParentKey = parentKey;
 			}
 		}
+		return parent;
+	}
+
+	private synchronized DataCollector get(String key, DataCollector parent) {
+		DataCollector collector = null;
+
+		if (parent == null) {
+			collector = collectors.get(key);
+			if (collector == null) {
+				collector = new TimedDataCollector();
+				collector.setPaused(this.pauseAllCollectors.get());
+				collectors.put(key, collector);
+			}
+		} else {
+			collector = parent.getChild(key);
+			if (collector == null) {
+				collector = new TimedDataCollector();
+				collector.setPaused(this.pauseAllCollectors.get());
+				parent.addChild(key, collector);
+			}
+		}
+
 		return collector;
 	}
 
