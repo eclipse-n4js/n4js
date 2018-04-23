@@ -28,6 +28,8 @@ public class MyReferenceSearchResultContentProviderCustomModule extends Abstract
 
 	@Override
 	protected void configure() {
+		// As a workaround to fix GH-724, this is copied from org.eclipse.xtext.ui.shared.internal.SharedModule
+		// and the default must be kept in sync with the corresponding code there!!
 		binder().install(new PrivateModule() {
 			@Override
 			protected void configure() {
