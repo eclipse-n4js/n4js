@@ -22,9 +22,8 @@ import static org.eclipse.n4js.tester.domain.TestStatus.values;
 
 import java.util.Arrays;
 
-import org.eclipse.swt.SWT;
-
 import org.eclipse.n4js.tester.domain.TestStatus;
+import org.eclipse.swt.SWT;
 
 /**
  * Counter to keep track of how many tests have passed, failed, etc. Such a counter will be used for every non-leaf node
@@ -107,6 +106,31 @@ public class TestStatusCounter {
 		return null;
 	}
 
+	/**
+	 * Returns the first SKIP like status
+	 */
+	public TestStatus containsSkipped() {
+		if (getCount(SKIPPED_FIXME) > 0) {
+			return SKIPPED_FIXME;
+		}
+		if (getCount(SKIPPED) > 0) {
+			return SKIPPED;
+		}
+		if (getCount(SKIPPED_NOT_IMPLEMENTED) > 0) {
+			return SKIPPED_NOT_IMPLEMENTED;
+		}
+		if (getCount(SKIPPED_PRECONDITION) > 0) {
+			return SKIPPED_PRECONDITION;
+		}
+		if (getCount(SKIPPED_IGNORE) > 0) {
+			return SKIPPED_IGNORE;
+		}
+		if (getCount(PASSED) > 0) {
+			return PASSED;
+		}
+		return null;
+	}
+
 	@Override
 	public String toString() {
 		return toString(true, -1, SWT.RIGHT);
@@ -127,7 +151,8 @@ public class TestStatusCounter {
 	 */
 	public String toString(boolean showSkipped, int pending, int alignment) {
 		final int skipped = showSkipped
-				? getCount(SKIPPED, SKIPPED_NOT_IMPLEMENTED, SKIPPED_PRECONDITION, SKIPPED_IGNORE, SKIPPED_FIXME) : 0;
+				? getCount(SKIPPED, SKIPPED_NOT_IMPLEMENTED, SKIPPED_PRECONDITION, SKIPPED_IGNORE, SKIPPED_FIXME)
+				: 0;
 		final StringBuffer sb = new StringBuffer();
 		if (alignment == SWT.LEFT && (skipped > 0 || pending > 0)) {
 			sb.append("(");

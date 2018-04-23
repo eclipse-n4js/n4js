@@ -22,8 +22,9 @@
 			File "manifest.n4mf" { from="../../../manifest_nv.n4mf" }
 		}
 		Project "react" {
-			File "index.n4jsd" { from = "../../../react/index.n4jsd" }
-			File "manifest.n4mf" { from = "../../../react/manifest.n4mf" }
+			File "index.n4jsd" { from = "../../../react-implementations/valid/index.n4jsd" }
+			File "index.js" { from = "../../../react-implementations/valid/index.js" }
+			File "manifest.n4mf" { from = "../../../react-implementations/valid/manifest.n4mf" }
 		}
 	}
 

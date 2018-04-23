@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
 public abstract class UIUtils {
 
 	/** Default timeout when waiting for values obtained from the UI. */
-	public static final long DEFAULT_UI_TIMEOUT = TimeUnit.SECONDS.toMillis(10);
+	public static final long DEFAULT_UI_TIMEOUT = TimeUnit.SECONDS.toMillis(60);
 
 	/**
 	 * Like {@link Supplier}, but supports results that may not be available yet, by returning immediately with an

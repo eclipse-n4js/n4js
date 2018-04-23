@@ -41,10 +41,16 @@ import java.util.stream.Collectors;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.commands.ITerminateHandler;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.ITerminate;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.commands.actions.DebugCommandService;
 import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchGroup;
@@ -57,7 +63,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -69,12 +74,12 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterEventBus;
-import org.eclipse.n4js.tester.TesterFrontEnd;
 import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
 import org.eclipse.n4js.tester.domain.TestElement;
@@ -90,7 +95,6 @@ import org.eclipse.n4js.tester.events.TestEndedEvent;
 import org.eclipse.n4js.tester.events.TestEvent;
 import org.eclipse.n4js.tester.events.TestStartedEvent;
 import org.eclipse.n4js.tester.ui.TestConfigurationConverter;
-import org.eclipse.n4js.tester.ui.TesterFrontEndUI;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.ui.editor.EditorContentExtractor;
 import org.eclipse.n4js.ui.editor.StyledTextDescriptor;
@@ -128,14 +132,15 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 /**
  * An Eclipse {@link IViewPart view} showing test results. This UI is independent of the particular tester being used
- * (node.js, Chrome, etc.).
+ * (node.js, Chrome, etc.). Implementation was guided by org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart
+ *
+ * State of layout and filters is stored in a memento.
  */
 @SuppressWarnings("restriction")
 public class TestResultsView extends ViewPart {
@@ -145,6 +150,26 @@ public class TestResultsView extends ViewPart {
 	 */
 	public static final String ID = "org.eclipse.n4js.tester.ui.TestResultsView";
 
+	/**
+	 * Characters used to separate segments in a test suite name. Typically the test suites are the fully qualified
+	 * module names in which we find the tests, so file separators are used. But also spaces and "," are recognized as
+	 * separates.
+	 */
+	private static final String TESTSUITE_NAME_SEGMENT_SEP = "/\\ ,";
+
+	/** Memento tag */
+	private static final String TAG_TEST_HOVER = "showTestHover";
+	/** Memento tag */
+	private static final String TAG_SCROLL = "scrollLock";
+	/** Memento tag */
+	private static final String TAG_RATIO = "sashRatio";
+	/** Memento tag */
+	private static final String TAG_ORIENTATION = "orientation";
+	/** Memento tag */
+	private static final String TAG_OMIT_COMMON_PREFIX = "omitCommonPrefix";
+	/** Memento tag */
+	private static final String TAG_SHOW_FILTER = "showFilter";
+
 	@Inject
 	private TesterEventBus testerEventBus;
 
@@ -153,12 +178,6 @@ public class TestResultsView extends ViewPart {
 
 	@Inject
 	private EditorContentExtractor editorContentExtractor;
-
-	@Inject
-	private TesterFrontEndUI testerFrontEndUI;
-
-	@Inject
-	private TesterFrontEnd testerFrontEnd;
 
 	@Inject
 	private IN4JSEclipseCore core;
@@ -183,7 +202,7 @@ public class TestResultsView extends ViewPart {
 	private TreeViewer testTreeViewer;
 	private Text stackTrace;
 
-	private Action actionLock;
+	private Action actionScrollLock;
 	private Action actionRelaunch;
 	private Action actionRelaunchFailed;
 	private Action actionStop;
@@ -192,7 +211,43 @@ public class TestResultsView extends ViewPart {
 	private Action doubleClickAction;
 	private Action singleClickAction;
 	private Action actionOpenLaunchConfig;
+	private Action actionShowTestHover;
+	private Action actionOmitCommonPrefix;
 
+	/**
+	 * Actions and state of sash layout, extracted to helper class.
+	 */
+	private TestViewLayoutHelper viewLayoutHelper;
+
+	/**
+	 * Actions and state of test filter, extracted to helper class.
+	 */
+	private TestViewFilterHelper viewFilterHelper;
+
+	/**
+	 * The sashForm, modeled as field in order to make its configuration available for the memento methos
+	 */
+	private SashForm sashForm;
+
+	/**
+	 * Memento loaded before the view has been created.
+	 */
+	private IMemento storedMemento;
+
+	/**
+	 * Common prefix of all test suites.
+	 */
+	private String commonPrefix;
+
+	/**
+	 * The last started node, may be null
+	 */
+	private ResultNode lastStartedNode;
+
+	/**
+	 * The tool tip shown when hovering over a test case with the source code of the test. This is only shown if action
+	 * "show test hover" is checked.
+	 */
 	private class CodeSnippetToolTip extends ToolTip {
 
 		private StyledTextDescriptor lastDescriptor;
@@ -215,7 +270,8 @@ public class TestResultsView extends ViewPart {
 		@Override
 		protected boolean shouldCreateToolTip(final Event e) {
 			this.lastDescriptor = null;
-			if (e.widget instanceof Tree) {
+			if (e.widget instanceof Tree && actionShowTestHover != null && actionShowTestHover.isChecked()) {
+
 				final Tree tree = (Tree) e.widget;
 				final TreeItem item = tree.getItem(new Point(e.x, e.y));
 
@@ -242,12 +298,12 @@ public class TestResultsView extends ViewPart {
 
 	}
 
-	private static class TestTreeViewerContentProvider implements ITreeContentProvider {
+	private class TestTreeViewerContentProvider implements ITreeContentProvider {
 
 		@Override
 		public Object[] getElements(Object input) {
 			if (input instanceof ResultNode)
-				return ((ResultNode) input).getChildren();
+				return getChildren(input);
 			return new Object[0];
 		}
 
@@ -256,9 +312,34 @@ public class TestResultsView extends ViewPart {
 			return ((ResultNode) parent).hasChildren();
 		}
 
+		/**
+		 * Returns children of a node, using current filter settings (see {@link TestViewFilterHelper}) to omit nodes
+		 * that are not to be shown.
+		 */
 		@Override
 		public Object[] getChildren(Object parent) {
-			return ((ResultNode) parent).getChildren();
+			ResultNode[] children = ((ResultNode) parent).getChildren();
+			if (viewFilterHelper.getFilter() != TestViewFilterHelper.SHOW_ALL) {
+				List<ResultNode> filteredChildren = new ArrayList<>(children.length);
+				for (ResultNode node : children) {
+					TestStatus result = node.getStatus();
+					if (result == null && node.getTestSuite() != null) {
+						result = node.getChildrenStatus().getAggregatedStatus();
+					}
+					if (viewFilterHelper.match(result)) {
+						filteredChildren.add(node);
+					} else if (viewFilterHelper.getFilter() == TestViewFilterHelper.SHOW_SKIPPED) {
+						if (node.getTestSuite() != null) {
+							result = node.getChildrenStatus().containsSkipped();
+							if (viewFilterHelper.match(result)) {
+								filteredChildren.add(node);
+							}
+						}
+					}
+				}
+				return filteredChildren.toArray();
+			}
+			return children;
 		}
 
 		@Override
@@ -277,6 +358,10 @@ public class TestResultsView extends ViewPart {
 		}
 	}
 
+	/**
+	 * Provides labels for the test suites and test cases. The names of the test suites may be shortened by removing
+	 * common prefixes to make the view more condensed; this is only done if action "omit common prefix" is checked.
+	 */
 	private class TestTreeViewerLabelProvider extends LabelProvider
 			implements ITableLabelProvider, ITableColorProvider {
 
@@ -286,8 +371,13 @@ public class TestResultsView extends ViewPart {
 			switch (columnIndex) {
 			case 0:
 				final TestElement tmElement = node.getElement();
-				if (tmElement instanceof TestSuite)
-					return ((TestSuite) tmElement).getName();
+				if (tmElement instanceof TestSuite) {
+					String name = ((TestSuite) tmElement).getName();
+					if (actionOmitCommonPrefix.isChecked()) {
+						name = trimCommonPrefix(name);
+					}
+					return name;
+				}
 				if (tmElement instanceof TestCase)
 					return ((TestCase) tmElement).getName();
 				return null;
@@ -381,6 +471,7 @@ public class TestResultsView extends ViewPart {
 			}
 			return null;
 		}
+
 	}
 
 	/**
@@ -402,10 +493,128 @@ public class TestResultsView extends ViewPart {
 		}
 	}
 
+	/**
+	 * Updates the common prefix which is removed from all test suites to shorten the name. The test suite name is
+	 * interpreted as a path consisting of segments separated by a character contained in #TESTSUITE_NAME_SEGMENT_SEP.
+	 * The name of the test suites may be shortened by omitting a common prefix, which always consists of full segments.
+	 */
+	private void updateCommonPrefix() {
+		commonPrefix = "";
+		for (ResultNode node : currentRoot.getChildren()) {
+			TestSuite suite = node.getTestSuite();
+			if (suite != null) {
+				String name = suite.getName();
+				if (commonPrefix.length() == 0) { // first test suite
+					int sep = lastTestSuiteNameSegmentSep(name, -1);
+					if (sep > 0 && sep + 1 < name.length()) {
+						commonPrefix = name.substring(0, sep + 1);
+					} else { // no segments found.
+						commonPrefix = "";
+						return;
+					}
+				} else { // we already have a prefix from a previous suite
+					final int min = Math.min(commonPrefix.length(), name.length());
+					int i = 0;
+					for (; i < min; i++) { // find matching part
+						if (name.charAt(i) != commonPrefix.charAt(i)) {
+							break;
+						}
+					}
+					if (i == 0) { // no common part found
+						commonPrefix = "";
+						return;
+					}
+					if (i < min) { // we found a common part, shorter than the current prefix
+						int sep = lastTestSuiteNameSegmentSep(name, i);
+						if (sep > 0) { // it still contains full segments
+							commonPrefix = commonPrefix.substring(0, sep + 1);
+						} else { // no full segments in common prefix, so we do not use a prefix at all
+							commonPrefix = "";
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Helper for {@link #updateCommonPrefix()}, returns last segment separator position.
+	 */
+	private static int lastTestSuiteNameSegmentSep(String s, int startAt) {
+		if (startAt < 0 || startAt >= s.length()) {
+			startAt = s.length() - 1;
+		}
+		for (int i = startAt; i >= 0; i--) {
+			if (TESTSUITE_NAME_SEGMENT_SEP.indexOf(s.charAt(i)) >= 0) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Removes common prefix from given name and returns the shortened name.
+	 */
+	private String trimCommonPrefix(String name) {
+		if (commonPrefix == null || commonPrefix.length() == 0 || name.length() <= commonPrefix.length()) {
+			return name;
+		}
+		return name.substring(commonPrefix.length(), name.length());
+	}
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
+		this.storedMemento = memento;
 		testerEventBus.register(this);
+	}
+
+	@Override
+	public void saveState(IMemento memento) {
+		if (sashForm == null) { // part has not been created
+			if (storedMemento != null) // Keep the old state;
+				storedMemento.putMemento(memento);
+			return;
+		}
+		memento.putBoolean(TAG_TEST_HOVER, actionShowTestHover.isChecked());
+		memento.putBoolean(TAG_OMIT_COMMON_PREFIX, actionOmitCommonPrefix.isChecked());
+		memento.putBoolean(TAG_SCROLL, actionScrollLock.isChecked());
+
+		int weigths[] = sashForm.getWeights();
+		int ratio = (weigths[0] * 1000) / (weigths[0] + weigths[1]);
+		memento.putInteger(TAG_RATIO, ratio);
+		memento.putInteger(TAG_ORIENTATION, viewLayoutHelper.getOrientation());
+
+		memento.putInteger(TAG_SHOW_FILTER, viewFilterHelper.getFilter());
+	}
+
+	private void restoreLayoutState(IMemento memento) {
+		Integer ratio = memento.getInteger(TAG_RATIO);
+		if (ratio != null) {
+			sashForm.setWeights(new int[] { ratio.intValue(), 1000 - ratio.intValue() });
+		}
+		Integer orientation = memento.getInteger(TAG_ORIENTATION);
+		if (orientation != null) {
+			viewLayoutHelper.setOrientation(orientation.intValue());
+		}
+		Integer filter = memento.getInteger(TAG_SHOW_FILTER);
+		if (filter != null) {
+			viewFilterHelper.setFilter(filter);
+		}
+		Boolean scrollLock = memento.getBoolean(TAG_SCROLL);
+		if (scrollLock != null) {
+			actionScrollLock.setChecked(scrollLock);
+		}
+		Boolean testHover = memento.getBoolean(TAG_TEST_HOVER);
+		if (testHover != null) {
+			actionShowTestHover.setChecked(testHover);
+		}
+		Boolean omitCommonPrefix = memento.getBoolean(TAG_OMIT_COMMON_PREFIX);
+		if (omitCommonPrefix != null) {
+			actionOmitCommonPrefix.setChecked(omitCommonPrefix);
+		}
+
 	}
 
 	@Override
@@ -441,33 +650,32 @@ public class TestResultsView extends ViewPart {
 		gd.horizontalAlignment = SWT.FILL;
 		progressBar.setLayoutData(gd);
 
-		final SashForm sash = new SashForm(parent, SWT.NONE);
+		sashForm = new SashForm(parent, SWT.NONE);
+		sashForm.setBackground(sashForm.getDisplay().getSystemColor(SWT.COLOR_GRAY));
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		gd.grabExcessHorizontalSpace = true;
 		gd.horizontalAlignment = SWT.FILL;
 		gd.grabExcessVerticalSpace = true;
 		gd.verticalAlignment = SWT.FILL;
-		sash.setLayoutData(gd);
+		sashForm.setLayoutData(gd);
+		viewLayoutHelper = new TestViewLayoutHelper(sashForm);
 
 		testTreeViewer = new TreeViewerBuilder(newArrayList("Test", "Status", "Duration"),
 				new TestTreeViewerContentProvider())
 						.setLinesVisible(false).setLabelProvider(new TestTreeViewerLabelProvider())
-						.setColumnWeights(asList(5, 2, 1)).build(sash);
+						.setColumnWeights(asList(5, 2, 1)).build(sashForm);
 		installToolTipSupport(testTreeViewer.getTree());
+		viewFilterHelper = new TestViewFilterHelper(testTreeViewer);
 
 		testTreeViewer.setInput(getViewSite());
 
-		stackTrace = new Text(sash, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		stackTrace = new Text(sashForm, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 
-		sash.addControlListener(new ControlListener() {
+		sashForm.addControlListener(new ControlListener() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				final Point size = parent.getSize();
-				final int orientation = size.x > size.y ? SWT.HORIZONTAL : SWT.VERTICAL;
-				if (orientation != sash.getOrientation()) {
-					sash.setOrientation(orientation);
-				}
+				viewLayoutHelper.updateSashLayout();
 			}
 
 			@Override
@@ -482,7 +690,13 @@ public class TestResultsView extends ViewPart {
 		hookSingleClickAction();
 		contributeToActionBars();
 
+		if (storedMemento != null) {
+			restoreLayoutState(storedMemento);
+			storedMemento = null;
+		}
+
 		refreshActions();
+
 	}
 
 	private ToolTip installToolTipSupport(final Control control) {
@@ -537,7 +751,7 @@ public class TestResultsView extends ViewPart {
 		manager.add(actionRelaunchFailed);
 		manager.add(actionStop);
 		manager.add(new Separator());
-		manager.add(actionLock);
+		manager.add(actionScrollLock);
 		manager.add(new Separator());
 		// Other plug-ins can contribute their actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -549,13 +763,22 @@ public class TestResultsView extends ViewPart {
 		manager.add(actionRelaunchFailed);
 		manager.add(actionStop);
 		manager.add(new Separator());
-		manager.add(actionLock);
+		manager.add(actionScrollLock);
+		manager.add(new Separator());
+		manager.add(viewLayoutHelper.orientationMenu);
+		manager.add(actionShowTestHover);
+		manager.add(actionOmitCommonPrefix);
+		manager.add(new Separator());
+		manager.add(viewFilterHelper.getFailureAction());
+		manager.add(viewFilterHelper.getSkippedAction());
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(actionShowHistory);
 		manager.add(new Separator());
-		manager.add(actionLock);
+		manager.add(viewFilterHelper.getFailureAction());
+		manager.add(viewFilterHelper.getSkippedAction());
+		manager.add(actionScrollLock);
 		manager.add(new Separator());
 		manager.add(actionRelaunch);
 		manager.add(actionRelaunchFailed);
@@ -572,7 +795,7 @@ public class TestResultsView extends ViewPart {
 	 * Create all actions.
 	 */
 	protected void createActions() {
-		actionLock = createAction(
+		actionScrollLock = createAction(
 				"Scroll Lock", IAction.AS_CHECK_BOX,
 				"Do not jump to test case when its status is updated.",
 				TesterUiActivator.getImageDescriptor(TesterUiActivator.ICON_LOCK),
@@ -594,12 +817,9 @@ public class TestResultsView extends ViewPart {
 				this::performRelaunchFailed);
 		actionStop = createAction(
 				"Stop", IAction.AS_PUSH_BUTTON,
-				/* "Stop currently running test session.", */
-				"Stopping the running test session is currently not supported.",
+				"Stop currently running test session.",
 				TesterUiActivator.getImageDescriptor(TesterUiActivator.ICON_STOP),
 				this::performStop);
-		// Disable stop action for now since testing framework doesn't support stopping yet.
-		// TODO re-enable stop action (also see to-do in method #refreshActions(), below!)
 		actionStop.setEnabled(false);
 
 		actionShowHistory = new ShowHistoryAction(this);
@@ -613,6 +833,27 @@ public class TestResultsView extends ViewPart {
 
 		singleClickAction = createAction(null, IAction.AS_PUSH_BUTTON, null, null, this::onSingleClick);
 
+		actionShowTestHover = createAction(
+				"Show Test in Hover", IAction.AS_CHECK_BOX,
+				"Show the test in a hover when mouse is over the test method.",
+				null, null); // nothing to be done when toggled (will read state when necessary)
+		actionOmitCommonPrefix = createAction(
+				"Omit Common Prefix", IAction.AS_CHECK_BOX,
+				"Omit common prefix of names of test suites (typically path segments).",
+				null, () -> {
+					if (currentRoot != null && testTreeViewer != null) {
+						ISelection sel = testTreeViewer.getSelection();
+						testTreeViewer.refresh();
+						if (sel instanceof TreeSelection) {
+							Object element = ((TreeSelection) sel).getFirstElement();
+							if (element instanceof ResultNode) {
+								showNode((ResultNode) element);
+							}
+						}
+					}
+				});
+
+		// viewLayoutHelper also contains actions, created in init directly
 	}
 
 	/**
@@ -643,11 +884,13 @@ public class TestResultsView extends ViewPart {
 	 * Refreshes the enabled state of all of this view's actions.
 	 */
 	protected void refreshActions() {
-		actionLock.setEnabled(true);
+		actionScrollLock.setEnabled(true);
 		actionOpenLaunchConfig.setEnabled(null != currentRoot);
-		actionRelaunch.setEnabled(null != currentRoot && !currentRoot.isRunning());
-		actionRelaunchFailed.setEnabled(false);
-		// actionStop.setEnabled(currentRoot != null && currentRoot.isRunning());
+		boolean isRunningOrNoRoot = null == currentRoot || currentRoot.isRunning();
+		actionRelaunch.setEnabled(!isRunningOrNoRoot);
+		actionRelaunchFailed.setEnabled(!isRunningOrNoRoot);
+		actionStop.setEnabled(isRunningOrNoRoot);
+
 		// TODO
 		actionShowHistory.setEnabled(true);
 		actionClearTerminated.setEnabled(containsTerminated());
@@ -660,20 +903,39 @@ public class TestResultsView extends ViewPart {
 		if (null != currentRoot) {
 			final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
 			if (null != session) {
-				final TestConfiguration configurationToReRun = session.configuration;
 				registeredSessions.remove(session);
-				try {
-					final TestConfiguration newConfiguration = testerFrontEnd.createConfiguration(configurationToReRun);
-					testerFrontEndUI.runInUI(newConfiguration);
-				} catch (Exception e) {
-					String message = "Test class not found in the workspace.";
-					if (!Strings.isNullOrEmpty(e.getMessage())) {
-						message += " Reason: " + e.getMessage();
-					}
-					MessageDialog.openError(getShell(), "Cannot open editor", message);
-				}
+				ILaunchConfiguration launchConfig = getLaunchConfigForSession(session, null);
+				DebugUITools.launch(launchConfig, ILaunchManager.RUN_MODE, true);
 			}
 		}
+	}
+
+	/**
+	 * Invoked when user performs {@link #performRelaunchFailed()}.
+	 */
+	protected void performRelaunchFailed() {
+		if (null != currentRoot) {
+			final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
+			if (null != session) {
+				List<TestCase> failed = session.root.getFailed();
+				if (failed.isEmpty()) {
+					return;
+				}
+				registeredSessions.remove(session);
+				ILaunchConfiguration launchConfig = getLaunchConfigForSession(session, failed);
+				DebugUITools.launch(launchConfig, ILaunchManager.RUN_MODE, true);
+			}
+		}
+	}
+
+	private ILaunchConfiguration getLaunchConfigForSession(TestSession session, List<TestCase> failed) {
+		final TestConfiguration testConfig = session.configuration;
+		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(
+				testConfig.getLaunchConfigurationTypeIdentifier());
+		ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type,
+				testConfig, failed);
+		return launchConfig;
 	}
 
 	/**
@@ -688,7 +950,7 @@ public class TestResultsView extends ViewPart {
 				ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(
 						testConfig.getLaunchConfigurationTypeIdentifier());
 				ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type,
-						testConfig);
+						testConfig, null);
 				Set<String> modes;
 				try {
 					modes = launchConfig.getModes();
@@ -701,26 +963,62 @@ public class TestResultsView extends ViewPart {
 				LaunchConfigurationManager configManager = DebugUIPlugin.getDefault().getLaunchConfigurationManager();
 				ILaunchGroup group = configManager.getLaunchGroup(type, modes);
 
-				int ret = DebugUITools.openLaunchConfigurationPropertiesDialog(
+				DebugUITools.openLaunchConfigurationDialog(
 						this.getViewSite().getShell(),
-						launchConfig, group.getIdentifier());
-				System.out.println(ret);
+						launchConfig, group.getIdentifier(), null);
 			}
 		}
-	}
-
-	/**
-	 * Invoked when user performs {@link #performRelaunchFailed()}.
-	 */
-	protected void performRelaunchFailed() {
-		// TODO
 	}
 
 	/**
 	 * Invoked when user performs {@link #actionStop}.
 	 */
 	protected void performStop() {
-		// TODO
+
+		final TestSession session = from(registeredSessions).firstMatch(s -> s.root == currentRoot).orNull();
+		if (null != session) {
+			IProcess process = DebugUITools.getCurrentProcess();
+			ILaunch launch = process.getLaunch();
+			ILaunchConfiguration runningConfig = launch.getLaunchConfiguration();
+			ILaunchConfiguration sessionConfig = getLaunchConfigForSession(session, null);
+			if (runningConfig.getName() == sessionConfig.getName()) { // we use "==" since the name is the same instance
+				List<ITerminate> targets = collectTargets(process);
+				targets.add(process);
+				DebugCommandService service = DebugCommandService
+						.getService(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+				service.executeCommand(ITerminateHandler.class, targets.toArray(), null);
+				session.root.stopRunning();
+				refreshActions();
+			}
+		}
+	}
+
+	/**
+	 * Collects targets associated with a process. -- copied from ConsoleTerminateAction
+	 *
+	 * @param process
+	 *            the process to collect {@link IDebugTarget}s for
+	 * @return associated targets
+	 */
+	private List<ITerminate> collectTargets(IProcess process) {
+		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunch[] launches = launchManager.getLaunches();
+		List<ITerminate> targets = new ArrayList<>();
+		for (int i = 0; i < launches.length; i++) {
+			ILaunch launch = launches[i];
+			IProcess[] processes = launch.getProcesses();
+			for (int j = 0; j < processes.length; j++) {
+				IProcess process2 = processes[j];
+				if (process2.equals(process)) {
+					IDebugTarget[] debugTargets = launch.getDebugTargets();
+					for (int k = 0; k < debugTargets.length; k++) {
+						targets.add(debugTargets[k]);
+					}
+					return targets; // all possible targets have been terminated for the launch.
+				}
+			}
+		}
+		return targets;
 	}
 
 	/**
@@ -851,10 +1149,10 @@ public class TestResultsView extends ViewPart {
 	}
 
 	/**
-	 * Invoked when user toggles the scroll lock (via {@link #actionLock}).
+	 * Invoked when user toggles the scroll lock (via {@link #actionScrollLock}).
 	 */
 	protected void onScrollLockToggled() {
-		if (actionLock.isChecked()) {
+		if (actionScrollLock.isChecked()) {
 			// scroll lock was turned ON
 			setFocusNode(null, false);
 		} else {
@@ -889,7 +1187,9 @@ public class TestResultsView extends ViewPart {
 	 */
 	public void notifyTestEvent(TestEvent event) {
 		if (event instanceof SessionStartedEvent) {
-			// ignore
+			if (testTreeViewer != null) {
+				testTreeViewer.expandAll();
+			}
 		} else if (event instanceof TestStartedEvent) {
 			notifyTestCaseStarted(new ID(((TestStartedEvent) event).getTestId()));
 		} else if (event instanceof TestEndedEvent) {
@@ -931,13 +1231,18 @@ public class TestResultsView extends ViewPart {
 	 */
 	protected void notifyTestCaseStarted(ID testCaseId) {
 		final ResultNode node = findNode(testCaseId);
+		lastStartedNode = node;
 		if (node != null) {
 			node.startRunning();
-			if (isShown(node)) {
-				updateNode(node);
-				setFocusNode(node, true);
-			}
+			showNode(node);
 			refreshActions();
+		}
+	}
+
+	void showNode(ResultNode node) {
+		if (isShown(node)) {
+			updateNode(node);
+			setFocusNode(node, true);
 		}
 	}
 
@@ -953,6 +1258,10 @@ public class TestResultsView extends ViewPart {
 				updateNode(node);
 				updateProgressBar();
 				setFocusNode(node, true);
+			}
+			if (viewFilterHelper.getFilter() != TestViewFilterHelper.SHOW_ALL) {
+				testTreeViewer.refresh();
+				showNode(lastStartedNode);
 			}
 			refreshActions();
 		}
@@ -1062,7 +1371,7 @@ public class TestResultsView extends ViewPart {
 	 * Checks if the given node belongs to the test tree that is currently being presented in the UI.
 	 */
 	protected boolean isShown(ResultNode node) {
-		return currentRoot != null && currentRoot == node.getRoot();
+		return node != null && currentRoot != null && currentRoot == node.getRoot();
 	}
 
 	/**
@@ -1076,6 +1385,7 @@ public class TestResultsView extends ViewPart {
 		}
 		setFocusNode(null, false);
 		this.currentRoot = root;
+		updateCommonPrefix();
 		progressBar.setExpectedTotal(root != null ? root.countTestCases() : 0);
 		progressBar.setCounter(root != null ? root.getChildrenStatus() : null);
 		testTreeViewer.setInput(root);
@@ -1152,12 +1462,12 @@ public class TestResultsView extends ViewPart {
 	 * <p>
 	 * The focus node is like a cursor that tracks the currently running test case until a test session is completed.
 	 * Ancestors will be expanded and collapsed in order to always show the current focus node. However, the focus node
-	 * is unrelated to selection, so this method won't change the current selection in the UI. If {@link #actionLock
-	 * scroll lock} is active, then this method will ignore argument <code>reveal</code> and will never reveal the new
-	 * focus node.
+	 * is unrelated to selection, so this method won't change the current selection in the UI. If
+	 * {@link #actionScrollLock scroll lock} is active, then this method will ignore argument <code>reveal</code> and
+	 * will never reveal the new focus node.
 	 */
 	protected void setFocusNode(ResultNode newNode, boolean reveal) {
-		if (focusNode == newNode)
+		if (focusNode == newNode || actionScrollLock.isChecked())
 			return;
 
 		// collapse all ancestors of old focus node (if any) that no longer have to be expanded in order to show the
@@ -1184,7 +1494,7 @@ public class TestResultsView extends ViewPart {
 		if (focusNode != null) {
 			expand(focusNode);
 
-			if (reveal && !actionLock.isChecked())
+			if (reveal && !actionScrollLock.isChecked())
 				testTreeViewer.reveal(focusNode);
 		}
 	}

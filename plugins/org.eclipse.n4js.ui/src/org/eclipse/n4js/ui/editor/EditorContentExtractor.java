@@ -34,6 +34,9 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.presentation.IPresentationDamager;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.ui.part.FileEditorInput;
@@ -52,10 +55,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Range;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * Class for extracting AST semantic elements from a {@link XtextEditor Xtext based editor} as its text representation
@@ -98,27 +97,11 @@ public class EditorContentExtractor {
 	 *         URI.
 	 */
 	public Optional<StyledTextDescriptor> getDescriptorForSemanticElement(final URI uri) {
-		if (null == uri) {
+		final Optional<TModule> optModule = loadTModuleFromURI(uri);
+		if (!optModule.isPresent()) {
 			return absent();
 		}
-
-		final URI trimmedUri = uri.hasFragment() ? uri.trimFragment() : uri;
-		final IN4JSProject project = core.findProject(trimmedUri).orNull();
-		if (project == null) {
-			return absent();
-		}
-		final ResourceSet resSet = core.createResourceSet(Optional.of(project));
-		final IResourceDescriptions index = core.getXtextIndex(resSet);
-		final IResourceDescription resDesc = index.getResourceDescription(trimmedUri);
-
-		if (null == resDesc) {
-			return absent();
-		}
-
-		final TModule module = core.loadModuleFromIndex(resSet, resDesc, false);
-		if (null == module || null == module.eResource() || null == module.eResource().getResourceSet()) {
-			return absent();
-		}
+		TModule module = optModule.get();
 
 		final URI moduleUri = module.eResource().getURI();
 		final IFile file = getWorkspace().getRoot().getFile(new Path(moduleUri.toPlatformString(true)));
@@ -197,6 +180,31 @@ public class EditorContentExtractor {
 			return absent();
 		}
 
+	}
+
+	private Optional<TModule> loadTModuleFromURI(final URI uri) {
+		if (null == uri) {
+			return absent();
+		}
+
+		final URI trimmedUri = uri.hasFragment() ? uri.trimFragment() : uri;
+		final IN4JSProject project = core.findProject(trimmedUri).orNull();
+		if (project == null) {
+			return absent();
+		}
+		final ResourceSet resSet = core.createResourceSet(Optional.of(project));
+		final IResourceDescriptions index = core.getXtextIndex(resSet);
+		final IResourceDescription resDesc = index.getResourceDescription(trimmedUri);
+
+		if (null == resDesc) {
+			return absent();
+		}
+
+		final TModule module = core.loadModuleFromIndex(resSet, resDesc, false);
+		if (null == module || null == module.eResource() || null == module.eResource().getResourceSet()) {
+			return absent();
+		}
+		return Optional.of(module);
 	}
 
 	/**
