@@ -212,6 +212,7 @@ import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.typesystem.TypeSystemErrorExtensions.*
 import org.eclipse.n4js.n4JS.DestructureUtils
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 
 inject TypeSystemHelper typeSystemHelper
 inject N4JSFunctionDefinitionTypesBuilder functionDefinitionTypesBuilder
@@ -906,6 +907,9 @@ from {
 	} else if(targetTypeRef?.declaredType===G.functionType) {
 		T = G.anyTypeRef
 	} else if(targetTypeRef.dynamic) {
+		T = G.anyTypeRefDynamic
+	} else if(MigrationUtils.isMigrateCall(expr) && targetTypeRef instanceof UnknownTypeRef) {
+		// type unresolved 'migrate'-calls as any+
 		T = G.anyTypeRefDynamic
 	} else {
 		T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef

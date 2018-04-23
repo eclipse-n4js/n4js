@@ -100,6 +100,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver;
 import org.eclipse.n4js.n4jsx.ReactHelper;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
@@ -2607,7 +2608,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         if (_isDynamic) {
           T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
         } else {
-          T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+          if ((MigrationUtils.isMigrateCall(expr) && (targetTypeRef instanceof UnknownTypeRef))) {
+            T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
+          } else {
+            T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+          }
         }
       }
     }
