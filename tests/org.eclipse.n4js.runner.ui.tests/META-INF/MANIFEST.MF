@@ -17,3 +17,4 @@ Require-Bundle: org.junit,
  org.eclipse.n4js.tester,
  com.google.guava,
  org.eclipse.n4js.runner.nodejs
+Automatic-Module-Name: org.eclipse.n4js.runner.ui.tests

@@ -10,3 +10,4 @@ Require-Bundle: org.eclipse.xtext.testing;bundle-version="2.5.0",
  org.eclipse.n4js.tests.helper,
  org.junit;bundle-version="4.11.0",
  org.eclipse.n4js.transpiler.es
+Automatic-Module-Name: org.eclipse.n4js.xsemantics.tests

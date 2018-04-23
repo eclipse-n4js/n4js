@@ -30,3 +30,4 @@ Export-Package: org.eclipse.n4js.xpect.ui,
  org.eclipse.n4js.xpect.ui.results,
  org.eclipse.n4js.xpect.ui.runner
 Bundle-Activator: org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin
+Automatic-Module-Name: org.eclipse.n4js.xpect.ui

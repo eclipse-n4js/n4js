@@ -17,3 +17,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.tests.ecmatestsuite,
  org.junit
+Automatic-Module-Name: org.eclipse.n4js.n4jsx.lang.tests

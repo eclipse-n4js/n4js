@@ -10,3 +10,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.utils
+Automatic-Module-Name: org.eclipse.n4js.utils.tests
