@@ -27,8 +27,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.NpmManager;
 import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.utils.Cancelable;
 
@@ -44,7 +44,7 @@ public class ExternalLibrariesReloadHelper {
 	private static final Logger LOGGER = Logger.getLogger(ExternalLibrariesReloadHelper.class);
 
 	@Inject
-	private NpmManager npmManager;
+	private LibraryManager npmManager;
 
 	@Inject
 	private ExternalProjectsCollector collector;
@@ -99,7 +99,7 @@ public class ExternalLibrariesReloadHelper {
 
 		// Refresh the type definitions for the npm packages if required.
 		if (refreshNpmDefinitions) {
-			final IStatus refreshStatus = npmManager.refreshInstalledNpmPackages(subMonitor.newChild(1));
+			final IStatus refreshStatus = npmManager.reloadAllExternalProjects(subMonitor.newChild(1));
 			if (!refreshStatus.isOK()) {
 				throw new InvocationTargetException(new CoreException(refreshStatus));
 			}

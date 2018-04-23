@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 
 // due to some bad linking / scoping behavior in Xcore for clean builds,
 // we need to define this data type here even though it's only usages are
@@ -484,7 +485,13 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	refers Type declaredType
 	contains TypeArgument[] typeArgs
 	boolean arrayTypeLiteral = "false"
-	/**  */
+
+	/*
+	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
+	 * code, referred to via the namespace of a namespace import, then this is non-null and points to that namespace.
+	 */
+	refers transient ModuleNamespaceVirtualType astNamespace
+
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
 

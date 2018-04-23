@@ -86,6 +86,9 @@ public class NpmPackageToProjectAdapter {
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
+	@Inject
+	private GitCloneSupplier gitCloneSupplier;
+
 	/** Default filter for manifest fragments */
 	private final static FileFilter ONLY_MANIFEST_FRAGMENTS = new FileFilter() {
 		private final static String MANIFEST_FRAGMENT = "manifest.fragment";
@@ -124,15 +127,12 @@ public class NpmPackageToProjectAdapter {
 	 *            names of the expected packages
 	 * @return pair of overall adaptation status and folders of successfully adapted npm packages
 	 */
-	public Pair<IStatus, Collection<File>> adaptPackages(Iterable<String> namesOfPackagesToAdapt) {
-
+	public Pair<IStatus, Collection<File>> adaptPackages(Collection<String> namesOfPackagesToAdapt) {
+		final MultiStatus status = statusHelper.createMultiStatus("Status of adapting npm packages");
+		final Collection<File> adaptedProjects = newHashSet();
 		final File nodeModulesFolder = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
 		final Collection<String> names = newHashSet(namesOfPackagesToAdapt);
-		final Collection<File> adaptedProjects = newHashSet();
 		final File[] packageRoots = nodeModulesFolder.listFiles(packageName -> names.contains(packageName.getName()));
-
-		final MultiStatus status = statusHelper.createMultiStatus("Status of adapting npm packages");
-
 		final File n4jsdsFolder = getNpmsTypeDefinitionsFolder();
 
 		for (File packageRoot : packageRoots) {
@@ -229,7 +229,7 @@ public class NpmPackageToProjectAdapter {
 
 		File repositoryLocation = new File(installLocationProvider.getTargetPlatformLocalGitRepositoryLocation());
 
-		if (performGitPull) {
+		if (performGitPull && gitCloneSupplier.remoteRepoAvailable()) {
 			// pull changes
 			GitUtils.pull(repositoryLocation.toPath());
 		}
@@ -238,8 +238,8 @@ public class NpmPackageToProjectAdapter {
 		if (definitionsRoot.exists() && definitionsRoot.isDirectory()) {
 			return definitionsRoot;
 		} else {
-			LOGGER.error(
-					"Cannot locate local git repository clone for N4JS definition files: " + definitionsRoot + ".");
+			String msg = "Cannot locate local git repository clone for N4JS definition files: " + definitionsRoot + ".";
+			LOGGER.error(msg);
 			return null;
 		}
 	}

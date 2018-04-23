@@ -10,8 +10,11 @@
  */
 package org.eclipse.n4js.tester;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.tester.domain.TestTree;
 
@@ -31,11 +34,21 @@ public class TestConfiguration extends RunConfiguration {
 	/** Within the execution data passed to the exec module, this key is used to store the test tree. */
 	public final static String EXEC_DATA_KEY__TEST_TREE = "testTree";
 
+	/** Key used for attribute specifying test cases, also see {@link #getTestMethodSelection()} */
+	public final static String TESTCASE_SELECTION = "TESTCASE_SELECTION";
+
 	private String testerId;
 
 	private TestTree testTree;
 
 	private int resultReportingPort; // volatile
+
+	private String launchConfigurationTypeIdentifier;
+
+	/**
+	 * Test methods specifications, see {@link #getTestMethodSelection()} for details.
+	 */
+	private List<URI> testMethods;
 
 	/**
 	 * Identifier of the tester to use.
@@ -87,6 +100,41 @@ public class TestConfiguration extends RunConfiguration {
 	 */
 	public int getResultReportingPort() {
 		return this.resultReportingPort;
+	}
+
+	/**
+	 * Sets the launch configuration type identifier, required to enable shortcuts for opening the launch configuration.
+	 */
+	public void setLaunchConfigurationTypeIdentifier(String identifier) {
+		this.launchConfigurationTypeIdentifier = identifier;
+
+	}
+
+	/**
+	 * Returns the launchConfigurationTypeIdentifier previously set via
+	 * {@link #setLaunchConfigurationTypeIdentifier(String)}
+	 */
+	public String getLaunchConfigurationTypeIdentifier() {
+		return launchConfigurationTypeIdentifier;
+	}
+
+	/**
+	 * Returns list of selected test methods. A test method selection is a fully qualified URI method specifier, e.g.
+	 * "platform:/resource/TestProj/test/pack/Test_TestProj2.n4js#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.0".
+	 * If this returns a non-empty list, the user selection is ignored. This is usually only used for running tests from
+	 * the test view (run all failures).
+	 *
+	 * @return unmodifiable list with method specifiers or empty, never null
+	 */
+	public List<URI> getTestMethodSelection() {
+		return testMethods == null ? Collections.emptyList() : Collections.unmodifiableList(testMethods);
+	}
+
+	/**
+	 * Sets test method specifiers, see {@link #getTestMethodSelection()} for details.
+	 */
+	public void setTestMethodSelection(List<URI> testMethods) {
+		this.testMethods = testMethods;
 	}
 
 }

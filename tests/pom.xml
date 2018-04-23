@@ -325,8 +325,8 @@ Contributors:
 							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
 							<phase />
 							<configuration>
-								<!-- 15 Minutes timeout -->
-								<forkedProcessTimeoutInSeconds>900</forkedProcessTimeoutInSeconds>
+								<!-- 30 Minutes timeout (plus 1sec to simplify search for this timeout in log) -->
+								<forkedProcessTimeoutInSeconds>1801</forkedProcessTimeoutInSeconds>
 								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
 								<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
 								<!-- different for mac/not mac -->
@@ -365,8 +365,8 @@ Contributors:
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
 								</systemProperties>
 								<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
-								<!-- 15 Minutes timeout -->
-								<forkedProcessTimeoutInSeconds>901</forkedProcessTimeoutInSeconds>
+								<!-- 30 Minutes timeout (plus 2sec to simplify search for this timeout in log) -->
+								<forkedProcessTimeoutInSeconds>1802</forkedProcessTimeoutInSeconds>
 								<!-- useUIHarness=true ensures the workbench is started before the
 									tests are run. -->
 								<useUIHarness>true</useUIHarness>
@@ -591,8 +591,8 @@ Contributors:
 									<!-- for submodules providing smoke-tests bing to phase integration-test -->
 									<phase />
 									<configuration>
-										<!-- 100 Minutes timeout -->
-										<forkedProcessTimeoutInSeconds>6000</forkedProcessTimeoutInSeconds>
+										<!-- 100 Minutes timeout (plus 5sec to simplify search for this timeout in log) -->
+										<forkedProcessTimeoutInSeconds>6005</forkedProcessTimeoutInSeconds>
 										<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
 										<!-- different for mac/not mac -->
 										<useUIHarness>false</useUIHarness>

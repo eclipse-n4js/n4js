@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4idl.N4IDLGlobals
+import org.eclipse.n4js.services.N4JSGrammarAccess
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -24,6 +26,7 @@ import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreato
 import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal
 import org.eclipse.swt.graphics.Image
 import org.eclipse.xtext.CrossReference
+import org.eclipse.xtext.GrammarUtil
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.RuleCall
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -31,7 +34,6 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider
-import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider.DefaultProposalCreator
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 import org.eclipse.n4js.n4JS.JSXElement
@@ -50,6 +52,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	@Inject
 	IQualifiedNameConverter qualifiedNameConverter
 
+	@Inject
+	private N4JSGrammarAccess n4jsGrammarAccess;
+
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 			ICompletionProposalAcceptor acceptor) {
 		val calledRule = ruleCall.getRule();
@@ -60,6 +65,21 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	override protected lookupCrossReference(CrossReference crossReference, ContentAssistContext contentAssistContext, ICompletionProposalAcceptor acceptor) {
 		lookupCrossReference(crossReference, contentAssistContext, acceptor, new N4JSCandidateFilter());
+	}
+	override protected void lookupCrossReference(CrossReference crossReference, ContentAssistContext contentAssistContext,
+			ICompletionProposalAcceptor acceptor, Predicate<IEObjectDescription> filter) {
+		// because rule "TypeReference" in TypeExpressions.xtext (overridden in N4JS.xtext) is a wildcard fragment,
+		// the standard behavior of the super method would fail in the following case:
+		val containingParserRule = GrammarUtil.containingParserRule(crossReference);
+		if (containingParserRule === n4jsGrammarAccess.typeReferenceRule) {
+			val featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
+			if (featureName == TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType.name) {
+				lookupCrossReference(crossReference, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType,
+					contentAssistContext, acceptor, filter);
+			}
+		}
+		// standard behavior:
+		super.lookupCrossReference(crossReference, contentAssistContext, acceptor, filter);
 	}
 
 	/**

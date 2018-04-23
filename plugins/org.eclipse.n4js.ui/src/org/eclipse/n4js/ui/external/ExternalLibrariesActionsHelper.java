@@ -15,15 +15,14 @@ import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.rep
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.GitCloneSupplier;
-import org.eclipse.n4js.external.NpmManager;
 import org.eclipse.n4js.ui.preferences.external.MaintenanceActionsButtonListener;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -38,7 +37,7 @@ public class ExternalLibrariesActionsHelper {
 	@Inject
 	private StatusHelper statusHelper;
 	@Inject
-	private NpmManager npmManager;
+	private LibraryManager npmManager;
 
 	@Inject
 	private GitCloneSupplier gitSupplier;
@@ -50,8 +49,8 @@ public class ExternalLibrariesActionsHelper {
 	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
 
 	/**
-	 * Performs {@link NpmManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd into
-	 * provided status.
+	 * Performs {@link LibraryManager#cleanCache(IProgressMonitor)}. If that operation fails, status is mergegd
+	 * into provided status.
 	 *
 	 * @param multistatus
 	 *            the status used accumulate issues
@@ -130,7 +129,7 @@ public class ExternalLibrariesActionsHelper {
 	 */
 	public void installNoUpdate(final Map<String, String> versionedPackages, final MultiStatus multistatus,
 			final IProgressMonitor monitor) {
-		IStatus status = npmManager.installDependencies(versionedPackages, monitor, false);
+		IStatus status = npmManager.installNPMs(versionedPackages, monitor);
 		if (!status.isOK())
 			multistatus.merge(status);
 	}
@@ -151,7 +150,7 @@ public class ExternalLibrariesActionsHelper {
 			// type definitions were updated at the beginning,
 			// hence skip refreshing type definitions
 			externalLibrariesReloadHelper.reloadLibraries(false, monitor);
-		} catch (InvocationTargetException e) {
+		} catch (Exception e) {
 			multistatus.merge(
 					statusHelper.createError("Error when reloading libraries after maintenance actions.", e));
 		}

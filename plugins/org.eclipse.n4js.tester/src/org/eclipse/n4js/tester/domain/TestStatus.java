@@ -50,4 +50,11 @@ public enum TestStatus {
 		return status;
 	}
 
+	/**
+	 * Returns true if this status is ERROR or FAILED
+	 */
+	public boolean isFailedOrError() {
+		return this == ERROR || this == FAILED;
+	}
+
 }

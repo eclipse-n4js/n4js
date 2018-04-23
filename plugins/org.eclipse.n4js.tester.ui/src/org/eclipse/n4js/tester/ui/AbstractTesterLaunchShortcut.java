@@ -10,19 +10,29 @@
  */
 package org.eclipse.n4js.tester.ui;
 
+import java.util.Arrays;
+import java.util.Collections;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorPart;
-
-import com.google.inject.Inject;
-
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.runner.RunConfiguration;
+import org.eclipse.n4js.runner.ui.AbstractLaunchConfigurationMainTab;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterFrontEnd;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.ui.IEditorPart;
+
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
 
 /**
  */
@@ -32,6 +42,8 @@ public abstract class AbstractTesterLaunchShortcut implements ILaunchShortcut {
 	private TesterFrontEnd testerFrontEnd;
 	@Inject
 	private TestConfigurationConverter testConfigConverter;
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	/**
 	 */
@@ -68,7 +80,54 @@ public abstract class AbstractTesterLaunchShortcut implements ILaunchShortcut {
 
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(getLaunchConfigTypeID());
-		DebugUITools.launch(testConfigConverter.toLaunchConfiguration(type, testConfig), mode);
+
+		copyProjectsLaunchConfigSettings(resourceToTest, testConfig, type);
+
+		ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type, testConfig, null);
+		DebugUITools.launch(launchConfig, mode);
 		// execution dispatched to proper ILaunchConfigurationDelegate
+	}
+
+	/**
+	 * Copies ENV_VARS, ENGINE_OPTIONS, CUSTOM_ENGINE_PATH and SYSTEM_LOADER of project launch confif (if found) to more
+	 * launch config of resource within this project.
+	 */
+	private void copyProjectsLaunchConfigSettings(URI resourceToTest, TestConfiguration testConfig,
+			ILaunchConfigurationType type) {
+		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+		Optional<? extends IN4JSProject> project = n4jsCore.findProject(resourceToTest);
+		if (project.isPresent()) {
+			IN4JSProject n4jsProject = project.get();
+			if (n4jsProject instanceof IN4JSEclipseProject) {
+				try {
+					final String projectLocation = ((IN4JSEclipseProject) n4jsProject).getLocation()
+							.toPlatformString(true);
+					java.util.Optional<ILaunchConfiguration> projectLaunchConfig = Arrays
+							.stream(launchManager.getLaunchConfigurations(type))
+							.filter(config -> {
+								try {
+									String resToTest = AbstractLaunchConfigurationMainTab.getResourceRunAsText(config);
+									return projectLocation.equals(resToTest);
+								} catch (CoreException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								return false;
+							}).findAny();
+					if (projectLaunchConfig.isPresent()) {
+						ILaunchConfiguration pconfig = projectLaunchConfig.get();
+						testConfig.setEnvironmentVariables(
+								pconfig.getAttribute(RunConfiguration.ENV_VARS, Collections.emptyMap()));
+						testConfig.setEngineOptions(pconfig.getAttribute(RunConfiguration.ENGINE_OPTIONS, ""));
+						testConfig.setCustomEnginePath(pconfig.getAttribute(RunConfiguration.CUSTOM_ENGINE_PATH, ""));
+						testConfig.setSystemLoader(pconfig.getAttribute(RunConfiguration.SYSTEM_LOADER, ""));
+
+					}
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

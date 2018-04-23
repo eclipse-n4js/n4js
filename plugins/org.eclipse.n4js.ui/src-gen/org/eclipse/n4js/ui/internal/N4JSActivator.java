@@ -61,7 +61,8 @@ public class N4JSActivator extends AbstractUIPlugin {
 		synchronized (injectors) {
 			Injector injector = injectors.get(language);
 			if (injector == null) {
-				injectors.put(language, injector = createInjector(language));
+				injector = createInjector(language);
+				injectors.put(language, injector);
 			}
 			return injector;
 		}
@@ -75,10 +76,11 @@ public class N4JSActivator extends AbstractUIPlugin {
 			Module mergedModule = Modules2.mixin(runtimeModule, sharedStateModule, uiModule);
 			return Guice.createInjector(mergedModule);
 		} catch (Exception e) {
-			// DON'T use the logger here, since this can create infinitive loops.
-			// Reason: The logger is created with dependency injection. When an exception is thrown
-			// in this phase, the not yet injected logger triggers itself.
-			throw new RuntimeException("Failed to create injector for " + language, e);
+			// An exception occurring here might be related to Guice:
+			// https://stackoverflow.com/questions/39918622/why-is-guice-throwing-computationexception-from-uncaughtexceptionhandler-in-mai.
+			e.printStackTrace();
+			System.exit(-1);
+			return null;
 		}
 	}
 

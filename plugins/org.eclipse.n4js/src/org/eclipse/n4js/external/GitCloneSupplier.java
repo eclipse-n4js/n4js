@@ -18,15 +18,14 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-
-import com.google.common.base.Supplier;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
+
+import com.google.common.base.Supplier;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Clones the remote Git repository with the N4JS definition files.
@@ -49,29 +48,58 @@ public class GitCloneSupplier implements Supplier<File> {
 	/**
 	 * Supplies the local git repository root folder location. Ensures that the remote git repository is cloned in case
 	 * of its absence. If the local git repository already exists, then it performs a hard reset on the {@code HEAD} of
-	 * the {@code master} branch.
+	 * the {@code master} branch. In case the Internet is not available, the git actions are not performed.
 	 *
 	 * @return returns with the file pointing to the local Git repository clone.
 	 */
 	@Override
 	public synchronized File get() {
+		initLocations();
+
+		final String repositoryName = currentGitLocation.getRepositoryName();
+		final File gitRoot = getOrCreateNestedFolder(repositoryName);
+		synchronizeTypeDefinitions();
+
+		return gitRoot;
+	}
+
+	private void initLocations() {
 		final TypeDefinitionGitLocation gitLocation = gitLocationProvider.getGitLocation();
 		checkNotNull(gitLocation, "Git location for type definitions was null.");
+
 		if (!gitLocation.equals(currentGitLocation)) {
 			currentGitLocation = gitLocation;
 			successfullyCloned = false;
 		}
-		final String repositoryName = currentGitLocation.getRepositoryName();
+	}
+
+	/** @return true iff the remote location of the type definition repository is available */
+	public boolean remoteRepoAvailable() {
+		initLocations();
+
+		final String remoteURL = currentGitLocation.getRepositoryRemoteURL();
+		final boolean netIsAvailable = GitUtils.netIsAvailable(remoteURL);
+		return netIsAvailable;
+	}
+
+	/**
+	 * Synchronizes the local clone of the type definitions repository. Does nothing if Internet connection is
+	 * unavailable.
+	 */
+	public synchronized void synchronizeTypeDefinitions() {
+		initLocations();
+
 		final String remoteURL = currentGitLocation.getRepositoryRemoteURL();
 		final String remoteBranch = currentGitLocation.getRemoteBranch();
-		if (!successfullyCloned) {
-			final File gitRoot = getOrCreateNestedFolder(repositoryName);
+		final String repositoryName = currentGitLocation.getRepositoryName();
+		final File gitRoot = getOrCreateNestedFolder(repositoryName);
+
+		if (remoteRepoAvailable() && !successfullyCloned) {
 			try {
 				GitUtils.hardReset(remoteURL, gitRoot.toPath(), remoteBranch, true);
 				GitUtils.pull(gitRoot.toPath());
 				LOGGER.info("Local N4JS type definition files have been successfully prepared for npm support.");
 				successfullyCloned = true;
-				return gitRoot;
 			} catch (final Exception e) {
 				final String message = "Error occurred while preparing local git repository for N4JS type definition files.";
 				LOGGER.error(message, e);
@@ -84,12 +112,10 @@ public class GitCloneSupplier implements Supplier<File> {
 					log(statusHelper.createError(cleanUpErrorMessage, e2));
 				}
 				successfullyCloned = false;
-				return gitRoot;
 			} finally {
 				getOrCreateNestedFolder(repositoryName); // Make sure root is there even if clone failed.
 			}
 		}
-		return getOrCreateNestedFolder(repositoryName);
 	}
 
 	/**
@@ -102,7 +128,11 @@ public class GitCloneSupplier implements Supplier<File> {
 		this.successfullyCloned = false;
 		File newRepo = get();
 		return newRepo.getAbsolutePath().equals(oldRepo.getAbsolutePath());
+	}
 
+	/** @return true iff the last {@link #get()} or {@link #repairTypeDefinitions()} call was successful. */
+	public synchronized boolean isSuccessfullyCloned() {
+		return successfullyCloned;
 	}
 
 }

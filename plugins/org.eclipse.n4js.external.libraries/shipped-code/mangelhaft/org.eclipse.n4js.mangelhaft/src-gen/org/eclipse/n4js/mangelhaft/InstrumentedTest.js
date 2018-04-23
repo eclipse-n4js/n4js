@@ -3,11 +3,12 @@
 (function(System) {
 	'use strict';
 	System.register([
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/IInstrumentedTest',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestFunctionType',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor'
 	], function($n4Export) {
-		var IInstrumentedTest, TestFunctionType, TestMethodDescriptor, getAllPropertyNames, InstrumentedTest;
+		var TestController, IInstrumentedTest, TestFunctionType, TestMethodDescriptor, getAllPropertyNames, InstrumentedTest;
 		getAllPropertyNames = function getAllPropertyNames(objProt, propNames) {
 			propNames = propNames || new Map();
 			let names = Object.getOwnPropertyNames(objProt);
@@ -53,6 +54,10 @@
 		$n4Export('InstrumentedTest', InstrumentedTest);
 		return {
 			setters: [
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController
+					TestController = $exports.TestController;
+				},
 				function($exports) {
 					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/IInstrumentedTest
 					IInstrumentedTest = $exports.IInstrumentedTest;
@@ -261,7 +266,7 @@
 						}
 					},
 					getInstrumentedTest: {
-						value: function getInstrumentedTest___n4(testClass, info, testInjector) {
+						value: function getInstrumentedTest___n4(testClass, info, testInjector, controller) {
 							let parameters = null;
 							let nameTemplate = null;
 							let pMeth = testClass.n4type.methodsWithAnnotation("Parameters", true, true, true).pop();
@@ -278,7 +283,13 @@
 							if (parameters) {
 								parameterizedTests = this.getParameterizedInstrumentedTests(testClass, info, testInjector, parameters, nameTemplate);
 							}
-							return new InstrumentedTest(testClass, info, testInjector.create(testClass), null, parameterizedTests);
+							const instance = testInjector.internalCreate(testClass, testInjector, new Map([
+								[
+									`${TestController.n4type.origin}${TestController.n4type.fqn}`,
+									controller
+								]
+							]));
+							return new InstrumentedTest(testClass, info, instance, null, parameterizedTests);
 						}
 					}
 				}, function(instanceProto, staticProto) {

@@ -15,6 +15,7 @@ pipeline {
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
             args '-v n4js-m2-repository:/usr/share/maven/ref/repository/ -m 8000M'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
+            label 'mesos-xlarge'
         }
     }
     environment {
@@ -35,6 +36,15 @@ pipeline {
         timeout(time: 5, unit: 'HOURS')
         timestamps()
     }
+
+    environment {
+        MAVEN_OPTS = '-XX:+UseConcMarkSweepGC '          +
+                     '-XX:+UnlockExperimentalVMOptions ' +
+                     '-XX:+UseCGroupMemoryLimitForHeap ' +
+                     '-XX:MaxRAMFraction=2 '             +
+                     '-XshowSettings:vm '
+    }
+
     triggers {
         pollSCM('H/5 * * * *') // every 5 minutes
         cron   ('H   1 * * *') // Nightly build every day a 1am
@@ -58,7 +68,7 @@ pipeline {
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
             }
             steps {
-                sshagent(['github-n4js-sandbox']) {
+                sshagent(['github-com-ssh-key']) {
                     script {
                         def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                         def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
@@ -68,7 +78,7 @@ pipeline {
                             'execute-plugin-ui-tests'
                         ].join(',')
 
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        sh "${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }
@@ -82,7 +92,7 @@ pipeline {
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
             }
             steps {
-                sshagent(['github-n4js-sandbox']) {
+                sshagent(['github-com-ssh-key']) {
                     script {
                         def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                         def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
@@ -96,7 +106,7 @@ pipeline {
                             'execute-accesscontrol-tests '
                         ].join(',')
 
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        sh "${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }

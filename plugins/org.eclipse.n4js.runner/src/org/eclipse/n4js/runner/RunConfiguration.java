@@ -82,6 +82,9 @@ public class RunConfiguration {
 	/** Key used for the custom execution engine options attribute. */
 	public final static String ENGINE_OPTIONS = "ENGINE_OPTIONS";
 
+	/** Key used for custom environment variables. */
+	public final static String ENV_VARS = "ENV_VARS";
+
 	/** Key for the custom path attribute. */
 	public final static String CUSTOM_ENGINE_PATH = "CUSTOM_ENGINE_PATH";
 
@@ -107,15 +110,20 @@ public class RunConfiguration {
 
 	private String engineOptions;
 
+	private final Map<String, Object> executionData = new LinkedHashMap<>();
+
 	private RuntimeEnvironment runtimeEnvironment;
 
 	private String implementationId;
 
 	private final Map<String, String> apiImplProjectMapping = new LinkedHashMap<>();
 
+	/**
+	 * See {@link #getUserSelection()} for details.
+	 */
 	private URI userSelection;
 
-	private final Map<String, Object> executionData = new LinkedHashMap<>();
+	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 
 	private final List<String> coreProjectPaths = new ArrayList<>();
 
@@ -219,6 +227,26 @@ public class RunConfiguration {
 	}
 
 	/**
+	 * Returns unmodifiable map of environment variables.
+	 */
+	public Map<String, String> getEnvironmentVariables() {
+		return Collections.unmodifiableMap(environmentVariables);
+	}
+
+	/**
+	 * Counterpart of the {@link #getEnvironmentVariables()}.
+	 *
+	 * @param environmentVariables
+	 *            the new values to be set. The map will be copied to internal map.
+	 */
+	public void setEnvironmentVariables(Map<String, String> environmentVariables) {
+		this.environmentVariables.clear();
+		if (environmentVariables != null) {
+			this.environmentVariables.putAll(environmentVariables);
+		}
+	}
+
+	/**
 	 * Identifier of the runner to use.
 	 */
 	public String getRunnerId() {
@@ -246,7 +274,9 @@ public class RunConfiguration {
 	 * User selection defined by a URI as used by {@link IN4JSCore}, {@link IN4JSProject}, etc. In the headless case
 	 * this will be a file URI, in the UI case it will be a platform resource URI.
 	 * <p>
-	 * Runners will expect the URI of a file, testers can cope with URIs of files, folders, projects.
+	 * Runners will expect the URI of a file, testers can cope with URIs of methods, classes, files, folders, projects.
+	 * <p>
+	 * The user selection may be accompanied with a test selection in TestConfiguration.
 	 */
 	public URI getUserSelection() {
 		return userSelection;
@@ -413,7 +443,8 @@ public class RunConfiguration {
 
 	/**
 	 * Returns a new map containing all values of the receiving run configuration that are to be persisted. Values in
-	 * the returned map may only be of type <code>Boolean</code>, <code>String</code>, or <code>List&lt;String></code>.
+	 * the returned map may only be of type <code>Boolean</code>, <code>String</code>, or <code>List&lt;String></code>,
+	 * or <code>Map&lt;String,String></code>.
 	 * <p>
 	 * Subclasses may override to add more persistent values, but then the super-class implementation should be invoked
 	 * and method {@link #writePersistentValues(Map)} should be customized accordingly.
@@ -427,6 +458,9 @@ public class RunConfiguration {
 		result.put(USER_SELECTION, this.userSelection.toString());
 		result.put(CUSTOM_ENGINE_PATH, getCustomEnginePath());
 		result.put(ENGINE_OPTIONS, getEngineOptions());
+		result.put(ENV_VARS, this.getEnvironmentVariables());
+		// .entrySet().stream().map(entry -> entry.getKey() + "=" +
+		// entry.getValue()).collect(Collectors.joining("\n")));
 		result.put(SYSTEM_LOADER, getSystemLoader());
 		return result;
 	}
@@ -447,6 +481,9 @@ public class RunConfiguration {
 		this.userSelection = getURI(map, USER_SELECTION, false);
 		this.customEnginePath = nullToEmpty(getString(map, CUSTOM_ENGINE_PATH, true));
 		this.engineOptions = nullToEmpty(getString(map, ENGINE_OPTIONS, true));
+
+		this.setEnvironmentVariables(getMap(map, ENV_VARS, true));
+
 		this.systemLoader = nullToEmpty(getString(map, SYSTEM_LOADER, true));
 	}
 
@@ -479,6 +516,20 @@ public class RunConfiguration {
 	/**
 	 * Fail-fast method for reading a value from a map as returned by method {@link #readPersistentValues()}.
 	 */
+	@SuppressWarnings("unchecked")
+	public static final Map<String, String> getMap(Map<String, Object> map, String key, boolean allowNull) {
+		final Object value = map.get(key);
+		if (value == null && !allowNull)
+			throw new IllegalArgumentException("no value for key '" + key + "'");
+		if (value != null && !(value instanceof Map))
+			throw new IllegalArgumentException("value for key '" + key
+					+ "' is expected to be of type Map but was: " + value.getClass().getName());
+		return (Map<String, String>) value;
+	}
+
+	/**
+	 * Fail-fast method for reading a value from a map as returned by method {@link #readPersistentValues()}.
+	 */
 	public static final URI getURI(Map<String, Object> map, String key, boolean allowNull) {
 		final String value = getString(map, key, allowNull);
 		return value != null ? URI.createURI(value) : null;
@@ -487,10 +538,14 @@ public class RunConfiguration {
 	/**
 	 * Fail-fast method for reading a value from a map as returned by method {@link #readPersistentValues()}.
 	 */
-	public static final List<String> getListOfString(Map<String, Object> map, String key) {
+	public static final List<String> getListOfString(Map<String, Object> map, String key, boolean allowNull) {
 		final Object value = map.get(key);
-		if (value == null)
-			throw new IllegalArgumentException("no value for key '" + key + "'");
+		if (value == null) {
+			if (!allowNull) {
+				throw new IllegalArgumentException("no value for key '" + key + "'");
+			}
+			return Collections.emptyList();
+		}
 		// Following usage of raw-types is due to a javac-compiler crash in version 1.8.0_40 when using WildCards:
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		final boolean wrongType = !(value instanceof List)
@@ -502,4 +557,5 @@ public class RunConfiguration {
 		final List<String> result = (List<String>) value;
 		return result;
 	}
+
 }
