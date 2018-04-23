@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.google.common.base.Strings;
 
@@ -31,6 +33,8 @@ public enum DataCollectors {
 
 	private final Map<String, DataCollector> collectors = new HashMap<>();
 	private final AtomicBoolean pauseAllCollectors = new AtomicBoolean(true);
+	/** Deal with multiple threads competing to access {@link DataCollectors#collectors} concurrently. */
+	private final Lock lock = new ReentrantLock(true);
 
 	/**
 	 * returns existing collector for the provided key. If there is no collector corresponding to the key creates new
@@ -57,22 +61,28 @@ public enum DataCollectors {
 		}
 
 		DataCollector parent = null;
-		if (parentKeys != null) {
-			String parentKey = parentKeys[0];
-			String prevParentKey = parentKey;
-			parent = collectors.get(parentKey);
-			if (parent == null)
-				throw new RuntimeException("Cannot find parent for key " + parentKey);
-			// we have root parent, iterate over its children
-			for (int i = 1; i < parentKeys.length; i++) {
-				parentKey = parentKeys[i];
-				parent = parent.getChild(parentKey);
-				// since we have parent keys we break at key with no mapping to parent
+		// acquire lock to avoid other thread modifying {@link collectors}
+		try {
+			lock.lock();
+			if (parentKeys != null) {
+				String parentKey = parentKeys[0];
+				String prevParentKey = parentKey;
+				parent = collectors.get(parentKey);
 				if (parent == null)
-					throw new RuntimeException(
-							"Cannot find collector for key " + parentKey + " and parent " + prevParentKey);
-				prevParentKey = parentKey;
+					throw new RuntimeException("Cannot find parent for key " + parentKey);
+				// we have root parent, iterate over its children
+				for (int i = 1; i < parentKeys.length; i++) {
+					parentKey = parentKeys[i];
+					parent = parent.getChild(parentKey);
+					// since we have parent keys we break at key with no mapping to parent
+					if (parent == null)
+						throw new RuntimeException(
+								"Cannot find collector for key " + parentKey + " and parent " + prevParentKey);
+					prevParentKey = parentKey;
+				}
 			}
+		} finally {
+			lock.unlock();
 		}
 
 		return get(key, parent);
@@ -91,23 +101,28 @@ public enum DataCollectors {
 		return get(key, parent);
 	}
 
-	private DataCollector get(String key, DataCollector parent) {
-
+	private synchronized DataCollector get(String key, DataCollector parent) {
 		DataCollector collector = null;
-		if (parent == null) {
-			collector = collectors.get(key);
-			if (collector == null) {
-				collector = new TimedDataCollector();
-				collector.setPaused(this.pauseAllCollectors.get());
-				collectors.put(key, collector);
+		// acquire lock to avoid other thread modifying {@link collectors}
+		try {
+			this.lock.lock();
+			if (parent == null) {
+				collector = collectors.get(key);
+				if (collector == null) {
+					collector = new TimedDataCollector();
+					collector.setPaused(this.pauseAllCollectors.get());
+					collectors.put(key, collector);
+				}
+			} else {
+				collector = parent.getChild(key);
+				if (collector == null) {
+					collector = new TimedDataCollector();
+					collector.setPaused(this.pauseAllCollectors.get());
+					parent.addChild(key, collector);
+				}
 			}
-		} else {
-			collector = parent.getChild(key);
-			if (collector == null) {
-				collector = new TimedDataCollector();
-				collector.setPaused(this.pauseAllCollectors.get());
-				parent.addChild(key, collector);
-			}
+		} finally {
+			lock.unlock();
 		}
 		return collector;
 	}
