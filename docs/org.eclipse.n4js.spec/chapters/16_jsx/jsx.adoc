@@ -178,7 +178,7 @@ If the tag binds to a component, the following constraints must hold:
 If the lower-case tag does not bind to a function or class declaration, the following constraints must be hold:
 
 * If the tag is not a pre-defined html tag, a warning is issued.
-* If an attribute of the tag is not a pre-defined property of the html tag or react specific attribtues, a warning is issued. This requirement is currently NOT supported.
+* If an attribute of the tag is not a pre-defined property of the html tag or react specific attributes, a warning is issued. This requirement is currently NOT supported.
 --
 
 .JSXSpreadAttribute behavior
@@ -189,3 +189,20 @@ The use of spread operators within an JSX element for specifying multiple attrib
 * The type of each attribute specified in spread operator must be conform to the type of the corresponding property of `props`.
 * If a non-optional property of `props` is specified neither as attribute nor in a spread operator, a warning is issued.
 --
+
+
+== JSX Backend
+
+The support for JSX in N4JS aims for an implementation that adheres to the idea of https://reactjs.org/docs/jsx-in-depth.html[React JSX]. This means that JSX elements are transpiled to React Element factory calls (e.g. `<div prop="c">content</div>` transpiles to `React.createElement('div', {prop: "c"}, null)`). For that, the transpiler must be aware of a specific implementation of React and the corresponding `createElement` function.
+
+.React Implementation
+[req,id=GH-687, version=1]
+--
+A react implementation is given in terms of a module that fulfils the following properties:
+
+* The FQN of the module is `react`.
+* Type definitions are available for the module.
+* The module exports a function of name `createElement`.
+-- 
+
+If a react implementation is declared as project dependency, the N4JS transpiler automatically imports it to the module using JSX and generates the corresponding factory calls.

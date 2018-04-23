@@ -1,0 +1,13 @@
+ProjectId: other-project
+ProjectType: library
+ProjectVersion: 16.0.0
+VendorId: npm
+VendorName: "npm"
+Output: "."
+MainModule: "react"
+ModuleLoader: commonjs
+Sources {
+	external {
+		"."
+	}
+}
