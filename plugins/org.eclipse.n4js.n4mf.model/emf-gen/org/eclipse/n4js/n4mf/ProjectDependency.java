@@ -98,7 +98,7 @@ public interface ProjectDependency extends SimpleProjectDependency {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.n4mf.ProjectDependencyScope%> _elvis = null;\n<%org.eclipse.n4js.n4mf.ProjectDependencyScope%> _declaredScope = this.getDeclaredScope();\nif (_declaredScope != null)\n{\n\t_elvis = _declaredScope;\n} else\n{\n\t_elvis = <%org.eclipse.n4js.n4mf.ProjectDependencyScope%>.COMPILE;\n}\nreturn _elvis;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.n4mf.ProjectDependencyScope%&gt; _elvis = null;\n&lt;%org.eclipse.n4js.n4mf.ProjectDependencyScope%&gt; _declaredScope = this.getDeclaredScope();\nif (_declaredScope != null)\n{\n\t_elvis = _declaredScope;\n} else\n{\n\t_elvis = &lt;%org.eclipse.n4js.n4mf.ProjectDependencyScope%&gt;.COMPILE;\n}\nreturn _elvis;'"
 	 * @generated
 	 */
 	ProjectDependencyScope getScope();

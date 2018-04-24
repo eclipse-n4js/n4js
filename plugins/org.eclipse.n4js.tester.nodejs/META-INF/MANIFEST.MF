@@ -11,3 +11,4 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.tester,
  org.eclipse.emf.ecore
 Export-Package: org.eclipse.n4js.tester.nodejs
+Automatic-Module-Name: org.eclipse.n4js.tester.nodejs

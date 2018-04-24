@@ -16,3 +16,4 @@ Require-Bundle: org.junit,
  org.eclipse.n4js.ui.tests.helper,
  org.eclipse.n4js.ui
 Export-Package: org.eclipse.n4js.tests.ecmatestsuite
+Automatic-Module-Name: org.eclipse.n4js.tests.ecmatestsuite

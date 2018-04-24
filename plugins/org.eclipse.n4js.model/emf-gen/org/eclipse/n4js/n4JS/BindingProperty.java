@@ -58,7 +58,7 @@ public interface BindingProperty extends PropertyNameOwner {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.String%> _elvis = null;\n<%java.lang.String%> _name = super.getName();\nif (_name != null)\n{\n\t_elvis = _name;\n} else\n{\n\t<%org.eclipse.n4js.n4JS.BindingElement%> _value = this.getValue();\n\t<%org.eclipse.n4js.n4JS.VariableDeclaration%> _varDecl = null;\n\tif (_value!=null)\n\t{\n\t\t_varDecl=_value.getVarDecl();\n\t}\n\t<%java.lang.String%> _name_1 = null;\n\tif (_varDecl!=null)\n\t{\n\t\t_name_1=_varDecl.getName();\n\t}\n\t_elvis = _name_1;\n}\nreturn _elvis;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _elvis = null;\n&lt;%java.lang.String%&gt; _name = super.getName();\nif (_name != null)\n{\n\t_elvis = _name;\n} else\n{\n\t&lt;%org.eclipse.n4js.n4JS.BindingElement%&gt; _value = this.getValue();\n\t&lt;%org.eclipse.n4js.n4JS.VariableDeclaration%&gt; _varDecl = null;\n\tif (_value!=null)\n\t{\n\t\t_varDecl=_value.getVarDecl();\n\t}\n\t&lt;%java.lang.String%&gt; _name_1 = null;\n\tif (_varDecl!=null)\n\t{\n\t\t_name_1=_varDecl.getName();\n\t}\n\t_elvis = _name_1;\n}\nreturn _elvis;'"
 	 * @generated
 	 */
 	String getName();

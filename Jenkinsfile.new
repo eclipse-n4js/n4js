@@ -97,7 +97,8 @@ pipeline {
                             'execute-ecma-tests',
                             'execute-performance-tests',
                             'execute-swtbot-performance-tests',
-                            'execute-accesscontrol-tests '
+                            'execute-accesscontrol-tests ',
+                            'execute-smoke-tests'
                         ].join(',')
 
                         sh "${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"

@@ -10,18 +10,18 @@
  */
 package org.eclipse.n4js.tests.scoping
 
+import com.google.common.base.Charsets
+import com.google.common.io.Resources
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.google.common.io.CharStreams
-import java.io.InputStreamReader
-import org.junit.Ignore
 
 /**
  * Just a test to make sure this finishes in a reasonable time.
@@ -164,9 +164,8 @@ class InfiniteRecursionTest {
 	@Ignore
 	@Test //(timeout = 3500)
 	def void testComputationFinishes_02() {
-		val scriptAsString = CharStreams.toString[|
-			new InputStreamReader(class.getResourceAsStream("InfiniteComputationTest_02.txt"))
-		]
+		val fileURL = class.getResource("InfiniteComputationTest_02.txt")
+		val scriptAsString = Resources.toString(fileURL, Charsets.UTF_8)
 
 		val script = scriptAsString.parse
 		EcoreUtil.resolveAll(script)

@@ -28,3 +28,4 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.xpect.ui,
  org.eclipse.n4js.ui.tests.helper,
  org.eclipse.n4js.flowgraphs
+Automatic-Module-Name: org.eclipse.n4js.flowgraphs.ui.tests

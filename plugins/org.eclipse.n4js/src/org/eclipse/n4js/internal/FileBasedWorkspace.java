@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -216,7 +217,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 			Iterator<ZipEntry> entries = getArchiveIterator(stream, archiveRelativeLocation);
 			return toArchiveURIs(archiveLocation, entries);
 		} catch (FileNotFoundException e) {
-			return Iterators.emptyIterator();
+			return Collections.emptyIterator();
 		} finally {
 			if (stream != null) {
 				try {
@@ -239,7 +240,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 					if (root instanceof File && ((File) root).isDirectory()) {
 						return Arrays.asList(((File) root).listFiles()).iterator();
 					}
-					return Iterators.emptyIterator();
+					return Collections.emptyIterator();
 				}
 			};
 			return Iterators.unmodifiableIterator(Iterators.transform(
@@ -255,7 +256,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 						}
 					}));
 		}
-		return Iterators.emptyIterator();
+		return Collections.emptyIterator();
 	}
 
 	@Override

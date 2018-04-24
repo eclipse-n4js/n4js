@@ -13,6 +13,10 @@ package org.eclipse.n4js.types;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TypesFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +25,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.google.common.collect.Lists;
-
-import org.eclipse.n4js.ts.types.ContainerType;
-import org.eclipse.n4js.ts.types.TClass;
-import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TypesFactory;
 
 /**
  */
@@ -41,7 +40,6 @@ public class FindOwnedMemberBenchmarkTest {
 
 	/***/
 	@Parameters(name = "{0}-{1}")
-	@SuppressWarnings("boxing")
 	public static Collection<Object[]> data() {
 		List<Object[]> data = Lists.newArrayList();
 		for (int i = 0; i < 15; i++) {
@@ -82,12 +80,12 @@ public class FindOwnedMemberBenchmarkTest {
 		case 0:
 			testImplementation();
 			return;
-			// case 1:
-			// testImplementationWithOccasionalClear2();
-			// return;
-			// case 2:
-			// testImplementationWithClear2();
-			// return;
+		// case 1:
+		// testImplementationWithOccasionalClear2();
+		// return;
+		// case 2:
+		// testImplementationWithClear2();
+		// return;
 		}
 	}
 

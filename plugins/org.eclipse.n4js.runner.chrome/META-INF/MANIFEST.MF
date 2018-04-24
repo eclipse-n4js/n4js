@@ -12,3 +12,4 @@ Require-Bundle: org.eclipse.n4js.runner,
  org.eclipse.n4js,
  org.apache.log4j
 Export-Package: org.eclipse.n4js.runner.chrome
+Automatic-Module-Name: org.eclipse.n4js.runner.chrome

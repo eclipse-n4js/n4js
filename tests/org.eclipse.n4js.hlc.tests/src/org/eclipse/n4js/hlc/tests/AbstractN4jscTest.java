@@ -287,7 +287,7 @@ public abstract class AbstractN4jscTest {
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 
 					// skip src
-					if (N4JSLanguageConstants.DEFAULT_PROJECT_SRC.equals(dir.getFileName())) {
+					if (N4JSLanguageConstants.DEFAULT_PROJECT_SRC.equals(dir.getFileName().toString())) {
 						return FileVisitResult.SKIP_SUBTREE;
 					}
 
@@ -314,7 +314,7 @@ public abstract class AbstractN4jscTest {
 
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-					if (N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT.equals(dir.getFileName()))
+					if (N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT.equals(dir.getFileName().toString()))
 						return FileVisitResult.SKIP_SIBLINGS;
 					return FileVisitResult.CONTINUE;
 				}

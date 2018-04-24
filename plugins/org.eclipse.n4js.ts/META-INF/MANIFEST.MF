@@ -47,3 +47,4 @@ Export-Package: env,
  org.eclipse.n4js.ts.services,
  org.eclipse.n4js.ts.utils,
  org.eclipse.n4js.ts.validation
+Automatic-Module-Name: org.eclipse.n4js.ts

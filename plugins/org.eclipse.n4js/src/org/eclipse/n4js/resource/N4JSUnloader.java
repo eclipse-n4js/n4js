@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.resource;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,14 +24,13 @@ import org.eclipse.emf.ecore.impl.EClassImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.parser.antlr.IReferableElementsUnloader;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-
-import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
-import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
  * Specialized, {@link SyntaxRelatedTElement syntax element} aware unloader for {@link EObject EObjects}.
@@ -187,7 +187,7 @@ public class N4JSUnloader implements IReferableElementsUnloader {
 				final EStructuralFeature[] containments = containmentFeatures(current);
 				if (containments == null || containments.length == 0) {
 					// no containment features found, exit
-					return Iterators.emptyIterator();
+					return Collections.emptyIterator();
 				}
 				// we have at least one containment feature - append the fragment delimiter '/'
 				result.append('/');
