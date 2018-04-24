@@ -25,8 +25,8 @@ import org.eclipse.n4js.n4JS.JSXSpreadAttribute
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
+import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.es.util.JSXBackendHelper
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.Script_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
@@ -53,7 +53,7 @@ class JSXTransformation extends Transformation {
 	private SymbolTableEntryOriginal steForJsxBackendElementFactoryFunction;
 
 	@Inject
-	private JSXBackendHelper jsxBackendHelper;
+	private ReactHelper reactHelper;
 
 	override assertPreConditions() {
 	}
@@ -104,7 +104,7 @@ class JSXTransformation extends Transformation {
 	}
 
 	def private SymbolTableEntryOriginal prepareImportOfJsxBackend() {
-		val jsxBackendModule = jsxBackendHelper.getJsxBackendModule(state.resource);
+		val jsxBackendModule = reactHelper.getJsxBackendModule(state.resource);
 		if(jsxBackendModule===null) {
 			throw new RuntimeException("cannot locate JSX backend for N4JSX resource " + state.resource.URI);
 		}
@@ -121,11 +121,11 @@ class JSXTransformation extends Transformation {
 		// create namespace import for the JSX backend
 		// (note: we do not have to care for name clashes regarding name of the namespace, because validations ensure
 		// that "React" is never used as a name in N4JSX files, except as the namespace name of a react import)
-		return addNamespaceImport(jsxBackendModule, jsxBackendHelper.getJsxBackendNamespaceName());
+		return addNamespaceImport(jsxBackendModule, reactHelper.getJsxBackendNamespaceName());
 	}
 
 	def private SymbolTableEntryOriginal prepareElementFactoryFunction() {
-		val elementFactoryFunction = jsxBackendHelper.getJsxBackendElementFactoryFunction(state.resource);
+		val elementFactoryFunction = reactHelper.getJsxBackendElementFactoryFunction(state.resource);
 		if(elementFactoryFunction===null) {
 			throw new RuntimeException("cannot locate element factory function of JSX backend for N4JSX resource " + state.resource.URI);
 		}

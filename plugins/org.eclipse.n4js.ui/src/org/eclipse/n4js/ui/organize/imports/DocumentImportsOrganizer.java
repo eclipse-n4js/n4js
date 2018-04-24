@@ -291,7 +291,7 @@ class DocumentImportsOrganizer {
 	}
 
 	/**
-	 * Very specific to the generator: One has a text with nonzero length, all others are deletions an have zero-length
+	 * Very specific to the generator: One has a text with nonzero length, all others are deletions and have zero-length
 	 * texts.
 	 *
 	 * Find the one with text, try to condense the other into one atomic change.
