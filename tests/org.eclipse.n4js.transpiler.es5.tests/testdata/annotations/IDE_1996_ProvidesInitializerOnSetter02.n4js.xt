@@ -50,7 +50,7 @@ class C3 extends C2 {
 
 }
 
-// XPECT errors --> "~Object is not a structural subtype of ~i~C1: missing setter y; y failed: non-optional writable field requires a readable field or a getter in subtype." at "{}"
+// XPECT errors --> "~Object is not a structural subtype of ~i~C1: missing getter y; y failed: non-optional writable field requires a readable field or a getter in subtype." at "{}"
 console.log(new C1({}).y);
 console.log(new C1({y: 42}).y);
 
