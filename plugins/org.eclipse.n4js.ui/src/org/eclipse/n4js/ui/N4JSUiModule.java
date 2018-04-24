@@ -281,8 +281,12 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/**
 	 * Re-binds the {@link BuildOrderComputer} to the singleton instance declared in the contribution module.
 	 */
-	public Provider<NpmLogger> provideNpmLogger() {
-		return Access.contributedProvider(NpmLogger.class);
+	// public Provider<NpmLogger> provideNpmLogger() {
+	// return Access.contributedProvider(NpmLogger.class);
+	// }
+
+	public Class<? extends NpmLogger> bindNpmLogger() {
+		return NpmLogger.class;
 	}
 
 	/**
