@@ -61,8 +61,8 @@ public class MigrationScopeHelper {
 		// if no matching migration can be found, we cannot link this migrate-call
 		if (targetMigrations.isEmpty()) {
 			// defensively return a UnresolvableObjectDescription instead of raising a linking issue
-			return new SingletonScope(
-					new UnresolvableObjectDescription(QualifiedName.create(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER)),
+			return new SingletonScope(new UnresolvableObjectDescription(
+					QualifiedName.create(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER)),
 					IScope.NULLSCOPE);
 		}
 

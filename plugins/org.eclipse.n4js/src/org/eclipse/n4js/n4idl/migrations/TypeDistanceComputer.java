@@ -53,8 +53,8 @@ public class TypeDistanceComputer {
 	/**
 	 * Computes the overall type distance from {@code fromTypeRefs} to {@code toTypeRefs}.
 	 *
-	 * Returns {@link #MAX_DISTANCE} if one or all of the types in {@code fromTypes} are infinitely distant (unrelated) from the
-	 * types in {@code toTypes}.
+	 * Returns {@link #MAX_DISTANCE} if one or all of the types in {@code fromTypes} are infinitely distant (unrelated)
+	 * from the types in {@code toTypes}.
 	 *
 	 * @param fromTypeRefs
 	 *            The types references to compute the distance from.
@@ -102,12 +102,6 @@ public class TypeDistanceComputer {
 	 *             type distance computation (e.g. null, unsupported TypeRef subclasses, etc.).
 	 */
 	public double computeDistance(TypeRef typeRef1, TypeRef typeRef2) throws UnsupportedTypeDistanceOperandsException {
-		// in case the type reference do not match in their version, they cannot be equal (even in case of virtual
-		// types)
-		if (typeRef1.getVersion() != typeRef2.getVersion()) {
-			return MAX_DISTANCE;
-		}
-
 		// obtain a valid pair of operands from the given type references
 		final Optional<Pair<Type, Type>> operands = extractTypeDistanceOperands(typeRef1, typeRef2);
 		// if that fails already, we assume a maximum type distance
@@ -130,6 +124,12 @@ public class TypeDistanceComputer {
 
 		if (type1 instanceof BuiltInType || type2 instanceof BuiltInType) {
 			// if one of the types is built-in but not equal (see above), they must be unrelated
+			return MAX_DISTANCE;
+		}
+
+		// In case the initial type references do not match in their version,
+		// they cannot be equal (even in case of virtual types)
+		if (typeRef1.getVersion() != typeRef2.getVersion()) {
 			return MAX_DISTANCE;
 		}
 

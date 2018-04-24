@@ -41,7 +41,7 @@ class MigrateScopeXpectMethod {
 			@StringExpectation IStringExpectation expectation,
 			ICrossEReferenceAndEObject arg1) {
 		if (expectation === null)
-			throw new IllegalStateException("No expectation specified, add '--> <type switch string representation>'");
+			throw new IllegalStateException("No expectation specified, add '--> <migration name>'");
 
 		val scope = scopeProvider.getScope(arg1.getEObject(), arg1.getCrossEReference());
 		val description = scope.getSingleElement(QualifiedName.create(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER))
