@@ -99,7 +99,7 @@ public abstract class ExternalIndexSynchronizer {
 		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
 		if (nodeModulesFolder.exists() && nodeModulesFolder.isDirectory()) {
 			for (File npmLibrary : nodeModulesFolder.listFiles()) {
-				if (npmLibrary.exists() && npmLibrary.isDirectory()) {
+				if (npmLibrary.isDirectory()) {
 					String npmName = npmLibrary.getName();
 					File manifest = npmLibrary.toPath().resolve(IN4JSProject.N4MF_MANIFEST).toFile();
 					String version = getVersionFromManifest(manifest);
