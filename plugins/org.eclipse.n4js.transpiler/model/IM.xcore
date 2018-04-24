@@ -36,7 +36,6 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.VersionedIdentifierRef
-import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
@@ -44,6 +43,7 @@ import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.versions.VersionableUtils
 
 
 
@@ -412,6 +412,6 @@ class VersionedNamedImportSpecifier_IM extends NamedImportSpecifier {
 	 */
 	boolean versionedTypeImport get {
 		return importedTypeVersions.size > 0 && (importedTypeVersions.size > 1 /*shortcut*/ ||
-			VersionUtils.isTVersionable(importedTypeVersions.get(0).originalTarget));
+			VersionableUtils.isTVersionable(importedTypeVersions.get(0).originalTarget));
 	}
 }
