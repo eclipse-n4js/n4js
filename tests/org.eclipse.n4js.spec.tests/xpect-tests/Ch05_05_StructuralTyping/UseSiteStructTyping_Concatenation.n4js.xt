@@ -237,3 +237,80 @@ gsfe_sfi.t;
 let gsfe_sfe: GSFE<~∅~C>;
 // XPECT type of 'gsfe_sfe.t' --> ~∅~C
 gsfe_sfe.t;
+
+// ======================================================
+
+// to avoid too many test cases, we test the following only once for each kind of structural typing
+// and not in each of the above test cases:
+
+let cs: ~C;
+// XPECT noerrors -->
+cs.field;
+// XPECT noerrors -->
+cs.field = 42;
+// XPECT noerrors -->
+cs.acc;
+// XPECT noerrors -->
+cs.acc = 42;
+// XPECT noerrors -->
+cs.method();
+
+let csf: ~~C;
+// XPECT noerrors -->
+csf.field;
+// XPECT noerrors -->
+csf.field = 42;
+// XPECT noerrors -->
+csf.acc;
+// XPECT noerrors -->
+csf.acc = 42;
+// XPECT errors --> "method method is not available for fields-only-referenced type ~~C." at "method"
+csf.method();
+
+let csfr: ~r~C;
+// XPECT noerrors -->
+csfr.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~r~C." at "field"
+csfr.field = 42;
+// XPECT noerrors -->
+csfr.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~r~C." at "acc"
+csfr.acc = 42;
+// XPECT errors --> "method method is not available for structurally referenced type ~r~C." at "method"
+csfr.method();
+
+let csfw: ~w~C;
+// XPECT errors --> "field field is not available for structurally referenced type ~w~C." at "field"
+csfw.field;
+// XPECT noerrors -->
+csfw.field = 42;
+// XPECT errors --> "getter acc is not available for structurally referenced type ~w~C." at "acc"
+csfw.acc;
+// XPECT noerrors -->
+csfw.acc = 42;
+// XPECT errors --> "method method is not available for structurally referenced type ~w~C." at "method"
+csfw.method();
+
+let csfi: ~i~C;
+// XPECT noerrors -->
+csfi.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~i~C." at "field"
+csfi.field = 42;
+// XPECT noerrors -->
+csfi.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~i~C." at "acc"
+csfi.acc = 42;
+// XPECT errors --> "method method is not available for structurally referenced type ~i~C." at "method"
+csfi.method();
+
+let csfe: ~∅~C;
+// XPECT errors --> "field field is not available for structurally referenced type ~∅~C." at "field"
+csfe.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~∅~C." at "field"
+csfe.field = 42;
+// XPECT errors --> "getter acc is not available for structurally referenced type ~∅~C." at "acc"
+csfe.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~∅~C." at "acc"
+csfe.acc = 42;
+// XPECT errors --> "method method is not available for structurally referenced type ~∅~C." at "method"
+csfe.method();
