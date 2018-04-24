@@ -2649,7 +2649,7 @@ from {
 			// ---- NOTE: this code was copied in rule 'substTypeVariablesInClassifierTypeRef' above (keep in sync!) ----
 			// do we have a substitution?
 			val tempFromEnv = env(G, typeVar, TypeRef)
-			val temp = TypeUtils.mergeTypingStrategies(tempFromEnv, typeRef);
+			val temp = TypeUtils.mergeTypeModifiers(tempFromEnv, typeRef);
 
 			val tempDeclaredType = temp.declaredType
 			if (typeVar !== tempDeclaredType
@@ -2663,7 +2663,6 @@ from {
 				result = TypeUtils.copy(temp); // always copy! ('temp' is lying in the rule env, don't wanna change content of rule env!)
 				// (note: TypeUtils#copyIfContained() would fail in previous lines, because 'temp' will not be "contained" in the sense of EMF containment)
 			}
-			TypeUtils.copyTypeModifiers(result, typeRef)
 		}
 		or
 		{

@@ -501,22 +501,74 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Merges typing strategy of 'source' into 'target', assuming the type modification represented by the typing
-	 * strategy in 'target' took place before the one represented by the typing strategy in 'source'. This method will
-	 * copy 'target' on demand, i.e. 'target' will be copied if and only if its typing strategy actually changes due to
-	 * this operation.
+	 * Merges type modifiers of 'source' into 'target', taking into account 'target's current type modifiers and
+	 * assuming the type modification represented by the type modifiers in 'target' took place before the one
+	 * represented by type modifiers in 'source'.
 	 * <p>
-	 * Returns target unchanged if
+	 * For details about the on-demand copying of 'target' etc. see {@link #mergeDynamicModifiers(TypeRef, boolean)} and
+	 * {@link #mergeTypingStrategies(TypeRef, TypingStrategy)}.
+	 */
+	public static TypeRef mergeTypeModifiers(TypeRef target, TypeRef source) {
+		return mergeTypeModifiers(target, source.isDynamic(), source.getTypingStrategy());
+	}
+
+	/**
+	 * Merges the given type modifiers into 'target', taking into account 'target's current type modifiers and assuming
+	 * the type modification represented by the type modifiers in 'target' took place before the one represented by the
+	 * given type modifiers.
+	 * <p>
+	 * For details about the on-demand copying of 'target' etc. see {@link #mergeDynamicModifiers(TypeRef, boolean)} and
+	 * {@link #mergeTypingStrategies(TypeRef, TypingStrategy)}.
+	 */
+	public static TypeRef mergeTypeModifiers(TypeRef target, boolean sourceIsDynamic,
+			TypingStrategy sourceTypingStrategy) {
+		TypeRef result = target;
+		result = mergeDynamicModifiers(result, sourceIsDynamic);
+		result = mergeTypingStrategies(result, sourceTypingStrategy);
+		return result;
+	}
+
+	/**
+	 * Merges dynamic flag 'source' into type reference 'target', taking into account 'target's current dynamic flag.
+	 * <p>
+	 * This method will copy 'target' on demand, i.e. 'target' will be copied if and only if its dynamic flag actually
+	 * changes due to this operation. Returns target unchanged if
+	 * <ol>
+	 * <li>the dynamic flag in 'target' is the same before and after the merge operation, or
+	 * <li>the merge operation is not supported yet (e.g. merging a dynamic flag into a type reference that does not
+	 * support a dynamic flag).
+	 * </ol>
+	 */
+	public static TypeRef mergeDynamicModifiers(TypeRef target, boolean source) {
+		final boolean combined = target.isDynamic() || source;
+		if (combined != target.isDynamic()) {
+			if (target instanceof BaseTypeRef) {
+				target = copy(target);
+				((BaseTypeRef) target).setDynamic(combined);
+			} else {
+				// TODO IDE-2965 support for other kinds of type references
+			}
+		}
+		return target;
+	}
+
+	/**
+	 * Merges typing strategy 'source' into type reference 'target', taking into account 'target's current typing
+	 * strategy and assuming the type modification represented by the typing strategy in 'target' took place before the
+	 * one represented by typing strategy 'source'.
+	 * <p>
+	 * This method will copy 'target' on demand, i.e. 'target' will be copied if and only if its typing strategy
+	 * actually changes due to this operation. Returns target unchanged if
 	 * <ol>
 	 * <li>the typing strategy in 'target' is the same before and after the merge operation, or
 	 * <li>the merge operation is not supported yet (e.g. merging a typing strategy into a type reference that does not
 	 * support structural typing).
 	 * </ol>
-	 * 
+	 *
 	 * @see #concatTypingStrategies(TypingStrategy, TypingStrategy)
 	 */
-	public static TypeRef mergeTypingStrategies(TypeRef target, TypeRef source) {
-		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source.getTypingStrategy());
+	public static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source) {
+		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source);
 		if (combined != target.getTypingStrategy()) {
 			if (target instanceof ParameterizedTypeRef) {
 				final ParameterizedTypeRefStructural ptrs = copyToParameterizedTypeRefStructural(
