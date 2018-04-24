@@ -11,3 +11,4 @@ Require-Bundle: org.eclipse.xtext.testing,
  com.google.guava,
  org.eclipse.xtend.lib,
  org.eclipse.xtext.xbase.lib
+Automatic-Module-Name: org.eclipse.n4js.ts.model.tests

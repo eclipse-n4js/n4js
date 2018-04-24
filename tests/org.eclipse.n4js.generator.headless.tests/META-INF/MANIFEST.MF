@@ -22,4 +22,5 @@ Require-Bundle: com.google.inject,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.transpiler.es,
  org.eclipse.n4js.hlc.base
+Automatic-Module-Name: org.eclipse.n4js.generator.headless.tests
 

@@ -16,3 +16,4 @@ Require-Bundle: org.eclipse.n4js.runner,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.ts.model
 Export-Package: org.eclipse.n4js.runner.ui
+Automatic-Module-Name: org.eclipse.n4js.runner.ui

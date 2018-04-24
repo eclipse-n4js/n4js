@@ -528,7 +528,7 @@ public class ModuleSpecifierSelectionDialog extends CustomElementSelectionDialog
 	private IPath sourceFolderRelativePath(IResource resource) {
 		IPath path = resource.getFullPath().makeRelativeTo(this.sourceFolder.getFullPath());
 
-		if (path.toString().equals(IPath.SEPARATOR)) {
+		if (path.toString().equals(Character.toString(IPath.SEPARATOR))) {
 			return new Path("");
 		}
 		return path;

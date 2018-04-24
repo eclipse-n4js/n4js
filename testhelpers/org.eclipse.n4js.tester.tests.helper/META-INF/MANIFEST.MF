@@ -225,3 +225,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
  com.fasterxml.jackson.core.jackson-databind
+Automatic-Module-Name: org.eclipse.n4js.tester.tests.helper

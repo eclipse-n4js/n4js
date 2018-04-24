@@ -42,21 +42,15 @@ Contributors:
 		<tycho-version>1.0.0</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
-		<xtext-version>2.12.0</xtext-version>
+		<xtext-version>2.13.0</xtext-version>
 		<mwe2-version>2.9.0.201605261059</mwe2-version>
 		<org.eclipse.xtext.builder.standalone-version>[${xtext-version}]</org.eclipse.xtext.builder.standalone-version>
 		<org.eclipse.xtext.common.types-version>[${xtext-version}]</org.eclipse.xtext.common.types-version>
 		<org.eclipse.xtext.xtext-version>[${xtext-version}]</org.eclipse.xtext.xtext-version>
 		<org.eclipse.xtext.xbase-version>[${xtext-version}]</org.eclipse.xtext.xbase-version>
 		<org.osgi.core-version>4.3.1</org.osgi.core-version>
-		<org.eclipse.core.resources-version>3.11.1</org.eclipse.core.resources-version>
+		<org.eclipse.core.resources-version>3.12.0</org.eclipse.core.resources-version>
 		<org.eclipse.text-version>3.5.101</org.eclipse.text-version>
-		<org.eclipse.emf.codegen.ecore-version>[2.11.0-v20150806-0404]</org.eclipse.emf.codegen.ecore-version>
-		<org.eclipse.emf.codegen.ecore.xtext-version>[1.2.0]</org.eclipse.emf.codegen.ecore.xtext-version>
-		<org.eclipse.emf.common-version>[2.11.0-v20150805-0538]</org.eclipse.emf.common-version>
-		<org.eclipse.emf.ecore-version>[2.11.1-v20150805-0538]</org.eclipse.emf.ecore-version>
-		<org.eclipse.emf.ecore.xcore-version>[1.3.1]</org.eclipse.emf.ecore.xcore-version>
-		<org.eclipse.emf.ecore.xcore.lib-version>[1.1.100]</org.eclipse.emf.ecore.xcore.lib-version>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>

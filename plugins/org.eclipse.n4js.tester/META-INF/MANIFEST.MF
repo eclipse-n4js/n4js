@@ -33,3 +33,4 @@ Export-Package: org.eclipse.n4js.tester,
 Bundle-Activator: org.eclipse.n4js.tester.internal.TesterActivator
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.n4js.tester.events
+Automatic-Module-Name: org.eclipse.n4js.tester

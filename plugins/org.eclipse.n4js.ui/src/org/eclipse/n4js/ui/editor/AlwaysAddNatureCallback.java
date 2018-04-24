@@ -11,7 +11,7 @@
 package org.eclipse.n4js.ui.editor;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.xtext.builder.nature.ToggleXtextNatureAction;
+import org.eclipse.xtext.builder.nature.ToggleXtextNatureCommand;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 
@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 public class AlwaysAddNatureCallback extends IXtextEditorCallback.NullImpl {
 
 	@Inject
-	private ToggleXtextNatureAction toggleNature;
+	private ToggleXtextNatureCommand toggleNature;
 
 	@Override
 	public void afterCreatePartControl(XtextEditor editor) {

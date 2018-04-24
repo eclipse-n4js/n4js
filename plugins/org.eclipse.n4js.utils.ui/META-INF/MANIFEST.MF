@@ -27,3 +27,4 @@ Export-Package: org.eclipse.n4js.utils.ui.editor,
  org.eclipse.n4js.utils.ui.quickfix
 Bundle-Vendor: %providerName
 Bundle-ClassPath: .
+Automatic-Module-Name: org.eclipse.n4js.utils.ui

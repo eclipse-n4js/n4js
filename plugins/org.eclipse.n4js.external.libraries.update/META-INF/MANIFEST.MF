@@ -15,3 +15,4 @@ Require-Bundle: com.google.guava,
  org.eclipse.n4js.utils,
  com.fasterxml.jackson.core.jackson-core
 Export-Package: org.eclipse.n4js.external.libraries.update
+Automatic-Module-Name: org.eclipse.n4js.external.libraries.update
