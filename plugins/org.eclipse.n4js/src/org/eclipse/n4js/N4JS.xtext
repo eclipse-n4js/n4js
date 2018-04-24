@@ -45,8 +45,8 @@ import "http://www.eclipse.org/n4js/ts/TypeRefs" as types
 // [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 // ****************************************************************************************************
 Script: {Script}
-	annotations+=ScriptAnnotation*
-	scriptElements+=ScriptElement*;
+	( annotations+=ScriptAnnotation
+	| scriptElements+=ScriptElement )*;
 
 /*
  * The top level elements in a script are type declarations, exports, imports or statements
