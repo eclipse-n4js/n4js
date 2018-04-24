@@ -144,7 +144,7 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 		}
 	}
 
-	private def boolean hasSyntheticTerminalRule() {
+	protected override boolean hasSyntheticTerminalRule() {
 		grammar.allTerminalRules.exists[isSyntheticTerminalRule]
 	}
 

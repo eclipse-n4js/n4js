@@ -10,11 +10,9 @@
  */
 package org.eclipse.n4js;
 
+import java.util.Collections;
+
 import org.eclipse.emf.common.util.URI;
-
-import com.google.common.collect.Iterators;
-import com.google.common.collect.UnmodifiableIterator;
-
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
@@ -22,6 +20,9 @@ import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
+
+import com.google.common.collect.Iterators;
+import com.google.common.collect.UnmodifiableIterator;
 
 /**
  */
@@ -62,12 +63,12 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 
 	@Override
 	public UnmodifiableIterator<URI> getArchiveIterator(URI archiveLocation, String archiveRelativeLocation) {
-		return Iterators.emptyIterator();
+		return Iterators.unmodifiableIterator(Collections.emptyIterator());
 	}
 
 	@Override
 	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
-		return Iterators.emptyIterator();
+		return Iterators.unmodifiableIterator(Collections.emptyIterator());
 	}
 
 	@Override

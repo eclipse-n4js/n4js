@@ -245,7 +245,7 @@ public enum AssignmentOperator implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SHL_ASSIGN
-	 * @model name="shlAssign" literal="<<="
+	 * @model name="shlAssign" literal="&lt;&lt;="
 	 * @generated
 	 * @ordered
 	 */
@@ -260,7 +260,7 @@ public enum AssignmentOperator implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SHR_ASSIGN
-	 * @model name="shrAssign" literal=">>="
+	 * @model name="shrAssign" literal="&gt;&gt;="
 	 * @generated
 	 * @ordered
 	 */
@@ -275,7 +275,7 @@ public enum AssignmentOperator implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #USHR_ASSIGN
-	 * @model name="ushrAssign" literal=">>>="
+	 * @model name="ushrAssign" literal="&gt;&gt;&gt;="
 	 * @generated
 	 * @ordered
 	 */
@@ -290,7 +290,7 @@ public enum AssignmentOperator implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #AND_ASSIGN
-	 * @model name="andAssign" literal="&="
+	 * @model name="andAssign" literal="&amp;="
 	 * @generated
 	 * @ordered
 	 */

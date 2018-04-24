@@ -17,3 +17,4 @@ Require-Bundle: org.eclipse.n4js,
 Export-Package: org.eclipse.n4js.jsdoc2spec,
  org.eclipse.n4js.jsdoc2spec.adoc
 Bundle-Vendor: %providerName
+Automatic-Module-Name: org.eclipse.n4js.jsdoc2spec

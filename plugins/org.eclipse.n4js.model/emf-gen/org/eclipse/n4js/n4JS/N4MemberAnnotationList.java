@@ -36,7 +36,7 @@ public interface N4MemberAnnotationList extends AbstractAnnotationList, N4Member
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.emf.ecore.EObject%> c = this.eContainer();\nif ((c instanceof <%org.eclipse.n4js.n4JS.N4MemberDeclaration%>))\n{\n\treturn ((<%org.eclipse.n4js.n4JS.N4MemberDeclaration%>)c).getDefinedTypeElement();\n}\nreturn null;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.emf.ecore.EObject%&gt; c = this.eContainer();\nif ((c instanceof &lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;))\n{\n\treturn ((&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;)c).getDefinedTypeElement();\n}\nreturn null;'"
 	 * @generated
 	 */
 	TMember getDefinedTypeElement();
@@ -45,7 +45,7 @@ public interface N4MemberAnnotationList extends AbstractAnnotationList, N4Member
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.emf.ecore.EObject%> c = this.eContainer();\nif ((c instanceof <%org.eclipse.n4js.n4JS.N4MemberDeclaration%>))\n{\n\treturn ((<%org.eclipse.n4js.n4JS.N4MemberDeclaration%>)c).getDeclaredTypeRef();\n}\nreturn null;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.emf.ecore.EObject%&gt; c = this.eContainer();\nif ((c instanceof &lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;))\n{\n\treturn ((&lt;%org.eclipse.n4js.n4JS.N4MemberDeclaration%&gt;)c).getDeclaredTypeRef();\n}\nreturn null;'"
 	 * @generated
 	 */
 	TypeRef getDeclaredTypeRef();

@@ -64,7 +64,7 @@ public interface IdentifierRef_IM extends IdentifierRef, ReferencingElementExpre
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model ixUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((ix != null))\n{\n\tthrow new <%java.lang.IllegalArgumentException%>(\"IDRef_IM cannot accept Identifiers. Use #id_IM.\");\n}'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((ix != null))\n{\n\tthrow new &lt;%java.lang.IllegalArgumentException%&gt;(\"IDRef_IM cannot accept Identifiers. Use #id_IM.\");\n}'"
 	 * @generated
 	 */
 	void setId(IdentifiableElement ix);

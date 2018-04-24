@@ -42,3 +42,4 @@ Export-Package: org.eclipse.n4js.fileextensions,
  org.eclipse.n4js.xtext.scoping
 Bundle-Vendor: %providerName
 Bundle-ClassPath: .
+Automatic-Module-Name: org.eclipse.n4js.utils

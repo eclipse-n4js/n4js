@@ -20,3 +20,4 @@ Export-Package: de.itemis.xcore2java,
  org.eclipse.n4js.antlr.syntaxcoloring,
  org.eclipse.n4js.generation,
  org.eclipse.n4js.generation.xcore
+Automatic-Module-Name: org.eclipse.n4js.releng.utils

@@ -151,7 +151,6 @@ public abstract class AbstractLaunchConfigurationMainTab extends AbstractLaunchC
 		txtResource.setLayoutData(gd);
 		txtResource.setFont(parent.getFont());
 		txtResource.addModifyListener(new ModifyListener() {
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void modifyText(ModifyEvent e) {
 				updateLaunchConfigurationDialog();

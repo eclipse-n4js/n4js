@@ -16,6 +16,7 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -31,6 +32,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.base.StandardSystemProperty;
+import com.google.common.io.ByteSink;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 
 /**
  * Provides access to the shipped code for setups that don't work with proper workspace, e.g. unit tests for the
@@ -114,8 +118,11 @@ public class ShippedCodeAccess {
 					}
 				} else {
 					checkState(newResource.createNewFile(), "Error while creating new file at: " + newResource);
-					try (final InputStream is = jarFile.getInputStream(entry)) {
-						com.google.common.io.Files.copy(() -> is, newResource);
+					ByteSink byteSink = Files.asByteSink(newResource);
+					try (
+							final InputStream is = jarFile.getInputStream(entry);
+							OutputStream outputStream = byteSink.openStream();) {
+						ByteStreams.copy(is, outputStream);
 					}
 				}
 				newResource.deleteOnExit();

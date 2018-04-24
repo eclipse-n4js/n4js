@@ -22,3 +22,4 @@ Require-Bundle: org.eclipse.emf.common,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.npmexporter,
  org.eclipse.n4js.npmexporter.validation
+Automatic-Module-Name: org.eclipse.n4js.npmexporter

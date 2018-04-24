@@ -122,7 +122,7 @@ public interface TVariable extends TExportableElement, TConstableElement, Syntax
 	 * Returns string representation of variable according to syntax definition.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>();\nboolean _isConst = this.isConst();\nif (_isConst)\n{\n\tstrb.append(\"const \");\n}\nelse\n{\n\tstrb.append(\"var \");\n}\nstrb.append(this.getName());\n<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _typeRef = this.getTypeRef();\nboolean _tripleNotEquals = (_typeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(\": \").append(this.getTypeRef().getTypeRefAsString());\n}\nreturn strb.toString();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.StringBuilder%&gt; strb = new &lt;%java.lang.StringBuilder%&gt;();\nboolean _isConst = this.isConst();\nif (_isConst)\n{\n\tstrb.append(\"const \");\n}\nelse\n{\n\tstrb.append(\"var \");\n}\nstrb.append(this.getName());\n&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; _typeRef = this.getTypeRef();\nboolean _tripleNotEquals = (_typeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(\": \").append(this.getTypeRef().getTypeRefAsString());\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String getVariableAsString();

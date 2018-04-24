@@ -36,6 +36,7 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.eclipse.n4js.n4JS.JSXElement
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -193,6 +194,8 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	override completeKeyword(Keyword keyword, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		if (context.currentModel instanceof ParameterizedPropertyAccessExpression || context.previousModel instanceof ParameterizedPropertyAccessExpression)
 			return; // filter out all keywords if we are in the context of a property access
+		if (context.currentModel instanceof JSXElement || context.previousModel instanceof JSXElement)
+			return; // filter out all keywords if we are in the context of a JSX element
 		if (!Character.isAlphabetic(keyword.value.charAt(0)))
 			return; // filter out operators
 		if (keyword.value.length < 5)
