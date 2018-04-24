@@ -886,6 +886,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cQualifierAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
 		private final RuleCall cQualifierN4mfIdentifierParserRuleCall_2_1_0 = (RuleCall)cQualifierAssignment_2_1.eContents().get(0);
 		
+		////TODO build meta data not supported https://semver.org/#spec-item-10
 		//DeclaredVersion:
 		//	major=INT ('.' minor=INT ('.' micro=INT)?)? ('-' qualifier=N4mfIdentifier)?;
 		@Override public ParserRule getRule() { return rule; }
@@ -1903,6 +1904,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		return getExtendedRuntimeEnvironmentAccess().getRule();
 	}
 	
+	////TODO build meta data not supported https://semver.org/#spec-item-10
 	//DeclaredVersion:
 	//	major=INT ('.' minor=INT ('.' micro=INT)?)? ('-' qualifier=N4mfIdentifier)?;
 	public DeclaredVersionElements getDeclaredVersionAccess() {

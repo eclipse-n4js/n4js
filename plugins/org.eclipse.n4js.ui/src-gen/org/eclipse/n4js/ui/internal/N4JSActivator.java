@@ -30,6 +30,7 @@ import org.osgi.framework.BundleContext;
  */
 public class N4JSActivator extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.n4js.ui";
 	public static final String ORG_ECLIPSE_N4JS_N4JS = "org.eclipse.n4js.N4JS";
 	
 	private static final Logger logger = Logger.getLogger(N4JSActivator.class);
@@ -96,5 +97,6 @@ public class N4JSActivator extends AbstractUIPlugin {
 	protected Module getSharedStateModule() {
 		return new SharedStateModule();
 	}
+	
 	
 }

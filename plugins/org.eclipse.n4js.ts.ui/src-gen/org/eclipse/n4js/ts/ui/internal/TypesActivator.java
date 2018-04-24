@@ -32,6 +32,7 @@ import org.osgi.framework.BundleContext;
  */
 public class TypesActivator extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.n4js.ts.ui";
 	public static final String ORG_ECLIPSE_N4JS_TS_TYPEEXPRESSIONS = "org.eclipse.n4js.ts.TypeExpressions";
 	public static final String ORG_ECLIPSE_N4JS_TS_TYPES = "org.eclipse.n4js.ts.Types";
 	
@@ -105,5 +106,6 @@ public class TypesActivator extends AbstractUIPlugin {
 	protected Module getSharedStateModule() {
 		return new SharedStateModule();
 	}
+	
 	
 }
