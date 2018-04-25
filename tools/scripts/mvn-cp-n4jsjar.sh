@@ -2,7 +2,7 @@
 cd ../..
 # First, run Maven to create n4jsc.jar
 echo "Running maven build"
-mvn clean verify -DnoTests
+mvn clean verify -DnoTests -PbuildProduct
 
 # Create a target folder in /tests/org.eclipse.n4js.hlc.tests/
 if [ ! -d "./tests/org.eclipse.n4js.hlc.tests/target" ]; then

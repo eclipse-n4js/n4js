@@ -19,12 +19,12 @@ import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageDataProvider;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.xtext.ui.label.AbstractLabelProvider;
-
-import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 
 /**
  * This image descriptor accepts multiple decorators on a single quadrant. In contrast, {@link DecorationOverlayIcon}
@@ -44,6 +44,7 @@ public final class N4JSDecoratorRow extends CompositeImageDescriptor {
 	private final ImageDescriptor main;
 	private final int quadrant;
 	private final ImageDescriptor[] decos;
+	private ImageDataProvider imageDataProvider;
 
 	/**
 	 * Usage:
@@ -57,11 +58,11 @@ public final class N4JSDecoratorRow extends CompositeImageDescriptor {
 	/**
 	 * Usage:
 	 * <ul>
-	 * <li>Never access directly, use {@link #getDecosData()} instead.</li>
+	 * <li>Never access directly, use {@link #getDecosDataProvider()} instead.</li>
 	 * <li>lazily-initialized, derived data, not considered for equals()/hashCode()</li>
 	 * </ul>
 	 */
-	private ImageData[] decosData = null;
+	private CachedImageDataProvider[] decosDataProvider = null;
 
 	@SuppressWarnings("javadoc")
 	public N4JSDecoratorRow(ImageDescriptor main, int quadrant, List<ImageDescriptor> decos) {
@@ -139,22 +140,35 @@ public final class N4JSDecoratorRow extends CompositeImageDescriptor {
 	 */
 	private ImageData getMainData() {
 		if (null == mainData) {
-			mainData = main.getImageData();
+			mainData = main.getImageData(100);
 		}
 		return mainData;
 	}
 
 	/**
+	 * Return ImageDataProvider.
+	 */
+	private ImageDataProvider getImageDataProvider() {
+		if (main == null)
+			return null;
+
+		if (imageDataProvider == null) {
+			imageDataProvider = createCachedImageDataProvider(main);
+		}
+		return imageDataProvider;
+	}
+
+	/**
 	 * This method initializes a field on demand, given that each invocation of the delegate allocates anew.
 	 */
-	private ImageData[] getDecosData() {
-		if (null == decosData) {
-			decosData = new ImageData[decos.length];
-			for (int i = 0; i < decosData.length; i++) {
-				decosData[i] = decos[i].getImageData();
+	private CachedImageDataProvider[] getDecosDataProvider() {
+		if (null == decosDataProvider) {
+			decosDataProvider = new CachedImageDataProvider[decos.length];
+			for (int i = 0; i < decosDataProvider.length; i++) {
+				decosDataProvider[i] = createCachedImageDataProvider(decos[i]);
 			}
 		}
-		return decosData;
+		return decosDataProvider;
 	}
 
 	/**
@@ -162,8 +176,8 @@ public final class N4JSDecoratorRow extends CompositeImageDescriptor {
 	 */
 	private int getDecosWidth() {
 		int result = 0;
-		for (ImageData dd : getDecosData()) {
-			result += dd.width;
+		for (CachedImageDataProvider dd : getDecosDataProvider()) {
+			result += dd.getWidth();
 		}
 		return result;
 	}
@@ -173,8 +187,8 @@ public final class N4JSDecoratorRow extends CompositeImageDescriptor {
 	 */
 	private int getDecosHeight() {
 		int result = 0;
-		for (ImageData dd : getDecosData()) {
-			result = Math.max(result, dd.height);
+		for (CachedImageDataProvider dd : getDecosDataProvider()) {
+			result = Math.max(result, dd.getHeight());
 		}
 		return result;
 	}
@@ -281,13 +295,13 @@ public final class N4JSDecoratorRow extends CompositeImageDescriptor {
 	@Override
 	protected void drawCompositeImage(int ignoredWidth, int ignoredHeight) {
 		// base image, possibly shifted to accommodate decorators
-		drawImage(getMainData(), shiftFromLeft(), shiftFromTop());
+		drawImage(getImageDataProvider(), shiftFromLeft(), shiftFromTop());
 		// row of decorators
 		int x = marginFromLeft();
 		final int y = marginFromTop();
-		for (ImageData decoData : getDecosData()) {
-			drawImage(decoData, x, y);
-			x += decoData.width;
+		for (CachedImageDataProvider decoDataProvider : getDecosDataProvider()) {
+			drawImage(decoDataProvider, x, y);
+			x += decoDataProvider.getWidth();
 		}
 	}
 

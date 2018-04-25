@@ -117,7 +117,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * returns a non-<code>null</code> value.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _elementType = this.getElementType();\nreturn (_elementType != null);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt; _elementType = this.getElementType();\nreturn (_elementType != null);'"
 	 * @generated
 	 */
 	boolean isArrayLike();
@@ -131,7 +131,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * if this is not an array-like type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.Object%> _elementType = <%org.eclipse.n4js.ts.types.ArrayLikes%>.getElementType(this);\nreturn ((<%org.eclipse.n4js.ts.typeRefs.TypeRef%>) _elementType);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.Object%&gt; _elementType = &lt;%org.eclipse.n4js.ts.types.ArrayLikes%&gt;.getElementType(this);\nreturn ((&lt;%org.eclipse.n4js.ts.typeRefs.TypeRef%&gt;) _elementType);'"
 	 * @generated
 	 */
 	TypeRef getElementType();
@@ -145,7 +145,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * This base implementation always returns public.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.n4js.ts.types.TypeAccessModifier%>.PUBLIC;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.TypeAccessModifier%&gt;.PUBLIC;'"
 	 * @generated
 	 */
 	TypeAccessModifier getTypeAccessModifier();
@@ -173,7 +173,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * this method is introduced to simplify client code and reduce the number of instance-of cascades.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.ts.types.TypeVariable%>>emptyEList();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;&gt;emptyEList();'"
 	 * @generated
 	 */
 	EList<TypeVariable> getTypeVars();
@@ -186,7 +186,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * For details see {@link TypeVariable#getVariance()}.
 	 * <!-- end-model-doc -->
 	 * @model dataType="org.eclipse.n4js.ts.types.Variance" unique="false" idxUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.util.Variance%> _xifexpression = null;\nif (((idx >= 0) && (idx < this.getTypeVars().size())))\n{\n\t_xifexpression = this.getTypeVars().get(idx).getVariance();\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.util.Variance%&gt; _xifexpression = null;\nif (((idx &gt;= 0) &amp;&amp; (idx &lt; this.getTypeVars().size())))\n{\n\t_xifexpression = this.getTypeVars().get(idx).getVariance();\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	Variance getVarianceOfTypeVar(int idx);
@@ -211,7 +211,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * As the returned string is used for comparison in tests, this method should not be changed.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.String%> _xifexpression = null;\nboolean _isGeneric = this.isGeneric();\nif (_isGeneric)\n{\n\t<%java.lang.String%> _name = this.getName();\n\t<%java.lang.String%> _plus = (_name + \"<\");\n\tfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>>()\n\t{\n\t\tpublic <%java.lang.String%> apply(final <%org.eclipse.n4js.ts.types.TypeVariable%> it)\n\t\t{\n\t\t\treturn it.getTypeAsString();\n\t\t}\n\t};\n\t<%java.lang.String%> _join = <%org.eclipse.xtext.xbase.lib.IterableExtensions%>.join(<%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%>.<<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>>map(this.getTypeVars(), _function), \",\");\n\t<%java.lang.String%> _plus_1 = (_plus + _join);\n\t_xifexpression = (_plus_1 + \">\");\n}\nelse\n{\n\t_xifexpression = this.getName();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _xifexpression = null;\nboolean _isGeneric = this.isGeneric();\nif (_isGeneric)\n{\n\t&lt;%java.lang.String%&gt; _name = this.getName();\n\t&lt;%java.lang.String%&gt; _plus = (_name + \"&lt;\");\n\tfinal &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;, &lt;%java.lang.String%&gt;&gt; _function = new &lt;%org.eclipse.xtext.xbase.lib.Functions.Function1%&gt;&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;, &lt;%java.lang.String%&gt;&gt;()\n\t{\n\t\tpublic &lt;%java.lang.String%&gt; apply(final &lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt; it)\n\t\t{\n\t\t\treturn it.getTypeAsString();\n\t\t}\n\t};\n\t&lt;%java.lang.String%&gt; _join = &lt;%org.eclipse.xtext.xbase.lib.IterableExtensions%&gt;.join(&lt;%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;, &lt;%java.lang.String%&gt;&gt;map(this.getTypeVars(), _function), \",\");\n\t&lt;%java.lang.String%&gt; _plus_1 = (_plus + _join);\n\t_xifexpression = (_plus_1 + \"&gt;\");\n}\nelse\n{\n\t_xifexpression = this.getName();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	String getTypeAsString();

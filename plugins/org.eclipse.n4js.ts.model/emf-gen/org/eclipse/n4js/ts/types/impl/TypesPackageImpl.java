@@ -589,6 +589,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		isInited = true;
 
+		// Initialize simple dependencies
+		EcorePackage.eINSTANCE.eClass();
+
 		// Obtain or create and register interdependencies
 		TypeRefsPackageImpl theTypeRefsPackage = (TypeRefsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TypeRefsPackage.eNS_URI) instanceof TypeRefsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TypeRefsPackage.eNS_URI) : TypeRefsPackage.eINSTANCE);
 

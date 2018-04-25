@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +103,7 @@ public class SymbolFactory {
 	}
 
 	static private Symbol createFromNumericLiteral(ControlFlowElement cfe) {
-		if (new Integer(0).equals(((NumericLiteral) cfe).getValue())) {
+		if (new BigDecimal(0).equals(((NumericLiteral) cfe).getValue())) {
 			return new SymbolOfZeroLiteral((NumericLiteral) cfe);
 		}
 		return null;

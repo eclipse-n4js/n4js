@@ -59,7 +59,7 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TInterface}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.Type%> _definedType = this.getDefinedType();\nreturn ((<%org.eclipse.n4js.ts.types.TInterface%>) _definedType);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _definedType = this.getDefinedType();\nreturn ((&lt;%org.eclipse.n4js.ts.types.TInterface%&gt;) _definedType);'"
 	 * @generated
 	 */
 	TInterface getDefinedTypeAsInterface();

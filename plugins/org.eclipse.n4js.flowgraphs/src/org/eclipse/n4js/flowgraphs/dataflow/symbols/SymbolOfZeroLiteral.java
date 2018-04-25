@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
+import java.math.BigDecimal;
+
 import org.eclipse.n4js.n4JS.NumericLiteral;
 
 /**
@@ -34,7 +36,7 @@ public class SymbolOfZeroLiteral extends Symbol {
 
 	@Override
 	public boolean isZeroLiteral() {
-		return nl.getValue().equals(0);
+		return nl.getValue().equals(new BigDecimal(0));
 	}
 
 }

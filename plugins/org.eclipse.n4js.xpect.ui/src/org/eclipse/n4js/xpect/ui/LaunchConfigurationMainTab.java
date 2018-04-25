@@ -69,7 +69,6 @@ public class LaunchConfigurationMainTab extends AbstractLaunchConfigurationTab {
 		fileText.setLayoutData(gd);
 		fileText.setFont(parent.getFont());
 		fileText.addModifyListener(new ModifyListener() {
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void modifyText(ModifyEvent e) {
 				updateLaunchConfigurationDialog();

@@ -41,9 +41,28 @@ class ImportsRegionHelper {
 	@Inject
 	private TypeExpressionsGrammarAccess typeExpressionGrammmarAccess;
 
-	/** Calculates import region offset by analyzing provided resource. */
+	/** 
+	 * Calculates import offset by analyzing the provided resource.
+	 * @See {@link #getImportRegion(Script)}
+	 */
 	public def int getImportOffset(XtextResource resource) {
 		getImportRegion(resource).offset;
+	}
+	
+	/** 
+	 * Calculates import offset by analyzing the provided script.
+	 * @See {@link #getImportRegion(Script)}
+	 */
+	public def int getImportOffset(Script script) {
+		getImportRegion(script).offset;
+	}
+	
+	/** 
+	 * Calculates import region by analyzing the provided resource.
+	 * @See {@link #getImportRegion(Script)}
+	 */
+	package def InsertionPoint getImportRegion(XtextResource xtextResource) {
+		return getImportRegion(getScript(xtextResource))
 	}
 
 	/**
@@ -86,7 +105,7 @@ class ImportsRegionHelper {
 	 *            n4js resource
 	 * @return region for import statements, length 0
 	 */
-	package def InsertionPoint getImportRegion(XtextResource xtextResource) {
+	package def InsertionPoint getImportRegion(Script script) {
 		// In N4js imports can appear anywhere in the Script as top-level elements. So even as a last
 		// statement and more importantly scattered around.
 		val InsertionPoint insertionPoint = new InsertionPoint;
@@ -94,7 +113,6 @@ class ImportsRegionHelper {
 		// First Position
 		var int begin = -1;
 
-		val Script script = getScript(xtextResource);
 		if (script !== null) {
 			// if there is a script, we can insert in first position.
 			begin = 0;

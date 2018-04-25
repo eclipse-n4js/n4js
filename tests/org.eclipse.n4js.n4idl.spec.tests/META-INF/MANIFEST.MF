@@ -23,3 +23,4 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.xpect,
  org.eclipse.n4js.xpect.ui,
  org.eclipse.n4js.n4mf.ui;bundle-version="0.0.1"
+Automatic-Module-Name: org.eclipse.n4js.n4idl.spec.tests

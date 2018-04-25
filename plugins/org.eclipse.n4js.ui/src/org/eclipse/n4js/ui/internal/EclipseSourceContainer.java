@@ -10,17 +10,15 @@
  */
 package org.eclipse.n4js.ui.internal;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.emf.common.util.URI;
-
-import com.google.common.collect.Iterators;
-
 import org.eclipse.n4js.internal.N4JSProjectSourceContainer;
+import org.eclipse.n4js.n4mf.SourceFragmentType;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
 
 /**
  */
@@ -61,7 +59,7 @@ public class EclipseSourceContainer extends N4JSProjectSourceContainer implement
 		if (exists()) {
 			return super.iterator();
 		} else {
-			return Iterators.emptyIterator();
+			return Collections.emptyIterator();
 		}
 	}
 

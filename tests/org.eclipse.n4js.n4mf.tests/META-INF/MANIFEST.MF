@@ -14,3 +14,4 @@ Require-Bundle: org.eclipse.n4js.n4mf,
  org.junit,
  org.eclipse.n4js.n4mf.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.n4js.n4mf.tests

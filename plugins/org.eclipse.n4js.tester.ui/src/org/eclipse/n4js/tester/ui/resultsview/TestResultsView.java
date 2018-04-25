@@ -1331,13 +1331,9 @@ public class TestResultsView extends ViewPart {
 		while (i.hasNext())
 			if (!i.next().isRunning())
 				i.remove();
-
-		Optional<TestSession> registeredSessionOfRoot = currentRoot != null
-				? registeredSessions.stream().filter(testSession -> testSession.root == currentRoot).findAny()
-				: Optional.empty();
-
 		// if the currently shown root was among the purged ones, clear the UI
-		if (currentRoot != null && !registeredSessionOfRoot.isPresent())
+		if (currentRoot != null
+				&& !registeredSessions.stream().filter(session -> session.root == currentRoot).findFirst().isPresent())
 			setShownTestTree(null);
 		// if nothing is shown, show the newest session
 		if (currentRoot == null && !registeredSessions.isEmpty())

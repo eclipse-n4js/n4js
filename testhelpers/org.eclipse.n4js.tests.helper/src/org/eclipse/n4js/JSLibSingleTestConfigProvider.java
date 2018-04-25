@@ -12,7 +12,6 @@ package org.eclipse.n4js;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,8 +20,8 @@ import java.util.zip.ZipEntry;
 import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.io.CharStreams;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
+import com.google.common.io.CharSource;
 
 /**
  * Base class for factories creating {@link JSLibSingleTestConfig} with some additional functionality to be aware of
@@ -85,14 +84,15 @@ public class JSLibSingleTestConfigProvider {
 	 *            the classpath-relative location of the to-be-read resource
 	 */
 	private static List<String> getFileLines(final String resourceName) throws IOException {
-		InputSupplier<InputStreamReader> readerSupplier = CharStreams.newReaderSupplier(
-				new InputSupplier<InputStream>() {
-					@Override
-					public InputStream getInput() throws IOException {
-						return Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
-					}
-				}, Charsets.UTF_8);
-		return CharStreams.readLines(readerSupplier);
+		ByteSource byteSource = new ByteSource() {
+			@Override
+			public InputStream openStream() throws IOException {
+				return Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
+			}
+		};
+
+		CharSource charSrc = byteSource.asCharSource(Charsets.UTF_8);
+		return charSrc.readLines();
 	}
 
 }

@@ -58,7 +58,7 @@ public interface SimpleTypeReference extends JSDocNode, ContentNode {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getTypeName() != null) && (!this.getTypeName().isEmpty()));'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getTypeName() != null) &amp;&amp; (!this.getTypeName().isEmpty()));'"
 	 * @generated
 	 */
 	boolean typeNameSet();

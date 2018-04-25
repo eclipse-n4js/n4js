@@ -187,7 +187,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 		val script = '0O127;'.parseSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as OctalIntLiteral
-		assertEquals(0127, number.toInt)
+		assertEquals(Integer.parseInt("127", 8), number.toInt)
 	}
 
 	@Test

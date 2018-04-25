@@ -93,7 +93,7 @@ public interface SourceFragment extends EObject {
 	 * interface.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" otherUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((null == other))\n{\n\treturn (-1);\n}\n<%org.eclipse.n4js.n4mf.SourceFragmentType%> _sourceFragmentType = this.getSourceFragmentType();\nboolean _tripleEquals = (null == _sourceFragmentType);\nif (_tripleEquals)\n{\n\tint _xifexpression = (int) 0;\n\t<%org.eclipse.n4js.n4mf.SourceFragmentType%> _sourceFragmentType_1 = other.getSourceFragmentType();\n\tboolean _tripleEquals_1 = (null == _sourceFragmentType_1);\n\tif (_tripleEquals_1)\n\t{\n\t\t_xifexpression = 0;\n\t}\n\telse\n\t{\n\t\t_xifexpression = 1;\n\t}\n\treturn _xifexpression;\n}\nreturn this.getSourceFragmentType().compareTo(other.getSourceFragmentType());'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((null == other))\n{\n\treturn (-1);\n}\n&lt;%org.eclipse.n4js.n4mf.SourceFragmentType%&gt; _sourceFragmentType = this.getSourceFragmentType();\nboolean _tripleEquals = (null == _sourceFragmentType);\nif (_tripleEquals)\n{\n\tint _xifexpression = (int) 0;\n\t&lt;%org.eclipse.n4js.n4mf.SourceFragmentType%&gt; _sourceFragmentType_1 = other.getSourceFragmentType();\n\tboolean _tripleEquals_1 = (null == _sourceFragmentType_1);\n\tif (_tripleEquals_1)\n\t{\n\t\t_xifexpression = 0;\n\t}\n\telse\n\t{\n\t\t_xifexpression = 1;\n\t}\n\treturn _xifexpression;\n}\nreturn this.getSourceFragmentType().compareTo(other.getSourceFragmentType());'"
 	 * @generated
 	 */
 	int compareByFragmentType(SourceFragment other);

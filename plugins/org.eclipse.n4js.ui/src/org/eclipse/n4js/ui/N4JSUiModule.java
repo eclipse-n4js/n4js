@@ -98,6 +98,7 @@ import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
+import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
 import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
@@ -131,6 +132,7 @@ import org.eclipse.xtext.ui.editor.contentassist.IContentAssistantFactory;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider;
 import org.eclipse.xtext.ui.editor.findrefs.EditorResourceAccess;
+import org.eclipse.xtext.ui.editor.findrefs.ReferenceSearchResultContentProvider;
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHover;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
@@ -817,5 +819,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Bind N4JS composite generator */
 	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
 		return N4JSCompositeGenerator.class;
+	}
+
+	/** Bind custom ReferenceSearchResultContentProvider. Workaround to fix GH-724. */
+	public Class<? extends ReferenceSearchResultContentProvider> bindReferenceSearchResultContentProvider() {
+		return MyReferenceSearchResultContentProvider.class;
 	}
 }

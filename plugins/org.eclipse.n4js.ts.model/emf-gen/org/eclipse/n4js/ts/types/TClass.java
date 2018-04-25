@@ -283,7 +283,7 @@ public interface TClass extends TN4Classifier {
 	 * not possible, not available. Ignores implicit super types!
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%> _superClassRef = this.getSuperClassRef();\n<%org.eclipse.n4js.ts.types.Type%> _declaredType = null;\nif (_superClassRef!=null)\n{\n\t_declaredType=_superClassRef.getDeclaredType();\n}\nfinal <%org.eclipse.n4js.ts.types.Type%> superType = _declaredType;\n<%org.eclipse.n4js.ts.types.TClass%> _xifexpression = null;\nif ((superType instanceof <%org.eclipse.n4js.ts.types.TClass%>))\n{\n\t_xifexpression = ((<%org.eclipse.n4js.ts.types.TClass%>)superType);\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt; _superClassRef = this.getSuperClassRef();\n&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = null;\nif (_superClassRef!=null)\n{\n\t_declaredType=_superClassRef.getDeclaredType();\n}\nfinal &lt;%org.eclipse.n4js.ts.types.Type%&gt; superType = _declaredType;\n&lt;%org.eclipse.n4js.ts.types.TClass%&gt; _xifexpression = null;\nif ((superType instanceof &lt;%org.eclipse.n4js.ts.types.TClass%&gt;))\n{\n\t_xifexpression = ((&lt;%org.eclipse.n4js.ts.types.TClass%&gt;)superType);\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	TClass getSuperClass();
@@ -296,7 +296,7 @@ public interface TClass extends TN4Classifier {
 	 * Convenience method, returns all super classes, consumed roles and implemented or extend interfaces
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%> _superClassRef = this.getSuperClassRef();\nboolean _tripleNotEquals = (_superClassRef != null);\nif (_tripleNotEquals)\n{\n\treturn <%com.google.common.collect.Iterables%>.<<%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%>>concat(<%java.util.Collections%>.<<%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%>>singleton(this.getSuperClassRef()), this.getImplementedInterfaceRefs());\n}\nreturn <%com.google.common.collect.Iterables%>.<<%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%>>concat(this.getImplementedInterfaceRefs());'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt; _superClassRef = this.getSuperClassRef();\nboolean _tripleNotEquals = (_superClassRef != null);\nif (_tripleNotEquals)\n{\n\treturn &lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;concat(&lt;%java.util.Collections%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;singleton(this.getSuperClassRef()), this.getImplementedInterfaceRefs());\n}\nreturn &lt;%com.google.common.collect.Iterables%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef%&gt;&gt;concat(this.getImplementedInterfaceRefs());'"
 	 * @generated
 	 */
 	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
