@@ -10,10 +10,9 @@
  */
 package org.eclipse.n4js.scoping.members;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  */
@@ -34,7 +33,7 @@ public class WrongTypingStrategyDescription extends AbstractDescriptionWithError
 	@Override
 	public String getMessage() {
 		String memberName = getName().getLastSegment();
-		String memberTypeName = getMemberTypeName(getEObjectOrProxy());
+		String memberTypeName = getMemberTypeName(getEObjectOrProxy(), false); // FIXME
 		String typeName = receiverTypeName;
 		if (fields) {
 			return IssueCodes.getMessageForTYS_MEMBER_NOT_IN_STRUCTURAL_FIELDS_TYPE_USE_SITE(memberTypeName,

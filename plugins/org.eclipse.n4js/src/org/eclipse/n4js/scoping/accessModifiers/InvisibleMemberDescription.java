@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.scoping.accessModifiers;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.IssueUserDataKeys.VIS_ILLEGAL_MEMBER_ACCESS;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * This description wraps an invisible member.
@@ -49,7 +48,7 @@ public class InvisibleMemberDescription extends AbstractDescriptionWithError {
 
 	@Override
 	public String getMessage() {
-		String memberTypeName = getMemberTypeName(getEObjectOrProxy());
+		String memberTypeName = getMemberTypeName(getEObjectOrProxy(), false); // FIXME
 		String memberName = getName().getLastSegment();
 		return IssueCodes.getMessageForVIS_ILLEGAL_MEMBER_ACCESS(memberTypeName, memberName);
 	}

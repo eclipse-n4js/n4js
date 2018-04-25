@@ -14,9 +14,19 @@
 class C {
 	public set acc(value: int) {}
 }
+class D {
+	public get acc(): int { return 42; }
+}
 
 let i: ~i~C & Object;
 // XPECT noerrors -->
 i.acc;
 // XPECT errors --> "setter acc is not available for structurally referenced type ~i~C." at "acc"
 i.acc = 42;
+
+
+let u: ~i~C | ~~D;
+// XPECT noerrors -->
+u.acc;
+// XPECT errors --> "setter acc is not available for structurally referenced type ~i~C. The accessor acc is read-only in ~~D." at "acc"
+u.acc = 42;
