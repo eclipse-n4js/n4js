@@ -457,7 +457,8 @@ public class ASTProcessor extends AbstractProcessor {
 			}
 			Script case variantHelper.allowVersionedTypes(obj): {
 				// For variants that support versioned types and therefore migrations,
-				// process the migrations first.
+				// process the migrations first, since information about signatures of 
+				// all migrations will be required when processing migration calls.
 				obj.eContents.bringToFront(obj.scriptElements
 					.filter(FunctionDeclaration)
 					.filter[MigrationUtils.isMigrationDefinition(it)])
