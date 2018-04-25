@@ -12,10 +12,11 @@ grammar DebugInternalN4JS;
 
 // Rule Script
 ruleScript:
-	ruleScriptAnnotation
-	*
-	ruleScriptElement
-	*
+	(
+		ruleScriptAnnotation
+		    |
+		ruleScriptElement
+	)*
 ;
 
 // Rule ScriptElement
