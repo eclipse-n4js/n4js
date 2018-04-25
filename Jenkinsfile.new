@@ -97,7 +97,7 @@ pipeline {
                             'execute-ecma-tests',
                             'execute-performance-tests',
                             'execute-swtbot-performance-tests',
-                            'execute-accesscontrol-tests ',
+                            'execute-accesscontrol-tests',
                             'execute-smoke-tests'
                         ].join(',')
 
