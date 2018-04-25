@@ -83,11 +83,13 @@ class MemberScopingHelper {
 	 *               {@link #INVISIBLE_MEMBER}.
 	 * @param staticAccess
 	 *               true: only static members are relevant; false: only non-static ones.
+	 * @param structFieldInitMode
+	 *               see {@link AbstractMemberScope#structFieldInitMode}.
 	 */
 	public def IScope createMemberScope(TypeRef receiverTypeRef, MemberAccess context,
-		boolean checkVisibility, boolean staticAccess) {
+		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 		return decoratedMemberScopeFor(receiverTypeRef,
-			new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess));
+			new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess, structFieldInitMode));
 	}
 
 	/**
@@ -105,9 +107,9 @@ class MemberScopingHelper {
 	 * </ol>
 	 */
 	public def IScope createMemberScopeAllowingNonContainedMembers(TypeRef receiverTypeRef, EObject context,
-		boolean checkVisibility, boolean staticAccess) {
+		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 		return decoratedMemberScopeFor(receiverTypeRef,
-			new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess));
+			new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess, structFieldInitMode));
 	}
 
 	/**
@@ -182,11 +184,13 @@ class MemberScopingHelper {
 			return result.decorate(request, ptrs)
 		}
 		val memberScopeRaw = if (ptrs.structuralType !== null) {
-				memberScopeFactory.create(result, ptrs.structuralType, request.context, request.staticAccess);
+				memberScopeFactory.create(result, ptrs.structuralType, request.context, request.staticAccess,
+					request.structFieldInitMode);
 			} else {
 				// note: these are not the members of the defined type
 				// however, we only scope locally, so that doesn't matter
-				memberScopeFactory.create(result, ptrs.structuralMembers, request.context, request.staticAccess);
+				memberScopeFactory.create(result, ptrs.structuralMembers, request.context, request.staticAccess,
+					request.structFieldInitMode);
 			}
 
 		return decorate(memberScopeRaw, request, ptrs);
@@ -350,11 +354,13 @@ class MemberScopingHelper {
 		}
 		val implicitSuperTypeMemberScope = if (jsVariantHelper.activateDynamicPseudoScope(request.context)) { // cf. sec. 13.1
 				memberScopeFactory.create(new DynamicPseudoScope(), implicitSuperType, request.context,
-					request.staticAccess);
+					request.staticAccess, request.structFieldInitMode);
 			} else {
-				memberScopeFactory.create(implicitSuperType, request.context, request.staticAccess);
+				memberScopeFactory.create(implicitSuperType, request.context, request.staticAccess,
+					request.structFieldInitMode);
 			}
-		return memberScopeFactory.create(implicitSuperTypeMemberScope, type, request.context, request.staticAccess);
+		return memberScopeFactory.create(implicitSuperTypeMemberScope, type, request.context, request.staticAccess,
+			request.structFieldInitMode);
 	}
 
 	/**
@@ -389,7 +395,7 @@ class MemberScopingHelper {
 		if (structType.ownedMembers.empty) {
 			return IScope.NULLSCOPE
 		}
-		return memberScopeFactory.create(structType, request.context, request.staticAccess)
+		return memberScopeFactory.create(structType, request.context, request.staticAccess, request.structFieldInitMode)
 	}
 
 	def private ResourceSet getResourceSet(EObject type, EObject context) {

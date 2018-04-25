@@ -1107,11 +1107,11 @@ icgsmg = new DF();
 // --------------------------------------------------------------------------------------------------------------------
 
 
-// XPECT errors --> "~Object is not a structural subtype of ~i~CGSMS: missing setter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "{}"
+// XPECT errors --> "~Object is not a structural subtype of ~i~CGSMS: missing getter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "{}"
 icgsms = {}
-// XPECT errors --> "D0 is not a structural subtype of ~i~CGSMS: missing setter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "d0"
+// XPECT errors --> "D0 is not a structural subtype of ~i~CGSMS: missing getter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "d0"
 icgsms = d0;
-// XPECT errors --> "D0 is not a structural subtype of ~i~CGSMS: missing setter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "new D0()"
+// XPECT errors --> "D0 is not a structural subtype of ~i~CGSMS: missing getter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "new D0()"
 icgsms = new D0();
 
 
@@ -1125,9 +1125,9 @@ icgsms = new DG();
 
 // XPECT errors --> "~Object with { set f(value: string) } is not a structural subtype of ~i~CGSMS: f failed: non-optional writable field requires a readable field or a getter in subtype." at "{ set f(value: string) {} }"
 icgsms = { set f(value: string) {} }
-// XPECT errors --> "DS is not a structural subtype of ~i~CGSMS: missing setter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "ds"
+// XPECT errors --> "DS is not a structural subtype of ~i~CGSMS: missing getter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "ds"
 icgsms = ds;
-// XPECT errors --> "DS is not a structural subtype of ~i~CGSMS: missing setter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "new DS()"
+// XPECT errors --> "DS is not a structural subtype of ~i~CGSMS: missing getter f; f failed: non-optional writable field requires a readable field or a getter in subtype." at "new DS()"
 icgsms = new DS();
 
 

@@ -15,11 +15,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.scoping.utils.RestrictedUsageDescription;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.NameAndAccess;
@@ -28,6 +23,10 @@ import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
+
+import com.google.inject.Inject;
 
 /**
  * A scope implementation that wraps a type and allows to access its members as scope content.
@@ -46,26 +45,39 @@ public class MemberScope extends AbstractMemberScope {
 
 		/**
 		 * Factory method to produce a {@link MemberScope} with the members of the given ContainerType.
+		 *
+		 * @param structFieldInitMode
+		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
 		public IScope create(IScope parent, ContainerType<?> type,
-				EObject context, boolean staticAccess) {
-			return new MemberScope(containerTypesHelper, parent, type, context, staticAccess, jsVariantHelper);
+				EObject context, boolean staticAccess, boolean structFieldInitMode) {
+			return new MemberScope(containerTypesHelper, parent, type, context, staticAccess, structFieldInitMode,
+					jsVariantHelper);
 		}
 
 		/**
 		 * Factory method to produce a {@link MemberScope} with the members of the given ContainerType without a parent.
+		 *
+		 * @param structFieldInitMode
+		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
-		public IScope create(ContainerType<?> type, EObject context, boolean staticAccess) {
-			return new MemberScope(containerTypesHelper, type, context, staticAccess, jsVariantHelper);
+		public IScope create(ContainerType<?> type,
+				EObject context, boolean staticAccess, boolean structFieldInitMode) {
+			return new MemberScope(containerTypesHelper, type, context, staticAccess, structFieldInitMode,
+					jsVariantHelper);
 		}
 
 		/**
 		 * Factory method to produce a {@link MemberScope} with the members provided in list 'members'. Only used for
 		 * structural type references with structural members.
+		 *
+		 * @param structFieldInitMode
+		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
 		public IScope create(IScope parent,
-				List<? extends TMember> members, EObject context, boolean staticAccess) {
-			return new MemberScope(containerTypesHelper, parent, members, context, staticAccess, jsVariantHelper);
+				List<? extends TMember> members, EObject context, boolean staticAccess, boolean structFieldInitMode) {
+			return new MemberScope(containerTypesHelper, parent, members, context, staticAccess, structFieldInitMode,
+					jsVariantHelper);
 		}
 	}
 
@@ -84,36 +96,36 @@ public class MemberScope extends AbstractMemberScope {
 	final ContainerTypesHelper containerTypesHelper;
 
 	/**
-	 * @see MemberScopeFactory#create(IScope, List, EObject, boolean)
+	 * @see MemberScopeFactory#create(IScope, List, EObject, boolean, boolean)
 	 */
 	MemberScope(ContainerTypesHelper containerTypesHelper, IScope parent,
 			List<? extends TMember> members, EObject context,
-			boolean staticAccess, JavaScriptVariantHelper jsVariantHelper) {
-		super(parent, context, staticAccess, jsVariantHelper);
+			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {
+		super(parent, context, staticAccess, structFieldInitMode, jsVariantHelper);
 		this.containerTypesHelper = containerTypesHelper;
 		this.type = null;
 		this.members = new ArrayList<>(members);
 	}
 
 	/**
-	 * @see MemberScopeFactory#create(IScope, ContainerType, EObject, boolean)
+	 * @see MemberScopeFactory#create(IScope, ContainerType, EObject, boolean, boolean)
 	 */
 	MemberScope(ContainerTypesHelper containerTypesHelper, IScope parent, ContainerType<?> type,
 			EObject context,
-			boolean staticAccess, JavaScriptVariantHelper jsVariantHelper) {
-		super(parent, context, staticAccess, jsVariantHelper);
+			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {
+		super(parent, context, staticAccess, structFieldInitMode, jsVariantHelper);
 		this.containerTypesHelper = containerTypesHelper;
 		this.type = type;
 		this.members = null;
 	}
 
 	/**
-	 * @see MemberScopeFactory#create(ContainerType, EObject, boolean)
+	 * @see MemberScopeFactory#create(ContainerType, EObject, boolean, boolean)
 	 */
 	MemberScope(ContainerTypesHelper containerTypesHelper, ContainerType<?> type,
 			EObject context,
-			boolean staticAccess, JavaScriptVariantHelper jsVariantHelper) {
-		super(IScope.NULLSCOPE, context, staticAccess, jsVariantHelper);
+			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {
+		super(IScope.NULLSCOPE, context, staticAccess, structFieldInitMode, jsVariantHelper);
 		this.containerTypesHelper = containerTypesHelper;
 		this.type = type;
 		this.members = null;
