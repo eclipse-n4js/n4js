@@ -38,7 +38,7 @@ class A {
 let spec = {
 	p: 42
 }
-//XPECT errors --> "~Object with { p: int } is not a structural subtype of ~i~A: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "spec"
+//XPECT errors --> "~Object with { p: int } is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "spec"
 let a = new A(spec);
 
 

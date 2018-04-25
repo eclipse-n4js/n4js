@@ -83,10 +83,10 @@ var awo4 : ~w~A = {
 // XPECT errors --> "~Object is not a structural subtype of ~i~A: missing field f1 and 2 more; f1 failed: non-optional writable field requires a readable field or a getter in subtype. and 2 more problems." at "{ }"
 var ai0 : ~i~A = { };
 
-// XPECT errors --> "~Object with { get f1(): string } is not a structural subtype of ~i~A: missing setter f3 and 1 more; f3 failed: non-optional writable field requires a readable field or a getter in subtype. and 1 more problems." at "{ get f1(): string { return null; } }"
+// XPECT errors --> "~Object with { get f1(): string } is not a structural subtype of ~i~A: missing getter f3 and 1 more; f3 failed: non-optional writable field requires a readable field or a getter in subtype. and 1 more problems." at "{ get f1(): string { return null; } }"
 var ai1 : ~i~A = { get f1(): string { return null; } };
 
-// XPECT errors --> "~Object with { get f1(): string; get f3(): string } is not a structural subtype of ~i~A: missing setter f5; f5 failed: non-optional writable field requires a readable field or a getter in subtype." at "{ get f1(): string { return null; }, get f3(): string { return null; } }"
+// XPECT errors --> "~Object with { get f1(): string; get f3(): string } is not a structural subtype of ~i~A: missing getter f5; f5 failed: non-optional writable field requires a readable field or a getter in subtype." at "{ get f1(): string { return null; }, get f3(): string { return null; } }"
 var ai2 : ~i~A = { get f1(): string { return null; }, get f3(): string { return null; } };
 
 // XPECT noerrors --> ""

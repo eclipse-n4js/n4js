@@ -343,6 +343,7 @@ enum TypingStrategy {
 	structuralReadOnlyFields as "~r~" = 4
 	structuralWriteOnlyFields as "~w~" = 5
 	structuralFieldInitializer as "~i~" = 6
+	empty as "~\u2205~" = -1 // ~∅~
 }
 
 class TypeVariable extends Type {

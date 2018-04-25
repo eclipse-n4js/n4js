@@ -1873,12 +1873,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_AdditiveExpression(ISerializationContext context, AdditiveExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ADDITIVE_EXPRESSION__LHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ADDITIVE_EXPRESSION__LHS));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ADDITIVE_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ADDITIVE_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ADDITIVE_EXPRESSION__RHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ADDITIVE_EXPRESSION__RHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAdditiveExpression_Lhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAdditiveExpression_Lhs()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAdditiveExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAdditiveExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAdditiveExpression_Rhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAdditiveExpression_Rhs()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAdditiveExpressionAccess().getAdditiveExpressionLhsAction_1_0_0_0(), semanticObject.getLhs());
@@ -3446,13 +3446,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
+	 *             )
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -6224,8 +6224,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_AssignmentExpressionStatement(ISerializationContext context, ExpressionStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.EXPRESSION_STATEMENT__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.EXPRESSION_STATEMENT__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getExpressionStatement_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getExpressionStatement_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAssignmentExpressionStatementAccess().getExpressionAssignmentExpressionParserRuleCall_0(), semanticObject.getExpression());
@@ -6253,12 +6253,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_AssignmentExpression(ISerializationContext context, AssignmentExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__RHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__RHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAssignmentExpression_Lhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAssignmentExpression_Lhs()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAssignmentExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAssignmentExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAssignmentExpression_Rhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAssignmentExpression_Rhs()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0(), semanticObject.getLhs());
@@ -6356,8 +6356,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_AwaitExpression(ISerializationContext context, AwaitExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.AWAIT_EXPRESSION__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.AWAIT_EXPRESSION__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAwaitExpression_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAwaitExpression_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAwaitExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_1_0(), semanticObject.getExpression());
@@ -6936,8 +6936,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_BinaryIntLiteral(ISerializationContext context, BinaryIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getBinaryIntLiteralAccess().getValueBINARY_INTTerminalRuleCall_0(), semanticObject.getValue());
@@ -7082,12 +7082,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_BitwiseANDExpression(ISerializationContext context, BinaryBitwiseExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.BINARY_BITWISE_EXPRESSION__LHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.BINARY_BITWISE_EXPRESSION__LHS));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.BINARY_BITWISE_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.BINARY_BITWISE_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.BINARY_BITWISE_EXPRESSION__RHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.BINARY_BITWISE_EXPRESSION__RHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getBinaryBitwiseExpression_Lhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getBinaryBitwiseExpression_Lhs()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getBinaryBitwiseExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getBinaryBitwiseExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getBinaryBitwiseExpression_Rhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getBinaryBitwiseExpression_Rhs()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getBitwiseANDExpressionAccess().getBinaryBitwiseExpressionLhsAction_1_0_0_0(), semanticObject.getLhs());
@@ -8278,10 +8278,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_CastExpression(ISerializationContext context, CastExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__EXPRESSION));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__TARGET_TYPE_REF) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__TARGET_TYPE_REF));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getCastExpression_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getCastExpression_Expression()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getCastExpression_TargetTypeRef()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getCastExpression_TargetTypeRef()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getCastExpressionAccess().getCastExpressionExpressionAction_1_0_0_0(), semanticObject.getExpression());
@@ -8300,10 +8300,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_CatchBlock(ISerializationContext context, CatchBlock semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CATCH_BLOCK__CATCH_VARIABLE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CATCH_BLOCK__CATCH_VARIABLE));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ABSTRACT_CATCH_BLOCK__BLOCK) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ABSTRACT_CATCH_BLOCK__BLOCK));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getCatchBlock_CatchVariable()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getCatchBlock_CatchVariable()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAbstractCatchBlock_Block()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAbstractCatchBlock_Block()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getCatchBlockAccess().getCatchVariableCatchVariableParserRuleCall_3_0(), semanticObject.getCatchVariable());
@@ -9394,12 +9394,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_ConditionalExpression(ISerializationContext context, ConditionalExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CONDITIONAL_EXPRESSION__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CONDITIONAL_EXPRESSION__EXPRESSION));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CONDITIONAL_EXPRESSION__TRUE_EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CONDITIONAL_EXPRESSION__TRUE_EXPRESSION));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CONDITIONAL_EXPRESSION__FALSE_EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CONDITIONAL_EXPRESSION__FALSE_EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getConditionalExpression_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getConditionalExpression_Expression()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getConditionalExpression_TrueExpression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getConditionalExpression_TrueExpression()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getConditionalExpression_FalseExpression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getConditionalExpression_FalseExpression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0(), semanticObject.getExpression());
@@ -9466,11 +9466,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_DefaultImportSpecifier(ISerializationContext context, DefaultImportSpecifier semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT, false));
+		feeder.accept(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement(), false));
 		feeder.finish();
 	}
 	
@@ -9492,10 +9492,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_DoStatement(ISerializationContext context, DoStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ITERATION_STATEMENT__STATEMENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ITERATION_STATEMENT__STATEMENT));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ITERATION_STATEMENT__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ITERATION_STATEMENT__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIterationStatement_Statement()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIterationStatement_Statement()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIterationStatement_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIterationStatement_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getDoStatementAccess().getStatementStatementParserRuleCall_1_0(), semanticObject.getStatement());
@@ -10075,8 +10075,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_DoubleLiteral(ISerializationContext context, DoubleLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getDoubleLiteralAccess().getValueDOUBLETerminalRuleCall_0(), semanticObject.getValue());
@@ -10301,12 +10301,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_EqualityExpression(ISerializationContext context, EqualityExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.EQUALITY_EXPRESSION__LHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.EQUALITY_EXPRESSION__LHS));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.EQUALITY_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.EQUALITY_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.EQUALITY_EXPRESSION__RHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.EQUALITY_EXPRESSION__RHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getEqualityExpression_Lhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getEqualityExpression_Lhs()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getEqualityExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getEqualityExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getEqualityExpression_Rhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getEqualityExpression_Rhs()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getEqualityExpressionAccess().getEqualityExpressionLhsAction_1_0_0_0(), semanticObject.getLhs());
@@ -10357,10 +10357,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_ExportedVariableBinding(ISerializationContext context, ExportedVariableBinding semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.VARIABLE_BINDING__PATTERN) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.VARIABLE_BINDING__PATTERN));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.VARIABLE_BINDING__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.VARIABLE_BINDING__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getVariableBinding_Pattern()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getVariableBinding_Pattern()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getVariableBinding_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getVariableBinding_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getExportedVariableBindingAccess().getPatternBindingPatternParserRuleCall_0_0(), semanticObject.getPattern());
@@ -10508,8 +10508,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_ExpressionStatement(ISerializationContext context, ExpressionStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.EXPRESSION_STATEMENT__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.EXPRESSION_STATEMENT__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getExpressionStatement_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getExpressionStatement_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getExpressionStatementAccess().getExpressionExpressionParserRuleCall_0_0(), semanticObject.getExpression());
@@ -10542,8 +10542,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_FinallyBlock(ISerializationContext context, FinallyBlock semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ABSTRACT_CATCH_BLOCK__BLOCK) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ABSTRACT_CATCH_BLOCK__BLOCK));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getAbstractCatchBlock_Block()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getAbstractCatchBlock_Block()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getFinallyBlockAccess().getBlockBlockParserRuleCall_2_0(), semanticObject.getBlock());
@@ -11166,8 +11166,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_HexIntLiteral(ISerializationContext context, HexIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getHexIntLiteralAccess().getValueHEX_INTTerminalRuleCall_0(), semanticObject.getValue());
@@ -11747,11 +11747,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_IdentifierRef(ISerializationContext context, IdentifierRef semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIdentifierRef_Id()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIdentifierRef_Id()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getIdentifierRefAccess().getIdIdentifiableElementBindingIdentifierParserRuleCall_0_0_1(), semanticObject.eGet(N4JSPackage.Literals.IDENTIFIER_REF__ID, false));
+		feeder.accept(grammarAccess.getIdentifierRefAccess().getIdIdentifiableElementBindingIdentifierParserRuleCall_0_0_1(), semanticObject.eGet(N4JSPackage.eINSTANCE.getIdentifierRef_Id(), false));
 		feeder.finish();
 	}
 	
@@ -12328,13 +12328,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_IdentifierRef_VersionRequest(ISerializationContext context, VersionedIdentifierRef semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIdentifierRef_Id()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIdentifierRef_Id()));
 			if (transientValues.isValueTransient(semanticObject, TypeRefsPackage.Literals.VERSIONED_REFERENCE__REQUESTED_VERSION) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypeRefsPackage.Literals.VERSIONED_REFERENCE__REQUESTED_VERSION));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getIdentifierRefAccess().getIdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1(), semanticObject.eGet(N4JSPackage.Literals.IDENTIFIER_REF__ID, false));
+		feeder.accept(grammarAccess.getIdentifierRefAccess().getIdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1(), semanticObject.eGet(N4JSPackage.eINSTANCE.getIdentifierRef_Id(), false));
 		feeder.accept(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0(), semanticObject.getRequestedVersion());
 		feeder.finish();
 	}
@@ -12537,10 +12537,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_IndexedAccessExpressionTail_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Target()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Target()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Index()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Index()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0(), semanticObject.getTarget());
@@ -13144,10 +13144,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_IndexedAccessExpressionTail_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Target()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Target()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Index()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Index()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_3_0_0(), semanticObject.getTarget());
@@ -13281,10 +13281,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_IndexedAccessExpressionTail_MemberExpression_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Target()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Target()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Index()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIndexedAccessExpression_Index()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_2_1_0_0(), semanticObject.getTarget());
@@ -13864,8 +13864,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_IntLiteral(ISerializationContext context, IntLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getIntLiteralAccess().getValueINTTerminalRuleCall_0(), semanticObject.getValue());
@@ -14476,8 +14476,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_JSXElementName(ISerializationContext context, JSXElementName semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getJSXElementName_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getJSXElementName_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getJSXElementNameAccess().getExpressionJSXElementNameExpressionParserRuleCall_0(), semanticObject.getExpression());
@@ -14495,8 +14495,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_JSXExpression(ISerializationContext context, JSXExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.JSX_EXPRESSION__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.JSX_EXPRESSION__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getJSXExpression_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getJSXExpression_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getJSXExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_1_0(), semanticObject.getExpression());
@@ -14527,8 +14527,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_JSXSpreadAttribute(ISerializationContext context, JSXSpreadAttribute semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.JSX_SPREAD_ATTRIBUTE__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.JSX_SPREAD_ATTRIBUTE__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getJSXSpreadAttribute_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getJSXSpreadAttribute_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getJSXSpreadAttributeAccess().getExpressionAssignmentExpressionParserRuleCall_2_0(), semanticObject.getExpression());
@@ -14551,10 +14551,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_LabelledStatement(ISerializationContext context, LabelledStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.LABELLED_STATEMENT__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.LABELLED_STATEMENT__NAME));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.LABELLED_STATEMENT__STATEMENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.LABELLED_STATEMENT__STATEMENT));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getLabelledStatement_Name()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getLabelledStatement_Name()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getLabelledStatement_Statement()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getLabelledStatement_Statement()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getLabelledStatementAccess().getNameBindingIdentifierParserRuleCall_0_0_0_0(), semanticObject.getName());
@@ -14723,10 +14723,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, TaggedTemplateString semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Target()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Target()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Template()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Template()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0(), semanticObject.getTarget());
@@ -15722,8 +15722,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_LegacyOctalIntLiteral(ISerializationContext context, LegacyOctalIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getLegacyOctalIntLiteralAccess().getValueLEGACY_OCTAL_INTTerminalRuleCall_0(), semanticObject.getValue());
@@ -15740,11 +15740,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_LetIdentifierRef(ISerializationContext context, IdentifierRef semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIdentifierRef_Id()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIdentifierRef_Id()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getLetIdentifierRefAccess().getIdIdentifiableElementLetAsIdentifierParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.Literals.IDENTIFIER_REF__ID, false));
+		feeder.accept(grammarAccess.getLetIdentifierRefAccess().getIdIdentifiableElementLetAsIdentifierParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.eINSTANCE.getIdentifierRef_Id(), false));
 		feeder.finish();
 	}
 	
@@ -15759,8 +15759,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_LiteralAnnotationArgument(ISerializationContext context, LiteralAnnotationArgument semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.LITERAL_ANNOTATION_ARGUMENT__LITERAL) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.LITERAL_ANNOTATION_ARGUMENT__LITERAL));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getLiteralAnnotationArgument_Literal()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getLiteralAnnotationArgument_Literal()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getLiteralAnnotationArgumentAccess().getLiteralLiteralParserRuleCall_0(), semanticObject.getLiteral());
@@ -15809,12 +15809,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_LogicalANDExpression(ISerializationContext context, BinaryLogicalExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.BINARY_LOGICAL_EXPRESSION__LHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.BINARY_LOGICAL_EXPRESSION__LHS));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.BINARY_LOGICAL_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.BINARY_LOGICAL_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.BINARY_LOGICAL_EXPRESSION__RHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.BINARY_LOGICAL_EXPRESSION__RHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getBinaryLogicalExpression_Lhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getBinaryLogicalExpression_Lhs()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getBinaryLogicalExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getBinaryLogicalExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getBinaryLogicalExpression_Rhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getBinaryLogicalExpression_Rhs()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0(), semanticObject.getLhs());
@@ -16013,10 +16013,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, TaggedTemplateString semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Target()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Target()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Template()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Template()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_2_0(), semanticObject.getTarget());
@@ -16150,10 +16150,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_MemberExpression_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, TaggedTemplateString semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Target()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Target()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Template()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTaggedTemplateString_Template()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_2_1_2_0(), semanticObject.getTarget());
@@ -17015,12 +17015,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_MultiplicativeExpression(ISerializationContext context, MultiplicativeExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.MULTIPLICATIVE_EXPRESSION__LHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.MULTIPLICATIVE_EXPRESSION__LHS));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.MULTIPLICATIVE_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.MULTIPLICATIVE_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.MULTIPLICATIVE_EXPRESSION__RHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.MULTIPLICATIVE_EXPRESSION__RHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getMultiplicativeExpression_Lhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getMultiplicativeExpression_Lhs()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getMultiplicativeExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getMultiplicativeExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getMultiplicativeExpression_Rhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getMultiplicativeExpression_Rhs()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getMultiplicativeExpressionAccess().getMultiplicativeExpressionLhsAction_1_0_0_0(), semanticObject.getLhs());
@@ -17125,8 +17125,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_NoSubstitutionTemplate(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getNoSubstitutionTemplateAccess().getRawValueNO_SUBSTITUTION_TEMPLATE_LITERALTerminalRuleCall_1_0(), semanticObject.getRawValue());
@@ -18866,8 +18866,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_OctalIntLiteral(ISerializationContext context, OctalIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getOctalIntLiteralAccess().getValueOCTAL_INTTerminalRuleCall_0(), semanticObject.getValue());
@@ -19644,8 +19644,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_ParenExpression(ISerializationContext context, ParenExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.PAREN_EXPRESSION__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.PAREN_EXPRESSION__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getParenExpression_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getParenExpression_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getParenExpressionAccess().getExpressionExpressionParserRuleCall_1_0(), semanticObject.getExpression());
@@ -20023,10 +20023,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_PostfixExpression(ISerializationContext context, PostfixExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.POSTFIX_EXPRESSION__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.POSTFIX_EXPRESSION__EXPRESSION));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.POSTFIX_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.POSTFIX_EXPRESSION__OP));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getPostfixExpression_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getPostfixExpression_Expression()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getPostfixExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getPostfixExpression_Op()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getPostfixExpressionAccess().getPostfixExpressionExpressionAction_1_0_0(), semanticObject.getExpression());
@@ -20059,8 +20059,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_PromisifyExpression(ISerializationContext context, PromisifyExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.PROMISIFY_EXPRESSION__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.PROMISIFY_EXPRESSION__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getPromisifyExpression_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getPromisifyExpression_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getPromisifyExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_1_0(), semanticObject.getExpression());
@@ -20704,8 +20704,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_RegularExpressionLiteral(ISerializationContext context, RegularExpressionLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.REGULAR_EXPRESSION_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.REGULAR_EXPRESSION_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getRegularExpressionLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getRegularExpressionLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRegularExpressionLiteralAccess().getValueREGEX_LITERALParserRuleCall_0(), semanticObject.getValue());
@@ -20936,12 +20936,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_RelationalExpression(ISerializationContext context, RelationalExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.RELATIONAL_EXPRESSION__LHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.RELATIONAL_EXPRESSION__LHS));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.RELATIONAL_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.RELATIONAL_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.RELATIONAL_EXPRESSION__RHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.RELATIONAL_EXPRESSION__RHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getRelationalExpression_Lhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getRelationalExpression_Lhs()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getRelationalExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getRelationalExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getRelationalExpression_Rhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getRelationalExpression_Rhs()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRelationalExpressionAccess().getRelationalExpressionLhsAction_1_0_0(), semanticObject.getLhs());
@@ -21540,8 +21540,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_ScientificIntLiteral(ISerializationContext context, ScientificIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NUMERIC_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getNumericLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getScientificIntLiteralAccess().getValueSCIENTIFIC_INTTerminalRuleCall_0(), semanticObject.getValue());
@@ -21818,12 +21818,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_ShiftExpression(ISerializationContext context, ShiftExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.SHIFT_EXPRESSION__LHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.SHIFT_EXPRESSION__LHS));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.SHIFT_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.SHIFT_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.SHIFT_EXPRESSION__RHS) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.SHIFT_EXPRESSION__RHS));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getShiftExpression_Lhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getShiftExpression_Lhs()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getShiftExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getShiftExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getShiftExpression_Rhs()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getShiftExpression_Rhs()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getShiftExpressionAccess().getShiftExpressionLhsAction_1_0_0(), semanticObject.getLhs());
@@ -21845,8 +21845,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_SingleNameBinding(ISerializationContext context, BindingElement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.BINDING_ELEMENT__VAR_DECL) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.BINDING_ELEMENT__VAR_DECL));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getBindingElement_VarDecl()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getBindingElement_VarDecl()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getSingleNameBindingAccess().getVarDeclVariableDeclarationParserRuleCall_0(), semanticObject.getVarDecl());
@@ -22424,8 +22424,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_StringLiteral(ISerializationContext context, StringLiteral semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.STRING_LITERAL__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.STRING_LITERAL__VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getStringLiteral_Value()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getStringLiteral_Value()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getStringLiteralAccess().getValueSTRINGTerminalRuleCall_0(), semanticObject.getValue());
@@ -23032,8 +23032,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_TemplateHead(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTemplateHeadAccess().getRawValueTEMPLATE_HEADTerminalRuleCall_1_0(), semanticObject.getRawValue());
@@ -23626,8 +23626,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_TemplateMiddle(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTemplateMiddleAccess().getRawValueTemplateMiddleLiteralParserRuleCall_1_0(), semanticObject.getRawValue());
@@ -23644,8 +23644,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_TemplateTail(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TEMPLATE_SEGMENT__RAW_VALUE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTemplateSegment_RawValue()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTemplateTailAccess().getRawValueTemplateTailLiteralParserRuleCall_1_0(), semanticObject.getRawValue());
@@ -24240,8 +24240,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_ThrowStatement(ISerializationContext context, ThrowStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.THROW_STATEMENT__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.THROW_STATEMENT__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getThrowStatement_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getThrowStatement_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getThrowStatementAccess().getExpressionExpressionParserRuleCall_1_0(), semanticObject.getExpression());
@@ -24330,8 +24330,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_TypeRefAnnotationArgument(ISerializationContext context, TypeRefAnnotationArgument semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getTypeRefAnnotationArgument_TypeRef()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getTypeRefAnnotationArgument_TypeRef()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefTypeRefParserRuleCall_0(), semanticObject.getTypeRef());
@@ -24681,10 +24681,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_UnaryExpression(ISerializationContext context, UnaryExpression semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.UNARY_EXPRESSION__OP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.UNARY_EXPRESSION__OP));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.UNARY_EXPRESSION__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.UNARY_EXPRESSION__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getUnaryExpression_Op()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getUnaryExpression_Op()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getUnaryExpression_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getUnaryExpression_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getUnaryExpressionAccess().getOpUnaryOperatorEnumRuleCall_1_1_0(), semanticObject.getOp());
@@ -24709,10 +24709,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_VariableBinding$OptionalInit$false$(ISerializationContext context, VariableBinding semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.VARIABLE_BINDING__PATTERN) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.VARIABLE_BINDING__PATTERN));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.VARIABLE_BINDING__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.VARIABLE_BINDING__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getVariableBinding_Pattern()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getVariableBinding_Pattern()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getVariableBinding_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getVariableBinding_Expression()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getVariableBindingAccess().getPatternBindingPatternParserRuleCall_0_0(), semanticObject.getPattern());
@@ -24792,10 +24792,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_WhileStatement(ISerializationContext context, WhileStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ITERATION_STATEMENT__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ITERATION_STATEMENT__EXPRESSION));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ITERATION_STATEMENT__STATEMENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ITERATION_STATEMENT__STATEMENT));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIterationStatement_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIterationStatement_Expression()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getIterationStatement_Statement()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getIterationStatement_Statement()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getWhileStatementAccess().getExpressionExpressionParserRuleCall_2_0(), semanticObject.getExpression());
@@ -24819,10 +24819,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_WithStatement(ISerializationContext context, WithStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.WITH_STATEMENT__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.WITH_STATEMENT__EXPRESSION));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.WITH_STATEMENT__STATEMENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.WITH_STATEMENT__STATEMENT));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getWithStatement_Expression()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getWithStatement_Expression()));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.eINSTANCE.getWithStatement_Statement()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.eINSTANCE.getWithStatement_Statement()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getWithStatementAccess().getExpressionExpressionParserRuleCall_2_0(), semanticObject.getExpression());

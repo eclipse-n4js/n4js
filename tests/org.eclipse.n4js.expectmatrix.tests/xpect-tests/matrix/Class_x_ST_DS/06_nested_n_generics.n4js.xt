@@ -53,9 +53,9 @@ var f2 : G<F> = {f: {n:4, foo: bar}};
 // partial object literal XPECT noerrors -->
 var f3 : G<F> = {f: f1};
 
-// full object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of G<F>: f failed: ~Object with { foo: {function():void} } is not equal to ~F." at "{f: {foo: function () : void {}}}"
+// full object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of G<F>: f failed: ~Object with { foo: {function():void} } is not equal to F." at "{f: {foo: function () : void {}}}"
 var f4 : G<F> = {f: {foo: function () : void {}}};
 
 var fMissingN = {foo: function () : void {}};
-// partial object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of G<F>: f failed: ~Object with { foo: {function():void} } is not equal to ~F." at "{f: fMissingN}"
+// partial object literal with incomplete properties (n missing) XPECT errors --> "~Object with { f: ~Object with { foo: {function():void} } } is not a structural subtype of G<F>: f failed: ~Object with { foo: {function():void} } is not equal to F." at "{f: fMissingN}"
 var f5 : G<F> = {f: fMissingN};

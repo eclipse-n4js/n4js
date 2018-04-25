@@ -48,15 +48,15 @@ awo = awo;
 // XPECT errors --> "~i~A is not a structural subtype of ~w~A: missing setter s; s failed: writable field requires a setter in subtype." at "ai"
 awo = ai;
 
-// XPECT errors --> "A is not a structural subtype of ~i~A: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "an"
+// XPECT errors --> "A is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "an"
 ai = an;
-// XPECT errors --> "~A is not a structural subtype of ~i~A: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "as"
+// XPECT errors --> "~A is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "as"
 ai = as;
-// XPECT errors --> "~~A is not a structural subtype of ~i~A: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "afs"
+// XPECT errors --> "~~A is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "afs"
 ai = afs;
-// XPECT errors --> "~r~A is not a structural subtype of ~i~A: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "aro"
+// XPECT errors --> "~r~A is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "aro"
 ai = aro;
-// XPECT errors --> "~w~A is not a structural subtype of ~i~A: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "awo"
+// XPECT errors --> "~w~A is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "awo"
 ai = awo;
-// XPECT errors --> "~i~A is not a structural subtype of ~i~A: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ai"
+// XPECT errors --> "~i~A is not a structural subtype of ~i~A: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ai"
 ai = ai;

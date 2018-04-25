@@ -71,6 +71,7 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
@@ -496,8 +497,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val TypeRef typeRef = if(typeRefRaw!==null) ts.upperBound(G, typeRefRaw).value else null;
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
+		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val checkVisibility = true;
-		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess);
+		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
 	}
 
 	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context) {
@@ -671,11 +673,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				val TypeRef propsTypeRef = jsxElem.getPropsType();
 				val checkVisibility = true;
 				val staticAccess = false;
+				val structFieldInitMode = false;
 				if (propsTypeRef !== null) {
 					// Prevent "Cannot resolve to element" error message of unknown attributes since
 					// we want to issue a warning instead
 					val memberScope = memberScopingHelper.createMemberScope(propsTypeRef, context, checkVisibility,
-						staticAccess);
+						staticAccess, structFieldInitMode);
 					return new DynamicPseudoScope(memberScope);
 				} else {
 					val scope = getN4JSScope(context, reference);
