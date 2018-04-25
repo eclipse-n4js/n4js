@@ -37,7 +37,7 @@ public class N4JSActivator extends AbstractUIPlugin {
 
 	private static N4JSActivator INSTANCE;
 
-	private final Map<String, Injector> injectors = Collections
+	protected final Map<String, Injector> injectors = Collections
 			.synchronizedMap(Maps.<String, Injector> newHashMapWithExpectedSize(1));
 
 	@Override
