@@ -34,18 +34,13 @@ public class N4JSGracefulActivator extends N4JSActivator {
 
 	@Override
 	public Injector getInjector(String language) {
-		synchronized (injectors) {
+		synchronized (semaphore) {
 			if (semaphore.availablePermits() < 1) {
 				throw new InjectorNotYetAvailableException();
 			}
 			try {
 				semaphore.acquire();
-				Injector injector = injectors.get(language);
-				if (injector == null) {
-					injector = createInjector(language);
-					injectors.put(language, injector);
-				}
-				return injector;
+				return super.getInjector(language);
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			} finally {
