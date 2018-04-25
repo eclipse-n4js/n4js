@@ -56,7 +56,7 @@ public abstract class AbstractMemberScope extends AbstractScope {
 	 */
 	protected final boolean staticAccess;
 	/**
-	 * Flag indicating access of a member of a structural field initializer type, i.e. receiver type reference has a
+	 * Flag indicating access of a member of a structural field initializer type, i.e. the receiver type reference has a
 	 * typing strategy of {@link TypingStrategy#STRUCTURAL_FIELD_INITIALIZER}.
 	 */
 	protected final boolean structFieldInitMode;
@@ -71,6 +71,8 @@ public abstract class AbstractMemberScope extends AbstractScope {
 	 *
 	 * @param context
 	 *            context from where the scope is to be retrieved, neither the context nor its resource must be null
+	 * @param structFieldInitMode
+	 *            see {@link #structFieldInitMode}.
 	 */
 	public AbstractMemberScope(IScope parent, EObject context,
 			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {

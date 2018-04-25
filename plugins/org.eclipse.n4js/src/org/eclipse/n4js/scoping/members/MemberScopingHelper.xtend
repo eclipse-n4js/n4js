@@ -83,6 +83,8 @@ class MemberScopingHelper {
 	 *               {@link #INVISIBLE_MEMBER}.
 	 * @param staticAccess
 	 *               true: only static members are relevant; false: only non-static ones.
+	 * @param structFieldInitMode
+	 *               see {@link AbstractMemberScope#structFieldInitMode}.
 	 */
 	public def IScope createMemberScope(TypeRef receiverTypeRef, MemberAccess context,
 		boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {

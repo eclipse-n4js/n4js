@@ -33,7 +33,10 @@ public class MemberScopeRequest {
 	public final boolean checkVisibility;
 	/** Flag whether static or instance members are to be accessed. */
 	public final boolean staticAccess;
-	/** Flag indicating access of a member of a structural field initializer type. */
+	/**
+	 * Flag indicating access of a member of a structural field initializer type, see
+	 * {@link AbstractMemberScope#structFieldInitMode}.
+	 */
 	public final boolean structFieldInitMode;
 
 	/**

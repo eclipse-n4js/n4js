@@ -45,6 +45,9 @@ public class MemberScope extends AbstractMemberScope {
 
 		/**
 		 * Factory method to produce a {@link MemberScope} with the members of the given ContainerType.
+		 *
+		 * @param structFieldInitMode
+		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
 		public IScope create(IScope parent, ContainerType<?> type,
 				EObject context, boolean staticAccess, boolean structFieldInitMode) {
@@ -54,6 +57,9 @@ public class MemberScope extends AbstractMemberScope {
 
 		/**
 		 * Factory method to produce a {@link MemberScope} with the members of the given ContainerType without a parent.
+		 *
+		 * @param structFieldInitMode
+		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
 		public IScope create(ContainerType<?> type,
 				EObject context, boolean staticAccess, boolean structFieldInitMode) {
@@ -64,6 +70,9 @@ public class MemberScope extends AbstractMemberScope {
 		/**
 		 * Factory method to produce a {@link MemberScope} with the members provided in list 'members'. Only used for
 		 * structural type references with structural members.
+		 *
+		 * @param structFieldInitMode
+		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
 		public IScope create(IScope parent,
 				List<? extends TMember> members, EObject context, boolean staticAccess, boolean structFieldInitMode) {
