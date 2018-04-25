@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.xbase.lib.Pair;
-
+import org.eclipse.n4js.scoping.members.ComposedMemberInfo.ToBeComposedMemberInfo;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
@@ -38,7 +37,7 @@ public class ComposedMemberInfoBuilder {
 	private boolean writeAccess;
 	private Resource resource;
 	private N4JSTypeSystem ts;
-	private List<Pair<TMember, RuleEnvironment>> siblings;
+	private List<ToBeComposedMemberInfo> siblings;
 
 	/**
 	 * Initializes the static methods. (Also refer to the life cycle mentioned above.)
@@ -56,13 +55,13 @@ public class ComposedMemberInfoBuilder {
 	 * Adds a sibling member on which a new composed member is based upon. (Also refer to the life cycle mentioned
 	 * above.)
 	 */
-	public void addMember(TMember member, RuleEnvironment G) {
+	public void addMember(TMember member, RuleEnvironment G, boolean structFieldInitMode) {
 		Objects.nonNull(siblings);
-		Pair<TMember, RuleEnvironment> pair = null;
+		ToBeComposedMemberInfo info = null;
 		if (member != null) {
-			pair = new Pair<>(member, G);
+			info = new ToBeComposedMemberInfo(member, G, structFieldInitMode);
 		}
-		siblings.add(pair); // adds null to indicate missing members
+		siblings.add(info); // adds null to indicate missing members
 	}
 
 	/**

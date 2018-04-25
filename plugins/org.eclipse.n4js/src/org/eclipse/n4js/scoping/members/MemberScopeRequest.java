@@ -84,4 +84,12 @@ public class MemberScopeRequest {
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
 				false, structFieldInitMode);
 	}
+
+	public MemberScopeRequest setStructFieldInitMode(boolean structFieldInitMode) {
+		if (this.structFieldInitMode == structFieldInitMode) {
+			return this;
+		}
+		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
+				staticAccess, structFieldInitMode);
+	}
 }

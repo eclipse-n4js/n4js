@@ -33,11 +33,10 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
-
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * The purpose of the classes and methods in this file is twofold:
@@ -60,7 +59,7 @@ public class ComposedMemberInfo {
 	private final boolean isWriteAccess;
 	private final Resource resource;
 	private final N4JSTypeSystem ts;
-	private final List<Pair<TMember, RuleEnvironment>> siblings;
+	private final List<ToBeComposedMemberInfo> siblings;
 
 	// non-finals are set in initMemberAggregate()
 	private boolean isInitialized = false;
@@ -142,8 +141,20 @@ public class ComposedMemberInfo {
 		}
 	}
 
+	public static final class ToBeComposedMemberInfo {
+		final TMember member;
+		final RuleEnvironment G;
+		final boolean structFieldInitMode;
+
+		public ToBeComposedMemberInfo(TMember member, RuleEnvironment G, boolean structFieldInitMode) {
+			this.member = member;
+			this.G = G;
+			this.structFieldInitMode = structFieldInitMode;
+		}
+	}
+
 	ComposedMemberInfo(boolean writeAccess, Resource resource, N4JSTypeSystem ts,
-			List<Pair<TMember, RuleEnvironment>> siblings) {
+			List<ToBeComposedMemberInfo> siblings) {
 
 		this.isWriteAccess = writeAccess;
 		this.resource = resource;
@@ -161,15 +172,16 @@ public class ComposedMemberInfo {
 		this.isSiblingMissing = siblings.contains(null);
 
 		MemberType lastMType = null;
-		for (Pair<TMember, RuleEnvironment> pair : siblings) {
-			if (pair == null)
+		for (ToBeComposedMemberInfo toBeComposedMemberInfo : siblings) {
+			if (toBeComposedMemberInfo == null)
 				continue;
 			this.isEmpty = false;
 
-			TMember member = pair.getKey();
-			RuleEnvironment G = pair.getValue();
+			TMember member = toBeComposedMemberInfo.member;
+			RuleEnvironment G = toBeComposedMemberInfo.G;
+			boolean structFieldInitMode = toBeComposedMemberInfo.structFieldInitMode;
 
-			lastMType = handleMemberTypes(lastMType, member);
+			lastMType = handleMemberTypes(lastMType, member, structFieldInitMode);
 			handleReadOnlyField(member);
 			handleAccessibility(member);
 			handleTypeRefLists(member, G);
@@ -222,8 +234,12 @@ public class ComposedMemberInfo {
 
 	/////////////////////////// Helper Init Methods ///////////////////////////
 
-	private MemberType handleMemberTypes(MemberType lastMType, TMember member) {
+	private MemberType handleMemberTypes(MemberType lastMType, TMember member, boolean isStructFieldInit) {
 		MemberType currMType = member.getMemberType();
+		if (isStructFieldInit && currMType == MemberType.SETTER) {
+			// this setter has been changed into a getter by ~i~ modifier
+			currMType = MemberType.GETTER;
+		}
 		lastMType = (lastMType == null) ? currMType : lastMType;
 		hasMultipleMemberTypes |= currMType != lastMType;
 		hasFieldMemberType |= currMType == MemberType.FIELD;
@@ -329,11 +345,11 @@ public class ComposedMemberInfo {
 	}
 
 	private void handleValidationProblems() {
-		for (Pair<TMember, RuleEnvironment> pair : siblings) {
-			if (pair == null)
+		for (ToBeComposedMemberInfo toBeComposedMemberInfo : siblings) {
+			if (toBeComposedMemberInfo == null)
 				continue;
 
-			TMember member = pair.getKey();
+			TMember member = toBeComposedMemberInfo.member;
 			if (member instanceof TMethod) {
 				TMethod tMethod = (TMethod) member;
 
@@ -534,7 +550,7 @@ public class ComposedMemberInfo {
 	 */
 	public List<TMember> getConstituentMembers() {
 		initMemberAggregate();
-		return this.siblings.stream().filter(Objects::nonNull).map(sibling -> sibling.getKey())
+		return this.siblings.stream().filter(Objects::nonNull).map(sibling -> sibling.member)
 				.collect(Collectors.toList());
 	}
 }
