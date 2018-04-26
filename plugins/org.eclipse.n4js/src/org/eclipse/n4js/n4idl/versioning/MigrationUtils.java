@@ -93,8 +93,8 @@ public class MigrationUtils {
 	public static boolean isMigrateCall(EObject object) {
 		return object instanceof ParameterizedCallExpression
 				&& ((ParameterizedCallExpression) object).getTarget() instanceof IdentifierRef
-				&& ((IdentifierRef) ((ParameterizedCallExpression) object).getTarget()).getIdAsText()
-						.equals(N4IDLGlobals.MIGRATION_CALL_IDENTIFIER);
+				&& N4IDLGlobals.MIGRATION_CALL_IDENTIFIER
+						.equals(((IdentifierRef) ((ParameterizedCallExpression) object).getTarget()).getIdAsText());
 	}
 
 	/**
