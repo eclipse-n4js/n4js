@@ -383,7 +383,7 @@ class ImportedElementsScopingHelper {
 	 */
 	private def IScope getGlobalObjectProperties(IScope parent, EObject context) {
 		val globalObject = GlobalObjectScope.get(context.eResource.resourceSet).getGlobalObject
-		memberScopeFactory.create(parent, globalObject, context, false)
+		memberScopeFactory.create(parent, globalObject, context, false, false)
 	}
 
 	private def void addAccessModifierSuggestion(IEObjectDescription description, String suggestion) {
