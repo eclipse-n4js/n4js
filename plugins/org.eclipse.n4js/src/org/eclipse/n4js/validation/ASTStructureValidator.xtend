@@ -1535,7 +1535,7 @@ class ASTStructureValidator {
 		// not appear at the very top of the module.
 		if (model.eContainer instanceof Script) {
 			val script = model.eContainer as Script;
-			if (script.annotations.size > 0) {
+ 			if (script.scriptElements.size > 0) {
 				val annotationNode = NodeModelUtils.findActualNodeFor(model);
 				val annotationOffset = annotationNode.offset
 				val firstScriptElement = script.scriptElements.get(0);
