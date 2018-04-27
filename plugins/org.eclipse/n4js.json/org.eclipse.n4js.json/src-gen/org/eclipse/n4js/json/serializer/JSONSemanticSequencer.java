@@ -14,9 +14,15 @@ import com.google.inject.Inject;
 import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.n4js.json.jSON.Greeting;
-import org.eclipse.n4js.json.jSON.JSONPackage;
-import org.eclipse.n4js.json.jSON.Model;
+import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
+import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONNullLiteral;
+import org.eclipse.n4js.json.JSON.JSONNumericLiteral;
+import org.eclipse.n4js.json.JSON.JSONObject;
+import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.json.JSON.JSONStringLiteral;
+import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Parameter;
@@ -40,11 +46,29 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 		Set<Parameter> parameters = context.getEnabledBooleanParameters();
 		if (epackage == JSONPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
-			case JSONPackage.GREETING:
-				sequence_Greeting(context, (Greeting) semanticObject); 
+			case JSONPackage.JSON_ARRAY:
+				sequence_JSONArray(context, (JSONArray) semanticObject); 
 				return; 
-			case JSONPackage.MODEL:
-				sequence_Model(context, (Model) semanticObject); 
+			case JSONPackage.JSON_BOOLEAN_LITERAL:
+				sequence_JSONBooleanLiteral(context, (JSONBooleanLiteral) semanticObject); 
+				return; 
+			case JSONPackage.JSON_DOCUMENT:
+				sequence_JSONDocument(context, (JSONDocument) semanticObject); 
+				return; 
+			case JSONPackage.JSON_NULL_LITERAL:
+				sequence_JSONNullLiteral(context, (JSONNullLiteral) semanticObject); 
+				return; 
+			case JSONPackage.JSON_NUMERIC_LITERAL:
+				sequence_JSONNumericLiteral(context, (JSONNumericLiteral) semanticObject); 
+				return; 
+			case JSONPackage.JSON_OBJECT:
+				sequence_JSONObject(context, (JSONObject) semanticObject); 
+				return; 
+			case JSONPackage.JSON_STRING_LITERAL:
+				sequence_JSONStringLiteral(context, (JSONStringLiteral) semanticObject); 
+				return; 
+			case JSONPackage.NAME_VALUE_PAIR:
+				sequence_NameValuePair(context, (NameValuePair) semanticObject); 
 				return; 
 			}
 		if (errorAcceptor != null)
@@ -53,31 +77,130 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     Greeting returns Greeting
+	 *     JSONArray returns JSONArray
+	 *     JSONValue returns JSONArray
 	 *
 	 * Constraint:
-	 *     name=ID
+	 *     (elements+=JSONValue elements+=JSONValue*)?
 	 */
-	protected void sequence_Greeting(ISerializationContext context, Greeting semanticObject) {
+	protected void sequence_JSONArray(ISerializationContext context, JSONArray semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JSONValue returns JSONBooleanLiteral
+	 *     JSONBooleanLiteral returns JSONBooleanLiteral
+	 *
+	 * Constraint:
+	 *     booleanValue?='true'?
+	 */
+	protected void sequence_JSONBooleanLiteral(ISerializationContext context, JSONBooleanLiteral semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JSONDocument returns JSONDocument
+	 *
+	 * Constraint:
+	 *     content=JSONValue
+	 */
+	protected void sequence_JSONDocument(ISerializationContext context, JSONDocument semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, JSONPackage.Literals.GREETING__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, JSONPackage.Literals.GREETING__NAME));
+			if (transientValues.isValueTransient(semanticObject, JSONPackage.Literals.JSON_DOCUMENT__CONTENT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, JSONPackage.Literals.JSON_DOCUMENT__CONTENT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getGreetingAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_0(), semanticObject.getContent());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
-	 *     Model returns Model
+	 *     JSONValue returns JSONNullLiteral
+	 *     JSONNullLiteral returns JSONNullLiteral
 	 *
 	 * Constraint:
-	 *     greetings+=Greeting+
+	 *     {JSONNullLiteral}
 	 */
-	protected void sequence_Model(ISerializationContext context, Model semanticObject) {
+	protected void sequence_JSONNullLiteral(ISerializationContext context, JSONNullLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JSONValue returns JSONNumericLiteral
+	 *     JSONNumericLiteral returns JSONNumericLiteral
+	 *
+	 * Constraint:
+	 *     value=NUMBER
+	 */
+	protected void sequence_JSONNumericLiteral(ISerializationContext context, JSONNumericLiteral semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, JSONPackage.Literals.JSON_NUMERIC_LITERAL__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, JSONPackage.Literals.JSON_NUMERIC_LITERAL__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJSONNumericLiteralAccess().getValueNUMBERTerminalRuleCall_0(), semanticObject.getValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JSONObject returns JSONObject
+	 *     JSONValue returns JSONObject
+	 *
+	 * Constraint:
+	 *     (nameValuePairs+=NameValuePair nameValuePairs+=NameValuePair*)?
+	 */
+	protected void sequence_JSONObject(ISerializationContext context, JSONObject semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     JSONValue returns JSONStringLiteral
+	 *     JSONStringLiteral returns JSONStringLiteral
+	 *
+	 * Constraint:
+	 *     value=STRING
+	 */
+	protected void sequence_JSONStringLiteral(ISerializationContext context, JSONStringLiteral semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, JSONPackage.Literals.JSON_STRING_LITERAL__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, JSONPackage.Literals.JSON_STRING_LITERAL__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJSONStringLiteralAccess().getValueSTRINGTerminalRuleCall_0(), semanticObject.getValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NameValuePair returns NameValuePair
+	 *
+	 * Constraint:
+	 *     (name=STRING value=JSONValue)
+	 */
+	protected void sequence_NameValuePair(ISerializationContext context, NameValuePair semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, JSONPackage.Literals.NAME_VALUE_PAIR__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, JSONPackage.Literals.NAME_VALUE_PAIR__NAME));
+			if (transientValues.isValueTransient(semanticObject, JSONPackage.Literals.NAME_VALUE_PAIR__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, JSONPackage.Literals.NAME_VALUE_PAIR__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNameValuePairAccess().getNameSTRINGTerminalRuleCall_0_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getNameValuePairAccess().getValueJSONValueParserRuleCall_2_0(), semanticObject.getValue());
+		feeder.finish();
 	}
 	
 	

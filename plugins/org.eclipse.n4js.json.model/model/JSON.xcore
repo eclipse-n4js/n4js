@@ -24,6 +24,35 @@
 
 package org.eclipse.n4js.json.JSON
 
-class A {
-	String name
+class JSONDocument {
+	contains JSONValue content 
 }
+
+abstract class JSONValue {}
+
+class JSONObject extends JSONValue {
+	contains NameValuePair[] nameValuePairs
+}
+
+class JSONArray extends JSONValue {
+	contains JSONValue[] elements
+}
+
+class NameValuePair {
+	String name
+	contains JSONValue value
+}
+
+class JSONStringLiteral extends JSONValue {
+	String value
+}
+
+class JSONNumericLiteral extends JSONValue {
+	BigDecimal value
+}
+
+class JSONBooleanLiteral extends JSONValue {
+	boolean ^booleanValue
+}
+
+class JSONNullLiteral extends JSONValue {}

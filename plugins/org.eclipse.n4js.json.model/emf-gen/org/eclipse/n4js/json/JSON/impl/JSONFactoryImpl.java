@@ -64,7 +64,14 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case JSONPackage.A: return createA();
+			case JSONPackage.JSON_DOCUMENT: return createJSONDocument();
+			case JSONPackage.JSON_OBJECT: return createJSONObject();
+			case JSONPackage.JSON_ARRAY: return createJSONArray();
+			case JSONPackage.NAME_VALUE_PAIR: return createNameValuePair();
+			case JSONPackage.JSON_STRING_LITERAL: return createJSONStringLiteral();
+			case JSONPackage.JSON_NUMERIC_LITERAL: return createJSONNumericLiteral();
+			case JSONPackage.JSON_BOOLEAN_LITERAL: return createJSONBooleanLiteral();
+			case JSONPackage.JSON_NULL_LITERAL: return createJSONNullLiteral();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -75,9 +82,79 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public A createA() {
-		AImpl a = new AImpl();
-		return a;
+	public JSONDocument createJSONDocument() {
+		JSONDocumentImpl jsonDocument = new JSONDocumentImpl();
+		return jsonDocument;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSONObject createJSONObject() {
+		JSONObjectImpl jsonObject = new JSONObjectImpl();
+		return jsonObject;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSONArray createJSONArray() {
+		JSONArrayImpl jsonArray = new JSONArrayImpl();
+		return jsonArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NameValuePair createNameValuePair() {
+		NameValuePairImpl nameValuePair = new NameValuePairImpl();
+		return nameValuePair;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSONStringLiteral createJSONStringLiteral() {
+		JSONStringLiteralImpl jsonStringLiteral = new JSONStringLiteralImpl();
+		return jsonStringLiteral;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSONNumericLiteral createJSONNumericLiteral() {
+		JSONNumericLiteralImpl jsonNumericLiteral = new JSONNumericLiteralImpl();
+		return jsonNumericLiteral;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSONBooleanLiteral createJSONBooleanLiteral() {
+		JSONBooleanLiteralImpl jsonBooleanLiteral = new JSONBooleanLiteralImpl();
+		return jsonBooleanLiteral;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSONNullLiteral createJSONNullLiteral() {
+		JSONNullLiteralImpl jsonNullLiteral = new JSONNullLiteralImpl();
+		return jsonNullLiteral;
 	}
 
 	/**

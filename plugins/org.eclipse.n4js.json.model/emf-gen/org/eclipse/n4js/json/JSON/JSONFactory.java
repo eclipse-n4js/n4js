@@ -30,13 +30,76 @@ public interface JSONFactory extends EFactory {
 	JSONFactory eINSTANCE = org.eclipse.n4js.json.JSON.impl.JSONFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>A</em>'.
+	 * Returns a new object of class '<em>Document</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>A</em>'.
+	 * @return a new object of class '<em>Document</em>'.
 	 * @generated
 	 */
-	A createA();
+	JSONDocument createJSONDocument();
+
+	/**
+	 * Returns a new object of class '<em>Object</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Object</em>'.
+	 * @generated
+	 */
+	JSONObject createJSONObject();
+
+	/**
+	 * Returns a new object of class '<em>Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Array</em>'.
+	 * @generated
+	 */
+	JSONArray createJSONArray();
+
+	/**
+	 * Returns a new object of class '<em>Name Value Pair</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Name Value Pair</em>'.
+	 * @generated
+	 */
+	NameValuePair createNameValuePair();
+
+	/**
+	 * Returns a new object of class '<em>String Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>String Literal</em>'.
+	 * @generated
+	 */
+	JSONStringLiteral createJSONStringLiteral();
+
+	/**
+	 * Returns a new object of class '<em>Numeric Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Numeric Literal</em>'.
+	 * @generated
+	 */
+	JSONNumericLiteral createJSONNumericLiteral();
+
+	/**
+	 * Returns a new object of class '<em>Boolean Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Boolean Literal</em>'.
+	 * @generated
+	 */
+	JSONBooleanLiteral createJSONBooleanLiteral();
+
+	/**
+	 * Returns a new object of class '<em>Null Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Null Literal</em>'.
+	 * @generated
+	 */
+	JSONNullLiteral createJSONNullLiteral();
 
 	/**
 	 * Returns the package supported by this factory.

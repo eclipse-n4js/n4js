@@ -10,23 +10,16 @@
  */
 package org.eclipse.n4js.json.validation;
 
+import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.xtext.validation.Check;
 
 /**
- * This class contains custom validation rules. 
- *
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
+ * This class contains custom validation rules with regard to JSON files. 
  */
 public class JSONValidator extends AbstractJSONValidator {
 	
-//	public static final INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	public void checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.getName().charAt(0))) {
-//			warning("Name should start with a capital",
-//					JSONPackage.Literals.GREETING__NAME,
-//					INVALID_NAME);
-//		}
-//	}
-	
+	@Check
+	public void checkDocument(JSONDocument document) {
+		// validate JSON here
+	}
 }

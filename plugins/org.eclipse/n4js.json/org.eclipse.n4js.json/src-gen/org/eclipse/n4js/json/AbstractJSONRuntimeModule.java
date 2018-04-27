@@ -142,12 +142,6 @@ public abstract class AbstractJSONRuntimeModule extends DefaultRuntimeModule {
 			.to(InternalJSONLexer.class);
 	}
 	
-	// contributed by org.eclipse.xtext.xtext.generator.validation.ValidatorFragment2
-	@SingletonBinding(eager=true)
-	public Class<? extends JSONValidator> bindJSONValidator() {
-		return JSONValidator.class;
-	}
-	
 	// contributed by org.eclipse.xtext.xtext.generator.scoping.ImportNamespacesScopingFragment2
 	public Class<? extends IScopeProvider> bindIScopeProvider() {
 		return JSONScopeProvider.class;
@@ -196,6 +190,12 @@ public abstract class AbstractJSONRuntimeModule extends DefaultRuntimeModule {
 	// contributed by org.eclipse.xtext.xtext.generator.generator.GeneratorFragment2
 	public Class<? extends IGenerator2> bindIGenerator2() {
 		return JSONGenerator.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.validation.ValidatorFragment2
+	@SingletonBinding(eager=true)
+	public Class<? extends JSONValidator> bindJSONValidator() {
+		return JSONValidator.class;
 	}
 	
 }

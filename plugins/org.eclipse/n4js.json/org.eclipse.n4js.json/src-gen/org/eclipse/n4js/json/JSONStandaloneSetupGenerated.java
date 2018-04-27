@@ -12,11 +12,9 @@ package org.eclipse.n4js.json;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.json.jSON.JSONPackage;
+import org.eclipse.n4js.common.unicode.UnicodeStandaloneSetup;
 import org.eclipse.xtext.ISetup;
-import org.eclipse.xtext.common.TerminalsStandaloneSetup;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 
@@ -25,7 +23,7 @@ public class JSONStandaloneSetupGenerated implements ISetup {
 
 	@Override
 	public Injector createInjectorAndDoEMFRegistration() {
-		TerminalsStandaloneSetup.doSetup();
+		UnicodeStandaloneSetup.doSetup();
 
 		Injector injector = createInjector();
 		register(injector);
@@ -37,9 +35,6 @@ public class JSONStandaloneSetupGenerated implements ISetup {
 	}
 	
 	public void register(Injector injector) {
-		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/n4js/json/JSON")) {
-			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/n4js/json/JSON", JSONPackage.eINSTANCE);
-		}
 		IResourceFactory resourceFactory = injector.getInstance(IResourceFactory.class);
 		IResourceServiceProvider serviceProvider = injector.getInstance(IResourceServiceProvider.class);
 		

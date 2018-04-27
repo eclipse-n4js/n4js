@@ -74,9 +74,63 @@ public class JSONSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case JSONPackage.A: {
-				A a = (A)theEObject;
-				T result = caseA(a);
+			case JSONPackage.JSON_DOCUMENT: {
+				JSONDocument jsonDocument = (JSONDocument)theEObject;
+				T result = caseJSONDocument(jsonDocument);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case JSONPackage.JSON_VALUE: {
+				JSONValue jsonValue = (JSONValue)theEObject;
+				T result = caseJSONValue(jsonValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case JSONPackage.JSON_OBJECT: {
+				JSONObject jsonObject = (JSONObject)theEObject;
+				T result = caseJSONObject(jsonObject);
+				if (result == null) result = caseJSONValue(jsonObject);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case JSONPackage.JSON_ARRAY: {
+				JSONArray jsonArray = (JSONArray)theEObject;
+				T result = caseJSONArray(jsonArray);
+				if (result == null) result = caseJSONValue(jsonArray);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case JSONPackage.NAME_VALUE_PAIR: {
+				NameValuePair nameValuePair = (NameValuePair)theEObject;
+				T result = caseNameValuePair(nameValuePair);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case JSONPackage.JSON_STRING_LITERAL: {
+				JSONStringLiteral jsonStringLiteral = (JSONStringLiteral)theEObject;
+				T result = caseJSONStringLiteral(jsonStringLiteral);
+				if (result == null) result = caseJSONValue(jsonStringLiteral);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case JSONPackage.JSON_NUMERIC_LITERAL: {
+				JSONNumericLiteral jsonNumericLiteral = (JSONNumericLiteral)theEObject;
+				T result = caseJSONNumericLiteral(jsonNumericLiteral);
+				if (result == null) result = caseJSONValue(jsonNumericLiteral);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case JSONPackage.JSON_BOOLEAN_LITERAL: {
+				JSONBooleanLiteral jsonBooleanLiteral = (JSONBooleanLiteral)theEObject;
+				T result = caseJSONBooleanLiteral(jsonBooleanLiteral);
+				if (result == null) result = caseJSONValue(jsonBooleanLiteral);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case JSONPackage.JSON_NULL_LITERAL: {
+				JSONNullLiteral jsonNullLiteral = (JSONNullLiteral)theEObject;
+				T result = caseJSONNullLiteral(jsonNullLiteral);
+				if (result == null) result = caseJSONValue(jsonNullLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -85,17 +139,137 @@ public class JSONSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>A</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Document</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>A</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Document</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseA(A object) {
+	public T caseJSONDocument(JSONDocument object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSONValue(JSONValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Object</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Object</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSONObject(JSONObject object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Array</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSONArray(JSONArray object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Name Value Pair</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Name Value Pair</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNameValuePair(NameValuePair object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>String Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>String Literal</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSONStringLiteral(JSONStringLiteral object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Numeric Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Numeric Literal</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSONNumericLiteral(JSONNumericLiteral object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Boolean Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Boolean Literal</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSONBooleanLiteral(JSONBooleanLiteral object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Null Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Null Literal</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSONNullLiteral(JSONNullLiteral object) {
 		return null;
 	}
 

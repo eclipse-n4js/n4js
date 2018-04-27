@@ -11,52 +11,54 @@
 package org.eclipse.n4js.json.JSON.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.n4js.json.JSON.A;
-import org.eclipse.n4js.json.JSON.JSONPackage;
 
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
+import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>A</b></em>'.
+ * An implementation of the model object '<em><b>String Literal</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.json.JSON.impl.AImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.json.JSON.impl.JSONStringLiteralImpl#getValue <em>Value</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class AImpl extends ProxyResolvingEObjectImpl implements A {
+public class JSONStringLiteralImpl extends JSONValueImpl implements JSONStringLiteral {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
+	 * @see #getValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = null;
+	protected static final String VALUE_EDEFAULT = null;
+
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
+	 * @see #getValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected String name = NAME_EDEFAULT;
+	protected String value = VALUE_EDEFAULT;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AImpl() {
+	protected JSONStringLiteralImpl() {
 		super();
 	}
 
@@ -67,7 +69,7 @@ public class AImpl extends ProxyResolvingEObjectImpl implements A {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return JSONPackage.Literals.A;
+		return JSONPackage.Literals.JSON_STRING_LITERAL;
 	}
 
 	/**
@@ -75,8 +77,8 @@ public class AImpl extends ProxyResolvingEObjectImpl implements A {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getName() {
-		return name;
+	public String getValue() {
+		return value;
 	}
 
 	/**
@@ -84,11 +86,11 @@ public class AImpl extends ProxyResolvingEObjectImpl implements A {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
+	public void setValue(String newValue) {
+		String oldValue = value;
+		value = newValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, JSONPackage.A__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, JSONPackage.JSON_STRING_LITERAL__VALUE, oldValue, value));
 	}
 
 	/**
@@ -99,8 +101,8 @@ public class AImpl extends ProxyResolvingEObjectImpl implements A {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case JSONPackage.A__NAME:
-				return getName();
+			case JSONPackage.JSON_STRING_LITERAL__VALUE:
+				return getValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,8 +115,8 @@ public class AImpl extends ProxyResolvingEObjectImpl implements A {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case JSONPackage.A__NAME:
-				setName((String)newValue);
+			case JSONPackage.JSON_STRING_LITERAL__VALUE:
+				setValue((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -128,8 +130,8 @@ public class AImpl extends ProxyResolvingEObjectImpl implements A {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case JSONPackage.A__NAME:
-				setName(NAME_EDEFAULT);
+			case JSONPackage.JSON_STRING_LITERAL__VALUE:
+				setValue(VALUE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -143,8 +145,8 @@ public class AImpl extends ProxyResolvingEObjectImpl implements A {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case JSONPackage.A__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case JSONPackage.JSON_STRING_LITERAL__VALUE:
+				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -159,10 +161,10 @@ public class AImpl extends ProxyResolvingEObjectImpl implements A {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (name: ");
-		result.append(name);
+		result.append(" (value: ");
+		result.append(value);
 		result.append(')');
 		return result.toString();
 	}
 
-} //AImpl
+} //JSONStringLiteralImpl

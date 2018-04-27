@@ -11,7 +11,7 @@ Workflow {
 	component = XtextGenerator {
 		configuration = {
 			project = StandardProjectConfig {
-				baseName = "org.eclipse.n4js.json"
+				baseName = runtimeProjectName
 				rootPath = rootPath
 				genericIde = {
 					enabled = true
@@ -21,7 +21,7 @@ Workflow {
 				eclipsePlugin = {
 					enabled = true
 				}
-				createEclipseMetaData = true
+				createEclipseMetaData = false
 			}
 			code = {
 				encoding = "UTF-8"
@@ -35,10 +35,26 @@ Workflow {
 		language = StandardLanguage {
 			name = "org.eclipse.n4js.json.JSON"
 			fileExtensions = "json"
+			
+			referencedResource = "platform:/resource/org.eclipse.n4js.json.model/model/JSON.xcore"
+
+			// make sure nothing is inherited from the Unicode Language (but the grammar)
+			contentAssist = {
+				inheritImplementation = false
+			}
+		
+			scopeProvider = {
+				inheritImplementation = false
+			}
+			
+			fragment = validation.ValidatorFragment2 {
+				inheritImplementation = false
+			}
 
 			serializer = {
 				generateStub = false
 			}
+			
 			validator = {
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}

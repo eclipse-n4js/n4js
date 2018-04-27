@@ -13,12 +13,22 @@ package org.eclipse.n4js.json.JSON.impl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
-
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
+import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONFactory;
+import org.eclipse.n4js.json.JSON.JSONNullLiteral;
+import org.eclipse.n4js.json.JSON.JSONNumericLiteral;
+import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.json.JSON.JSONStringLiteral;
+import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.n4js.json.JSON.NameValuePair;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,7 +42,63 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass aEClass = null;
+	private EClass jsonDocumentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsonValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsonObjectEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsonArrayEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass nameValuePairEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsonStringLiteralEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsonNumericLiteralEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsonBooleanLiteralEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsonNullLiteralEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -103,8 +169,8 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getA() {
-		return aEClass;
+	public EClass getJSONDocument() {
+		return jsonDocumentEClass;
 	}
 
 	/**
@@ -112,8 +178,143 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getA_Name() {
-		return (EAttribute)aEClass.getEStructuralFeatures().get(0);
+	public EReference getJSONDocument_Content() {
+		return (EReference)jsonDocumentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSONValue() {
+		return jsonValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSONObject() {
+		return jsonObjectEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSONObject_NameValuePairs() {
+		return (EReference)jsonObjectEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSONArray() {
+		return jsonArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSONArray_Elements() {
+		return (EReference)jsonArrayEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNameValuePair() {
+		return nameValuePairEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNameValuePair_Name() {
+		return (EAttribute)nameValuePairEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNameValuePair_Value() {
+		return (EReference)nameValuePairEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSONStringLiteral() {
+		return jsonStringLiteralEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getJSONStringLiteral_Value() {
+		return (EAttribute)jsonStringLiteralEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSONNumericLiteral() {
+		return jsonNumericLiteralEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getJSONNumericLiteral_Value() {
+		return (EAttribute)jsonNumericLiteralEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSONBooleanLiteral() {
+		return jsonBooleanLiteralEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getJSONBooleanLiteral_BooleanValue() {
+		return (EAttribute)jsonBooleanLiteralEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSONNullLiteral() {
+		return jsonNullLiteralEClass;
 	}
 
 	/**
@@ -144,8 +345,31 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 		isCreated = true;
 
 		// Create classes and their features
-		aEClass = createEClass(A);
-		createEAttribute(aEClass, A__NAME);
+		jsonDocumentEClass = createEClass(JSON_DOCUMENT);
+		createEReference(jsonDocumentEClass, JSON_DOCUMENT__CONTENT);
+
+		jsonValueEClass = createEClass(JSON_VALUE);
+
+		jsonObjectEClass = createEClass(JSON_OBJECT);
+		createEReference(jsonObjectEClass, JSON_OBJECT__NAME_VALUE_PAIRS);
+
+		jsonArrayEClass = createEClass(JSON_ARRAY);
+		createEReference(jsonArrayEClass, JSON_ARRAY__ELEMENTS);
+
+		nameValuePairEClass = createEClass(NAME_VALUE_PAIR);
+		createEAttribute(nameValuePairEClass, NAME_VALUE_PAIR__NAME);
+		createEReference(nameValuePairEClass, NAME_VALUE_PAIR__VALUE);
+
+		jsonStringLiteralEClass = createEClass(JSON_STRING_LITERAL);
+		createEAttribute(jsonStringLiteralEClass, JSON_STRING_LITERAL__VALUE);
+
+		jsonNumericLiteralEClass = createEClass(JSON_NUMERIC_LITERAL);
+		createEAttribute(jsonNumericLiteralEClass, JSON_NUMERIC_LITERAL__VALUE);
+
+		jsonBooleanLiteralEClass = createEClass(JSON_BOOLEAN_LITERAL);
+		createEAttribute(jsonBooleanLiteralEClass, JSON_BOOLEAN_LITERAL__BOOLEAN_VALUE);
+
+		jsonNullLiteralEClass = createEClass(JSON_NULL_LITERAL);
 	}
 
 	/**
@@ -179,10 +403,39 @@ public class JSONPackageImpl extends EPackageImpl implements JSONPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		jsonObjectEClass.getESuperTypes().add(this.getJSONValue());
+		jsonArrayEClass.getESuperTypes().add(this.getJSONValue());
+		jsonStringLiteralEClass.getESuperTypes().add(this.getJSONValue());
+		jsonNumericLiteralEClass.getESuperTypes().add(this.getJSONValue());
+		jsonBooleanLiteralEClass.getESuperTypes().add(this.getJSONValue());
+		jsonNullLiteralEClass.getESuperTypes().add(this.getJSONValue());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(aEClass, org.eclipse.n4js.json.JSON.A.class, "A", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getA_Name(), theEcorePackage.getEString(), "name", null, 0, 1, org.eclipse.n4js.json.JSON.A.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(jsonDocumentEClass, JSONDocument.class, "JSONDocument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSONDocument_Content(), this.getJSONValue(), null, "content", null, 0, 1, JSONDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsonValueEClass, JSONValue.class, "JSONValue", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(jsonObjectEClass, JSONObject.class, "JSONObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSONObject_NameValuePairs(), this.getNameValuePair(), null, "nameValuePairs", null, 0, -1, JSONObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsonArrayEClass, JSONArray.class, "JSONArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSONArray_Elements(), this.getJSONValue(), null, "elements", null, 0, -1, JSONArray.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(nameValuePairEClass, NameValuePair.class, "NameValuePair", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getNameValuePair_Name(), theEcorePackage.getEString(), "name", null, 0, 1, NameValuePair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNameValuePair_Value(), this.getJSONValue(), null, "value", null, 0, 1, NameValuePair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsonStringLiteralEClass, JSONStringLiteral.class, "JSONStringLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getJSONStringLiteral_Value(), theEcorePackage.getEString(), "value", null, 0, 1, JSONStringLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsonNumericLiteralEClass, JSONNumericLiteral.class, "JSONNumericLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getJSONNumericLiteral_Value(), theEcorePackage.getEBigDecimal(), "value", null, 0, 1, JSONNumericLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsonBooleanLiteralEClass, JSONBooleanLiteral.class, "JSONBooleanLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getJSONBooleanLiteral_BooleanValue(), theEcorePackage.getEBoolean(), "booleanValue", null, 0, 1, JSONBooleanLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsonNullLiteralEClass, JSONNullLiteral.class, "JSONNullLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

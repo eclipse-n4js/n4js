@@ -76,8 +76,40 @@ public class JSONAdapterFactory extends AdapterFactoryImpl {
 	protected JSONSwitch<Adapter> modelSwitch =
 		new JSONSwitch<Adapter>() {
 			@Override
-			public Adapter caseA(A object) {
-				return createAAdapter();
+			public Adapter caseJSONDocument(JSONDocument object) {
+				return createJSONDocumentAdapter();
+			}
+			@Override
+			public Adapter caseJSONValue(JSONValue object) {
+				return createJSONValueAdapter();
+			}
+			@Override
+			public Adapter caseJSONObject(JSONObject object) {
+				return createJSONObjectAdapter();
+			}
+			@Override
+			public Adapter caseJSONArray(JSONArray object) {
+				return createJSONArrayAdapter();
+			}
+			@Override
+			public Adapter caseNameValuePair(NameValuePair object) {
+				return createNameValuePairAdapter();
+			}
+			@Override
+			public Adapter caseJSONStringLiteral(JSONStringLiteral object) {
+				return createJSONStringLiteralAdapter();
+			}
+			@Override
+			public Adapter caseJSONNumericLiteral(JSONNumericLiteral object) {
+				return createJSONNumericLiteralAdapter();
+			}
+			@Override
+			public Adapter caseJSONBooleanLiteral(JSONBooleanLiteral object) {
+				return createJSONBooleanLiteralAdapter();
+			}
+			@Override
+			public Adapter caseJSONNullLiteral(JSONNullLiteral object) {
+				return createJSONNullLiteralAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -100,16 +132,128 @@ public class JSONAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.A <em>A</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.JSONDocument <em>Document</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.json.JSON.A
+	 * @see org.eclipse.n4js.json.JSON.JSONDocument
 	 * @generated
 	 */
-	public Adapter createAAdapter() {
+	public Adapter createJSONDocumentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.JSONValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.json.JSON.JSONValue
+	 * @generated
+	 */
+	public Adapter createJSONValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.JSONObject <em>Object</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.json.JSON.JSONObject
+	 * @generated
+	 */
+	public Adapter createJSONObjectAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.JSONArray <em>Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.json.JSON.JSONArray
+	 * @generated
+	 */
+	public Adapter createJSONArrayAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.NameValuePair <em>Name Value Pair</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.json.JSON.NameValuePair
+	 * @generated
+	 */
+	public Adapter createNameValuePairAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.JSONStringLiteral <em>String Literal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.json.JSON.JSONStringLiteral
+	 * @generated
+	 */
+	public Adapter createJSONStringLiteralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.JSONNumericLiteral <em>Numeric Literal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.json.JSON.JSONNumericLiteral
+	 * @generated
+	 */
+	public Adapter createJSONNumericLiteralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.JSONBooleanLiteral <em>Boolean Literal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.json.JSON.JSONBooleanLiteral
+	 * @generated
+	 */
+	public Adapter createJSONBooleanLiteralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.json.JSON.JSONNullLiteral <em>Null Literal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.json.JSON.JSONNullLiteral
+	 * @generated
+	 */
+	public Adapter createJSONNullLiteralAdapter() {
 		return null;
 	}
 
