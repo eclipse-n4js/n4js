@@ -11,22 +11,27 @@
 package org.eclipse.n4js.tests.realworld;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
+import org.eclipse.n4js.regex.ui.internal.RegularExpressionActivator;
+import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.ts.ui.internal.TypesActivator;
 import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
+import org.eclipse.n4js.utils.InjectorCollector;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
-import org.eclipse.xtext.ui.shared.internal.SharedStateContributionRegistryImpl;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Binding;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -35,7 +40,14 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 
 /**
- * Tests parsing and validation of ListBase and underscore.
+ * This test detects multiple instances of injected classes marked with @Singleton.
+ * <p>
+ * Note that instances are created lazily. Consequently, this test cannot guarantee completeness. In case a case of
+ * multiple singleton instances is missing, this test should be adjusted to provoke the lazy creation of this missing
+ * case.
+ * <p>
+ * Note also that singleton classes that are never bound explicitly (meaning in none of the modules), are not checked in
+ * this test.
  */
 public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest {
 
@@ -59,74 +71,105 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 		tearDownExternalLibraries(true);
 	}
 
-	@SuppressWarnings("javadoc")
+	/**
+	 * The tests first collects all injectors. The shared injector is identified using the class
+	 * {@link InjectorCollector}. Afterwards, it detects all singleton classes that are bound in N4JS related injectors.
+	 * Finally, for every such singleton class all injectors are checked whether they created an instance of the
+	 * singleton class and whether these instances are the same.
+	 */
 	@Test
-	public void testListBase() throws Exception {
+	public void identifyMultipleSingletons() throws Exception {
 		ProjectTestsUtils.importProject(new File("probands"), "ListBase");
 		IResourcesSetupUtil.waitForBuild();
 
-		Set<Class<?>> singletonInstances = new HashSet<>();
-		Injector n4jsInj = new N4JSInjectorSupplier().get();
+		Multimap<Class<?>, Injector> singletonInstances = HashMultimap.create();
 
-		Injector n4mfInj = N4MFActivator.getInstance().getInjector(N4MFActivator.ORG_ECLIPSE_N4JS_N4MF_N4MF);
-		Injector sharedInj = getSharedInjector();
+		Map<Injector, String> injectors = getAllInjectors();
+		for (Injector injector : injectors.keySet()) {
+			getN4JSSingletonsOfInjector(injector, singletonInstances);
+		}
 
-		checkSingletonsOfInjector(singletonInstances, n4jsInj);
-		checkSingletonsOfInjector(singletonInstances, n4mfInj);
-		checkSingletonsOfInjector(singletonInstances, sharedInj);
+		String status = getMultipleSingletonStatusString(singletonInstances, injectors);
+		System.out.println(status);
 
-		assertTrue(true);
+		assertEquals(SINGLETON_STATUS_EXPECTATION, status);
 	}
 
-	private void checkSingletonsOfInjector(Set<Class<?>> singletonInstances, Injector injector) {
+	Map<Injector, String> getAllInjectors() {
+		Map<Injector, String> injectors = new HashMap<>();
+
+		injectors.putAll(InjectorCollector.getSharedInjectors());
+		injectors.put(new N4JSInjectorSupplier().get(),
+				"N4JS-Injector");
+		injectors.put(N4MFActivator.getInstance().getInjector(N4MFActivator.ORG_ECLIPSE_N4JS_N4MF_N4MF),
+				"N4MF-Injector");
+		injectors.put(RegularExpressionActivator.getInstance()
+				.getInjector(RegularExpressionActivator.ORG_ECLIPSE_N4JS_REGEX_REGULAREXPRESSION),
+				"Regex-Injector");
+		injectors.put(TypesActivator.getInstance().getInjector(TypesActivator.ORG_ECLIPSE_N4JS_TS_TYPES),
+				"Types-Injector");
+		injectors.put(TesterModule.getInjector(TesterModule.N4_TESTER_MODULE_ID),
+				"Tester-Injector");
+
+		return injectors;
+	}
+
+	private void getN4JSSingletonsOfInjector(Injector injector, Multimap<Class<?>, Injector> singletonInstances) {
 		for (Binding<?> b : injector.getAllBindings().values()) {
 			Key<?> key = b.getKey();
 			TypeLiteral<?> typeLiteral = key.getTypeLiteral();
 			Type type = typeLiteral.getType();
 			if (type instanceof Class<?>) {
-				Class<?> c = (Class<?>) type;
-				Singleton annotation = c.getAnnotation(Singleton.class);
-				if (annotation != null) {
+				Class<?> singletonClass = (Class<?>) type;
+				String singletonName = singletonClass.getName();
+				Singleton annotation = singletonClass.getAnnotation(Singleton.class);
 
-					int size = injector.findBindingsByType(typeLiteral).size();
-					if (size > 1) {
-						System.err.println("Found more than one binding");
-					}
-					if (singletonInstances.contains(c)) {
-						String msg = "Singleton class '" + c.getName() + "' is provided twice.";
-						System.err.println(msg);
-						fail(msg);
-					} else {
-						singletonInstances.add(c);
-					}
+				if (annotation != null && singletonName.toLowerCase().contains("n4js")) {
+					singletonInstances.put(singletonClass, injector);
 				}
 			}
 		}
 	}
 
-	private Injector getSharedInjector() {
-		try {
-			Class<? extends SharedStateContributionRegistryImpl> clazz = SharedStateContributionRegistryImpl.class;
-			Field field = clazz.getDeclaredField("injector");
-			field.setAccessible(true);
-			Injector injector = (Injector) field.get(this.sharedRegistry);
-			return injector;
-
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private String getMultipleSingletonStatusString(Multimap<Class<?>, Injector> singletonInstances,
+			Map<Injector, String> injectors) {
+		String status = "";
+		for (Class<?> singleton : singletonInstances.keySet()) {
+			status += printInjectorsForInstances(singleton, injectors);
 		}
-
-		return null;
+		return status;
 	}
 
+	private String printInjectorsForInstances(Class<?> singleton, Map<Injector, String> injectors) {
+		Multimap<Object, String> instances = HashMultimap.create();
+		for (Map.Entry<Injector, String> entry : injectors.entrySet()) {
+			String name = entry.getValue();
+			Injector inj = entry.getKey();
+			try {
+				Binding<?> existingBinding = inj.getExistingBinding(Key.get(singleton));
+				if (existingBinding != null) {
+					Object instance = inj.getInstance(singleton);
+					instances.put(instance, name);
+				}
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+
+		int instanceCount = instances.keySet().size();
+		String status = "";
+		if (instanceCount > 1) {
+			String singletonName = singleton.getName();
+			status += "Singleton '" + singletonName + "' has " + instanceCount;
+			status += " instances that have the following injectors:\n";
+			for (Object instance : instances.keySet()) {
+				Collection<String> injNames = instances.get(instance);
+				status += "\t- " + String.join(", ", injNames) + "\n";
+			}
+		}
+
+		return status;
+	}
+
+	final static String SINGLETON_STATUS_EXPECTATION = "";
 }

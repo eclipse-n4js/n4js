@@ -63,6 +63,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetManagerModificationStrategyProv
 import org.eclipse.n4js.ui.workingsets.WorkingSetManualAssociationWizard;
 import org.eclipse.n4js.ui.workingsets.WorkingSetProjectNameFilterWizard;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
+import org.eclipse.n4js.utils.InjectorCollector;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
@@ -94,6 +95,8 @@ public class ContributingModule implements Module {
 
 	@Override
 	public void configure(Binder binder) {
+		binder.bind(InjectorCollector.class);
+
 		binder.bind(IToBeBuiltComputerContribution.class).to(N4JSToBeBuiltComputer.class);
 		binder.bind(IStorage2UriMapperContribution.class).to(CompositeStorage2UriMapperContribution.class);
 		binder.bind(NfarStorageMapper.class);
@@ -102,6 +105,10 @@ public class ContributingModule implements Module {
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject
 			IWorkspace workspace;
+
+			@SuppressWarnings("unused")
+			@Inject
+			InjectorCollector injectorCollector; // used to collect the injector
 
 			@Override
 			public IWorkspaceRoot get() {
