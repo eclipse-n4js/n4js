@@ -12,8 +12,12 @@ package org.eclipse.n4js.tests.realworld;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
@@ -132,8 +136,19 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 
 	private String getMultipleSingletonStatusString(Multimap<Class<?>, Injector> singletonInstances,
 			Map<Injector, String> injectors) {
+
+		// sort singleton classes to preserve output order
+		List<Class<?>> sortedByClassName = new ArrayList<>(singletonInstances.keySet());
+		Comparator<Class<?>> comparatorByClassName = new Comparator<Class<?>>() {
+			@Override
+			public int compare(Class<?> c1, Class<?> c2) {
+				return c1.getName().compareTo(c2.getName());
+			}
+		};
+		Collections.sort(sortedByClassName, comparatorByClassName);
+
 		String status = "";
-		for (Class<?> singleton : singletonInstances.keySet()) {
+		for (Class<?> singleton : sortedByClassName) {
 			status += printInjectorsForInstances(singleton, injectors);
 		}
 		return status;
