@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.n4js.json.ide
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.eclipse.n4js.json.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.n4js.json,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide,
+ org.antlr.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.eclipse.n4js.json.ide.contentassist.antlr.internal,
+ org.eclipse.n4js.json.ide.contentassist.antlr
+
