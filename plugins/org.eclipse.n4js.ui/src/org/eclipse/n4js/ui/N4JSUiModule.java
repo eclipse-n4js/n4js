@@ -17,8 +17,10 @@ import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
+import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
+import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.GitCloneSupplier;
@@ -30,12 +32,15 @@ import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
+import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
 import org.eclipse.n4js.ui.containers.N4JSAllContainersStateProvider;
@@ -85,6 +90,7 @@ import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
 import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
+import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.outline.MetaTypeAwareComparator;
 import org.eclipse.n4js.ui.outline.N4JSFilterLocalTypesOutlineContribution;
 import org.eclipse.n4js.ui.outline.N4JSFilterNonPublicMembersOutlineContribution;
@@ -106,6 +112,8 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
+import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
 import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -796,9 +804,49 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSHyperlinkDetector.class;
 	}
 
-	/** */
-	public Class<? extends WorkspaceRepositoriesProvider> bindWorkspaceRepositoryProvider() {
-		return WorkspaceRepositoriesProvider.class;
+	/** Delegate to shared injector */
+	public Provider<? extends WorkspaceRepositoriesProvider> provideWorkspaceRepositoryProvider() {
+		return Access.contributedProvider(WorkspaceRepositoriesProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends BinaryCommandFactory> provideBinaryCommandFactory() {
+		return Access.contributedProvider(BinaryCommandFactory.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends ExternalLibraryUriHelper> provideExternalLibraryUriHelper() {
+		return Access.contributedProvider(ExternalLibraryUriHelper.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends FileBasedExternalPackageManager> provideFileBasedExternalPackageManager() {
+		return Access.contributedProvider(FileBasedExternalPackageManager.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends N4JSModel> provideN4JSModel() {
+		return Access.contributedProvider(N4JSModel.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends N4JSProjectExplorerHelper> provideN4JSProjectExplorerHelper() {
+		return Access.contributedProvider(N4JSProjectExplorerHelper.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends StatusHelper> provideStatusHelper() {
+		return Access.contributedProvider(StatusHelper.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends OutputStreamPrinterThreadProvider> provideOutputStreamPrinterThreadProvider() {
+		return Access.contributedProvider(OutputStreamPrinterThreadProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends TypesKeywordProvider> provideTypesKeywordProvider() {
+		return Access.contributedProvider(TypesKeywordProvider.class);
 	}
 
 	@Override

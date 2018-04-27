@@ -41,6 +41,7 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.containers.CompositeStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSExternalLibraryStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSToBeBuiltComputer;
@@ -193,6 +194,8 @@ public class ContributingModule implements Module {
 		binder.bind(NodeJsBinary.class).in(SINGLETON);
 		binder.bind(NpmBinary.class).in(SINGLETON);
 		binder.bind(NpmrcBinary.class).in(SINGLETON);
+
+		binder.bind(TypesKeywordProvider.class).in(SINGLETON);
 
 	}
 }

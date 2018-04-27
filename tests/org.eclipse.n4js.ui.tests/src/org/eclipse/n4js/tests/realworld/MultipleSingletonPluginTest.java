@@ -13,7 +13,6 @@ package org.eclipse.n4js.tests.realworld;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -95,7 +94,7 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 
 		String status = getMultipleSingletonStatusString(singletonInstances, injectors);
 
-		assertEquals(SINGLETON_STATUS_EXPECTATION, status);
+		assertEquals(MultiSingletonExpectation.get(), status);
 	}
 
 	Map<Injector, String> getAllInjectors() {
@@ -137,7 +136,7 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 	private String getMultipleSingletonStatusString(Multimap<Class<?>, Injector> singletonInstances,
 			Map<Injector, String> injectors) {
 
-		// sort singleton classes to preserve output order
+		// sort to preserve output order
 		List<Class<?>> sortedByClassName = new ArrayList<>(singletonInstances.keySet());
 		Comparator<Class<?>> comparatorByClassName = new Comparator<Class<?>>() {
 			@Override
@@ -148,9 +147,15 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 		Collections.sort(sortedByClassName, comparatorByClassName);
 
 		String status = "";
+		int multipleInstancesCount = 0;
 		for (Class<?> singleton : sortedByClassName) {
-			status += printInjectorsForInstances(singleton, injectors);
+			String outputForInstance = printInjectorsForInstances(singleton, injectors);
+			if (outputForInstance.length() > 0) {
+				status += outputForInstance;
+				multipleInstancesCount++;
+			}
 		}
+		status = "Found multiple instances for " + multipleInstancesCount + " singleton classes:\n" + status;
 		return status;
 	}
 
@@ -176,10 +181,16 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 			String singletonName = singleton.getName();
 			status += "Singleton '" + singletonName + "' has " + instanceCount;
 			status += " instances that have the following injectors:\n";
+			List<String> statusLines = new ArrayList<>();
 			for (Object instance : instances.keySet()) {
-				Collection<String> injNames = instances.get(instance);
-				status += "\t- " + String.join(", ", injNames) + "\n";
+				List<String> injNames = new ArrayList<>(instances.get(instance));
+				Collections.sort(injNames); // sort to preserve output order
+				statusLines.add("\t- " + String.join(", ", injNames));
 			}
+
+			Collections.sort(statusLines); // sort to preserve output order
+			status += String.join("\n", statusLines);
+			status += "\n";
 		}
 
 		return status;
