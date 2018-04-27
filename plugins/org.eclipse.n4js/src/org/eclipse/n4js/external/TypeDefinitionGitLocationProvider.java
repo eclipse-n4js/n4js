@@ -17,6 +17,7 @@ import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitio
 import org.eclipse.n4js.utils.git.GitUtils;
 
 import com.google.inject.ImplementedBy;
+import com.google.inject.Singleton;
 
 /**
  * Representation of a Git repository location provider.
@@ -35,6 +36,7 @@ public interface TypeDefinitionGitLocationProvider {
 	 * TypeDefinitionGitLocationProviderImpl implementation that points to the public Git repository with the type
 	 * definitions. This repository is accessible via HTTPS and requires no SSH session factory creation.
 	 */
+	@Singleton
 	public static final class TypeDefinitionGitLocationProviderImpl implements TypeDefinitionGitLocationProvider {
 
 		private static final Logger LOGGER = Logger.getLogger(TypeDefinitionGitLocationProviderImpl.class);
@@ -104,7 +106,8 @@ public interface TypeDefinitionGitLocationProvider {
 		/**
 		 * Type definition location for testing purposes.
 		 */
-		TEST_DEFINITION_LOCATION("n4jsd-sandbox", "https://github.com/NumberFour/n4jsd-sandbox.git", GitUtils.getMasterBranch());
+		TEST_DEFINITION_LOCATION("n4jsd-sandbox", "https://github.com/NumberFour/n4jsd-sandbox.git",
+				GitUtils.getMasterBranch());
 
 		private static final String N4JSD_URL_SYSTEM_PROPERTY_PREFIX = "numberfour.n4jsd-repository.url";
 

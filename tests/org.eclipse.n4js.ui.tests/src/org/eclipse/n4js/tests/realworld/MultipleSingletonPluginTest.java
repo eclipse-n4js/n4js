@@ -196,5 +196,4 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 		return status;
 	}
 
-	final static String SINGLETON_STATUS_EXPECTATION = "";
 }

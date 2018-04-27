@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import static com.google.inject.Scopes.SINGLETON;
-
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
@@ -87,9 +85,15 @@ import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Provider;
+import com.google.inject.binder.ScopedBindingBuilder;
 import com.google.inject.name.Names;
 
 /**
+ * The following bindings are used by the shared injector.
+ * <p>
+ * Do not use the method {@link ScopedBindingBuilder#in(Class) in(SINGLETON)} or similar to declare a singleton scope.
+ * Use the annotation {@code @Singleton} instead in the bound class itself. The reason is that the test for singleton
+ * validation {@code MultipleSingletonPluginTest} only respects annotations.
  */
 @SuppressWarnings("restriction")
 public class ContributingModule implements Module {
@@ -117,11 +121,9 @@ public class ContributingModule implements Module {
 			}
 		});
 		binder.bind(StatusHelper.class);
-		binder.bind(TargetPlatformInstallLocationProvider.class).to(EclipseTargetPlatformInstallLocationProvider.class)
-				.in(SINGLETON);
-		binder.bind(GitCloneSupplier.class).in(SINGLETON);
-		binder.bind(TypeDefinitionGitLocationProvider.class).to(TypeDefinitionGitLocationProviderImpl.class)
-				.in(SINGLETON);
+		binder.bind(TargetPlatformInstallLocationProvider.class).to(EclipseTargetPlatformInstallLocationProvider.class);
+		binder.bind(GitCloneSupplier.class);
+		binder.bind(TypeDefinitionGitLocationProvider.class).to(TypeDefinitionGitLocationProviderImpl.class);
 
 		binder.bind(IN4JSCore.class).to(N4JSEclipseCore.class);
 		binder.bind(IN4JSEclipseCore.class).to(N4JSEclipseCore.class);
@@ -151,7 +153,7 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);
 		binder.bind(ExternalLibraryUriHelper.class);
 		binder.bind(FileBasedExternalPackageManager.class);
-		binder.bind(ExternalLibraryPreferenceStore.class).to(OsgiExternalLibraryPreferenceStore.class).in(SINGLETON);
+		binder.bind(ExternalLibraryPreferenceStore.class).to(OsgiExternalLibraryPreferenceStore.class);
 		binder.bind(OsgiExternalLibraryPreferenceStore.class);
 		binder.bind(XtextResourceSet.class);
 		binder.bind(IEagerContribution.class).to(ProjectDescriptionLoadListener.class);
@@ -159,8 +161,8 @@ public class ContributingModule implements Module {
 		binder.bind(IResourceSetInitializer.class).to(ScopeInitializer.class);
 		binder.bind(ClassLoader.class).toInstance(getClass().getClassLoader());
 
-		binder.bind(WorkingSetManagerBrokerImpl.class).in(SINGLETON);
-		binder.bind(WorkingSetManagerBroker.class).to(WorkingSetManagerBrokerImpl.class).in(SINGLETON);
+		binder.bind(WorkingSetManagerBrokerImpl.class);
+		binder.bind(WorkingSetManagerBroker.class).to(WorkingSetManagerBrokerImpl.class);
 		binder.bind(WorkingSetManualAssociationWizard.class);
 		binder.bind(WorkingSetManagerModificationStrategyProvider.class);
 		binder.bind(WorkingSetProjectNameFilterWizard.class);
@@ -168,7 +170,7 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSProjectExplorerHelper.class);
 		binder.bind(ObjectMapper.class);
 
-		binder.bind(WorkspaceRepositoriesProvider.class).in(SINGLETON);
+		binder.bind(WorkspaceRepositoriesProvider.class);
 
 		binder.bind(ResourceDescriptionsProvider.class);
 		binder.bind(ResourceSetBasedResourceDescriptions.class);
@@ -182,20 +184,20 @@ public class ContributingModule implements Module {
 				.annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS))
 				.to(IBuilderState.class);
 
-		binder.bind(ProcessExecutor.class).in(SINGLETON);
-		binder.bind(BinaryCommandFactory.class).in(SINGLETON);
-		binder.bind(NodeProcessBuilder.class).in(SINGLETON);
-		binder.bind(OutputStreamPrinterThreadProvider.class).in(SINGLETON);
-		binder.bind(BinariesPreferenceStore.class).to(OsgiBinariesPreferenceStore.class).in(SINGLETON);
-		binder.bind(BinariesValidator.class).in(SINGLETON);
-		binder.bind(BinariesProvider.class).in(SINGLETON);
+		binder.bind(ProcessExecutor.class);
+		binder.bind(BinaryCommandFactory.class);
+		binder.bind(NodeProcessBuilder.class);
+		binder.bind(OutputStreamPrinterThreadProvider.class);
+		binder.bind(BinariesPreferenceStore.class).to(OsgiBinariesPreferenceStore.class);
+		binder.bind(BinariesValidator.class);
+		binder.bind(BinariesProvider.class);
 
 		binder.bind(NodeBinaryLocatorHelper.class);
-		binder.bind(NodeJsBinary.class).in(SINGLETON);
-		binder.bind(NpmBinary.class).in(SINGLETON);
-		binder.bind(NpmrcBinary.class).in(SINGLETON);
+		binder.bind(NodeJsBinary.class);
+		binder.bind(NpmBinary.class);
+		binder.bind(NpmrcBinary.class);
 
-		binder.bind(TypesKeywordProvider.class).in(SINGLETON);
+		binder.bind(TypesKeywordProvider.class);
 
 	}
 }

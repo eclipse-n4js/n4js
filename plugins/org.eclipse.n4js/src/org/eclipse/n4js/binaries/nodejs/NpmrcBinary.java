@@ -26,6 +26,7 @@ import org.eclipse.n4js.utils.Version;
 import com.google.common.base.StandardSystemProperty;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 /**
  * Representation of a {@code npmrc}. While not being binary itself, it exploits current design to allow user to add
@@ -33,6 +34,7 @@ import com.google.inject.Provider;
  *
  * Note, that {@code npm} is not binary itself, but an executable (script) file added by the {@code npm} library.
  */
+@Singleton
 public class NpmrcBinary implements Binary {
 
 	private static final String NPM_CONFIG_USERCONFIG = "NPM_CONFIG_userconfig";

@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.realworld
 
 /**
- *
+ * This practical implementation for the test expectation of #MultipleSingletonPluginTest makes use of xtend features.
  */
 class MultiSingletonExpectation {
 
