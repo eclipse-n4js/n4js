@@ -30,11 +30,11 @@ Contributors:
    <extension
          point="org.eclipse.n4js.generator.subgenerator">
       <subgenerator
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator"
             fileExtensions="n4js,js,n4jsx,jsx">
       </subgenerator>
       <subgenerator
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator"
             fileExtensions="n4idl">
       </subgenerator>
    </extension>
@@ -47,7 +47,7 @@ Contributors:
       </category>
      <wizard
            category="org.eclipse.wizards"
-           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.classes.N4JSNewClassWizard"
+           class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.classes.N4JSNewClassWizard"
            icon="icons/newclass_wiz.gif"
            id="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard"
            name="N4JS Class"
@@ -58,7 +58,7 @@ Contributors:
       </wizard>
       <wizard
            category="org.eclipse.wizards"
-           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.interfaces.N4JSNewInterfaceWizard"
+           class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.interfaces.N4JSNewInterfaceWizard"
            icon="icons/newint_wiz.gif"
            id="org.eclipse.n4js.ui.wizard.N4JSNewInterfaceWizard"
            name="N4JS Interface"
@@ -100,7 +100,7 @@ Contributors:
     <extension
             point="org.eclipse.ui.editors">
         <editor
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
             extensions="n4js,n4jsx,n4idl,n4jsd,js,jsx"
@@ -112,7 +112,7 @@ Contributors:
     <extension
         point="org.eclipse.ui.handlers">
         <handler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
             commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
             <activeWhen>
                 <reference
@@ -121,7 +121,7 @@ Contributors:
             </activeWhen>
         </handler>
         <handler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
             commandId="org.eclipse.n4js.N4JS.validate">
          <activeWhen>
             <reference
@@ -131,14 +131,14 @@ Contributors:
         </handler>
         <!-- copy qualified name -->
         <handler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
             commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
             <activeWhen>
                 <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened" />
             </activeWhen>
         </handler>
         <handler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
             commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
             <activeWhen>
                <and>
@@ -150,7 +150,7 @@ Contributors:
             </activeWhen>
         </handler>
         <handler
-              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.ShowTypeInformationHandler"
+              class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.ShowTypeInformationHandler"
               commandId="org.eclipse.n4js.ui.showTypeInformation">
            <enabledWhen>
               <with
@@ -162,15 +162,15 @@ Contributors:
            </enabledWhen>
         </handler>
         <handler
-              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.OpenGeneratedSourceInEditorHandler"
+              class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.OpenGeneratedSourceInEditorHandler"
               commandId="org.eclipse.n4js.ui.openGeneratedSourceInEditor">
         </handler>
         <handler
-              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ResetWorkingSetManagersHandler"
+              class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ResetWorkingSetManagersHandler"
               commandId="org.eclipse.n4js.ui.workingsets.ResetWorkingSetManagersHandler">
         </handler>
         <handler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.SelectAllProjectExplorerHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.SelectAllProjectExplorerHandler"
             commandId="org.eclipse.ui.edit.selectAll">
             <activeWhen>
     <with variable="activePartId">
@@ -204,21 +204,21 @@ Contributors:
     <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.eclipse.n4js.N4JS"
             name="N4JS">
             <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
         </page>
         <page
             category="org.eclipse.n4js.N4JS"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
             id="org.eclipse.n4js.N4JS.coloring"
             name="Syntax Coloring">
             <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
         </page>
         <page
             category="org.eclipse.n4js.N4JS"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
             id="org.eclipse.n4js.N4JS.templates"
             name="Templates">
             <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
@@ -227,7 +227,7 @@ Contributors:
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.eclipse.n4js.N4JS"
             name="N4JS">
             <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
@@ -479,7 +479,7 @@ Contributors:
     </extension>
     <extension point="org.eclipse.ui.handlers">
         <handler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
             commandId="org.eclipse.xtext.ui.editor.FindReferences">
             <activeWhen>
                 <reference
@@ -488,7 +488,7 @@ Contributors:
             </activeWhen>
         </handler>
      <handler
-           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.typesearch.OpenTypeSelectionDialogHandler"
+           class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.typesearch.OpenTypeSelectionDialogHandler"
            commandId="org.eclipse.n4js.ui.search.openTypeSelectionDialog">
      </handler>
      <handler
@@ -496,11 +496,11 @@ Contributors:
            commandId="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences">
      </handler>
      <handler
-           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.LibrariesFixHandler"
+           class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.LibrariesFixHandler"
            commandId="org.eclipse.n4js.ui.handler.LibrariesFix">
      </handler>
      <handler
-             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.CreateNewN4JSElementInModuleHandler"
+             class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.CreateNewN4JSElementInModuleHandler"
              commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule">
      </handler>
     </extension>
@@ -510,13 +510,13 @@ Contributors:
     <extension
         point="org.eclipse.emf.ecore.extension_parser">
         <parser
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
             type="n4js">
         </parser>
     </extension>
     <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="n4js">
         </resourceServiceProvider>
     </extension>
@@ -524,13 +524,13 @@ Contributors:
     <extension
         point="org.eclipse.emf.ecore.extension_parser">
         <parser
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
             type="n4jsx">
         </parser>
     </extension>
     <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="n4jsx">
         </resourceServiceProvider>
     </extension>
@@ -538,13 +538,13 @@ Contributors:
     <extension
         point="org.eclipse.emf.ecore.extension_parser">
         <parser
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
             type="js">
         </parser>
     </extension>
     <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="js">
         </resourceServiceProvider>
     </extension>
@@ -552,13 +552,13 @@ Contributors:
     <extension
         point="org.eclipse.emf.ecore.extension_parser">
         <parser
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
             type="jsx">
         </parser>
     </extension>
     <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="jsx">
         </resourceServiceProvider>
     </extension>
@@ -566,13 +566,13 @@ Contributors:
     <extension
         point="org.eclipse.emf.ecore.extension_parser">
         <parser
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
             type="n4jsd">
         </parser>
     </extension>
     <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="n4jsd">
         </resourceServiceProvider>
     </extension>
@@ -580,13 +580,13 @@ Contributors:
     <extension
         point="org.eclipse.emf.ecore.extension_parser">
         <parser
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
             type="n4idl">
         </parser>
     </extension>
     <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="n4idl">
         </resourceServiceProvider>
     </extension>
@@ -662,7 +662,7 @@ Contributors:
    <extension
          point="org.eclipse.xtext.builder.participant">
       <participant
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
             fileExtensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
       </participant>
    </extension>
@@ -670,14 +670,14 @@ Contributors:
             point="org.eclipse.ui.preferencePages">
         <page
             category="org.eclipse.n4js.N4JS"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
             id="org.eclipse.n4js.N4JS.compiler.preferencePage"
             name="Compiler">
             <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
         </page>
         <page
               category="org.eclipse.n4js.N4JS"
-              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.external.ExternalLibraryPreferencePage"
+              class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.external.ExternalLibraryPreferencePage"
               id="org.eclipse.n4js.ui.preferences.external.ExternalLibraryPreferencePage"
               name="N4JS External Libraries">
            <keywordReference
@@ -686,7 +686,7 @@ Contributors:
         </page>
           <page
             category="org.eclipse.n4js.N4JS"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.binaries.BinariesPreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.binaries.BinariesPreferencePage"
             id="org.eclipse.n4js.ui.binaries.BinariesPreferencePage"
             name="Binaries">
              <keywordReference
@@ -701,7 +701,7 @@ Contributors:
             point="org.eclipse.ui.propertyPages">
         <page
             category="org.eclipse.n4js.N4JS"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
             id="org.eclipse.n4js.N4JS.compiler.propertyPage"
             name="Compiler">
             <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
@@ -715,7 +715,7 @@ Contributors:
             point="org.eclipse.ui.propertyPages">
         <page
             category="org.eclipse.n4js.N4JS"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
             id="org.eclipse.n4js.N4JS.compiler.propertyPage"
             name="Compiler">
             <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
@@ -730,7 +730,7 @@ Contributors:
     <extension
         point="org.eclipse.ui.handlers">
         <handler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
             commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
             <activeWhen>
                 <reference
@@ -799,7 +799,7 @@ Contributors:
   <extension
     point="org.eclipse.ui.handlers">
     <handler
-      class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.organize.imports.N4JSOrganizeImportsHandler"
+      class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.organize.imports.N4JSOrganizeImportsHandler"
       commandId="org.eclipse.n4js.ui.organize.imports.OrganizeImports">
     </handler>
   </extension>
@@ -877,7 +877,7 @@ Contributors:
     <extension
             point="org.eclipse.ui.ide.markerResolution">
         <markerResolutionGenerator
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
             markerType="org.eclipse.n4js.ui.n4js.check.fast">
             <attribute
                 name="FIXABLE_KEY"
@@ -885,7 +885,7 @@ Contributors:
             </attribute>
         </markerResolutionGenerator>
         <markerResolutionGenerator
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
             markerType="org.eclipse.n4js.ui.n4js.check.normal">
             <attribute
                 name="FIXABLE_KEY"
@@ -893,7 +893,7 @@ Contributors:
             </attribute>
         </markerResolutionGenerator>
         <markerResolutionGenerator
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
             markerType="org.eclipse.n4js.ui.n4js.check.expensive">
             <attribute
                 name="FIXABLE_KEY"
@@ -904,7 +904,7 @@ Contributors:
        <!-- Rename Refactoring -->
     <extension point="org.eclipse.ui.handlers">
         <handler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
             commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
             <activeWhen>
                 <reference
@@ -929,7 +929,7 @@ Contributors:
    <extension point="org.eclipse.ui.preferencePages">
         <page
             category="org.eclipse.n4js.N4JS"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
             id="org.eclipse.n4js.N4JS.refactoring"
             name="Refactoring">
             <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
@@ -938,19 +938,19 @@ Contributors:
 
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.eclipse.n4js.N4JS.compare.contentViewers"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
             extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
     <viewer id="org.eclipse.n4js.N4JS.compare.contentMergeViewers"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
             extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl" label="N4JS Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
     <provider id="org.eclipse.n4js.N4JS.editors.documentProviders"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
             extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
     </provider>
   </extension>
@@ -1021,14 +1021,14 @@ Contributors:
       <extension
             point="org.eclipse.core.expressions.propertyTesters">
          <propertyTester
-               class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.FileExtensionBasedPropertTester"
+               class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.FileExtensionBasedPropertTester"
                id="org.eclipse.n4js.ui.handler.FileExtensionBasedPropertTester"
                namespace="org.eclipse.n4js.ui"
                properties="fileExtension"
                type="java.lang.Object">
          </propertyTester>
          <propertyTester
-               class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSSourceContainerPropertyTester"
+               class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSSourceContainerPropertyTester"
                id="org.eclipse.n4js.ui.navigator.internal.N4JSSourceContainerPropertyTester"
                namespace="org.eclipse.n4js.ui"
                properties="sourceContainer"
@@ -1039,7 +1039,7 @@ Contributors:
             point="org.eclipse.ui.views">
          <view
                category="org.eclipse.n4js.category"
-               class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.compare.ApiCompareView"
+               class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.compare.ApiCompareView"
                icon="icons/api_compare.png"
                id="org.eclipse.n4js.ui.apicompareview"
                name="API Compare"
@@ -1054,7 +1054,7 @@ Contributors:
         point="org.eclipse.ui.decorators">
        <decorator
              adaptable="true"
-             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.decorator.ProjectTypeLabelDecorator"
+             class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.decorator.ProjectTypeLabelDecorator"
              id="org.eclipse.n4js.n4mf.ui.decorator.ProjectTypeLabelDecorator"
              label="Project Type Label Decorator"
              lightweight="true"
@@ -1071,10 +1071,10 @@ Contributors:
         <extension
               point="org.eclipse.ui.startup">
            <startup
-                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.N4JSExternalLibraryStartup">
+                 class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.N4JSExternalLibraryStartup">
            </startup>
            <startup
-                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.WorkingSetManagerStartup">
+                 class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.WorkingSetManagerStartup">
            </startup>
         </extension>
         <extension
@@ -1086,7 +1086,7 @@ Contributors:
         <extension
               point="org.eclipse.n4js.utils.ui.quickfixProviderSupplier">
            <supplier
-                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.quickfix.N4JSQuickfixProviderSupplier">
+                 class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.quickfix.N4JSQuickfixProviderSupplier">
            </supplier>
         </extension>
 
@@ -1119,10 +1119,10 @@ Contributors:
            <navigatorContent
            activeByDefault="true"
            appearsBefore="org.eclipse.jdt.java.ui.javaContent"
-           contentProvider="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerContentProvider"
+           contentProvider="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerContentProvider"
            icon="icons/n4_logo_16.png"
            id="org.eclipse.n4js.ui.navigatorContent"
-           labelProvider="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider"
+           labelProvider="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider"
            name="N4JS"
            priority="highest">
 
@@ -1138,7 +1138,7 @@ Contributors:
               </possibleChildren>
 
             <commonSorter
-                  class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSResourceExtensionSorter"
+                  class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSResourceExtensionSorter"
                   id="org.eclipse.ui.navigator.resources.sorters.defaultSorter">
                <parentExpression>
                          <or>
@@ -1153,7 +1153,7 @@ Contributors:
                     policy="InvokeAlwaysRegardlessOfSuppressedExt"
                     suppressedExtensionId="org.eclipse.jdt.java.ui.javaContent"/>
    <dropAssistant
-         class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.internal.N4JSProjectInWorkingSetDropAdapterAssistant"
+         class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.internal.N4JSProjectInWorkingSetDropAdapterAssistant"
          id="org.eclipse.n4js.ui.workingsets.internal.N4JSProjectInWorkingSetDropAdapterAssistant">
          <possibleDropTargets>
              <adapt type="org.eclipse.n4js.ui.workingsets.WorkingSet"/>
@@ -1180,7 +1180,7 @@ Contributors:
      </actionProvider>
        <!-- Override for the WorkingSetActions to enable the custom N4JS Working Sets implementation. -->
        <actionProvider
-             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSActionBarContributionProvider"
+             class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSActionBarContributionProvider"
              id="org.eclipse.n4js.ui.navigator.internal.N4JSActionBarContributionProvider"
              overrides="org.eclipse.ui.navigator.resources.WorkingSetActions"
              priority="highest">
@@ -1195,7 +1195,7 @@ Contributors:
        </actionProvider>
 
         <actionProvider
-                class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSNavigatorActionProvider"
+                class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSNavigatorActionProvider"
                 id="org.eclipse.n4js.ui.navigator.internal.N4JSNavigatorActionProvider">
             <enablement>
                 <or>
@@ -1246,7 +1246,7 @@ Contributors:
         <extension
               point="org.eclipse.ui.navigator.linkHelper">
                <linkHelper
-                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSResourceLinkHelper"
+                 class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSResourceLinkHelper"
                  id="org.eclipse.n4js.ui.linkHelper">
               <selectionEnablement>
                   <or>
@@ -1277,7 +1277,7 @@ Contributors:
       <extension
         point="org.eclipse.ui.statusHandlers">
          <statusHandler
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.binaries.N4StatusHandler"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.binaries.N4StatusHandler"
             id="org.eclipse.n4js.ui.binaries.N4StatusHandler">
          </statusHandler>
          <statusHandlerProductBinding
@@ -1307,7 +1307,7 @@ Contributors:
       <wizard
             canFinishEarly="false"
             category="org.eclipse.wizards"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             finalPerspective="org.eclipse.n4js.product.N4JSPerspective"
             icon="icons/newprj_wiz.gif"
             id="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
@@ -1320,7 +1320,7 @@ Contributors:
       <wizard
             canFinishEarly="false"
             category="org.eclipse.ui.Examples"
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             finalPerspective="org.eclipse.n4js.product.N4JSPerspective"
             icon="icons/newprj_wiz.gif"
             id="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
@@ -1333,19 +1333,19 @@ Contributors:
    <extension
          point="org.eclipse.n4js.ui.workingSetManager">
       <manager
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ManualAssociationAwareWorkingSetManager">
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ManualAssociationAwareWorkingSetManager">
       </manager>
       <manager
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ProjectNameFilterAwareWorkingSetManager">
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ProjectNameFilterAwareWorkingSetManager">
       </manager>
       <manager
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.GitRepositoryAwareWorkingSetManager">
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.GitRepositoryAwareWorkingSetManager">
       </manager>
       <manager
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ProjectLocationAwareWorkingSetManager">
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ProjectLocationAwareWorkingSetManager">
       </manager>
       <manager
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ProjectTypeAwareWorkingSetManager">
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ProjectTypeAwareWorkingSetManager">
       </manager>
    </extension>
    <extension
@@ -1367,7 +1367,7 @@ Contributors:
    <extension
          point="org.eclipse.ui.console.consoleFactories">
       <consoleFactory
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.building.BuilderStateLogger$Factory"
+            class="org.eclipse.n4js.ui.GracefulN4JSExecutableExtensionFactory:org.eclipse.n4js.ui.building.BuilderStateLogger$Factory"
             label="Builder State">
       </consoleFactory>
    </extension>

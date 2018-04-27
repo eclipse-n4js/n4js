@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
 
@@ -30,7 +29,7 @@ public class N4JSExecutableExtensionFactory extends AbstractGuiceAwareExecutable
 
 	@Override
 	protected Injector getInjector() {
-		return new N4JSInjectorSupplier().get();
+		return N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
 	}
 
 }
