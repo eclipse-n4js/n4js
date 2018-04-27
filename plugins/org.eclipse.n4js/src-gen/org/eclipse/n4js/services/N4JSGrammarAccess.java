@@ -13685,7 +13685,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal STRUCTMODSUFFIX:
-	//	('r' | 'i' | 'w') '~';
+	//	('r' | 'i' | 'w' | '\\u2205') '~';
 	public TerminalRule getSTRUCTMODSUFFIXRule() {
 		return gaTypeExpressions.getSTRUCTMODSUFFIXRule();
 	}

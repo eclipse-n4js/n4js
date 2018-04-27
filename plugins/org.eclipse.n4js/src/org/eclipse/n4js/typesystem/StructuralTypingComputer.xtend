@@ -318,7 +318,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		if (left === null) {
 			// no corresponding member found on left side
 			if (memberIsMissing(leftTypeRef, right, info)) {
-				info.missingMembers.add(keywordProvider.keyword(right) + " " + right.name);
+				info.missingMembers.add(keywordProvider.keyword(right, rightStrategy) + " " + right.name);
 			}
 
 		} else {

@@ -186,7 +186,9 @@ class DestructureHelper {
 	 *               {@link #INVISIBLE_MEMBER}.
 	 */
 	public def IScope createMemberScopeForPropertyAccess(TypeRef receiverTypeRef, EObject contextObj, boolean checkVisibility) {
-		return memberScopingHelper.createMemberScopeAllowingNonContainedMembers(receiverTypeRef, contextObj, checkVisibility, false);
+		val structFieldInitMode = receiverTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+		return memberScopingHelper.createMemberScopeAllowingNonContainedMembers(receiverTypeRef, contextObj,
+			checkVisibility, false, structFieldInitMode);
 	}
 
 	/**

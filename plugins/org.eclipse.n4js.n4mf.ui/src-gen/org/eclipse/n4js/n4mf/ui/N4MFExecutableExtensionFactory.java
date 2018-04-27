@@ -11,6 +11,7 @@
 package org.eclipse.n4js.n4mf.ui;
 
 import com.google.inject.Injector;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
 import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
@@ -23,12 +24,13 @@ public class N4MFExecutableExtensionFactory extends AbstractGuiceAwareExecutable
 
 	@Override
 	protected Bundle getBundle() {
-		return N4MFActivator.getInstance().getBundle();
+		return Platform.getBundle(N4MFActivator.PLUGIN_ID);
 	}
 	
 	@Override
 	protected Injector getInjector() {
-		return N4MFActivator.getInstance().getInjector(N4MFActivator.ORG_ECLIPSE_N4JS_N4MF_N4MF);
+		N4MFActivator activator = N4MFActivator.getInstance();
+		return activator != null ? activator.getInjector(N4MFActivator.ORG_ECLIPSE_N4JS_N4MF_N4MF) : null;
 	}
-	
+
 }

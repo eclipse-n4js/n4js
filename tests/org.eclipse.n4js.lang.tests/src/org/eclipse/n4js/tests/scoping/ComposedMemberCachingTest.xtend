@@ -148,13 +148,13 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 
 		val receiverTypeRef = varDecl.declaredTypeRef;
 		val scope = memberScopingHelper.createMemberScopeAllowingNonContainedMembers(receiverTypeRef, propAccess, false,
-			true);
+			true, false);
 		scope.getAllElements();
 		assertTrue("scoping should not have added anything to composed member cache",
 			script.module.composedMemberCaches.empty);
 
 		// only for completeness, we test the counter example using ordinary member scoping:
-		val scope2 = memberScopingHelper.createMemberScope(receiverTypeRef, propAccess, false, true);
+		val scope2 = memberScopingHelper.createMemberScope(receiverTypeRef, propAccess, false, true, false);
 		scope2.getAllElements();
 		assertTrue("scoping should have added several members to composed member cache",
 			script.module.composedMemberCaches.head.cachedComposedMembers.size>1); // at time of writing, 16 members were added (but exact count might change over time)
@@ -184,7 +184,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 	}
 
 	def private TMember performOrdinaryMemberScoping(String memberName, TypeRef receiverTypeRef, MemberAccess context) {
-		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, context, false, true);
+		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, context, false, true, false);
 		val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
 		val member = memberDesc.getEObjectOrProxy() as TMember;
 		assertNotNull(member);
