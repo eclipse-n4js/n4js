@@ -15,7 +15,7 @@
 <plugin>
 	<extension point="org.eclipse.emf.ecore.generated_package">
 		<package 
-			uri = "http://www.eclipse.org/n4js/n4js/JSON"
+			uri = "http://www.eclipse.org/n4js/JSON"
 			class = "org.eclipse.n4js.json.JSON.JSONPackage"
 			genModel = "model/JSON.xcore" />
 	</extension>

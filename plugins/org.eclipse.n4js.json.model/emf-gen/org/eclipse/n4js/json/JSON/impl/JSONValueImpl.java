@@ -12,10 +12,9 @@ package org.eclipse.n4js.json.JSON.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
-
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,7 +23,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public abstract class JSONValueImpl extends ProxyResolvingEObjectImpl implements JSONValue {
+public abstract class JSONValueImpl extends MinimalEObjectImpl.Container implements JSONValue {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

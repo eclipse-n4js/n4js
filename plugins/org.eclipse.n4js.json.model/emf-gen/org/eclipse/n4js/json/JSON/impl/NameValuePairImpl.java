@@ -18,11 +18,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -38,7 +37,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public class NameValuePairImpl extends ProxyResolvingEObjectImpl implements NameValuePair {
+public class NameValuePairImpl extends MinimalEObjectImpl.Container implements NameValuePair {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->

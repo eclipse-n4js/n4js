@@ -18,11 +18,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
-
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,7 +36,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public class JSONDocumentImpl extends ProxyResolvingEObjectImpl implements JSONDocument {
+public class JSONDocumentImpl extends MinimalEObjectImpl.Container implements JSONDocument {
 	/**
 	 * The cached value of the '{@link #getContent() <em>Content</em>}' containment reference.
 	 * <!-- begin-user-doc -->

@@ -20,7 +20,7 @@ public abstract class AbstractJSONValidator extends AbstractDeclarativeValidator
 	@Override
 	protected List<EPackage> getEPackages() {
 		List<EPackage> result = new ArrayList<EPackage>();
-		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/n4js/JSON"));
+		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/JSON"));
 		return result;
 	}
 	

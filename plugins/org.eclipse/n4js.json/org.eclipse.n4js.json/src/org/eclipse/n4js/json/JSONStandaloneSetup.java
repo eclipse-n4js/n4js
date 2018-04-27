@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js.json;
 
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.n4js.common.unicode.UnicodeStandaloneSetup;
+import org.eclipse.n4js.json.JSON.JSONPackage;
+
+import com.google.inject.Injector;
 
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
@@ -17,6 +22,22 @@ package org.eclipse.n4js.json;
 public class JSONStandaloneSetup extends JSONStandaloneSetupGenerated {
 
 	public static void doSetup() {
+		UnicodeStandaloneSetup.doSetup();
+		
 		new JSONStandaloneSetup().createInjectorAndDoEMFRegistration();
+	}
+	
+	@Override
+	public Injector createInjectorAndDoEMFRegistration() {
+		// trigger class loading
+		JSONPackage.eINSTANCE.getNsURI();
+
+		EPackage.Registry.INSTANCE.put(JSONPackage.eNS_URI, JSONPackage.eINSTANCE);
+
+		UnicodeStandaloneSetup.doSetup();
+		
+		Injector injector = createInjector();
+		register(injector);
+		return injector;
 	}
 }

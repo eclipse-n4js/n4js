@@ -8,10 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-@Ecore(nsURI="http://www.eclipse.org/n4js/n4js/JSON")
+@Ecore(nsURI="http://www.eclipse.org/n4js/JSON")
 @GenModel(fileExtensions="json",
-//	modelPluginID="org.eclipse.n4js.model",
-	rootExtendsClass="org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl",
 	modelDirectory="/org.eclipse.n4js.json.model/emf-gen",
 	forceOverwrite="true",
 	updateClasspath="false",
