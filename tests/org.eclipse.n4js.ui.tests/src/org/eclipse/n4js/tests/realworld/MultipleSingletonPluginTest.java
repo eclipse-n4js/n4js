@@ -90,7 +90,6 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 		}
 
 		String status = getMultipleSingletonStatusString(singletonInstances, injectors);
-		System.out.println(status);
 
 		assertEquals(SINGLETON_STATUS_EXPECTATION, status);
 	}
