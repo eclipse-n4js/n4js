@@ -49,6 +49,7 @@
 <setEntry value="org.eclipse.n4js.dependencies.sdk:default"/>
 <setEntry value="org.eclipse.n4js.dependencies.ui.sdk:default"/>
 <setEntry value="org.eclipse.n4js.jsdoc2spec.sdk:default"/>
+<setEntry value="org.eclipse.n4js.json.sdk:default"/>
 <setEntry value="org.eclipse.n4js.lang.sdk:default"/>
 <setEntry value="org.eclipse.n4js.n4mf.sdk:default"/>
 <setEntry value="org.eclipse.n4js.regex.sdk:default"/>

@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.n4js.json
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.eclipse.n4js.json; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.13.0",
+ org.antlr.runtime,
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.eclipse.xtend.lib;bundle-version="2.13.0",
+ org.eclipse.n4js.json.model
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.n4js.json
+Export-Package: org.eclipse.n4js.json.validation,
+ org.eclipse.n4js.json.jSON.impl,
+ org.eclipse.n4js.json.jSON.util,
+ org.eclipse.n4js.json.parser.antlr,
+ org.eclipse.n4js.json.services,
+ org.eclipse.n4js.json.scoping,
+ org.eclipse.n4js.json.generator,
+ org.eclipse.n4js.json.jSON,
+ org.eclipse.n4js.json.parser.antlr.internal,
+ org.eclipse.n4js.json,
+ org.eclipse.n4js.json.serializer
+Import-Package: org.apache.log4j

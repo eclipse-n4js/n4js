@@ -1,0 +1,47 @@
+module org.eclipse.n4js.json.GenerateJSON
+
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+
+var rootPath = ".."
+var runtimeProjectName = "org.eclipse.n4js.json"
+var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"
+Workflow {
+	
+	component = XtextGenerator {
+		configuration = {
+			project = StandardProjectConfig {
+				baseName = "org.eclipse.n4js.json"
+				rootPath = rootPath
+				genericIde = {
+					enabled = true
+					name = "${runtimeProjectName}.ui"
+					root = "${runtimeProjectPath}.ui"
+				}
+				eclipsePlugin = {
+					enabled = true
+				}
+				createEclipseMetaData = true
+			}
+			code = {
+				encoding = "UTF-8"
+				// same as org.eclipse.n4js.releng.utils.license.LicenseTemplate.COPYRIGHT_HEADER
+				// should re-use in the long run
+				fileHeader = "/**\n * Copyright (c) 2017 NumberFour AG.\n * All rights reserved. This program and the accompanying materials\n * are made available under the terms of the Eclipse Public License v1.0\n * which accompanies this distribution, and is available at\n * http://www.eclipse.org/legal/epl-v10.html\n *\n * Contributors:\n *   NumberFour AG - Initial API and implementation\n */"
+				lineDelimiter = '\n'
+				preferXtendStubs = false
+			}
+		}
+		language = StandardLanguage {
+			name = "org.eclipse.n4js.json.JSON"
+			fileExtensions = "json"
+
+			serializer = {
+				generateStub = false
+			}
+			validator = {
+				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+			}
+		}
+	}
+}

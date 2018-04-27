@@ -1,0 +1,11 @@
+grammar org.eclipse.n4js.json.JSON with org.eclipse.xtext.common.Terminals
+
+import "http://www.eclipse.org/n4js/n4js/JSON"
+
+generate jSON "http://www.eclipse.org/n4js/json/JSON"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting returns A:
+	'Hello' name=ID '!';
