@@ -38,9 +38,9 @@ class ParserTest {
 		'''42E+42'''.parseSuccessfully;
 		'''42.42E-42'''.parseSuccessfully;
 		'''"string"'''.parseSuccessfully;
-		'''"null"'''.parseSuccessfully;
-		'''"true"'''.parseSuccessfully;
-		'''"false"'''.parseSuccessfully;
+		'''null'''.parseSuccessfully;
+		'''true'''.parseSuccessfully;
+		'''false'''.parseSuccessfully;
 	}
 	
 	protected def JSONDocument parseSuccessfully(CharSequence json) {
