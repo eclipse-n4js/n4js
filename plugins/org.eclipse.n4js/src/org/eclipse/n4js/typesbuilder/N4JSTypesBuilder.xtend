@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -79,6 +78,8 @@ public class N4JSTypesBuilder {
 	@Inject private SpecifierConverter specifierConverter
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
 
+	private final String DISABLED_MD5 = "disabled/GH-774";
+
 	/**
 	 * When demand-loading an AST for a resource that already has a TModule (usually retrieved from the index) by
 	 * calling SyntaxRelatedTElement#getAstElement(), we are facing a challenge: we could simply replace the original
@@ -105,10 +106,10 @@ public class N4JSTypesBuilder {
 
 			val TModule module = resource.contents.get(1) as TModule;
 
-			val astMD5New = N4JSASTUtils.md5Hex(resource);
-			if (astMD5New != module.astMD5) {
-				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " + resource.URI);
-			}
+//			val astMD5New = N4JSASTUtils.md5Hex(resource);
+//			if (astMD5New != module.astMD5) {
+//				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " + resource.URI);
+//			}
 			module.reconciled = true;
 
 			script.buildNamespacesTypesFromModuleImports(module,preLinkingPhase);
@@ -148,7 +149,9 @@ public class N4JSTypesBuilder {
 
 			val TModule result = typesFactory.createTModule;
 
-			result.astMD5 = N4JSASTUtils.md5Hex(resource);
+// TODO GH-774
+result.astMD5 = DISABLED_MD5;
+//			result.astMD5 = N4JSASTUtils.md5Hex(resource);
 			result.reconciled = false;
 
 			var qualifiedModuleName = resource.qualifiedModuleName;
