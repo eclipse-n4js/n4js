@@ -19,7 +19,6 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
@@ -395,7 +394,7 @@ public abstract class N4JSASTUtils {
 
 	/**
 	 * Computes an MD5 hash from the given resource's source code (the actual source text), as stored in
-	 * {@link TModule#getAstMD5()}. Will fail with an exception if the given resource does not have a valid
+	 * {@code TModule#getAstMD5()}. Will fail with an exception if the given resource does not have a valid
 	 * {@link XtextResource#getParseResult() parse result}, as created by Xtext during parsing.
 	 */
 	public static String md5Hex(XtextResource resource) {

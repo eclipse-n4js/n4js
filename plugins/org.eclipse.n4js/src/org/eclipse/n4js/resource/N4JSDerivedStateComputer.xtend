@@ -34,8 +34,9 @@ public class N4JSDerivedStateComputer implements IDerivedStateComputer {
 			throw new IllegalStateException("cannot install derived state in resource without AST")
 		} else if (contents.size == 1) {
 			typesBuilder.createTModuleFromSource(resource, preLinkingPhase);
-		} else if (contents.size == 2) {
-			typesBuilder.relinkTModuleToSource(resource, preLinkingPhase);
+// TODO GH-774
+//		} else if (contents.size == 2) {
+//			typesBuilder.relinkTModuleToSource(resource, preLinkingPhase);
 		} else {
 			throw new IllegalStateException("resource with more than two roots");
 		}

@@ -145,20 +145,6 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	contains Type[] exposedInternalTypes
 	
 	/**
-	 * MD5 hash (hex) of the AST from which this type model was created. This can be used to quickly
-	 * compare two type models created from -- maybe -- different versions of the same AST.
-	 * <p>
-	 * The MD5 is used since this is the fastest and easiest solution to compare the AST. More elegant
-	 * methods may would use the AST (in order to ignore comments and whitespaces), however this
-	 * is rather complicated to implement: No proxies must be resolved and the hash must be stable between
-	 * different runs (and between different machines to enable stable tests). This is rather hard to
-	 * achieve with traversing the AST.
-	 * 
-	 * @see org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.md5Hex(String)
-	 */
-	String astMD5
-	
-	/**
 	 * Caches for composed members. Not serialized to the Xtext index.
 	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
 	 */

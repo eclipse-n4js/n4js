@@ -40,7 +40,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTemporaryTypes <em>Temporary Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getModuleSpecifier <em>Module Specifier</em>}</li>
@@ -396,41 +395,6 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	EList<Type> getExposedInternalTypes();
-
-	/**
-	 * Returns the value of the '<em><b>Ast MD5</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * MD5 hash (hex) of the AST from which this type model was created. This can be used to quickly
-	 * compare two type models created from -- maybe -- different versions of the same AST.
-	 * <p>
-	 * The MD5 is used since this is the fastest and easiest solution to compare the AST. More elegant
-	 * methods may would use the AST (in order to ignore comments and whitespaces), however this
-	 * is rather complicated to implement: No proxies must be resolved and the hash must be stable between
-	 * different runs (and between different machines to enable stable tests). This is rather hard to
-	 * achieve with traversing the AST.
-	 * 
-	 * @see org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.md5Hex(String)
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Ast MD5</em>' attribute.
-	 * @see #setAstMD5(String)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_AstMD5()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getAstMD5();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getAstMD5 <em>Ast MD5</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ast MD5</em>' attribute.
-	 * @see #getAstMD5()
-	 * @generated
-	 */
-	void setAstMD5(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Composed Member Caches</b></em>' containment reference list.
