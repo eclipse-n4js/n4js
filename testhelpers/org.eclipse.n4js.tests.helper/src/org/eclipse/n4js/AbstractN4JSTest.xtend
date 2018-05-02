@@ -59,6 +59,24 @@ public class AbstractN4JSTest extends Assert {
 	}
 
 	/**
+	 * Creates two new N4JSResource instances for the two given URIs.
+	 * 
+	 * Only returns the N4JSResource created for the first {@code uri}.
+	 */
+	def protected N4JSResource createFromFile(URI uri, URI other) {
+		val resSet = resourceSetProvider.get();
+		
+		val resURI = resSet.URIConverter.normalize(uri);
+		val res = resSet.createResource(resURI) as N4JSResource;
+		
+		val otherResURI = resSet.URIConverter.normalize(other);
+		resSet.createResource(otherResURI);
+		
+		return res;
+	}
+
+
+	/**
 	 * Creates and loads a new N4JSResource inside a newly created resource set for the given URI. The resource returned
 	 * is loaded, but installation of derived state (i.e. types builder) has not yet been triggered.
 	 */
@@ -103,6 +121,55 @@ public class AbstractN4JSTest extends Assert {
 		// remove from resource set
 		res.unload();
 		resSet.resources.remove(res);
+
+		// now re-load from index
+		val resFromIndex = n4jsCore.loadModuleFromIndex(resSet, resDesc, false).eResource as N4JSResource;
+		assertTrue(resFromIndex.script.eIsProxy);
+		assertFalse(resFromIndex.module.eIsProxy);
+
+		return resFromIndex;
+	}
+	
+	/**
+	 * Simulates loading the resources for the two given URIs from the index, 
+	 * inside a newly created resource set.
+	 */
+	def protected N4JSResource loadFromDescription(URI uri, URI other) {
+		// load normally
+		val res = createFromFile(uri, other);
+		res.load(emptyMap);
+		res.contents; // trigger installation of derived state (i.e. types builder), so that it is in same state as when using org.eclipse.xtext.testing.util.ParseHelper#parse(CharSequence)
+		val resOther = res.resourceSet.getResource(other, false) as N4JSResource;
+		resOther.load(emptyMap);
+		resOther.contents; // trigger installation of derived state (i.e. types builder), so that it is in same state as when using org.eclipse.xtext.testing.util.ParseHelper#parse(CharSequence)
+		
+		res.performPostProcessing;
+		resOther.performPostProcessing;
+		
+		val resURI = res.URI;
+		val resSet = res.resourceSet;
+
+		res.assertNoErrors
+
+		// force serialization into index
+		val resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(res);
+		assertFalse("index has not been filled", resourceDescriptions.allResourceDescriptions.empty);
+		val resDesc = resourceDescriptions.getResourceDescription(resURI);
+		resDesc.exportedObjects.head.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT); // trigger actual serialization into index
+		
+		val resourceDescriptionsOther = resourceDescriptionsProvider.getResourceDescriptions(resOther);
+		assertFalse("index has not been filled", resourceDescriptionsOther.allResourceDescriptions.empty);
+		val resDescOther = resourceDescriptionsOther.getResourceDescription(resURI);
+		resDescOther.exportedObjects.head.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT); // trigger actual serialization into index
+
+		assertTrue(res.fullyInitialized);
+		assertTrue(res.fullyProcessed);
+
+		// remove from resource set
+		res.unload();
+		resSet.resources.remove(res);
+		resOther.unload();
+		resSet.resources.remove(resOther);
 
 		// now re-load from index
 		val resFromIndex = n4jsCore.loadModuleFromIndex(resSet, resDesc, false).eResource as N4JSResource;
