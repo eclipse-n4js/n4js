@@ -469,7 +469,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		EObject oldScript = null;
 		ModuleAwareContentsList myContents = ((ModuleAwareContentsList) contents);
 		try {
-			oldModule = discardStateFromDescription(false);
+			oldModule = discardStateFromDescription(true);
 			if (!myContents.isEmpty()) {
 				oldScript = myContents.basicGet(0);
 				myContents.sneakyClear();
@@ -489,16 +489,18 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			EObject result = getParseResult().getRootASTElement();
 			if (myContents.isEmpty()) {
 				myContents.sneakyAdd(0, result);
-				if (oldModule != null) {
-					myContents.sneakyAdd(oldModule);
-				}
+				// TODO GH-774
+				// if (oldModule != null) {
+				// myContents.sneakyAdd(oldModule);
+				// }
 				forceInstallDerivedState(false);
 			} else {
-				if (myContents.size() == 1) {
-					if (oldModule != null) {
-						myContents.sneakyAdd(oldModule);
-					}
-				}
+				// TODO GH-774
+				// if (myContents.size() == 1) {
+				// if (oldModule != null) {
+				// myContents.sneakyAdd(oldModule);
+				// }
+				// }
 				installDerivedState(false);
 			}
 			if (oldScript != null) {

@@ -190,9 +190,10 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 			if (!newModule.equals(oldModule)) {
 				TModule newModuleObj = UserdataMapper.getDeserializedModuleFromDescription(newDescription, uri);
 				TModule oldModuleObj = UserdataMapper.getDeserializedModuleFromDescription(oldDescription, uri);
-				// we deserialize the TModules and ignore the MD5 Hash
-				newModuleObj.setAstMD5("");
-				oldModuleObj.setAstMD5("");
+				// TODO GH-774
+				// // we deserialize the TModules and ignore the MD5 Hash
+				// newModuleObj.setAstMD5("");
+				// oldModuleObj.setAstMD5("");
 				if (!EcoreUtilN4.equalsNonResolving(newModuleObj, oldModuleObj)) {
 					return false;
 				}

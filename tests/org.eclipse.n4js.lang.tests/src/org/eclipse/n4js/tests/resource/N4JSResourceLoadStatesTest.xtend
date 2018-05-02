@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtend.lib.annotations.Data
+import org.junit.Ignore
 import org.junit.Test
 
 /**
@@ -252,6 +253,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		res.assertState(State.LOADED_FROM_DESC);
 	}
 
+	@Ignore("GH-774")
 	@Test
 	def void testStateReconciled1() throws Exception {
 		val res = loadFromDescription(SAMPLE_FILE);
@@ -262,6 +264,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 	}
 
 	/** Same as previous method, but use different ways of triggering demand-loading of AST and post-processing. */
+	@Ignore("GH-774")
 	@Test
 	def void testStateReconciled2() throws Exception {
 		val res = loadFromDescription(SAMPLE_FILE);

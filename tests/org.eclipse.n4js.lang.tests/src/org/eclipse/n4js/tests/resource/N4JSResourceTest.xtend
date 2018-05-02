@@ -181,8 +181,8 @@ class N4JSResourceTest {
 		loadedFromDescription.eAdapters += recorder
 
 		val demandLoaded = exported.astElement
-		assertFalse(exported.eIsProxy)
-		assertNotNull(exported.eResource)
+		assertTrue(exported.eIsProxy)
+		assertNull(exported.eResource)
 		assertFalse(demandLoaded.eIsProxy)
 		assertSame(loadedFromDescription, demandLoaded.eResource)
 

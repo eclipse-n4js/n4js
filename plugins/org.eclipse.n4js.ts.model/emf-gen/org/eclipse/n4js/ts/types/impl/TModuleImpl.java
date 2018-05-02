@@ -56,7 +56,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTemporaryTypes <em>Temporary Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getModuleSpecifier <em>Module Specifier</em>}</li>
@@ -314,26 +313,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<Type> exposedInternalTypes;
-
-	/**
-	 * The default value of the '{@link #getAstMD5() <em>Ast MD5</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAstMD5()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String AST_MD5_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getAstMD5() <em>Ast MD5</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAstMD5()
-	 * @generated
-	 * @ordered
-	 */
-	protected String astMD5 = AST_MD5_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getComposedMemberCaches() <em>Composed Member Caches</em>}' containment reference list.
@@ -659,27 +638,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getAstMD5() {
-		return astMD5;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setAstMD5(String newAstMD5) {
-		String oldAstMD5 = astMD5;
-		astMD5 = newAstMD5;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__AST_MD5, oldAstMD5, astMD5));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<ComposedMemberCache> getComposedMemberCaches() {
 		if (composedMemberCaches == null) {
 			composedMemberCaches = new EObjectContainmentEList<ComposedMemberCache>(ComposedMemberCache.class, this, TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES);
@@ -772,8 +730,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getInternalTypes();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return getExposedInternalTypes();
-			case TypesPackage.TMODULE__AST_MD5:
-				return getAstMD5();
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				return getComposedMemberCaches();
 			case TypesPackage.TMODULE__TEMPORARY_TYPES:
@@ -843,9 +799,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				getExposedInternalTypes().clear();
 				getExposedInternalTypes().addAll((Collection<? extends Type>)newValue);
 				return;
-			case TypesPackage.TMODULE__AST_MD5:
-				setAstMD5((String)newValue);
-				return;
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				getComposedMemberCaches().clear();
 				getComposedMemberCaches().addAll((Collection<? extends ComposedMemberCache>)newValue);
@@ -911,9 +864,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				getExposedInternalTypes().clear();
 				return;
-			case TypesPackage.TMODULE__AST_MD5:
-				setAstMD5(AST_MD5_EDEFAULT);
-				return;
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				getComposedMemberCaches().clear();
 				return;
@@ -962,8 +912,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return internalTypes != null && !internalTypes.isEmpty();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return exposedInternalTypes != null && !exposedInternalTypes.isEmpty();
-			case TypesPackage.TMODULE__AST_MD5:
-				return AST_MD5_EDEFAULT == null ? astMD5 != null : !AST_MD5_EDEFAULT.equals(astMD5);
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				return composedMemberCaches != null && !composedMemberCaches.isEmpty();
 			case TypesPackage.TMODULE__TEMPORARY_TYPES:
@@ -1036,8 +984,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		result.append(preLinkingPhase);
 		result.append(", reconciled: ");
 		result.append(reconciled);
-		result.append(", astMD5: ");
-		result.append(astMD5);
 		result.append(')');
 		return result.toString();
 	}
