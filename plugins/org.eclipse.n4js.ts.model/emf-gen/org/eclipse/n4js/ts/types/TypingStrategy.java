@@ -102,7 +102,17 @@ public enum TypingStrategy implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	STRUCTURAL_FIELD_INITIALIZER(6, "structuralFieldInitializer", "~i~");
+	STRUCTURAL_FIELD_INITIALIZER(6, "structuralFieldInitializer", "~i~"),
+
+	/**
+	 * The '<em><b>Empty</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #EMPTY_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	EMPTY(-1, "empty", "~\u2205~");
 
 	/**
 	 * The '<em><b>Default</b></em>' literal value.
@@ -210,6 +220,21 @@ public enum TypingStrategy implements Enumerator {
 	public static final int STRUCTURAL_FIELD_INITIALIZER_VALUE = 6;
 
 	/**
+	 * The '<em><b>Empty</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>Empty</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #EMPTY
+	 * @model name="empty" literal="~\u2205~"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int EMPTY_VALUE = -1;
+
+	/**
 	 * An array of all the '<em><b>Typing Strategy</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -224,6 +249,7 @@ public enum TypingStrategy implements Enumerator {
 			STRUCTURAL_READ_ONLY_FIELDS,
 			STRUCTURAL_WRITE_ONLY_FIELDS,
 			STRUCTURAL_FIELD_INITIALIZER,
+			EMPTY,
 		};
 
 	/**
@@ -287,6 +313,7 @@ public enum TypingStrategy implements Enumerator {
 			case STRUCTURAL_READ_ONLY_FIELDS_VALUE: return STRUCTURAL_READ_ONLY_FIELDS;
 			case STRUCTURAL_WRITE_ONLY_FIELDS_VALUE: return STRUCTURAL_WRITE_ONLY_FIELDS;
 			case STRUCTURAL_FIELD_INITIALIZER_VALUE: return STRUCTURAL_FIELD_INITIALIZER;
+			case EMPTY_VALUE: return EMPTY;
 		}
 		return null;
 	}

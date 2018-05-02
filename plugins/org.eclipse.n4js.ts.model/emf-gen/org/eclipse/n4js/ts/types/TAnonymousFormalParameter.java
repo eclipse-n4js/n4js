@@ -31,7 +31,7 @@ public interface TAnonymousFormalParameter extends TFormalParameter {
 	 * (_par_n with n is the index of the parameter in the parameter list, or just _par_ in case of setter).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.String%> definedName = this.getDefinedName();\nif ((definedName != null))\n{\n\treturn definedName;\n}\nfinal <%java.lang.Object%> containingFeature = this.eContainer().eGet(this.eContainingFeature());\nif ((containingFeature instanceof <%java.util.List%><?>))\n{\n\t<%java.lang.Object%> _eGet = this.eContainer().eGet(this.eContainingFeature());\n\tfinal int index = ((<%java.util.List%><?>) _eGet).indexOf(this);\n\treturn (\"_par_\" + <%java.lang.Integer%>.valueOf(index));\n}\nelse\n{\n\treturn \"_par_\";\n}'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%java.lang.String%&gt; definedName = this.getDefinedName();\nif ((definedName != null))\n{\n\treturn definedName;\n}\nfinal &lt;%java.lang.Object%&gt; containingFeature = this.eContainer().eGet(this.eContainingFeature());\nif ((containingFeature instanceof &lt;%java.util.List%&gt;&lt;?&gt;))\n{\n\t&lt;%java.lang.Object%&gt; _eGet = this.eContainer().eGet(this.eContainingFeature());\n\tfinal int index = ((&lt;%java.util.List%&gt;&lt;?&gt;) _eGet).indexOf(this);\n\treturn (\"_par_\" + &lt;%java.lang.Integer%&gt;.valueOf(index));\n}\nelse\n{\n\treturn \"_par_\";\n}'"
 	 * @generated
 	 */
 	String getName();

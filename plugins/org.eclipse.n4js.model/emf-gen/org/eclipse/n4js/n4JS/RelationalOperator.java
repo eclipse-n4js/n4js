@@ -95,7 +95,7 @@ public enum RelationalOperator implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #LT
-	 * @model name="lt" literal="<"
+	 * @model name="lt" literal="&lt;"
 	 * @generated
 	 * @ordered
 	 */
@@ -110,7 +110,7 @@ public enum RelationalOperator implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #GT
-	 * @model name="gt" literal=">"
+	 * @model name="gt" literal="&gt;"
 	 * @generated
 	 * @ordered
 	 */
@@ -125,7 +125,7 @@ public enum RelationalOperator implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #LTE
-	 * @model name="lte" literal="<="
+	 * @model name="lte" literal="&lt;="
 	 * @generated
 	 * @ordered
 	 */
@@ -140,7 +140,7 @@ public enum RelationalOperator implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #GTE
-	 * @model name="gte" literal=">="
+	 * @model name="gte" literal="&gt;="
 	 * @generated
 	 * @ordered
 	 */

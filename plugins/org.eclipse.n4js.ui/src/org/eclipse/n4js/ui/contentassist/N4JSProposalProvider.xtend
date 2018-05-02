@@ -39,6 +39,9 @@ import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposa
 import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.eclipse.n4js.services.N4JSGrammarAccess
+import org.eclipse.xtext.GrammarUtil
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -234,11 +237,11 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	/**
 	 * Returns the display string for a non-proxy element, otherwise null.
 	 */
-	private def tryGetDisplayString(EObject element, (QualifiedName, String)=>StyledString stringifier, String shortName) {
+	private def tryGetDisplayString(EObject element, (EObject, QualifiedName, String)=>StyledString stringifier, String shortName) {
 		if (!element.eIsProxy && element instanceof Type) {
 			val qualifiedTypeName = qualifiedNameProvider.getFullyQualifiedName(element)
 			if (qualifiedTypeName !== null) {
-				return stringifier.apply(qualifiedTypeName, shortName)
+				return stringifier.apply(element, qualifiedTypeName, shortName)
 			}
 		}
 		return null

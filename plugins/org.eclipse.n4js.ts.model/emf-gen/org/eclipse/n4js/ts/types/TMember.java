@@ -187,7 +187,7 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * if the container is not of type ContainerType.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.emf.ecore.EObject%> myContainer = this.eContainer();\n<%org.eclipse.n4js.ts.types.ContainerType%><?> _xifexpression = null;\nif ((myContainer instanceof <%org.eclipse.n4js.ts.types.ContainerType%><?>))\n{\n\t_xifexpression = ((<%org.eclipse.n4js.ts.types.ContainerType%><?>)myContainer);\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.emf.ecore.EObject%&gt; myContainer = this.eContainer();\n&lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt; _xifexpression = null;\nif ((myContainer instanceof &lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt;))\n{\n\t_xifexpression = ((&lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt;)myContainer);\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	ContainerType<?> getContainingType();
@@ -227,7 +227,7 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * Convenience method, returns true if member type is MemberType.FIELD
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.MemberType%> _memberType = this.getMemberType();\nreturn <%com.google.common.base.Objects%>.equal(_memberType, <%org.eclipse.n4js.ts.types.MemberType%>.FIELD);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.MemberType%&gt; _memberType = this.getMemberType();\nreturn &lt;%com.google.common.base.Objects%&gt;.equal(_memberType, &lt;%org.eclipse.n4js.ts.types.MemberType%&gt;.FIELD);'"
 	 * @generated
 	 */
 	boolean isField();
@@ -240,7 +240,7 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * Convenience method, returns true if member type is MemberType.GETTER
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.MemberType%> _memberType = this.getMemberType();\nreturn <%com.google.common.base.Objects%>.equal(_memberType, <%org.eclipse.n4js.ts.types.MemberType%>.GETTER);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.MemberType%&gt; _memberType = this.getMemberType();\nreturn &lt;%com.google.common.base.Objects%&gt;.equal(_memberType, &lt;%org.eclipse.n4js.ts.types.MemberType%&gt;.GETTER);'"
 	 * @generated
 	 */
 	boolean isGetter();
@@ -253,7 +253,7 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * Convenience method, returns true if member type is MemberType.SETTER
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.MemberType%> _memberType = this.getMemberType();\nreturn <%com.google.common.base.Objects%>.equal(_memberType, <%org.eclipse.n4js.ts.types.MemberType%>.SETTER);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.MemberType%&gt; _memberType = this.getMemberType();\nreturn &lt;%com.google.common.base.Objects%&gt;.equal(_memberType, &lt;%org.eclipse.n4js.ts.types.MemberType%&gt;.SETTER);'"
 	 * @generated
 	 */
 	boolean isSetter();
@@ -266,7 +266,7 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * Convenience method, returns true if member type is MemberType.SETTER or MemberType.GETTER
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return (<%com.google.common.base.Objects%>.equal(this.getMemberType(), <%org.eclipse.n4js.ts.types.MemberType%>.SETTER) || <%com.google.common.base.Objects%>.equal(this.getMemberType(), <%org.eclipse.n4js.ts.types.MemberType%>.GETTER));'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return (&lt;%com.google.common.base.Objects%&gt;.equal(this.getMemberType(), &lt;%org.eclipse.n4js.ts.types.MemberType%&gt;.SETTER) || &lt;%com.google.common.base.Objects%&gt;.equal(this.getMemberType(), &lt;%org.eclipse.n4js.ts.types.MemberType%&gt;.GETTER));'"
 	 * @generated
 	 */
 	boolean isAccessor();
@@ -279,7 +279,7 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * Convenience method, returns true if member type is MemberType.METHOD
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.MemberType%> _memberType = this.getMemberType();\nreturn <%com.google.common.base.Objects%>.equal(_memberType, <%org.eclipse.n4js.ts.types.MemberType%>.METHOD);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.MemberType%&gt; _memberType = this.getMemberType();\nreturn &lt;%com.google.common.base.Objects%&gt;.equal(_memberType, &lt;%org.eclipse.n4js.ts.types.MemberType%&gt;.METHOD);'"
 	 * @generated
 	 */
 	boolean isMethod();
@@ -395,7 +395,7 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * this member has been poly-filled.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.n4js.ts.types.ContainerType%><?> containingType = this.getContainingType();\nif ((containingType == null))\n{\n\treturn false;\n}\nreturn (containingType.isPolyfill() || containingType.isStaticPolyfill());'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.types.ContainerType%&gt;&lt;?&gt; containingType = this.getContainingType();\nif ((containingType == null))\n{\n\treturn false;\n}\nreturn (containingType.isPolyfill() || containingType.isStaticPolyfill());'"
 	 * @generated
 	 */
 	boolean isPolyfilled();

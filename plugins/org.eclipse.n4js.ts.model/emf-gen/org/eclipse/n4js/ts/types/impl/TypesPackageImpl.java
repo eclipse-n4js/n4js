@@ -589,6 +589,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		isInited = true;
 
+		// Initialize simple dependencies
+		EcorePackage.eINSTANCE.eClass();
+
 		// Obtain or create and register interdependencies
 		TypeRefsPackageImpl theTypeRefsPackage = (TypeRefsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(TypeRefsPackage.eNS_URI) instanceof TypeRefsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(TypeRefsPackage.eNS_URI) : TypeRefsPackage.eINSTANCE);
 
@@ -4025,6 +4028,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(typingStrategyEEnum, TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS);
 		addEEnumLiteral(typingStrategyEEnum, TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS);
 		addEEnumLiteral(typingStrategyEEnum, TypingStrategy.STRUCTURAL_FIELD_INITIALIZER);
+		addEEnumLiteral(typingStrategyEEnum, TypingStrategy.EMPTY);
 
 		initEEnum(typeAccessModifierEEnum, TypeAccessModifier.class, "TypeAccessModifier");
 		addEEnumLiteral(typeAccessModifierEEnum, TypeAccessModifier.UNDEFINED);
