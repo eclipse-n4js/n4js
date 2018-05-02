@@ -73,6 +73,11 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 		};
 	}
 
+	@Override
+	public Delta createDelta(IResourceDescription oldDescription, IResourceDescription newDescription) {
+		return new N4JSResourceDescriptionDelta(oldDescription, newDescription);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 *
