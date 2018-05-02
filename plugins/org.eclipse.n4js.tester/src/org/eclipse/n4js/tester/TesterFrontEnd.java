@@ -11,7 +11,10 @@
 package org.eclipse.n4js.tester;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.runner.IExecutor;
@@ -112,6 +115,13 @@ public class TesterFrontEnd {
 		final TestConfiguration config = tester.createConfiguration();
 		config.writePersistentValues(values);
 
+		List<String> testCaseURIStrings = RunConfiguration.getListOfString(values,
+				TestConfiguration.TESTCASE_SELECTION, true);
+		if (testCaseURIStrings != null && !testCaseURIStrings.isEmpty()) {
+			List<URI> uris = testCaseURIStrings.stream().map(s -> URI.createURI(s))
+					.collect(Collectors.toList());
+			config.setTestMethodSelection(uris);
+		}
 		computeDerivedValues(config);
 
 		return config;
@@ -127,7 +137,13 @@ public class TesterFrontEnd {
 		// B) compute derived values for the test configuration
 
 		// B.1) compute the test tree (note: will create a new session ID every time this is called)
-		final TestTree testTree = testDiscoveryHelper.collectTests(config.getUserSelection());
+
+		List<URI> testMethods = config.getTestMethodSelection();
+		if (testMethods.isEmpty()) {
+			testMethods = Collections.singletonList(config.getUserSelection());
+		}
+
+		final TestTree testTree = testDiscoveryHelper.collectTests(testMethods);
 		config.setTestTree(testTree);
 
 		// B.2) pass test tree as execution data
@@ -137,7 +153,6 @@ public class TesterFrontEnd {
 			int port = testerActivator != null ? testerActivator.getServerPort() : PORT_PLACEHOLDER_MAGIC_NUMBER;
 			config.setResultReportingPort(port);
 			testTreeTransformer.setHttpServerPort(Integer.toString(port));
-
 			final String testTreeAsJSON = objectMapper.writeValueAsString(testTreeTransformer.apply(testTree));
 			config.setExecutionData(TestConfiguration.EXEC_DATA_KEY__TEST_TREE, testTreeAsJSON);
 		} catch (IOException e) {

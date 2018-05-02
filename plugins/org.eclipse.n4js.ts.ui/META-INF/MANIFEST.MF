@@ -29,3 +29,4 @@ Export-Package: org.eclipse.n4js.ts.ui,
  org.eclipse.n4js.ts.ui.quickfix,
  org.eclipse.n4js.ts.ui.search
 Bundle-Activator: org.eclipse.n4js.ts.ui.internal.TypesActivator
+Automatic-Module-Name: org.eclipse.n4js.ts.ui

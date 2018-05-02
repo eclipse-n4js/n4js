@@ -121,7 +121,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 
 		val firstJSXElement = script.eAllContents.findFirst[it instanceof JSXElement]
-		if (firstJSXElement !== null && reactHelper.lookUpReactTModule(script.eResource) === null)
+		if (firstJSXElement !== null && reactHelper.getJsxBackendModule(script.eResource) === null)
 			addIssue(getMessageForJSX_REACT_NOT_RESOLVED(), firstJSXElement, JSX_REACT_NOT_RESOLVED);
 	}
 
@@ -133,7 +133,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
 			return;
 
-		val reactModule = reactHelper.lookUpReactTModule(resource);
+		val reactModule = reactHelper.getJsxBackendModule(resource);
 		val importedModule = importSpecifier.importedModule;
 		if (reactModule !== null && importedModule === reactModule) {
 			if (importSpecifier.alias != ReactHelper.REACT_NAMESPACE_NAME) {
@@ -172,7 +172,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def public void checkReactElementBinding(JSXElement jsxElem) {
 		val expr = jsxElem.jsxElementName.expression;
-		val TypeRef exprTypeRef = reactHelper.getJSXElementBindingType(jsxElem);
+		val TypeRef exprTypeRef = reactHelper.getJsxElementBindingType(jsxElem);
 		var isFunction = exprTypeRef instanceof FunctionTypeExprOrRef;
 		var isClass = exprTypeRef instanceof TypeTypeRef && (exprTypeRef as TypeTypeRef).constructorRef;
 
@@ -287,7 +287,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def public void checkUnknownJSXPropertyAttribute(JSXPropertyAttribute propertyAttribute) {
 		val jsxElem = propertyAttribute.eContainer as JSXElement;
-		val TypeRef exprTypeRef = reactHelper.getJSXElementBindingType(jsxElem);
+		val TypeRef exprTypeRef = reactHelper.getJsxElementBindingType(jsxElem);
 		var isFunction = exprTypeRef instanceof FunctionTypeExprOrRef;
 		var isClass = exprTypeRef instanceof TypeTypeRef && (exprTypeRef as TypeTypeRef).constructorRef;
 		if (!isFunction && !isClass) {

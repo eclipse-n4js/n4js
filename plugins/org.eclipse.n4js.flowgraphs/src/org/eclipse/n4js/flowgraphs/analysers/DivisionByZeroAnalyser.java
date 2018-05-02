@@ -57,7 +57,7 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 		if (expr instanceof NumericLiteral) {
 			NumericLiteral numLit = (NumericLiteral) expr;
 			BigDecimal litValue = numLit.getValue();
-			return litValue.equals(0);
+			return litValue.equals(BigDecimal.ZERO);
 		}
 		return false;
 	}

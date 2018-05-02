@@ -51,7 +51,7 @@ import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 @SuppressWarnings("javadoc")
 public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderParticipantTest {
 	protected static final int ERROR_TIMEOUT = 10000;
-	protected static final int EXPECTED_TIMEOUT = 500;
+	protected static final int EXPECTED_TIMEOUT = 1000;
 	protected IOutlineNodeComparer nodeComparer = new IOutlineNodeComparer.Default();
 	protected IFile file;
 	protected XtextEditor editor;

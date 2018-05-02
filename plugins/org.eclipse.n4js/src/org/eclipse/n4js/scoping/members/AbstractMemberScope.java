@@ -16,6 +16,16 @@ import java.util.Collections;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
+import org.eclipse.n4js.scoping.utils.UnsatisfiedRWAccessDescription;
+import org.eclipse.n4js.scoping.utils.WrongStaticAccessDescription;
+import org.eclipse.n4js.scoping.utils.WrongWriteAccessDescription;
+import org.eclipse.n4js.ts.types.TField;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TSetter;
+import org.eclipse.n4js.ts.types.TypingStrategy;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -25,15 +35,6 @@ import org.eclipse.xtext.scoping.impl.AbstractScope;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-
-import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
-import org.eclipse.n4js.scoping.utils.UnsatisfiedRWAccessDescription;
-import org.eclipse.n4js.scoping.utils.WrongStaticAccessDescription;
-import org.eclipse.n4js.scoping.utils.WrongWriteAccessDescription;
-import org.eclipse.n4js.ts.types.TField;
-import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 
 /**
  * Base class for real {@link MemberScope}. It allows access to members of a container type, taking static access and
@@ -54,6 +55,11 @@ public abstract class AbstractMemberScope extends AbstractScope {
 	 * Flag indicating static access, used to filter members (or create erroneous descriptions)
 	 */
 	protected final boolean staticAccess;
+	/**
+	 * Flag indicating access of a member of a structural field initializer type, i.e. the receiver type reference has a
+	 * typing strategy of {@link TypingStrategy#STRUCTURAL_FIELD_INITIALIZER}.
+	 */
+	protected final boolean structFieldInitMode;
 
 	/**
 	 * Java script variant helper used for determined the kind of constraints to check
@@ -65,9 +71,11 @@ public abstract class AbstractMemberScope extends AbstractScope {
 	 *
 	 * @param context
 	 *            context from where the scope is to be retrieved, neither the context nor its resource must be null
+	 * @param structFieldInitMode
+	 *            see {@link #structFieldInitMode}.
 	 */
 	public AbstractMemberScope(IScope parent, EObject context,
-			boolean staticAccess, JavaScriptVariantHelper jsVariantHelper) {
+			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {
 		super(parent, false);
 		if (context == null || context.eResource() == null) {
 			throw new NullPointerException("Cannot create member scope for context " + context
@@ -76,6 +84,7 @@ public abstract class AbstractMemberScope extends AbstractScope {
 		this.context = context;
 		this.contextResource = context.eResource();
 		this.staticAccess = staticAccess;
+		this.structFieldInitMode = structFieldInitMode;
 		this.jsVariantHelper = jsVariantHelper;
 	}
 
@@ -153,6 +162,11 @@ public abstract class AbstractMemberScope extends AbstractScope {
 					.isSemiLegalAssignmentToFinalFieldInCtor(context.eContainer(), existingMember);
 			final boolean isLegalAssOfFinalInCtor = isAssOfFinalInCtor && !((TField) existingMember).isHasExpression();
 			if (isLegalAssOfFinalInCtor) {
+				return createSingleElementDescription(existingMember);
+			}
+
+			// allowed special case: accessing a setter for read operation in context of structural field init typing
+			if (structFieldInitMode && !accessForWriteOperation && existingMember instanceof TSetter) {
 				return createSingleElementDescription(existingMember);
 			}
 

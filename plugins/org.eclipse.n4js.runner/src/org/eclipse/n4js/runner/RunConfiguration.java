@@ -118,6 +118,9 @@ public class RunConfiguration {
 
 	private final Map<String, String> apiImplProjectMapping = new LinkedHashMap<>();
 
+	/**
+	 * See {@link #getUserSelection()} for details.
+	 */
 	private URI userSelection;
 
 	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
@@ -271,7 +274,9 @@ public class RunConfiguration {
 	 * User selection defined by a URI as used by {@link IN4JSCore}, {@link IN4JSProject}, etc. In the headless case
 	 * this will be a file URI, in the UI case it will be a platform resource URI.
 	 * <p>
-	 * Runners will expect the URI of a file, testers can cope with URIs of files, folders, projects.
+	 * Runners will expect the URI of a file, testers can cope with URIs of methods, classes, files, folders, projects.
+	 * <p>
+	 * The user selection may be accompanied with a test selection in TestConfiguration.
 	 */
 	public URI getUserSelection() {
 		return userSelection;
@@ -533,10 +538,14 @@ public class RunConfiguration {
 	/**
 	 * Fail-fast method for reading a value from a map as returned by method {@link #readPersistentValues()}.
 	 */
-	public static final List<String> getListOfString(Map<String, Object> map, String key) {
+	public static final List<String> getListOfString(Map<String, Object> map, String key, boolean allowNull) {
 		final Object value = map.get(key);
-		if (value == null)
-			throw new IllegalArgumentException("no value for key '" + key + "'");
+		if (value == null) {
+			if (!allowNull) {
+				throw new IllegalArgumentException("no value for key '" + key + "'");
+			}
+			return Collections.emptyList();
+		}
 		// Following usage of raw-types is due to a javac-compiler crash in version 1.8.0_40 when using WildCards:
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		final boolean wrongType = !(value instanceof List)

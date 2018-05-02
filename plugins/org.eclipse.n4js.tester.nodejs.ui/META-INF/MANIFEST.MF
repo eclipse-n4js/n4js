@@ -21,3 +21,4 @@ Require-Bundle: org.eclipse.n4js.ui,
 Bundle-Activator: org.eclipse.n4js.tester.nodejs.ui.NodejsTesterUiActivator
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.n4js.tester.nodejs.ui
+Automatic-Module-Name: org.eclipse.n4js.tester.nodejs.ui

@@ -12,9 +12,9 @@ package org.eclipse.n4js.typesystem;
 
 import java.util.List;
 
-import com.google.common.base.Strings;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
+import com.google.common.base.Strings;
 
 /**
  * Result of a structural typing computed by {@link StructuralTypingComputer}, basically a message with some additional
@@ -51,24 +51,25 @@ public class StructuralTypingResult {
 		if (missingMembers.isEmpty() && wrongMembersErrors.isEmpty()) {
 			return success();
 		} else {
-			String msg = left.getTypeRefAsString() + " is not a structural subtype of " + right.getTypeRefAsString()
-					+ ": ";
+			final StringBuilder sb = new StringBuilder();
+			sb.append(left.getTypeRefAsString() + " is not a structural subtype of " + right.getTypeRefAsString()
+					+ ": ");
 			if (!missingMembers.isEmpty()) {
-				msg += "missing " + missingMembers.get(0);
+				sb.append("missing " + missingMembers.get(0));
 				if (missingMembers.size() > 1) {
-					msg += " and " + (missingMembers.size() - 1) + " more";
+					sb.append(" and " + (missingMembers.size() - 1) + " more");
 				}
 			}
 			if (!wrongMembersErrors.isEmpty()) {
 				if (!missingMembers.isEmpty()) {
-					msg += "; ";
+					sb.append("; ");
 				}
-				msg += wrongMembersErrors.get(0);
+				sb.append(wrongMembersErrors.get(0));
 				if (wrongMembersErrors.size() > 1) {
-					msg += " and " + (wrongMembersErrors.size() - 1) + " more problems";
+					sb.append(" and " + (wrongMembersErrors.size() - 1) + " more problems");
 				}
 			}
-			return failure(msg);
+			return failure(sb.toString());
 		}
 	}
 

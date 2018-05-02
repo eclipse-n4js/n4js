@@ -86,7 +86,7 @@ public class GitCloneSupplier implements Supplier<File> {
 	 * Synchronizes the local clone of the type definitions repository. Does nothing if Internet connection is
 	 * unavailable.
 	 */
-	public void synchronizeTypeDefinitions() {
+	public synchronized void synchronizeTypeDefinitions() {
 		initLocations();
 
 		final String remoteURL = currentGitLocation.getRepositoryRemoteURL();

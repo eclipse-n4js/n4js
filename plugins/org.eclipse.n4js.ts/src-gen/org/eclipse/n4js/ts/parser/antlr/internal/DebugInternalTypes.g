@@ -861,24 +861,26 @@ ruleParameterizedTypeRef:
 
 // Rule ParameterizedTypeRefNominal
 ruleParameterizedTypeRefNominal:
-	ruleTypeAndTypeArguments
-;
-
-// Rule ArrayTypeRef
-ruleArrayTypeRef:
-	'['
-	ruleTypeArgument
-	']'
+	(
+		ruleTypeReference
+		    |
+		ruleTypeReference
+		ruleVersionRequest
+	)
+	(
+		('<')=>
+		ruleTypeArguments
+	)?
 ;
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
 	(
 		ruleTypingStrategyUseSiteOperator
-		ruleTypeReferenceName
+		ruleTypeReference
 		    |
 		ruleTypingStrategyUseSiteOperator
-		ruleTypeReferenceName
+		ruleTypeReference
 		ruleVersionRequest
 	)
 	(
@@ -891,23 +893,21 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule TypeAndTypeArguments
-ruleTypeAndTypeArguments:
-	(
-		ruleTypeReferenceName
-		    |
-		ruleTypeReferenceName
-		ruleVersionRequest
-	)
-	(
-		('<')=>
-		ruleTypeArguments
-	)?
+// Rule ArrayTypeRef
+ruleArrayTypeRef:
+	'['
+	ruleTypeArgument
+	']'
 ;
 
 // Rule VersionRequest
 ruleVersionRequest:
 	RULE_VERSION
+;
+
+// Rule TypeReference
+ruleTypeReference:
+	ruleTypeReferenceName
 ;
 
 // Rule TypeArguments
@@ -1320,7 +1320,7 @@ RULE_STRING : '\'' RULE_SINGLE_STRING_CHAR* '\'';
 
 fragment RULE_SINGLE_STRING_CHAR : (~((RULE_LINE_TERMINATOR_FRAGMENT|'\''|'\\'))|'\\' (RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT|~(RULE_LINE_TERMINATOR_FRAGMENT)));
 
-RULE_STRUCTMODSUFFIX : ('r'|'i'|'w') '~';
+RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 
 RULE_IDENTIFIER : RULE_IDENTIFIER_START RULE_IDENTIFIER_PART*;
 

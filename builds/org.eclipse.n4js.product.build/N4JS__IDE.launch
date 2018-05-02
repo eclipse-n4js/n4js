@@ -38,6 +38,7 @@
 <setEntry value="org.eclipse.egit:default"/>
 <setEntry value="org.eclipse.emf.common:default"/>
 <setEntry value="org.eclipse.emf.ecore:default"/>
+<setEntry value="org.eclipse.epp.mpc:default"/>
 <setEntry value="org.eclipse.equinox.p2.core.feature:default"/>
 <setEntry value="org.eclipse.equinox.p2.extras.feature:default"/>
 <setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>

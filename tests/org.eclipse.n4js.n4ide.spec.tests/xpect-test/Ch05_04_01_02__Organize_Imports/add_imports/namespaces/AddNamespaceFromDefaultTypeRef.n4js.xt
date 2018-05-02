@@ -41,6 +41,6 @@
 var placeholder:string;
 
 /* XPECT errors ---
-"Couldn't resolve reference to Type 'namespace.default'." at "namespace.default"
+"Couldn't resolve reference to ModuleNamespaceVirtualType 'namespace'." at "namespace"
 --- */
 let r : namespace.default;

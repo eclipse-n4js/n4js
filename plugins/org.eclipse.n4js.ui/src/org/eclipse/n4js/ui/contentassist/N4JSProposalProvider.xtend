@@ -54,6 +54,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	@Inject
 	IQualifiedNameConverter qualifiedNameConverter
 
+	@Inject
+	private N4JSGrammarAccess n4jsGrammarAccess;
+
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 			ICompletionProposalAcceptor acceptor) {
 		val calledRule = ruleCall.getRule();
@@ -64,6 +67,21 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	override protected lookupCrossReference(CrossReference crossReference, ContentAssistContext contentAssistContext, ICompletionProposalAcceptor acceptor) {
 		lookupCrossReference(crossReference, contentAssistContext, acceptor, new N4JSCandidateFilter());
+	}
+	override protected void lookupCrossReference(CrossReference crossReference, ContentAssistContext contentAssistContext,
+			ICompletionProposalAcceptor acceptor, Predicate<IEObjectDescription> filter) {
+		// because rule "TypeReference" in TypeExpressions.xtext (overridden in N4JS.xtext) is a wildcard fragment,
+		// the standard behavior of the super method would fail in the following case:
+		val containingParserRule = GrammarUtil.containingParserRule(crossReference);
+		if (containingParserRule === n4jsGrammarAccess.typeReferenceRule) {
+			val featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
+			if (featureName == TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType.name) {
+				lookupCrossReference(crossReference, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType,
+					contentAssistContext, acceptor, filter);
+			}
+		}
+		// standard behavior:
+		super.lookupCrossReference(crossReference, contentAssistContext, acceptor, filter);
 	}
 
 	/**
@@ -166,7 +184,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		}
 		return result
 	]
-	 
+	
 	override protected getStyledDisplayString(EObject element, String qualifiedName, String shortName) {
 		if (qualifiedName == shortName) {
 			val parsedQualifiedName = qualifiedNameConverter.toQualifiedName(qualifiedName)
@@ -177,7 +195,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		}
 		return tryGetDisplayString(element, stringifier, shortName) ?: stringifier.apply(element, qualifiedNameConverter.toQualifiedName(qualifiedName), shortName)
 	}
-	
+
 	override protected getImage(IEObjectDescription description) {
 		val clazz = description.EClass
 		return super.getImage(EcoreUtil.create(clazz))
@@ -216,11 +234,11 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	/**
 	 * Returns the display string for a non-proxy element, otherwise null.
 	 */
-	private def tryGetDisplayString(EObject element, (EObject, QualifiedName, String)=>StyledString stringifier, String shortName) {
+	private def tryGetDisplayString(EObject element, (QualifiedName, String)=>StyledString stringifier, String shortName) {
 		if (!element.eIsProxy && element instanceof Type) {
 			val qualifiedTypeName = qualifiedNameProvider.getFullyQualifiedName(element)
 			if (qualifiedTypeName !== null) {
-				return stringifier.apply(element, qualifiedTypeName, shortName)
+				return stringifier.apply(qualifiedTypeName, shortName)
 			}
 		}
 		return null

@@ -11,13 +11,12 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.Result
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.Expression
@@ -33,6 +32,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
@@ -44,6 +44,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions
 import org.eclipse.n4js.scoping.N4JSScopeProvider
+import org.eclipse.n4js.scoping.members.TypingStrategyFilter
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
@@ -69,6 +70,7 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -79,12 +81,14 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.n4js.typesystem.TypingStrategyFilter
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -335,7 +339,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			val staticAccess = genDecl instanceof N4MemberDeclaration && (genDecl as N4MemberDeclaration).static;
 			val scope = n4jsScopeProvider.getTypeScope( // note: calling #getTypeScope() here, NOT #getScope()!
 			genDecl.eContainer, // use container, because we do not want to see type variables we are currently validating
-			TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType, // provide any reference that expects instances of Type as target objects
 			staticAccess);
 			genDecl.typeVars.forEach [
 				if (!it.name.nullOrEmpty) {
@@ -521,7 +524,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			if (typeRef.isDynamic) {
 				return;
 			}
-	
+
 			var type = typeRef.declaredType;
 			if (type===null && typeRef instanceof BoundThisTypeRef) {
 				type = (typeRef as BoundThisTypeRef).actualThisTypeRef?.declaredType;
@@ -535,15 +538,18 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			if (structuralMembers.isEmpty && type == RuleEnvironmentExtensions.objectType(G)) {
 				return;
 			}
-	
-			val strategyFilter = new TypingStrategyFilter(typingStrategy);
+
+			val ctor = containerTypesHelper.fromContext(objectLiteral).findConstructor(type as ContainerType<?>);
+			val strategyFilter = new TypingStrategyFilter(typingStrategy,
+				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
+				isSpecArgumentToSpecCtor(objectLiteral, ctor));
 			val expectedMembers = containerTypesHelper.fromContext(objectLiteral).allMembers(
 				type as ContainerType<?>).filter[member|strategyFilter.apply(member)].map[member|member.name].
 				toSet();
-	
+
 			// These are available via the 'with' keyword add them to the accepted ones
 			typeRef.structuralMembers.forEach[member|expectedMembers.add(member.name)];
-	
+
 			val inputMembers = (objectLiteral.definedType as ContainerType<?>).ownedMembers;
 			for (property : inputMembers) {
 				if (!expectedMembers.contains(property.name)) {
@@ -767,5 +773,22 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		return tClassRefs;
 	}
+
+	def private static boolean isSpecArgumentToSpecCtor(Expression expr, TMethod ctor) {
+		if (ctor === null) {
+			return false;
+		}
+		val parent = expr?.eContainer;
+		val grandParent = parent?.eContainer;
+		if (parent instanceof Argument) {
+			if (grandParent instanceof NewExpression) {
+				val argIdx = grandParent.arguments.indexOf(parent);
+				val ctorFpar = ctor.getFparForArgIdx(argIdx);
+				if (ctorFpar !== null) {
+					return AnnotationDefinition.SPEC.hasAnnotation(ctorFpar);
+				}
+			}
+		}
+		return false;
+	}
 }
-	

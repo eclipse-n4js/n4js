@@ -17,4 +17,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.n4mf,
  org.eclipse.n4js.n4mf.impl,
  org.eclipse.n4js.n4mf.util
+Automatic-Module-Name: org.eclipse.n4js.n4mf.model
 

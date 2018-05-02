@@ -24,3 +24,4 @@ Export-Package: org.eclipse.n4js.smith.ui,
  org.eclipse.n4js.smith.ui.graph
 Bundle-Activator: org.eclipse.n4js.smith.ui.Activator
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.eclipse.n4js.smith.ui

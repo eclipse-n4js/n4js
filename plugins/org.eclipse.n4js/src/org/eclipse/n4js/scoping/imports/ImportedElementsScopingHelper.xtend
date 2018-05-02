@@ -240,7 +240,7 @@ class ImportedElementsScopingHelper {
 		}
 
 		// add namespace to scope
-		var namespaceName = specifier.alias;
+		val namespaceName = specifier.alias;
 		val namespaceQName = QualifiedName.create(namespaceName)
 		val Type namespaceType = script.module.internalTypes.findFirst [ interType |
 			interType instanceof ModuleNamespaceVirtualType &&
@@ -251,6 +251,7 @@ class ImportedElementsScopingHelper {
 
 		if (importVariables) {
 			// add vars to namespace
+			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 			for (importedVar : imp.module.variables) {
 				val varVisibility = variableVisibilityChecker.isVisible(contextResource, importedVar);
 				val varName = importedVar.exportedName
@@ -261,32 +262,21 @@ class ImportedElementsScopingHelper {
 						importedVar.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap,
 							specifier)
 					}
-				} else {
-					importedVar.handleInvisible(invalidImports, qn, varVisibility.accessModifierSuggestion,
-						originatorMap, specifier)
 				}
 			}
 		}
 
 		// add types
+		// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 		for (importedType : imp.module.topLevelTypes) {
 			val typeVisibility = typeVisibilityChecker.isVisible(contextResource, importedType);
 
 			val qn = createImportedQualifiedTypeName(namespaceName, importedType)
 			if (typeVisibility.visibility) {
-				if (!importVariables) {
-					// when we are not importing variables we ask for types, types are not access expressions,
-					// so we add type with namespace name into the scope
-					val ieod = validImports.putOrError(importedType, qn, IssueCodes.IMP_AMBIGUOUS)
-					originatorMap.putWithOrigin(ieod, specifier)
-				}
 				val originalName = createImportedQualifiedTypeName(importedType)
 				if (!invalidImports.containsElement(originalName)) {
 					importedType.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap, specifier)
 				}
-			} else {
-				importedType.handleInvisible(invalidImports, qn, typeVisibility.accessModifierSuggestion, originatorMap,
-					specifier)
 			}
 		}
 	}
@@ -410,7 +400,7 @@ class ImportedElementsScopingHelper {
 	 */
 	private def IScope getGlobalObjectProperties(IScope parent, EObject context) {
 		val globalObject = GlobalObjectScope.get(context.eResource.resourceSet).getGlobalObject
-		memberScopeFactory.create(parent, globalObject, context, false)
+		memberScopeFactory.create(parent, globalObject, context, false, false)
 	}
 
 	private def void addAccessModifierSuggestion(IEObjectDescription description, String suggestion) {

@@ -14,6 +14,7 @@ import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.StringJoiner;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -25,11 +26,13 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express' with N4JS definition file support.
  */
-public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN4jscExternalTest {
+public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends AbstractN4jscTest {
 	File workspace;
 
 	private static final String PROJECT_NAME_N4JS = "project.using.external.from.n4js";
 	private static final String PROJECT_NAME_N4JSX = "project.using.external.from.n4jsx";
+
+	private static final String EXPECTED = createExpectedOutput();
 
 	/** Prepare workspace. */
 	@Before
@@ -55,7 +58,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose",
@@ -64,9 +66,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				wsRoot + "/" + PROJECT_NAME_N4JS
 		};
 		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
-				out);
+		N4CliHelper.assertExpectedOutput(EXPECTED, out);
 	}
 
 	/**
@@ -81,7 +81,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--verbose",
@@ -91,8 +90,23 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 		};
 
 		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
-				out);
+		N4CliHelper.assertExpectedOutput(EXPECTED, out);
+	}
+
+	/** Keep in sync with the modules being executed ( {@code Main} and {@code MainX}). */
+	private static String createExpectedOutput() {
+		StringJoiner expected = new StringJoiner("\n ");
+		expected.add("express");
+		expected.add("has own prop init");
+		expected.add("has own prop defaultConfiguration");
+		expected.add("has own prop lazyrouter");
+		expected.add("has own prop handle");
+		expected.add("has own prop use");
+		expected.add("has own prop route");
+		expected.add("has own prop engine");
+		expected.add("has own prop param");
+		expected.add("has own prop listen");
+		expected.add("has own prop render");
+		return expected.toString();
 	}
 }

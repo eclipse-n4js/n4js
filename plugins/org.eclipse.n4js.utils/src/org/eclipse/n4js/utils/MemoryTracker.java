@@ -134,13 +134,15 @@ public class MemoryTracker {
 
 	/** Utility, print to std out current memory usage (no data recording). */
 	public static void printCurrentMemoryUsage(String label) {
-		System.out.println(String.format("\n| %s | %s |",
+		System.out.println(String.format("| %s | %s |",
 				formatLabelToWidth(" " + label, label.length() + 2),
 				formatMemory(bytesToHuman(getUsedMemory()))));
 	}
 
 	/** Utility, run finalizations and GC. */
 	public static void runGC() {
+		// see http://www.fasterj.com/articles/gcnotifs.shtml
+		// for notification if GC ran
 		Runtime.getRuntime().runFinalization();
 		Runtime.getRuntime().gc();
 		Thread.yield();

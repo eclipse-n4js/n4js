@@ -83,7 +83,7 @@ public abstract class AbstractTesterLaunchShortcut implements ILaunchShortcut {
 
 		copyProjectsLaunchConfigSettings(resourceToTest, testConfig, type);
 
-		ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type, testConfig);
+		ILaunchConfiguration launchConfig = testConfigConverter.toLaunchConfiguration(type, testConfig, null);
 		DebugUITools.launch(launchConfig, mode);
 		// execution dispatched to proper ILaunchConfigurationDelegate
 	}

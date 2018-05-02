@@ -23,4 +23,5 @@ Require-Bundle: org.eclipse.xpect.xtext.lib;bundle-version="0.2.0",
  org.eclipse.n4js.xpect,
  org.eclipse.n4js.xpect.ui
 Export-Package: org.eclipse.n4js.transpiler.es5.xpect.tests
+Automatic-Module-Name: org.eclipse.n4js.transpiler.es5.tests
 

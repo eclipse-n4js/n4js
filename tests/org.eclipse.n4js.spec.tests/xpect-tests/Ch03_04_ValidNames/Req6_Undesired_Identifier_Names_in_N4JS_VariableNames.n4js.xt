@@ -31,5 +31,8 @@ var RED;
 // XPECT nowarnings -->
 const BLUE = 1;
 
-// XPECT errors --> "no viable alternative at input 'catch'" at "catch"
+/* XPECT errors ---
+   "A variable statement must at least contain one variable declaration." at "var"
+   "no viable alternative at input 'catch'" at "catch"
+ --- */
 var catch;

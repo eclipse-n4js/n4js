@@ -19,3 +19,4 @@ Require-Bundle: com.google.guava,
  com.fasterxml.jackson.core.jackson-databind
 Export-Package: org.eclipse.n4js.external.libraries
 Bundle-Vendor: %providerName
+Automatic-Module-Name: org.eclipse.n4js.external.libraries

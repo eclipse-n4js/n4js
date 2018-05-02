@@ -34,3 +34,4 @@ Export-Package: org.eclipse.n4js.n4mf.ui,
  org.eclipse.n4js.n4mf.ui.internal,
  org.eclipse.n4js.n4mf.ui.quickfix
 Bundle-Activator: org.eclipse.n4js.n4mf.ui.internal.N4MFActivator
+Automatic-Module-Name: org.eclipse.n4js.n4mf.ui

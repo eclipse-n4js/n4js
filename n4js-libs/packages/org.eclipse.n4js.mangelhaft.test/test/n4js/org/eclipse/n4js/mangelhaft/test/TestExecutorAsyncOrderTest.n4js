@@ -1,0 +1,42 @@
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+
+const sleep = (ms: int): Promise<?, ?> => new Promise<any, any>(resolve => setTimeout(resolve, ms));
+
+class BaseClass {
+    collected: [string] = [];
+    
+    @BeforeAll
+    async baseBeforeAll(): void {
+        await sleep(100);
+        this.collected.push("baseBeforeAll");
+    }
+    @Before
+    private async baseBefore(): void {
+        await sleep(5);
+        this.collected.push("baseBefore");
+    }
+}
+
+export public class TestExecutorAsyncOrderTest extends BaseClass {
+    @BeforeAll
+    async beforeAll(): void {
+        await sleep(10);
+        this.collected.push("beforeAll");
+    }
+    @Before
+    private async before(): void {
+        this.collected.push("before");
+    }
+
+    @Test @Fixme("GH-731")
+    test_before(): void {
+        Assert.deepEqual(this.collected, ["baseBeforeAll", "beforeAll" , "baseBefore", "before"], "should follow order");
+    }
+}
+    
+export public class TestExecutorAsyncOrderTest_Sub extends TestExecutorAsyncOrderTest {
+    @Test @Fixme("GH-731")
+    test_before_sub(): void {
+        super.test_before();
+    }
+}

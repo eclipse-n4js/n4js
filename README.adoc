@@ -37,7 +37,7 @@ This installer is to be downloaded from https://wiki.eclipse.org/Eclipse_Install
 Run the installer and apply the following steps:
 
 1. change to "Advance Mode" via the menu (upper-right corner) (no need to move the installer)
-2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "Latest(Neon)"
+2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "Oxygen"
 3. double-click the entry **Eclipse Projects/N4JS** so that it is shown in the catalog view below
 4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder.
 5. start installation
@@ -48,7 +48,7 @@ The installer will then guide you through the rest of the installation. All plug
 
 For a manual install, clone the code and import all top-level projects from the docs, features, plugins, releng, testhelpers, and tests folders. Activate the targetplatform contained in the `releng/org.eclipse.n4js.targetplatform/` project.
 
-The N4JS IDE is developed with Eclipse Neon 4.6 or better since the system is based on Eclipse anyway.
+The N4JS IDE is developed with Eclipse Oxygen 4.7 or better since the system is based on Eclipse anyway.
 It is almost impossible to use another IDE to develop Eclipse plugins. The list of required plugins includes:
 
 - Xtext/Xtend 2.10.0

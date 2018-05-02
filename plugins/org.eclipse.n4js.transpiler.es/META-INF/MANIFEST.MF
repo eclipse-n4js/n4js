@@ -20,3 +20,4 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.external.libraries
 Export-Package: org.eclipse.n4js.transpiler.es.n4idl,
  org.eclipse.n4js.transpiler.es
+Automatic-Module-Name: org.eclipse.n4js.transpiler.es
