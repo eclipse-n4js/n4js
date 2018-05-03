@@ -39,7 +39,7 @@ import com.google.inject.Singleton;
  * getCache() instead of directly accessing the property cache. The cast to {@link N4JSResourceDescriptionStrategy} is
  * only a double check that the correct resource description strategy is bound in the runtime module.
  *
- * Furthermore, this manager implementation binds an N4JS specific
+ * Furthermore, this manager implementation configures an N4JS specific
  * {@link org.eclipse.xtext.resource.IResourceDescription.Delta} implementation to customize the builder behavior.
  */
 @Singleton
