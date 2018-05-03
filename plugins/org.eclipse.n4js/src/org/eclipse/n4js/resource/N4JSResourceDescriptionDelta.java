@@ -32,8 +32,8 @@ public class N4JSResourceDescriptionDelta extends DefaultResourceDescriptionDelt
 	/**
 	 * Creates an instance.
 	 */
-	public N4JSResourceDescriptionDelta(IResourceDescription old, IResourceDescription _new) {
-		super(old, _new);
+	public N4JSResourceDescriptionDelta(IResourceDescription oldDescription, IResourceDescription newDescription) {
+		super(oldDescription, newDescription);
 	}
 
 	/**
