@@ -61,7 +61,7 @@ public class AbstractN4JSTest extends Assert {
 	}
 
 	/**
-	 * Creates a new N4JSResource for each of the given URIs inside a newly created {@link  ResourceSet}.
+	 * Creates a new N4JSResource for each of the given URIs inside the same, newly created {@link ResourceSet}.
 	 *  
 	 * The returned resources are not loaded yet.
 	 */
@@ -70,7 +70,7 @@ public class AbstractN4JSTest extends Assert {
 		val resources = uris.stream.map[u |
 			val normalizedURI = resSet.URIConverter.normalize(u);
 			return resSet.createResource(normalizedURI) as N4JSResource;
-		].collect(Collectors.toList) // make sure resources are created eagerly
+		].collect(Collectors.toList) // eagerly collect created resources
 		
 		return resources;
 	}
@@ -177,7 +177,7 @@ public class AbstractN4JSTest extends Assert {
 			assertFalse(resFromIndex.module.eIsProxy);
 			
 			return resFromIndex;
-		].collect(Collectors.toList) // eagerly re-loaded resources
+		].collect(Collectors.toList) // eagerly collect re-loaded resources
 		
 		return reloadedResources;
 	}
