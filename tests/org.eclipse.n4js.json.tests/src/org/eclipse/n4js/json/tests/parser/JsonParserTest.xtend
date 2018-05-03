@@ -12,7 +12,6 @@ package org.eclipse.n4js.json.tests.parser
 
 import com.google.inject.Inject
 import java.math.BigDecimal
-import java.util.List
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONBooleanLiteral
 import org.eclipse.n4js.json.JSON.JSONDocument
@@ -29,6 +28,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 
 /**
  * Tests for parsing JSON files.
@@ -97,16 +97,58 @@ class JsonParserTest {
 		'''"   "'''.parseSuccessfully
 	}
 	
+	@Test def void testInvalidJSON() {
+		'''NaN'''.parseUnsuccessfully;
+		'''Infinity'''.parseUnsuccessfully;
+		'''f()'''.parseUnsuccessfully // JS style function calls
+		'''[[[identifier], 2], 3]'''.parseUnsuccessfully // JS style identifier use
+		'''function f() {}'''.parseUnsuccessfully // JS style function declaration
+		'''() => {}'''.parseUnsuccessfully // JS style arrow function
+		
+		// JS number literals that are invalid JSON number
+		'''.42'''.parseUnsuccessfully
+		'''+42'''.parseUnsuccessfully
+		'''42.'''.parseUnsuccessfully
+		'''[.42]'''.parseUnsuccessfully
+		'''[-.42]'''.parseUnsuccessfully
+		'''[-42.]'''.parseUnsuccessfully
+		
+		// JS string literals that are invalid JSON
+		"''".parseUnsuccessfully // wrong quotes
+		'''"\a"'''.parseUnsuccessfully // invalid escape character
+		"\"\\\'\"".parseUnsuccessfully // invalid escape character
+		'''"This string never ends'''.parseUnsuccessfully // unterminated string
+		'''"This string never ends\"'''.parseUnsuccessfully // unterminated string
+	
+		// JS object literals that are invalid JSON
+		'''{no; "keyquotes"'''.parseUnsuccessfully;
+		'''{true: false}'''.parseUnsuccessfully;
+		'''{0:0}'''.parseUnsuccessfully;
+		'''{-42:24}'''.parseUnsuccessfully;
+		'''{id: 2"}'''.parseUnsuccessfully
+		'''{null: null"}'''.parseUnsuccessfully
+	}
+	
+	@Test def void testSimpleObjects() {
+		val obj1 = assertIsObject('''{"a": 1, "b": 2}'''.parseSuccessfully.content);
+		assertEqualsValue(1, assertHasKey(obj1, "a"));
+		assertEqualsValue(2, assertHasKey(obj1, "b"));
+		
+		val obj2 = assertIsObject('''{"c": "str", "d": []}'''.parseSuccessfully.content);
+		assertEqualsValue("str", assertHasKey(obj2, "c"));
+		assertIsArray(0, assertHasKey(obj2, "d"));
+	}
+	
 	/** Checks that an array of numeric literals is parsed correctly. */
 	@Test def void testNumericArray() {
 		val doc = '''[1, 2, 3]'''.parseSuccessfully;
 		assertTrue(doc.content instanceof JSONArray);
 		
-		val array = assertIsArray(3, doc.content);
+		val arrayElements = assertIsArray(3, doc.content).elements;
 
-		assertEqualsValue(1, array.get(0));
-		assertEqualsValue(2, array.get(1));
-		assertEqualsValue(3, array.get(2));
+		assertEqualsValue(1, arrayElements.get(0));
+		assertEqualsValue(2, arrayElements.get(1));
+		assertEqualsValue(3, arrayElements.get(2));
 	}
 	
 	/** Checks that an array of mixed values is parsed correctly. */
@@ -114,21 +156,107 @@ class JsonParserTest {
 		val doc = '''[1, "str", {"v" : 1}, [], null, true, 42.42, 12e+2]'''.parseSuccessfully;
 		assertTrue(doc.content instanceof JSONArray);
 		
-		val array = assertIsArray(8, doc.content);
+		val arrayElements = assertIsArray(8, doc.content).elements;
 		
-		assertEqualsValue(1, array.get(0));
-		assertEqualsValue("str", array.get(1));
+		assertEqualsValue(1, arrayElements.get(0));
+		assertEqualsValue("str", arrayElements.get(1));
 		
-		val obj = assertIsObject(array.get(2));
+		val obj = assertIsObject(arrayElements.get(2));
 		val vVal = assertHasKey(obj, "v");
 		assertEqualsValue(1, vVal);
 		
-		assertIsArray(0, array.get(3));
+		assertIsArray(0, arrayElements.get(3));
 		
-		assertIsNullValue(array.get(4));
-		assertEqualsValue(true, array.get(5));
-		assertEqualsValue(42.42, array.get(6));
-		assertEqualsValue(new BigDecimal(12e2), array.get(7));
+		assertIsNullValue(arrayElements.get(4));
+		assertEqualsValue(true, arrayElements.get(5));
+		assertEqualsValue(42.42, arrayElements.get(6));
+		assertEqualsValue(new BigDecimal(12e2), arrayElements.get(7));
+	}
+	
+	/** Checks that the parsing of a nested JSON object works as intended. */
+	@Test def void testNestedObject() {
+		val doc = '''{
+			"a": {
+				"b": {
+					"c": {
+						"d": {
+							"e": [1]
+						}
+					}
+				}
+			}
+		}'''.parseSuccessfully;
+	
+		val objA = assertIsObject(doc.content);
+		val objB = assertIsObject(assertHasKey(objA, "a"));
+		val objC = assertIsObject(assertHasKey(objB, "b"));
+		val objD = assertIsObject(assertHasKey(objC, "c"));
+		val objE = assertIsObject(assertHasKey(objD, "d"));
+		val arrE = assertIsArray(1, assertHasKey(objE, "e"));
+		
+		assertEqualsValue(1, arrE.elements.get(0));
+	}
+	
+	/** Checks that the parsing of a nested JSON array works as intended. */
+	@Test def void testNestedArray() {
+		val doc = '''
+		[
+			[
+				[
+					[
+						[]
+					]
+				]
+			]
+		]'''.parseSuccessfully;
+	
+		val arr1 = assertIsArray(1, doc.content);
+		val arr2 = assertIsArray(1, arr1.elements.get(0));
+		val arr3 = assertIsArray(1, arr2.elements.get(0));
+		val arr4 = assertIsArray(1, arr3.elements.get(0));
+		assertIsArray(0, arr4.elements.get(0));
+	}
+	
+	/** Checks that the parsing of a simple Node.js package.json file works as intended. */
+	@Test def void testSimpleNodePackageJson() {
+		val doc = '''
+		{
+		  "name": "test-npm",
+		  "version": "1.0.0",
+		  "description": "",
+		  "main": "index.js",
+		  "scripts": {
+		    "test": "echo \"Error: no test specified\" && exit 1"
+		  },
+		  "keywords": [],
+		  "author": "",
+		  "license": "ISC",
+		  "dependencies": {
+		    "a": "^16.3.2",
+		    "b": "^0.3.2"
+		  }
+		}
+		'''.parseSuccessfully;
+		
+		
+		val rootObject = assertIsObject(doc.content);
+		
+		assertEqualsValue("test-npm", assertHasKey(rootObject, "name"));
+		assertEqualsValue("1.0.0", assertHasKey(rootObject, "version"));
+		assertEqualsValue("", assertHasKey(rootObject, "description"));
+		assertEqualsValue("index.js", assertHasKey(rootObject, "main"));
+		
+		val scriptsObject = assertIsObject(assertHasKey(rootObject, "scripts"));
+		assertEqualsValue("echo \"Error: no test specified\" && exit 1", assertHasKey(scriptsObject, "test"));
+		
+		assertIsArray(0, assertHasKey(rootObject, "keywords"));
+		assertEqualsValue("", assertHasKey(rootObject, "author"));
+		assertEqualsValue("ISC", assertHasKey(rootObject, "license"));
+		
+		val dependenciesObject = assertIsObject(assertHasKey(rootObject, "dependencies"));
+		assertEqualsValue("^16.3.2", assertHasKey(dependenciesObject, "a"));
+		assertEqualsValue("^0.3.2", assertHasKey(dependenciesObject, "b"));
+		
 	}
 
 	/** Asserts that the given {@code actual} JSON value represents a number of value {@code numberValue}. */
@@ -167,10 +295,10 @@ class JsonParserTest {
 	}
 	
 	/** Asserts the given {@link JSONValue} is an array of given size and returns its elements. */
-	private def List<JSONValue> assertIsArray(int size, JSONValue actual) {
+	private def JSONArray assertIsArray(int size, JSONValue actual) {
 		assertTrue("Value is expected to be a JSONArray", actual instanceof JSONArray);
 		assertEquals(size, (actual as JSONArray).elements.size);
-		return (actual as JSONArray).elements;
+		return (actual as JSONArray);
 	}
 	
 	/** Asserts the given {@link JSONValue} is an object of given size and returns it. */
@@ -194,5 +322,14 @@ class JsonParserTest {
 		val doc = json.parse;
 		assertTrue('''"«json»" ''' + doc.eResource.errors.join('\n')[line + ': ' + message], doc.eResource.errors.empty)
 		return doc
+	}
+	
+	/** 
+	 * Asserts that the given {@code json} character sequences cannot be parsed correctly. 
+	 */
+	protected def void parseUnsuccessfully(CharSequence json) {
+		val doc = json.parse;
+		assertFalse('''Parsing "«json»" did not cause any syntax errors as expected.''', 
+			doc.eResource.errors.filter(XtextSyntaxDiagnostic).empty);
 	}
 }

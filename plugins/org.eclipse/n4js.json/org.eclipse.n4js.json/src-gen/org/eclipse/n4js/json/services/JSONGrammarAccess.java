@@ -529,7 +529,7 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal DOUBLE returns ecore::EBigDecimal:
-	//	'-'? DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?;
+	//	'-'? DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?;
 	public TerminalRule getDOUBLERule() {
 		return tDOUBLE;
 	}

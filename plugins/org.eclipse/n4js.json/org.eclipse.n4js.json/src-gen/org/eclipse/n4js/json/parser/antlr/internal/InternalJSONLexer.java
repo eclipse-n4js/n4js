@@ -427,8 +427,8 @@ public class InternalJSONLexer extends Lexer {
     // $ANTLR start "RULE_DOUBLE"
     public final void mRULE_DOUBLE() throws RecognitionException {
         try {
-            // InternalJSON.g:594:22: ( ( '-' )? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' ( RULE_DECIMAL_DIGIT_FRAGMENT )* ( RULE_EXPONENT_PART )? )
-            // InternalJSON.g:594:24: ( '-' )? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' ( RULE_DECIMAL_DIGIT_FRAGMENT )* ( RULE_EXPONENT_PART )?
+            // InternalJSON.g:594:22: ( ( '-' )? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT ( RULE_DECIMAL_DIGIT_FRAGMENT )* ( RULE_EXPONENT_PART )? )
+            // InternalJSON.g:594:24: ( '-' )? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT ( RULE_DECIMAL_DIGIT_FRAGMENT )* ( RULE_EXPONENT_PART )?
             {
             // InternalJSON.g:594:24: ( '-' )?
             int alt5=2;
@@ -450,7 +450,8 @@ public class InternalJSONLexer extends Lexer {
 
             mRULE_DECIMAL_INTEGER_LITERAL_FRAGMENT(); 
             match('.'); 
-            // InternalJSON.g:594:71: ( RULE_DECIMAL_DIGIT_FRAGMENT )*
+            mRULE_DECIMAL_DIGIT_FRAGMENT(); 
+            // InternalJSON.g:594:99: ( RULE_DECIMAL_DIGIT_FRAGMENT )*
             loop6:
             do {
                 int alt6=2;
@@ -463,7 +464,7 @@ public class InternalJSONLexer extends Lexer {
 
                 switch (alt6) {
             	case 1 :
-            	    // InternalJSON.g:594:71: RULE_DECIMAL_DIGIT_FRAGMENT
+            	    // InternalJSON.g:594:99: RULE_DECIMAL_DIGIT_FRAGMENT
             	    {
             	    mRULE_DECIMAL_DIGIT_FRAGMENT(); 
 
@@ -475,7 +476,7 @@ public class InternalJSONLexer extends Lexer {
                 }
             } while (true);
 
-            // InternalJSON.g:594:100: ( RULE_EXPONENT_PART )?
+            // InternalJSON.g:594:128: ( RULE_EXPONENT_PART )?
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -484,7 +485,7 @@ public class InternalJSONLexer extends Lexer {
             }
             switch (alt7) {
                 case 1 :
-                    // InternalJSON.g:594:100: RULE_EXPONENT_PART
+                    // InternalJSON.g:594:128: RULE_EXPONENT_PART
                     {
                     mRULE_EXPONENT_PART(); 
 
