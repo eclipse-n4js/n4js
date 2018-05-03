@@ -44,7 +44,7 @@ public class ExternalLibrariesReloadHelper {
 	private static final Logger LOGGER = Logger.getLogger(ExternalLibrariesReloadHelper.class);
 
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	@Inject
 	private ExternalProjectsCollector collector;
@@ -99,7 +99,7 @@ public class ExternalLibrariesReloadHelper {
 
 		// Refresh the type definitions for the npm packages if required.
 		if (refreshNpmDefinitions) {
-			final IStatus refreshStatus = npmManager.reloadAllExternalProjects(subMonitor.newChild(1));
+			final IStatus refreshStatus = libManager.reloadAllExternalProjects(subMonitor.newChild(1));
 			if (!refreshStatus.isOK()) {
 				throw new InvocationTargetException(new CoreException(refreshStatus));
 			}

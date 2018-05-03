@@ -12,6 +12,7 @@ package org.eclipse.n4js.ui.internal;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.concurrent.Semaphore;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
@@ -29,6 +30,24 @@ import com.google.inject.Module;
  *
  */
 public class N4JSGracefulActivator extends N4JSActivator {
+	private final Semaphore semaphore = new Semaphore(1);
+
+	@Override
+	public Injector getInjector(String language) {
+		synchronized (semaphore) {
+			if (semaphore.availablePermits() < 1) {
+				throw new InjectorNotYetAvailableException();
+			}
+			try {
+				semaphore.acquire();
+				return super.getInjector(language);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			} finally {
+				semaphore.release();
+			}
+		}
+	}
 
 	@Override
 	protected Injector createInjector(String language) {
