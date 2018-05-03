@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.realworld;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
