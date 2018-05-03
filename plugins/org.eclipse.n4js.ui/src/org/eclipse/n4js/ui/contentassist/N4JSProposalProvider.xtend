@@ -179,11 +179,12 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	val (EObject, QualifiedName, String)=>StyledString stringifier = [ element, it, name |
 		val result = new StyledString(name)
 		if (it.segmentCount > 1) {
+			val dashName = ' - ' + qualifiedNameConverter.toString(it.skipLast(1));
 			if (it.lastSegment.endsWith(name)) {
-				result.append(getTypeVersionString(element) + ' - ' + qualifiedNameConverter.toString(it.skipLast(1)), StyledString.QUALIFIER_STYLER)
+				result.append(getTypeVersionString(element) + dashName, StyledString.QUALIFIER_STYLER)
 			} else {
 				// aliased - print the alias and the original name
-				result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)) + ' alias for ' + it.lastSegment + getTypeVersionString(element), StyledString.QUALIFIER_STYLER)
+				result.append(dashName + ' alias for ' + it.lastSegment + getTypeVersionString(element), StyledString.QUALIFIER_STYLER)
 			}
 		}
 		return result
@@ -193,21 +194,24 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		if (qualifiedName == shortName) {
 			val parsedQualifiedName = qualifiedNameConverter.toQualifiedName(qualifiedName)
 			if (parsedQualifiedName.segmentCount == 1) {
-				return tryGetDisplayString(element, stringifier, shortName) ?: stringifier.apply(element, parsedQualifiedName, shortName)
+				return tryGetDisplayString(element, shortName) ?: stringifier.apply(element, parsedQualifiedName, shortName)
 			}
 			return stringifier.apply(element, parsedQualifiedName, parsedQualifiedName.lastSegment)
 		}
-		return tryGetDisplayString(element, stringifier, shortName) ?: stringifier.apply(element, qualifiedNameConverter.toQualifiedName(qualifiedName), shortName)
+		return tryGetDisplayString(element, shortName) ?: stringifier.apply(element, qualifiedNameConverter.toQualifiedName(qualifiedName), shortName)
 	}
 
 	override protected getImage(IEObjectDescription description) {
 		val clazz = description.EClass
 		return super.getImage(EcoreUtil.create(clazz))
 	}
-	
+
 	/**
 	 * Overridden to avoid calls to IEObjectDescription#getEObjectOrProxy
-	 */
+	 *
+	 * Remove before merging to master!
+	 * Due to IDL, the proxy element is retrieved anyway, but used only if it is a TClassifier
+	 * /
 	override protected getStyledDisplayString(IEObjectDescription description) {
 		val element = description.getEObjectOrProxy();
 		val qualifiedName = description.qualifiedName;
@@ -220,6 +224,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		// don't recompute the qualified name again
 		return stringifier.apply(element, qualifiedName, qualifiedNameConverter.toString(shortName))
 	}
+	*/
 
 	/**
 	 * If the element is an instance of {@link TClassifier} this method
@@ -228,7 +233,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * Otherwise, this method returns an empty string.
 	 */
 	private def String getTypeVersionString(EObject element) {
-		if (element instanceof TClassifier &&
+		if (!element.eIsProxy && element instanceof TClassifier &&
 			(element as TClassifier).declaredVersion != 0) {
 			return N4IDLGlobals.VERSION_SEPARATOR + Integer.toString((element as TClassifier).declaredVersion)
 		}
@@ -238,7 +243,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	/**
 	 * Returns the display string for a non-proxy element, otherwise null.
 	 */
-	private def tryGetDisplayString(EObject element, (EObject, QualifiedName, String)=>StyledString stringifier, String shortName) {
+	private def tryGetDisplayString(EObject element, String shortName) {
 		if (!element.eIsProxy && element instanceof Type) {
 			val qualifiedTypeName = qualifiedNameProvider.getFullyQualifiedName(element)
 			if (qualifiedTypeName !== null) {
