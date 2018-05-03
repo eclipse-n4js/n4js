@@ -85,21 +85,30 @@ ruleJSONDocument returns [EObject current=null]
 	(
 		(
 			{
-				newCompositeNode(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_0());
-			}
-			lv_content_0_0=ruleJSONValue
-			{
-				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getJSONDocumentRule());
-				}
-				set(
-					$current,
-					"content",
-					lv_content_0_0,
-					"org.eclipse.n4js.json.JSON.JSONValue");
-				afterParserOrEnumRuleCall();
+				$current = forceCreateModelElement(
+					grammarAccess.getJSONDocumentAccess().getJSONDocumentAction_0(),
+					$current);
 			}
 		)
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_1_0());
+				}
+				lv_content_1_0=ruleJSONValue
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getJSONDocumentRule());
+					}
+					set(
+						$current,
+						"content",
+						lv_content_1_0,
+						"org.eclipse.n4js.json.JSON.JSONValue");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)?
 	)
 ;
 
@@ -576,17 +585,15 @@ ruleJSONNullLiteral returns [EObject current=null]
 	)
 ;
 
-RULE_NUMBER : (RULE_DOUBLE|RULE_SCIENTIFIC_INT|RULE_INT);
+RULE_NUMBER : (RULE_DOUBLE|RULE_INT);
 
 RULE_STRING : '"' RULE_DOUBLE_STRING_CHAR* '"';
 
 fragment RULE_DOUBLE_STRING_CHAR : (~((RULE_LINE_TERMINATOR_FRAGMENT|'"'|'\\'))|'\\' (RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT|~(RULE_LINE_TERMINATOR_FRAGMENT))?);
 
-fragment RULE_DOUBLE : ('.' RULE_DECIMAL_DIGIT_FRAGMENT+ RULE_EXPONENT_PART?|RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?);
+fragment RULE_DOUBLE : '-'? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?;
 
-fragment RULE_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT;
-
-fragment RULE_SCIENTIFIC_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT RULE_EXPONENT_PART;
+fragment RULE_INT : '-'? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT RULE_EXPONENT_PART?;
 
 fragment RULE_EXPONENT_PART : ('e'|'E') RULE_SIGNED_INT;
 

@@ -42,6 +42,7 @@ public class JSONParser extends AbstractContentAssistParser {
 					put(grammarAccess.getJSONArrayAccess().getAlternatives(), "rule__JSONArray__Alternatives");
 					put(grammarAccess.getJSONValueAccess().getAlternatives(), "rule__JSONValue__Alternatives");
 					put(grammarAccess.getJSONBooleanLiteralAccess().getAlternatives_1(), "rule__JSONBooleanLiteral__Alternatives_1");
+					put(grammarAccess.getJSONDocumentAccess().getGroup(), "rule__JSONDocument__Group__0");
 					put(grammarAccess.getJSONObjectAccess().getGroup_0(), "rule__JSONObject__Group_0__0");
 					put(grammarAccess.getJSONObjectAccess().getGroup_0_2(), "rule__JSONObject__Group_0_2__0");
 					put(grammarAccess.getJSONObjectAccess().getGroup_1(), "rule__JSONObject__Group_1__0");
@@ -51,7 +52,7 @@ public class JSONParser extends AbstractContentAssistParser {
 					put(grammarAccess.getJSONArrayAccess().getGroup_1(), "rule__JSONArray__Group_1__0");
 					put(grammarAccess.getJSONBooleanLiteralAccess().getGroup(), "rule__JSONBooleanLiteral__Group__0");
 					put(grammarAccess.getJSONNullLiteralAccess().getGroup(), "rule__JSONNullLiteral__Group__0");
-					put(grammarAccess.getJSONDocumentAccess().getContentAssignment(), "rule__JSONDocument__ContentAssignment");
+					put(grammarAccess.getJSONDocumentAccess().getContentAssignment_1(), "rule__JSONDocument__ContentAssignment_1");
 					put(grammarAccess.getJSONObjectAccess().getNameValuePairsAssignment_0_1(), "rule__JSONObject__NameValuePairsAssignment_0_1");
 					put(grammarAccess.getJSONObjectAccess().getNameValuePairsAssignment_0_2_1(), "rule__JSONObject__NameValuePairsAssignment_0_2_1");
 					put(grammarAccess.getNameValuePairAccess().getNameAssignment_0(), "rule__NameValuePair__NameAssignment_0");

@@ -11,13 +11,23 @@
 package org.eclipse.n4js.json.tests.parser
 
 import com.google.inject.Inject
+import java.math.BigDecimal
+import java.util.List
+import org.eclipse.n4js.json.JSON.JSONArray
+import org.eclipse.n4js.json.JSON.JSONBooleanLiteral
 import org.eclipse.n4js.json.JSON.JSONDocument
+import org.eclipse.n4js.json.JSON.JSONNullLiteral
+import org.eclipse.n4js.json.JSON.JSONNumericLiteral
+import org.eclipse.n4js.json.JSON.JSONObject
+import org.eclipse.n4js.json.JSON.JSONStringLiteral
+import org.eclipse.n4js.json.JSON.JSONValue
 import org.eclipse.n4js.json.JSONInjectorProvider
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.junit.runner.RunWith
 import org.junit.Test
+import org.junit.runner.RunWith
+
 import static org.junit.Assert.*
 
 /**
@@ -29,8 +39,11 @@ class JsonParserTest {
 
 	@Inject extension ParseHelper<JSONDocument>
 
-	@Test 
-	def void testPlainValues() {
+	/** Checks that all supported types of value literals are parsed correctly. */
+	@Test def void testPlainValues() {
+		''''''.parseSuccessfully // empty document
+		''' 	 '''.parseSuccessfully // whitespace document
+		
 		'''{}'''.parseSuccessfully;
 		'''[]'''.parseSuccessfully;
 		'''42'''.parseSuccessfully;
@@ -44,8 +57,8 @@ class JsonParserTest {
 		'''false'''.parseSuccessfully;
 	}
 	
-	@Test
-	def void testStringEscapeSequences() {
+	/** Checks that all supported escape sequences are parsed correctly. */
+	@Test def void testStringEscapeSequences() {
 		'''"f\\no"'''.parseSuccessfully
 		'''"\f"'''.parseSuccessfully
 		'''"\n"'''.parseSuccessfully
@@ -57,217 +70,129 @@ class JsonParserTest {
 		'''"\\"'''.parseSuccessfully
 	}
 	
+	/** Checks that various different variations of numeric literals are parsed correctly. */
+	@Test def void testNumericValues() {
+		'''2'''.parseSuccessfully
+		'''4'''.parseSuccessfully
+		'''0.2'''.parseSuccessfully
+		'''2.4'''.parseSuccessfully
+		'''2.44444'''.parseSuccessfully
+		'''4E+2'''.parseSuccessfully
+		'''4.2E+2'''.parseSuccessfully
+		'''4e+2'''.parseSuccessfully
+		'''4.2e+2'''.parseSuccessfully
+		
+		'''-4'''.parseSuccessfully
+		'''-4.2'''.parseSuccessfully
+		'''-31.42'''.parseSuccessfully
+		'''-42e+42'''.parseSuccessfully
+		'''-42E-42'''.parseSuccessfully
+		
+		assertEqualsValue(new BigDecimal("-0"), '''-0'''.parseSuccessfully.content);
+	}
+	
+	/** Checks that various different variations of string literals are parsed correctly. */
+	@Test def void testStringValues() {
+		'''""'''.parseSuccessfully
+		'''"   "'''.parseSuccessfully
+	}
+	
+	/** Checks that an array of numeric literals is parsed correctly. */
+	@Test def void testNumericArray() {
+		val doc = '''[1, 2, 3]'''.parseSuccessfully;
+		assertTrue(doc.content instanceof JSONArray);
+		
+		val array = assertIsArray(3, doc.content);
+
+		assertEqualsValue(1, array.get(0));
+		assertEqualsValue(2, array.get(1));
+		assertEqualsValue(3, array.get(2));
+	}
+	
+	/** Checks that an array of mixed values is parsed correctly. */
+	@Test def void testMixedArray() {
+		val doc = '''[1, "str", {"v" : 1}, [], null, true, 42.42, 12e+2]'''.parseSuccessfully;
+		assertTrue(doc.content instanceof JSONArray);
+		
+		val array = assertIsArray(8, doc.content);
+		
+		assertEqualsValue(1, array.get(0));
+		assertEqualsValue("str", array.get(1));
+		
+		val obj = assertIsObject(array.get(2));
+		val vVal = assertHasKey(obj, "v");
+		assertEqualsValue(1, vVal);
+		
+		assertIsArray(0, array.get(3));
+		
+		assertIsNullValue(array.get(4));
+		assertEqualsValue(true, array.get(5));
+		assertEqualsValue(42.42, array.get(6));
+		assertEqualsValue(new BigDecimal(12e2), array.get(7));
+	}
+
+	/** Asserts that the given {@code actual} JSON value represents a number of value {@code numberValue}. */
+	private def assertEqualsValue(long numberValue, JSONValue actual) {
+		assertTrue("Value is expected to be a JSONNumericLiteral", actual instanceof JSONNumericLiteral);
+		assertEquals(numberValue, (actual as JSONNumericLiteral).value.longValue);
+	}
+	
+	/** Asserts that the given {@code actual} JSON value represents a number of value {@code numberValue}. */
+	private def assertEqualsValue(double numberValue, JSONValue actual) {
+		assertTrue("Value is expected to be a JSONNumericLiteral", actual instanceof JSONNumericLiteral);
+		assertEquals(numberValue, (actual as JSONNumericLiteral).value.doubleValue, 0.0);
+	}
+	
+	/** Asserts that the given decimal JSON value {@code actual} represents (compareTo == 0) the given {@code bigDecimalValue}. */
+	private def assertEqualsValue(BigDecimal bigDecimalValue, JSONValue actual) {
+		assertTrue("Value is expected to be a JSONNumericLiteral", actual instanceof JSONNumericLiteral);
+		assertTrue(bigDecimalValue.compareTo((actual as JSONNumericLiteral).value) == 0);
+	}
+	
+	/** Asserts that the given {@code actual} JSON value represents a string with value {@code stringValue}. */
+	private def assertEqualsValue(String stringValue, JSONValue actual) {
+		assertTrue("Value is expected to be a JSONStringLiteral", actual instanceof JSONStringLiteral);
+		assertEquals(stringValue, (actual as JSONStringLiteral).value);
+	}
+	
+	/** Asserts that the given {@code actual} JSON value represents a boolean value with value {@code booleanValue}. */
+	private def assertEqualsValue(boolean booleanValue, JSONValue actual) {
+		assertTrue("Value is expected to be a JSONBooleanLiteral", actual instanceof JSONBooleanLiteral);
+		assertEquals(booleanValue, (actual as JSONBooleanLiteral).booleanValue);
+	}
+	
+	/** Asserts that the given {@code actual} JSON value represents a null value. */
+	private def assertIsNullValue(JSONValue actual) {
+		assertTrue("Value is expected to be a JSONNullLiteral", actual instanceof JSONNullLiteral);
+	}
+	
+	/** Asserts the given {@link JSONValue} is an array of given size and returns its elements. */
+	private def List<JSONValue> assertIsArray(int size, JSONValue actual) {
+		assertTrue("Value is expected to be a JSONArray", actual instanceof JSONArray);
+		assertEquals(size, (actual as JSONArray).elements.size);
+		return (actual as JSONArray).elements;
+	}
+	
+	/** Asserts the given {@link JSONValue} is an object of given size and returns it. */
+	private def JSONObject assertIsObject(JSONValue actual) {
+		assertTrue("Value is expected to be a JSONObject", actual instanceof JSONObject);
+		return (actual as JSONObject);
+	}
+	
+	/** Asserts that the given {@link JSONObject} has a value for the given key and returns the value. */
+	private def JSONValue assertHasKey(JSONObject object, String key) {
+		val valuesByName = object.nameValuePairs.toList.toMap([pair | pair.name], [pair | pair.value]);
+		assertTrue("Object " + object + " is expected to have a value for key " + key, valuesByName.keySet.contains(key));
+		return valuesByName.get(key);
+	}
+	
+	/** 
+	 * Asserts that the given {@code json} character sequence can be parsed correctly. Returns the
+	 * resulting {@link JSONDocument} instance.
+	 */
 	protected def JSONDocument parseSuccessfully(CharSequence json) {
 		val doc = json.parse;
 		assertTrue('''"«json»" ''' + doc.eResource.errors.join('\n')[line + ': ' + message], doc.eResource.errors.empty)
 		return doc
 	}
-//
-//
-////	& 	('ModuleFilters'	'{' moduleFilters+=ModuleFilter+ '}')?
-//
-//	/**
-//	 * also included
-//	 */
-//	@Test def void testCompleteExample() {
-//		val project = '''
-//			ProjectId: my.project.one
-//			ProjectType: library
-//			ProjectVersion: 0.0.1-SNAPSHOT
-//			VendorId: org.eclipse.n4js
-//			VendorName: "Eclipse N4JS Project"
-//			Output: "output"
-//			Libraries {
-//				"lib"
-//			}
-//			Resources {
-//				"resources"
-//			}
-//			Sources {
-//				source {
-//					"src",
-//					"src2"
-//				}
-//				test {
-//					"src-test"
-//				}
-//				external {
-//					"external",
-//					"external2"
-//				}
-//			}
-//			ModuleFilters {
-//				noValidate {
-//					"**/path1/*.*",
-//					"**/path2/A*.js"
-//				}
-//				noModuleWrap {
-//					"**/*Wrapped.*" in "src",
-//					"**/wrapped/*.js"
-//				}
-//			}
-//			ProjectDependencies {
-//				org.eclipse.n4js:my.project.one (0.0.1,0.0.2] compile,
-//				org.eclipse.n4js:my.project.one 1.0 compile
-//			}
-//		'''.parse
-//		val errors = project.eResource.errors
-//		assertTrue(errors.toString, errors.empty)
-//
-//		assertEquals(3, project.sourceFragment.size)
-//		assertEquals(SourceFragmentType.SOURCE, project.sourceFragment.head.sourceFragmentType)
-//		assertEquals(#["src", "src2"], project.sourceFragment.head.paths)
-//		assertEquals(SourceFragmentType.TEST, project.sourceFragment.get(1).sourceFragmentType)
-//		assertEquals(#["src-test"], project.sourceFragment.get(1).paths)
-//		assertEquals(SourceFragmentType.EXTERNAL, project.sourceFragment.last.sourceFragmentType)
-//		assertEquals(#["external", "external2"], project.sourceFragment.last.paths)
-//
-//		assertEquals(2, project.moduleFilters.size)
-//		assertEquals(ModuleFilterType.NO_VALIDATE, project.moduleFilters.head.moduleFilterType)
-//		assertEquals(#["**/path1/*.*", "**/path2/A*.js"], project.moduleFilters.head.moduleSpecifiers.map[moduleSpecifierWithWildcard])
-//		assertEquals(ModuleFilterType.NO_MODULE_WRAPPING, project.moduleFilters.get(1).moduleFilterType)
-//		assertEquals(#["**/*Wrapped.*", "**/wrapped/*.js"], project.moduleFilters.get(1).moduleSpecifiers.map[moduleSpecifierWithWildcard])
-//
-//		assertEquals(project.allProjectDependencies.size, 2)
-//		assertEquals("org.eclipse.n4js", project.allProjectDependencies.head.project.vendorId)
-//		assertEquals("my.project.one", project.allProjectDependencies.head.project.projectId)
-//
-//		assertEquals(true, project.allProjectDependencies.head.versionConstraint.exclLowerBound)
-//		assertEquals(0, project.allProjectDependencies.head.versionConstraint.lowerVersion.major)
-//		assertEquals(0, project.allProjectDependencies.head.versionConstraint.lowerVersion.minor)
-//		assertEquals(1, project.allProjectDependencies.head.versionConstraint.lowerVersion.micro)
-//		assertEquals(false, project.allProjectDependencies.head.versionConstraint.exclUpperBound)
-//		assertEquals(0, project.allProjectDependencies.head.versionConstraint.upperVersion.major)
-//		assertEquals(0, project.allProjectDependencies.head.versionConstraint.upperVersion.minor)
-//		assertEquals(2, project.allProjectDependencies.head.versionConstraint.upperVersion.micro)
-//		assertEquals(ProjectDependencyScope.COMPILE, project.allProjectDependencies.head.scope)
-//
-//		assertEquals(null, project.allProjectDependencies.last.versionConstraint.upperVersion, null)
-//		assertEquals(1, project.allProjectDependencies.last.versionConstraint.lowerVersion.major)
-//		assertEquals(0, project.allProjectDependencies.last.versionConstraint.lowerVersion.minor)
-//		assertEquals("if no number given 0 should be set by default", 0, project.allProjectDependencies.last.versionConstraint.lowerVersion.micro)
-//		assertEquals(null, project.allProjectDependencies.last.versionConstraint.lowerVersion.qualifier)
-//		assertEquals(ProjectDependencyScope.COMPILE, project.allProjectDependencies.last.scope)
-//	}
-//
-//	@Test def void testProjectDependencyWithoutScope() {
-//		val project = '''
-//			ProjectId: my.project.one
-//			ProjectType: library
-//			ProjectVersion: 0.0.1-SNAPSHOT
-//			VendorId: org.eclipse.n4js
-//			VendorName: "Eclipse N4JS Project"
-//			Output: "output"
-//			Sources {
-//				source {
-//					"src"
-//				}
-//			}
-//			ProjectDependencies {
-//				org.eclipse:my.project.one (0.0.1,0.0.2]
-//			}
-//		'''.parse
-//		val errors = project.eResource.errors
-//		assertTrue(errors.toString, errors.empty)
-//		// compile should be assigned by default
-//		assertEquals(ProjectDependencyScope.COMPILE, project.allProjectDependencies.last.scope)
-//	}
-//
-//	@Test def void testProjectDependencyWithoutVersion() {
-//		val project = '''
-//			ProjectId: my.project.one
-//			ProjectType: library
-//			ProjectVersion: 0.0.1-SNAPSHOT
-//			VendorId: org.eclipse.n4js
-//			VendorName: "Eclipse N4JS Project"
-//			Output: "output"
-//			Sources {
-//				source {
-//					"src"
-//				}
-//			}
-//			ProjectDependencies {
-//				org.eclipse:my.project.one
-//			}
-//		'''.parse
-//		val errors = project.eResource.errors
-//		assertTrue(errors.toString, errors.empty)
-//		assertNull(project.allProjectDependencies.last.versionConstraint)
-//	}
-//
-//	@Test def void testProjectDependencyWithoutVendor() {
-//		val project = '''
-//			ProjectId: my.project.one
-//			ProjectType: library
-//			ProjectVersion: 0.0.1-SNAPSHOT
-//			VendorId: org.eclipse.n4js
-//			VendorName: "Eclipse N4JS Project"
-//			Output: "output"
-//			Sources {
-//				source {
-//					"src"
-//				}
-//			}
-//			ProjectDependencies {
-//				my.project.one
-//			}
-//		'''.parse
-//		val errors = project.eResource.errors
-//		assertTrue(errors.toString, errors.empty)
-//		// when no vendorId is given the vendorId of the current project should be used
-//		assertEquals("org.eclipse.n4js", project.allProjectDependencies.last.project.vendorId)
-//	}
-//
-//	@Test def void testProjectWithNoUpperBound() {
-//		val project = '''
-//			ProjectId: my.project.one
-//			ProjectType: library
-//			ProjectVersion: 0.0.1-SNAPSHOT
-//			VendorId: org.eclipse.n4js
-//			VendorName: "Eclipse N4JS Project"
-//			Output: "output"
-//			Sources {
-//				source {
-//					"src"
-//				}
-//			}
-//			ProjectDependencies {
-//				my.project.one 0.0.1,
-//				my.project.one (0.0.1)
-//			}
-//		'''.parse
-//		val errors = project.eResource.errors
-//		assertTrue(errors.toString, errors.empty)
-//		// when no vendorId is given the vendorId of the current project should be used
-//		assertEquals("org.eclipse.n4js", project.allProjectDependencies.last.project.vendorId)
-//
-//		assertEquals(0, project.allProjectDependencies.last.versionConstraint.lowerVersion.major)
-//		assertEquals(0, project.allProjectDependencies.last.versionConstraint.lowerVersion.minor)
-//		assertEquals(1, project.allProjectDependencies.last.versionConstraint.lowerVersion.micro)
-//		assertTrue(project.allProjectDependencies.last.versionConstraint.exclLowerBound)
-//		assertEquals(null, project.allProjectDependencies.last.versionConstraint.upperVersion, null)
-//
-//		assertFalse(project.allProjectDependencies.head.versionConstraint.exclLowerBound)
-//	}
-//
-//	@Test def void testOrderIndependence() {
-//		val project = '''
-//			Output: "output"
-//			Sources {
-//				source {
-//					"src"
-//				}
-//			}
-//			ProjectVersion: 0.0.1-SNAPSHOT
-//			VendorName: "Eclipse N4JS Project"
-//			VendorId: org.eclipse.n4js
-//			ProjectDependencies {
-//				my.project.one
-//			}
-//			ProjectId: my.project.one
-//			ProjectType: library
-//		'''.parse
-//		val errors = project.eResource.errors
-//		assertTrue(errors.toString, errors.empty)
-//	}
 }

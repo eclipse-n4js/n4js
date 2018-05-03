@@ -73,9 +73,9 @@ ruleJSONDocument
 	}
 	:
 	(
-		{ before(grammarAccess.getJSONDocumentAccess().getContentAssignment()); }
-		(rule__JSONDocument__ContentAssignment)
-		{ after(grammarAccess.getJSONDocumentAccess().getContentAssignment()); }
+		{ before(grammarAccess.getJSONDocumentAccess().getGroup()); }
+		(rule__JSONDocument__Group__0)
+		{ after(grammarAccess.getJSONDocumentAccess().getGroup()); }
 	)
 ;
 finally {
@@ -389,6 +389,60 @@ rule__JSONBooleanLiteral__Alternatives_1
 finally {
 	restoreStackSize(stackSize);
 }
+
+rule__JSONDocument__Group__0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__JSONDocument__Group__0__Impl
+	rule__JSONDocument__Group__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__JSONDocument__Group__0__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getJSONDocumentAccess().getJSONDocumentAction_0()); }
+	()
+	{ after(grammarAccess.getJSONDocumentAccess().getJSONDocumentAction_0()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__JSONDocument__Group__1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__JSONDocument__Group__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__JSONDocument__Group__1__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getJSONDocumentAccess().getContentAssignment_1()); }
+	(rule__JSONDocument__ContentAssignment_1)?
+	{ after(grammarAccess.getJSONDocumentAccess().getContentAssignment_1()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 
 rule__JSONObject__Group_0__0
 	@init {
@@ -1065,15 +1119,15 @@ finally {
 }
 
 
-rule__JSONDocument__ContentAssignment
+rule__JSONDocument__ContentAssignment_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_0()); }
+		{ before(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_1_0()); }
 		ruleJSONValue
-		{ after(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_0()); }
+		{ after(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_1_0()); }
 	)
 ;
 finally {
@@ -1219,17 +1273,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-RULE_NUMBER : (RULE_DOUBLE|RULE_SCIENTIFIC_INT|RULE_INT);
+RULE_NUMBER : (RULE_DOUBLE|RULE_INT);
 
 RULE_STRING : '"' RULE_DOUBLE_STRING_CHAR* '"';
 
 fragment RULE_DOUBLE_STRING_CHAR : (~((RULE_LINE_TERMINATOR_FRAGMENT|'"'|'\\'))|'\\' (RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT|~(RULE_LINE_TERMINATOR_FRAGMENT))?);
 
-fragment RULE_DOUBLE : ('.' RULE_DECIMAL_DIGIT_FRAGMENT+ RULE_EXPONENT_PART?|RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?);
+fragment RULE_DOUBLE : '-'? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?;
 
-fragment RULE_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT;
-
-fragment RULE_SCIENTIFIC_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT RULE_EXPONENT_PART;
+fragment RULE_INT : '-'? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT RULE_EXPONENT_PART?;
 
 fragment RULE_EXPONENT_PART : ('e'|'E') RULE_SIGNED_INT;
 

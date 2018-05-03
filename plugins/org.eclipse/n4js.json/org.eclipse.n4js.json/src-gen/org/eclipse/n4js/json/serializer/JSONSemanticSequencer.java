@@ -106,16 +106,10 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     JSONDocument returns JSONDocument
 	 *
 	 * Constraint:
-	 *     content=JSONValue
+	 *     content=JSONValue?
 	 */
 	protected void sequence_JSONDocument(ISerializationContext context, JSONDocument semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, JSONPackage.Literals.JSON_DOCUMENT__CONTENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, JSONPackage.Literals.JSON_DOCUMENT__CONTENT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_0(), semanticObject.getContent());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

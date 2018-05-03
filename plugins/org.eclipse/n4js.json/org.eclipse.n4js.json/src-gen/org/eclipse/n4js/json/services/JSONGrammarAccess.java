@@ -32,18 +32,26 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public class JSONDocumentElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.JSONDocument");
-		private final Assignment cContentAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cContentJSONValueParserRuleCall_0 = (RuleCall)cContentAssignment.eContents().get(0);
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cJSONDocumentAction_0 = (Action)cGroup.eContents().get(0);
+		private final Assignment cContentAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cContentJSONValueParserRuleCall_1_0 = (RuleCall)cContentAssignment_1.eContents().get(0);
 		
 		//JSONDocument:
-		//	content=JSONValue;
+		//	{JSONDocument} content=JSONValue?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//content=JSONValue
-		public Assignment getContentAssignment() { return cContentAssignment; }
+		//{JSONDocument} content=JSONValue?
+		public Group getGroup() { return cGroup; }
+		
+		//{JSONDocument}
+		public Action getJSONDocumentAction_0() { return cJSONDocumentAction_0; }
+		
+		//content=JSONValue?
+		public Assignment getContentAssignment_1() { return cContentAssignment_1; }
 		
 		//JSONValue
-		public RuleCall getContentJSONValueParserRuleCall_0() { return cContentJSONValueParserRuleCall_0; }
+		public RuleCall getContentJSONValueParserRuleCall_1_0() { return cContentJSONValueParserRuleCall_1_0; }
 	}
 	public class JSONObjectElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.JSONObject");
@@ -342,7 +350,6 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	private final TerminalRule tDOUBLE_STRING_CHAR;
 	private final TerminalRule tDOUBLE;
 	private final TerminalRule tINT;
-	private final TerminalRule tSCIENTIFIC_INT;
 	private final TerminalRule tEXPONENT_PART;
 	private final TerminalRule tSIGNED_INT;
 	private final TerminalRule tWS;
@@ -371,7 +378,6 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 		this.tDOUBLE_STRING_CHAR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.DOUBLE_STRING_CHAR");
 		this.tDOUBLE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.DOUBLE");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.INT");
-		this.tSCIENTIFIC_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.SCIENTIFIC_INT");
 		this.tEXPONENT_PART = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.EXPONENT_PART");
 		this.tSIGNED_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.SIGNED_INT");
 		this.tWS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.WS");
@@ -406,7 +412,7 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//JSONDocument:
-	//	content=JSONValue;
+	//	{JSONDocument} content=JSONValue?;
 	public JSONDocumentElements getJSONDocumentAccess() {
 		return pJSONDocument;
 	}
@@ -505,7 +511,7 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal NUMBER returns ecore::EBigDecimal:
-	//	DOUBLE | SCIENTIFIC_INT | INT;
+	//	DOUBLE | INT;
 	public TerminalRule getNUMBERRule() {
 		return tNUMBER;
 	}
@@ -523,22 +529,15 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal DOUBLE returns ecore::EBigDecimal:
-	//	'.' DECIMAL_DIGIT_FRAGMENT+ EXPONENT_PART?
-	//	| DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?;
+	//	'-'? DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?;
 	public TerminalRule getDOUBLERule() {
 		return tDOUBLE;
 	}
 	
 	//terminal INT returns ecore::EBigDecimal:
-	//	DECIMAL_INTEGER_LITERAL_FRAGMENT;
+	//	'-'? DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART?;
 	public TerminalRule getINTRule() {
 		return tINT;
-	}
-	
-	//terminal SCIENTIFIC_INT returns ecore::EBigDecimal:
-	//	DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART;
-	public TerminalRule getSCIENTIFIC_INTRule() {
-		return tSCIENTIFIC_INT;
 	}
 	
 	//terminal fragment EXPONENT_PART:

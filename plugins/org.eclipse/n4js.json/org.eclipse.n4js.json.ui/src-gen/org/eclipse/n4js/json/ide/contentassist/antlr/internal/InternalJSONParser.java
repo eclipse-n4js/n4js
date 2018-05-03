@@ -33,45 +33,44 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalJSONParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_STRING", "RULE_NUMBER", "RULE_DOUBLE", "RULE_SCIENTIFIC_INT", "RULE_INT", "RULE_DOUBLE_STRING_CHAR", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_EXPONENT_PART", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_SIGNED_INT", "RULE_WHITESPACE_FRAGMENT", "RULE_WS", "RULE_EOL", "RULE_HEX_DIGIT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_ANY_OTHER", "'false'", "'{'", "'}'", "','", "':'", "'['", "']'", "'null'", "'true'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_STRING", "RULE_NUMBER", "RULE_DOUBLE", "RULE_INT", "RULE_DOUBLE_STRING_CHAR", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_EXPONENT_PART", "RULE_SIGNED_INT", "RULE_WHITESPACE_FRAGMENT", "RULE_WS", "RULE_EOL", "RULE_HEX_DIGIT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_ANY_OTHER", "'false'", "'{'", "'}'", "','", "':'", "'['", "']'", "'null'", "'true'"
     };
-    public static final int RULE_SCIENTIFIC_INT=7;
-    public static final int RULE_ML_COMMENT_FRAGMENT=25;
+    public static final int RULE_ML_COMMENT_FRAGMENT=24;
     public static final int RULE_STRING=4;
     public static final int RULE_EXPONENT_PART=13;
-    public static final int RULE_ZWJ=20;
-    public static final int RULE_SL_COMMENT_FRAGMENT=24;
-    public static final int RULE_WHITESPACE_FRAGMENT=16;
-    public static final int RULE_UNICODE_DIGIT_FRAGMENT=27;
+    public static final int RULE_ZWJ=19;
+    public static final int RULE_SL_COMMENT_FRAGMENT=23;
+    public static final int RULE_WHITESPACE_FRAGMENT=15;
+    public static final int RULE_UNICODE_DIGIT_FRAGMENT=26;
     public static final int T__37=37;
     public static final int RULE_DOUBLE=6;
     public static final int T__38=38;
-    public static final int T__39=39;
     public static final int T__33=33;
-    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=23;
+    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=22;
     public static final int T__34=34;
     public static final int T__35=35;
     public static final int T__36=36;
     public static final int EOF=-1;
+    public static final int T__30=30;
     public static final int T__31=31;
     public static final int T__32=32;
-    public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=11;
-    public static final int RULE_WS=17;
-    public static final int RULE_EOL=18;
-    public static final int RULE_BOM=22;
-    public static final int RULE_SIGNED_INT=15;
-    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=26;
-    public static final int RULE_ANY_OTHER=30;
-    public static final int RULE_DOUBLE_STRING_CHAR=9;
+    public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=10;
+    public static final int RULE_WS=16;
+    public static final int RULE_EOL=17;
+    public static final int RULE_BOM=21;
+    public static final int RULE_SIGNED_INT=14;
+    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=25;
+    public static final int RULE_ANY_OTHER=29;
+    public static final int RULE_DOUBLE_STRING_CHAR=8;
     public static final int RULE_NUMBER=5;
-    public static final int RULE_LINE_TERMINATOR_FRAGMENT=10;
-    public static final int RULE_ZWNJ=21;
-    public static final int RULE_UNICODE_LETTER_FRAGMENT=29;
+    public static final int RULE_LINE_TERMINATOR_FRAGMENT=9;
+    public static final int RULE_ZWNJ=20;
+    public static final int RULE_UNICODE_LETTER_FRAGMENT=28;
     public static final int RULE_DECIMAL_DIGIT_FRAGMENT=12;
-    public static final int RULE_INT=8;
-    public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=14;
-    public static final int RULE_HEX_DIGIT=19;
-    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=28;
+    public static final int RULE_INT=7;
+    public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=11;
+    public static final int RULE_HEX_DIGIT=18;
+    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=27;
 
     // delegates
     // delegators
@@ -143,26 +142,26 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "ruleJSONDocument"
-    // InternalJSON.g:70:1: ruleJSONDocument : ( ( rule__JSONDocument__ContentAssignment ) ) ;
+    // InternalJSON.g:70:1: ruleJSONDocument : ( ( rule__JSONDocument__Group__0 ) ) ;
     public final void ruleJSONDocument() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:74:2: ( ( ( rule__JSONDocument__ContentAssignment ) ) )
-            // InternalJSON.g:75:2: ( ( rule__JSONDocument__ContentAssignment ) )
+            // InternalJSON.g:74:2: ( ( ( rule__JSONDocument__Group__0 ) ) )
+            // InternalJSON.g:75:2: ( ( rule__JSONDocument__Group__0 ) )
             {
-            // InternalJSON.g:75:2: ( ( rule__JSONDocument__ContentAssignment ) )
-            // InternalJSON.g:76:3: ( rule__JSONDocument__ContentAssignment )
+            // InternalJSON.g:75:2: ( ( rule__JSONDocument__Group__0 ) )
+            // InternalJSON.g:76:3: ( rule__JSONDocument__Group__0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getJSONDocumentAccess().getContentAssignment()); 
+               before(grammarAccess.getJSONDocumentAccess().getGroup()); 
             }
-            // InternalJSON.g:77:3: ( rule__JSONDocument__ContentAssignment )
-            // InternalJSON.g:77:4: rule__JSONDocument__ContentAssignment
+            // InternalJSON.g:77:3: ( rule__JSONDocument__Group__0 )
+            // InternalJSON.g:77:4: rule__JSONDocument__Group__0
             {
             pushFollow(FOLLOW_2);
-            rule__JSONDocument__ContentAssignment();
+            rule__JSONDocument__Group__0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -170,7 +169,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getJSONDocumentAccess().getContentAssignment()); 
+               after(grammarAccess.getJSONDocumentAccess().getGroup()); 
             }
 
             }
@@ -884,13 +883,13 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             int alt1=2;
             int LA1_0 = input.LA(1);
 
-            if ( (LA1_0==32) ) {
+            if ( (LA1_0==31) ) {
                 int LA1_1 = input.LA(2);
 
                 if ( (LA1_1==RULE_STRING) ) {
                     alt1=1;
                 }
-                else if ( (LA1_1==33) ) {
+                else if ( (LA1_1==32) ) {
                     alt1=2;
                 }
                 else {
@@ -995,14 +994,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             int alt2=2;
             int LA2_0 = input.LA(1);
 
-            if ( (LA2_0==36) ) {
+            if ( (LA2_0==35) ) {
                 int LA2_1 = input.LA(2);
 
-                if ( ((LA2_1>=RULE_STRING && LA2_1<=RULE_NUMBER)||(LA2_1>=31 && LA2_1<=32)||LA2_1==36||(LA2_1>=38 && LA2_1<=39)) ) {
-                    alt2=1;
-                }
-                else if ( (LA2_1==37) ) {
+                if ( (LA2_1==36) ) {
                     alt2=2;
+                }
+                else if ( ((LA2_1>=RULE_STRING && LA2_1<=RULE_NUMBER)||(LA2_1>=30 && LA2_1<=31)||LA2_1==35||(LA2_1>=37 && LA2_1<=38)) ) {
+                    alt2=1;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return ;}
@@ -1105,12 +1104,12 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             // InternalJSON.g:331:1: ( ( ruleJSONObject ) | ( ruleJSONArray ) | ( ruleJSONStringLiteral ) | ( ruleJSONNumericLiteral ) | ( ruleJSONNullLiteral ) | ( ruleJSONBooleanLiteral ) )
             int alt3=6;
             switch ( input.LA(1) ) {
-            case 32:
+            case 31:
                 {
                 alt3=1;
                 }
                 break;
-            case 36:
+            case 35:
                 {
                 alt3=2;
                 }
@@ -1125,13 +1124,13 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
                 alt3=4;
                 }
                 break;
-            case 38:
+            case 37:
                 {
                 alt3=5;
                 }
                 break;
-            case 31:
-            case 39:
+            case 30:
+            case 38:
                 {
                 alt3=6;
                 }
@@ -1311,10 +1310,10 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             int alt4=2;
             int LA4_0 = input.LA(1);
 
-            if ( (LA4_0==39) ) {
+            if ( (LA4_0==38) ) {
                 alt4=1;
             }
-            else if ( (LA4_0==31) ) {
+            else if ( (LA4_0==30) ) {
                 alt4=2;
             }
             else {
@@ -1363,7 +1362,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getJSONBooleanLiteralAccess().getFalseKeyword_1_1()); 
                     }
-                    match(input,31,FOLLOW_2); if (state.failed) return ;
+                    match(input,30,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
                        after(grammarAccess.getJSONBooleanLiteralAccess().getFalseKeyword_1_1()); 
                     }
@@ -1390,17 +1389,191 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__JSONBooleanLiteral__Alternatives_1"
 
 
+    // $ANTLR start "rule__JSONDocument__Group__0"
+    // InternalJSON.g:393:1: rule__JSONDocument__Group__0 : rule__JSONDocument__Group__0__Impl rule__JSONDocument__Group__1 ;
+    public final void rule__JSONDocument__Group__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalJSON.g:397:1: ( rule__JSONDocument__Group__0__Impl rule__JSONDocument__Group__1 )
+            // InternalJSON.g:398:2: rule__JSONDocument__Group__0__Impl rule__JSONDocument__Group__1
+            {
+            pushFollow(FOLLOW_3);
+            rule__JSONDocument__Group__0__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+            pushFollow(FOLLOW_2);
+            rule__JSONDocument__Group__1();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__JSONDocument__Group__0"
+
+
+    // $ANTLR start "rule__JSONDocument__Group__0__Impl"
+    // InternalJSON.g:405:1: rule__JSONDocument__Group__0__Impl : ( () ) ;
+    public final void rule__JSONDocument__Group__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalJSON.g:409:1: ( ( () ) )
+            // InternalJSON.g:410:1: ( () )
+            {
+            // InternalJSON.g:410:1: ( () )
+            // InternalJSON.g:411:2: ()
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getJSONDocumentAccess().getJSONDocumentAction_0()); 
+            }
+            // InternalJSON.g:412:2: ()
+            // InternalJSON.g:412:3: 
+            {
+            }
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getJSONDocumentAccess().getJSONDocumentAction_0()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__JSONDocument__Group__0__Impl"
+
+
+    // $ANTLR start "rule__JSONDocument__Group__1"
+    // InternalJSON.g:420:1: rule__JSONDocument__Group__1 : rule__JSONDocument__Group__1__Impl ;
+    public final void rule__JSONDocument__Group__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalJSON.g:424:1: ( rule__JSONDocument__Group__1__Impl )
+            // InternalJSON.g:425:2: rule__JSONDocument__Group__1__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__JSONDocument__Group__1__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__JSONDocument__Group__1"
+
+
+    // $ANTLR start "rule__JSONDocument__Group__1__Impl"
+    // InternalJSON.g:431:1: rule__JSONDocument__Group__1__Impl : ( ( rule__JSONDocument__ContentAssignment_1 )? ) ;
+    public final void rule__JSONDocument__Group__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalJSON.g:435:1: ( ( ( rule__JSONDocument__ContentAssignment_1 )? ) )
+            // InternalJSON.g:436:1: ( ( rule__JSONDocument__ContentAssignment_1 )? )
+            {
+            // InternalJSON.g:436:1: ( ( rule__JSONDocument__ContentAssignment_1 )? )
+            // InternalJSON.g:437:2: ( rule__JSONDocument__ContentAssignment_1 )?
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getJSONDocumentAccess().getContentAssignment_1()); 
+            }
+            // InternalJSON.g:438:2: ( rule__JSONDocument__ContentAssignment_1 )?
+            int alt5=2;
+            int LA5_0 = input.LA(1);
+
+            if ( ((LA5_0>=RULE_STRING && LA5_0<=RULE_NUMBER)||(LA5_0>=30 && LA5_0<=31)||LA5_0==35||(LA5_0>=37 && LA5_0<=38)) ) {
+                alt5=1;
+            }
+            switch (alt5) {
+                case 1 :
+                    // InternalJSON.g:438:3: rule__JSONDocument__ContentAssignment_1
+                    {
+                    pushFollow(FOLLOW_2);
+                    rule__JSONDocument__ContentAssignment_1();
+
+                    state._fsp--;
+                    if (state.failed) return ;
+
+                    }
+                    break;
+
+            }
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getJSONDocumentAccess().getContentAssignment_1()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__JSONDocument__Group__1__Impl"
+
+
     // $ANTLR start "rule__JSONObject__Group_0__0"
-    // InternalJSON.g:393:1: rule__JSONObject__Group_0__0 : rule__JSONObject__Group_0__0__Impl rule__JSONObject__Group_0__1 ;
+    // InternalJSON.g:447:1: rule__JSONObject__Group_0__0 : rule__JSONObject__Group_0__0__Impl rule__JSONObject__Group_0__1 ;
     public final void rule__JSONObject__Group_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:397:1: ( rule__JSONObject__Group_0__0__Impl rule__JSONObject__Group_0__1 )
-            // InternalJSON.g:398:2: rule__JSONObject__Group_0__0__Impl rule__JSONObject__Group_0__1
+            // InternalJSON.g:451:1: ( rule__JSONObject__Group_0__0__Impl rule__JSONObject__Group_0__1 )
+            // InternalJSON.g:452:2: rule__JSONObject__Group_0__0__Impl rule__JSONObject__Group_0__1
             {
-            pushFollow(FOLLOW_3);
+            pushFollow(FOLLOW_4);
             rule__JSONObject__Group_0__0__Impl();
 
             state._fsp--;
@@ -1429,22 +1602,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0__0__Impl"
-    // InternalJSON.g:405:1: rule__JSONObject__Group_0__0__Impl : ( '{' ) ;
+    // InternalJSON.g:459:1: rule__JSONObject__Group_0__0__Impl : ( '{' ) ;
     public final void rule__JSONObject__Group_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:409:1: ( ( '{' ) )
-            // InternalJSON.g:410:1: ( '{' )
+            // InternalJSON.g:463:1: ( ( '{' ) )
+            // InternalJSON.g:464:1: ( '{' )
             {
-            // InternalJSON.g:410:1: ( '{' )
-            // InternalJSON.g:411:2: '{'
+            // InternalJSON.g:464:1: ( '{' )
+            // InternalJSON.g:465:2: '{'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_0_0()); 
             }
-            match(input,32,FOLLOW_2); if (state.failed) return ;
+            match(input,31,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_0_0()); 
             }
@@ -1470,16 +1643,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0__1"
-    // InternalJSON.g:420:1: rule__JSONObject__Group_0__1 : rule__JSONObject__Group_0__1__Impl rule__JSONObject__Group_0__2 ;
+    // InternalJSON.g:474:1: rule__JSONObject__Group_0__1 : rule__JSONObject__Group_0__1__Impl rule__JSONObject__Group_0__2 ;
     public final void rule__JSONObject__Group_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:424:1: ( rule__JSONObject__Group_0__1__Impl rule__JSONObject__Group_0__2 )
-            // InternalJSON.g:425:2: rule__JSONObject__Group_0__1__Impl rule__JSONObject__Group_0__2
+            // InternalJSON.g:478:1: ( rule__JSONObject__Group_0__1__Impl rule__JSONObject__Group_0__2 )
+            // InternalJSON.g:479:2: rule__JSONObject__Group_0__1__Impl rule__JSONObject__Group_0__2
             {
-            pushFollow(FOLLOW_4);
+            pushFollow(FOLLOW_5);
             rule__JSONObject__Group_0__1__Impl();
 
             state._fsp--;
@@ -1508,23 +1681,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0__1__Impl"
-    // InternalJSON.g:432:1: rule__JSONObject__Group_0__1__Impl : ( ( rule__JSONObject__NameValuePairsAssignment_0_1 ) ) ;
+    // InternalJSON.g:486:1: rule__JSONObject__Group_0__1__Impl : ( ( rule__JSONObject__NameValuePairsAssignment_0_1 ) ) ;
     public final void rule__JSONObject__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:436:1: ( ( ( rule__JSONObject__NameValuePairsAssignment_0_1 ) ) )
-            // InternalJSON.g:437:1: ( ( rule__JSONObject__NameValuePairsAssignment_0_1 ) )
+            // InternalJSON.g:490:1: ( ( ( rule__JSONObject__NameValuePairsAssignment_0_1 ) ) )
+            // InternalJSON.g:491:1: ( ( rule__JSONObject__NameValuePairsAssignment_0_1 ) )
             {
-            // InternalJSON.g:437:1: ( ( rule__JSONObject__NameValuePairsAssignment_0_1 ) )
-            // InternalJSON.g:438:2: ( rule__JSONObject__NameValuePairsAssignment_0_1 )
+            // InternalJSON.g:491:1: ( ( rule__JSONObject__NameValuePairsAssignment_0_1 ) )
+            // InternalJSON.g:492:2: ( rule__JSONObject__NameValuePairsAssignment_0_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getNameValuePairsAssignment_0_1()); 
             }
-            // InternalJSON.g:439:2: ( rule__JSONObject__NameValuePairsAssignment_0_1 )
-            // InternalJSON.g:439:3: rule__JSONObject__NameValuePairsAssignment_0_1
+            // InternalJSON.g:493:2: ( rule__JSONObject__NameValuePairsAssignment_0_1 )
+            // InternalJSON.g:493:3: rule__JSONObject__NameValuePairsAssignment_0_1
             {
             pushFollow(FOLLOW_2);
             rule__JSONObject__NameValuePairsAssignment_0_1();
@@ -1559,16 +1732,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0__2"
-    // InternalJSON.g:447:1: rule__JSONObject__Group_0__2 : rule__JSONObject__Group_0__2__Impl rule__JSONObject__Group_0__3 ;
+    // InternalJSON.g:501:1: rule__JSONObject__Group_0__2 : rule__JSONObject__Group_0__2__Impl rule__JSONObject__Group_0__3 ;
     public final void rule__JSONObject__Group_0__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:451:1: ( rule__JSONObject__Group_0__2__Impl rule__JSONObject__Group_0__3 )
-            // InternalJSON.g:452:2: rule__JSONObject__Group_0__2__Impl rule__JSONObject__Group_0__3
+            // InternalJSON.g:505:1: ( rule__JSONObject__Group_0__2__Impl rule__JSONObject__Group_0__3 )
+            // InternalJSON.g:506:2: rule__JSONObject__Group_0__2__Impl rule__JSONObject__Group_0__3
             {
-            pushFollow(FOLLOW_4);
+            pushFollow(FOLLOW_5);
             rule__JSONObject__Group_0__2__Impl();
 
             state._fsp--;
@@ -1597,37 +1770,37 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0__2__Impl"
-    // InternalJSON.g:459:1: rule__JSONObject__Group_0__2__Impl : ( ( rule__JSONObject__Group_0_2__0 )* ) ;
+    // InternalJSON.g:513:1: rule__JSONObject__Group_0__2__Impl : ( ( rule__JSONObject__Group_0_2__0 )* ) ;
     public final void rule__JSONObject__Group_0__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:463:1: ( ( ( rule__JSONObject__Group_0_2__0 )* ) )
-            // InternalJSON.g:464:1: ( ( rule__JSONObject__Group_0_2__0 )* )
+            // InternalJSON.g:517:1: ( ( ( rule__JSONObject__Group_0_2__0 )* ) )
+            // InternalJSON.g:518:1: ( ( rule__JSONObject__Group_0_2__0 )* )
             {
-            // InternalJSON.g:464:1: ( ( rule__JSONObject__Group_0_2__0 )* )
-            // InternalJSON.g:465:2: ( rule__JSONObject__Group_0_2__0 )*
+            // InternalJSON.g:518:1: ( ( rule__JSONObject__Group_0_2__0 )* )
+            // InternalJSON.g:519:2: ( rule__JSONObject__Group_0_2__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getGroup_0_2()); 
             }
-            // InternalJSON.g:466:2: ( rule__JSONObject__Group_0_2__0 )*
-            loop5:
+            // InternalJSON.g:520:2: ( rule__JSONObject__Group_0_2__0 )*
+            loop6:
             do {
-                int alt5=2;
-                int LA5_0 = input.LA(1);
+                int alt6=2;
+                int LA6_0 = input.LA(1);
 
-                if ( (LA5_0==34) ) {
-                    alt5=1;
+                if ( (LA6_0==33) ) {
+                    alt6=1;
                 }
 
 
-                switch (alt5) {
+                switch (alt6) {
             	case 1 :
-            	    // InternalJSON.g:466:3: rule__JSONObject__Group_0_2__0
+            	    // InternalJSON.g:520:3: rule__JSONObject__Group_0_2__0
             	    {
-            	    pushFollow(FOLLOW_5);
+            	    pushFollow(FOLLOW_6);
             	    rule__JSONObject__Group_0_2__0();
 
             	    state._fsp--;
@@ -1637,7 +1810,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop5;
+            	    break loop6;
                 }
             } while (true);
 
@@ -1666,14 +1839,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0__3"
-    // InternalJSON.g:474:1: rule__JSONObject__Group_0__3 : rule__JSONObject__Group_0__3__Impl ;
+    // InternalJSON.g:528:1: rule__JSONObject__Group_0__3 : rule__JSONObject__Group_0__3__Impl ;
     public final void rule__JSONObject__Group_0__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:478:1: ( rule__JSONObject__Group_0__3__Impl )
-            // InternalJSON.g:479:2: rule__JSONObject__Group_0__3__Impl
+            // InternalJSON.g:532:1: ( rule__JSONObject__Group_0__3__Impl )
+            // InternalJSON.g:533:2: rule__JSONObject__Group_0__3__Impl
             {
             pushFollow(FOLLOW_2);
             rule__JSONObject__Group_0__3__Impl();
@@ -1699,22 +1872,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0__3__Impl"
-    // InternalJSON.g:485:1: rule__JSONObject__Group_0__3__Impl : ( '}' ) ;
+    // InternalJSON.g:539:1: rule__JSONObject__Group_0__3__Impl : ( '}' ) ;
     public final void rule__JSONObject__Group_0__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:489:1: ( ( '}' ) )
-            // InternalJSON.g:490:1: ( '}' )
+            // InternalJSON.g:543:1: ( ( '}' ) )
+            // InternalJSON.g:544:1: ( '}' )
             {
-            // InternalJSON.g:490:1: ( '}' )
-            // InternalJSON.g:491:2: '}'
+            // InternalJSON.g:544:1: ( '}' )
+            // InternalJSON.g:545:2: '}'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_0_3()); 
             }
-            match(input,33,FOLLOW_2); if (state.failed) return ;
+            match(input,32,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_0_3()); 
             }
@@ -1740,16 +1913,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0_2__0"
-    // InternalJSON.g:501:1: rule__JSONObject__Group_0_2__0 : rule__JSONObject__Group_0_2__0__Impl rule__JSONObject__Group_0_2__1 ;
+    // InternalJSON.g:555:1: rule__JSONObject__Group_0_2__0 : rule__JSONObject__Group_0_2__0__Impl rule__JSONObject__Group_0_2__1 ;
     public final void rule__JSONObject__Group_0_2__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:505:1: ( rule__JSONObject__Group_0_2__0__Impl rule__JSONObject__Group_0_2__1 )
-            // InternalJSON.g:506:2: rule__JSONObject__Group_0_2__0__Impl rule__JSONObject__Group_0_2__1
+            // InternalJSON.g:559:1: ( rule__JSONObject__Group_0_2__0__Impl rule__JSONObject__Group_0_2__1 )
+            // InternalJSON.g:560:2: rule__JSONObject__Group_0_2__0__Impl rule__JSONObject__Group_0_2__1
             {
-            pushFollow(FOLLOW_3);
+            pushFollow(FOLLOW_4);
             rule__JSONObject__Group_0_2__0__Impl();
 
             state._fsp--;
@@ -1778,22 +1951,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0_2__0__Impl"
-    // InternalJSON.g:513:1: rule__JSONObject__Group_0_2__0__Impl : ( ',' ) ;
+    // InternalJSON.g:567:1: rule__JSONObject__Group_0_2__0__Impl : ( ',' ) ;
     public final void rule__JSONObject__Group_0_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:517:1: ( ( ',' ) )
-            // InternalJSON.g:518:1: ( ',' )
+            // InternalJSON.g:571:1: ( ( ',' ) )
+            // InternalJSON.g:572:1: ( ',' )
             {
-            // InternalJSON.g:518:1: ( ',' )
-            // InternalJSON.g:519:2: ','
+            // InternalJSON.g:572:1: ( ',' )
+            // InternalJSON.g:573:2: ','
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getCommaKeyword_0_2_0()); 
             }
-            match(input,34,FOLLOW_2); if (state.failed) return ;
+            match(input,33,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getCommaKeyword_0_2_0()); 
             }
@@ -1819,14 +1992,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0_2__1"
-    // InternalJSON.g:528:1: rule__JSONObject__Group_0_2__1 : rule__JSONObject__Group_0_2__1__Impl ;
+    // InternalJSON.g:582:1: rule__JSONObject__Group_0_2__1 : rule__JSONObject__Group_0_2__1__Impl ;
     public final void rule__JSONObject__Group_0_2__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:532:1: ( rule__JSONObject__Group_0_2__1__Impl )
-            // InternalJSON.g:533:2: rule__JSONObject__Group_0_2__1__Impl
+            // InternalJSON.g:586:1: ( rule__JSONObject__Group_0_2__1__Impl )
+            // InternalJSON.g:587:2: rule__JSONObject__Group_0_2__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__JSONObject__Group_0_2__1__Impl();
@@ -1852,23 +2025,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_0_2__1__Impl"
-    // InternalJSON.g:539:1: rule__JSONObject__Group_0_2__1__Impl : ( ( rule__JSONObject__NameValuePairsAssignment_0_2_1 ) ) ;
+    // InternalJSON.g:593:1: rule__JSONObject__Group_0_2__1__Impl : ( ( rule__JSONObject__NameValuePairsAssignment_0_2_1 ) ) ;
     public final void rule__JSONObject__Group_0_2__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:543:1: ( ( ( rule__JSONObject__NameValuePairsAssignment_0_2_1 ) ) )
-            // InternalJSON.g:544:1: ( ( rule__JSONObject__NameValuePairsAssignment_0_2_1 ) )
+            // InternalJSON.g:597:1: ( ( ( rule__JSONObject__NameValuePairsAssignment_0_2_1 ) ) )
+            // InternalJSON.g:598:1: ( ( rule__JSONObject__NameValuePairsAssignment_0_2_1 ) )
             {
-            // InternalJSON.g:544:1: ( ( rule__JSONObject__NameValuePairsAssignment_0_2_1 ) )
-            // InternalJSON.g:545:2: ( rule__JSONObject__NameValuePairsAssignment_0_2_1 )
+            // InternalJSON.g:598:1: ( ( rule__JSONObject__NameValuePairsAssignment_0_2_1 ) )
+            // InternalJSON.g:599:2: ( rule__JSONObject__NameValuePairsAssignment_0_2_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getNameValuePairsAssignment_0_2_1()); 
             }
-            // InternalJSON.g:546:2: ( rule__JSONObject__NameValuePairsAssignment_0_2_1 )
-            // InternalJSON.g:546:3: rule__JSONObject__NameValuePairsAssignment_0_2_1
+            // InternalJSON.g:600:2: ( rule__JSONObject__NameValuePairsAssignment_0_2_1 )
+            // InternalJSON.g:600:3: rule__JSONObject__NameValuePairsAssignment_0_2_1
             {
             pushFollow(FOLLOW_2);
             rule__JSONObject__NameValuePairsAssignment_0_2_1();
@@ -1903,16 +2076,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_1__0"
-    // InternalJSON.g:555:1: rule__JSONObject__Group_1__0 : rule__JSONObject__Group_1__0__Impl rule__JSONObject__Group_1__1 ;
+    // InternalJSON.g:609:1: rule__JSONObject__Group_1__0 : rule__JSONObject__Group_1__0__Impl rule__JSONObject__Group_1__1 ;
     public final void rule__JSONObject__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:559:1: ( rule__JSONObject__Group_1__0__Impl rule__JSONObject__Group_1__1 )
-            // InternalJSON.g:560:2: rule__JSONObject__Group_1__0__Impl rule__JSONObject__Group_1__1
+            // InternalJSON.g:613:1: ( rule__JSONObject__Group_1__0__Impl rule__JSONObject__Group_1__1 )
+            // InternalJSON.g:614:2: rule__JSONObject__Group_1__0__Impl rule__JSONObject__Group_1__1
             {
-            pushFollow(FOLLOW_6);
+            pushFollow(FOLLOW_7);
             rule__JSONObject__Group_1__0__Impl();
 
             state._fsp--;
@@ -1941,23 +2114,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_1__0__Impl"
-    // InternalJSON.g:567:1: rule__JSONObject__Group_1__0__Impl : ( () ) ;
+    // InternalJSON.g:621:1: rule__JSONObject__Group_1__0__Impl : ( () ) ;
     public final void rule__JSONObject__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:571:1: ( ( () ) )
-            // InternalJSON.g:572:1: ( () )
+            // InternalJSON.g:625:1: ( ( () ) )
+            // InternalJSON.g:626:1: ( () )
             {
-            // InternalJSON.g:572:1: ( () )
-            // InternalJSON.g:573:2: ()
+            // InternalJSON.g:626:1: ( () )
+            // InternalJSON.g:627:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getJSONObjectAction_1_0()); 
             }
-            // InternalJSON.g:574:2: ()
-            // InternalJSON.g:574:3: 
+            // InternalJSON.g:628:2: ()
+            // InternalJSON.g:628:3: 
             {
             }
 
@@ -1982,16 +2155,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_1__1"
-    // InternalJSON.g:582:1: rule__JSONObject__Group_1__1 : rule__JSONObject__Group_1__1__Impl rule__JSONObject__Group_1__2 ;
+    // InternalJSON.g:636:1: rule__JSONObject__Group_1__1 : rule__JSONObject__Group_1__1__Impl rule__JSONObject__Group_1__2 ;
     public final void rule__JSONObject__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:586:1: ( rule__JSONObject__Group_1__1__Impl rule__JSONObject__Group_1__2 )
-            // InternalJSON.g:587:2: rule__JSONObject__Group_1__1__Impl rule__JSONObject__Group_1__2
+            // InternalJSON.g:640:1: ( rule__JSONObject__Group_1__1__Impl rule__JSONObject__Group_1__2 )
+            // InternalJSON.g:641:2: rule__JSONObject__Group_1__1__Impl rule__JSONObject__Group_1__2
             {
-            pushFollow(FOLLOW_7);
+            pushFollow(FOLLOW_8);
             rule__JSONObject__Group_1__1__Impl();
 
             state._fsp--;
@@ -2020,22 +2193,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_1__1__Impl"
-    // InternalJSON.g:594:1: rule__JSONObject__Group_1__1__Impl : ( '{' ) ;
+    // InternalJSON.g:648:1: rule__JSONObject__Group_1__1__Impl : ( '{' ) ;
     public final void rule__JSONObject__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:598:1: ( ( '{' ) )
-            // InternalJSON.g:599:1: ( '{' )
+            // InternalJSON.g:652:1: ( ( '{' ) )
+            // InternalJSON.g:653:1: ( '{' )
             {
-            // InternalJSON.g:599:1: ( '{' )
-            // InternalJSON.g:600:2: '{'
+            // InternalJSON.g:653:1: ( '{' )
+            // InternalJSON.g:654:2: '{'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_1_1()); 
             }
-            match(input,32,FOLLOW_2); if (state.failed) return ;
+            match(input,31,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_1_1()); 
             }
@@ -2061,14 +2234,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_1__2"
-    // InternalJSON.g:609:1: rule__JSONObject__Group_1__2 : rule__JSONObject__Group_1__2__Impl ;
+    // InternalJSON.g:663:1: rule__JSONObject__Group_1__2 : rule__JSONObject__Group_1__2__Impl ;
     public final void rule__JSONObject__Group_1__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:613:1: ( rule__JSONObject__Group_1__2__Impl )
-            // InternalJSON.g:614:2: rule__JSONObject__Group_1__2__Impl
+            // InternalJSON.g:667:1: ( rule__JSONObject__Group_1__2__Impl )
+            // InternalJSON.g:668:2: rule__JSONObject__Group_1__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__JSONObject__Group_1__2__Impl();
@@ -2094,22 +2267,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__Group_1__2__Impl"
-    // InternalJSON.g:620:1: rule__JSONObject__Group_1__2__Impl : ( '}' ) ;
+    // InternalJSON.g:674:1: rule__JSONObject__Group_1__2__Impl : ( '}' ) ;
     public final void rule__JSONObject__Group_1__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:624:1: ( ( '}' ) )
-            // InternalJSON.g:625:1: ( '}' )
+            // InternalJSON.g:678:1: ( ( '}' ) )
+            // InternalJSON.g:679:1: ( '}' )
             {
-            // InternalJSON.g:625:1: ( '}' )
-            // InternalJSON.g:626:2: '}'
+            // InternalJSON.g:679:1: ( '}' )
+            // InternalJSON.g:680:2: '}'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_1_2()); 
             }
-            match(input,33,FOLLOW_2); if (state.failed) return ;
+            match(input,32,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_1_2()); 
             }
@@ -2135,16 +2308,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NameValuePair__Group__0"
-    // InternalJSON.g:636:1: rule__NameValuePair__Group__0 : rule__NameValuePair__Group__0__Impl rule__NameValuePair__Group__1 ;
+    // InternalJSON.g:690:1: rule__NameValuePair__Group__0 : rule__NameValuePair__Group__0__Impl rule__NameValuePair__Group__1 ;
     public final void rule__NameValuePair__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:640:1: ( rule__NameValuePair__Group__0__Impl rule__NameValuePair__Group__1 )
-            // InternalJSON.g:641:2: rule__NameValuePair__Group__0__Impl rule__NameValuePair__Group__1
+            // InternalJSON.g:694:1: ( rule__NameValuePair__Group__0__Impl rule__NameValuePair__Group__1 )
+            // InternalJSON.g:695:2: rule__NameValuePair__Group__0__Impl rule__NameValuePair__Group__1
             {
-            pushFollow(FOLLOW_8);
+            pushFollow(FOLLOW_9);
             rule__NameValuePair__Group__0__Impl();
 
             state._fsp--;
@@ -2173,23 +2346,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NameValuePair__Group__0__Impl"
-    // InternalJSON.g:648:1: rule__NameValuePair__Group__0__Impl : ( ( rule__NameValuePair__NameAssignment_0 ) ) ;
+    // InternalJSON.g:702:1: rule__NameValuePair__Group__0__Impl : ( ( rule__NameValuePair__NameAssignment_0 ) ) ;
     public final void rule__NameValuePair__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:652:1: ( ( ( rule__NameValuePair__NameAssignment_0 ) ) )
-            // InternalJSON.g:653:1: ( ( rule__NameValuePair__NameAssignment_0 ) )
+            // InternalJSON.g:706:1: ( ( ( rule__NameValuePair__NameAssignment_0 ) ) )
+            // InternalJSON.g:707:1: ( ( rule__NameValuePair__NameAssignment_0 ) )
             {
-            // InternalJSON.g:653:1: ( ( rule__NameValuePair__NameAssignment_0 ) )
-            // InternalJSON.g:654:2: ( rule__NameValuePair__NameAssignment_0 )
+            // InternalJSON.g:707:1: ( ( rule__NameValuePair__NameAssignment_0 ) )
+            // InternalJSON.g:708:2: ( rule__NameValuePair__NameAssignment_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getNameValuePairAccess().getNameAssignment_0()); 
             }
-            // InternalJSON.g:655:2: ( rule__NameValuePair__NameAssignment_0 )
-            // InternalJSON.g:655:3: rule__NameValuePair__NameAssignment_0
+            // InternalJSON.g:709:2: ( rule__NameValuePair__NameAssignment_0 )
+            // InternalJSON.g:709:3: rule__NameValuePair__NameAssignment_0
             {
             pushFollow(FOLLOW_2);
             rule__NameValuePair__NameAssignment_0();
@@ -2224,16 +2397,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NameValuePair__Group__1"
-    // InternalJSON.g:663:1: rule__NameValuePair__Group__1 : rule__NameValuePair__Group__1__Impl rule__NameValuePair__Group__2 ;
+    // InternalJSON.g:717:1: rule__NameValuePair__Group__1 : rule__NameValuePair__Group__1__Impl rule__NameValuePair__Group__2 ;
     public final void rule__NameValuePair__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:667:1: ( rule__NameValuePair__Group__1__Impl rule__NameValuePair__Group__2 )
-            // InternalJSON.g:668:2: rule__NameValuePair__Group__1__Impl rule__NameValuePair__Group__2
+            // InternalJSON.g:721:1: ( rule__NameValuePair__Group__1__Impl rule__NameValuePair__Group__2 )
+            // InternalJSON.g:722:2: rule__NameValuePair__Group__1__Impl rule__NameValuePair__Group__2
             {
-            pushFollow(FOLLOW_9);
+            pushFollow(FOLLOW_3);
             rule__NameValuePair__Group__1__Impl();
 
             state._fsp--;
@@ -2262,22 +2435,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NameValuePair__Group__1__Impl"
-    // InternalJSON.g:675:1: rule__NameValuePair__Group__1__Impl : ( ':' ) ;
+    // InternalJSON.g:729:1: rule__NameValuePair__Group__1__Impl : ( ':' ) ;
     public final void rule__NameValuePair__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:679:1: ( ( ':' ) )
-            // InternalJSON.g:680:1: ( ':' )
+            // InternalJSON.g:733:1: ( ( ':' ) )
+            // InternalJSON.g:734:1: ( ':' )
             {
-            // InternalJSON.g:680:1: ( ':' )
-            // InternalJSON.g:681:2: ':'
+            // InternalJSON.g:734:1: ( ':' )
+            // InternalJSON.g:735:2: ':'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getNameValuePairAccess().getColonKeyword_1()); 
             }
-            match(input,35,FOLLOW_2); if (state.failed) return ;
+            match(input,34,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getNameValuePairAccess().getColonKeyword_1()); 
             }
@@ -2303,14 +2476,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NameValuePair__Group__2"
-    // InternalJSON.g:690:1: rule__NameValuePair__Group__2 : rule__NameValuePair__Group__2__Impl ;
+    // InternalJSON.g:744:1: rule__NameValuePair__Group__2 : rule__NameValuePair__Group__2__Impl ;
     public final void rule__NameValuePair__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:694:1: ( rule__NameValuePair__Group__2__Impl )
-            // InternalJSON.g:695:2: rule__NameValuePair__Group__2__Impl
+            // InternalJSON.g:748:1: ( rule__NameValuePair__Group__2__Impl )
+            // InternalJSON.g:749:2: rule__NameValuePair__Group__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__NameValuePair__Group__2__Impl();
@@ -2336,23 +2509,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NameValuePair__Group__2__Impl"
-    // InternalJSON.g:701:1: rule__NameValuePair__Group__2__Impl : ( ( rule__NameValuePair__ValueAssignment_2 ) ) ;
+    // InternalJSON.g:755:1: rule__NameValuePair__Group__2__Impl : ( ( rule__NameValuePair__ValueAssignment_2 ) ) ;
     public final void rule__NameValuePair__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:705:1: ( ( ( rule__NameValuePair__ValueAssignment_2 ) ) )
-            // InternalJSON.g:706:1: ( ( rule__NameValuePair__ValueAssignment_2 ) )
+            // InternalJSON.g:759:1: ( ( ( rule__NameValuePair__ValueAssignment_2 ) ) )
+            // InternalJSON.g:760:1: ( ( rule__NameValuePair__ValueAssignment_2 ) )
             {
-            // InternalJSON.g:706:1: ( ( rule__NameValuePair__ValueAssignment_2 ) )
-            // InternalJSON.g:707:2: ( rule__NameValuePair__ValueAssignment_2 )
+            // InternalJSON.g:760:1: ( ( rule__NameValuePair__ValueAssignment_2 ) )
+            // InternalJSON.g:761:2: ( rule__NameValuePair__ValueAssignment_2 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getNameValuePairAccess().getValueAssignment_2()); 
             }
-            // InternalJSON.g:708:2: ( rule__NameValuePair__ValueAssignment_2 )
-            // InternalJSON.g:708:3: rule__NameValuePair__ValueAssignment_2
+            // InternalJSON.g:762:2: ( rule__NameValuePair__ValueAssignment_2 )
+            // InternalJSON.g:762:3: rule__NameValuePair__ValueAssignment_2
             {
             pushFollow(FOLLOW_2);
             rule__NameValuePair__ValueAssignment_2();
@@ -2387,16 +2560,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0__0"
-    // InternalJSON.g:717:1: rule__JSONArray__Group_0__0 : rule__JSONArray__Group_0__0__Impl rule__JSONArray__Group_0__1 ;
+    // InternalJSON.g:771:1: rule__JSONArray__Group_0__0 : rule__JSONArray__Group_0__0__Impl rule__JSONArray__Group_0__1 ;
     public final void rule__JSONArray__Group_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:721:1: ( rule__JSONArray__Group_0__0__Impl rule__JSONArray__Group_0__1 )
-            // InternalJSON.g:722:2: rule__JSONArray__Group_0__0__Impl rule__JSONArray__Group_0__1
+            // InternalJSON.g:775:1: ( rule__JSONArray__Group_0__0__Impl rule__JSONArray__Group_0__1 )
+            // InternalJSON.g:776:2: rule__JSONArray__Group_0__0__Impl rule__JSONArray__Group_0__1
             {
-            pushFollow(FOLLOW_9);
+            pushFollow(FOLLOW_3);
             rule__JSONArray__Group_0__0__Impl();
 
             state._fsp--;
@@ -2425,22 +2598,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0__0__Impl"
-    // InternalJSON.g:729:1: rule__JSONArray__Group_0__0__Impl : ( '[' ) ;
+    // InternalJSON.g:783:1: rule__JSONArray__Group_0__0__Impl : ( '[' ) ;
     public final void rule__JSONArray__Group_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:733:1: ( ( '[' ) )
-            // InternalJSON.g:734:1: ( '[' )
+            // InternalJSON.g:787:1: ( ( '[' ) )
+            // InternalJSON.g:788:1: ( '[' )
             {
-            // InternalJSON.g:734:1: ( '[' )
-            // InternalJSON.g:735:2: '['
+            // InternalJSON.g:788:1: ( '[' )
+            // InternalJSON.g:789:2: '['
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_0_0()); 
             }
-            match(input,36,FOLLOW_2); if (state.failed) return ;
+            match(input,35,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_0_0()); 
             }
@@ -2466,14 +2639,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0__1"
-    // InternalJSON.g:744:1: rule__JSONArray__Group_0__1 : rule__JSONArray__Group_0__1__Impl rule__JSONArray__Group_0__2 ;
+    // InternalJSON.g:798:1: rule__JSONArray__Group_0__1 : rule__JSONArray__Group_0__1__Impl rule__JSONArray__Group_0__2 ;
     public final void rule__JSONArray__Group_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:748:1: ( rule__JSONArray__Group_0__1__Impl rule__JSONArray__Group_0__2 )
-            // InternalJSON.g:749:2: rule__JSONArray__Group_0__1__Impl rule__JSONArray__Group_0__2
+            // InternalJSON.g:802:1: ( rule__JSONArray__Group_0__1__Impl rule__JSONArray__Group_0__2 )
+            // InternalJSON.g:803:2: rule__JSONArray__Group_0__1__Impl rule__JSONArray__Group_0__2
             {
             pushFollow(FOLLOW_10);
             rule__JSONArray__Group_0__1__Impl();
@@ -2504,23 +2677,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0__1__Impl"
-    // InternalJSON.g:756:1: rule__JSONArray__Group_0__1__Impl : ( ( rule__JSONArray__ElementsAssignment_0_1 ) ) ;
+    // InternalJSON.g:810:1: rule__JSONArray__Group_0__1__Impl : ( ( rule__JSONArray__ElementsAssignment_0_1 ) ) ;
     public final void rule__JSONArray__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:760:1: ( ( ( rule__JSONArray__ElementsAssignment_0_1 ) ) )
-            // InternalJSON.g:761:1: ( ( rule__JSONArray__ElementsAssignment_0_1 ) )
+            // InternalJSON.g:814:1: ( ( ( rule__JSONArray__ElementsAssignment_0_1 ) ) )
+            // InternalJSON.g:815:1: ( ( rule__JSONArray__ElementsAssignment_0_1 ) )
             {
-            // InternalJSON.g:761:1: ( ( rule__JSONArray__ElementsAssignment_0_1 ) )
-            // InternalJSON.g:762:2: ( rule__JSONArray__ElementsAssignment_0_1 )
+            // InternalJSON.g:815:1: ( ( rule__JSONArray__ElementsAssignment_0_1 ) )
+            // InternalJSON.g:816:2: ( rule__JSONArray__ElementsAssignment_0_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getElementsAssignment_0_1()); 
             }
-            // InternalJSON.g:763:2: ( rule__JSONArray__ElementsAssignment_0_1 )
-            // InternalJSON.g:763:3: rule__JSONArray__ElementsAssignment_0_1
+            // InternalJSON.g:817:2: ( rule__JSONArray__ElementsAssignment_0_1 )
+            // InternalJSON.g:817:3: rule__JSONArray__ElementsAssignment_0_1
             {
             pushFollow(FOLLOW_2);
             rule__JSONArray__ElementsAssignment_0_1();
@@ -2555,14 +2728,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0__2"
-    // InternalJSON.g:771:1: rule__JSONArray__Group_0__2 : rule__JSONArray__Group_0__2__Impl rule__JSONArray__Group_0__3 ;
+    // InternalJSON.g:825:1: rule__JSONArray__Group_0__2 : rule__JSONArray__Group_0__2__Impl rule__JSONArray__Group_0__3 ;
     public final void rule__JSONArray__Group_0__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:775:1: ( rule__JSONArray__Group_0__2__Impl rule__JSONArray__Group_0__3 )
-            // InternalJSON.g:776:2: rule__JSONArray__Group_0__2__Impl rule__JSONArray__Group_0__3
+            // InternalJSON.g:829:1: ( rule__JSONArray__Group_0__2__Impl rule__JSONArray__Group_0__3 )
+            // InternalJSON.g:830:2: rule__JSONArray__Group_0__2__Impl rule__JSONArray__Group_0__3
             {
             pushFollow(FOLLOW_10);
             rule__JSONArray__Group_0__2__Impl();
@@ -2593,37 +2766,37 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0__2__Impl"
-    // InternalJSON.g:783:1: rule__JSONArray__Group_0__2__Impl : ( ( rule__JSONArray__Group_0_2__0 )* ) ;
+    // InternalJSON.g:837:1: rule__JSONArray__Group_0__2__Impl : ( ( rule__JSONArray__Group_0_2__0 )* ) ;
     public final void rule__JSONArray__Group_0__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:787:1: ( ( ( rule__JSONArray__Group_0_2__0 )* ) )
-            // InternalJSON.g:788:1: ( ( rule__JSONArray__Group_0_2__0 )* )
+            // InternalJSON.g:841:1: ( ( ( rule__JSONArray__Group_0_2__0 )* ) )
+            // InternalJSON.g:842:1: ( ( rule__JSONArray__Group_0_2__0 )* )
             {
-            // InternalJSON.g:788:1: ( ( rule__JSONArray__Group_0_2__0 )* )
-            // InternalJSON.g:789:2: ( rule__JSONArray__Group_0_2__0 )*
+            // InternalJSON.g:842:1: ( ( rule__JSONArray__Group_0_2__0 )* )
+            // InternalJSON.g:843:2: ( rule__JSONArray__Group_0_2__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getGroup_0_2()); 
             }
-            // InternalJSON.g:790:2: ( rule__JSONArray__Group_0_2__0 )*
-            loop6:
+            // InternalJSON.g:844:2: ( rule__JSONArray__Group_0_2__0 )*
+            loop7:
             do {
-                int alt6=2;
-                int LA6_0 = input.LA(1);
+                int alt7=2;
+                int LA7_0 = input.LA(1);
 
-                if ( (LA6_0==34) ) {
-                    alt6=1;
+                if ( (LA7_0==33) ) {
+                    alt7=1;
                 }
 
 
-                switch (alt6) {
+                switch (alt7) {
             	case 1 :
-            	    // InternalJSON.g:790:3: rule__JSONArray__Group_0_2__0
+            	    // InternalJSON.g:844:3: rule__JSONArray__Group_0_2__0
             	    {
-            	    pushFollow(FOLLOW_5);
+            	    pushFollow(FOLLOW_6);
             	    rule__JSONArray__Group_0_2__0();
 
             	    state._fsp--;
@@ -2633,7 +2806,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop6;
+            	    break loop7;
                 }
             } while (true);
 
@@ -2662,14 +2835,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0__3"
-    // InternalJSON.g:798:1: rule__JSONArray__Group_0__3 : rule__JSONArray__Group_0__3__Impl ;
+    // InternalJSON.g:852:1: rule__JSONArray__Group_0__3 : rule__JSONArray__Group_0__3__Impl ;
     public final void rule__JSONArray__Group_0__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:802:1: ( rule__JSONArray__Group_0__3__Impl )
-            // InternalJSON.g:803:2: rule__JSONArray__Group_0__3__Impl
+            // InternalJSON.g:856:1: ( rule__JSONArray__Group_0__3__Impl )
+            // InternalJSON.g:857:2: rule__JSONArray__Group_0__3__Impl
             {
             pushFollow(FOLLOW_2);
             rule__JSONArray__Group_0__3__Impl();
@@ -2695,22 +2868,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0__3__Impl"
-    // InternalJSON.g:809:1: rule__JSONArray__Group_0__3__Impl : ( ']' ) ;
+    // InternalJSON.g:863:1: rule__JSONArray__Group_0__3__Impl : ( ']' ) ;
     public final void rule__JSONArray__Group_0__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:813:1: ( ( ']' ) )
-            // InternalJSON.g:814:1: ( ']' )
+            // InternalJSON.g:867:1: ( ( ']' ) )
+            // InternalJSON.g:868:1: ( ']' )
             {
-            // InternalJSON.g:814:1: ( ']' )
-            // InternalJSON.g:815:2: ']'
+            // InternalJSON.g:868:1: ( ']' )
+            // InternalJSON.g:869:2: ']'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_0_3()); 
             }
-            match(input,37,FOLLOW_2); if (state.failed) return ;
+            match(input,36,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_0_3()); 
             }
@@ -2736,16 +2909,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0_2__0"
-    // InternalJSON.g:825:1: rule__JSONArray__Group_0_2__0 : rule__JSONArray__Group_0_2__0__Impl rule__JSONArray__Group_0_2__1 ;
+    // InternalJSON.g:879:1: rule__JSONArray__Group_0_2__0 : rule__JSONArray__Group_0_2__0__Impl rule__JSONArray__Group_0_2__1 ;
     public final void rule__JSONArray__Group_0_2__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:829:1: ( rule__JSONArray__Group_0_2__0__Impl rule__JSONArray__Group_0_2__1 )
-            // InternalJSON.g:830:2: rule__JSONArray__Group_0_2__0__Impl rule__JSONArray__Group_0_2__1
+            // InternalJSON.g:883:1: ( rule__JSONArray__Group_0_2__0__Impl rule__JSONArray__Group_0_2__1 )
+            // InternalJSON.g:884:2: rule__JSONArray__Group_0_2__0__Impl rule__JSONArray__Group_0_2__1
             {
-            pushFollow(FOLLOW_9);
+            pushFollow(FOLLOW_3);
             rule__JSONArray__Group_0_2__0__Impl();
 
             state._fsp--;
@@ -2774,22 +2947,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0_2__0__Impl"
-    // InternalJSON.g:837:1: rule__JSONArray__Group_0_2__0__Impl : ( ',' ) ;
+    // InternalJSON.g:891:1: rule__JSONArray__Group_0_2__0__Impl : ( ',' ) ;
     public final void rule__JSONArray__Group_0_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:841:1: ( ( ',' ) )
-            // InternalJSON.g:842:1: ( ',' )
+            // InternalJSON.g:895:1: ( ( ',' ) )
+            // InternalJSON.g:896:1: ( ',' )
             {
-            // InternalJSON.g:842:1: ( ',' )
-            // InternalJSON.g:843:2: ','
+            // InternalJSON.g:896:1: ( ',' )
+            // InternalJSON.g:897:2: ','
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getCommaKeyword_0_2_0()); 
             }
-            match(input,34,FOLLOW_2); if (state.failed) return ;
+            match(input,33,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getCommaKeyword_0_2_0()); 
             }
@@ -2815,14 +2988,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0_2__1"
-    // InternalJSON.g:852:1: rule__JSONArray__Group_0_2__1 : rule__JSONArray__Group_0_2__1__Impl ;
+    // InternalJSON.g:906:1: rule__JSONArray__Group_0_2__1 : rule__JSONArray__Group_0_2__1__Impl ;
     public final void rule__JSONArray__Group_0_2__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:856:1: ( rule__JSONArray__Group_0_2__1__Impl )
-            // InternalJSON.g:857:2: rule__JSONArray__Group_0_2__1__Impl
+            // InternalJSON.g:910:1: ( rule__JSONArray__Group_0_2__1__Impl )
+            // InternalJSON.g:911:2: rule__JSONArray__Group_0_2__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__JSONArray__Group_0_2__1__Impl();
@@ -2848,23 +3021,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_0_2__1__Impl"
-    // InternalJSON.g:863:1: rule__JSONArray__Group_0_2__1__Impl : ( ( rule__JSONArray__ElementsAssignment_0_2_1 ) ) ;
+    // InternalJSON.g:917:1: rule__JSONArray__Group_0_2__1__Impl : ( ( rule__JSONArray__ElementsAssignment_0_2_1 ) ) ;
     public final void rule__JSONArray__Group_0_2__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:867:1: ( ( ( rule__JSONArray__ElementsAssignment_0_2_1 ) ) )
-            // InternalJSON.g:868:1: ( ( rule__JSONArray__ElementsAssignment_0_2_1 ) )
+            // InternalJSON.g:921:1: ( ( ( rule__JSONArray__ElementsAssignment_0_2_1 ) ) )
+            // InternalJSON.g:922:1: ( ( rule__JSONArray__ElementsAssignment_0_2_1 ) )
             {
-            // InternalJSON.g:868:1: ( ( rule__JSONArray__ElementsAssignment_0_2_1 ) )
-            // InternalJSON.g:869:2: ( rule__JSONArray__ElementsAssignment_0_2_1 )
+            // InternalJSON.g:922:1: ( ( rule__JSONArray__ElementsAssignment_0_2_1 ) )
+            // InternalJSON.g:923:2: ( rule__JSONArray__ElementsAssignment_0_2_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getElementsAssignment_0_2_1()); 
             }
-            // InternalJSON.g:870:2: ( rule__JSONArray__ElementsAssignment_0_2_1 )
-            // InternalJSON.g:870:3: rule__JSONArray__ElementsAssignment_0_2_1
+            // InternalJSON.g:924:2: ( rule__JSONArray__ElementsAssignment_0_2_1 )
+            // InternalJSON.g:924:3: rule__JSONArray__ElementsAssignment_0_2_1
             {
             pushFollow(FOLLOW_2);
             rule__JSONArray__ElementsAssignment_0_2_1();
@@ -2899,14 +3072,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_1__0"
-    // InternalJSON.g:879:1: rule__JSONArray__Group_1__0 : rule__JSONArray__Group_1__0__Impl rule__JSONArray__Group_1__1 ;
+    // InternalJSON.g:933:1: rule__JSONArray__Group_1__0 : rule__JSONArray__Group_1__0__Impl rule__JSONArray__Group_1__1 ;
     public final void rule__JSONArray__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:883:1: ( rule__JSONArray__Group_1__0__Impl rule__JSONArray__Group_1__1 )
-            // InternalJSON.g:884:2: rule__JSONArray__Group_1__0__Impl rule__JSONArray__Group_1__1
+            // InternalJSON.g:937:1: ( rule__JSONArray__Group_1__0__Impl rule__JSONArray__Group_1__1 )
+            // InternalJSON.g:938:2: rule__JSONArray__Group_1__0__Impl rule__JSONArray__Group_1__1
             {
             pushFollow(FOLLOW_11);
             rule__JSONArray__Group_1__0__Impl();
@@ -2937,23 +3110,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_1__0__Impl"
-    // InternalJSON.g:891:1: rule__JSONArray__Group_1__0__Impl : ( () ) ;
+    // InternalJSON.g:945:1: rule__JSONArray__Group_1__0__Impl : ( () ) ;
     public final void rule__JSONArray__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:895:1: ( ( () ) )
-            // InternalJSON.g:896:1: ( () )
+            // InternalJSON.g:949:1: ( ( () ) )
+            // InternalJSON.g:950:1: ( () )
             {
-            // InternalJSON.g:896:1: ( () )
-            // InternalJSON.g:897:2: ()
+            // InternalJSON.g:950:1: ( () )
+            // InternalJSON.g:951:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getJSONArrayAction_1_0()); 
             }
-            // InternalJSON.g:898:2: ()
-            // InternalJSON.g:898:3: 
+            // InternalJSON.g:952:2: ()
+            // InternalJSON.g:952:3: 
             {
             }
 
@@ -2978,14 +3151,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_1__1"
-    // InternalJSON.g:906:1: rule__JSONArray__Group_1__1 : rule__JSONArray__Group_1__1__Impl rule__JSONArray__Group_1__2 ;
+    // InternalJSON.g:960:1: rule__JSONArray__Group_1__1 : rule__JSONArray__Group_1__1__Impl rule__JSONArray__Group_1__2 ;
     public final void rule__JSONArray__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:910:1: ( rule__JSONArray__Group_1__1__Impl rule__JSONArray__Group_1__2 )
-            // InternalJSON.g:911:2: rule__JSONArray__Group_1__1__Impl rule__JSONArray__Group_1__2
+            // InternalJSON.g:964:1: ( rule__JSONArray__Group_1__1__Impl rule__JSONArray__Group_1__2 )
+            // InternalJSON.g:965:2: rule__JSONArray__Group_1__1__Impl rule__JSONArray__Group_1__2
             {
             pushFollow(FOLLOW_12);
             rule__JSONArray__Group_1__1__Impl();
@@ -3016,22 +3189,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_1__1__Impl"
-    // InternalJSON.g:918:1: rule__JSONArray__Group_1__1__Impl : ( '[' ) ;
+    // InternalJSON.g:972:1: rule__JSONArray__Group_1__1__Impl : ( '[' ) ;
     public final void rule__JSONArray__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:922:1: ( ( '[' ) )
-            // InternalJSON.g:923:1: ( '[' )
+            // InternalJSON.g:976:1: ( ( '[' ) )
+            // InternalJSON.g:977:1: ( '[' )
             {
-            // InternalJSON.g:923:1: ( '[' )
-            // InternalJSON.g:924:2: '['
+            // InternalJSON.g:977:1: ( '[' )
+            // InternalJSON.g:978:2: '['
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_1_1()); 
             }
-            match(input,36,FOLLOW_2); if (state.failed) return ;
+            match(input,35,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_1_1()); 
             }
@@ -3057,14 +3230,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_1__2"
-    // InternalJSON.g:933:1: rule__JSONArray__Group_1__2 : rule__JSONArray__Group_1__2__Impl ;
+    // InternalJSON.g:987:1: rule__JSONArray__Group_1__2 : rule__JSONArray__Group_1__2__Impl ;
     public final void rule__JSONArray__Group_1__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:937:1: ( rule__JSONArray__Group_1__2__Impl )
-            // InternalJSON.g:938:2: rule__JSONArray__Group_1__2__Impl
+            // InternalJSON.g:991:1: ( rule__JSONArray__Group_1__2__Impl )
+            // InternalJSON.g:992:2: rule__JSONArray__Group_1__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__JSONArray__Group_1__2__Impl();
@@ -3090,22 +3263,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__Group_1__2__Impl"
-    // InternalJSON.g:944:1: rule__JSONArray__Group_1__2__Impl : ( ']' ) ;
+    // InternalJSON.g:998:1: rule__JSONArray__Group_1__2__Impl : ( ']' ) ;
     public final void rule__JSONArray__Group_1__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:948:1: ( ( ']' ) )
-            // InternalJSON.g:949:1: ( ']' )
+            // InternalJSON.g:1002:1: ( ( ']' ) )
+            // InternalJSON.g:1003:1: ( ']' )
             {
-            // InternalJSON.g:949:1: ( ']' )
-            // InternalJSON.g:950:2: ']'
+            // InternalJSON.g:1003:1: ( ']' )
+            // InternalJSON.g:1004:2: ']'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_1_2()); 
             }
-            match(input,37,FOLLOW_2); if (state.failed) return ;
+            match(input,36,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_1_2()); 
             }
@@ -3131,16 +3304,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONBooleanLiteral__Group__0"
-    // InternalJSON.g:960:1: rule__JSONBooleanLiteral__Group__0 : rule__JSONBooleanLiteral__Group__0__Impl rule__JSONBooleanLiteral__Group__1 ;
+    // InternalJSON.g:1014:1: rule__JSONBooleanLiteral__Group__0 : rule__JSONBooleanLiteral__Group__0__Impl rule__JSONBooleanLiteral__Group__1 ;
     public final void rule__JSONBooleanLiteral__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:964:1: ( rule__JSONBooleanLiteral__Group__0__Impl rule__JSONBooleanLiteral__Group__1 )
-            // InternalJSON.g:965:2: rule__JSONBooleanLiteral__Group__0__Impl rule__JSONBooleanLiteral__Group__1
+            // InternalJSON.g:1018:1: ( rule__JSONBooleanLiteral__Group__0__Impl rule__JSONBooleanLiteral__Group__1 )
+            // InternalJSON.g:1019:2: rule__JSONBooleanLiteral__Group__0__Impl rule__JSONBooleanLiteral__Group__1
             {
-            pushFollow(FOLLOW_9);
+            pushFollow(FOLLOW_3);
             rule__JSONBooleanLiteral__Group__0__Impl();
 
             state._fsp--;
@@ -3169,23 +3342,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONBooleanLiteral__Group__0__Impl"
-    // InternalJSON.g:972:1: rule__JSONBooleanLiteral__Group__0__Impl : ( () ) ;
+    // InternalJSON.g:1026:1: rule__JSONBooleanLiteral__Group__0__Impl : ( () ) ;
     public final void rule__JSONBooleanLiteral__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:976:1: ( ( () ) )
-            // InternalJSON.g:977:1: ( () )
+            // InternalJSON.g:1030:1: ( ( () ) )
+            // InternalJSON.g:1031:1: ( () )
             {
-            // InternalJSON.g:977:1: ( () )
-            // InternalJSON.g:978:2: ()
+            // InternalJSON.g:1031:1: ( () )
+            // InternalJSON.g:1032:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONBooleanLiteralAccess().getJSONBooleanLiteralAction_0()); 
             }
-            // InternalJSON.g:979:2: ()
-            // InternalJSON.g:979:3: 
+            // InternalJSON.g:1033:2: ()
+            // InternalJSON.g:1033:3: 
             {
             }
 
@@ -3210,14 +3383,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONBooleanLiteral__Group__1"
-    // InternalJSON.g:987:1: rule__JSONBooleanLiteral__Group__1 : rule__JSONBooleanLiteral__Group__1__Impl ;
+    // InternalJSON.g:1041:1: rule__JSONBooleanLiteral__Group__1 : rule__JSONBooleanLiteral__Group__1__Impl ;
     public final void rule__JSONBooleanLiteral__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:991:1: ( rule__JSONBooleanLiteral__Group__1__Impl )
-            // InternalJSON.g:992:2: rule__JSONBooleanLiteral__Group__1__Impl
+            // InternalJSON.g:1045:1: ( rule__JSONBooleanLiteral__Group__1__Impl )
+            // InternalJSON.g:1046:2: rule__JSONBooleanLiteral__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__JSONBooleanLiteral__Group__1__Impl();
@@ -3243,23 +3416,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONBooleanLiteral__Group__1__Impl"
-    // InternalJSON.g:998:1: rule__JSONBooleanLiteral__Group__1__Impl : ( ( rule__JSONBooleanLiteral__Alternatives_1 ) ) ;
+    // InternalJSON.g:1052:1: rule__JSONBooleanLiteral__Group__1__Impl : ( ( rule__JSONBooleanLiteral__Alternatives_1 ) ) ;
     public final void rule__JSONBooleanLiteral__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1002:1: ( ( ( rule__JSONBooleanLiteral__Alternatives_1 ) ) )
-            // InternalJSON.g:1003:1: ( ( rule__JSONBooleanLiteral__Alternatives_1 ) )
+            // InternalJSON.g:1056:1: ( ( ( rule__JSONBooleanLiteral__Alternatives_1 ) ) )
+            // InternalJSON.g:1057:1: ( ( rule__JSONBooleanLiteral__Alternatives_1 ) )
             {
-            // InternalJSON.g:1003:1: ( ( rule__JSONBooleanLiteral__Alternatives_1 ) )
-            // InternalJSON.g:1004:2: ( rule__JSONBooleanLiteral__Alternatives_1 )
+            // InternalJSON.g:1057:1: ( ( rule__JSONBooleanLiteral__Alternatives_1 ) )
+            // InternalJSON.g:1058:2: ( rule__JSONBooleanLiteral__Alternatives_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONBooleanLiteralAccess().getAlternatives_1()); 
             }
-            // InternalJSON.g:1005:2: ( rule__JSONBooleanLiteral__Alternatives_1 )
-            // InternalJSON.g:1005:3: rule__JSONBooleanLiteral__Alternatives_1
+            // InternalJSON.g:1059:2: ( rule__JSONBooleanLiteral__Alternatives_1 )
+            // InternalJSON.g:1059:3: rule__JSONBooleanLiteral__Alternatives_1
             {
             pushFollow(FOLLOW_2);
             rule__JSONBooleanLiteral__Alternatives_1();
@@ -3294,14 +3467,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONNullLiteral__Group__0"
-    // InternalJSON.g:1014:1: rule__JSONNullLiteral__Group__0 : rule__JSONNullLiteral__Group__0__Impl rule__JSONNullLiteral__Group__1 ;
+    // InternalJSON.g:1068:1: rule__JSONNullLiteral__Group__0 : rule__JSONNullLiteral__Group__0__Impl rule__JSONNullLiteral__Group__1 ;
     public final void rule__JSONNullLiteral__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1018:1: ( rule__JSONNullLiteral__Group__0__Impl rule__JSONNullLiteral__Group__1 )
-            // InternalJSON.g:1019:2: rule__JSONNullLiteral__Group__0__Impl rule__JSONNullLiteral__Group__1
+            // InternalJSON.g:1072:1: ( rule__JSONNullLiteral__Group__0__Impl rule__JSONNullLiteral__Group__1 )
+            // InternalJSON.g:1073:2: rule__JSONNullLiteral__Group__0__Impl rule__JSONNullLiteral__Group__1
             {
             pushFollow(FOLLOW_13);
             rule__JSONNullLiteral__Group__0__Impl();
@@ -3332,23 +3505,23 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONNullLiteral__Group__0__Impl"
-    // InternalJSON.g:1026:1: rule__JSONNullLiteral__Group__0__Impl : ( () ) ;
+    // InternalJSON.g:1080:1: rule__JSONNullLiteral__Group__0__Impl : ( () ) ;
     public final void rule__JSONNullLiteral__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1030:1: ( ( () ) )
-            // InternalJSON.g:1031:1: ( () )
+            // InternalJSON.g:1084:1: ( ( () ) )
+            // InternalJSON.g:1085:1: ( () )
             {
-            // InternalJSON.g:1031:1: ( () )
-            // InternalJSON.g:1032:2: ()
+            // InternalJSON.g:1085:1: ( () )
+            // InternalJSON.g:1086:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONNullLiteralAccess().getJSONNullLiteralAction_0()); 
             }
-            // InternalJSON.g:1033:2: ()
-            // InternalJSON.g:1033:3: 
+            // InternalJSON.g:1087:2: ()
+            // InternalJSON.g:1087:3: 
             {
             }
 
@@ -3373,14 +3546,14 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONNullLiteral__Group__1"
-    // InternalJSON.g:1041:1: rule__JSONNullLiteral__Group__1 : rule__JSONNullLiteral__Group__1__Impl ;
+    // InternalJSON.g:1095:1: rule__JSONNullLiteral__Group__1 : rule__JSONNullLiteral__Group__1__Impl ;
     public final void rule__JSONNullLiteral__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1045:1: ( rule__JSONNullLiteral__Group__1__Impl )
-            // InternalJSON.g:1046:2: rule__JSONNullLiteral__Group__1__Impl
+            // InternalJSON.g:1099:1: ( rule__JSONNullLiteral__Group__1__Impl )
+            // InternalJSON.g:1100:2: rule__JSONNullLiteral__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__JSONNullLiteral__Group__1__Impl();
@@ -3406,22 +3579,22 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONNullLiteral__Group__1__Impl"
-    // InternalJSON.g:1052:1: rule__JSONNullLiteral__Group__1__Impl : ( 'null' ) ;
+    // InternalJSON.g:1106:1: rule__JSONNullLiteral__Group__1__Impl : ( 'null' ) ;
     public final void rule__JSONNullLiteral__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1056:1: ( ( 'null' ) )
-            // InternalJSON.g:1057:1: ( 'null' )
+            // InternalJSON.g:1110:1: ( ( 'null' ) )
+            // InternalJSON.g:1111:1: ( 'null' )
             {
-            // InternalJSON.g:1057:1: ( 'null' )
-            // InternalJSON.g:1058:2: 'null'
+            // InternalJSON.g:1111:1: ( 'null' )
+            // InternalJSON.g:1112:2: 'null'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONNullLiteralAccess().getNullKeyword_1()); 
             }
-            match(input,38,FOLLOW_2); if (state.failed) return ;
+            match(input,37,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONNullLiteralAccess().getNullKeyword_1()); 
             }
@@ -3446,21 +3619,21 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__JSONNullLiteral__Group__1__Impl"
 
 
-    // $ANTLR start "rule__JSONDocument__ContentAssignment"
-    // InternalJSON.g:1068:1: rule__JSONDocument__ContentAssignment : ( ruleJSONValue ) ;
-    public final void rule__JSONDocument__ContentAssignment() throws RecognitionException {
+    // $ANTLR start "rule__JSONDocument__ContentAssignment_1"
+    // InternalJSON.g:1122:1: rule__JSONDocument__ContentAssignment_1 : ( ruleJSONValue ) ;
+    public final void rule__JSONDocument__ContentAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1072:1: ( ( ruleJSONValue ) )
-            // InternalJSON.g:1073:2: ( ruleJSONValue )
+            // InternalJSON.g:1126:1: ( ( ruleJSONValue ) )
+            // InternalJSON.g:1127:2: ( ruleJSONValue )
             {
-            // InternalJSON.g:1073:2: ( ruleJSONValue )
-            // InternalJSON.g:1074:3: ruleJSONValue
+            // InternalJSON.g:1127:2: ( ruleJSONValue )
+            // InternalJSON.g:1128:3: ruleJSONValue
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_0()); 
+               before(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_1_0()); 
             }
             pushFollow(FOLLOW_2);
             ruleJSONValue();
@@ -3468,7 +3641,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_0()); 
+               after(grammarAccess.getJSONDocumentAccess().getContentJSONValueParserRuleCall_1_0()); 
             }
 
             }
@@ -3488,21 +3661,21 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__JSONDocument__ContentAssignment"
+    // $ANTLR end "rule__JSONDocument__ContentAssignment_1"
 
 
     // $ANTLR start "rule__JSONObject__NameValuePairsAssignment_0_1"
-    // InternalJSON.g:1083:1: rule__JSONObject__NameValuePairsAssignment_0_1 : ( ruleNameValuePair ) ;
+    // InternalJSON.g:1137:1: rule__JSONObject__NameValuePairsAssignment_0_1 : ( ruleNameValuePair ) ;
     public final void rule__JSONObject__NameValuePairsAssignment_0_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1087:1: ( ( ruleNameValuePair ) )
-            // InternalJSON.g:1088:2: ( ruleNameValuePair )
+            // InternalJSON.g:1141:1: ( ( ruleNameValuePair ) )
+            // InternalJSON.g:1142:2: ( ruleNameValuePair )
             {
-            // InternalJSON.g:1088:2: ( ruleNameValuePair )
-            // InternalJSON.g:1089:3: ruleNameValuePair
+            // InternalJSON.g:1142:2: ( ruleNameValuePair )
+            // InternalJSON.g:1143:3: ruleNameValuePair
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_0_1_0()); 
@@ -3537,17 +3710,17 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONObject__NameValuePairsAssignment_0_2_1"
-    // InternalJSON.g:1098:1: rule__JSONObject__NameValuePairsAssignment_0_2_1 : ( ruleNameValuePair ) ;
+    // InternalJSON.g:1152:1: rule__JSONObject__NameValuePairsAssignment_0_2_1 : ( ruleNameValuePair ) ;
     public final void rule__JSONObject__NameValuePairsAssignment_0_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1102:1: ( ( ruleNameValuePair ) )
-            // InternalJSON.g:1103:2: ( ruleNameValuePair )
+            // InternalJSON.g:1156:1: ( ( ruleNameValuePair ) )
+            // InternalJSON.g:1157:2: ( ruleNameValuePair )
             {
-            // InternalJSON.g:1103:2: ( ruleNameValuePair )
-            // InternalJSON.g:1104:3: ruleNameValuePair
+            // InternalJSON.g:1157:2: ( ruleNameValuePair )
+            // InternalJSON.g:1158:3: ruleNameValuePair
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_0_2_1_0()); 
@@ -3582,17 +3755,17 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NameValuePair__NameAssignment_0"
-    // InternalJSON.g:1113:1: rule__NameValuePair__NameAssignment_0 : ( RULE_STRING ) ;
+    // InternalJSON.g:1167:1: rule__NameValuePair__NameAssignment_0 : ( RULE_STRING ) ;
     public final void rule__NameValuePair__NameAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1117:1: ( ( RULE_STRING ) )
-            // InternalJSON.g:1118:2: ( RULE_STRING )
+            // InternalJSON.g:1171:1: ( ( RULE_STRING ) )
+            // InternalJSON.g:1172:2: ( RULE_STRING )
             {
-            // InternalJSON.g:1118:2: ( RULE_STRING )
-            // InternalJSON.g:1119:3: RULE_STRING
+            // InternalJSON.g:1172:2: ( RULE_STRING )
+            // InternalJSON.g:1173:3: RULE_STRING
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getNameValuePairAccess().getNameSTRINGTerminalRuleCall_0_0()); 
@@ -3623,17 +3796,17 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NameValuePair__ValueAssignment_2"
-    // InternalJSON.g:1128:1: rule__NameValuePair__ValueAssignment_2 : ( ruleJSONValue ) ;
+    // InternalJSON.g:1182:1: rule__NameValuePair__ValueAssignment_2 : ( ruleJSONValue ) ;
     public final void rule__NameValuePair__ValueAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1132:1: ( ( ruleJSONValue ) )
-            // InternalJSON.g:1133:2: ( ruleJSONValue )
+            // InternalJSON.g:1186:1: ( ( ruleJSONValue ) )
+            // InternalJSON.g:1187:2: ( ruleJSONValue )
             {
-            // InternalJSON.g:1133:2: ( ruleJSONValue )
-            // InternalJSON.g:1134:3: ruleJSONValue
+            // InternalJSON.g:1187:2: ( ruleJSONValue )
+            // InternalJSON.g:1188:3: ruleJSONValue
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getNameValuePairAccess().getValueJSONValueParserRuleCall_2_0()); 
@@ -3668,17 +3841,17 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__ElementsAssignment_0_1"
-    // InternalJSON.g:1143:1: rule__JSONArray__ElementsAssignment_0_1 : ( ruleJSONValue ) ;
+    // InternalJSON.g:1197:1: rule__JSONArray__ElementsAssignment_0_1 : ( ruleJSONValue ) ;
     public final void rule__JSONArray__ElementsAssignment_0_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1147:1: ( ( ruleJSONValue ) )
-            // InternalJSON.g:1148:2: ( ruleJSONValue )
+            // InternalJSON.g:1201:1: ( ( ruleJSONValue ) )
+            // InternalJSON.g:1202:2: ( ruleJSONValue )
             {
-            // InternalJSON.g:1148:2: ( ruleJSONValue )
-            // InternalJSON.g:1149:3: ruleJSONValue
+            // InternalJSON.g:1202:2: ( ruleJSONValue )
+            // InternalJSON.g:1203:3: ruleJSONValue
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_0_1_0()); 
@@ -3713,17 +3886,17 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONArray__ElementsAssignment_0_2_1"
-    // InternalJSON.g:1158:1: rule__JSONArray__ElementsAssignment_0_2_1 : ( ruleJSONValue ) ;
+    // InternalJSON.g:1212:1: rule__JSONArray__ElementsAssignment_0_2_1 : ( ruleJSONValue ) ;
     public final void rule__JSONArray__ElementsAssignment_0_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1162:1: ( ( ruleJSONValue ) )
-            // InternalJSON.g:1163:2: ( ruleJSONValue )
+            // InternalJSON.g:1216:1: ( ( ruleJSONValue ) )
+            // InternalJSON.g:1217:2: ( ruleJSONValue )
             {
-            // InternalJSON.g:1163:2: ( ruleJSONValue )
-            // InternalJSON.g:1164:3: ruleJSONValue
+            // InternalJSON.g:1217:2: ( ruleJSONValue )
+            // InternalJSON.g:1218:3: ruleJSONValue
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_0_2_1_0()); 
@@ -3758,17 +3931,17 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONStringLiteral__ValueAssignment"
-    // InternalJSON.g:1173:1: rule__JSONStringLiteral__ValueAssignment : ( RULE_STRING ) ;
+    // InternalJSON.g:1227:1: rule__JSONStringLiteral__ValueAssignment : ( RULE_STRING ) ;
     public final void rule__JSONStringLiteral__ValueAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1177:1: ( ( RULE_STRING ) )
-            // InternalJSON.g:1178:2: ( RULE_STRING )
+            // InternalJSON.g:1231:1: ( ( RULE_STRING ) )
+            // InternalJSON.g:1232:2: ( RULE_STRING )
             {
-            // InternalJSON.g:1178:2: ( RULE_STRING )
-            // InternalJSON.g:1179:3: RULE_STRING
+            // InternalJSON.g:1232:2: ( RULE_STRING )
+            // InternalJSON.g:1233:3: RULE_STRING
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONStringLiteralAccess().getValueSTRINGTerminalRuleCall_0()); 
@@ -3799,17 +3972,17 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONNumericLiteral__ValueAssignment"
-    // InternalJSON.g:1188:1: rule__JSONNumericLiteral__ValueAssignment : ( RULE_NUMBER ) ;
+    // InternalJSON.g:1242:1: rule__JSONNumericLiteral__ValueAssignment : ( RULE_NUMBER ) ;
     public final void rule__JSONNumericLiteral__ValueAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1192:1: ( ( RULE_NUMBER ) )
-            // InternalJSON.g:1193:2: ( RULE_NUMBER )
+            // InternalJSON.g:1246:1: ( ( RULE_NUMBER ) )
+            // InternalJSON.g:1247:2: ( RULE_NUMBER )
             {
-            // InternalJSON.g:1193:2: ( RULE_NUMBER )
-            // InternalJSON.g:1194:3: RULE_NUMBER
+            // InternalJSON.g:1247:2: ( RULE_NUMBER )
+            // InternalJSON.g:1248:3: RULE_NUMBER
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONNumericLiteralAccess().getValueNUMBERTerminalRuleCall_0()); 
@@ -3840,28 +4013,28 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__JSONBooleanLiteral__BooleanValueAssignment_1_0"
-    // InternalJSON.g:1203:1: rule__JSONBooleanLiteral__BooleanValueAssignment_1_0 : ( ( 'true' ) ) ;
+    // InternalJSON.g:1257:1: rule__JSONBooleanLiteral__BooleanValueAssignment_1_0 : ( ( 'true' ) ) ;
     public final void rule__JSONBooleanLiteral__BooleanValueAssignment_1_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalJSON.g:1207:1: ( ( ( 'true' ) ) )
-            // InternalJSON.g:1208:2: ( ( 'true' ) )
+            // InternalJSON.g:1261:1: ( ( ( 'true' ) ) )
+            // InternalJSON.g:1262:2: ( ( 'true' ) )
             {
-            // InternalJSON.g:1208:2: ( ( 'true' ) )
-            // InternalJSON.g:1209:3: ( 'true' )
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getJSONBooleanLiteralAccess().getBooleanValueTrueKeyword_1_0_0()); 
-            }
-            // InternalJSON.g:1210:3: ( 'true' )
-            // InternalJSON.g:1211:4: 'true'
+            // InternalJSON.g:1262:2: ( ( 'true' ) )
+            // InternalJSON.g:1263:3: ( 'true' )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONBooleanLiteralAccess().getBooleanValueTrueKeyword_1_0_0()); 
             }
-            match(input,39,FOLLOW_2); if (state.failed) return ;
+            // InternalJSON.g:1264:3: ( 'true' )
+            // InternalJSON.g:1265:4: 'true'
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getJSONBooleanLiteralAccess().getBooleanValueTrueKeyword_1_0_0()); 
+            }
+            match(input,38,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONBooleanLiteralAccess().getBooleanValueTrueKeyword_1_0_0()); 
             }
@@ -3898,16 +4071,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
     public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000600000000L});
-    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000400000002L});
-    public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000100000000L});
-    public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000200000000L});
-    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000000800000000L});
-    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x000000D180000030L});
-    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0000002400000000L});
-    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000001000000000L});
-    public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000002000000000L});
-    public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000004000000000L});
+    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x00000068C0000030L});
+    public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000300000000L});
+    public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000200000002L});
+    public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000000100000000L});
+    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000000400000000L});
+    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0000001200000000L});
+    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000800000000L});
+    public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000001000000000L});
+    public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000002000000000L});
 
 }
