@@ -20,8 +20,8 @@ import org.eclipse.xtext.util.Arrays;
 import com.google.common.collect.Sets;
 
 /**
- * Like {@link DefaultResourceDescriptionDelta}, but ignores user data key {@link UserdataMapper#USERDATA_KEY_AST_MD5
- * USERDATA_KEY_AST_MD5} when checking for changes with method
+ * Like {@link DefaultResourceDescriptionDelta}, but ignores user data key {@link UserdataMapper#USERDATA_KEY_AST_MD5}
+ * when checking for changes with method
  * {@link org.eclipse.xtext.resource.IResourceDescription.Delta#haveEObjectDescriptionsChanged()
  * #haveEObjectDescriptionsChanged()}.
  */
