@@ -39,10 +39,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Script");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cScriptAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cAnnotationsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cAnnotationsScriptAnnotationParserRuleCall_1_0 = (RuleCall)cAnnotationsAssignment_1.eContents().get(0);
-		private final Assignment cScriptElementsAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cScriptElementsScriptElementParserRuleCall_2_0 = (RuleCall)cScriptElementsAssignment_2.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Assignment cAnnotationsAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
+		private final RuleCall cAnnotationsScriptAnnotationParserRuleCall_1_0_0 = (RuleCall)cAnnotationsAssignment_1_0.eContents().get(0);
+		private final Assignment cScriptElementsAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
+		private final RuleCall cScriptElementsScriptElementParserRuleCall_1_1_0 = (RuleCall)cScriptElementsAssignment_1_1.eContents().get(0);
 		
 		//// ****************************************************************************************************
 		//// [ECM11] A.5 Functions and Programs (p. 224)
@@ -50,27 +51,30 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//// [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 		//// ****************************************************************************************************
 		//Script:
-		//	{Script} annotations+=ScriptAnnotation*
-		//	scriptElements+=ScriptElement*;
+		//	{Script} (annotations+=ScriptAnnotation
+		//	| scriptElements+=ScriptElement)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{Script} annotations+=ScriptAnnotation* scriptElements+=ScriptElement*
+		//{Script} (annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*
 		public Group getGroup() { return cGroup; }
 		
 		//{Script}
 		public Action getScriptAction_0() { return cScriptAction_0; }
 		
-		//annotations+=ScriptAnnotation*
-		public Assignment getAnnotationsAssignment_1() { return cAnnotationsAssignment_1; }
+		//(annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//annotations+=ScriptAnnotation
+		public Assignment getAnnotationsAssignment_1_0() { return cAnnotationsAssignment_1_0; }
 		
 		//ScriptAnnotation
-		public RuleCall getAnnotationsScriptAnnotationParserRuleCall_1_0() { return cAnnotationsScriptAnnotationParserRuleCall_1_0; }
+		public RuleCall getAnnotationsScriptAnnotationParserRuleCall_1_0_0() { return cAnnotationsScriptAnnotationParserRuleCall_1_0_0; }
 		
-		//scriptElements+=ScriptElement*
-		public Assignment getScriptElementsAssignment_2() { return cScriptElementsAssignment_2; }
+		//scriptElements+=ScriptElement
+		public Assignment getScriptElementsAssignment_1_1() { return cScriptElementsAssignment_1_1; }
 		
 		//ScriptElement
-		public RuleCall getScriptElementsScriptElementParserRuleCall_2_0() { return cScriptElementsScriptElementParserRuleCall_2_0; }
+		public RuleCall getScriptElementsScriptElementParserRuleCall_1_1_0() { return cScriptElementsScriptElementParserRuleCall_1_1_0; }
 	}
 	public class ScriptElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ScriptElement");
@@ -10523,8 +10527,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//// [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 	//// ****************************************************************************************************
 	//Script:
-	//	{Script} annotations+=ScriptAnnotation*
-	//	scriptElements+=ScriptElement*;
+	//	{Script} (annotations+=ScriptAnnotation
+	//	| scriptElements+=ScriptElement)*;
 	public ScriptElements getScriptAccess() {
 		return pScript;
 	}

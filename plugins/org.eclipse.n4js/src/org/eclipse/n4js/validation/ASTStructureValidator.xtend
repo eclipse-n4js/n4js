@@ -98,6 +98,7 @@ import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConve
 import org.eclipse.n4js.n4JS.DestructureUtils
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
+import org.eclipse.n4js.n4JS.Annotation
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -1522,6 +1523,32 @@ class ASTStructureValidator {
 			validLabels,
 			constraints
 		)
+	}
+	
+	def private dispatch void validateASTStructure(
+		Annotation model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		// Add an issue for all script annotation (indicated by '@@') that do 
+		// not appear at the very top of the module.
+		if (model.eContainer instanceof Script) {
+			val script = model.eContainer as Script;
+ 			if (script.scriptElements.size > 0) {
+				val annotationNode = NodeModelUtils.findActualNodeFor(model);
+				val annotationOffset = annotationNode.offset
+				val firstScriptElement = script.scriptElements.get(0);
+				val scriptElementOffset = NodeModelUtils.findActualNodeFor(firstScriptElement).offset;
+				
+				if (annotationOffset > scriptElementOffset) {
+					producer.node = annotationNode;
+					producer.addDiagnostic(
+						new DiagnosticMessage(IssueCodes.getMessageForAST_SCRIPT_ANNO_INVALID_PLACEMENT(model.name),
+							IssueCodes.getDefaultSeverity(IssueCodes.AST_SCRIPT_ANNO_INVALID_PLACEMENT), IssueCodes.AST_SCRIPT_ANNO_INVALID_PLACEMENT))
+				}
+			}
+		}
 	}
 
 	def private void validateRestInBindingPattern(BindingElement elem, ASTStructureDiagnosticProducer producer) {
