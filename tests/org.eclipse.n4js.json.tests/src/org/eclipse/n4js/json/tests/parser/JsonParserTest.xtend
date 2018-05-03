@@ -25,11 +25,12 @@ import static org.junit.Assert.*
  */
 @RunWith(XtextRunner)
 @InjectWith(JSONInjectorProvider)
-class ParserTest {
+class JsonParserTest {
 
 	@Inject extension ParseHelper<JSONDocument>
 
-	@Test def void testPlainValues() {
+	@Test 
+	def void testPlainValues() {
 		'''{}'''.parseSuccessfully;
 		'''[]'''.parseSuccessfully;
 		'''42'''.parseSuccessfully;
@@ -41,6 +42,19 @@ class ParserTest {
 		'''null'''.parseSuccessfully;
 		'''true'''.parseSuccessfully;
 		'''false'''.parseSuccessfully;
+	}
+	
+	@Test
+	def void testStringEscapeSequences() {
+		'''"f\\no"'''.parseSuccessfully
+		'''"\f"'''.parseSuccessfully
+		'''"\n"'''.parseSuccessfully
+		'''"\r"'''.parseSuccessfully
+		'''"\t"'''.parseSuccessfully
+		'''"\""'''.parseSuccessfully
+		'''"\u2028"'''.parseSuccessfully
+		'''"\/"'''.parseSuccessfully
+		'''"\\"'''.parseSuccessfully
 	}
 	
 	protected def JSONDocument parseSuccessfully(CharSequence json) {

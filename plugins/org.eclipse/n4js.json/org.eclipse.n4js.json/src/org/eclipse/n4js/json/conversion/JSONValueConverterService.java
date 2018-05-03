@@ -7,14 +7,13 @@ import org.eclipse.n4js.conversion.ScientificIntValueConverter;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.impl.AbstractDeclarativeValueConverterService;
-import org.eclipse.xtext.conversion.impl.STRINGValueConverter;
 
 import com.google.inject.Inject;
 
 public class JSONValueConverterService extends AbstractDeclarativeValueConverterService {
 	
 	@Inject
-	private STRINGValueConverter stringValueConverter;
+	private JsonSTRINGValueConverter stringValueConverter;
 	
 	@Inject
 	private DoubleValueConverter doubleValueConverter;
