@@ -10,22 +10,21 @@
  */
 package org.eclipse.n4js.ui.building;
 
-import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.internal.ProjectDescriptionLoadListener;
+import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.builder.impl.XtextBuilder;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /**
  * A customized XtextBuilder that uses the {@link N4JSBuildTypeTracker} so other clients can get access to the build
@@ -86,9 +85,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	}
 
 	private void updateProjectReferencesIfNecessary() {
-		final ProjectDescriptionLoadListener loadListener = N4JSActivator.getInstance()
-				.getInjector(ORG_ECLIPSE_N4JS_N4JS)
-				.getInstance(ProjectDescriptionLoadListener.class);
+		final Injector injector = new N4JSInjectorSupplier().get();
+		final ProjectDescriptionLoadListener loadListener = injector.getInstance(ProjectDescriptionLoadListener.class);
 		loadListener.updateProjectReferencesIfNecessary(getProject());
 	}
 }

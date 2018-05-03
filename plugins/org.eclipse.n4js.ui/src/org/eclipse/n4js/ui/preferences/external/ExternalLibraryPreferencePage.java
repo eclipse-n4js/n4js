@@ -102,7 +102,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private Provider<ExternalLibraryTreeContentProvider> contentProvider;
 
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	@Inject
 	private NpmCLI npmCli;
@@ -291,7 +291,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 								: "The npm package '" + name + "' is not installed."));
 	}
 
-	// TODO refactor with NpmManager internal logic of validating package name
+	// TODO refactor with libManager internal logic of validating package name
 	private IInputValidator getBasicPackageValidator() {
 		return InputFunctionalValidator.from(
 				(final String name) -> {
@@ -387,7 +387,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	private void maintenanceCleanNpmCache(final MaintenanceActionsChoice userChoice,
 			final MultiStatus multistatus, IProgressMonitor monitor) {
 		if (userChoice.decisionCleanCache) {
-			IStatus status = npmManager.cleanCache(monitor);
+			IStatus status = libManager.cleanCache(monitor);
 			if (!status.isOK()) {
 				multistatus.merge(status);
 			}
@@ -415,7 +415,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 
 			try {
 				// externalLibrariesReloadHelper.reloadLibraries(true, monitor);
-				npmManager.reloadAllExternalProjects(monitor);
+				libManager.reloadAllExternalProjects(monitor);
 
 			} catch (Exception e) {
 				String msg = "Error when reloading external libraries.";
@@ -583,7 +583,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * @return status of the operation.
 	 */
 	private IStatus installAndUpdate(final Map<String, String> versionedPackages, final IProgressMonitor monitor) {
-		IStatus status = npmManager.installNPMs(versionedPackages, monitor);
+		IStatus status = libManager.installNPMs(versionedPackages, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
 
@@ -596,7 +596,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * @return status of the operation.
 	 */
 	private IStatus uninstallAndUpdate(final Collection<String> packageNames, final IProgressMonitor monitor) {
-		IStatus status = npmManager.uninstallNPM(packageNames, monitor);
+		IStatus status = libManager.uninstallNPM(packageNames, monitor);
 		if (status.isOK())
 			updateInput(viewer, store.getLocations());
 

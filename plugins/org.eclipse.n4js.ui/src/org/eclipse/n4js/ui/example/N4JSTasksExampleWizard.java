@@ -45,7 +45,7 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	public static final String ID = N4JSTasksExampleWizard.class.getName();
 
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	@Inject
 	private TargetPlatformInstallLocationProvider installLocationProvider;
@@ -83,10 +83,10 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 							IStatus status;
 							if (!version.isEmpty()) {
 								monitor.subTask("Installing dependency '" + name + "' in version " + version);
-								status = npmManager.installNPM(name, version, monitor);
+								status = libManager.installNPM(name, version, monitor);
 							} else {
 								monitor.subTask("Installing dependency '" + name + "'");
-								status = npmManager.installNPM(name, monitor);
+								status = libManager.installNPM(name, monitor);
 							}
 							if (status.matches(IStatus.ERROR))
 								throw status.getException();
