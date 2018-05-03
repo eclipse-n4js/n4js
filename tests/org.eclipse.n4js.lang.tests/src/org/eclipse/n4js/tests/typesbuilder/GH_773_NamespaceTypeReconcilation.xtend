@@ -21,15 +21,19 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
  * instances, no duplicate {@link ModuleNamespaceVirtualType} instances are created.
  */
 class GH_773_NamespaceTypeReconcilation extends AbstractN4JSTest {
-	static val NAMESPACE_FILE = URI.createURI("src/org/eclipse/n4js/tests/typesbuilder/GH_733_NamespaceImport.n4js");
+	static val NAMESPACE_FILE = URI.createURI(
+		"src/org/eclipse/n4js/tests/typesbuilder/GH_733_NamespaceImport.n4js");
 	static val NAMESPACE_FILE_OTHER = URI.createURI(
 		"src/org/eclipse/n4js/tests/typesbuilder/GH_733_NamespaceModule.n4js");
 
 	@Test
 	def void testNamespaceImportTypeReconcilation() throws Exception {
-		val res = loadFromDescription(NAMESPACE_FILE, NAMESPACE_FILE_OTHER);
+		val resources = loadFromDescriptions(NAMESPACE_FILE, NAMESPACE_FILE_OTHER);
+		val res = resources.get(0);
 		res.contents.get(0); // trigger demand-loading of AST (with reconciliation)
 		val module = res.contents.get(1) as TModule;
+
+		res.assertNoIssues
 
 		assertEquals("No duplicates in internalTypes + exposedInternalTypes", 1,
 			(module.internalTypes + module.exposedInternalTypes).size);
