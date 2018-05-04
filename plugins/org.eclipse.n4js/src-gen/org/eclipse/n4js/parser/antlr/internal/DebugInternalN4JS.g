@@ -12,10 +12,11 @@ grammar DebugInternalN4JS;
 
 // Rule Script
 ruleScript:
-	ruleScriptAnnotation
-	*
-	ruleScriptElement
-	*
+	(
+		ruleScriptAnnotation
+		    |
+		ruleScriptElement
+	)*
 ;
 
 // Rule ScriptElement
@@ -9014,7 +9015,7 @@ RULE_NO_LINE_TERMINATOR : '//5';
 
 RULE_INCOMPLETE_ASYNC_ARROW : '@=';
 
-RULE_STRUCTMODSUFFIX : ('r'|'i'|'w') '~';
+RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 
 RULE_IDENTIFIER : RULE_IDENTIFIER_START RULE_IDENTIFIER_PART*;
 

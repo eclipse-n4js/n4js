@@ -143,7 +143,7 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * imports 'A'. To access those, the referring {@link #variables variable} has to be used.
 	 */
 	contains Type[] exposedInternalTypes
-	
+
 	/**
 	 * MD5 hash (hex) of the AST from which this type model was created. This can be used to quickly
 	 * compare two type models created from -- maybe -- different versions of the same AST.
@@ -156,8 +156,8 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * 
 	 * @see org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.md5Hex(String)
 	 */
-	String astMD5
-	
+	transient String astMD5
+
 	/**
 	 * Caches for composed members. Not serialized to the Xtext index.
 	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
@@ -343,6 +343,7 @@ enum TypingStrategy {
 	structuralReadOnlyFields as "~r~" = 4
 	structuralWriteOnlyFields as "~w~" = 5
 	structuralFieldInitializer as "~i~" = 6
+	empty as "~\u2205~" = -1 // ~∅~
 }
 
 class TypeVariable extends Type {

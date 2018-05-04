@@ -35,4 +35,5 @@ Export-Package: org.eclipse.n4js.regex,
  org.eclipse.n4js.regex.scoping,
  org.eclipse.n4js.regex.generator,
  org.eclipse.n4js.regex.parser.antlr.lexer
+Automatic-Module-Name: org.eclipse.n4js.regex
 

@@ -10,3 +10,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.n4js.ts.tests.helper
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.n4js.ts.tests

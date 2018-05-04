@@ -235,7 +235,7 @@ class ImportedElementsScopingHelper {
 		// add namespace to scope
 		val namespaceName = specifier.alias;
 		val namespaceQName = QualifiedName.create(namespaceName)
-		val Type namespaceType = script.module.internalTypes.findFirst [ interType |
+		val Type namespaceType = (script.module.internalTypes + script.module.exposedInternalTypes).findFirst [ interType |
 			interType instanceof ModuleNamespaceVirtualType &&
 				(interType as ModuleNamespaceVirtualType).module === imp.module
 		]
@@ -383,7 +383,7 @@ class ImportedElementsScopingHelper {
 	 */
 	private def IScope getGlobalObjectProperties(IScope parent, EObject context) {
 		val globalObject = GlobalObjectScope.get(context.eResource.resourceSet).getGlobalObject
-		memberScopeFactory.create(parent, globalObject, context, false)
+		memberScopeFactory.create(parent, globalObject, context, false, false)
 	}
 
 	private def void addAccessModifierSuggestion(IEObjectDescription description, String suggestion) {

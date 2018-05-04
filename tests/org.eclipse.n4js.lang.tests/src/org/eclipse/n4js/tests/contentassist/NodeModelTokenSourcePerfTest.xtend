@@ -11,21 +11,20 @@
 package org.eclipse.n4js.tests.contentassist
 
 import com.google.common.base.Charsets
-import com.google.common.io.CharStreams
+import com.google.common.io.Resources
 import com.google.inject.Inject
+import java.io.StringReader
+import org.antlr.runtime.Token
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.parser.AntlrStreamWithToString
 import org.eclipse.n4js.ui.contentassist.TokenSourceFactory
 import org.eclipse.n4js.ui.contentassist.antlr.lexer.InternalN4JSLexer
-import java.io.InputStreamReader
-import java.io.StringReader
-import org.antlr.runtime.Token
+import org.eclipse.xtext.nodemodel.ICompositeNode
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.eclipse.xtext.nodemodel.ICompositeNode
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -50,9 +49,9 @@ class NodeModelTokenSourcePerfTest {
 
 	@Before
 	def void setUp() {
-		testData = CharStreams.toString [|
-			new InputStreamReader(NodeModelTokenSourcePerfTest.getResourceAsStream('/org/eclipse/n4js/tests/contentassist/testdata.txt'), Charsets.UTF_8)
-		]
+		val resourceURL = NodeModelTokenSourcePerfTest.getResource('/org/eclipse/n4js/tests/contentassist/testdata.txt')
+		val charSrc = Resources.asCharSource(resourceURL, Charsets.UTF_8);
+		testData = charSrc.read
 		parsed = testData.parse
 		node = NodeModelUtils.getNode(parsed).rootNode
 	}

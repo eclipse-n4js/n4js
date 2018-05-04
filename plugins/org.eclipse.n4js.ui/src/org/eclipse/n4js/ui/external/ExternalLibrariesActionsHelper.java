@@ -37,7 +37,7 @@ public class ExternalLibrariesActionsHelper {
 	@Inject
 	private StatusHelper statusHelper;
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	@Inject
 	private GitCloneSupplier gitSupplier;
@@ -58,7 +58,7 @@ public class ExternalLibrariesActionsHelper {
 	 *            the monitor used to interact with npm manager
 	 */
 	public void maintenanceCleanNpmCache(final MultiStatus multistatus, IProgressMonitor monitor) {
-		IStatus status = npmManager.cleanCache(monitor);
+		IStatus status = libManager.cleanCache(monitor);
 		if (!status.isOK()) {
 			multistatus.merge(status);
 		}
@@ -129,7 +129,7 @@ public class ExternalLibrariesActionsHelper {
 	 */
 	public void installNoUpdate(final Map<String, String> versionedPackages, final MultiStatus multistatus,
 			final IProgressMonitor monitor) {
-		IStatus status = npmManager.installNPMs(versionedPackages, monitor);
+		IStatus status = libManager.installNPMs(versionedPackages, monitor);
 		if (!status.isOK())
 			multistatus.merge(status);
 	}

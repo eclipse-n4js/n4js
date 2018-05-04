@@ -19,10 +19,13 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
+import com.google.inject.Singleton;
+
 /**
  * Process executor that either executes provided {@link Process} or uses provided {@link ProcessBuilder} to create
  * process. Obtained process is executed and {@link ProcessResult result} is returned.
  */
+@Singleton
 public class ProcessExecutor {
 
 	@Inject

@@ -11,9 +11,6 @@
 package org.eclipse.n4js.scoping.members;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -21,13 +18,15 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 
 /**
  * Scope aware of structural typing, i.e., filtering out (with error markers) some members based on the typing strategy.
  */
 public class TypingStrategyAwareMemberScope extends FilterWithErrorMarkerScope {
 
-	final TypingStrategyFilter strategyFilter;
+	final TypingStrategyFilterDesc strategyFilter;
 	final boolean useSite;
 	final String receiverTypeName;
 
@@ -42,7 +41,7 @@ public class TypingStrategyAwareMemberScope extends FilterWithErrorMarkerScope {
 	public TypingStrategyAwareMemberScope(IScope parent, TypeRef receiverType, EObject context) {
 		super(parent);
 		boolean isLeftHand = ExpressionExtensions.isLeftHandSide(context);
-		strategyFilter = new TypingStrategyFilter(TypeUtils.retrieveTypingStrategy(receiverType), isLeftHand);
+		strategyFilter = new TypingStrategyFilterDesc(TypeUtils.retrieveTypingStrategy(receiverType), isLeftHand);
 		useSite = receiverType != null && receiverType.isUseSiteStructuralTyping();
 		receiverTypeName = (receiverType == null || receiverType.eIsProxy()) ? "unknown type" : receiverType
 				.getTypeRefAsString();

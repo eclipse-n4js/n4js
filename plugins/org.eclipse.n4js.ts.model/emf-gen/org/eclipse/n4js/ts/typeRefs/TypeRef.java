@@ -91,7 +91,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * The method is robust, if declared type is null, false is returned.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.n4js.ts.types.Type%> dtype = this.getDeclaredType();\nreturn ((dtype != null) && dtype.isFinal());'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.types.Type%&gt; dtype = this.getDeclaredType();\nreturn ((dtype != null) &amp;&amp; dtype.isFinal());'"
 	 * @generated
 	 */
 	boolean isFinalByType();
@@ -103,7 +103,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Tells if this type reference has a declared type which is "array like" as defined by {@link Type#isArrayLike()}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.n4js.ts.types.Type%> dtype = this.getDeclaredType();\nreturn ((dtype != null) && dtype.isArrayLike());'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.types.Type%&gt; dtype = this.getDeclaredType();\nreturn ((dtype != null) &amp;&amp; dtype.isArrayLike());'"
 	 * @generated
 	 */
 	boolean isArrayLike();
@@ -208,7 +208,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Convenience method to avoid type casts, does return unmodifiable empty list for all type references except parameterized type refs.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.ts.typeRefs.TypeArgument%>>emptyEList();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.typeRefs.TypeArgument%&gt;&gt;emptyEList();'"
 	 * @generated
 	 */
 	EList<TypeArgument> getTypeArgs();
@@ -257,7 +257,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 *  Convenience method, returns only true for parameterized type refs if the declared type is any
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.Type%> _declaredType = this.getDeclaredType();\nreturn (_declaredType instanceof <%org.eclipse.n4js.ts.types.AnyType%>);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = this.getDeclaredType();\nreturn (_declaredType instanceof &lt;%org.eclipse.n4js.ts.types.AnyType%&gt;);'"
 	 * @generated
 	 */
 	boolean isTopType();
@@ -269,7 +269,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 *  Convenience method, returns only true for parameterized type refs if the declared type is undefined
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.Type%> _declaredType = this.getDeclaredType();\nreturn (_declaredType instanceof <%org.eclipse.n4js.ts.types.UndefinedType%>);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = this.getDeclaredType();\nreturn (_declaredType instanceof &lt;%org.eclipse.n4js.ts.types.UndefinedType%&gt;);'"
 	 * @generated
 	 */
 	boolean isBottomType();
@@ -282,7 +282,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Returns the typing strategy, either the use or def site, usually NOMINAL.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.n4js.ts.types.TypingStrategy%>.NOMINAL;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.types.TypingStrategy%&gt;.NOMINAL;'"
 	 * @generated
 	 */
 	TypingStrategy getTypingStrategy();
@@ -296,7 +296,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Overridden in {@link ParameterizedTypeRefStructural}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.ts.types.TStructMember%>>emptyEList();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TStructMember%&gt;&gt;emptyEList();'"
 	 * @generated
 	 */
 	EList<TStructMember> getStructuralMembers();
@@ -335,7 +335,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Used to activate the special semantics of optional fields in certain cases.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy%>.OFF;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy%&gt;.OFF;'"
 	 * @generated
 	 */
 	OptionalFieldStrategy getASTNodeOptionalFieldStrategy();
@@ -347,7 +347,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Override Versioned#getVersion()
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _xifexpression = (int) 0;\n<%org.eclipse.n4js.ts.types.Type%> _declaredType = this.getDeclaredType();\nboolean _tripleNotEquals = (_declaredType != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getDeclaredType().getVersion();\n}\nelse\n{\n\t_xifexpression = 0;\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _xifexpression = (int) 0;\n&lt;%org.eclipse.n4js.ts.types.Type%&gt; _declaredType = this.getDeclaredType();\nboolean _tripleNotEquals = (_declaredType != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getDeclaredType().getVersion();\n}\nelse\n{\n\t_xifexpression = 0;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	int getVersion();

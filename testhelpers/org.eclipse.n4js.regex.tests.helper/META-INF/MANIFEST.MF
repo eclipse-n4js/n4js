@@ -13,3 +13,4 @@ Require-Bundle: org.eclipse.n4js.regex,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.regex,
  org.eclipse.n4js.regex.tests
+Automatic-Module-Name: org.eclipse.n4js.regex.tests.helper

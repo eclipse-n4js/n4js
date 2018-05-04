@@ -68,7 +68,6 @@ import java.util.List
 import org.eclipse.emf.common.util.ECollections
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.n4JS.AdditiveExpression
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.Argument
@@ -87,6 +86,7 @@ import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.CatchVariable
 import org.eclipse.n4js.n4JS.CommaExpression
 import org.eclipse.n4js.n4JS.ConditionalExpression
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.EqualityExpression
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
@@ -141,6 +141,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
+import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
@@ -152,7 +153,6 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
@@ -193,8 +193,8 @@ import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesbuilder.N4JSFunctionDefinitionTypesBuilder
 import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator
@@ -210,7 +210,6 @@ import static extension org.eclipse.n4js.ts.utils.TypeExtensions.*
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.typesystem.TypeSystemErrorExtensions.*
-import org.eclipse.n4js.n4JS.DestructureUtils
 
 inject TypeSystemHelper typeSystemHelper
 inject N4JSFunctionDefinitionTypesBuilder functionDefinitionTypesBuilder
@@ -699,8 +698,9 @@ from {
 		} else if (memberName!==null) {
 			// indexing via constant computed-name, sub-cases: static or instance member, for the latter nominally-typed or structurally-typed receiver
 			val staticAccess = (targetTypeRef instanceof TypeTypeRef)
+			val structFieldInitMode = targetTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER
 			val checkVisibility = false // access modifiers checked in validation
-			val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess)
+			val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess, structFieldInitMode)
 			val memberDesc = if(memberName!==null && !memberName.isEmpty()) {
 				scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName))
 			};
@@ -2648,16 +2648,8 @@ from {
 		{
 			// ---- NOTE: this code was copied in rule 'substTypeVariablesInClassifierTypeRef' above (keep in sync!) ----
 			// do we have a substitution?
-
-			// this might be changed when working on GHOLD-12
-			var temp = env(G, typeVar, TypeRef)
-			if (typeRef instanceof ParameterizedTypeRefStructural) {
-				if (temp instanceof ParameterizedTypeRef) {
-					var ptrs = TypeUtils.copyToParameterizedTypeRefStructural(temp);
-					ptrs.setTypingStrategy(typeRef.getTypingStrategy());
-					temp = ptrs;
-				}
-			}
+			val tempFromEnv = env(G, typeVar, TypeRef)
+			val temp = TypeUtils.mergeTypeModifiers(tempFromEnv, typeRef);
 
 			val tempDeclaredType = temp.declaredType
 			if (typeVar !== tempDeclaredType
@@ -2671,7 +2663,6 @@ from {
 				result = TypeUtils.copy(temp); // always copy! ('temp' is lying in the rule env, don't wanna change content of rule env!)
 				// (note: TypeUtils#copyIfContained() would fail in previous lines, because 'temp' will not be "contained" in the sense of EMF containment)
 			}
-			TypeUtils.copyTypeModifiers(result, typeRef)
 		}
 		or
 		{

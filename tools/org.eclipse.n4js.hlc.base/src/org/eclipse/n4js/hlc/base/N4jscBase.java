@@ -248,7 +248,7 @@ public class N4jscBase implements IApplication {
 	private TargetPlatformInstallLocationProvider installLocationProvider;
 
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	@Inject
 	private TesterRegistry testerRegistry;
@@ -336,7 +336,7 @@ public class N4jscBase implements IApplication {
 		try {
 
 			CmdLineParser parser = new CmdLineParser(this);
-			parser.setUsageWidth(130);
+			parser.getProperties().withUsageWidth(130);
 
 			try {
 
@@ -497,7 +497,7 @@ public class N4jscBase implements IApplication {
 						});
 					}
 
-					IStatus status = npmManager.installNPMs(dependencies, new NullProgressMonitor());
+					IStatus status = libManager.installNPMs(dependencies, new NullProgressMonitor());
 					if (!status.isOK())
 						if (keepCompiling)
 							warn(status.getMessage());
@@ -597,7 +597,7 @@ public class N4jscBase implements IApplication {
 				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
 		pull(localClonePath);
 
-		// generate n4tp file for NpmManager to use
+		// generate n4tp file for libManager to use
 		PackageJson packageJson = TargetPlatformFactory.createN4Default();
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
 		File packageJsonFile = new File(new File(platformLocation), PackageJson.PACKAGE_JSON);

@@ -39,48 +39,42 @@ Contributors:
 		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
 		
 		<!-- tycho -->
-		<tycho-version>1.0.0</tycho-version>
+		<tycho-version>1.1.0</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
-		<xtext-version>2.12.0</xtext-version>
+		<xtext-version>2.13.0</xtext-version>
 		<mwe2-version>2.9.0.201605261059</mwe2-version>
 		<org.eclipse.xtext.builder.standalone-version>[${xtext-version}]</org.eclipse.xtext.builder.standalone-version>
 		<org.eclipse.xtext.common.types-version>[${xtext-version}]</org.eclipse.xtext.common.types-version>
 		<org.eclipse.xtext.xtext-version>[${xtext-version}]</org.eclipse.xtext.xtext-version>
 		<org.eclipse.xtext.xbase-version>[${xtext-version}]</org.eclipse.xtext.xbase-version>
 		<org.osgi.core-version>4.3.1</org.osgi.core-version>
-		<org.eclipse.core.resources-version>3.11.1</org.eclipse.core.resources-version>
+		<org.eclipse.core.resources-version>3.12.0</org.eclipse.core.resources-version>
 		<org.eclipse.text-version>3.5.101</org.eclipse.text-version>
-		<org.eclipse.emf.codegen.ecore-version>[2.11.0-v20150806-0404]</org.eclipse.emf.codegen.ecore-version>
-		<org.eclipse.emf.codegen.ecore.xtext-version>[1.2.0]</org.eclipse.emf.codegen.ecore.xtext-version>
-		<org.eclipse.emf.common-version>[2.11.0-v20150805-0538]</org.eclipse.emf.common-version>
-		<org.eclipse.emf.ecore-version>[2.11.1-v20150805-0538]</org.eclipse.emf.ecore-version>
-		<org.eclipse.emf.ecore.xcore-version>[1.3.1]</org.eclipse.emf.ecore.xcore-version>
-		<org.eclipse.emf.ecore.xcore.lib-version>[1.1.100]</org.eclipse.emf.ecore.xcore.lib-version>
 
 		<!-- maven plugins -->
-		<build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
+		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
 		<codehaus-buildnumber-maven-plugin.version>1.4</codehaus-buildnumber-maven-plugin.version>
-		<codehaus-exec-maven-plugin.version>1.6.0</codehaus-exec-maven-plugin.version>
 		<codehaus-copy-rename-maven-plugin.version>1.0.1</codehaus-copy-rename-maven-plugin.version>
+		<codehaus-exec-maven-plugin.version>1.6.0</codehaus-exec-maven-plugin.version>
 		<fornax-oaw-m2-plugin.version>3.6.0</fornax-oaw-m2-plugin.version>
 		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
 		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
-		<maven-assembly-plugin.version>2.4.1</maven-assembly-plugin.version>
-		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
+		<maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-		<maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
+		<maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
 		<maven-failsafe-plugin.version>2.17</maven-failsafe-plugin.version>
 		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
 		<maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
-		<maven-jxr-plugin.version>2.4</maven-jxr-plugin.version>
+		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+		<maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
 		<maven-pmd-plugin.version>3.2</maven-pmd-plugin.version>
-		<maven-release-plugin.version>2.5</maven-release-plugin.version>
+		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
 		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
-		<maven-scm-plugin.version>1.9.1</maven-scm-plugin.version>
+		<maven-scm-plugin.version>1.9.5</maven-scm-plugin.version>
 		<maven-site-plugin.version>3.3</maven-site-plugin.version>
 		<maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
 		<maven-verifier-plugin.version>1.0</maven-verifier-plugin.version>

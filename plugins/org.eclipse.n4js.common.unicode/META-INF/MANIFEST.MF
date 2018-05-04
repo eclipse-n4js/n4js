@@ -19,3 +19,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.common.unicode,
  org.eclipse.n4js.common.unicode.serializer,
  org.eclipse.n4js.common.unicode.services
+Automatic-Module-Name: org.eclipse.n4js.common.unicode

@@ -33,6 +33,11 @@ public class MemberScopeRequest {
 	public final boolean checkVisibility;
 	/** Flag whether static or instance members are to be accessed. */
 	public final boolean staticAccess;
+	/**
+	 * Flag indicating access of a member of a structural field initializer type, see
+	 * {@link AbstractMemberScope#structFieldInitMode}.
+	 */
+	public final boolean structFieldInitMode;
 
 	/**
 	 * Creates a new member scope request with given values, these values are directly accessible via fields.
@@ -44,7 +49,7 @@ public class MemberScopeRequest {
 	 *            see {@link #provideContainedMembers}.
 	 */
 	public MemberScopeRequest(TypeRef originalReceiverTypeRef, EObject context, boolean provideContainedMembers,
-			boolean checkVisibility, boolean staticAccess) {
+			boolean checkVisibility, boolean staticAccess, boolean structFieldInitMode) {
 		if (provideContainedMembers && !(context instanceof MemberAccess)) {
 			throw new IllegalStateException(
 					"member scoping can only guarantee to provide contained members if given a context of type "
@@ -55,6 +60,7 @@ public class MemberScopeRequest {
 		this.provideContainedMembers = provideContainedMembers;
 		this.checkVisibility = checkVisibility;
 		this.staticAccess = staticAccess;
+		this.structFieldInitMode = structFieldInitMode;
 	}
 
 	/**
@@ -64,7 +70,8 @@ public class MemberScopeRequest {
 		if (staticAccess) {
 			return this;
 		}
-		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility, true);
+		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
+				true, structFieldInitMode);
 	}
 
 	/**
@@ -75,6 +82,6 @@ public class MemberScopeRequest {
 			return this;
 		}
 		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
-				false);
+				false, structFieldInitMode);
 	}
 }

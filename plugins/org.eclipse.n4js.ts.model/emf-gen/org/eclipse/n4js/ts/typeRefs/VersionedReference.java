@@ -76,7 +76,7 @@ public interface VersionedReference extends EObject {
 	 * when computing the implicitly requested version, e.g. for property access expressions.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.math.BigDecimal%> _requestedVersion = this.getRequestedVersion();\nreturn (_requestedVersion != null);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.math.BigDecimal%&gt; _requestedVersion = this.getRequestedVersion();\nreturn (_requestedVersion != null);'"
 	 * @generated
 	 */
 	boolean hasRequestedVersion();

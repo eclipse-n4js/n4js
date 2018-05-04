@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.external;
 
-import static com.google.common.collect.Iterators.emptyIterator;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.eclipse.core.runtime.SubMonitor.convert;
@@ -19,6 +18,7 @@ import static org.eclipse.n4js.internal.N4JSSourceContainerType.PROJECT;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -126,7 +126,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public Iterator<URI> getArchiveIterator(URI archiveLocation, String archiveRelativeLocation) {
-		return emptyIterator();
+		return Collections.emptyIterator();
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 			}
 		}
 
-		return emptyIterator();
+		return Collections.emptyIterator();
 	}
 
 	@Override

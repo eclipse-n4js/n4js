@@ -1,0 +1,14 @@
+ProjectId: ScriptAnnotations
+ProjectType: library
+ProjectVersion: 0.0.1
+VendorId: org.eclipse.n4js
+//output folder (e.g. compiled files, etc.)
+Output: "src-gen"
+//define project source folders
+Sources {
+    //those are your project production sources (usually N4JS code)
+    source {
+        "src",
+        "src-fill"
+    }
+}

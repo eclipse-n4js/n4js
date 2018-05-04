@@ -15,3 +15,4 @@ Require-Bundle: org.eclipse.n4js.runner,
  org.apache.log4j,
  org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.runner.nodejs
+Automatic-Module-Name: org.eclipse.n4js.runner.nodejs

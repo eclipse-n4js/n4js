@@ -82,6 +82,12 @@ public final class UserdataMapper {
 	public static final String USERDATA_KEY_TIMESTAMP = "timestamp";
 
 	/**
+	 * The key in the user data map for storing the value of transient property {@link TModule#getAstMD5()
+	 * TModule#astMD5}.
+	 */
+	public static final String USERDATA_KEY_AST_MD5 = "astMD5";
+
+	/**
 	 * Flag indicating whether the string representation contains binary or human readable data.
 	 */
 	private final static Boolean BINARY = Boolean.TRUE;
@@ -159,6 +165,11 @@ public final class UserdataMapper {
 
 		final HashMap<String, String> ret = new HashMap<>();
 		ret.put(USERDATA_KEY_SERIALIZED_SCRIPT, serializedScript);
+
+		final String astMD5 = exportedModule.getAstMD5();
+		if (astMD5 != null) {
+			ret.put(USERDATA_KEY_AST_MD5, astMD5);
+		}
 
 		ret.put(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY, Boolean.toString(exportedModule.isMainModule()));
 
@@ -241,6 +252,10 @@ public final class UserdataMapper {
 		}
 		final TModule module = (TModule) contents.get(0);
 		xres.getContents().clear();
+
+		final String astMD5 = eObjectDescription.getUserData(USERDATA_KEY_AST_MD5);
+		module.setAstMD5(astMD5);
+
 		return module;
 	}
 

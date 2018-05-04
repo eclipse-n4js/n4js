@@ -24,3 +24,4 @@ Export-Package: org.eclipse.n4js.regex.ui.quickfix,
  org.eclipse.n4js.regex.ui.contentassist.antlr,
  org.eclipse.n4js.regex.ui.internal
 Bundle-Activator: org.eclipse.n4js.regex.ui.internal.RegularExpressionActivator
+Automatic-Module-Name: org.eclipse.n4js.regex.ui

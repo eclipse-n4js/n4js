@@ -21043,7 +21043,7 @@ public interface N4JSPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Iterator Of Expression</em>'.
 	 * @see java.util.Iterator
-	 * @model instanceClass="java.util.Iterator<org.eclipse.n4js.n4JS.Expression>"
+	 * @model instanceClass="java.util.Iterator&lt;org.eclipse.n4js.n4JS.Expression&gt;"
 	 * @generated
 	 */
 	EDataType getIteratorOfExpression();
@@ -21054,7 +21054,7 @@ public interface N4JSPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Iterator Of Yield Expression</em>'.
 	 * @see java.util.Iterator
-	 * @model instanceClass="java.util.Iterator<org.eclipse.n4js.n4JS.YieldExpression>"
+	 * @model instanceClass="java.util.Iterator&lt;org.eclipse.n4js.n4JS.YieldExpression&gt;"
 	 * @generated
 	 */
 	EDataType getIteratorOfYieldExpression();
@@ -21065,7 +21065,7 @@ public interface N4JSPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Iterator Of Statement</em>'.
 	 * @see java.util.Iterator
-	 * @model instanceClass="java.util.Iterator<org.eclipse.n4js.n4JS.Statement>"
+	 * @model instanceClass="java.util.Iterator&lt;org.eclipse.n4js.n4JS.Statement&gt;"
 	 * @generated
 	 */
 	EDataType getIteratorOfStatement();
@@ -21076,7 +21076,7 @@ public interface N4JSPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Iterator Of Return Statement</em>'.
 	 * @see java.util.Iterator
-	 * @model instanceClass="java.util.Iterator<org.eclipse.n4js.n4JS.ReturnStatement>"
+	 * @model instanceClass="java.util.Iterator&lt;org.eclipse.n4js.n4JS.ReturnStatement&gt;"
 	 * @generated
 	 */
 	EDataType getIteratorOfReturnStatement();

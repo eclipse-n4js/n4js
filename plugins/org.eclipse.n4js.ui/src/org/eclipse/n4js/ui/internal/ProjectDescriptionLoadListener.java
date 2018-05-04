@@ -102,10 +102,12 @@ public class ProjectDescriptionLoadListener implements IEagerContribution {
 				return;
 			}
 			IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+				@SuppressWarnings("deprecation")
 				@Override
 				public void run(IProgressMonitor monitor) throws CoreException {
 					IProjectDescription description = project.getDescription();
 					IProject[] array = newRequires.toArray(new IProject[newRequires.size()]);
+
 					description.setDynamicReferences(array);
 					project.setDescription(description, IResource.AVOID_NATURE_CONFIG, monitor);
 				}

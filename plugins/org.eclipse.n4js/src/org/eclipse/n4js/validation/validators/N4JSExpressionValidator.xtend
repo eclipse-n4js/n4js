@@ -11,8 +11,6 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
@@ -22,6 +20,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.compileTime.CompileTimeEvaluationError
 import org.eclipse.n4js.compileTime.CompileTimeEvaluator.UnresolvedPropertyAccessError
 import org.eclipse.n4js.compileTime.CompileTimeValue
@@ -128,8 +127,9 @@ import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -1486,7 +1486,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val checkVisibility = true
 		val staticAccess = (receiverTypeRef instanceof TypeTypeRef)
-		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess)
+		val structFieldInitMode = receiverTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER
+		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess, structFieldInitMode)
 		val memberDesc = if(memberName!==null && !memberName.empty) {
 			scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName))
 		};

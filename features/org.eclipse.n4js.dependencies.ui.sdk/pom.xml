@@ -109,6 +109,7 @@ Contributors:
 						<feature id="org.eclipse.platform"/>
 						<feature id="org.eclipse.egit"/>
 						<feature id="org.eclipse.jgit"/>
+						<feature id="org.eclipse.epp.mpc"/>
 					</excludes>
 				</configuration>
 			</plugin>

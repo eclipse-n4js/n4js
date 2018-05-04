@@ -30,6 +30,7 @@ import org.osgi.framework.BundleContext;
  */
 public class N4MFActivator extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.n4js.n4mf.ui";
 	public static final String ORG_ECLIPSE_N4JS_N4MF_N4MF = "org.eclipse.n4js.n4mf.N4MF";
 	
 	private static final Logger logger = Logger.getLogger(N4MFActivator.class);
@@ -96,5 +97,6 @@ public class N4MFActivator extends AbstractUIPlugin {
 	protected Module getSharedStateModule() {
 		return new SharedStateModule();
 	}
+	
 	
 }

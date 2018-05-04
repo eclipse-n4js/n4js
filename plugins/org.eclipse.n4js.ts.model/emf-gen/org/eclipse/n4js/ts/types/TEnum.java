@@ -81,7 +81,7 @@ public interface TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTEle
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.ts.types.TypeVariable%>>emptyEList();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.ts.types.TypeVariable%&gt;&gt;emptyEList();'"
 	 * @generated
 	 */
 	EList<TypeVariable> getTypeVars();
