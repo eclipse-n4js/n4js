@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
+import org.eclipse.n4js.n4mf.utils.parsing.ProjectDescriptionProviderUtil;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.common.collect.Sets;
@@ -57,12 +60,28 @@ public class HeadlessHelper {
 	public static void registerProjectsToFileBasedWorkspace(Iterable<URI> projectURIs,
 			FileBasedWorkspace n4jsFileBasedWorkspace, IHeadlessLogger logger)
 			throws N4JSCompileException {
+		Map<String, URI> registeredProjects = new HashMap<>();
 		// Register all projects with the file based workspace.
 		for (URI projectURI : projectURIs) {
 			try {
+
+				File root = new File(projectURI.toFileString());
+				File manifest = new File(root, IN4JSProject.N4MF_MANIFEST);
+				if (!manifest.isFile()) {
+					throw new N4JSCompileException("Cannot locate manifest at " + manifest + ".");
+				}
+
+				String projectID = ProjectDescriptionProviderUtil.getFromFile(manifest).getProjectId();
+
+				if (registeredProjects.containsKey(projectID))
+					throw new N4JSCompileException("Duplicate project id [" + projectID
+							+ "]. Already registered project at " + registeredProjects.get(projectID)
+							+ ", trying to register project at " + projectURI + ".");
+
 				if (logger != null && logger.isCreateDebugOutput()) {
 					logger.debug("Registering project '" + projectURI + "'");
 				}
+				registeredProjects.put(projectID, projectURI);
 				n4jsFileBasedWorkspace.registerProject(projectURI);
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);
