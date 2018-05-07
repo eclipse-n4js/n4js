@@ -23,7 +23,7 @@
 package org.eclipse.n4js.json.JSON
 
 class JSONDocument {
-	contains JSONValue content 
+	contains JSONValue content
 }
 
 abstract class JSONValue {}
