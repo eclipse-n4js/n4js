@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -18,6 +18,7 @@ import java.util.List
 import java.util.Map
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Platform
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.n4js.n4mf.ModuleFilter
@@ -37,6 +38,7 @@ import org.eclipse.xtext.validation.Check
 import static org.eclipse.n4js.n4mf.N4mfPackage.Literals.*
 import static org.eclipse.n4js.n4mf.utils.N4MFUtils.*
 import static org.eclipse.n4js.n4mf.validation.IssueCodes.*
+import java.nio.file.Paths
 
 class N4MFValidator extends AbstractN4MFValidator {
 
@@ -95,18 +97,17 @@ class N4MFValidator extends AbstractN4MFValidator {
 	 */
 	def private void checkMainModule(ProjectDescription pd) {
 		val mainModuleSpecifier = pd.mainModule;
-		if(mainModuleSpecifier!==null) { // this property is optional, so null is fine!
-			if(mainModuleSpecifier.empty || !isExistingModule(pd, mainModuleSpecifier)) {
-				val specifierToShow = if(mainModuleSpecifier.empty) "<empty string>" else  mainModuleSpecifier;
-				addIssue(
-					getMessageForNON_EXISTING_MODULE_SPECIFIER(specifierToShow),
-					pd, PROJECT_DESCRIPTION__MAIN_MODULE,
-					NON_EXISTING_MODULE_SPECIFIER);
+		if (mainModuleSpecifier !== null) { // this property is optional, so null is fine!
+			if (mainModuleSpecifier.empty || !isExistingModule(pd, mainModuleSpecifier)) {
+				val specifierToShow = if (mainModuleSpecifier.empty) "<empty string>" else mainModuleSpecifier;
+				addIssue(getMessageForNON_EXISTING_MODULE_SPECIFIER(specifierToShow), pd,
+					PROJECT_DESCRIPTION__MAIN_MODULE, NON_EXISTING_MODULE_SPECIFIER);
 			}
 		}
 	}
 
-	def private checkForExistingPaths(ProjectDescription projectDescription, HashMap<EAttribute, List<String>> containerToPath) {
+	def private checkForExistingPaths(ProjectDescription projectDescription,
+		HashMap<EAttribute, List<String>> containerToPath) {
 		val uri = projectDescription.eResource.URI
 		val absoluteProjectPath = pathProvider.getAbsoluteProjectPath(uri)
 		for (entry : containerToPath.entrySet) {
@@ -156,9 +157,13 @@ class N4MFValidator extends AbstractN4MFValidator {
 		Map<Object, List<String>> paths) {
 		val pathToContainer = <String, List<Object>>newHashMap
 		paths.entrySet.map[value -> key].forEach(
-			e|
-				e.key.forEach[val grouped = pathToContainer.get(it) ?: newArrayList; grouped.add(e.value);
-					pathToContainer.put(it, grouped)])
+			e |
+				e.key.forEach [
+					val grouped = pathToContainer.get(it) ?: newArrayList;
+					grouped.add(e.value);
+					pathToContainer.put(it, grouped)
+				]
+		)
 		val duplicatePaths = pathToContainer.keySet.filter[pathToContainer.get(it).size > 1]
 		val container = getContainer(pathContainer, projectDescription)
 		val feature = getFeature(pathContainer, projectDescription)
@@ -228,8 +233,8 @@ class N4MFValidator extends AbstractN4MFValidator {
 	private def checkForDuplicatePaths(SourceFragment sourceFragment, List<String> paths) {
 		val duplicatePaths = getDuplicates(paths)
 		duplicatePaths.forEach [
-			addIssue(getMessageForDUPLICATE_PATH_INTERNAL, sourceFragment,
-				SOURCE_FRAGMENT__PATHS, paths.indexOf(it.key), DUPLICATE_PATH_INTERNAL)
+			addIssue(getMessageForDUPLICATE_PATH_INTERNAL, sourceFragment, SOURCE_FRAGMENT__PATHS,
+				paths.indexOf(it.key), DUPLICATE_PATH_INTERNAL)
 		]
 	}
 
@@ -244,25 +249,61 @@ class N4MFValidator extends AbstractN4MFValidator {
 	}
 
 	@Check
+	def void checkOutputFolder(ProjectDescription projectDescription) {
+		val sourceFrgmt = getSourceContainingOutput(projectDescription);
+
+		if (sourceFrgmt !== null) {
+			val srcFrgmtName = sourceFrgmt.sourceFragmentType.getName().toString;
+			val message = getMessageForOUTPUT_FOLDER_INSIDE_SOURCES(srcFrgmtName);
+			addIssue(message, projectDescription, PROJECT_DESCRIPTION__OUTPUT_PATH, OUTPUT_FOLDER_INSIDE_SOURCES);
+		}
+	}
+
+	def SourceFragment getSourceContainingOutput(ProjectDescription projectDescription) {
+		val outputPathName = projectDescription.outputPath;
+		if (outputPathName === null || outputPathName.isEmpty) {
+			return null;
+		}
+
+		val outputPath = new Path(outputPathName);
+		val sourceTypes = projectDescription.sourceFragment;
+
+		for (SourceFragment sourceFrgmt : sourceTypes) {
+			for (String sourcePathStr : sourceFrgmt.paths) {
+				val sourcePathStr2 = Paths.get(sourcePathStr).normalize().toString();
+				val sourcePath = new Path(sourcePathStr2);
+
+				if (sourcePathStr.isEmpty || ".".equals(sourcePathStr) || sourcePath.equals(outputPath) ||
+					sourcePath.isPrefixOf(outputPath)) {
+
+					return sourceFrgmt;
+				}
+			}
+		}
+		return null;
+	}
+
+	@Check
 	def checkForDuplicateResources(ProjectDescription projectDescription) {
 		val paths = projectDescription.resourcePaths
 		val duplicatePaths = getDuplicates(paths)
 		duplicatePaths.forEach [
-			addIssue(getMessageForDUPLICATE_PATH_INTERNAL, projectDescription,
-				PROJECT_DESCRIPTION__RESOURCE_PATHS, paths.lastIndexOf(it.key),
-				DUPLICATE_PATH_INTERNAL)
+			addIssue(getMessageForDUPLICATE_PATH_INTERNAL, projectDescription, PROJECT_DESCRIPTION__RESOURCE_PATHS,
+				paths.lastIndexOf(it.key), DUPLICATE_PATH_INTERNAL)
 		]
 	}
 
 	@Check
 	def checkForDuplicateModuleSpecifiers(ModuleFilter moduleFilter) {
-		val paths = moduleFilter.moduleSpecifiers.filter[sourcePath !== null].map[
-			moduleSpecifierWithWildcard -> sourcePath].toList
+		val paths = moduleFilter.moduleSpecifiers.filter[sourcePath !== null].map [
+			moduleSpecifierWithWildcard -> sourcePath
+		].toList
 		val filterWithOutExplicitSourceFolder = moduleFilter.moduleSpecifiers.filter[sourcePath === null]
 
 		if (!filterWithOutExplicitSourceFolder.empty) {
-			val sourcePaths = EcoreUtil2.getContainerOfType(moduleFilter, ProjectDescription).sourceFragment.map[
-				it.paths].flatten.toSet
+			val sourcePaths = EcoreUtil2.getContainerOfType(moduleFilter, ProjectDescription).sourceFragment.map [
+				it.paths
+			].flatten.toSet
 			for (spec : filterWithOutExplicitSourceFolder) {
 				for (sourcePath : sourcePaths) {
 					paths.add((spec.moduleSpecifierWithWildcard -> sourcePath))
@@ -273,8 +314,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 		for (duplicatePath : duplicatePaths) {
 			val moduleSpec = moduleFilter.moduleSpecifiers.findLast[moduleSpecifierWithWildcard == duplicatePath]
 			addIssue(getMessageForDUPLICATE_MODULE_SPECIFIER, moduleSpec,
-				MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
-				DUPLICATE_MODULE_SPECIFIER)
+				MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD, DUPLICATE_MODULE_SPECIFIER)
 		}
 
 		moduleFilter.moduleSpecifiers.forEach [
@@ -339,9 +379,9 @@ class N4MFValidator extends AbstractN4MFValidator {
 		if (hasIssue) {
 			addIssue(getMessageForNON_EXISTING_MODULE_SPECIFIER(moduleFilterSpecifier.moduleSpecifierWithWildcard),
 				moduleFilterSpecifier, MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
-				NON_EXISTING_MODULE_SPECIFIER	)
-			}
+				NON_EXISTING_MODULE_SPECIFIER)
 		}
+	}
 
 	def private handleNoValidationForN4JSFiles(ModuleFilterSpecifier moduleFilterSpecifier,
 		String moduleFilterSpecifierWithWildcard) {
@@ -357,30 +397,27 @@ class N4MFValidator extends AbstractN4MFValidator {
 
 	def private checkForExistingPath(String path, SourceFragment sourceFragment) {
 		if (path.contains("*") || path.contains("?")) {
-			addIssue(getMessageForWILDCARD_NOT_ALLOWED, sourceFragment,
-				SOURCE_FRAGMENT__PATHS, sourceFragment.paths.indexOf(path),
-				WILDCARD_NOT_ALLOWED)
+			addIssue(getMessageForWILDCARD_NOT_ALLOWED, sourceFragment, SOURCE_FRAGMENT__PATHS,
+				sourceFragment.paths.indexOf(path), WILDCARD_NOT_ALLOWED)
 			return;
 		}
 		val uri = sourceFragment.eResource.URI
 		val absoluteProjectPath = pathProvider.getAbsoluteProjectPath(uri)
 		val foundFiles = {
-				val absolutePath = absoluteProjectPath + File.separator + path
-				if (new File(absolutePath).exists) {
-					#[absolutePath]
-				} else
-					#[]
-			}
+			val absolutePath = absoluteProjectPath + File.separator + path
+			if (new File(absolutePath).exists) {
+				#[absolutePath]
+			} else
+				#[]
+		}
 		if (foundFiles.empty) {
-			addIssue(getMessageForNON_EXISTING_SOURCE_PATH(path), sourceFragment,
-				SOURCE_FRAGMENT__PATHS, sourceFragment.paths.indexOf(path),
-				NON_EXISTING_SOURCE_PATH)
+			addIssue(getMessageForNON_EXISTING_SOURCE_PATH(path), sourceFragment, SOURCE_FRAGMENT__PATHS,
+				sourceFragment.paths.indexOf(path), NON_EXISTING_SOURCE_PATH)
 		}
 		if (isGenerationAwareN4JSContainer(sourceFragment.sourceFragmentType)) {
 			for (foundFile : foundFiles.filter[new File(it).file]) {
-				addIssue(getMessageForNO_FOLDER_PATH(path), sourceFragment,
-					SOURCE_FRAGMENT__PATHS, sourceFragment.paths.indexOf(path),
-					NO_FOLDER_PATH)
+				addIssue(getMessageForNO_FOLDER_PATH(path), sourceFragment, SOURCE_FRAGMENT__PATHS,
+					sourceFragment.paths.indexOf(path), NO_FOLDER_PATH)
 			}
 		}
 	}
@@ -402,8 +439,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 			val root = ResourcesPlugin.getWorkspace.root;
 			val manifestUri = projectDescription.eResource.URI;
 
-			val eclipseFolderName =
-				if (manifestUri.isPlatformResource) {
+			val eclipseFolderName = if (manifestUri.isPlatformResource) {
 					val platformURI = manifestUri.trimSegments(1).toPlatformString(true);
 					val resolved = root.findMember(platformURI);
 					if (resolved instanceof IProject) {
@@ -414,23 +450,22 @@ class N4MFValidator extends AbstractN4MFValidator {
 				}
 
 			if (eclipseFolderName != projectId) {
-				addIssue(getMessageForPROJECT_NAME_ECLIPSE_MISMATCH(projectId, eclipseFolderName),
-					projectDescription, SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID,
-					PROJECT_NAME_ECLIPSE_MISMATCH)
+				addIssue(getMessageForPROJECT_NAME_ECLIPSE_MISMATCH(projectId, eclipseFolderName), projectDescription,
+					SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID, PROJECT_NAME_ECLIPSE_MISMATCH)
 			}
 		}
 	}
 
 	@Check
 	def checkMultipleModuleFiltersForSameType(ProjectDescription projectDescription) {
-		val duplicateEntries = projectDescription.moduleFilters.groupBy[it.moduleFilterType].entrySet.filter[
-			value.size > 1]
+		val duplicateEntries = projectDescription.moduleFilters.groupBy[it.moduleFilterType].entrySet.filter [
+			value.size > 1
+		]
 		if (duplicateEntries.size > 0) {
 			val issueCode = MULTIPLE_MODULE_FILTERS_FOR_SAME_TYPE
 			val feature = MODULE_FILTER__MODULE_FILTER_TYPE
 			for (duplicateEntry : duplicateEntries) {
-				val message =
-					getMessageForMULTIPLE_MODULE_FILTERS_FOR_SAME_TYPE(duplicateEntry.key.getModuleFilterName)
+				val message = getMessageForMULTIPLE_MODULE_FILTERS_FOR_SAME_TYPE(duplicateEntry.key.getModuleFilterName)
 				val moduleFilter = duplicateEntry.value.last
 				addIssue(message, moduleFilter, feature, issueCode)
 			}
@@ -439,14 +474,15 @@ class N4MFValidator extends AbstractN4MFValidator {
 
 	def private getModuleFilterName(ModuleFilterType moduleFilterType) {
 		switch (moduleFilterType) {
-			case NO_VALIDATE: "noValidate"
-			case NO_MODULE_WRAPPING: "noModuleWrap"
+			case NO_VALIDATE:
+				"noValidate"
+			case NO_MODULE_WRAPPING:
+				"noModuleWrap"
 			default: {
 				"unknown filter type"
 			}
 		}
 	}
-
 
 	@Check
 	def checkInSrcForIsDeclaredSourceContainer(ModuleFilterSpecifier moduleFilterSpecifier) {
@@ -454,8 +490,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 			val projectDescription = EcoreUtil2.getContainerOfType(moduleFilterSpecifier, ProjectDescription)
 			if (!projectDescription.sourceFragment.exists[paths.contains(moduleFilterSpecifier.sourcePath)]) {
 				addIssue(getMessageForSRC_IN_IN_IS_NO_DECLARED_SOURCE(moduleFilterSpecifier.sourcePath),
-					moduleFilterSpecifier, MODULE_FILTER_SPECIFIER__SOURCE_PATH,
-					SRC_IN_IN_IS_NO_DECLARED_SOURCE)
+					moduleFilterSpecifier, MODULE_FILTER_SPECIFIER__SOURCE_PATH, SRC_IN_IN_IS_NO_DECLARED_SOURCE)
 			}
 		}
 	}
@@ -489,8 +524,8 @@ class N4MFValidator extends AbstractN4MFValidator {
 		val implId = projectDescription.implementationId;
 		val implProjects = projectDescription.allImplementedProjects;
 
-		for(pref : implProjects) {
-			if(pref?.project?.projectId == projectDescription.projectId) {
+		for (pref : implProjects) {
+			if (pref?.project?.projectId == projectDescription.projectId) {
 				// reflexive implementation
 				addIssue(
 					messageForAPIIMPL_REFLEXIVE,
@@ -500,20 +535,22 @@ class N4MFValidator extends AbstractN4MFValidator {
 			}
 		}
 
-		if(implId===null && !implProjects.empty) {
+		if (implId === null && !implProjects.empty) {
 			// missing implementation ID
 			addIssue(
 				messageForAPIIMPL_MISSING_IMPL_ID,
-				projectDescription.implementedProjects, implementedProjects_ImplementedProjects,
+				projectDescription.implementedProjects,
+				implementedProjects_ImplementedProjects,
 				APIIMPL_MISSING_IMPL_ID
 			);
 		}
 
-		if(implId!==null && implProjects.empty) {
+		if (implId !== null && implProjects.empty) {
 			// missing implemented projects
 			addIssue(
 				messageForAPIIMPL_MISSING_IMPL_PROJECTS,
-				projectDescription, projectDescription_ImplementationId,
+				projectDescription,
+				projectDescription_ImplementationId,
 				APIIMPL_MISSING_IMPL_PROJECTS
 			);
 		}
@@ -529,9 +566,9 @@ class N4MFValidator extends AbstractN4MFValidator {
 		val relativeModulePath = moduleSpecifier.replace('/', File.separator);
 		val absoluteProjectPath = new File(pathProvider.getAbsoluteProjectPath(uri));
 		val sourcePaths = pd.sourceFragment.map[paths].flatten.filterNull.map[replace('/', File.separator)];
-		return sourcePaths.exists[sp|
+		return sourcePaths.exists [ sp |
 			val sourceFolder = new File(absoluteProjectPath, sp);
-			return #[".n4js", ".n4jsx", ".n4jsd", ".js", ".jsx"].exists[ext|
+			return #[".n4js", ".n4jsx", ".n4jsd", ".js", ".jsx"].exists [ ext |
 				new File(sourceFolder, relativeModulePath + ext).exists()
 			];
 		];
