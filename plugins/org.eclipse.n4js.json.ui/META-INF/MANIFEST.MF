@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.n4js.json.ui
-Bundle-Vendor: My Company
-Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: org.eclipse.n4js
+Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.json.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.n4js.json,

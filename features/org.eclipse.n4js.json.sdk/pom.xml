@@ -14,12 +14,12 @@ Contributors:
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.n4js.json.tests.helper</artifactId>
-	<packaging>eclipse-plugin</packaging>
+	<artifactId>org.eclipse.n4js.json.sdk</artifactId>
+	<packaging>eclipse-feature</packaging>
 
 	<parent>
 		<groupId>org.eclipse.n4js</groupId>
-		<artifactId>org.eclipse.n4js.testhelpers</artifactId>
+		<artifactId>org.eclipse.n4js.features</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>

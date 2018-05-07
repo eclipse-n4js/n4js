@@ -14,14 +14,27 @@ Contributors:
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.n4js.json.tests.helper</artifactId>
+	<artifactId>org.eclipse.n4js.json.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<parent>
 		<groupId>org.eclipse.n4js</groupId>
-		<artifactId>org.eclipse.n4js.testhelpers</artifactId>
+		<artifactId>org.eclipse.n4js.plugins</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
