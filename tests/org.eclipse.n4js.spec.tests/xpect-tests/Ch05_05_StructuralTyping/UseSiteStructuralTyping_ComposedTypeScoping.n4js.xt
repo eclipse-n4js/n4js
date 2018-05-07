@@ -83,3 +83,17 @@ let u04: ~i~C | ~~D;
 u04.acc;
 // XPECT errors --> "setter acc is not available for structurally referenced type ~i~C. The accessor acc is read-only in ~~D." at "acc"
 u04.acc = 42;
+
+// ============================================================
+
+let i05: ~r~C & ~w~C;
+// XPECT noerrors -->
+i05.field;
+// XPECT noerrors -->
+i05.field = 0;
+
+let u05: ~r~C | ~w~C;
+// XPECT errors --> "field field is not available for structurally referenced type ~w~C." at "field"
+u05.field;
+// XPECT errors --> "field field is not available for structurally referenced type ~r~C." at "field"
+u05.field = 0;
