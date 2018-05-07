@@ -12,5 +12,5 @@ package org.eclipse.n4js.json.scoping;
 
 import org.eclipse.xtext.scoping.impl.DelegatingScopeProvider;
 
-public abstract class AbstractJSONScopeProvider extends DelegatingScopeProvider {
+public class JSONScopeProvider extends DelegatingScopeProvider {
 }
