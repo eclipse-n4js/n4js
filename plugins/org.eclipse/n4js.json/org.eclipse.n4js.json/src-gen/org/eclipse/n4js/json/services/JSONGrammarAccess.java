@@ -348,6 +348,8 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	private final TerminalRule tNUMBER;
 	private final TerminalRule tSTRING;
 	private final TerminalRule tDOUBLE_STRING_CHAR;
+	private final TerminalRule tLINE_TERMINATOR_FRAGMENT;
+	private final TerminalRule tLINE_TERMINATOR_SEQUENCE_FRAGMENT;
 	private final TerminalRule tDOUBLE;
 	private final TerminalRule tINT;
 	private final TerminalRule tEXPONENT_PART;
@@ -376,6 +378,8 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 		this.tNUMBER = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.NUMBER");
 		this.tSTRING = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.STRING");
 		this.tDOUBLE_STRING_CHAR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.DOUBLE_STRING_CHAR");
+		this.tLINE_TERMINATOR_FRAGMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.LINE_TERMINATOR_FRAGMENT");
+		this.tLINE_TERMINATOR_SEQUENCE_FRAGMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.LINE_TERMINATOR_SEQUENCE_FRAGMENT");
 		this.tDOUBLE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.DOUBLE");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.INT");
 		this.tEXPONENT_PART = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.EXPONENT_PART");
@@ -523,9 +527,22 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal fragment DOUBLE_STRING_CHAR:
-	//	!(LINE_TERMINATOR_FRAGMENT | '"' | '\\') | '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?;
+	//	!(LINE_TERMINATOR_FRAGMENT | '"' | '\\' | '\\u0000'..'\\u001F') | '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT |
+	//	!LINE_TERMINATOR_FRAGMENT)?;
 	public TerminalRule getDOUBLE_STRING_CHARRule() {
 		return tDOUBLE_STRING_CHAR;
+	}
+	
+	//@ Override terminal fragment LINE_TERMINATOR_FRAGMENT:
+	//	'\\u000A' | '\\u000D';
+	public TerminalRule getLINE_TERMINATOR_FRAGMENTRule() {
+		return tLINE_TERMINATOR_FRAGMENT;
+	}
+	
+	//@ Override terminal fragment LINE_TERMINATOR_SEQUENCE_FRAGMENT:
+	//	'\\u000A' | '\\u000D' '\\u000A'?;
+	public TerminalRule getLINE_TERMINATOR_SEQUENCE_FRAGMENTRule() {
+		return tLINE_TERMINATOR_SEQUENCE_FRAGMENT;
 	}
 	
 	//terminal DOUBLE returns ecore::EBigDecimal:
@@ -547,7 +564,7 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal fragment SIGNED_INT:
-	//	('+' | '-') DECIMAL_DIGIT_FRAGMENT+;
+	//	('+' | '-')? DECIMAL_DIGIT_FRAGMENT+;
 	public TerminalRule getSIGNED_INTRule() {
 		return tSIGNED_INT;
 	}
@@ -607,20 +624,8 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 		return gaUnicode.getWHITESPACE_FRAGMENTRule();
 	}
 	
-	//terminal fragment LINE_TERMINATOR_FRAGMENT:
-	//	'\\u000A' | '\\u000D' | '\\u2028' | '\\u2029';
-	public TerminalRule getLINE_TERMINATOR_FRAGMENTRule() {
-		return gaUnicode.getLINE_TERMINATOR_FRAGMENTRule();
-	}
-	
-	//terminal fragment LINE_TERMINATOR_SEQUENCE_FRAGMENT:
-	//	'\\u000A' | '\\u000D' '\\u000A'? | '\\u2028' | '\\u2029';
-	public TerminalRule getLINE_TERMINATOR_SEQUENCE_FRAGMENTRule() {
-		return gaUnicode.getLINE_TERMINATOR_SEQUENCE_FRAGMENTRule();
-	}
-	
 	//terminal fragment SL_COMMENT_FRAGMENT:
-	//	'//' !LINE_TERMINATOR_FRAGMENT*;
+	//	'//' !super::LINE_TERMINATOR_FRAGMENT*;
 	public TerminalRule getSL_COMMENT_FRAGMENTRule() {
 		return gaUnicode.getSL_COMMENT_FRAGMENTRule();
 	}

@@ -42,7 +42,7 @@ class JsonParserTest {
 	/** Checks that all supported types of value literals are parsed correctly. */
 	@Test def void testPlainValues() {
 		''''''.parseSuccessfully // empty document
-		''' 	 '''.parseSuccessfully // whitespace document
+		'''	 '''.parseSuccessfully // whitespace document
 		
 		'''{}'''.parseSuccessfully;
 		'''[]'''.parseSuccessfully;
@@ -81,12 +81,17 @@ class JsonParserTest {
 		'''4.2E+2'''.parseSuccessfully
 		'''4e+2'''.parseSuccessfully
 		'''4.2e+2'''.parseSuccessfully
+		'''4.2E2'''.parseSuccessfully
+		'''4e2'''.parseSuccessfully
 		
 		'''-4'''.parseSuccessfully
 		'''-4.2'''.parseSuccessfully
 		'''-31.42'''.parseSuccessfully
 		'''-42e+42'''.parseSuccessfully
 		'''-42E-42'''.parseSuccessfully
+		
+		'''-42e42'''.parseSuccessfully
+		'''-42E42'''.parseSuccessfully
 		
 		assertEqualsValue(new BigDecimal("-0"), '''-0'''.parseSuccessfully.content);
 	}
@@ -95,6 +100,13 @@ class JsonParserTest {
 	@Test def void testStringValues() {
 		'''""'''.parseSuccessfully
 		'''"   "'''.parseSuccessfully
+		'''"\t\n"'''.parseSuccessfully
+		assertEqualsValue("\u1F604", '''"\u1F604"'''.parseSuccessfully.content); // parse unicode
+		
+		// use non-standard line/paragraph terminators in string literal
+		'''"\u2028"'''.parseSuccessfully
+		'''"\u2029"'''.parseSuccessfully
+		
 	}
 	
 	@Test def void testInvalidJSON() {
@@ -127,6 +139,11 @@ class JsonParserTest {
 		'''{-42:24}'''.parseUnsuccessfully;
 		'''{id: 2"}'''.parseUnsuccessfully
 		'''{null: null"}'''.parseUnsuccessfully
+		
+		// un-escaped unicode control characters in strings
+		'''"	"'''.parseUnsuccessfully; // un-escaped tab in string literal
+		'''"
+		"'''.parseUnsuccessfully // un-escaped linebreak in string literal
 	}
 	
 	@Test def void testSimpleObjects() {
@@ -258,6 +275,11 @@ class JsonParserTest {
 		assertEqualsValue("^0.3.2", assertHasKey(dependenciesObject, "b"));
 		
 	}
+	
+	/**  */
+	@Test def testUnicodeControlCharacters() {
+		'''["a a"]'''.parseUnsuccessfully
+	}
 
 	/** Asserts that the given {@code actual} JSON value represents a number of value {@code numberValue}. */
 	private def assertEqualsValue(long numberValue, JSONValue actual) {
@@ -329,7 +351,7 @@ class JsonParserTest {
 	 */
 	protected def void parseUnsuccessfully(CharSequence json) {
 		val doc = json.parse;
-		assertFalse('''Parsing "«json»" did not cause any syntax errors as expected.''', 
+		assertFalse('''The following JSON text did not cause any syntax errors as expected: "«json»" ''', 
 			doc.eResource.errors.filter(XtextSyntaxDiagnostic).empty);
 	}
 }
