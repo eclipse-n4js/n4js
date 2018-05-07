@@ -60,7 +60,12 @@ public class HeadlessHelper {
 	public static void registerProjectsToFileBasedWorkspace(Iterable<URI> projectURIs,
 			FileBasedWorkspace n4jsFileBasedWorkspace, IHeadlessLogger logger)
 			throws N4JSCompileException {
+
 		Map<String, URI> registeredProjects = new HashMap<>();
+		n4jsFileBasedWorkspace.getAllProjectsLocations().forEachRemaining(u -> {
+			String projectID = n4jsFileBasedWorkspace.getProjectDescription(u).getProjectId();
+			registeredProjects.put(projectID, u);
+		});
 		// Register all projects with the file based workspace.
 		for (URI projectURI : projectURIs) {
 			try {
@@ -73,11 +78,22 @@ public class HeadlessHelper {
 
 				String projectID = ProjectDescriptionProviderUtil.getFromFile(manifest).getProjectId();
 
-				if (registeredProjects.containsKey(projectID))
-					throw new N4JSCompileException("Duplicate project id [" + projectID
-							+ "]. Already registered project at " + registeredProjects.get(projectID)
-							+ ", trying to register project at " + projectURI + ".");
+				if (registeredProjects.containsKey(projectID)) {
+					URI existing = registeredProjects.get(projectID);
+					if (existing.equals(projectURI)) {
+						if (logger != null && logger.isCreateDebugOutput()) {
+							logger.debug("Skipping already registered project '" + projectURI + "'");
+						}
+						// duplicate is the same location, so the same project passed twice, ignore
+						continue;
 
+					} else {
+						// duplicate is in new location, so new project with the same name
+						throw new N4JSCompileException("Duplicate project id [" + projectID
+								+ "]. Already registered project at " + registeredProjects.get(projectID)
+								+ ", trying to register project at " + projectURI + ".");
+					}
+				}
 				if (logger != null && logger.isCreateDebugOutput()) {
 					logger.debug("Registering project '" + projectURI + "'");
 				}
