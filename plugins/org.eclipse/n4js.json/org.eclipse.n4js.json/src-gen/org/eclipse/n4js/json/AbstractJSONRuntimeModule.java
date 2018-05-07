@@ -22,7 +22,7 @@ import org.eclipse.n4js.json.scoping.JSONScopeProvider;
 import org.eclipse.n4js.json.serializer.JSONSemanticSequencer;
 import org.eclipse.n4js.json.serializer.JSONSyntacticSequencer;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
-import org.eclipse.n4js.json.validation.JSONValidator;
+import org.eclipse.n4js.json.validation.validators.JSONValidator;
 import org.eclipse.xtext.Constants;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.generator.IGenerator2;

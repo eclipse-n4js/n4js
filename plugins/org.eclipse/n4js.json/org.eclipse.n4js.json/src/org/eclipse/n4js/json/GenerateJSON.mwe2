@@ -45,6 +45,7 @@ Workflow {
 		
 			scopeProvider = {
 				inheritImplementation = false
+				generateStub = false
 			}
 			
 			fragment = validation.ValidatorFragment2 {

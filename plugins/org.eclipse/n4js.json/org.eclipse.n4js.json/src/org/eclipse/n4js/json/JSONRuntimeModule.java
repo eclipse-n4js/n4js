@@ -12,8 +12,11 @@ package org.eclipse.n4js.json;
 
 import org.eclipse.n4js.json.conversion.JSONValueConverterService;
 import org.eclipse.n4js.json.formatting2.JSONFormatter;
+import org.eclipse.n4js.json.validation.IssueCodes;
+import org.eclipse.n4js.json.validation.JSONIssueSeveritiesProvider;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.formatting2.IFormatter2;
+import org.eclipse.xtext.validation.IssueSeveritiesProvider;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -26,8 +29,13 @@ public class JSONRuntimeModule extends AbstractJSONRuntimeModule {
 		return JSONValueConverterService.class;
 	}
 	
-	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
+	/** Bind custom JSON formatter implementation */
 	public Class<? extends IFormatter2> bindIFormatter2() {
 		return JSONFormatter.class;
+	}
+	
+	/** Bind custom JSOn issue severities provider that operates based on {@link IssueCodes}. */
+	public Class<? extends IssueSeveritiesProvider> bindIssueSeveritiesProvider() {
+		return JSONIssueSeveritiesProvider.class;
 	}
 }

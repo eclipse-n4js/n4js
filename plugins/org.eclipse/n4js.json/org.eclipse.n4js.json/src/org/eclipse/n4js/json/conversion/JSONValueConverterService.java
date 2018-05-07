@@ -9,6 +9,9 @@ import org.eclipse.xtext.conversion.impl.AbstractDeclarativeValueConverterServic
 
 import com.google.inject.Inject;
 
+/**
+ * A value converter service specific to JSON literals.
+ */
 public class JSONValueConverterService extends AbstractDeclarativeValueConverterService {
 	
 	@Inject

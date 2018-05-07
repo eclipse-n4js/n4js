@@ -21,6 +21,11 @@ import com.google.inject.Injector;
  */
 public class JSONStandaloneSetup extends JSONStandaloneSetupGenerated {
 
+	/**
+	 * Performs the setup and populates the EMF registers in a stand-alone environment.
+	 *
+	 * @see #createInjectorAndDoEMFRegistration()
+	 */
 	public static void doSetup() {
 		UnicodeStandaloneSetup.doSetup();
 		
