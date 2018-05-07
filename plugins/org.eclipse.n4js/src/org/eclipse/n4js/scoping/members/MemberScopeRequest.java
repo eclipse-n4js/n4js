@@ -85,6 +85,10 @@ public class MemberScopeRequest {
 				false, structFieldInitMode);
 	}
 
+	/**
+	 * Returns a request similar to the receiving one, but with the given {@link #structFieldInitMode structural field
+	 * init mode}.
+	 */
 	public MemberScopeRequest setStructFieldInitMode(boolean structFieldInitMode) {
 		if (this.structFieldInitMode == structFieldInitMode) {
 			return this;

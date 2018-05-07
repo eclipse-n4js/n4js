@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.scoping.members.ComposedMemberInfoBuilder.ToBeComposedMemberInfo;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
@@ -138,18 +139,6 @@ public class ComposedMemberInfo {
 		/** Returns the set of {@link #getTypeRefsVariadic()} of this formal parameter and all its predecessors. */
 		public List<TypeRef> getTypeRefsVariadicAccumulated() {
 			return typeRefsVariadicAccumulated;
-		}
-	}
-
-	public static final class ToBeComposedMemberInfo {
-		final TMember member;
-		final RuleEnvironment G;
-		final boolean structFieldInitMode;
-
-		public ToBeComposedMemberInfo(TMember member, RuleEnvironment G, boolean structFieldInitMode) {
-			this.member = member;
-			this.G = G;
-			this.structFieldInitMode = structFieldInitMode;
 		}
 	}
 

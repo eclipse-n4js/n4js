@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.scoping.members.ComposedMemberInfo.ToBeComposedMemberInfo;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
@@ -40,6 +39,24 @@ public class ComposedMemberInfoBuilder {
 	private List<ToBeComposedMemberInfo> siblings;
 
 	/**
+	 * Required information on each member that is to be composed into a {@link ComposedMemberInfo}. In other words, two
+	 * or more {@link ToBeComposedMemberInfo}s are composed into a single {@link ComposedMemberInfo} by using
+	 * {@link ComposedMemberInfoBuilder}.
+	 */
+	public static final class ToBeComposedMemberInfo {
+		final TMember member;
+		final RuleEnvironment G;
+		final boolean structFieldInitMode;
+
+		/** See {@link ToBeComposedMemberInfo}. */
+		public ToBeComposedMemberInfo(TMember member, RuleEnvironment G, boolean structFieldInitMode) {
+			this.member = member;
+			this.G = G;
+			this.structFieldInitMode = structFieldInitMode;
+		}
+	}
+
+	/**
 	 * Initializes the static methods. (Also refer to the life cycle mentioned above.)
 	 */
 	@SuppressWarnings("hiding")
@@ -54,6 +71,9 @@ public class ComposedMemberInfoBuilder {
 	/**
 	 * Adds a sibling member on which a new composed member is based upon. (Also refer to the life cycle mentioned
 	 * above.)
+	 *
+	 * @param member
+	 *            the member to be added or <code>null</code> to denote a missing member.
 	 */
 	public void addMember(TMember member, RuleEnvironment G, boolean structFieldInitMode) {
 		Objects.nonNull(siblings);

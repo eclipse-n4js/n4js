@@ -18,9 +18,9 @@ import org.eclipse.xtext.resource.IEObjectDescription;
  */
 public class WrongTypingStrategyDescription extends AbstractDescriptionWithError {
 
-	final boolean fields;
-	final boolean useSite;
-	final String receiverTypeName;
+	private final boolean fields;
+	private final boolean useSite;
+	private final String receiverTypeName;
 
 	WrongTypingStrategyDescription(IEObjectDescription delegate, boolean fields, boolean useSite,
 			String receiverTypeName) {
@@ -33,7 +33,9 @@ public class WrongTypingStrategyDescription extends AbstractDescriptionWithError
 	@Override
 	public String getMessage() {
 		String memberName = getName().getLastSegment();
-		String memberTypeName = getMemberTypeName(getEObjectOrProxy(), false); // FIXME
+		String memberTypeName = getMemberTypeName(getEObjectOrProxy(), false); // Flag structFieldInitMode always false,
+		// here, because error message refers not to the member available in the type but to the missing member accessed
+		// by the source code.
 		String typeName = receiverTypeName;
 		if (fields) {
 			return IssueCodes.getMessageForTYS_MEMBER_NOT_IN_STRUCTURAL_FIELDS_TYPE_USE_SITE(memberTypeName,
