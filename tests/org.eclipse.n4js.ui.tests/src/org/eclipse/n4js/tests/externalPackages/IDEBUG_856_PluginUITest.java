@@ -45,7 +45,7 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 	private static final int ITERATION_COUNT = 30;
 
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
@@ -86,8 +86,8 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 			LOGGER.info("| Iteration " + i + " of " + ITERATION_COUNT + ".");
 			LOGGER.info("------------------------------------------------------------");
 			setupWorkspace();
-			npmManager.reloadAllExternalProjects(new NullProgressMonitor());
-			npmManager.reloadAllExternalProjects(new NullProgressMonitor());
+			libManager.reloadAllExternalProjects(new NullProgressMonitor());
+			libManager.reloadAllExternalProjects(new NullProgressMonitor());
 			tearDown();
 		}
 	}
