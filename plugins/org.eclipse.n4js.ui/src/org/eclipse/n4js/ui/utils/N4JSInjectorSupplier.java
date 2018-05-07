@@ -12,10 +12,10 @@ package org.eclipse.n4js.ui.utils;
 
 import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
-import com.google.inject.Injector;
-
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.injector.InjectorSupplier;
+
+import com.google.inject.Injector;
 
 /**
  * Supplies the injector for the N4JS language.
@@ -24,7 +24,10 @@ public class N4JSInjectorSupplier implements InjectorSupplier {
 
 	@Override
 	public Injector get() {
-		return N4JSActivator.getInstance().getInjector(getInjectorId());
+		N4JSActivator activator = N4JSActivator.getInstance();
+		if (activator == null)
+			return null;
+		return activator.getInjector(getInjectorId());
 	}
 
 	@Override

@@ -417,7 +417,7 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @return the value of the '<em>Ast MD5</em>' attribute.
 	 * @see #setAstMD5(String)
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_AstMD5()
-	 * @model unique="false"
+	 * @model unique="false" transient="true"
 	 * @generated
 	 */
 	String getAstMD5();
