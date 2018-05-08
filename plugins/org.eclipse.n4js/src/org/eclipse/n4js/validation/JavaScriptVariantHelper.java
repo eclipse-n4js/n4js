@@ -33,7 +33,7 @@ public interface JavaScriptVariantHelper {
 	/**
 	 * Returns the name of the variant of the file extension.
 	 *
-	 * Returns {@code null} if fileExtension is unkonwn.
+	 * Returns {@code null} if fileExtension is unknown.
 	 */
 	public String getVariantName(String fileExtension);
 

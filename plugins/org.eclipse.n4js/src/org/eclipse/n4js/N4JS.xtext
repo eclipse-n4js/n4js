@@ -243,6 +243,7 @@ fragment FunctionImpl<Yield, YieldIfGenerator, Expression>*:
 fragment FunctionHeader<Yield, Generator>*:
 	TypeVariables?
 	name=BindingIdentifier<Yield>?
+	VersionDeclaration?
 	StrictFormalParameters<Yield=Generator>
 	(-> ColonSepReturnTypeRef)?
 ;

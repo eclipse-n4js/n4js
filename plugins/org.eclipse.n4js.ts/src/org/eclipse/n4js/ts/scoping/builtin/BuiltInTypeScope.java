@@ -56,7 +56,8 @@ public final class BuiltInTypeScope extends EnumerableScope {
 			"primitives_n4.n4ts",
 			"builtin_js.n4ts",
 			"builtin_n4.n4ts",
-			"console.n4ts"
+			"console.n4ts",
+			"builtin_n4idl.n4ts"
 	};
 
 	/**
@@ -191,9 +192,14 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	public static final QualifiedName QN_ERROR = QualifiedName.create("Error");
 
 	/**
-	 * The built-in name {@code N4Provider}
+	 * The built-in name {@code N4Provider}.
 	 */
 	public static final QualifiedName QN_N4PROVIDER = QualifiedName.create("N4Provider");
+
+	/**
+	 * The built-in name {@code MigrationContext}.
+	 */
+	public static final QualifiedName QN_MIGRATION_CONTEXT = QualifiedName.create("MigrationContext");
 
 	private List<ParameterizedTypeRef> n4classifiersAllImplicitSuperTypeRefs;
 	private List<ParameterizedTypeRef> objectPrototypesAllImplicitSuperTypeRefs;
@@ -446,6 +452,13 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public final TInterface getN4ProviderType() {
 		return getEObjectOrProxy(QN_N4PROVIDER);
+	}
+
+	/**
+	 * Returns the built-in N4IDL type "MigrationContext".
+	 */
+	public final TInterface getMigrationContextType() {
+		return getEObjectOrProxy(QN_MIGRATION_CONTEXT);
 	}
 
 	/**

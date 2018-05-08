@@ -12,7 +12,6 @@ package org.eclipse.n4js.typesbuilder;
 
 import java.math.BigDecimal;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.ts.types.TVersionable;
 
@@ -28,14 +27,12 @@ public class VersionedTypesBuilderUtil {
 	 * An AST element is considered to provide version information if it implements {@link VersionedElement} and the
 	 * {@link VersionedElement#getDeclaredVersion()} returns a non-null value. .
 	 */
-	/* package */ static void setTypeVersion(TVersionable versionable, EObject astElement) {
-		if (astElement instanceof VersionedElement) {
-			BigDecimal declaredVersion = ((VersionedElement) astElement).getDeclaredVersion();
-			if (null == declaredVersion) {
-				versionable.setDeclaredVersion(0);
-			} else {
-				versionable.setDeclaredVersion(declaredVersion.intValue());
-			}
+	/* package */ static void setTypeVersion(TVersionable versionable, VersionedElement astElement) {
+		BigDecimal declaredVersion = astElement.getDeclaredVersion();
+		if (null == declaredVersion) {
+			versionable.setDeclaredVersion(0);
+		} else {
+			versionable.setDeclaredVersion(declaredVersion.intValue());
 		}
 	}
 

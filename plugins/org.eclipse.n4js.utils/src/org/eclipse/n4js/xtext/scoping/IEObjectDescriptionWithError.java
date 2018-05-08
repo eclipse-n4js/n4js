@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xtext.scoping;
 
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 
@@ -34,6 +35,15 @@ public interface IEObjectDescriptionWithError extends IEObjectDescription {
 	 * @return the issue code.
 	 */
 	public abstract String getIssueCode();
+
+	/**
+	 * {@link Severity#ERROR} by default.
+	 *
+	 * @return the issue severity
+	 */
+	public default Severity getSeverity() {
+		return Severity.ERROR;
+	}
 
 	/**
 	 * Helper method to be used instead of instanceof-checks, as it also covers {@link AliasedEObjectDescription}s.

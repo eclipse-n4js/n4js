@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.linking.impl.DefaultLinkingService;
 import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.linking.impl.XtextLinkingDiagnostic;
@@ -149,7 +150,13 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 		if (resource.isValidationDisabled())
 			return;
 
-		List<Diagnostic> list = resource.getErrors();
+		final Severity severity = error.getSeverity();
+		List<Diagnostic> list;
+		if (severity == Severity.WARNING) {
+			list = resource.getWarnings();
+		} else {
+			list = resource.getErrors();
+		}
 
 		// Convert key value user data to String array
 		String[] userData = null;

@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.n4idl.scoping;
 
-import org.eclipse.n4js.n4idl.versioning.VersionUtils;
 import org.eclipse.n4js.scoping.utils.IssueCodeBasedEObjectDescription;
 import org.eclipse.n4js.ts.types.TVersionable;
+import org.eclipse.n4js.ts.versions.VersionableUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.FilteringScope;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
@@ -32,7 +32,7 @@ public final class FailedToInferContextVersionWrappingScope extends FilteringSco
 	public FailedToInferContextVersionWrappingScope(IScope parent) {
 		super(parent, d -> {
 			if (d.getEObjectOrProxy() instanceof TVersionable) {
-				return !VersionUtils.isTVersionable(d.getEObjectOrProxy());
+				return !VersionableUtils.isTVersionable(d.getEObjectOrProxy());
 			} else {
 				// leave all other descriptions un-decorated
 				return true;
