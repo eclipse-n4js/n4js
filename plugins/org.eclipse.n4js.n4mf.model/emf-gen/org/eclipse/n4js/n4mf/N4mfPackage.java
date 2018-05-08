@@ -269,13 +269,13 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__EXEC_MODULE = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 11;
 
 	/**
-	 * The feature id for the '<em><b>Output Path</b></em>' attribute.
+	 * The feature id for the '<em><b>Output Path Raw</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__OUTPUT_PATH = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 12;
+	int PROJECT_DESCRIPTION__OUTPUT_PATH_RAW = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Library Paths</b></em>' attribute list.
@@ -350,13 +350,31 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION___GET_VENDOR_ID = SIMPLE_PROJECT_DESCRIPTION___GET_VENDOR_ID;
 
 	/**
+	 * The operation id for the '<em>Get Output Path</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION___GET_OUTPUT_PATH = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Set Output Path</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Get All Tested Projects</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 0;
+	int PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get All Init Modules</em>' operation.
@@ -365,7 +383,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 1;
+	int PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get All Implemented Projects</em>' operation.
@@ -374,7 +392,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_IMPLEMENTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 2;
+	int PROJECT_DESCRIPTION___GET_ALL_IMPLEMENTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get All Project Dependencies</em>' operation.
@@ -383,7 +401,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_PROJECT_DEPENDENCIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 3;
+	int PROJECT_DESCRIPTION___GET_ALL_PROJECT_DEPENDENCIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get All Provided Runtime Libraries</em>' operation.
@@ -392,7 +410,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_PROVIDED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 4;
+	int PROJECT_DESCRIPTION___GET_ALL_PROVIDED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get All Required Runtime Libraries</em>' operation.
@@ -401,7 +419,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_REQUIRED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 5;
+	int PROJECT_DESCRIPTION___GET_ALL_REQUIRED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>Project Description</em>' class.
@@ -410,7 +428,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_OPERATION_COUNT = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 6;
+	int PROJECT_DESCRIPTION_OPERATION_COUNT = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ExecModuleImpl <em>Exec Module</em>}' class.
@@ -902,13 +920,13 @@ public interface N4mfPackage extends EPackage {
 	int SOURCE_FRAGMENT__SOURCE_FRAGMENT_TYPE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Paths</b></em>' attribute list.
+	 * The feature id for the '<em><b>Paths Raw</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FRAGMENT__PATHS = 1;
+	int SOURCE_FRAGMENT__PATHS_RAW = 1;
 
 	/**
 	 * The number of structural features of the '<em>Source Fragment</em>' class.
@@ -929,13 +947,22 @@ public interface N4mfPackage extends EPackage {
 	int SOURCE_FRAGMENT___COMPARE_BY_FRAGMENT_TYPE__SOURCEFRAGMENT = 0;
 
 	/**
+	 * The operation id for the '<em>Get Paths</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_FRAGMENT___GET_PATHS = 1;
+
+	/**
 	 * The number of operations of the '<em>Source Fragment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FRAGMENT_OPERATION_COUNT = 1;
+	int SOURCE_FRAGMENT_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterImpl <em>Module Filter</em>}' class.
@@ -1572,15 +1599,15 @@ public interface N4mfPackage extends EPackage {
 	EReference getProjectDescription_ExecModule();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath <em>Output Path</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Output Path</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath()
+	 * @return the meta object for the attribute '<em>Output Path Raw</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw()
 	 * @see #getProjectDescription()
 	 * @generated
 	 */
-	EAttribute getProjectDescription_OutputPath();
+	EAttribute getProjectDescription_OutputPathRaw();
 
 	/**
 	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPaths <em>Library Paths</em>}'.
@@ -1647,6 +1674,26 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getProjectDescription_ModuleLoader();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath() <em>Get Output Path</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Output Path</em>' operation.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath()
+	 * @generated
+	 */
+	EOperation getProjectDescription__GetOutputPath();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#setOutputPath(java.lang.String) <em>Set Output Path</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Set Output Path</em>' operation.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#setOutputPath(java.lang.String)
+	 * @generated
+	 */
+	EOperation getProjectDescription__SetOutputPath__String();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getAllTestedProjects() <em>Get All Tested Projects</em>}' operation.
@@ -2005,15 +2052,15 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getSourceFragment_SourceFragmentType();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.SourceFragment#getPaths <em>Paths</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.SourceFragment#getPathsRaw <em>Paths Raw</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Paths</em>'.
-	 * @see org.eclipse.n4js.n4mf.SourceFragment#getPaths()
+	 * @return the meta object for the attribute list '<em>Paths Raw</em>'.
+	 * @see org.eclipse.n4js.n4mf.SourceFragment#getPathsRaw()
 	 * @see #getSourceFragment()
 	 * @generated
 	 */
-	EAttribute getSourceFragment_Paths();
+	EAttribute getSourceFragment_PathsRaw();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceFragment#compareByFragmentType(org.eclipse.n4js.n4mf.SourceFragment) <em>Compare By Fragment Type</em>}' operation.
@@ -2024,6 +2071,16 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getSourceFragment__CompareByFragmentType__SourceFragment();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceFragment#getPaths() <em>Get Paths</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Paths</em>' operation.
+	 * @see org.eclipse.n4js.n4mf.SourceFragment#getPaths()
+	 * @generated
+	 */
+	EOperation getSourceFragment__GetPaths();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ModuleFilter <em>Module Filter</em>}'.
@@ -2489,12 +2546,12 @@ public interface N4mfPackage extends EPackage {
 		EReference PROJECT_DESCRIPTION__EXEC_MODULE = eINSTANCE.getProjectDescription_ExecModule();
 
 		/**
-		 * The meta object literal for the '<em><b>Output Path</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Output Path Raw</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROJECT_DESCRIPTION__OUTPUT_PATH = eINSTANCE.getProjectDescription_OutputPath();
+		EAttribute PROJECT_DESCRIPTION__OUTPUT_PATH_RAW = eINSTANCE.getProjectDescription_OutputPathRaw();
 
 		/**
 		 * The meta object literal for the '<em><b>Library Paths</b></em>' attribute list feature.
@@ -2543,6 +2600,22 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PROJECT_DESCRIPTION__MODULE_LOADER = eINSTANCE.getProjectDescription_ModuleLoader();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Output Path</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PROJECT_DESCRIPTION___GET_OUTPUT_PATH = eINSTANCE.getProjectDescription__GetOutputPath();
+
+		/**
+		 * The meta object literal for the '<em><b>Set Output Path</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING = eINSTANCE.getProjectDescription__SetOutputPath__String();
 
 		/**
 		 * The meta object literal for the '<em><b>Get All Tested Projects</b></em>' operation.
@@ -2839,12 +2912,12 @@ public interface N4mfPackage extends EPackage {
 		EAttribute SOURCE_FRAGMENT__SOURCE_FRAGMENT_TYPE = eINSTANCE.getSourceFragment_SourceFragmentType();
 
 		/**
-		 * The meta object literal for the '<em><b>Paths</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Paths Raw</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SOURCE_FRAGMENT__PATHS = eINSTANCE.getSourceFragment_Paths();
+		EAttribute SOURCE_FRAGMENT__PATHS_RAW = eINSTANCE.getSourceFragment_PathsRaw();
 
 		/**
 		 * The meta object literal for the '<em><b>Compare By Fragment Type</b></em>' operation.
@@ -2853,6 +2926,14 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation SOURCE_FRAGMENT___COMPARE_BY_FRAGMENT_TYPE__SOURCEFRAGMENT = eINSTANCE.getSourceFragment__CompareByFragmentType__SourceFragment();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Paths</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SOURCE_FRAGMENT___GET_PATHS = eINSTANCE.getSourceFragment__GetPaths();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterImpl <em>Module Filter</em>}' class.

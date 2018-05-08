@@ -41,6 +41,9 @@ package org.eclipse.n4js.n4mf
  * - validate if manifest is in project
  * - check if file is in root folder
  */
+import java.nio.file.Paths
+import org.eclipse.emf.common.util.BasicEList
+
 class ProjectDescription extends SimpleProjectDescription {
 	String vendorName
 	contains DeclaredVersion projectVersion
@@ -54,13 +57,25 @@ class ProjectDescription extends SimpleProjectDescription {
 	contains ImplementedProjects implementedProjects
 	contains InitModules initModules
 	contains ExecModule execModule
-	String outputPath
+	String outputPathRaw
 	String[] libraryPaths
 	String[] resourcePaths
 	contains SourceFragment[] sourceFragment
 	contains ModuleFilter[] moduleFilters
 	contains TestedProjects testedProjects
 	ModuleLoader moduleLoader
+
+	op String getOutputPath() {
+		var normalizedOutputPath = Paths.get(outputPathRaw).normalize().toString();
+		if (normalizedOutputPath.isEmpty) {
+			normalizedOutputPath = ".";
+		}
+		return normalizedOutputPath;
+	}
+
+	op void setOutputPath(String newOutputPath) {
+		this.outputPathRaw = newOutputPath;
+	}
 
 	/**
 	 * Convenient method for getting all tested projects defined for the current project description.
@@ -218,7 +233,8 @@ enum ProjectType {
 	API,
 	RUNTIME_ENVIRONMENT,
 	RUNTIME_LIBRARY,
-	TEST
+	TEST,
+	VALIDATION
 }
 
 /**
@@ -226,7 +242,7 @@ enum ProjectType {
  */
 class SourceFragment {
 	SourceFragmentType sourceFragmentType
-	String[] paths
+	String[] pathsRaw
 
 	/**
 	 * Compares the current source fragment instance with the {@code other} one based on the
@@ -243,6 +259,19 @@ class SourceFragment {
 		}
 		return sourceFragmentType.compareTo(other.sourceFragmentType);
 	}
+
+	op String[] getPaths() {
+		val paths = new BasicEList(pathsRaw.length());
+		for (String pathRaw : pathsRaw) {
+			var normalizedPath = Paths.get(pathRaw).normalize().toString();
+			if (normalizedPath.isEmpty) {
+				normalizedPath = ".";
+			}
+			paths.add(normalizedPath);
+		}
+		return paths;
+	}
+
 }
 
 /**

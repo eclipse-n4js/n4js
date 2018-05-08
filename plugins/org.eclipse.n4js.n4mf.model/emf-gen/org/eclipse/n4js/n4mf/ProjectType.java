@@ -106,7 +106,17 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	TEST(0, "TEST", "TEST");
+	TEST(0, "TEST", "TEST"),
+
+	/**
+	 * The '<em><b>VALIDATION</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #VALIDATION_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	VALIDATION(0, "VALIDATION", "VALIDATION");
 
 	/**
 	 * The '<em><b>APPLICATION</b></em>' literal value.
@@ -214,6 +224,21 @@ public enum ProjectType implements Enumerator {
 	public static final int TEST_VALUE = 0;
 
 	/**
+	 * The '<em><b>VALIDATION</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>VALIDATION</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #VALIDATION
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int VALIDATION_VALUE = 0;
+
+	/**
 	 * An array of all the '<em><b>Project Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -228,6 +253,7 @@ public enum ProjectType implements Enumerator {
 			RUNTIME_ENVIRONMENT,
 			RUNTIME_LIBRARY,
 			TEST,
+			VALIDATION,
 		};
 
 	/**

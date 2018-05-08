@@ -45,7 +45,7 @@ ProjectDescription:
 	&	(execModule=ExecModule)?
 
 
-	&	('Output' 			':' outputPath=STRING)?
+	&	('Output' 			':' outputPathRaw=STRING)?
 	&	('Libraries' 		'{' libraryPaths+=STRING (',' libraryPaths+=STRING)* '}')?
 	&	('Resources' 		'{' resourcePaths+=STRING (',' resourcePaths+=STRING)* '}')?
 	&	('Sources' 			'{' sourceFragment+=SourceFragment+ '}')?
@@ -64,7 +64,8 @@ enum ProjectType :
 	API = 'API' |
 	RUNTIME_ENVIRONMENT = "runtimeEnvironment" |
 	RUNTIME_LIBRARY = "runtimeLibrary" |
-	TEST = "test"
+	TEST = "test" |
+	VALIDATION = "validation"
 ;
 
 ExecModule returns ExecModule:
@@ -127,7 +128,7 @@ DeclaredVersion :
 ;
 
 SourceFragment:
-	sourceFragmentType=SourceFragmentType '{' paths+=STRING (',' paths+=STRING)* '}'
+	sourceFragmentType=SourceFragmentType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}'
 ;
 
 enum SourceFragmentType :

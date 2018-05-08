@@ -116,7 +116,7 @@ public class N4MFParser extends AbstractContentAssistParser {
 					put(grammarAccess.getProjectDescriptionAccess().getImplementedProjectsAssignment_11(), "rule__ProjectDescription__ImplementedProjectsAssignment_11");
 					put(grammarAccess.getProjectDescriptionAccess().getInitModulesAssignment_12(), "rule__ProjectDescription__InitModulesAssignment_12");
 					put(grammarAccess.getProjectDescriptionAccess().getExecModuleAssignment_13(), "rule__ProjectDescription__ExecModuleAssignment_13");
-					put(grammarAccess.getProjectDescriptionAccess().getOutputPathAssignment_14_2(), "rule__ProjectDescription__OutputPathAssignment_14_2");
+					put(grammarAccess.getProjectDescriptionAccess().getOutputPathRawAssignment_14_2(), "rule__ProjectDescription__OutputPathRawAssignment_14_2");
 					put(grammarAccess.getProjectDescriptionAccess().getLibraryPathsAssignment_15_2(), "rule__ProjectDescription__LibraryPathsAssignment_15_2");
 					put(grammarAccess.getProjectDescriptionAccess().getLibraryPathsAssignment_15_3_1(), "rule__ProjectDescription__LibraryPathsAssignment_15_3_1");
 					put(grammarAccess.getProjectDescriptionAccess().getResourcePathsAssignment_16_2(), "rule__ProjectDescription__ResourcePathsAssignment_16_2");
@@ -144,8 +144,8 @@ public class N4MFParser extends AbstractContentAssistParser {
 					put(grammarAccess.getDeclaredVersionAccess().getMicroAssignment_1_2_1(), "rule__DeclaredVersion__MicroAssignment_1_2_1");
 					put(grammarAccess.getDeclaredVersionAccess().getQualifierAssignment_2_1(), "rule__DeclaredVersion__QualifierAssignment_2_1");
 					put(grammarAccess.getSourceFragmentAccess().getSourceFragmentTypeAssignment_0(), "rule__SourceFragment__SourceFragmentTypeAssignment_0");
-					put(grammarAccess.getSourceFragmentAccess().getPathsAssignment_2(), "rule__SourceFragment__PathsAssignment_2");
-					put(grammarAccess.getSourceFragmentAccess().getPathsAssignment_3_1(), "rule__SourceFragment__PathsAssignment_3_1");
+					put(grammarAccess.getSourceFragmentAccess().getPathsRawAssignment_2(), "rule__SourceFragment__PathsRawAssignment_2");
+					put(grammarAccess.getSourceFragmentAccess().getPathsRawAssignment_3_1(), "rule__SourceFragment__PathsRawAssignment_3_1");
 					put(grammarAccess.getModuleFilterAccess().getModuleFilterTypeAssignment_0(), "rule__ModuleFilter__ModuleFilterTypeAssignment_0");
 					put(grammarAccess.getModuleFilterAccess().getModuleSpecifiersAssignment_2(), "rule__ModuleFilter__ModuleSpecifiersAssignment_2");
 					put(grammarAccess.getModuleFilterAccess().getModuleSpecifiersAssignment_3_1(), "rule__ModuleFilter__ModuleSpecifiersAssignment_3_1");

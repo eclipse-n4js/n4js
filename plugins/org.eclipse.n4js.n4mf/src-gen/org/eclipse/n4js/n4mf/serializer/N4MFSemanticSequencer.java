@@ -279,7 +279,7 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *         implementedProjects=ImplementedProjects | 
 	 *         initModules=InitModules | 
 	 *         execModule=ExecModule | 
-	 *         outputPath=STRING | 
+	 *         outputPathRaw=STRING | 
 	 *         (libraryPaths+=STRING libraryPaths+=STRING*) | 
 	 *         (resourcePaths+=STRING resourcePaths+=STRING*) | 
 	 *         sourceFragment+=SourceFragment | 
@@ -388,7 +388,7 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     SourceFragment returns SourceFragment
 	 *
 	 * Constraint:
-	 *     (sourceFragmentType=SourceFragmentType paths+=STRING paths+=STRING*)
+	 *     (sourceFragmentType=SourceFragmentType pathsRaw+=STRING pathsRaw+=STRING*)
 	 */
 	protected void sequence_SourceFragment(ISerializationContext context, SourceFragment semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

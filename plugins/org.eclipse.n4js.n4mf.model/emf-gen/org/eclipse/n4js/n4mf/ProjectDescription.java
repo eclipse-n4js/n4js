@@ -17,23 +17,6 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Project Description</b></em>'.
  * <!-- end-user-doc -->
  *
- * <!-- begin-model-doc -->
- * *
- * Describes a project by making it identifiable by projectId, vendorId and
- * declared version.
- *  * The project type defines how a project should be bundled.
- *  * Project paths decide about which resources should be bundled and be visible
- * to other projects that list this project as dependency. So e.g. the files
- * contained in a declared source folder will be in scope for a project that
- * has this project as a test scoped dependency.
- *  * The listed dependencies lists all projects this project depends on. A dependency
- * is categorized to be only while testing or at runtime. This plays together with
- * projects paths (source or test).
- *  * To be later validated
- * - validate if manifest is in project
- * - check if file is in root folder
- * <!-- end-model-doc -->
- *
  * <p>
  * The following features are supported:
  * </p>
@@ -50,7 +33,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getImplementedProjects <em>Implemented Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getExecModule <em>Exec Module</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath <em>Output Path</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPaths <em>Library Paths</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePaths <em>Resource Paths</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceFragment <em>Source Fragment</em>}</li>
@@ -380,30 +363,30 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	void setExecModule(ExecModule value);
 
 	/**
-	 * Returns the value of the '<em><b>Output Path</b></em>' attribute.
+	 * Returns the value of the '<em><b>Output Path Raw</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Output Path</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Output Path Raw</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Output Path</em>' attribute.
-	 * @see #setOutputPath(String)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_OutputPath()
+	 * @return the value of the '<em>Output Path Raw</em>' attribute.
+	 * @see #setOutputPathRaw(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_OutputPathRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getOutputPath();
+	String getOutputPathRaw();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath <em>Output Path</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Output Path</em>' attribute.
-	 * @see #getOutputPath()
+	 * @param value the new value of the '<em>Output Path Raw</em>' attribute.
+	 * @see #getOutputPathRaw()
 	 * @generated
 	 */
-	void setOutputPath(String value);
+	void setOutputPathRaw(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Library Paths</b></em>' attribute list.
@@ -523,6 +506,24 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * @generated
 	 */
 	void setModuleLoader(ModuleLoader value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; normalizedOutputPath = &lt;%java.nio.file.Paths%&gt;.get(this.getOutputPathRaw()).normalize().toString();\nboolean _isEmpty = normalizedOutputPath.isEmpty();\nif (_isEmpty)\n{\n\tnormalizedOutputPath = \".\";\n}\nreturn normalizedOutputPath;'"
+	 * @generated
+	 */
+	String getOutputPath();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model newOutputPathUnique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='this.setOutputPathRaw(newOutputPath);'"
+	 * @generated
+	 */
+	void setOutputPath(String newOutputPath);
 
 	/**
 	 * <!-- begin-user-doc -->

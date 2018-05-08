@@ -558,9 +558,9 @@ ruleProjectDescription returns [EObject current=null]
 							}
 							(
 								(
-									lv_outputPath_31_0=RULE_STRING
+									lv_outputPathRaw_31_0=RULE_STRING
 									{
-										newLeafNode(lv_outputPath_31_0, grammarAccess.getProjectDescriptionAccess().getOutputPathSTRINGTerminalRuleCall_14_2_0());
+										newLeafNode(lv_outputPathRaw_31_0, grammarAccess.getProjectDescriptionAccess().getOutputPathRawSTRINGTerminalRuleCall_14_2_0());
 									}
 									{
 										if ($current==null) {
@@ -568,8 +568,8 @@ ruleProjectDescription returns [EObject current=null]
 										}
 										setWithLastConsumed(
 											$current,
-											"outputPath",
-											lv_outputPath_31_0,
+											"outputPathRaw",
+											lv_outputPathRaw_31_0,
 											"org.eclipse.xtext.common.Terminals.STRING");
 									}
 								)
@@ -1631,9 +1631,9 @@ ruleSourceFragment returns [EObject current=null]
 		}
 		(
 			(
-				lv_paths_2_0=RULE_STRING
+				lv_pathsRaw_2_0=RULE_STRING
 				{
-					newLeafNode(lv_paths_2_0, grammarAccess.getSourceFragmentAccess().getPathsSTRINGTerminalRuleCall_2_0());
+					newLeafNode(lv_pathsRaw_2_0, grammarAccess.getSourceFragmentAccess().getPathsRawSTRINGTerminalRuleCall_2_0());
 				}
 				{
 					if ($current==null) {
@@ -1641,8 +1641,8 @@ ruleSourceFragment returns [EObject current=null]
 					}
 					addWithLastConsumed(
 						$current,
-						"paths",
-						lv_paths_2_0,
+						"pathsRaw",
+						lv_pathsRaw_2_0,
 						"org.eclipse.xtext.common.Terminals.STRING");
 				}
 			)
@@ -1654,9 +1654,9 @@ ruleSourceFragment returns [EObject current=null]
 			}
 			(
 				(
-					lv_paths_4_0=RULE_STRING
+					lv_pathsRaw_4_0=RULE_STRING
 					{
-						newLeafNode(lv_paths_4_0, grammarAccess.getSourceFragmentAccess().getPathsSTRINGTerminalRuleCall_3_1_0());
+						newLeafNode(lv_pathsRaw_4_0, grammarAccess.getSourceFragmentAccess().getPathsRawSTRINGTerminalRuleCall_3_1_0());
 					}
 					{
 						if ($current==null) {
@@ -1664,8 +1664,8 @@ ruleSourceFragment returns [EObject current=null]
 						}
 						addWithLastConsumed(
 							$current,
-							"paths",
-							lv_paths_4_0,
+							"pathsRaw",
+							lv_pathsRaw_4_0,
 							"org.eclipse.xtext.common.Terminals.STRING");
 					}
 				)

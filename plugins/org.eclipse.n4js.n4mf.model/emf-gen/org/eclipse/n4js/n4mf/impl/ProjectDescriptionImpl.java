@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4mf.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.nio.file.Paths;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -72,7 +74,7 @@ import org.eclipse.n4js.n4mf.TestedProjects;
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getImplementedProjects <em>Implemented Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getExecModule <em>Exec Module</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getOutputPath <em>Output Path</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getOutputPathRaw <em>Output Path Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getLibraryPaths <em>Library Paths</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getResourcePaths <em>Resource Paths</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getSourceFragment <em>Source Fragment</em>}</li>
@@ -245,24 +247,24 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	protected ExecModule execModule;
 
 	/**
-	 * The default value of the '{@link #getOutputPath() <em>Output Path</em>}' attribute.
+	 * The default value of the '{@link #getOutputPathRaw() <em>Output Path Raw</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getOutputPath()
+	 * @see #getOutputPathRaw()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String OUTPUT_PATH_EDEFAULT = null;
+	protected static final String OUTPUT_PATH_RAW_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getOutputPath() <em>Output Path</em>}' attribute.
+	 * The cached value of the '{@link #getOutputPathRaw() <em>Output Path Raw</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getOutputPath()
+	 * @see #getOutputPathRaw()
 	 * @generated
 	 * @ordered
 	 */
-	protected String outputPath = OUTPUT_PATH_EDEFAULT;
+	protected String outputPathRaw = OUTPUT_PATH_RAW_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getLibraryPaths() <em>Library Paths</em>}' attribute list.
@@ -786,8 +788,8 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getOutputPath() {
-		return outputPath;
+	public String getOutputPathRaw() {
+		return outputPathRaw;
 	}
 
 	/**
@@ -795,11 +797,11 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOutputPath(String newOutputPath) {
-		String oldOutputPath = outputPath;
-		outputPath = newOutputPath;
+	public void setOutputPathRaw(String newOutputPathRaw) {
+		String oldOutputPathRaw = outputPathRaw;
+		outputPathRaw = newOutputPathRaw;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH, oldOutputPath, outputPath));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW, oldOutputPathRaw, outputPathRaw));
 	}
 
 	/**
@@ -912,6 +914,29 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 		moduleLoader = newModuleLoader == null ? MODULE_LOADER_EDEFAULT : newModuleLoader;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__MODULE_LOADER, oldModuleLoader, moduleLoader));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getOutputPath() {
+		String normalizedOutputPath = Paths.get(this.getOutputPathRaw()).normalize().toString();
+		boolean _isEmpty = normalizedOutputPath.isEmpty();
+		if (_isEmpty) {
+			normalizedOutputPath = ".";
+		}
+		return normalizedOutputPath;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setOutputPath(final String newOutputPath) {
+		this.setOutputPathRaw(newOutputPath);
 	}
 
 	/**
@@ -1088,8 +1113,8 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 				return getInitModules();
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				return getExecModule();
-			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
-				return getOutputPath();
+			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
+				return getOutputPathRaw();
 			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS:
 				return getLibraryPaths();
 			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS:
@@ -1151,8 +1176,8 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				setExecModule((ExecModule)newValue);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
-				setOutputPath((String)newValue);
+			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
+				setOutputPathRaw((String)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS:
 				getLibraryPaths().clear();
@@ -1224,8 +1249,8 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				setExecModule((ExecModule)null);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
-				setOutputPath(OUTPUT_PATH_EDEFAULT);
+			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
+				setOutputPathRaw(OUTPUT_PATH_RAW_EDEFAULT);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS:
 				getLibraryPaths().clear();
@@ -1281,8 +1306,8 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 				return initModules != null;
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				return execModule != null;
-			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
-				return OUTPUT_PATH_EDEFAULT == null ? outputPath != null : !OUTPUT_PATH_EDEFAULT.equals(outputPath);
+			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
+				return OUTPUT_PATH_RAW_EDEFAULT == null ? outputPathRaw != null : !OUTPUT_PATH_RAW_EDEFAULT.equals(outputPathRaw);
 			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS:
 				return libraryPaths != null && !libraryPaths.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS:
@@ -1307,6 +1332,11 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4mfPackage.PROJECT_DESCRIPTION___GET_OUTPUT_PATH:
+				return getOutputPath();
+			case N4mfPackage.PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING:
+				setOutputPath((String)arguments.get(0));
+				return null;
 			case N4mfPackage.PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS:
 				return getAllTestedProjects();
 			case N4mfPackage.PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES:
@@ -1341,8 +1371,8 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 		result.append(mainModule);
 		result.append(", implementationId: ");
 		result.append(implementationId);
-		result.append(", outputPath: ");
-		result.append(outputPath);
+		result.append(", outputPathRaw: ");
+		result.append(outputPathRaw);
 		result.append(", libraryPaths: ");
 		result.append(libraryPaths);
 		result.append(", resourcePaths: ");

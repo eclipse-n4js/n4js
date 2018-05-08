@@ -5283,31 +5283,31 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectDescription__Group_14__2__Impl"
-    // InternalN4MFParser.g:1721:1: rule__ProjectDescription__Group_14__2__Impl : ( ( rule__ProjectDescription__OutputPathAssignment_14_2 ) ) ;
+    // InternalN4MFParser.g:1721:1: rule__ProjectDescription__Group_14__2__Impl : ( ( rule__ProjectDescription__OutputPathRawAssignment_14_2 ) ) ;
     public final void rule__ProjectDescription__Group_14__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalN4MFParser.g:1725:1: ( ( ( rule__ProjectDescription__OutputPathAssignment_14_2 ) ) )
-            // InternalN4MFParser.g:1726:1: ( ( rule__ProjectDescription__OutputPathAssignment_14_2 ) )
+            // InternalN4MFParser.g:1725:1: ( ( ( rule__ProjectDescription__OutputPathRawAssignment_14_2 ) ) )
+            // InternalN4MFParser.g:1726:1: ( ( rule__ProjectDescription__OutputPathRawAssignment_14_2 ) )
             {
-            // InternalN4MFParser.g:1726:1: ( ( rule__ProjectDescription__OutputPathAssignment_14_2 ) )
-            // InternalN4MFParser.g:1727:2: ( rule__ProjectDescription__OutputPathAssignment_14_2 )
+            // InternalN4MFParser.g:1726:1: ( ( rule__ProjectDescription__OutputPathRawAssignment_14_2 ) )
+            // InternalN4MFParser.g:1727:2: ( rule__ProjectDescription__OutputPathRawAssignment_14_2 )
             {
-             before(grammarAccess.getProjectDescriptionAccess().getOutputPathAssignment_14_2()); 
-            // InternalN4MFParser.g:1728:2: ( rule__ProjectDescription__OutputPathAssignment_14_2 )
-            // InternalN4MFParser.g:1728:3: rule__ProjectDescription__OutputPathAssignment_14_2
+             before(grammarAccess.getProjectDescriptionAccess().getOutputPathRawAssignment_14_2()); 
+            // InternalN4MFParser.g:1728:2: ( rule__ProjectDescription__OutputPathRawAssignment_14_2 )
+            // InternalN4MFParser.g:1728:3: rule__ProjectDescription__OutputPathRawAssignment_14_2
             {
             pushFollow(FOLLOW_2);
-            rule__ProjectDescription__OutputPathAssignment_14_2();
+            rule__ProjectDescription__OutputPathRawAssignment_14_2();
 
             state._fsp--;
 
 
             }
 
-             after(grammarAccess.getProjectDescriptionAccess().getOutputPathAssignment_14_2()); 
+             after(grammarAccess.getProjectDescriptionAccess().getOutputPathRawAssignment_14_2()); 
 
             }
 
@@ -13397,31 +13397,31 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SourceFragment__Group__2__Impl"
-    // InternalN4MFParser.g:4436:1: rule__SourceFragment__Group__2__Impl : ( ( rule__SourceFragment__PathsAssignment_2 ) ) ;
+    // InternalN4MFParser.g:4436:1: rule__SourceFragment__Group__2__Impl : ( ( rule__SourceFragment__PathsRawAssignment_2 ) ) ;
     public final void rule__SourceFragment__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalN4MFParser.g:4440:1: ( ( ( rule__SourceFragment__PathsAssignment_2 ) ) )
-            // InternalN4MFParser.g:4441:1: ( ( rule__SourceFragment__PathsAssignment_2 ) )
+            // InternalN4MFParser.g:4440:1: ( ( ( rule__SourceFragment__PathsRawAssignment_2 ) ) )
+            // InternalN4MFParser.g:4441:1: ( ( rule__SourceFragment__PathsRawAssignment_2 ) )
             {
-            // InternalN4MFParser.g:4441:1: ( ( rule__SourceFragment__PathsAssignment_2 ) )
-            // InternalN4MFParser.g:4442:2: ( rule__SourceFragment__PathsAssignment_2 )
+            // InternalN4MFParser.g:4441:1: ( ( rule__SourceFragment__PathsRawAssignment_2 ) )
+            // InternalN4MFParser.g:4442:2: ( rule__SourceFragment__PathsRawAssignment_2 )
             {
-             before(grammarAccess.getSourceFragmentAccess().getPathsAssignment_2()); 
-            // InternalN4MFParser.g:4443:2: ( rule__SourceFragment__PathsAssignment_2 )
-            // InternalN4MFParser.g:4443:3: rule__SourceFragment__PathsAssignment_2
+             before(grammarAccess.getSourceFragmentAccess().getPathsRawAssignment_2()); 
+            // InternalN4MFParser.g:4443:2: ( rule__SourceFragment__PathsRawAssignment_2 )
+            // InternalN4MFParser.g:4443:3: rule__SourceFragment__PathsRawAssignment_2
             {
             pushFollow(FOLLOW_2);
-            rule__SourceFragment__PathsAssignment_2();
+            rule__SourceFragment__PathsRawAssignment_2();
 
             state._fsp--;
 
 
             }
 
-             after(grammarAccess.getSourceFragmentAccess().getPathsAssignment_2()); 
+             after(grammarAccess.getSourceFragmentAccess().getPathsRawAssignment_2()); 
 
             }
 
@@ -13725,31 +13725,31 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SourceFragment__Group_3__1__Impl"
-    // InternalN4MFParser.g:4543:1: rule__SourceFragment__Group_3__1__Impl : ( ( rule__SourceFragment__PathsAssignment_3_1 ) ) ;
+    // InternalN4MFParser.g:4543:1: rule__SourceFragment__Group_3__1__Impl : ( ( rule__SourceFragment__PathsRawAssignment_3_1 ) ) ;
     public final void rule__SourceFragment__Group_3__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalN4MFParser.g:4547:1: ( ( ( rule__SourceFragment__PathsAssignment_3_1 ) ) )
-            // InternalN4MFParser.g:4548:1: ( ( rule__SourceFragment__PathsAssignment_3_1 ) )
+            // InternalN4MFParser.g:4547:1: ( ( ( rule__SourceFragment__PathsRawAssignment_3_1 ) ) )
+            // InternalN4MFParser.g:4548:1: ( ( rule__SourceFragment__PathsRawAssignment_3_1 ) )
             {
-            // InternalN4MFParser.g:4548:1: ( ( rule__SourceFragment__PathsAssignment_3_1 ) )
-            // InternalN4MFParser.g:4549:2: ( rule__SourceFragment__PathsAssignment_3_1 )
+            // InternalN4MFParser.g:4548:1: ( ( rule__SourceFragment__PathsRawAssignment_3_1 ) )
+            // InternalN4MFParser.g:4549:2: ( rule__SourceFragment__PathsRawAssignment_3_1 )
             {
-             before(grammarAccess.getSourceFragmentAccess().getPathsAssignment_3_1()); 
-            // InternalN4MFParser.g:4550:2: ( rule__SourceFragment__PathsAssignment_3_1 )
-            // InternalN4MFParser.g:4550:3: rule__SourceFragment__PathsAssignment_3_1
+             before(grammarAccess.getSourceFragmentAccess().getPathsRawAssignment_3_1()); 
+            // InternalN4MFParser.g:4550:2: ( rule__SourceFragment__PathsRawAssignment_3_1 )
+            // InternalN4MFParser.g:4550:3: rule__SourceFragment__PathsRawAssignment_3_1
             {
             pushFollow(FOLLOW_2);
-            rule__SourceFragment__PathsAssignment_3_1();
+            rule__SourceFragment__PathsRawAssignment_3_1();
 
             state._fsp--;
 
 
             }
 
-             after(grammarAccess.getSourceFragmentAccess().getPathsAssignment_3_1()); 
+             after(grammarAccess.getSourceFragmentAccess().getPathsRawAssignment_3_1()); 
 
             }
 
@@ -19046,9 +19046,9 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ProjectDescription__ExecModuleAssignment_13"
 
 
-    // $ANTLR start "rule__ProjectDescription__OutputPathAssignment_14_2"
-    // InternalN4MFParser.g:6229:1: rule__ProjectDescription__OutputPathAssignment_14_2 : ( RULE_STRING ) ;
-    public final void rule__ProjectDescription__OutputPathAssignment_14_2() throws RecognitionException {
+    // $ANTLR start "rule__ProjectDescription__OutputPathRawAssignment_14_2"
+    // InternalN4MFParser.g:6229:1: rule__ProjectDescription__OutputPathRawAssignment_14_2 : ( RULE_STRING ) ;
+    public final void rule__ProjectDescription__OutputPathRawAssignment_14_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -19059,9 +19059,9 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
             // InternalN4MFParser.g:6234:2: ( RULE_STRING )
             // InternalN4MFParser.g:6235:3: RULE_STRING
             {
-             before(grammarAccess.getProjectDescriptionAccess().getOutputPathSTRINGTerminalRuleCall_14_2_0()); 
+             before(grammarAccess.getProjectDescriptionAccess().getOutputPathRawSTRINGTerminalRuleCall_14_2_0()); 
             match(input,RULE_STRING,FOLLOW_2); 
-             after(grammarAccess.getProjectDescriptionAccess().getOutputPathSTRINGTerminalRuleCall_14_2_0()); 
+             after(grammarAccess.getProjectDescriptionAccess().getOutputPathRawSTRINGTerminalRuleCall_14_2_0()); 
 
             }
 
@@ -19080,7 +19080,7 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectDescription__OutputPathAssignment_14_2"
+    // $ANTLR end "rule__ProjectDescription__OutputPathRawAssignment_14_2"
 
 
     // $ANTLR start "rule__ProjectDescription__LibraryPathsAssignment_15_2"
@@ -20162,9 +20162,9 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__SourceFragment__SourceFragmentTypeAssignment_0"
 
 
-    // $ANTLR start "rule__SourceFragment__PathsAssignment_2"
-    // InternalN4MFParser.g:6649:1: rule__SourceFragment__PathsAssignment_2 : ( RULE_STRING ) ;
-    public final void rule__SourceFragment__PathsAssignment_2() throws RecognitionException {
+    // $ANTLR start "rule__SourceFragment__PathsRawAssignment_2"
+    // InternalN4MFParser.g:6649:1: rule__SourceFragment__PathsRawAssignment_2 : ( RULE_STRING ) ;
+    public final void rule__SourceFragment__PathsRawAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -20175,9 +20175,9 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
             // InternalN4MFParser.g:6654:2: ( RULE_STRING )
             // InternalN4MFParser.g:6655:3: RULE_STRING
             {
-             before(grammarAccess.getSourceFragmentAccess().getPathsSTRINGTerminalRuleCall_2_0()); 
+             before(grammarAccess.getSourceFragmentAccess().getPathsRawSTRINGTerminalRuleCall_2_0()); 
             match(input,RULE_STRING,FOLLOW_2); 
-             after(grammarAccess.getSourceFragmentAccess().getPathsSTRINGTerminalRuleCall_2_0()); 
+             after(grammarAccess.getSourceFragmentAccess().getPathsRawSTRINGTerminalRuleCall_2_0()); 
 
             }
 
@@ -20196,12 +20196,12 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__SourceFragment__PathsAssignment_2"
+    // $ANTLR end "rule__SourceFragment__PathsRawAssignment_2"
 
 
-    // $ANTLR start "rule__SourceFragment__PathsAssignment_3_1"
-    // InternalN4MFParser.g:6664:1: rule__SourceFragment__PathsAssignment_3_1 : ( RULE_STRING ) ;
-    public final void rule__SourceFragment__PathsAssignment_3_1() throws RecognitionException {
+    // $ANTLR start "rule__SourceFragment__PathsRawAssignment_3_1"
+    // InternalN4MFParser.g:6664:1: rule__SourceFragment__PathsRawAssignment_3_1 : ( RULE_STRING ) ;
+    public final void rule__SourceFragment__PathsRawAssignment_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -20212,9 +20212,9 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
             // InternalN4MFParser.g:6669:2: ( RULE_STRING )
             // InternalN4MFParser.g:6670:3: RULE_STRING
             {
-             before(grammarAccess.getSourceFragmentAccess().getPathsSTRINGTerminalRuleCall_3_1_0()); 
+             before(grammarAccess.getSourceFragmentAccess().getPathsRawSTRINGTerminalRuleCall_3_1_0()); 
             match(input,RULE_STRING,FOLLOW_2); 
-             after(grammarAccess.getSourceFragmentAccess().getPathsSTRINGTerminalRuleCall_3_1_0()); 
+             after(grammarAccess.getSourceFragmentAccess().getPathsRawSTRINGTerminalRuleCall_3_1_0()); 
 
             }
 
@@ -20233,7 +20233,7 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__SourceFragment__PathsAssignment_3_1"
+    // $ANTLR end "rule__SourceFragment__PathsRawAssignment_3_1"
 
 
     // $ANTLR start "rule__ModuleFilter__ModuleFilterTypeAssignment_0"
