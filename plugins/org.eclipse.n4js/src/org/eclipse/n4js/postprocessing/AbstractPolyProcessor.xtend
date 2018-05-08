@@ -11,7 +11,6 @@
 package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Argument
@@ -29,6 +28,7 @@ import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.InferenceVariable
@@ -41,6 +41,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -70,6 +71,12 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 	def boolean isPoly(Expression obj) {
 		return switch (obj) {
 			ParameterizedCallExpression: {
+				if (MigrationUtils.isMigrateCall(obj)) {
+					// Constraint-based type inference is disabled for migrate calls,
+					// since the type of the invoked migration is not known at this point.
+					return false;
+				}
+				
 				// NOTE: in next line, we do not propagate the cancel indicator; however, this is not required, because
 				// all we do with the newly created rule environment is to type a backward(!) reference, so we can be
 				// sure that no significant processing will be triggered by the type judgment invocation below

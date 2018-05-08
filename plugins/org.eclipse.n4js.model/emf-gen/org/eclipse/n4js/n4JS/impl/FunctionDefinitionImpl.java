@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.math.BigDecimal;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -32,6 +34,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.n4JS.VersionedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -47,6 +50,7 @@ import org.eclipse.n4js.ts.types.Type;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDefinedType <em>Defined Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getReturnTypeRef <em>Return Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#isGenerator <em>Generator</em>}</li>
@@ -65,6 +69,26 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * @ordered
 	 */
 	protected Type definedType;
+
+	/**
+	 * The default value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final BigDecimal DECLARED_VERSION_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected BigDecimal declaredVersion = DECLARED_VERSION_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getFpars() <em>Fpars</em>}' containment reference list.
@@ -181,6 +205,27 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 		definedType = newDefinedType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE, oldDefinedType, definedType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BigDecimal getDeclaredVersion() {
+		return declaredVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
+		BigDecimal oldDeclaredVersion = declaredVersion;
+		declaredVersion = newDeclaredVersion;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DECLARED_VERSION, oldDeclaredVersion, declaredVersion));
 	}
 
 	/**
@@ -317,6 +362,33 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean hasDeclaredVersion() {
+		BigDecimal _declaredVersion = this.getDeclaredVersion();
+		return (_declaredVersion != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getDeclaredVersionOrZero() {
+		int _xifexpression = (int) 0;
+		boolean _hasDeclaredVersion = this.hasDeclaredVersion();
+		if (_hasDeclaredVersion) {
+			_xifexpression = this.getDeclaredVersion().intValue();
+		}
+		else {
+			_xifexpression = 0;
+		}
+		return _xifexpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -339,6 +411,8 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE:
 				if (resolve) return getDefinedType();
 				return basicGetDefinedType();
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_VERSION:
+				return getDeclaredVersion();
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				return getFpars();
 			case N4JSPackage.FUNCTION_DEFINITION__RETURN_TYPE_REF:
@@ -362,6 +436,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 		switch (featureID) {
 			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE:
 				setDefinedType((Type)newValue);
+				return;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_VERSION:
+				setDeclaredVersion((BigDecimal)newValue);
 				return;
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				getFpars().clear();
@@ -391,6 +468,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE:
 				setDefinedType((Type)null);
 				return;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_VERSION:
+				setDeclaredVersion(DECLARED_VERSION_EDEFAULT);
+				return;
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				getFpars().clear();
 				return;
@@ -417,6 +497,8 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 		switch (featureID) {
 			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE:
 				return definedType != null;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_VERSION:
+				return DECLARED_VERSION_EDEFAULT == null ? declaredVersion != null : !DECLARED_VERSION_EDEFAULT.equals(declaredVersion);
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.FUNCTION_DEFINITION__RETURN_TYPE_REF:
@@ -442,6 +524,12 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				default: return -1;
 			}
 		}
+		if (baseClass == VersionedElement.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_VERSION: return N4JSPackage.VERSIONED_ELEMENT__DECLARED_VERSION;
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -455,6 +543,12 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 		if (baseClass == TypeDefiningElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE: return N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE;
+				default: return -1;
+			}
+		}
+		if (baseClass == VersionedElement.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.VERSIONED_ELEMENT__DECLARED_VERSION: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_VERSION;
 				default: return -1;
 			}
 		}
@@ -480,6 +574,13 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				default: return -1;
 			}
 		}
+		if (baseClass == VersionedElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.VERSIONED_ELEMENT___HAS_DECLARED_VERSION: return N4JSPackage.FUNCTION_DEFINITION___HAS_DECLARED_VERSION;
+				case N4JSPackage.VERSIONED_ELEMENT___GET_DECLARED_VERSION_OR_ZERO: return N4JSPackage.FUNCTION_DEFINITION___GET_DECLARED_VERSION_OR_ZERO;
+				default: return -1;
+			}
+		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -497,6 +598,10 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return isAsync();
 			case N4JSPackage.FUNCTION_DEFINITION___GET_DEFINED_FUNCTION:
 				return getDefinedFunction();
+			case N4JSPackage.FUNCTION_DEFINITION___HAS_DECLARED_VERSION:
+				return hasDeclaredVersion();
+			case N4JSPackage.FUNCTION_DEFINITION___GET_DECLARED_VERSION_OR_ZERO:
+				return getDeclaredVersionOrZero();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
@@ -511,7 +616,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (generator: ");
+		result.append(" (declaredVersion: ");
+		result.append(declaredVersion);
+		result.append(", generator: ");
 		result.append(generator);
 		result.append(", declaredAsync: ");
 		result.append(declaredAsync);

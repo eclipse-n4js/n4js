@@ -37,6 +37,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.n4idl.versioning.VersionHelper;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
@@ -332,6 +333,8 @@ public class PreparationStep {
 					// name of a JSX element, e.g. the "div" in something like: <div prop='value'></div>
 					String tagName = ((IdentifierRef) eObject).getIdAsText();
 					((IdentifierRef_IM) copyEObject).setIdAsText(tagName);
+				} else if (MigrationUtils.isMigrateCall(eObject.eContainer())) {
+					// unresolved migrate-calls can still be transpiled
 				} else {
 					throw new IllegalStateException("Rewire() called for a proxified original target. IM-eobject = "
 							+ eObject + "   origTarget is "

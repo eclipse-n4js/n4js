@@ -404,6 +404,7 @@ public final class AnnotationDefinition {
 	 */
 	public final static AnnotationDefinition MIGRATION = define("Migration").targets(FUNCTION_DECLARATION)
 			.javaScriptVariants(N4JSJavaScriptVariantHelper.EXT_N4IDL)
+			.args(N4JSPackage.Literals.NUMERIC_LITERAL, N4JSPackage.Literals.NUMERIC_LITERAL).argsOptional()
 			.retention(RUNTIME).end();
 
 	/**
