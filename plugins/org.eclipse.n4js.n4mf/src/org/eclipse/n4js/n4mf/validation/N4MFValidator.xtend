@@ -38,7 +38,6 @@ import org.eclipse.xtext.validation.Check
 import static org.eclipse.n4js.n4mf.N4mfPackage.Literals.*
 import static org.eclipse.n4js.n4mf.utils.N4MFUtils.*
 import static org.eclipse.n4js.n4mf.validation.IssueCodes.*
-import java.nio.file.Paths
 
 class N4MFValidator extends AbstractN4MFValidator {
 
@@ -70,7 +69,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 		val pathsWhichMustExists = <EAttribute, List<String>>newHashMap
 		types.addAll(sourceTypes)
 		allPaths.putAll(allSourcePaths)
-		val outputPathFeature = PROJECT_DESCRIPTION__OUTPUT_PATH
+		val outputPathFeature = PROJECT_DESCRIPTION__OUTPUT_PATH_RAW
 		types.add(outputPathFeature)
 		// output path must not exist, usually not added to git and created on the fly, cf. IDEBUG-197
 		allPaths.put(outputPathFeature,
@@ -175,7 +174,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 					EAttribute:
 						switch (it) {
 							case PROJECT_DESCRIPTION__RESOURCE_PATHS: "Resources"
-							case PROJECT_DESCRIPTION__OUTPUT_PATH: "Output"
+							case PROJECT_DESCRIPTION__OUTPUT_PATH_RAW: "Output"
 							case PROJECT_DESCRIPTION__LIBRARY_PATHS: "Libraries"
 							default: it.name
 						}
@@ -205,7 +204,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 
 	private def getFeature(Object pathContainer, ProjectDescription projectDescription) {
 		switch (pathContainer) {
-			SourceFragment: SOURCE_FRAGMENT__PATHS
+			SourceFragment: SOURCE_FRAGMENT__PATHS_RAW
 			EAttribute: pathContainer
 		}
 	}
@@ -218,7 +217,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 				switch (pathContainer) {
 					case PROJECT_DESCRIPTION__RESOURCE_PATHS:
 						projectDescription.resourcePaths.lastIndexOf(path)
-					case PROJECT_DESCRIPTION__OUTPUT_PATH:
+					case PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 						if (path.equals(projectDescription.outputPath)) -2 else -1
 					case PROJECT_DESCRIPTION__LIBRARY_PATHS:
 						projectDescription.libraryPaths.lastIndexOf(path)
@@ -233,7 +232,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 	private def checkForDuplicatePaths(SourceFragment sourceFragment, List<String> paths) {
 		val duplicatePaths = getDuplicates(paths)
 		duplicatePaths.forEach [
-			addIssue(getMessageForDUPLICATE_PATH_INTERNAL, sourceFragment, SOURCE_FRAGMENT__PATHS,
+			addIssue(getMessageForDUPLICATE_PATH_INTERNAL, sourceFragment, SOURCE_FRAGMENT__PATHS_RAW,
 				paths.indexOf(it.key), DUPLICATE_PATH_INTERNAL)
 		]
 	}
@@ -250,37 +249,35 @@ class N4MFValidator extends AbstractN4MFValidator {
 
 	@Check
 	def void checkOutputFolder(ProjectDescription projectDescription) {
-		val sourceFrgmt = getSourceContainingOutput(projectDescription);
-
-		if (sourceFrgmt !== null) {
-			val srcFrgmtName = sourceFrgmt.sourceFragmentType.getName().toString;
-			val message = getMessageForOUTPUT_FOLDER_INSIDE_SOURCES(srcFrgmtName);
-			addIssue(message, projectDescription, PROJECT_DESCRIPTION__OUTPUT_PATH, OUTPUT_FOLDER_INSIDE_SOURCES);
-		}
-	}
-
-	def SourceFragment getSourceContainingOutput(ProjectDescription projectDescription) {
 		val outputPathName = projectDescription.outputPath;
-		if (outputPathName === null || outputPathName.isEmpty) {
-			return null;
+		if (outputPathName === null) {
+			return;
 		}
 
 		val outputPath = new Path(outputPathName);
 		val sourceTypes = projectDescription.sourceFragment;
 
 		for (SourceFragment sourceFrgmt : sourceTypes) {
-			for (String sourcePathStr : sourceFrgmt.paths) {
-				val sourcePathStr2 = Paths.get(sourcePathStr).normalize().toString();
-				val sourcePath = new Path(sourcePathStr2);
+			for (var i = 0; i < sourceFrgmt.paths.size; i++) {
+				val sourcePathStr = sourceFrgmt.paths.get(i);
+				val sourcePath = new Path(sourcePathStr);
+				val srcFrgmtName = sourceFrgmt.sourceFragmentType.getName().toString;
 
-				if (sourcePathStr.isEmpty || ".".equals(sourcePathStr) || sourcePath.equals(outputPath) ||
-					sourcePath.isPrefixOf(outputPath)) {
+				if (".".equals(sourcePathStr) || sourcePath.equals(outputPath) || sourcePath.isPrefixOf(outputPath)) {
+					val containingFolder = "The output";
+					val nestedFolder = "a " + srcFrgmtName;
+					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+					addIssue(message, projectDescription, PROJECT_DESCRIPTION__OUTPUT_PATH_RAW, OUTPUT_AND_SOURCES_FOLDER_NESTING);
+				}
 
-					return sourceFrgmt;
+				if (outputPath.isPrefixOf(sourcePath)) {
+					val containingFolder = "A " + srcFrgmtName;
+					val nestedFolder = "the output";
+					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+					addIssue(message, sourceFrgmt, SOURCE_FRAGMENT__PATHS_RAW, i, OUTPUT_AND_SOURCES_FOLDER_NESTING);
 				}
 			}
 		}
-		return null;
 	}
 
 	@Check
@@ -397,7 +394,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 
 	def private checkForExistingPath(String path, SourceFragment sourceFragment) {
 		if (path.contains("*") || path.contains("?")) {
-			addIssue(getMessageForWILDCARD_NOT_ALLOWED, sourceFragment, SOURCE_FRAGMENT__PATHS,
+			addIssue(getMessageForWILDCARD_NOT_ALLOWED, sourceFragment, SOURCE_FRAGMENT__PATHS_RAW,
 				sourceFragment.paths.indexOf(path), WILDCARD_NOT_ALLOWED)
 			return;
 		}
@@ -411,12 +408,12 @@ class N4MFValidator extends AbstractN4MFValidator {
 				#[]
 		}
 		if (foundFiles.empty) {
-			addIssue(getMessageForNON_EXISTING_SOURCE_PATH(path), sourceFragment, SOURCE_FRAGMENT__PATHS,
+			addIssue(getMessageForNON_EXISTING_SOURCE_PATH(path), sourceFragment, SOURCE_FRAGMENT__PATHS_RAW,
 				sourceFragment.paths.indexOf(path), NON_EXISTING_SOURCE_PATH)
 		}
 		if (isGenerationAwareN4JSContainer(sourceFragment.sourceFragmentType)) {
 			for (foundFile : foundFiles.filter[new File(it).file]) {
-				addIssue(getMessageForNO_FOLDER_PATH(path), sourceFragment, SOURCE_FRAGMENT__PATHS,
+				addIssue(getMessageForNO_FOLDER_PATH(path), sourceFragment, SOURCE_FRAGMENT__PATHS_RAW,
 					sourceFragment.paths.indexOf(path), NO_FOLDER_PATH)
 			}
 		}
