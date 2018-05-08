@@ -11,10 +11,8 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
@@ -68,7 +66,8 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
  */
 class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
-	@Inject ContainerTypesHelper containerTypesHelper;
+	@Inject
+	private ContainerTypesHelper containerTypesHelper;
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
@@ -497,52 +496,17 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkDuplicateFieldsIn(N4ClassDeclaration n4ClassDeclaration) {
-		val tClass = n4ClassDeclaration.definedType
-		if (tClass instanceof TClass) {
-			iterateConstructorHierarchy(tClass, tClass, newArrayList)
-		}
-	}
-
-	private def void iterateConstructorHierarchy(TClass tClass, TClass superClass, List<TClass> alreadyVisited) {
-		val superType = superClass.superClassRef?.declaredType
-		if (superType instanceof TClass) {
-			if (alreadyVisited.contains(superType)) {
-				return
-			} else {
-				alreadyVisited += superType
-			}
-			val constructor = superType.ownedMembers.filter[constructor].head as TMethod
-			if (constructor !== null) {
-				val isInSameClass = false
-				handleConstructor(constructor, tClass, isInSameClass)
-			} else {
-				iterateConstructorHierarchy(tClass, superType, alreadyVisited)
-			}
-		}
-	}
-
-	private def handleConstructor(TMethod constructor, TClass tClass, boolean isInSameClass) {
-		val thisTypeRefStructural = constructor.fpars.map[typeRef].filter(ThisTypeRefStructural).head
-		if (thisTypeRefStructural !== null) {
-			internalCheckDuplicateFieldsIn(tClass, thisTypeRefStructural, isInSameClass)
-		}
-	}
-
-	@Check
 	def checkDuplicateFieldsIn(ThisTypeRefStructural thisTypeRefStructural) {
 		val n4ClassifierDefinition = EcoreUtil2.getContainerOfType(thisTypeRefStructural, N4ClassifierDefinition)
 		if (n4ClassifierDefinition !== null) {
 			val tClass = n4ClassifierDefinition.definedType
 			if (tClass instanceof TClass) {
-				val isInSameClass = true
-				internalCheckDuplicateFieldsIn(tClass, thisTypeRefStructural, isInSameClass)
+				internalCheckDuplicateFieldsIn(tClass, thisTypeRefStructural)
 			}
 		}
 	}
 
-	private def internalCheckDuplicateFieldsIn(TClass tclass, ThisTypeRefStructural thisTypeRefStructural,
-		boolean isInSameClass) {
+	private def internalCheckDuplicateFieldsIn(TClass tclass, ThisTypeRefStructural thisTypeRefStructural) {
 		val members = LazyOverrideAwareMemberCollector.collectAllMembers(tclass)
 		val membersByNameAndStatic = members.groupBy[Tuples.pair(name, static)];
 		val structuralMembersByNameAndStatic = thisTypeRefStructural.structuralMembers.groupBy [
@@ -552,18 +516,12 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			if (membersByNameAndStatic.containsKey(it)) {
 				val structuralFieldDuplicate = structuralMembersByNameAndStatic.get(it).head
 				val existingClassifierMember = membersByNameAndStatic.get(it).head
-				if (existingClassifierMember.memberAccessModifier == MemberAccessModifier.PUBLIC) {
-					if (isInSameClass) {
-						val message = getMessageForCLF_DUP_MEMBER(structuralFieldDuplicate.descriptionWithLine,
-							existingClassifierMember.descriptionWithLine);
-						val index = thisTypeRefStructural.structuralMembers.indexOf(structuralFieldDuplicate)
-						addIssue(message, thisTypeRefStructural,
-							TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS, index, CLF_DUP_MEMBER)
-					} else {
-						val message = getMessageForCLF_DUP_WITH_MEMBER(existingClassifierMember.description)
-						addIssue(message, existingClassifierMember.astElement,
-							N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_DUP_WITH_MEMBER)
-					}
+				if (existingClassifierMember?.memberAccessModifier == MemberAccessModifier.PUBLIC) {
+					val message = getMessageForCLF_DUP_MEMBER(structuralFieldDuplicate.descriptionWithLine,
+						existingClassifierMember.descriptionWithLine);
+					val index = thisTypeRefStructural.structuralMembers.indexOf(structuralFieldDuplicate)
+					addIssue(message, thisTypeRefStructural,
+						TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS, index, CLF_DUP_MEMBER)
 				}
 			}
 		]
