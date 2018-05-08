@@ -12,7 +12,6 @@ package org.eclipse.n4js.json.validation.validators;
 
 import org.eclipse.n4js.json.validation.AbstractResourceDependentJSONValidator;
 import org.eclipse.xtext.validation.ComposedChecks;
-import org.eclipse.xtext.validation.EValidatorRegistrar;
 
 /**
  * This class contains general validation with regard to JSON files. 
@@ -21,17 +20,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar;
 	PackageJsonValidator.class
 })
 public class JSONValidator extends AbstractResourceDependentJSONValidator {
-	
-	/**
-	 * NEEDED
-	 *
-	 * When removed check methods will be called twice once by N4JSValidator, and once by
-	 * AbstractDeclarativeN4JSValidator.
-	 */
-	@Override
-	public void register(EValidatorRegistrar registrar) {
-		// nop
-	}
 	
 //	/** Checks the validity of a {@link JSONDocument} element. */
 //	@Check
