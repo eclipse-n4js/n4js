@@ -30,4 +30,17 @@ class D {
 }
 
 // XPECT nowarnings --> "getter is not defined in ~i~this[C]." at "getter"
-new D({data: "ok", getter: "correct"});
+let d = new D({data: "ok", getter: "correct"});
+
+console.log(d.data);
+console.log(d.getter);
+
+
+/* XPECT output ---
+<==
+stdout:
+ok
+correct
+stderr:
+==>
+--- */
