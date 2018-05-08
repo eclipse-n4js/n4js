@@ -12,13 +12,12 @@ package org.eclipse.n4js.n4mf.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
-import java.nio.file.Paths;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -54,6 +53,8 @@ import org.eclipse.n4js.n4mf.SourceFragment;
 import org.eclipse.n4js.n4mf.TestedProject;
 import org.eclipse.n4js.n4mf.TestedProjects;
 
+import org.eclipse.n4js.utils.io.FileUtils;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Project Description</b></em>'.
@@ -75,8 +76,8 @@ import org.eclipse.n4js.n4mf.TestedProjects;
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getExecModule <em>Exec Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getOutputPathRaw <em>Output Path Raw</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getLibraryPaths <em>Library Paths</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getResourcePaths <em>Resource Paths</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getLibraryPathsRaw <em>Library Paths Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getResourcePathsRaw <em>Resource Paths Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getSourceFragment <em>Source Fragment</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getTestedProjects <em>Tested Projects</em>}</li>
@@ -267,24 +268,24 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	protected String outputPathRaw = OUTPUT_PATH_RAW_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getLibraryPaths() <em>Library Paths</em>}' attribute list.
+	 * The cached value of the '{@link #getLibraryPathsRaw() <em>Library Paths Raw</em>}' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getLibraryPaths()
+	 * @see #getLibraryPathsRaw()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> libraryPaths;
+	protected EList<String> libraryPathsRaw;
 
 	/**
-	 * The cached value of the '{@link #getResourcePaths() <em>Resource Paths</em>}' attribute list.
+	 * The cached value of the '{@link #getResourcePathsRaw() <em>Resource Paths Raw</em>}' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getResourcePaths()
+	 * @see #getResourcePathsRaw()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> resourcePaths;
+	protected EList<String> resourcePathsRaw;
 
 	/**
 	 * The cached value of the '{@link #getSourceFragment() <em>Source Fragment</em>}' containment reference list.
@@ -809,11 +810,11 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getLibraryPaths() {
-		if (libraryPaths == null) {
-			libraryPaths = new EDataTypeEList<String>(String.class, this, N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS);
+	public EList<String> getLibraryPathsRaw() {
+		if (libraryPathsRaw == null) {
+			libraryPathsRaw = new EDataTypeEList<String>(String.class, this, N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW);
 		}
-		return libraryPaths;
+		return libraryPathsRaw;
 	}
 
 	/**
@@ -821,11 +822,11 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getResourcePaths() {
-		if (resourcePaths == null) {
-			resourcePaths = new EDataTypeEList<String>(String.class, this, N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS);
+	public EList<String> getResourcePathsRaw() {
+		if (resourcePathsRaw == null) {
+			resourcePathsRaw = new EDataTypeEList<String>(String.class, this, N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW);
 		}
-		return resourcePaths;
+		return resourcePathsRaw;
 	}
 
 	/**
@@ -922,12 +923,7 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	 * @generated
 	 */
 	public String getOutputPath() {
-		String normalizedOutputPath = Paths.get(this.getOutputPathRaw()).normalize().toString();
-		boolean _isEmpty = normalizedOutputPath.isEmpty();
-		if (_isEmpty) {
-			normalizedOutputPath = ".";
-		}
-		return normalizedOutputPath;
+		return FileUtils.normalizeDotWhenEmpty(this.getOutputPathRaw());
 	}
 
 	/**
@@ -937,6 +933,42 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 	 */
 	public void setOutputPath(final String newOutputPath) {
 		this.setOutputPathRaw(newOutputPath);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<String> getLibraryPaths() {
+		int _length = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getLibraryPathsRaw(), Object.class)).length;
+		final BasicEList<String> paths = new BasicEList<String>(_length);
+		EList<String> _libraryPathsRaw = this.getLibraryPathsRaw();
+		for (final String pathRaw : _libraryPathsRaw) {
+			{
+				final String normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
+				paths.add(normalizedPath);
+			}
+		}
+		return paths;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<String> getResourcePaths() {
+		int _length = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getResourcePathsRaw(), Object.class)).length;
+		final BasicEList<String> paths = new BasicEList<String>(_length);
+		EList<String> _resourcePathsRaw = this.getResourcePathsRaw();
+		for (final String pathRaw : _resourcePathsRaw) {
+			{
+				final String normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
+				paths.add(normalizedPath);
+			}
+		}
+		return paths;
 	}
 
 	/**
@@ -1115,10 +1147,10 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 				return getExecModule();
 			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 				return getOutputPathRaw();
-			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS:
-				return getLibraryPaths();
-			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS:
-				return getResourcePaths();
+			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
+				return getLibraryPathsRaw();
+			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
+				return getResourcePathsRaw();
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
 				return getSourceFragment();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
@@ -1179,13 +1211,13 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 				setOutputPathRaw((String)newValue);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS:
-				getLibraryPaths().clear();
-				getLibraryPaths().addAll((Collection<? extends String>)newValue);
+			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
+				getLibraryPathsRaw().clear();
+				getLibraryPathsRaw().addAll((Collection<? extends String>)newValue);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS:
-				getResourcePaths().clear();
-				getResourcePaths().addAll((Collection<? extends String>)newValue);
+			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
+				getResourcePathsRaw().clear();
+				getResourcePathsRaw().addAll((Collection<? extends String>)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
 				getSourceFragment().clear();
@@ -1252,11 +1284,11 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 				setOutputPathRaw(OUTPUT_PATH_RAW_EDEFAULT);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS:
-				getLibraryPaths().clear();
+			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
+				getLibraryPathsRaw().clear();
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS:
-				getResourcePaths().clear();
+			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
+				getResourcePathsRaw().clear();
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
 				getSourceFragment().clear();
@@ -1308,10 +1340,10 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 				return execModule != null;
 			case N4mfPackage.PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 				return OUTPUT_PATH_RAW_EDEFAULT == null ? outputPathRaw != null : !OUTPUT_PATH_RAW_EDEFAULT.equals(outputPathRaw);
-			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS:
-				return libraryPaths != null && !libraryPaths.isEmpty();
-			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS:
-				return resourcePaths != null && !resourcePaths.isEmpty();
+			case N4mfPackage.PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
+				return libraryPathsRaw != null && !libraryPathsRaw.isEmpty();
+			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
+				return resourcePathsRaw != null && !resourcePathsRaw.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
 				return sourceFragment != null && !sourceFragment.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
@@ -1337,6 +1369,10 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			case N4mfPackage.PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING:
 				setOutputPath((String)arguments.get(0));
 				return null;
+			case N4mfPackage.PROJECT_DESCRIPTION___GET_LIBRARY_PATHS:
+				return getLibraryPaths();
+			case N4mfPackage.PROJECT_DESCRIPTION___GET_RESOURCE_PATHS:
+				return getResourcePaths();
 			case N4mfPackage.PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS:
 				return getAllTestedProjects();
 			case N4mfPackage.PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES:
@@ -1373,10 +1409,10 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 		result.append(implementationId);
 		result.append(", outputPathRaw: ");
 		result.append(outputPathRaw);
-		result.append(", libraryPaths: ");
-		result.append(libraryPaths);
-		result.append(", resourcePaths: ");
-		result.append(resourcePaths);
+		result.append(", libraryPathsRaw: ");
+		result.append(libraryPathsRaw);
+		result.append(", resourcePathsRaw: ");
+		result.append(resourcePathsRaw);
 		result.append(", moduleLoader: ");
 		result.append(moduleLoader);
 		result.append(')');

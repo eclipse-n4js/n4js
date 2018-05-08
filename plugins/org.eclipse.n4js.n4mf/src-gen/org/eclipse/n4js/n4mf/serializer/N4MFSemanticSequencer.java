@@ -280,8 +280,8 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *         initModules=InitModules | 
 	 *         execModule=ExecModule | 
 	 *         outputPathRaw=STRING | 
-	 *         (libraryPaths+=STRING libraryPaths+=STRING*) | 
-	 *         (resourcePaths+=STRING resourcePaths+=STRING*) | 
+	 *         (libraryPathsRaw+=STRING libraryPathsRaw+=STRING*) | 
+	 *         (resourcePathsRaw+=STRING resourcePathsRaw+=STRING*) | 
 	 *         sourceFragment+=SourceFragment | 
 	 *         moduleFilters+=ModuleFilter | 
 	 *         testedProjects=TestedProjects | 

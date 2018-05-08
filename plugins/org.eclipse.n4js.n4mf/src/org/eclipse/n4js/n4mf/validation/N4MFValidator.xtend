@@ -74,10 +74,10 @@ class N4MFValidator extends AbstractN4MFValidator {
 		// output path must not exist, usually not added to git and created on the fly, cf. IDEBUG-197
 		allPaths.put(outputPathFeature,
 			if (projectDescription.outputPath !== null) #[projectDescription.outputPath] else #[])
-		val libraryPathFeature = PROJECT_DESCRIPTION__LIBRARY_PATHS
+		val libraryPathFeature = PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW
 		types.add(libraryPathFeature)
 		pathsWhichMustExists.put(libraryPathFeature, projectDescription.libraryPaths)
-		val resourcesPathFeature = PROJECT_DESCRIPTION__RESOURCE_PATHS
+		val resourcesPathFeature = PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW
 		types.add(resourcesPathFeature)
 		pathsWhichMustExists.put(resourcesPathFeature, projectDescription.resourcePaths)
 		allPaths.putAll(pathsWhichMustExists)
@@ -173,9 +173,9 @@ class N4MFValidator extends AbstractN4MFValidator {
 						sourceFragmentType.getName
 					EAttribute:
 						switch (it) {
-							case PROJECT_DESCRIPTION__RESOURCE_PATHS: "Resources"
+							case PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW: "Resources"
 							case PROJECT_DESCRIPTION__OUTPUT_PATH_RAW: "Output"
-							case PROJECT_DESCRIPTION__LIBRARY_PATHS: "Libraries"
+							case PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW: "Libraries"
 							default: it.name
 						}
 					default:
@@ -215,11 +215,11 @@ class N4MFValidator extends AbstractN4MFValidator {
 				pathContainer.paths.lastIndexOf(path)
 			EAttribute:
 				switch (pathContainer) {
-					case PROJECT_DESCRIPTION__RESOURCE_PATHS:
+					case PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
 						projectDescription.resourcePaths.lastIndexOf(path)
 					case PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
 						if (path.equals(projectDescription.outputPath)) -2 else -1
-					case PROJECT_DESCRIPTION__LIBRARY_PATHS:
+					case PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
 						projectDescription.libraryPaths.lastIndexOf(path)
 					default:
 						-1
@@ -285,7 +285,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 		val paths = projectDescription.resourcePaths
 		val duplicatePaths = getDuplicates(paths)
 		duplicatePaths.forEach [
-			addIssue(getMessageForDUPLICATE_PATH_INTERNAL, projectDescription, PROJECT_DESCRIPTION__RESOURCE_PATHS,
+			addIssue(getMessageForDUPLICATE_PATH_INTERNAL, projectDescription, PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW,
 				paths.lastIndexOf(it.key), DUPLICATE_PATH_INTERNAL)
 		]
 	}
@@ -498,7 +498,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 		if (libraryPaths.size > 1) {
 			val message = getMessageForMULTIPLE_LIBRARY_PATHS
 			val issueCode = MULTIPLE_LIBRARY_PATHS
-			val feature = PROJECT_DESCRIPTION__LIBRARY_PATHS
+			val feature = PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW
 			addIssue(message, projectDescription, feature, 1, issueCode)
 		}
 	}

@@ -278,22 +278,22 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__OUTPUT_PATH_RAW = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 12;
 
 	/**
-	 * The feature id for the '<em><b>Library Paths</b></em>' attribute list.
+	 * The feature id for the '<em><b>Library Paths Raw</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__LIBRARY_PATHS = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 13;
+	int PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 13;
 
 	/**
-	 * The feature id for the '<em><b>Resource Paths</b></em>' attribute list.
+	 * The feature id for the '<em><b>Resource Paths Raw</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__RESOURCE_PATHS = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 14;
+	int PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Source Fragment</b></em>' containment reference list.
@@ -368,13 +368,31 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Library Paths</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION___GET_LIBRARY_PATHS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get Resource Paths</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION___GET_RESOURCE_PATHS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Get All Tested Projects</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 2;
+	int PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get All Init Modules</em>' operation.
@@ -383,7 +401,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 3;
+	int PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get All Implemented Projects</em>' operation.
@@ -392,7 +410,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_IMPLEMENTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 4;
+	int PROJECT_DESCRIPTION___GET_ALL_IMPLEMENTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get All Project Dependencies</em>' operation.
@@ -401,7 +419,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_PROJECT_DEPENDENCIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 5;
+	int PROJECT_DESCRIPTION___GET_ALL_PROJECT_DEPENDENCIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get All Provided Runtime Libraries</em>' operation.
@@ -410,7 +428,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_PROVIDED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 6;
+	int PROJECT_DESCRIPTION___GET_ALL_PROVIDED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get All Required Runtime Libraries</em>' operation.
@@ -419,7 +437,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_ALL_REQUIRED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 7;
+	int PROJECT_DESCRIPTION___GET_ALL_REQUIRED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>Project Description</em>' class.
@@ -428,7 +446,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_OPERATION_COUNT = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 8;
+	int PROJECT_DESCRIPTION_OPERATION_COUNT = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ExecModuleImpl <em>Exec Module</em>}' class.
@@ -1610,26 +1628,26 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getProjectDescription_OutputPathRaw();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPaths <em>Library Paths</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPathsRaw <em>Library Paths Raw</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Library Paths</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPaths()
+	 * @return the meta object for the attribute list '<em>Library Paths Raw</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPathsRaw()
 	 * @see #getProjectDescription()
 	 * @generated
 	 */
-	EAttribute getProjectDescription_LibraryPaths();
+	EAttribute getProjectDescription_LibraryPathsRaw();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePaths <em>Resource Paths</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePathsRaw <em>Resource Paths Raw</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Resource Paths</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getResourcePaths()
+	 * @return the meta object for the attribute list '<em>Resource Paths Raw</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getResourcePathsRaw()
 	 * @see #getProjectDescription()
 	 * @generated
 	 */
-	EAttribute getProjectDescription_ResourcePaths();
+	EAttribute getProjectDescription_ResourcePathsRaw();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceFragment <em>Source Fragment</em>}'.
@@ -1694,6 +1712,26 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getProjectDescription__SetOutputPath__String();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPaths() <em>Get Library Paths</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Library Paths</em>' operation.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPaths()
+	 * @generated
+	 */
+	EOperation getProjectDescription__GetLibraryPaths();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePaths() <em>Get Resource Paths</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Resource Paths</em>' operation.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getResourcePaths()
+	 * @generated
+	 */
+	EOperation getProjectDescription__GetResourcePaths();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getAllTestedProjects() <em>Get All Tested Projects</em>}' operation.
@@ -2554,20 +2592,20 @@ public interface N4mfPackage extends EPackage {
 		EAttribute PROJECT_DESCRIPTION__OUTPUT_PATH_RAW = eINSTANCE.getProjectDescription_OutputPathRaw();
 
 		/**
-		 * The meta object literal for the '<em><b>Library Paths</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Library Paths Raw</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROJECT_DESCRIPTION__LIBRARY_PATHS = eINSTANCE.getProjectDescription_LibraryPaths();
+		EAttribute PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW = eINSTANCE.getProjectDescription_LibraryPathsRaw();
 
 		/**
-		 * The meta object literal for the '<em><b>Resource Paths</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Resource Paths Raw</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROJECT_DESCRIPTION__RESOURCE_PATHS = eINSTANCE.getProjectDescription_ResourcePaths();
+		EAttribute PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW = eINSTANCE.getProjectDescription_ResourcePathsRaw();
 
 		/**
 		 * The meta object literal for the '<em><b>Source Fragment</b></em>' containment reference list feature.
@@ -2616,6 +2654,22 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING = eINSTANCE.getProjectDescription__SetOutputPath__String();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Library Paths</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PROJECT_DESCRIPTION___GET_LIBRARY_PATHS = eINSTANCE.getProjectDescription__GetLibraryPaths();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Resource Paths</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PROJECT_DESCRIPTION___GET_RESOURCE_PATHS = eINSTANCE.getProjectDescription__GetResourcePaths();
 
 		/**
 		 * The meta object literal for the '<em><b>Get All Tested Projects</b></em>' operation.

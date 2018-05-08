@@ -595,9 +595,9 @@ ruleProjectDescription returns [EObject current=null]
 							}
 							(
 								(
-									lv_libraryPaths_34_0=RULE_STRING
+									lv_libraryPathsRaw_34_0=RULE_STRING
 									{
-										newLeafNode(lv_libraryPaths_34_0, grammarAccess.getProjectDescriptionAccess().getLibraryPathsSTRINGTerminalRuleCall_15_2_0());
+										newLeafNode(lv_libraryPathsRaw_34_0, grammarAccess.getProjectDescriptionAccess().getLibraryPathsRawSTRINGTerminalRuleCall_15_2_0());
 									}
 									{
 										if ($current==null) {
@@ -605,8 +605,8 @@ ruleProjectDescription returns [EObject current=null]
 										}
 										addWithLastConsumed(
 											$current,
-											"libraryPaths",
-											lv_libraryPaths_34_0,
+											"libraryPathsRaw",
+											lv_libraryPathsRaw_34_0,
 											"org.eclipse.xtext.common.Terminals.STRING");
 									}
 								)
@@ -618,9 +618,9 @@ ruleProjectDescription returns [EObject current=null]
 								}
 								(
 									(
-										lv_libraryPaths_36_0=RULE_STRING
+										lv_libraryPathsRaw_36_0=RULE_STRING
 										{
-											newLeafNode(lv_libraryPaths_36_0, grammarAccess.getProjectDescriptionAccess().getLibraryPathsSTRINGTerminalRuleCall_15_3_1_0());
+											newLeafNode(lv_libraryPathsRaw_36_0, grammarAccess.getProjectDescriptionAccess().getLibraryPathsRawSTRINGTerminalRuleCall_15_3_1_0());
 										}
 										{
 											if ($current==null) {
@@ -628,8 +628,8 @@ ruleProjectDescription returns [EObject current=null]
 											}
 											addWithLastConsumed(
 												$current,
-												"libraryPaths",
-												lv_libraryPaths_36_0,
+												"libraryPathsRaw",
+												lv_libraryPathsRaw_36_0,
 												"org.eclipse.xtext.common.Terminals.STRING");
 										}
 									)
@@ -660,9 +660,9 @@ ruleProjectDescription returns [EObject current=null]
 							}
 							(
 								(
-									lv_resourcePaths_40_0=RULE_STRING
+									lv_resourcePathsRaw_40_0=RULE_STRING
 									{
-										newLeafNode(lv_resourcePaths_40_0, grammarAccess.getProjectDescriptionAccess().getResourcePathsSTRINGTerminalRuleCall_16_2_0());
+										newLeafNode(lv_resourcePathsRaw_40_0, grammarAccess.getProjectDescriptionAccess().getResourcePathsRawSTRINGTerminalRuleCall_16_2_0());
 									}
 									{
 										if ($current==null) {
@@ -670,8 +670,8 @@ ruleProjectDescription returns [EObject current=null]
 										}
 										addWithLastConsumed(
 											$current,
-											"resourcePaths",
-											lv_resourcePaths_40_0,
+											"resourcePathsRaw",
+											lv_resourcePathsRaw_40_0,
 											"org.eclipse.xtext.common.Terminals.STRING");
 									}
 								)
@@ -683,9 +683,9 @@ ruleProjectDescription returns [EObject current=null]
 								}
 								(
 									(
-										lv_resourcePaths_42_0=RULE_STRING
+										lv_resourcePathsRaw_42_0=RULE_STRING
 										{
-											newLeafNode(lv_resourcePaths_42_0, grammarAccess.getProjectDescriptionAccess().getResourcePathsSTRINGTerminalRuleCall_16_3_1_0());
+											newLeafNode(lv_resourcePathsRaw_42_0, grammarAccess.getProjectDescriptionAccess().getResourcePathsRawSTRINGTerminalRuleCall_16_3_1_0());
 										}
 										{
 											if ($current==null) {
@@ -693,8 +693,8 @@ ruleProjectDescription returns [EObject current=null]
 											}
 											addWithLastConsumed(
 												$current,
-												"resourcePaths",
-												lv_resourcePaths_42_0,
+												"resourcePathsRaw",
+												lv_resourcePathsRaw_42_0,
 												"org.eclipse.xtext.common.Terminals.STRING");
 										}
 									)
@@ -2511,6 +2511,14 @@ ruleProjectType returns [Enumerator current=null]
 			{
 				$current = grammarAccess.getProjectTypeAccess().getTESTEnumLiteralDeclaration_6().getEnumLiteral().getInstance();
 				newLeafNode(enumLiteral_6, grammarAccess.getProjectTypeAccess().getTESTEnumLiteralDeclaration_6());
+			}
+		)
+		    |
+		(
+			enumLiteral_7=Validation
+			{
+				$current = grammarAccess.getProjectTypeAccess().getVALIDATIONEnumLiteralDeclaration_7().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_7, grammarAccess.getProjectTypeAccess().getVALIDATIONEnumLiteralDeclaration_7());
 			}
 		)
 	)

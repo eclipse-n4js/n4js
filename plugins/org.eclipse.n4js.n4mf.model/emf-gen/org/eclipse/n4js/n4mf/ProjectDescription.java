@@ -34,8 +34,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getExecModule <em>Exec Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPaths <em>Library Paths</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePaths <em>Resource Paths</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPathsRaw <em>Library Paths Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePathsRaw <em>Resource Paths Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceFragment <em>Source Fragment</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}</li>
@@ -389,36 +389,36 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	void setOutputPathRaw(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Library Paths</b></em>' attribute list.
+	 * Returns the value of the '<em><b>Library Paths Raw</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Library Paths</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Library Paths Raw</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Library Paths</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_LibraryPaths()
+	 * @return the value of the '<em>Library Paths Raw</em>' attribute list.
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_LibraryPathsRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
-	EList<String> getLibraryPaths();
+	EList<String> getLibraryPathsRaw();
 
 	/**
-	 * Returns the value of the '<em><b>Resource Paths</b></em>' attribute list.
+	 * Returns the value of the '<em><b>Resource Paths Raw</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Resource Paths</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Resource Paths Raw</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Resource Paths</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ResourcePaths()
+	 * @return the value of the '<em>Resource Paths Raw</em>' attribute list.
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ResourcePathsRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
-	EList<String> getResourcePaths();
+	EList<String> getResourcePathsRaw();
 
 	/**
 	 * Returns the value of the '<em><b>Source Fragment</b></em>' containment reference list.
@@ -511,7 +511,7 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; normalizedOutputPath = &lt;%java.nio.file.Paths%&gt;.get(this.getOutputPathRaw()).normalize().toString();\nboolean _isEmpty = normalizedOutputPath.isEmpty();\nif (_isEmpty)\n{\n\tnormalizedOutputPath = \".\";\n}\nreturn normalizedOutputPath;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(this.getOutputPathRaw());'"
 	 * @generated
 	 */
 	String getOutputPath();
@@ -524,6 +524,24 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * @generated
 	 */
 	void setOutputPath(String newOutputPath);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getLibraryPathsRaw(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; paths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _libraryPathsRaw = this.getLibraryPathsRaw();\nfor (final &lt;%java.lang.String%&gt; pathRaw : _libraryPathsRaw)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(pathRaw);\n\t\tpaths.add(normalizedPath);\n\t}\n}\nreturn paths;'"
+	 * @generated
+	 */
+	EList<String> getLibraryPaths();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getResourcePathsRaw(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; paths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _resourcePathsRaw = this.getResourcePathsRaw();\nfor (final &lt;%java.lang.String%&gt; pathRaw : _resourcePathsRaw)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(pathRaw);\n\t\tpaths.add(normalizedPath);\n\t}\n}\nreturn paths;'"
+	 * @generated
+	 */
+	EList<String> getResourcePaths();
 
 	/**
 	 * <!-- begin-user-doc -->

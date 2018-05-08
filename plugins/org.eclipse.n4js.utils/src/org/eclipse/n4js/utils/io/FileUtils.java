@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -306,4 +307,23 @@ public abstract class FileUtils {
 			}
 		}
 	}
+
+	/** @return the normalized version of the given path */
+	public static String normalize(String path) {
+		String normalized = "";
+		if (path != null) {
+			normalized = Paths.get(path).normalize().toString();
+		}
+		return normalized;
+	}
+
+	/** @return @see {@link #normalize(String)}, but iff the normalized path is empty then {@code .} is returned */
+	public static String normalizeDotWhenEmpty(String path) {
+		String normalized = normalize(path);
+		if (normalized.isEmpty()) {
+			normalized = ".";
+		}
+		return normalized;
+	}
+
 }

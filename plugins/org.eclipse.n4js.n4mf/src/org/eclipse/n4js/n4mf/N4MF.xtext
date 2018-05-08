@@ -46,8 +46,8 @@ ProjectDescription:
 
 
 	&	('Output' 			':' outputPathRaw=STRING)?
-	&	('Libraries' 		'{' libraryPaths+=STRING (',' libraryPaths+=STRING)* '}')?
-	&	('Resources' 		'{' resourcePaths+=STRING (',' resourcePaths+=STRING)* '}')?
+	&	('Libraries' 		'{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
+	&	('Resources' 		'{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')?
 	&	('Sources' 			'{' sourceFragment+=SourceFragment+ '}')?
 
 	& 	('ModuleFilters'	'{' moduleFilters+=ModuleFilter+ '}')?

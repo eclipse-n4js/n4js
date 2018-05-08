@@ -117,10 +117,10 @@ public class N4MFParser extends AbstractContentAssistParser {
 					put(grammarAccess.getProjectDescriptionAccess().getInitModulesAssignment_12(), "rule__ProjectDescription__InitModulesAssignment_12");
 					put(grammarAccess.getProjectDescriptionAccess().getExecModuleAssignment_13(), "rule__ProjectDescription__ExecModuleAssignment_13");
 					put(grammarAccess.getProjectDescriptionAccess().getOutputPathRawAssignment_14_2(), "rule__ProjectDescription__OutputPathRawAssignment_14_2");
-					put(grammarAccess.getProjectDescriptionAccess().getLibraryPathsAssignment_15_2(), "rule__ProjectDescription__LibraryPathsAssignment_15_2");
-					put(grammarAccess.getProjectDescriptionAccess().getLibraryPathsAssignment_15_3_1(), "rule__ProjectDescription__LibraryPathsAssignment_15_3_1");
-					put(grammarAccess.getProjectDescriptionAccess().getResourcePathsAssignment_16_2(), "rule__ProjectDescription__ResourcePathsAssignment_16_2");
-					put(grammarAccess.getProjectDescriptionAccess().getResourcePathsAssignment_16_3_1(), "rule__ProjectDescription__ResourcePathsAssignment_16_3_1");
+					put(grammarAccess.getProjectDescriptionAccess().getLibraryPathsRawAssignment_15_2(), "rule__ProjectDescription__LibraryPathsRawAssignment_15_2");
+					put(grammarAccess.getProjectDescriptionAccess().getLibraryPathsRawAssignment_15_3_1(), "rule__ProjectDescription__LibraryPathsRawAssignment_15_3_1");
+					put(grammarAccess.getProjectDescriptionAccess().getResourcePathsRawAssignment_16_2(), "rule__ProjectDescription__ResourcePathsRawAssignment_16_2");
+					put(grammarAccess.getProjectDescriptionAccess().getResourcePathsRawAssignment_16_3_1(), "rule__ProjectDescription__ResourcePathsRawAssignment_16_3_1");
 					put(grammarAccess.getProjectDescriptionAccess().getSourceFragmentAssignment_17_2(), "rule__ProjectDescription__SourceFragmentAssignment_17_2");
 					put(grammarAccess.getProjectDescriptionAccess().getModuleFiltersAssignment_18_2(), "rule__ProjectDescription__ModuleFiltersAssignment_18_2");
 					put(grammarAccess.getProjectDescriptionAccess().getTestedProjectsAssignment_19(), "rule__ProjectDescription__TestedProjectsAssignment_19");

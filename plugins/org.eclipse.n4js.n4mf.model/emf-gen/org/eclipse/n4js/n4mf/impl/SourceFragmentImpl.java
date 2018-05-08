@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4mf.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
-import java.nio.file.Paths;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -31,6 +29,8 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.SourceFragment;
 import org.eclipse.n4js.n4mf.SourceFragmentType;
+
+import org.eclipse.n4js.utils.io.FileUtils;
 
 /**
  * <!-- begin-user-doc -->
@@ -166,11 +166,7 @@ public class SourceFragmentImpl extends MinimalEObjectImpl.Container implements 
 		EList<String> _pathsRaw = this.getPathsRaw();
 		for (final String pathRaw : _pathsRaw) {
 			{
-				String normalizedPath = Paths.get(pathRaw).normalize().toString();
-				boolean _isEmpty = normalizedPath.isEmpty();
-				if (_isEmpty) {
-					normalizedPath = ".";
-				}
+				final String normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
 				paths.add(normalizedPath);
 			}
 		}
