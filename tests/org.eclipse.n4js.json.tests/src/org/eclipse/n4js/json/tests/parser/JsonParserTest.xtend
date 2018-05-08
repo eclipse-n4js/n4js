@@ -14,21 +14,19 @@ import com.google.inject.Inject
 import java.math.BigDecimal
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONBooleanLiteral
-import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONNullLiteral
 import org.eclipse.n4js.json.JSON.JSONNumericLiteral
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.JSON.JSONValue
 import org.eclipse.n4js.json.JSONInjectorProvider
+import org.eclipse.n4js.json.JSONParseHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 
 /**
  * Tests for parsing JSON files.
@@ -37,7 +35,7 @@ import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 @InjectWith(JSONInjectorProvider)
 class JsonParserTest {
 
-	@Inject extension ParseHelper<JSONDocument>
+	@Inject extension JSONParseHelper
 
 	/** Checks that all supported types of value literals are parsed correctly. */
 	@Test def void testPlainValues() {
@@ -144,6 +142,15 @@ class JsonParserTest {
 		'''"	"'''.parseUnsuccessfully; // un-escaped tab in string literal
 		'''"
 		"'''.parseUnsuccessfully // un-escaped linebreak in string literal
+	}
+	
+	@Test def void testComments() {
+		'''//single line comment
+		{"content": 1}'''.parseSuccessfully;
+		
+		'''/* multi
+		line
+		comment*/ {"content" : 2}'''.parseSuccessfully
 	}
 	
 	@Test def void testSimpleObjects() {
@@ -334,24 +341,5 @@ class JsonParserTest {
 		val valuesByName = object.nameValuePairs.toList.toMap([pair | pair.name], [pair | pair.value]);
 		assertTrue("Object " + object + " is expected to have a value for key " + key, valuesByName.keySet.contains(key));
 		return valuesByName.get(key);
-	}
-	
-	/** 
-	 * Asserts that the given {@code json} character sequence can be parsed correctly. Returns the
-	 * resulting {@link JSONDocument} instance.
-	 */
-	protected def JSONDocument parseSuccessfully(CharSequence json) {
-		val doc = json.parse;
-		assertTrue('''"«json»" ''' + doc.eResource.errors.join('\n')[line + ': ' + message], doc.eResource.errors.empty)
-		return doc
-	}
-	
-	/** 
-	 * Asserts that the given {@code json} character sequences cannot be parsed correctly. 
-	 */
-	protected def void parseUnsuccessfully(CharSequence json) {
-		val doc = json.parse;
-		assertFalse('''The following JSON text did not cause any syntax errors as expected: "«json»" ''', 
-			doc.eResource.errors.filter(XtextSyntaxDiagnostic).empty);
 	}
 }

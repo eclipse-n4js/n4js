@@ -70,7 +70,7 @@ public class JSONParser extends AbstractContentAssistParser {
 			
 	@Override
 	protected String[] getInitialHiddenTokens() {
-		return new String[] { "RULE_WS", "RULE_EOL" };
+		return new String[] { "RULE_WS", "RULE_EOL", "RULE_ML_COMMENT", "RULE_SL_COMMENT" };
 	}
 
 	public JSONGrammarAccess getGrammarAccess() {

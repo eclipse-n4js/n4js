@@ -10,20 +10,25 @@
  */
 package org.eclipse.n4js.json.parser.antlr;
 
-import com.google.inject.Inject;
 import org.eclipse.n4js.json.parser.antlr.internal.InternalJSONParser;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.xtext.parser.antlr.AbstractAntlrParser;
 import org.eclipse.xtext.parser.antlr.XtextTokenStream;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
 public class JSONParser extends AbstractAntlrParser {
 
 	@Inject
 	private JSONGrammarAccess grammarAccess;
+	
+	@Inject
+	private Injector injector;
 
 	@Override
 	protected void setInitialHiddenTokens(XtextTokenStream tokenStream) {
-		tokenStream.setInitialHiddenTokens("RULE_WS", "RULE_EOL");
+		tokenStream.setInitialHiddenTokens("RULE_WS", "RULE_EOL", "RULE_ML_COMMENT", "RULE_SL_COMMENT");
 	}
 	
 

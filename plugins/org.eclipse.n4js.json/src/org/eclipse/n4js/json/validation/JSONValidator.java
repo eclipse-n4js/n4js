@@ -8,21 +8,29 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.json.validation.validators;
+package org.eclipse.n4js.json.validation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.json.validation.AbstractResourceDependentJSONValidator;
-import org.eclipse.n4js.json.validation.IssueCodes;
+import org.eclipse.n4js.json.services.JSONGrammarAccess;
+import org.eclipse.n4js.json.validation.validators.PackageJsonValidator;
+import org.eclipse.xtext.TerminalRule;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.ComposedChecks;
+
+import com.google.inject.Inject;
 
 /**
  * This class contains general validation with regard to JSON files. 
@@ -31,6 +39,13 @@ import org.eclipse.xtext.validation.ComposedChecks;
 	PackageJsonValidator.class
 })
 public class JSONValidator extends AbstractResourceDependentJSONValidator {
+	
+	@Inject
+	JSONGrammarAccess grammarAccess;
+
+	JSONValidator() {
+		super();
+	}
 	
 	/**
 	 * Checks for duplicate keys in {@link JSONObject}s.
@@ -49,5 +64,32 @@ public class JSONValidator extends AbstractResourceDependentJSONValidator {
 			}
 			values.put(pair.getName(), pair.getValue());
 		}
+	}
+	
+
+	/** 
+	 * Checks the document for comments (single or multi-line) which are not valid JSON constructs
+	 * but accepted by our parser. */
+	@Check
+	public void checkDocumentForComments(JSONDocument document) {
+		ICompositeNode documentNode = NodeModelUtils.findActualNodeFor(document);
+		ICompositeNode rootNode = documentNode.getRootNode();
+		
+		StreamSupport.stream(rootNode.getAsTreeIterable().spliterator(), false)
+			.filter(n -> n instanceof HiddenLeafNode)
+			.filter(n -> isCommentNode(n))
+			.forEach(n -> {
+				addIssue(IssueCodes.getMessageForJSON_COMMENT_UNSUPPORTED(), document, n.getOffset(), 
+						n.getLength(), IssueCodes.JSON_COMMENT_UNSUPPORTED);
+			});
+	}
+	
+	private boolean isCommentNode(INode node) {
+		EObject grammarElement = node.getGrammarElement();
+		if (grammarElement instanceof TerminalRule) {
+			return ((TerminalRule) grammarElement).getName().equals(grammarAccess.getSL_COMMENTRule().getName())
+					|| ((TerminalRule) grammarElement).getName().equals(grammarAccess.getML_COMMENTRule().getName());
+		}
+		return false;
 	}
 }

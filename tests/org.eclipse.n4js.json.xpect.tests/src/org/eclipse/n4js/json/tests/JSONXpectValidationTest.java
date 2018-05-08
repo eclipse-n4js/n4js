@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.json.tests;
 
+import org.eclipse.n4js.json.validation.suppression.JSONSuppressIssuesSetup;
+import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
 import org.eclipse.xpect.runner.XpectTestFiles;
@@ -24,6 +26,7 @@ import org.junit.runner.RunWith;
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect", fileExtensions = { "xt" })
+@XpectImport({ JSONSuppressIssuesSetup.class })
 public class JSONXpectValidationTest {
 	// nothing more required
 }

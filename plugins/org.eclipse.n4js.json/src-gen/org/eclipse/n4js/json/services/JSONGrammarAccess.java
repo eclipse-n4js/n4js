@@ -356,6 +356,8 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	private final TerminalRule tSIGNED_INT;
 	private final TerminalRule tWS;
 	private final TerminalRule tEOL;
+	private final TerminalRule tML_COMMENT;
+	private final TerminalRule tSL_COMMENT;
 	
 	private final Grammar grammar;
 	
@@ -386,6 +388,8 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 		this.tSIGNED_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.SIGNED_INT");
 		this.tWS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.WS");
 		this.tEOL = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.EOL");
+		this.tML_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.ML_COMMENT");
+		this.tSL_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.SL_COMMENT");
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -579,6 +583,18 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	//	LINE_TERMINATOR_SEQUENCE_FRAGMENT;
 	public TerminalRule getEOLRule() {
 		return tEOL;
+	}
+	
+	//terminal ML_COMMENT:
+	//	ML_COMMENT_FRAGMENT;
+	public TerminalRule getML_COMMENTRule() {
+		return tML_COMMENT;
+	}
+	
+	//terminal SL_COMMENT:
+	//	'//' !LINE_TERMINATOR_FRAGMENT*;
+	public TerminalRule getSL_COMMENTRule() {
+		return tSL_COMMENT;
 	}
 	
 	//terminal fragment HEX_DIGIT:

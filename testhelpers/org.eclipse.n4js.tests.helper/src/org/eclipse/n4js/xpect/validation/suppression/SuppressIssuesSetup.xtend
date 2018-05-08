@@ -45,9 +45,7 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.TestingResour
 @XpectImport( #[SuppressIssuesSetupRoot])
 class SuppressIssuesSetup extends IssuesByLineProvider {
 
-	private final Collection<String> suppressedIssueCodes = new ArrayList<String>(
-		N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS
-	);
+	private final Collection<String> suppressedIssueCodes = new ArrayList<String>(this.defaultSuppressedIssueCodes);
 	private Multimap<IRegion, Issue> issuesByLine = null;
 
 	/**
@@ -87,6 +85,13 @@ class SuppressIssuesSetup extends IssuesByLineProvider {
 			}
 		}
 	}
+	
+	/**
+	 * Returns the list of issue codes that are suppressed by default.
+	 */
+	protected def Collection<String> getDefaultSuppressedIssueCodes() {
+		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
+	}
 
 	/*
 	 * Override this method to remove suppressed issues from the
@@ -102,7 +107,7 @@ class SuppressIssuesSetup extends IssuesByLineProvider {
 
 	/*
 	 * Override this method to additionally filter the issue by line mapping.
-	 * This is required, since many xpect methods obtain their list of issues by a IssuesByLine parameter.
+	 * This is required, since many xpect methods obtain their list of issues by an IssuesByLine parameter.
 	 */
 	@Creates(IssuesByLine)
 	override collectIssuesByLine() {

@@ -12,7 +12,13 @@
 /* XPECT_SETUP org.eclipse.n4js.json.tests.JSONXpectValidationTest END_SETUP  */
 {
 	"a": 1,
-	"b": 2
-	// XPECT errors --> "" at ""
-	"a": "str"
+	"b": 2,
+	// Duplicate key is detected by validation XPECT warnings --> "Property a duplicates property a (line 14)." at ""a""
+	"a": "str",
+	"nested": {
+		// Differently nested key is not detected as duplicate XPECT noerrors
+		"a" : "not a duplicate",
+		// Differently nested key is not detected as duplicate XPECT noerrors
+		"b" : ["not a duplicate", 12]
+	}
 }

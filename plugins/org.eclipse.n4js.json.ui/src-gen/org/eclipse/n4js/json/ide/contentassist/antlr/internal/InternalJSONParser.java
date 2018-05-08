@@ -33,44 +33,46 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalJSONParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_STRING", "RULE_NUMBER", "RULE_DOUBLE", "RULE_INT", "RULE_DOUBLE_STRING_CHAR", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_EXPONENT_PART", "RULE_SIGNED_INT", "RULE_WHITESPACE_FRAGMENT", "RULE_WS", "RULE_EOL", "RULE_HEX_DIGIT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_ANY_OTHER", "'false'", "'{'", "'}'", "','", "':'", "'['", "']'", "'null'", "'true'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_STRING", "RULE_NUMBER", "RULE_DOUBLE", "RULE_INT", "RULE_DOUBLE_STRING_CHAR", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_EXPONENT_PART", "RULE_SIGNED_INT", "RULE_WHITESPACE_FRAGMENT", "RULE_WS", "RULE_EOL", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_HEX_DIGIT", "RULE_ZWJ", "RULE_ZWNJ", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_ANY_OTHER", "'false'", "'{'", "'}'", "','", "':'", "'['", "']'", "'null'", "'true'"
     };
-    public static final int RULE_ML_COMMENT_FRAGMENT=24;
+    public static final int RULE_ML_COMMENT_FRAGMENT=18;
     public static final int RULE_STRING=4;
     public static final int RULE_EXPONENT_PART=13;
-    public static final int RULE_ZWJ=19;
-    public static final int RULE_SL_COMMENT_FRAGMENT=23;
+    public static final int RULE_SL_COMMENT=20;
+    public static final int RULE_ZWJ=22;
+    public static final int RULE_SL_COMMENT_FRAGMENT=26;
     public static final int RULE_WHITESPACE_FRAGMENT=15;
-    public static final int RULE_UNICODE_DIGIT_FRAGMENT=26;
+    public static final int RULE_UNICODE_DIGIT_FRAGMENT=28;
     public static final int T__37=37;
     public static final int RULE_DOUBLE=6;
     public static final int T__38=38;
+    public static final int T__39=39;
     public static final int T__33=33;
-    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=22;
+    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=25;
     public static final int T__34=34;
     public static final int T__35=35;
     public static final int T__36=36;
     public static final int EOF=-1;
-    public static final int T__30=30;
-    public static final int T__31=31;
     public static final int T__32=32;
     public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=10;
     public static final int RULE_WS=16;
     public static final int RULE_EOL=17;
-    public static final int RULE_BOM=21;
+    public static final int RULE_BOM=24;
     public static final int RULE_SIGNED_INT=14;
-    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=25;
-    public static final int RULE_ANY_OTHER=29;
+    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=27;
+    public static final int RULE_ANY_OTHER=31;
     public static final int RULE_DOUBLE_STRING_CHAR=8;
     public static final int RULE_NUMBER=5;
     public static final int RULE_LINE_TERMINATOR_FRAGMENT=9;
-    public static final int RULE_ZWNJ=20;
-    public static final int RULE_UNICODE_LETTER_FRAGMENT=28;
+    public static final int RULE_ZWNJ=23;
+    public static final int RULE_UNICODE_LETTER_FRAGMENT=30;
     public static final int RULE_DECIMAL_DIGIT_FRAGMENT=12;
     public static final int RULE_INT=7;
+    public static final int RULE_ML_COMMENT=19;
     public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=11;
-    public static final int RULE_HEX_DIGIT=18;
-    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=27;
+    public static final int RULE_HEX_DIGIT=21;
+    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=29;
+    public static final int T__40=40;
 
     // delegates
     // delegators
@@ -883,13 +885,13 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             int alt1=2;
             int LA1_0 = input.LA(1);
 
-            if ( (LA1_0==31) ) {
+            if ( (LA1_0==33) ) {
                 int LA1_1 = input.LA(2);
 
                 if ( (LA1_1==RULE_STRING) ) {
                     alt1=1;
                 }
-                else if ( (LA1_1==32) ) {
+                else if ( (LA1_1==34) ) {
                     alt1=2;
                 }
                 else {
@@ -994,13 +996,13 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             int alt2=2;
             int LA2_0 = input.LA(1);
 
-            if ( (LA2_0==35) ) {
+            if ( (LA2_0==37) ) {
                 int LA2_1 = input.LA(2);
 
-                if ( (LA2_1==36) ) {
+                if ( (LA2_1==38) ) {
                     alt2=2;
                 }
-                else if ( ((LA2_1>=RULE_STRING && LA2_1<=RULE_NUMBER)||(LA2_1>=30 && LA2_1<=31)||LA2_1==35||(LA2_1>=37 && LA2_1<=38)) ) {
+                else if ( ((LA2_1>=RULE_STRING && LA2_1<=RULE_NUMBER)||(LA2_1>=32 && LA2_1<=33)||LA2_1==37||(LA2_1>=39 && LA2_1<=40)) ) {
                     alt2=1;
                 }
                 else {
@@ -1104,12 +1106,12 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             // InternalJSON.g:331:1: ( ( ruleJSONObject ) | ( ruleJSONArray ) | ( ruleJSONStringLiteral ) | ( ruleJSONNumericLiteral ) | ( ruleJSONNullLiteral ) | ( ruleJSONBooleanLiteral ) )
             int alt3=6;
             switch ( input.LA(1) ) {
-            case 31:
+            case 33:
                 {
                 alt3=1;
                 }
                 break;
-            case 35:
+            case 37:
                 {
                 alt3=2;
                 }
@@ -1124,13 +1126,13 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
                 alt3=4;
                 }
                 break;
-            case 37:
+            case 39:
                 {
                 alt3=5;
                 }
                 break;
-            case 30:
-            case 38:
+            case 32:
+            case 40:
                 {
                 alt3=6;
                 }
@@ -1310,10 +1312,10 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             int alt4=2;
             int LA4_0 = input.LA(1);
 
-            if ( (LA4_0==38) ) {
+            if ( (LA4_0==40) ) {
                 alt4=1;
             }
-            else if ( (LA4_0==30) ) {
+            else if ( (LA4_0==32) ) {
                 alt4=2;
             }
             else {
@@ -1362,7 +1364,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getJSONBooleanLiteralAccess().getFalseKeyword_1_1()); 
                     }
-                    match(input,30,FOLLOW_2); if (state.failed) return ;
+                    match(input,32,FOLLOW_2); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
                        after(grammarAccess.getJSONBooleanLiteralAccess().getFalseKeyword_1_1()); 
                     }
@@ -1521,7 +1523,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             int alt5=2;
             int LA5_0 = input.LA(1);
 
-            if ( ((LA5_0>=RULE_STRING && LA5_0<=RULE_NUMBER)||(LA5_0>=30 && LA5_0<=31)||LA5_0==35||(LA5_0>=37 && LA5_0<=38)) ) {
+            if ( ((LA5_0>=RULE_STRING && LA5_0<=RULE_NUMBER)||(LA5_0>=32 && LA5_0<=33)||LA5_0==37||(LA5_0>=39 && LA5_0<=40)) ) {
                 alt5=1;
             }
             switch (alt5) {
@@ -1617,7 +1619,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_0_0()); 
             }
-            match(input,31,FOLLOW_2); if (state.failed) return ;
+            match(input,33,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_0_0()); 
             }
@@ -1791,7 +1793,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
                 int alt6=2;
                 int LA6_0 = input.LA(1);
 
-                if ( (LA6_0==33) ) {
+                if ( (LA6_0==35) ) {
                     alt6=1;
                 }
 
@@ -1887,7 +1889,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_0_3()); 
             }
-            match(input,32,FOLLOW_2); if (state.failed) return ;
+            match(input,34,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_0_3()); 
             }
@@ -1966,7 +1968,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getCommaKeyword_0_2_0()); 
             }
-            match(input,33,FOLLOW_2); if (state.failed) return ;
+            match(input,35,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getCommaKeyword_0_2_0()); 
             }
@@ -2208,7 +2210,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_1_1()); 
             }
-            match(input,31,FOLLOW_2); if (state.failed) return ;
+            match(input,33,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_1_1()); 
             }
@@ -2282,7 +2284,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_1_2()); 
             }
-            match(input,32,FOLLOW_2); if (state.failed) return ;
+            match(input,34,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_1_2()); 
             }
@@ -2450,7 +2452,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getNameValuePairAccess().getColonKeyword_1()); 
             }
-            match(input,34,FOLLOW_2); if (state.failed) return ;
+            match(input,36,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getNameValuePairAccess().getColonKeyword_1()); 
             }
@@ -2613,7 +2615,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_0_0()); 
             }
-            match(input,35,FOLLOW_2); if (state.failed) return ;
+            match(input,37,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_0_0()); 
             }
@@ -2787,7 +2789,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
                 int alt7=2;
                 int LA7_0 = input.LA(1);
 
-                if ( (LA7_0==33) ) {
+                if ( (LA7_0==35) ) {
                     alt7=1;
                 }
 
@@ -2883,7 +2885,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_0_3()); 
             }
-            match(input,36,FOLLOW_2); if (state.failed) return ;
+            match(input,38,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_0_3()); 
             }
@@ -2962,7 +2964,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getCommaKeyword_0_2_0()); 
             }
-            match(input,33,FOLLOW_2); if (state.failed) return ;
+            match(input,35,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getCommaKeyword_0_2_0()); 
             }
@@ -3204,7 +3206,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_1_1()); 
             }
-            match(input,35,FOLLOW_2); if (state.failed) return ;
+            match(input,37,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_1_1()); 
             }
@@ -3278,7 +3280,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_1_2()); 
             }
-            match(input,36,FOLLOW_2); if (state.failed) return ;
+            match(input,38,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_1_2()); 
             }
@@ -3594,7 +3596,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONNullLiteralAccess().getNullKeyword_1()); 
             }
-            match(input,37,FOLLOW_2); if (state.failed) return ;
+            match(input,39,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONNullLiteralAccess().getNullKeyword_1()); 
             }
@@ -4034,7 +4036,7 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getJSONBooleanLiteralAccess().getBooleanValueTrueKeyword_1_0_0()); 
             }
-            match(input,38,FOLLOW_2); if (state.failed) return ;
+            match(input,40,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
                after(grammarAccess.getJSONBooleanLiteralAccess().getBooleanValueTrueKeyword_1_0_0()); 
             }
@@ -4071,16 +4073,16 @@ public class InternalJSONParser extends AbstractInternalContentAssistParser {
 
     public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x00000068C0000030L});
+    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x000001A300000030L});
     public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000300000000L});
-    public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000200000002L});
-    public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000000100000000L});
-    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0000001200000000L});
-    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000800000000L});
-    public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000001000000000L});
-    public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000002000000000L});
+    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000C00000000L});
+    public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000800000002L});
+    public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000200000000L});
+    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000000400000000L});
+    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000001000000000L});
+    public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0000004800000000L});
+    public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000002000000000L});
+    public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000004000000000L});
+    public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000008000000000L});
 
 }
