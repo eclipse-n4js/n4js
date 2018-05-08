@@ -38,6 +38,9 @@ import com.google.inject.Singleton;
  * Only differences to super class method are that a {@link N4JSResourceDescription} is created as well the call to
  * getCache() instead of directly accessing the property cache. The cast to {@link N4JSResourceDescriptionStrategy} is
  * only a double check that the correct resource description strategy is bound in the runtime module.
+ *
+ * Furthermore, this manager implementation configures an N4JS specific
+ * {@link org.eclipse.xtext.resource.IResourceDescription.Delta} implementation to customize the builder behavior.
  */
 @Singleton
 public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDescriptionManager implements N4Scheme {
@@ -71,6 +74,11 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 				return lookup;
 			}
 		};
+	}
+
+	@Override
+	public Delta createDelta(IResourceDescription oldDescription, IResourceDescription newDescription) {
+		return new N4JSResourceDescriptionDelta(oldDescription, newDescription);
 	}
 
 	/**

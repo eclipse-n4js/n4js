@@ -12,10 +12,14 @@ package org.eclipse.n4js
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import java.util.List
+import java.util.stream.Collectors
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.testing.InjectWith
@@ -48,15 +52,29 @@ public class AbstractN4JSTest extends Assert {
 
 
 	/**
-	 * Creates a new N4JSResource inside a newly created resource set for the given URI. The resource returned is not
-	 * loaded yet.
+	 * Creates a new N4JSResource for the given URI inside a newly created {@link  ResourceSet}.
+	 *  
+	 * The returned resource is not loaded yet.
 	 */
 	def protected N4JSResource createFromFile(URI uri) {
-		val resSet = resourceSetProvider.get();
-		val resURI = resSet.URIConverter.normalize(uri);
-		val res = resSet.createResource(resURI) as N4JSResource;
-		return res;
+		return createFromFiles(uri).head;
 	}
+
+	/**
+	 * Creates a new N4JSResource for each of the given URIs inside the same, newly created {@link ResourceSet}.
+	 *  
+	 * The returned resources are not loaded yet.
+	 */
+	def protected List<N4JSResource> createFromFiles(URI... uris) {
+		val resSet = resourceSetProvider.get();
+		val resources = uris.stream.map[u |
+			val normalizedURI = resSet.URIConverter.normalize(u);
+			return resSet.createResource(normalizedURI) as N4JSResource;
+		].collect(Collectors.toList) // eagerly collect created resources
+		
+		return resources;
+	}
+
 
 	/**
 	 * Creates and loads a new N4JSResource inside a newly created resource set for the given URI. The resource returned
@@ -81,34 +99,86 @@ public class AbstractN4JSTest extends Assert {
 		res.contents; // trigger installation of derived state (i.e. types builder), so that it is in same state as when using org.eclipse.xtext.testing.util.ParseHelper#parse(CharSequence)
 		return res;
 	}
-
+	
 	/**
-	 * Simulates loading the resource for the given URI from the index, inside a newly created resource set.
+	 * Simulates re-loading the resource with the given URI
+	 * from the index.
+	 * 
+	 * @See #loadFromDescriptions(URI...)
 	 */
 	def protected N4JSResource loadFromDescription(URI uri) {
+		return loadFromDescriptions(uri).head;
+	}
+	
+	/**
+	 * Simulates loading resources for the given URIs, serializing them
+	 * into the index, unloading them, reloading them from index and returning
+	 * the resulting reloaded resources.
+	 * 
+	 * During the execution this method also asserts that no validation 
+	 * issues can be detected. 
+	 * 
+	 * This method triggers the reconciliation of the {@link TModule} instances 
+	 * that can be deserialized from the index.
+	 */
+	def protected List<N4JSResource> loadFromDescriptions(URI... uris) {
+		// early exit, if no URIs are given
+		if (uris.empty) {
+			return #[];
+		}
+		
 		// load normally
-		val res = parseFromFile(uri);
-		val resURI = res.URI;
-		val resSet = res.resourceSet;
+		val resources = createFromFiles(uris);
+		
+		resources.forEach[res |
+			// trigger installation of derived state (i.e. types builder), so that 
+			// it is in same state as when using org.eclipse.xtext.testing.util.ParseHelper#parse(CharSequence) 
+			res.load(emptyMap);
+			res.contents;
+			
+			// perform post processing
+			res.performPostProcessing
+		]
+		
+		// obtain common resource set
+		val resSet = resources.head.resourceSet;
 
-		// force serialization into index
-		val resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(res);
-		assertFalse("index has not been filled", resourceDescriptions.allResourceDescriptions.empty);
-		val resDesc = resourceDescriptions.getResourceDescription(resURI);
-		resDesc.exportedObjects.head.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT); // trigger actual serialization into index
+		// obtain descriptions of all resources
+		val descriptions = resources.stream.map[ res |
+			// ensure that there are no validation errors
+			res.assertNoErrors
+			
+			val uri = res.URI
+			
+			// force serialization into index
+			val resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(res);
+			assertFalse("index has not been filled", resourceDescriptions.allResourceDescriptions.empty);
+			val description = resourceDescriptions.getResourceDescription(uri);
+			description.exportedObjects.head.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT); // trigger actual serialization into index
+			
+			// ensure that the resource is in the expected state
+			assertTrue(res.fullyInitialized);
+			assertTrue(res.fullyProcessed);
+			
+			return description;
+		].collect(Collectors.toList) // eagerly collect resource descriptions
 
-		assertTrue(res.fullyInitialized);
-		assertTrue(res.fullyProcessed);
-
-		// remove from resource set
-		res.unload();
-		resSet.resources.remove(res);
-
-		// now re-load from index
-		val resFromIndex = n4jsCore.loadModuleFromIndex(resSet, resDesc, false).eResource as N4JSResource;
-		assertTrue(resFromIndex.script.eIsProxy);
-		assertFalse(resFromIndex.module.eIsProxy);
-
-		return resFromIndex;
+		// unload and remove all resources
+		resources.forEach[res | 
+			res.unload();
+			resSet.resources.remove(res);
+		]
+		
+		// re-load all resources from index
+		val reloadedResources = descriptions.stream.map[resDesc |
+			val resFromIndex = n4jsCore.loadModuleFromIndex(resSet, resDesc, false).eResource as N4JSResource;
+			
+			assertTrue(resFromIndex.script.eIsProxy);
+			assertFalse(resFromIndex.module.eIsProxy);
+			
+			return resFromIndex;
+		].collect(Collectors.toList) // eagerly collect re-loaded resources
+		
+		return reloadedResources;
 	}
 }
