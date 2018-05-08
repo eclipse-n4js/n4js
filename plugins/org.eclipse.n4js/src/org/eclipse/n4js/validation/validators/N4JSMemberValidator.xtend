@@ -31,10 +31,12 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -507,6 +509,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private def internalCheckDuplicateFieldsIn(TClass tclass, ThisTypeRefStructural thisTypeRefStructural) {
+		val structFieldInitMode = thisTypeRefStructural.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val members = LazyOverrideAwareMemberCollector.collectAllMembers(tclass)
 		val membersByNameAndStatic = members.groupBy[Tuples.pair(name, static)];
 		val structuralMembersByNameAndStatic = thisTypeRefStructural.structuralMembers.groupBy [
@@ -515,7 +518,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		structuralMembersByNameAndStatic.keySet.forEach [
 			if (membersByNameAndStatic.containsKey(it)) {
 				val structuralFieldDuplicate = structuralMembersByNameAndStatic.get(it).head
-				val existingClassifierMember = membersByNameAndStatic.get(it).head
+				val existingClassifierMember = membersByNameAndStatic.get(it).headExceptNonExistantGetters(structFieldInitMode)
 				if (existingClassifierMember?.memberAccessModifier == MemberAccessModifier.PUBLIC) {
 					val message = getMessageForCLF_DUP_MEMBER(structuralFieldDuplicate.descriptionWithLine,
 						existingClassifierMember.descriptionWithLine);
@@ -525,6 +528,13 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 		]
+	}
+
+	private def TMember headExceptNonExistantGetters(Iterable<? extends TMember> members, boolean structFieldInitMode) {
+		if (structFieldInitMode) {
+			return members.filter[!(it instanceof TGetter)].head;
+		}
+		return members.head;
 	}
 
 	/**
