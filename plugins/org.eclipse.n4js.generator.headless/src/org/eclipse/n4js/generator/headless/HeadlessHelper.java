@@ -27,6 +27,7 @@ import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.n4mf.utils.parsing.ProjectDescriptionProviderUtil;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.collect.Sets;
 
@@ -64,13 +65,14 @@ public class HeadlessHelper {
 		// TODO GH-783 refactor FileBasedWorkspace, https://github.com/eclipse/n4js/issues/783
 		// this is reverse mapping of the one that is kept in the workspace
 		Map<String, URI> registeredProjects = new HashMap<>();
-		n4jsFileBasedWorkspace.getAllProjectsLocations().forEachRemaining(u -> {
-			String projectID = n4jsFileBasedWorkspace.getProjectDescription(u).getProjectId();
-			registeredProjects.put(projectID, u);
+		n4jsFileBasedWorkspace.getAllProjectsLocations().forEachRemaining(uri -> {
+			String projectID = n4jsFileBasedWorkspace.getProjectDescription(uri).getProjectId();
+			registeredProjects.put(projectID, URIUtils.normalize(uri));
 		});
 
 		// Register all projects with the file based workspace.
-		for (URI projectURI : projectURIs) {
+		for (URI uri : projectURIs) {
+			URI projectURI = URIUtils.normalize(uri);
 
 			File root = new File(projectURI.toFileString());
 			File manifest = new File(root, IN4JSProject.N4MF_MANIFEST);

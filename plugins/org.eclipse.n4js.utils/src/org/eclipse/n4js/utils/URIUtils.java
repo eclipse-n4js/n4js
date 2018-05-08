@@ -90,14 +90,22 @@ public class URIUtils {
 			File file = new File(fileString);
 			Path path = file.toPath();
 			try {
-				Path realPath = path.toRealPath();
-				return realPath.toString();
+				String result = path.toRealPath().toFile().toURI().toString();
+				if (result.endsWith("/"))
+					result = result.substring(0, result.length() - 1);
+				return result;
 			} catch (IOException e) {
+				// this will not contain leading "file:"
 				return fileString;
 			}
 		} else {
 			String string = uri.toString();
 			return string;
 		}
+	}
+
+	/** Creates new URI from the provided one, with symlinks resolved. */
+	static public org.eclipse.emf.common.util.URI normalize(org.eclipse.emf.common.util.URI uri) {
+		return URI.createURI(toString(uri));
 	}
 }
