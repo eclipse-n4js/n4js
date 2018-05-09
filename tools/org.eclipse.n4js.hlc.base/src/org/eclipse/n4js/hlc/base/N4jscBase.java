@@ -390,7 +390,7 @@ public class N4jscBase implements IApplication {
 				}
 			}
 			if (!sj.toString().isEmpty()) {
-				System.out.println(
+				System.err.println(
 						"These source files or projects are invalid (neither file nor directory): " + sj.toString());
 				throw new ExitCodeException(ErrorExitCode.EXITCODE_SRCFILES_INVALID);
 			}
