@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.ModuleFilterType
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceFragment
 import org.eclipse.n4js.n4mf.utils.IPathProvider
 import org.eclipse.xtext.EcoreUtil2
@@ -154,6 +155,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 
 	def checkForDuplicatePaths(Object pathContainer, ProjectDescription projectDescription,
 		Map<Object, List<String>> paths) {
+
 		val pathToContainer = <String, List<Object>>newHashMap
 		paths.entrySet.map[value -> key].forEach(
 			e |
@@ -182,7 +184,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 						it
 				}
 			]
-			if (!duplicatePlaces.empty) {
+			if (!duplicatePlaces.empty && !isSourcesAndOutputDuplicate(feature, duplicatePlaces)) {
 				val message = getMessageForDUPLICATE_PATH(duplicatePlaces.map[toString].sort.join(", "))
 
 				val index = getIndex(pathContainer, projectDescription, duplicatePath)
@@ -193,6 +195,17 @@ class N4MFValidator extends AbstractN4MFValidator {
 				}
 			}
 		}
+	}
+
+	private def boolean isSourcesAndOutputDuplicate(EAttribute feature, Iterable<Object> duplicatePlaces) {
+		val placesHasOutput = !duplicatePlaces.filter["Output".equals(it)].isEmpty;
+		val placesHasSTE = !duplicatePlaces.filter["SOURCE".equals(it) || "TEST".equals(it) || "EXTERNAL".equals(it)].isEmpty;
+
+		if (placesHasSTE && feature.name == "outputPathRaw")
+			return true;
+		if (placesHasOutput && feature.name == "pathsRaw")
+			return true;
+		return false;
 	}
 
 	private def getContainer(Object pathContainer, ProjectDescription projectDescription) {
@@ -250,7 +263,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 	@Check
 	def void checkOutputFolder(ProjectDescription projectDescription) {
 		val outputPathName = projectDescription.outputPath;
-		if (outputPathName === null) {
+		if (projectDescription.projectType === ProjectType.VALIDATION || outputPathName === null) {
 			return;
 		}
 

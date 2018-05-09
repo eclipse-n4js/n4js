@@ -217,12 +217,14 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
 		if (project !== null) {
 			val outputPathName = project.getOutputPath();
-			val resourceLocation = n4jsSourceURI.toString();
-			val pl = project.getLocation();
-			val prjRelOutputLocation = Paths.get(pl.toString(), outputPathName).toString();
-			val resourceInOutput = resourceLocation.startsWith(prjRelOutputLocation);
-			if (resourceInOutput) {
-				return false;
+			if (outputPathName !== null) {
+				val resourceLocation = n4jsSourceURI.toString();
+				val pl = project.getLocation();
+				val prjRelOutputLocation = Paths.get(pl.toString(), outputPathName).toString();
+				val resourceInOutput = resourceLocation.startsWith(prjRelOutputLocation);
+				if (resourceInOutput) {
+					return false;
+				}
 			}
 		}
 		return true;
