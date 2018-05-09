@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 		ValidationTest.class
 })
 @RunWith(XpectRunner.class)
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect", fileExtensions = { "xt" })
+@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect/validation", fileExtensions = { "xt" })
 @XpectImport({ JSONSuppressIssuesSetup.class })
 public class JSONXpectValidationTest {
 	// nothing more required
