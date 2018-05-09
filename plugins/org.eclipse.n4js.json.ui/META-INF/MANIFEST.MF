@@ -17,7 +17,9 @@ Require-Bundle: org.eclipse.n4js.json,
  org.eclipse.xtend.lib;resolution:=optional,
  org.eclipse.xtext.xbase.lib;bundle-version="2.13.0",
  org.antlr.runtime,
- org.eclipse.n4js.ui
+ org.eclipse.n4js.ui,
+ org.eclipse.jface.text,
+ org.eclipse.n4js.json.model
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.n4js.json.ui

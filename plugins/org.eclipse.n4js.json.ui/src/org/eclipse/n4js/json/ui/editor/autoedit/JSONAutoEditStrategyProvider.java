@@ -1,16 +1,23 @@
 package org.eclipse.n4js.json.ui.editor.autoedit;
 
-import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
+import org.eclipse.xtext.ui.editor.autoedit.DefaultAutoEditStrategyProvider;
 
 /**
- * This class configures the auto-edit strategy used in our JSON editor 
+ * This class configures the auto-edit strategy used in the JSON editor 
  * (e.g. automatic opening/closing of squared brackets).
  */
-public class JSONAutoEditStrategyProvider extends AbstractEditStrategyProvider {
-
+public class JSONAutoEditStrategyProvider extends DefaultAutoEditStrategyProvider {
 	@Override
-	protected void configure(IEditStrategyAcceptor iEditStrategyAcceptor) {
-		// do not configure an auto-edit strategy for now (investigate doing this later for squared brackets and curly braces)
+	protected void configure(IEditStrategyAcceptor acceptor) {
+		/*
+		 * Almost the default configuration but omits auto-edit 
+		 * behavior for parenthesis characters. 
+		 */
+		configureIndentationEditStrategy(acceptor);
+		configureStringLiteral(acceptor);
+		configureSquareBrackets(acceptor);
+		configureCurlyBracesBlock(acceptor);
+		configureMultilineComments(acceptor);
+		configureCompoundBracesBlocks(acceptor);
 	}
-
 }
