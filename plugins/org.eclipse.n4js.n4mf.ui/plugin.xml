@@ -329,7 +329,7 @@ Contributors:
       <wizard
             category="org.eclipse.wizards"
             class="org.eclipse.n4js.n4mf.ui.N4MFExecutableExtensionFactory:org.eclipse.n4js.n4mf.ui.wizard.SimpleN4MFNewProjectWizard"
-            icon="icons/newprj_wiz.gif"
+            icon="icons/newprj_wiz.png"
             id="org.eclipse.n4js.n4mf.ui.wizard.N4MFNewProjectWizard"
             name="N4JS Project"
             project="true">

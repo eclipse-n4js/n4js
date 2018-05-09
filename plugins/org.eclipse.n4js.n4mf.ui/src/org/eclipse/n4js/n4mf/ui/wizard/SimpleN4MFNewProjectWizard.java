@@ -30,7 +30,7 @@ import com.google.inject.Inject;
  */
 public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.XtextNewProjectWizard {
 
-	private static final String FILE_PATH = "icons/newprj_wiz.png";
+	private static final String FILE_PATH = "icons/newprj_wizban.png";
 	private static final String PLUGIN_ID = N4MFActivator.getInstance().getBundle().getSymbolicName();
 	private static final ImageDescriptor NEW_PROJECT_WIZBAN_DESC = imageDescriptorFromPlugin(PLUGIN_ID, FILE_PATH);
 
