@@ -85,23 +85,23 @@ public class URIUtils {
 	 * @return true iff the given {@link URI}s are equal
 	 */
 	static public String toString(org.eclipse.emf.common.util.URI uri) {
+		String result = uri.toString();
+
 		if (uri.isFile()) {
 			String fileString = uri.toFileString();
 			File file = new File(fileString);
 			Path path = file.toPath();
 			try {
-				String result = path.toRealPath().toFile().toURI().toString();
-				if (result.endsWith("/"))
-					result = result.substring(0, result.length() - 1);
-				return result;
+				String newResult = path.toRealPath().toFile().toURI().toString();
+				if (newResult.endsWith("/"))
+					newResult = newResult.substring(0, newResult.length() - 1);
+				result = newResult;
 			} catch (IOException e) {
-				// this will not contain leading "file:"
-				return fileString;
+				// conversion unsuccessful, return original
 			}
-		} else {
-			String string = uri.toString();
-			return string;
 		}
+
+		return result;
 	}
 
 	/** Creates new URI from the provided one, with symlinks resolved. */
