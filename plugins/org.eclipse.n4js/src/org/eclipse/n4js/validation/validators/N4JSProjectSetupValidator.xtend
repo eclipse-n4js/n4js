@@ -74,6 +74,8 @@ import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.n4mf.SourceFragment
+import org.eclipse.core.runtime.Path
 
 /**
  * Checking Project Setup from N4MF considering Polyfills.
@@ -618,6 +620,39 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		)) {
 			//
 			checkReferencedProjects(implementedProjectsFeatures, allProjects, API_TYPE.forN4jsProjects);
+		}
+	}
+
+	@Check
+	def void checkOutputFolder(ProjectDescription projectDescription) {
+		val outputPathName = projectDescription.outputPath;
+		if (projectDescription.projectType === ProjectType.VALIDATION || outputPathName === null) {
+			return;
+		}
+
+		val outputPath = new Path(outputPathName);
+		val sourceTypes = projectDescription.sourceFragment;
+
+		for (SourceFragment sourceFrgmt : sourceTypes) {
+			for (var i = 0; i < sourceFrgmt.paths.size; i++) {
+				val sourcePathStr = sourceFrgmt.paths.get(i);
+				val sourcePath = new Path(sourcePathStr);
+				val srcFrgmtName = sourceFrgmt.sourceFragmentType.getName().toString;
+
+				if (".".equals(sourcePathStr) || sourcePath.equals(outputPath) || sourcePath.isPrefixOf(outputPath)) {
+					val containingFolder = "The output";
+					val nestedFolder = "a " + srcFrgmtName;
+					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+					addIssue(message, projectDescription, PROJECT_DESCRIPTION__OUTPUT_PATH_RAW, OUTPUT_AND_SOURCES_FOLDER_NESTING);
+				}
+
+				if (outputPath.isPrefixOf(sourcePath)) {
+					val containingFolder = "A " + srcFrgmtName;
+					val nestedFolder = "the output";
+					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+					addIssue(message, sourceFrgmt, SOURCE_FRAGMENT__PATHS_RAW, i, OUTPUT_AND_SOURCES_FOLDER_NESTING);
+				}
+			}
 		}
 	}
 

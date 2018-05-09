@@ -141,7 +141,7 @@ public class EditorsUtil {
 			try {
 				wrappedEditor.set(IDE.openEditor(page, file, editorID, true));
 			} catch (Exception e) {
-				logger.error("exception when opening edotri for " + file.getRawLocationURI(), e);
+				logger.error("exception when opening editor for " + file.getRawLocationURI(), e);
 			}
 		});
 
