@@ -21,6 +21,7 @@ import java.util.zip.ZipOutputStream;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -76,7 +77,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	protected void createTempProjects() {
 		try {
 			workspaceRoot = Files.createTempDir();
-			URI myProjectURI = createTempProject(host.myProjectId);
+			URI myProjectURI = URIUtils.normalize(createTempProject(host.myProjectId));
 			host.setMyProjectURI(myProjectURI);
 			createManifest(myProjectURI, "ProjectId: " + host.myProjectId + "\n" +
 					"ProjectType: library\n" +
@@ -92,7 +93,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"}" +
 					"ProjectDependencies { " + host.libProjectId + ", " + host.archiveProjectId + " }\n");
 			createArchive(myProjectURI);
-			URI libProjectURI = createTempProject(host.libProjectId);
+			URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectId));
 			host.setLibProjectURI(libProjectURI);
 			createManifest(libProjectURI, "ProjectId: " + host.libProjectId + "\n" +
 					"ProjectType: library\n" +
@@ -139,7 +140,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 				"	}\n" +
 				"}").getBytes(Charsets.UTF_8));
 		zipOutputStream.close();
-		host.setArchiveFileURI(URI.createURI(nfar.toURI().toString()));
+		host.setArchiveFileURI(URIUtils.normalize(URI.createURI(nfar.toURI().toString())));
 	}
 
 	private void createManifest(URI projectDir, String string) throws IOException {
