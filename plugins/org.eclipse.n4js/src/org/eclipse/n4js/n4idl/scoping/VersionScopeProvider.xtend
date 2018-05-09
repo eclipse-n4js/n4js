@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.n4idl.scoping
 
-import org.eclipse.emf.ecore.EObject
+import com.google.inject.Inject
+import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.scoping.N4JSScopeProvider
+import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.Type
-import com.google.inject.Inject
+import org.eclipse.xtext.scoping.IScope
 
 /**
  * A provider for version scopes.
@@ -22,22 +24,27 @@ import com.google.inject.Inject
 class VersionScopeProvider {
 
 	@Inject private N4JSScopeProvider scopeProvider;
+	@Inject private LocallyKnownTypesScopingHelper locallyKnownTypesScopingHelper;
 
 	/**
 	 * Returns a scope containing all versions of the given type.
 	 */
-	public def getVersionScope(Type classifier) {
-		var EObject context = classifier;
-
+	public def getVersionScope(Type type) {
 		// If present, use containing module as scoping context.
-		// For built-in types however, there is no containing module and thus the
-		// classifier itself is used.
-		if (null !== classifier.containingModule) {
-			context = classifier.containingModule;
+		if (null !== type.containingModule) {
+			// Only return locally declared types, to avoid issues with cyclic dependencies
+			// via module imports.
+			val script = type.containingModule.astElement as Script;
+			return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(script, IScope.NULLSCOPE);
+		} else {
+			// For built-in types, there is no containing module and thus the
+			// type itself is used as context. In this special case, this strategy is valid, 
+			// since built-in types are guaranteed to not create cyclic dependencies with workspace modules.
+			return scopeProvider.getN4JSScope(type,
+				TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
 		}
 
-		return scopeProvider.getN4JSScope(context,
-			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
+		
 	}
 
 }

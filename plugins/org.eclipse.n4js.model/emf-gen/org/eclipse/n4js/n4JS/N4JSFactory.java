@@ -1128,6 +1128,15 @@ public interface N4JSFactory extends EFactory {
 	VersionedIdentifierRef createVersionedIdentifierRef();
 
 	/**
+	 * Returns a new object of class '<em>Migration Context Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Migration Context Variable</em>'.
+	 * @generated
+	 */
+	MigrationContextVariable createMigrationContextVariable();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

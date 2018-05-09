@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.n4idl;
 
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
 import org.eclipse.n4js.transpiler.Transformation;
@@ -29,15 +30,26 @@ public class N4IDLVersionedTypesTransformation extends Transformation {
 	public void transform() {
 		EcoreUtil2.getAllContentsOfType(getState().im, N4TypeDeclaration.class)
 				.forEach(this::transformTypeDeclaration);
+		EcoreUtil2.getAllContentsOfType(getState().im, FunctionDeclaration.class)
+				.forEach(this::transformFunctionDeclaration);
 	}
 
 	/**
-	 * Updates the name of versioned type declarations so that there are not name conflicts between different type
+	 * Updates the name of versioned type declarations so that there are no name conflicts between different type
 	 * versions.
 	 */
 	private void transformTypeDeclaration(N4TypeDeclaration typeDeclaration) {
 		// for non-versioned types, this will default to the plain name
 		typeDeclaration.setName(N4IDLTranspilerUtils.getVersionedInternalName(typeDeclaration));
+	}
+
+	/**
+	 * Updates the name of versioned function declarations so that there are no name conflicts between different type
+	 * versions.
+	 */
+	private void transformFunctionDeclaration(FunctionDeclaration functionDeclaration) {
+		// for non-versioned types, this will default to the plain name
+		functionDeclaration.setName(N4IDLTranspilerUtils.getVersionedInternalName(functionDeclaration));
 	}
 
 	@Override

@@ -639,6 +639,16 @@ class RuleEnvironmentExtensions {
 	public def static argumentsTypeRef(RuleEnvironment G) {
 		G.argumentsType.createTypeRef
 	}
+	
+	/* Returns built-in type {@code MigrationContext} */
+	public def static migrationContextType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.migrationContextType;
+	}
+	
+	/* Returns newly created reference to built-in type {@code MigrationContext} */
+	public def static migrationContextTypeRef(RuleEnvironment G) {
+		G.migrationContextType.createTypeRef;
+	}
 
 	/* Returns built-in type {@code Iterable<T>} */
 	public def static iterableType(RuleEnvironment G) {

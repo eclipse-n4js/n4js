@@ -10,7 +10,7 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest END_SETUP */
 
 /** This test assures that explicit type version requests are only allowed
    in contexts that are explicitly specified to be version aware (e.g. @Migration, @VersionAware).
@@ -30,7 +30,7 @@ class SubClass#1 extends A#1 {
 }
 
 @Migration
-function migration(p : A#1) {
+function migration(p : A#1) : A#2 {
 	// In migrations, type versions may be specified explicitly XPECT noerrors
 	let a1 = new A#1();
 	// In migrations, type versions may be specified explicitly XPECT noerrors
@@ -38,6 +38,8 @@ function migration(p : A#1) {
 
 	// In migrations, an explicit declaration of type versions is required XPECT errors --> "Failed to infer the context version for A. Please declare an explicit type version." at "A"
 	let noVersion = new A();
+	
+	return null;
 }
 
 // classes can be declared @VersionAware

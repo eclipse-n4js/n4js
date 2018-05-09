@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest END_SETUP */
 
 class A#1 {
 	s : string
@@ -37,9 +37,10 @@ export public function insiderFunction() {
 	// I am a @VersionAware function		
 }
 
-@Migration
-export public function migration() {
+@Migration(1,2)
+export public function migration(a : A#1 = undefined) : any {
 	// as a migration I am also in the @VersionAware world
+	return null;
 }
 
 function outside() {
