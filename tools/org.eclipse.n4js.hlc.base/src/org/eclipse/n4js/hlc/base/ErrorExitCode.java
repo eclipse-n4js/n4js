@@ -41,10 +41,10 @@ public enum ErrorExitCode {
 	EXITCODE_TESTER_STOPPED_WITH_ERROR(9, "unsuccessful execution of the tests"),
 	/** Exit with 10, if required tester could not be loaded. */
 	EXITCODE_TESTER_NOT_FOUND(10, "required tester could not be loaded"),
-	/** Exit with 10, if required tester could not be loaded. */
-	EXITCODE_DEPENDENCY_NOT_FOUND(10, "required dependency is missing"),
-	/** Exit with 11, if srcFiles are invalid. */
-	EXITCODE_SRCFILES_INVALID(10,
+	/** Exit with 11, if required tester could not be loaded. */
+	EXITCODE_DEPENDENCY_NOT_FOUND(11, "required dependency is missing"),
+	/** Exit with 12, if srcFiles are invalid. */
+	EXITCODE_SRCFILES_INVALID(12,
 			"At least one source file or project (last parameter) is neither file nor directory.");
 
 	private static final Map<Integer, ErrorExitCode> lookup = new HashMap<>();

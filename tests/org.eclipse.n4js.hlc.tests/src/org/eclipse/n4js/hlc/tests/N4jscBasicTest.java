@@ -212,12 +212,9 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testInvalidSrcFiles() {
-
 		String proot = workspace.getAbsolutePath().toString();
-
 		// Project
 		String pathToBLAH = "/BLAH";
-
 		String[] args = { "-pl", proot,
 				"--buildType", "projects", pathToBLAH,
 				"--verbose"

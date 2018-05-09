@@ -381,13 +381,18 @@ public class N4jscBase implements IApplication {
 				return SuccessExitStatus.INSTANCE;
 			}
 
+			StringJoiner sj = new StringJoiner(",");
+
 			// Make sure the srcFiles are valid
 			for (File srcFile : srcFiles) {
 				if (!srcFile.isFile() && !srcFile.isDirectory()) {
-					System.out.println(srcFile.toString()
-							+ " of the list of source files or projects is neither valid file nor valid directory.");
-					throw new ExitCodeException(ErrorExitCode.EXITCODE_SRCFILES_INVALID);
+					sj.add(srcFile.toString());
 				}
+			}
+			if (!sj.toString().isEmpty()) {
+				System.out.println(
+						"These source files or projects are invalid (neither file nor directory): " + sj.toString());
+				throw new ExitCodeException(ErrorExitCode.EXITCODE_SRCFILES_INVALID);
 			}
 
 			EnumSet<BuildType> noSrcRequired = EnumSet.of(BuildType.allprojects, BuildType.dontcompile);
