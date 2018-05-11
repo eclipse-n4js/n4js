@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
-<setAttribute key="additional_plugins">
-<setEntry value="org.eclipse.n4js.product:0.0.1.qualifier:default:true"/>
-</setAttribute>
+<setAttribute key="additional_plugins"/>
 <booleanAttribute key="append.args" value="true"/>
 <booleanAttribute key="askclear" value="true"/>
 <booleanAttribute key="automaticAdd" value="true"/>
@@ -48,6 +46,8 @@
 <setEntry value="org.eclipse.help:default"/>
 <setEntry value="org.eclipse.jgit:default"/>
 <setEntry value="org.eclipse.n4js.compiler.sdk:default"/>
+<setEntry value="org.eclipse.n4js.dependencies.sdk:default"/>
+<setEntry value="org.eclipse.n4js.dependencies.ui.sdk:default"/>
 <setEntry value="org.eclipse.n4js.jsdoc2spec.sdk:default"/>
 <setEntry value="org.eclipse.n4js.lang.sdk:default"/>
 <setEntry value="org.eclipse.n4js.n4mf.sdk:default"/>
