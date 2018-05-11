@@ -134,3 +134,5 @@ test_project_type.png						- NumberFour AG
 re_project_type								- NumberFour AG
 rl_project_type.png							- NumberFour AG
 proc_project_type.png						- NumberFour AG
+n4js_function.png							- NumberFour AG
+n4js_module.png								- NumberFour AG
