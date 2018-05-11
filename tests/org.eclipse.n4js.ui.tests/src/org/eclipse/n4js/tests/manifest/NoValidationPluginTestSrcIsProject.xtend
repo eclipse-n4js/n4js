@@ -70,7 +70,7 @@ class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest 
 
 	def void setProjectAsSource() {
 		val pd = getProjectDescription;
-		val srcPaths = pd.sourceFragment.filter[sourceFragmentType == SourceFragmentType.SOURCE].head.paths;
+		val srcPaths = pd.sourceFragment.filter[sourceFragmentType == SourceFragmentType.SOURCE].head.pathsRaw;
 		srcPaths.clear;
 		srcPaths.add(".");
 		pd.eResource.save(null)
