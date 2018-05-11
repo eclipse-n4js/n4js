@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.json.ui.outline;
 
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -17,7 +19,6 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.ui.JSONUIModelUtils;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
-import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 
 /**
  * Customization of the default outline structure.
@@ -28,8 +29,15 @@ public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Override
 	public void createChildren(IOutlineNode parent, EObject modelElement) {
 		if (modelElement instanceof JSONDocument) {
-			if(JSONUIModelUtils.isContainer(((JSONDocument) modelElement).getContent())) {
-				createChildren(parent, ((JSONDocument) modelElement).getContent());
+			JSONValue content = ((JSONDocument) modelElement).getContent();
+			if(JSONUIModelUtils.isContainer(content)) {
+				List<? extends EObject> children = JSONUIModelUtils.getChildren(content);
+				for (EObject child : children) {
+					createNode(parent, child);
+				}
+				return;
+			} else {
+				createNode(parent, content);
 				return;
 			}
 		}
@@ -51,12 +59,18 @@ public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
 	@Override
 	protected void createNode(IOutlineNode parent, EObject modelElement) {
-		if (modelElement.eContainer() instanceof JSONDocument) {
-			new EObjectNode(modelElement, parent, imageDispatcher.invoke(modelElement), 
-					modelElement.eResource().getURI().lastSegment(), false);
+		// make sure that non-container name-value-pairs are marked as leaf nodes
+		if (modelElement instanceof NameValuePair && 
+				!JSONUIModelUtils.isContainer(((NameValuePair) modelElement).getValue())) {
+			createEObjectNode(parent, modelElement, 
+					this.imageDispatcher.invoke(modelElement), 
+					this.textDispatcher.invoke(modelElement),
+					// mark as leaf node
+					true);
 			return;
 		}
 		
+		// otherwise delegate to default behavior
 		super.createNode(parent, modelElement);
 	}
 }

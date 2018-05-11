@@ -12,6 +12,7 @@ package org.eclipse.n4js.json.ui.labeling;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONNullLiteral;
@@ -26,9 +27,7 @@ import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 import com.google.inject.Inject;
 
 /**
- * Provides labels for EObjects.
- * 
- * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
+ * Customized label provider for JSON documents.
  */
 public class JSONLabelProvider extends DefaultEObjectLabelProvider {
 
@@ -36,52 +35,88 @@ public class JSONLabelProvider extends DefaultEObjectLabelProvider {
 	public JSONLabelProvider(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
-
-	String text(NameValuePair pair) {
-		JSONValue value = pair.getValue();
+	
+	/**
+	 * Display values of {@link NameValuePair}s as part of the description
+	 * if they are not of container nature (e.g. 'a : "value"').
+	 * 
+	 * Only display the name of the value pair, if the value is an array or object.
+	 */
+	StyledString text(NameValuePair pair) {
+		final JSONValue value = pair.getValue();
+		final String nameDescription = String.format("%s", pair.getName());
+		
 		// if the name-value-pair has no children
 		if (!JSONUIModelUtils.isContainer(value)) {
-			// display its value inline
-			return String.format("%s = %s", pair.getName(), getText(value));
+			// display its value in line
+			StyledString nameValueLabel = new StyledString(nameDescription + " : ");
+			nameValueLabel = nameValueLabel.append(this.getText(pair.getValue()), StyledString.QUALIFIER_STYLER);
+			return nameValueLabel;
 		}
-		return pair.getName();
+		return new StyledString(nameDescription);
 	}
 	
-	String text(JSONObject object) {
-		return "<object>";
+	/**
+	 * Display "anonymous" objects as a grayed out {@code <object>}.
+	 * 
+	 * This can happen when objects are nested inside of arrays.
+	 */
+	StyledString text(JSONObject object) {
+		return new StyledString("<object>", StyledString.QUALIFIER_STYLER);
 	}
 	
-	String text(JSONArray object) {
-		return "<array>";
+	/**
+	 * Display "anonymous" arrays as a grayed out {@code <object>}.
+	 * 
+	 * This can happen when arrays are nested within arrays.
+	 */
+	StyledString text(JSONArray array) {
+		return new StyledString("<array>", StyledString.QUALIFIER_STYLER);
 	}
-	
+
+	/** Display the string representation of numeric literals. */
 	String text(JSONNumericLiteral numericLiteral) {
 		return numericLiteral.getValue().toString();
 	}
 	
+	/** Display a double-quoted string representation of string literals. */
 	String text(JSONStringLiteral stringLiteral) {
 		return String.format("\"%s\"", stringLiteral.getValue());
 	}
 	
+	/** Display {@code true} or {@code false} for boolean literals. */
 	String text(JSONBooleanLiteral booleanLiteral) {
 		return booleanLiteral.isBooleanValue() ? "true" : "false";
 	}
 	
+	/** Display {@code null} for null literals. */
 	String text(JSONNullLiteral nullLiteral) {
 		return "null";
 	}
 	
-	ImageDescriptor image(NameValuePair pair) {
-		return JSONImageDescriptorCache.ImageRef.EXPRESSION_OBJ.asImageDescriptor().get();
+	ImageDescriptor image(JSONArray array) {
+		return JSONImageDescriptorCache.ImageRef.JSON_ARRAY.asImageDescriptor().get();
 	}
 	
-	// Labels and icons can be computed like this:
+	ImageDescriptor image(JSONObject object) {
+		return JSONImageDescriptorCache.ImageRef.JSON_OBJECT.asImageDescriptor().get();
+	}
+
+	/** Customize fall-back icon for JSON values */
+	@Override
+	public Object image(Object element) {
+		return JSONImageDescriptorCache.ImageRef.JSON_VALUE.asImageDescriptor().get();
+	}
 	
-//	String text(Greeting ele) {
-//		return "A greeting to " + ele.getName();
-//	}
-//
-//	String image(Greeting ele) {
-//		return "Greeting.gif";
-//	}
+	ImageDescriptor image(NameValuePair pair) {
+		final JSONValue value = pair.getValue();
+		// display an object/array icon for name-value pairs if their value are an array or object.
+		if (value instanceof JSONArray) {
+			return this.image((JSONArray) value);
+		} else if (value instanceof JSONObject) {
+			return this.image((JSONObject) value);
+		}
+		
+		return JSONImageDescriptorCache.ImageRef.JSON_VALUE_PAIR.asImageDescriptor().get();
+	}
 }

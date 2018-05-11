@@ -45,11 +45,11 @@ public enum JSONImageDescriptorCache {
 	 */
 	public static enum ImageRef {
 
-		/** The decorator for {@link ProjectType#TEST test} projects. */
-		VARIABLE_VIEW("variable_view.png"),
+		JSON_OBJECT("json_object.png"),
+		JSON_ARRAY("json_array.png"),
+		JSON_VALUE_PAIR("public_co.png"),
+		JSON_VALUE("json_value.png");
 		
-		EXPRESSION_OBJ("expression_obj.png");
-
 		private static final Logger LOGGER = Logger.getLogger(ImageRef.class);
 
 		private final String fileName;

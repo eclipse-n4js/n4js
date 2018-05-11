@@ -11,6 +11,10 @@ Contributors:
 
 
 # icons
-variable_view.png							- https://github.com/eclipse/eclipse.platform.debug/blob/master/org.eclipse.debug.ui/icons/full/dview16/variable_view.png
 
-expression_obj.png							- https://github.com/eclipse/eclipse.platform.debug/blob/master/org.eclipse.debug.ui/icons/full/obj16/expression_obj.png
+public_co.png 					- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/elcl16/public_co.png
+
+
+json_array.png					- NumberFour AG
+json_object.png					- NumberFour AG
+json_value.png					- NumberFour AG
