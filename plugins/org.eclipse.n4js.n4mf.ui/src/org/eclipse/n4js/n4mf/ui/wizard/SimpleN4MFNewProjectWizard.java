@@ -10,12 +10,11 @@
  */
 package org.eclipse.n4js.n4mf.ui.wizard;
 
-import static org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin;
-
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
+import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.ui.wizard.IProjectCreator;
@@ -30,9 +29,8 @@ import com.google.inject.Inject;
  */
 public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.XtextNewProjectWizard {
 
-	private static final String FILE_PATH = "icons/newprj_wizban.png";
-	private static final String PLUGIN_ID = N4MFActivator.getInstance().getBundle().getSymbolicName();
-	private static final ImageDescriptor NEW_PROJECT_WIZBAN_DESC = imageDescriptorFromPlugin(PLUGIN_ID, FILE_PATH);
+	private static final ImageDescriptor NEW_PROJECT_WIZBAN_DESC = ImageRef.NEW_PROJECT_WIZBAN.asImageDescriptor()
+			.orNull();
 
 	private static final String DIALOG_SETTINGS_SECTION_KEY = "org.eclipse.n4js.n4mf.ui.wizard.SimpleN4MFNewProjectWizard";
 	private static final String CREATE_GREETER_SETTINGS_KEY = "createGreeterFile";

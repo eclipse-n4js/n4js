@@ -329,7 +329,7 @@ Contributors:
       <wizard
             category="org.eclipse.wizards"
             class="org.eclipse.n4js.n4mf.ui.N4MFExecutableExtensionFactory:org.eclipse.n4js.n4mf.ui.wizard.SimpleN4MFNewProjectWizard"
-            icon="icons/newprj_wiz.png"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/newprj_wiz.png"
             id="org.eclipse.n4js.n4mf.ui.wizard.N4MFNewProjectWizard"
             name="N4JS Project"
             project="true">
@@ -340,7 +340,7 @@ Contributors:
 		<handler 
 			class="org.eclipse.n4js.n4mf.ui.N4MFExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
-			<activeWhen>
+			<activeWhen>	
 				<reference
 					definitionId="org.eclipse.n4js.n4mf.N4MF.Editor.opened">
 				</reference>
