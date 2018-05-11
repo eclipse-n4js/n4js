@@ -9,7 +9,18 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4mf.tests.N4MFXpectValidationTest END_SETUP */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4MFXpectPluginUITest
+
+    Workspace {
+        JavaProject "outputEqualsSrcTop" {
+        	Folder "src" {}
+            ThisFile {}
+        }
+    }
+
+    END_SETUP
+ */
 
 ProjectId: outputEqualsSrcTop
 ProjectType: library

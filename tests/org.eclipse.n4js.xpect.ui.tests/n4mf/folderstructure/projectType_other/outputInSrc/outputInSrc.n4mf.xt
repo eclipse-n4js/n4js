@@ -9,18 +9,28 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4mf.tests.N4MFXpectValidationTest END_SETUP */
 
-ProjectId: outputEqualsSrcTop
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4MFXpectPluginUITest
+
+    Workspace {
+        JavaProject "outputInSrc" {
+        	Folder "src" {}
+            ThisFile {}
+        }
+    }
+
+    END_SETUP
+ */
+
+ProjectId: outputInSrc
 ProjectType: validation
 ProjectVersion: 0.0.1-SNAPSHOT
 VendorId: MyVendorID
 VendorName: "My Vendor Name"
 // XPECT noerrors -->
-Output: "."
+Output: "src/inner"
 Sources {
 	source {
-		// XPECT noerrors -->
-		"."
+		"src"
 	}
 }

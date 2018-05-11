@@ -9,17 +9,29 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4mf.tests.N4MFXpectValidationTest END_SETUP */
 
-ProjectId: srcInOutput
-ProjectType: library
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4MFXpectPluginUITest
+
+    Workspace {
+        JavaProject "outputEqualsSrcTop" {
+        	Folder "src" {}
+            ThisFile {}
+        }
+    }
+
+    END_SETUP
+ */
+
+ProjectId: outputEqualsSrcTop
+ProjectType: validation
 ProjectVersion: 0.0.1-SNAPSHOT
 VendorId: MyVendorID
 VendorName: "My Vendor Name"
-Output: "src"
+// XPECT noerrors -->
+Output: "."
 Sources {
 	source {
-		// XPECT errors --> "A SOURCE folder must not be located inside the output folder." at ""src/inner""
-		"src/inner"
+		// XPECT noerrors -->
+		"."
 	}
 }

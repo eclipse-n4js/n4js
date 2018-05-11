@@ -646,7 +646,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(message, projectDescription, PROJECT_DESCRIPTION__OUTPUT_PATH_RAW, OUTPUT_AND_SOURCES_FOLDER_NESTING);
 				}
 
-				if (outputPath.isPrefixOf(sourcePath)) {
+				if (".".equals(outputPathName) || outputPath.isPrefixOf(sourcePath)) {
 					val containingFolder = "A " + srcFrgmtName;
 					val nestedFolder = "the output";
 					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
