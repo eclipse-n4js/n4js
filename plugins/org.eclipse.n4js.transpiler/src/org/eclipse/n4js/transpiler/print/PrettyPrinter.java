@@ -13,8 +13,6 @@ package org.eclipse.n4js.transpiler.print;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -25,7 +23,7 @@ import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.print.SourceMapAwareAppendable.SourceOutputMapping;
 import org.eclipse.n4js.transpiler.sourcemap.FilePosition;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapGenerator;
-import org.eclipse.n4js.transpiler.sourcemap.SourceMapGeneratorDummy;
+import org.eclipse.n4js.transpiler.sourcemap.SourceMapRev3Generator;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.util.ITextRegion;
 
@@ -67,7 +65,7 @@ public class PrettyPrinter {
 
 		if (emitSourceMaps) {
 			final SourceMapInfo sourceMapInfo = optSourceMapInfo.get();
-			final SourceMapGenerator generator = new SourceMapGeneratorDummy();
+			final SourceMapGenerator generator = new SourceMapRev3Generator();
 
 			// append link to source maps to outCode
 			out.newLine();
@@ -79,10 +77,8 @@ public class PrettyPrinter {
 
 			// perform some tweaks on the mappings (TEMPORARY)
 			removeCatchAllMapping(mappings);
-			sortMappings(mappings);
 
-			// Convert the source/output mappings produced by SourceMapAwareAppendable to the API of the
-			// Google Closure compiler source map library and add them to our SourceMapGenerator 'generator'
+			// Convert the source/output mappings produced by SourceMapAwareAppendable
 			final PositionProvider positionProvider = PositionProvider.from(state.resource);
 			for (SourceOutputMapping m : mappings) {
 				final EObject originalASTNode = state.tracer.getOriginalASTNode(m.elementInIM);
@@ -115,15 +111,4 @@ public class PrettyPrinter {
 		mappings.remove(lastIdx);
 	}
 
-	private void sortMappings(List<SourceOutputMapping> mappings) {
-		Collections.sort(mappings, new Comparator<SourceOutputMapping>() {
-			@Override
-			public int compare(SourceOutputMapping m1, SourceOutputMapping m2) {
-				final int c = Integer.compare(m1.outputStart.getLine(), m2.outputStart.getLine());
-				if (c != 0)
-					return c;
-				return Integer.compare(m1.outputStart.getColumn(), m2.outputStart.getColumn());
-			}
-		});
-	}
 }
