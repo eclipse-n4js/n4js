@@ -13,7 +13,7 @@
   * This test verifies that versioned types and migrations are disabled in N4JS.
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest END_SETUP */
 
 // Declaration of versioned types XPECT errors -->"Versioned types are not supported in N4JS files." at "class T#1 {  }"
 class T#1 {}

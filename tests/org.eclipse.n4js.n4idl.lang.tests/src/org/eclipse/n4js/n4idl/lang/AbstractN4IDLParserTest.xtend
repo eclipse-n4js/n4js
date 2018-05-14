@@ -20,7 +20,7 @@ import org.junit.Assert
 import org.junit.runner.RunWith
 
 /**
- * N4JSX version of N4JS' AbstractParserTest
+ * N4IDL version of N4JS' AbstractParserTest
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
