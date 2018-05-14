@@ -41,6 +41,13 @@ class JSONFormatter extends AbstractFormatter2 {
 		// indent array elements
 		bracketPair.interior[indent];
 		
+		// format empty arrays to be a bracket pair without space (nor newline) in between
+		if (al.elements.empty) {
+			bracketPair.key.append[noSpace]
+			bracketPair.value.prepend[noSpace]
+			return;
+		}
+		
 		// put every array element on a separate line
 		al.elements.forEach[it,num|prepend[newLine]];
 		// recursively format each element
@@ -64,6 +71,13 @@ class JSONFormatter extends AbstractFormatter2 {
 
 		val bracePair = ol.regionFor.keywordPairs("{","}").head;
 		bracePair.interior[indent];
+
+		// format empty objects to be a brace pair without space (nor newline) in between
+		if (ol.nameValuePairs.empty) {
+			bracePair.key.append[noSpace]
+			bracePair.value.prepend[noSpace]
+			return;
+		}
 
 		bracePair.value.prepend[newLine]; // format WS in front of closing brace
 		ol.nameValuePairs.forEach[it,num|prepend[newLine]];
