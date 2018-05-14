@@ -127,15 +127,15 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cValueJSONValueParserRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
 		
 		//NameValuePair:
-		//	=> name=STRING
+		//	name=STRING
 		//	':'
 		//	value=JSONValue;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=> name=STRING ':' value=JSONValue
+		//name=STRING ':' value=JSONValue
 		public Group getGroup() { return cGroup; }
 		
-		//=> name=STRING
+		//name=STRING
 		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
 		
 		//STRING
@@ -354,10 +354,10 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	private final TerminalRule tINT;
 	private final TerminalRule tEXPONENT_PART;
 	private final TerminalRule tSIGNED_INT;
-	private final TerminalRule tWS;
-	private final TerminalRule tEOL;
 	private final TerminalRule tML_COMMENT;
 	private final TerminalRule tSL_COMMENT;
+	private final TerminalRule tWS;
+	private final TerminalRule tEOL;
 	
 	private final Grammar grammar;
 	
@@ -386,10 +386,10 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.INT");
 		this.tEXPONENT_PART = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.EXPONENT_PART");
 		this.tSIGNED_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.SIGNED_INT");
-		this.tWS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.WS");
-		this.tEOL = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.EOL");
 		this.tML_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.ML_COMMENT");
 		this.tSL_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.SL_COMMENT");
+		this.tWS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.WS");
+		this.tEOL = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.EOL");
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -441,7 +441,7 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//NameValuePair:
-	//	=> name=STRING
+	//	name=STRING
 	//	':'
 	//	value=JSONValue;
 	public NameValuePairElements getNameValuePairAccess() {
@@ -573,18 +573,6 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 		return tSIGNED_INT;
 	}
 	
-	//terminal WS:
-	//	WHITESPACE_FRAGMENT+;
-	public TerminalRule getWSRule() {
-		return tWS;
-	}
-	
-	//terminal EOL:
-	//	LINE_TERMINATOR_SEQUENCE_FRAGMENT;
-	public TerminalRule getEOLRule() {
-		return tEOL;
-	}
-	
 	//terminal ML_COMMENT:
 	//	ML_COMMENT_FRAGMENT;
 	public TerminalRule getML_COMMENTRule() {
@@ -595,6 +583,18 @@ public class JSONGrammarAccess extends AbstractGrammarElementFinder {
 	//	'//' !LINE_TERMINATOR_FRAGMENT*;
 	public TerminalRule getSL_COMMENTRule() {
 		return tSL_COMMENT;
+	}
+	
+	//terminal WS:
+	//	WHITESPACE_FRAGMENT+;
+	public TerminalRule getWSRule() {
+		return tWS;
+	}
+	
+	//terminal EOL:
+	//	LINE_TERMINATOR_SEQUENCE_FRAGMENT;
+	public TerminalRule getEOLRule() {
+		return tEOL;
 	}
 	
 	//terminal fragment HEX_DIGIT:

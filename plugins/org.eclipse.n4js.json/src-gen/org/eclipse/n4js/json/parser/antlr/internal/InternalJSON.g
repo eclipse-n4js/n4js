@@ -134,10 +134,6 @@ ruleJSONObject returns [EObject current=null]
 				newLeafNode(otherlv_0, grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_0_0());
 			}
 			(
-				((
-					RULE_STRING
-				)
-				)=>
 				(
 					{
 						newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_0_1_0());
@@ -162,10 +158,6 @@ ruleJSONObject returns [EObject current=null]
 					newLeafNode(otherlv_2, grammarAccess.getJSONObjectAccess().getCommaKeyword_0_2_0());
 				}
 				(
-					((
-						RULE_STRING
-					)
-					)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_0_2_1_0());
@@ -228,10 +220,6 @@ ruleNameValuePair returns [EObject current=null]
 }:
 	(
 		(
-			((
-				RULE_STRING
-			)
-			)=>
 			(
 				lv_name_0_0=RULE_STRING
 				{
@@ -603,13 +591,13 @@ fragment RULE_EXPONENT_PART : ('e'|'E') RULE_SIGNED_INT;
 
 fragment RULE_SIGNED_INT : ('+'|'-')? RULE_DECIMAL_DIGIT_FRAGMENT+;
 
-RULE_WS : RULE_WHITESPACE_FRAGMENT+;
-
-RULE_EOL : RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT;
-
 RULE_ML_COMMENT : RULE_ML_COMMENT_FRAGMENT;
 
 RULE_SL_COMMENT : '//' ~(RULE_LINE_TERMINATOR_FRAGMENT)*;
+
+RULE_WS : RULE_WHITESPACE_FRAGMENT+;
+
+RULE_EOL : RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT;
 
 fragment RULE_HEX_DIGIT : (RULE_DECIMAL_DIGIT_FRAGMENT|'a'..'f'|'A'..'F');
 

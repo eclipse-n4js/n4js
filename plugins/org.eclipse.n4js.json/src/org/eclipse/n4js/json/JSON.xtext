@@ -26,7 +26,7 @@ JSONObject:
 ;
 
 NameValuePair:
-	=> name=STRING 
+	name=STRING 
 	':'
 	value=JSONValue
 ;
@@ -53,7 +53,6 @@ JSONNumericLiteral:
 	value=NUMBER
 ;
 
-
 JSONBooleanLiteral:
 	{JSONBooleanLiteral} (booleanValue?='true' | 'false')
 ;
@@ -75,11 +74,13 @@ terminal fragment DOUBLE_STRING_CHAR:
 	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
 ;
 
+// does not include '\u2028' | '\u2029' as a subtle difference between JSON and ECMAScript (cf. overridden rule)  
 @Override 
 terminal fragment LINE_TERMINATOR_FRAGMENT:
 	'\u000A' | '\u000D'
 ;
 
+// does not include '\u2028' | '\u2029' as a subtle difference to ECMAScript (cf. overridden rule)
 @Override 
 terminal fragment LINE_TERMINATOR_SEQUENCE_FRAGMENT:
 	'\u000A' | '\u000D' '\u000A'?
@@ -92,21 +93,23 @@ terminal INT returns ecore::EBigDecimal:
 	'-'? DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART?;
 
 terminal fragment EXPONENT_PART:
-	  ('e' | 'E') SIGNED_INT
+	('e' | 'E') SIGNED_INT
 ;
 
 terminal fragment SIGNED_INT:
 	('+' | '-')? DECIMAL_DIGIT_FRAGMENT+
 ;
 
+// multi-line comments
+terminal ML_COMMENT:
+	ML_COMMENT_FRAGMENT;
+
+// single-line comments
+terminal SL_COMMENT:
+	'//' (!LINE_TERMINATOR_FRAGMENT)*;
+
 terminal WS:
 	WHITESPACE_FRAGMENT+;
 
 terminal EOL:
 	LINE_TERMINATOR_SEQUENCE_FRAGMENT;
-	
-terminal ML_COMMENT:
-	ML_COMMENT_FRAGMENT;
-
-terminal SL_COMMENT:
-	'//' (!LINE_TERMINATOR_FRAGMENT)*;
