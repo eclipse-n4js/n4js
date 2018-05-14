@@ -1,0 +1,41 @@
+{
+  "name": "n4js-cli",
+  "version": "0.4.0",
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "license": "EPL-1.0",
+  "repository": "https://github.com/NumberFour/n4js-libs",
+  "description": "N4JS compiler and command line tools.",
+  "bin": {
+    "n4jsc": "./bin/n4jsc.js"
+  },
+  "scripts": {
+    "postinstall": "./npm-postinstall.js",
+    "build": "./npm-build.sh",
+    "test": "eslint . && mocha tests"
+  },
+  "files": [
+    "bin",
+    "npm-postinstall.js",
+    "index.js",
+    "index.n4jsd"
+  ],
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "mocha": "^3.5.3"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true,
+      "mocha": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+      "strict": "error",
+      "no-trailing-spaces": "error"
+    }
+  },
+  "dependencies": {
+    "npmlog": "^4.1.2"
+  }
+}

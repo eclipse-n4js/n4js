@@ -18,10 +18,45 @@
     "node": ">= 5.0.0"
   },
   "dependencies": {
-    "org.eclipse.n4js.mangelhaft.runner.ide": "latest"
+    "org.eclipse.n4js.mangelhaft.runner.ide": "latest",
+    "n4js-node": "latest"
   },
   "files": [
     "manifest.n4mf",
     "src-gen"
-  ]
+  ],
+  "devDependencies": {},
+  "n4js_manifest": {
+    "ProjectId": "n4js-node-mangelhaft",
+    "VendorId": "org.eclipse.n4js",
+    "VendorName": "Eclipse N4JS Project",
+    "ProjectType": "runtimeEnvironment",
+    "ProjectVersion": "0.3.2",
+    "ExtendedRuntimeEnvironment": "n4js-node",
+    "ProvidedRuntimeLibraries": [
+      "n4js-runtime-n4",
+      "n4js-runtime-v8",
+      "n4js-runtime-es2015",
+      "n4js-runtime-esnext",
+      "n4js-runtime-fetch",
+      "n4js-runtime-mangelhaft",
+      "n4js-runtime-ecma402",
+      "n4js.lang",
+      "org.eclipse.n4js.mangelhaft.runner.ide",
+      "org.eclipse.n4js.mangelhaft",
+      "org.eclipse.n4js.mangelhaft.reporter.ide"
+    ],
+    "Output": "src-gen",
+    "Sources": {
+      "external": [
+        "\"src/js\""
+      ]
+    },
+    "ExecModule": "n4js-mangelhaft-cli",
+    "ModuleFilters": {
+      "noModuleWrap": [
+        "\"**\""
+      ]
+    }
+  }
 }

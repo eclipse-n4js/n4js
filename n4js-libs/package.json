@@ -1,0 +1,29 @@
+{
+	"author": "Enfore AG",
+	"private": true,
+	"devDependencies": {
+		"lerna": "^2.10.0",
+		"npm-cli-login": "latest"
+	},
+	"scripts": {
+		"publish-canary": "./npm-publish-canary.sh"
+	},
+	"workspaces": [
+		"packages/n4js-es5",
+		"packages/n4js-node",
+		"packages/n4js-node-mangelhaft",
+		"packages/n4js-runtime-ecma402",
+		"packages/n4js-runtime-es2015",
+		"packages/n4js-runtime-esnext",
+		"packages/n4js-runtime-fetch",
+		"packages/n4js-runtime-mangelhaft",
+		"packages/n4js-runtime-n4",
+		"packages/n4js-runtime-node",
+		"packages/n4js-runtime-v8",
+		"packages/n4js.lang",
+		"packages/org.eclipse.n4js.mangelhaft",
+		"packages/org.eclipse.n4js.mangelhaft.assert",
+		"packages/org.eclipse.n4js.mangelhaft.reporter.ide",
+		"packages/org.eclipse.n4js.mangelhaft.runner.ide"
+	]
+}

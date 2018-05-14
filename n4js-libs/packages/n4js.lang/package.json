@@ -15,5 +15,27 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
+  },
+  "dependencies": {
+    "n4js-node": "latest"
+  },
+  "devDependencies": {
+    "n4js-runtime-es2015": "latest"
+  },
+  "n4js_manifest": {
+    "ProjectId": "n4js.lang",
+    "VendorId": "org.eclipse.n4js",
+    "VendorName": "Eclipse N4JS Project",
+    "ProjectType": "library",
+    "ProjectVersion": "0.3.1",
+    "Output": "src-gen",
+    "Sources": {
+      "source": [
+        "\"src/n4js\""
+      ]
+    },
+    "RequiredRuntimeLibraries": [
+      "n4js-runtime-es2015"
+    ]
   }
 }

@@ -17,5 +17,48 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
+  },
+  "dependencies": {
+    "n4js.lang": "latest",
+    "org.eclipse.n4js.mangelhaft.assert": "latest",
+    "n4js-node": "latest"
+  },
+  "devDependencies": {
+    "n4js-runtime-n4": "latest",
+    "n4js-runtime-es2015": "latest",
+    "n4js-runtime-v8": "latest"
+  },
+  "n4js_manifest": {
+    "ProjectId": "n4js-runtime-n4-tests",
+    "VendorId": "org.eclipse.n4js",
+    "VendorName": "Eclipse N4JS Project",
+    "ProjectType": "test",
+    "ProjectVersion": "0.3.0",
+    "Output": "src-gen",
+    "Sources": {
+      "test": [
+        "\"test/n4js\""
+      ],
+      "external": [
+        "\"test/js\""
+      ]
+    },
+    "ModuleFilters": {
+      "noModuleWrap": [
+        "\"runtime/n4/util/moduleloader/modules/TestModulePlainCJS\""
+      ]
+    },
+    "TestedProjects": [
+      "n4js-runtime-n4"
+    ],
+    "ProjectDependencies": [
+      "n4js.lang",
+      "org.eclipse.n4js.mangelhaft.assert"
+    ],
+    "RequiredRuntimeLibraries": [
+      "n4js-runtime-n4",
+      "n4js-runtime-es2015",
+      "n4js-runtime-v8"
+    ]
   }
 }
