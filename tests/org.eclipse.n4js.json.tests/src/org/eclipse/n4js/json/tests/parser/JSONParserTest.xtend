@@ -33,7 +33,7 @@ import static org.junit.Assert.*
  */
 @RunWith(XtextRunner)
 @InjectWith(JSONInjectorProvider)
-class JsonParserTest {
+class JSONParserTest {
 
 	@Inject extension JSONParseHelper
 

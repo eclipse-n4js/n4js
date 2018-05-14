@@ -26,7 +26,7 @@ import org.eclipse.n4js.json.validation.JSONIssueCodes
  */
 @RunWith(XtextRunner)
 @InjectWith(JSONInjectorProvider)
-class JsonCommentValidationTest extends Assert {
+class JSONCommentValidationTest extends Assert {
 
 	@Inject extension JSONParseHelper
 	@Inject extension ValidationTestHelper
