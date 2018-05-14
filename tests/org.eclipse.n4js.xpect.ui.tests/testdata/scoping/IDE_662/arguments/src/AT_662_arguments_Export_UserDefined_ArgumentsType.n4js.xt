@@ -38,6 +38,7 @@ Iterable2 - builtin_n4.n4ts, Iterable3 - builtin_n4.n4ts, Iterable4 - builtin_n4
 Iterable6 - builtin_n4.n4ts, Iterable7 - builtin_n4.n4ts, Iterable8 - builtin_n4.n4ts, Iterable9 - builtin_n4.n4ts,
 Iterator - builtin_js.n4ts, IteratorEntry - builtin_js.n4ts,
 JSON - builtin_js.n4ts, Math - builtin_js.n4ts,
+MigrationContext - builtin_n4idl.n4ts, MigrationController - builtin_n4idl.n4ts,
 N4Accessor - builtin_n4.n4ts,
 N4Annotation - builtin_n4.n4ts, N4Class - builtin_n4.n4ts, N4Classifier - builtin_n4.n4ts,
 N4DataField - builtin_n4.n4ts, N4Element - builtin_n4.n4ts, N4Enum - builtin_n4.n4ts,

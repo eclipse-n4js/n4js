@@ -11,13 +11,13 @@
 package org.eclipse.n4js.xsemantics
 
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.validation.JavaScriptVariant.*
-import org.eclipse.n4js.validation.JavaScriptVariant
 
 /**
  * Test class for assignment expressions (6.1.21)
@@ -99,14 +99,20 @@ class N6_1_21_AssignmentExpressionTypesystemTest extends AbstractOperatorExpress
 			}
 		}
 	}
-
+	
 	private def void assertExpectedType(JavaScriptVariant variant, String expectedLeftType, String expectedRightType,
 		String expression) {
 			assertBinaryOperatorExpectedType(variant,
-				if (variant===JavaScriptVariant.n4js) expectedLeftType else BOTTOM_TYPE,
-				if (variant===JavaScriptVariant.n4js) expectedRightType else TOP_TYPE,
+				if (variant.isTypeAwareVariant) expectedLeftType else BOTTOM_TYPE,
+				if (variant.isTypeAwareVariant) expectedRightType else TOP_TYPE,
 				expression
 			);
+	}
+	
+	/** Returns {@code true} if the {@code variant} is considered 
+	 * type-aware in the context of this test. */
+	private def boolean isTypeAwareVariant(JavaScriptVariant variant) {
+		return #[JavaScriptVariant.n4js, JavaScriptVariant.n4idl].contains(variant);
 	}
 
 	@Test

@@ -13,7 +13,7 @@
   * This test verifies that versioned types and migrations are disabled in N4JSD.
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest END_SETUP */
 
 // Declaration of versioned types XPECT errors -->"Versioned types are not supported in N4JSD External Definitions Language (n4jsd) files." at "external class T#1 {}"
 external class T#1 {}

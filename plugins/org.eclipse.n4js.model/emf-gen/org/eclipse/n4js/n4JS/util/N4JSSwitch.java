@@ -302,6 +302,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseFunctionDefinition(functionDefinition);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDefinition);
 				if (result == null) result = caseTypeDefiningElement(functionDefinition);
+				if (result == null) result = caseVersionedElement(functionDefinition);
 				if (result == null) result = caseAnnotableElement(functionDefinition);
 				if (result == null) result = caseVariableEnvironmentElement(functionDefinition);
 				if (result == null) result = caseThisArgProvider(functionDefinition);
@@ -337,6 +338,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseControlFlowElement(functionDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDeclaration);
 				if (result == null) result = caseTypeDefiningElement(functionDeclaration);
+				if (result == null) result = caseVersionedElement(functionDeclaration);
 				if (result == null) result = caseAnnotableElement(functionDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(functionDeclaration);
 				if (result == null) result = caseThisArgProvider(functionDeclaration);
@@ -353,6 +355,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseNamedElement(functionExpression);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionExpression);
 				if (result == null) result = caseTypeDefiningElement(functionExpression);
+				if (result == null) result = caseVersionedElement(functionExpression);
 				if (result == null) result = caseExpression(functionExpression);
 				if (result == null) result = caseAnnotableElement(functionExpression);
 				if (result == null) result = caseVariableEnvironmentElement(functionExpression);
@@ -372,6 +375,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseNamedElement(arrowFunction);
 				if (result == null) result = caseFunctionOrFieldAccessor(arrowFunction);
 				if (result == null) result = caseTypeDefiningElement(arrowFunction);
+				if (result == null) result = caseVersionedElement(arrowFunction);
 				if (result == null) result = caseExpression(arrowFunction);
 				if (result == null) result = caseAnnotableElement(arrowFunction);
 				if (result == null) result = caseVariableEnvironmentElement(arrowFunction);
@@ -913,6 +917,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePropertyNameOwner(propertyMethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(propertyMethodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(propertyMethodDeclaration);
+				if (result == null) result = caseVersionedElement(propertyMethodDeclaration);
 				if (result == null) result = caseTypeProvidingElement(propertyMethodDeclaration);
 				if (result == null) result = caseAnnotableElement(propertyMethodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(propertyMethodDeclaration);
@@ -1644,6 +1649,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePropertyNameOwner(methodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(methodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(methodDeclaration);
+				if (result == null) result = caseVersionedElement(methodDeclaration);
 				if (result == null) result = caseTypeProvidingElement(methodDeclaration);
 				if (result == null) result = caseNamedElement(methodDeclaration);
 				if (result == null) result = caseAnnotableElement(methodDeclaration);
@@ -1668,6 +1674,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseNamedElement(n4MethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(n4MethodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4MethodDeclaration);
+				if (result == null) result = caseVersionedElement(n4MethodDeclaration);
 				if (result == null) result = caseAnnotableElement(n4MethodDeclaration);
 				if (result == null) result = caseTypableElement(n4MethodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(n4MethodDeclaration);
@@ -1849,6 +1856,18 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseExpression(versionedIdentifierRef);
 				if (result == null) result = caseTypableElement(versionedIdentifierRef);
 				if (result == null) result = caseControlFlowElement(versionedIdentifierRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.MIGRATION_CONTEXT_VARIABLE: {
+				MigrationContextVariable migrationContextVariable = (MigrationContextVariable)theEObject;
+				T result = caseMigrationContextVariable(migrationContextVariable);
+				if (result == null) result = caseVariable(migrationContextVariable);
+				if (result == null) result = caseTypedElement(migrationContextVariable);
+				if (result == null) result = caseIdentifiableElement(migrationContextVariable);
+				if (result == null) result = caseNamedElement(migrationContextVariable);
+				if (result == null) result = caseTypeProvidingElement(migrationContextVariable);
+				if (result == null) result = caseTypableElement(migrationContextVariable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -4418,6 +4437,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseVersionedIdentifierRef(VersionedIdentifierRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Migration Context Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Migration Context Variable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMigrationContextVariable(MigrationContextVariable object) {
 		return null;
 	}
 

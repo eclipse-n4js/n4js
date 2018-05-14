@@ -12,6 +12,7 @@ package org.eclipse.n4js.scoping.utils;
 
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
@@ -21,12 +22,23 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 public class IssueCodeBasedEObjectDescription extends AbstractDescriptionWithError {
 	private final String message;
 	private final String issueCode;
+	private final Severity severity;
 
 	/** Instantiates a new {@link IssueCodeBasedEObjectDescription} with the given issue message and code. */
 	public IssueCodeBasedEObjectDescription(IEObjectDescription delegate, String message, String issueCode) {
 		super(delegate);
 		this.issueCode = issueCode;
 		this.message = message;
+		this.severity = Severity.ERROR;
+	}
+
+	/** Instantiates a new {@link IssueCodeBasedEObjectDescription} with the given issue message and code. */
+	public IssueCodeBasedEObjectDescription(IEObjectDescription delegate, String message, String issueCode,
+			Severity severity) {
+		super(delegate);
+		this.issueCode = issueCode;
+		this.message = message;
+		this.severity = severity;
 	}
 
 	@Override
@@ -38,4 +50,10 @@ public class IssueCodeBasedEObjectDescription extends AbstractDescriptionWithErr
 	public String getIssueCode() {
 		return this.issueCode;
 	}
+
+	@Override
+	public Severity getSeverity() {
+		return this.severity;
+	}
+
 }

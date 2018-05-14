@@ -10,22 +10,14 @@
  */
 package org.eclipse.n4js.json.ui.labeling;
 
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider;
 
 /**
- * Provides labels for IEObjectDescriptions and IResourceDescriptions.
+ * Provides labels for {@link IEObjectDescription}s that represent JSON model elements in the index.
  * 
- * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
+ * For now, this does nothing as the content of JSON resources is not exposed to the index.
  */
 public class JSONDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
-
-	// Labels and icons can be computed like this:
-	
-//	String text(IEObjectDescription ele) {
-//		return ele.getName().toString();
-//	}
-//	 
-//	String image(IEObjectDescription ele) {
-//		return ele.getEClass().getName() + ".gif";
-//	}
+	// no custom behavior
 }
