@@ -104,7 +104,7 @@ public class NonVersionAwareContextScope extends FilteringScope {
 			ValidatorMessageHelper messageHelper) {
 		super(parent, d -> {
 			EObject element = d.getEObjectOrProxy();
-			if (!element.eIsProxy()) {
+			if (null != element && !element.eIsProxy()) {
 				// wrap all elements that are in a version-aware context
 				return !VersionUtils.isVersionAwareContext(element);
 			} else {

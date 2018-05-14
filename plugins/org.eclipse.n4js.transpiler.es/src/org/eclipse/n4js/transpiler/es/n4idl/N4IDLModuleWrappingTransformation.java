@@ -15,12 +15,12 @@ import org.eclipse.n4js.n4JS.Argument;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
-import org.eclipse.n4js.n4idl.versioning.VersionUtils;
 import org.eclipse.n4js.transpiler.TranspilerBuilderBlocks;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.versions.VersionableUtils;
 
 /**
  * Module/Script wrapping transformation for transpiling N4IDL modules to ECMAScript.
@@ -37,7 +37,7 @@ public class N4IDLModuleWrappingTransformation extends ModuleWrappingTransformat
 		if (entry instanceof SymbolTableEntryOriginal) {
 			final IdentifiableElement originalTarget = ((SymbolTableEntryOriginal) entry).getOriginalTarget();
 
-			if (VersionUtils.isTVersionable(originalTarget)) {
+			if (VersionableUtils.isTVersionable(originalTarget)) {
 				return createVersionedExportExpression(originalTarget, TranspilerBuilderBlocks._IdentRef(entry));
 			}
 		}
@@ -55,7 +55,7 @@ public class N4IDLModuleWrappingTransformation extends ModuleWrappingTransformat
 	 */
 	private ParameterizedCallExpression createVersionedExportExpression(IdentifiableElement element,
 			Expression expression) {
-		if (!VersionUtils.isTVersionable(element)) {
+		if (!VersionableUtils.isTVersionable(element)) {
 			throw new IllegalArgumentException("Cannot export non-versionable element " + element + " as versionable.");
 		}
 
