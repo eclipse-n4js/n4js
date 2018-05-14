@@ -57,6 +57,11 @@ Workflow {
 			}
 			
 			validator = {}
+			
+			// formatter API
+			fragment = formatting.Formatter2Fragment2 {
+				generateXtendStub = true
+			}
 		}
 	}
 }

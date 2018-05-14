@@ -21,9 +21,8 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 
 /**
- * Customization of the default outline structure.
- *
- * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#outline
+ * Provides an outline tree for JSON documents, based on the containment
+ * hierarchy that is defined by JSON arrays and objects.
  */
 public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Override
@@ -37,7 +36,10 @@ public class JSONOutlineTreeProvider extends DefaultOutlineTreeProvider {
 				}
 				return;
 			} else {
-				createNode(parent, content);
+				if (content != null) {
+					// create node without children, given content is not null
+					createNode(parent, content);
+				}
 				return;
 			}
 		}
