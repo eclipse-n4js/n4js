@@ -28,6 +28,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import java.util.List
 
 /**
  */
@@ -58,7 +59,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 
 		val varDecl = createVarDecl(ifcDecl);
 		val fieldInitFun = createInstanceFieldInitializationFunction(ifcDecl, ifcSTE);
-		val staticFieldInits = createStaticFieldInitializations(ifcDecl, ifcSTE);
+		val staticFieldInits = createStaticFieldInitializations(ifcSTE, ifcDecl);
 		val memberDefs = bootstrapCallAssistant.createInterfaceMemberDefinitionSection(ifcDecl);
 		val makeIfcCall = bootstrapCallAssistant.createMakeInterfaceCall(ifcDecl);
 
@@ -171,15 +172,22 @@ class InterfaceDeclarationTransformation extends Transformation {
 		}
 		return result;
 	}
-
-	def private ExpressionStatement[] createStaticFieldInitializations(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
+	
+	/**
+	 * Creates a new list of statements to initialize the static fields of the given {@code ifcDecl}.
+	 * 
+	 * Clients of this method may modify the returned list.
+	 */
+	def protected List<Statement> createStaticFieldInitializations(SymbolTableEntry ifcSTE, N4InterfaceDeclaration ifcDecl) {
 		// for an interface 'I' with a static field 'field' we here create something like:
 		// I.field = "initial value";
-		return ifcDecl.ownedMembers.filter(N4FieldDeclaration).filter[static].filter[expression!==null].map[fieldDecl|
+		return ifcDecl.ownedMembers.filter(N4FieldDeclaration).filter[static].filter[expression!==null]
+			// create an initialization statement per static field
+			.<N4FieldDeclaration, Statement>map[fieldDecl|
 			_ExprStmnt(_AssignmentExpr()=>[
 				lhs = _PropertyAccessExpr(ifcSTE, findSymbolTableEntryForElement(fieldDecl,true));
 				rhs = fieldDecl.expression;
 			]);
-		];
+		].toList;
 	}
 }

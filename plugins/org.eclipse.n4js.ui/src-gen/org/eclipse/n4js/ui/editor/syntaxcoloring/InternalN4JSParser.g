@@ -1344,11 +1344,14 @@ ruleFunctionHeader
 			}
 		)
 	)?
-	StrictFormalParametersParserRuleCall_2=ruleStrictFormalParameters{ announce($StrictFormalParametersParserRuleCall_2.start, $StrictFormalParametersParserRuleCall_2.stop, grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2()); }
+	(
+		VersionDeclarationParserRuleCall_2=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_2.start, $VersionDeclarationParserRuleCall_2.stop, grammarAccess.getFunctionHeaderAccess().getVersionDeclarationParserRuleCall_2()); }
+	)?
+	StrictFormalParametersParserRuleCall_3=ruleStrictFormalParameters{ announce($StrictFormalParametersParserRuleCall_3.start, $StrictFormalParametersParserRuleCall_3.stop, grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_3()); }
 	(
 		(Colon
 		)=>
-		ColonSepReturnTypeRefParserRuleCall_3=ruleColonSepReturnTypeRef{ announce($ColonSepReturnTypeRefParserRuleCall_3.start, $ColonSepReturnTypeRefParserRuleCall_3.stop, grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_3()); }
+		ColonSepReturnTypeRefParserRuleCall_4=ruleColonSepReturnTypeRef{ announce($ColonSepReturnTypeRefParserRuleCall_4.start, $ColonSepReturnTypeRefParserRuleCall_4.stop, grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4()); }
 	)?
 )
 ;
@@ -1369,11 +1372,14 @@ norm1_FunctionHeader
 			}
 		)
 	)?
-	StrictFormalParametersParserRuleCall_2=ruleStrictFormalParameters{ announce($StrictFormalParametersParserRuleCall_2.start, $StrictFormalParametersParserRuleCall_2.stop, grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2()); }
+	(
+		VersionDeclarationParserRuleCall_2=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_2.start, $VersionDeclarationParserRuleCall_2.stop, grammarAccess.getFunctionHeaderAccess().getVersionDeclarationParserRuleCall_2()); }
+	)?
+	StrictFormalParametersParserRuleCall_3=ruleStrictFormalParameters{ announce($StrictFormalParametersParserRuleCall_3.start, $StrictFormalParametersParserRuleCall_3.stop, grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_3()); }
 	(
 		(Colon
 		)=>
-		ColonSepReturnTypeRefParserRuleCall_3=ruleColonSepReturnTypeRef{ announce($ColonSepReturnTypeRefParserRuleCall_3.start, $ColonSepReturnTypeRefParserRuleCall_3.stop, grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_3()); }
+		ColonSepReturnTypeRefParserRuleCall_4=ruleColonSepReturnTypeRef{ announce($ColonSepReturnTypeRefParserRuleCall_4.start, $ColonSepReturnTypeRefParserRuleCall_4.stop, grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4()); }
 	)?
 )
 ;
@@ -1394,11 +1400,14 @@ norm2_FunctionHeader
 			}
 		)
 	)?
-	StrictFormalParametersParserRuleCall_2=norm1_StrictFormalParameters{ announce($StrictFormalParametersParserRuleCall_2.start, $StrictFormalParametersParserRuleCall_2.stop, grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2()); }
+	(
+		VersionDeclarationParserRuleCall_2=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_2.start, $VersionDeclarationParserRuleCall_2.stop, grammarAccess.getFunctionHeaderAccess().getVersionDeclarationParserRuleCall_2()); }
+	)?
+	StrictFormalParametersParserRuleCall_3=norm1_StrictFormalParameters{ announce($StrictFormalParametersParserRuleCall_3.start, $StrictFormalParametersParserRuleCall_3.stop, grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_3()); }
 	(
 		(Colon
 		)=>
-		ColonSepReturnTypeRefParserRuleCall_3=ruleColonSepReturnTypeRef{ announce($ColonSepReturnTypeRefParserRuleCall_3.start, $ColonSepReturnTypeRefParserRuleCall_3.stop, grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_3()); }
+		ColonSepReturnTypeRefParserRuleCall_4=ruleColonSepReturnTypeRef{ announce($ColonSepReturnTypeRefParserRuleCall_4.start, $ColonSepReturnTypeRefParserRuleCall_4.stop, grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4()); }
 	)?
 )
 ;
@@ -1419,11 +1428,14 @@ norm3_FunctionHeader
 			}
 		)
 	)?
-	StrictFormalParametersParserRuleCall_2=norm1_StrictFormalParameters{ announce($StrictFormalParametersParserRuleCall_2.start, $StrictFormalParametersParserRuleCall_2.stop, grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_2()); }
+	(
+		VersionDeclarationParserRuleCall_2=ruleVersionDeclaration{ announce($VersionDeclarationParserRuleCall_2.start, $VersionDeclarationParserRuleCall_2.stop, grammarAccess.getFunctionHeaderAccess().getVersionDeclarationParserRuleCall_2()); }
+	)?
+	StrictFormalParametersParserRuleCall_3=norm1_StrictFormalParameters{ announce($StrictFormalParametersParserRuleCall_3.start, $StrictFormalParametersParserRuleCall_3.stop, grammarAccess.getFunctionHeaderAccess().getStrictFormalParametersParserRuleCall_3()); }
 	(
 		(Colon
 		)=>
-		ColonSepReturnTypeRefParserRuleCall_3=ruleColonSepReturnTypeRef{ announce($ColonSepReturnTypeRefParserRuleCall_3.start, $ColonSepReturnTypeRefParserRuleCall_3.stop, grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_3()); }
+		ColonSepReturnTypeRefParserRuleCall_4=ruleColonSepReturnTypeRef{ announce($ColonSepReturnTypeRefParserRuleCall_4.start, $ColonSepReturnTypeRefParserRuleCall_4.stop, grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4()); }
 	)?
 )
 ;
