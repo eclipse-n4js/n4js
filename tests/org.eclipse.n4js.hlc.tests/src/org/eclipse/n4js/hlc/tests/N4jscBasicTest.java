@@ -12,7 +12,6 @@ package org.eclipse.n4js.hlc.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -219,11 +218,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 				"--buildType", "projects", pathToBLAH,
 				"--verbose"
 		};
-		try {
-			new N4jscBase().doMain(args);
-			fail("HCL must have been failed");
-		} catch (ExitCodeException e) {
-			assertTrue(e.getExitCode() == ErrorExitCode.EXITCODE_SRCFILES_INVALID.getExitCodeValue());
-		}
+
+		expectCompilerException(args, ErrorExitCode.EXITCODE_SRCFILES_INVALID);
 	}
 }
