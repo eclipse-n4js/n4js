@@ -14,8 +14,6 @@ import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.name.Names;
 import org.eclipse.compare.IViewerCreator;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.n4js.json.ide.contentassist.antlr.JSONParser;
 import org.eclipse.n4js.json.ide.contentassist.antlr.PartialJSONContentAssistParser;
@@ -26,15 +24,6 @@ import org.eclipse.n4js.json.ui.labeling.JSONLabelProvider;
 import org.eclipse.n4js.json.ui.outline.JSONOutlineTreeProvider;
 import org.eclipse.n4js.json.ui.quickfix.JSONQuickfixProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.builder.BuilderParticipant;
-import org.eclipse.xtext.builder.EclipseOutputConfigurationProvider;
-import org.eclipse.xtext.builder.IXtextBuilderParticipant;
-import org.eclipse.xtext.builder.builderState.IBuilderState;
-import org.eclipse.xtext.builder.clustering.CurrentDescriptions;
-import org.eclipse.xtext.builder.impl.PersistentDataAwareDirtyResource;
-import org.eclipse.xtext.builder.nature.NatureAddingEditorCallback;
-import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
-import org.eclipse.xtext.generator.IContextualOutputConfigurationProvider;
 import org.eclipse.xtext.ide.LexerIdeBindings;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.Lexer;
@@ -42,9 +31,7 @@ import org.eclipse.xtext.ide.editor.partialEditing.IPartialEditingContentAssistP
 import org.eclipse.xtext.parser.antlr.AntlrTokenDefProvider;
 import org.eclipse.xtext.parser.antlr.ITokenDefProvider;
 import org.eclipse.xtext.parser.antlr.LexerProvider;
-import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.DefaultUiModule;
 import org.eclipse.xtext.ui.UIBindings;
@@ -56,8 +43,6 @@ import org.eclipse.xtext.ui.codetemplates.ui.preferences.TemplatesLanguageConfig
 import org.eclipse.xtext.ui.codetemplates.ui.registry.LanguageRegistrar;
 import org.eclipse.xtext.ui.codetemplates.ui.registry.LanguageRegistry;
 import org.eclipse.xtext.ui.compare.DefaultViewerCreator;
-import org.eclipse.xtext.ui.editor.DocumentBasedDirtyResource;
-import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher;
 import org.eclipse.xtext.ui.editor.contentassist.IContentProposalProvider;
@@ -152,46 +137,9 @@ public abstract class AbstractJSONUiModule extends DefaultUiModule {
 		return DefaultDependentElementsCalculator.class;
 	}
 	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public void configureIResourceDescriptionsBuilderScope(Binder binder) {
-		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.NAMED_BUILDER_SCOPE)).to(CurrentDescriptions.ResourceSetAware.class);
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public Class<? extends IXtextEditorCallback> bindIXtextEditorCallback() {
-		return NatureAddingEditorCallback.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public Class<? extends IContextualOutputConfigurationProvider> bindIContextualOutputConfigurationProvider() {
-		return EclipseOutputConfigurationProvider.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public void configureIResourceDescriptionsPersisted(Binder binder) {
-		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS)).to(IBuilderState.class);
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public Class<? extends DocumentBasedDirtyResource> bindDocumentBasedDirtyResource() {
-		return PersistentDataAwareDirtyResource.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.generator.GeneratorFragment2
-	public Class<? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant() {
-		return BuilderParticipant.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.generator.GeneratorFragment2
-	public IWorkspaceRoot bindIWorkspaceRootToInstance() {
-		return ResourcesPlugin.getWorkspace().getRoot();
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.generator.GeneratorFragment2
-	public void configureBuilderPreferenceStoreInitializer(Binder binder) {
-		binder.bind(IPreferenceStoreInitializer.class)
-			.annotatedWith(Names.named("builderPreferenceInitializer"))
-			.to(BuilderPreferenceAccess.Initializer.class);
+	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
+	public Class<? extends IContentFormatterFactory> bindIContentFormatterFactory() {
+		return ContentFormatterFactory.class;
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.ui.labeling.LabelProviderFragment2
@@ -290,11 +238,6 @@ public abstract class AbstractJSONUiModule extends DefaultUiModule {
 	// contributed by org.eclipse.xtext.xtext.generator.ui.compare.CompareFragment2
 	public void configureCompareViewerTitle(Binder binder) {
 		binder.bind(String.class).annotatedWith(Names.named(UIBindings.COMPARE_VIEWER_TITLE)).toInstance("JSON Compare");
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
-	public Class<? extends IContentFormatterFactory> bindIContentFormatterFactory() {
-		return ContentFormatterFactory.class;
 	}
 	
 }

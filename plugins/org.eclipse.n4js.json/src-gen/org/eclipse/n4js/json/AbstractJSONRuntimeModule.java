@@ -15,11 +15,9 @@ import com.google.inject.Provider;
 import com.google.inject.name.Names;
 import java.util.Properties;
 import org.eclipse.n4js.json.formatting2.JSONFormatter;
-import org.eclipse.n4js.json.generator.JSONGenerator;
 import org.eclipse.n4js.json.parser.antlr.JSONAntlrTokenFileProvider;
 import org.eclipse.n4js.json.parser.antlr.JSONParser;
 import org.eclipse.n4js.json.parser.antlr.internal.InternalJSONLexer;
-import org.eclipse.n4js.json.scoping.JSONScopeProvider;
 import org.eclipse.n4js.json.serializer.JSONSemanticSequencer;
 import org.eclipse.n4js.json.serializer.JSONSyntacticSequencer;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
@@ -29,7 +27,6 @@ import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.formatting2.FormatterPreferenceValuesProvider;
 import org.eclipse.xtext.formatting2.FormatterPreferences;
 import org.eclipse.xtext.formatting2.IFormatter2;
-import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.parser.IParser;
@@ -42,19 +39,6 @@ import org.eclipse.xtext.parser.antlr.Lexer;
 import org.eclipse.xtext.parser.antlr.LexerBindings;
 import org.eclipse.xtext.parser.antlr.LexerProvider;
 import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
-import org.eclipse.xtext.resource.IContainer;
-import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.eclipse.xtext.resource.containers.ResourceSetBasedAllContainersStateProvider;
-import org.eclipse.xtext.resource.containers.StateBasedContainerManager;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
-import org.eclipse.xtext.resource.impl.ResourceSetBasedResourceDescriptions;
-import org.eclipse.xtext.scoping.IGlobalScopeProvider;
-import org.eclipse.xtext.scoping.IScopeProvider;
-import org.eclipse.xtext.scoping.IgnoreCaseLinking;
-import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
-import org.eclipse.xtext.scoping.impl.DefaultGlobalScopeProvider;
-import org.eclipse.xtext.scoping.impl.ImportedNamespaceAwareLocalScopeProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.serializer.impl.Serializer;
 import org.eclipse.xtext.serializer.sequencer.ISemanticSequencer;
@@ -147,60 +131,15 @@ public abstract class AbstractJSONRuntimeModule extends DefaultRuntimeModule {
 			.to(InternalJSONLexer.class);
 	}
 	
-	// contributed by org.eclipse.xtext.xtext.generator.scoping.ImportNamespacesScopingFragment2
-	public Class<? extends IScopeProvider> bindIScopeProvider() {
-		return JSONScopeProvider.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.scoping.ImportNamespacesScopingFragment2
-	public void configureIScopeProviderDelegate(Binder binder) {
-		binder.bind(IScopeProvider.class).annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE)).to(ImportedNamespaceAwareLocalScopeProvider.class);
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.scoping.ImportNamespacesScopingFragment2
-	public Class<? extends IGlobalScopeProvider> bindIGlobalScopeProvider() {
-		return DefaultGlobalScopeProvider.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.scoping.ImportNamespacesScopingFragment2
-	public void configureIgnoreCaseLinking(Binder binder) {
-		binder.bindConstant().annotatedWith(IgnoreCaseLinking.class).to(false);
+	// contributed by org.eclipse.xtext.xtext.generator.validation.ValidatorFragment2
+	@SingletonBinding(eager=true)
+	public Class<? extends JSONValidator> bindJSONValidator() {
+		return JSONValidator.class;
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.exporting.QualifiedNamesFragment2
 	public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
 		return DefaultDeclarativeQualifiedNameProvider.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public Class<? extends IContainer.Manager> bindIContainer$Manager() {
-		return StateBasedContainerManager.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public Class<? extends IAllContainersState.Provider> bindIAllContainersState$Provider() {
-		return ResourceSetBasedAllContainersStateProvider.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public void configureIResourceDescriptions(Binder binder) {
-		binder.bind(IResourceDescriptions.class).to(ResourceSetBasedResourceDescriptions.class);
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public void configureIResourceDescriptionsPersisted(Binder binder) {
-		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS)).to(ResourceSetBasedResourceDescriptions.class);
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.generator.GeneratorFragment2
-	public Class<? extends IGenerator2> bindIGenerator2() {
-		return JSONGenerator.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.validation.ValidatorFragment2
-	@SingletonBinding(eager=true)
-	public Class<? extends JSONValidator> bindJSONValidator() {
-		return JSONValidator.class;
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2

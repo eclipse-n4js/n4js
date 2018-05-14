@@ -24,8 +24,6 @@ Automatic-Module-Name: org.eclipse.n4js.json
 Export-Package: org.eclipse.n4js.json.validation,
  org.eclipse.n4js.json.parser.antlr,
  org.eclipse.n4js.json.services,
- org.eclipse.n4js.json.scoping,
- org.eclipse.n4js.json.generator,
  org.eclipse.n4js.json.parser.antlr.internal,
  org.eclipse.n4js.json,
  org.eclipse.n4js.json.serializer
