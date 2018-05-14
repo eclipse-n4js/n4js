@@ -28,7 +28,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 /**
- * Cache for {@link ImageDescriptor image descriptor}s.
+ * Cache for {@link ImageDescriptor image descriptor}s in the context of the JSON bundle.
  */
 public enum JSONImageDescriptorCache {
 
