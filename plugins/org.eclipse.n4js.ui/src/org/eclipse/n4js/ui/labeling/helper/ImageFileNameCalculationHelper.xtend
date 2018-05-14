@@ -151,11 +151,11 @@ class ImageFileNameCalculationHelper {
 
 	def dispatch String getImageFileName(TFunction tFunction) {
 		switch tFunction.typeAccessModifier {
-			case TypeAccessModifier.PUBLIC: "n4js_function_small.png"
-			case TypeAccessModifier.PUBLIC_INTERNAL: "n4js_function_small.png"
-			case TypeAccessModifier.PROJECT: "n4js_function_small.png"
-			case TypeAccessModifier.PRIVATE: "n4js_function_small.png"
-			default: "n4js_function_small.png"
+			case TypeAccessModifier.PUBLIC: "n4js_function.png"
+			case TypeAccessModifier.PUBLIC_INTERNAL: "n4js_function.png"
+			case TypeAccessModifier.PROJECT: "n4js_function.png"
+			case TypeAccessModifier.PRIVATE: "n4js_function.png"
+			default: "n4js_function.png"
 		}
 	}
 
