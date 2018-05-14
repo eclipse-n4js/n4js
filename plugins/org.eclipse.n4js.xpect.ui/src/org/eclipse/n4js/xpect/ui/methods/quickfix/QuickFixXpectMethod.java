@@ -81,8 +81,6 @@ import com.google.inject.Injector;
 @XpectImport({ N4JSOffsetAdapter.class, XpEnvironmentData.class, VarDef.class, Config.class,
 		ValidationTestModuleSetup.class })
 public class QuickFixXpectMethod {
-	// @Inject
-	// private XpectN4JSES5TranspilerHelper xpectN4JSES5TranpilerHelper;
 
 	@Inject
 	private IssueResolutionProvider quickfixProvider;
