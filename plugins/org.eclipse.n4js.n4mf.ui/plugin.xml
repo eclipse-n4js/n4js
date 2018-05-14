@@ -340,7 +340,7 @@ Contributors:
 		<handler 
 			class="org.eclipse.n4js.n4mf.ui.N4MFExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
-			<activeWhen>	
+			<activeWhen>
 				<reference
 					definitionId="org.eclipse.n4js.n4mf.N4MF.Editor.opened">
 				</reference>

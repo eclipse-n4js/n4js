@@ -112,7 +112,7 @@ show_hidden.gif                             - Composition of
 macrodef_obj.gif							- https://github.com/eclipse/eclipse.platform/blob/master/ant/org.eclipse.ant.ui/icons/full/obj16/macrodef_obj.png
 native_lib_path_attrib.gif					- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/obj16/native_lib_path_attrib.png
 
-# wizards
+## wizards
 
 newprj_wiz.png								- https://github.com/eclipse/eclipse.platform.ui/blob/master/bundles/org.eclipse.ui.ide/icons/full/etool16/newprj_wiz.png
 newprj_wizban.png							- https://github.com/eclipse/eclipse.platform.ui/blob/master/bundles/org.eclipse.ui.ide/icons/full/wizban/newprj_wiz.png
