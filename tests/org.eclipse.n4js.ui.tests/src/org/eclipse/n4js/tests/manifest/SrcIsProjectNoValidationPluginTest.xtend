@@ -27,12 +27,12 @@ import org.junit.Test
 /**
  * Tests if the source folder can be set to {@code "."}
  */
-class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest {
+class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest {
 
 	IProject projectUnderTest
 	IFolder src
 	IFolder src_P
-	IFolder src_P_JuergensHacks
+	IFolder src_P_Q
 	IFile manifest
 
 	@Before
@@ -40,8 +40,8 @@ class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest 
 		super.setUp
 		projectUnderTest = createJSProject("IDE_754")
 		src = configureProjectWithXtext(projectUnderTest);
-		src_P = createFolder(src, "p");
-		src_P_JuergensHacks = createFolder(src_P, "juergensHacks");
+		src_P = createFolder(src, "P");
+		src_P_Q = createFolder(src_P, "Q");
 		manifest = projectUnderTest.project.getFile("manifest.n4mf");
 		setProjectAsSource();
 		waitForAutoBuild
@@ -49,23 +49,24 @@ class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest 
 
 	@Test
 	def void testFileInSrc() throws Exception {
-		val fileAValidated = createTestFile(src_P, "A", fileA);
-		val fileBValidated = createTestFile(src_P, "B", fileB);
-		val fileMyAlreadyAsModuleHack = createTestFile(src_P, "myAlreadyAsModuleHack", fileMyAlreadyAsModuleHack);
-		val fileWolfgangsUglyHack = createTestFile(src_P, "wolfgangsUglyHack", fileWolfgangsUglyHack);
-		val fileJuergenA = createTestFile(src_P_JuergensHacks, "A", fileJuergenA);
-		val fileJuergenB = createTestFile(src_P_JuergensHacks, "B", fileJuergenB);
-		assertMarkers("file A should have 3 markers", fileAValidated, 3);
-		assertMarkers("file B should have markers", fileBValidated, 2);
-		assertMarkers("file MyAlreadyAsModuleHack should have markers", fileMyAlreadyAsModuleHack, 2);
-		assertMarkers("file WolfgangsUglyHack should have markers", fileWolfgangsUglyHack, 2);
-		assertMarkers("file JuergenA should have markers", fileJuergenA, 6);
-		assertMarkers("file JuergenB should have markers", fileJuergenB, 2);
+		val fileA = createTestFile(src_P, "A", fileContentsA);
+		val fileB = createTestFile(src_P, "B", fileContentsB);
+		val fileC = createTestFile(src_P, "C", fileContentsC);
+		val fileD = createTestFile(src_P, "D", fileContentsD);
+		val fileE = createTestFile(src_P_Q, "E", fileContentsE);
+		val fileF = createTestFile(src_P_Q, "F", fileContentsF);
+		assertMarkers("file A should have 3 markers", fileA, 3);
+		assertMarkers("file B should have 2 markers", fileB, 2);
+		assertMarkers("file C should have 2 markers", fileC, 2);
+		assertMarkers("file D should have 2 markers", fileD, 2);
+		assertMarkers("file E should have 6 markers", fileE, 6);
+		assertMarkers("file F should have 2 markers", fileF, 2);
+		assertMarkers("manifest should have 1 marker", manifest, 1);
 
-		addPathsToNoValidate("p/wolfgangsUglyHack" -> null, "p/juergensHacks/*" -> null)
-		assertMarkers("file WolfgangsUglyHack should have no markers", fileWolfgangsUglyHack, 0);
-		assertMarkers("file JuergensA should have no markers", fileJuergenA, 0);
-		assertMarkers("file JuergenB should have no markers", fileJuergenB, 0);
+		addPathsToNoValidate("P/D" -> null, "P/Q/*" -> null)
+		assertMarkers("file D should have no markers", fileD, 0);
+		assertMarkers("file E should have no markers", fileE, 0);
+		assertMarkers("file F should have no markers", fileF, 0);
 	}
 
 	def void setProjectAsSource() {
@@ -143,13 +144,13 @@ class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest 
 		resource.contents.head as ProjectDescription
 	}
 
-	def fileA() '''
+	def getFileContentsA() '''
 		{
 			function funA() {
 			}
 		}
 		
-		import * as JN from "src/p/juergensHacks/B"
+		import * as JN from "src/P/Q/F"
 		
 		export public class A {
 		
@@ -160,8 +161,8 @@ class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest 
 		}
 	'''
 
-	def fileB() '''
-		import { A } from "src/p/juergensHacks/A"
+	def getFileContentsB() '''
+		import { A } from "src/P/Q/E"
 		
 		{
 			function B() {
@@ -175,7 +176,7 @@ class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest 
 		}
 	'''
 
-	def fileMyAlreadyAsModuleHack() '''
+	def getFileContentsC() '''
 		{
 			function Module() {
 			}
@@ -188,7 +189,7 @@ class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest 
 		}
 	'''
 
-	def fileWolfgangsUglyHack() '''
+	def getFileContentsD() '''
 		{
 			function ugly() {
 			}
@@ -201,21 +202,21 @@ class NoValidationPluginTestSrcIsProject extends AbstractBuilderParticipantTest 
 		}
 	'''
 
-	def fileJuergenA() '''
+	def getFileContentsE() '''
 		{
 			function funA() {
 			}
 		}
 		
-		import { B } from "src/p/juergensHacks/B"
+		import { B } from "src/P/Q/F"
 		
 		export public class A {
 			$b : B;
 		}
 	'''
 
-	def fileJuergenB() '''
-		import { A } from "src/p/juergensHacks/A"
+	def getFileContentsF() '''
+		import { A } from "src/P/Q/E"
 		
 		{
 			function B() {
