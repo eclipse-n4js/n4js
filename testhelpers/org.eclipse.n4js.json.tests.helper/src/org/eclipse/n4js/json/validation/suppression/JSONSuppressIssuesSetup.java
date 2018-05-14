@@ -13,7 +13,7 @@ package org.eclipse.n4js.json.validation.suppression;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.eclipse.n4js.json.validation.IssueCodes;
+import org.eclipse.n4js.json.validation.JSONIssueCodes;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetupRoot;
 import org.eclipse.xpect.XpectImport;
@@ -43,7 +43,7 @@ public class JSONSuppressIssuesSetup extends SuppressIssuesSetup {
 	@Override
 	protected Collection<String> getDefaultSuppressedIssueCodes() {
 		// per default, we ignore all comments-related issues in JSON X!PECT tests
-		return Arrays.asList(IssueCodes.JSON_COMMENT_UNSUPPORTED);
+		return Arrays.asList(JSONIssueCodes.JSON_COMMENT_UNSUPPORTED);
 	}
 
 }

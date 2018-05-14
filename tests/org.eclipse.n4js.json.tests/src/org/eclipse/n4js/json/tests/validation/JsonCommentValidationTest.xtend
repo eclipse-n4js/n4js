@@ -19,7 +19,7 @@ import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.json.validation.IssueCodes
+import org.eclipse.n4js.json.validation.JSONIssueCodes
 
 /**
  * Tests that checks for the validation of comments in JSON resources.
@@ -44,8 +44,8 @@ class JsonCommentValidationTest extends Assert {
 			   multi-line comment
 			*/
 		}'''.assertIssues('''
-		1 21 WARNING: «IssueCodes.JSON_COMMENT_UNSUPPORTED»
-		5 29 WARNING: «IssueCodes.JSON_COMMENT_UNSUPPORTED»''');
+		1 21 WARNING: «JSONIssueCodes.JSON_COMMENT_UNSUPPORTED»
+		5 29 WARNING: «JSONIssueCodes.JSON_COMMENT_UNSUPPORTED»''');
 	}
 	
 	@Test def void testTrailingComment() {

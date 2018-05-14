@@ -17,7 +17,7 @@ import org.eclipse.xtext.nodemodel.INode;
  * </ul>
  *
  */
-public class JsonSTRINGValueConverter extends STRINGValueConverter {
+public class JSONSTRINGValueConverter extends STRINGValueConverter {
 
 	@Override
 	/*

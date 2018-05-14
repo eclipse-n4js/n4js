@@ -79,7 +79,7 @@ public class ASTGraphProvider implements GraphProvider<Object, Object> {
 			// only show contents of first resource + .n4js resources
 			// (avoid showing built-in types or letting graph become to large)
 			String uriStr = res.getURI().toString();
-			if (isFirstResource || uriStr.endsWith(".n4js") || uriStr.endsWith(".n4jsd") || uriStr.endsWith(".json")) {
+			if (isFirstResource || uriStr.endsWith(".n4js") || uriStr.endsWith(".n4jsd")) {
 				getElementsForN4JSs(result, res);
 
 			} else if (SHOW_BUILT_IN.length > 0

@@ -59,8 +59,8 @@ public class JSONValidator extends AbstractResourceDependentJSONValidator {
 			if (value != null) {
 				final INode duplicatedNode = NodeModelUtils.findActualNodeFor(value);
 				final int duplicatedLine = NodeModelUtils.getLineAndColumn(duplicatedNode, duplicatedNode.getOffset()).getLine();
-				addIssue(IssueCodes.getMessageForJSON_DUPLICATE_KEY(pair.getName(), duplicatedLine), pair, 
-						JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.JSON_DUPLICATE_KEY);
+				addIssue(JSONIssueCodes.getMessageForJSON_DUPLICATE_KEY(pair.getName(), duplicatedLine), pair, 
+						JSONPackage.Literals.NAME_VALUE_PAIR__NAME, JSONIssueCodes.JSON_DUPLICATE_KEY);
 			}
 			values.put(pair.getName(), pair.getValue());
 		}
@@ -79,8 +79,8 @@ public class JSONValidator extends AbstractResourceDependentJSONValidator {
 			.filter(n -> n instanceof HiddenLeafNode)
 			.filter(n -> isCommentNode(n))
 			.forEach(n -> {
-				addIssue(IssueCodes.getMessageForJSON_COMMENT_UNSUPPORTED(), document, n.getOffset(), 
-						n.getLength(), IssueCodes.JSON_COMMENT_UNSUPPORTED);
+				addIssue(JSONIssueCodes.getMessageForJSON_COMMENT_UNSUPPORTED(), document, n.getOffset(), 
+						n.getLength(), JSONIssueCodes.JSON_COMMENT_UNSUPPORTED);
 			});
 	}
 	

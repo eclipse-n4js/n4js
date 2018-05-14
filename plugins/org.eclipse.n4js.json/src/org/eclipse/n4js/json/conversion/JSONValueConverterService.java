@@ -15,7 +15,7 @@ import com.google.inject.Inject;
 public class JSONValueConverterService extends AbstractDeclarativeValueConverterService {
 	
 	@Inject
-	private JsonSTRINGValueConverter stringValueConverter;
+	private JSONSTRINGValueConverter stringValueConverter;
 	
 	@Inject
 	private DoubleValueConverter doubleValueConverter;

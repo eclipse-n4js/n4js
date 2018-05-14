@@ -21,7 +21,7 @@ import org.eclipse.xtext.validation.SeverityConverter;
 /**
  * {@link IssueSeverities} implementation for JSON resources.
  * 
- * Provides issue severities based on JSON-related issue codes of {@link IssueCodes}.
+ * Provides issue severities based on JSON-related issue codes of {@link JSONIssueCodes}.
  */
 @SuppressWarnings("restriction")
 public class JSONIssueSeverities extends IssueSeverities {
@@ -43,7 +43,7 @@ public class JSONIssueSeverities extends IssueSeverities {
 	@Override
 	public Severity getSeverity(String code) {
 		if (!configurableIssueCodes.containsKey(code)) {
-			Severity severity = IssueCodes.getDefaultSeverity(code);
+			Severity severity = JSONIssueCodes.getDefaultSeverity(code);
 			if (severity != null) {
 				return severity;
 			}
