@@ -17,6 +17,11 @@ import org.eclipse.emf.ecore.EObject;
  * A representation of the model object '<em><b>Name Value Pair</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * *
+ * Represents a single name-value association.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>

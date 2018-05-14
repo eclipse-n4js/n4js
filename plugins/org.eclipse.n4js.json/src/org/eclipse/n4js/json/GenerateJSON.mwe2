@@ -6,8 +6,11 @@ import org.eclipse.xtext.xtext.generator.model.project.*
 var rootPath = ".."
 var runtimeProjectName = "org.eclipse.n4js.json"
 var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"
+
+/**
+ * Workflow to generate the language infrastructure of the JSON language.
+ */
 Workflow {
-	
 	component = XtextGenerator {
 		configuration = {
 			project = StandardProjectConfig {

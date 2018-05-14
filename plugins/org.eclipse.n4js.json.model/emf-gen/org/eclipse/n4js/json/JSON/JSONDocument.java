@@ -17,6 +17,10 @@ import org.eclipse.emf.ecore.EObject;
  * A representation of the model object '<em><b>Document</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * * Represents the root of a JSON document.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>
@@ -37,6 +41,10 @@ public interface JSONDocument extends EObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * The content of this JSON document.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Content</em>' containment reference.
 	 * @see #setContent(JSONValue)
 	 * @see org.eclipse.n4js.json.JSON.JSONPackage#getJSONDocument_Content()

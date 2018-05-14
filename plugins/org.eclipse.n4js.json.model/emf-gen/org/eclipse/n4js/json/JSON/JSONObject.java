@@ -17,6 +17,11 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Object</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * *
+ * Represents a JSON object.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>
@@ -38,6 +43,10 @@ public interface JSONObject extends JSONValue {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * The name-value associations stored in this object.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Name Value Pairs</em>' containment reference list.
 	 * @see org.eclipse.n4js.json.JSON.JSONPackage#getJSONObject_NameValuePairs()
 	 * @model containment="true"

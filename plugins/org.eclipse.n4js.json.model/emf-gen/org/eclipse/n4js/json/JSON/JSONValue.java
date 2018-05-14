@@ -17,6 +17,11 @@ import org.eclipse.emf.ecore.EObject;
  * A representation of the model object '<em><b>Value</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * *
+ * Common supertype to all values that may exist in JSON.
+ * <!-- end-model-doc -->
+ *
  *
  * @see org.eclipse.n4js.json.JSON.JSONPackage#getJSONValue()
  * @model abstract="true"

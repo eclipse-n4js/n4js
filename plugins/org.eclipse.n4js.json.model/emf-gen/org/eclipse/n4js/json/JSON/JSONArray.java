@@ -17,6 +17,11 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Array</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * *
+ * Represents a JSON array.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>

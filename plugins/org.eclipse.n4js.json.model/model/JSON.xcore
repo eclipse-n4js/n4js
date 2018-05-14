@@ -22,20 +22,39 @@
 
 package org.eclipse.n4js.json.JSON
 
+/** Represents the root of a JSON document. */
 class JSONDocument {
+	/**
+	 * The content of this JSON document.
+	 */
 	contains JSONValue content
 }
 
+/**
+ * Common supertype to all values that may exist in JSON. 
+ */
 abstract class JSONValue {}
 
+/**
+ * Represents a JSON object.
+ */
 class JSONObject extends JSONValue {
+	/**
+	 * The name-value associations stored in this object.
+	 */
 	contains NameValuePair[] nameValuePairs
 }
 
+/**
+ * Represents a JSON array.
+ */
 class JSONArray extends JSONValue {
 	contains JSONValue[] elements
 }
 
+/**
+ * Represents a single name-value association.
+ */
 class NameValuePair {
 	String name
 	contains JSONValue value
