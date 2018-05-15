@@ -60,6 +60,8 @@ VendorName : 'VendorName';
 
 NoValidate : 'noValidate';
 
+Validation : 'validation';
+
 Libraries : 'Libraries';
 
 ProjectId : 'ProjectId';
