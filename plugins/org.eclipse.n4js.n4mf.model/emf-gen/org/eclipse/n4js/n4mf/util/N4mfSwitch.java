@@ -80,14 +80,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4mfPackage.TESTED_PROJECT: {
-				TestedProject testedProject = (TestedProject)theEObject;
-				T result = caseTestedProject(testedProject);
-				if (result == null) result = caseProjectDependency(testedProject);
-				if (result == null) result = caseProjectReference(testedProject);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case N4mfPackage.DECLARED_VERSION: {
 				DeclaredVersion declaredVersion = (DeclaredVersion)theEObject;
 				T result = caseDeclaredVersion(declaredVersion);
@@ -124,29 +116,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4mfPackage.RUNTIME_PROJECT_DEPENDENCY: {
-				RuntimeProjectDependency runtimeProjectDependency = (RuntimeProjectDependency)theEObject;
-				T result = caseRuntimeProjectDependency(runtimeProjectDependency);
-				if (result == null) result = caseProjectReference(runtimeProjectDependency);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.REQUIRED_RUNTIME_LIBRARY_DEPENDENCY: {
-				RequiredRuntimeLibraryDependency requiredRuntimeLibraryDependency = (RequiredRuntimeLibraryDependency)theEObject;
-				T result = caseRequiredRuntimeLibraryDependency(requiredRuntimeLibraryDependency);
-				if (result == null) result = caseRuntimeProjectDependency(requiredRuntimeLibraryDependency);
-				if (result == null) result = caseProjectReference(requiredRuntimeLibraryDependency);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.PROVIDED_RUNTIME_LIBRARY_DEPENDENCY: {
-				ProvidedRuntimeLibraryDependency providedRuntimeLibraryDependency = (ProvidedRuntimeLibraryDependency)theEObject;
-				T result = caseProvidedRuntimeLibraryDependency(providedRuntimeLibraryDependency);
-				if (result == null) result = caseRuntimeProjectDependency(providedRuntimeLibraryDependency);
-				if (result == null) result = caseProjectReference(providedRuntimeLibraryDependency);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case N4mfPackage.PROJECT_DEPENDENCY: {
 				ProjectDependency projectDependency = (ProjectDependency)theEObject;
 				T result = caseProjectDependency(projectDependency);
@@ -176,21 +145,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProjectDescription(ProjectDescription object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Tested Project</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Tested Project</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTestedProject(TestedProject object) {
 		return null;
 	}
 
@@ -281,51 +235,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseModuleFilterSpecifier(ModuleFilterSpecifier object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Runtime Project Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Runtime Project Dependency</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRuntimeProjectDependency(RuntimeProjectDependency object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Required Runtime Library Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Required Runtime Library Dependency</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRequiredRuntimeLibraryDependency(RequiredRuntimeLibraryDependency object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Provided Runtime Library Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Provided Runtime Library Dependency</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseProvidedRuntimeLibraryDependency(ProvidedRuntimeLibraryDependency object) {
 		return null;
 	}
 

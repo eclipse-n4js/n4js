@@ -42,8 +42,8 @@ class ProjectDescription {
 	ProjectType projectType
 	String mainModule
 	contains ProjectReference extendedRuntimeEnvironment
-	contains ProvidedRuntimeLibraryDependency[] providedRuntimeLibraries
-	contains RequiredRuntimeLibraryDependency[] requiredRuntimeLibraries
+	contains ProjectReference[] providedRuntimeLibraries
+	contains ProjectReference[] requiredRuntimeLibraries
 	contains ProjectDependency[] projectDependencies
 	String implementationId
 	contains ProjectReference[] implementedProjects
@@ -54,7 +54,7 @@ class ProjectDescription {
 	String[] resourcePathsRaw
 	contains SourceFragment[] sourceFragment
 	contains ModuleFilter[] moduleFilters
-	contains TestedProject[] testedProjects
+	contains ProjectDependency[] testedProjects
 	ModuleLoader moduleLoader
 
 	op String getOutputPath() {
@@ -82,12 +82,6 @@ class ProjectDescription {
 		}
 		return paths;
 	}
-}
-
-/**
- * Representation of a reference to a project that is declared as the tested project for a particular test project.
- */
-class TestedProject extends ProjectDependency {
 }
 
 /**
@@ -222,28 +216,6 @@ class ModuleFilterSpecifier {
 	String moduleSpecifierWithWildcard
 	String sourcePath
 }
-
-/**
- * Abstract class representing the dependency to a runtime environment or runtime library.
- */
-abstract class RuntimeProjectDependency extends ProjectReference {
-
-}
-
-/**
- * Class for representing a required runtime library project dependency.
- */
-class RequiredRuntimeLibraryDependency extends RuntimeProjectDependency {
-
-}
-
-/**
- * Class for representing a provided runtime library project dependency.
- */
-class ProvidedRuntimeLibraryDependency extends RuntimeProjectDependency {
-
-}
-
 
 /**
  * Defines a unique project dependency by identifying a project by

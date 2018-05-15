@@ -238,7 +238,7 @@ public interface ProjectDescription extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Provided Runtime Libraries</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectReference}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Provided Runtime Libraries</em>' containment reference list isn't clear,
@@ -250,11 +250,11 @@ public interface ProjectDescription extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ProvidedRuntimeLibraryDependency> getProvidedRuntimeLibraries();
+	EList<ProjectReference> getProvidedRuntimeLibraries();
 
 	/**
 	 * Returns the value of the '<em><b>Required Runtime Libraries</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectReference}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Required Runtime Libraries</em>' containment reference list isn't clear,
@@ -266,7 +266,7 @@ public interface ProjectDescription extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<RequiredRuntimeLibraryDependency> getRequiredRuntimeLibraries();
+	EList<ProjectReference> getRequiredRuntimeLibraries();
 
 	/**
 	 * Returns the value of the '<em><b>Project Dependencies</b></em>' containment reference list.
@@ -460,7 +460,7 @@ public interface ProjectDescription extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Tested Projects</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4mf.TestedProject}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectDependency}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Tested Projects</em>' containment reference list isn't clear,
@@ -472,7 +472,7 @@ public interface ProjectDescription extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TestedProject> getTestedProjects();
+	EList<ProjectDependency> getTestedProjects();
 
 	/**
 	 * Returns the value of the '<em><b>Module Loader</b></em>' attribute.

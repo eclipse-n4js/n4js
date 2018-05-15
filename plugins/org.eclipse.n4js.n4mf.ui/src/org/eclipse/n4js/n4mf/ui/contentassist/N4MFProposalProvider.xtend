@@ -120,39 +120,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 		}
 	}
 
-	override complete_ProvidedRuntimeLibraryDependency(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
-		val desc = eObject.findProjectDescription;
-		if (null !== desc) {
-			val ignoredIds = desc.providedRuntimeLibraries.map[projectId];
-			completeProposal(desc, ctx, acceptor, RL_TYPE.forDescriptionMinis, ignoredIds);
-		}
-	}
-
-	override complete_RequiredRuntimeLibraryDependency(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
-		val desc = eObject.findProjectDescription;
-		if (null !== desc) {
-			val ignoredIds = desc.requiredRuntimeLibraries.map[projectId];
-			completeProposal(desc, ctx, acceptor, RL_TYPE.forDescriptionMinis, ignoredIds);
-		}
-	}
-
-	override complete_TestedProject(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
-		val desc = eObject.findProjectDescription;
-		if (null !== desc) {
-			val ignoredIds = desc.testedProjects.map[projectId];
-
-			// If no dependencies yet, do not be so harsh... allow anything but test project
-			val predicate = if (ignoredIds.nullOrEmpty) {
-				not(TEST_TYPE);
-			} else {
-				// If there is at least one tested project, try to stick to that project type.
-				val type = eObject.getProjectType(ignoredIds.head);
-				if (null === type) not(TEST_TYPE) else anyOf(type);
-			}
-			completeProposal(desc, ctx, acceptor, predicate.forDescriptionMinis, ignoredIds);
-		}
-	}
-
 	override complete_ProjectReference(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
 		if (ruleCall?.eContainer instanceof Assignment) {
 			val desc = eObject.findProjectDescription;
@@ -161,6 +128,26 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 			}
 			val assignment = ruleCall?.eContainer as Assignment;
 			switch(assignment.feature) {
+				case projectDescriptionAccess.providedRuntimeLibrariesAssignment_7_2_0.feature: {
+					val ignoredIds = desc.providedRuntimeLibraries.map[projectId];
+					completeProposal(desc, ctx, acceptor, RL_TYPE.forDescriptionMinis, ignoredIds);
+				}
+				case projectDescriptionAccess.requiredRuntimeLibrariesAssignment_8_2_0.feature: {
+					val ignoredIds = desc.requiredRuntimeLibraries.map[projectId];
+					completeProposal(desc, ctx, acceptor, RL_TYPE.forDescriptionMinis, ignoredIds);
+				}
+				case projectDescriptionAccess.testedProjectsAssignment_19_2_0.feature: {
+					val ignoredIds = desc.testedProjects.map[projectId];
+					// If no dependencies yet, do not be so harsh... allow anything but test project
+					val predicate = if (ignoredIds.nullOrEmpty) {
+						not(TEST_TYPE);
+					} else {
+						// If there is at least one tested project, try to stick to that project type.
+						val type = eObject.getProjectType(ignoredIds.head);
+						if (null === type) not(TEST_TYPE) else anyOf(type);
+					}
+					completeProposal(desc, ctx, acceptor, predicate.forDescriptionMinis, ignoredIds);
+				}
 				case projectDescriptionAccess.extendedRuntimeEnvironmentAssignment_6_2.feature: {
 					val currentExtendedREId = desc?.extendedRuntimeEnvironment?.projectId;
 					completeProposal(desc, ctx, acceptor, RE_TYPE.forDescriptionMinis, singleton(currentExtendedREId));

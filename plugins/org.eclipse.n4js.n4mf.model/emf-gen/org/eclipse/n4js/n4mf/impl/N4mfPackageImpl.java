@@ -33,12 +33,8 @@ import org.eclipse.n4js.n4mf.ProjectDependencyScope;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency;
-import org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency;
-import org.eclipse.n4js.n4mf.RuntimeProjectDependency;
 import org.eclipse.n4js.n4mf.SourceFragment;
 import org.eclipse.n4js.n4mf.SourceFragmentType;
-import org.eclipse.n4js.n4mf.TestedProject;
 import org.eclipse.n4js.n4mf.VersionConstraint;
 
 /**
@@ -54,13 +50,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	private EClass projectDescriptionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass testedProjectEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -103,27 +92,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * @generated
 	 */
 	private EClass moduleFilterSpecifierEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass runtimeProjectDependencyEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass requiredRuntimeLibraryDependencyEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass providedRuntimeLibraryDependencyEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -486,15 +454,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getTestedProject() {
-		return testedProjectEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getDeclaredVersion() {
 		return declaredVersionEClass;
 	}
@@ -711,33 +670,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getRuntimeProjectDependency() {
-		return runtimeProjectDependencyEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRequiredRuntimeLibraryDependency() {
-		return requiredRuntimeLibraryDependencyEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getProvidedRuntimeLibraryDependency() {
-		return providedRuntimeLibraryDependencyEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getProjectDependency() {
 		return projectDependencyEClass;
 	}
@@ -915,8 +847,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_LIBRARY_PATHS);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_RESOURCE_PATHS);
 
-		testedProjectEClass = createEClass(TESTED_PROJECT);
-
 		declaredVersionEClass = createEClass(DECLARED_VERSION);
 		createEAttribute(declaredVersionEClass, DECLARED_VERSION__MAJOR);
 		createEAttribute(declaredVersionEClass, DECLARED_VERSION__MINOR);
@@ -946,12 +876,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		moduleFilterSpecifierEClass = createEClass(MODULE_FILTER_SPECIFIER);
 		createEAttribute(moduleFilterSpecifierEClass, MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD);
 		createEAttribute(moduleFilterSpecifierEClass, MODULE_FILTER_SPECIFIER__SOURCE_PATH);
-
-		runtimeProjectDependencyEClass = createEClass(RUNTIME_PROJECT_DEPENDENCY);
-
-		requiredRuntimeLibraryDependencyEClass = createEClass(REQUIRED_RUNTIME_LIBRARY_DEPENDENCY);
-
-		providedRuntimeLibraryDependencyEClass = createEClass(PROVIDED_RUNTIME_LIBRARY_DEPENDENCY);
 
 		projectDependencyEClass = createEClass(PROJECT_DEPENDENCY);
 		createEReference(projectDependencyEClass, PROJECT_DEPENDENCY__VERSION_CONSTRAINT);
@@ -1003,10 +927,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		testedProjectEClass.getESuperTypes().add(this.getProjectDependency());
-		runtimeProjectDependencyEClass.getESuperTypes().add(this.getProjectReference());
-		requiredRuntimeLibraryDependencyEClass.getESuperTypes().add(this.getRuntimeProjectDependency());
-		providedRuntimeLibraryDependencyEClass.getESuperTypes().add(this.getRuntimeProjectDependency());
 		projectDependencyEClass.getESuperTypes().add(this.getProjectReference());
 
 		// Initialize classes, features, and operations; add parameters
@@ -1018,8 +938,8 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEAttribute(getProjectDescription_ProjectType(), this.getProjectType(), "projectType", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_MainModule(), theEcorePackage.getEString(), "mainModule", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ExtendedRuntimeEnvironment(), this.getProjectReference(), null, "extendedRuntimeEnvironment", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProjectDescription_ProvidedRuntimeLibraries(), this.getProvidedRuntimeLibraryDependency(), null, "providedRuntimeLibraries", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProjectDescription_RequiredRuntimeLibraries(), this.getRequiredRuntimeLibraryDependency(), null, "requiredRuntimeLibraries", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProjectDescription_ProvidedRuntimeLibraries(), this.getProjectReference(), null, "providedRuntimeLibraries", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProjectDescription_RequiredRuntimeLibraries(), this.getProjectReference(), null, "requiredRuntimeLibraries", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ProjectDependencies(), this.getProjectDependency(), null, "projectDependencies", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ImplementationId(), theEcorePackage.getEString(), "implementationId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ImplementedProjects(), this.getProjectReference(), null, "implementedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1030,7 +950,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEAttribute(getProjectDescription_ResourcePathsRaw(), theEcorePackage.getEString(), "resourcePathsRaw", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_SourceFragment(), this.getSourceFragment(), null, "sourceFragment", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ModuleFilters(), this.getModuleFilter(), null, "moduleFilters", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProjectDescription_TestedProjects(), this.getTestedProject(), null, "testedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProjectDescription_TestedProjects(), this.getProjectDependency(), null, "testedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ModuleLoader(), this.getModuleLoader(), "moduleLoader", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getProjectDescription__GetVendorId(), theEcorePackage.getEString(), "getVendorId", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -1043,8 +963,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEOperation(getProjectDescription__GetLibraryPaths(), theEcorePackage.getEString(), "getLibraryPaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getProjectDescription__GetResourcePaths(), theEcorePackage.getEString(), "getResourcePaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(testedProjectEClass, TestedProject.class, "TestedProject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(declaredVersionEClass, DeclaredVersion.class, "DeclaredVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDeclaredVersion_Major(), theEcorePackage.getEInt(), "major", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1080,12 +998,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEClass(moduleFilterSpecifierEClass, ModuleFilterSpecifier.class, "ModuleFilterSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModuleFilterSpecifier_ModuleSpecifierWithWildcard(), theEcorePackage.getEString(), "moduleSpecifierWithWildcard", null, 0, 1, ModuleFilterSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModuleFilterSpecifier_SourcePath(), theEcorePackage.getEString(), "sourcePath", null, 0, 1, ModuleFilterSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(runtimeProjectDependencyEClass, RuntimeProjectDependency.class, "RuntimeProjectDependency", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(requiredRuntimeLibraryDependencyEClass, RequiredRuntimeLibraryDependency.class, "RequiredRuntimeLibraryDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(providedRuntimeLibraryDependencyEClass, ProvidedRuntimeLibraryDependency.class, "ProvidedRuntimeLibraryDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(projectDependencyEClass, ProjectDependency.class, "ProjectDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProjectDependency_VersionConstraint(), this.getVersionConstraint(), null, "versionConstraint", null, 0, 1, ProjectDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

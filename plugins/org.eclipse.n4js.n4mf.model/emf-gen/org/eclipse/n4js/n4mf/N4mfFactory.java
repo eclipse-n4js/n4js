@@ -39,15 +39,6 @@ public interface N4mfFactory extends EFactory {
 	ProjectDescription createProjectDescription();
 
 	/**
-	 * Returns a new object of class '<em>Tested Project</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Tested Project</em>'.
-	 * @generated
-	 */
-	TestedProject createTestedProject();
-
-	/**
 	 * Returns a new object of class '<em>Declared Version</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -100,24 +91,6 @@ public interface N4mfFactory extends EFactory {
 	 * @generated
 	 */
 	ModuleFilterSpecifier createModuleFilterSpecifier();
-
-	/**
-	 * Returns a new object of class '<em>Required Runtime Library Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Required Runtime Library Dependency</em>'.
-	 * @generated
-	 */
-	RequiredRuntimeLibraryDependency createRequiredRuntimeLibraryDependency();
-
-	/**
-	 * Returns a new object of class '<em>Provided Runtime Library Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Provided Runtime Library Dependency</em>'.
-	 * @generated
-	 */
-	ProvidedRuntimeLibraryDependency createProvidedRuntimeLibraryDependency();
 
 	/**
 	 * Returns a new object of class '<em>Project Dependency</em>'.

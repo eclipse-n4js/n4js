@@ -340,6 +340,226 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION_OPERATION_COUNT = 5;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl <em>Declared Version</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl
+	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getDeclaredVersion()
+	 * @generated
+	 */
+	int DECLARED_VERSION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Major</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DECLARED_VERSION__MAJOR = 0;
+
+	/**
+	 * The feature id for the '<em><b>Minor</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DECLARED_VERSION__MINOR = 1;
+
+	/**
+	 * The feature id for the '<em><b>Micro</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DECLARED_VERSION__MICRO = 2;
+
+	/**
+	 * The feature id for the '<em><b>Qualifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DECLARED_VERSION__QUALIFIER = 3;
+
+	/**
+	 * The number of structural features of the '<em>Declared Version</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DECLARED_VERSION_FEATURE_COUNT = 4;
+
+	/**
+	 * The number of operations of the '<em>Declared Version</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DECLARED_VERSION_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.SourceFragmentImpl <em>Source Fragment</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4mf.impl.SourceFragmentImpl
+	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragment()
+	 * @generated
+	 */
+	int SOURCE_FRAGMENT = 2;
+
+	/**
+	 * The feature id for the '<em><b>Source Fragment Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_FRAGMENT__SOURCE_FRAGMENT_TYPE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Paths Raw</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_FRAGMENT__PATHS_RAW = 1;
+
+	/**
+	 * The number of structural features of the '<em>Source Fragment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_FRAGMENT_FEATURE_COUNT = 2;
+
+	/**
+	 * The operation id for the '<em>Compare By Fragment Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_FRAGMENT___COMPARE_BY_FRAGMENT_TYPE__SOURCEFRAGMENT = 0;
+
+	/**
+	 * The operation id for the '<em>Get Paths</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_FRAGMENT___GET_PATHS = 1;
+
+	/**
+	 * The number of operations of the '<em>Source Fragment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_FRAGMENT_OPERATION_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterImpl <em>Module Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4mf.impl.ModuleFilterImpl
+	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilter()
+	 * @generated
+	 */
+	int MODULE_FILTER = 3;
+
+	/**
+	 * The feature id for the '<em><b>Module Filter Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_FILTER__MODULE_FILTER_TYPE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Module Specifiers</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_FILTER__MODULE_SPECIFIERS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Module Filter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_FILTER_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Module Filter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_FILTER_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.BootstrapModuleImpl <em>Bootstrap Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4mf.impl.BootstrapModuleImpl
+	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getBootstrapModule()
+	 * @generated
+	 */
+	int BOOTSTRAP_MODULE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOTSTRAP_MODULE__MODULE_SPECIFIER_WITH_WILDCARD = 0;
+
+	/**
+	 * The feature id for the '<em><b>Source Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOTSTRAP_MODULE__SOURCE_PATH = 1;
+
+	/**
+	 * The number of structural features of the '<em>Bootstrap Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOTSTRAP_MODULE_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Bootstrap Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOTSTRAP_MODULE_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ProjectReferenceImpl <em>Project Reference</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -347,7 +567,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectReference()
 	 * @generated
 	 */
-	int PROJECT_REFERENCE = 6;
+	int PROJECT_REFERENCE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
@@ -404,6 +624,52 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_REFERENCE_OPERATION_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterSpecifierImpl <em>Module Filter Specifier</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4mf.impl.ModuleFilterSpecifierImpl
+	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilterSpecifier()
+	 * @generated
+	 */
+	int MODULE_FILTER_SPECIFIER = 6;
+
+	/**
+	 * The feature id for the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD = 0;
+
+	/**
+	 * The feature id for the '<em><b>Source Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_FILTER_SPECIFIER__SOURCE_PATH = 1;
+
+	/**
+	 * The number of structural features of the '<em>Module Filter Specifier</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_FILTER_SPECIFIER_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Module Filter Specifier</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_FILTER_SPECIFIER_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl <em>Project Dependency</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -411,7 +677,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectDependency()
 	 * @generated
 	 */
-	int PROJECT_DEPENDENCY = 11;
+	int PROJECT_DEPENDENCY = 7;
 
 	/**
 	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
@@ -486,546 +752,6 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DEPENDENCY_OPERATION_COUNT = PROJECT_REFERENCE_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.TestedProjectImpl <em>Tested Project</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.TestedProjectImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getTestedProject()
-	 * @generated
-	 */
-	int TESTED_PROJECT = 1;
-
-	/**
-	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECT__PROJECT_ID = PROJECT_DEPENDENCY__PROJECT_ID;
-
-	/**
-	 * The feature id for the '<em><b>Declared Vendor Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECT__DECLARED_VENDOR_ID = PROJECT_DEPENDENCY__DECLARED_VENDOR_ID;
-
-	/**
-	 * The feature id for the '<em><b>Version Constraint</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECT__VERSION_CONSTRAINT = PROJECT_DEPENDENCY__VERSION_CONSTRAINT;
-
-	/**
-	 * The feature id for the '<em><b>Declared Scope</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECT__DECLARED_SCOPE = PROJECT_DEPENDENCY__DECLARED_SCOPE;
-
-	/**
-	 * The number of structural features of the '<em>Tested Project</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECT_FEATURE_COUNT = PROJECT_DEPENDENCY_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Vendor Id</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECT___GET_VENDOR_ID = PROJECT_DEPENDENCY___GET_VENDOR_ID;
-
-	/**
-	 * The operation id for the '<em>Get Scope</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECT___GET_SCOPE = PROJECT_DEPENDENCY___GET_SCOPE;
-
-	/**
-	 * The number of operations of the '<em>Tested Project</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECT_OPERATION_COUNT = PROJECT_DEPENDENCY_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl <em>Declared Version</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getDeclaredVersion()
-	 * @generated
-	 */
-	int DECLARED_VERSION = 2;
-
-	/**
-	 * The feature id for the '<em><b>Major</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__MAJOR = 0;
-
-	/**
-	 * The feature id for the '<em><b>Minor</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__MINOR = 1;
-
-	/**
-	 * The feature id for the '<em><b>Micro</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__MICRO = 2;
-
-	/**
-	 * The feature id for the '<em><b>Qualifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION__QUALIFIER = 3;
-
-	/**
-	 * The number of structural features of the '<em>Declared Version</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION_FEATURE_COUNT = 4;
-
-	/**
-	 * The number of operations of the '<em>Declared Version</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DECLARED_VERSION_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.SourceFragmentImpl <em>Source Fragment</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.SourceFragmentImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragment()
-	 * @generated
-	 */
-	int SOURCE_FRAGMENT = 3;
-
-	/**
-	 * The feature id for the '<em><b>Source Fragment Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_FRAGMENT__SOURCE_FRAGMENT_TYPE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Paths Raw</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_FRAGMENT__PATHS_RAW = 1;
-
-	/**
-	 * The number of structural features of the '<em>Source Fragment</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_FRAGMENT_FEATURE_COUNT = 2;
-
-	/**
-	 * The operation id for the '<em>Compare By Fragment Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_FRAGMENT___COMPARE_BY_FRAGMENT_TYPE__SOURCEFRAGMENT = 0;
-
-	/**
-	 * The operation id for the '<em>Get Paths</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_FRAGMENT___GET_PATHS = 1;
-
-	/**
-	 * The number of operations of the '<em>Source Fragment</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_FRAGMENT_OPERATION_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterImpl <em>Module Filter</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.ModuleFilterImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilter()
-	 * @generated
-	 */
-	int MODULE_FILTER = 4;
-
-	/**
-	 * The feature id for the '<em><b>Module Filter Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_FILTER__MODULE_FILTER_TYPE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Module Specifiers</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_FILTER__MODULE_SPECIFIERS = 1;
-
-	/**
-	 * The number of structural features of the '<em>Module Filter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_FILTER_FEATURE_COUNT = 2;
-
-	/**
-	 * The number of operations of the '<em>Module Filter</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_FILTER_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.BootstrapModuleImpl <em>Bootstrap Module</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.BootstrapModuleImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getBootstrapModule()
-	 * @generated
-	 */
-	int BOOTSTRAP_MODULE = 5;
-
-	/**
-	 * The feature id for the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOOTSTRAP_MODULE__MODULE_SPECIFIER_WITH_WILDCARD = 0;
-
-	/**
-	 * The feature id for the '<em><b>Source Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOOTSTRAP_MODULE__SOURCE_PATH = 1;
-
-	/**
-	 * The number of structural features of the '<em>Bootstrap Module</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOOTSTRAP_MODULE_FEATURE_COUNT = 2;
-
-	/**
-	 * The number of operations of the '<em>Bootstrap Module</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOOTSTRAP_MODULE_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterSpecifierImpl <em>Module Filter Specifier</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.ModuleFilterSpecifierImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilterSpecifier()
-	 * @generated
-	 */
-	int MODULE_FILTER_SPECIFIER = 7;
-
-	/**
-	 * The feature id for the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD = 0;
-
-	/**
-	 * The feature id for the '<em><b>Source Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_FILTER_SPECIFIER__SOURCE_PATH = 1;
-
-	/**
-	 * The number of structural features of the '<em>Module Filter Specifier</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_FILTER_SPECIFIER_FEATURE_COUNT = 2;
-
-	/**
-	 * The number of operations of the '<em>Module Filter Specifier</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_FILTER_SPECIFIER_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.RuntimeProjectDependencyImpl <em>Runtime Project Dependency</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.RuntimeProjectDependencyImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getRuntimeProjectDependency()
-	 * @generated
-	 */
-	int RUNTIME_PROJECT_DEPENDENCY = 8;
-
-	/**
-	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RUNTIME_PROJECT_DEPENDENCY__PROJECT_ID = PROJECT_REFERENCE__PROJECT_ID;
-
-	/**
-	 * The feature id for the '<em><b>Declared Vendor Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RUNTIME_PROJECT_DEPENDENCY__DECLARED_VENDOR_ID = PROJECT_REFERENCE__DECLARED_VENDOR_ID;
-
-	/**
-	 * The number of structural features of the '<em>Runtime Project Dependency</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RUNTIME_PROJECT_DEPENDENCY_FEATURE_COUNT = PROJECT_REFERENCE_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Vendor Id</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RUNTIME_PROJECT_DEPENDENCY___GET_VENDOR_ID = PROJECT_REFERENCE___GET_VENDOR_ID;
-
-	/**
-	 * The operation id for the '<em>Get Scope</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RUNTIME_PROJECT_DEPENDENCY___GET_SCOPE = PROJECT_REFERENCE___GET_SCOPE;
-
-	/**
-	 * The number of operations of the '<em>Runtime Project Dependency</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RUNTIME_PROJECT_DEPENDENCY_OPERATION_COUNT = PROJECT_REFERENCE_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.RequiredRuntimeLibraryDependencyImpl <em>Required Runtime Library Dependency</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.RequiredRuntimeLibraryDependencyImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getRequiredRuntimeLibraryDependency()
-	 * @generated
-	 */
-	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY = 9;
-
-	/**
-	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY__PROJECT_ID = RUNTIME_PROJECT_DEPENDENCY__PROJECT_ID;
-
-	/**
-	 * The feature id for the '<em><b>Declared Vendor Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY__DECLARED_VENDOR_ID = RUNTIME_PROJECT_DEPENDENCY__DECLARED_VENDOR_ID;
-
-	/**
-	 * The number of structural features of the '<em>Required Runtime Library Dependency</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY_FEATURE_COUNT = RUNTIME_PROJECT_DEPENDENCY_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Vendor Id</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY___GET_VENDOR_ID = RUNTIME_PROJECT_DEPENDENCY___GET_VENDOR_ID;
-
-	/**
-	 * The operation id for the '<em>Get Scope</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY___GET_SCOPE = RUNTIME_PROJECT_DEPENDENCY___GET_SCOPE;
-
-	/**
-	 * The number of operations of the '<em>Required Runtime Library Dependency</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY_OPERATION_COUNT = RUNTIME_PROJECT_DEPENDENCY_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ProvidedRuntimeLibraryDependencyImpl <em>Provided Runtime Library Dependency</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.ProvidedRuntimeLibraryDependencyImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProvidedRuntimeLibraryDependency()
-	 * @generated
-	 */
-	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY = 10;
-
-	/**
-	 * The feature id for the '<em><b>Project Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY__PROJECT_ID = RUNTIME_PROJECT_DEPENDENCY__PROJECT_ID;
-
-	/**
-	 * The feature id for the '<em><b>Declared Vendor Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY__DECLARED_VENDOR_ID = RUNTIME_PROJECT_DEPENDENCY__DECLARED_VENDOR_ID;
-
-	/**
-	 * The number of structural features of the '<em>Provided Runtime Library Dependency</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY_FEATURE_COUNT = RUNTIME_PROJECT_DEPENDENCY_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Vendor Id</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY___GET_VENDOR_ID = RUNTIME_PROJECT_DEPENDENCY___GET_VENDOR_ID;
-
-	/**
-	 * The operation id for the '<em>Get Scope</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY___GET_SCOPE = RUNTIME_PROJECT_DEPENDENCY___GET_SCOPE;
-
-	/**
-	 * The number of operations of the '<em>Provided Runtime Library Dependency</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY_OPERATION_COUNT = RUNTIME_PROJECT_DEPENDENCY_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.VersionConstraintImpl <em>Version Constraint</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1033,7 +759,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getVersionConstraint()
 	 * @generated
 	 */
-	int VERSION_CONSTRAINT = 12;
+	int VERSION_CONSTRAINT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Excl Lower Bound</b></em>' attribute.
@@ -1097,7 +823,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectType()
 	 * @generated
 	 */
-	int PROJECT_TYPE = 13;
+	int PROJECT_TYPE = 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.SourceFragmentType <em>Source Fragment Type</em>}' enum.
@@ -1107,7 +833,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragmentType()
 	 * @generated
 	 */
-	int SOURCE_FRAGMENT_TYPE = 14;
+	int SOURCE_FRAGMENT_TYPE = 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ModuleFilterType <em>Module Filter Type</em>}' enum.
@@ -1117,7 +843,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilterType()
 	 * @generated
 	 */
-	int MODULE_FILTER_TYPE = 15;
+	int MODULE_FILTER_TYPE = 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ProjectDependencyScope <em>Project Dependency Scope</em>}' enum.
@@ -1127,7 +853,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectDependencyScope()
 	 * @generated
 	 */
-	int PROJECT_DEPENDENCY_SCOPE = 16;
+	int PROJECT_DEPENDENCY_SCOPE = 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ModuleLoader <em>Module Loader</em>}' enum.
@@ -1137,7 +863,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleLoader()
 	 * @generated
 	 */
-	int MODULE_LOADER = 17;
+	int MODULE_LOADER = 13;
 
 
 	/**
@@ -1432,16 +1158,6 @@ public interface N4mfPackage extends EPackage {
 	EOperation getProjectDescription__GetResourcePaths();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.TestedProject <em>Tested Project</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Tested Project</em>'.
-	 * @see org.eclipse.n4js.n4mf.TestedProject
-	 * @generated
-	 */
-	EClass getTestedProject();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.DeclaredVersion <em>Declared Version</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1694,36 +1410,6 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getModuleFilterSpecifier_SourcePath();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.RuntimeProjectDependency <em>Runtime Project Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Runtime Project Dependency</em>'.
-	 * @see org.eclipse.n4js.n4mf.RuntimeProjectDependency
-	 * @generated
-	 */
-	EClass getRuntimeProjectDependency();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency <em>Required Runtime Library Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Required Runtime Library Dependency</em>'.
-	 * @see org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency
-	 * @generated
-	 */
-	EClass getRequiredRuntimeLibraryDependency();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency <em>Provided Runtime Library Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Provided Runtime Library Dependency</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency
-	 * @generated
-	 */
-	EClass getProvidedRuntimeLibraryDependency();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ProjectDependency <em>Project Dependency</em>}'.
@@ -2113,16 +1799,6 @@ public interface N4mfPackage extends EPackage {
 		EOperation PROJECT_DESCRIPTION___GET_RESOURCE_PATHS = eINSTANCE.getProjectDescription__GetResourcePaths();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.TestedProjectImpl <em>Tested Project</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.TestedProjectImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getTestedProject()
-		 * @generated
-		 */
-		EClass TESTED_PROJECT = eINSTANCE.getTestedProject();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl <em>Declared Version</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2325,36 +2001,6 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MODULE_FILTER_SPECIFIER__SOURCE_PATH = eINSTANCE.getModuleFilterSpecifier_SourcePath();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.RuntimeProjectDependencyImpl <em>Runtime Project Dependency</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.RuntimeProjectDependencyImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getRuntimeProjectDependency()
-		 * @generated
-		 */
-		EClass RUNTIME_PROJECT_DEPENDENCY = eINSTANCE.getRuntimeProjectDependency();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.RequiredRuntimeLibraryDependencyImpl <em>Required Runtime Library Dependency</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.RequiredRuntimeLibraryDependencyImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getRequiredRuntimeLibraryDependency()
-		 * @generated
-		 */
-		EClass REQUIRED_RUNTIME_LIBRARY_DEPENDENCY = eINSTANCE.getRequiredRuntimeLibraryDependency();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ProvidedRuntimeLibraryDependencyImpl <em>Provided Runtime Library Dependency</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.ProvidedRuntimeLibraryDependencyImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProvidedRuntimeLibraryDependency()
-		 * @generated
-		 */
-		EClass PROVIDED_RUNTIME_LIBRARY_DEPENDENCY = eINSTANCE.getProvidedRuntimeLibraryDependency();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ProjectDependencyImpl <em>Project Dependency</em>}' class.

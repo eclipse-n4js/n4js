@@ -26,10 +26,10 @@ ProjectDescription:
 	&	('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)?
 
 	// only in case of runtime libraries or runtime environment:
-	&	('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (',' providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)? '}')?
+	&	('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProjectReference (',' providedRuntimeLibraries+=ProjectReference)*)? '}')?
 
 	// not available in runtime environments:
-	&	('RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (',' requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)? '}')?
+	&	('RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=ProjectReference (',' requiredRuntimeLibraries+=ProjectReference)*)? '}')?
 
 	// only available in N4JS components (Apps, Libs, Processor)
 	&	('ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)? '}')?
@@ -51,7 +51,7 @@ ProjectDescription:
 
 	& 	('ModuleFilters'	'{' moduleFilters+=ModuleFilter+ '}')?
 
-	&	('TestedProjects'	'{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)? '}')?
+	&	('TestedProjects'	'{' (testedProjects+=ProjectDependency (',' testedProjects+=ProjectDependency)*)? '}')?
 
 	&	('ModuleLoader'		':' moduleLoader=ModuleLoader)?
 ;
@@ -96,18 +96,6 @@ ModuleFilterSpecifier:
 
 enum ModuleFilterType:
 	NO_VALIDATE = 'noValidate' | NO_MODULE_WRAPPING = 'noModuleWrap'
-;
-
-ProvidedRuntimeLibraryDependency:
-	ProjectIdWithOptionalVendor
-;
-
-RequiredRuntimeLibraryDependency:
-	ProjectIdWithOptionalVendor
-;
-
-TestedProject:
-	ProjectIdWithOptionalVendor
 ;
 
 /*

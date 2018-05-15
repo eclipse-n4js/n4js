@@ -36,12 +36,11 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency;
 import org.eclipse.n4js.n4mf.SourceFragment;
 import org.eclipse.n4js.n4mf.SourceFragmentType;
-import org.eclipse.n4js.n4mf.TestedProject;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -352,11 +351,11 @@ public class N4JSModel {
 	public ImmutableList<? extends IN4JSSourceContainerAware> getProvidedRuntimeLibraries(N4JSProject project) {
 
 		ImmutableList.Builder<IN4JSSourceContainerAware> providedRuntimes = ImmutableList.builder();
-		EList<ProvidedRuntimeLibraryDependency> runtimeLibraries = getAllProvidedRuntimeLibraries(project);
+		EList<ProjectReference> runtimeLibraries = getAllProvidedRuntimeLibraries(project);
 		URI projectLocation = project.getLocation();
 
 		// GHOLD-249: If the project n4mf file has parse errors, we need a lot of null checks.
-		for (ProvidedRuntimeLibraryDependency runtimeLibrary : runtimeLibraries) {
+		for (ProjectReference runtimeLibrary : runtimeLibraries) {
 			URI location = workspace.getLocation(projectLocation, runtimeLibrary, PROJECT);
 			if (null == location) {
 				location = externalLibraryWorkspace.getLocation(projectLocation, runtimeLibrary,
@@ -378,7 +377,7 @@ public class N4JSModel {
 		return providedRuntimes.build();
 	}
 
-	private EList<ProvidedRuntimeLibraryDependency> getAllProvidedRuntimeLibraries(N4JSProject project) {
+	private EList<ProjectReference> getAllProvidedRuntimeLibraries(N4JSProject project) {
 		URI projectLocation = project.getLocation();
 		if (projectLocation == null)
 			return ECollections.emptyEList();
@@ -387,7 +386,7 @@ public class N4JSModel {
 		if (description == null)
 			return ECollections.emptyEList();
 
-		EList<ProvidedRuntimeLibraryDependency> runtimeLibraries = description.getProvidedRuntimeLibraries();
+		EList<ProjectReference> runtimeLibraries = description.getProvidedRuntimeLibraries();
 		if (runtimeLibraries == null)
 			return ECollections.emptyEList();
 
@@ -463,7 +462,7 @@ public class N4JSModel {
 		final ProjectDescription description = getProjectDescription(location);
 
 		if (null != description) {
-			for (TestedProject testedProject : description.getTestedProjects()) {
+			for (ProjectDependency testedProject : description.getTestedProjects()) {
 				URI hostLocation = workspace.getLocation(location, testedProject, PROJECT);
 
 				if (null == hostLocation) {

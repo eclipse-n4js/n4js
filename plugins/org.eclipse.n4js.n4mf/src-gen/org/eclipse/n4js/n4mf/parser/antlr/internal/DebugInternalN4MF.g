@@ -50,10 +50,10 @@ ruleProjectDescription:
 		'ProvidedRuntimeLibraries'
 		'{'
 		(
-			ruleProvidedRuntimeLibraryDependency
+			ruleProjectReference
 			(
 				','
-				ruleProvidedRuntimeLibraryDependency
+				ruleProjectReference
 			)*
 		)?
 		'}'
@@ -63,10 +63,10 @@ ruleProjectDescription:
 		'RequiredRuntimeLibraries'
 		'{'
 		(
-			ruleRequiredRuntimeLibraryDependency
+			ruleProjectReference
 			(
 				','
-				ruleRequiredRuntimeLibraryDependency
+				ruleProjectReference
 			)*
 		)?
 		'}'
@@ -171,10 +171,10 @@ ruleProjectDescription:
 		'TestedProjects'
 		'{'
 		(
-			ruleTestedProject
+			ruleProjectDependency
 			(
 				','
-				ruleTestedProject
+				ruleProjectDependency
 			)*
 		)?
 		'}'
@@ -245,21 +245,6 @@ ruleModuleFilterSpecifier:
 		'in'
 		RULE_STRING
 	)?
-;
-
-// Rule ProvidedRuntimeLibraryDependency
-ruleProvidedRuntimeLibraryDependency:
-	ruleProjectIdWithOptionalVendor
-;
-
-// Rule RequiredRuntimeLibraryDependency
-ruleRequiredRuntimeLibraryDependency:
-	ruleProjectIdWithOptionalVendor
-;
-
-// Rule TestedProject
-ruleTestedProject:
-	ruleProjectIdWithOptionalVendor
 ;
 
 // Rule ProjectReference

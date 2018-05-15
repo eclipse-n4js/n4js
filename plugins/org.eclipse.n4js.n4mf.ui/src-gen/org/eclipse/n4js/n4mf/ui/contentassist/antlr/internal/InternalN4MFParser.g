@@ -259,81 +259,6 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleProvidedRuntimeLibraryDependency
-entryRuleProvidedRuntimeLibraryDependency
-:
-{ before(grammarAccess.getProvidedRuntimeLibraryDependencyRule()); }
-	 ruleProvidedRuntimeLibraryDependency
-{ after(grammarAccess.getProvidedRuntimeLibraryDependencyRule()); } 
-	 EOF 
-;
-
-// Rule ProvidedRuntimeLibraryDependency
-ruleProvidedRuntimeLibraryDependency 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall()); }
-		ruleProjectIdWithOptionalVendor
-		{ after(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-// Entry rule entryRuleRequiredRuntimeLibraryDependency
-entryRuleRequiredRuntimeLibraryDependency
-:
-{ before(grammarAccess.getRequiredRuntimeLibraryDependencyRule()); }
-	 ruleRequiredRuntimeLibraryDependency
-{ after(grammarAccess.getRequiredRuntimeLibraryDependencyRule()); } 
-	 EOF 
-;
-
-// Rule RequiredRuntimeLibraryDependency
-ruleRequiredRuntimeLibraryDependency 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall()); }
-		ruleProjectIdWithOptionalVendor
-		{ after(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-// Entry rule entryRuleTestedProject
-entryRuleTestedProject
-:
-{ before(grammarAccess.getTestedProjectRule()); }
-	 ruleTestedProject
-{ after(grammarAccess.getTestedProjectRule()); } 
-	 EOF 
-;
-
-// Rule TestedProject
-ruleTestedProject 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getTestedProjectAccess().getProjectIdWithOptionalVendorParserRuleCall()); }
-		ruleProjectIdWithOptionalVendor
-		{ after(grammarAccess.getTestedProjectAccess().getProjectIdWithOptionalVendorParserRuleCall()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
 // Entry rule entryRuleProjectReference
 entryRuleProjectReference
 :
@@ -5710,9 +5635,9 @@ rule__ProjectDescription__ProvidedRuntimeLibrariesAssignment_7_2_0
 	}
 :
 	(
-		{ before(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_0_0()); }
-		ruleProvidedRuntimeLibraryDependency
-		{ after(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_0_0()); }
+		{ before(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProjectReferenceParserRuleCall_7_2_0_0()); }
+		ruleProjectReference
+		{ after(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProjectReferenceParserRuleCall_7_2_0_0()); }
 	)
 ;
 finally {
@@ -5725,9 +5650,9 @@ rule__ProjectDescription__ProvidedRuntimeLibrariesAssignment_7_2_1_1
 	}
 :
 	(
-		{ before(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_1_1_0()); }
-		ruleProvidedRuntimeLibraryDependency
-		{ after(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_1_1_0()); }
+		{ before(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProjectReferenceParserRuleCall_7_2_1_1_0()); }
+		ruleProjectReference
+		{ after(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProjectReferenceParserRuleCall_7_2_1_1_0()); }
 	)
 ;
 finally {
@@ -5740,9 +5665,9 @@ rule__ProjectDescription__RequiredRuntimeLibrariesAssignment_8_2_0
 	}
 :
 	(
-		{ before(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_0_0()); }
-		ruleRequiredRuntimeLibraryDependency
-		{ after(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_0_0()); }
+		{ before(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesProjectReferenceParserRuleCall_8_2_0_0()); }
+		ruleProjectReference
+		{ after(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesProjectReferenceParserRuleCall_8_2_0_0()); }
 	)
 ;
 finally {
@@ -5755,9 +5680,9 @@ rule__ProjectDescription__RequiredRuntimeLibrariesAssignment_8_2_1_1
 	}
 :
 	(
-		{ before(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_1_1_0()); }
-		ruleRequiredRuntimeLibraryDependency
-		{ after(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_1_1_0()); }
+		{ before(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesProjectReferenceParserRuleCall_8_2_1_1_0()); }
+		ruleProjectReference
+		{ after(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesProjectReferenceParserRuleCall_8_2_1_1_0()); }
 	)
 ;
 finally {
@@ -5995,9 +5920,9 @@ rule__ProjectDescription__TestedProjectsAssignment_19_2_0
 	}
 :
 	(
-		{ before(grammarAccess.getProjectDescriptionAccess().getTestedProjectsTestedProjectParserRuleCall_19_2_0_0()); }
-		ruleTestedProject
-		{ after(grammarAccess.getProjectDescriptionAccess().getTestedProjectsTestedProjectParserRuleCall_19_2_0_0()); }
+		{ before(grammarAccess.getProjectDescriptionAccess().getTestedProjectsProjectDependencyParserRuleCall_19_2_0_0()); }
+		ruleProjectDependency
+		{ after(grammarAccess.getProjectDescriptionAccess().getTestedProjectsProjectDependencyParserRuleCall_19_2_0_0()); }
 	)
 ;
 finally {
@@ -6010,9 +5935,9 @@ rule__ProjectDescription__TestedProjectsAssignment_19_2_1_1
 	}
 :
 	(
-		{ before(grammarAccess.getProjectDescriptionAccess().getTestedProjectsTestedProjectParserRuleCall_19_2_1_1_0()); }
-		ruleTestedProject
-		{ after(grammarAccess.getProjectDescriptionAccess().getTestedProjectsTestedProjectParserRuleCall_19_2_1_1_0()); }
+		{ before(grammarAccess.getProjectDescriptionAccess().getTestedProjectsProjectDependencyParserRuleCall_19_2_1_1_0()); }
+		ruleProjectDependency
+		{ after(grammarAccess.getProjectDescriptionAccess().getTestedProjectsProjectDependencyParserRuleCall_19_2_1_1_0()); }
 	)
 ;
 finally {

@@ -22,10 +22,7 @@ import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency;
-import org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency;
 import org.eclipse.n4js.n4mf.SourceFragment;
-import org.eclipse.n4js.n4mf.TestedProject;
 import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess;
 import org.eclipse.xtext.Action;
@@ -69,17 +66,8 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case N4mfPackage.PROJECT_REFERENCE:
 				sequence_ProjectIdWithOptionalVendor(context, (ProjectReference) semanticObject); 
 				return; 
-			case N4mfPackage.PROVIDED_RUNTIME_LIBRARY_DEPENDENCY:
-				sequence_ProjectIdWithOptionalVendor(context, (ProvidedRuntimeLibraryDependency) semanticObject); 
-				return; 
-			case N4mfPackage.REQUIRED_RUNTIME_LIBRARY_DEPENDENCY:
-				sequence_ProjectIdWithOptionalVendor(context, (RequiredRuntimeLibraryDependency) semanticObject); 
-				return; 
 			case N4mfPackage.SOURCE_FRAGMENT:
 				sequence_SourceFragment(context, (SourceFragment) semanticObject); 
-				return; 
-			case N4mfPackage.TESTED_PROJECT:
-				sequence_ProjectIdWithOptionalVendor(context, (TestedProject) semanticObject); 
 				return; 
 			case N4mfPackage.VERSION_CONSTRAINT:
 				sequence_VersionConstraint(context, (VersionConstraint) semanticObject); 
@@ -172,12 +160,12 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *         )? 
 	 *         (libraryPathsRaw+=STRING libraryPathsRaw+=STRING*)? 
 	 *         (resourcePathsRaw+=STRING resourcePathsRaw+=STRING*)? 
-	 *         (testedProjects+=TestedProject testedProjects+=TestedProject*)? 
+	 *         (testedProjects+=ProjectDependency testedProjects+=ProjectDependency*)? 
 	 *         (initModules+=BootstrapModule initModules+=BootstrapModule*)? 
 	 *         (implementedProjects+=ProjectReference implementedProjects+=ProjectReference*)? 
 	 *         (projectDependencies+=ProjectDependency projectDependencies+=ProjectDependency*)? 
-	 *         (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency*)? 
-	 *         (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency*)?
+	 *         (requiredRuntimeLibraries+=ProjectReference requiredRuntimeLibraries+=ProjectReference*)? 
+	 *         (providedRuntimeLibraries+=ProjectReference providedRuntimeLibraries+=ProjectReference*)?
 	 *     )+
 	 */
 	protected void sequence_ProjectDescription(ISerializationContext context, ProjectDescription semanticObject) {
@@ -193,42 +181,6 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier)
 	 */
 	protected void sequence_ProjectIdWithOptionalVendor(ISerializationContext context, ProjectReference semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     ProvidedRuntimeLibraryDependency returns ProvidedRuntimeLibraryDependency
-	 *
-	 * Constraint:
-	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier)
-	 */
-	protected void sequence_ProjectIdWithOptionalVendor(ISerializationContext context, ProvidedRuntimeLibraryDependency semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     RequiredRuntimeLibraryDependency returns RequiredRuntimeLibraryDependency
-	 *
-	 * Constraint:
-	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier)
-	 */
-	protected void sequence_ProjectIdWithOptionalVendor(ISerializationContext context, RequiredRuntimeLibraryDependency semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TestedProject returns TestedProject
-	 *
-	 * Constraint:
-	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier)
-	 */
-	protected void sequence_ProjectIdWithOptionalVendor(ISerializationContext context, TestedProject semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

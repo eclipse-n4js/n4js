@@ -364,9 +364,9 @@ ruleProjectDescription returns [EObject current=null]
 								(
 									(
 										{
-											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_0_0());
+											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProjectReferenceParserRuleCall_7_2_0_0());
 										}
-										lv_providedRuntimeLibraries_24_0=ruleProvidedRuntimeLibraryDependency
+										lv_providedRuntimeLibraries_24_0=ruleProjectReference
 										{
 											if ($current==null) {
 												$current = createModelElementForParent(grammarAccess.getProjectDescriptionRule());
@@ -375,7 +375,7 @@ ruleProjectDescription returns [EObject current=null]
 												$current,
 												"providedRuntimeLibraries",
 												lv_providedRuntimeLibraries_24_0,
-												"org.eclipse.n4js.n4mf.N4MF.ProvidedRuntimeLibraryDependency");
+												"org.eclipse.n4js.n4mf.N4MF.ProjectReference");
 											afterParserOrEnumRuleCall();
 										}
 									)
@@ -388,9 +388,9 @@ ruleProjectDescription returns [EObject current=null]
 									(
 										(
 											{
-												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_1_1_0());
+												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProjectReferenceParserRuleCall_7_2_1_1_0());
 											}
-											lv_providedRuntimeLibraries_26_0=ruleProvidedRuntimeLibraryDependency
+											lv_providedRuntimeLibraries_26_0=ruleProjectReference
 											{
 												if ($current==null) {
 													$current = createModelElementForParent(grammarAccess.getProjectDescriptionRule());
@@ -399,7 +399,7 @@ ruleProjectDescription returns [EObject current=null]
 													$current,
 													"providedRuntimeLibraries",
 													lv_providedRuntimeLibraries_26_0,
-													"org.eclipse.n4js.n4mf.N4MF.ProvidedRuntimeLibraryDependency");
+													"org.eclipse.n4js.n4mf.N4MF.ProjectReference");
 												afterParserOrEnumRuleCall();
 											}
 										)
@@ -433,9 +433,9 @@ ruleProjectDescription returns [EObject current=null]
 								(
 									(
 										{
-											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_0_0());
+											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesProjectReferenceParserRuleCall_8_2_0_0());
 										}
-										lv_requiredRuntimeLibraries_30_0=ruleRequiredRuntimeLibraryDependency
+										lv_requiredRuntimeLibraries_30_0=ruleProjectReference
 										{
 											if ($current==null) {
 												$current = createModelElementForParent(grammarAccess.getProjectDescriptionRule());
@@ -444,7 +444,7 @@ ruleProjectDescription returns [EObject current=null]
 												$current,
 												"requiredRuntimeLibraries",
 												lv_requiredRuntimeLibraries_30_0,
-												"org.eclipse.n4js.n4mf.N4MF.RequiredRuntimeLibraryDependency");
+												"org.eclipse.n4js.n4mf.N4MF.ProjectReference");
 											afterParserOrEnumRuleCall();
 										}
 									)
@@ -457,9 +457,9 @@ ruleProjectDescription returns [EObject current=null]
 									(
 										(
 											{
-												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_1_1_0());
+												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesProjectReferenceParserRuleCall_8_2_1_1_0());
 											}
-											lv_requiredRuntimeLibraries_32_0=ruleRequiredRuntimeLibraryDependency
+											lv_requiredRuntimeLibraries_32_0=ruleProjectReference
 											{
 												if ($current==null) {
 													$current = createModelElementForParent(grammarAccess.getProjectDescriptionRule());
@@ -468,7 +468,7 @@ ruleProjectDescription returns [EObject current=null]
 													$current,
 													"requiredRuntimeLibraries",
 													lv_requiredRuntimeLibraries_32_0,
-													"org.eclipse.n4js.n4mf.N4MF.RequiredRuntimeLibraryDependency");
+													"org.eclipse.n4js.n4mf.N4MF.ProjectReference");
 												afterParserOrEnumRuleCall();
 											}
 										)
@@ -1036,9 +1036,9 @@ ruleProjectDescription returns [EObject current=null]
 								(
 									(
 										{
-											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getTestedProjectsTestedProjectParserRuleCall_19_2_0_0());
+											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getTestedProjectsProjectDependencyParserRuleCall_19_2_0_0());
 										}
-										lv_testedProjects_83_0=ruleTestedProject
+										lv_testedProjects_83_0=ruleProjectDependency
 										{
 											if ($current==null) {
 												$current = createModelElementForParent(grammarAccess.getProjectDescriptionRule());
@@ -1047,7 +1047,7 @@ ruleProjectDescription returns [EObject current=null]
 												$current,
 												"testedProjects",
 												lv_testedProjects_83_0,
-												"org.eclipse.n4js.n4mf.N4MF.TestedProject");
+												"org.eclipse.n4js.n4mf.N4MF.ProjectDependency");
 											afterParserOrEnumRuleCall();
 										}
 									)
@@ -1060,9 +1060,9 @@ ruleProjectDescription returns [EObject current=null]
 									(
 										(
 											{
-												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getTestedProjectsTestedProjectParserRuleCall_19_2_1_1_0());
+												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getTestedProjectsProjectDependencyParserRuleCall_19_2_1_1_0());
 											}
-											lv_testedProjects_85_0=ruleTestedProject
+											lv_testedProjects_85_0=ruleProjectDependency
 											{
 												if ($current==null) {
 													$current = createModelElementForParent(grammarAccess.getProjectDescriptionRule());
@@ -1071,7 +1071,7 @@ ruleProjectDescription returns [EObject current=null]
 													$current,
 													"testedProjects",
 													lv_testedProjects_85_0,
-													"org.eclipse.n4js.n4mf.N4MF.TestedProject");
+													"org.eclipse.n4js.n4mf.N4MF.ProjectDependency");
 												afterParserOrEnumRuleCall();
 											}
 										)
@@ -1544,90 +1544,6 @@ ruleModuleFilterSpecifier returns [EObject current=null]
 			)
 		)?
 	)
-;
-
-// Entry rule entryRuleProvidedRuntimeLibraryDependency
-entryRuleProvidedRuntimeLibraryDependency returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getProvidedRuntimeLibraryDependencyRule()); }
-	iv_ruleProvidedRuntimeLibraryDependency=ruleProvidedRuntimeLibraryDependency
-	{ $current=$iv_ruleProvidedRuntimeLibraryDependency.current; }
-	EOF;
-
-// Rule ProvidedRuntimeLibraryDependency
-ruleProvidedRuntimeLibraryDependency returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	{
-		if ($current==null) {
-			$current = createModelElement(grammarAccess.getProvidedRuntimeLibraryDependencyRule());
-		}
-		newCompositeNode(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall());
-	}
-	this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor[$current]
-	{
-		$current = $this_ProjectIdWithOptionalVendor_0.current;
-		afterParserOrEnumRuleCall();
-	}
-;
-
-// Entry rule entryRuleRequiredRuntimeLibraryDependency
-entryRuleRequiredRuntimeLibraryDependency returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyRule()); }
-	iv_ruleRequiredRuntimeLibraryDependency=ruleRequiredRuntimeLibraryDependency
-	{ $current=$iv_ruleRequiredRuntimeLibraryDependency.current; }
-	EOF;
-
-// Rule RequiredRuntimeLibraryDependency
-ruleRequiredRuntimeLibraryDependency returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	{
-		if ($current==null) {
-			$current = createModelElement(grammarAccess.getRequiredRuntimeLibraryDependencyRule());
-		}
-		newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall());
-	}
-	this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor[$current]
-	{
-		$current = $this_ProjectIdWithOptionalVendor_0.current;
-		afterParserOrEnumRuleCall();
-	}
-;
-
-// Entry rule entryRuleTestedProject
-entryRuleTestedProject returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getTestedProjectRule()); }
-	iv_ruleTestedProject=ruleTestedProject
-	{ $current=$iv_ruleTestedProject.current; }
-	EOF;
-
-// Rule TestedProject
-ruleTestedProject returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	{
-		if ($current==null) {
-			$current = createModelElement(grammarAccess.getTestedProjectRule());
-		}
-		newCompositeNode(grammarAccess.getTestedProjectAccess().getProjectIdWithOptionalVendorParserRuleCall());
-	}
-	this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor[$current]
-	{
-		$current = $this_ProjectIdWithOptionalVendor_0.current;
-		afterParserOrEnumRuleCall();
-	}
 ;
 
 // Entry rule entryRuleProjectReference

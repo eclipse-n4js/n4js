@@ -37,7 +37,6 @@ import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.RuntimeProjectDependency
 import org.eclipse.n4js.n4mf.SourceFragment
 import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
@@ -132,12 +131,12 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 		// Take the RTE and RTL's check for duplicate fillings.
 		// lookup of Names in n4mf &
-		val Map<String, RuntimeProjectDependency> mQName2rtDep = newHashMap()
+		val Map<String, ProjectReference> mQName2rtDep = newHashMap()
 
 		// Concatenate RTEnv and RTLibs to be processed in same loop:
-		var Iterable<? extends RuntimeProjectDependency> rteAndRtl = projectDescription.requiredRuntimeLibraries
+		var Iterable<? extends ProjectReference> rteAndRtl = projectDescription.requiredRuntimeLibraries
 		// Describing Self-Project as RuntimeDependency to handle clash with filled Members from current Project consistently.
-		val selfProject = N4mfFactory.eINSTANCE.createRequiredRuntimeLibraryDependency
+		val selfProject = N4mfFactory.eINSTANCE.createProjectReference
 		selfProject.projectId = projectDescription.projectId
 		selfProject.declaredVendorId = projectDescription.declaredVendorId
 		val Optional<? extends IN4JSProject> optOwnProject = findProject(projectDescription.eResource.URI)
@@ -145,7 +144,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			rteAndRtl = Iterables.concat(rteAndRtl, #{selfProject})
 		}
 
-		for (RuntimeProjectDependency lib : rteAndRtl) {
+		for (ProjectReference lib : rteAndRtl) {
 
 			// lib.scope // COMPILE or TEST, in both cases we generate errors.
 			if (null !== lib) {
@@ -190,7 +189,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 		// Search for clashes in Polyfill:
 		// markermap: {lib1,lib2,...}->"filledname"
-		val Multimap<Set<RuntimeProjectDependency>, String> markerMapLibs2FilledName = LinkedListMultimap.create // Value is QualifiedName of polyfill_Element
+		val Multimap<Set<ProjectReference>, String> markerMapLibs2FilledName = LinkedListMultimap.create // Value is QualifiedName of polyfill_Element
 		for (String polyExport_QN : exportedPolyfills_QN_to_PolyProvision.keySet) {
 			val polyProvisions = exportedPolyfills_QN_to_PolyProvision.get(polyExport_QN);
 			if (polyProvisions.size > 1) {
@@ -241,7 +240,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		// obsolete: c) clash with multiple libraries and self --> something
 		// obsolete: d) clash with only one library and it is self --> we have errors
 		//
-		for (Set<RuntimeProjectDependency> keyS : markerMapLibs2FilledName.keySet) {
+		for (Set<ProjectReference> keyS : markerMapLibs2FilledName.keySet) {
 
 			val polyFilledMemberAsStrings = markerMapLibs2FilledName.get(keyS)
 			val libsString = keyS.toList.map [

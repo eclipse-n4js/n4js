@@ -40,10 +40,7 @@ import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency;
-import org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency;
 import org.eclipse.n4js.n4mf.SourceFragment;
-import org.eclipse.n4js.n4mf.TestedProject;
 
 import org.eclipse.n4js.utils.io.FileUtils;
 
@@ -209,7 +206,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ProvidedRuntimeLibraryDependency> providedRuntimeLibraries;
+	protected EList<ProjectReference> providedRuntimeLibraries;
 
 	/**
 	 * The cached value of the '{@link #getRequiredRuntimeLibraries() <em>Required Runtime Libraries</em>}' containment reference list.
@@ -219,7 +216,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<RequiredRuntimeLibraryDependency> requiredRuntimeLibraries;
+	protected EList<ProjectReference> requiredRuntimeLibraries;
 
 	/**
 	 * The cached value of the '{@link #getProjectDependencies() <em>Project Dependencies</em>}' containment reference list.
@@ -349,7 +346,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TestedProject> testedProjects;
+	protected EList<ProjectDependency> testedProjects;
 
 	/**
 	 * The default value of the '{@link #getModuleLoader() <em>Module Loader</em>}' attribute.
@@ -586,9 +583,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ProvidedRuntimeLibraryDependency> getProvidedRuntimeLibraries() {
+	public EList<ProjectReference> getProvidedRuntimeLibraries() {
 		if (providedRuntimeLibraries == null) {
-			providedRuntimeLibraries = new EObjectContainmentEList<ProvidedRuntimeLibraryDependency>(ProvidedRuntimeLibraryDependency.class, this, N4mfPackage.PROJECT_DESCRIPTION__PROVIDED_RUNTIME_LIBRARIES);
+			providedRuntimeLibraries = new EObjectContainmentEList<ProjectReference>(ProjectReference.class, this, N4mfPackage.PROJECT_DESCRIPTION__PROVIDED_RUNTIME_LIBRARIES);
 		}
 		return providedRuntimeLibraries;
 	}
@@ -598,9 +595,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<RequiredRuntimeLibraryDependency> getRequiredRuntimeLibraries() {
+	public EList<ProjectReference> getRequiredRuntimeLibraries() {
 		if (requiredRuntimeLibraries == null) {
-			requiredRuntimeLibraries = new EObjectContainmentEList<RequiredRuntimeLibraryDependency>(RequiredRuntimeLibraryDependency.class, this, N4mfPackage.PROJECT_DESCRIPTION__REQUIRED_RUNTIME_LIBRARIES);
+			requiredRuntimeLibraries = new EObjectContainmentEList<ProjectReference>(ProjectReference.class, this, N4mfPackage.PROJECT_DESCRIPTION__REQUIRED_RUNTIME_LIBRARIES);
 		}
 		return requiredRuntimeLibraries;
 	}
@@ -779,9 +776,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<TestedProject> getTestedProjects() {
+	public EList<ProjectDependency> getTestedProjects() {
 		if (testedProjects == null) {
-			testedProjects = new EObjectContainmentEList<TestedProject>(TestedProject.class, this, N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS);
+			testedProjects = new EObjectContainmentEList<ProjectDependency>(ProjectDependency.class, this, N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS);
 		}
 		return testedProjects;
 	}
@@ -1012,11 +1009,11 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__PROVIDED_RUNTIME_LIBRARIES:
 				getProvidedRuntimeLibraries().clear();
-				getProvidedRuntimeLibraries().addAll((Collection<? extends ProvidedRuntimeLibraryDependency>)newValue);
+				getProvidedRuntimeLibraries().addAll((Collection<? extends ProjectReference>)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__REQUIRED_RUNTIME_LIBRARIES:
 				getRequiredRuntimeLibraries().clear();
-				getRequiredRuntimeLibraries().addAll((Collection<? extends RequiredRuntimeLibraryDependency>)newValue);
+				getRequiredRuntimeLibraries().addAll((Collection<? extends ProjectReference>)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES:
 				getProjectDependencies().clear();
@@ -1057,7 +1054,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:
 				getTestedProjects().clear();
-				getTestedProjects().addAll((Collection<? extends TestedProject>)newValue);
+				getTestedProjects().addAll((Collection<? extends ProjectDependency>)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				setModuleLoader((ModuleLoader)newValue);

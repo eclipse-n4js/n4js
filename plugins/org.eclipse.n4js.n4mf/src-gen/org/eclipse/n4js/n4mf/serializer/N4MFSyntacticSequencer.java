@@ -913,7 +913,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -922,7 +922,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         execModule=BootstrapModule
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -931,7 +931,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         extendedRuntimeEnvironment=ProjectReference
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -940,7 +940,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         implementationId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -949,7 +949,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         libraryPathsRaw+=STRING
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -958,7 +958,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         mainModule=STRING
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -967,7 +967,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         moduleFilters+=ModuleFilter
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -976,7 +976,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         moduleLoader=ModuleLoader
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -985,7 +985,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         outputPathRaw=STRING
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -994,7 +994,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1003,7 +1003,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectType=ProjectType
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1012,7 +1012,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectVersion=DeclaredVersion
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1021,7 +1021,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         resourcePathsRaw+=STRING
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1030,7 +1030,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         sourceFragment+=SourceFragment
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1039,7 +1039,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         declaredVendorId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1048,7 +1048,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         vendorName=STRING
 	 *     )
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1076,7 +1076,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1085,7 +1085,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         execModule=BootstrapModule
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1094,7 +1094,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         extendedRuntimeEnvironment=ProjectReference
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1103,7 +1103,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         implementationId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1112,7 +1112,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         libraryPathsRaw+=STRING
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1121,7 +1121,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         mainModule=STRING
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1130,7 +1130,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         moduleFilters+=ModuleFilter
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1139,7 +1139,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         moduleLoader=ModuleLoader
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1148,7 +1148,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         outputPathRaw=STRING
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1157,7 +1157,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1166,7 +1166,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectType=ProjectType
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1175,7 +1175,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectVersion=DeclaredVersion
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1184,7 +1184,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         resourcePathsRaw+=STRING
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1193,7 +1193,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         sourceFragment+=SourceFragment
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1202,7 +1202,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         declaredVendorId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1211,7 +1211,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         vendorName=STRING
 	 *     )
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         (ambiguity) 
@@ -1411,7 +1411,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         ((('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('InitModules' '{' '}'))? ('TestedProjects' '{' '}')?)+ 
 	 *         'ImplementedProjects' 
@@ -1438,7 +1438,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))? ('RequiredRuntimeLibraries' '{' '}')?)+ 
 	 *         'ImplementedProjects' 
@@ -1465,7 +1465,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))? ('ProvidedRuntimeLibraries' '{' '}')?)+ 
 	 *         'ImplementedProjects' 
@@ -1721,7 +1721,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         ((('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}'))? ('TestedProjects' '{' '}')?)+ 
 	 *         'InitModules' 
@@ -1748,7 +1748,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('TestedProjects' '{' '}'))? ('RequiredRuntimeLibraries' '{' '}')?)+ 
 	 *         'InitModules' 
@@ -1775,7 +1775,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('TestedProjects' '{' '}'))? ('ProvidedRuntimeLibraries' '{' '}')?)+ 
 	 *         'InitModules' 
@@ -1910,7 +1910,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         declaredVendorId=N4mfIdentifier 
@@ -1918,7 +1918,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         execModule=BootstrapModule 
@@ -1926,7 +1926,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         extendedRuntimeEnvironment=ProjectReference 
@@ -1934,7 +1934,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         implementationId=N4mfIdentifier 
@@ -1942,7 +1942,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         libraryPathsRaw+=STRING 
@@ -1951,7 +1951,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         mainModule=STRING 
@@ -1959,7 +1959,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         moduleFilters+=ModuleFilter 
@@ -1968,7 +1968,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         moduleLoader=ModuleLoader 
@@ -1976,7 +1976,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         outputPathRaw=STRING 
@@ -1984,7 +1984,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         projectId=N4mfIdentifier 
@@ -1992,7 +1992,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         projectType=ProjectType 
@@ -2000,7 +2000,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         projectVersion=DeclaredVersion 
@@ -2008,7 +2008,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         resourcePathsRaw+=STRING 
@@ -2017,7 +2017,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         sourceFragment+=SourceFragment 
@@ -2026,7 +2026,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
 	 *         vendorName=STRING 
@@ -2034,7 +2034,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_19_3_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____a_TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2057,7 +2057,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     testedProjects+=TestedProject (ambiguity) testedProjects+=TestedProject
+	 *     testedProjects+=ProjectDependency (ambiguity) testedProjects+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_19_3_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____a_TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -2077,13 +2077,13 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))? ('RequiredRuntimeLibraries' '{' '}')?)+ 
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_19_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3____q___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q__p_TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2104,13 +2104,13 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))? ('ProvidedRuntimeLibraries' '{' '}')?)+ 
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_19_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q__p_TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2137,7 +2137,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_19_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3__q__p_TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2164,7 +2164,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_19_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3__q__p_TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2191,7 +2191,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'TestedProjects' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         testedProjects+=TestedProject
+	 *         testedProjects+=ProjectDependency
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_19_3_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3__q__p_TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2220,7 +2220,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         declaredVendorId=N4mfIdentifier 
@@ -2228,7 +2228,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         execModule=BootstrapModule 
@@ -2236,7 +2236,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         extendedRuntimeEnvironment=ProjectReference 
@@ -2244,7 +2244,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         implementationId=N4mfIdentifier 
@@ -2252,7 +2252,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         libraryPathsRaw+=STRING 
@@ -2261,7 +2261,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         mainModule=STRING 
@@ -2269,7 +2269,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         moduleFilters+=ModuleFilter 
@@ -2278,7 +2278,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         moduleLoader=ModuleLoader 
@@ -2286,7 +2286,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         outputPathRaw=STRING 
@@ -2294,7 +2294,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         projectId=N4mfIdentifier 
@@ -2302,7 +2302,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         projectType=ProjectType 
@@ -2310,7 +2310,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         projectVersion=DeclaredVersion 
@@ -2318,7 +2318,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         resourcePathsRaw+=STRING 
@@ -2327,7 +2327,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         sourceFragment+=SourceFragment 
@@ -2336,7 +2336,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         vendorName=STRING 
@@ -2344,7 +2344,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_7_3_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____a_ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2367,7 +2367,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (ambiguity) providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *     providedRuntimeLibraries+=ProjectReference (ambiguity) providedRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_7_3_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____a_ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -2387,13 +2387,13 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         ((('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))? ('TestedProjects' '{' '}')?)+ 
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_7_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3__q__p_ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2414,13 +2414,13 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))? ('RequiredRuntimeLibraries' '{' '}')?)+ 
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_7_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q__p_ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2447,7 +2447,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_7_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3__q__p_ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2474,7 +2474,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_7_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3__q__p_ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2501,7 +2501,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'ProvidedRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_7_3_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3__q__p_ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2530,7 +2530,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         declaredVendorId=N4mfIdentifier 
@@ -2538,7 +2538,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         execModule=BootstrapModule 
@@ -2546,7 +2546,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         extendedRuntimeEnvironment=ProjectReference 
@@ -2554,7 +2554,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         implementationId=N4mfIdentifier 
@@ -2562,7 +2562,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         libraryPathsRaw+=STRING 
@@ -2571,7 +2571,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         mainModule=STRING 
@@ -2579,7 +2579,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         moduleFilters+=ModuleFilter 
@@ -2588,7 +2588,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         moduleLoader=ModuleLoader 
@@ -2596,7 +2596,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         outputPathRaw=STRING 
@@ -2604,7 +2604,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         projectId=N4mfIdentifier 
@@ -2612,7 +2612,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         projectType=ProjectType 
@@ -2620,7 +2620,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         projectVersion=DeclaredVersion 
@@ -2628,7 +2628,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         resourcePathsRaw+=STRING 
@@ -2637,7 +2637,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         sourceFragment+=SourceFragment 
@@ -2646,7 +2646,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
 	 *         vendorName=STRING 
@@ -2654,7 +2654,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_8_3_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____a_RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2677,7 +2677,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (ambiguity) requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *     requiredRuntimeLibraries+=ProjectReference (ambiguity) requiredRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_8_3_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____a_RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -2697,13 +2697,13 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         ((('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))? ('TestedProjects' '{' '}')?)+ 
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_8_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3____q___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3__q__p_RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2724,13 +2724,13 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))? ('ProvidedRuntimeLibraries' '{' '}')?)+ 
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_8_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q__p_RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2757,7 +2757,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_8_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3__q__p_RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2784,7 +2784,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_8_3_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3__q__p_RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -2811,7 +2811,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         'RequiredRuntimeLibraries' 
 	 *         '{' 
 	 *         (ambiguity) 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_8_3_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3__q__p_RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -3007,7 +3007,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         ((('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))? ('TestedProjects' '{' '}')?)+ 
 	 *         'ProjectDependencies' 
@@ -3034,7 +3034,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
+	 *         requiredRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('ProvidedRuntimeLibraries' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))? ('RequiredRuntimeLibraries' '{' '}')?)+ 
 	 *         'ProjectDependencies' 
@@ -3061,7 +3061,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
+	 *         providedRuntimeLibraries+=ProjectReference 
 	 *         '}' 
 	 *         ((('RequiredRuntimeLibraries' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))? ('ProvidedRuntimeLibraries' '{' '}')?)+ 
 	 *         'ProjectDependencies' 
@@ -3145,7 +3145,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3154,7 +3154,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         execModule=BootstrapModule
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3163,7 +3163,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         extendedRuntimeEnvironment=ProjectReference
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3172,7 +3172,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         implementationId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3181,7 +3181,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         libraryPathsRaw+=STRING
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3190,7 +3190,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         mainModule=STRING
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3199,7 +3199,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         moduleFilters+=ModuleFilter
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3208,7 +3208,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         moduleLoader=ModuleLoader
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3217,7 +3217,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         outputPathRaw=STRING
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3226,7 +3226,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3235,7 +3235,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectType=ProjectType
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3244,7 +3244,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectVersion=DeclaredVersion
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3253,7 +3253,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         resourcePathsRaw+=STRING
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3262,7 +3262,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         sourceFragment+=SourceFragment
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3271,7 +3271,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         declaredVendorId=N4mfIdentifier
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3280,7 +3280,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         vendorName=STRING
 	 *     )
 	 *     (
-	 *         testedProjects+=TestedProject 
+	 *         testedProjects+=ProjectDependency 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         (ambiguity) 
@@ -3302,38 +3302,38 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     declaredVendorId=N4mfIdentifier (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     execModule=BootstrapModule (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     implementationId=N4mfIdentifier (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     mainModule=STRING (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     moduleLoader=ModuleLoader (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     outputPathRaw=STRING (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     projectId=N4mfIdentifier (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     projectType=ProjectType (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     projectVersion=DeclaredVersion (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ExecModule' ':' execModule=BootstrapModule
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ImplementationId' ':' implementationId=N4mfIdentifier
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Libraries' '{' libraryPathsRaw+=STRING
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'MainModule' ':' mainModule=STRING
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ModuleFilters' '{' moduleFilters+=ModuleFilter
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ModuleLoader' ':' moduleLoader=ModuleLoader
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Output' ':' outputPathRaw=STRING
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ProjectId' ':' projectId=N4mfIdentifier
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'VendorId' ':' declaredVendorId=N4mfIdentifier
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
-	 *     testedProjects+=TestedProject '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* (rule end)
-	 *     vendorName=STRING (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
+	 *     (rule start) (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     declaredVendorId=N4mfIdentifier (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     execModule=BootstrapModule (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     implementationId=N4mfIdentifier (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     mainModule=STRING (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     moduleLoader=ModuleLoader (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     outputPathRaw=STRING (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     projectId=N4mfIdentifier (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     projectType=ProjectType (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     projectVersion=DeclaredVersion (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ExecModule' ':' execModule=BootstrapModule
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ImplementationId' ':' implementationId=N4mfIdentifier
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Libraries' '{' libraryPathsRaw+=STRING
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'MainModule' ':' mainModule=STRING
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ModuleFilters' '{' moduleFilters+=ModuleFilter
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ModuleLoader' ':' moduleLoader=ModuleLoader
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Output' ':' outputPathRaw=STRING
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ProjectId' ':' projectId=N4mfIdentifier
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'VendorId' ':' declaredVendorId=N4mfIdentifier
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* (rule end)
+	 *     vendorName=STRING (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3639,38 +3639,38 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     declaredVendorId=N4mfIdentifier (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     execModule=BootstrapModule (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     implementationId=N4mfIdentifier (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     mainModule=STRING (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     moduleLoader=ModuleLoader (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     outputPathRaw=STRING (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     projectId=N4mfIdentifier (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     projectType=ProjectType (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     projectVersion=DeclaredVersion (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ExecModule' ':' execModule=BootstrapModule
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ImplementationId' ':' implementationId=N4mfIdentifier
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Libraries' '{' libraryPathsRaw+=STRING
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'MainModule' ':' mainModule=STRING
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ModuleFilters' '{' moduleFilters+=ModuleFilter
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ModuleLoader' ':' moduleLoader=ModuleLoader
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Output' ':' outputPathRaw=STRING
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectId' ':' projectId=N4mfIdentifier
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'VendorId' ':' declaredVendorId=N4mfIdentifier
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* (rule end)
-	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     vendorName=STRING (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *     (rule start) (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     declaredVendorId=N4mfIdentifier (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     execModule=BootstrapModule (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     implementationId=N4mfIdentifier (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     mainModule=STRING (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     moduleLoader=ModuleLoader (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     outputPathRaw=STRING (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     projectId=N4mfIdentifier (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     projectType=ProjectType (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     projectVersion=DeclaredVersion (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ExecModule' ':' execModule=BootstrapModule
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ImplementationId' ':' implementationId=N4mfIdentifier
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Libraries' '{' libraryPathsRaw+=STRING
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'MainModule' ':' mainModule=STRING
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ModuleFilters' '{' moduleFilters+=ModuleFilter
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ModuleLoader' ':' moduleLoader=ModuleLoader
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Output' ':' outputPathRaw=STRING
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectId' ':' projectId=N4mfIdentifier
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'VendorId' ':' declaredVendorId=N4mfIdentifier
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* (rule end)
+	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     vendorName=STRING (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3687,38 +3687,38 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     declaredVendorId=N4mfIdentifier (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     execModule=BootstrapModule (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     implementationId=N4mfIdentifier (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     mainModule=STRING (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     moduleLoader=ModuleLoader (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     outputPathRaw=STRING (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     projectId=N4mfIdentifier (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     projectType=ProjectType (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     projectVersion=DeclaredVersion (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ExecModule' ':' execModule=BootstrapModule
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ImplementationId' ':' implementationId=N4mfIdentifier
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Libraries' '{' libraryPathsRaw+=STRING
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'MainModule' ':' mainModule=STRING
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ModuleFilters' '{' moduleFilters+=ModuleFilter
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ModuleLoader' ':' moduleLoader=ModuleLoader
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Output' ':' outputPathRaw=STRING
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectId' ':' projectId=N4mfIdentifier
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'VendorId' ':' declaredVendorId=N4mfIdentifier
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* (rule end)
-	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     vendorName=STRING (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *     (rule start) (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     declaredVendorId=N4mfIdentifier (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     execModule=BootstrapModule (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     implementationId=N4mfIdentifier (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     mainModule=STRING (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     moduleLoader=ModuleLoader (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     outputPathRaw=STRING (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     projectId=N4mfIdentifier (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     projectType=ProjectType (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     projectVersion=DeclaredVersion (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ExecModule' ':' execModule=BootstrapModule
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ImplementationId' ':' implementationId=N4mfIdentifier
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Libraries' '{' libraryPathsRaw+=STRING
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'MainModule' ':' mainModule=STRING
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ModuleFilters' '{' moduleFilters+=ModuleFilter
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ModuleLoader' ':' moduleLoader=ModuleLoader
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Output' ':' outputPathRaw=STRING
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectId' ':' projectId=N4mfIdentifier
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'VendorId' ':' declaredVendorId=N4mfIdentifier
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* (rule end)
+	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     vendorName=STRING (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3876,7 +3876,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3____q___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3890,7 +3890,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     testedProjects+=TestedProject '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3____q___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3904,7 +3904,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3918,7 +3918,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     testedProjects+=TestedProject '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3932,15 +3932,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency 
-	 *         '}' 
-	 *         (ambiguity) 
-	 *         'RequiredRuntimeLibraries' 
-	 *         '{' 
-	 *         ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* 
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-	 *     )
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3954,15 +3946,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (
-	 *         requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency 
-	 *         '}' 
-	 *         (ambiguity) 
-	 *         'ProvidedRuntimeLibraries' 
-	 *         '{' 
-	 *         ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* 
-	 *         providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-	 *     )
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3976,7 +3960,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     projectDependencies+=ProjectDependency '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
+	 *     projectDependencies+=ProjectDependency '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -3990,7 +3974,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     testedProjects+=TestedProject '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4004,7 +3988,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     projectDependencies+=ProjectDependency '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *     projectDependencies+=ProjectDependency '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4018,7 +4002,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4032,7 +4016,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     projectDependencies+=ProjectDependency '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *     projectDependencies+=ProjectDependency '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4046,7 +4030,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4060,7 +4044,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     initModules+=BootstrapModule '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
+	 *     initModules+=BootstrapModule '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4074,7 +4058,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     testedProjects+=TestedProject '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4088,7 +4072,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     initModules+=BootstrapModule '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *     initModules+=BootstrapModule '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4102,7 +4086,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4116,7 +4100,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     initModules+=BootstrapModule '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *     initModules+=BootstrapModule '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4130,7 +4114,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
 	 */
 	protected void emit_ProjectDescription_______ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4172,7 +4156,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     implementedProjects+=ProjectReference '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=TestedProject
+	 *     implementedProjects+=ProjectReference '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 */
 	protected void emit_ProjectDescription_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4186,7 +4170,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     testedProjects+=TestedProject '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3____q___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4200,7 +4184,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     implementedProjects+=ProjectReference '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+	 *     implementedProjects+=ProjectReference '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4214,7 +4198,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4228,7 +4212,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     implementedProjects+=ProjectReference '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+	 *     implementedProjects+=ProjectReference '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -4242,7 +4226,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
 	 */
 	protected void emit_ProjectDescription_______InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____q___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

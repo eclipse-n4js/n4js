@@ -170,7 +170,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectDescription"
-    // InternalN4MFParser.g:72:1: ruleProjectDescription returns [EObject current=null] : ( ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) ) ) ;
+    // InternalN4MFParser.g:72:1: ruleProjectDescription returns [EObject current=null] : ( ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) ) ) ;
     public final EObject ruleProjectDescription() throws RecognitionException {
         EObject current = null;
 
@@ -290,22 +290,22 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:78:2: ( ( ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) ) ) )
-            // InternalN4MFParser.g:79:2: ( ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) ) )
+            // InternalN4MFParser.g:78:2: ( ( ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) ) ) )
+            // InternalN4MFParser.g:79:2: ( ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) ) )
             {
-            // InternalN4MFParser.g:79:2: ( ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) ) )
-            // InternalN4MFParser.g:80:3: ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) )
+            // InternalN4MFParser.g:79:2: ( ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) ) )
+            // InternalN4MFParser.g:80:3: ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) )
             {
-            // InternalN4MFParser.g:80:3: ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) )
-            // InternalN4MFParser.g:81:4: ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?)
+            // InternalN4MFParser.g:80:3: ( ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?) )
+            // InternalN4MFParser.g:81:4: ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?)
             {
              
             			  getUnorderedGroupHelper().enter(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup());
             			
-            // InternalN4MFParser.g:84:4: ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?)
-            // InternalN4MFParser.g:85:5: ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?
+            // InternalN4MFParser.g:84:4: ( ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?)
+            // InternalN4MFParser.g:85:5: ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+ {...}?
             {
-            // InternalN4MFParser.g:85:5: ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+
+            // InternalN4MFParser.g:85:5: ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+
             int cnt17=0;
             loop17:
             do {
@@ -870,28 +870,28 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 8 :
-            	    // InternalN4MFParser.g:350:3: ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) )
+            	    // InternalN4MFParser.g:350:3: ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) )
             	    {
-            	    // InternalN4MFParser.g:350:3: ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) )
-            	    // InternalN4MFParser.g:351:4: {...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) )
+            	    // InternalN4MFParser.g:350:3: ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) )
+            	    // InternalN4MFParser.g:351:4: {...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) )
             	    {
             	    if ( ! getUnorderedGroupHelper().canSelect(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 7) ) {
             	        throw new FailedPredicateException(input, "ruleProjectDescription", "getUnorderedGroupHelper().canSelect(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 7)");
             	    }
-            	    // InternalN4MFParser.g:351:112: ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) )
-            	    // InternalN4MFParser.g:352:5: ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) )
+            	    // InternalN4MFParser.g:351:112: ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) )
+            	    // InternalN4MFParser.g:352:5: ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) )
             	    {
 
             	    					getUnorderedGroupHelper().select(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 7);
             	    				
-            	    // InternalN4MFParser.g:355:8: ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) )
-            	    // InternalN4MFParser.g:355:9: {...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket )
+            	    // InternalN4MFParser.g:355:8: ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) )
+            	    // InternalN4MFParser.g:355:9: {...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket )
             	    {
             	    if ( !((true)) ) {
             	        throw new FailedPredicateException(input, "ruleProjectDescription", "true");
             	    }
-            	    // InternalN4MFParser.g:355:18: (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket )
-            	    // InternalN4MFParser.g:355:19: otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket
+            	    // InternalN4MFParser.g:355:18: (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket )
+            	    // InternalN4MFParser.g:355:19: otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket
             	    {
             	    otherlv_22=(Token)match(input,ProvidedRuntimeLibraries,FOLLOW_9); 
 
@@ -901,7 +901,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	    								newLeafNode(otherlv_23, grammarAccess.getProjectDescriptionAccess().getLeftCurlyBracketKeyword_7_1());
             	    							
-            	    // InternalN4MFParser.g:363:8: ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )?
+            	    // InternalN4MFParser.g:363:8: ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )?
             	    int alt2=2;
             	    int LA2_0 = input.LA(1);
 
@@ -910,19 +910,19 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	    }
             	    switch (alt2) {
             	        case 1 :
-            	            // InternalN4MFParser.g:364:9: ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )*
+            	            // InternalN4MFParser.g:364:9: ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )*
             	            {
-            	            // InternalN4MFParser.g:364:9: ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) )
-            	            // InternalN4MFParser.g:365:10: (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency )
+            	            // InternalN4MFParser.g:364:9: ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) )
+            	            // InternalN4MFParser.g:365:10: (lv_providedRuntimeLibraries_24_0= ruleProjectReference )
             	            {
-            	            // InternalN4MFParser.g:365:10: (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency )
-            	            // InternalN4MFParser.g:366:11: lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency
+            	            // InternalN4MFParser.g:365:10: (lv_providedRuntimeLibraries_24_0= ruleProjectReference )
+            	            // InternalN4MFParser.g:366:11: lv_providedRuntimeLibraries_24_0= ruleProjectReference
             	            {
 
-            	            											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_0_0());
+            	            											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProjectReferenceParserRuleCall_7_2_0_0());
             	            										
             	            pushFollow(FOLLOW_11);
-            	            lv_providedRuntimeLibraries_24_0=ruleProvidedRuntimeLibraryDependency();
+            	            lv_providedRuntimeLibraries_24_0=ruleProjectReference();
 
             	            state._fsp--;
 
@@ -934,7 +934,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	            												current,
             	            												"providedRuntimeLibraries",
             	            												lv_providedRuntimeLibraries_24_0,
-            	            												"org.eclipse.n4js.n4mf.N4MF.ProvidedRuntimeLibraryDependency");
+            	            												"org.eclipse.n4js.n4mf.N4MF.ProjectReference");
             	            											afterParserOrEnumRuleCall();
             	            										
 
@@ -943,7 +943,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	            }
 
-            	            // InternalN4MFParser.g:383:9: (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )*
+            	            // InternalN4MFParser.g:383:9: (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )*
             	            loop1:
             	            do {
             	                int alt1=2;
@@ -956,23 +956,23 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	                switch (alt1) {
             	            	case 1 :
-            	            	    // InternalN4MFParser.g:384:10: otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) )
+            	            	    // InternalN4MFParser.g:384:10: otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) )
             	            	    {
             	            	    otherlv_25=(Token)match(input,Comma,FOLLOW_4); 
 
             	            	    										newLeafNode(otherlv_25, grammarAccess.getProjectDescriptionAccess().getCommaKeyword_7_2_1_0());
             	            	    									
-            	            	    // InternalN4MFParser.g:388:10: ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) )
-            	            	    // InternalN4MFParser.g:389:11: (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency )
+            	            	    // InternalN4MFParser.g:388:10: ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) )
+            	            	    // InternalN4MFParser.g:389:11: (lv_providedRuntimeLibraries_26_0= ruleProjectReference )
             	            	    {
-            	            	    // InternalN4MFParser.g:389:11: (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency )
-            	            	    // InternalN4MFParser.g:390:12: lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency
+            	            	    // InternalN4MFParser.g:389:11: (lv_providedRuntimeLibraries_26_0= ruleProjectReference )
+            	            	    // InternalN4MFParser.g:390:12: lv_providedRuntimeLibraries_26_0= ruleProjectReference
             	            	    {
 
-            	            	    												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_1_1_0());
+            	            	    												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getProvidedRuntimeLibrariesProjectReferenceParserRuleCall_7_2_1_1_0());
             	            	    											
             	            	    pushFollow(FOLLOW_11);
-            	            	    lv_providedRuntimeLibraries_26_0=ruleProvidedRuntimeLibraryDependency();
+            	            	    lv_providedRuntimeLibraries_26_0=ruleProjectReference();
 
             	            	    state._fsp--;
 
@@ -984,7 +984,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	            	    													current,
             	            	    													"providedRuntimeLibraries",
             	            	    													lv_providedRuntimeLibraries_26_0,
-            	            	    													"org.eclipse.n4js.n4mf.N4MF.ProvidedRuntimeLibraryDependency");
+            	            	    													"org.eclipse.n4js.n4mf.N4MF.ProjectReference");
             	            	    												afterParserOrEnumRuleCall();
             	            	    											
 
@@ -1031,28 +1031,28 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 9 :
-            	    // InternalN4MFParser.g:419:3: ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) )
+            	    // InternalN4MFParser.g:419:3: ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) )
             	    {
-            	    // InternalN4MFParser.g:419:3: ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) )
-            	    // InternalN4MFParser.g:420:4: {...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) )
+            	    // InternalN4MFParser.g:419:3: ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) )
+            	    // InternalN4MFParser.g:420:4: {...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) )
             	    {
             	    if ( ! getUnorderedGroupHelper().canSelect(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 8) ) {
             	        throw new FailedPredicateException(input, "ruleProjectDescription", "getUnorderedGroupHelper().canSelect(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 8)");
             	    }
-            	    // InternalN4MFParser.g:420:112: ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) )
-            	    // InternalN4MFParser.g:421:5: ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) )
+            	    // InternalN4MFParser.g:420:112: ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) )
+            	    // InternalN4MFParser.g:421:5: ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) )
             	    {
 
             	    					getUnorderedGroupHelper().select(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 8);
             	    				
-            	    // InternalN4MFParser.g:424:8: ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) )
-            	    // InternalN4MFParser.g:424:9: {...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket )
+            	    // InternalN4MFParser.g:424:8: ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) )
+            	    // InternalN4MFParser.g:424:9: {...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket )
             	    {
             	    if ( !((true)) ) {
             	        throw new FailedPredicateException(input, "ruleProjectDescription", "true");
             	    }
-            	    // InternalN4MFParser.g:424:18: (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket )
-            	    // InternalN4MFParser.g:424:19: otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket
+            	    // InternalN4MFParser.g:424:18: (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket )
+            	    // InternalN4MFParser.g:424:19: otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket
             	    {
             	    otherlv_28=(Token)match(input,RequiredRuntimeLibraries,FOLLOW_9); 
 
@@ -1062,7 +1062,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	    								newLeafNode(otherlv_29, grammarAccess.getProjectDescriptionAccess().getLeftCurlyBracketKeyword_8_1());
             	    							
-            	    // InternalN4MFParser.g:432:8: ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )?
+            	    // InternalN4MFParser.g:432:8: ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )?
             	    int alt4=2;
             	    int LA4_0 = input.LA(1);
 
@@ -1071,19 +1071,19 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	    }
             	    switch (alt4) {
             	        case 1 :
-            	            // InternalN4MFParser.g:433:9: ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )*
+            	            // InternalN4MFParser.g:433:9: ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )*
             	            {
-            	            // InternalN4MFParser.g:433:9: ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) )
-            	            // InternalN4MFParser.g:434:10: (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency )
+            	            // InternalN4MFParser.g:433:9: ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) )
+            	            // InternalN4MFParser.g:434:10: (lv_requiredRuntimeLibraries_30_0= ruleProjectReference )
             	            {
-            	            // InternalN4MFParser.g:434:10: (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency )
-            	            // InternalN4MFParser.g:435:11: lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency
+            	            // InternalN4MFParser.g:434:10: (lv_requiredRuntimeLibraries_30_0= ruleProjectReference )
+            	            // InternalN4MFParser.g:435:11: lv_requiredRuntimeLibraries_30_0= ruleProjectReference
             	            {
 
-            	            											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_0_0());
+            	            											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesProjectReferenceParserRuleCall_8_2_0_0());
             	            										
             	            pushFollow(FOLLOW_11);
-            	            lv_requiredRuntimeLibraries_30_0=ruleRequiredRuntimeLibraryDependency();
+            	            lv_requiredRuntimeLibraries_30_0=ruleProjectReference();
 
             	            state._fsp--;
 
@@ -1095,7 +1095,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	            												current,
             	            												"requiredRuntimeLibraries",
             	            												lv_requiredRuntimeLibraries_30_0,
-            	            												"org.eclipse.n4js.n4mf.N4MF.RequiredRuntimeLibraryDependency");
+            	            												"org.eclipse.n4js.n4mf.N4MF.ProjectReference");
             	            											afterParserOrEnumRuleCall();
             	            										
 
@@ -1104,7 +1104,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	            }
 
-            	            // InternalN4MFParser.g:452:9: (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )*
+            	            // InternalN4MFParser.g:452:9: (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )*
             	            loop3:
             	            do {
             	                int alt3=2;
@@ -1117,23 +1117,23 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	                switch (alt3) {
             	            	case 1 :
-            	            	    // InternalN4MFParser.g:453:10: otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) )
+            	            	    // InternalN4MFParser.g:453:10: otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) )
             	            	    {
             	            	    otherlv_31=(Token)match(input,Comma,FOLLOW_4); 
 
             	            	    										newLeafNode(otherlv_31, grammarAccess.getProjectDescriptionAccess().getCommaKeyword_8_2_1_0());
             	            	    									
-            	            	    // InternalN4MFParser.g:457:10: ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) )
-            	            	    // InternalN4MFParser.g:458:11: (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency )
+            	            	    // InternalN4MFParser.g:457:10: ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) )
+            	            	    // InternalN4MFParser.g:458:11: (lv_requiredRuntimeLibraries_32_0= ruleProjectReference )
             	            	    {
-            	            	    // InternalN4MFParser.g:458:11: (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency )
-            	            	    // InternalN4MFParser.g:459:12: lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency
+            	            	    // InternalN4MFParser.g:458:11: (lv_requiredRuntimeLibraries_32_0= ruleProjectReference )
+            	            	    // InternalN4MFParser.g:459:12: lv_requiredRuntimeLibraries_32_0= ruleProjectReference
             	            	    {
 
-            	            	    												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_1_1_0());
+            	            	    												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getRequiredRuntimeLibrariesProjectReferenceParserRuleCall_8_2_1_1_0());
             	            	    											
             	            	    pushFollow(FOLLOW_11);
-            	            	    lv_requiredRuntimeLibraries_32_0=ruleRequiredRuntimeLibraryDependency();
+            	            	    lv_requiredRuntimeLibraries_32_0=ruleProjectReference();
 
             	            	    state._fsp--;
 
@@ -1145,7 +1145,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	            	    													current,
             	            	    													"requiredRuntimeLibraries",
             	            	    													lv_requiredRuntimeLibraries_32_0,
-            	            	    													"org.eclipse.n4js.n4mf.N4MF.RequiredRuntimeLibraryDependency");
+            	            	    													"org.eclipse.n4js.n4mf.N4MF.ProjectReference");
             	            	    												afterParserOrEnumRuleCall();
             	            	    											
 
@@ -2397,28 +2397,28 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 20 :
-            	    // InternalN4MFParser.g:1022:3: ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) )
+            	    // InternalN4MFParser.g:1022:3: ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) )
             	    {
-            	    // InternalN4MFParser.g:1022:3: ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) )
-            	    // InternalN4MFParser.g:1023:4: {...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) )
+            	    // InternalN4MFParser.g:1022:3: ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) )
+            	    // InternalN4MFParser.g:1023:4: {...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) )
             	    {
             	    if ( ! getUnorderedGroupHelper().canSelect(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 19) ) {
             	        throw new FailedPredicateException(input, "ruleProjectDescription", "getUnorderedGroupHelper().canSelect(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 19)");
             	    }
-            	    // InternalN4MFParser.g:1023:113: ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) )
-            	    // InternalN4MFParser.g:1024:5: ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) )
+            	    // InternalN4MFParser.g:1023:113: ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) )
+            	    // InternalN4MFParser.g:1024:5: ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) )
             	    {
 
             	    					getUnorderedGroupHelper().select(grammarAccess.getProjectDescriptionAccess().getUnorderedGroup(), 19);
             	    				
-            	    // InternalN4MFParser.g:1027:8: ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) )
-            	    // InternalN4MFParser.g:1027:9: {...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket )
+            	    // InternalN4MFParser.g:1027:8: ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) )
+            	    // InternalN4MFParser.g:1027:9: {...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket )
             	    {
             	    if ( !((true)) ) {
             	        throw new FailedPredicateException(input, "ruleProjectDescription", "true");
             	    }
-            	    // InternalN4MFParser.g:1027:18: (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket )
-            	    // InternalN4MFParser.g:1027:19: otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket
+            	    // InternalN4MFParser.g:1027:18: (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket )
+            	    // InternalN4MFParser.g:1027:19: otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket
             	    {
             	    otherlv_81=(Token)match(input,TestedProjects,FOLLOW_9); 
 
@@ -2428,7 +2428,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	    								newLeafNode(otherlv_82, grammarAccess.getProjectDescriptionAccess().getLeftCurlyBracketKeyword_19_1());
             	    							
-            	    // InternalN4MFParser.g:1035:8: ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )?
+            	    // InternalN4MFParser.g:1035:8: ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )?
             	    int alt16=2;
             	    int LA16_0 = input.LA(1);
 
@@ -2437,19 +2437,19 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	    }
             	    switch (alt16) {
             	        case 1 :
-            	            // InternalN4MFParser.g:1036:9: ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )*
+            	            // InternalN4MFParser.g:1036:9: ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )*
             	            {
-            	            // InternalN4MFParser.g:1036:9: ( (lv_testedProjects_83_0= ruleTestedProject ) )
-            	            // InternalN4MFParser.g:1037:10: (lv_testedProjects_83_0= ruleTestedProject )
+            	            // InternalN4MFParser.g:1036:9: ( (lv_testedProjects_83_0= ruleProjectDependency ) )
+            	            // InternalN4MFParser.g:1037:10: (lv_testedProjects_83_0= ruleProjectDependency )
             	            {
-            	            // InternalN4MFParser.g:1037:10: (lv_testedProjects_83_0= ruleTestedProject )
-            	            // InternalN4MFParser.g:1038:11: lv_testedProjects_83_0= ruleTestedProject
+            	            // InternalN4MFParser.g:1037:10: (lv_testedProjects_83_0= ruleProjectDependency )
+            	            // InternalN4MFParser.g:1038:11: lv_testedProjects_83_0= ruleProjectDependency
             	            {
 
-            	            											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getTestedProjectsTestedProjectParserRuleCall_19_2_0_0());
+            	            											newCompositeNode(grammarAccess.getProjectDescriptionAccess().getTestedProjectsProjectDependencyParserRuleCall_19_2_0_0());
             	            										
             	            pushFollow(FOLLOW_11);
-            	            lv_testedProjects_83_0=ruleTestedProject();
+            	            lv_testedProjects_83_0=ruleProjectDependency();
 
             	            state._fsp--;
 
@@ -2461,7 +2461,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	            												current,
             	            												"testedProjects",
             	            												lv_testedProjects_83_0,
-            	            												"org.eclipse.n4js.n4mf.N4MF.TestedProject");
+            	            												"org.eclipse.n4js.n4mf.N4MF.ProjectDependency");
             	            											afterParserOrEnumRuleCall();
             	            										
 
@@ -2470,7 +2470,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	            }
 
-            	            // InternalN4MFParser.g:1055:9: (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )*
+            	            // InternalN4MFParser.g:1055:9: (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )*
             	            loop15:
             	            do {
             	                int alt15=2;
@@ -2483,23 +2483,23 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             	                switch (alt15) {
             	            	case 1 :
-            	            	    // InternalN4MFParser.g:1056:10: otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) )
+            	            	    // InternalN4MFParser.g:1056:10: otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) )
             	            	    {
             	            	    otherlv_84=(Token)match(input,Comma,FOLLOW_4); 
 
             	            	    										newLeafNode(otherlv_84, grammarAccess.getProjectDescriptionAccess().getCommaKeyword_19_2_1_0());
             	            	    									
-            	            	    // InternalN4MFParser.g:1060:10: ( (lv_testedProjects_85_0= ruleTestedProject ) )
-            	            	    // InternalN4MFParser.g:1061:11: (lv_testedProjects_85_0= ruleTestedProject )
+            	            	    // InternalN4MFParser.g:1060:10: ( (lv_testedProjects_85_0= ruleProjectDependency ) )
+            	            	    // InternalN4MFParser.g:1061:11: (lv_testedProjects_85_0= ruleProjectDependency )
             	            	    {
-            	            	    // InternalN4MFParser.g:1061:11: (lv_testedProjects_85_0= ruleTestedProject )
-            	            	    // InternalN4MFParser.g:1062:12: lv_testedProjects_85_0= ruleTestedProject
+            	            	    // InternalN4MFParser.g:1061:11: (lv_testedProjects_85_0= ruleProjectDependency )
+            	            	    // InternalN4MFParser.g:1062:12: lv_testedProjects_85_0= ruleProjectDependency
             	            	    {
 
-            	            	    												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getTestedProjectsTestedProjectParserRuleCall_19_2_1_1_0());
+            	            	    												newCompositeNode(grammarAccess.getProjectDescriptionAccess().getTestedProjectsProjectDependencyParserRuleCall_19_2_1_1_0());
             	            	    											
             	            	    pushFollow(FOLLOW_11);
-            	            	    lv_testedProjects_85_0=ruleTestedProject();
+            	            	    lv_testedProjects_85_0=ruleProjectDependency();
 
             	            	    state._fsp--;
 
@@ -2511,7 +2511,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             	            	    													current,
             	            	    													"testedProjects",
             	            	    													lv_testedProjects_85_0,
-            	            	    													"org.eclipse.n4js.n4mf.N4MF.TestedProject");
+            	            	    													"org.eclipse.n4js.n4mf.N4MF.ProjectDependency");
             	            	    												afterParserOrEnumRuleCall();
             	            	    											
 
@@ -3648,263 +3648,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleModuleFilterSpecifier"
 
 
-    // $ANTLR start "entryRuleProvidedRuntimeLibraryDependency"
-    // InternalN4MFParser.g:1550:1: entryRuleProvidedRuntimeLibraryDependency returns [EObject current=null] : iv_ruleProvidedRuntimeLibraryDependency= ruleProvidedRuntimeLibraryDependency EOF ;
-    public final EObject entryRuleProvidedRuntimeLibraryDependency() throws RecognitionException {
-        EObject current = null;
-
-        EObject iv_ruleProvidedRuntimeLibraryDependency = null;
-
-
-        try {
-            // InternalN4MFParser.g:1550:73: (iv_ruleProvidedRuntimeLibraryDependency= ruleProvidedRuntimeLibraryDependency EOF )
-            // InternalN4MFParser.g:1551:2: iv_ruleProvidedRuntimeLibraryDependency= ruleProvidedRuntimeLibraryDependency EOF
-            {
-             newCompositeNode(grammarAccess.getProvidedRuntimeLibraryDependencyRule()); 
-            pushFollow(FOLLOW_1);
-            iv_ruleProvidedRuntimeLibraryDependency=ruleProvidedRuntimeLibraryDependency();
-
-            state._fsp--;
-
-             current =iv_ruleProvidedRuntimeLibraryDependency; 
-            match(input,EOF,FOLLOW_2); 
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleProvidedRuntimeLibraryDependency"
-
-
-    // $ANTLR start "ruleProvidedRuntimeLibraryDependency"
-    // InternalN4MFParser.g:1557:1: ruleProvidedRuntimeLibraryDependency returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
-    public final EObject ruleProvidedRuntimeLibraryDependency() throws RecognitionException {
-        EObject current = null;
-
-        EObject this_ProjectIdWithOptionalVendor_0 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalN4MFParser.g:1563:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
-            // InternalN4MFParser.g:1564:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
-            {
-
-            		if (current==null) {
-            			current = createModelElement(grammarAccess.getProvidedRuntimeLibraryDependencyRule());
-            		}
-            		newCompositeNode(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall());
-            	
-            pushFollow(FOLLOW_2);
-            this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor(current);
-
-            state._fsp--;
-
-
-            		current = this_ProjectIdWithOptionalVendor_0;
-            		afterParserOrEnumRuleCall();
-            	
-
-            }
-
-
-            	leaveRule();
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleProvidedRuntimeLibraryDependency"
-
-
-    // $ANTLR start "entryRuleRequiredRuntimeLibraryDependency"
-    // InternalN4MFParser.g:1578:1: entryRuleRequiredRuntimeLibraryDependency returns [EObject current=null] : iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF ;
-    public final EObject entryRuleRequiredRuntimeLibraryDependency() throws RecognitionException {
-        EObject current = null;
-
-        EObject iv_ruleRequiredRuntimeLibraryDependency = null;
-
-
-        try {
-            // InternalN4MFParser.g:1578:73: (iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF )
-            // InternalN4MFParser.g:1579:2: iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF
-            {
-             newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyRule()); 
-            pushFollow(FOLLOW_1);
-            iv_ruleRequiredRuntimeLibraryDependency=ruleRequiredRuntimeLibraryDependency();
-
-            state._fsp--;
-
-             current =iv_ruleRequiredRuntimeLibraryDependency; 
-            match(input,EOF,FOLLOW_2); 
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleRequiredRuntimeLibraryDependency"
-
-
-    // $ANTLR start "ruleRequiredRuntimeLibraryDependency"
-    // InternalN4MFParser.g:1585:1: ruleRequiredRuntimeLibraryDependency returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
-    public final EObject ruleRequiredRuntimeLibraryDependency() throws RecognitionException {
-        EObject current = null;
-
-        EObject this_ProjectIdWithOptionalVendor_0 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalN4MFParser.g:1591:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
-            // InternalN4MFParser.g:1592:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
-            {
-
-            		if (current==null) {
-            			current = createModelElement(grammarAccess.getRequiredRuntimeLibraryDependencyRule());
-            		}
-            		newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall());
-            	
-            pushFollow(FOLLOW_2);
-            this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor(current);
-
-            state._fsp--;
-
-
-            		current = this_ProjectIdWithOptionalVendor_0;
-            		afterParserOrEnumRuleCall();
-            	
-
-            }
-
-
-            	leaveRule();
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleRequiredRuntimeLibraryDependency"
-
-
-    // $ANTLR start "entryRuleTestedProject"
-    // InternalN4MFParser.g:1606:1: entryRuleTestedProject returns [EObject current=null] : iv_ruleTestedProject= ruleTestedProject EOF ;
-    public final EObject entryRuleTestedProject() throws RecognitionException {
-        EObject current = null;
-
-        EObject iv_ruleTestedProject = null;
-
-
-        try {
-            // InternalN4MFParser.g:1606:54: (iv_ruleTestedProject= ruleTestedProject EOF )
-            // InternalN4MFParser.g:1607:2: iv_ruleTestedProject= ruleTestedProject EOF
-            {
-             newCompositeNode(grammarAccess.getTestedProjectRule()); 
-            pushFollow(FOLLOW_1);
-            iv_ruleTestedProject=ruleTestedProject();
-
-            state._fsp--;
-
-             current =iv_ruleTestedProject; 
-            match(input,EOF,FOLLOW_2); 
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleTestedProject"
-
-
-    // $ANTLR start "ruleTestedProject"
-    // InternalN4MFParser.g:1613:1: ruleTestedProject returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
-    public final EObject ruleTestedProject() throws RecognitionException {
-        EObject current = null;
-
-        EObject this_ProjectIdWithOptionalVendor_0 = null;
-
-
-
-        	enterRule();
-
-        try {
-            // InternalN4MFParser.g:1619:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
-            // InternalN4MFParser.g:1620:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
-            {
-
-            		if (current==null) {
-            			current = createModelElement(grammarAccess.getTestedProjectRule());
-            		}
-            		newCompositeNode(grammarAccess.getTestedProjectAccess().getProjectIdWithOptionalVendorParserRuleCall());
-            	
-            pushFollow(FOLLOW_2);
-            this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor(current);
-
-            state._fsp--;
-
-
-            		current = this_ProjectIdWithOptionalVendor_0;
-            		afterParserOrEnumRuleCall();
-            	
-
-            }
-
-
-            	leaveRule();
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleTestedProject"
-
-
     // $ANTLR start "entryRuleProjectReference"
-    // InternalN4MFParser.g:1634:1: entryRuleProjectReference returns [EObject current=null] : iv_ruleProjectReference= ruleProjectReference EOF ;
+    // InternalN4MFParser.g:1550:1: entryRuleProjectReference returns [EObject current=null] : iv_ruleProjectReference= ruleProjectReference EOF ;
     public final EObject entryRuleProjectReference() throws RecognitionException {
         EObject current = null;
 
@@ -3912,8 +3657,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1634:57: (iv_ruleProjectReference= ruleProjectReference EOF )
-            // InternalN4MFParser.g:1635:2: iv_ruleProjectReference= ruleProjectReference EOF
+            // InternalN4MFParser.g:1550:57: (iv_ruleProjectReference= ruleProjectReference EOF )
+            // InternalN4MFParser.g:1551:2: iv_ruleProjectReference= ruleProjectReference EOF
             {
              newCompositeNode(grammarAccess.getProjectReferenceRule()); 
             pushFollow(FOLLOW_1);
@@ -3940,7 +3685,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectReference"
-    // InternalN4MFParser.g:1641:1: ruleProjectReference returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
+    // InternalN4MFParser.g:1557:1: ruleProjectReference returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
     public final EObject ruleProjectReference() throws RecognitionException {
         EObject current = null;
 
@@ -3951,8 +3696,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1647:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
-            // InternalN4MFParser.g:1648:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
+            // InternalN4MFParser.g:1563:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
+            // InternalN4MFParser.g:1564:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
             {
 
             		if (current==null) {
@@ -3989,7 +3734,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleProjectDependency"
-    // InternalN4MFParser.g:1662:1: entryRuleProjectDependency returns [EObject current=null] : iv_ruleProjectDependency= ruleProjectDependency EOF ;
+    // InternalN4MFParser.g:1578:1: entryRuleProjectDependency returns [EObject current=null] : iv_ruleProjectDependency= ruleProjectDependency EOF ;
     public final EObject entryRuleProjectDependency() throws RecognitionException {
         EObject current = null;
 
@@ -3997,8 +3742,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1662:58: (iv_ruleProjectDependency= ruleProjectDependency EOF )
-            // InternalN4MFParser.g:1663:2: iv_ruleProjectDependency= ruleProjectDependency EOF
+            // InternalN4MFParser.g:1578:58: (iv_ruleProjectDependency= ruleProjectDependency EOF )
+            // InternalN4MFParser.g:1579:2: iv_ruleProjectDependency= ruleProjectDependency EOF
             {
              newCompositeNode(grammarAccess.getProjectDependencyRule()); 
             pushFollow(FOLLOW_1);
@@ -4025,7 +3770,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectDependency"
-    // InternalN4MFParser.g:1669:1: ruleProjectDependency returns [EObject current=null] : (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? ) ;
+    // InternalN4MFParser.g:1585:1: ruleProjectDependency returns [EObject current=null] : (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? ) ;
     public final EObject ruleProjectDependency() throws RecognitionException {
         EObject current = null;
 
@@ -4040,11 +3785,11 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1675:2: ( (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? ) )
-            // InternalN4MFParser.g:1676:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? )
+            // InternalN4MFParser.g:1591:2: ( (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? ) )
+            // InternalN4MFParser.g:1592:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? )
             {
-            // InternalN4MFParser.g:1676:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? )
-            // InternalN4MFParser.g:1677:3: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )?
+            // InternalN4MFParser.g:1592:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? )
+            // InternalN4MFParser.g:1593:3: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )?
             {
 
             			if (current==null) {
@@ -4061,7 +3806,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             			current = this_ProjectIdWithOptionalVendor_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalN4MFParser.g:1688:3: ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )?
+            // InternalN4MFParser.g:1604:3: ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )?
             int alt25=2;
             int LA25_0 = input.LA(1);
 
@@ -4070,10 +3815,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt25) {
                 case 1 :
-                    // InternalN4MFParser.g:1689:4: (lv_versionConstraint_1_0= ruleVersionConstraint )
+                    // InternalN4MFParser.g:1605:4: (lv_versionConstraint_1_0= ruleVersionConstraint )
                     {
-                    // InternalN4MFParser.g:1689:4: (lv_versionConstraint_1_0= ruleVersionConstraint )
-                    // InternalN4MFParser.g:1690:5: lv_versionConstraint_1_0= ruleVersionConstraint
+                    // InternalN4MFParser.g:1605:4: (lv_versionConstraint_1_0= ruleVersionConstraint )
+                    // InternalN4MFParser.g:1606:5: lv_versionConstraint_1_0= ruleVersionConstraint
                     {
 
                     					newCompositeNode(grammarAccess.getProjectDependencyAccess().getVersionConstraintVersionConstraintParserRuleCall_1_0());
@@ -4103,7 +3848,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalN4MFParser.g:1707:3: ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )?
+            // InternalN4MFParser.g:1623:3: ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )?
             int alt26=2;
             int LA26_0 = input.LA(1);
 
@@ -4112,10 +3857,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt26) {
                 case 1 :
-                    // InternalN4MFParser.g:1708:4: (lv_declaredScope_2_0= ruleProjectDependencyScope )
+                    // InternalN4MFParser.g:1624:4: (lv_declaredScope_2_0= ruleProjectDependencyScope )
                     {
-                    // InternalN4MFParser.g:1708:4: (lv_declaredScope_2_0= ruleProjectDependencyScope )
-                    // InternalN4MFParser.g:1709:5: lv_declaredScope_2_0= ruleProjectDependencyScope
+                    // InternalN4MFParser.g:1624:4: (lv_declaredScope_2_0= ruleProjectDependencyScope )
+                    // InternalN4MFParser.g:1625:5: lv_declaredScope_2_0= ruleProjectDependencyScope
                     {
 
                     					newCompositeNode(grammarAccess.getProjectDependencyAccess().getDeclaredScopeProjectDependencyScopeEnumRuleCall_2_0());
@@ -4168,7 +3913,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectIdWithOptionalVendor"
-    // InternalN4MFParser.g:1731:1: ruleProjectIdWithOptionalVendor[EObject in_current] returns [EObject current=in_current] : ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) ) ;
+    // InternalN4MFParser.g:1647:1: ruleProjectIdWithOptionalVendor[EObject in_current] returns [EObject current=in_current] : ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) ) ;
     public final EObject ruleProjectIdWithOptionalVendor(EObject in_current) throws RecognitionException {
         EObject current = in_current;
 
@@ -4182,24 +3927,24 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1737:2: ( ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) ) )
-            // InternalN4MFParser.g:1738:2: ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) )
+            // InternalN4MFParser.g:1653:2: ( ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) ) )
+            // InternalN4MFParser.g:1654:2: ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) )
             {
-            // InternalN4MFParser.g:1738:2: ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) )
-            // InternalN4MFParser.g:1739:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) )
+            // InternalN4MFParser.g:1654:2: ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) )
+            // InternalN4MFParser.g:1655:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) )
             {
-            // InternalN4MFParser.g:1739:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )?
+            // InternalN4MFParser.g:1655:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )?
             int alt27=2;
             alt27 = dfa27.predict(input);
             switch (alt27) {
                 case 1 :
-                    // InternalN4MFParser.g:1740:4: ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon
+                    // InternalN4MFParser.g:1656:4: ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon
                     {
-                    // InternalN4MFParser.g:1740:4: ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) )
-                    // InternalN4MFParser.g:1741:5: (lv_declaredVendorId_0_0= ruleN4mfIdentifier )
+                    // InternalN4MFParser.g:1656:4: ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) )
+                    // InternalN4MFParser.g:1657:5: (lv_declaredVendorId_0_0= ruleN4mfIdentifier )
                     {
-                    // InternalN4MFParser.g:1741:5: (lv_declaredVendorId_0_0= ruleN4mfIdentifier )
-                    // InternalN4MFParser.g:1742:6: lv_declaredVendorId_0_0= ruleN4mfIdentifier
+                    // InternalN4MFParser.g:1657:5: (lv_declaredVendorId_0_0= ruleN4mfIdentifier )
+                    // InternalN4MFParser.g:1658:6: lv_declaredVendorId_0_0= ruleN4mfIdentifier
                     {
 
                     						newCompositeNode(grammarAccess.getProjectIdWithOptionalVendorAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_0_0_0());
@@ -4236,11 +3981,11 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalN4MFParser.g:1764:3: ( (lv_projectId_2_0= ruleN4mfIdentifier ) )
-            // InternalN4MFParser.g:1765:4: (lv_projectId_2_0= ruleN4mfIdentifier )
+            // InternalN4MFParser.g:1680:3: ( (lv_projectId_2_0= ruleN4mfIdentifier ) )
+            // InternalN4MFParser.g:1681:4: (lv_projectId_2_0= ruleN4mfIdentifier )
             {
-            // InternalN4MFParser.g:1765:4: (lv_projectId_2_0= ruleN4mfIdentifier )
-            // InternalN4MFParser.g:1766:5: lv_projectId_2_0= ruleN4mfIdentifier
+            // InternalN4MFParser.g:1681:4: (lv_projectId_2_0= ruleN4mfIdentifier )
+            // InternalN4MFParser.g:1682:5: lv_projectId_2_0= ruleN4mfIdentifier
             {
 
             					newCompositeNode(grammarAccess.getProjectIdWithOptionalVendorAccess().getProjectIdN4mfIdentifierParserRuleCall_1_0());
@@ -4290,7 +4035,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleVersionConstraint"
-    // InternalN4MFParser.g:1787:1: entryRuleVersionConstraint returns [EObject current=null] : iv_ruleVersionConstraint= ruleVersionConstraint EOF ;
+    // InternalN4MFParser.g:1703:1: entryRuleVersionConstraint returns [EObject current=null] : iv_ruleVersionConstraint= ruleVersionConstraint EOF ;
     public final EObject entryRuleVersionConstraint() throws RecognitionException {
         EObject current = null;
 
@@ -4298,8 +4043,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1787:58: (iv_ruleVersionConstraint= ruleVersionConstraint EOF )
-            // InternalN4MFParser.g:1788:2: iv_ruleVersionConstraint= ruleVersionConstraint EOF
+            // InternalN4MFParser.g:1703:58: (iv_ruleVersionConstraint= ruleVersionConstraint EOF )
+            // InternalN4MFParser.g:1704:2: iv_ruleVersionConstraint= ruleVersionConstraint EOF
             {
              newCompositeNode(grammarAccess.getVersionConstraintRule()); 
             pushFollow(FOLLOW_1);
@@ -4326,7 +4071,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionConstraint"
-    // InternalN4MFParser.g:1794:1: ruleVersionConstraint returns [EObject current=null] : ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) ) ;
+    // InternalN4MFParser.g:1710:1: ruleVersionConstraint returns [EObject current=null] : ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) ) ;
     public final EObject ruleVersionConstraint() throws RecognitionException {
         EObject current = null;
 
@@ -4347,10 +4092,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1800:2: ( ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) ) )
-            // InternalN4MFParser.g:1801:2: ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) )
+            // InternalN4MFParser.g:1716:2: ( ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) ) )
+            // InternalN4MFParser.g:1717:2: ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) )
             {
-            // InternalN4MFParser.g:1801:2: ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) )
+            // InternalN4MFParser.g:1717:2: ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) )
             int alt32=2;
             int LA32_0 = input.LA(1);
 
@@ -4368,12 +4113,12 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt32) {
                 case 1 :
-                    // InternalN4MFParser.g:1802:3: ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) )
+                    // InternalN4MFParser.g:1718:3: ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) )
                     {
-                    // InternalN4MFParser.g:1802:3: ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) )
-                    // InternalN4MFParser.g:1803:4: ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis )
+                    // InternalN4MFParser.g:1718:3: ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) )
+                    // InternalN4MFParser.g:1719:4: ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis )
                     {
-                    // InternalN4MFParser.g:1803:4: ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket )
+                    // InternalN4MFParser.g:1719:4: ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket )
                     int alt28=2;
                     int LA28_0 = input.LA(1);
 
@@ -4391,13 +4136,13 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt28) {
                         case 1 :
-                            // InternalN4MFParser.g:1804:5: ( (lv_exclLowerBound_0_0= LeftParenthesis ) )
+                            // InternalN4MFParser.g:1720:5: ( (lv_exclLowerBound_0_0= LeftParenthesis ) )
                             {
-                            // InternalN4MFParser.g:1804:5: ( (lv_exclLowerBound_0_0= LeftParenthesis ) )
-                            // InternalN4MFParser.g:1805:6: (lv_exclLowerBound_0_0= LeftParenthesis )
+                            // InternalN4MFParser.g:1720:5: ( (lv_exclLowerBound_0_0= LeftParenthesis ) )
+                            // InternalN4MFParser.g:1721:6: (lv_exclLowerBound_0_0= LeftParenthesis )
                             {
-                            // InternalN4MFParser.g:1805:6: (lv_exclLowerBound_0_0= LeftParenthesis )
-                            // InternalN4MFParser.g:1806:7: lv_exclLowerBound_0_0= LeftParenthesis
+                            // InternalN4MFParser.g:1721:6: (lv_exclLowerBound_0_0= LeftParenthesis )
+                            // InternalN4MFParser.g:1722:7: lv_exclLowerBound_0_0= LeftParenthesis
                             {
                             lv_exclLowerBound_0_0=(Token)match(input,LeftParenthesis,FOLLOW_7); 
 
@@ -4419,7 +4164,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                             }
                             break;
                         case 2 :
-                            // InternalN4MFParser.g:1819:5: otherlv_1= LeftSquareBracket
+                            // InternalN4MFParser.g:1735:5: otherlv_1= LeftSquareBracket
                             {
                             otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_7); 
 
@@ -4431,11 +4176,11 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalN4MFParser.g:1824:4: ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) )
-                    // InternalN4MFParser.g:1825:5: (lv_lowerVersion_2_0= ruleDeclaredVersion )
+                    // InternalN4MFParser.g:1740:4: ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) )
+                    // InternalN4MFParser.g:1741:5: (lv_lowerVersion_2_0= ruleDeclaredVersion )
                     {
-                    // InternalN4MFParser.g:1825:5: (lv_lowerVersion_2_0= ruleDeclaredVersion )
-                    // InternalN4MFParser.g:1826:6: lv_lowerVersion_2_0= ruleDeclaredVersion
+                    // InternalN4MFParser.g:1741:5: (lv_lowerVersion_2_0= ruleDeclaredVersion )
+                    // InternalN4MFParser.g:1742:6: lv_lowerVersion_2_0= ruleDeclaredVersion
                     {
 
                     						newCompositeNode(grammarAccess.getVersionConstraintAccess().getLowerVersionDeclaredVersionParserRuleCall_0_1_0());
@@ -4462,7 +4207,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalN4MFParser.g:1843:4: ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis )
+                    // InternalN4MFParser.g:1759:4: ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis )
                     int alt31=2;
                     int LA31_0 = input.LA(1);
 
@@ -4480,9 +4225,9 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt31) {
                         case 1 :
-                            // InternalN4MFParser.g:1844:5: (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )?
+                            // InternalN4MFParser.g:1760:5: (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )?
                             {
-                            // InternalN4MFParser.g:1844:5: (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )?
+                            // InternalN4MFParser.g:1760:5: (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )?
                             int alt30=2;
                             int LA30_0 = input.LA(1);
 
@@ -4495,17 +4240,17 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                             }
                             switch (alt30) {
                                 case 1 :
-                                    // InternalN4MFParser.g:1845:6: otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket )
+                                    // InternalN4MFParser.g:1761:6: otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket )
                                     {
                                     otherlv_3=(Token)match(input,Comma,FOLLOW_7); 
 
                                     						newLeafNode(otherlv_3, grammarAccess.getVersionConstraintAccess().getCommaKeyword_0_2_0_0());
                                     					
-                                    // InternalN4MFParser.g:1849:6: ( (lv_upperVersion_4_0= ruleDeclaredVersion ) )
-                                    // InternalN4MFParser.g:1850:7: (lv_upperVersion_4_0= ruleDeclaredVersion )
+                                    // InternalN4MFParser.g:1765:6: ( (lv_upperVersion_4_0= ruleDeclaredVersion ) )
+                                    // InternalN4MFParser.g:1766:7: (lv_upperVersion_4_0= ruleDeclaredVersion )
                                     {
-                                    // InternalN4MFParser.g:1850:7: (lv_upperVersion_4_0= ruleDeclaredVersion )
-                                    // InternalN4MFParser.g:1851:8: lv_upperVersion_4_0= ruleDeclaredVersion
+                                    // InternalN4MFParser.g:1766:7: (lv_upperVersion_4_0= ruleDeclaredVersion )
+                                    // InternalN4MFParser.g:1767:8: lv_upperVersion_4_0= ruleDeclaredVersion
                                     {
 
                                     								newCompositeNode(grammarAccess.getVersionConstraintAccess().getUpperVersionDeclaredVersionParserRuleCall_0_2_0_1_0());
@@ -4532,7 +4277,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
                                     }
 
-                                    // InternalN4MFParser.g:1868:6: ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket )
+                                    // InternalN4MFParser.g:1784:6: ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket )
                                     int alt29=2;
                                     int LA29_0 = input.LA(1);
 
@@ -4550,13 +4295,13 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                                     }
                                     switch (alt29) {
                                         case 1 :
-                                            // InternalN4MFParser.g:1869:7: ( (lv_exclUpperBound_5_0= RightParenthesis ) )
+                                            // InternalN4MFParser.g:1785:7: ( (lv_exclUpperBound_5_0= RightParenthesis ) )
                                             {
-                                            // InternalN4MFParser.g:1869:7: ( (lv_exclUpperBound_5_0= RightParenthesis ) )
-                                            // InternalN4MFParser.g:1870:8: (lv_exclUpperBound_5_0= RightParenthesis )
+                                            // InternalN4MFParser.g:1785:7: ( (lv_exclUpperBound_5_0= RightParenthesis ) )
+                                            // InternalN4MFParser.g:1786:8: (lv_exclUpperBound_5_0= RightParenthesis )
                                             {
-                                            // InternalN4MFParser.g:1870:8: (lv_exclUpperBound_5_0= RightParenthesis )
-                                            // InternalN4MFParser.g:1871:9: lv_exclUpperBound_5_0= RightParenthesis
+                                            // InternalN4MFParser.g:1786:8: (lv_exclUpperBound_5_0= RightParenthesis )
+                                            // InternalN4MFParser.g:1787:9: lv_exclUpperBound_5_0= RightParenthesis
                                             {
                                             lv_exclUpperBound_5_0=(Token)match(input,RightParenthesis,FOLLOW_2); 
 
@@ -4578,7 +4323,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                                             }
                                             break;
                                         case 2 :
-                                            // InternalN4MFParser.g:1884:7: otherlv_6= RightSquareBracket
+                                            // InternalN4MFParser.g:1800:7: otherlv_6= RightSquareBracket
                                             {
                                             otherlv_6=(Token)match(input,RightSquareBracket,FOLLOW_2); 
 
@@ -4600,7 +4345,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                             }
                             break;
                         case 2 :
-                            // InternalN4MFParser.g:1891:5: otherlv_7= RightParenthesis
+                            // InternalN4MFParser.g:1807:5: otherlv_7= RightParenthesis
                             {
                             otherlv_7=(Token)match(input,RightParenthesis,FOLLOW_2); 
 
@@ -4619,13 +4364,13 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:1898:3: ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) )
+                    // InternalN4MFParser.g:1814:3: ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) )
                     {
-                    // InternalN4MFParser.g:1898:3: ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) )
-                    // InternalN4MFParser.g:1899:4: (lv_lowerVersion_8_0= ruleDeclaredVersion )
+                    // InternalN4MFParser.g:1814:3: ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) )
+                    // InternalN4MFParser.g:1815:4: (lv_lowerVersion_8_0= ruleDeclaredVersion )
                     {
-                    // InternalN4MFParser.g:1899:4: (lv_lowerVersion_8_0= ruleDeclaredVersion )
-                    // InternalN4MFParser.g:1900:5: lv_lowerVersion_8_0= ruleDeclaredVersion
+                    // InternalN4MFParser.g:1815:4: (lv_lowerVersion_8_0= ruleDeclaredVersion )
+                    // InternalN4MFParser.g:1816:5: lv_lowerVersion_8_0= ruleDeclaredVersion
                     {
 
                     					newCompositeNode(grammarAccess.getVersionConstraintAccess().getLowerVersionDeclaredVersionParserRuleCall_1_0());
@@ -4678,7 +4423,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleN4mfIdentifier"
-    // InternalN4MFParser.g:1921:1: entryRuleN4mfIdentifier returns [String current=null] : iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF ;
+    // InternalN4MFParser.g:1837:1: entryRuleN4mfIdentifier returns [String current=null] : iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF ;
     public final String entryRuleN4mfIdentifier() throws RecognitionException {
         String current = null;
 
@@ -4686,8 +4431,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1921:54: (iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF )
-            // InternalN4MFParser.g:1922:2: iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF
+            // InternalN4MFParser.g:1837:54: (iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF )
+            // InternalN4MFParser.g:1838:2: iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF
             {
              newCompositeNode(grammarAccess.getN4mfIdentifierRule()); 
             pushFollow(FOLLOW_1);
@@ -4714,7 +4459,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleN4mfIdentifier"
-    // InternalN4MFParser.g:1928:1: ruleN4mfIdentifier returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test ) ;
+    // InternalN4MFParser.g:1844:1: ruleN4mfIdentifier returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test ) ;
     public final AntlrDatatypeRuleToken ruleN4mfIdentifier() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -4725,10 +4470,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1934:2: ( (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test ) )
-            // InternalN4MFParser.g:1935:2: (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test )
+            // InternalN4MFParser.g:1850:2: ( (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test ) )
+            // InternalN4MFParser.g:1851:2: (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test )
             {
-            // InternalN4MFParser.g:1935:2: (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test )
+            // InternalN4MFParser.g:1851:2: (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test )
             int alt33=18;
             switch ( input.LA(1) ) {
             case RULE_ID:
@@ -4830,7 +4575,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             switch (alt33) {
                 case 1 :
-                    // InternalN4MFParser.g:1936:3: this_ID_0= RULE_ID
+                    // InternalN4MFParser.g:1852:3: this_ID_0= RULE_ID
                     {
                     this_ID_0=(Token)match(input,RULE_ID,FOLLOW_2); 
 
@@ -4843,7 +4588,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:1944:3: kw= ProjectId
+                    // InternalN4MFParser.g:1860:3: kw= ProjectId
                     {
                     kw=(Token)match(input,ProjectId,FOLLOW_2); 
 
@@ -4854,7 +4599,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalN4MFParser.g:1950:3: kw= ProjectType
+                    // InternalN4MFParser.g:1866:3: kw= ProjectType
                     {
                     kw=(Token)match(input,ProjectType,FOLLOW_2); 
 
@@ -4865,7 +4610,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalN4MFParser.g:1956:3: kw= ProjectVersion
+                    // InternalN4MFParser.g:1872:3: kw= ProjectVersion
                     {
                     kw=(Token)match(input,ProjectVersion,FOLLOW_2); 
 
@@ -4876,7 +4621,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalN4MFParser.g:1962:3: kw= VendorId
+                    // InternalN4MFParser.g:1878:3: kw= VendorId
                     {
                     kw=(Token)match(input,VendorId,FOLLOW_2); 
 
@@ -4887,7 +4632,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalN4MFParser.g:1968:3: kw= VendorName
+                    // InternalN4MFParser.g:1884:3: kw= VendorName
                     {
                     kw=(Token)match(input,VendorName,FOLLOW_2); 
 
@@ -4898,7 +4643,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalN4MFParser.g:1974:3: kw= Output
+                    // InternalN4MFParser.g:1890:3: kw= Output
                     {
                     kw=(Token)match(input,Output,FOLLOW_2); 
 
@@ -4909,7 +4654,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // InternalN4MFParser.g:1980:3: kw= Libraries
+                    // InternalN4MFParser.g:1896:3: kw= Libraries
                     {
                     kw=(Token)match(input,Libraries,FOLLOW_2); 
 
@@ -4920,7 +4665,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 9 :
-                    // InternalN4MFParser.g:1986:3: kw= Resources
+                    // InternalN4MFParser.g:1902:3: kw= Resources
                     {
                     kw=(Token)match(input,Resources,FOLLOW_2); 
 
@@ -4931,7 +4676,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 10 :
-                    // InternalN4MFParser.g:1992:3: kw= Sources
+                    // InternalN4MFParser.g:1908:3: kw= Sources
                     {
                     kw=(Token)match(input,Sources,FOLLOW_2); 
 
@@ -4942,7 +4687,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 11 :
-                    // InternalN4MFParser.g:1998:3: kw= ModuleFilters
+                    // InternalN4MFParser.g:1914:3: kw= ModuleFilters
                     {
                     kw=(Token)match(input,ModuleFilters,FOLLOW_2); 
 
@@ -4953,10 +4698,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 12 :
-                    // InternalN4MFParser.g:2004:3: (kw= ProjectDependencies kw= KW_System )
+                    // InternalN4MFParser.g:1920:3: (kw= ProjectDependencies kw= KW_System )
                     {
-                    // InternalN4MFParser.g:2004:3: (kw= ProjectDependencies kw= KW_System )
-                    // InternalN4MFParser.g:2005:4: kw= ProjectDependencies kw= KW_System
+                    // InternalN4MFParser.g:1920:3: (kw= ProjectDependencies kw= KW_System )
+                    // InternalN4MFParser.g:1921:4: kw= ProjectDependencies kw= KW_System
                     {
                     kw=(Token)match(input,ProjectDependencies,FOLLOW_25); 
 
@@ -4975,7 +4720,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 13 :
-                    // InternalN4MFParser.g:2017:3: kw= API
+                    // InternalN4MFParser.g:1933:3: kw= API
                     {
                     kw=(Token)match(input,API,FOLLOW_2); 
 
@@ -4986,7 +4731,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 14 :
-                    // InternalN4MFParser.g:2023:3: kw= User
+                    // InternalN4MFParser.g:1939:3: kw= User
                     {
                     kw=(Token)match(input,User,FOLLOW_2); 
 
@@ -4997,7 +4742,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 15 :
-                    // InternalN4MFParser.g:2029:3: kw= Application
+                    // InternalN4MFParser.g:1945:3: kw= Application
                     {
                     kw=(Token)match(input,Application,FOLLOW_2); 
 
@@ -5008,10 +4753,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 16 :
-                    // InternalN4MFParser.g:2035:3: (kw= Processor kw= Source )
+                    // InternalN4MFParser.g:1951:3: (kw= Processor kw= Source )
                     {
-                    // InternalN4MFParser.g:2035:3: (kw= Processor kw= Source )
-                    // InternalN4MFParser.g:2036:4: kw= Processor kw= Source
+                    // InternalN4MFParser.g:1951:3: (kw= Processor kw= Source )
+                    // InternalN4MFParser.g:1952:4: kw= Processor kw= Source
                     {
                     kw=(Token)match(input,Processor,FOLLOW_26); 
 
@@ -5030,7 +4775,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 17 :
-                    // InternalN4MFParser.g:2048:3: kw= Content
+                    // InternalN4MFParser.g:1964:3: kw= Content
                     {
                     kw=(Token)match(input,Content,FOLLOW_2); 
 
@@ -5041,7 +4786,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 18 :
-                    // InternalN4MFParser.g:2054:3: kw= Test
+                    // InternalN4MFParser.g:1970:3: kw= Test
                     {
                     kw=(Token)match(input,Test,FOLLOW_2); 
 
@@ -5074,7 +4819,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectType"
-    // InternalN4MFParser.g:2063:1: ruleProjectType returns [Enumerator current=null] : ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) ) ;
+    // InternalN4MFParser.g:1979:1: ruleProjectType returns [Enumerator current=null] : ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) ) ;
     public final Enumerator ruleProjectType() throws RecognitionException {
         Enumerator current = null;
 
@@ -5091,10 +4836,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2069:2: ( ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) ) )
-            // InternalN4MFParser.g:2070:2: ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) )
+            // InternalN4MFParser.g:1985:2: ( ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) ) )
+            // InternalN4MFParser.g:1986:2: ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) )
             {
-            // InternalN4MFParser.g:2070:2: ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) )
+            // InternalN4MFParser.g:1986:2: ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) )
             int alt34=8;
             switch ( input.LA(1) ) {
             case Application:
@@ -5146,10 +4891,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             switch (alt34) {
                 case 1 :
-                    // InternalN4MFParser.g:2071:3: (enumLiteral_0= Application )
+                    // InternalN4MFParser.g:1987:3: (enumLiteral_0= Application )
                     {
-                    // InternalN4MFParser.g:2071:3: (enumLiteral_0= Application )
-                    // InternalN4MFParser.g:2072:4: enumLiteral_0= Application
+                    // InternalN4MFParser.g:1987:3: (enumLiteral_0= Application )
+                    // InternalN4MFParser.g:1988:4: enumLiteral_0= Application
                     {
                     enumLiteral_0=(Token)match(input,Application,FOLLOW_2); 
 
@@ -5163,10 +4908,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2079:3: (enumLiteral_1= Processor )
+                    // InternalN4MFParser.g:1995:3: (enumLiteral_1= Processor )
                     {
-                    // InternalN4MFParser.g:2079:3: (enumLiteral_1= Processor )
-                    // InternalN4MFParser.g:2080:4: enumLiteral_1= Processor
+                    // InternalN4MFParser.g:1995:3: (enumLiteral_1= Processor )
+                    // InternalN4MFParser.g:1996:4: enumLiteral_1= Processor
                     {
                     enumLiteral_1=(Token)match(input,Processor,FOLLOW_2); 
 
@@ -5180,10 +4925,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalN4MFParser.g:2087:3: (enumLiteral_2= Library )
+                    // InternalN4MFParser.g:2003:3: (enumLiteral_2= Library )
                     {
-                    // InternalN4MFParser.g:2087:3: (enumLiteral_2= Library )
-                    // InternalN4MFParser.g:2088:4: enumLiteral_2= Library
+                    // InternalN4MFParser.g:2003:3: (enumLiteral_2= Library )
+                    // InternalN4MFParser.g:2004:4: enumLiteral_2= Library
                     {
                     enumLiteral_2=(Token)match(input,Library,FOLLOW_2); 
 
@@ -5197,10 +4942,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalN4MFParser.g:2095:3: (enumLiteral_3= API )
+                    // InternalN4MFParser.g:2011:3: (enumLiteral_3= API )
                     {
-                    // InternalN4MFParser.g:2095:3: (enumLiteral_3= API )
-                    // InternalN4MFParser.g:2096:4: enumLiteral_3= API
+                    // InternalN4MFParser.g:2011:3: (enumLiteral_3= API )
+                    // InternalN4MFParser.g:2012:4: enumLiteral_3= API
                     {
                     enumLiteral_3=(Token)match(input,API,FOLLOW_2); 
 
@@ -5214,10 +4959,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalN4MFParser.g:2103:3: (enumLiteral_4= RuntimeEnvironment )
+                    // InternalN4MFParser.g:2019:3: (enumLiteral_4= RuntimeEnvironment )
                     {
-                    // InternalN4MFParser.g:2103:3: (enumLiteral_4= RuntimeEnvironment )
-                    // InternalN4MFParser.g:2104:4: enumLiteral_4= RuntimeEnvironment
+                    // InternalN4MFParser.g:2019:3: (enumLiteral_4= RuntimeEnvironment )
+                    // InternalN4MFParser.g:2020:4: enumLiteral_4= RuntimeEnvironment
                     {
                     enumLiteral_4=(Token)match(input,RuntimeEnvironment,FOLLOW_2); 
 
@@ -5231,10 +4976,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalN4MFParser.g:2111:3: (enumLiteral_5= RuntimeLibrary )
+                    // InternalN4MFParser.g:2027:3: (enumLiteral_5= RuntimeLibrary )
                     {
-                    // InternalN4MFParser.g:2111:3: (enumLiteral_5= RuntimeLibrary )
-                    // InternalN4MFParser.g:2112:4: enumLiteral_5= RuntimeLibrary
+                    // InternalN4MFParser.g:2027:3: (enumLiteral_5= RuntimeLibrary )
+                    // InternalN4MFParser.g:2028:4: enumLiteral_5= RuntimeLibrary
                     {
                     enumLiteral_5=(Token)match(input,RuntimeLibrary,FOLLOW_2); 
 
@@ -5248,10 +4993,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalN4MFParser.g:2119:3: (enumLiteral_6= Test )
+                    // InternalN4MFParser.g:2035:3: (enumLiteral_6= Test )
                     {
-                    // InternalN4MFParser.g:2119:3: (enumLiteral_6= Test )
-                    // InternalN4MFParser.g:2120:4: enumLiteral_6= Test
+                    // InternalN4MFParser.g:2035:3: (enumLiteral_6= Test )
+                    // InternalN4MFParser.g:2036:4: enumLiteral_6= Test
                     {
                     enumLiteral_6=(Token)match(input,Test,FOLLOW_2); 
 
@@ -5265,10 +5010,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // InternalN4MFParser.g:2127:3: (enumLiteral_7= Validation )
+                    // InternalN4MFParser.g:2043:3: (enumLiteral_7= Validation )
                     {
-                    // InternalN4MFParser.g:2127:3: (enumLiteral_7= Validation )
-                    // InternalN4MFParser.g:2128:4: enumLiteral_7= Validation
+                    // InternalN4MFParser.g:2043:3: (enumLiteral_7= Validation )
+                    // InternalN4MFParser.g:2044:4: enumLiteral_7= Validation
                     {
                     enumLiteral_7=(Token)match(input,Validation,FOLLOW_2); 
 
@@ -5304,7 +5049,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSourceFragmentType"
-    // InternalN4MFParser.g:2138:1: ruleSourceFragmentType returns [Enumerator current=null] : ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) ) ;
+    // InternalN4MFParser.g:2054:1: ruleSourceFragmentType returns [Enumerator current=null] : ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) ) ;
     public final Enumerator ruleSourceFragmentType() throws RecognitionException {
         Enumerator current = null;
 
@@ -5316,10 +5061,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2144:2: ( ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) ) )
-            // InternalN4MFParser.g:2145:2: ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) )
+            // InternalN4MFParser.g:2060:2: ( ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) ) )
+            // InternalN4MFParser.g:2061:2: ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) )
             {
-            // InternalN4MFParser.g:2145:2: ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) )
+            // InternalN4MFParser.g:2061:2: ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) )
             int alt35=3;
             switch ( input.LA(1) ) {
             case Source:
@@ -5346,10 +5091,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             switch (alt35) {
                 case 1 :
-                    // InternalN4MFParser.g:2146:3: (enumLiteral_0= Source )
+                    // InternalN4MFParser.g:2062:3: (enumLiteral_0= Source )
                     {
-                    // InternalN4MFParser.g:2146:3: (enumLiteral_0= Source )
-                    // InternalN4MFParser.g:2147:4: enumLiteral_0= Source
+                    // InternalN4MFParser.g:2062:3: (enumLiteral_0= Source )
+                    // InternalN4MFParser.g:2063:4: enumLiteral_0= Source
                     {
                     enumLiteral_0=(Token)match(input,Source,FOLLOW_2); 
 
@@ -5363,10 +5108,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2154:3: (enumLiteral_1= External )
+                    // InternalN4MFParser.g:2070:3: (enumLiteral_1= External )
                     {
-                    // InternalN4MFParser.g:2154:3: (enumLiteral_1= External )
-                    // InternalN4MFParser.g:2155:4: enumLiteral_1= External
+                    // InternalN4MFParser.g:2070:3: (enumLiteral_1= External )
+                    // InternalN4MFParser.g:2071:4: enumLiteral_1= External
                     {
                     enumLiteral_1=(Token)match(input,External,FOLLOW_2); 
 
@@ -5380,10 +5125,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalN4MFParser.g:2162:3: (enumLiteral_2= Test )
+                    // InternalN4MFParser.g:2078:3: (enumLiteral_2= Test )
                     {
-                    // InternalN4MFParser.g:2162:3: (enumLiteral_2= Test )
-                    // InternalN4MFParser.g:2163:4: enumLiteral_2= Test
+                    // InternalN4MFParser.g:2078:3: (enumLiteral_2= Test )
+                    // InternalN4MFParser.g:2079:4: enumLiteral_2= Test
                     {
                     enumLiteral_2=(Token)match(input,Test,FOLLOW_2); 
 
@@ -5419,7 +5164,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleModuleFilterType"
-    // InternalN4MFParser.g:2173:1: ruleModuleFilterType returns [Enumerator current=null] : ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) ) ;
+    // InternalN4MFParser.g:2089:1: ruleModuleFilterType returns [Enumerator current=null] : ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) ) ;
     public final Enumerator ruleModuleFilterType() throws RecognitionException {
         Enumerator current = null;
 
@@ -5430,10 +5175,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2179:2: ( ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) ) )
-            // InternalN4MFParser.g:2180:2: ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) )
+            // InternalN4MFParser.g:2095:2: ( ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) ) )
+            // InternalN4MFParser.g:2096:2: ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) )
             {
-            // InternalN4MFParser.g:2180:2: ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) )
+            // InternalN4MFParser.g:2096:2: ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) )
             int alt36=2;
             int LA36_0 = input.LA(1);
 
@@ -5451,10 +5196,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt36) {
                 case 1 :
-                    // InternalN4MFParser.g:2181:3: (enumLiteral_0= NoValidate )
+                    // InternalN4MFParser.g:2097:3: (enumLiteral_0= NoValidate )
                     {
-                    // InternalN4MFParser.g:2181:3: (enumLiteral_0= NoValidate )
-                    // InternalN4MFParser.g:2182:4: enumLiteral_0= NoValidate
+                    // InternalN4MFParser.g:2097:3: (enumLiteral_0= NoValidate )
+                    // InternalN4MFParser.g:2098:4: enumLiteral_0= NoValidate
                     {
                     enumLiteral_0=(Token)match(input,NoValidate,FOLLOW_2); 
 
@@ -5468,10 +5213,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2189:3: (enumLiteral_1= NoModuleWrap )
+                    // InternalN4MFParser.g:2105:3: (enumLiteral_1= NoModuleWrap )
                     {
-                    // InternalN4MFParser.g:2189:3: (enumLiteral_1= NoModuleWrap )
-                    // InternalN4MFParser.g:2190:4: enumLiteral_1= NoModuleWrap
+                    // InternalN4MFParser.g:2105:3: (enumLiteral_1= NoModuleWrap )
+                    // InternalN4MFParser.g:2106:4: enumLiteral_1= NoModuleWrap
                     {
                     enumLiteral_1=(Token)match(input,NoModuleWrap,FOLLOW_2); 
 
@@ -5507,7 +5252,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectDependencyScope"
-    // InternalN4MFParser.g:2200:1: ruleProjectDependencyScope returns [Enumerator current=null] : ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) ) ;
+    // InternalN4MFParser.g:2116:1: ruleProjectDependencyScope returns [Enumerator current=null] : ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) ) ;
     public final Enumerator ruleProjectDependencyScope() throws RecognitionException {
         Enumerator current = null;
 
@@ -5518,10 +5263,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2206:2: ( ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) ) )
-            // InternalN4MFParser.g:2207:2: ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) )
+            // InternalN4MFParser.g:2122:2: ( ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) ) )
+            // InternalN4MFParser.g:2123:2: ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) )
             {
-            // InternalN4MFParser.g:2207:2: ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) )
+            // InternalN4MFParser.g:2123:2: ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) )
             int alt37=2;
             int LA37_0 = input.LA(1);
 
@@ -5539,10 +5284,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt37) {
                 case 1 :
-                    // InternalN4MFParser.g:2208:3: (enumLiteral_0= Compile )
+                    // InternalN4MFParser.g:2124:3: (enumLiteral_0= Compile )
                     {
-                    // InternalN4MFParser.g:2208:3: (enumLiteral_0= Compile )
-                    // InternalN4MFParser.g:2209:4: enumLiteral_0= Compile
+                    // InternalN4MFParser.g:2124:3: (enumLiteral_0= Compile )
+                    // InternalN4MFParser.g:2125:4: enumLiteral_0= Compile
                     {
                     enumLiteral_0=(Token)match(input,Compile,FOLLOW_2); 
 
@@ -5556,10 +5301,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2216:3: (enumLiteral_1= Test )
+                    // InternalN4MFParser.g:2132:3: (enumLiteral_1= Test )
                     {
-                    // InternalN4MFParser.g:2216:3: (enumLiteral_1= Test )
-                    // InternalN4MFParser.g:2217:4: enumLiteral_1= Test
+                    // InternalN4MFParser.g:2132:3: (enumLiteral_1= Test )
+                    // InternalN4MFParser.g:2133:4: enumLiteral_1= Test
                     {
                     enumLiteral_1=(Token)match(input,Test,FOLLOW_2); 
 
@@ -5595,7 +5340,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleModuleLoader"
-    // InternalN4MFParser.g:2227:1: ruleModuleLoader returns [Enumerator current=null] : ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) ) ;
+    // InternalN4MFParser.g:2143:1: ruleModuleLoader returns [Enumerator current=null] : ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) ) ;
     public final Enumerator ruleModuleLoader() throws RecognitionException {
         Enumerator current = null;
 
@@ -5607,10 +5352,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2233:2: ( ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) ) )
-            // InternalN4MFParser.g:2234:2: ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) )
+            // InternalN4MFParser.g:2149:2: ( ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) ) )
+            // InternalN4MFParser.g:2150:2: ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) )
             {
-            // InternalN4MFParser.g:2234:2: ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) )
+            // InternalN4MFParser.g:2150:2: ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) )
             int alt38=3;
             switch ( input.LA(1) ) {
             case N4js:
@@ -5637,10 +5382,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             switch (alt38) {
                 case 1 :
-                    // InternalN4MFParser.g:2235:3: (enumLiteral_0= N4js )
+                    // InternalN4MFParser.g:2151:3: (enumLiteral_0= N4js )
                     {
-                    // InternalN4MFParser.g:2235:3: (enumLiteral_0= N4js )
-                    // InternalN4MFParser.g:2236:4: enumLiteral_0= N4js
+                    // InternalN4MFParser.g:2151:3: (enumLiteral_0= N4js )
+                    // InternalN4MFParser.g:2152:4: enumLiteral_0= N4js
                     {
                     enumLiteral_0=(Token)match(input,N4js,FOLLOW_2); 
 
@@ -5654,10 +5399,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2243:3: (enumLiteral_1= Commonjs )
+                    // InternalN4MFParser.g:2159:3: (enumLiteral_1= Commonjs )
                     {
-                    // InternalN4MFParser.g:2243:3: (enumLiteral_1= Commonjs )
-                    // InternalN4MFParser.g:2244:4: enumLiteral_1= Commonjs
+                    // InternalN4MFParser.g:2159:3: (enumLiteral_1= Commonjs )
+                    // InternalN4MFParser.g:2160:4: enumLiteral_1= Commonjs
                     {
                     enumLiteral_1=(Token)match(input,Commonjs,FOLLOW_2); 
 
@@ -5671,10 +5416,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalN4MFParser.g:2251:3: (enumLiteral_2= Node_builtin )
+                    // InternalN4MFParser.g:2167:3: (enumLiteral_2= Node_builtin )
                     {
-                    // InternalN4MFParser.g:2251:3: (enumLiteral_2= Node_builtin )
-                    // InternalN4MFParser.g:2252:4: enumLiteral_2= Node_builtin
+                    // InternalN4MFParser.g:2167:3: (enumLiteral_2= Node_builtin )
+                    // InternalN4MFParser.g:2168:4: enumLiteral_2= Node_builtin
                     {
                     enumLiteral_2=(Token)match(input,Node_builtin,FOLLOW_2); 
 
@@ -5767,7 +5512,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             this.transition = dfa_7;
         }
         public String getDescription() {
-            return "()+ loopback of 85:5: ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProvidedRuntimeLibraryDependency ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProvidedRuntimeLibraryDependency ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleRequiredRuntimeLibraryDependency ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleRequiredRuntimeLibraryDependency ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleTestedProject ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleTestedProject ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+";
+            return "()+ loopback of 85:5: ( ({...}? => ( ({...}? => (otherlv_1= ProjectId otherlv_2= Colon ( (lv_projectId_3_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_4= ProjectType otherlv_5= Colon ( (lv_projectType_6_0= ruleProjectType ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_7= ProjectVersion otherlv_8= Colon ( (lv_projectVersion_9_0= ruleDeclaredVersion ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_10= VendorId otherlv_11= Colon ( (lv_declaredVendorId_12_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_13= VendorName otherlv_14= Colon ( (lv_vendorName_15_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_16= MainModule otherlv_17= Colon ( (lv_mainModule_18_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_19= ExtendedRuntimeEnvironment otherlv_20= Colon ( (lv_extendedRuntimeEnvironment_21_0= ruleProjectReference ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_22= ProvidedRuntimeLibraries otherlv_23= LeftCurlyBracket ( ( (lv_providedRuntimeLibraries_24_0= ruleProjectReference ) ) (otherlv_25= Comma ( (lv_providedRuntimeLibraries_26_0= ruleProjectReference ) ) )* )? otherlv_27= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_28= RequiredRuntimeLibraries otherlv_29= LeftCurlyBracket ( ( (lv_requiredRuntimeLibraries_30_0= ruleProjectReference ) ) (otherlv_31= Comma ( (lv_requiredRuntimeLibraries_32_0= ruleProjectReference ) ) )* )? otherlv_33= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_34= ProjectDependencies otherlv_35= LeftCurlyBracket ( ( (lv_projectDependencies_36_0= ruleProjectDependency ) ) (otherlv_37= Comma ( (lv_projectDependencies_38_0= ruleProjectDependency ) ) )* )? otherlv_39= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_40= ImplementationId otherlv_41= Colon ( (lv_implementationId_42_0= ruleN4mfIdentifier ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_43= ImplementedProjects otherlv_44= LeftCurlyBracket ( ( (lv_implementedProjects_45_0= ruleProjectReference ) ) (otherlv_46= Comma ( (lv_implementedProjects_47_0= ruleProjectReference ) ) )* )? otherlv_48= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_49= InitModules otherlv_50= LeftCurlyBracket ( ( (lv_initModules_51_0= ruleBootstrapModule ) ) (otherlv_52= Comma ( (lv_initModules_53_0= ruleBootstrapModule ) ) )* )? otherlv_54= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_55= ExecModule otherlv_56= Colon ( (lv_execModule_57_0= ruleBootstrapModule ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_58= Output otherlv_59= Colon ( (lv_outputPathRaw_60_0= RULE_STRING ) ) ) ) ) ) | ({...}? => ( ({...}? => (otherlv_61= Libraries otherlv_62= LeftCurlyBracket ( (lv_libraryPathsRaw_63_0= RULE_STRING ) ) (otherlv_64= Comma ( (lv_libraryPathsRaw_65_0= RULE_STRING ) ) )* otherlv_66= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_67= Resources otherlv_68= LeftCurlyBracket ( (lv_resourcePathsRaw_69_0= RULE_STRING ) ) (otherlv_70= Comma ( (lv_resourcePathsRaw_71_0= RULE_STRING ) ) )* otherlv_72= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_73= Sources otherlv_74= LeftCurlyBracket ( (lv_sourceFragment_75_0= ruleSourceFragment ) )+ otherlv_76= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_77= ModuleFilters otherlv_78= LeftCurlyBracket ( (lv_moduleFilters_79_0= ruleModuleFilter ) )+ otherlv_80= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_81= TestedProjects otherlv_82= LeftCurlyBracket ( ( (lv_testedProjects_83_0= ruleProjectDependency ) ) (otherlv_84= Comma ( (lv_testedProjects_85_0= ruleProjectDependency ) ) )* )? otherlv_86= RightCurlyBracket ) ) ) ) | ({...}? => ( ({...}? => (otherlv_87= ModuleLoader otherlv_88= Colon ( (lv_moduleLoader_89_0= ruleModuleLoader ) ) ) ) ) ) )+";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -5886,7 +5631,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             this.transition = dfa_13;
         }
         public String getDescription() {
-            return "1739:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )?";
+            return "1655:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )?";
         }
     }
  
