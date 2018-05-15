@@ -10,6 +10,9 @@ rm -rf node_modules
 # Install dependencies in order to prepare npm-task script
 yarn install
 
+# Build n4js-cli
+yarn run build
+
 # Run npm task script 'publish-canary'
 yarn run publish-canary
 
