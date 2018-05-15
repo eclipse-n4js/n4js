@@ -13,7 +13,6 @@ package org.eclipse.n4js.n4mf.services;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.util.List;
-import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.EnumLiteralDeclaration;
@@ -67,25 +66,76 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cColonKeyword_5_1 = (Keyword)cGroup_5.eContents().get(1);
 		private final Assignment cMainModuleAssignment_5_2 = (Assignment)cGroup_5.eContents().get(2);
 		private final RuleCall cMainModuleSTRINGTerminalRuleCall_5_2_0 = (RuleCall)cMainModuleAssignment_5_2.eContents().get(0);
-		private final Assignment cExtendedRuntimeEnvironmentAssignment_6 = (Assignment)cUnorderedGroup.eContents().get(6);
-		private final RuleCall cExtendedRuntimeEnvironmentExtendedRuntimeEnvironmentParserRuleCall_6_0 = (RuleCall)cExtendedRuntimeEnvironmentAssignment_6.eContents().get(0);
-		private final Assignment cProvidedRuntimeLibrariesAssignment_7 = (Assignment)cUnorderedGroup.eContents().get(7);
-		private final RuleCall cProvidedRuntimeLibrariesProvidedRuntimeLibrariesParserRuleCall_7_0 = (RuleCall)cProvidedRuntimeLibrariesAssignment_7.eContents().get(0);
-		private final Assignment cRequiredRuntimeLibrariesAssignment_8 = (Assignment)cUnorderedGroup.eContents().get(8);
-		private final RuleCall cRequiredRuntimeLibrariesRequiredRuntimeLibrariesParserRuleCall_8_0 = (RuleCall)cRequiredRuntimeLibrariesAssignment_8.eContents().get(0);
-		private final Assignment cProjectDependenciesAssignment_9 = (Assignment)cUnorderedGroup.eContents().get(9);
-		private final RuleCall cProjectDependenciesProjectDependenciesParserRuleCall_9_0 = (RuleCall)cProjectDependenciesAssignment_9.eContents().get(0);
+		private final Group cGroup_6 = (Group)cUnorderedGroup.eContents().get(6);
+		private final Keyword cExtendedRuntimeEnvironmentKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Keyword cColonKeyword_6_1 = (Keyword)cGroup_6.eContents().get(1);
+		private final Assignment cExtendedRuntimeEnvironmentAssignment_6_2 = (Assignment)cGroup_6.eContents().get(2);
+		private final RuleCall cExtendedRuntimeEnvironmentProjectReferenceParserRuleCall_6_2_0 = (RuleCall)cExtendedRuntimeEnvironmentAssignment_6_2.eContents().get(0);
+		private final Group cGroup_7 = (Group)cUnorderedGroup.eContents().get(7);
+		private final Keyword cProvidedRuntimeLibrariesKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_7_1 = (Keyword)cGroup_7.eContents().get(1);
+		private final Group cGroup_7_2 = (Group)cGroup_7.eContents().get(2);
+		private final Assignment cProvidedRuntimeLibrariesAssignment_7_2_0 = (Assignment)cGroup_7_2.eContents().get(0);
+		private final RuleCall cProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_0_0 = (RuleCall)cProvidedRuntimeLibrariesAssignment_7_2_0.eContents().get(0);
+		private final Group cGroup_7_2_1 = (Group)cGroup_7_2.eContents().get(1);
+		private final Keyword cCommaKeyword_7_2_1_0 = (Keyword)cGroup_7_2_1.eContents().get(0);
+		private final Assignment cProvidedRuntimeLibrariesAssignment_7_2_1_1 = (Assignment)cGroup_7_2_1.eContents().get(1);
+		private final RuleCall cProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_1_1_0 = (RuleCall)cProvidedRuntimeLibrariesAssignment_7_2_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_7_3 = (Keyword)cGroup_7.eContents().get(3);
+		private final Group cGroup_8 = (Group)cUnorderedGroup.eContents().get(8);
+		private final Keyword cRequiredRuntimeLibrariesKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_8_1 = (Keyword)cGroup_8.eContents().get(1);
+		private final Group cGroup_8_2 = (Group)cGroup_8.eContents().get(2);
+		private final Assignment cRequiredRuntimeLibrariesAssignment_8_2_0 = (Assignment)cGroup_8_2.eContents().get(0);
+		private final RuleCall cRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_0_0 = (RuleCall)cRequiredRuntimeLibrariesAssignment_8_2_0.eContents().get(0);
+		private final Group cGroup_8_2_1 = (Group)cGroup_8_2.eContents().get(1);
+		private final Keyword cCommaKeyword_8_2_1_0 = (Keyword)cGroup_8_2_1.eContents().get(0);
+		private final Assignment cRequiredRuntimeLibrariesAssignment_8_2_1_1 = (Assignment)cGroup_8_2_1.eContents().get(1);
+		private final RuleCall cRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_1_1_0 = (RuleCall)cRequiredRuntimeLibrariesAssignment_8_2_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_8_3 = (Keyword)cGroup_8.eContents().get(3);
+		private final Group cGroup_9 = (Group)cUnorderedGroup.eContents().get(9);
+		private final Keyword cProjectDependenciesKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_9_1 = (Keyword)cGroup_9.eContents().get(1);
+		private final Group cGroup_9_2 = (Group)cGroup_9.eContents().get(2);
+		private final Assignment cProjectDependenciesAssignment_9_2_0 = (Assignment)cGroup_9_2.eContents().get(0);
+		private final RuleCall cProjectDependenciesProjectDependencyParserRuleCall_9_2_0_0 = (RuleCall)cProjectDependenciesAssignment_9_2_0.eContents().get(0);
+		private final Group cGroup_9_2_1 = (Group)cGroup_9_2.eContents().get(1);
+		private final Keyword cCommaKeyword_9_2_1_0 = (Keyword)cGroup_9_2_1.eContents().get(0);
+		private final Assignment cProjectDependenciesAssignment_9_2_1_1 = (Assignment)cGroup_9_2_1.eContents().get(1);
+		private final RuleCall cProjectDependenciesProjectDependencyParserRuleCall_9_2_1_1_0 = (RuleCall)cProjectDependenciesAssignment_9_2_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_9_3 = (Keyword)cGroup_9.eContents().get(3);
 		private final Group cGroup_10 = (Group)cUnorderedGroup.eContents().get(10);
 		private final Keyword cImplementationIdKeyword_10_0 = (Keyword)cGroup_10.eContents().get(0);
 		private final Keyword cColonKeyword_10_1 = (Keyword)cGroup_10.eContents().get(1);
 		private final Assignment cImplementationIdAssignment_10_2 = (Assignment)cGroup_10.eContents().get(2);
 		private final RuleCall cImplementationIdN4mfIdentifierParserRuleCall_10_2_0 = (RuleCall)cImplementationIdAssignment_10_2.eContents().get(0);
-		private final Assignment cImplementedProjectsAssignment_11 = (Assignment)cUnorderedGroup.eContents().get(11);
-		private final RuleCall cImplementedProjectsImplementedProjectsParserRuleCall_11_0 = (RuleCall)cImplementedProjectsAssignment_11.eContents().get(0);
-		private final Assignment cInitModulesAssignment_12 = (Assignment)cUnorderedGroup.eContents().get(12);
-		private final RuleCall cInitModulesInitModulesParserRuleCall_12_0 = (RuleCall)cInitModulesAssignment_12.eContents().get(0);
-		private final Assignment cExecModuleAssignment_13 = (Assignment)cUnorderedGroup.eContents().get(13);
-		private final RuleCall cExecModuleExecModuleParserRuleCall_13_0 = (RuleCall)cExecModuleAssignment_13.eContents().get(0);
+		private final Group cGroup_11 = (Group)cUnorderedGroup.eContents().get(11);
+		private final Keyword cImplementedProjectsKeyword_11_0 = (Keyword)cGroup_11.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_11_1 = (Keyword)cGroup_11.eContents().get(1);
+		private final Group cGroup_11_2 = (Group)cGroup_11.eContents().get(2);
+		private final Assignment cImplementedProjectsAssignment_11_2_0 = (Assignment)cGroup_11_2.eContents().get(0);
+		private final RuleCall cImplementedProjectsProjectReferenceParserRuleCall_11_2_0_0 = (RuleCall)cImplementedProjectsAssignment_11_2_0.eContents().get(0);
+		private final Group cGroup_11_2_1 = (Group)cGroup_11_2.eContents().get(1);
+		private final Keyword cCommaKeyword_11_2_1_0 = (Keyword)cGroup_11_2_1.eContents().get(0);
+		private final Assignment cImplementedProjectsAssignment_11_2_1_1 = (Assignment)cGroup_11_2_1.eContents().get(1);
+		private final RuleCall cImplementedProjectsProjectReferenceParserRuleCall_11_2_1_1_0 = (RuleCall)cImplementedProjectsAssignment_11_2_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_11_3 = (Keyword)cGroup_11.eContents().get(3);
+		private final Group cGroup_12 = (Group)cUnorderedGroup.eContents().get(12);
+		private final Keyword cInitModulesKeyword_12_0 = (Keyword)cGroup_12.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_12_1 = (Keyword)cGroup_12.eContents().get(1);
+		private final Group cGroup_12_2 = (Group)cGroup_12.eContents().get(2);
+		private final Assignment cInitModulesAssignment_12_2_0 = (Assignment)cGroup_12_2.eContents().get(0);
+		private final RuleCall cInitModulesBootstrapModuleParserRuleCall_12_2_0_0 = (RuleCall)cInitModulesAssignment_12_2_0.eContents().get(0);
+		private final Group cGroup_12_2_1 = (Group)cGroup_12_2.eContents().get(1);
+		private final Keyword cCommaKeyword_12_2_1_0 = (Keyword)cGroup_12_2_1.eContents().get(0);
+		private final Assignment cInitModulesAssignment_12_2_1_1 = (Assignment)cGroup_12_2_1.eContents().get(1);
+		private final RuleCall cInitModulesBootstrapModuleParserRuleCall_12_2_1_1_0 = (RuleCall)cInitModulesAssignment_12_2_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_12_3 = (Keyword)cGroup_12.eContents().get(3);
+		private final Group cGroup_13 = (Group)cUnorderedGroup.eContents().get(13);
+		private final Keyword cExecModuleKeyword_13_0 = (Keyword)cGroup_13.eContents().get(0);
+		private final Keyword cColonKeyword_13_1 = (Keyword)cGroup_13.eContents().get(1);
+		private final Assignment cExecModuleAssignment_13_2 = (Assignment)cGroup_13.eContents().get(2);
+		private final RuleCall cExecModuleBootstrapModuleParserRuleCall_13_2_0 = (RuleCall)cExecModuleAssignment_13_2.eContents().get(0);
 		private final Group cGroup_14 = (Group)cUnorderedGroup.eContents().get(14);
 		private final Keyword cOutputKeyword_14_0 = (Keyword)cGroup_14.eContents().get(0);
 		private final Keyword cColonKeyword_14_1 = (Keyword)cGroup_14.eContents().get(1);
@@ -123,8 +173,17 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cModuleFiltersAssignment_18_2 = (Assignment)cGroup_18.eContents().get(2);
 		private final RuleCall cModuleFiltersModuleFilterParserRuleCall_18_2_0 = (RuleCall)cModuleFiltersAssignment_18_2.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_18_3 = (Keyword)cGroup_18.eContents().get(3);
-		private final Assignment cTestedProjectsAssignment_19 = (Assignment)cUnorderedGroup.eContents().get(19);
-		private final RuleCall cTestedProjectsTestedProjectsParserRuleCall_19_0 = (RuleCall)cTestedProjectsAssignment_19.eContents().get(0);
+		private final Group cGroup_19 = (Group)cUnorderedGroup.eContents().get(19);
+		private final Keyword cTestedProjectsKeyword_19_0 = (Keyword)cGroup_19.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_19_1 = (Keyword)cGroup_19.eContents().get(1);
+		private final Group cGroup_19_2 = (Group)cGroup_19.eContents().get(2);
+		private final Assignment cTestedProjectsAssignment_19_2_0 = (Assignment)cGroup_19_2.eContents().get(0);
+		private final RuleCall cTestedProjectsTestedProjectParserRuleCall_19_2_0_0 = (RuleCall)cTestedProjectsAssignment_19_2_0.eContents().get(0);
+		private final Group cGroup_19_2_1 = (Group)cGroup_19_2.eContents().get(1);
+		private final Keyword cCommaKeyword_19_2_1_0 = (Keyword)cGroup_19_2_1.eContents().get(0);
+		private final Assignment cTestedProjectsAssignment_19_2_1_1 = (Assignment)cGroup_19_2_1.eContents().get(1);
+		private final RuleCall cTestedProjectsTestedProjectParserRuleCall_19_2_1_1_0 = (RuleCall)cTestedProjectsAssignment_19_2_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_19_3 = (Keyword)cGroup_19.eContents().get(3);
 		private final Group cGroup_20 = (Group)cUnorderedGroup.eContents().get(20);
 		private final Keyword cModuleLoaderKeyword_20_0 = (Keyword)cGroup_20.eContents().get(0);
 		private final Keyword cColonKeyword_20_1 = (Keyword)cGroup_20.eContents().get(1);
@@ -137,42 +196,51 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//	vendorName=STRING)?
 		//	& ('MainModule' ':' mainModule=STRING)?
 		//	// only available for runtime environments
-		//	& extendedRuntimeEnvironment=ExtendedRuntimeEnvironment?
+		//	& ('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)?
 		//	// only in case of runtime libraries or runtime environment:
-		//	& providedRuntimeLibraries=ProvidedRuntimeLibraries?
+		//	& ('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (','
+		//	providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)? '}')?
 		//	// not available in runtime environments:
-		//	& requiredRuntimeLibraries=RequiredRuntimeLibraries?
+		//	& ('RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (','
+		//	requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)? '}')?
 		//	// only available in N4JS components (Apps, Libs, Processor)
-		//	& projectDependencies=ProjectDependencies?
+		//	& ('ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
+		//	'}')?
 		//	// only available in N4JS components (Apps, Libs, Processor)
 		//	& ('ImplementationId' ':' implementationId=N4mfIdentifier)?
 		//	// only available in N4JS components (Apps, Libs, Processor)
-		//	& implementedProjects=ImplementedProjects?
+		//	& ('ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)?
+		//	'}')?
 		//	//only RuntimeLibrary and RuntimeEnvironemnt
-		//	& initModules=InitModules?
-		//	& execModule=ExecModule?
+		//	& ('InitModules' '{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}')?
+		//	& ('ExecModule' ':' execModule=BootstrapModule)?
 		//	& ('Output' ':' outputPathRaw=STRING)?
 		//	& ('Libraries' '{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
 		//	& ('Resources' '{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')?
 		//	& ('Sources' '{' sourceFragment+=SourceFragment+ '}')?
 		//	& ('ModuleFilters' '{' moduleFilters+=ModuleFilter+ '}')?
-		//	& testedProjects=TestedProjects?
+		//	& ('TestedProjects' '{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)? '}')?
 		//	& ('ModuleLoader' ':' moduleLoader=ModuleLoader)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'ProjectId' ':' projectId=N4mfIdentifier & 'ProjectType' ':' projectType=ProjectType & 'ProjectVersion' ':'
 		//projectVersion=DeclaredVersion & 'VendorId' ':' declaredVendorId=N4mfIdentifier & ('VendorName' ':' vendorName=STRING)?
 		//& ('MainModule' ':' mainModule=STRING)? // only available for runtime environments
-		//& extendedRuntimeEnvironment=ExtendedRuntimeEnvironment? // only in case of runtime libraries or runtime environment:
-		//& providedRuntimeLibraries=ProvidedRuntimeLibraries? // not available in runtime environments:
-		//& requiredRuntimeLibraries=RequiredRuntimeLibraries? // only available in N4JS components (Apps, Libs, Processor)
-		//& projectDependencies=ProjectDependencies? // only available in N4JS components (Apps, Libs, Processor)
+		//& ('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)? // only in case of runtime libraries or runtime environment:
+		//& ('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (','
+		//providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)? '}')? // not available in runtime environments:
+		//& ('RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (','
+		//requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)? '}')? // only available in N4JS components (Apps, Libs, Processor)
+		//& ('ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
+		//'}')? // only available in N4JS components (Apps, Libs, Processor)
 		//& ('ImplementationId' ':' implementationId=N4mfIdentifier)? // only available in N4JS components (Apps, Libs, Processor)
-		//& implementedProjects=ImplementedProjects? //only RuntimeLibrary and RuntimeEnvironemnt
-		//& initModules=InitModules? & execModule=ExecModule? & ('Output' ':' outputPathRaw=STRING)? & ('Libraries' '{'
-		//libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')? & ('Resources' '{' resourcePathsRaw+=STRING (','
-		//resourcePathsRaw+=STRING)* '}')? & ('Sources' '{' sourceFragment+=SourceFragment+ '}')? & ('ModuleFilters' '{'
-		//moduleFilters+=ModuleFilter+ '}')? & testedProjects=TestedProjects? & ('ModuleLoader' ':' moduleLoader=ModuleLoader)?
+		//& ('ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)? '}')? //only RuntimeLibrary and RuntimeEnvironemnt
+		//& ('InitModules' '{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}')? & ('ExecModule' ':'
+		//execModule=BootstrapModule)? & ('Output' ':' outputPathRaw=STRING)? & ('Libraries' '{' libraryPathsRaw+=STRING (','
+		//libraryPathsRaw+=STRING)* '}')? & ('Resources' '{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')? &
+		//('Sources' '{' sourceFragment+=SourceFragment+ '}')? & ('ModuleFilters' '{' moduleFilters+=ModuleFilter+ '}')? &
+		//('TestedProjects' '{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)? '}')? & ('ModuleLoader' ':'
+		//moduleLoader=ModuleLoader)?
 		public UnorderedGroup getUnorderedGroup() { return cUnorderedGroup; }
 		
 		//'ProjectId' ':' projectId=N4mfIdentifier
@@ -265,29 +333,123 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//STRING
 		public RuleCall getMainModuleSTRINGTerminalRuleCall_5_2_0() { return cMainModuleSTRINGTerminalRuleCall_5_2_0; }
 		
-		//extendedRuntimeEnvironment=ExtendedRuntimeEnvironment?
-		public Assignment getExtendedRuntimeEnvironmentAssignment_6() { return cExtendedRuntimeEnvironmentAssignment_6; }
+		//('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)?
+		public Group getGroup_6() { return cGroup_6; }
 		
-		//ExtendedRuntimeEnvironment
-		public RuleCall getExtendedRuntimeEnvironmentExtendedRuntimeEnvironmentParserRuleCall_6_0() { return cExtendedRuntimeEnvironmentExtendedRuntimeEnvironmentParserRuleCall_6_0; }
+		//'ExtendedRuntimeEnvironment'
+		public Keyword getExtendedRuntimeEnvironmentKeyword_6_0() { return cExtendedRuntimeEnvironmentKeyword_6_0; }
 		
-		//providedRuntimeLibraries=ProvidedRuntimeLibraries?
-		public Assignment getProvidedRuntimeLibrariesAssignment_7() { return cProvidedRuntimeLibrariesAssignment_7; }
+		//':'
+		public Keyword getColonKeyword_6_1() { return cColonKeyword_6_1; }
 		
-		//ProvidedRuntimeLibraries
-		public RuleCall getProvidedRuntimeLibrariesProvidedRuntimeLibrariesParserRuleCall_7_0() { return cProvidedRuntimeLibrariesProvidedRuntimeLibrariesParserRuleCall_7_0; }
+		//extendedRuntimeEnvironment=ProjectReference
+		public Assignment getExtendedRuntimeEnvironmentAssignment_6_2() { return cExtendedRuntimeEnvironmentAssignment_6_2; }
 		
-		//requiredRuntimeLibraries=RequiredRuntimeLibraries?
-		public Assignment getRequiredRuntimeLibrariesAssignment_8() { return cRequiredRuntimeLibrariesAssignment_8; }
+		//ProjectReference
+		public RuleCall getExtendedRuntimeEnvironmentProjectReferenceParserRuleCall_6_2_0() { return cExtendedRuntimeEnvironmentProjectReferenceParserRuleCall_6_2_0; }
 		
-		//RequiredRuntimeLibraries
-		public RuleCall getRequiredRuntimeLibrariesRequiredRuntimeLibrariesParserRuleCall_8_0() { return cRequiredRuntimeLibrariesRequiredRuntimeLibrariesParserRuleCall_8_0; }
+		//('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (','
+		//providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)? '}')?
+		public Group getGroup_7() { return cGroup_7; }
 		
-		//projectDependencies=ProjectDependencies?
-		public Assignment getProjectDependenciesAssignment_9() { return cProjectDependenciesAssignment_9; }
+		//'ProvidedRuntimeLibraries'
+		public Keyword getProvidedRuntimeLibrariesKeyword_7_0() { return cProvidedRuntimeLibrariesKeyword_7_0; }
 		
-		//ProjectDependencies
-		public RuleCall getProjectDependenciesProjectDependenciesParserRuleCall_9_0() { return cProjectDependenciesProjectDependenciesParserRuleCall_9_0; }
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_7_1() { return cLeftCurlyBracketKeyword_7_1; }
+		
+		//(providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (','
+		//providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)?
+		public Group getGroup_7_2() { return cGroup_7_2; }
+		
+		//providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+		public Assignment getProvidedRuntimeLibrariesAssignment_7_2_0() { return cProvidedRuntimeLibrariesAssignment_7_2_0; }
+		
+		//ProvidedRuntimeLibraryDependency
+		public RuleCall getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_0_0() { return cProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_0_0; }
+		
+		//(',' providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*
+		public Group getGroup_7_2_1() { return cGroup_7_2_1; }
+		
+		//','
+		public Keyword getCommaKeyword_7_2_1_0() { return cCommaKeyword_7_2_1_0; }
+		
+		//providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
+		public Assignment getProvidedRuntimeLibrariesAssignment_7_2_1_1() { return cProvidedRuntimeLibrariesAssignment_7_2_1_1; }
+		
+		//ProvidedRuntimeLibraryDependency
+		public RuleCall getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_1_1_0() { return cProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_7_2_1_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_7_3() { return cRightCurlyBracketKeyword_7_3; }
+		
+		//('RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (','
+		//requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)? '}')?
+		public Group getGroup_8() { return cGroup_8; }
+		
+		//'RequiredRuntimeLibraries'
+		public Keyword getRequiredRuntimeLibrariesKeyword_8_0() { return cRequiredRuntimeLibrariesKeyword_8_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_8_1() { return cLeftCurlyBracketKeyword_8_1; }
+		
+		//(requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (','
+		//requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)?
+		public Group getGroup_8_2() { return cGroup_8_2; }
+		
+		//requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+		public Assignment getRequiredRuntimeLibrariesAssignment_8_2_0() { return cRequiredRuntimeLibrariesAssignment_8_2_0; }
+		
+		//RequiredRuntimeLibraryDependency
+		public RuleCall getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_0_0() { return cRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_0_0; }
+		
+		//(',' requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*
+		public Group getGroup_8_2_1() { return cGroup_8_2_1; }
+		
+		//','
+		public Keyword getCommaKeyword_8_2_1_0() { return cCommaKeyword_8_2_1_0; }
+		
+		//requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
+		public Assignment getRequiredRuntimeLibrariesAssignment_8_2_1_1() { return cRequiredRuntimeLibrariesAssignment_8_2_1_1; }
+		
+		//RequiredRuntimeLibraryDependency
+		public RuleCall getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_1_1_0() { return cRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_8_2_1_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_8_3() { return cRightCurlyBracketKeyword_8_3; }
+		
+		//('ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)? '}')?
+		public Group getGroup_9() { return cGroup_9; }
+		
+		//'ProjectDependencies'
+		public Keyword getProjectDependenciesKeyword_9_0() { return cProjectDependenciesKeyword_9_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_9_1() { return cLeftCurlyBracketKeyword_9_1; }
+		
+		//(projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
+		public Group getGroup_9_2() { return cGroup_9_2; }
+		
+		//projectDependencies+=ProjectDependency
+		public Assignment getProjectDependenciesAssignment_9_2_0() { return cProjectDependenciesAssignment_9_2_0; }
+		
+		//ProjectDependency
+		public RuleCall getProjectDependenciesProjectDependencyParserRuleCall_9_2_0_0() { return cProjectDependenciesProjectDependencyParserRuleCall_9_2_0_0; }
+		
+		//(',' projectDependencies+=ProjectDependency)*
+		public Group getGroup_9_2_1() { return cGroup_9_2_1; }
+		
+		//','
+		public Keyword getCommaKeyword_9_2_1_0() { return cCommaKeyword_9_2_1_0; }
+		
+		//projectDependencies+=ProjectDependency
+		public Assignment getProjectDependenciesAssignment_9_2_1_1() { return cProjectDependenciesAssignment_9_2_1_1; }
+		
+		//ProjectDependency
+		public RuleCall getProjectDependenciesProjectDependencyParserRuleCall_9_2_1_1_0() { return cProjectDependenciesProjectDependencyParserRuleCall_9_2_1_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_9_3() { return cRightCurlyBracketKeyword_9_3; }
 		
 		//('ImplementationId' ':' implementationId=N4mfIdentifier)?
 		public Group getGroup_10() { return cGroup_10; }
@@ -304,23 +466,86 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//N4mfIdentifier
 		public RuleCall getImplementationIdN4mfIdentifierParserRuleCall_10_2_0() { return cImplementationIdN4mfIdentifierParserRuleCall_10_2_0; }
 		
-		//implementedProjects=ImplementedProjects?
-		public Assignment getImplementedProjectsAssignment_11() { return cImplementedProjectsAssignment_11; }
+		//('ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)? '}')?
+		public Group getGroup_11() { return cGroup_11; }
 		
-		//ImplementedProjects
-		public RuleCall getImplementedProjectsImplementedProjectsParserRuleCall_11_0() { return cImplementedProjectsImplementedProjectsParserRuleCall_11_0; }
+		//'ImplementedProjects'
+		public Keyword getImplementedProjectsKeyword_11_0() { return cImplementedProjectsKeyword_11_0; }
 		
-		//initModules=InitModules?
-		public Assignment getInitModulesAssignment_12() { return cInitModulesAssignment_12; }
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_11_1() { return cLeftCurlyBracketKeyword_11_1; }
 		
-		//InitModules
-		public RuleCall getInitModulesInitModulesParserRuleCall_12_0() { return cInitModulesInitModulesParserRuleCall_12_0; }
+		//(implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)?
+		public Group getGroup_11_2() { return cGroup_11_2; }
 		
-		//execModule=ExecModule?
-		public Assignment getExecModuleAssignment_13() { return cExecModuleAssignment_13; }
+		//implementedProjects+=ProjectReference
+		public Assignment getImplementedProjectsAssignment_11_2_0() { return cImplementedProjectsAssignment_11_2_0; }
 		
-		//ExecModule
-		public RuleCall getExecModuleExecModuleParserRuleCall_13_0() { return cExecModuleExecModuleParserRuleCall_13_0; }
+		//ProjectReference
+		public RuleCall getImplementedProjectsProjectReferenceParserRuleCall_11_2_0_0() { return cImplementedProjectsProjectReferenceParserRuleCall_11_2_0_0; }
+		
+		//(',' implementedProjects+=ProjectReference)*
+		public Group getGroup_11_2_1() { return cGroup_11_2_1; }
+		
+		//','
+		public Keyword getCommaKeyword_11_2_1_0() { return cCommaKeyword_11_2_1_0; }
+		
+		//implementedProjects+=ProjectReference
+		public Assignment getImplementedProjectsAssignment_11_2_1_1() { return cImplementedProjectsAssignment_11_2_1_1; }
+		
+		//ProjectReference
+		public RuleCall getImplementedProjectsProjectReferenceParserRuleCall_11_2_1_1_0() { return cImplementedProjectsProjectReferenceParserRuleCall_11_2_1_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_11_3() { return cRightCurlyBracketKeyword_11_3; }
+		
+		//('InitModules' '{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}')?
+		public Group getGroup_12() { return cGroup_12; }
+		
+		//'InitModules'
+		public Keyword getInitModulesKeyword_12_0() { return cInitModulesKeyword_12_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_12_1() { return cLeftCurlyBracketKeyword_12_1; }
+		
+		//(initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)?
+		public Group getGroup_12_2() { return cGroup_12_2; }
+		
+		//initModules+=BootstrapModule
+		public Assignment getInitModulesAssignment_12_2_0() { return cInitModulesAssignment_12_2_0; }
+		
+		//BootstrapModule
+		public RuleCall getInitModulesBootstrapModuleParserRuleCall_12_2_0_0() { return cInitModulesBootstrapModuleParserRuleCall_12_2_0_0; }
+		
+		//(',' initModules+=BootstrapModule)*
+		public Group getGroup_12_2_1() { return cGroup_12_2_1; }
+		
+		//','
+		public Keyword getCommaKeyword_12_2_1_0() { return cCommaKeyword_12_2_1_0; }
+		
+		//initModules+=BootstrapModule
+		public Assignment getInitModulesAssignment_12_2_1_1() { return cInitModulesAssignment_12_2_1_1; }
+		
+		//BootstrapModule
+		public RuleCall getInitModulesBootstrapModuleParserRuleCall_12_2_1_1_0() { return cInitModulesBootstrapModuleParserRuleCall_12_2_1_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_12_3() { return cRightCurlyBracketKeyword_12_3; }
+		
+		//('ExecModule' ':' execModule=BootstrapModule)?
+		public Group getGroup_13() { return cGroup_13; }
+		
+		//'ExecModule'
+		public Keyword getExecModuleKeyword_13_0() { return cExecModuleKeyword_13_0; }
+		
+		//':'
+		public Keyword getColonKeyword_13_1() { return cColonKeyword_13_1; }
+		
+		//execModule=BootstrapModule
+		public Assignment getExecModuleAssignment_13_2() { return cExecModuleAssignment_13_2; }
+		
+		//BootstrapModule
+		public RuleCall getExecModuleBootstrapModuleParserRuleCall_13_2_0() { return cExecModuleBootstrapModuleParserRuleCall_13_2_0; }
 		
 		//('Output' ':' outputPathRaw=STRING)?
 		public Group getGroup_14() { return cGroup_14; }
@@ -433,11 +658,38 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_18_3() { return cRightCurlyBracketKeyword_18_3; }
 		
-		//testedProjects=TestedProjects?
-		public Assignment getTestedProjectsAssignment_19() { return cTestedProjectsAssignment_19; }
+		//('TestedProjects' '{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)? '}')?
+		public Group getGroup_19() { return cGroup_19; }
 		
-		//TestedProjects
-		public RuleCall getTestedProjectsTestedProjectsParserRuleCall_19_0() { return cTestedProjectsTestedProjectsParserRuleCall_19_0; }
+		//'TestedProjects'
+		public Keyword getTestedProjectsKeyword_19_0() { return cTestedProjectsKeyword_19_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_19_1() { return cLeftCurlyBracketKeyword_19_1; }
+		
+		//(testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)?
+		public Group getGroup_19_2() { return cGroup_19_2; }
+		
+		//testedProjects+=TestedProject
+		public Assignment getTestedProjectsAssignment_19_2_0() { return cTestedProjectsAssignment_19_2_0; }
+		
+		//TestedProject
+		public RuleCall getTestedProjectsTestedProjectParserRuleCall_19_2_0_0() { return cTestedProjectsTestedProjectParserRuleCall_19_2_0_0; }
+		
+		//(',' testedProjects+=TestedProject)*
+		public Group getGroup_19_2_1() { return cGroup_19_2_1; }
+		
+		//','
+		public Keyword getCommaKeyword_19_2_1_0() { return cCommaKeyword_19_2_1_0; }
+		
+		//testedProjects+=TestedProject
+		public Assignment getTestedProjectsAssignment_19_2_1_1() { return cTestedProjectsAssignment_19_2_1_1; }
+		
+		//TestedProject
+		public RuleCall getTestedProjectsTestedProjectParserRuleCall_19_2_1_1_0() { return cTestedProjectsTestedProjectParserRuleCall_19_2_1_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_19_3() { return cRightCurlyBracketKeyword_19_3; }
 		
 		//('ModuleLoader' ':' moduleLoader=ModuleLoader)?
 		public Group getGroup_20() { return cGroup_20; }
@@ -453,420 +705,6 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//ModuleLoader
 		public RuleCall getModuleLoaderModuleLoaderEnumRuleCall_20_2_0() { return cModuleLoaderModuleLoaderEnumRuleCall_20_2_0; }
-	}
-	public class ExecModuleElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ExecModule");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cExecModuleAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cExecModuleKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Assignment cExecModuleAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cExecModuleBootstrapModuleParserRuleCall_3_0 = (RuleCall)cExecModuleAssignment_3.eContents().get(0);
-		
-		//ExecModule:
-		//	{ExecModule}
-		//	'ExecModule' ':' execModule=BootstrapModule;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{ExecModule} 'ExecModule' ':' execModule=BootstrapModule
-		public Group getGroup() { return cGroup; }
-		
-		//{ExecModule}
-		public Action getExecModuleAction_0() { return cExecModuleAction_0; }
-		
-		//'ExecModule'
-		public Keyword getExecModuleKeyword_1() { return cExecModuleKeyword_1; }
-		
-		//':'
-		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
-		
-		//execModule=BootstrapModule
-		public Assignment getExecModuleAssignment_3() { return cExecModuleAssignment_3; }
-		
-		//BootstrapModule
-		public RuleCall getExecModuleBootstrapModuleParserRuleCall_3_0() { return cExecModuleBootstrapModuleParserRuleCall_3_0; }
-	}
-	public class TestedProjectsElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.TestedProjects");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cTestedProjectsAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cTestedProjectsKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Assignment cTestedProjectsAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
-		private final RuleCall cTestedProjectsTestedProjectParserRuleCall_3_0_0 = (RuleCall)cTestedProjectsAssignment_3_0.eContents().get(0);
-		private final Group cGroup_3_1 = (Group)cGroup_3.eContents().get(1);
-		private final Keyword cCommaKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
-		private final Assignment cTestedProjectsAssignment_3_1_1 = (Assignment)cGroup_3_1.eContents().get(1);
-		private final RuleCall cTestedProjectsTestedProjectParserRuleCall_3_1_1_0 = (RuleCall)cTestedProjectsAssignment_3_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		
-		//TestedProjects:
-		//	{TestedProjects}
-		//	'TestedProjects' '{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)?
-		//	'}';
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{TestedProjects} 'TestedProjects' '{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)? '}'
-		public Group getGroup() { return cGroup; }
-		
-		//{TestedProjects}
-		public Action getTestedProjectsAction_0() { return cTestedProjectsAction_0; }
-		
-		//'TestedProjects'
-		public Keyword getTestedProjectsKeyword_1() { return cTestedProjectsKeyword_1; }
-		
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
-		
-		//(testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)?
-		public Group getGroup_3() { return cGroup_3; }
-		
-		//testedProjects+=TestedProject
-		public Assignment getTestedProjectsAssignment_3_0() { return cTestedProjectsAssignment_3_0; }
-		
-		//TestedProject
-		public RuleCall getTestedProjectsTestedProjectParserRuleCall_3_0_0() { return cTestedProjectsTestedProjectParserRuleCall_3_0_0; }
-		
-		//(',' testedProjects+=TestedProject)*
-		public Group getGroup_3_1() { return cGroup_3_1; }
-		
-		//','
-		public Keyword getCommaKeyword_3_1_0() { return cCommaKeyword_3_1_0; }
-		
-		//testedProjects+=TestedProject
-		public Assignment getTestedProjectsAssignment_3_1_1() { return cTestedProjectsAssignment_3_1_1; }
-		
-		//TestedProject
-		public RuleCall getTestedProjectsTestedProjectParserRuleCall_3_1_1_0() { return cTestedProjectsTestedProjectParserRuleCall_3_1_1_0; }
-		
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
-	}
-	public class InitModulesElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.InitModules");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cInitModulesAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cInitModulesKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Assignment cInitModulesAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
-		private final RuleCall cInitModulesBootstrapModuleParserRuleCall_3_0_0 = (RuleCall)cInitModulesAssignment_3_0.eContents().get(0);
-		private final Group cGroup_3_1 = (Group)cGroup_3.eContents().get(1);
-		private final Keyword cCommaKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
-		private final Assignment cInitModulesAssignment_3_1_1 = (Assignment)cGroup_3_1.eContents().get(1);
-		private final RuleCall cInitModulesBootstrapModuleParserRuleCall_3_1_1_0 = (RuleCall)cInitModulesAssignment_3_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		
-		//InitModules:
-		//	{InitModules}
-		//	'InitModules' '{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)?
-		//	'}';
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{InitModules} 'InitModules' '{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}'
-		public Group getGroup() { return cGroup; }
-		
-		//{InitModules}
-		public Action getInitModulesAction_0() { return cInitModulesAction_0; }
-		
-		//'InitModules'
-		public Keyword getInitModulesKeyword_1() { return cInitModulesKeyword_1; }
-		
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
-		
-		//(initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)?
-		public Group getGroup_3() { return cGroup_3; }
-		
-		//initModules+=BootstrapModule
-		public Assignment getInitModulesAssignment_3_0() { return cInitModulesAssignment_3_0; }
-		
-		//BootstrapModule
-		public RuleCall getInitModulesBootstrapModuleParserRuleCall_3_0_0() { return cInitModulesBootstrapModuleParserRuleCall_3_0_0; }
-		
-		//(',' initModules+=BootstrapModule)*
-		public Group getGroup_3_1() { return cGroup_3_1; }
-		
-		//','
-		public Keyword getCommaKeyword_3_1_0() { return cCommaKeyword_3_1_0; }
-		
-		//initModules+=BootstrapModule
-		public Assignment getInitModulesAssignment_3_1_1() { return cInitModulesAssignment_3_1_1; }
-		
-		//BootstrapModule
-		public RuleCall getInitModulesBootstrapModuleParserRuleCall_3_1_1_0() { return cInitModulesBootstrapModuleParserRuleCall_3_1_1_0; }
-		
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
-	}
-	public class ImplementedProjectsElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ImplementedProjects");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cImplementedProjectsAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cImplementedProjectsKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Assignment cImplementedProjectsAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
-		private final RuleCall cImplementedProjectsProjectReferenceParserRuleCall_3_0_0 = (RuleCall)cImplementedProjectsAssignment_3_0.eContents().get(0);
-		private final Group cGroup_3_1 = (Group)cGroup_3.eContents().get(1);
-		private final Keyword cCommaKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
-		private final Assignment cImplementedProjectsAssignment_3_1_1 = (Assignment)cGroup_3_1.eContents().get(1);
-		private final RuleCall cImplementedProjectsProjectReferenceParserRuleCall_3_1_1_0 = (RuleCall)cImplementedProjectsAssignment_3_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		
-		//ImplementedProjects:
-		//	{ImplementedProjects}
-		//	'ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)?
-		//	'}';
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{ImplementedProjects} 'ImplementedProjects' '{' (implementedProjects+=ProjectReference (','
-		//implementedProjects+=ProjectReference)*)? '}'
-		public Group getGroup() { return cGroup; }
-		
-		//{ImplementedProjects}
-		public Action getImplementedProjectsAction_0() { return cImplementedProjectsAction_0; }
-		
-		//'ImplementedProjects'
-		public Keyword getImplementedProjectsKeyword_1() { return cImplementedProjectsKeyword_1; }
-		
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
-		
-		//(implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)?
-		public Group getGroup_3() { return cGroup_3; }
-		
-		//implementedProjects+=ProjectReference
-		public Assignment getImplementedProjectsAssignment_3_0() { return cImplementedProjectsAssignment_3_0; }
-		
-		//ProjectReference
-		public RuleCall getImplementedProjectsProjectReferenceParserRuleCall_3_0_0() { return cImplementedProjectsProjectReferenceParserRuleCall_3_0_0; }
-		
-		//(',' implementedProjects+=ProjectReference)*
-		public Group getGroup_3_1() { return cGroup_3_1; }
-		
-		//','
-		public Keyword getCommaKeyword_3_1_0() { return cCommaKeyword_3_1_0; }
-		
-		//implementedProjects+=ProjectReference
-		public Assignment getImplementedProjectsAssignment_3_1_1() { return cImplementedProjectsAssignment_3_1_1; }
-		
-		//ProjectReference
-		public RuleCall getImplementedProjectsProjectReferenceParserRuleCall_3_1_1_0() { return cImplementedProjectsProjectReferenceParserRuleCall_3_1_1_0; }
-		
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
-	}
-	public class ProjectDependenciesElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ProjectDependencies");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cProjectDependenciesAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cProjectDependenciesKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Assignment cProjectDependenciesAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
-		private final RuleCall cProjectDependenciesProjectDependencyParserRuleCall_3_0_0 = (RuleCall)cProjectDependenciesAssignment_3_0.eContents().get(0);
-		private final Group cGroup_3_1 = (Group)cGroup_3.eContents().get(1);
-		private final Keyword cCommaKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
-		private final Assignment cProjectDependenciesAssignment_3_1_1 = (Assignment)cGroup_3_1.eContents().get(1);
-		private final RuleCall cProjectDependenciesProjectDependencyParserRuleCall_3_1_1_0 = (RuleCall)cProjectDependenciesAssignment_3_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		
-		//ProjectDependencies:
-		//	{ProjectDependencies}
-		//	'ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
-		//	'}';
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{ProjectDependencies} 'ProjectDependencies' '{' (projectDependencies+=ProjectDependency (','
-		//projectDependencies+=ProjectDependency)*)? '}'
-		public Group getGroup() { return cGroup; }
-		
-		//{ProjectDependencies}
-		public Action getProjectDependenciesAction_0() { return cProjectDependenciesAction_0; }
-		
-		//'ProjectDependencies'
-		public Keyword getProjectDependenciesKeyword_1() { return cProjectDependenciesKeyword_1; }
-		
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
-		
-		//(projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
-		public Group getGroup_3() { return cGroup_3; }
-		
-		//projectDependencies+=ProjectDependency
-		public Assignment getProjectDependenciesAssignment_3_0() { return cProjectDependenciesAssignment_3_0; }
-		
-		//ProjectDependency
-		public RuleCall getProjectDependenciesProjectDependencyParserRuleCall_3_0_0() { return cProjectDependenciesProjectDependencyParserRuleCall_3_0_0; }
-		
-		//(',' projectDependencies+=ProjectDependency)*
-		public Group getGroup_3_1() { return cGroup_3_1; }
-		
-		//','
-		public Keyword getCommaKeyword_3_1_0() { return cCommaKeyword_3_1_0; }
-		
-		//projectDependencies+=ProjectDependency
-		public Assignment getProjectDependenciesAssignment_3_1_1() { return cProjectDependenciesAssignment_3_1_1; }
-		
-		//ProjectDependency
-		public RuleCall getProjectDependenciesProjectDependencyParserRuleCall_3_1_1_0() { return cProjectDependenciesProjectDependencyParserRuleCall_3_1_1_0; }
-		
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
-	}
-	public class ProvidedRuntimeLibrariesElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ProvidedRuntimeLibraries");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cProvidedRuntimeLibrariesAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cProvidedRuntimeLibrariesKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Assignment cProvidedRuntimeLibrariesAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
-		private final RuleCall cProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_3_0_0 = (RuleCall)cProvidedRuntimeLibrariesAssignment_3_0.eContents().get(0);
-		private final Group cGroup_3_1 = (Group)cGroup_3.eContents().get(1);
-		private final Keyword cCommaKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
-		private final Assignment cProvidedRuntimeLibrariesAssignment_3_1_1 = (Assignment)cGroup_3_1.eContents().get(1);
-		private final RuleCall cProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_3_1_1_0 = (RuleCall)cProvidedRuntimeLibrariesAssignment_3_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		
-		//ProvidedRuntimeLibraries:
-		//	{ProvidedRuntimeLibraries}
-		//	'ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (','
-		//	providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)?
-		//	'}';
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{ProvidedRuntimeLibraries} 'ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-		//(',' providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)? '}'
-		public Group getGroup() { return cGroup; }
-		
-		//{ProvidedRuntimeLibraries}
-		public Action getProvidedRuntimeLibrariesAction_0() { return cProvidedRuntimeLibrariesAction_0; }
-		
-		//'ProvidedRuntimeLibraries'
-		public Keyword getProvidedRuntimeLibrariesKeyword_1() { return cProvidedRuntimeLibrariesKeyword_1; }
-		
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
-		
-		//(providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (','
-		//providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)?
-		public Group getGroup_3() { return cGroup_3; }
-		
-		//providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-		public Assignment getProvidedRuntimeLibrariesAssignment_3_0() { return cProvidedRuntimeLibrariesAssignment_3_0; }
-		
-		//ProvidedRuntimeLibraryDependency
-		public RuleCall getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_3_0_0() { return cProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_3_0_0; }
-		
-		//(',' providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*
-		public Group getGroup_3_1() { return cGroup_3_1; }
-		
-		//','
-		public Keyword getCommaKeyword_3_1_0() { return cCommaKeyword_3_1_0; }
-		
-		//providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency
-		public Assignment getProvidedRuntimeLibrariesAssignment_3_1_1() { return cProvidedRuntimeLibrariesAssignment_3_1_1; }
-		
-		//ProvidedRuntimeLibraryDependency
-		public RuleCall getProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_3_1_1_0() { return cProvidedRuntimeLibrariesProvidedRuntimeLibraryDependencyParserRuleCall_3_1_1_0; }
-		
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
-	}
-	public class RequiredRuntimeLibrariesElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.RequiredRuntimeLibraries");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cRequiredRuntimeLibrariesAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cRequiredRuntimeLibrariesKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Assignment cRequiredRuntimeLibrariesAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
-		private final RuleCall cRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_3_0_0 = (RuleCall)cRequiredRuntimeLibrariesAssignment_3_0.eContents().get(0);
-		private final Group cGroup_3_1 = (Group)cGroup_3.eContents().get(1);
-		private final Keyword cCommaKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
-		private final Assignment cRequiredRuntimeLibrariesAssignment_3_1_1 = (Assignment)cGroup_3_1.eContents().get(1);
-		private final RuleCall cRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_3_1_1_0 = (RuleCall)cRequiredRuntimeLibrariesAssignment_3_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		
-		//RequiredRuntimeLibraries:
-		//	{RequiredRuntimeLibraries}
-		//	'RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (','
-		//	requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)?
-		//	'}';
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{RequiredRuntimeLibraries} 'RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-		//(',' requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)? '}'
-		public Group getGroup() { return cGroup; }
-		
-		//{RequiredRuntimeLibraries}
-		public Action getRequiredRuntimeLibrariesAction_0() { return cRequiredRuntimeLibrariesAction_0; }
-		
-		//'RequiredRuntimeLibraries'
-		public Keyword getRequiredRuntimeLibrariesKeyword_1() { return cRequiredRuntimeLibrariesKeyword_1; }
-		
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
-		
-		//(requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (','
-		//requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)?
-		public Group getGroup_3() { return cGroup_3; }
-		
-		//requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-		public Assignment getRequiredRuntimeLibrariesAssignment_3_0() { return cRequiredRuntimeLibrariesAssignment_3_0; }
-		
-		//RequiredRuntimeLibraryDependency
-		public RuleCall getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_3_0_0() { return cRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_3_0_0; }
-		
-		//(',' requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*
-		public Group getGroup_3_1() { return cGroup_3_1; }
-		
-		//','
-		public Keyword getCommaKeyword_3_1_0() { return cCommaKeyword_3_1_0; }
-		
-		//requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency
-		public Assignment getRequiredRuntimeLibrariesAssignment_3_1_1() { return cRequiredRuntimeLibrariesAssignment_3_1_1; }
-		
-		//RequiredRuntimeLibraryDependency
-		public RuleCall getRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_3_1_1_0() { return cRequiredRuntimeLibrariesRequiredRuntimeLibraryDependencyParserRuleCall_3_1_1_0; }
-		
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
-	}
-	public class ExtendedRuntimeEnvironmentElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ExtendedRuntimeEnvironment");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cExtendedRuntimeEnvironmentAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cExtendedRuntimeEnvironmentKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Assignment cExtendedRuntimeEnvironmentAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cExtendedRuntimeEnvironmentProjectReferenceParserRuleCall_3_0 = (RuleCall)cExtendedRuntimeEnvironmentAssignment_3.eContents().get(0);
-		
-		//ExtendedRuntimeEnvironment:
-		//	{ExtendedRuntimeEnvironment}
-		//	'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{ExtendedRuntimeEnvironment} 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
-		public Group getGroup() { return cGroup; }
-		
-		//{ExtendedRuntimeEnvironment}
-		public Action getExtendedRuntimeEnvironmentAction_0() { return cExtendedRuntimeEnvironmentAction_0; }
-		
-		//'ExtendedRuntimeEnvironment'
-		public Keyword getExtendedRuntimeEnvironmentKeyword_1() { return cExtendedRuntimeEnvironmentKeyword_1; }
-		
-		//':'
-		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
-		
-		//extendedRuntimeEnvironment=ProjectReference
-		public Assignment getExtendedRuntimeEnvironmentAssignment_3() { return cExtendedRuntimeEnvironmentAssignment_3; }
-		
-		//ProjectReference
-		public RuleCall getExtendedRuntimeEnvironmentProjectReferenceParserRuleCall_3_0() { return cExtendedRuntimeEnvironmentProjectReferenceParserRuleCall_3_0; }
 	}
 	public class DeclaredVersionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.DeclaredVersion");
@@ -1673,14 +1511,6 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	
 	private final ProjectDescriptionElements pProjectDescription;
 	private final ProjectTypeElements eProjectType;
-	private final ExecModuleElements pExecModule;
-	private final TestedProjectsElements pTestedProjects;
-	private final InitModulesElements pInitModules;
-	private final ImplementedProjectsElements pImplementedProjects;
-	private final ProjectDependenciesElements pProjectDependencies;
-	private final ProvidedRuntimeLibrariesElements pProvidedRuntimeLibraries;
-	private final RequiredRuntimeLibrariesElements pRequiredRuntimeLibraries;
-	private final ExtendedRuntimeEnvironmentElements pExtendedRuntimeEnvironment;
 	private final DeclaredVersionElements pDeclaredVersion;
 	private final SourceFragmentElements pSourceFragment;
 	private final SourceFragmentTypeElements eSourceFragmentType;
@@ -1711,14 +1541,6 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		this.gaTerminals = gaTerminals;
 		this.pProjectDescription = new ProjectDescriptionElements();
 		this.eProjectType = new ProjectTypeElements();
-		this.pExecModule = new ExecModuleElements();
-		this.pTestedProjects = new TestedProjectsElements();
-		this.pInitModules = new InitModulesElements();
-		this.pImplementedProjects = new ImplementedProjectsElements();
-		this.pProjectDependencies = new ProjectDependenciesElements();
-		this.pProvidedRuntimeLibraries = new ProvidedRuntimeLibrariesElements();
-		this.pRequiredRuntimeLibraries = new RequiredRuntimeLibrariesElements();
-		this.pExtendedRuntimeEnvironment = new ExtendedRuntimeEnvironmentElements();
 		this.pDeclaredVersion = new DeclaredVersionElements();
 		this.pSourceFragment = new SourceFragmentElements();
 		this.eSourceFragmentType = new SourceFragmentTypeElements();
@@ -1772,26 +1594,30 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	//	vendorName=STRING)?
 	//	& ('MainModule' ':' mainModule=STRING)?
 	//	// only available for runtime environments
-	//	& extendedRuntimeEnvironment=ExtendedRuntimeEnvironment?
+	//	& ('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)?
 	//	// only in case of runtime libraries or runtime environment:
-	//	& providedRuntimeLibraries=ProvidedRuntimeLibraries?
+	//	& ('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (','
+	//	providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)? '}')?
 	//	// not available in runtime environments:
-	//	& requiredRuntimeLibraries=RequiredRuntimeLibraries?
+	//	& ('RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (','
+	//	requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)? '}')?
 	//	// only available in N4JS components (Apps, Libs, Processor)
-	//	& projectDependencies=ProjectDependencies?
+	//	& ('ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
+	//	'}')?
 	//	// only available in N4JS components (Apps, Libs, Processor)
 	//	& ('ImplementationId' ':' implementationId=N4mfIdentifier)?
 	//	// only available in N4JS components (Apps, Libs, Processor)
-	//	& implementedProjects=ImplementedProjects?
+	//	& ('ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)?
+	//	'}')?
 	//	//only RuntimeLibrary and RuntimeEnvironemnt
-	//	& initModules=InitModules?
-	//	& execModule=ExecModule?
+	//	& ('InitModules' '{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}')?
+	//	& ('ExecModule' ':' execModule=BootstrapModule)?
 	//	& ('Output' ':' outputPathRaw=STRING)?
 	//	& ('Libraries' '{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
 	//	& ('Resources' '{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')?
 	//	& ('Sources' '{' sourceFragment+=SourceFragment+ '}')?
 	//	& ('ModuleFilters' '{' moduleFilters+=ModuleFilter+ '}')?
-	//	& testedProjects=TestedProjects?
+	//	& ('TestedProjects' '{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)? '}')?
 	//	& ('ModuleLoader' ':' moduleLoader=ModuleLoader)?;
 	public ProjectDescriptionElements getProjectDescriptionAccess() {
 		return pProjectDescription;
@@ -1816,102 +1642,6 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public EnumRule getProjectTypeRule() {
 		return getProjectTypeAccess().getRule();
-	}
-	
-	//ExecModule:
-	//	{ExecModule}
-	//	'ExecModule' ':' execModule=BootstrapModule;
-	public ExecModuleElements getExecModuleAccess() {
-		return pExecModule;
-	}
-	
-	public ParserRule getExecModuleRule() {
-		return getExecModuleAccess().getRule();
-	}
-	
-	//TestedProjects:
-	//	{TestedProjects}
-	//	'TestedProjects' '{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)?
-	//	'}';
-	public TestedProjectsElements getTestedProjectsAccess() {
-		return pTestedProjects;
-	}
-	
-	public ParserRule getTestedProjectsRule() {
-		return getTestedProjectsAccess().getRule();
-	}
-	
-	//InitModules:
-	//	{InitModules}
-	//	'InitModules' '{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)?
-	//	'}';
-	public InitModulesElements getInitModulesAccess() {
-		return pInitModules;
-	}
-	
-	public ParserRule getInitModulesRule() {
-		return getInitModulesAccess().getRule();
-	}
-	
-	//ImplementedProjects:
-	//	{ImplementedProjects}
-	//	'ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)?
-	//	'}';
-	public ImplementedProjectsElements getImplementedProjectsAccess() {
-		return pImplementedProjects;
-	}
-	
-	public ParserRule getImplementedProjectsRule() {
-		return getImplementedProjectsAccess().getRule();
-	}
-	
-	//ProjectDependencies:
-	//	{ProjectDependencies}
-	//	'ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
-	//	'}';
-	public ProjectDependenciesElements getProjectDependenciesAccess() {
-		return pProjectDependencies;
-	}
-	
-	public ParserRule getProjectDependenciesRule() {
-		return getProjectDependenciesAccess().getRule();
-	}
-	
-	//ProvidedRuntimeLibraries:
-	//	{ProvidedRuntimeLibraries}
-	//	'ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (','
-	//	providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)?
-	//	'}';
-	public ProvidedRuntimeLibrariesElements getProvidedRuntimeLibrariesAccess() {
-		return pProvidedRuntimeLibraries;
-	}
-	
-	public ParserRule getProvidedRuntimeLibrariesRule() {
-		return getProvidedRuntimeLibrariesAccess().getRule();
-	}
-	
-	//RequiredRuntimeLibraries:
-	//	{RequiredRuntimeLibraries}
-	//	'RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (','
-	//	requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)?
-	//	'}';
-	public RequiredRuntimeLibrariesElements getRequiredRuntimeLibrariesAccess() {
-		return pRequiredRuntimeLibraries;
-	}
-	
-	public ParserRule getRequiredRuntimeLibrariesRule() {
-		return getRequiredRuntimeLibrariesAccess().getRule();
-	}
-	
-	//ExtendedRuntimeEnvironment:
-	//	{ExtendedRuntimeEnvironment}
-	//	'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference;
-	public ExtendedRuntimeEnvironmentElements getExtendedRuntimeEnvironmentAccess() {
-		return pExtendedRuntimeEnvironment;
-	}
-	
-	public ParserRule getExtendedRuntimeEnvironmentRule() {
-		return getExtendedRuntimeEnvironmentAccess().getRule();
 	}
 	
 	////TODO build meta data not supported https://semver.org/#spec-item-10

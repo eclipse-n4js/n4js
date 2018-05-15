@@ -23,26 +23,26 @@ ProjectDescription:
 	&	('MainModule'		':' mainModule=STRING)?
 
 	// only available for runtime environments
-	&	(extendedRuntimeEnvironment=ExtendedRuntimeEnvironment)?
+	&	('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)?
 
 	// only in case of runtime libraries or runtime environment:
-	&	(providedRuntimeLibraries=ProvidedRuntimeLibraries)?
+	&	('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (',' providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)? '}')?
 
 	// not available in runtime environments:
-	&	(requiredRuntimeLibraries=RequiredRuntimeLibraries)?
+	&	('RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (',' requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)? '}')?
 
 	// only available in N4JS components (Apps, Libs, Processor)
-	&	(projectDependencies=ProjectDependencies)?
+	&	('ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)? '}')?
 
 	// only available in N4JS components (Apps, Libs, Processor)
 	&	('ImplementationId' ':' implementationId=N4mfIdentifier)?
 
 	// only available in N4JS components (Apps, Libs, Processor)
-	&	(implementedProjects=ImplementedProjects)?
+	&	('ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)? '}')?
 
 	//only RuntimeLibrary and RuntimeEnvironemnt
-	&	(initModules=InitModules)?
-	&	(execModule=ExecModule)?
+	&	('InitModules'	'{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}' )?
+	&	('ExecModule'	':' execModule=BootstrapModule)?
 
 
 	&	('Output' 			':' outputPathRaw=STRING)?
@@ -52,7 +52,7 @@ ProjectDescription:
 
 	& 	('ModuleFilters'	'{' moduleFilters+=ModuleFilter+ '}')?
 
-	&	(testedProjects=TestedProjects)?
+	&	('TestedProjects'	'{' (testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)? '}')?
 
 	&	('ModuleLoader'		':' moduleLoader=ModuleLoader)?
 ;
@@ -66,60 +66,6 @@ enum ProjectType :
 	RUNTIME_LIBRARY = "runtimeLibrary" |
 	TEST = "test" |
 	VALIDATION = "validation"
-;
-
-ExecModule returns ExecModule:
-	{ExecModule}
-	'ExecModule' ':' execModule=BootstrapModule
-;
-
-
-TestedProjects returns TestedProjects:
-	{TestedProjects}
-	'TestedProjects' '{'
-		(testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)?
-	'}'
-;
-
-
-InitModules returns InitModules:
-	{InitModules}
-	'InitModules' '{'
-		(initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)?
-	'}'
-;
-
-ImplementedProjects returns ImplementedProjects:
-	{ImplementedProjects}
-	'ImplementedProjects' '{'
-		(implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)?
-	'}'
-;
-
-ProjectDependencies returns ProjectDependencies:
-	{ProjectDependencies}
-	'ProjectDependencies' '{'
-		(projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
-	'}'
-;
-
-ProvidedRuntimeLibraries returns ProvidedRuntimeLibraries:
-	{ProvidedRuntimeLibraries}
-	'ProvidedRuntimeLibraries' '{'
-		(providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (',' providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)?
-	'}'
-;
-
-RequiredRuntimeLibraries returns RequiredRuntimeLibraries:
-	{RequiredRuntimeLibraries}
-	'RequiredRuntimeLibraries' '{'
-		(requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (',' requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)?
-	'}'
-;
-
-ExtendedRuntimeEnvironment returns ExtendedRuntimeEnvironment:
-	{ExtendedRuntimeEnvironment}
-	'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
 ;
 
 //TODO build meta data not supported https://semver.org/#spec-item-10

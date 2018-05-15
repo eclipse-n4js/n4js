@@ -81,10 +81,9 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
 		val dependency = N4mfFactory.eINSTANCE.createProjectDependency
 		val otherProject = N4mfFactory.eINSTANCE.createSimpleProjectDescription
-		pd.projectDependencies = N4mfFactory.eINSTANCE.createProjectDependencies
 		otherProject.setProjectId(projectId)
 		dependency.setProject(otherProject)
-		pd.projectDependencies.projectDependencies.add(dependency)
+		pd.projectDependencies.add(dependency)
 		resource.save(null)
 		waitForAutoBuild();
 	}
@@ -104,7 +103,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val resourceSet = getResourceSet(toChange);
 		val resource = resourceSet.getResource(uri, true);
 		val description = resource.contents.head as ProjectDescription;
-		description.projectDependencies = null;
+		description.projectDependencies.clear();
 		resource.save(null);
 		waitForAutoBuild;
 	}
@@ -114,7 +113,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val rs = getResourceSet(firstProjectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.projectDependencies.projectDependencies.remove(pd.projectDependencies.projectDependencies.last)
+		pd.projectDependencies.remove(pd.projectDependencies.last)
 		resource.save(null)
 		waitForAutoBuild();
 	}

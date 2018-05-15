@@ -40,17 +40,50 @@ ruleProjectDescription:
 		RULE_STRING
 	)?
 	    |
-	ruleExtendedRuntimeEnvironment
-	?
+	(
+		'ExtendedRuntimeEnvironment'
+		':'
+		ruleProjectReference
+	)?
 	    |
-	ruleProvidedRuntimeLibraries
-	?
+	(
+		'ProvidedRuntimeLibraries'
+		'{'
+		(
+			ruleProvidedRuntimeLibraryDependency
+			(
+				','
+				ruleProvidedRuntimeLibraryDependency
+			)*
+		)?
+		'}'
+	)?
 	    |
-	ruleRequiredRuntimeLibraries
-	?
+	(
+		'RequiredRuntimeLibraries'
+		'{'
+		(
+			ruleRequiredRuntimeLibraryDependency
+			(
+				','
+				ruleRequiredRuntimeLibraryDependency
+			)*
+		)?
+		'}'
+	)?
 	    |
-	ruleProjectDependencies
-	?
+	(
+		'ProjectDependencies'
+		'{'
+		(
+			ruleProjectDependency
+			(
+				','
+				ruleProjectDependency
+			)*
+		)?
+		'}'
+	)?
 	    |
 	(
 		'ImplementationId'
@@ -58,14 +91,37 @@ ruleProjectDescription:
 		ruleN4mfIdentifier
 	)?
 	    |
-	ruleImplementedProjects
-	?
+	(
+		'ImplementedProjects'
+		'{'
+		(
+			ruleProjectReference
+			(
+				','
+				ruleProjectReference
+			)*
+		)?
+		'}'
+	)?
 	    |
-	ruleInitModules
-	?
+	(
+		'InitModules'
+		'{'
+		(
+			ruleBootstrapModule
+			(
+				','
+				ruleBootstrapModule
+			)*
+		)?
+		'}'
+	)?
 	    |
-	ruleExecModule
-	?
+	(
+		'ExecModule'
+		':'
+		ruleBootstrapModule
+	)?
 	    |
 	(
 		'Output'
@@ -111,8 +167,18 @@ ruleProjectDescription:
 		'}'
 	)?
 	    |
-	ruleTestedProjects
-	?
+	(
+		'TestedProjects'
+		'{'
+		(
+			ruleTestedProject
+			(
+				','
+				ruleTestedProject
+			)*
+		)?
+		'}'
+	)?
 	    |
 	(
 		'ModuleLoader'
@@ -120,104 +186,6 @@ ruleProjectDescription:
 		ruleModuleLoader
 	)?
 	)*
-;
-
-// Rule ExecModule
-ruleExecModule:
-	'ExecModule'
-	':'
-	ruleBootstrapModule
-;
-
-// Rule TestedProjects
-ruleTestedProjects:
-	'TestedProjects'
-	'{'
-	(
-		ruleTestedProject
-		(
-			','
-			ruleTestedProject
-		)*
-	)?
-	'}'
-;
-
-// Rule InitModules
-ruleInitModules:
-	'InitModules'
-	'{'
-	(
-		ruleBootstrapModule
-		(
-			','
-			ruleBootstrapModule
-		)*
-	)?
-	'}'
-;
-
-// Rule ImplementedProjects
-ruleImplementedProjects:
-	'ImplementedProjects'
-	'{'
-	(
-		ruleProjectReference
-		(
-			','
-			ruleProjectReference
-		)*
-	)?
-	'}'
-;
-
-// Rule ProjectDependencies
-ruleProjectDependencies:
-	'ProjectDependencies'
-	'{'
-	(
-		ruleProjectDependency
-		(
-			','
-			ruleProjectDependency
-		)*
-	)?
-	'}'
-;
-
-// Rule ProvidedRuntimeLibraries
-ruleProvidedRuntimeLibraries:
-	'ProvidedRuntimeLibraries'
-	'{'
-	(
-		ruleProvidedRuntimeLibraryDependency
-		(
-			','
-			ruleProvidedRuntimeLibraryDependency
-		)*
-	)?
-	'}'
-;
-
-// Rule RequiredRuntimeLibraries
-ruleRequiredRuntimeLibraries:
-	'RequiredRuntimeLibraries'
-	'{'
-	(
-		ruleRequiredRuntimeLibraryDependency
-		(
-			','
-			ruleRequiredRuntimeLibraryDependency
-		)*
-	)?
-	'}'
-;
-
-// Rule ExtendedRuntimeEnvironment
-ruleExtendedRuntimeEnvironment:
-	'ExtendedRuntimeEnvironment'
-	':'
-	ruleProjectReference
 ;
 
 // Rule DeclaredVersion

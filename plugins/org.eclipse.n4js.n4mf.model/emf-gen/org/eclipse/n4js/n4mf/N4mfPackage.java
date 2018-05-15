@@ -85,7 +85,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSimpleProjectDescription()
 	 * @generated
 	 */
-	int SIMPLE_PROJECT_DESCRIPTION = 8;
+	int SIMPLE_PROJECT_DESCRIPTION = 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Vendor Id</b></em>' attribute.
@@ -206,7 +206,7 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__EXTENDED_RUNTIME_ENVIRONMENT = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Provided Runtime Libraries</b></em>' containment reference.
+	 * The feature id for the '<em><b>Provided Runtime Libraries</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -215,7 +215,7 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__PROVIDED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Required Runtime Libraries</b></em>' containment reference.
+	 * The feature id for the '<em><b>Required Runtime Libraries</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -224,7 +224,7 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__REQUIRED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 6;
 
 	/**
-	 * The feature id for the '<em><b>Project Dependencies</b></em>' containment reference.
+	 * The feature id for the '<em><b>Project Dependencies</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -242,7 +242,7 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__IMPLEMENTATION_ID = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 8;
 
 	/**
-	 * The feature id for the '<em><b>Implemented Projects</b></em>' containment reference.
+	 * The feature id for the '<em><b>Implemented Projects</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -251,7 +251,7 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 9;
 
 	/**
-	 * The feature id for the '<em><b>Init Modules</b></em>' containment reference.
+	 * The feature id for the '<em><b>Init Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -314,7 +314,7 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__MODULE_FILTERS = SIMPLE_PROJECT_DESCRIPTION_FEATURE_COUNT + 16;
 
 	/**
-	 * The feature id for the '<em><b>Tested Projects</b></em>' containment reference.
+	 * The feature id for the '<em><b>Tested Projects</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -386,326 +386,13 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION___GET_RESOURCE_PATHS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Get All Tested Projects</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 4;
-
-	/**
-	 * The operation id for the '<em>Get All Init Modules</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 5;
-
-	/**
-	 * The operation id for the '<em>Get All Implemented Projects</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___GET_ALL_IMPLEMENTED_PROJECTS = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 6;
-
-	/**
-	 * The operation id for the '<em>Get All Project Dependencies</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___GET_ALL_PROJECT_DEPENDENCIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 7;
-
-	/**
-	 * The operation id for the '<em>Get All Provided Runtime Libraries</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___GET_ALL_PROVIDED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 8;
-
-	/**
-	 * The operation id for the '<em>Get All Required Runtime Libraries</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___GET_ALL_REQUIRED_RUNTIME_LIBRARIES = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 9;
-
-	/**
 	 * The number of operations of the '<em>Project Description</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_OPERATION_COUNT = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 10;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ExecModuleImpl <em>Exec Module</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.ExecModuleImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getExecModule()
-	 * @generated
-	 */
-	int EXEC_MODULE = 1;
-
-	/**
-	 * The feature id for the '<em><b>Exec Module</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXEC_MODULE__EXEC_MODULE = 0;
-
-	/**
-	 * The number of structural features of the '<em>Exec Module</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXEC_MODULE_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Exec Module</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXEC_MODULE_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.TestedProjectsImpl <em>Tested Projects</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.TestedProjectsImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getTestedProjects()
-	 * @generated
-	 */
-	int TESTED_PROJECTS = 2;
-
-	/**
-	 * The feature id for the '<em><b>Tested Projects</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECTS__TESTED_PROJECTS = 0;
-
-	/**
-	 * The number of structural features of the '<em>Tested Projects</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECTS_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Tested Projects</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TESTED_PROJECTS_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.InitModulesImpl <em>Init Modules</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.InitModulesImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getInitModules()
-	 * @generated
-	 */
-	int INIT_MODULES = 3;
-
-	/**
-	 * The feature id for the '<em><b>Init Modules</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INIT_MODULES__INIT_MODULES = 0;
-
-	/**
-	 * The number of structural features of the '<em>Init Modules</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INIT_MODULES_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Init Modules</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INIT_MODULES_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ImplementedProjectsImpl <em>Implemented Projects</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.ImplementedProjectsImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getImplementedProjects()
-	 * @generated
-	 */
-	int IMPLEMENTED_PROJECTS = 4;
-
-	/**
-	 * The feature id for the '<em><b>Implemented Projects</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMPLEMENTED_PROJECTS__IMPLEMENTED_PROJECTS = 0;
-
-	/**
-	 * The number of structural features of the '<em>Implemented Projects</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMPLEMENTED_PROJECTS_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Implemented Projects</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMPLEMENTED_PROJECTS_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ProjectDependenciesImpl <em>Project Dependencies</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.ProjectDependenciesImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectDependencies()
-	 * @generated
-	 */
-	int PROJECT_DEPENDENCIES = 5;
-
-	/**
-	 * The feature id for the '<em><b>Project Dependencies</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DEPENDENCIES__PROJECT_DEPENDENCIES = 0;
-
-	/**
-	 * The number of structural features of the '<em>Project Dependencies</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DEPENDENCIES_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Project Dependencies</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DEPENDENCIES_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ProvidedRuntimeLibrariesImpl <em>Provided Runtime Libraries</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.ProvidedRuntimeLibrariesImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProvidedRuntimeLibraries()
-	 * @generated
-	 */
-	int PROVIDED_RUNTIME_LIBRARIES = 6;
-
-	/**
-	 * The feature id for the '<em><b>Provided Runtime Libraries</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARIES__PROVIDED_RUNTIME_LIBRARIES = 0;
-
-	/**
-	 * The number of structural features of the '<em>Provided Runtime Libraries</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARIES_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Provided Runtime Libraries</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROVIDED_RUNTIME_LIBRARIES_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.RequiredRuntimeLibrariesImpl <em>Required Runtime Libraries</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.RequiredRuntimeLibrariesImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getRequiredRuntimeLibraries()
-	 * @generated
-	 */
-	int REQUIRED_RUNTIME_LIBRARIES = 7;
-
-	/**
-	 * The feature id for the '<em><b>Required Runtime Libraries</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARIES__REQUIRED_RUNTIME_LIBRARIES = 0;
-
-	/**
-	 * The number of structural features of the '<em>Required Runtime Libraries</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARIES_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Required Runtime Libraries</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIRED_RUNTIME_LIBRARIES_OPERATION_COUNT = 0;
+	int PROJECT_DESCRIPTION_OPERATION_COUNT = SIMPLE_PROJECT_DESCRIPTION_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ProjectReferenceImpl <em>Project Reference</em>}' class.
@@ -715,7 +402,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectReference()
 	 * @generated
 	 */
-	int PROJECT_REFERENCE = 15;
+	int PROJECT_REFERENCE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Project</b></em>' containment reference.
@@ -752,7 +439,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSimpleProjectDependency()
 	 * @generated
 	 */
-	int SIMPLE_PROJECT_DEPENDENCY = 16;
+	int SIMPLE_PROJECT_DEPENDENCY = 8;
 
 	/**
 	 * The feature id for the '<em><b>Project</b></em>' containment reference.
@@ -798,7 +485,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getTestedProject()
 	 * @generated
 	 */
-	int TESTED_PROJECT = 9;
+	int TESTED_PROJECT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Project</b></em>' containment reference.
@@ -862,7 +549,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getDeclaredVersion()
 	 * @generated
 	 */
-	int DECLARED_VERSION = 10;
+	int DECLARED_VERSION = 3;
 
 	/**
 	 * The feature id for the '<em><b>Major</b></em>' attribute.
@@ -926,7 +613,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragment()
 	 * @generated
 	 */
-	int SOURCE_FRAGMENT = 11;
+	int SOURCE_FRAGMENT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Source Fragment Type</b></em>' attribute.
@@ -990,7 +677,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilter()
 	 * @generated
 	 */
-	int MODULE_FILTER = 12;
+	int MODULE_FILTER = 5;
 
 	/**
 	 * The feature id for the '<em><b>Module Filter Type</b></em>' attribute.
@@ -1036,7 +723,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getBootstrapModule()
 	 * @generated
 	 */
-	int BOOTSTRAP_MODULE = 13;
+	int BOOTSTRAP_MODULE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
@@ -1075,43 +762,6 @@ public interface N4mfPackage extends EPackage {
 	int BOOTSTRAP_MODULE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ExtendedRuntimeEnvironmentImpl <em>Extended Runtime Environment</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.ExtendedRuntimeEnvironmentImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getExtendedRuntimeEnvironment()
-	 * @generated
-	 */
-	int EXTENDED_RUNTIME_ENVIRONMENT = 14;
-
-	/**
-	 * The feature id for the '<em><b>Extended Runtime Environment</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXTENDED_RUNTIME_ENVIRONMENT__EXTENDED_RUNTIME_ENVIRONMENT = 0;
-
-	/**
-	 * The number of structural features of the '<em>Extended Runtime Environment</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXTENDED_RUNTIME_ENVIRONMENT_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Extended Runtime Environment</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXTENDED_RUNTIME_ENVIRONMENT_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterSpecifierImpl <em>Module Filter Specifier</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1119,7 +769,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilterSpecifier()
 	 * @generated
 	 */
-	int MODULE_FILTER_SPECIFIER = 17;
+	int MODULE_FILTER_SPECIFIER = 9;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier With Wildcard</b></em>' attribute.
@@ -1165,7 +815,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getRuntimeProjectDependency()
 	 * @generated
 	 */
-	int RUNTIME_PROJECT_DEPENDENCY = 18;
+	int RUNTIME_PROJECT_DEPENDENCY = 10;
 
 	/**
 	 * The feature id for the '<em><b>Project</b></em>' containment reference.
@@ -1211,7 +861,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getRequiredRuntimeLibraryDependency()
 	 * @generated
 	 */
-	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY = 19;
+	int REQUIRED_RUNTIME_LIBRARY_DEPENDENCY = 11;
 
 	/**
 	 * The feature id for the '<em><b>Project</b></em>' containment reference.
@@ -1257,7 +907,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProvidedRuntimeLibraryDependency()
 	 * @generated
 	 */
-	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY = 20;
+	int PROVIDED_RUNTIME_LIBRARY_DEPENDENCY = 12;
 
 	/**
 	 * The feature id for the '<em><b>Project</b></em>' containment reference.
@@ -1303,7 +953,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectDependency()
 	 * @generated
 	 */
-	int PROJECT_DEPENDENCY = 21;
+	int PROJECT_DEPENDENCY = 13;
 
 	/**
 	 * The feature id for the '<em><b>Project</b></em>' containment reference.
@@ -1367,7 +1017,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getVersionConstraint()
 	 * @generated
 	 */
-	int VERSION_CONSTRAINT = 22;
+	int VERSION_CONSTRAINT = 14;
 
 	/**
 	 * The feature id for the '<em><b>Excl Lower Bound</b></em>' attribute.
@@ -1431,7 +1081,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectType()
 	 * @generated
 	 */
-	int PROJECT_TYPE = 23;
+	int PROJECT_TYPE = 15;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.SourceFragmentType <em>Source Fragment Type</em>}' enum.
@@ -1441,7 +1091,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragmentType()
 	 * @generated
 	 */
-	int SOURCE_FRAGMENT_TYPE = 24;
+	int SOURCE_FRAGMENT_TYPE = 16;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ModuleFilterType <em>Module Filter Type</em>}' enum.
@@ -1451,7 +1101,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleFilterType()
 	 * @generated
 	 */
-	int MODULE_FILTER_TYPE = 25;
+	int MODULE_FILTER_TYPE = 17;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ProjectDependencyScope <em>Project Dependency Scope</em>}' enum.
@@ -1461,7 +1111,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectDependencyScope()
 	 * @generated
 	 */
-	int PROJECT_DEPENDENCY_SCOPE = 26;
+	int PROJECT_DEPENDENCY_SCOPE = 18;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ModuleLoader <em>Module Loader</em>}' enum.
@@ -1471,7 +1121,7 @@ public interface N4mfPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getModuleLoader()
 	 * @generated
 	 */
-	int MODULE_LOADER = 27;
+	int MODULE_LOADER = 19;
 
 
 	/**
@@ -1540,10 +1190,10 @@ public interface N4mfPackage extends EPackage {
 	EReference getProjectDescription_ExtendedRuntimeEnvironment();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProvidedRuntimeLibraries <em>Provided Runtime Libraries</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProvidedRuntimeLibraries <em>Provided Runtime Libraries</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Provided Runtime Libraries</em>'.
+	 * @return the meta object for the containment reference list '<em>Provided Runtime Libraries</em>'.
 	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getProvidedRuntimeLibraries()
 	 * @see #getProjectDescription()
 	 * @generated
@@ -1551,10 +1201,10 @@ public interface N4mfPackage extends EPackage {
 	EReference getProjectDescription_ProvidedRuntimeLibraries();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ProjectDescription#getRequiredRuntimeLibraries <em>Required Runtime Libraries</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getRequiredRuntimeLibraries <em>Required Runtime Libraries</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Required Runtime Libraries</em>'.
+	 * @return the meta object for the containment reference list '<em>Required Runtime Libraries</em>'.
 	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getRequiredRuntimeLibraries()
 	 * @see #getProjectDescription()
 	 * @generated
@@ -1562,10 +1212,10 @@ public interface N4mfPackage extends EPackage {
 	EReference getProjectDescription_RequiredRuntimeLibraries();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectDependencies <em>Project Dependencies</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectDependencies <em>Project Dependencies</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Project Dependencies</em>'.
+	 * @return the meta object for the containment reference list '<em>Project Dependencies</em>'.
 	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getProjectDependencies()
 	 * @see #getProjectDescription()
 	 * @generated
@@ -1584,10 +1234,10 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getProjectDescription_ImplementationId();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ProjectDescription#getImplementedProjects <em>Implemented Projects</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getImplementedProjects <em>Implemented Projects</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Implemented Projects</em>'.
+	 * @return the meta object for the containment reference list '<em>Implemented Projects</em>'.
 	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getImplementedProjects()
 	 * @see #getProjectDescription()
 	 * @generated
@@ -1595,10 +1245,10 @@ public interface N4mfPackage extends EPackage {
 	EReference getProjectDescription_ImplementedProjects();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ProjectDescription#getInitModules <em>Init Modules</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getInitModules <em>Init Modules</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Init Modules</em>'.
+	 * @return the meta object for the containment reference list '<em>Init Modules</em>'.
 	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getInitModules()
 	 * @see #getProjectDescription()
 	 * @generated
@@ -1672,10 +1322,10 @@ public interface N4mfPackage extends EPackage {
 	EReference getProjectDescription_ModuleFilters();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Tested Projects</em>'.
+	 * @return the meta object for the containment reference list '<em>Tested Projects</em>'.
 	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects()
 	 * @see #getProjectDescription()
 	 * @generated
@@ -1732,213 +1382,6 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getProjectDescription__GetResourcePaths();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getAllTestedProjects() <em>Get All Tested Projects</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get All Tested Projects</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getAllTestedProjects()
-	 * @generated
-	 */
-	EOperation getProjectDescription__GetAllTestedProjects();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getAllInitModules() <em>Get All Init Modules</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get All Init Modules</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getAllInitModules()
-	 * @generated
-	 */
-	EOperation getProjectDescription__GetAllInitModules();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getAllImplementedProjects() <em>Get All Implemented Projects</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get All Implemented Projects</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getAllImplementedProjects()
-	 * @generated
-	 */
-	EOperation getProjectDescription__GetAllImplementedProjects();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getAllProjectDependencies() <em>Get All Project Dependencies</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get All Project Dependencies</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getAllProjectDependencies()
-	 * @generated
-	 */
-	EOperation getProjectDescription__GetAllProjectDependencies();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getAllProvidedRuntimeLibraries() <em>Get All Provided Runtime Libraries</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get All Provided Runtime Libraries</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getAllProvidedRuntimeLibraries()
-	 * @generated
-	 */
-	EOperation getProjectDescription__GetAllProvidedRuntimeLibraries();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getAllRequiredRuntimeLibraries() <em>Get All Required Runtime Libraries</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get All Required Runtime Libraries</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getAllRequiredRuntimeLibraries()
-	 * @generated
-	 */
-	EOperation getProjectDescription__GetAllRequiredRuntimeLibraries();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ExecModule <em>Exec Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Exec Module</em>'.
-	 * @see org.eclipse.n4js.n4mf.ExecModule
-	 * @generated
-	 */
-	EClass getExecModule();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ExecModule#getExecModule <em>Exec Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Exec Module</em>'.
-	 * @see org.eclipse.n4js.n4mf.ExecModule#getExecModule()
-	 * @see #getExecModule()
-	 * @generated
-	 */
-	EReference getExecModule_ExecModule();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.TestedProjects <em>Tested Projects</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Tested Projects</em>'.
-	 * @see org.eclipse.n4js.n4mf.TestedProjects
-	 * @generated
-	 */
-	EClass getTestedProjects();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.TestedProjects#getTestedProjects <em>Tested Projects</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Tested Projects</em>'.
-	 * @see org.eclipse.n4js.n4mf.TestedProjects#getTestedProjects()
-	 * @see #getTestedProjects()
-	 * @generated
-	 */
-	EReference getTestedProjects_TestedProjects();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.InitModules <em>Init Modules</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Init Modules</em>'.
-	 * @see org.eclipse.n4js.n4mf.InitModules
-	 * @generated
-	 */
-	EClass getInitModules();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.InitModules#getInitModules <em>Init Modules</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Init Modules</em>'.
-	 * @see org.eclipse.n4js.n4mf.InitModules#getInitModules()
-	 * @see #getInitModules()
-	 * @generated
-	 */
-	EReference getInitModules_InitModules();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ImplementedProjects <em>Implemented Projects</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Implemented Projects</em>'.
-	 * @see org.eclipse.n4js.n4mf.ImplementedProjects
-	 * @generated
-	 */
-	EClass getImplementedProjects();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ImplementedProjects#getImplementedProjects <em>Implemented Projects</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Implemented Projects</em>'.
-	 * @see org.eclipse.n4js.n4mf.ImplementedProjects#getImplementedProjects()
-	 * @see #getImplementedProjects()
-	 * @generated
-	 */
-	EReference getImplementedProjects_ImplementedProjects();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ProjectDependencies <em>Project Dependencies</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Project Dependencies</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDependencies
-	 * @generated
-	 */
-	EClass getProjectDependencies();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDependencies#getProjectDependencies <em>Project Dependencies</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Project Dependencies</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDependencies#getProjectDependencies()
-	 * @see #getProjectDependencies()
-	 * @generated
-	 */
-	EReference getProjectDependencies_ProjectDependencies();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries <em>Provided Runtime Libraries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Provided Runtime Libraries</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries
-	 * @generated
-	 */
-	EClass getProvidedRuntimeLibraries();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries#getProvidedRuntimeLibraries <em>Provided Runtime Libraries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Provided Runtime Libraries</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries#getProvidedRuntimeLibraries()
-	 * @see #getProvidedRuntimeLibraries()
-	 * @generated
-	 */
-	EReference getProvidedRuntimeLibraries_ProvidedRuntimeLibraries();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.RequiredRuntimeLibraries <em>Required Runtime Libraries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Required Runtime Libraries</em>'.
-	 * @see org.eclipse.n4js.n4mf.RequiredRuntimeLibraries
-	 * @generated
-	 */
-	EClass getRequiredRuntimeLibraries();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.RequiredRuntimeLibraries#getRequiredRuntimeLibraries <em>Required Runtime Libraries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Required Runtime Libraries</em>'.
-	 * @see org.eclipse.n4js.n4mf.RequiredRuntimeLibraries#getRequiredRuntimeLibraries()
-	 * @see #getRequiredRuntimeLibraries()
-	 * @generated
-	 */
-	EReference getRequiredRuntimeLibraries_RequiredRuntimeLibraries();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.SimpleProjectDescription <em>Simple Project Description</em>}'.
@@ -2183,27 +1626,6 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getBootstrapModule_SourcePath();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment <em>Extended Runtime Environment</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Extended Runtime Environment</em>'.
-	 * @see org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment
-	 * @generated
-	 */
-	EClass getExtendedRuntimeEnvironment();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment#getExtendedRuntimeEnvironment <em>Extended Runtime Environment</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Extended Runtime Environment</em>'.
-	 * @see org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment#getExtendedRuntimeEnvironment()
-	 * @see #getExtendedRuntimeEnvironment()
-	 * @generated
-	 */
-	EReference getExtendedRuntimeEnvironment_ExtendedRuntimeEnvironment();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ProjectReference <em>Project Reference</em>}'.
@@ -2528,7 +1950,7 @@ public interface N4mfPackage extends EPackage {
 		EReference PROJECT_DESCRIPTION__EXTENDED_RUNTIME_ENVIRONMENT = eINSTANCE.getProjectDescription_ExtendedRuntimeEnvironment();
 
 		/**
-		 * The meta object literal for the '<em><b>Provided Runtime Libraries</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Provided Runtime Libraries</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2536,7 +1958,7 @@ public interface N4mfPackage extends EPackage {
 		EReference PROJECT_DESCRIPTION__PROVIDED_RUNTIME_LIBRARIES = eINSTANCE.getProjectDescription_ProvidedRuntimeLibraries();
 
 		/**
-		 * The meta object literal for the '<em><b>Required Runtime Libraries</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Required Runtime Libraries</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2544,7 +1966,7 @@ public interface N4mfPackage extends EPackage {
 		EReference PROJECT_DESCRIPTION__REQUIRED_RUNTIME_LIBRARIES = eINSTANCE.getProjectDescription_RequiredRuntimeLibraries();
 
 		/**
-		 * The meta object literal for the '<em><b>Project Dependencies</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Project Dependencies</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2560,7 +1982,7 @@ public interface N4mfPackage extends EPackage {
 		EAttribute PROJECT_DESCRIPTION__IMPLEMENTATION_ID = eINSTANCE.getProjectDescription_ImplementationId();
 
 		/**
-		 * The meta object literal for the '<em><b>Implemented Projects</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Implemented Projects</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2568,7 +1990,7 @@ public interface N4mfPackage extends EPackage {
 		EReference PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS = eINSTANCE.getProjectDescription_ImplementedProjects();
 
 		/**
-		 * The meta object literal for the '<em><b>Init Modules</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Init Modules</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2624,7 +2046,7 @@ public interface N4mfPackage extends EPackage {
 		EReference PROJECT_DESCRIPTION__MODULE_FILTERS = eINSTANCE.getProjectDescription_ModuleFilters();
 
 		/**
-		 * The meta object literal for the '<em><b>Tested Projects</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Tested Projects</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2670,180 +2092,6 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation PROJECT_DESCRIPTION___GET_RESOURCE_PATHS = eINSTANCE.getProjectDescription__GetResourcePaths();
-
-		/**
-		 * The meta object literal for the '<em><b>Get All Tested Projects</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS = eINSTANCE.getProjectDescription__GetAllTestedProjects();
-
-		/**
-		 * The meta object literal for the '<em><b>Get All Init Modules</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES = eINSTANCE.getProjectDescription__GetAllInitModules();
-
-		/**
-		 * The meta object literal for the '<em><b>Get All Implemented Projects</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___GET_ALL_IMPLEMENTED_PROJECTS = eINSTANCE.getProjectDescription__GetAllImplementedProjects();
-
-		/**
-		 * The meta object literal for the '<em><b>Get All Project Dependencies</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___GET_ALL_PROJECT_DEPENDENCIES = eINSTANCE.getProjectDescription__GetAllProjectDependencies();
-
-		/**
-		 * The meta object literal for the '<em><b>Get All Provided Runtime Libraries</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___GET_ALL_PROVIDED_RUNTIME_LIBRARIES = eINSTANCE.getProjectDescription__GetAllProvidedRuntimeLibraries();
-
-		/**
-		 * The meta object literal for the '<em><b>Get All Required Runtime Libraries</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___GET_ALL_REQUIRED_RUNTIME_LIBRARIES = eINSTANCE.getProjectDescription__GetAllRequiredRuntimeLibraries();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ExecModuleImpl <em>Exec Module</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.ExecModuleImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getExecModule()
-		 * @generated
-		 */
-		EClass EXEC_MODULE = eINSTANCE.getExecModule();
-
-		/**
-		 * The meta object literal for the '<em><b>Exec Module</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference EXEC_MODULE__EXEC_MODULE = eINSTANCE.getExecModule_ExecModule();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.TestedProjectsImpl <em>Tested Projects</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.TestedProjectsImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getTestedProjects()
-		 * @generated
-		 */
-		EClass TESTED_PROJECTS = eINSTANCE.getTestedProjects();
-
-		/**
-		 * The meta object literal for the '<em><b>Tested Projects</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TESTED_PROJECTS__TESTED_PROJECTS = eINSTANCE.getTestedProjects_TestedProjects();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.InitModulesImpl <em>Init Modules</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.InitModulesImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getInitModules()
-		 * @generated
-		 */
-		EClass INIT_MODULES = eINSTANCE.getInitModules();
-
-		/**
-		 * The meta object literal for the '<em><b>Init Modules</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference INIT_MODULES__INIT_MODULES = eINSTANCE.getInitModules_InitModules();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ImplementedProjectsImpl <em>Implemented Projects</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.ImplementedProjectsImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getImplementedProjects()
-		 * @generated
-		 */
-		EClass IMPLEMENTED_PROJECTS = eINSTANCE.getImplementedProjects();
-
-		/**
-		 * The meta object literal for the '<em><b>Implemented Projects</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference IMPLEMENTED_PROJECTS__IMPLEMENTED_PROJECTS = eINSTANCE.getImplementedProjects_ImplementedProjects();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ProjectDependenciesImpl <em>Project Dependencies</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.ProjectDependenciesImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProjectDependencies()
-		 * @generated
-		 */
-		EClass PROJECT_DEPENDENCIES = eINSTANCE.getProjectDependencies();
-
-		/**
-		 * The meta object literal for the '<em><b>Project Dependencies</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROJECT_DEPENDENCIES__PROJECT_DEPENDENCIES = eINSTANCE.getProjectDependencies_ProjectDependencies();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ProvidedRuntimeLibrariesImpl <em>Provided Runtime Libraries</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.ProvidedRuntimeLibrariesImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getProvidedRuntimeLibraries()
-		 * @generated
-		 */
-		EClass PROVIDED_RUNTIME_LIBRARIES = eINSTANCE.getProvidedRuntimeLibraries();
-
-		/**
-		 * The meta object literal for the '<em><b>Provided Runtime Libraries</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROVIDED_RUNTIME_LIBRARIES__PROVIDED_RUNTIME_LIBRARIES = eINSTANCE.getProvidedRuntimeLibraries_ProvidedRuntimeLibraries();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.RequiredRuntimeLibrariesImpl <em>Required Runtime Libraries</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.RequiredRuntimeLibrariesImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getRequiredRuntimeLibraries()
-		 * @generated
-		 */
-		EClass REQUIRED_RUNTIME_LIBRARIES = eINSTANCE.getRequiredRuntimeLibraries();
-
-		/**
-		 * The meta object literal for the '<em><b>Required Runtime Libraries</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference REQUIRED_RUNTIME_LIBRARIES__REQUIRED_RUNTIME_LIBRARIES = eINSTANCE.getRequiredRuntimeLibraries_RequiredRuntimeLibraries();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.SimpleProjectDescriptionImpl <em>Simple Project Description</em>}' class.
@@ -3040,24 +2288,6 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute BOOTSTRAP_MODULE__SOURCE_PATH = eINSTANCE.getBootstrapModule_SourcePath();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ExtendedRuntimeEnvironmentImpl <em>Extended Runtime Environment</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.ExtendedRuntimeEnvironmentImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getExtendedRuntimeEnvironment()
-		 * @generated
-		 */
-		EClass EXTENDED_RUNTIME_ENVIRONMENT = eINSTANCE.getExtendedRuntimeEnvironment();
-
-		/**
-		 * The meta object literal for the '<em><b>Extended Runtime Environment</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference EXTENDED_RUNTIME_ENVIRONMENT__EXTENDED_RUNTIME_ENVIRONMENT = eINSTANCE.getExtendedRuntimeEnvironment_ExtendedRuntimeEnvironment();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ProjectReferenceImpl <em>Project Reference</em>}' class.

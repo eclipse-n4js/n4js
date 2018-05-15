@@ -10,16 +10,19 @@
  */
 package org.eclipse.n4js.ui.changes
 
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.SourceFragment
-import org.eclipse.n4js.n4mf.SourceFragmentType
 import java.util.ArrayList
 import java.util.Collection
 import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.n4mf.N4mfPackage
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.SourceFragment
+import org.eclipse.n4js.n4mf.SourceFragmentType
+import org.eclipse.n4js.utils.nodemodel.SiblingIterator
+import org.eclipse.xtext.Keyword
+import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.n4js.n4mf.N4mfPackage
 
 /**
  * This class provides basic change functionality for N4JS manifest files.
@@ -66,7 +69,7 @@ class ManifestChangeProvider {
 
 		// Remove all dependencies, that are already part of the list
 		if (description.projectDependencies !== null) {
-			dependencies.removeIf [ description.projectDependencies.projectDependencies.map[project.projectId].contains(it) ]
+			dependencies.removeIf [ description.projectDependencies.map[project.projectId].contains(it) ]
 		}
 
 		if (dependencies.length < 1) {
@@ -81,16 +84,22 @@ class ManifestChangeProvider {
 			val INode globalDescriptionNode = NodeModelUtils.findActualNodeFor(description);
 			offset = globalDescriptionNode.offset + globalDescriptionNode.length;
 			withFrame = true;
-		} else if (description.projectDependencies.projectDependencies.length > 0) { //If existing dependency list, append after the last one
-			val INode lastDep = NodeModelUtils.findActualNodeFor(description.projectDependencies.projectDependencies.last);
+		} else if (description.projectDependencies.length > 0) { //If existing dependency list, append after the last one
+			val INode lastDep = NodeModelUtils.findActualNodeFor(description.projectDependencies.last);
 			offset = lastDep.offset + lastDep.length;
 			textToInsert.append(",");
 		} else { //If empty dependency list, replace the whole empty block
 			textToInsert.append(ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY + " {");
 			withFrame = true;
-			val INode depsNode = NodeModelUtils.findActualNodeFor(description.projectDependencies);
+			val INode descNode = NodeModelUtils.findActualNodeFor(description);
+			val INode depsNode = (descNode as ICompositeNode).children
+				.findFirst[it.grammarElement instanceof Keyword
+					&& (it.grammarElement as Keyword).value==ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY];
+			val INode closingNode = new SiblingIterator(depsNode)
+				.findFirst[it.grammarElement instanceof Keyword
+					&& (it.grammarElement as Keyword).value=="}"];
 			offset = depsNode.offset;
-			length = depsNode.length;
+			length = (closingNode.offset + closingNode.length) - depsNode.offset;
 		}
 
 		textToInsert.append('''«FOR dep : dependencies SEPARATOR ","»«"\n\t" + dep»«ENDFOR»''')
@@ -116,7 +125,7 @@ class ManifestChangeProvider {
 
 		// Remove all dependencies, that are already part of the list
 		if (projectDescription.requiredRuntimeLibraries !== null) {
-			dependencies.removeIf [ projectDescription.requiredRuntimeLibraries.requiredRuntimeLibraries.map[project.projectId].contains(it)]
+			dependencies.removeIf [ projectDescription.requiredRuntimeLibraries.map[project.projectId].contains(it)]
 		}
 
 		if (dependencies.length < 1) {
@@ -129,16 +138,22 @@ class ManifestChangeProvider {
 			val INode globalDescriptionNode = NodeModelUtils.findActualNodeFor(projectDescription);
 			offset = globalDescriptionNode.offset + globalDescriptionNode.length;
 			withFrame = true;
-		} else if (projectDescription.requiredRuntimeLibraries.requiredRuntimeLibraries.length > 0) { //If existing runtime library list, append after the last one
-			val INode lastDep = NodeModelUtils.findActualNodeFor(projectDescription.requiredRuntimeLibraries.requiredRuntimeLibraries.last);
+		} else if (projectDescription.requiredRuntimeLibraries.length > 0) { //If existing runtime library list, append after the last one
+			val INode lastDep = NodeModelUtils.findActualNodeFor(projectDescription.requiredRuntimeLibraries.last);
 			offset = lastDep.offset + lastDep.length;
 			textToInsert.append(",");
 		} else { //If empty dependency list, replace the whole empty block
 			textToInsert.append(ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY + " {");
 			withFrame = true;
-			val INode requiredRuntimeNode = NodeModelUtils.findActualNodeFor(projectDescription.requiredRuntimeLibraries);
-			offset = requiredRuntimeNode.offset;
-			length = requiredRuntimeNode.length;
+			val INode descNode = NodeModelUtils.findActualNodeFor(projectDescription);
+			val INode reqRTLibNode = (descNode as ICompositeNode).children
+				.findFirst[it.grammarElement instanceof Keyword
+					&& (it.grammarElement as Keyword).value==ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY];
+			val INode closingNode = new SiblingIterator(reqRTLibNode)
+				.findFirst[it.grammarElement instanceof Keyword
+					&& (it.grammarElement as Keyword).value=="}"];
+			offset = reqRTLibNode.offset;
+			length = (closingNode.offset + closingNode.length) - reqRTLibNode.offset;
 		}
 
 		textToInsert.append('''«FOR dep : dependencies SEPARATOR ","»«"\n\t" + dep»«ENDFOR»''')

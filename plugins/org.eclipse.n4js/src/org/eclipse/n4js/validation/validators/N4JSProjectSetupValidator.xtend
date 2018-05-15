@@ -136,7 +136,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		val Map<String, RuntimeProjectDependency> mQName2rtDep = newHashMap()
 
 		// Concatenate RTEnv and RTLibs to be processed in same loop:
-		var Iterable<? extends RuntimeProjectDependency> rteAndRtl = projectDescription.allRequiredRuntimeLibraries
+		var Iterable<? extends RuntimeProjectDependency> rteAndRtl = projectDescription.requiredRuntimeLibraries
 		// Describing Self-Project as RuntimeDependency to handle clash with filled Members from current Project consistently.
 		val selfProject = N4mfFactory.eINSTANCE.createRequiredRuntimeLibraryDependency
 		selfProject.project = N4mfFactory.eINSTANCE.createSimpleProjectDescription
@@ -426,17 +426,17 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	 * project.
 	 */
 	@Check
-	def checkTestedProjects(ProjectDescription it) {
+	def checkTestedProjects(ProjectDescription pd) {
 		if (TEST == projectType) {
-			val projects = testedProjects?.testedProjects;
+			val projects = pd.testedProjects;
 			if (!projects.nullOrEmpty) {
-				val allProjects = existingProjectIds;
+				val allProjects = pd.existingProjectIds;
 				val head = projects.head;
 				val refProjectType = allProjects.get(head.project.projectId)?.projectType
-				if (projects.exists[refProjectType != allProjects.get(project?.projectId)?.projectType]) {
+				if (projects.exists[testedProject | refProjectType != allProjects.get(testedProject.project?.projectId)?.projectType]) {
 					addIssue(
 						messageForMISMATCHING_TESTED_PROJECT_TYPES,
-						it,
+						pd,
 						PROJECT_DESCRIPTION__TESTED_PROJECTS,
 						MISMATCHING_TESTED_PROJECT_TYPES
 					);
@@ -450,10 +450,10 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	 * depend on any other libraries that belong to any other implementation. In such cases, raises validation issue.
 	 */
 	@Check
-	def checkHasConsistenImplementationIdChain(ProjectDescription it) {
+	def checkHasConsistentImplementationIdChain(ProjectDescription it) {
 		if (LIBRARY == projectType && !implementationId.nullOrEmpty) {
 			val expectedImplementationId = implementationId;
-			val dependencies = projectDependencies?.projectDependencies;
+			val dependencies = it.projectDependencies;
 			if (!dependencies.nullOrEmpty) {
 				val allProjects = existingProjectIds;
 				dependencies.filterNull.forEach[
@@ -462,7 +462,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 						addIssue(
 							getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, project.projectId, actualImplementationId),
 							it.eContainer,
-							PROJECT_DEPENDENCIES__PROJECT_DEPENDENCIES,
+							PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES,
 							dependencies.indexOf(it),
 							MISMATCHING_IMPLEMENTATION_ID
 						);
@@ -533,7 +533,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		val allProjects = existingProjectIds;
 
 		// Project dependencies feature check. Obsolete or not allowed.
-		val projectDescriptionFeatures = #[projectDescription_ProjectDependencies, projectDependencies_ProjectDependencies];
+		val projectDescriptionFeatures = #[projectDescription_ProjectDependencies];
 		if (checkFeature(
 			projectDescriptionFeatures,
 			not(RE_OR_RL_TYPE)
@@ -558,7 +558,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Required runtime library feature check. Obsolete or not allowed.
-		val requiredRLFeatures = #[projectDescription_RequiredRuntimeLibraries, requiredRuntimeLibraries_RequiredRuntimeLibraries];
+		val requiredRLFeatures = #[projectDescription_RequiredRuntimeLibraries];
 		if (checkFeature(
 			requiredRLFeatures,
 			not(RE_TYPE)
@@ -568,7 +568,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Provided RL feature check. Obsolete or not allowed.
-		val providedRLFeatures = #[projectDescription_ProvidedRuntimeLibraries, providedRuntimeLibraries_ProvidedRuntimeLibraries];
+		val providedRLFeatures = #[projectDescription_ProvidedRuntimeLibraries];
 		if (checkFeature(
 			providedRLFeatures,
 			RE_TYPE
@@ -578,7 +578,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Tested projects feature check. Obsolete or not allowed.
-		val testProjectsFeatures = #[projectDescription_TestedProjects, testedProjects_TestedProjects];
+		val testProjectsFeatures = #[projectDescription_TestedProjects];
 		if (checkFeature(
 			testProjectsFeatures,
 			TEST_TYPE
@@ -590,7 +590,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 		// Initializer module feature check for REs and RLs. Obsolete or not allowed.
 		if (checkFeature(
-			#[projectDescription_InitModules, initModules_InitModules],
+			#[projectDescription_InitModules],
 			RE_OR_RL_TYPE
 		)) {
 			//
@@ -613,7 +613,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Implemented projects feature check for applications, libraries and processors. Obsolete or not allowed.
-		val implementedProjectsFeatures = #[projectDescription_ImplementedProjects, implementedProjects_ImplementedProjects];
+		val implementedProjectsFeatures = #[projectDescription_ImplementedProjects];
 		if (checkFeature(
 			implementedProjectsFeatures,
 			LIBRARY_TYPE

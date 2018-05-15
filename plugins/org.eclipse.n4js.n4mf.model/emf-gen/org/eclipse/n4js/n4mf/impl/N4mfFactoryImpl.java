@@ -66,20 +66,12 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case N4mfPackage.PROJECT_DESCRIPTION: return createProjectDescription();
-			case N4mfPackage.EXEC_MODULE: return createExecModule();
-			case N4mfPackage.TESTED_PROJECTS: return createTestedProjects();
-			case N4mfPackage.INIT_MODULES: return createInitModules();
-			case N4mfPackage.IMPLEMENTED_PROJECTS: return createImplementedProjects();
-			case N4mfPackage.PROJECT_DEPENDENCIES: return createProjectDependencies();
-			case N4mfPackage.PROVIDED_RUNTIME_LIBRARIES: return createProvidedRuntimeLibraries();
-			case N4mfPackage.REQUIRED_RUNTIME_LIBRARIES: return createRequiredRuntimeLibraries();
 			case N4mfPackage.SIMPLE_PROJECT_DESCRIPTION: return createSimpleProjectDescription();
 			case N4mfPackage.TESTED_PROJECT: return createTestedProject();
 			case N4mfPackage.DECLARED_VERSION: return createDeclaredVersion();
 			case N4mfPackage.SOURCE_FRAGMENT: return createSourceFragment();
 			case N4mfPackage.MODULE_FILTER: return createModuleFilter();
 			case N4mfPackage.BOOTSTRAP_MODULE: return createBootstrapModule();
-			case N4mfPackage.EXTENDED_RUNTIME_ENVIRONMENT: return createExtendedRuntimeEnvironment();
 			case N4mfPackage.PROJECT_REFERENCE: return createProjectReference();
 			case N4mfPackage.SIMPLE_PROJECT_DEPENDENCY: return createSimpleProjectDependency();
 			case N4mfPackage.MODULE_FILTER_SPECIFIER: return createModuleFilterSpecifier();
@@ -153,76 +145,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ExecModule createExecModule() {
-		ExecModuleImpl execModule = new ExecModuleImpl();
-		return execModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TestedProjects createTestedProjects() {
-		TestedProjectsImpl testedProjects = new TestedProjectsImpl();
-		return testedProjects;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public InitModules createInitModules() {
-		InitModulesImpl initModules = new InitModulesImpl();
-		return initModules;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ImplementedProjects createImplementedProjects() {
-		ImplementedProjectsImpl implementedProjects = new ImplementedProjectsImpl();
-		return implementedProjects;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ProjectDependencies createProjectDependencies() {
-		ProjectDependenciesImpl projectDependencies = new ProjectDependenciesImpl();
-		return projectDependencies;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ProvidedRuntimeLibraries createProvidedRuntimeLibraries() {
-		ProvidedRuntimeLibrariesImpl providedRuntimeLibraries = new ProvidedRuntimeLibrariesImpl();
-		return providedRuntimeLibraries;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RequiredRuntimeLibraries createRequiredRuntimeLibraries() {
-		RequiredRuntimeLibrariesImpl requiredRuntimeLibraries = new RequiredRuntimeLibrariesImpl();
-		return requiredRuntimeLibraries;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public SimpleProjectDescription createSimpleProjectDescription() {
 		SimpleProjectDescriptionImpl simpleProjectDescription = new SimpleProjectDescriptionImpl();
 		return simpleProjectDescription;
@@ -276,16 +198,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	public BootstrapModule createBootstrapModule() {
 		BootstrapModuleImpl bootstrapModule = new BootstrapModuleImpl();
 		return bootstrapModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ExtendedRuntimeEnvironment createExtendedRuntimeEnvironment() {
-		ExtendedRuntimeEnvironmentImpl extendedRuntimeEnvironment = new ExtendedRuntimeEnvironmentImpl();
-		return extendedRuntimeEnvironment;
 	}
 
 	/**

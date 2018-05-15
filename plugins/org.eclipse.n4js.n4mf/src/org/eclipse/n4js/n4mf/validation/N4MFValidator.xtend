@@ -497,7 +497,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 	@Check
 	def checkApiImplProperties(ProjectDescription projectDescription) {
 		val implId = projectDescription.implementationId;
-		val implProjects = projectDescription.allImplementedProjects;
+		val implProjects = projectDescription.implementedProjects;
 
 		for (pref : implProjects) {
 			if (pref?.project?.projectId == projectDescription.projectId) {
@@ -514,8 +514,8 @@ class N4MFValidator extends AbstractN4MFValidator {
 			// missing implementation ID
 			addIssue(
 				messageForAPIIMPL_MISSING_IMPL_ID,
-				projectDescription.implementedProjects,
-				implementedProjects_ImplementedProjects,
+				projectDescription,
+				projectDescription_ImplementedProjects,
 				APIIMPL_MISSING_IMPL_ID
 			);
 		}

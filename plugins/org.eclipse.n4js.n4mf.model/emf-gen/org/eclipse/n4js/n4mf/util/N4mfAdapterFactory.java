@@ -80,34 +80,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 				return createProjectDescriptionAdapter();
 			}
 			@Override
-			public Adapter caseExecModule(ExecModule object) {
-				return createExecModuleAdapter();
-			}
-			@Override
-			public Adapter caseTestedProjects(TestedProjects object) {
-				return createTestedProjectsAdapter();
-			}
-			@Override
-			public Adapter caseInitModules(InitModules object) {
-				return createInitModulesAdapter();
-			}
-			@Override
-			public Adapter caseImplementedProjects(ImplementedProjects object) {
-				return createImplementedProjectsAdapter();
-			}
-			@Override
-			public Adapter caseProjectDependencies(ProjectDependencies object) {
-				return createProjectDependenciesAdapter();
-			}
-			@Override
-			public Adapter caseProvidedRuntimeLibraries(ProvidedRuntimeLibraries object) {
-				return createProvidedRuntimeLibrariesAdapter();
-			}
-			@Override
-			public Adapter caseRequiredRuntimeLibraries(RequiredRuntimeLibraries object) {
-				return createRequiredRuntimeLibrariesAdapter();
-			}
-			@Override
 			public Adapter caseSimpleProjectDescription(SimpleProjectDescription object) {
 				return createSimpleProjectDescriptionAdapter();
 			}
@@ -130,10 +102,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseBootstrapModule(BootstrapModule object) {
 				return createBootstrapModuleAdapter();
-			}
-			@Override
-			public Adapter caseExtendedRuntimeEnvironment(ExtendedRuntimeEnvironment object) {
-				return createExtendedRuntimeEnvironmentAdapter();
 			}
 			@Override
 			public Adapter caseProjectReference(ProjectReference object) {
@@ -198,104 +166,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createProjectDescriptionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ExecModule <em>Exec Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ExecModule
-	 * @generated
-	 */
-	public Adapter createExecModuleAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.TestedProjects <em>Tested Projects</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.TestedProjects
-	 * @generated
-	 */
-	public Adapter createTestedProjectsAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.InitModules <em>Init Modules</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.InitModules
-	 * @generated
-	 */
-	public Adapter createInitModulesAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ImplementedProjects <em>Implemented Projects</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ImplementedProjects
-	 * @generated
-	 */
-	public Adapter createImplementedProjectsAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ProjectDependencies <em>Project Dependencies</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ProjectDependencies
-	 * @generated
-	 */
-	public Adapter createProjectDependenciesAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries <em>Provided Runtime Libraries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries
-	 * @generated
-	 */
-	public Adapter createProvidedRuntimeLibrariesAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.RequiredRuntimeLibraries <em>Required Runtime Libraries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.RequiredRuntimeLibraries
-	 * @generated
-	 */
-	public Adapter createRequiredRuntimeLibrariesAdapter() {
 		return null;
 	}
 
@@ -380,20 +250,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createBootstrapModuleAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment <em>Extended Runtime Environment</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment
-	 * @generated
-	 */
-	public Adapter createExtendedRuntimeEnvironmentAdapter() {
 		return null;
 	}
 

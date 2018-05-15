@@ -30,20 +30,20 @@ class ProjectDescription extends SimpleProjectDescription {
 	contains DeclaredVersion projectVersion
 	ProjectType projectType
 	String mainModule
-	contains ExtendedRuntimeEnvironment extendedRuntimeEnvironment
-	contains ProvidedRuntimeLibraries providedRuntimeLibraries
-	contains RequiredRuntimeLibraries requiredRuntimeLibraries
-	contains ProjectDependencies projectDependencies
+	contains ProjectReference extendedRuntimeEnvironment
+	contains ProvidedRuntimeLibraryDependency[] providedRuntimeLibraries
+	contains RequiredRuntimeLibraryDependency[] requiredRuntimeLibraries
+	contains ProjectDependency[] projectDependencies
 	String implementationId
-	contains ImplementedProjects implementedProjects
-	contains InitModules initModules
-	contains ExecModule execModule
+	contains ProjectReference[] implementedProjects
+	contains BootstrapModule[] initModules
+	contains BootstrapModule execModule
 	String outputPathRaw
 	String[] libraryPathsRaw
 	String[] resourcePathsRaw
 	contains SourceFragment[] sourceFragment
 	contains ModuleFilter[] moduleFilters
-	contains TestedProjects testedProjects
+	contains TestedProject[] testedProjects
 	ModuleLoader moduleLoader
 
 	op String getOutputPath() {
@@ -71,104 +71,6 @@ class ProjectDescription extends SimpleProjectDescription {
 		}
 		return paths;
 	}
-
-	/**
-	 * Convenient method for getting all tested projects defined for the current project description.
-	 * Returns with an empty list if no test projects are set for the current project, otherwise returns with them.
-	 */
-	op TestedProject[] getAllTestedProjects() {
-		if (null === testedProjects) emptyEList else testedProjects.testedProjects;
-	}
-
-	/**
-	 * Convenient method for getting all initializer bootstrap modules defined for the current project description.
-	 * Returns with an empty list if no initializer modules are set for the current project, otherwise returns with them.
-	 */
-	op BootstrapModule[] getAllInitModules() {
-		if (null === initModules) emptyEList else initModules.initModules;
-	}
-
-	/**
-	 * Convenient method for getting all implemented modules defined for the current project description.
-	 * Returns with an empty list if no modules are implemented by the current project, otherwise returns with them.
-	 */
-	op ProjectReference[] getAllImplementedProjects() {
-		if (null === implementedProjects) emptyEList else implementedProjects.implementedProjects;
-	}
-
-	/**
-	 * Convenient method for getting all project dependencies for the current project description.
-	 * Returns with an empty list if the current project does not depend on any other projects, otherwise returns with them.
-	 */
-	op ProjectDependency[] getAllProjectDependencies() {
-		if (null === projectDependencies) emptyEList else projectDependencies.projectDependencies;
-	}
-
-	/**
-	 * Convenient method for getting all provided runtime libraries defined for the current project description.
-	 * Returns with an empty list if no runtime libraries are provided by the current project, otherwise returns with them.
-	 */
-	op ProvidedRuntimeLibraryDependency[] getAllProvidedRuntimeLibraries() {
-		if (null === providedRuntimeLibraries) emptyEList else providedRuntimeLibraries.providedRuntimeLibraries;
-	}
-
-	/**
-	 * Convenient method for getting all required runtime libraries for the current project description.
-	 * Returns with an empty list if no required runtime libraries are specified by the current project, otherwise returns with them.
-	 */
-	op RequiredRuntimeLibraryDependency[] getAllRequiredRuntimeLibraries() {
-		if (null === requiredRuntimeLibraries) emptyEList else requiredRuntimeLibraries.requiredRuntimeLibraries;
-	}
-
-}
-
-/**
- * Class for wrapping the execution module.
- */
-class ExecModule {
-	contains BootstrapModule execModule
-}
-
-/**
- * Class for collecting a collection of projects tested by the current project.
- */
-class TestedProjects {
-	contains TestedProject[] testedProjects
-}
-
-/**
- * Class for encapsulating a collection of initializer bootstrap modules for the current project.
- */
-class InitModules {
-	contains BootstrapModule[] initModules
-}
-
-/**
- * Class for collecting a bunch of projects implemented by the current project.
- */
-class ImplementedProjects {
-	contains ProjectReference[] implementedProjects
-}
-
-/**
- * Class for wrapping a collection of dependencies for the particular project.
- */
-class ProjectDependencies {
-	contains ProjectDependency[] projectDependencies
-}
-
-/**
- * Class for wrapping a collection of provided runtime environments.
- */
-class ProvidedRuntimeLibraries {
-	contains ProvidedRuntimeLibraryDependency[] providedRuntimeLibraries
-}
-
-/**
- * Class for wrapping the required runtime environments of the current project.
- */
-class RequiredRuntimeLibraries {
-	contains RequiredRuntimeLibraryDependency[] requiredRuntimeLibraries
 }
 
 /**
@@ -300,13 +202,6 @@ class BootstrapModule {
 enum ModuleFilterType {
 	NO_VALIDATE
 	, NO_MODULE_WRAPPING
-}
-
-/**
- * Class for representing the extended runtime environment project of the current project.
- */
-class ExtendedRuntimeEnvironment {
-	contains ProjectReference extendedRuntimeEnvironment
 }
 
 class ProjectReference {

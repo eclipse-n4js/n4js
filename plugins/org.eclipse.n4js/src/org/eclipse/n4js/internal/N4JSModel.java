@@ -36,8 +36,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment;
-import org.eclipse.n4js.n4mf.ImplementedProjects;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency;
@@ -220,9 +218,9 @@ public class N4JSModel {
 		ImmutableList.Builder<IN4JSArchive> result = ImmutableList.builder();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			description.getAllRequiredRuntimeLibraries().forEach(
+			description.getRequiredRuntimeLibraries().forEach(
 					lib -> addArchiveFromDependency(project, location, lib, result));
-			description.getAllProjectDependencies().forEach(
+			description.getProjectDependencies().forEach(
 					lib -> addArchiveFromDependency(project, location, lib, result));
 		}
 		return result.build();
@@ -323,8 +321,8 @@ public class N4JSModel {
 		URI location = project.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			result.addAll(resolveProjectReferences(project, description.getAllRequiredRuntimeLibraries()));
-			result.addAll(resolveProjectReferences(project, description.getAllProjectDependencies()));
+			result.addAll(resolveProjectReferences(project, description.getRequiredRuntimeLibraries()));
+			result.addAll(resolveProjectReferences(project, description.getProjectDependencies()));
 			result.addAll(getTestedProjects(project));
 			if (includeApis) {
 				result.addAll(resolveProjectReferences(project, description.getImplementedProjects()));
@@ -339,11 +337,7 @@ public class N4JSModel {
 		if (null == description) {
 			return absent();
 		}
-		final ExtendedRuntimeEnvironment re = description.getExtendedRuntimeEnvironment();
-		if (null == re) {
-			return absent();
-		}
-		final ProjectReference ref = re.getExtendedRuntimeEnvironment();
+		final ProjectReference ref = description.getExtendedRuntimeEnvironment();
 		return resolveProjectReference(project, ref);
 	}
 
@@ -352,7 +346,7 @@ public class N4JSModel {
 		URI location = project.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			result.addAll(resolveProjectReferences(project, description.getAllImplementedProjects()));
+			result.addAll(resolveProjectReferences(project, description.getImplementedProjects()));
 		}
 		return result.build();
 	}
@@ -397,7 +391,7 @@ public class N4JSModel {
 		if (description == null)
 			return ECollections.emptyEList();
 
-		EList<ProvidedRuntimeLibraryDependency> runtimeLibraries = description.getAllProvidedRuntimeLibraries();
+		EList<ProvidedRuntimeLibraryDependency> runtimeLibraries = description.getProvidedRuntimeLibraries();
 		if (runtimeLibraries == null)
 			return ECollections.emptyEList();
 
@@ -451,11 +445,7 @@ public class N4JSModel {
 		if (null == description) {
 			return absent();
 		}
-		final ExtendedRuntimeEnvironment extendedRe = description.getExtendedRuntimeEnvironment();
-		if (null == extendedRe) {
-			return absent();
-		}
-		final ProjectReference reRef = extendedRe.getExtendedRuntimeEnvironment();
+		final ProjectReference reRef = description.getExtendedRuntimeEnvironment();
 		if (null == reRef) {
 			return absent();
 		}
@@ -481,7 +471,7 @@ public class N4JSModel {
 		final ProjectDescription description = getProjectDescription(location);
 
 		if (null != description) {
-			for (TestedProject testedProject : description.getAllTestedProjects()) {
+			for (TestedProject testedProject : description.getTestedProjects()) {
 				if (null != testedProject.getProject()) {
 					URI hostLocation = workspace.getLocation(location, testedProject, PROJECT);
 
@@ -566,19 +556,4 @@ public class N4JSModel {
 
 		return resolvedReferences;
 	}
-
-	/**
-	 *
-	 * @param project
-	 * @param implementedProjects
-	 * @return
-	 */
-	private Iterable<? extends IN4JSProject> resolveProjectReferences(N4JSProject project,
-			ImplementedProjects implementedProjects) {
-		if (implementedProjects == null || implementedProjects.getImplementedProjects() == null) {
-			return emptyList();
-		}
-		return resolveProjectReferences(project, implementedProjects.getImplementedProjects());
-	}
-
 }

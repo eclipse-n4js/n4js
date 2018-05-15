@@ -81,48 +81,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4mfPackage.EXEC_MODULE: {
-				ExecModule execModule = (ExecModule)theEObject;
-				T result = caseExecModule(execModule);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.TESTED_PROJECTS: {
-				TestedProjects testedProjects = (TestedProjects)theEObject;
-				T result = caseTestedProjects(testedProjects);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.INIT_MODULES: {
-				InitModules initModules = (InitModules)theEObject;
-				T result = caseInitModules(initModules);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.IMPLEMENTED_PROJECTS: {
-				ImplementedProjects implementedProjects = (ImplementedProjects)theEObject;
-				T result = caseImplementedProjects(implementedProjects);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.PROJECT_DEPENDENCIES: {
-				ProjectDependencies projectDependencies = (ProjectDependencies)theEObject;
-				T result = caseProjectDependencies(projectDependencies);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.PROVIDED_RUNTIME_LIBRARIES: {
-				ProvidedRuntimeLibraries providedRuntimeLibraries = (ProvidedRuntimeLibraries)theEObject;
-				T result = caseProvidedRuntimeLibraries(providedRuntimeLibraries);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.REQUIRED_RUNTIME_LIBRARIES: {
-				RequiredRuntimeLibraries requiredRuntimeLibraries = (RequiredRuntimeLibraries)theEObject;
-				T result = caseRequiredRuntimeLibraries(requiredRuntimeLibraries);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case N4mfPackage.SIMPLE_PROJECT_DESCRIPTION: {
 				SimpleProjectDescription simpleProjectDescription = (SimpleProjectDescription)theEObject;
 				T result = caseSimpleProjectDescription(simpleProjectDescription);
@@ -158,12 +116,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 			case N4mfPackage.BOOTSTRAP_MODULE: {
 				BootstrapModule bootstrapModule = (BootstrapModule)theEObject;
 				T result = caseBootstrapModule(bootstrapModule);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.EXTENDED_RUNTIME_ENVIRONMENT: {
-				ExtendedRuntimeEnvironment extendedRuntimeEnvironment = (ExtendedRuntimeEnvironment)theEObject;
-				T result = caseExtendedRuntimeEnvironment(extendedRuntimeEnvironment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -242,111 +194,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProjectDescription(ProjectDescription object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Exec Module</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Exec Module</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseExecModule(ExecModule object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Tested Projects</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Tested Projects</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTestedProjects(TestedProjects object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Init Modules</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Init Modules</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseInitModules(InitModules object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Implemented Projects</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Implemented Projects</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseImplementedProjects(ImplementedProjects object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Project Dependencies</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Project Dependencies</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseProjectDependencies(ProjectDependencies object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Provided Runtime Libraries</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Provided Runtime Libraries</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseProvidedRuntimeLibraries(ProvidedRuntimeLibraries object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Required Runtime Libraries</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Required Runtime Libraries</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRequiredRuntimeLibraries(RequiredRuntimeLibraries object) {
 		return null;
 	}
 
@@ -437,21 +284,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseBootstrapModule(BootstrapModule object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Extended Runtime Environment</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Extended Runtime Environment</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseExtendedRuntimeEnvironment(ExtendedRuntimeEnvironment object) {
 		return null;
 	}
 

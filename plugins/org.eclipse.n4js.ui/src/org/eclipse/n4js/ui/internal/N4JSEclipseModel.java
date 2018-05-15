@@ -187,7 +187,7 @@ public class N4JSEclipseModel extends N4JSModel {
 		ImmutableList.Builder<IN4JSEclipseArchive> result = ImmutableList.builder();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			List<ProjectDependency> dependencies = description.getAllProjectDependencies();
+			List<ProjectDependency> dependencies = description.getProjectDependencies();
 			for (ProjectDependency dependency : dependencies) {
 				URI dependencyLocation = getInternalWorkspace().getLocation(location, dependency,
 						N4JSSourceContainerType.ARCHIVE);

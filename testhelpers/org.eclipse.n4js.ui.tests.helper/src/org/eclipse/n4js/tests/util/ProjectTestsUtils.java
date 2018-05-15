@@ -228,7 +228,6 @@ public class ProjectTestsUtils {
 		IFile config = project.getFile("manifest.n4mf");
 		URI uri = URI.createPlatformResourceURI(config.getFullPath().toString(), true);
 		ProjectDescription projectDesc = N4mfFactory.eINSTANCE.createProjectDescription();
-		projectDesc.setProjectDependencies(N4mfFactory.eINSTANCE.createProjectDependencies());
 		projectDesc.setDeclaredVendorId("org.eclipse.n4js");
 		projectDesc.setVendorName("Eclipse N4JS Project");
 		projectDesc.setProjectId(project.getName());
@@ -248,11 +247,6 @@ public class ProjectTestsUtils {
 		ResourceSet rs = createResourceSet(project);
 		Resource res = rs.createResource(uri);
 		res.getContents().add(projectDesc);
-
-		// Workaround to avoid any unnecessary warnings due to empty project dependency block
-		if (projectDesc.getAllProjectDependencies().isEmpty()) {
-			projectDesc.setProjectDependencies(null);
-		}
 
 		try {
 			res.save(Collections.EMPTY_MAP);
