@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
+import org.eclipse.n4js.json.JSON.NameValuePair
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 
@@ -88,6 +89,16 @@ class JSONFormatter extends AbstractFormatter2 {
 		}
 		
 		// recursively format each name-value pair
-		ol.nameValuePairs.forEach[format(it.value)];
+		ol.nameValuePairs.forEach[format(it)];
+	}
+	
+	def dispatch void format(NameValuePair nameValuePair, extension IFormattableDocument document) {
+		val colon = nameValuePair.regionFor.keyword(":");
+		val value = nameValuePair.value;
+
+		colon.prepend[noSpace];
+		colon.append[oneSpace];
+		
+		format(value)
 	}
 }
