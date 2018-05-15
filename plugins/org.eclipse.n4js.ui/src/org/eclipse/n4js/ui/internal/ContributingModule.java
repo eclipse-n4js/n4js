@@ -50,6 +50,7 @@ import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
 import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider;
@@ -198,6 +199,7 @@ public class ContributingModule implements Module {
 		binder.bind(NpmrcBinary.class);
 
 		binder.bind(TypesKeywordProvider.class);
+		binder.bind(ExternalLibraryErrorMarkerManager.class);
 
 	}
 }

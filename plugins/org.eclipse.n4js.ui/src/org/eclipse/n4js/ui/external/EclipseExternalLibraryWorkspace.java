@@ -369,12 +369,12 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public ExternalProject getProject(String projectName) {
+	public N4JSExternalProject getProject(String projectName) {
 		return projectProvider.getProject(projectName);
 	}
 
 	@Override
-	public ExternalProject getProject(URI projectLocation) {
+	public N4JSExternalProject getProject(URI projectLocation) {
 		return projectProvider.getProject(projectLocation);
 	}
 

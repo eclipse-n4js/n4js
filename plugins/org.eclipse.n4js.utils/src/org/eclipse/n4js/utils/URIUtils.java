@@ -38,7 +38,7 @@ public class URIUtils {
 		String fullPathString = iResource.getFullPath().toString();
 
 		org.eclipse.emf.common.util.URI uri;
-		if (projectPath.startsWith("P/")) {
+		if (projectPath.startsWith("P/") || projectPath.startsWith("L/")) {
 			uri = org.eclipse.emf.common.util.URI.createPlatformResourceURI(fullPathString, true);
 		} else {
 			uri = org.eclipse.emf.common.util.URI.createFileURI(fullPathString);

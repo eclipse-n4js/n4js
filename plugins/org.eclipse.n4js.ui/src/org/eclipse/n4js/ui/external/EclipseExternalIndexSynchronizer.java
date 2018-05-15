@@ -58,6 +58,9 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
 
 	@Inject
+	private ExternalLibraryErrorMarkerManager externalErrorMarkerManager;
+
+	@Inject
 	private NpmLogger logger;
 
 	/**
@@ -156,6 +159,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 			monitor.setTaskName("Cleaning all projects...");
 			RegisterResult cleanResult = externalLibraryWorkspace.deregisterAllProjects(monitor);
+			externalErrorMarkerManager.clearAllMarkers();
 			printRegisterResults(cleanResult, "clean");
 			subMonitor.worked(1);
 
@@ -279,7 +283,6 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 				// delete markers
 				try {
-					markerResource.deleteMarkers(null, true, 0);
 					for (IMarker marker : markerResource.findMarkers(null, true, 0)) {
 						String issueCode = marker.getAttribute(Issue.CODE_KEY, "");
 						if (issueCode.equals(IssueCodes.NODE_MODULES_OUT_OF_SYNC)) {

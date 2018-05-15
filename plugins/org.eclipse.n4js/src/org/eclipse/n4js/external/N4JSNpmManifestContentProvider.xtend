@@ -27,18 +27,19 @@ class N4JSNpmManifestContentProvider {
 	 */
 	def String getContent(String projectId, String outputFolder, String externalFolder, String main, String version)
 	'''
+		// Generated Manifest
 		ProjectId: «projectId»
-		ProjectType: library
+		ProjectType: validation
 		ProjectVersion: «IF version.isNullOrEmpty»0.0.1-SNAPSHOT«ELSE»«version»«ENDIF»
 		VendorId: npm
 		VendorName: "npm"
-		Output: "«outputFolder»"«
+		Output: "«outputFolder»«
 		IF Strings.isNullOrEmpty(main) === false»
 		MainModule: "«main»"«
 		ENDIF»
 		ModuleLoader: commonjs
 		Sources {
-			external {
+			source {
 				"«externalFolder»"
 			}
 		}

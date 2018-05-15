@@ -101,6 +101,9 @@ public class ExternalLibraryBuilder {
 	@Inject
 	private ExternalProjectProvider projectProvider;
 
+	@Inject
+	private ExternalLibraryErrorMarkerManager errorMarkerManager;
+
 	/**
 	 * Performs a full build on all registered and available external libraries.
 	 * <p>
@@ -263,6 +266,8 @@ public class ExternalLibraryBuilder {
 		ISchedulingRule rule = getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
+
+			errorMarkerManager.clearMarkers(projects);
 
 			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
 			// wrap as Arrays.asList returns immutable list
@@ -456,7 +461,7 @@ public class ExternalLibraryBuilder {
 							resourceSet,
 							toBeBuilt,
 							queuedBuildData,
-							true /* indexingOnly */);
+							false /* indexingOnly */);
 
 					monitor.setTaskName("Building '" + project.getName() + "'...");
 					IProgressMonitor buildMonitor = subMonitor.newChild(1, SUPPRESS_BEGINTASK);
