@@ -538,7 +538,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         (ambiguity) 
 	 *         'Sources' 
 	 *         '{' 
-	 *         sourceFragment+=SourceFragment
+	 *         sourceContainers+=SourceContainerDescription
 	 *     )
 	 *     (
 	 *         implementedProjects+=ProjectReference 
@@ -701,7 +701,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         (ambiguity) 
 	 *         'Sources' 
 	 *         '{' 
-	 *         sourceFragment+=SourceFragment
+	 *         sourceContainers+=SourceContainerDescription
 	 *     )
 	 *     (
 	 *         initModules+=BootstrapModule 
@@ -864,7 +864,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         (ambiguity) 
 	 *         'Sources' 
 	 *         '{' 
-	 *         sourceFragment+=SourceFragment
+	 *         sourceContainers+=SourceContainerDescription
 	 *     )
 	 *     (
 	 *         projectDependencies+=ProjectDependency 
@@ -1027,7 +1027,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         (ambiguity) 
 	 *         'Sources' 
 	 *         '{' 
-	 *         sourceFragment+=SourceFragment
+	 *         sourceContainers+=SourceContainerDescription
 	 *     )
 	 *     (
 	 *         providedRuntimeLibraries+=ProjectReference 
@@ -1190,7 +1190,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         (ambiguity) 
 	 *         'Sources' 
 	 *         '{' 
-	 *         sourceFragment+=SourceFragment
+	 *         sourceContainers+=SourceContainerDescription
 	 *     )
 	 *     (
 	 *         requiredRuntimeLibraries+=ProjectReference 
@@ -1346,7 +1346,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         implementedProjects+=ProjectReference
 	 *     )
 	 *     (
-	 *         sourceFragment+=SourceFragment 
+	 *         sourceContainers+=SourceContainerDescription 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         'ImplementedProjects' 
@@ -1656,7 +1656,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         initModules+=BootstrapModule
 	 *     )
 	 *     (
-	 *         sourceFragment+=SourceFragment 
+	 *         sourceContainers+=SourceContainerDescription 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         'InitModules' 
@@ -1859,7 +1859,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	  *     )?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     sourceFragment+=SourceFragment (ambiguity) sourceFragment+=SourceFragment
+	 *     sourceContainers+=SourceContainerDescription (ambiguity) sourceContainers+=SourceContainerDescription
 	 */
 	protected void emit_ProjectDescription___RightCurlyBracketKeyword_17_3_____ImplementedProjectsKeyword_11_0_LeftCurlyBracketKeyword_11_1_RightCurlyBracketKeyword_11_3___or___InitModulesKeyword_12_0_LeftCurlyBracketKeyword_12_1_RightCurlyBracketKeyword_12_3___or___ProjectDependenciesKeyword_9_0_LeftCurlyBracketKeyword_9_1_RightCurlyBracketKeyword_9_3___or___ProvidedRuntimeLibrariesKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3___or___RequiredRuntimeLibrariesKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3___or___TestedProjectsKeyword_19_0_LeftCurlyBracketKeyword_19_1_RightCurlyBracketKeyword_19_3____a_SourcesKeyword_17_0_LeftCurlyBracketKeyword_17_1__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -2012,7 +2012,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         testedProjects+=ProjectDependency
 	 *     )
 	 *     (
-	 *         sourceFragment+=SourceFragment 
+	 *         sourceContainers+=SourceContainerDescription 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}'))* 
 	 *         'TestedProjects' 
@@ -2322,7 +2322,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         providedRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
-	 *         sourceFragment+=SourceFragment 
+	 *         sourceContainers+=SourceContainerDescription 
 	 *         '}' 
 	 *         (('RequiredRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         'ProvidedRuntimeLibraries' 
@@ -2632,7 +2632,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         requiredRuntimeLibraries+=ProjectReference
 	 *     )
 	 *     (
-	 *         sourceFragment+=SourceFragment 
+	 *         sourceContainers+=SourceContainerDescription 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('ProjectDependencies' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         'RequiredRuntimeLibraries' 
@@ -2942,7 +2942,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         projectDependencies+=ProjectDependency
 	 *     )
 	 *     (
-	 *         sourceFragment+=SourceFragment 
+	 *         sourceContainers+=SourceContainerDescription 
 	 *         '}' 
 	 *         (('ProvidedRuntimeLibraries' '{' '}') | ('RequiredRuntimeLibraries' '{' '}') | ('ImplementedProjects' '{' '}') | ('InitModules' '{' '}') | ('TestedProjects' '{' '}'))* 
 	 *         'ProjectDependencies' 
@@ -3259,7 +3259,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *         (ambiguity) 
 	 *         'Sources' 
 	 *         '{' 
-	 *         sourceFragment+=SourceFragment
+	 *         sourceContainers+=SourceContainerDescription
 	 *     )
 	 *     (
 	 *         testedProjects+=ProjectDependency 
@@ -3315,7 +3315,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     projectType=ProjectType (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 *     projectVersion=DeclaredVersion (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'TestedProjects' '{' ('}' (ambiguity) 'TestedProjects' '{')* testedProjects+=ProjectDependency
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ExecModule' ':' execModule=BootstrapModule
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ImplementationId' ':' implementationId=N4mfIdentifier
@@ -3328,7 +3328,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
 	 *     testedProjects+=ProjectDependency '}' (ambiguity) ('TestedProjects' '{' '}' (ambiguity))* (rule end)
@@ -3363,7 +3363,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     (rule start) (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     (rule start) (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     (rule start) (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     (rule start) (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     (rule start) (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     (rule start) (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     (rule start) (ambiguity) (rule start)
@@ -3379,7 +3379,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     execModule=BootstrapModule (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     execModule=BootstrapModule (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     execModule=BootstrapModule (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     execModule=BootstrapModule (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     execModule=BootstrapModule (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     execModule=BootstrapModule (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     execModule=BootstrapModule (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     execModule=BootstrapModule (ambiguity) (rule end)
@@ -3395,7 +3395,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     extendedRuntimeEnvironment=ProjectReference (ambiguity) (rule end)
@@ -3411,7 +3411,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     implementationId=N4mfIdentifier (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     implementationId=N4mfIdentifier (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     implementationId=N4mfIdentifier (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     implementationId=N4mfIdentifier (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     implementationId=N4mfIdentifier (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     implementationId=N4mfIdentifier (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     implementationId=N4mfIdentifier (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     implementationId=N4mfIdentifier (ambiguity) (rule end)
@@ -3427,7 +3427,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     libraryPathsRaw+=STRING '}' (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     libraryPathsRaw+=STRING '}' (ambiguity) (rule end)
@@ -3443,7 +3443,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     mainModule=STRING (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     mainModule=STRING (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     mainModule=STRING (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     mainModule=STRING (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     mainModule=STRING (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     mainModule=STRING (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     mainModule=STRING (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     mainModule=STRING (ambiguity) (rule end)
@@ -3458,7 +3458,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     moduleFilters+=ModuleFilter '}' (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     moduleFilters+=ModuleFilter '}' (ambiguity) (rule end)
@@ -3474,7 +3474,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     moduleLoader=ModuleLoader (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     moduleLoader=ModuleLoader (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     moduleLoader=ModuleLoader (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     moduleLoader=ModuleLoader (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     moduleLoader=ModuleLoader (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     moduleLoader=ModuleLoader (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     moduleLoader=ModuleLoader (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     moduleLoader=ModuleLoader (ambiguity) (rule end)
@@ -3490,7 +3490,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     outputPathRaw=STRING (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     outputPathRaw=STRING (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     outputPathRaw=STRING (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     outputPathRaw=STRING (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     outputPathRaw=STRING (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     outputPathRaw=STRING (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     outputPathRaw=STRING (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     outputPathRaw=STRING (ambiguity) (rule end)
@@ -3506,7 +3506,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     projectId=N4mfIdentifier (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     projectId=N4mfIdentifier (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     projectId=N4mfIdentifier (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     projectId=N4mfIdentifier (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     projectId=N4mfIdentifier (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     projectId=N4mfIdentifier (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     projectId=N4mfIdentifier (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     projectId=N4mfIdentifier (ambiguity) (rule end)
@@ -3522,7 +3522,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     projectType=ProjectType (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     projectType=ProjectType (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     projectType=ProjectType (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     projectType=ProjectType (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     projectType=ProjectType (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     projectType=ProjectType (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     projectType=ProjectType (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     projectType=ProjectType (ambiguity) (rule end)
@@ -3538,7 +3538,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     projectVersion=DeclaredVersion (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     projectVersion=DeclaredVersion (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     projectVersion=DeclaredVersion (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     projectVersion=DeclaredVersion (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     projectVersion=DeclaredVersion (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     projectVersion=DeclaredVersion (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     projectVersion=DeclaredVersion (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     projectVersion=DeclaredVersion (ambiguity) (rule end)
@@ -3554,25 +3554,25 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) (rule end)
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ExecModule' ':' execModule=BootstrapModule
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ImplementationId' ':' implementationId=N4mfIdentifier
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'Libraries' '{' libraryPathsRaw+=STRING
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'MainModule' ':' mainModule=STRING
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ModuleFilters' '{' moduleFilters+=ModuleFilter
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ModuleLoader' ':' moduleLoader=ModuleLoader
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'Output' ':' outputPathRaw=STRING
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ProjectId' ':' projectId=N4mfIdentifier
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ProjectType' ':' projectType=ProjectType
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'VendorName' ':' vendorName=STRING
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) (rule end)
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ExecModule' ':' execModule=BootstrapModule
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ImplementationId' ':' implementationId=N4mfIdentifier
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'Libraries' '{' libraryPathsRaw+=STRING
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'MainModule' ':' mainModule=STRING
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ModuleFilters' '{' moduleFilters+=ModuleFilter
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ModuleLoader' ':' moduleLoader=ModuleLoader
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'Output' ':' outputPathRaw=STRING
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ProjectId' ':' projectId=N4mfIdentifier
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ProjectType' ':' projectType=ProjectType
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'VendorName' ':' vendorName=STRING
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) (rule end)
 	 *     vendorId=N4mfIdentifier (ambiguity) 'ExecModule' ':' execModule=BootstrapModule
 	 *     vendorId=N4mfIdentifier (ambiguity) 'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
 	 *     vendorId=N4mfIdentifier (ambiguity) 'ImplementationId' ':' implementationId=N4mfIdentifier
@@ -3585,7 +3585,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     vendorId=N4mfIdentifier (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     vendorId=N4mfIdentifier (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     vendorId=N4mfIdentifier (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     vendorId=N4mfIdentifier (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     vendorId=N4mfIdentifier (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     vendorId=N4mfIdentifier (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     vendorId=N4mfIdentifier (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     vendorId=N4mfIdentifier (ambiguity) (rule end)
@@ -3601,7 +3601,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     vendorName=STRING (ambiguity) 'ProjectType' ':' projectType=ProjectType
 	 *     vendorName=STRING (ambiguity) 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     vendorName=STRING (ambiguity) 'Resources' '{' resourcePathsRaw+=STRING
-	 *     vendorName=STRING (ambiguity) 'Sources' '{' sourceFragment+=SourceFragment
+	 *     vendorName=STRING (ambiguity) 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     vendorName=STRING (ambiguity) 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     vendorName=STRING (ambiguity) 'VendorName' ':' vendorName=STRING
 	 *     vendorName=STRING (ambiguity) (rule end)
@@ -3663,12 +3663,12 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
 	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
 	 *     requiredRuntimeLibraries+=ProjectReference '}' (ambiguity) ('RequiredRuntimeLibraries' '{' '}' (ambiguity))* (rule end)
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 *     vendorId=N4mfIdentifier (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 *     vendorName=STRING (ambiguity) 'RequiredRuntimeLibraries' '{' ('}' (ambiguity) 'RequiredRuntimeLibraries' '{')* requiredRuntimeLibraries+=ProjectReference
 	 */
@@ -3711,12 +3711,12 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
 	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
 	 *     providedRuntimeLibraries+=ProjectReference '}' (ambiguity) ('ProvidedRuntimeLibraries' '{' '}' (ambiguity))* (rule end)
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 *     vendorId=N4mfIdentifier (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 *     vendorName=STRING (ambiguity) 'ProvidedRuntimeLibraries' '{' ('}' (ambiguity) 'ProvidedRuntimeLibraries' '{')* providedRuntimeLibraries+=ProjectReference
 	 */
@@ -3756,7 +3756,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     projectDependencies+=ProjectDependency '}' (ambiguity) ('ProjectDependencies' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
 	 *     projectDependencies+=ProjectDependency '}' (ambiguity) ('ProjectDependencies' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     projectDependencies+=ProjectDependency '}' (ambiguity) ('ProjectDependencies' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     projectDependencies+=ProjectDependency '}' (ambiguity) ('ProjectDependencies' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     projectDependencies+=ProjectDependency '}' (ambiguity) ('ProjectDependencies' '{' '}' (ambiguity))* 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     projectDependencies+=ProjectDependency '}' (ambiguity) ('ProjectDependencies' '{' '}' (ambiguity))* 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     projectDependencies+=ProjectDependency '}' (ambiguity) ('ProjectDependencies' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
 	 *     projectDependencies+=ProjectDependency '}' (ambiguity) ('ProjectDependencies' '{' '}' (ambiguity))* (rule end)
@@ -3764,7 +3764,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     projectType=ProjectType (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
 	 *     projectVersion=DeclaredVersion (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
 	 *     vendorId=N4mfIdentifier (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
 	 *     vendorName=STRING (ambiguity) 'ProjectDependencies' '{' ('}' (ambiguity) 'ProjectDependencies' '{')* projectDependencies+=ProjectDependency
 	 */
@@ -3799,7 +3799,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     initModules+=BootstrapModule '}' (ambiguity) ('InitModules' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
 	 *     initModules+=BootstrapModule '}' (ambiguity) ('InitModules' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     initModules+=BootstrapModule '}' (ambiguity) ('InitModules' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     initModules+=BootstrapModule '}' (ambiguity) ('InitModules' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     initModules+=BootstrapModule '}' (ambiguity) ('InitModules' '{' '}' (ambiguity))* 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     initModules+=BootstrapModule '}' (ambiguity) ('InitModules' '{' '}' (ambiguity))* 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     initModules+=BootstrapModule '}' (ambiguity) ('InitModules' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
 	 *     initModules+=BootstrapModule '}' (ambiguity) ('InitModules' '{' '}' (ambiguity))* (rule end)
@@ -3812,7 +3812,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     projectType=ProjectType (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
 	 *     projectVersion=DeclaredVersion (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
 	 *     vendorId=N4mfIdentifier (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
 	 *     vendorName=STRING (ambiguity) 'InitModules' '{' ('}' (ambiguity) 'InitModules' '{')* initModules+=BootstrapModule
 	 */
@@ -3847,7 +3847,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     implementedProjects+=ProjectReference '}' (ambiguity) ('ImplementedProjects' '{' '}' (ambiguity))* 'ProjectType' ':' projectType=ProjectType
 	 *     implementedProjects+=ProjectReference '}' (ambiguity) ('ImplementedProjects' '{' '}' (ambiguity))* 'ProjectVersion' ':' projectVersion=DeclaredVersion
 	 *     implementedProjects+=ProjectReference '}' (ambiguity) ('ImplementedProjects' '{' '}' (ambiguity))* 'Resources' '{' resourcePathsRaw+=STRING
-	 *     implementedProjects+=ProjectReference '}' (ambiguity) ('ImplementedProjects' '{' '}' (ambiguity))* 'Sources' '{' sourceFragment+=SourceFragment
+	 *     implementedProjects+=ProjectReference '}' (ambiguity) ('ImplementedProjects' '{' '}' (ambiguity))* 'Sources' '{' sourceContainers+=SourceContainerDescription
 	 *     implementedProjects+=ProjectReference '}' (ambiguity) ('ImplementedProjects' '{' '}' (ambiguity))* 'VendorId' ':' vendorId=N4mfIdentifier
 	 *     implementedProjects+=ProjectReference '}' (ambiguity) ('ImplementedProjects' '{' '}' (ambiguity))* 'VendorName' ':' vendorName=STRING
 	 *     implementedProjects+=ProjectReference '}' (ambiguity) ('ImplementedProjects' '{' '}' (ambiguity))* (rule end)
@@ -3860,7 +3860,7 @@ public class N4MFSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     projectType=ProjectType (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
 	 *     projectVersion=DeclaredVersion (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
 	 *     resourcePathsRaw+=STRING '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
-	 *     sourceFragment+=SourceFragment '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
+	 *     sourceContainers+=SourceContainerDescription '}' (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
 	 *     vendorId=N4mfIdentifier (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
 	 *     vendorName=STRING (ambiguity) 'ImplementedProjects' '{' ('}' (ambiguity) 'ImplementedProjects' '{')* implementedProjects+=ProjectReference
 	 */

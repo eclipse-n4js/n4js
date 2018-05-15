@@ -241,13 +241,13 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW = 16;
 
 	/**
-	 * The feature id for the '<em><b>Source Fragment</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Source Containers</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__SOURCE_FRAGMENT = 17;
+	int PROJECT_DESCRIPTION__SOURCE_CONTAINERS = 17;
 
 	/**
 	 * The feature id for the '<em><b>Module Filters</b></em>' containment reference list.
@@ -395,23 +395,23 @@ public interface N4mfPackage extends EPackage {
 	int DECLARED_VERSION_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.SourceFragmentImpl <em>Source Fragment</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.impl.SourceFragmentImpl
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragment()
+	 * @see org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl
+	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceContainerDescription()
 	 * @generated
 	 */
-	int SOURCE_FRAGMENT = 2;
+	int SOURCE_CONTAINER_DESCRIPTION = 2;
 
 	/**
-	 * The feature id for the '<em><b>Source Fragment Type</b></em>' attribute.
+	 * The feature id for the '<em><b>Source Container Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FRAGMENT__SOURCE_FRAGMENT_TYPE = 0;
+	int SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Paths Raw</b></em>' attribute list.
@@ -420,16 +420,16 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FRAGMENT__PATHS_RAW = 1;
+	int SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW = 1;
 
 	/**
-	 * The number of structural features of the '<em>Source Fragment</em>' class.
+	 * The number of structural features of the '<em>Source Container Description</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FRAGMENT_FEATURE_COUNT = 2;
+	int SOURCE_CONTAINER_DESCRIPTION_FEATURE_COUNT = 2;
 
 	/**
 	 * The operation id for the '<em>Compare By Fragment Type</em>' operation.
@@ -438,7 +438,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FRAGMENT___COMPARE_BY_FRAGMENT_TYPE__SOURCEFRAGMENT = 0;
+	int SOURCE_CONTAINER_DESCRIPTION___COMPARE_BY_FRAGMENT_TYPE__SOURCECONTAINERDESCRIPTION = 0;
 
 	/**
 	 * The operation id for the '<em>Get Paths</em>' operation.
@@ -447,16 +447,16 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FRAGMENT___GET_PATHS = 1;
+	int SOURCE_CONTAINER_DESCRIPTION___GET_PATHS = 1;
 
 	/**
-	 * The number of operations of the '<em>Source Fragment</em>' class.
+	 * The number of operations of the '<em>Source Container Description</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FRAGMENT_OPERATION_COUNT = 2;
+	int SOURCE_CONTAINER_DESCRIPTION_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterImpl <em>Module Filter</em>}' class.
@@ -817,14 +817,14 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_TYPE = 9;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.SourceFragmentType <em>Source Fragment Type</em>}' enum.
+	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.SourceContainerType <em>Source Container Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4mf.SourceFragmentType
-	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragmentType()
+	 * @see org.eclipse.n4js.n4mf.SourceContainerType
+	 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceContainerType()
 	 * @generated
 	 */
-	int SOURCE_FRAGMENT_TYPE = 10;
+	int SOURCE_CONTAINER_TYPE = 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.ModuleFilterType <em>Module Filter Type</em>}' enum.
@@ -1055,15 +1055,15 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getProjectDescription_ResourcePathsRaw();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceFragment <em>Source Fragment</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceContainers <em>Source Containers</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Source Fragment</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getSourceFragment()
+	 * @return the meta object for the containment reference list '<em>Source Containers</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getSourceContainers()
 	 * @see #getProjectDescription()
 	 * @generated
 	 */
-	EReference getProjectDescription_SourceFragment();
+	EReference getProjectDescription_SourceContainers();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleFilters <em>Module Filters</em>}'.
@@ -1193,56 +1193,56 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getDeclaredVersion_Qualifier();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.SourceFragment <em>Source Fragment</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.SourceContainerDescription <em>Source Container Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Source Fragment</em>'.
-	 * @see org.eclipse.n4js.n4mf.SourceFragment
+	 * @return the meta object for class '<em>Source Container Description</em>'.
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription
 	 * @generated
 	 */
-	EClass getSourceFragment();
+	EClass getSourceContainerDescription();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.SourceFragment#getSourceFragmentType <em>Source Fragment Type</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getSourceContainerType <em>Source Container Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Source Fragment Type</em>'.
-	 * @see org.eclipse.n4js.n4mf.SourceFragment#getSourceFragmentType()
-	 * @see #getSourceFragment()
+	 * @return the meta object for the attribute '<em>Source Container Type</em>'.
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription#getSourceContainerType()
+	 * @see #getSourceContainerDescription()
 	 * @generated
 	 */
-	EAttribute getSourceFragment_SourceFragmentType();
+	EAttribute getSourceContainerDescription_SourceContainerType();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.SourceFragment#getPathsRaw <em>Paths Raw</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPathsRaw <em>Paths Raw</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute list '<em>Paths Raw</em>'.
-	 * @see org.eclipse.n4js.n4mf.SourceFragment#getPathsRaw()
-	 * @see #getSourceFragment()
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription#getPathsRaw()
+	 * @see #getSourceContainerDescription()
 	 * @generated
 	 */
-	EAttribute getSourceFragment_PathsRaw();
+	EAttribute getSourceContainerDescription_PathsRaw();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceFragment#compareByFragmentType(org.eclipse.n4js.n4mf.SourceFragment) <em>Compare By Fragment Type</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#compareByFragmentType(org.eclipse.n4js.n4mf.SourceContainerDescription) <em>Compare By Fragment Type</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Compare By Fragment Type</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.SourceFragment#compareByFragmentType(org.eclipse.n4js.n4mf.SourceFragment)
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription#compareByFragmentType(org.eclipse.n4js.n4mf.SourceContainerDescription)
 	 * @generated
 	 */
-	EOperation getSourceFragment__CompareByFragmentType__SourceFragment();
+	EOperation getSourceContainerDescription__CompareByFragmentType__SourceContainerDescription();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceFragment#getPaths() <em>Get Paths</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPaths() <em>Get Paths</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Get Paths</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.SourceFragment#getPaths()
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription#getPaths()
 	 * @generated
 	 */
-	EOperation getSourceFragment__GetPaths();
+	EOperation getSourceContainerDescription__GetPaths();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.ModuleFilter <em>Module Filter</em>}'.
@@ -1499,14 +1499,14 @@ public interface N4mfPackage extends EPackage {
 	EEnum getProjectType();
 
 	/**
-	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4mf.SourceFragmentType <em>Source Fragment Type</em>}'.
+	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4mf.SourceContainerType <em>Source Container Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Source Fragment Type</em>'.
-	 * @see org.eclipse.n4js.n4mf.SourceFragmentType
+	 * @return the meta object for enum '<em>Source Container Type</em>'.
+	 * @see org.eclipse.n4js.n4mf.SourceContainerType
 	 * @generated
 	 */
-	EEnum getSourceFragmentType();
+	EEnum getSourceContainerType();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4mf.ModuleFilterType <em>Module Filter Type</em>}'.
@@ -1708,12 +1708,12 @@ public interface N4mfPackage extends EPackage {
 		EAttribute PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW = eINSTANCE.getProjectDescription_ResourcePathsRaw();
 
 		/**
-		 * The meta object literal for the '<em><b>Source Fragment</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Source Containers</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROJECT_DESCRIPTION__SOURCE_FRAGMENT = eINSTANCE.getProjectDescription_SourceFragment();
+		EReference PROJECT_DESCRIPTION__SOURCE_CONTAINERS = eINSTANCE.getProjectDescription_SourceContainers();
 
 		/**
 		 * The meta object literal for the '<em><b>Module Filters</b></em>' containment reference list feature.
@@ -1814,22 +1814,22 @@ public interface N4mfPackage extends EPackage {
 		EAttribute DECLARED_VERSION__QUALIFIER = eINSTANCE.getDeclaredVersion_Qualifier();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.SourceFragmentImpl <em>Source Fragment</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.impl.SourceFragmentImpl
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragment()
+		 * @see org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl
+		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceContainerDescription()
 		 * @generated
 		 */
-		EClass SOURCE_FRAGMENT = eINSTANCE.getSourceFragment();
+		EClass SOURCE_CONTAINER_DESCRIPTION = eINSTANCE.getSourceContainerDescription();
 
 		/**
-		 * The meta object literal for the '<em><b>Source Fragment Type</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Source Container Type</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SOURCE_FRAGMENT__SOURCE_FRAGMENT_TYPE = eINSTANCE.getSourceFragment_SourceFragmentType();
+		EAttribute SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE = eINSTANCE.getSourceContainerDescription_SourceContainerType();
 
 		/**
 		 * The meta object literal for the '<em><b>Paths Raw</b></em>' attribute list feature.
@@ -1837,7 +1837,7 @@ public interface N4mfPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SOURCE_FRAGMENT__PATHS_RAW = eINSTANCE.getSourceFragment_PathsRaw();
+		EAttribute SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW = eINSTANCE.getSourceContainerDescription_PathsRaw();
 
 		/**
 		 * The meta object literal for the '<em><b>Compare By Fragment Type</b></em>' operation.
@@ -1845,7 +1845,7 @@ public interface N4mfPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation SOURCE_FRAGMENT___COMPARE_BY_FRAGMENT_TYPE__SOURCEFRAGMENT = eINSTANCE.getSourceFragment__CompareByFragmentType__SourceFragment();
+		EOperation SOURCE_CONTAINER_DESCRIPTION___COMPARE_BY_FRAGMENT_TYPE__SOURCECONTAINERDESCRIPTION = eINSTANCE.getSourceContainerDescription__CompareByFragmentType__SourceContainerDescription();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Paths</b></em>' operation.
@@ -1853,7 +1853,7 @@ public interface N4mfPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation SOURCE_FRAGMENT___GET_PATHS = eINSTANCE.getSourceFragment__GetPaths();
+		EOperation SOURCE_CONTAINER_DESCRIPTION___GET_PATHS = eINSTANCE.getSourceContainerDescription__GetPaths();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.ModuleFilterImpl <em>Module Filter</em>}' class.
@@ -2062,14 +2062,14 @@ public interface N4mfPackage extends EPackage {
 		EEnum PROJECT_TYPE = eINSTANCE.getProjectType();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.SourceFragmentType <em>Source Fragment Type</em>}' enum.
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.SourceContainerType <em>Source Container Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4mf.SourceFragmentType
-		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceFragmentType()
+		 * @see org.eclipse.n4js.n4mf.SourceContainerType
+		 * @see org.eclipse.n4js.n4mf.impl.N4mfPackageImpl#getSourceContainerType()
 		 * @generated
 		 */
-		EEnum SOURCE_FRAGMENT_TYPE = eINSTANCE.getSourceFragmentType();
+		EEnum SOURCE_CONTAINER_TYPE = eINSTANCE.getSourceContainerType();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.ModuleFilterType <em>Module Filter Type</em>}' enum.

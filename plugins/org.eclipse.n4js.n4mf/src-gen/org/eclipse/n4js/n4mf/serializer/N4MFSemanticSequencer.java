@@ -22,7 +22,7 @@ import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.SourceFragment;
+import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess;
 import org.eclipse.xtext.Action;
@@ -66,8 +66,8 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case N4mfPackage.PROJECT_REFERENCE:
 				sequence_ProjectIdWithOptionalVendor(context, (ProjectReference) semanticObject); 
 				return; 
-			case N4mfPackage.SOURCE_FRAGMENT:
-				sequence_SourceFragment(context, (SourceFragment) semanticObject); 
+			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION:
+				sequence_SourceContainerDescription(context, (SourceContainerDescription) semanticObject); 
 				return; 
 			case N4mfPackage.VERSION_CONSTRAINT:
 				sequence_VersionConstraint(context, (VersionConstraint) semanticObject); 
@@ -154,7 +154,7 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *             implementationId=N4mfIdentifier | 
 	 *             execModule=BootstrapModule | 
 	 *             outputPathRaw=STRING | 
-	 *             sourceFragment+=SourceFragment | 
+	 *             sourceContainers+=SourceContainerDescription | 
 	 *             moduleFilters+=ModuleFilter | 
 	 *             moduleLoader=ModuleLoader
 	 *         )? 
@@ -187,12 +187,12 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     SourceFragment returns SourceFragment
+	 *     SourceContainerDescription returns SourceContainerDescription
 	 *
 	 * Constraint:
-	 *     (sourceFragmentType=SourceFragmentType pathsRaw+=STRING pathsRaw+=STRING*)
+	 *     (sourceContainerType=SourceContainerType pathsRaw+=STRING pathsRaw+=STRING*)
 	 */
-	protected void sequence_SourceFragment(ISerializationContext context, SourceFragment semanticObject) {
+	protected void sequence_SourceContainerDescription(ISerializationContext context, SourceContainerDescription semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

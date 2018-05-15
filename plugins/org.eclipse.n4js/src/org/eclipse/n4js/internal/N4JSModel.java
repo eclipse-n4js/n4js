@@ -39,8 +39,8 @@ import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.SourceFragment;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.n4mf.SourceContainerDescription;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -256,16 +256,16 @@ public class N4JSModel {
 		URI location = project.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			List<SourceFragment> sourceFragments = newArrayList(from(description.getSourceFragment()));
+			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
 			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> f1
 					.compareByFragmentType(fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT));
-			for (SourceFragment sourceFragment : sourceFragments) {
+			for (SourceContainerDescription sourceFragment : sourceFragments) {
 				List<String> paths = sourceFragment.getPaths();
 				for (String path : paths) {
 					// XXX poor man's canonical path conversion. Consider headless compiler with npm projects.
 					final String relativeLocation = ".".equals(path) ? "" : path;
 					IN4JSSourceContainer sourceContainer = this.createProjectN4JSSourceContainer(project,
-							sourceFragment.getSourceFragmentType(), relativeLocation);
+							sourceFragment.getSourceContainerType(), relativeLocation);
 					result.add(sourceContainer);
 				}
 			}
@@ -277,12 +277,12 @@ public class N4JSModel {
 		return location.toFileString();
 	}
 
-	protected IN4JSSourceContainer createArchiveN4JSSourceContainer(N4JSArchive archive, SourceFragmentType type,
+	protected IN4JSSourceContainer createArchiveN4JSSourceContainer(N4JSArchive archive, SourceContainerType type,
 			String relativeLocation) {
 		return new N4JSArchiveSourceContainer(archive, type, relativeLocation);
 	}
 
-	protected IN4JSSourceContainer createProjectN4JSSourceContainer(N4JSProject project, SourceFragmentType type,
+	protected IN4JSSourceContainer createProjectN4JSSourceContainer(N4JSProject project, SourceContainerType type,
 			String relativeLocation) {
 		return new N4JSProjectSourceContainer(project, type, relativeLocation);
 	}
@@ -292,13 +292,14 @@ public class N4JSModel {
 		URI location = archive.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			List<SourceFragment> sourceFragments = newArrayList(from(description.getSourceFragment()));
+			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
 			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> f1
 					.compareByFragmentType(fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT));
-			for (SourceFragment sourceFragment : sourceFragments) {
+			for (SourceContainerDescription sourceFragment : sourceFragments) {
 				List<String> paths = sourceFragment.getPaths();
 				for (String path : paths) {
-					result.add(createArchiveN4JSSourceContainer(archive, sourceFragment.getSourceFragmentType(), path));
+					result.add(
+							createArchiveN4JSSourceContainer(archive, sourceFragment.getSourceContainerType(), path));
 				}
 			}
 		}

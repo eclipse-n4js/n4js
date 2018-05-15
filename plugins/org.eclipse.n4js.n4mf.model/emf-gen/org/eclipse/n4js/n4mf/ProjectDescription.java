@@ -40,7 +40,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPathsRaw <em>Library Paths Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePathsRaw <em>Resource Paths Raw</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceFragment <em>Source Fragment</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleLoader <em>Module Loader</em>}</li>
@@ -427,20 +427,20 @@ public interface ProjectDescription extends EObject {
 	EList<String> getResourcePathsRaw();
 
 	/**
-	 * Returns the value of the '<em><b>Source Fragment</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4mf.SourceFragment}.
+	 * Returns the value of the '<em><b>Source Containers</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.SourceContainerDescription}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Source Fragment</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Source Containers</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source Fragment</em>' containment reference list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_SourceFragment()
+	 * @return the value of the '<em>Source Containers</em>' containment reference list.
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_SourceContainers()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<SourceFragment> getSourceFragment();
+	EList<SourceContainerDescription> getSourceContainers();
 
 	/**
 	 * Returns the value of the '<em><b>Module Filters</b></em>' containment reference list.

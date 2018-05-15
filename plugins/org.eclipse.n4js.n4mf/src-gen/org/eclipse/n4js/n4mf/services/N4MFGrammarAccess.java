@@ -164,8 +164,8 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_17 = (Group)cUnorderedGroup.eContents().get(17);
 		private final Keyword cSourcesKeyword_17_0 = (Keyword)cGroup_17.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_17_1 = (Keyword)cGroup_17.eContents().get(1);
-		private final Assignment cSourceFragmentAssignment_17_2 = (Assignment)cGroup_17.eContents().get(2);
-		private final RuleCall cSourceFragmentSourceFragmentParserRuleCall_17_2_0 = (RuleCall)cSourceFragmentAssignment_17_2.eContents().get(0);
+		private final Assignment cSourceContainersAssignment_17_2 = (Assignment)cGroup_17.eContents().get(2);
+		private final RuleCall cSourceContainersSourceContainerDescriptionParserRuleCall_17_2_0 = (RuleCall)cSourceContainersAssignment_17_2.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_17_3 = (Keyword)cGroup_17.eContents().get(3);
 		private final Group cGroup_18 = (Group)cUnorderedGroup.eContents().get(18);
 		private final Keyword cModuleFiltersKeyword_18_0 = (Keyword)cGroup_18.eContents().get(0);
@@ -216,7 +216,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//	& ('Output' ':' outputPathRaw=STRING)?
 		//	& ('Libraries' '{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
 		//	& ('Resources' '{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')?
-		//	& ('Sources' '{' sourceFragment+=SourceFragment+ '}')?
+		//	& ('Sources' '{' sourceContainers+=SourceContainerDescription+ '}')?
 		//	& ('ModuleFilters' '{' moduleFilters+=ModuleFilter+ '}')?
 		//	& ('TestedProjects' '{' (testedProjects+=ProjectDependency (',' testedProjects+=ProjectDependency)*)? '}')?
 		//	& ('ModuleLoader' ':' moduleLoader=ModuleLoader)?;
@@ -237,8 +237,8 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//& ('InitModules' '{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}')? & ('ExecModule' ':'
 		//execModule=BootstrapModule)? & ('Output' ':' outputPathRaw=STRING)? & ('Libraries' '{' libraryPathsRaw+=STRING (','
 		//libraryPathsRaw+=STRING)* '}')? & ('Resources' '{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')? &
-		//('Sources' '{' sourceFragment+=SourceFragment+ '}')? & ('ModuleFilters' '{' moduleFilters+=ModuleFilter+ '}')? &
-		//('TestedProjects' '{' (testedProjects+=ProjectDependency (',' testedProjects+=ProjectDependency)*)? '}')? &
+		//('Sources' '{' sourceContainers+=SourceContainerDescription+ '}')? & ('ModuleFilters' '{' moduleFilters+=ModuleFilter+
+		//'}')? & ('TestedProjects' '{' (testedProjects+=ProjectDependency (',' testedProjects+=ProjectDependency)*)? '}')? &
 		//('ModuleLoader' ':' moduleLoader=ModuleLoader)?
 		public UnorderedGroup getUnorderedGroup() { return cUnorderedGroup; }
 		
@@ -619,7 +619,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_16_4() { return cRightCurlyBracketKeyword_16_4; }
 		
-		//('Sources' '{' sourceFragment+=SourceFragment+ '}')?
+		//('Sources' '{' sourceContainers+=SourceContainerDescription+ '}')?
 		public Group getGroup_17() { return cGroup_17; }
 		
 		//'Sources'
@@ -628,11 +628,11 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_17_1() { return cLeftCurlyBracketKeyword_17_1; }
 		
-		//sourceFragment+=SourceFragment+
-		public Assignment getSourceFragmentAssignment_17_2() { return cSourceFragmentAssignment_17_2; }
+		//sourceContainers+=SourceContainerDescription+
+		public Assignment getSourceContainersAssignment_17_2() { return cSourceContainersAssignment_17_2; }
 		
-		//SourceFragment
-		public RuleCall getSourceFragmentSourceFragmentParserRuleCall_17_2_0() { return cSourceFragmentSourceFragmentParserRuleCall_17_2_0; }
+		//SourceContainerDescription
+		public RuleCall getSourceContainersSourceContainerDescriptionParserRuleCall_17_2_0() { return cSourceContainersSourceContainerDescriptionParserRuleCall_17_2_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_17_3() { return cRightCurlyBracketKeyword_17_3; }
@@ -771,11 +771,11 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//N4mfIdentifier
 		public RuleCall getQualifierN4mfIdentifierParserRuleCall_2_1_0() { return cQualifierN4mfIdentifierParserRuleCall_2_1_0; }
 	}
-	public class SourceFragmentElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.SourceFragment");
+	public class SourceContainerDescriptionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.SourceContainerDescription");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cSourceFragmentTypeAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cSourceFragmentTypeSourceFragmentTypeEnumRuleCall_0_0 = (RuleCall)cSourceFragmentTypeAssignment_0.eContents().get(0);
+		private final Assignment cSourceContainerTypeAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cSourceContainerTypeSourceContainerTypeEnumRuleCall_0_0 = (RuleCall)cSourceContainerTypeAssignment_0.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Assignment cPathsRawAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cPathsRawSTRINGTerminalRuleCall_2_0 = (RuleCall)cPathsRawAssignment_2.eContents().get(0);
@@ -785,18 +785,18 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cPathsRawSTRINGTerminalRuleCall_3_1_0 = (RuleCall)cPathsRawAssignment_3_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
-		//SourceFragment:
-		//	sourceFragmentType=SourceFragmentType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}';
+		//SourceContainerDescription:
+		//	sourceContainerType=SourceContainerType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//sourceFragmentType=SourceFragmentType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}'
+		//sourceContainerType=SourceContainerType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}'
 		public Group getGroup() { return cGroup; }
 		
-		//sourceFragmentType=SourceFragmentType
-		public Assignment getSourceFragmentTypeAssignment_0() { return cSourceFragmentTypeAssignment_0; }
+		//sourceContainerType=SourceContainerType
+		public Assignment getSourceContainerTypeAssignment_0() { return cSourceContainerTypeAssignment_0; }
 		
-		//SourceFragmentType
-		public RuleCall getSourceFragmentTypeSourceFragmentTypeEnumRuleCall_0_0() { return cSourceFragmentTypeSourceFragmentTypeEnumRuleCall_0_0; }
+		//SourceContainerType
+		public RuleCall getSourceContainerTypeSourceContainerTypeEnumRuleCall_0_0() { return cSourceContainerTypeSourceContainerTypeEnumRuleCall_0_0; }
 		
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_1() { return cLeftCurlyBracketKeyword_1; }
@@ -1326,8 +1326,8 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//"validation"
 		public Keyword getVALIDATIONValidationKeyword_7_0() { return cVALIDATIONValidationKeyword_7_0; }
 	}
-	public class SourceFragmentTypeElements extends AbstractEnumRuleElementFinder {
-		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.SourceFragmentType");
+	public class SourceContainerTypeElements extends AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.SourceContainerType");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final EnumLiteralDeclaration cSOURCEEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
 		private final Keyword cSOURCESourceKeyword_0_0 = (Keyword)cSOURCEEnumLiteralDeclaration_0.eContents().get(0);
@@ -1336,7 +1336,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final EnumLiteralDeclaration cTESTEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
 		private final Keyword cTESTTestKeyword_2_0 = (Keyword)cTESTEnumLiteralDeclaration_2.eContents().get(0);
 		
-		//enum SourceFragmentType:
+		//enum SourceContainerType:
 		//	SOURCE='source' | EXTERNAL='external' | TEST='test';
 		public EnumRule getRule() { return rule; }
 		
@@ -1456,8 +1456,8 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	private final ProjectDescriptionElements pProjectDescription;
 	private final ProjectTypeElements eProjectType;
 	private final DeclaredVersionElements pDeclaredVersion;
-	private final SourceFragmentElements pSourceFragment;
-	private final SourceFragmentTypeElements eSourceFragmentType;
+	private final SourceContainerDescriptionElements pSourceContainerDescription;
+	private final SourceContainerTypeElements eSourceContainerType;
 	private final ModuleFilterElements pModuleFilter;
 	private final BootstrapModuleElements pBootstrapModule;
 	private final ModuleFilterSpecifierElements pModuleFilterSpecifier;
@@ -1483,8 +1483,8 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		this.pProjectDescription = new ProjectDescriptionElements();
 		this.eProjectType = new ProjectTypeElements();
 		this.pDeclaredVersion = new DeclaredVersionElements();
-		this.pSourceFragment = new SourceFragmentElements();
-		this.eSourceFragmentType = new SourceFragmentTypeElements();
+		this.pSourceContainerDescription = new SourceContainerDescriptionElements();
+		this.eSourceContainerType = new SourceContainerTypeElements();
 		this.pModuleFilter = new ModuleFilterElements();
 		this.pBootstrapModule = new BootstrapModuleElements();
 		this.pModuleFilterSpecifier = new ModuleFilterSpecifierElements();
@@ -1552,7 +1552,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	//	& ('Output' ':' outputPathRaw=STRING)?
 	//	& ('Libraries' '{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
 	//	& ('Resources' '{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')?
-	//	& ('Sources' '{' sourceFragment+=SourceFragment+ '}')?
+	//	& ('Sources' '{' sourceContainers+=SourceContainerDescription+ '}')?
 	//	& ('ModuleFilters' '{' moduleFilters+=ModuleFilter+ '}')?
 	//	& ('TestedProjects' '{' (testedProjects+=ProjectDependency (',' testedProjects+=ProjectDependency)*)? '}')?
 	//	& ('ModuleLoader' ':' moduleLoader=ModuleLoader)?;
@@ -1592,24 +1592,24 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		return getDeclaredVersionAccess().getRule();
 	}
 	
-	//SourceFragment:
-	//	sourceFragmentType=SourceFragmentType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}';
-	public SourceFragmentElements getSourceFragmentAccess() {
-		return pSourceFragment;
+	//SourceContainerDescription:
+	//	sourceContainerType=SourceContainerType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}';
+	public SourceContainerDescriptionElements getSourceContainerDescriptionAccess() {
+		return pSourceContainerDescription;
 	}
 	
-	public ParserRule getSourceFragmentRule() {
-		return getSourceFragmentAccess().getRule();
+	public ParserRule getSourceContainerDescriptionRule() {
+		return getSourceContainerDescriptionAccess().getRule();
 	}
 	
-	//enum SourceFragmentType:
+	//enum SourceContainerType:
 	//	SOURCE='source' | EXTERNAL='external' | TEST='test';
-	public SourceFragmentTypeElements getSourceFragmentTypeAccess() {
-		return eSourceFragmentType;
+	public SourceContainerTypeElements getSourceContainerTypeAccess() {
+		return eSourceContainerType;
 	}
 	
-	public EnumRule getSourceFragmentTypeRule() {
-		return getSourceFragmentTypeAccess().getRule();
+	public EnumRule getSourceContainerTypeRule() {
+		return getSourceContainerTypeAccess().getRule();
 	}
 	
 	//ModuleFilter:

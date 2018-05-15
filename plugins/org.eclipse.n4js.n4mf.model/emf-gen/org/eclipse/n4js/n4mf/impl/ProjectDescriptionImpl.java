@@ -39,7 +39,7 @@ import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.SourceFragment;
+import org.eclipse.n4js.n4mf.SourceContainerDescription;
 
 import org.eclipse.n4js.utils.io.FileUtils;
 
@@ -68,7 +68,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getOutputPathRaw <em>Output Path Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getLibraryPathsRaw <em>Library Paths Raw</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getResourcePathsRaw <em>Resource Paths Raw</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getSourceFragment <em>Source Fragment</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getTestedProjects <em>Tested Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getModuleLoader <em>Module Loader</em>}</li>
@@ -318,14 +318,14 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	protected EList<String> resourcePathsRaw;
 
 	/**
-	 * The cached value of the '{@link #getSourceFragment() <em>Source Fragment</em>}' containment reference list.
+	 * The cached value of the '{@link #getSourceContainers() <em>Source Containers</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSourceFragment()
+	 * @see #getSourceContainers()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<SourceFragment> sourceFragment;
+	protected EList<SourceContainerDescription> sourceContainers;
 
 	/**
 	 * The cached value of the '{@link #getModuleFilters() <em>Module Filters</em>}' containment reference list.
@@ -751,11 +751,11 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<SourceFragment> getSourceFragment() {
-		if (sourceFragment == null) {
-			sourceFragment = new EObjectContainmentEList<SourceFragment>(SourceFragment.class, this, N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT);
+	public EList<SourceContainerDescription> getSourceContainers() {
+		if (sourceContainers == null) {
+			sourceContainers = new EObjectContainmentEList<SourceContainerDescription>(SourceContainerDescription.class, this, N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS);
 		}
-		return sourceFragment;
+		return sourceContainers;
 	}
 
 	/**
@@ -881,8 +881,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return ((InternalEList<?>)getInitModules()).basicRemove(otherEnd, msgs);
 			case N4mfPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
 				return basicSetExecModule(null, msgs);
-			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
-				return ((InternalEList<?>)getSourceFragment()).basicRemove(otherEnd, msgs);
+			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
+				return ((InternalEList<?>)getSourceContainers()).basicRemove(otherEnd, msgs);
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
 				return ((InternalEList<?>)getModuleFilters()).basicRemove(otherEnd, msgs);
 			case N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:
@@ -933,8 +933,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return getLibraryPathsRaw();
 			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
 				return getResourcePathsRaw();
-			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
-				return getSourceFragment();
+			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
+				return getSourceContainers();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
 				return getModuleFilters();
 			case N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:
@@ -1012,9 +1012,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				getResourcePathsRaw().clear();
 				getResourcePathsRaw().addAll((Collection<? extends String>)newValue);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
-				getSourceFragment().clear();
-				getSourceFragment().addAll((Collection<? extends SourceFragment>)newValue);
+			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
+				getSourceContainers().clear();
+				getSourceContainers().addAll((Collection<? extends SourceContainerDescription>)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
 				getModuleFilters().clear();
@@ -1090,8 +1090,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
 				getResourcePathsRaw().clear();
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
-				getSourceFragment().clear();
+			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
+				getSourceContainers().clear();
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
 				getModuleFilters().clear();
@@ -1148,8 +1148,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return libraryPathsRaw != null && !libraryPathsRaw.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
 				return resourcePathsRaw != null && !resourcePathsRaw.isEmpty();
-			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_FRAGMENT:
-				return sourceFragment != null && !sourceFragment.isEmpty();
+			case N4mfPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
+				return sourceContainers != null && !sourceContainers.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
 				return moduleFilters != null && !moduleFilters.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:

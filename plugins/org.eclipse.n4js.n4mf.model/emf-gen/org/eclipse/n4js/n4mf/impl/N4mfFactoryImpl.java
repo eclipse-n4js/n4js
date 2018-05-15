@@ -67,7 +67,7 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 		switch (eClass.getClassifierID()) {
 			case N4mfPackage.PROJECT_DESCRIPTION: return createProjectDescription();
 			case N4mfPackage.DECLARED_VERSION: return createDeclaredVersion();
-			case N4mfPackage.SOURCE_FRAGMENT: return createSourceFragment();
+			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION: return createSourceContainerDescription();
 			case N4mfPackage.MODULE_FILTER: return createModuleFilter();
 			case N4mfPackage.BOOTSTRAP_MODULE: return createBootstrapModule();
 			case N4mfPackage.PROJECT_REFERENCE: return createProjectReference();
@@ -89,8 +89,8 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 		switch (eDataType.getClassifierID()) {
 			case N4mfPackage.PROJECT_TYPE:
 				return createProjectTypeFromString(eDataType, initialValue);
-			case N4mfPackage.SOURCE_FRAGMENT_TYPE:
-				return createSourceFragmentTypeFromString(eDataType, initialValue);
+			case N4mfPackage.SOURCE_CONTAINER_TYPE:
+				return createSourceContainerTypeFromString(eDataType, initialValue);
 			case N4mfPackage.MODULE_FILTER_TYPE:
 				return createModuleFilterTypeFromString(eDataType, initialValue);
 			case N4mfPackage.PROJECT_DEPENDENCY_SCOPE:
@@ -112,8 +112,8 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 		switch (eDataType.getClassifierID()) {
 			case N4mfPackage.PROJECT_TYPE:
 				return convertProjectTypeToString(eDataType, instanceValue);
-			case N4mfPackage.SOURCE_FRAGMENT_TYPE:
-				return convertSourceFragmentTypeToString(eDataType, instanceValue);
+			case N4mfPackage.SOURCE_CONTAINER_TYPE:
+				return convertSourceContainerTypeToString(eDataType, instanceValue);
 			case N4mfPackage.MODULE_FILTER_TYPE:
 				return convertModuleFilterTypeToString(eDataType, instanceValue);
 			case N4mfPackage.PROJECT_DEPENDENCY_SCOPE:
@@ -150,9 +150,9 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SourceFragment createSourceFragment() {
-		SourceFragmentImpl sourceFragment = new SourceFragmentImpl();
-		return sourceFragment;
+	public SourceContainerDescription createSourceContainerDescription() {
+		SourceContainerDescriptionImpl sourceContainerDescription = new SourceContainerDescriptionImpl();
+		return sourceContainerDescription;
 	}
 
 	/**
@@ -240,8 +240,8 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SourceFragmentType createSourceFragmentTypeFromString(EDataType eDataType, String initialValue) {
-		SourceFragmentType result = SourceFragmentType.get(initialValue);
+	public SourceContainerType createSourceContainerTypeFromString(EDataType eDataType, String initialValue) {
+		SourceContainerType result = SourceContainerType.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
@@ -251,7 +251,7 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String convertSourceFragmentTypeToString(EDataType eDataType, Object instanceValue) {
+	public String convertSourceContainerTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

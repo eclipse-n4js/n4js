@@ -49,8 +49,8 @@ public class QualifiedNameProvider extends DefaultDeclarativeQualifiedNameProvid
 		}
 
 		@Override
-		public String caseSourceFragment(SourceFragment object) {
-			return object.getSourceFragmentType() + ": " + object.getPaths().toString();
+		public String caseSourceContainerDescription(SourceContainerDescription object) {
+			return object.getSourceContainerType() + ": " + object.getPaths().toString();
 		}
 
 		@Override

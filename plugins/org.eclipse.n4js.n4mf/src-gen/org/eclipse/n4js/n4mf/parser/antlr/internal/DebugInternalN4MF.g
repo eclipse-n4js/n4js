@@ -154,7 +154,7 @@ ruleProjectDescription:
 	(
 		'Sources'
 		'{'
-		ruleSourceFragment
+		ruleSourceContainerDescription
 		+
 		'}'
 	)?
@@ -205,9 +205,9 @@ ruleDeclaredVersion:
 	)?
 ;
 
-// Rule SourceFragment
-ruleSourceFragment:
-	ruleSourceFragmentType
+// Rule SourceContainerDescription
+ruleSourceContainerDescription:
+	ruleSourceContainerType
 	'{'
 	RULE_STRING
 	(
@@ -361,8 +361,8 @@ ruleProjectType:
 	)
 ;
 
-// Rule SourceFragmentType
-ruleSourceFragmentType:
+// Rule SourceContainerType
+ruleSourceContainerType:
 	(
 		'source'
 		    |

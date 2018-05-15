@@ -16,7 +16,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IMarker
@@ -28,6 +27,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import org.junit.Ignore
+import org.eclipse.n4js.n4mf.SourceContainerType
 
 /**
  */
@@ -258,9 +258,9 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	def void testDeleteExternalFolderValidateManifestWithoutOpenedEditors() {
 
 		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [
-			it.sourceFragment += N4mfFactory.eINSTANCE.createSourceFragment => [
+			it.sourceContainers += N4mfFactory.eINSTANCE.createSourceContainerDescription => [
 				pathsRaw.addAll('ext');
-				sourceFragmentType = SourceFragmentType.EXTERNAL;
+				sourceContainerType = SourceContainerType.EXTERNAL;
 			];
 		]);
 		configureProjectWithXtext(project);

@@ -16,13 +16,13 @@ import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.SourceFragment
-import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.eclipse.n4js.utils.nodemodel.SiblingIterator
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.n4mf.SourceContainerDescription
 
 /**
  * This class provides basic change functionality for N4JS manifest files.
@@ -38,7 +38,7 @@ class ManifestChangeProvider {
 	public static def IAtomicChange addSourceFoldersToManifest(Resource manifestResource, List<String> sourceFolders) {
 		val manifestSourceFolders = new ArrayList<String>(sourceFolders);
 
-		val sourceFragment = manifestResource.allContents.filter(SourceFragment).filter[ fragment | fragment.sourceFragmentType == SourceFragmentType.SOURCE].head;
+		val sourceFragment = manifestResource.allContents.filter(SourceContainerDescription).filter[ fragment | fragment.sourceContainerType == SourceContainerType.SOURCE].head;
 		manifestSourceFolders.addAll(sourceFragment.paths);
 
 		val sourceFragmentNode = NodeModelUtils.findActualNodeFor(sourceFragment);

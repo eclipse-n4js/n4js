@@ -86,9 +86,9 @@ public class N4mfSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4mfPackage.SOURCE_FRAGMENT: {
-				SourceFragment sourceFragment = (SourceFragment)theEObject;
-				T result = caseSourceFragment(sourceFragment);
+			case N4mfPackage.SOURCE_CONTAINER_DESCRIPTION: {
+				SourceContainerDescription sourceContainerDescription = (SourceContainerDescription)theEObject;
+				T result = caseSourceContainerDescription(sourceContainerDescription);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -164,17 +164,17 @@ public class N4mfSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Source Fragment</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Source Container Description</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Source Fragment</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Source Container Description</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSourceFragment(SourceFragment object) {
+	public T caseSourceContainerDescription(SourceContainerDescription object) {
 		return null;
 	}
 

@@ -951,18 +951,18 @@ ruleProjectDescription returns [EObject current=null]
 							(
 								(
 									{
-										newCompositeNode(grammarAccess.getProjectDescriptionAccess().getSourceFragmentSourceFragmentParserRuleCall_17_2_0());
+										newCompositeNode(grammarAccess.getProjectDescriptionAccess().getSourceContainersSourceContainerDescriptionParserRuleCall_17_2_0());
 									}
-									lv_sourceFragment_75_0=ruleSourceFragment
+									lv_sourceContainers_75_0=ruleSourceContainerDescription
 									{
 										if ($current==null) {
 											$current = createModelElementForParent(grammarAccess.getProjectDescriptionRule());
 										}
 										add(
 											$current,
-											"sourceFragment",
-											lv_sourceFragment_75_0,
-											"org.eclipse.n4js.n4mf.N4MF.SourceFragment");
+											"sourceContainers",
+											lv_sourceContainers_75_0,
+											"org.eclipse.n4js.n4mf.N4MF.SourceContainerDescription");
 										afterParserOrEnumRuleCall();
 									}
 								)
@@ -1246,15 +1246,15 @@ ruleDeclaredVersion returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleSourceFragment
-entryRuleSourceFragment returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSourceFragmentRule()); }
-	iv_ruleSourceFragment=ruleSourceFragment
-	{ $current=$iv_ruleSourceFragment.current; }
+// Entry rule entryRuleSourceContainerDescription
+entryRuleSourceContainerDescription returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getSourceContainerDescriptionRule()); }
+	iv_ruleSourceContainerDescription=ruleSourceContainerDescription
+	{ $current=$iv_ruleSourceContainerDescription.current; }
 	EOF;
 
-// Rule SourceFragment
-ruleSourceFragment returns [EObject current=null]
+// Rule SourceContainerDescription
+ruleSourceContainerDescription returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -1265,35 +1265,35 @@ ruleSourceFragment returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getSourceFragmentAccess().getSourceFragmentTypeSourceFragmentTypeEnumRuleCall_0_0());
+					newCompositeNode(grammarAccess.getSourceContainerDescriptionAccess().getSourceContainerTypeSourceContainerTypeEnumRuleCall_0_0());
 				}
-				lv_sourceFragmentType_0_0=ruleSourceFragmentType
+				lv_sourceContainerType_0_0=ruleSourceContainerType
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getSourceFragmentRule());
+						$current = createModelElementForParent(grammarAccess.getSourceContainerDescriptionRule());
 					}
 					set(
 						$current,
-						"sourceFragmentType",
-						lv_sourceFragmentType_0_0,
-						"org.eclipse.n4js.n4mf.N4MF.SourceFragmentType");
+						"sourceContainerType",
+						lv_sourceContainerType_0_0,
+						"org.eclipse.n4js.n4mf.N4MF.SourceContainerType");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
 		otherlv_1=LeftCurlyBracket
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSourceFragmentAccess().getLeftCurlyBracketKeyword_1());
+			newLeafNode(otherlv_1, grammarAccess.getSourceContainerDescriptionAccess().getLeftCurlyBracketKeyword_1());
 		}
 		(
 			(
 				lv_pathsRaw_2_0=RULE_STRING
 				{
-					newLeafNode(lv_pathsRaw_2_0, grammarAccess.getSourceFragmentAccess().getPathsRawSTRINGTerminalRuleCall_2_0());
+					newLeafNode(lv_pathsRaw_2_0, grammarAccess.getSourceContainerDescriptionAccess().getPathsRawSTRINGTerminalRuleCall_2_0());
 				}
 				{
 					if ($current==null) {
-						$current = createModelElement(grammarAccess.getSourceFragmentRule());
+						$current = createModelElement(grammarAccess.getSourceContainerDescriptionRule());
 					}
 					addWithLastConsumed(
 						$current,
@@ -1306,17 +1306,17 @@ ruleSourceFragment returns [EObject current=null]
 		(
 			otherlv_3=Comma
 			{
-				newLeafNode(otherlv_3, grammarAccess.getSourceFragmentAccess().getCommaKeyword_3_0());
+				newLeafNode(otherlv_3, grammarAccess.getSourceContainerDescriptionAccess().getCommaKeyword_3_0());
 			}
 			(
 				(
 					lv_pathsRaw_4_0=RULE_STRING
 					{
-						newLeafNode(lv_pathsRaw_4_0, grammarAccess.getSourceFragmentAccess().getPathsRawSTRINGTerminalRuleCall_3_1_0());
+						newLeafNode(lv_pathsRaw_4_0, grammarAccess.getSourceContainerDescriptionAccess().getPathsRawSTRINGTerminalRuleCall_3_1_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getSourceFragmentRule());
+							$current = createModelElement(grammarAccess.getSourceContainerDescriptionRule());
 						}
 						addWithLastConsumed(
 							$current,
@@ -1329,7 +1329,7 @@ ruleSourceFragment returns [EObject current=null]
 		)*
 		otherlv_5=RightCurlyBracket
 		{
-			newLeafNode(otherlv_5, grammarAccess.getSourceFragmentAccess().getRightCurlyBracketKeyword_4());
+			newLeafNode(otherlv_5, grammarAccess.getSourceContainerDescriptionAccess().getRightCurlyBracketKeyword_4());
 		}
 	)
 ;
@@ -2050,8 +2050,8 @@ ruleProjectType returns [Enumerator current=null]
 	)
 ;
 
-// Rule SourceFragmentType
-ruleSourceFragmentType returns [Enumerator current=null]
+// Rule SourceContainerType
+ruleSourceContainerType returns [Enumerator current=null]
 @init {
 	enterRule();
 }
@@ -2062,24 +2062,24 @@ ruleSourceFragmentType returns [Enumerator current=null]
 		(
 			enumLiteral_0=Source
 			{
-				$current = grammarAccess.getSourceFragmentTypeAccess().getSOURCEEnumLiteralDeclaration_0().getEnumLiteral().getInstance();
-				newLeafNode(enumLiteral_0, grammarAccess.getSourceFragmentTypeAccess().getSOURCEEnumLiteralDeclaration_0());
+				$current = grammarAccess.getSourceContainerTypeAccess().getSOURCEEnumLiteralDeclaration_0().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_0, grammarAccess.getSourceContainerTypeAccess().getSOURCEEnumLiteralDeclaration_0());
 			}
 		)
 		    |
 		(
 			enumLiteral_1=External
 			{
-				$current = grammarAccess.getSourceFragmentTypeAccess().getEXTERNALEnumLiteralDeclaration_1().getEnumLiteral().getInstance();
-				newLeafNode(enumLiteral_1, grammarAccess.getSourceFragmentTypeAccess().getEXTERNALEnumLiteralDeclaration_1());
+				$current = grammarAccess.getSourceContainerTypeAccess().getEXTERNALEnumLiteralDeclaration_1().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_1, grammarAccess.getSourceContainerTypeAccess().getEXTERNALEnumLiteralDeclaration_1());
 			}
 		)
 		    |
 		(
 			enumLiteral_2=Test
 			{
-				$current = grammarAccess.getSourceFragmentTypeAccess().getTESTEnumLiteralDeclaration_2().getEnumLiteral().getInstance();
-				newLeafNode(enumLiteral_2, grammarAccess.getSourceFragmentTypeAccess().getTESTEnumLiteralDeclaration_2());
+				$current = grammarAccess.getSourceContainerTypeAccess().getTESTEnumLiteralDeclaration_2().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_2, grammarAccess.getSourceContainerTypeAccess().getTESTEnumLiteralDeclaration_2());
 			}
 		)
 	)

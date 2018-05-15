@@ -84,8 +84,8 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 				return createDeclaredVersionAdapter();
 			}
 			@Override
-			public Adapter caseSourceFragment(SourceFragment object) {
-				return createSourceFragmentAdapter();
+			public Adapter caseSourceContainerDescription(SourceContainerDescription object) {
+				return createSourceContainerDescriptionAdapter();
 			}
 			@Override
 			public Adapter caseModuleFilter(ModuleFilter object) {
@@ -160,16 +160,16 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.SourceFragment <em>Source Fragment</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.SourceContainerDescription <em>Source Container Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.SourceFragment
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription
 	 * @generated
 	 */
-	public Adapter createSourceFragmentAdapter() {
+	public Adapter createSourceContainerDescriptionAdapter() {
 		return null;
 	}
 

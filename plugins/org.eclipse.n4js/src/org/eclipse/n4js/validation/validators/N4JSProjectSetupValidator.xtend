@@ -37,8 +37,8 @@ import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceFragment
-import org.eclipse.n4js.n4mf.SourceFragmentType
+import org.eclipse.n4js.n4mf.SourceContainerDescription
+import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.n4js.projectModel.IN4JSArchive
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -337,11 +337,11 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Checks if a project containing {@link SourceFragmentType#TEST}  requires (directly or transitively) on {@link ProjectType#RUNTIME_LIBRARY test runtime library}.
+	 * Checks if a project containing {@link SourceContainerType#TEST}  requires (directly or transitively) on {@link ProjectType#RUNTIME_LIBRARY test runtime library}.
 	 */
 	private def holdsProjectWithTestFragmentDependsOnTestLibrary(IN4JSProject project, ProjectDescription projectDescription) {
 
-		val hasTestFragment = projectDescription.sourceFragment.findFirst[sf| SourceFragmentType.TEST.equals(sf.sourceFragmentType)] !== null;
+		val hasTestFragment = projectDescription.sourceContainers.findFirst[sf| SourceContainerType.TEST.equals(sf.getSourceContainerType)] !== null;
 
 		if(!hasTestFragment){
 			return;
@@ -622,13 +622,13 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		val outputPath = new Path(outputPathName);
-		val sourceTypes = projectDescription.sourceFragment;
+		val sourceTypes = projectDescription.sourceContainers;
 
-		for (SourceFragment sourceFrgmt : sourceTypes) {
+		for (SourceContainerDescription sourceFrgmt : sourceTypes) {
 			for (var i = 0; i < sourceFrgmt.paths.size; i++) {
 				val sourcePathStr = sourceFrgmt.paths.get(i);
 				val sourcePath = new Path(sourcePathStr);
-				val srcFrgmtName = sourceFrgmt.sourceFragmentType.getName().toString;
+				val srcFrgmtName = sourceFrgmt.getSourceContainerType.getName().toString;
 
 				if (".".equals(sourcePathStr) || sourcePath.equals(outputPath) || sourcePath.isPrefixOf(outputPath)) {
 					val containingFolder = "The output";
@@ -641,7 +641,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 					val containingFolder = "A " + srcFrgmtName;
 					val nestedFolder = "the output";
 					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
-					addIssue(message, sourceFrgmt, SOURCE_FRAGMENT__PATHS_RAW, i, OUTPUT_AND_SOURCES_FOLDER_NESTING);
+					addIssue(message, sourceFrgmt, SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW, i, OUTPUT_AND_SOURCES_FOLDER_NESTING);
 				}
 			}
 		}

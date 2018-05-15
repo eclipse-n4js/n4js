@@ -10,17 +10,17 @@
  */
 package org.eclipse.n4js.tests.manifest
 
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.core.resources.IFile
+import org.eclipse.core.resources.IFolder
+import org.eclipse.core.resources.IProject
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.n4mf.ModuleFilter
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.ModuleFilterType
 import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.SourceFragmentType
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IFolder
-import org.eclipse.core.resources.IProject
-import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.junit.Before
 import org.junit.Test
 
@@ -71,7 +71,7 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 
 	def void setProjectAsSource() {
 		val pd = getProjectDescription;
-		val srcPaths = pd.sourceFragment.filter[sourceFragmentType == SourceFragmentType.SOURCE].head.pathsRaw;
+		val srcPaths = pd.sourceContainers.filter[getSourceContainerType == SourceContainerType.SOURCE].head.pathsRaw;
 		srcPaths.clear;
 		srcPaths.add(".");
 		pd.eResource.save(null)

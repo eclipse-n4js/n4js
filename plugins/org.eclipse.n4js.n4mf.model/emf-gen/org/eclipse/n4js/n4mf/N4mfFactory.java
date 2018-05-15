@@ -48,13 +48,13 @@ public interface N4mfFactory extends EFactory {
 	DeclaredVersion createDeclaredVersion();
 
 	/**
-	 * Returns a new object of class '<em>Source Fragment</em>'.
+	 * Returns a new object of class '<em>Source Container Description</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Source Fragment</em>'.
+	 * @return a new object of class '<em>Source Container Description</em>'.
 	 * @generated
 	 */
-	SourceFragment createSourceFragment();
+	SourceContainerDescription createSourceContainerDescription();
 
 	/**
 	 * Returns a new object of class '<em>Module Filter</em>'.

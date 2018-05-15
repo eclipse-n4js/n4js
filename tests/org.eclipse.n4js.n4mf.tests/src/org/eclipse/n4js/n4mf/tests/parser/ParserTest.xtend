@@ -16,7 +16,7 @@ import org.eclipse.n4js.n4mf.N4MFInjectorProvider
 import org.eclipse.n4js.n4mf.ProjectDependencyScope
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceFragmentType
+import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -109,13 +109,13 @@ class ParserTest {
 		val errors = project.eResource.errors
 		assertTrue(errors.toString, errors.empty)
 
-		assertEquals(3, project.sourceFragment.size)
-		assertEquals(SourceFragmentType.SOURCE, project.sourceFragment.head.sourceFragmentType)
-		assertEquals(#["src", "src2"], project.sourceFragment.head.paths)
-		assertEquals(SourceFragmentType.TEST, project.sourceFragment.get(1).sourceFragmentType)
-		assertEquals(#["src-test"], project.sourceFragment.get(1).paths)
-		assertEquals(SourceFragmentType.EXTERNAL, project.sourceFragment.last.sourceFragmentType)
-		assertEquals(#["external", "external2"], project.sourceFragment.last.paths)
+		assertEquals(3, project.sourceContainers.size)
+		assertEquals(SourceContainerType.SOURCE, project.sourceContainers.head.getSourceContainerType)
+		assertEquals(#["src", "src2"], project.sourceContainers.head.paths)
+		assertEquals(SourceContainerType.TEST, project.sourceContainers.get(1).getSourceContainerType)
+		assertEquals(#["src-test"], project.sourceContainers.get(1).paths)
+		assertEquals(SourceContainerType.EXTERNAL, project.sourceContainers.last.getSourceContainerType)
+		assertEquals(#["external", "external2"], project.sourceContainers.last.paths)
 
 		assertEquals(2, project.moduleFilters.size)
 		assertEquals(ModuleFilterType.NO_VALIDATE, project.moduleFilters.head.moduleFilterType)

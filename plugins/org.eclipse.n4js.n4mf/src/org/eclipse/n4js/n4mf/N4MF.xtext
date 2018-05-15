@@ -47,7 +47,7 @@ ProjectDescription:
 	&	('Output' 			':' outputPathRaw=STRING)?
 	&	('Libraries' 		'{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
 	&	('Resources' 		'{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')?
-	&	('Sources' 			'{' sourceFragment+=SourceFragment+ '}')?
+	&	('Sources' 			'{' sourceContainers+=SourceContainerDescription+ '}')?
 
 	& 	('ModuleFilters'	'{' moduleFilters+=ModuleFilter+ '}')?
 
@@ -72,11 +72,11 @@ DeclaredVersion :
 	major=INT ('.' minor=INT ('.' micro=INT)?)? ('-' qualifier=N4mfIdentifier)?
 ;
 
-SourceFragment:
-	sourceFragmentType=SourceFragmentType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}'
+SourceContainerDescription:
+	sourceContainerType=SourceContainerType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}'
 ;
 
-enum SourceFragmentType :
+enum SourceContainerType :
 	SOURCE = 'source' | EXTERNAL = 'external' | TEST = 'test'
 ;
 

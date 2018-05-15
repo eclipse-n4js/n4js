@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4mf.ModuleFilterType
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.xtext.Assignment
@@ -44,6 +43,7 @@ import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static extension com.google.common.base.Strings.nullToEmpty
 import static extension com.google.common.base.Strings.repeat
 import static extension com.google.common.collect.Iterables.concat
+import org.eclipse.n4js.n4mf.SourceContainerType
 
 /**
  * Content assist proposal provider for N4JS manifest.
@@ -82,7 +82,7 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 		} else if (eContainer instanceof EnumLiteralDeclaration) {
 			val enumDecl = eContainer as EnumLiteralDeclaration;
 			val instance = enumDecl.enumLiteral.instance;
-			if (instance instanceof SourceFragmentType || instance instanceof ModuleFilterType) {
+			if (instance instanceof SourceContainerType || instance instanceof ModuleFilterType) {
 				return createBlockProposal(1) -> NUMBER_OF_SPACES_PER_TAB + 2;
 			}
 		}

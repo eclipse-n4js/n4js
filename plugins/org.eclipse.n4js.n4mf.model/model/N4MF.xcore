@@ -43,7 +43,7 @@ class ProjectDescription {
 	String outputPathRaw
 	String[] libraryPathsRaw
 	String[] resourcePathsRaw
-	contains SourceFragment[] sourceFragment
+	contains SourceContainerDescription[] sourceContainers
 	contains ModuleFilter[] moduleFilters
 	contains ProjectDependency[] testedProjects
 	ModuleLoader moduleLoader
@@ -113,8 +113,8 @@ enum ProjectType {
 /**
  * List the in the project contained generation aware source folders categorized by their later usage.
  */
-class SourceFragment {
-	SourceFragmentType sourceFragmentType
+class SourceContainerDescription {
+	SourceContainerType sourceContainerType
 	String[] pathsRaw
 
 	/**
@@ -123,14 +123,14 @@ class SourceFragment {
 	 * return value of this compare method is identical to the specification of the {@link Comparable}
 	 * interface.
 	 */
-	op int compareByFragmentType(SourceFragment other) {
+	op int compareByFragmentType(SourceContainerDescription other) {
 		if (null === other) {
 			return -1;
 		}
-		if (null === sourceFragmentType) {
-			return if (null === other.sourceFragmentType) 0 else 1;
+		if (null === sourceContainerType) {
+			return if (null === other.sourceContainerType) 0 else 1;
 		}
-		return sourceFragmentType.compareTo(other.sourceFragmentType);
+		return sourceContainerType.compareTo(other.sourceContainerType);
 	}
 
 	op String[] getPaths() {
@@ -148,7 +148,7 @@ class SourceFragment {
  * Categorizes a source fragment to either contain sources files (SOURCE),
  * tests (TEST) or external classes (EXTERNAL).
  */
-enum SourceFragmentType {
+enum SourceContainerType {
 	SOURCE = 0,
 	TEST = 1,
 	EXTERNAL = 2
