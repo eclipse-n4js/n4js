@@ -81,7 +81,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 
 	def void addFolderAsSource(String folderName) {
 		val pd = getProjectDescription
-		pd.sourceFragment.filter[sourceFragmentType == SourceFragmentType.SOURCE].head.paths += folderName
+		pd.sourceFragment.filter[sourceFragmentType == SourceFragmentType.SOURCE].head.pathsRaw += folderName
 		pd.eResource.save(null)
 		waitForAutoBuild();
 	}

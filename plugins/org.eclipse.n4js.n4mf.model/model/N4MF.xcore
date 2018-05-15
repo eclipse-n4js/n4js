@@ -22,25 +22,9 @@
 	language="")
 package org.eclipse.n4js.n4mf
 
-/**
- * Describes a project by making it identifiable by projectId, vendorId and
- * declared version.
- *
- * The project type defines how a project should be bundled.
- *
- * Project paths decide about which resources should be bundled and be visible
- * to other projects that list this project as dependency. So e.g. the files
- * contained in a declared source folder will be in scope for a project that
- * has this project as a test scoped dependency.
- *
- * The listed dependencies lists all projects this project depends on. A dependency
- * is categorized to be only while testing or at runtime. This plays together with
- * projects paths (source or test).
- *
- * To be later validated
- * - validate if manifest is in project
- * - check if file is in root folder
- */
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.n4js.utils.io.FileUtils
+
 class ProjectDescription extends SimpleProjectDescription {
 	String vendorName
 	contains DeclaredVersion projectVersion
@@ -54,13 +38,39 @@ class ProjectDescription extends SimpleProjectDescription {
 	contains ImplementedProjects implementedProjects
 	contains InitModules initModules
 	contains ExecModule execModule
-	String outputPath
-	String[] libraryPaths
-	String[] resourcePaths
+	String outputPathRaw
+	String[] libraryPathsRaw
+	String[] resourcePathsRaw
 	contains SourceFragment[] sourceFragment
 	contains ModuleFilter[] moduleFilters
 	contains TestedProjects testedProjects
 	ModuleLoader moduleLoader
+
+	op String getOutputPath() {
+		return FileUtils.normalizeDotWhenEmpty(outputPathRaw);
+	}
+
+	op void setOutputPath(String newOutputPath) {
+		this.outputPathRaw = newOutputPath;
+	}
+
+	op String[] getLibraryPaths() {
+		val paths = new BasicEList(libraryPathsRaw.length());
+		for (String pathRaw : libraryPathsRaw) {
+			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
+			paths.add(normalizedPath);
+		}
+		return paths;
+	}
+
+	op String[] getResourcePaths() {
+		val paths = new BasicEList(resourcePathsRaw.length());
+		for (String pathRaw : resourcePathsRaw) {
+			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
+			paths.add(normalizedPath);
+		}
+		return paths;
+	}
 
 	/**
 	 * Convenient method for getting all tested projects defined for the current project description.
@@ -212,13 +222,14 @@ class DeclaredVersion {
  * </description>
  */
 enum ProjectType {
-	APPLICATION,
-	PROCESSOR,
-	LIBRARY,
-	API,
-	RUNTIME_ENVIRONMENT,
-	RUNTIME_LIBRARY,
-	TEST
+	APPLICATION = 0,
+	PROCESSOR = 1,
+	LIBRARY = 2,
+	API = 3,
+	RUNTIME_ENVIRONMENT = 4,
+	RUNTIME_LIBRARY = 5,
+	TEST = 6,
+	VALIDATION = 7
 }
 
 /**
@@ -226,7 +237,7 @@ enum ProjectType {
  */
 class SourceFragment {
 	SourceFragmentType sourceFragmentType
-	String[] paths
+	String[] pathsRaw
 
 	/**
 	 * Compares the current source fragment instance with the {@code other} one based on the
@@ -243,6 +254,16 @@ class SourceFragment {
 		}
 		return sourceFragmentType.compareTo(other.sourceFragmentType);
 	}
+
+	op String[] getPaths() {
+		val paths = new BasicEList(pathsRaw.length());
+		for (String pathRaw : pathsRaw) {
+			val normalizedPath = FileUtils.normalizeDotWhenEmpty(pathRaw);
+			paths.add(normalizedPath);
+		}
+		return paths;
+	}
+
 }
 
 /**
