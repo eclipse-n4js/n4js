@@ -33,7 +33,7 @@ class N4JSNpmManifestContentProvider {
 		ProjectVersion: «IF version.isNullOrEmpty»0.0.1-SNAPSHOT«ELSE»«version»«ENDIF»
 		VendorId: npm
 		VendorName: "npm"
-		Output: "«outputFolder»«
+		Output: "«outputFolder»"«
 		IF Strings.isNullOrEmpty(main) === false»
 		MainModule: "«main»"«
 		ENDIF»
