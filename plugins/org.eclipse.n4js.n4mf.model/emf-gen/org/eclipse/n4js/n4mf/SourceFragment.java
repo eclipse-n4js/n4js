@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.SourceFragment#getSourceFragmentType <em>Source Fragment Type</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.SourceFragment#getPaths <em>Paths</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.SourceFragment#getPathsRaw <em>Paths Raw</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceFragment()
@@ -67,20 +67,20 @@ public interface SourceFragment extends EObject {
 	void setSourceFragmentType(SourceFragmentType value);
 
 	/**
-	 * Returns the value of the '<em><b>Paths</b></em>' attribute list.
+	 * Returns the value of the '<em><b>Paths Raw</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Paths</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Paths Raw</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Paths</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceFragment_Paths()
+	 * @return the value of the '<em>Paths Raw</em>' attribute list.
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceFragment_PathsRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
-	EList<String> getPaths();
+	EList<String> getPathsRaw();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -97,5 +97,14 @@ public interface SourceFragment extends EObject {
 	 * @generated
 	 */
 	int compareByFragmentType(SourceFragment other);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getPathsRaw(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; paths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _pathsRaw = this.getPathsRaw();\nfor (final &lt;%java.lang.String%&gt; pathRaw : _pathsRaw)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(pathRaw);\n\t\tpaths.add(normalizedPath);\n\t}\n}\nreturn paths;'"
+	 * @generated
+	 */
+	EList<String> getPaths();
 
 } // SourceFragment
