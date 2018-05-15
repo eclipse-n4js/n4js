@@ -41,8 +41,8 @@ ProjectDescription:
 	&	('ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)? '}')?
 
 	//only RuntimeLibrary and RuntimeEnvironemnt
-	&	('InitModules'	'{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}' )?
-	&	('ExecModule'	':' execModule=BootstrapModule)?
+	&	('InitModules'		'{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}' )?
+	&	('ExecModule'		':' execModule=BootstrapModule)?
 
 	&	('Output' 			':' outputPathRaw=STRING)?
 	&	('Libraries' 		'{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
