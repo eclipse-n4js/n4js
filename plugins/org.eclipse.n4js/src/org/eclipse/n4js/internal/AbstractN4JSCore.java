@@ -13,6 +13,7 @@ package org.eclipse.n4js.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -104,17 +105,22 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 		List<String> relativeResolvedPaths = new ArrayList<>();
 		for (ModuleFilterSpecifier spec : moduleFilter.getModuleSpecifiers()) {
 			String specPath = spec.getSourcePath();
-			if (specPath != null)
-				if (projectRelativeSourcePath.equals(specPath) == false)
-					// different source container, different filter path
-					// nothing will be found here
-					continue;
+			if (specPath != null && !projectRelativeSourcePath.equals(specPath)) {
+				// different source container, different filter path
+				// nothing will be found here
+				continue;
+			}
 
-			String basePathToCheck = absoluteLocationPath + "/"
-					+ (specPath != null ? specPath : projectRelativeSourcePath);
+			Path basePath = new Path(absoluteLocationPath);
+			if (specPath != null) {
+				basePath.append(specPath);
+			} else {
+				basePath.append(projectRelativeSourcePath);
+			}
+			String basePathStr = basePath.toString();
 			String pathsToFind = "/" + spec.getModuleSpecifierWithWildcard();
-			List<String> resolvedPaths = WildcardPathFilter.collectPathsByWildcardPath(basePathToCheck,
-					pathsToFind);
+
+			List<String> resolvedPaths = WildcardPathFilter.collectPathsByWildcardPath(basePathStr, pathsToFind);
 			relativeResolvedPaths.addAll(resolvedPaths);
 		}
 		return relativeResolvedPaths;

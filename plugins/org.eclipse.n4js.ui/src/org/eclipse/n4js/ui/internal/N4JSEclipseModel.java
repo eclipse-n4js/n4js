@@ -255,7 +255,9 @@ public class N4JSEclipseModel extends N4JSModel {
 		N4JSEclipseProject casted = (N4JSEclipseProject) project;
 		IProject eclipseProject = casted.getProject();
 		final IContainer container;
-		if (".".equals(relativeLocation)) {
+
+		String relPath = new Path(relativeLocation).toString();
+		if (relPath.isEmpty() || ".".equals(relPath)) {
 			container = eclipseProject;
 		} else {
 			container = eclipseProject.getFolder(relativeLocation);

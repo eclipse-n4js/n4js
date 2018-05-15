@@ -19,6 +19,7 @@ import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.n4js.n4mf.N4mfPackage
 
 /**
  * This class provides basic change functionality for N4JS manifest files.
@@ -28,6 +29,7 @@ class ManifestChangeProvider {
 	private static val PROJECT_DEPENDENCIES_KEY = "ProjectDependencies";
 	private static val REQUIRED_RUNTIME_LIBRARIES_KEY = "RequiredRuntimeLibraries";
 	private static val EXTENDED_RUNTIME_ENVIRONMENT_KEY = "ExtendedRuntimeEnvironment"
+	private static val PROJECT_TYPE_KEY = "ProjectType"
 
 
 	public static def IAtomicChange addSourceFoldersToManifest(Resource manifestResource, List<String> sourceFolders) {
@@ -165,6 +167,29 @@ class ManifestChangeProvider {
 			val projectDescriptionNode = NodeModelUtils.findActualNodeFor(projectDescription);
 			return new Replacement(manifestResource.URI, projectDescriptionNode.offset + projectDescriptionNode.length, 0,
 								   "\n" + EXTENDED_RUNTIME_ENVIRONMENT_KEY + ": " + runtimeEnvironment);
+		}
+	}
+
+	/**
+	 * Returns change instance to set the ProjectType to the given value.
+	 *
+	 * @param manifestResource The manifest resource
+	 * @param runtimeEnvironment The runtime environment to set
+	 * @param projectDescription The project description object of the manifest
+	 */
+	public static def IAtomicChange setProjectType(Resource manifestResource, String projectType, ProjectDescription projectDescription) {
+		val newProjectType = projectType.toLowerCase;
+		val prjTypeNodes = NodeModelUtils.findNodesForFeature(projectDescription, N4mfPackage.Literals.PROJECT_DESCRIPTION__PROJECT_TYPE);
+		if (prjTypeNodes.isEmpty) {
+			// Append a new entry
+			val pidNodes = NodeModelUtils.findNodesForFeature(projectDescription, N4mfPackage.Literals.SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID);
+			val location = if (pidNodes.isEmpty) 0 else pidNodes.get(0).endOffset;
+			val newEntry = "\n" + PROJECT_TYPE_KEY + ": " + newProjectType + (if (location === 0) "\n" else "");
+			return new Replacement(manifestResource.URI, location, 0, newEntry);
+		} else {
+			// Replace existing entry
+			val prjTypeNode = prjTypeNodes.get(0);
+			return new Replacement(manifestResource.URI, prjTypeNode.offset, prjTypeNode.length, newProjectType);
 		}
 	}
 }
