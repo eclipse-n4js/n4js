@@ -49,7 +49,7 @@ public abstract class AbstractStaticPolyfillBuilderTest extends AbstractBuilderP
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceFragment.head.paths.add(folderName)
+		pd.sourceFragment.head.pathsRaw.add(folderName)
 		resource.save(null)
 		waitForAutoBuild();
 	}
@@ -59,7 +59,7 @@ public abstract class AbstractStaticPolyfillBuilderTest extends AbstractBuilderP
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceFragment.head.paths.remove(1)
+		pd.sourceFragment.head.pathsRaw.remove(1)
 		resource.save(null)
 		waitForAutoBuild();
 	}

@@ -15,8 +15,8 @@ package org.eclipse.n4js.ui.labeling.helper;
 @SuppressWarnings("javadoc")
 public final class ImageNames {
 
-	public static final String ANNOTATION_ADD = "annotation_add.gif";
-	public static final String ANNOTATION_REMOVE = "annotation_remove.gif";
+	public static final String ANNOTATION_ADD = "annotation_add.png";
+	public static final String ANNOTATION_REMOVE = "annotation_remove.png";
 
 	public static final String IMPORT = "import_obj.gif";
 

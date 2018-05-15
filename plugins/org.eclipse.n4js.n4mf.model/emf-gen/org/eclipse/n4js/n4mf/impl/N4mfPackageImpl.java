@@ -440,7 +440,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_OutputPath() {
+	public EAttribute getProjectDescription_OutputPathRaw() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -449,7 +449,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_LibraryPaths() {
+	public EAttribute getProjectDescription_LibraryPathsRaw() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -458,7 +458,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_ResourcePaths() {
+	public EAttribute getProjectDescription_ResourcePathsRaw() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(14);
 	}
 
@@ -503,7 +503,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetAllTestedProjects() {
+	public EOperation getProjectDescription__GetOutputPath() {
 		return projectDescriptionEClass.getEOperations().get(0);
 	}
 
@@ -512,7 +512,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetAllInitModules() {
+	public EOperation getProjectDescription__SetOutputPath__String() {
 		return projectDescriptionEClass.getEOperations().get(1);
 	}
 
@@ -521,7 +521,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetAllImplementedProjects() {
+	public EOperation getProjectDescription__GetLibraryPaths() {
 		return projectDescriptionEClass.getEOperations().get(2);
 	}
 
@@ -530,7 +530,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetAllProjectDependencies() {
+	public EOperation getProjectDescription__GetResourcePaths() {
 		return projectDescriptionEClass.getEOperations().get(3);
 	}
 
@@ -539,7 +539,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetAllProvidedRuntimeLibraries() {
+	public EOperation getProjectDescription__GetAllTestedProjects() {
 		return projectDescriptionEClass.getEOperations().get(4);
 	}
 
@@ -548,8 +548,44 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetAllRequiredRuntimeLibraries() {
+	public EOperation getProjectDescription__GetAllInitModules() {
 		return projectDescriptionEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getProjectDescription__GetAllImplementedProjects() {
+		return projectDescriptionEClass.getEOperations().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getProjectDescription__GetAllProjectDependencies() {
+		return projectDescriptionEClass.getEOperations().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getProjectDescription__GetAllProvidedRuntimeLibraries() {
+		return projectDescriptionEClass.getEOperations().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getProjectDescription__GetAllRequiredRuntimeLibraries() {
+		return projectDescriptionEClass.getEOperations().get(9);
 	}
 
 	/**
@@ -809,7 +845,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSourceFragment_Paths() {
+	public EAttribute getSourceFragment_PathsRaw() {
 		return (EAttribute)sourceFragmentEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -820,6 +856,15 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 */
 	public EOperation getSourceFragment__CompareByFragmentType__SourceFragment() {
 		return sourceFragmentEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getSourceFragment__GetPaths() {
+		return sourceFragmentEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -1151,13 +1196,17 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__INIT_MODULES);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__EXEC_MODULE);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__OUTPUT_PATH);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__LIBRARY_PATHS);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__RESOURCE_PATHS);
+		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__OUTPUT_PATH_RAW);
+		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW);
+		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__SOURCE_FRAGMENT);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_FILTERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__TESTED_PROJECTS);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_LOADER);
+		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_OUTPUT_PATH);
+		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING);
+		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_LIBRARY_PATHS);
+		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_RESOURCE_PATHS);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_ALL_TESTED_PROJECTS);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_ALL_INIT_MODULES);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_ALL_IMPLEMENTED_PROJECTS);
@@ -1203,8 +1252,9 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		sourceFragmentEClass = createEClass(SOURCE_FRAGMENT);
 		createEAttribute(sourceFragmentEClass, SOURCE_FRAGMENT__SOURCE_FRAGMENT_TYPE);
-		createEAttribute(sourceFragmentEClass, SOURCE_FRAGMENT__PATHS);
+		createEAttribute(sourceFragmentEClass, SOURCE_FRAGMENT__PATHS_RAW);
 		createEOperation(sourceFragmentEClass, SOURCE_FRAGMENT___COMPARE_BY_FRAGMENT_TYPE__SOURCEFRAGMENT);
+		createEOperation(sourceFragmentEClass, SOURCE_FRAGMENT___GET_PATHS);
 
 		moduleFilterEClass = createEClass(MODULE_FILTER);
 		createEAttribute(moduleFilterEClass, MODULE_FILTER__MODULE_FILTER_TYPE);
@@ -1305,13 +1355,22 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEReference(getProjectDescription_ImplementedProjects(), this.getImplementedProjects(), null, "implementedProjects", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_InitModules(), this.getInitModules(), null, "initModules", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ExecModule(), this.getExecModule(), null, "execModule", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDescription_OutputPath(), theEcorePackage.getEString(), "outputPath", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDescription_LibraryPaths(), theEcorePackage.getEString(), "libraryPaths", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDescription_ResourcePaths(), theEcorePackage.getEString(), "resourcePaths", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDescription_OutputPathRaw(), theEcorePackage.getEString(), "outputPathRaw", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDescription_LibraryPathsRaw(), theEcorePackage.getEString(), "libraryPathsRaw", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDescription_ResourcePathsRaw(), theEcorePackage.getEString(), "resourcePathsRaw", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_SourceFragment(), this.getSourceFragment(), null, "sourceFragment", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ModuleFilters(), this.getModuleFilter(), null, "moduleFilters", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_TestedProjects(), this.getTestedProjects(), null, "testedProjects", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ModuleLoader(), this.getModuleLoader(), "moduleLoader", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getProjectDescription__GetOutputPath(), theEcorePackage.getEString(), "getOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		EOperation op = initEOperation(getProjectDescription__SetOutputPath__String(), null, "setOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEString(), "newOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getProjectDescription__GetLibraryPaths(), theEcorePackage.getEString(), "getLibraryPaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getProjectDescription__GetResourcePaths(), theEcorePackage.getEString(), "getResourcePaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getProjectDescription__GetAllTestedProjects(), this.getTestedProject(), "getAllTestedProjects", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
@@ -1364,10 +1423,12 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		initEClass(sourceFragmentEClass, SourceFragment.class, "SourceFragment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSourceFragment_SourceFragmentType(), this.getSourceFragmentType(), "sourceFragmentType", null, 0, 1, SourceFragment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSourceFragment_Paths(), theEcorePackage.getEString(), "paths", null, 0, -1, SourceFragment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSourceFragment_PathsRaw(), theEcorePackage.getEString(), "pathsRaw", null, 0, -1, SourceFragment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = initEOperation(getSourceFragment__CompareByFragmentType__SourceFragment(), theEcorePackage.getEInt(), "compareByFragmentType", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		op = initEOperation(getSourceFragment__CompareByFragmentType__SourceFragment(), theEcorePackage.getEInt(), "compareByFragmentType", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getSourceFragment(), "other", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getSourceFragment__GetPaths(), theEcorePackage.getEString(), "getPaths", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(moduleFilterEClass, ModuleFilter.class, "ModuleFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModuleFilter_ModuleFilterType(), this.getModuleFilterType(), "moduleFilterType", null, 0, 1, ModuleFilter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1418,6 +1479,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		addEEnumLiteral(projectTypeEEnum, ProjectType.RUNTIME_ENVIRONMENT);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.RUNTIME_LIBRARY);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.TEST);
+		addEEnumLiteral(projectTypeEEnum, ProjectType.VALIDATION);
 
 		initEEnum(sourceFragmentTypeEEnum, SourceFragmentType.class, "SourceFragmentType");
 		addEEnumLiteral(sourceFragmentTypeEEnum, SourceFragmentType.SOURCE);

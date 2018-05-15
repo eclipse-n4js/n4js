@@ -79,6 +79,10 @@ import org.eclipse.n4js.utils.StatusHelper
 import org.eclipse.jface.dialogs.ErrorDialog
 import org.eclipse.n4js.utils.StatusUtils
 import org.eclipse.n4js.external.LibraryManager
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.ui.changes.ManifestChangeProvider
 
 /**
  * N4JS quick fixes.
@@ -741,6 +745,28 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				insertLineAbove(context.xtextDocument, offset, "@"+AnnotationDefinition.VERSION_AWARE.name, true)
 			];
 		]
+	}
+
+
+	@Fix(IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING)
+	def changeProjectTypeToValidation(Issue issue, IssueResolutionAcceptor acceptor) {
+		// <--- do pre-processing here (if required)
+		val validationPT = ProjectType.VALIDATION.getName.toLowerCase;
+		val title = 'Change project type to ' + validationPT + '';
+		val descr = 'The project type \'' + validationPT + '\' does not generate code. Hence, output and source folders can be nested.';
+		acceptor.accept(issue, title, descr, null, new N4Modification() {
+			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				val resource = element.eResource;
+				val prjDescr = EcoreUtil2.getContainerOfType(element, ProjectDescription);
+				return #[ManifestChangeProvider.setProjectType(resource, validationPT, prjDescr)];
+			}
+			override supportsMultiApply() {
+				return false;
+			}
+			override isApplicableTo(IMarker marker) {
+				return true;
+			}
+		});
 	}
 
 	@Fix(IssueCodes.NODE_MODULES_OUT_OF_SYNC)
