@@ -26,17 +26,8 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.n4js.utils.io.FileUtils
 
 class ProjectDescription {
-	/**
-	 * the project ID
-	 */
 	String projectId
-	/**
-	 * the vendor ID
-	 */
-	String declaredVendorId
-	op String getVendorId() { // FIXME
-		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer?.eContainer as ProjectDescription)?.declaredVendorId;
-	}
+	String vendorId
 	String vendorName
 	contains DeclaredVersion projectVersion
 	ProjectType projectType
@@ -196,12 +187,13 @@ class ProjectReference {
 	 */
 	String projectId
 
+	// TODO is following property and operation really required?
 	/**
 	 * the vendor ID
 	 */
 	String declaredVendorId
 	op String getVendorId() {
-		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer as ProjectDescription)?.declaredVendorId;
+		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer as ProjectDescription)?.vendorId;
 	}
 
 	/**

@@ -105,7 +105,7 @@ public class N4MFParser extends AbstractContentAssistParser {
 					put(grammarAccess.getProjectDescriptionAccess().getProjectIdAssignment_0_2(), "rule__ProjectDescription__ProjectIdAssignment_0_2");
 					put(grammarAccess.getProjectDescriptionAccess().getProjectTypeAssignment_1_2(), "rule__ProjectDescription__ProjectTypeAssignment_1_2");
 					put(grammarAccess.getProjectDescriptionAccess().getProjectVersionAssignment_2_2(), "rule__ProjectDescription__ProjectVersionAssignment_2_2");
-					put(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdAssignment_3_2(), "rule__ProjectDescription__DeclaredVendorIdAssignment_3_2");
+					put(grammarAccess.getProjectDescriptionAccess().getVendorIdAssignment_3_2(), "rule__ProjectDescription__VendorIdAssignment_3_2");
 					put(grammarAccess.getProjectDescriptionAccess().getVendorNameAssignment_4_2(), "rule__ProjectDescription__VendorNameAssignment_4_2");
 					put(grammarAccess.getProjectDescriptionAccess().getMainModuleAssignment_5_2(), "rule__ProjectDescription__MainModuleAssignment_5_2");
 					put(grammarAccess.getProjectDescriptionAccess().getExtendedRuntimeEnvironmentAssignment_6_2(), "rule__ProjectDescription__ExtendedRuntimeEnvironmentAssignment_6_2");

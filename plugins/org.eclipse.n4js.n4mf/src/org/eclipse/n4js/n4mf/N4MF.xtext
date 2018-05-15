@@ -17,7 +17,7 @@ ProjectDescription:
 		('ProjectId'		':' projectId=N4mfIdentifier)
 	&	('ProjectType' 		':' projectType=ProjectType)
 	&	('ProjectVersion'	':' projectVersion=DeclaredVersion)
-	&	('VendorId' 		':' declaredVendorId=N4mfIdentifier)
+	&	('VendorId' 		':' vendorId=N4mfIdentifier)
 	&	('VendorName' 		':' vendorName=STRING)?
 
 	&	('MainModule'		':' mainModule=STRING)?

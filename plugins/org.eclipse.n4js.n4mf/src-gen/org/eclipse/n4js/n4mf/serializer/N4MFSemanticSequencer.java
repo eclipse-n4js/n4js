@@ -147,7 +147,7 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *             projectId=N4mfIdentifier | 
 	 *             projectType=ProjectType | 
 	 *             projectVersion=DeclaredVersion | 
-	 *             declaredVendorId=N4mfIdentifier | 
+	 *             vendorId=N4mfIdentifier | 
 	 *             vendorName=STRING | 
 	 *             mainModule=STRING | 
 	 *             extendedRuntimeEnvironment=ProjectReference | 

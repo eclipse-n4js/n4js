@@ -97,13 +97,13 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__PROJECT_ID = 0;
 
 	/**
-	 * The feature id for the '<em><b>Declared Vendor Id</b></em>' attribute.
+	 * The feature id for the '<em><b>Vendor Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__DECLARED_VENDOR_ID = 1;
+	int PROJECT_DESCRIPTION__VENDOR_ID = 1;
 
 	/**
 	 * The feature id for the '<em><b>Vendor Name</b></em>' attribute.
@@ -286,22 +286,13 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION_FEATURE_COUNT = 21;
 
 	/**
-	 * The operation id for the '<em>Get Vendor Id</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION___GET_VENDOR_ID = 0;
-
-	/**
 	 * The operation id for the '<em>Get Output Path</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_OUTPUT_PATH = 1;
+	int PROJECT_DESCRIPTION___GET_OUTPUT_PATH = 0;
 
 	/**
 	 * The operation id for the '<em>Set Output Path</em>' operation.
@@ -310,7 +301,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING = 2;
+	int PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING = 1;
 
 	/**
 	 * The operation id for the '<em>Get Library Paths</em>' operation.
@@ -319,7 +310,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_LIBRARY_PATHS = 3;
+	int PROJECT_DESCRIPTION___GET_LIBRARY_PATHS = 2;
 
 	/**
 	 * The operation id for the '<em>Get Resource Paths</em>' operation.
@@ -328,7 +319,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION___GET_RESOURCE_PATHS = 4;
+	int PROJECT_DESCRIPTION___GET_RESOURCE_PATHS = 3;
 
 	/**
 	 * The number of operations of the '<em>Project Description</em>' class.
@@ -337,7 +328,7 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_OPERATION_COUNT = 5;
+	int PROJECT_DESCRIPTION_OPERATION_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4mf.impl.DeclaredVersionImpl <em>Declared Version</em>}' class.
@@ -888,15 +879,15 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getProjectDescription_ProjectId();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#getDeclaredVendorId <em>Declared Vendor Id</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#getVendorId <em>Vendor Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Declared Vendor Id</em>'.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getDeclaredVendorId()
+	 * @return the meta object for the attribute '<em>Vendor Id</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getVendorId()
 	 * @see #getProjectDescription()
 	 * @generated
 	 */
-	EAttribute getProjectDescription_DeclaredVendorId();
+	EAttribute getProjectDescription_VendorId();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#getVendorName <em>Vendor Name</em>}'.
@@ -1106,16 +1097,6 @@ public interface N4mfPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getProjectDescription_ModuleLoader();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getVendorId() <em>Get Vendor Id</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Vendor Id</em>' operation.
-	 * @see org.eclipse.n4js.n4mf.ProjectDescription#getVendorId()
-	 * @generated
-	 */
-	EOperation getProjectDescription__GetVendorId();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath() <em>Get Output Path</em>}' operation.
@@ -1599,12 +1580,12 @@ public interface N4mfPackage extends EPackage {
 		EAttribute PROJECT_DESCRIPTION__PROJECT_ID = eINSTANCE.getProjectDescription_ProjectId();
 
 		/**
-		 * The meta object literal for the '<em><b>Declared Vendor Id</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Vendor Id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROJECT_DESCRIPTION__DECLARED_VENDOR_ID = eINSTANCE.getProjectDescription_DeclaredVendorId();
+		EAttribute PROJECT_DESCRIPTION__VENDOR_ID = eINSTANCE.getProjectDescription_VendorId();
 
 		/**
 		 * The meta object literal for the '<em><b>Vendor Name</b></em>' attribute feature.
@@ -1757,14 +1738,6 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PROJECT_DESCRIPTION__MODULE_LOADER = eINSTANCE.getProjectDescription_ModuleLoader();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Vendor Id</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PROJECT_DESCRIPTION___GET_VENDOR_ID = eINSTANCE.getProjectDescription__GetVendorId();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Output Path</b></em>' operation.

@@ -1124,9 +1124,9 @@ rule__ProjectDescription__Group_3__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdAssignment_3_2()); }
-	(rule__ProjectDescription__DeclaredVendorIdAssignment_3_2)
-	{ after(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdAssignment_3_2()); }
+	{ before(grammarAccess.getProjectDescriptionAccess().getVendorIdAssignment_3_2()); }
+	(rule__ProjectDescription__VendorIdAssignment_3_2)
+	{ after(grammarAccess.getProjectDescriptionAccess().getVendorIdAssignment_3_2()); }
 )
 ;
 finally {
@@ -5569,15 +5569,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ProjectDescription__DeclaredVendorIdAssignment_3_2
+rule__ProjectDescription__VendorIdAssignment_3_2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_3_2_0()); }
+		{ before(grammarAccess.getProjectDescriptionAccess().getVendorIdN4mfIdentifierParserRuleCall_3_2_0()); }
 		ruleN4mfIdentifier
-		{ after(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_3_2_0()); }
+		{ after(grammarAccess.getProjectDescriptionAccess().getVendorIdN4mfIdentifierParserRuleCall_3_2_0()); }
 	)
 ;
 finally {

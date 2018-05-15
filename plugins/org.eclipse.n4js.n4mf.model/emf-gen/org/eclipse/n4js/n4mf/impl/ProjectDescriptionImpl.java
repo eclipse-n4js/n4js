@@ -21,7 +21,6 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -53,7 +52,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getProjectId <em>Project Id</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getDeclaredVendorId <em>Declared Vendor Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getVendorId <em>Vendor Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getVendorName <em>Vendor Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getProjectVersion <em>Project Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getProjectType <em>Project Type</em>}</li>
@@ -99,24 +98,24 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	protected String projectId = PROJECT_ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDeclaredVendorId() <em>Declared Vendor Id</em>}' attribute.
+	 * The default value of the '{@link #getVendorId() <em>Vendor Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVendorId()
+	 * @see #getVendorId()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String DECLARED_VENDOR_ID_EDEFAULT = null;
+	protected static final String VENDOR_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDeclaredVendorId() <em>Declared Vendor Id</em>}' attribute.
+	 * The cached value of the '{@link #getVendorId() <em>Vendor Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVendorId()
+	 * @see #getVendorId()
 	 * @generated
 	 * @ordered
 	 */
-	protected String declaredVendorId = DECLARED_VENDOR_ID_EDEFAULT;
+	protected String vendorId = VENDOR_ID_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getVendorName() <em>Vendor Name</em>}' attribute.
@@ -413,8 +412,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getDeclaredVendorId() {
-		return declaredVendorId;
+	public String getVendorId() {
+		return vendorId;
 	}
 
 	/**
@@ -422,11 +421,11 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setDeclaredVendorId(String newDeclaredVendorId) {
-		String oldDeclaredVendorId = declaredVendorId;
-		declaredVendorId = newDeclaredVendorId;
+	public void setVendorId(String newVendorId) {
+		String oldVendorId = vendorId;
+		vendorId = newVendorId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__DECLARED_VENDOR_ID, oldDeclaredVendorId, declaredVendorId));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__VENDOR_ID, oldVendorId, vendorId));
 	}
 
 	/**
@@ -809,37 +808,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getVendorId() {
-		String _xifexpression = null;
-		String _declaredVendorId = this.getDeclaredVendorId();
-		boolean _tripleNotEquals = (_declaredVendorId != null);
-		if (_tripleNotEquals) {
-			_xifexpression = this.getDeclaredVendorId();
-		}
-		else {
-			EObject _eContainer = this.eContainer();
-			EObject _eContainer_1 = null;
-			if (_eContainer!=null) {
-				_eContainer_1=_eContainer.eContainer();
-			}
-			EObject _eContainer_2 = null;
-			if (_eContainer_1!=null) {
-				_eContainer_2=_eContainer_1.eContainer();
-			}
-			String _declaredVendorId_1 = null;
-			if (((ProjectDescription) _eContainer_2)!=null) {
-				_declaredVendorId_1=((ProjectDescription) _eContainer_2).getDeclaredVendorId();
-			}
-			_xifexpression = _declaredVendorId_1;
-		}
-		return _xifexpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getOutputPath() {
 		return FileUtils.normalizeDotWhenEmpty(this.getOutputPathRaw());
 	}
@@ -933,8 +901,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_ID:
 				return getProjectId();
-			case N4mfPackage.PROJECT_DESCRIPTION__DECLARED_VENDOR_ID:
-				return getDeclaredVendorId();
+			case N4mfPackage.PROJECT_DESCRIPTION__VENDOR_ID:
+				return getVendorId();
 			case N4mfPackage.PROJECT_DESCRIPTION__VENDOR_NAME:
 				return getVendorName();
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_VERSION:
@@ -989,8 +957,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_ID:
 				setProjectId((String)newValue);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__DECLARED_VENDOR_ID:
-				setDeclaredVendorId((String)newValue);
+			case N4mfPackage.PROJECT_DESCRIPTION__VENDOR_ID:
+				setVendorId((String)newValue);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__VENDOR_NAME:
 				setVendorName((String)newValue);
@@ -1074,8 +1042,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_ID:
 				setProjectId(PROJECT_ID_EDEFAULT);
 				return;
-			case N4mfPackage.PROJECT_DESCRIPTION__DECLARED_VENDOR_ID:
-				setDeclaredVendorId(DECLARED_VENDOR_ID_EDEFAULT);
+			case N4mfPackage.PROJECT_DESCRIPTION__VENDOR_ID:
+				setVendorId(VENDOR_ID_EDEFAULT);
 				return;
 			case N4mfPackage.PROJECT_DESCRIPTION__VENDOR_NAME:
 				setVendorName(VENDOR_NAME_EDEFAULT);
@@ -1148,8 +1116,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		switch (featureID) {
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_ID:
 				return PROJECT_ID_EDEFAULT == null ? projectId != null : !PROJECT_ID_EDEFAULT.equals(projectId);
-			case N4mfPackage.PROJECT_DESCRIPTION__DECLARED_VENDOR_ID:
-				return DECLARED_VENDOR_ID_EDEFAULT == null ? declaredVendorId != null : !DECLARED_VENDOR_ID_EDEFAULT.equals(declaredVendorId);
+			case N4mfPackage.PROJECT_DESCRIPTION__VENDOR_ID:
+				return VENDOR_ID_EDEFAULT == null ? vendorId != null : !VENDOR_ID_EDEFAULT.equals(vendorId);
 			case N4mfPackage.PROJECT_DESCRIPTION__VENDOR_NAME:
 				return VENDOR_NAME_EDEFAULT == null ? vendorName != null : !VENDOR_NAME_EDEFAULT.equals(vendorName);
 			case N4mfPackage.PROJECT_DESCRIPTION__PROJECT_VERSION:
@@ -1200,8 +1168,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case N4mfPackage.PROJECT_DESCRIPTION___GET_VENDOR_ID:
-				return getVendorId();
 			case N4mfPackage.PROJECT_DESCRIPTION___GET_OUTPUT_PATH:
 				return getOutputPath();
 			case N4mfPackage.PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING:
@@ -1227,8 +1193,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (projectId: ");
 		result.append(projectId);
-		result.append(", declaredVendorId: ");
-		result.append(declaredVendorId);
+		result.append(", vendorId: ");
+		result.append(vendorId);
 		result.append(", vendorName: ");
 		result.append(vendorName);
 		result.append(", projectType: ");

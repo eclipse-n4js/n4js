@@ -228,7 +228,7 @@ public class ProjectTestsUtils {
 		IFile config = project.getFile("manifest.n4mf");
 		URI uri = URI.createPlatformResourceURI(config.getFullPath().toString(), true);
 		ProjectDescription projectDesc = N4mfFactory.eINSTANCE.createProjectDescription();
-		projectDesc.setDeclaredVendorId("org.eclipse.n4js");
+		projectDesc.setVendorId("org.eclipse.n4js");
 		projectDesc.setVendorName("Eclipse N4JS Project");
 		projectDesc.setProjectId(project.getName());
 		projectDesc.setProjectType(ProjectType.LIBRARY);

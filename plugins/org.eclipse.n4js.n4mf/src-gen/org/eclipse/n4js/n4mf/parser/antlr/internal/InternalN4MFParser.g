@@ -213,17 +213,17 @@ ruleProjectDescription returns [EObject current=null]
 							(
 								(
 									{
-										newCompositeNode(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_3_2_0());
+										newCompositeNode(grammarAccess.getProjectDescriptionAccess().getVendorIdN4mfIdentifierParserRuleCall_3_2_0());
 									}
-									lv_declaredVendorId_12_0=ruleN4mfIdentifier
+									lv_vendorId_12_0=ruleN4mfIdentifier
 									{
 										if ($current==null) {
 											$current = createModelElementForParent(grammarAccess.getProjectDescriptionRule());
 										}
 										set(
 											$current,
-											"declaredVendorId",
-											lv_declaredVendorId_12_0,
+											"vendorId",
+											lv_vendorId_12_0,
 											"org.eclipse.n4js.n4mf.N4MF.N4mfIdentifier");
 										afterParserOrEnumRuleCall();
 									}

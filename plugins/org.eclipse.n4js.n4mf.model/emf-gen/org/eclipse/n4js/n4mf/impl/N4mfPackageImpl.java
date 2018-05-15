@@ -229,7 +229,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_DeclaredVendorId() {
+	public EAttribute getProjectDescription_VendorId() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -409,7 +409,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetVendorId() {
+	public EOperation getProjectDescription__GetOutputPath() {
 		return projectDescriptionEClass.getEOperations().get(0);
 	}
 
@@ -418,7 +418,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetOutputPath() {
+	public EOperation getProjectDescription__SetOutputPath__String() {
 		return projectDescriptionEClass.getEOperations().get(1);
 	}
 
@@ -427,7 +427,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__SetOutputPath__String() {
+	public EOperation getProjectDescription__GetLibraryPaths() {
 		return projectDescriptionEClass.getEOperations().get(2);
 	}
 
@@ -436,17 +436,8 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getProjectDescription__GetLibraryPaths() {
-		return projectDescriptionEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EOperation getProjectDescription__GetResourcePaths() {
-		return projectDescriptionEClass.getEOperations().get(4);
+		return projectDescriptionEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -821,7 +812,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		// Create classes and their features
 		projectDescriptionEClass = createEClass(PROJECT_DESCRIPTION);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__PROJECT_ID);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__DECLARED_VENDOR_ID);
+		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__VENDOR_ID);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__VENDOR_NAME);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__PROJECT_VERSION);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__PROJECT_TYPE);
@@ -841,7 +832,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_FILTERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__TESTED_PROJECTS);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_LOADER);
-		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_VENDOR_ID);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_OUTPUT_PATH);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___SET_OUTPUT_PATH__STRING);
 		createEOperation(projectDescriptionEClass, PROJECT_DESCRIPTION___GET_LIBRARY_PATHS);
@@ -932,7 +922,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		// Initialize classes, features, and operations; add parameters
 		initEClass(projectDescriptionEClass, ProjectDescription.class, "ProjectDescription", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getProjectDescription_ProjectId(), theEcorePackage.getEString(), "projectId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDescription_DeclaredVendorId(), theEcorePackage.getEString(), "declaredVendorId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProjectDescription_VendorId(), theEcorePackage.getEString(), "vendorId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_VendorName(), theEcorePackage.getEString(), "vendorName", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ProjectVersion(), this.getDeclaredVersion(), null, "projectVersion", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ProjectType(), this.getProjectType(), "projectType", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -952,8 +942,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEReference(getProjectDescription_ModuleFilters(), this.getModuleFilter(), null, "moduleFilters", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_TestedProjects(), this.getProjectDependency(), null, "testedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ModuleLoader(), this.getModuleLoader(), "moduleLoader", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getProjectDescription__GetVendorId(), theEcorePackage.getEString(), "getVendorId", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getProjectDescription__GetOutputPath(), theEcorePackage.getEString(), "getOutputPath", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

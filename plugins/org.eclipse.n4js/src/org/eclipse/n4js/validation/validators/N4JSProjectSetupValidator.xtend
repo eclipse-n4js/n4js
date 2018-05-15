@@ -138,7 +138,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		// Describing Self-Project as RuntimeDependency to handle clash with filled Members from current Project consistently.
 		val selfProject = N4mfFactory.eINSTANCE.createProjectReference
 		selfProject.projectId = projectDescription.projectId
-		selfProject.declaredVendorId = projectDescription.declaredVendorId
+		selfProject.declaredVendorId = projectDescription.vendorId
 		val Optional<? extends IN4JSProject> optOwnProject = findProject(projectDescription.eResource.URI)
 		if (optOwnProject.present) {
 			rteAndRtl = Iterables.concat(rteAndRtl, #{selfProject})

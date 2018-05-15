@@ -54,8 +54,8 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_3 = (Group)cUnorderedGroup.eContents().get(3);
 		private final Keyword cVendorIdKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
 		private final Keyword cColonKeyword_3_1 = (Keyword)cGroup_3.eContents().get(1);
-		private final Assignment cDeclaredVendorIdAssignment_3_2 = (Assignment)cGroup_3.eContents().get(2);
-		private final RuleCall cDeclaredVendorIdN4mfIdentifierParserRuleCall_3_2_0 = (RuleCall)cDeclaredVendorIdAssignment_3_2.eContents().get(0);
+		private final Assignment cVendorIdAssignment_3_2 = (Assignment)cGroup_3.eContents().get(2);
+		private final RuleCall cVendorIdN4mfIdentifierParserRuleCall_3_2_0 = (RuleCall)cVendorIdAssignment_3_2.eContents().get(0);
 		private final Group cGroup_4 = (Group)cUnorderedGroup.eContents().get(4);
 		private final Keyword cVendorNameKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		private final Keyword cColonKeyword_4_1 = (Keyword)cGroup_4.eContents().get(1);
@@ -192,8 +192,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//ProjectDescription:
 		//	'ProjectId' ':' projectId=N4mfIdentifier & 'ProjectType' ':' projectType=ProjectType & 'ProjectVersion' ':'
-		//	projectVersion=DeclaredVersion & 'VendorId' ':' declaredVendorId=N4mfIdentifier & ('VendorName' ':'
-		//	vendorName=STRING)?
+		//	projectVersion=DeclaredVersion & 'VendorId' ':' vendorId=N4mfIdentifier & ('VendorName' ':' vendorName=STRING)?
 		//	& ('MainModule' ':' mainModule=STRING)?
 		//	// only available for runtime environments
 		//	& ('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)?
@@ -224,8 +223,8 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'ProjectId' ':' projectId=N4mfIdentifier & 'ProjectType' ':' projectType=ProjectType & 'ProjectVersion' ':'
-		//projectVersion=DeclaredVersion & 'VendorId' ':' declaredVendorId=N4mfIdentifier & ('VendorName' ':' vendorName=STRING)?
-		//& ('MainModule' ':' mainModule=STRING)? // only available for runtime environments
+		//projectVersion=DeclaredVersion & 'VendorId' ':' vendorId=N4mfIdentifier & ('VendorName' ':' vendorName=STRING)? &
+		//('MainModule' ':' mainModule=STRING)? // only available for runtime environments
 		//& ('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)? // only in case of runtime libraries or runtime environment:
 		//& ('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProjectReference (','
 		//providedRuntimeLibraries+=ProjectReference)*)? '}')? // not available in runtime environments:
@@ -288,7 +287,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//DeclaredVersion
 		public RuleCall getProjectVersionDeclaredVersionParserRuleCall_2_2_0() { return cProjectVersionDeclaredVersionParserRuleCall_2_2_0; }
 		
-		//'VendorId' ':' declaredVendorId=N4mfIdentifier
+		//'VendorId' ':' vendorId=N4mfIdentifier
 		public Group getGroup_3() { return cGroup_3; }
 		
 		//'VendorId'
@@ -297,11 +296,11 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//':'
 		public Keyword getColonKeyword_3_1() { return cColonKeyword_3_1; }
 		
-		//declaredVendorId=N4mfIdentifier
-		public Assignment getDeclaredVendorIdAssignment_3_2() { return cDeclaredVendorIdAssignment_3_2; }
+		//vendorId=N4mfIdentifier
+		public Assignment getVendorIdAssignment_3_2() { return cVendorIdAssignment_3_2; }
 		
 		//N4mfIdentifier
-		public RuleCall getDeclaredVendorIdN4mfIdentifierParserRuleCall_3_2_0() { return cDeclaredVendorIdN4mfIdentifierParserRuleCall_3_2_0; }
+		public RuleCall getVendorIdN4mfIdentifierParserRuleCall_3_2_0() { return cVendorIdN4mfIdentifierParserRuleCall_3_2_0; }
 		
 		//('VendorName' ':' vendorName=STRING)?
 		public Group getGroup_4() { return cGroup_4; }
@@ -1529,8 +1528,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//ProjectDescription:
 	//	'ProjectId' ':' projectId=N4mfIdentifier & 'ProjectType' ':' projectType=ProjectType & 'ProjectVersion' ':'
-	//	projectVersion=DeclaredVersion & 'VendorId' ':' declaredVendorId=N4mfIdentifier & ('VendorName' ':'
-	//	vendorName=STRING)?
+	//	projectVersion=DeclaredVersion & 'VendorId' ':' vendorId=N4mfIdentifier & ('VendorName' ':' vendorName=STRING)?
 	//	& ('MainModule' ':' mainModule=STRING)?
 	//	// only available for runtime environments
 	//	& ('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)?

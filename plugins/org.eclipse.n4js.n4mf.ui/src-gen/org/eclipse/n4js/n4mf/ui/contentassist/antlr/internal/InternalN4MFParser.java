@@ -3508,31 +3508,31 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectDescription__Group_3__2__Impl"
-    // InternalN4MFParser.g:1121:1: rule__ProjectDescription__Group_3__2__Impl : ( ( rule__ProjectDescription__DeclaredVendorIdAssignment_3_2 ) ) ;
+    // InternalN4MFParser.g:1121:1: rule__ProjectDescription__Group_3__2__Impl : ( ( rule__ProjectDescription__VendorIdAssignment_3_2 ) ) ;
     public final void rule__ProjectDescription__Group_3__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalN4MFParser.g:1125:1: ( ( ( rule__ProjectDescription__DeclaredVendorIdAssignment_3_2 ) ) )
-            // InternalN4MFParser.g:1126:1: ( ( rule__ProjectDescription__DeclaredVendorIdAssignment_3_2 ) )
+            // InternalN4MFParser.g:1125:1: ( ( ( rule__ProjectDescription__VendorIdAssignment_3_2 ) ) )
+            // InternalN4MFParser.g:1126:1: ( ( rule__ProjectDescription__VendorIdAssignment_3_2 ) )
             {
-            // InternalN4MFParser.g:1126:1: ( ( rule__ProjectDescription__DeclaredVendorIdAssignment_3_2 ) )
-            // InternalN4MFParser.g:1127:2: ( rule__ProjectDescription__DeclaredVendorIdAssignment_3_2 )
+            // InternalN4MFParser.g:1126:1: ( ( rule__ProjectDescription__VendorIdAssignment_3_2 ) )
+            // InternalN4MFParser.g:1127:2: ( rule__ProjectDescription__VendorIdAssignment_3_2 )
             {
-             before(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdAssignment_3_2()); 
-            // InternalN4MFParser.g:1128:2: ( rule__ProjectDescription__DeclaredVendorIdAssignment_3_2 )
-            // InternalN4MFParser.g:1128:3: rule__ProjectDescription__DeclaredVendorIdAssignment_3_2
+             before(grammarAccess.getProjectDescriptionAccess().getVendorIdAssignment_3_2()); 
+            // InternalN4MFParser.g:1128:2: ( rule__ProjectDescription__VendorIdAssignment_3_2 )
+            // InternalN4MFParser.g:1128:3: rule__ProjectDescription__VendorIdAssignment_3_2
             {
             pushFollow(FOLLOW_2);
-            rule__ProjectDescription__DeclaredVendorIdAssignment_3_2();
+            rule__ProjectDescription__VendorIdAssignment_3_2();
 
             state._fsp--;
 
 
             }
 
-             after(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdAssignment_3_2()); 
+             after(grammarAccess.getProjectDescriptionAccess().getVendorIdAssignment_3_2()); 
 
             }
 
@@ -17142,9 +17142,9 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ProjectDescription__ProjectVersionAssignment_2_2"
 
 
-    // $ANTLR start "rule__ProjectDescription__DeclaredVendorIdAssignment_3_2"
-    // InternalN4MFParser.g:5572:1: rule__ProjectDescription__DeclaredVendorIdAssignment_3_2 : ( ruleN4mfIdentifier ) ;
-    public final void rule__ProjectDescription__DeclaredVendorIdAssignment_3_2() throws RecognitionException {
+    // $ANTLR start "rule__ProjectDescription__VendorIdAssignment_3_2"
+    // InternalN4MFParser.g:5572:1: rule__ProjectDescription__VendorIdAssignment_3_2 : ( ruleN4mfIdentifier ) ;
+    public final void rule__ProjectDescription__VendorIdAssignment_3_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -17155,13 +17155,13 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
             // InternalN4MFParser.g:5577:2: ( ruleN4mfIdentifier )
             // InternalN4MFParser.g:5578:3: ruleN4mfIdentifier
             {
-             before(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_3_2_0()); 
+             before(grammarAccess.getProjectDescriptionAccess().getVendorIdN4mfIdentifierParserRuleCall_3_2_0()); 
             pushFollow(FOLLOW_2);
             ruleN4mfIdentifier();
 
             state._fsp--;
 
-             after(grammarAccess.getProjectDescriptionAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_3_2_0()); 
+             after(grammarAccess.getProjectDescriptionAccess().getVendorIdN4mfIdentifierParserRuleCall_3_2_0()); 
 
             }
 
@@ -17180,7 +17180,7 @@ public class InternalN4MFParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectDescription__DeclaredVendorIdAssignment_3_2"
+    // $ANTLR end "rule__ProjectDescription__VendorIdAssignment_3_2"
 
 
     // $ANTLR start "rule__ProjectDescription__VendorNameAssignment_4_2"
