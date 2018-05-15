@@ -14,11 +14,11 @@ import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
-import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -38,28 +38,6 @@ public class VersionUtils {
 	}
 
 	/**
-	 * Returns {@code true} if the given {@link TVersionable} is considered to be versioned.
-	 *
-	 * An element is considered to be versioned, if it has a non-zero version.
-	 *
-	 * A return value of {@code true} indicates a non-zero value for {@link TVersionable#getVersion()}.
-	 */
-	public static boolean isTVersionable(EObject element) {
-		return (element instanceof TVersionable) && ((TVersionable) element).getVersion() != 0;
-	}
-
-	/**
-	 * Returns {@code true} if the given element implements {@link Versionable} and is considered to be versioned.
-	 *
-	 * An element is considered to be versioned, if it has a non-zero version.
-	 *
-	 * A return value of {@code true} indicates a non-zero value for {@link TVersionable#getVersion()}.
-	 */
-	public static boolean isVersionable(EObject element) {
-		return (element instanceof Versionable) && ((Versionable) element).getVersion() != 0;
-	}
-
-	/**
 	 * Returns {@code true} if the given context is version-aware (allows for explicit type version requests).
 	 */
 	public static boolean isVersionAwareContext(EObject context) {
@@ -76,20 +54,24 @@ public class VersionUtils {
 				return true;
 			}
 		}
+		// exception for import declarations
+		if (context instanceof ImportDeclaration) {
+			return true;
+		}
+
+		// check whether the context is the built-in MigrationContext (which is considered version-aware)
+		if (context == BuiltInTypeScope.get(context.eResource().getResourceSet()).getMigrationContextType()) {
+			return true;
+		}
 
 		// Otherwise traverse the containment tree of context:
 		// Find the first container which has any of the version-awareness annotations
-		final EObject versionAwareContainer = StreamSupport
+		return StreamSupport
 				.stream(EcoreUtil2.getAllContainers(context).spliterator(), false)
 				// filter and cast to AnnotableElement
 				.filter(AnnotableElement.class::isInstance).map(e -> (AnnotableElement) e)
-				// check whether the element has one of the version-awareness annotations
-				.filter(VersionUtils::hasVersionAwarenessAnnotation)
-				// find any such container
-				.findAny().orElse(null);
-
-		// the context is version aware if any of the containers is
-		return versionAwareContainer != null;
+				// check whether the container has one of the version-awareness annotations
+				.findAny().map(VersionUtils::isVersionAwareContext).orElse(false);
 	}
 
 	/**

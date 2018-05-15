@@ -81,7 +81,7 @@ public class ProjectResolveHelper {
 	 * {@link IN4JSProject#exists()}. In returned string file extension of the actual file is trimmed.
 	 */
 	public String resolvePackageAndFileName(URI uri, IN4JSProject project) {
-		final String msg = "Cannot locate source container for module " + uri.lastSegment() + ".";
+		final String msg = "Cannot locate source container for module " + uri + ".";
 		if (null == project) {
 			throw new RuntimeException(msg + " Provided project was null.");
 		}

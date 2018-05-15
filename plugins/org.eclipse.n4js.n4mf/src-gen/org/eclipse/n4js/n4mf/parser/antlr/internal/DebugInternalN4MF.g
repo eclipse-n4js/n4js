@@ -403,6 +403,8 @@ ruleProjectType:
 		'runtimeLibrary'
 		    |
 		'test'
+		    |
+		'validation'
 	)
 ;
 

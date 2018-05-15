@@ -31,7 +31,7 @@ public interface ISubGenerator extends IBaseGenerator {
 	public void setCompilerDescriptor(CompilerDescriptor compilerDescriptor);
 
 	/**
-	 * Returns true if for the given resource something should be compiled
+	 * Returns true if for the given resource should be compiled
 	 *
 	 * @param input
 	 *            the resource potentially to be compiled

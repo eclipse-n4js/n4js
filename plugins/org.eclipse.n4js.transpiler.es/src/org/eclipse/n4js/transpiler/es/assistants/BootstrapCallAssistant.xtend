@@ -45,7 +45,10 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.VersionedElement
+import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.transpiler.TransformationAssistant
+import org.eclipse.n4js.transpiler.TranspilerBuilderBlocks
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation
 import org.eclipse.n4js.transpiler.es.transform.EnumDeclarationTransformation
@@ -247,13 +250,41 @@ class BootstrapCallAssistant extends TransformationAssistant {
 				default: throw new IllegalStateException("unsupported type of member: "+m.eClass.name)
 			};
 		}
+		
+		// special static field wrt migrations for versioned classifiers in N4IDL
+		val staticMigrationsField = if (_static
+			&& classDecl instanceof VersionedElement 
+			&& (classDecl as VersionedElement).hasDeclaredVersion) {
+			 #[createEmptyObjectMemberForName(N4IDLGlobals.MIGRATIONS_STATIC_FIELD)]
+		} else {
+			#[]
+		}
 
 		return _ObjLit(
 			(
 				methods.map[createMemberDefinitionForMethod]
 				+ accessors.keys.toSet.map[accName | createMemberDefinitionForAccessor(accessors.get(accName))]
 				+ fields.map[createMemberDefinitionForField]
+				+ staticMigrationsField
 			).filterNull // note: #createMemberDefinitionForXYZ() is allowed to return 'null' if member should be ignored
+		);
+	}
+	
+	def private PropertyNameValuePair createEmptyObjectMemberForName(String name) {
+		// field: {
+        //     value: {},
+        //     false: true,
+        // 	   configurable: false,
+        // 	   enumerable: false
+        // }
+		return _PropertyNameValuePair(
+			name,
+			_ObjLit(
+				"value" -> TranspilerBuilderBlocks._ObjLit, // empty object literal
+				"writable" -> _TRUE,
+				"configurable" -> _FALSE,
+				"enumerable" -> _FALSE
+			)
 		);
 	}
 

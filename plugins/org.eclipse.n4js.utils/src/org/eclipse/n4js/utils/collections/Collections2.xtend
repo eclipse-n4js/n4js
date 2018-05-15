@@ -11,6 +11,7 @@
 package org.eclipse.n4js.utils.collections
 
 import java.util.ArrayList
+import java.util.Collection
 import java.util.Comparator
 import java.util.HashMap
 import java.util.HashSet
@@ -22,6 +23,7 @@ import java.util.Objects
 import java.util.Set
 import java.util.TreeMap
 import java.util.TreeSet
+import java.util.stream.Stream
 
 /**
  * Utility functions for collections
@@ -146,5 +148,18 @@ class Collections2 {
 		val Set<T> result = newLinkedHashSet(listA);
 		result.addAll(listB);
 		return newLinkedList(result);
+	}
+	
+	/** 
+	 * Returns a stream of all pairs that can be formed with the elements of the given collection.
+	 * 
+	 * Example: <code> [1,2,3] -> (1,1), (1,2), (1,3), (2,1), (2,2), (2,3), (3,1), (3,2), (3,3) </code>
+	 */
+	def static <T> Stream<Pair<T, T>> pairs(Collection<T> collection) {
+		return collection.stream.flatMap[ e1 | 
+			collection.stream.map[ e2 | 
+				return e1 -> e2;
+			]
+		]
 	}
 }

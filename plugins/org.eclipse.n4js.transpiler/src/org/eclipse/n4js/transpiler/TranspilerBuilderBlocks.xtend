@@ -330,6 +330,11 @@ public class TranspilerBuilderBlocks
 	public static def BinaryLogicalExpression _AND(Expression lhs, Expression rhs) {
 		return _BinaryLogicalExpr(lhs, BinaryLogicalOperator.AND, rhs);
 	}
+	
+	public static def Expression _AND(Iterable<Expression> operands) {
+		return operands.reduce[op1, op2 | _AND(op1, op2) ];
+	}
+	
 	public static def UnaryExpression _UnaryExpr(UnaryOperator op, Expression expr) {
 		val result = N4JSFactory.eINSTANCE.createUnaryExpression;
 		result.op = op;

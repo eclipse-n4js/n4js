@@ -56,7 +56,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	PROCESSOR(0, "PROCESSOR", "PROCESSOR"),
+	PROCESSOR(1, "PROCESSOR", "PROCESSOR"),
 
 	/**
 	 * The '<em><b>LIBRARY</b></em>' literal object.
@@ -66,7 +66,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	LIBRARY(0, "LIBRARY", "LIBRARY"),
+	LIBRARY(2, "LIBRARY", "LIBRARY"),
 
 	/**
 	 * The '<em><b>API</b></em>' literal object.
@@ -76,7 +76,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	API(0, "API", "API"),
+	API(3, "API", "API"),
 
 	/**
 	 * The '<em><b>RUNTIME ENVIRONMENT</b></em>' literal object.
@@ -86,7 +86,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	RUNTIME_ENVIRONMENT(0, "RUNTIME_ENVIRONMENT", "RUNTIME_ENVIRONMENT"),
+	RUNTIME_ENVIRONMENT(4, "RUNTIME_ENVIRONMENT", "RUNTIME_ENVIRONMENT"),
 
 	/**
 	 * The '<em><b>RUNTIME LIBRARY</b></em>' literal object.
@@ -96,7 +96,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	RUNTIME_LIBRARY(0, "RUNTIME_LIBRARY", "RUNTIME_LIBRARY"),
+	RUNTIME_LIBRARY(5, "RUNTIME_LIBRARY", "RUNTIME_LIBRARY"),
 
 	/**
 	 * The '<em><b>TEST</b></em>' literal object.
@@ -106,7 +106,17 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	TEST(0, "TEST", "TEST");
+	TEST(6, "TEST", "TEST"),
+
+	/**
+	 * The '<em><b>VALIDATION</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #VALIDATION_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	VALIDATION(7, "VALIDATION", "VALIDATION");
 
 	/**
 	 * The '<em><b>APPLICATION</b></em>' literal value.
@@ -136,7 +146,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PROCESSOR_VALUE = 0;
+	public static final int PROCESSOR_VALUE = 1;
 
 	/**
 	 * The '<em><b>LIBRARY</b></em>' literal value.
@@ -151,7 +161,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int LIBRARY_VALUE = 0;
+	public static final int LIBRARY_VALUE = 2;
 
 	/**
 	 * The '<em><b>API</b></em>' literal value.
@@ -166,7 +176,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int API_VALUE = 0;
+	public static final int API_VALUE = 3;
 
 	/**
 	 * The '<em><b>RUNTIME ENVIRONMENT</b></em>' literal value.
@@ -181,7 +191,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int RUNTIME_ENVIRONMENT_VALUE = 0;
+	public static final int RUNTIME_ENVIRONMENT_VALUE = 4;
 
 	/**
 	 * The '<em><b>RUNTIME LIBRARY</b></em>' literal value.
@@ -196,7 +206,7 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int RUNTIME_LIBRARY_VALUE = 0;
+	public static final int RUNTIME_LIBRARY_VALUE = 5;
 
 	/**
 	 * The '<em><b>TEST</b></em>' literal value.
@@ -211,7 +221,22 @@ public enum ProjectType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TEST_VALUE = 0;
+	public static final int TEST_VALUE = 6;
+
+	/**
+	 * The '<em><b>VALIDATION</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>VALIDATION</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #VALIDATION
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int VALIDATION_VALUE = 7;
 
 	/**
 	 * An array of all the '<em><b>Project Type</b></em>' enumerators.
@@ -228,6 +253,7 @@ public enum ProjectType implements Enumerator {
 			RUNTIME_ENVIRONMENT,
 			RUNTIME_LIBRARY,
 			TEST,
+			VALIDATION,
 		};
 
 	/**
@@ -285,6 +311,13 @@ public enum ProjectType implements Enumerator {
 	public static ProjectType get(int value) {
 		switch (value) {
 			case APPLICATION_VALUE: return APPLICATION;
+			case PROCESSOR_VALUE: return PROCESSOR;
+			case LIBRARY_VALUE: return LIBRARY;
+			case API_VALUE: return API;
+			case RUNTIME_ENVIRONMENT_VALUE: return RUNTIME_ENVIRONMENT;
+			case RUNTIME_LIBRARY_VALUE: return RUNTIME_LIBRARY;
+			case TEST_VALUE: return TEST;
+			case VALIDATION_VALUE: return VALIDATION;
 		}
 		return null;
 	}

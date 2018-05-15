@@ -241,7 +241,7 @@ public class ProjectTestsUtils {
 		projectDesc.setOutputPath(outputFolder);
 		SourceFragment sourceProjectPath = N4mfFactory.eINSTANCE.createSourceFragment();
 		sourceProjectPath.setSourceFragmentType(SourceFragmentType.SOURCE);
-		sourceProjectPath.getPaths().add(sourceFolder);
+		sourceProjectPath.getPathsRaw().add(sourceFolder);
 		projectDesc.getSourceFragment().add(sourceProjectPath);
 		if (manifestAdjustments != null)
 			manifestAdjustments.accept(projectDesc);
