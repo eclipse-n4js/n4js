@@ -80,10 +80,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 				return createProjectDescriptionAdapter();
 			}
 			@Override
-			public Adapter caseSimpleProjectDescription(SimpleProjectDescription object) {
-				return createSimpleProjectDescriptionAdapter();
-			}
-			@Override
 			public Adapter caseTestedProject(TestedProject object) {
 				return createTestedProjectAdapter();
 			}
@@ -106,10 +102,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseProjectReference(ProjectReference object) {
 				return createProjectReferenceAdapter();
-			}
-			@Override
-			public Adapter caseSimpleProjectDependency(SimpleProjectDependency object) {
-				return createSimpleProjectDependencyAdapter();
 			}
 			@Override
 			public Adapter caseModuleFilterSpecifier(ModuleFilterSpecifier object) {
@@ -166,20 +158,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createProjectDescriptionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.SimpleProjectDescription <em>Simple Project Description</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.SimpleProjectDescription
-	 * @generated
-	 */
-	public Adapter createSimpleProjectDescriptionAdapter() {
 		return null;
 	}
 
@@ -264,20 +242,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createProjectReferenceAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.SimpleProjectDependency <em>Simple Project Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.SimpleProjectDependency
-	 * @generated
-	 */
-	public Adapter createSimpleProjectDependencyAdapter() {
 		return null;
 	}
 

@@ -80,9 +80,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
 		val dependency = N4mfFactory.eINSTANCE.createProjectDependency
-		val otherProject = N4mfFactory.eINSTANCE.createSimpleProjectDescription
-		otherProject.setProjectId(projectId)
-		dependency.setProject(otherProject)
+		dependency.setProjectId(projectId)
 		pd.projectDependencies.add(dependency)
 		resource.save(null)
 		waitForAutoBuild();

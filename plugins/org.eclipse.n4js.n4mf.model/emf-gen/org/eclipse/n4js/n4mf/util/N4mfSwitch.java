@@ -77,20 +77,13 @@ public class N4mfSwitch<T> extends Switch<T> {
 			case N4mfPackage.PROJECT_DESCRIPTION: {
 				ProjectDescription projectDescription = (ProjectDescription)theEObject;
 				T result = caseProjectDescription(projectDescription);
-				if (result == null) result = caseSimpleProjectDescription(projectDescription);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4mfPackage.SIMPLE_PROJECT_DESCRIPTION: {
-				SimpleProjectDescription simpleProjectDescription = (SimpleProjectDescription)theEObject;
-				T result = caseSimpleProjectDescription(simpleProjectDescription);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4mfPackage.TESTED_PROJECT: {
 				TestedProject testedProject = (TestedProject)theEObject;
 				T result = caseTestedProject(testedProject);
-				if (result == null) result = caseSimpleProjectDependency(testedProject);
+				if (result == null) result = caseProjectDependency(testedProject);
 				if (result == null) result = caseProjectReference(testedProject);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -125,13 +118,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4mfPackage.SIMPLE_PROJECT_DEPENDENCY: {
-				SimpleProjectDependency simpleProjectDependency = (SimpleProjectDependency)theEObject;
-				T result = caseSimpleProjectDependency(simpleProjectDependency);
-				if (result == null) result = caseProjectReference(simpleProjectDependency);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case N4mfPackage.MODULE_FILTER_SPECIFIER: {
 				ModuleFilterSpecifier moduleFilterSpecifier = (ModuleFilterSpecifier)theEObject;
 				T result = caseModuleFilterSpecifier(moduleFilterSpecifier);
@@ -141,7 +127,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 			case N4mfPackage.RUNTIME_PROJECT_DEPENDENCY: {
 				RuntimeProjectDependency runtimeProjectDependency = (RuntimeProjectDependency)theEObject;
 				T result = caseRuntimeProjectDependency(runtimeProjectDependency);
-				if (result == null) result = caseSimpleProjectDependency(runtimeProjectDependency);
 				if (result == null) result = caseProjectReference(runtimeProjectDependency);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -150,7 +135,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 				RequiredRuntimeLibraryDependency requiredRuntimeLibraryDependency = (RequiredRuntimeLibraryDependency)theEObject;
 				T result = caseRequiredRuntimeLibraryDependency(requiredRuntimeLibraryDependency);
 				if (result == null) result = caseRuntimeProjectDependency(requiredRuntimeLibraryDependency);
-				if (result == null) result = caseSimpleProjectDependency(requiredRuntimeLibraryDependency);
 				if (result == null) result = caseProjectReference(requiredRuntimeLibraryDependency);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -159,7 +143,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 				ProvidedRuntimeLibraryDependency providedRuntimeLibraryDependency = (ProvidedRuntimeLibraryDependency)theEObject;
 				T result = caseProvidedRuntimeLibraryDependency(providedRuntimeLibraryDependency);
 				if (result == null) result = caseRuntimeProjectDependency(providedRuntimeLibraryDependency);
-				if (result == null) result = caseSimpleProjectDependency(providedRuntimeLibraryDependency);
 				if (result == null) result = caseProjectReference(providedRuntimeLibraryDependency);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -167,7 +150,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 			case N4mfPackage.PROJECT_DEPENDENCY: {
 				ProjectDependency projectDependency = (ProjectDependency)theEObject;
 				T result = caseProjectDependency(projectDependency);
-				if (result == null) result = caseSimpleProjectDependency(projectDependency);
 				if (result == null) result = caseProjectReference(projectDependency);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -194,21 +176,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProjectDescription(ProjectDescription object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Simple Project Description</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Simple Project Description</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSimpleProjectDescription(SimpleProjectDescription object) {
 		return null;
 	}
 
@@ -299,21 +266,6 @@ public class N4mfSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProjectReference(ProjectReference object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Simple Project Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Simple Project Dependency</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSimpleProjectDependency(SimpleProjectDependency object) {
 		return null;
 	}
 

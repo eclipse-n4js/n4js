@@ -3685,51 +3685,35 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProvidedRuntimeLibraryDependency"
-    // InternalN4MFParser.g:1557:1: ruleProvidedRuntimeLibraryDependency returns [EObject current=null] : ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ;
+    // InternalN4MFParser.g:1557:1: ruleProvidedRuntimeLibraryDependency returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
     public final EObject ruleProvidedRuntimeLibraryDependency() throws RecognitionException {
         EObject current = null;
 
-        EObject lv_project_0_0 = null;
+        EObject this_ProjectIdWithOptionalVendor_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1563:2: ( ( (lv_project_0_0= ruleSimpleProjectDescription ) ) )
-            // InternalN4MFParser.g:1564:2: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            {
-            // InternalN4MFParser.g:1564:2: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            // InternalN4MFParser.g:1565:3: (lv_project_0_0= ruleSimpleProjectDescription )
-            {
-            // InternalN4MFParser.g:1565:3: (lv_project_0_0= ruleSimpleProjectDescription )
-            // InternalN4MFParser.g:1566:4: lv_project_0_0= ruleSimpleProjectDescription
+            // InternalN4MFParser.g:1563:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
+            // InternalN4MFParser.g:1564:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
             {
 
-            				newCompositeNode(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectSimpleProjectDescriptionParserRuleCall_0());
-            			
+            		if (current==null) {
+            			current = createModelElement(grammarAccess.getProvidedRuntimeLibraryDependencyRule());
+            		}
+            		newCompositeNode(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall());
+            	
             pushFollow(FOLLOW_2);
-            lv_project_0_0=ruleSimpleProjectDescription();
+            this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor(current);
 
             state._fsp--;
 
 
-            				if (current==null) {
-            					current = createModelElementForParent(grammarAccess.getProvidedRuntimeLibraryDependencyRule());
-            				}
-            				set(
-            					current,
-            					"project",
-            					lv_project_0_0,
-            					"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-            				afterParserOrEnumRuleCall();
-            			
-
-            }
-
-
-            }
-
+            		current = this_ProjectIdWithOptionalVendor_0;
+            		afterParserOrEnumRuleCall();
+            	
 
             }
 
@@ -3750,7 +3734,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleRequiredRuntimeLibraryDependency"
-    // InternalN4MFParser.g:1586:1: entryRuleRequiredRuntimeLibraryDependency returns [EObject current=null] : iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF ;
+    // InternalN4MFParser.g:1578:1: entryRuleRequiredRuntimeLibraryDependency returns [EObject current=null] : iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF ;
     public final EObject entryRuleRequiredRuntimeLibraryDependency() throws RecognitionException {
         EObject current = null;
 
@@ -3758,8 +3742,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1586:73: (iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF )
-            // InternalN4MFParser.g:1587:2: iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF
+            // InternalN4MFParser.g:1578:73: (iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF )
+            // InternalN4MFParser.g:1579:2: iv_ruleRequiredRuntimeLibraryDependency= ruleRequiredRuntimeLibraryDependency EOF
             {
              newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyRule()); 
             pushFollow(FOLLOW_1);
@@ -3786,51 +3770,35 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleRequiredRuntimeLibraryDependency"
-    // InternalN4MFParser.g:1593:1: ruleRequiredRuntimeLibraryDependency returns [EObject current=null] : ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ;
+    // InternalN4MFParser.g:1585:1: ruleRequiredRuntimeLibraryDependency returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
     public final EObject ruleRequiredRuntimeLibraryDependency() throws RecognitionException {
         EObject current = null;
 
-        EObject lv_project_0_0 = null;
+        EObject this_ProjectIdWithOptionalVendor_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1599:2: ( ( (lv_project_0_0= ruleSimpleProjectDescription ) ) )
-            // InternalN4MFParser.g:1600:2: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            {
-            // InternalN4MFParser.g:1600:2: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            // InternalN4MFParser.g:1601:3: (lv_project_0_0= ruleSimpleProjectDescription )
-            {
-            // InternalN4MFParser.g:1601:3: (lv_project_0_0= ruleSimpleProjectDescription )
-            // InternalN4MFParser.g:1602:4: lv_project_0_0= ruleSimpleProjectDescription
+            // InternalN4MFParser.g:1591:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
+            // InternalN4MFParser.g:1592:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
             {
 
-            				newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectSimpleProjectDescriptionParserRuleCall_0());
-            			
+            		if (current==null) {
+            			current = createModelElement(grammarAccess.getRequiredRuntimeLibraryDependencyRule());
+            		}
+            		newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall());
+            	
             pushFollow(FOLLOW_2);
-            lv_project_0_0=ruleSimpleProjectDescription();
+            this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor(current);
 
             state._fsp--;
 
 
-            				if (current==null) {
-            					current = createModelElementForParent(grammarAccess.getRequiredRuntimeLibraryDependencyRule());
-            				}
-            				set(
-            					current,
-            					"project",
-            					lv_project_0_0,
-            					"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-            				afterParserOrEnumRuleCall();
-            			
-
-            }
-
-
-            }
-
+            		current = this_ProjectIdWithOptionalVendor_0;
+            		afterParserOrEnumRuleCall();
+            	
 
             }
 
@@ -3851,7 +3819,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleTestedProject"
-    // InternalN4MFParser.g:1622:1: entryRuleTestedProject returns [EObject current=null] : iv_ruleTestedProject= ruleTestedProject EOF ;
+    // InternalN4MFParser.g:1606:1: entryRuleTestedProject returns [EObject current=null] : iv_ruleTestedProject= ruleTestedProject EOF ;
     public final EObject entryRuleTestedProject() throws RecognitionException {
         EObject current = null;
 
@@ -3859,8 +3827,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1622:54: (iv_ruleTestedProject= ruleTestedProject EOF )
-            // InternalN4MFParser.g:1623:2: iv_ruleTestedProject= ruleTestedProject EOF
+            // InternalN4MFParser.g:1606:54: (iv_ruleTestedProject= ruleTestedProject EOF )
+            // InternalN4MFParser.g:1607:2: iv_ruleTestedProject= ruleTestedProject EOF
             {
              newCompositeNode(grammarAccess.getTestedProjectRule()); 
             pushFollow(FOLLOW_1);
@@ -3887,51 +3855,35 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleTestedProject"
-    // InternalN4MFParser.g:1629:1: ruleTestedProject returns [EObject current=null] : ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ;
+    // InternalN4MFParser.g:1613:1: ruleTestedProject returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
     public final EObject ruleTestedProject() throws RecognitionException {
         EObject current = null;
 
-        EObject lv_project_0_0 = null;
+        EObject this_ProjectIdWithOptionalVendor_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1635:2: ( ( (lv_project_0_0= ruleSimpleProjectDescription ) ) )
-            // InternalN4MFParser.g:1636:2: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            {
-            // InternalN4MFParser.g:1636:2: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            // InternalN4MFParser.g:1637:3: (lv_project_0_0= ruleSimpleProjectDescription )
-            {
-            // InternalN4MFParser.g:1637:3: (lv_project_0_0= ruleSimpleProjectDescription )
-            // InternalN4MFParser.g:1638:4: lv_project_0_0= ruleSimpleProjectDescription
+            // InternalN4MFParser.g:1619:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
+            // InternalN4MFParser.g:1620:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
             {
 
-            				newCompositeNode(grammarAccess.getTestedProjectAccess().getProjectSimpleProjectDescriptionParserRuleCall_0());
-            			
+            		if (current==null) {
+            			current = createModelElement(grammarAccess.getTestedProjectRule());
+            		}
+            		newCompositeNode(grammarAccess.getTestedProjectAccess().getProjectIdWithOptionalVendorParserRuleCall());
+            	
             pushFollow(FOLLOW_2);
-            lv_project_0_0=ruleSimpleProjectDescription();
+            this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor(current);
 
             state._fsp--;
 
 
-            				if (current==null) {
-            					current = createModelElementForParent(grammarAccess.getTestedProjectRule());
-            				}
-            				set(
-            					current,
-            					"project",
-            					lv_project_0_0,
-            					"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-            				afterParserOrEnumRuleCall();
-            			
-
-            }
-
-
-            }
-
+            		current = this_ProjectIdWithOptionalVendor_0;
+            		afterParserOrEnumRuleCall();
+            	
 
             }
 
@@ -3952,7 +3904,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleProjectReference"
-    // InternalN4MFParser.g:1658:1: entryRuleProjectReference returns [EObject current=null] : iv_ruleProjectReference= ruleProjectReference EOF ;
+    // InternalN4MFParser.g:1634:1: entryRuleProjectReference returns [EObject current=null] : iv_ruleProjectReference= ruleProjectReference EOF ;
     public final EObject entryRuleProjectReference() throws RecognitionException {
         EObject current = null;
 
@@ -3960,8 +3912,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1658:57: (iv_ruleProjectReference= ruleProjectReference EOF )
-            // InternalN4MFParser.g:1659:2: iv_ruleProjectReference= ruleProjectReference EOF
+            // InternalN4MFParser.g:1634:57: (iv_ruleProjectReference= ruleProjectReference EOF )
+            // InternalN4MFParser.g:1635:2: iv_ruleProjectReference= ruleProjectReference EOF
             {
              newCompositeNode(grammarAccess.getProjectReferenceRule()); 
             pushFollow(FOLLOW_1);
@@ -3988,51 +3940,35 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectReference"
-    // InternalN4MFParser.g:1665:1: ruleProjectReference returns [EObject current=null] : ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ;
+    // InternalN4MFParser.g:1641:1: ruleProjectReference returns [EObject current=null] : this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ;
     public final EObject ruleProjectReference() throws RecognitionException {
         EObject current = null;
 
-        EObject lv_project_0_0 = null;
+        EObject this_ProjectIdWithOptionalVendor_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1671:2: ( ( (lv_project_0_0= ruleSimpleProjectDescription ) ) )
-            // InternalN4MFParser.g:1672:2: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            {
-            // InternalN4MFParser.g:1672:2: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            // InternalN4MFParser.g:1673:3: (lv_project_0_0= ruleSimpleProjectDescription )
-            {
-            // InternalN4MFParser.g:1673:3: (lv_project_0_0= ruleSimpleProjectDescription )
-            // InternalN4MFParser.g:1674:4: lv_project_0_0= ruleSimpleProjectDescription
+            // InternalN4MFParser.g:1647:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] )
+            // InternalN4MFParser.g:1648:2: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current]
             {
 
-            				newCompositeNode(grammarAccess.getProjectReferenceAccess().getProjectSimpleProjectDescriptionParserRuleCall_0());
-            			
+            		if (current==null) {
+            			current = createModelElement(grammarAccess.getProjectReferenceRule());
+            		}
+            		newCompositeNode(grammarAccess.getProjectReferenceAccess().getProjectIdWithOptionalVendorParserRuleCall());
+            	
             pushFollow(FOLLOW_2);
-            lv_project_0_0=ruleSimpleProjectDescription();
+            this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor(current);
 
             state._fsp--;
 
 
-            				if (current==null) {
-            					current = createModelElementForParent(grammarAccess.getProjectReferenceRule());
-            				}
-            				set(
-            					current,
-            					"project",
-            					lv_project_0_0,
-            					"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-            				afterParserOrEnumRuleCall();
-            			
-
-            }
-
-
-            }
-
+            		current = this_ProjectIdWithOptionalVendor_0;
+            		afterParserOrEnumRuleCall();
+            	
 
             }
 
@@ -4053,7 +3989,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleProjectDependency"
-    // InternalN4MFParser.g:1694:1: entryRuleProjectDependency returns [EObject current=null] : iv_ruleProjectDependency= ruleProjectDependency EOF ;
+    // InternalN4MFParser.g:1662:1: entryRuleProjectDependency returns [EObject current=null] : iv_ruleProjectDependency= ruleProjectDependency EOF ;
     public final EObject entryRuleProjectDependency() throws RecognitionException {
         EObject current = null;
 
@@ -4061,8 +3997,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1694:58: (iv_ruleProjectDependency= ruleProjectDependency EOF )
-            // InternalN4MFParser.g:1695:2: iv_ruleProjectDependency= ruleProjectDependency EOF
+            // InternalN4MFParser.g:1662:58: (iv_ruleProjectDependency= ruleProjectDependency EOF )
+            // InternalN4MFParser.g:1663:2: iv_ruleProjectDependency= ruleProjectDependency EOF
             {
              newCompositeNode(grammarAccess.getProjectDependencyRule()); 
             pushFollow(FOLLOW_1);
@@ -4089,11 +4025,11 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectDependency"
-    // InternalN4MFParser.g:1701:1: ruleProjectDependency returns [EObject current=null] : ( ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? ) ;
+    // InternalN4MFParser.g:1669:1: ruleProjectDependency returns [EObject current=null] : (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? ) ;
     public final EObject ruleProjectDependency() throws RecognitionException {
         EObject current = null;
 
-        EObject lv_project_0_0 = null;
+        EObject this_ProjectIdWithOptionalVendor_0 = null;
 
         EObject lv_versionConstraint_1_0 = null;
 
@@ -4104,44 +4040,28 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1707:2: ( ( ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? ) )
-            // InternalN4MFParser.g:1708:2: ( ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? )
+            // InternalN4MFParser.g:1675:2: ( (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? ) )
+            // InternalN4MFParser.g:1676:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? )
             {
-            // InternalN4MFParser.g:1708:2: ( ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? )
-            // InternalN4MFParser.g:1709:3: ( (lv_project_0_0= ruleSimpleProjectDescription ) ) ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )?
-            {
-            // InternalN4MFParser.g:1709:3: ( (lv_project_0_0= ruleSimpleProjectDescription ) )
-            // InternalN4MFParser.g:1710:4: (lv_project_0_0= ruleSimpleProjectDescription )
-            {
-            // InternalN4MFParser.g:1710:4: (lv_project_0_0= ruleSimpleProjectDescription )
-            // InternalN4MFParser.g:1711:5: lv_project_0_0= ruleSimpleProjectDescription
+            // InternalN4MFParser.g:1676:2: (this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )? )
+            // InternalN4MFParser.g:1677:3: this_ProjectIdWithOptionalVendor_0= ruleProjectIdWithOptionalVendor[$current] ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )? ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )?
             {
 
-            					newCompositeNode(grammarAccess.getProjectDependencyAccess().getProjectSimpleProjectDescriptionParserRuleCall_0_0());
-            				
+            			if (current==null) {
+            				current = createModelElement(grammarAccess.getProjectDependencyRule());
+            			}
+            			newCompositeNode(grammarAccess.getProjectDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall_0());
+            		
             pushFollow(FOLLOW_21);
-            lv_project_0_0=ruleSimpleProjectDescription();
+            this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor(current);
 
             state._fsp--;
 
 
-            					if (current==null) {
-            						current = createModelElementForParent(grammarAccess.getProjectDependencyRule());
-            					}
-            					set(
-            						current,
-            						"project",
-            						lv_project_0_0,
-            						"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-            					afterParserOrEnumRuleCall();
-            				
-
-            }
-
-
-            }
-
-            // InternalN4MFParser.g:1728:3: ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )?
+            			current = this_ProjectIdWithOptionalVendor_0;
+            			afterParserOrEnumRuleCall();
+            		
+            // InternalN4MFParser.g:1688:3: ( (lv_versionConstraint_1_0= ruleVersionConstraint ) )?
             int alt25=2;
             int LA25_0 = input.LA(1);
 
@@ -4150,10 +4070,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt25) {
                 case 1 :
-                    // InternalN4MFParser.g:1729:4: (lv_versionConstraint_1_0= ruleVersionConstraint )
+                    // InternalN4MFParser.g:1689:4: (lv_versionConstraint_1_0= ruleVersionConstraint )
                     {
-                    // InternalN4MFParser.g:1729:4: (lv_versionConstraint_1_0= ruleVersionConstraint )
-                    // InternalN4MFParser.g:1730:5: lv_versionConstraint_1_0= ruleVersionConstraint
+                    // InternalN4MFParser.g:1689:4: (lv_versionConstraint_1_0= ruleVersionConstraint )
+                    // InternalN4MFParser.g:1690:5: lv_versionConstraint_1_0= ruleVersionConstraint
                     {
 
                     					newCompositeNode(grammarAccess.getProjectDependencyAccess().getVersionConstraintVersionConstraintParserRuleCall_1_0());
@@ -4183,7 +4103,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalN4MFParser.g:1747:3: ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )?
+            // InternalN4MFParser.g:1707:3: ( (lv_declaredScope_2_0= ruleProjectDependencyScope ) )?
             int alt26=2;
             int LA26_0 = input.LA(1);
 
@@ -4192,10 +4112,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt26) {
                 case 1 :
-                    // InternalN4MFParser.g:1748:4: (lv_declaredScope_2_0= ruleProjectDependencyScope )
+                    // InternalN4MFParser.g:1708:4: (lv_declaredScope_2_0= ruleProjectDependencyScope )
                     {
-                    // InternalN4MFParser.g:1748:4: (lv_declaredScope_2_0= ruleProjectDependencyScope )
-                    // InternalN4MFParser.g:1749:5: lv_declaredScope_2_0= ruleProjectDependencyScope
+                    // InternalN4MFParser.g:1708:4: (lv_declaredScope_2_0= ruleProjectDependencyScope )
+                    // InternalN4MFParser.g:1709:5: lv_declaredScope_2_0= ruleProjectDependencyScope
                     {
 
                     					newCompositeNode(grammarAccess.getProjectDependencyAccess().getDeclaredScopeProjectDependencyScopeEnumRuleCall_2_0());
@@ -4247,46 +4167,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleProjectDependency"
 
 
-    // $ANTLR start "entryRuleSimpleProjectDescription"
-    // InternalN4MFParser.g:1770:1: entryRuleSimpleProjectDescription returns [EObject current=null] : iv_ruleSimpleProjectDescription= ruleSimpleProjectDescription EOF ;
-    public final EObject entryRuleSimpleProjectDescription() throws RecognitionException {
-        EObject current = null;
-
-        EObject iv_ruleSimpleProjectDescription = null;
-
-
-        try {
-            // InternalN4MFParser.g:1770:65: (iv_ruleSimpleProjectDescription= ruleSimpleProjectDescription EOF )
-            // InternalN4MFParser.g:1771:2: iv_ruleSimpleProjectDescription= ruleSimpleProjectDescription EOF
-            {
-             newCompositeNode(grammarAccess.getSimpleProjectDescriptionRule()); 
-            pushFollow(FOLLOW_1);
-            iv_ruleSimpleProjectDescription=ruleSimpleProjectDescription();
-
-            state._fsp--;
-
-             current =iv_ruleSimpleProjectDescription; 
-            match(input,EOF,FOLLOW_2); 
-
-            }
-
-        }
-
-            catch (RecognitionException re) {
-                recover(input,re);
-                appendSkippedTokens();
-            }
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleSimpleProjectDescription"
-
-
-    // $ANTLR start "ruleSimpleProjectDescription"
-    // InternalN4MFParser.g:1777:1: ruleSimpleProjectDescription returns [EObject current=null] : ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) ) ;
-    public final EObject ruleSimpleProjectDescription() throws RecognitionException {
-        EObject current = null;
+    // $ANTLR start "ruleProjectIdWithOptionalVendor"
+    // InternalN4MFParser.g:1731:1: ruleProjectIdWithOptionalVendor[EObject in_current] returns [EObject current=in_current] : ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) ) ;
+    public final EObject ruleProjectIdWithOptionalVendor(EObject in_current) throws RecognitionException {
+        EObject current = in_current;
 
         Token otherlv_1=null;
         AntlrDatatypeRuleToken lv_declaredVendorId_0_0 = null;
@@ -4298,27 +4182,27 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1783:2: ( ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) ) )
-            // InternalN4MFParser.g:1784:2: ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) )
+            // InternalN4MFParser.g:1737:2: ( ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) ) )
+            // InternalN4MFParser.g:1738:2: ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) )
             {
-            // InternalN4MFParser.g:1784:2: ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) )
-            // InternalN4MFParser.g:1785:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) )
+            // InternalN4MFParser.g:1738:2: ( ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) ) )
+            // InternalN4MFParser.g:1739:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )? ( (lv_projectId_2_0= ruleN4mfIdentifier ) )
             {
-            // InternalN4MFParser.g:1785:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )?
+            // InternalN4MFParser.g:1739:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )?
             int alt27=2;
             alt27 = dfa27.predict(input);
             switch (alt27) {
                 case 1 :
-                    // InternalN4MFParser.g:1786:4: ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon
+                    // InternalN4MFParser.g:1740:4: ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon
                     {
-                    // InternalN4MFParser.g:1786:4: ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) )
-                    // InternalN4MFParser.g:1787:5: (lv_declaredVendorId_0_0= ruleN4mfIdentifier )
+                    // InternalN4MFParser.g:1740:4: ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) )
+                    // InternalN4MFParser.g:1741:5: (lv_declaredVendorId_0_0= ruleN4mfIdentifier )
                     {
-                    // InternalN4MFParser.g:1787:5: (lv_declaredVendorId_0_0= ruleN4mfIdentifier )
-                    // InternalN4MFParser.g:1788:6: lv_declaredVendorId_0_0= ruleN4mfIdentifier
+                    // InternalN4MFParser.g:1741:5: (lv_declaredVendorId_0_0= ruleN4mfIdentifier )
+                    // InternalN4MFParser.g:1742:6: lv_declaredVendorId_0_0= ruleN4mfIdentifier
                     {
 
-                    						newCompositeNode(grammarAccess.getSimpleProjectDescriptionAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_0_0_0());
+                    						newCompositeNode(grammarAccess.getProjectIdWithOptionalVendorAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_0_0_0());
                     					
                     pushFollow(FOLLOW_3);
                     lv_declaredVendorId_0_0=ruleN4mfIdentifier();
@@ -4327,7 +4211,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
                     						if (current==null) {
-                    							current = createModelElementForParent(grammarAccess.getSimpleProjectDescriptionRule());
+                    							current = createModelElementForParent(grammarAccess.getProjectIdWithOptionalVendorRule());
                     						}
                     						set(
                     							current,
@@ -4344,7 +4228,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
                     otherlv_1=(Token)match(input,Colon,FOLLOW_4); 
 
-                    				newLeafNode(otherlv_1, grammarAccess.getSimpleProjectDescriptionAccess().getColonKeyword_0_1());
+                    				newLeafNode(otherlv_1, grammarAccess.getProjectIdWithOptionalVendorAccess().getColonKeyword_0_1());
                     			
 
                     }
@@ -4352,14 +4236,14 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalN4MFParser.g:1810:3: ( (lv_projectId_2_0= ruleN4mfIdentifier ) )
-            // InternalN4MFParser.g:1811:4: (lv_projectId_2_0= ruleN4mfIdentifier )
+            // InternalN4MFParser.g:1764:3: ( (lv_projectId_2_0= ruleN4mfIdentifier ) )
+            // InternalN4MFParser.g:1765:4: (lv_projectId_2_0= ruleN4mfIdentifier )
             {
-            // InternalN4MFParser.g:1811:4: (lv_projectId_2_0= ruleN4mfIdentifier )
-            // InternalN4MFParser.g:1812:5: lv_projectId_2_0= ruleN4mfIdentifier
+            // InternalN4MFParser.g:1765:4: (lv_projectId_2_0= ruleN4mfIdentifier )
+            // InternalN4MFParser.g:1766:5: lv_projectId_2_0= ruleN4mfIdentifier
             {
 
-            					newCompositeNode(grammarAccess.getSimpleProjectDescriptionAccess().getProjectIdN4mfIdentifierParserRuleCall_1_0());
+            					newCompositeNode(grammarAccess.getProjectIdWithOptionalVendorAccess().getProjectIdN4mfIdentifierParserRuleCall_1_0());
             				
             pushFollow(FOLLOW_2);
             lv_projectId_2_0=ruleN4mfIdentifier();
@@ -4368,7 +4252,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
             					if (current==null) {
-            						current = createModelElementForParent(grammarAccess.getSimpleProjectDescriptionRule());
+            						current = createModelElementForParent(grammarAccess.getProjectIdWithOptionalVendorRule());
             					}
             					set(
             						current,
@@ -4402,11 +4286,11 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "ruleSimpleProjectDescription"
+    // $ANTLR end "ruleProjectIdWithOptionalVendor"
 
 
     // $ANTLR start "entryRuleVersionConstraint"
-    // InternalN4MFParser.g:1833:1: entryRuleVersionConstraint returns [EObject current=null] : iv_ruleVersionConstraint= ruleVersionConstraint EOF ;
+    // InternalN4MFParser.g:1787:1: entryRuleVersionConstraint returns [EObject current=null] : iv_ruleVersionConstraint= ruleVersionConstraint EOF ;
     public final EObject entryRuleVersionConstraint() throws RecognitionException {
         EObject current = null;
 
@@ -4414,8 +4298,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1833:58: (iv_ruleVersionConstraint= ruleVersionConstraint EOF )
-            // InternalN4MFParser.g:1834:2: iv_ruleVersionConstraint= ruleVersionConstraint EOF
+            // InternalN4MFParser.g:1787:58: (iv_ruleVersionConstraint= ruleVersionConstraint EOF )
+            // InternalN4MFParser.g:1788:2: iv_ruleVersionConstraint= ruleVersionConstraint EOF
             {
              newCompositeNode(grammarAccess.getVersionConstraintRule()); 
             pushFollow(FOLLOW_1);
@@ -4442,7 +4326,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionConstraint"
-    // InternalN4MFParser.g:1840:1: ruleVersionConstraint returns [EObject current=null] : ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) ) ;
+    // InternalN4MFParser.g:1794:1: ruleVersionConstraint returns [EObject current=null] : ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) ) ;
     public final EObject ruleVersionConstraint() throws RecognitionException {
         EObject current = null;
 
@@ -4463,10 +4347,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1846:2: ( ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) ) )
-            // InternalN4MFParser.g:1847:2: ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) )
+            // InternalN4MFParser.g:1800:2: ( ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) ) )
+            // InternalN4MFParser.g:1801:2: ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) )
             {
-            // InternalN4MFParser.g:1847:2: ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) )
+            // InternalN4MFParser.g:1801:2: ( ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) ) | ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) ) )
             int alt32=2;
             int LA32_0 = input.LA(1);
 
@@ -4484,12 +4368,12 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt32) {
                 case 1 :
-                    // InternalN4MFParser.g:1848:3: ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) )
+                    // InternalN4MFParser.g:1802:3: ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) )
                     {
-                    // InternalN4MFParser.g:1848:3: ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) )
-                    // InternalN4MFParser.g:1849:4: ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis )
+                    // InternalN4MFParser.g:1802:3: ( ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis ) )
+                    // InternalN4MFParser.g:1803:4: ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket ) ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) ) ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis )
                     {
-                    // InternalN4MFParser.g:1849:4: ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket )
+                    // InternalN4MFParser.g:1803:4: ( ( (lv_exclLowerBound_0_0= LeftParenthesis ) ) | otherlv_1= LeftSquareBracket )
                     int alt28=2;
                     int LA28_0 = input.LA(1);
 
@@ -4507,13 +4391,13 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt28) {
                         case 1 :
-                            // InternalN4MFParser.g:1850:5: ( (lv_exclLowerBound_0_0= LeftParenthesis ) )
+                            // InternalN4MFParser.g:1804:5: ( (lv_exclLowerBound_0_0= LeftParenthesis ) )
                             {
-                            // InternalN4MFParser.g:1850:5: ( (lv_exclLowerBound_0_0= LeftParenthesis ) )
-                            // InternalN4MFParser.g:1851:6: (lv_exclLowerBound_0_0= LeftParenthesis )
+                            // InternalN4MFParser.g:1804:5: ( (lv_exclLowerBound_0_0= LeftParenthesis ) )
+                            // InternalN4MFParser.g:1805:6: (lv_exclLowerBound_0_0= LeftParenthesis )
                             {
-                            // InternalN4MFParser.g:1851:6: (lv_exclLowerBound_0_0= LeftParenthesis )
-                            // InternalN4MFParser.g:1852:7: lv_exclLowerBound_0_0= LeftParenthesis
+                            // InternalN4MFParser.g:1805:6: (lv_exclLowerBound_0_0= LeftParenthesis )
+                            // InternalN4MFParser.g:1806:7: lv_exclLowerBound_0_0= LeftParenthesis
                             {
                             lv_exclLowerBound_0_0=(Token)match(input,LeftParenthesis,FOLLOW_7); 
 
@@ -4535,7 +4419,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                             }
                             break;
                         case 2 :
-                            // InternalN4MFParser.g:1865:5: otherlv_1= LeftSquareBracket
+                            // InternalN4MFParser.g:1819:5: otherlv_1= LeftSquareBracket
                             {
                             otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_7); 
 
@@ -4547,11 +4431,11 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalN4MFParser.g:1870:4: ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) )
-                    // InternalN4MFParser.g:1871:5: (lv_lowerVersion_2_0= ruleDeclaredVersion )
+                    // InternalN4MFParser.g:1824:4: ( (lv_lowerVersion_2_0= ruleDeclaredVersion ) )
+                    // InternalN4MFParser.g:1825:5: (lv_lowerVersion_2_0= ruleDeclaredVersion )
                     {
-                    // InternalN4MFParser.g:1871:5: (lv_lowerVersion_2_0= ruleDeclaredVersion )
-                    // InternalN4MFParser.g:1872:6: lv_lowerVersion_2_0= ruleDeclaredVersion
+                    // InternalN4MFParser.g:1825:5: (lv_lowerVersion_2_0= ruleDeclaredVersion )
+                    // InternalN4MFParser.g:1826:6: lv_lowerVersion_2_0= ruleDeclaredVersion
                     {
 
                     						newCompositeNode(grammarAccess.getVersionConstraintAccess().getLowerVersionDeclaredVersionParserRuleCall_0_1_0());
@@ -4578,7 +4462,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalN4MFParser.g:1889:4: ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis )
+                    // InternalN4MFParser.g:1843:4: ( (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )? | otherlv_7= RightParenthesis )
                     int alt31=2;
                     int LA31_0 = input.LA(1);
 
@@ -4596,9 +4480,9 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt31) {
                         case 1 :
-                            // InternalN4MFParser.g:1890:5: (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )?
+                            // InternalN4MFParser.g:1844:5: (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )?
                             {
-                            // InternalN4MFParser.g:1890:5: (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )?
+                            // InternalN4MFParser.g:1844:5: (otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket ) )?
                             int alt30=2;
                             int LA30_0 = input.LA(1);
 
@@ -4611,17 +4495,17 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                             }
                             switch (alt30) {
                                 case 1 :
-                                    // InternalN4MFParser.g:1891:6: otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket )
+                                    // InternalN4MFParser.g:1845:6: otherlv_3= Comma ( (lv_upperVersion_4_0= ruleDeclaredVersion ) ) ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket )
                                     {
                                     otherlv_3=(Token)match(input,Comma,FOLLOW_7); 
 
                                     						newLeafNode(otherlv_3, grammarAccess.getVersionConstraintAccess().getCommaKeyword_0_2_0_0());
                                     					
-                                    // InternalN4MFParser.g:1895:6: ( (lv_upperVersion_4_0= ruleDeclaredVersion ) )
-                                    // InternalN4MFParser.g:1896:7: (lv_upperVersion_4_0= ruleDeclaredVersion )
+                                    // InternalN4MFParser.g:1849:6: ( (lv_upperVersion_4_0= ruleDeclaredVersion ) )
+                                    // InternalN4MFParser.g:1850:7: (lv_upperVersion_4_0= ruleDeclaredVersion )
                                     {
-                                    // InternalN4MFParser.g:1896:7: (lv_upperVersion_4_0= ruleDeclaredVersion )
-                                    // InternalN4MFParser.g:1897:8: lv_upperVersion_4_0= ruleDeclaredVersion
+                                    // InternalN4MFParser.g:1850:7: (lv_upperVersion_4_0= ruleDeclaredVersion )
+                                    // InternalN4MFParser.g:1851:8: lv_upperVersion_4_0= ruleDeclaredVersion
                                     {
 
                                     								newCompositeNode(grammarAccess.getVersionConstraintAccess().getUpperVersionDeclaredVersionParserRuleCall_0_2_0_1_0());
@@ -4648,7 +4532,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
                                     }
 
-                                    // InternalN4MFParser.g:1914:6: ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket )
+                                    // InternalN4MFParser.g:1868:6: ( ( (lv_exclUpperBound_5_0= RightParenthesis ) ) | otherlv_6= RightSquareBracket )
                                     int alt29=2;
                                     int LA29_0 = input.LA(1);
 
@@ -4666,13 +4550,13 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                                     }
                                     switch (alt29) {
                                         case 1 :
-                                            // InternalN4MFParser.g:1915:7: ( (lv_exclUpperBound_5_0= RightParenthesis ) )
+                                            // InternalN4MFParser.g:1869:7: ( (lv_exclUpperBound_5_0= RightParenthesis ) )
                                             {
-                                            // InternalN4MFParser.g:1915:7: ( (lv_exclUpperBound_5_0= RightParenthesis ) )
-                                            // InternalN4MFParser.g:1916:8: (lv_exclUpperBound_5_0= RightParenthesis )
+                                            // InternalN4MFParser.g:1869:7: ( (lv_exclUpperBound_5_0= RightParenthesis ) )
+                                            // InternalN4MFParser.g:1870:8: (lv_exclUpperBound_5_0= RightParenthesis )
                                             {
-                                            // InternalN4MFParser.g:1916:8: (lv_exclUpperBound_5_0= RightParenthesis )
-                                            // InternalN4MFParser.g:1917:9: lv_exclUpperBound_5_0= RightParenthesis
+                                            // InternalN4MFParser.g:1870:8: (lv_exclUpperBound_5_0= RightParenthesis )
+                                            // InternalN4MFParser.g:1871:9: lv_exclUpperBound_5_0= RightParenthesis
                                             {
                                             lv_exclUpperBound_5_0=(Token)match(input,RightParenthesis,FOLLOW_2); 
 
@@ -4694,7 +4578,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                                             }
                                             break;
                                         case 2 :
-                                            // InternalN4MFParser.g:1930:7: otherlv_6= RightSquareBracket
+                                            // InternalN4MFParser.g:1884:7: otherlv_6= RightSquareBracket
                                             {
                                             otherlv_6=(Token)match(input,RightSquareBracket,FOLLOW_2); 
 
@@ -4716,7 +4600,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                             }
                             break;
                         case 2 :
-                            // InternalN4MFParser.g:1937:5: otherlv_7= RightParenthesis
+                            // InternalN4MFParser.g:1891:5: otherlv_7= RightParenthesis
                             {
                             otherlv_7=(Token)match(input,RightParenthesis,FOLLOW_2); 
 
@@ -4735,13 +4619,13 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:1944:3: ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) )
+                    // InternalN4MFParser.g:1898:3: ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) )
                     {
-                    // InternalN4MFParser.g:1944:3: ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) )
-                    // InternalN4MFParser.g:1945:4: (lv_lowerVersion_8_0= ruleDeclaredVersion )
+                    // InternalN4MFParser.g:1898:3: ( (lv_lowerVersion_8_0= ruleDeclaredVersion ) )
+                    // InternalN4MFParser.g:1899:4: (lv_lowerVersion_8_0= ruleDeclaredVersion )
                     {
-                    // InternalN4MFParser.g:1945:4: (lv_lowerVersion_8_0= ruleDeclaredVersion )
-                    // InternalN4MFParser.g:1946:5: lv_lowerVersion_8_0= ruleDeclaredVersion
+                    // InternalN4MFParser.g:1899:4: (lv_lowerVersion_8_0= ruleDeclaredVersion )
+                    // InternalN4MFParser.g:1900:5: lv_lowerVersion_8_0= ruleDeclaredVersion
                     {
 
                     					newCompositeNode(grammarAccess.getVersionConstraintAccess().getLowerVersionDeclaredVersionParserRuleCall_1_0());
@@ -4794,7 +4678,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleN4mfIdentifier"
-    // InternalN4MFParser.g:1967:1: entryRuleN4mfIdentifier returns [String current=null] : iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF ;
+    // InternalN4MFParser.g:1921:1: entryRuleN4mfIdentifier returns [String current=null] : iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF ;
     public final String entryRuleN4mfIdentifier() throws RecognitionException {
         String current = null;
 
@@ -4802,8 +4686,8 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalN4MFParser.g:1967:54: (iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF )
-            // InternalN4MFParser.g:1968:2: iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF
+            // InternalN4MFParser.g:1921:54: (iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF )
+            // InternalN4MFParser.g:1922:2: iv_ruleN4mfIdentifier= ruleN4mfIdentifier EOF
             {
              newCompositeNode(grammarAccess.getN4mfIdentifierRule()); 
             pushFollow(FOLLOW_1);
@@ -4830,7 +4714,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleN4mfIdentifier"
-    // InternalN4MFParser.g:1974:1: ruleN4mfIdentifier returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test ) ;
+    // InternalN4MFParser.g:1928:1: ruleN4mfIdentifier returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test ) ;
     public final AntlrDatatypeRuleToken ruleN4mfIdentifier() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -4841,10 +4725,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:1980:2: ( (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test ) )
-            // InternalN4MFParser.g:1981:2: (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test )
+            // InternalN4MFParser.g:1934:2: ( (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test ) )
+            // InternalN4MFParser.g:1935:2: (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test )
             {
-            // InternalN4MFParser.g:1981:2: (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test )
+            // InternalN4MFParser.g:1935:2: (this_ID_0= RULE_ID | kw= ProjectId | kw= ProjectType | kw= ProjectVersion | kw= VendorId | kw= VendorName | kw= Output | kw= Libraries | kw= Resources | kw= Sources | kw= ModuleFilters | (kw= ProjectDependencies kw= KW_System ) | kw= API | kw= User | kw= Application | (kw= Processor kw= Source ) | kw= Content | kw= Test )
             int alt33=18;
             switch ( input.LA(1) ) {
             case RULE_ID:
@@ -4946,7 +4830,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             switch (alt33) {
                 case 1 :
-                    // InternalN4MFParser.g:1982:3: this_ID_0= RULE_ID
+                    // InternalN4MFParser.g:1936:3: this_ID_0= RULE_ID
                     {
                     this_ID_0=(Token)match(input,RULE_ID,FOLLOW_2); 
 
@@ -4959,7 +4843,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:1990:3: kw= ProjectId
+                    // InternalN4MFParser.g:1944:3: kw= ProjectId
                     {
                     kw=(Token)match(input,ProjectId,FOLLOW_2); 
 
@@ -4970,7 +4854,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalN4MFParser.g:1996:3: kw= ProjectType
+                    // InternalN4MFParser.g:1950:3: kw= ProjectType
                     {
                     kw=(Token)match(input,ProjectType,FOLLOW_2); 
 
@@ -4981,7 +4865,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalN4MFParser.g:2002:3: kw= ProjectVersion
+                    // InternalN4MFParser.g:1956:3: kw= ProjectVersion
                     {
                     kw=(Token)match(input,ProjectVersion,FOLLOW_2); 
 
@@ -4992,7 +4876,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalN4MFParser.g:2008:3: kw= VendorId
+                    // InternalN4MFParser.g:1962:3: kw= VendorId
                     {
                     kw=(Token)match(input,VendorId,FOLLOW_2); 
 
@@ -5003,7 +4887,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalN4MFParser.g:2014:3: kw= VendorName
+                    // InternalN4MFParser.g:1968:3: kw= VendorName
                     {
                     kw=(Token)match(input,VendorName,FOLLOW_2); 
 
@@ -5014,7 +4898,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalN4MFParser.g:2020:3: kw= Output
+                    // InternalN4MFParser.g:1974:3: kw= Output
                     {
                     kw=(Token)match(input,Output,FOLLOW_2); 
 
@@ -5025,7 +4909,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // InternalN4MFParser.g:2026:3: kw= Libraries
+                    // InternalN4MFParser.g:1980:3: kw= Libraries
                     {
                     kw=(Token)match(input,Libraries,FOLLOW_2); 
 
@@ -5036,7 +4920,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 9 :
-                    // InternalN4MFParser.g:2032:3: kw= Resources
+                    // InternalN4MFParser.g:1986:3: kw= Resources
                     {
                     kw=(Token)match(input,Resources,FOLLOW_2); 
 
@@ -5047,7 +4931,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 10 :
-                    // InternalN4MFParser.g:2038:3: kw= Sources
+                    // InternalN4MFParser.g:1992:3: kw= Sources
                     {
                     kw=(Token)match(input,Sources,FOLLOW_2); 
 
@@ -5058,7 +4942,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 11 :
-                    // InternalN4MFParser.g:2044:3: kw= ModuleFilters
+                    // InternalN4MFParser.g:1998:3: kw= ModuleFilters
                     {
                     kw=(Token)match(input,ModuleFilters,FOLLOW_2); 
 
@@ -5069,10 +4953,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 12 :
-                    // InternalN4MFParser.g:2050:3: (kw= ProjectDependencies kw= KW_System )
+                    // InternalN4MFParser.g:2004:3: (kw= ProjectDependencies kw= KW_System )
                     {
-                    // InternalN4MFParser.g:2050:3: (kw= ProjectDependencies kw= KW_System )
-                    // InternalN4MFParser.g:2051:4: kw= ProjectDependencies kw= KW_System
+                    // InternalN4MFParser.g:2004:3: (kw= ProjectDependencies kw= KW_System )
+                    // InternalN4MFParser.g:2005:4: kw= ProjectDependencies kw= KW_System
                     {
                     kw=(Token)match(input,ProjectDependencies,FOLLOW_25); 
 
@@ -5091,7 +4975,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 13 :
-                    // InternalN4MFParser.g:2063:3: kw= API
+                    // InternalN4MFParser.g:2017:3: kw= API
                     {
                     kw=(Token)match(input,API,FOLLOW_2); 
 
@@ -5102,7 +4986,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 14 :
-                    // InternalN4MFParser.g:2069:3: kw= User
+                    // InternalN4MFParser.g:2023:3: kw= User
                     {
                     kw=(Token)match(input,User,FOLLOW_2); 
 
@@ -5113,7 +4997,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 15 :
-                    // InternalN4MFParser.g:2075:3: kw= Application
+                    // InternalN4MFParser.g:2029:3: kw= Application
                     {
                     kw=(Token)match(input,Application,FOLLOW_2); 
 
@@ -5124,10 +5008,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 16 :
-                    // InternalN4MFParser.g:2081:3: (kw= Processor kw= Source )
+                    // InternalN4MFParser.g:2035:3: (kw= Processor kw= Source )
                     {
-                    // InternalN4MFParser.g:2081:3: (kw= Processor kw= Source )
-                    // InternalN4MFParser.g:2082:4: kw= Processor kw= Source
+                    // InternalN4MFParser.g:2035:3: (kw= Processor kw= Source )
+                    // InternalN4MFParser.g:2036:4: kw= Processor kw= Source
                     {
                     kw=(Token)match(input,Processor,FOLLOW_26); 
 
@@ -5146,7 +5030,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 17 :
-                    // InternalN4MFParser.g:2094:3: kw= Content
+                    // InternalN4MFParser.g:2048:3: kw= Content
                     {
                     kw=(Token)match(input,Content,FOLLOW_2); 
 
@@ -5157,7 +5041,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 18 :
-                    // InternalN4MFParser.g:2100:3: kw= Test
+                    // InternalN4MFParser.g:2054:3: kw= Test
                     {
                     kw=(Token)match(input,Test,FOLLOW_2); 
 
@@ -5190,7 +5074,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectType"
-    // InternalN4MFParser.g:2109:1: ruleProjectType returns [Enumerator current=null] : ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) ) ;
+    // InternalN4MFParser.g:2063:1: ruleProjectType returns [Enumerator current=null] : ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) ) ;
     public final Enumerator ruleProjectType() throws RecognitionException {
         Enumerator current = null;
 
@@ -5207,10 +5091,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2115:2: ( ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) ) )
-            // InternalN4MFParser.g:2116:2: ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) )
+            // InternalN4MFParser.g:2069:2: ( ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) ) )
+            // InternalN4MFParser.g:2070:2: ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) )
             {
-            // InternalN4MFParser.g:2116:2: ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) )
+            // InternalN4MFParser.g:2070:2: ( (enumLiteral_0= Application ) | (enumLiteral_1= Processor ) | (enumLiteral_2= Library ) | (enumLiteral_3= API ) | (enumLiteral_4= RuntimeEnvironment ) | (enumLiteral_5= RuntimeLibrary ) | (enumLiteral_6= Test ) | (enumLiteral_7= Validation ) )
             int alt34=8;
             switch ( input.LA(1) ) {
             case Application:
@@ -5262,10 +5146,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             switch (alt34) {
                 case 1 :
-                    // InternalN4MFParser.g:2117:3: (enumLiteral_0= Application )
+                    // InternalN4MFParser.g:2071:3: (enumLiteral_0= Application )
                     {
-                    // InternalN4MFParser.g:2117:3: (enumLiteral_0= Application )
-                    // InternalN4MFParser.g:2118:4: enumLiteral_0= Application
+                    // InternalN4MFParser.g:2071:3: (enumLiteral_0= Application )
+                    // InternalN4MFParser.g:2072:4: enumLiteral_0= Application
                     {
                     enumLiteral_0=(Token)match(input,Application,FOLLOW_2); 
 
@@ -5279,10 +5163,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2125:3: (enumLiteral_1= Processor )
+                    // InternalN4MFParser.g:2079:3: (enumLiteral_1= Processor )
                     {
-                    // InternalN4MFParser.g:2125:3: (enumLiteral_1= Processor )
-                    // InternalN4MFParser.g:2126:4: enumLiteral_1= Processor
+                    // InternalN4MFParser.g:2079:3: (enumLiteral_1= Processor )
+                    // InternalN4MFParser.g:2080:4: enumLiteral_1= Processor
                     {
                     enumLiteral_1=(Token)match(input,Processor,FOLLOW_2); 
 
@@ -5296,10 +5180,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalN4MFParser.g:2133:3: (enumLiteral_2= Library )
+                    // InternalN4MFParser.g:2087:3: (enumLiteral_2= Library )
                     {
-                    // InternalN4MFParser.g:2133:3: (enumLiteral_2= Library )
-                    // InternalN4MFParser.g:2134:4: enumLiteral_2= Library
+                    // InternalN4MFParser.g:2087:3: (enumLiteral_2= Library )
+                    // InternalN4MFParser.g:2088:4: enumLiteral_2= Library
                     {
                     enumLiteral_2=(Token)match(input,Library,FOLLOW_2); 
 
@@ -5313,10 +5197,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalN4MFParser.g:2141:3: (enumLiteral_3= API )
+                    // InternalN4MFParser.g:2095:3: (enumLiteral_3= API )
                     {
-                    // InternalN4MFParser.g:2141:3: (enumLiteral_3= API )
-                    // InternalN4MFParser.g:2142:4: enumLiteral_3= API
+                    // InternalN4MFParser.g:2095:3: (enumLiteral_3= API )
+                    // InternalN4MFParser.g:2096:4: enumLiteral_3= API
                     {
                     enumLiteral_3=(Token)match(input,API,FOLLOW_2); 
 
@@ -5330,10 +5214,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalN4MFParser.g:2149:3: (enumLiteral_4= RuntimeEnvironment )
+                    // InternalN4MFParser.g:2103:3: (enumLiteral_4= RuntimeEnvironment )
                     {
-                    // InternalN4MFParser.g:2149:3: (enumLiteral_4= RuntimeEnvironment )
-                    // InternalN4MFParser.g:2150:4: enumLiteral_4= RuntimeEnvironment
+                    // InternalN4MFParser.g:2103:3: (enumLiteral_4= RuntimeEnvironment )
+                    // InternalN4MFParser.g:2104:4: enumLiteral_4= RuntimeEnvironment
                     {
                     enumLiteral_4=(Token)match(input,RuntimeEnvironment,FOLLOW_2); 
 
@@ -5347,10 +5231,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalN4MFParser.g:2157:3: (enumLiteral_5= RuntimeLibrary )
+                    // InternalN4MFParser.g:2111:3: (enumLiteral_5= RuntimeLibrary )
                     {
-                    // InternalN4MFParser.g:2157:3: (enumLiteral_5= RuntimeLibrary )
-                    // InternalN4MFParser.g:2158:4: enumLiteral_5= RuntimeLibrary
+                    // InternalN4MFParser.g:2111:3: (enumLiteral_5= RuntimeLibrary )
+                    // InternalN4MFParser.g:2112:4: enumLiteral_5= RuntimeLibrary
                     {
                     enumLiteral_5=(Token)match(input,RuntimeLibrary,FOLLOW_2); 
 
@@ -5364,10 +5248,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalN4MFParser.g:2165:3: (enumLiteral_6= Test )
+                    // InternalN4MFParser.g:2119:3: (enumLiteral_6= Test )
                     {
-                    // InternalN4MFParser.g:2165:3: (enumLiteral_6= Test )
-                    // InternalN4MFParser.g:2166:4: enumLiteral_6= Test
+                    // InternalN4MFParser.g:2119:3: (enumLiteral_6= Test )
+                    // InternalN4MFParser.g:2120:4: enumLiteral_6= Test
                     {
                     enumLiteral_6=(Token)match(input,Test,FOLLOW_2); 
 
@@ -5381,10 +5265,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // InternalN4MFParser.g:2173:3: (enumLiteral_7= Validation )
+                    // InternalN4MFParser.g:2127:3: (enumLiteral_7= Validation )
                     {
-                    // InternalN4MFParser.g:2173:3: (enumLiteral_7= Validation )
-                    // InternalN4MFParser.g:2174:4: enumLiteral_7= Validation
+                    // InternalN4MFParser.g:2127:3: (enumLiteral_7= Validation )
+                    // InternalN4MFParser.g:2128:4: enumLiteral_7= Validation
                     {
                     enumLiteral_7=(Token)match(input,Validation,FOLLOW_2); 
 
@@ -5420,7 +5304,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSourceFragmentType"
-    // InternalN4MFParser.g:2184:1: ruleSourceFragmentType returns [Enumerator current=null] : ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) ) ;
+    // InternalN4MFParser.g:2138:1: ruleSourceFragmentType returns [Enumerator current=null] : ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) ) ;
     public final Enumerator ruleSourceFragmentType() throws RecognitionException {
         Enumerator current = null;
 
@@ -5432,10 +5316,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2190:2: ( ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) ) )
-            // InternalN4MFParser.g:2191:2: ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) )
+            // InternalN4MFParser.g:2144:2: ( ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) ) )
+            // InternalN4MFParser.g:2145:2: ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) )
             {
-            // InternalN4MFParser.g:2191:2: ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) )
+            // InternalN4MFParser.g:2145:2: ( (enumLiteral_0= Source ) | (enumLiteral_1= External ) | (enumLiteral_2= Test ) )
             int alt35=3;
             switch ( input.LA(1) ) {
             case Source:
@@ -5462,10 +5346,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             switch (alt35) {
                 case 1 :
-                    // InternalN4MFParser.g:2192:3: (enumLiteral_0= Source )
+                    // InternalN4MFParser.g:2146:3: (enumLiteral_0= Source )
                     {
-                    // InternalN4MFParser.g:2192:3: (enumLiteral_0= Source )
-                    // InternalN4MFParser.g:2193:4: enumLiteral_0= Source
+                    // InternalN4MFParser.g:2146:3: (enumLiteral_0= Source )
+                    // InternalN4MFParser.g:2147:4: enumLiteral_0= Source
                     {
                     enumLiteral_0=(Token)match(input,Source,FOLLOW_2); 
 
@@ -5479,10 +5363,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2200:3: (enumLiteral_1= External )
+                    // InternalN4MFParser.g:2154:3: (enumLiteral_1= External )
                     {
-                    // InternalN4MFParser.g:2200:3: (enumLiteral_1= External )
-                    // InternalN4MFParser.g:2201:4: enumLiteral_1= External
+                    // InternalN4MFParser.g:2154:3: (enumLiteral_1= External )
+                    // InternalN4MFParser.g:2155:4: enumLiteral_1= External
                     {
                     enumLiteral_1=(Token)match(input,External,FOLLOW_2); 
 
@@ -5496,10 +5380,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalN4MFParser.g:2208:3: (enumLiteral_2= Test )
+                    // InternalN4MFParser.g:2162:3: (enumLiteral_2= Test )
                     {
-                    // InternalN4MFParser.g:2208:3: (enumLiteral_2= Test )
-                    // InternalN4MFParser.g:2209:4: enumLiteral_2= Test
+                    // InternalN4MFParser.g:2162:3: (enumLiteral_2= Test )
+                    // InternalN4MFParser.g:2163:4: enumLiteral_2= Test
                     {
                     enumLiteral_2=(Token)match(input,Test,FOLLOW_2); 
 
@@ -5535,7 +5419,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleModuleFilterType"
-    // InternalN4MFParser.g:2219:1: ruleModuleFilterType returns [Enumerator current=null] : ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) ) ;
+    // InternalN4MFParser.g:2173:1: ruleModuleFilterType returns [Enumerator current=null] : ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) ) ;
     public final Enumerator ruleModuleFilterType() throws RecognitionException {
         Enumerator current = null;
 
@@ -5546,10 +5430,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2225:2: ( ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) ) )
-            // InternalN4MFParser.g:2226:2: ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) )
+            // InternalN4MFParser.g:2179:2: ( ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) ) )
+            // InternalN4MFParser.g:2180:2: ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) )
             {
-            // InternalN4MFParser.g:2226:2: ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) )
+            // InternalN4MFParser.g:2180:2: ( (enumLiteral_0= NoValidate ) | (enumLiteral_1= NoModuleWrap ) )
             int alt36=2;
             int LA36_0 = input.LA(1);
 
@@ -5567,10 +5451,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt36) {
                 case 1 :
-                    // InternalN4MFParser.g:2227:3: (enumLiteral_0= NoValidate )
+                    // InternalN4MFParser.g:2181:3: (enumLiteral_0= NoValidate )
                     {
-                    // InternalN4MFParser.g:2227:3: (enumLiteral_0= NoValidate )
-                    // InternalN4MFParser.g:2228:4: enumLiteral_0= NoValidate
+                    // InternalN4MFParser.g:2181:3: (enumLiteral_0= NoValidate )
+                    // InternalN4MFParser.g:2182:4: enumLiteral_0= NoValidate
                     {
                     enumLiteral_0=(Token)match(input,NoValidate,FOLLOW_2); 
 
@@ -5584,10 +5468,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2235:3: (enumLiteral_1= NoModuleWrap )
+                    // InternalN4MFParser.g:2189:3: (enumLiteral_1= NoModuleWrap )
                     {
-                    // InternalN4MFParser.g:2235:3: (enumLiteral_1= NoModuleWrap )
-                    // InternalN4MFParser.g:2236:4: enumLiteral_1= NoModuleWrap
+                    // InternalN4MFParser.g:2189:3: (enumLiteral_1= NoModuleWrap )
+                    // InternalN4MFParser.g:2190:4: enumLiteral_1= NoModuleWrap
                     {
                     enumLiteral_1=(Token)match(input,NoModuleWrap,FOLLOW_2); 
 
@@ -5623,7 +5507,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProjectDependencyScope"
-    // InternalN4MFParser.g:2246:1: ruleProjectDependencyScope returns [Enumerator current=null] : ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) ) ;
+    // InternalN4MFParser.g:2200:1: ruleProjectDependencyScope returns [Enumerator current=null] : ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) ) ;
     public final Enumerator ruleProjectDependencyScope() throws RecognitionException {
         Enumerator current = null;
 
@@ -5634,10 +5518,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2252:2: ( ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) ) )
-            // InternalN4MFParser.g:2253:2: ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) )
+            // InternalN4MFParser.g:2206:2: ( ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) ) )
+            // InternalN4MFParser.g:2207:2: ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) )
             {
-            // InternalN4MFParser.g:2253:2: ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) )
+            // InternalN4MFParser.g:2207:2: ( (enumLiteral_0= Compile ) | (enumLiteral_1= Test ) )
             int alt37=2;
             int LA37_0 = input.LA(1);
 
@@ -5655,10 +5539,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             }
             switch (alt37) {
                 case 1 :
-                    // InternalN4MFParser.g:2254:3: (enumLiteral_0= Compile )
+                    // InternalN4MFParser.g:2208:3: (enumLiteral_0= Compile )
                     {
-                    // InternalN4MFParser.g:2254:3: (enumLiteral_0= Compile )
-                    // InternalN4MFParser.g:2255:4: enumLiteral_0= Compile
+                    // InternalN4MFParser.g:2208:3: (enumLiteral_0= Compile )
+                    // InternalN4MFParser.g:2209:4: enumLiteral_0= Compile
                     {
                     enumLiteral_0=(Token)match(input,Compile,FOLLOW_2); 
 
@@ -5672,10 +5556,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2262:3: (enumLiteral_1= Test )
+                    // InternalN4MFParser.g:2216:3: (enumLiteral_1= Test )
                     {
-                    // InternalN4MFParser.g:2262:3: (enumLiteral_1= Test )
-                    // InternalN4MFParser.g:2263:4: enumLiteral_1= Test
+                    // InternalN4MFParser.g:2216:3: (enumLiteral_1= Test )
+                    // InternalN4MFParser.g:2217:4: enumLiteral_1= Test
                     {
                     enumLiteral_1=(Token)match(input,Test,FOLLOW_2); 
 
@@ -5711,7 +5595,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleModuleLoader"
-    // InternalN4MFParser.g:2273:1: ruleModuleLoader returns [Enumerator current=null] : ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) ) ;
+    // InternalN4MFParser.g:2227:1: ruleModuleLoader returns [Enumerator current=null] : ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) ) ;
     public final Enumerator ruleModuleLoader() throws RecognitionException {
         Enumerator current = null;
 
@@ -5723,10 +5607,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalN4MFParser.g:2279:2: ( ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) ) )
-            // InternalN4MFParser.g:2280:2: ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) )
+            // InternalN4MFParser.g:2233:2: ( ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) ) )
+            // InternalN4MFParser.g:2234:2: ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) )
             {
-            // InternalN4MFParser.g:2280:2: ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) )
+            // InternalN4MFParser.g:2234:2: ( (enumLiteral_0= N4js ) | (enumLiteral_1= Commonjs ) | (enumLiteral_2= Node_builtin ) )
             int alt38=3;
             switch ( input.LA(1) ) {
             case N4js:
@@ -5753,10 +5637,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
 
             switch (alt38) {
                 case 1 :
-                    // InternalN4MFParser.g:2281:3: (enumLiteral_0= N4js )
+                    // InternalN4MFParser.g:2235:3: (enumLiteral_0= N4js )
                     {
-                    // InternalN4MFParser.g:2281:3: (enumLiteral_0= N4js )
-                    // InternalN4MFParser.g:2282:4: enumLiteral_0= N4js
+                    // InternalN4MFParser.g:2235:3: (enumLiteral_0= N4js )
+                    // InternalN4MFParser.g:2236:4: enumLiteral_0= N4js
                     {
                     enumLiteral_0=(Token)match(input,N4js,FOLLOW_2); 
 
@@ -5770,10 +5654,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalN4MFParser.g:2289:3: (enumLiteral_1= Commonjs )
+                    // InternalN4MFParser.g:2243:3: (enumLiteral_1= Commonjs )
                     {
-                    // InternalN4MFParser.g:2289:3: (enumLiteral_1= Commonjs )
-                    // InternalN4MFParser.g:2290:4: enumLiteral_1= Commonjs
+                    // InternalN4MFParser.g:2243:3: (enumLiteral_1= Commonjs )
+                    // InternalN4MFParser.g:2244:4: enumLiteral_1= Commonjs
                     {
                     enumLiteral_1=(Token)match(input,Commonjs,FOLLOW_2); 
 
@@ -5787,10 +5671,10 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalN4MFParser.g:2297:3: (enumLiteral_2= Node_builtin )
+                    // InternalN4MFParser.g:2251:3: (enumLiteral_2= Node_builtin )
                     {
-                    // InternalN4MFParser.g:2297:3: (enumLiteral_2= Node_builtin )
-                    // InternalN4MFParser.g:2298:4: enumLiteral_2= Node_builtin
+                    // InternalN4MFParser.g:2251:3: (enumLiteral_2= Node_builtin )
+                    // InternalN4MFParser.g:2252:4: enumLiteral_2= Node_builtin
                     {
                     enumLiteral_2=(Token)match(input,Node_builtin,FOLLOW_2); 
 
@@ -6002,7 +5886,7 @@ public class InternalN4MFParser extends AbstractInternalAntlrParser {
             this.transition = dfa_13;
         }
         public String getDescription() {
-            return "1785:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )?";
+            return "1739:3: ( ( (lv_declaredVendorId_0_0= ruleN4mfIdentifier ) ) otherlv_1= Colon )?";
         }
     }
  

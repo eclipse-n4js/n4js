@@ -26,5 +26,5 @@ package org.eclipse.n4js.n4mf;
  * @model abstract="true"
  * @generated
  */
-public interface RuntimeProjectDependency extends SimpleProjectDependency {
+public interface RuntimeProjectDependency extends ProjectReference {
 } // RuntimeProjectDependency

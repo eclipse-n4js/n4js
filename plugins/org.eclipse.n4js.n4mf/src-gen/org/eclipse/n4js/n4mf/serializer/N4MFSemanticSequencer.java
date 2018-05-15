@@ -24,7 +24,6 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency;
 import org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency;
-import org.eclipse.n4js.n4mf.SimpleProjectDescription;
 import org.eclipse.n4js.n4mf.SourceFragment;
 import org.eclipse.n4js.n4mf.TestedProject;
 import org.eclipse.n4js.n4mf.VersionConstraint;
@@ -33,9 +32,7 @@ import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Parameter;
 import org.eclipse.xtext.ParserRule;
 import org.eclipse.xtext.serializer.ISerializationContext;
-import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
 import org.eclipse.xtext.serializer.sequencer.AbstractDelegatingSemanticSequencer;
-import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
 
 @SuppressWarnings("all")
 public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
@@ -64,28 +61,25 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				sequence_ModuleFilterSpecifier(context, (ModuleFilterSpecifier) semanticObject); 
 				return; 
 			case N4mfPackage.PROJECT_DEPENDENCY:
-				sequence_ProjectDependency(context, (ProjectDependency) semanticObject); 
+				sequence_ProjectDependency_ProjectIdWithOptionalVendor(context, (ProjectDependency) semanticObject); 
 				return; 
 			case N4mfPackage.PROJECT_DESCRIPTION:
 				sequence_ProjectDescription(context, (ProjectDescription) semanticObject); 
 				return; 
 			case N4mfPackage.PROJECT_REFERENCE:
-				sequence_ProjectReference(context, (ProjectReference) semanticObject); 
+				sequence_ProjectIdWithOptionalVendor(context, (ProjectReference) semanticObject); 
 				return; 
 			case N4mfPackage.PROVIDED_RUNTIME_LIBRARY_DEPENDENCY:
-				sequence_ProvidedRuntimeLibraryDependency(context, (ProvidedRuntimeLibraryDependency) semanticObject); 
+				sequence_ProjectIdWithOptionalVendor(context, (ProvidedRuntimeLibraryDependency) semanticObject); 
 				return; 
 			case N4mfPackage.REQUIRED_RUNTIME_LIBRARY_DEPENDENCY:
-				sequence_RequiredRuntimeLibraryDependency(context, (RequiredRuntimeLibraryDependency) semanticObject); 
-				return; 
-			case N4mfPackage.SIMPLE_PROJECT_DESCRIPTION:
-				sequence_SimpleProjectDescription(context, (SimpleProjectDescription) semanticObject); 
+				sequence_ProjectIdWithOptionalVendor(context, (RequiredRuntimeLibraryDependency) semanticObject); 
 				return; 
 			case N4mfPackage.SOURCE_FRAGMENT:
 				sequence_SourceFragment(context, (SourceFragment) semanticObject); 
 				return; 
 			case N4mfPackage.TESTED_PROJECT:
-				sequence_TestedProject(context, (TestedProject) semanticObject); 
+				sequence_ProjectIdWithOptionalVendor(context, (TestedProject) semanticObject); 
 				return; 
 			case N4mfPackage.VERSION_CONSTRAINT:
 				sequence_VersionConstraint(context, (VersionConstraint) semanticObject); 
@@ -148,9 +142,9 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     ProjectDependency returns ProjectDependency
 	 *
 	 * Constraint:
-	 *     (project=SimpleProjectDescription versionConstraint=VersionConstraint? declaredScope=ProjectDependencyScope?)
+	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier versionConstraint=VersionConstraint? declaredScope=ProjectDependencyScope?)
 	 */
-	protected void sequence_ProjectDependency(ISerializationContext context, ProjectDependency semanticObject) {
+	protected void sequence_ProjectDependency_ProjectIdWithOptionalVendor(ISerializationContext context, ProjectDependency semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -196,16 +190,10 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     ProjectReference returns ProjectReference
 	 *
 	 * Constraint:
-	 *     project=SimpleProjectDescription
+	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier)
 	 */
-	protected void sequence_ProjectReference(ISerializationContext context, ProjectReference semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4mfPackage.Literals.PROJECT_REFERENCE__PROJECT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4mfPackage.Literals.PROJECT_REFERENCE__PROJECT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getProjectReferenceAccess().getProjectSimpleProjectDescriptionParserRuleCall_0(), semanticObject.getProject());
-		feeder.finish();
+	protected void sequence_ProjectIdWithOptionalVendor(ISerializationContext context, ProjectReference semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -214,16 +202,10 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     ProvidedRuntimeLibraryDependency returns ProvidedRuntimeLibraryDependency
 	 *
 	 * Constraint:
-	 *     project=SimpleProjectDescription
+	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier)
 	 */
-	protected void sequence_ProvidedRuntimeLibraryDependency(ISerializationContext context, ProvidedRuntimeLibraryDependency semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4mfPackage.Literals.PROJECT_REFERENCE__PROJECT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4mfPackage.Literals.PROJECT_REFERENCE__PROJECT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectSimpleProjectDescriptionParserRuleCall_0(), semanticObject.getProject());
-		feeder.finish();
+	protected void sequence_ProjectIdWithOptionalVendor(ISerializationContext context, ProvidedRuntimeLibraryDependency semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -232,27 +214,21 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     RequiredRuntimeLibraryDependency returns RequiredRuntimeLibraryDependency
 	 *
 	 * Constraint:
-	 *     project=SimpleProjectDescription
+	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier)
 	 */
-	protected void sequence_RequiredRuntimeLibraryDependency(ISerializationContext context, RequiredRuntimeLibraryDependency semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4mfPackage.Literals.PROJECT_REFERENCE__PROJECT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4mfPackage.Literals.PROJECT_REFERENCE__PROJECT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectSimpleProjectDescriptionParserRuleCall_0(), semanticObject.getProject());
-		feeder.finish();
+	protected void sequence_ProjectIdWithOptionalVendor(ISerializationContext context, RequiredRuntimeLibraryDependency semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Contexts:
-	 *     SimpleProjectDescription returns SimpleProjectDescription
+	 *     TestedProject returns TestedProject
 	 *
 	 * Constraint:
 	 *     (declaredVendorId=N4mfIdentifier? projectId=N4mfIdentifier)
 	 */
-	protected void sequence_SimpleProjectDescription(ISerializationContext context, SimpleProjectDescription semanticObject) {
+	protected void sequence_ProjectIdWithOptionalVendor(ISerializationContext context, TestedProject semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -266,24 +242,6 @@ public class N4MFSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 */
 	protected void sequence_SourceFragment(ISerializationContext context, SourceFragment semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TestedProject returns TestedProject
-	 *
-	 * Constraint:
-	 *     project=SimpleProjectDescription
-	 */
-	protected void sequence_TestedProject(ISerializationContext context, TestedProject semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4mfPackage.Literals.PROJECT_REFERENCE__PROJECT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4mfPackage.Literals.PROJECT_REFERENCE__PROJECT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTestedProjectAccess().getProjectSimpleProjectDescriptionParserRuleCall_0(), semanticObject.getProject());
-		feeder.finish();
 	}
 	
 	

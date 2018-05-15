@@ -249,35 +249,35 @@ ruleModuleFilterSpecifier:
 
 // Rule ProvidedRuntimeLibraryDependency
 ruleProvidedRuntimeLibraryDependency:
-	ruleSimpleProjectDescription
+	ruleProjectIdWithOptionalVendor
 ;
 
 // Rule RequiredRuntimeLibraryDependency
 ruleRequiredRuntimeLibraryDependency:
-	ruleSimpleProjectDescription
+	ruleProjectIdWithOptionalVendor
 ;
 
 // Rule TestedProject
 ruleTestedProject:
-	ruleSimpleProjectDescription
+	ruleProjectIdWithOptionalVendor
 ;
 
 // Rule ProjectReference
 ruleProjectReference:
-	ruleSimpleProjectDescription
+	ruleProjectIdWithOptionalVendor
 ;
 
 // Rule ProjectDependency
 ruleProjectDependency:
-	ruleSimpleProjectDescription
+	ruleProjectIdWithOptionalVendor
 	ruleVersionConstraint
 	?
 	ruleProjectDependencyScope
 	?
 ;
 
-// Rule SimpleProjectDescription
-ruleSimpleProjectDescription:
+// Rule ProjectIdWithOptionalVendor
+ruleProjectIdWithOptionalVendor:
 	(
 		ruleN4mfIdentifier
 		':'

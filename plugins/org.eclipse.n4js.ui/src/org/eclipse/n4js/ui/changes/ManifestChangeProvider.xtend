@@ -69,7 +69,7 @@ class ManifestChangeProvider {
 
 		// Remove all dependencies, that are already part of the list
 		if (description.projectDependencies !== null) {
-			dependencies.removeIf [ description.projectDependencies.map[project.projectId].contains(it) ]
+			dependencies.removeIf [ description.projectDependencies.map[it.projectId].contains(it) ]
 		}
 
 		if (dependencies.length < 1) {
@@ -125,7 +125,7 @@ class ManifestChangeProvider {
 
 		// Remove all dependencies, that are already part of the list
 		if (projectDescription.requiredRuntimeLibraries !== null) {
-			dependencies.removeIf [ projectDescription.requiredRuntimeLibraries.map[project.projectId].contains(it)]
+			dependencies.removeIf [ projectDescription.requiredRuntimeLibraries.map[it.projectId].contains(it)]
 		}
 
 		if (dependencies.length < 1) {
@@ -197,7 +197,7 @@ class ManifestChangeProvider {
 		val prjTypeNodes = NodeModelUtils.findNodesForFeature(projectDescription, N4mfPackage.Literals.PROJECT_DESCRIPTION__PROJECT_TYPE);
 		if (prjTypeNodes.isEmpty) {
 			// Append a new entry
-			val pidNodes = NodeModelUtils.findNodesForFeature(projectDescription, N4mfPackage.Literals.SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID);
+			val pidNodes = NodeModelUtils.findNodesForFeature(projectDescription, N4mfPackage.Literals.PROJECT_DESCRIPTION__PROJECT_ID);
 			val location = if (pidNodes.isEmpty) 0 else pidNodes.get(0).endOffset;
 			val newEntry = "\n" + PROJECT_TYPE_KEY + ": " + newProjectType + (if (location === 0) "\n" else "");
 			return new Replacement(manifestResource.URI, location, 0, newEntry);

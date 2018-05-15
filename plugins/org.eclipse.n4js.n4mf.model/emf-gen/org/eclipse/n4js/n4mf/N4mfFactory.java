@@ -39,15 +39,6 @@ public interface N4mfFactory extends EFactory {
 	ProjectDescription createProjectDescription();
 
 	/**
-	 * Returns a new object of class '<em>Simple Project Description</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Simple Project Description</em>'.
-	 * @generated
-	 */
-	SimpleProjectDescription createSimpleProjectDescription();
-
-	/**
 	 * Returns a new object of class '<em>Tested Project</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -100,15 +91,6 @@ public interface N4mfFactory extends EFactory {
 	 * @generated
 	 */
 	ProjectReference createProjectReference();
-
-	/**
-	 * Returns a new object of class '<em>Simple Project Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Simple Project Dependency</em>'.
-	 * @generated
-	 */
-	SimpleProjectDependency createSimpleProjectDependency();
 
 	/**
 	 * Returns a new object of class '<em>Module Filter Specifier</em>'.

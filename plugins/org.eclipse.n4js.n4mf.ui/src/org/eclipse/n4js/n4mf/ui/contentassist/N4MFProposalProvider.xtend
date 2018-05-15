@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4mf.ModuleFilterType
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess
@@ -194,10 +193,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 	private def getProjectType(EObject anyObjectInTheResource, String projectId) {
 		val desc = anyObjectInTheResource.allProjectDescriptions.findFirst[projectId == getUserData(PROJECT_ID_KEY)];
 		return ProjectType.get(desc?.getUserData(PROJECT_TYPE_KEY))
-	}
-
-	private def getProjectId(ProjectReference it) {
-		it?.project?.projectId;
 	}
 
 	private def completeProposal(ProjectDescription desc, ContentAssistContext ctx,

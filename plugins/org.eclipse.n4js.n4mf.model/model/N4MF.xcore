@@ -25,7 +25,18 @@ package org.eclipse.n4js.n4mf
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.n4js.utils.io.FileUtils
 
-class ProjectDescription extends SimpleProjectDescription {
+class ProjectDescription {
+	/**
+	 * the project ID
+	 */
+	String projectId
+	/**
+	 * the vendor ID
+	 */
+	String declaredVendorId
+	op String getVendorId() { // FIXME
+		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer?.eContainer as ProjectDescription)?.declaredVendorId;
+	}
 	String vendorName
 	contains DeclaredVersion projectVersion
 	ProjectType projectType
@@ -74,29 +85,9 @@ class ProjectDescription extends SimpleProjectDescription {
 }
 
 /**
- * Properties that makes a project unique among other projects (without considering the version).
- * The vendorId identifies the vendor of this project. The projectId identifies the project.
- */
-class SimpleProjectDescription {
-	/**
-	 * the vendor ID
-	 */
-	String declaredVendorId
-	/**
-	 * the project ID
-	 */
-	String projectId
-	op String getVendorId() {
-		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer?.eContainer as ProjectDescription)?.declaredVendorId;
-	}
-}
-
-/**
  * Representation of a reference to a project that is declared as the tested project for a particular test project.
  */
-class TestedProject extends SimpleProjectDependency {
-	contains VersionConstraint versionConstraint
-	ProjectDependencyScope declaredScope
+class TestedProject extends ProjectDependency {
 }
 
 /**
@@ -200,15 +191,24 @@ class BootstrapModule {
  * implementation provided by the runtime.
  */
 enum ModuleFilterType {
-	NO_VALIDATE
-	, NO_MODULE_WRAPPING
+	NO_VALIDATE,
+	NO_MODULE_WRAPPING
 }
 
 class ProjectReference {
-	contains SimpleProjectDescription project
-}
 
-class SimpleProjectDependency extends ProjectReference {
+	/**
+	 * the project ID
+	 */
+	String projectId
+
+	/**
+	 * the vendor ID
+	 */
+	String declaredVendorId
+	op String getVendorId() {
+		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer as ProjectDescription)?.declaredVendorId;
+	}
 
 	/**
 	 * COMPILE by default
@@ -226,7 +226,7 @@ class ModuleFilterSpecifier {
 /**
  * Abstract class representing the dependency to a runtime environment or runtime library.
  */
-abstract class RuntimeProjectDependency extends SimpleProjectDependency {
+abstract class RuntimeProjectDependency extends ProjectReference {
 
 }
 
@@ -253,7 +253,7 @@ class ProvidedRuntimeLibraryDependency extends RuntimeProjectDependency {
  * is and vice versa. The project dependency scope defines whether the
  * dependency affects runtime or is only required for testing.
  */
-class ProjectDependency extends SimpleProjectDependency {
+class ProjectDependency extends ProjectReference {
 	contains VersionConstraint versionConstraint
 
 	ProjectDependencyScope declaredScope
@@ -283,8 +283,7 @@ class VersionConstraint {
  * if it is a dependency at runtime (COMPILE).
  */
 enum ProjectDependencyScope {
-	COMPILE
-	,
+	COMPILE,
 	TEST
 }
 

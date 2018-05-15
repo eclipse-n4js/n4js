@@ -21,7 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectReference#getProject <em>Project</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectReference#getProjectId <em>Project Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectReference#getDeclaredVendorId <em>Declared Vendor Id</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectReference()
@@ -30,29 +31,77 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ProjectReference extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Project</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Project Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Project</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Project</em>' containment reference.
-	 * @see #setProject(SimpleProjectDescription)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectReference_Project()
-	 * @model containment="true"
+	 * <!-- begin-model-doc -->
+	 * *
+	 * the project ID
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Project Id</em>' attribute.
+	 * @see #setProjectId(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectReference_ProjectId()
+	 * @model unique="false"
 	 * @generated
 	 */
-	SimpleProjectDescription getProject();
+	String getProjectId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectReference#getProject <em>Project</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectReference#getProjectId <em>Project Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Project</em>' containment reference.
-	 * @see #getProject()
+	 * @param value the new value of the '<em>Project Id</em>' attribute.
+	 * @see #getProjectId()
 	 * @generated
 	 */
-	void setProject(SimpleProjectDescription value);
+	void setProjectId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Declared Vendor Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * the vendor ID
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Declared Vendor Id</em>' attribute.
+	 * @see #setDeclaredVendorId(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectReference_DeclaredVendorId()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getDeclaredVendorId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectReference#getDeclaredVendorId <em>Declared Vendor Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Vendor Id</em>' attribute.
+	 * @see #getDeclaredVendorId()
+	 * @generated
+	 */
+	void setDeclaredVendorId(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _xifexpression = null;\n&lt;%java.lang.String%&gt; _declaredVendorId = this.getDeclaredVendorId();\nboolean _tripleNotEquals = (_declaredVendorId != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getDeclaredVendorId();\n}\nelse\n{\n\t&lt;%org.eclipse.emf.ecore.EObject%&gt; _eContainer = this.eContainer();\n\t&lt;%org.eclipse.emf.ecore.EObject%&gt; _eContainer_1 = null;\n\tif (_eContainer!=null)\n\t{\n\t\t_eContainer_1=_eContainer.eContainer();\n\t}\n\t&lt;%java.lang.String%&gt; _declaredVendorId_1 = null;\n\tif (((&lt;%org.eclipse.n4js.n4mf.ProjectDescription%&gt;) _eContainer_1)!=null)\n\t{\n\t\t_declaredVendorId_1=((&lt;%org.eclipse.n4js.n4mf.ProjectDescription%&gt;) _eContainer_1).getDeclaredVendorId();\n\t}\n\t_xifexpression = _declaredVendorId_1;\n}\nreturn _xifexpression;'"
+	 * @generated
+	 */
+	String getVendorId();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * COMPILE by default
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.n4mf.ProjectDependencyScope%&gt;.COMPILE;'"
+	 * @generated
+	 */
+	ProjectDependencyScope getScope();
 
 } // ProjectReference

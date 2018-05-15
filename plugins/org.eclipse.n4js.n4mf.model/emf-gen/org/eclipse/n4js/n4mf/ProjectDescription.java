@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4mf;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Project Description</b></em>'.
@@ -21,6 +23,8 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectId <em>Project Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getDeclaredVendorId <em>Declared Vendor Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getVendorName <em>Vendor Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectVersion <em>Project Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectType <em>Project Type</em>}</li>
@@ -46,7 +50,59 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface ProjectDescription extends SimpleProjectDescription {
+public interface ProjectDescription extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Project Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * the project ID
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Project Id</em>' attribute.
+	 * @see #setProjectId(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ProjectId()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getProjectId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectId <em>Project Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Project Id</em>' attribute.
+	 * @see #getProjectId()
+	 * @generated
+	 */
+	void setProjectId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Declared Vendor Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * the vendor ID
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Declared Vendor Id</em>' attribute.
+	 * @see #setDeclaredVendorId(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_DeclaredVendorId()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getDeclaredVendorId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getDeclaredVendorId <em>Declared Vendor Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Vendor Id</em>' attribute.
+	 * @see #getDeclaredVendorId()
+	 * @generated
+	 */
+	void setDeclaredVendorId(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Vendor Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -446,6 +502,15 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * @generated
 	 */
 	void setModuleLoader(ModuleLoader value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%java.lang.String%&gt; _xifexpression = null;\n&lt;%java.lang.String%&gt; _declaredVendorId = this.getDeclaredVendorId();\nboolean _tripleNotEquals = (_declaredVendorId != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getDeclaredVendorId();\n}\nelse\n{\n\t&lt;%org.eclipse.emf.ecore.EObject%&gt; _eContainer = this.eContainer();\n\t&lt;%org.eclipse.emf.ecore.EObject%&gt; _eContainer_1 = null;\n\tif (_eContainer!=null)\n\t{\n\t\t_eContainer_1=_eContainer.eContainer();\n\t}\n\t&lt;%org.eclipse.emf.ecore.EObject%&gt; _eContainer_2 = null;\n\tif (_eContainer_1!=null)\n\t{\n\t\t_eContainer_2=_eContainer_1.eContainer();\n\t}\n\t&lt;%java.lang.String%&gt; _declaredVendorId_1 = null;\n\tif (((&lt;%org.eclipse.n4js.n4mf.ProjectDescription%&gt;) _eContainer_2)!=null)\n\t{\n\t\t_declaredVendorId_1=((&lt;%org.eclipse.n4js.n4mf.ProjectDescription%&gt;) _eContainer_2).getDeclaredVendorId();\n\t}\n\t_xifexpression = _declaredVendorId_1;\n}\nreturn _xifexpression;'"
+	 * @generated
+	 */
+	String getVendorId();
 
 	/**
 	 * <!-- begin-user-doc -->

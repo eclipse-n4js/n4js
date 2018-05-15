@@ -96,8 +96,8 @@ public class N4MFParser extends AbstractContentAssistParser {
 					put(grammarAccess.getModuleFilterSpecifierAccess().getGroup(), "rule__ModuleFilterSpecifier__Group__0");
 					put(grammarAccess.getModuleFilterSpecifierAccess().getGroup_1(), "rule__ModuleFilterSpecifier__Group_1__0");
 					put(grammarAccess.getProjectDependencyAccess().getGroup(), "rule__ProjectDependency__Group__0");
-					put(grammarAccess.getSimpleProjectDescriptionAccess().getGroup(), "rule__SimpleProjectDescription__Group__0");
-					put(grammarAccess.getSimpleProjectDescriptionAccess().getGroup_0(), "rule__SimpleProjectDescription__Group_0__0");
+					put(grammarAccess.getProjectIdWithOptionalVendorAccess().getGroup(), "rule__ProjectIdWithOptionalVendor__Group__0");
+					put(grammarAccess.getProjectIdWithOptionalVendorAccess().getGroup_0(), "rule__ProjectIdWithOptionalVendor__Group_0__0");
 					put(grammarAccess.getVersionConstraintAccess().getGroup_0(), "rule__VersionConstraint__Group_0__0");
 					put(grammarAccess.getVersionConstraintAccess().getGroup_0_2_0(), "rule__VersionConstraint__Group_0_2_0__0");
 					put(grammarAccess.getN4mfIdentifierAccess().getGroup_11(), "rule__N4mfIdentifier__Group_11__0");
@@ -145,15 +145,10 @@ public class N4MFParser extends AbstractContentAssistParser {
 					put(grammarAccess.getBootstrapModuleAccess().getSourcePathAssignment_1_1(), "rule__BootstrapModule__SourcePathAssignment_1_1");
 					put(grammarAccess.getModuleFilterSpecifierAccess().getModuleSpecifierWithWildcardAssignment_0(), "rule__ModuleFilterSpecifier__ModuleSpecifierWithWildcardAssignment_0");
 					put(grammarAccess.getModuleFilterSpecifierAccess().getSourcePathAssignment_1_1(), "rule__ModuleFilterSpecifier__SourcePathAssignment_1_1");
-					put(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectAssignment(), "rule__ProvidedRuntimeLibraryDependency__ProjectAssignment");
-					put(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectAssignment(), "rule__RequiredRuntimeLibraryDependency__ProjectAssignment");
-					put(grammarAccess.getTestedProjectAccess().getProjectAssignment(), "rule__TestedProject__ProjectAssignment");
-					put(grammarAccess.getProjectReferenceAccess().getProjectAssignment(), "rule__ProjectReference__ProjectAssignment");
-					put(grammarAccess.getProjectDependencyAccess().getProjectAssignment_0(), "rule__ProjectDependency__ProjectAssignment_0");
 					put(grammarAccess.getProjectDependencyAccess().getVersionConstraintAssignment_1(), "rule__ProjectDependency__VersionConstraintAssignment_1");
 					put(grammarAccess.getProjectDependencyAccess().getDeclaredScopeAssignment_2(), "rule__ProjectDependency__DeclaredScopeAssignment_2");
-					put(grammarAccess.getSimpleProjectDescriptionAccess().getDeclaredVendorIdAssignment_0_0(), "rule__SimpleProjectDescription__DeclaredVendorIdAssignment_0_0");
-					put(grammarAccess.getSimpleProjectDescriptionAccess().getProjectIdAssignment_1(), "rule__SimpleProjectDescription__ProjectIdAssignment_1");
+					put(grammarAccess.getProjectIdWithOptionalVendorAccess().getDeclaredVendorIdAssignment_0_0(), "rule__ProjectIdWithOptionalVendor__DeclaredVendorIdAssignment_0_0");
+					put(grammarAccess.getProjectIdWithOptionalVendorAccess().getProjectIdAssignment_1(), "rule__ProjectIdWithOptionalVendor__ProjectIdAssignment_1");
 					put(grammarAccess.getVersionConstraintAccess().getExclLowerBoundAssignment_0_0_0(), "rule__VersionConstraint__ExclLowerBoundAssignment_0_0_0");
 					put(grammarAccess.getVersionConstraintAccess().getLowerVersionAssignment_0_1(), "rule__VersionConstraint__LowerVersionAssignment_0_1");
 					put(grammarAccess.getVersionConstraintAccess().getUpperVersionAssignment_0_2_0_1(), "rule__VersionConstraint__UpperVersionAssignment_0_2_0_1");

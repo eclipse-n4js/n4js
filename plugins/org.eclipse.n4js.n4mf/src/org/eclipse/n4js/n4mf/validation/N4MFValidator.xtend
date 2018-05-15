@@ -403,7 +403,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 		val folderName = projectDescription.eResource.URI.trimSegments(1).lastSegment
 		if (folderName != projectId) {
 			addIssue(getMessageForPROJECT_NAME_MISMATCH(projectId, folderName), projectDescription,
-				SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID, PROJECT_NAME_MISMATCH)
+				PROJECT_DESCRIPTION__PROJECT_ID, PROJECT_NAME_MISMATCH)
 		}
 	}
 
@@ -426,7 +426,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 
 			if (eclipseFolderName != projectId) {
 				addIssue(getMessageForPROJECT_NAME_ECLIPSE_MISMATCH(projectId, eclipseFolderName), projectDescription,
-					SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID, PROJECT_NAME_ECLIPSE_MISMATCH)
+					PROJECT_DESCRIPTION__PROJECT_ID, PROJECT_NAME_ECLIPSE_MISMATCH)
 			}
 		}
 	}
@@ -486,7 +486,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 		if (projectDescription.outputPath === null) {
 			val message = getMessageForNO_OUTPUT_FOLDER
 			val issueCode = NO_OUTPUT_FOLDER
-			val feature = SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID
+			val feature = PROJECT_DESCRIPTION__PROJECT_ID
 			addIssue(message, projectDescription, feature, issueCode)
 		}
 	}
@@ -500,7 +500,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 		val implProjects = projectDescription.implementedProjects;
 
 		for (pref : implProjects) {
-			if (pref?.project?.projectId == projectDescription.projectId) {
+			if (pref?.projectId == projectDescription.projectId) {
 				// reflexive implementation
 				addIssue(
 					messageForAPIIMPL_REFLEXIVE,

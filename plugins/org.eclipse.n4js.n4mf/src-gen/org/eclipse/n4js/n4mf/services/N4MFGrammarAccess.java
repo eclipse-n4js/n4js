@@ -950,71 +950,54 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class ProvidedRuntimeLibraryDependencyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ProvidedRuntimeLibraryDependency");
-		private final Assignment cProjectAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cProjectSimpleProjectDescriptionParserRuleCall_0 = (RuleCall)cProjectAssignment.eContents().get(0);
+		private final RuleCall cProjectIdWithOptionalVendorParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//ProvidedRuntimeLibraryDependency:
-		//	project=SimpleProjectDescription;
+		//	ProjectIdWithOptionalVendor;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//project=SimpleProjectDescription
-		public Assignment getProjectAssignment() { return cProjectAssignment; }
-		
-		//SimpleProjectDescription
-		public RuleCall getProjectSimpleProjectDescriptionParserRuleCall_0() { return cProjectSimpleProjectDescriptionParserRuleCall_0; }
+		//ProjectIdWithOptionalVendor
+		public RuleCall getProjectIdWithOptionalVendorParserRuleCall() { return cProjectIdWithOptionalVendorParserRuleCall; }
 	}
 	public class RequiredRuntimeLibraryDependencyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.RequiredRuntimeLibraryDependency");
-		private final Assignment cProjectAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cProjectSimpleProjectDescriptionParserRuleCall_0 = (RuleCall)cProjectAssignment.eContents().get(0);
+		private final RuleCall cProjectIdWithOptionalVendorParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//RequiredRuntimeLibraryDependency:
-		//	project=SimpleProjectDescription;
+		//	ProjectIdWithOptionalVendor;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//project=SimpleProjectDescription
-		public Assignment getProjectAssignment() { return cProjectAssignment; }
-		
-		//SimpleProjectDescription
-		public RuleCall getProjectSimpleProjectDescriptionParserRuleCall_0() { return cProjectSimpleProjectDescriptionParserRuleCall_0; }
+		//ProjectIdWithOptionalVendor
+		public RuleCall getProjectIdWithOptionalVendorParserRuleCall() { return cProjectIdWithOptionalVendorParserRuleCall; }
 	}
 	public class TestedProjectElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.TestedProject");
-		private final Assignment cProjectAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cProjectSimpleProjectDescriptionParserRuleCall_0 = (RuleCall)cProjectAssignment.eContents().get(0);
+		private final RuleCall cProjectIdWithOptionalVendorParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//TestedProject:
-		//	project=SimpleProjectDescription;
+		//	ProjectIdWithOptionalVendor;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//project=SimpleProjectDescription
-		public Assignment getProjectAssignment() { return cProjectAssignment; }
-		
-		//SimpleProjectDescription
-		public RuleCall getProjectSimpleProjectDescriptionParserRuleCall_0() { return cProjectSimpleProjectDescriptionParserRuleCall_0; }
+		//ProjectIdWithOptionalVendor
+		public RuleCall getProjectIdWithOptionalVendorParserRuleCall() { return cProjectIdWithOptionalVendorParserRuleCall; }
 	}
 	public class ProjectReferenceElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ProjectReference");
-		private final Assignment cProjectAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cProjectSimpleProjectDescriptionParserRuleCall_0 = (RuleCall)cProjectAssignment.eContents().get(0);
+		private final RuleCall cProjectIdWithOptionalVendorParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		///*
 		// * scope is optional, default scope is compile
 		// */ ProjectReference:
-		//	project=SimpleProjectDescription;
+		//	ProjectIdWithOptionalVendor;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//project=SimpleProjectDescription
-		public Assignment getProjectAssignment() { return cProjectAssignment; }
-		
-		//SimpleProjectDescription
-		public RuleCall getProjectSimpleProjectDescriptionParserRuleCall_0() { return cProjectSimpleProjectDescriptionParserRuleCall_0; }
+		//ProjectIdWithOptionalVendor
+		public RuleCall getProjectIdWithOptionalVendorParserRuleCall() { return cProjectIdWithOptionalVendorParserRuleCall; }
 	}
 	public class ProjectDependencyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ProjectDependency");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cProjectAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cProjectSimpleProjectDescriptionParserRuleCall_0_0 = (RuleCall)cProjectAssignment_0.eContents().get(0);
+		private final RuleCall cProjectIdWithOptionalVendorParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Assignment cVersionConstraintAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cVersionConstraintVersionConstraintParserRuleCall_1_0 = (RuleCall)cVersionConstraintAssignment_1.eContents().get(0);
 		private final Assignment cDeclaredScopeAssignment_2 = (Assignment)cGroup.eContents().get(2);
@@ -1023,19 +1006,16 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		///*
 		// * scope is optional, default scope is compile
 		// */ ProjectDependency:
-		//	project=SimpleProjectDescription
+		//	ProjectIdWithOptionalVendor
 		//	versionConstraint=VersionConstraint?
 		//	declaredScope=ProjectDependencyScope?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//project=SimpleProjectDescription versionConstraint=VersionConstraint? declaredScope=ProjectDependencyScope?
+		//ProjectIdWithOptionalVendor versionConstraint=VersionConstraint? declaredScope=ProjectDependencyScope?
 		public Group getGroup() { return cGroup; }
 		
-		//project=SimpleProjectDescription
-		public Assignment getProjectAssignment_0() { return cProjectAssignment_0; }
-		
-		//SimpleProjectDescription
-		public RuleCall getProjectSimpleProjectDescriptionParserRuleCall_0_0() { return cProjectSimpleProjectDescriptionParserRuleCall_0_0; }
+		//ProjectIdWithOptionalVendor
+		public RuleCall getProjectIdWithOptionalVendorParserRuleCall_0() { return cProjectIdWithOptionalVendorParserRuleCall_0; }
 		
 		//versionConstraint=VersionConstraint?
 		public Assignment getVersionConstraintAssignment_1() { return cVersionConstraintAssignment_1; }
@@ -1049,9 +1029,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//ProjectDependencyScope
 		public RuleCall getDeclaredScopeProjectDependencyScopeEnumRuleCall_2_0() { return cDeclaredScopeProjectDependencyScopeEnumRuleCall_2_0; }
 	}
-	public class SimpleProjectDescriptionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-		private final Group cGroup = (Group)rule.eContents().get(1);
+	public class ProjectIdWithOptionalVendorElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.n4mf.N4MF.ProjectIdWithOptionalVendor");
+		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
 		private final Assignment cDeclaredVendorIdAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
 		private final RuleCall cDeclaredVendorIdN4mfIdentifierParserRuleCall_0_0_0 = (RuleCall)cDeclaredVendorIdAssignment_0_0.eContents().get(0);
@@ -1061,7 +1041,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		
 		///*
 		// * vendorN4mfIdentifier is optional, if it is not specified, vendor id of current project is used.
-		// */ SimpleProjectDescription:
+		// */ fragment ProjectIdWithOptionalVendor *:
 		//	(declaredVendorId=N4mfIdentifier ':')? projectId=N4mfIdentifier;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -1523,7 +1503,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	private final TestedProjectElements pTestedProject;
 	private final ProjectReferenceElements pProjectReference;
 	private final ProjectDependencyElements pProjectDependency;
-	private final SimpleProjectDescriptionElements pSimpleProjectDescription;
+	private final ProjectIdWithOptionalVendorElements pProjectIdWithOptionalVendor;
 	private final VersionConstraintElements pVersionConstraint;
 	private final ProjectDependencyScopeElements eProjectDependencyScope;
 	private final ModuleLoaderElements eModuleLoader;
@@ -1553,7 +1533,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		this.pTestedProject = new TestedProjectElements();
 		this.pProjectReference = new ProjectReferenceElements();
 		this.pProjectDependency = new ProjectDependencyElements();
-		this.pSimpleProjectDescription = new SimpleProjectDescriptionElements();
+		this.pProjectIdWithOptionalVendor = new ProjectIdWithOptionalVendorElements();
 		this.pVersionConstraint = new VersionConstraintElements();
 		this.eProjectDependencyScope = new ProjectDependencyScopeElements();
 		this.eModuleLoader = new ModuleLoaderElements();
@@ -1717,7 +1697,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ProvidedRuntimeLibraryDependency:
-	//	project=SimpleProjectDescription;
+	//	ProjectIdWithOptionalVendor;
 	public ProvidedRuntimeLibraryDependencyElements getProvidedRuntimeLibraryDependencyAccess() {
 		return pProvidedRuntimeLibraryDependency;
 	}
@@ -1727,7 +1707,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//RequiredRuntimeLibraryDependency:
-	//	project=SimpleProjectDescription;
+	//	ProjectIdWithOptionalVendor;
 	public RequiredRuntimeLibraryDependencyElements getRequiredRuntimeLibraryDependencyAccess() {
 		return pRequiredRuntimeLibraryDependency;
 	}
@@ -1737,7 +1717,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TestedProject:
-	//	project=SimpleProjectDescription;
+	//	ProjectIdWithOptionalVendor;
 	public TestedProjectElements getTestedProjectAccess() {
 		return pTestedProject;
 	}
@@ -1749,7 +1729,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	///*
 	// * scope is optional, default scope is compile
 	// */ ProjectReference:
-	//	project=SimpleProjectDescription;
+	//	ProjectIdWithOptionalVendor;
 	public ProjectReferenceElements getProjectReferenceAccess() {
 		return pProjectReference;
 	}
@@ -1761,7 +1741,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	///*
 	// * scope is optional, default scope is compile
 	// */ ProjectDependency:
-	//	project=SimpleProjectDescription
+	//	ProjectIdWithOptionalVendor
 	//	versionConstraint=VersionConstraint?
 	//	declaredScope=ProjectDependencyScope?;
 	public ProjectDependencyElements getProjectDependencyAccess() {
@@ -1774,14 +1754,14 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	
 	///*
 	// * vendorN4mfIdentifier is optional, if it is not specified, vendor id of current project is used.
-	// */ SimpleProjectDescription:
+	// */ fragment ProjectIdWithOptionalVendor *:
 	//	(declaredVendorId=N4mfIdentifier ':')? projectId=N4mfIdentifier;
-	public SimpleProjectDescriptionElements getSimpleProjectDescriptionAccess() {
-		return pSimpleProjectDescription;
+	public ProjectIdWithOptionalVendorElements getProjectIdWithOptionalVendorAccess() {
+		return pProjectIdWithOptionalVendor;
 	}
 	
-	public ParserRule getSimpleProjectDescriptionRule() {
-		return getSimpleProjectDescriptionAccess().getRule();
+	public ParserRule getProjectIdWithOptionalVendorRule() {
+		return getProjectIdWithOptionalVendorAccess().getRule();
 	}
 	
 	///*

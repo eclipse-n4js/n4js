@@ -164,7 +164,7 @@ class N4MFResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy
 	}
 
 	private def asString(Iterable<? extends ProjectReference> it) {
-		map[project].filterNull.map[projectId].filterNull.join(SEPARATOR)
+		it.filterNull.map[projectId].filterNull.join(SEPARATOR)
 	}
 
 	/**

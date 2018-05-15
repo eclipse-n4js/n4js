@@ -23,6 +23,7 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import java.util.Stack
+import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EStructuralFeature
@@ -37,7 +38,7 @@ import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.RuntimeProjectDependency
-import org.eclipse.n4js.n4mf.SimpleProjectDescription
+import org.eclipse.n4js.n4mf.SourceFragment
 import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.n4js.projectModel.IN4JSArchive
@@ -74,8 +75,6 @@ import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.n4mf.SourceFragment
-import org.eclipse.core.runtime.Path
 
 /**
  * Checking Project Setup from N4MF considering Polyfills.
@@ -139,9 +138,8 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		var Iterable<? extends RuntimeProjectDependency> rteAndRtl = projectDescription.requiredRuntimeLibraries
 		// Describing Self-Project as RuntimeDependency to handle clash with filled Members from current Project consistently.
 		val selfProject = N4mfFactory.eINSTANCE.createRequiredRuntimeLibraryDependency
-		selfProject.project = N4mfFactory.eINSTANCE.createSimpleProjectDescription
-		selfProject.project.projectId = projectDescription.projectId
-		selfProject.project.declaredVendorId = projectDescription.declaredVendorId
+		selfProject.projectId = projectDescription.projectId
+		selfProject.declaredVendorId = projectDescription.declaredVendorId
 		val Optional<? extends IN4JSProject> optOwnProject = findProject(projectDescription.eResource.URI)
 		if (optOwnProject.present) {
 			rteAndRtl = Iterables.concat(rteAndRtl, #{selfProject})
@@ -150,9 +148,8 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		for (RuntimeProjectDependency lib : rteAndRtl) {
 
 			// lib.scope // COMPILE or TEST, in both cases we generate errors.
-			val SimpleProjectDescription libProvidingProject = lib.project
-			if (null !== libProvidingProject) {
-				val String libPPqname = libProvidingProject.qname
+			if (null !== lib) {
+				val String libPPqname = lib.qname
 				mQName2rtDep.put(libPPqname, lib)
 			}
 		}
@@ -248,7 +245,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 			val polyFilledMemberAsStrings = markerMapLibs2FilledName.get(keyS)
 			val libsString = keyS.toList.map [
-				it.project.projectId
+				it.projectId
 			].sort.join(", ")
 
 			val userPresentablePolyFills = polyFilledMemberAsStrings.toList.map['"' + it + '"'].sort.join(", ")
@@ -307,12 +304,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 	/** Calculate qualified name for ProjectReference */
 	def private static String qname(ProjectReference pref) {
-		return qname(pref.project)
-	}
-
-	/** Calculate qualified name for SimpleProjectDescription */
-	def private static String qname(SimpleProjectDescription pdesc) {
-		return qname(pdesc.vendorId, pdesc.projectId)
+		return qname(pref.vendorId, pref.projectId)
 	}
 
 	/** Calculate qualified name for vendor id and project id */
@@ -331,10 +323,10 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 				addIssue(
 					getMessageForPROJECT_DEPENDENCY_CYCLE(result.prettyPrint([calculateName])),
 					projectDescription,
-					SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID,
+					PROJECT_DESCRIPTION__PROJECT_ID,
 					PROJECT_DEPENDENCY_CYCLE
 				);
-			}else{
+			} else {
 			//for performance reasons following is not separate check
 			/*
 			 * otherwise we would traverse all transitive dependencies multiple times,
@@ -360,7 +352,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(
 					getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT),
 					projectDescription,
-					SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID,
+					PROJECT_DESCRIPTION__PROJECT_ID,
 					PROJECT_DEPENDENCY_CYCLE
 				);
 		}
@@ -432,8 +424,8 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			if (!projects.nullOrEmpty) {
 				val allProjects = pd.existingProjectIds;
 				val head = projects.head;
-				val refProjectType = allProjects.get(head.project.projectId)?.projectType
-				if (projects.exists[testedProject | refProjectType != allProjects.get(testedProject.project?.projectId)?.projectType]) {
+				val refProjectType = allProjects.get(head.projectId)?.projectType
+				if (projects.exists[testedProject | refProjectType != allProjects.get(testedProject.projectId)?.projectType]) {
 					addIssue(
 						messageForMISMATCHING_TESTED_PROJECT_TYPES,
 						pd,
@@ -457,10 +449,10 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			if (!dependencies.nullOrEmpty) {
 				val allProjects = existingProjectIds;
 				dependencies.filterNull.forEach[
-					val actualImplementationId = allProjects.get(project?.projectId)?.implementationId?.orNull;
+					val actualImplementationId = allProjects.get(it.projectId)?.implementationId?.orNull;
 					if (!actualImplementationId.nullOrEmpty && actualImplementationId != expectedImplementationId) {
 						addIssue(
-							getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, project.projectId, actualImplementationId),
+							getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, it.projectId, actualImplementationId),
 							it.eContainer,
 							PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES,
 							dependencies.indexOf(it),
@@ -681,7 +673,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		// Check project existence.
 		references.filter(ProjectReference).forEach[
 
-			val id = it?.project?.projectId;
+			val id = it?.projectId;
 			// Assuming completely broken AST.
 			if (null !== id) {
 
@@ -723,7 +715,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			if (validProjectRefs.get(it).size > 1) {
 				val referencesByNameAndVendor = HashMultimap.<String, ProjectReference>create;
 				validProjectRefs.get(it).forEach [
-					var refVendor = it.project.vendorId
+					var refVendor = it.vendorId
 					//use vendor id of the refering project if not provided explicitly
 					if (refVendor === null)
 						refVendor = currentVendor

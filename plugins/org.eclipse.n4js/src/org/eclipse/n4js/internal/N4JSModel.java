@@ -39,8 +39,6 @@ import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency;
-import org.eclipse.n4js.n4mf.SimpleProjectDependency;
-import org.eclipse.n4js.n4mf.SimpleProjectDescription;
 import org.eclipse.n4js.n4mf.SourceFragment;
 import org.eclipse.n4js.n4mf.SourceFragmentType;
 import org.eclipse.n4js.n4mf.TestedProject;
@@ -227,9 +225,9 @@ public class N4JSModel {
 	}
 
 	private void addArchiveFromDependency(final N4JSProject project, final URI location,
-			final SimpleProjectDependency dependency, final ImmutableList.Builder<IN4JSArchive> result) {
+			final ProjectReference dependency, final ImmutableList.Builder<IN4JSArchive> result) {
 
-		if (null != dependency && null != dependency.getProject()) {
+		if (null != dependency) {
 			final URI dependencyLocation = workspace.getLocation(location, dependency,
 					N4JSSourceContainerType.ARCHIVE);
 			if (dependencyLocation != null) {
@@ -359,22 +357,20 @@ public class N4JSModel {
 
 		// GHOLD-249: If the project n4mf file has parse errors, we need a lot of null checks.
 		for (ProvidedRuntimeLibraryDependency runtimeLibrary : runtimeLibraries) {
-			if (null != runtimeLibrary.getProject()) {
-				URI location = workspace.getLocation(projectLocation, runtimeLibrary, PROJECT);
-				if (null == location) {
-					location = externalLibraryWorkspace.getLocation(projectLocation, runtimeLibrary,
-							PROJECT);
-				}
+			URI location = workspace.getLocation(projectLocation, runtimeLibrary, PROJECT);
+			if (null == location) {
+				location = externalLibraryWorkspace.getLocation(projectLocation, runtimeLibrary,
+						PROJECT);
+			}
 
+			if (null != location) {
+				providedRuntimes.add(getN4JSProject(location));
+			} else {
+
+				// Assuming archive (NFAR)
+				location = workspace.getLocation(projectLocation, runtimeLibrary, ARCHIVE);
 				if (null != location) {
-					providedRuntimes.add(getN4JSProject(location));
-				} else {
-
-					// Assuming archive (NFAR)
-					location = workspace.getLocation(projectLocation, runtimeLibrary, ARCHIVE);
-					if (null != location) {
-						providedRuntimes.add(getN4JSArchive(project, location));
-					}
+					providedRuntimes.add(getN4JSArchive(project, location));
 				}
 			}
 		}
@@ -449,11 +445,7 @@ public class N4JSModel {
 		if (null == reRef) {
 			return absent();
 		}
-		final SimpleProjectDescription project = reRef.getProject();
-		if (null == project) {
-			return absent();
-		}
-		return fromNullable(project.getProjectId());
+		return fromNullable(reRef.getProjectId());
 	}
 
 	public Collection<IN4JSProject> getTestedProjects(final N4JSProject project) {
@@ -472,18 +464,16 @@ public class N4JSModel {
 
 		if (null != description) {
 			for (TestedProject testedProject : description.getTestedProjects()) {
-				if (null != testedProject.getProject()) {
-					URI hostLocation = workspace.getLocation(location, testedProject, PROJECT);
+				URI hostLocation = workspace.getLocation(location, testedProject, PROJECT);
 
-					if (null == hostLocation) {
-						hostLocation = externalLibraryWorkspace.getLocation(location, testedProject, PROJECT);
-					}
+				if (null == hostLocation) {
+					hostLocation = externalLibraryWorkspace.getLocation(location, testedProject, PROJECT);
+				}
 
-					if (hostLocation != null) {
-						final N4JSProject tested = getN4JSProject(hostLocation);
-						if (null != tested && tested.exists()) {
-							builder.add(tested);
-						}
+				if (hostLocation != null) {
+					final N4JSProject tested = getN4JSProject(hostLocation);
+					if (null != tested && tested.exists()) {
+						builder.add(tested);
 					}
 				}
 			}
@@ -506,7 +496,7 @@ public class N4JSModel {
 	public Optional<IN4JSProject> resolveProjectReference(final IN4JSProject project,
 			final ProjectReference reference) {
 
-		if (null == project || null == reference || null == reference.getProject()) {
+		if (null == project || null == reference) {
 			return absent();
 		}
 

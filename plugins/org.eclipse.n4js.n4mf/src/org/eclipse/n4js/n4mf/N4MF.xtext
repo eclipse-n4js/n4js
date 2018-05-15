@@ -44,7 +44,6 @@ ProjectDescription:
 	&	('InitModules'	'{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}' )?
 	&	('ExecModule'	':' execModule=BootstrapModule)?
 
-
 	&	('Output' 			':' outputPathRaw=STRING)?
 	&	('Libraries' 		'{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
 	&	('Resources' 		'{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')?
@@ -100,29 +99,29 @@ enum ModuleFilterType:
 ;
 
 ProvidedRuntimeLibraryDependency:
-	project=SimpleProjectDescription
+	ProjectIdWithOptionalVendor
 ;
 
 RequiredRuntimeLibraryDependency:
-	project=SimpleProjectDescription
+	ProjectIdWithOptionalVendor
 ;
 
 TestedProject:
-	project=SimpleProjectDescription
+	ProjectIdWithOptionalVendor
 ;
 
 /*
  * scope is optional, default scope is compile
  */
-ProjectReference :
-	project=SimpleProjectDescription
+ProjectReference:
+	ProjectIdWithOptionalVendor
 ;
 
 /*
  * scope is optional, default scope is compile
  */
-ProjectDependency :
-	project=SimpleProjectDescription
+ProjectDependency:
+	ProjectIdWithOptionalVendor
 	(versionConstraint=VersionConstraint)?
 	(declaredScope=ProjectDependencyScope)?
 ;
@@ -130,7 +129,7 @@ ProjectDependency :
 /*
  * vendorN4mfIdentifier is optional, if it is not specified, vendor id of current project is used.
  */
-SimpleProjectDescription :
+fragment ProjectIdWithOptionalVendor*:
 	(declaredVendorId=N4mfIdentifier ':')? projectId=N4mfIdentifier
 ;
 

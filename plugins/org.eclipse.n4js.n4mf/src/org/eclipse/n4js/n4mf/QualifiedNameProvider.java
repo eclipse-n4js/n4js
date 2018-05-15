@@ -13,13 +13,12 @@ package org.eclipse.n4js.n4mf;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4mf.util.N4mfSwitch;
 import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 
 import com.google.common.base.Function;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.n4mf.util.N4mfSwitch;
 
 /**
  * A custom {@link IQualifiedNameProvider} for the {@code N4JS manifests}.
@@ -77,7 +76,7 @@ public class QualifiedNameProvider extends DefaultDeclarativeQualifiedNameProvid
 		}
 
 		@Override
-		public String caseSimpleProjectDescription(SimpleProjectDescription object) {
+		public String caseProjectReference(ProjectReference object) {
 			return object.getVendorId() + ":" + object.getProjectId();
 		}
 

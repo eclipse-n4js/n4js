@@ -22,7 +22,7 @@ import org.eclipse.n4js.n4mf.RuntimeProjectDependency;
  *
  * @generated
  */
-public abstract class RuntimeProjectDependencyImpl extends SimpleProjectDependencyImpl implements RuntimeProjectDependency {
+public abstract class RuntimeProjectDependencyImpl extends ProjectReferenceImpl implements RuntimeProjectDependency {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

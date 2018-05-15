@@ -66,14 +66,12 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case N4mfPackage.PROJECT_DESCRIPTION: return createProjectDescription();
-			case N4mfPackage.SIMPLE_PROJECT_DESCRIPTION: return createSimpleProjectDescription();
 			case N4mfPackage.TESTED_PROJECT: return createTestedProject();
 			case N4mfPackage.DECLARED_VERSION: return createDeclaredVersion();
 			case N4mfPackage.SOURCE_FRAGMENT: return createSourceFragment();
 			case N4mfPackage.MODULE_FILTER: return createModuleFilter();
 			case N4mfPackage.BOOTSTRAP_MODULE: return createBootstrapModule();
 			case N4mfPackage.PROJECT_REFERENCE: return createProjectReference();
-			case N4mfPackage.SIMPLE_PROJECT_DEPENDENCY: return createSimpleProjectDependency();
 			case N4mfPackage.MODULE_FILTER_SPECIFIER: return createModuleFilterSpecifier();
 			case N4mfPackage.REQUIRED_RUNTIME_LIBRARY_DEPENDENCY: return createRequiredRuntimeLibraryDependency();
 			case N4mfPackage.PROVIDED_RUNTIME_LIBRARY_DEPENDENCY: return createProvidedRuntimeLibraryDependency();
@@ -145,16 +143,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SimpleProjectDescription createSimpleProjectDescription() {
-		SimpleProjectDescriptionImpl simpleProjectDescription = new SimpleProjectDescriptionImpl();
-		return simpleProjectDescription;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public TestedProject createTestedProject() {
 		TestedProjectImpl testedProject = new TestedProjectImpl();
 		return testedProject;
@@ -208,16 +196,6 @@ public class N4mfFactoryImpl extends EFactoryImpl implements N4mfFactory {
 	public ProjectReference createProjectReference() {
 		ProjectReferenceImpl projectReference = new ProjectReferenceImpl();
 		return projectReference;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public SimpleProjectDependency createSimpleProjectDependency() {
-		SimpleProjectDependencyImpl simpleProjectDependency = new SimpleProjectDependencyImpl();
-		return simpleProjectDependency;
 	}
 
 	/**

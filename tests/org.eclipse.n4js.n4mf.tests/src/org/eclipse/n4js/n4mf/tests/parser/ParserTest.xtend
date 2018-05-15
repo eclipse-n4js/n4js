@@ -124,8 +124,8 @@ class ParserTest {
 		assertEquals(#["**/*Wrapped.*", "**/wrapped/*.js"], project.moduleFilters.get(1).moduleSpecifiers.map[moduleSpecifierWithWildcard])
 
 		assertEquals(project.projectDependencies.size, 2)
-		assertEquals("org.eclipse.n4js", project.projectDependencies.head.project.vendorId)
-		assertEquals("my.project.one", project.projectDependencies.head.project.projectId)
+		assertEquals("org.eclipse.n4js", project.projectDependencies.head.vendorId)
+		assertEquals("my.project.one", project.projectDependencies.head.projectId)
 
 		assertEquals(true, project.projectDependencies.head.versionConstraint.exclLowerBound)
 		assertEquals(0, project.projectDependencies.head.versionConstraint.lowerVersion.major)
@@ -210,7 +210,7 @@ class ParserTest {
 		val errors = project.eResource.errors
 		assertTrue(errors.toString, errors.empty)
 		// when no vendorId is given the vendorId of the current project should be used
-		assertEquals("org.eclipse.n4js", project.projectDependencies.last.project.vendorId)
+		assertEquals("org.eclipse.n4js", project.projectDependencies.last.vendorId)
 	}
 
 	@Test def void testProjectWithNoUpperBound() {
@@ -234,7 +234,7 @@ class ParserTest {
 		val errors = project.eResource.errors
 		assertTrue(errors.toString, errors.empty)
 		// when no vendorId is given the vendorId of the current project should be used
-		assertEquals("org.eclipse.n4js", project.projectDependencies.last.project.vendorId)
+		assertEquals("org.eclipse.n4js", project.projectDependencies.last.vendorId)
 
 		assertEquals(0, project.projectDependencies.last.versionConstraint.lowerVersion.major)
 		assertEquals(0, project.projectDependencies.last.versionConstraint.lowerVersion.minor)

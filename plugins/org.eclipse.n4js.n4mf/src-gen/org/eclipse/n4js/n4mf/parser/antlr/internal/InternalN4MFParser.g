@@ -1561,25 +1561,17 @@ ruleProvidedRuntimeLibraryDependency returns [EObject current=null]
 @after {
 	leaveRule();
 }:
-	(
-		(
-			{
-				newCompositeNode(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectSimpleProjectDescriptionParserRuleCall_0());
-			}
-			lv_project_0_0=ruleSimpleProjectDescription
-			{
-				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getProvidedRuntimeLibraryDependencyRule());
-				}
-				set(
-					$current,
-					"project",
-					lv_project_0_0,
-					"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-				afterParserOrEnumRuleCall();
-			}
-		)
-	)
+	{
+		if ($current==null) {
+			$current = createModelElement(grammarAccess.getProvidedRuntimeLibraryDependencyRule());
+		}
+		newCompositeNode(grammarAccess.getProvidedRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall());
+	}
+	this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor[$current]
+	{
+		$current = $this_ProjectIdWithOptionalVendor_0.current;
+		afterParserOrEnumRuleCall();
+	}
 ;
 
 // Entry rule entryRuleRequiredRuntimeLibraryDependency
@@ -1597,25 +1589,17 @@ ruleRequiredRuntimeLibraryDependency returns [EObject current=null]
 @after {
 	leaveRule();
 }:
-	(
-		(
-			{
-				newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectSimpleProjectDescriptionParserRuleCall_0());
-			}
-			lv_project_0_0=ruleSimpleProjectDescription
-			{
-				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getRequiredRuntimeLibraryDependencyRule());
-				}
-				set(
-					$current,
-					"project",
-					lv_project_0_0,
-					"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-				afterParserOrEnumRuleCall();
-			}
-		)
-	)
+	{
+		if ($current==null) {
+			$current = createModelElement(grammarAccess.getRequiredRuntimeLibraryDependencyRule());
+		}
+		newCompositeNode(grammarAccess.getRequiredRuntimeLibraryDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall());
+	}
+	this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor[$current]
+	{
+		$current = $this_ProjectIdWithOptionalVendor_0.current;
+		afterParserOrEnumRuleCall();
+	}
 ;
 
 // Entry rule entryRuleTestedProject
@@ -1633,25 +1617,17 @@ ruleTestedProject returns [EObject current=null]
 @after {
 	leaveRule();
 }:
-	(
-		(
-			{
-				newCompositeNode(grammarAccess.getTestedProjectAccess().getProjectSimpleProjectDescriptionParserRuleCall_0());
-			}
-			lv_project_0_0=ruleSimpleProjectDescription
-			{
-				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getTestedProjectRule());
-				}
-				set(
-					$current,
-					"project",
-					lv_project_0_0,
-					"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-				afterParserOrEnumRuleCall();
-			}
-		)
-	)
+	{
+		if ($current==null) {
+			$current = createModelElement(grammarAccess.getTestedProjectRule());
+		}
+		newCompositeNode(grammarAccess.getTestedProjectAccess().getProjectIdWithOptionalVendorParserRuleCall());
+	}
+	this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor[$current]
+	{
+		$current = $this_ProjectIdWithOptionalVendor_0.current;
+		afterParserOrEnumRuleCall();
+	}
 ;
 
 // Entry rule entryRuleProjectReference
@@ -1669,25 +1645,17 @@ ruleProjectReference returns [EObject current=null]
 @after {
 	leaveRule();
 }:
-	(
-		(
-			{
-				newCompositeNode(grammarAccess.getProjectReferenceAccess().getProjectSimpleProjectDescriptionParserRuleCall_0());
-			}
-			lv_project_0_0=ruleSimpleProjectDescription
-			{
-				if ($current==null) {
-					$current = createModelElementForParent(grammarAccess.getProjectReferenceRule());
-				}
-				set(
-					$current,
-					"project",
-					lv_project_0_0,
-					"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-				afterParserOrEnumRuleCall();
-			}
-		)
-	)
+	{
+		if ($current==null) {
+			$current = createModelElement(grammarAccess.getProjectReferenceRule());
+		}
+		newCompositeNode(grammarAccess.getProjectReferenceAccess().getProjectIdWithOptionalVendorParserRuleCall());
+	}
+	this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor[$current]
+	{
+		$current = $this_ProjectIdWithOptionalVendor_0.current;
+		afterParserOrEnumRuleCall();
+	}
 ;
 
 // Entry rule entryRuleProjectDependency
@@ -1706,25 +1674,17 @@ ruleProjectDependency returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getProjectDependencyAccess().getProjectSimpleProjectDescriptionParserRuleCall_0_0());
-				}
-				lv_project_0_0=ruleSimpleProjectDescription
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getProjectDependencyRule());
-					}
-					set(
-						$current,
-						"project",
-						lv_project_0_0,
-						"org.eclipse.n4js.n4mf.N4MF.SimpleProjectDescription");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
+		{
+			if ($current==null) {
+				$current = createModelElement(grammarAccess.getProjectDependencyRule());
+			}
+			newCompositeNode(grammarAccess.getProjectDependencyAccess().getProjectIdWithOptionalVendorParserRuleCall_0());
+		}
+		this_ProjectIdWithOptionalVendor_0=ruleProjectIdWithOptionalVendor[$current]
+		{
+			$current = $this_ProjectIdWithOptionalVendor_0.current;
+			afterParserOrEnumRuleCall();
+		}
 		(
 			(
 				{
@@ -1766,15 +1726,9 @@ ruleProjectDependency returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleSimpleProjectDescription
-entryRuleSimpleProjectDescription returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSimpleProjectDescriptionRule()); }
-	iv_ruleSimpleProjectDescription=ruleSimpleProjectDescription
-	{ $current=$iv_ruleSimpleProjectDescription.current; }
-	EOF;
 
-// Rule SimpleProjectDescription
-ruleSimpleProjectDescription returns [EObject current=null]
+// Rule ProjectIdWithOptionalVendor
+ruleProjectIdWithOptionalVendor[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -1786,12 +1740,12 @@ ruleSimpleProjectDescription returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getSimpleProjectDescriptionAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_0_0_0());
+						newCompositeNode(grammarAccess.getProjectIdWithOptionalVendorAccess().getDeclaredVendorIdN4mfIdentifierParserRuleCall_0_0_0());
 					}
 					lv_declaredVendorId_0_0=ruleN4mfIdentifier
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSimpleProjectDescriptionRule());
+							$current = createModelElementForParent(grammarAccess.getProjectIdWithOptionalVendorRule());
 						}
 						set(
 							$current,
@@ -1804,18 +1758,18 @@ ruleSimpleProjectDescription returns [EObject current=null]
 			)
 			otherlv_1=Colon
 			{
-				newLeafNode(otherlv_1, grammarAccess.getSimpleProjectDescriptionAccess().getColonKeyword_0_1());
+				newLeafNode(otherlv_1, grammarAccess.getProjectIdWithOptionalVendorAccess().getColonKeyword_0_1());
 			}
 		)?
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getSimpleProjectDescriptionAccess().getProjectIdN4mfIdentifierParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getProjectIdWithOptionalVendorAccess().getProjectIdN4mfIdentifierParserRuleCall_1_0());
 				}
 				lv_projectId_2_0=ruleN4mfIdentifier
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getSimpleProjectDescriptionRule());
+						$current = createModelElementForParent(grammarAccess.getProjectIdWithOptionalVendorRule());
 					}
 					set(
 						$current,
