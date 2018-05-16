@@ -51,10 +51,8 @@ public class ExternalLibrariesWizard extends Wizard {
 	public void addPages() {
 		start = new StartPage();
 		options = new SetupOptionsPage();
-		// runSetup = new RunSetupPage(installOptions);
 		addPage(start);
 		addPage(options);
-		// addPage(runSetup);
 	}
 
 	@Override
