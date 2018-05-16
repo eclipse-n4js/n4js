@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.ProjectReference;
 
 /**
  * Utility for collecting project dependencies. Focused on reading {@link ProjectDescription} only, and does not check
@@ -82,7 +83,8 @@ public class DependenciesCollectingUtil {
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */
 	private static Stream<DependencyInfo> getVersionedExtendedRuntimeEnvironment(ProjectDescription description) {
-		return Stream.of(description.getExtendedRuntimeEnvironment()).map(DependencyInfo::create);
+		final ProjectReference re = description.getExtendedRuntimeEnvironment();
+		return re != null ? Stream.of(re).map(DependencyInfo::create) : Stream.empty();
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */
