@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4mf.ModuleFilterType
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.xtext.Assignment
@@ -43,7 +44,6 @@ import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static extension com.google.common.base.Strings.nullToEmpty
 import static extension com.google.common.base.Strings.repeat
 import static extension com.google.common.collect.Iterables.concat
-import org.eclipse.n4js.n4mf.SourceContainerType
 
 /**
  * Content assist proposal provider for N4JS manifest.
@@ -108,15 +108,35 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 	}
 
 	override complete_ProjectDependency(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
-		val desc = eObject.findProjectDescription;
-		if (null !== desc) {
-			val ignoredIds = desc.projectDependencies.map[projectId];
-			val predicate = switch(desc.projectType) {
-				case TEST: not(RE_OR_RL_TYPE).forDescriptionMinis
-				case API: createProjectPredicateForAPIs
-				default: not(or(RE_OR_RL_TYPE, TEST_TYPE)).forDescriptionMinis
+		if (ruleCall?.eContainer instanceof Assignment) {
+			val desc = eObject.findProjectDescription;
+			if (null === desc) {
+				return;
 			}
-			completeProposal(desc, ctx, acceptor, predicate, ignoredIds);
+			val assignment = ruleCall?.eContainer as Assignment;
+			switch(assignment.feature) {
+				case projectDescriptionAccess.projectDependenciesAssignment_9_2_0.feature: {
+					val ignoredIds = desc.projectDependencies.map[projectId];
+					val predicate = switch(desc.projectType) {
+						case TEST: not(RE_OR_RL_TYPE).forDescriptionMinis
+						case API: createProjectPredicateForAPIs
+						default: not(or(RE_OR_RL_TYPE, TEST_TYPE)).forDescriptionMinis
+					}
+					completeProposal(desc, ctx, acceptor, predicate, ignoredIds);
+				}
+				case projectDescriptionAccess.testedProjectsAssignment_19_2_0.feature: {
+					val ignoredIds = desc.testedProjects.map[projectId];
+					// If no dependencies yet, do not be so harsh... allow anything but test project
+					val predicate = if (ignoredIds.nullOrEmpty) {
+						not(TEST_TYPE);
+					} else {
+						// If there is at least one tested project, try to stick to that project type.
+						val type = eObject.getProjectType(ignoredIds.head);
+						if (null === type) not(TEST_TYPE) else anyOf(type);
+					}
+					completeProposal(desc, ctx, acceptor, predicate.forDescriptionMinis, ignoredIds);
+				}
+			}
 		}
 	}
 
@@ -135,18 +155,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 				case projectDescriptionAccess.requiredRuntimeLibrariesAssignment_8_2_0.feature: {
 					val ignoredIds = desc.requiredRuntimeLibraries.map[projectId];
 					completeProposal(desc, ctx, acceptor, RL_TYPE.forDescriptionMinis, ignoredIds);
-				}
-				case projectDescriptionAccess.testedProjectsAssignment_19_2_0.feature: {
-					val ignoredIds = desc.testedProjects.map[projectId];
-					// If no dependencies yet, do not be so harsh... allow anything but test project
-					val predicate = if (ignoredIds.nullOrEmpty) {
-						not(TEST_TYPE);
-					} else {
-						// If there is at least one tested project, try to stick to that project type.
-						val type = eObject.getProjectType(ignoredIds.head);
-						if (null === type) not(TEST_TYPE) else anyOf(type);
-					}
-					completeProposal(desc, ctx, acceptor, predicate.forDescriptionMinis, ignoredIds);
 				}
 				case projectDescriptionAccess.extendedRuntimeEnvironmentAssignment_6_2.feature: {
 					val currentExtendedREId = desc?.extendedRuntimeEnvironment?.projectId;
