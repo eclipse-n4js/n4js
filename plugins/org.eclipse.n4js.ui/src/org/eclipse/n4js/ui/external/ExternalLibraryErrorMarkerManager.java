@@ -141,9 +141,20 @@ public class ExternalLibraryErrorMarkerManager {
 		marker.setAttribute(IMarker.LOCATION, locName);
 		marker.setAttribute(Issue.CODE_KEY, getCodeKey(issue));
 		marker.setAttribute(IMarker.SEVERITY, getSeverity(issue));
-		marker.setAttribute(IMarker.MESSAGE, issue.getMessage());
+		marker.setAttribute(IMarker.MESSAGE, getMessage(issue));
 		marker.setAttribute(Issue.URI_KEY, uriKey);
 		marker.setAttribute("FIXABLE_KEY", false);
+	}
+
+	private String getMessage(Issue issue) {
+		switch (issue.getSeverity()) {
+		case ERROR:
+			return IssueCodes.getMessageForEXTERNAL_LIBRARY_ERRORS(issue.getMessage());
+		case WARNING:
+			return IssueCodes.getMessageForEXTERNAL_LIBRARY_WARNINGS(issue.getMessage());
+		default:
+			throw new IllegalArgumentException(String.valueOf(issue.getSeverity()));
+		}
 	}
 
 	private String getCodeKey(Issue issue) {

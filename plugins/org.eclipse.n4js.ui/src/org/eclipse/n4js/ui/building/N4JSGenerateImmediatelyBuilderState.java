@@ -41,7 +41,6 @@ import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
-import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -235,11 +234,6 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
-		ResourceType resourceType = ResourceType.getResourceType(delta.getUri());
-		if (resourceType == ResourceType.JS || resourceType == ResourceType.JSX) {
-			return;
-		}
-
 		try (ClosableMeasurement m = dcValidations.getClosableMeasurement("validation");) {
 			super.updateMarkers(delta, resourceSet, monitor);
 		}
