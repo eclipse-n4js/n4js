@@ -157,13 +157,9 @@ public class ProjectReferenceImpl extends MinimalEObjectImpl.Container implement
 		}
 		else {
 			EObject _eContainer = this.eContainer();
-			EObject _eContainer_1 = null;
-			if (_eContainer!=null) {
-				_eContainer_1=_eContainer.eContainer();
-			}
 			String _vendorId = null;
-			if (((ProjectDescription) _eContainer_1)!=null) {
-				_vendorId=((ProjectDescription) _eContainer_1).getVendorId();
+			if (((ProjectDescription) _eContainer)!=null) {
+				_vendorId=((ProjectDescription) _eContainer).getVendorId();
 			}
 			_xifexpression = _vendorId;
 		}

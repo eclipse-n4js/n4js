@@ -193,7 +193,7 @@ class ProjectReference {
 	 */
 	String declaredVendorId
 	op String getVendorId() {
-		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer as ProjectDescription)?.vendorId;
+		return if (declaredVendorId !== null) declaredVendorId else (eContainer as ProjectDescription)?.vendorId;
 	}
 
 	/**
