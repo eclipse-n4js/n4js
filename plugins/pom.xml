@@ -56,6 +56,10 @@ Contributors:
 		<module>org.eclipse.n4js.n4mf.model</module>
 		<module>org.eclipse.n4js.n4mf</module>
 		<module>org.eclipse.n4js.n4mf.ui</module>
+		<!-- json -->
+		<module>org.eclipse.n4js.json</module>
+		<module>org.eclipse.n4js.json.model</module>
+		<module>org.eclipse.n4js.json.ui</module>
 		<!-- transpiler -->
 		<module>org.eclipse.n4js.generator.headless</module>
 		<module>org.eclipse.n4js.transpiler</module>

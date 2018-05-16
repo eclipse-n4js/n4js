@@ -16,7 +16,7 @@ import org.eclipse.n4js.xpect.ui.methods.OutlineXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
-import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
+import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.junit.runner.RunWith;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.lib.XpectTestResultTest;
@@ -46,7 +46,7 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect-test", fileExtensions = "xt")
-@XpectImport({ SuppressIssuesSetup.class })
+@XpectImport({ N4JSSuppressIssuesSetup.class })
 public class N4JSXpectPluginUITest {
 	//
 }
