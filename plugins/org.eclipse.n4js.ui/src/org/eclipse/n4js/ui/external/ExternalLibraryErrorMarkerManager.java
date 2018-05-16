@@ -110,8 +110,12 @@ public class ExternalLibraryErrorMarkerManager {
 		N4JSExternalProject externalProject = externalLibraryWorkspace.getProject(extPrj.getLocation());
 
 		for (Issue issue : issues) {
+			String prjFileLocation = extPrj.getLocation().toFileString();
+			String resFileLocation = uri.toFileString();
+			resFileLocation = resFileLocation.substring(prjFileLocation.length());
+
 			String locationName = "Dependency: " + externalProject.getName();
-			locationName += ", File: " + uri.toString();
+			locationName += ", File: " + resFileLocation;
 			locationName += ", Line: " + issue.getLineNumber();
 			String uriKey = externalProject.getName();
 
