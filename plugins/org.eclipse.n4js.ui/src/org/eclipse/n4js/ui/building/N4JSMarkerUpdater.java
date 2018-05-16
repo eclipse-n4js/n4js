@@ -73,10 +73,15 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 	}
 
 	private void updateMarkersForExternalLibraries(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
+		IN4JSCore n4jsCore = getIN4JSCore();
 		URI uri = delta.getUri();
+		if (n4jsCore.isNoValidate(uri)) {
+			return;
+		}
+
 		Resource resource = resourceSet.getResource(uri, true);
 		IResourceValidator validator = getValidator(resource);
-		IN4JSProject prj = getIN4JSCore().findProject(uri).orNull();
+		IN4JSProject prj = n4jsCore.findProject(uri).orNull();
 		CancelIndicator cancelIndicator = getCancelIndicator(monitor);
 
 		if (prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
