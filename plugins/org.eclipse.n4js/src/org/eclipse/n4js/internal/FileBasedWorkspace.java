@@ -170,7 +170,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	public URI getLocation(URI unsafeLocation, ProjectReference projectReference,
 			N4JSSourceContainerType expectedN4JSSourceContainerType) {
 		URI projectURI = URIUtils.normalize(unsafeLocation);
-		String projectId = projectReference.getProject().getProjectId();
+		String projectId = projectReference.getProjectId();
 		if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
 			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
 			if (baseHandle != null && !baseHandle.isArchive()) {

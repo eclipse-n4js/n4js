@@ -14,7 +14,6 @@ import static org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmF
 
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.TestedProject;
 
 /** Custom type for {@code Pair<String, String>} that is used to describe dependency (i.e. npm package). */
 public class DependencyInfo {
@@ -46,16 +45,15 @@ public class DependencyInfo {
 	}
 
 	private static String toName(ProjectReference projectReference) {
-		return projectReference.getProject().getProjectId();
+		return projectReference.getProjectId();
 	}
 
 	private static String toVersion(ProjectReference projectReference) {
 		String version = NO_VERSION;
 		if (projectReference instanceof ProjectDependency)
 			version = npmFormat(((ProjectDependency) projectReference).getVersionConstraint());
-		else if (projectReference instanceof TestedProject)
-			version = npmFormat(((TestedProject) projectReference).getVersionConstraint());
-
+		else if (projectReference instanceof ProjectDependency)
+			version = npmFormat(((ProjectDependency) projectReference).getVersionConstraint());
 		return version;
 	}
 }

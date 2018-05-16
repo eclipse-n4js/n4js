@@ -17,11 +17,11 @@ import org.eclipse.n4js.compare.ProjectComparison
 import org.eclipse.n4js.compare.ProjectComparisonEntry
 import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.n4mf.ProjectReference
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.Type
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 
 /**
  * Helper methods for testing API / implementation compare functionality.
@@ -116,10 +116,8 @@ class ApiImplCompareTestHelper {
 	}
 
 	public def ProjectReference createProjectReference(String projectIdOfTargetProject) {
-		val desc = N4mfFactory.eINSTANCE.createSimpleProjectDescription;
-		desc.projectId = projectIdOfTargetProject;
 		val pref = N4mfFactory.eINSTANCE.createProjectReference;
-		pref.project = desc;
+		pref.projectId = projectIdOfTargetProject;
 		return pref;
 	}
 }

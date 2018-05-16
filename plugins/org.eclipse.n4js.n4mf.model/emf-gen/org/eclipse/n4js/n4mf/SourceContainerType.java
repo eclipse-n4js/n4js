@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.Enumerator;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Source Fragment Type</b></em>',
+ * A representation of the literals of the enumeration '<em><b>Source Container Type</b></em>',
  * and utility methods for working with them.
  * <!-- end-user-doc -->
  * <!-- begin-model-doc -->
@@ -26,11 +26,11 @@ import org.eclipse.emf.common.util.Enumerator;
  * Categorizes a source fragment to either contain sources files (SOURCE),
  * tests (TEST) or external classes (EXTERNAL).
  * <!-- end-model-doc -->
- * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceFragmentType()
+ * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceContainerType()
  * @model
  * @generated
  */
-public enum SourceFragmentType implements Enumerator {
+public enum SourceContainerType implements Enumerator {
 	/**
 	 * The '<em><b>SOURCE</b></em>' literal object.
 	 * <!-- begin-user-doc -->
@@ -107,37 +107,37 @@ public enum SourceFragmentType implements Enumerator {
 	public static final int EXTERNAL_VALUE = 2;
 
 	/**
-	 * An array of all the '<em><b>Source Fragment Type</b></em>' enumerators.
+	 * An array of all the '<em><b>Source Container Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final SourceFragmentType[] VALUES_ARRAY =
-		new SourceFragmentType[] {
+	private static final SourceContainerType[] VALUES_ARRAY =
+		new SourceContainerType[] {
 			SOURCE,
 			TEST,
 			EXTERNAL,
 		};
 
 	/**
-	 * A public read-only list of all the '<em><b>Source Fragment Type</b></em>' enumerators.
+	 * A public read-only list of all the '<em><b>Source Container Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final List<SourceFragmentType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+	public static final List<SourceContainerType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Source Fragment Type</b></em>' literal with the specified literal value.
+	 * Returns the '<em><b>Source Container Type</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param literal the literal.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static SourceFragmentType get(String literal) {
+	public static SourceContainerType get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			SourceFragmentType result = VALUES_ARRAY[i];
+			SourceContainerType result = VALUES_ARRAY[i];
 			if (result.toString().equals(literal)) {
 				return result;
 			}
@@ -146,16 +146,16 @@ public enum SourceFragmentType implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Source Fragment Type</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Source Container Type</b></em>' literal with the specified name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param name the name.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static SourceFragmentType getByName(String name) {
+	public static SourceContainerType getByName(String name) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			SourceFragmentType result = VALUES_ARRAY[i];
+			SourceContainerType result = VALUES_ARRAY[i];
 			if (result.getName().equals(name)) {
 				return result;
 			}
@@ -164,14 +164,14 @@ public enum SourceFragmentType implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Source Fragment Type</b></em>' literal with the specified integer value.
+	 * Returns the '<em><b>Source Container Type</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the integer value.
 	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
-	public static SourceFragmentType get(int value) {
+	public static SourceContainerType get(int value) {
 		switch (value) {
 			case SOURCE_VALUE: return SOURCE;
 			case TEST_VALUE: return TEST;
@@ -207,7 +207,7 @@ public enum SourceFragmentType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private SourceFragmentType(int value, String name, String literal) {
+	private SourceContainerType(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -251,4 +251,4 @@ public enum SourceFragmentType implements Enumerator {
 		return literal;
 	}
 	
-} //SourceFragmentType
+} //SourceContainerType

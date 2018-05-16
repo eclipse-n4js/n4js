@@ -15,13 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment;
-import org.eclipse.n4js.n4mf.ImplementedProjects;
-import org.eclipse.n4js.n4mf.ProjectDependencies;
 import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries;
-import org.eclipse.n4js.n4mf.RequiredRuntimeLibraries;
-import org.eclipse.n4js.n4mf.TestedProjects;
+import org.eclipse.n4js.n4mf.ProjectReference;
 
 /**
  * Utility for collecting project dependencies. Focused on reading {@link ProjectDescription} only, and does not check
@@ -73,50 +68,33 @@ public class DependenciesCollectingUtil {
 
 	/** get id-version information about dependencies */
 	private static Stream<DependencyInfo> getVersionedDependencies(ProjectDescription description) {
-		ProjectDependencies projectDependencies = description.getProjectDependencies();
-		if (projectDependencies != null)
-			return projectDependencies.getProjectDependencies().stream().map(DependencyInfo::create);
-		return Stream.empty();
+		return description.getProjectDependencies().stream().map(DependencyInfo::create);
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */
 	private static Stream<DependencyInfo> getVersionedRequiredRuntimeLibraries(ProjectDescription description) {
-		RequiredRuntimeLibraries runtimeLibraries = description.getRequiredRuntimeLibraries();
-		if (runtimeLibraries != null)
-			return runtimeLibraries.getRequiredRuntimeLibraries().stream().map(DependencyInfo::create);
-		return Stream.empty();
+		return description.getRequiredRuntimeLibraries().stream().map(DependencyInfo::create);
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */
 	private static Stream<DependencyInfo> getVersionedProvidedRuntimeLibraries(ProjectDescription description) {
-		ProvidedRuntimeLibraries projectDependencies = description.getProvidedRuntimeLibraries();
-		if (projectDependencies != null)
-			return projectDependencies.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create);
-		return Stream.empty();
+		return description.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create);
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */
 	private static Stream<DependencyInfo> getVersionedExtendedRuntimeEnvironment(ProjectDescription description) {
-		ExtendedRuntimeEnvironment projectDependencies = description.getExtendedRuntimeEnvironment();
-		if (projectDependencies != null)
-			return Stream.of(projectDependencies.getExtendedRuntimeEnvironment()).map(DependencyInfo::create);
-		return Stream.empty();
+		final ProjectReference re = description.getExtendedRuntimeEnvironment();
+		return re != null ? Stream.of(re).map(DependencyInfo::create) : Stream.empty();
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */
 	private static Stream<DependencyInfo> getVersionedTestedProjects(ProjectDescription description) {
-		TestedProjects projectDependencies = description.getTestedProjects();
-		if (projectDependencies != null)
-			return projectDependencies.getTestedProjects().stream().map(DependencyInfo::create);
-		return Stream.empty();
+		return description.getTestedProjects().stream().map(DependencyInfo::create);
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */
 	private static Stream<DependencyInfo> getVersionedImplementedProjects(ProjectDescription description) {
-		ImplementedProjects projectDependencies = description.getImplementedProjects();
-		if (projectDependencies != null)
-			return projectDependencies.getImplementedProjects().stream().map(DependencyInfo::create);
-		return Stream.empty();
+		return description.getImplementedProjects().stream().map(DependencyInfo::create);
 	}
 
 }
