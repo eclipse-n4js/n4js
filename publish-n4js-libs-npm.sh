@@ -1,9 +1,14 @@
 #!/bin/bash
 
+set -e
+
 echo "Start publishing n4js-libs"
 
 # Navigate to n4js-libs folder
 cd `dirname $0`/n4js-libs
+
+# Start verdaccio
+verdaccio -l localhost:4873 > /dev/null &
 
 rm -rf node_modules
 

@@ -6,7 +6,8 @@
 		"npm-cli-login": "latest"
 	},
 	"scripts": {
-		"publish-canary": "./npm-publish-canary.sh"
+		"publish-canary": "./npm-publish-canary.sh",
+		"build": "./npm-build-all.sh"
 	},
 	"workspaces": [
 		"packages/n4js-es5",
