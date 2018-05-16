@@ -155,10 +155,10 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	@Override
 	public void reindexAllExternalProjects(IProgressMonitor monitor) {
 		try {
-			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
+			SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 
 			monitor.setTaskName("Cleaning all projects...");
-			RegisterResult cleanResult = externalLibraryWorkspace.deregisterAllProjects(monitor);
+			RegisterResult cleanResult = externalLibraryWorkspace.deregisterAllProjects(subMonitor.newChild(1));
 			externalErrorMarkerManager.clearAllMarkers();
 			printRegisterResults(cleanResult, "clean");
 			subMonitor.worked(1);
@@ -172,15 +172,16 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 				toBeReindexed.add(uri);
 			}
 
-			monitor.setTaskName("Building new projects...");
-			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(monitor, toBeReindexed);
+			subMonitor.setTaskName("Building new projects...");
+			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.newChild(9),
+					toBeReindexed);
 			printRegisterResults(buildResult, "built");
 			subMonitor.worked(1);
 
 			Set<URI> toBeScheduled = new HashSet<>();
 			toBeScheduled.addAll(cleanResult.affectedWorkspaceProjects);
 			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
-			externalLibraryWorkspace.scheduleWorkspaceProjects(monitor, toBeScheduled);
+			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor, toBeScheduled);
 
 			// clean error markers 'out-of-sync'
 			setOutOfSyncMarkers(false);

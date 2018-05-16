@@ -62,7 +62,7 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 
 		URI uri = delta.getUri();
 		Iterable<Pair<IStorage, IProject>> pairs = mapper.getStorages(uri);
-		if (pairs.iterator().hasNext()) {
+		if (resourceSet != null && pairs.iterator().hasNext()) {
 			Pair<IStorage, IProject> pair = pairs.iterator().next();
 			if (!(pair.getFirst() instanceof IFile)) {
 				updateMarkersForExternalLibraries(delta, resourceSet, monitor);

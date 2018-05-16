@@ -300,7 +300,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 			logger.warn("Built-in libraries and NPM support are disabled.");
 		}
 
-		SubMonitor subMonitor = convert(monitor, 2);
+		SubMonitor subMonitor = convert(monitor, 1);
 
 		// Rebuild whole external workspace. Filter out projects that are present in the Eclipse workspace.
 		Collection<N4JSExternalProject> projectsToBuild = getExternalProjects(toBeUpdated);
@@ -311,7 +311,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		// Build recently added projects that do not exist in workspace.
 		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(allProjectsToBuild)) {
-			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor.newChild(1)));
+			extPrjBuilt.addAll(builder.build(allProjectsToBuild, subMonitor));
 		}
 		subMonitor.worked(1);
 
