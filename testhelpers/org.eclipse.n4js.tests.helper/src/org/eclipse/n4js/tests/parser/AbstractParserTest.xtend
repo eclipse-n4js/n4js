@@ -43,6 +43,13 @@ public abstract class AbstractParserTest extends Assert {
 		return script
 	}
 
+	protected def parseN4JSWithError(CharSequence js) {
+		val script = js.parseN4js
+		val errors = script.eResource.errors;
+		assertFalse(errors.toString, errors.empty)
+		return script
+	}
+
 	/**
 	 * Used in tests to eliminate the suspicious paren expression
 	 */

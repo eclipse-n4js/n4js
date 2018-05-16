@@ -248,14 +248,14 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			function f() {
 			  ({a = (0, {a = 0})} = {})
 			}
-		'''.parseWithError
+		'''.parseSuccessfully
 	}
 
 	@Test
 	def void testTraceur_Error_CoverInitialiser2() {
 		'''
 			({a = 0});
-		'''.parseWithError
+		'''.parseSuccessfully
 	}
 
 	@Test

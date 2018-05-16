@@ -10,13 +10,16 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
 function nonStrict() {
 	// This should work
 	var yield = 3;
 }
 function strictMode() {
 	'use strict';
-	// XPECT errors --> "yield is a reserved identifier." at "yield"
+	// disabled issues until IDE-2145 is solved
+	// XPECT noerrors --> "yield is a reserved identifier." at "yield"
 	var yield = 4;
 }
 function nonStrict1() {

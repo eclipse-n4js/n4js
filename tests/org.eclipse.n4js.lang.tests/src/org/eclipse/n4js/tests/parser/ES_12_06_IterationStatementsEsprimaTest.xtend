@@ -468,15 +468,6 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 	}
 
 	@Test
-	def void testForOfLoop_16() {
-		val statement = '"use strict"; for(var v = new X() of list) {}'.parseWithError.scriptElements.last as ForStatement
-		assertFalse(statement.forIn)
-		assertTrue(statement.forOf)
-		assertFalse(statement.forPlain)
-		assertEquals('v', statement.varDecl.head.name);
-	}
-
-	@Test
 	def void testForOfLoop_17() {
 		val statement = '''
 			for(var [a2,b2,c2] of arr2) {}
@@ -485,5 +476,15 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
 		assertEquals('a2', statement.varDecl.head.name);
+	}
+
+	// NOTE: strict mode is validated in the validation, not in the parser
+	@Test
+	def void testForOfLoop_16() {
+		val statement = '"use strict"; for(var v = new X() of list) {}'.parseSuccessfully.scriptElements.last as ForStatement
+		assertFalse(statement.forIn)
+		assertTrue(statement.forOf)
+		assertFalse(statement.forPlain)
+		assertEquals('v', statement.varDecl.head.name);
 	}
 }

@@ -151,13 +151,14 @@ class ES_07_08_3_NumericLiteralsErrorTest extends AbstractParserTest {
 	}
 
 	@Test
-	def void testLegacyOctal012() {
-		'"use strict";0129;'.parseWithError
-	}
-
-	@Test
 	def void testLegacyOctal0012() {
 		'0012o;'.parseWithError
+	}
+
+	// NOTE: strict mode is validated in the validation, not in the parser
+	@Test
+	def void testLegacyOctal012() {
+		'"use strict";0129;'.parseSuccessfully
 	}
 
 }

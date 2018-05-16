@@ -13,9 +13,11 @@
 "use strict"
 
 class A {
-	// XPECT warnings --> "static is a reserved identifier." at "static"
+	// disabled issues until IDE-2145 is solved
+	// XPECT nowarnings --> "static is a reserved identifier." at "static"
 	private static() : void { }
 
-	// XPECT errors --> "static is a reserved identifier." at "static"
+	// disabled issues until IDE-2145 is solved
+	// XPECT noerrors --> "static is a reserved identifier." at "static"
 	private f = function static() { };
 }

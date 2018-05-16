@@ -201,9 +201,11 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 		assertEquals("Hello\u0000World", stringLiteral.value)
 	}
 
+
+	// NOTE: strict mode is validated in the validation, not in the parser
 	@Test
 	def void testOctalEscapeStrictMode_01() {
-		val script = ''''use strict';"Hello\112World"'''.parseWithError
+		val script = ''''use strict';"Hello\112World"'''.parseSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("HelloJWorld", stringLiteral.value)
@@ -211,7 +213,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscapeStrictMode_02() {
-		val script = ''''use strict';"Hello\0112World"'''.parseWithError
+		val script = ''''use strict';"Hello\0112World"'''.parseSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello\t2World", stringLiteral.value)
@@ -219,7 +221,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscapeStrictMode_03() {
-		val script = ''''use strict';"Hello\312World"'''.parseWithError
+		val script = ''''use strict';"Hello\312World"'''.parseSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello\u00CAWorld", stringLiteral.value)
@@ -227,7 +229,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscapeStrictMode_04() {
-		val script = ''''use strict';"Hello\412World"'''.parseWithError
+		val script = ''''use strict';"Hello\412World"'''.parseSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello!2World", stringLiteral.value)
@@ -235,7 +237,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscapeStrictMode_05() {
-		val script = ''''use strict';"Hello\812World"'''.parseWithError
+		val script = ''''use strict';"Hello\812World"'''.parseSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello812World", stringLiteral.value)
@@ -243,7 +245,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscapeStrictMode_06() {
-		val script = ''''use strict';"Hello\712World"'''.parseWithError
+		val script = ''''use strict';"Hello\712World"'''.parseSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello92World", stringLiteral.value)
@@ -251,7 +253,7 @@ class ES_07_08_4_StringLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctalEscapeStrictMode_07() {
-		val script = ''''use strict';"Hello\1World"'''.parseWithError
+		val script = ''''use strict';"Hello\1World"'''.parseSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val stringLiteral = statement.expression as StringLiteral
 		assertEquals("Hello\u0001World", stringLiteral.value)
