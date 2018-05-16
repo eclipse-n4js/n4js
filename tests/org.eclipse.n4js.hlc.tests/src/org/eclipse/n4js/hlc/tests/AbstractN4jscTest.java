@@ -31,6 +31,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;

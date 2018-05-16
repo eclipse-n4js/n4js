@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc.tests;
+package org.eclipse.n4js.test.helper.hlc;
 
 import org.apache.log4j.Logger;
 
