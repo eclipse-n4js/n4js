@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import org.eclipse.xtext.conversion.impl.AbstractLexerBasedConverter;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.util.Strings;
-
 import org.eclipse.n4js.validation.IssueCodes;
 
 /**
