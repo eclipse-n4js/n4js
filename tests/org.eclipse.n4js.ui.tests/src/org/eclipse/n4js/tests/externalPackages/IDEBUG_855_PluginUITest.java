@@ -62,7 +62,7 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 	private ContributingResourceDescriptionPersister persister;
 
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
@@ -121,7 +121,7 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 		assertMarkers("Expected exactly zero errors in client module.", clientModule, 0);
 
 		resource.getContents().clear();
-		npmManager.reloadAllExternalProjects(new NullProgressMonitor());
+		libManager.reloadAllExternalProjects(new NullProgressMonitor());
 
 		final int builderStateAfterReloadSize = Iterables.size(builderState.getAllResourceDescriptions());
 		persister.saveToResource(resource, builderState.getAllResourceDescriptions());

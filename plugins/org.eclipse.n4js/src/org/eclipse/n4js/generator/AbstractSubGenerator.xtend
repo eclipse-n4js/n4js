@@ -20,6 +20,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
@@ -121,7 +122,9 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val inputUri = input.URI
 
 		return (autobuildEnabled
+			&& isGenerateProjectType(inputUri)
 			&& hasOutput(inputUri)
+			&& isOutsideOfOutputFolder(inputUri)
 			&& isSource(inputUri)
 			&& (isNoValidate(inputUri)
 				|| isExternal(inputUri)
@@ -194,6 +197,37 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		} else {
 			logger.warn(msg,exc)
 		}
+	}
+
+	/** @return true iff the current project has a project type that is supposed to generate code. */
+	def boolean isGenerateProjectType(URI n4jsSourceURI) {
+		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
+		if (project !== null) {
+			val projectType = project.getProjectType();
+			if (projectType == ProjectType.VALIDATION) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/** @return true iff the given resource does not lie within the output folder. */
+	def boolean isOutsideOfOutputFolder(URI n4jsSourceURI) {
+		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
+		if (project !== null) {
+			val outputPathName = project.getOutputPath();
+			if (outputPathName !== null) {
+				val resourceLocation = n4jsSourceURI.toString();
+				val pl = project.getLocation();
+				val prjRelOutputLocation = Paths.get(pl.toString(), outputPathName).toString();
+				val resourceInOutput = resourceLocation.startsWith(prjRelOutputLocation);
+				if (resourceInOutput) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**

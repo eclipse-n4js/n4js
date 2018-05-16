@@ -262,7 +262,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 
 		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [
 			it.sourceFragment += N4mfFactory.eINSTANCE.createSourceFragment => [
-				paths.addAll('ext');
+				pathsRaw.addAll('ext');
 				sourceFragmentType = SourceFragmentType.EXTERNAL;
 			];
 		]);

@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.ts.versions.MigratableUtils
 
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
@@ -143,7 +144,7 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * imports 'A'. To access those, the referring {@link #variables variable} has to be used.
 	 */
 	contains Type[] exposedInternalTypes
-	
+
 	/**
 	 * MD5 hash (hex) of the AST from which this type model was created. This can be used to quickly
 	 * compare two type models created from -- maybe -- different versions of the same AST.
@@ -156,8 +157,8 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * 
 	 * @see org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.md5Hex(String)
 	 */
-	String astMD5
-	
+	transient String astMD5
+
 	/**
 	 * Caches for composed members. Not serialized to the Xtext index.
 	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
@@ -389,7 +390,7 @@ class InferenceVariable extends TypeVariable {}
  * Represents a function declaration. In JavaScript, functions are first-class objects, hence
  * a function declaration also is a type declaration.
  */
-class TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement {
+class TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
 	boolean external
 	/*
 	 * Formal parameters
@@ -840,7 +841,10 @@ class TStructuralType extends ContainerType<TStructMember>, SyntaxRelatedTElemen
 	}
 }
 
-abstract class TVersionable {
+/**
+ * Base class for all versionable types.
+ */
+abstract class TVersionable extends Type {
 	/**
 	 * The declared version of the type. This is not used by N4JS at the moment but only
 	 * in derived languages such as N4IDL. It needs to be stored in the type model though as
@@ -856,6 +860,78 @@ abstract class TVersionable {
 	 */
 	op int getVersion() {
 		return declaredVersion;
+	}
+}
+
+/**
+ * A migratable element represent a type that can be subject to N4IDL migrations.
+ * 
+ * @see TMigration
+ */
+abstract class TMigratable {
+	/**
+	 * The declared migrations for this {@link TMigratable} element.
+	 */
+	refers TMigration[] migrations
+}
+
+/**
+ * Represents an N4IDL migration.
+ */
+class TMigration extends TFunction {
+	
+	/**
+	 * The source model version of this migration.
+	 */
+	int sourceVersion
+	/**
+	 * The target model version of this migration.
+	 */
+	int targetVersion
+	
+	/**
+	 * Returns {@code true} iff migration has an explicitly declared
+	 * source and target version.
+	 */
+	boolean hasDeclaredSourceAndTargetVersion
+	
+	/**
+	 * The source TypeRefs of this migration.
+	 */
+	refers TypeRef[] sourceTypeRefs
+	
+	/**
+	 * The target TypeRefs of this migration.
+	 */
+	refers TypeRef[] targetTypeRefs	
+	
+	
+	/** Transient principal argument type. Access through #getPrincipalArgumentType() */
+	refers transient TMigratable _principalArgumentType
+	
+	/**
+	 * The principal argument of this migration.
+	 */
+	op TMigratable getPrincipalArgumentType() {
+		if (_principalArgumentType === null) {
+			EcoreUtilN4.doWithDeliver(false,
+				[|
+					_principalArgumentType = MigratableUtils.findPrincipalMigrationArgument(sourceTypeRefs).orElse(null);
+				], this);
+		}
+		return _principalArgumentType;
+	}
+	
+	/**
+	 * Returns string representation of this migration.
+	 * 
+	 * This includes source types and target types.
+	 */
+	op String getMigrationAsString() {
+		return String.format("%s (%s) => (%s)",
+				this.name,
+				this.sourceTypeRefs.map[t | t.getTypeRefAsString()].join(", "),
+				this.targetTypeRefs.map[t | t.getTypeRefAsString()].join(", "));
 	}
 }
 
@@ -957,7 +1033,7 @@ abstract class ArrayLike {
 	op TypeRef getElementType()
 }
 
-class TN4Classifier extends TClassifier, DeclaredTypeWithAccessModifier {
+class TN4Classifier extends TClassifier, DeclaredTypeWithAccessModifier, TMigratable {
 	/*
 	 * Flag indicating whether references to this type may be flagged as dynamic.
 	 */
@@ -1555,10 +1631,11 @@ class TStructSetter extends TSetter, TStructMember {
  * Represents a user defined enumeration type. All enums implicitly (and transparently
  * to the user) inherit from N4Enum, which provides properties shared by all enums.
  */
-class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
+class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable, TMigratable {
 
 	boolean external
 	contains TEnumLiteral[] literals
+	
 	op TypeVariable[] getTypeVars() {
 		return emptyEList();
 	}

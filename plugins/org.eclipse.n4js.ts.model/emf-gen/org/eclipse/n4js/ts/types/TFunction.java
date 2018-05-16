@@ -43,7 +43,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * @model
  * @generated
  */
-public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement {
+public interface TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->

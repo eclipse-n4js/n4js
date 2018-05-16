@@ -10,12 +10,16 @@
  */
 package org.eclipse.n4js.ts.types;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>TVersionable</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * *
+ * Base class for all versionable types.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -28,7 +32,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface TVersionable extends EObject {
+public interface TVersionable extends Type {
 	/**
 	 * Returns the value of the '<em><b>Declared Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->

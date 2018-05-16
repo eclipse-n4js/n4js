@@ -387,7 +387,7 @@ class N4JSScopingTest {
 		assertEquals("Stored user data",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" astMD5="7db65ac965ae43f2b3673735d7296d9b">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
@@ -399,6 +399,15 @@ class N4JSScopingTest {
 				</types:TModule>
 			'''.toString,
 			UserdataMapper.getDeserializedModuleFromDescriptionAsString(eoDescs.head, supplierResource.URI));
+
+		assertEquals("Separately stored md5 hash matches expectations",
+			"7db65ac965ae43f2b3673735d7296d9b", 
+			eoDescs.head.getUserData(UserdataMapper.USERDATA_KEY_AST_MD5));
+
+		val module = UserdataMapper.getDeserializedModuleFromDescription(eoDescs.head, supplierResource.URI);
+		assertEquals("During deserialization of a TModule the astMD5 hash is recovered from the separate user data slot",
+			"7db65ac965ae43f2b3673735d7296d9b",
+			module.astMD5)
 
 		rs.resources.forEach[it.unload];
 

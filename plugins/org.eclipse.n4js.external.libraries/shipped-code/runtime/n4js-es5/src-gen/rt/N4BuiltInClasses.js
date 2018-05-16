@@ -184,6 +184,15 @@
         this.$__n4err = new Error(spec);
     };
 
+    // N4IDL-related built-in types
+    var MigrationController = function MigrationController(spec) {
+        Object.prototype.constructor.call(this, spec);
+    }
+
+    var MigrationContext = function MigrationContext(spec) {
+        Object.prototype.constructor.call(this, spec);
+    }
+
     // ===== make N4BuiltInClasses (transform ctor functions to work as Classes)
 
     $makeN4BuiltInClass(N4Object, Object, {}, {});
@@ -776,6 +785,69 @@
             consumedMemebers: []
         }));
 
+    // N4IDL-related interfaces
+    $createMetaInfo(MigrationController,
+        new N4Interface({
+            name: 'MigrationController',
+            origin: 'n4js-es5',
+            fqn: 'N4BuiltInClasses.MigrationController',
+            n4superType: undefined,
+            allImplementedInterfaces: [],
+            annotations: [],
+            ownedMembers: [
+                new N4Method({
+                    name: 'migrate',
+                    isStatic: false,
+                    annotations: []
+                }),
+                new N4Method({
+                    name: 'migrateWith',
+                    isStatic: false,
+                    annotations: []
+                }),
+                new N4Accessor({
+                    name: 'context',
+                    getter: true,
+                    isStatic: false,
+                    annotations: []
+                })
+            ],
+            consumedMembers: []
+        }));
+    
+    $createMetaInfo(MigrationContext,
+        new N4Interface({
+            name: 'MigrationContext',
+            origin: 'n4js-es5',
+            fqn: 'N4BuiltInClasses.MigrationContext',
+            n4superType: undefined,
+            allImplementedInterfaces: [],
+            annotations: [],
+            ownedMembers: [
+                new N4Method({
+                    name: 'getTrace',
+                    isStatic: false,
+                    annotations: []
+                }),
+                new N4Method({
+                    name: 'isModified',
+                    isStatic: false,
+                    annotations: []
+                }),
+                new N4Method({
+                    name: 'setUserData',
+                    isStatic: false,
+                    annotations: []
+                }),
+                new N4Method({
+                    name: 'getUserData',
+                    isStatic: false,
+                    annotations: []
+                })
+            ],
+            consumedMembers: []
+        }));
+
     //====== prevent modifications at runtime runtime
     Object.freeze(N4Object);
     Object.freeze(N4Element);
@@ -794,6 +866,8 @@
     Object.freeze(N4StringBasedEnum);
     Object.freeze(N4Provider);
     Object.freeze(N4ApiNotImplementedError);
+    Object.freeze(MigrationController);
+    Object.freeze(MigrationContext);
 
     //====== make globally available
 
@@ -815,5 +889,7 @@
     global.N4Annotation = N4Annotation;
     global.N4Provider = N4Provider;
     global.N4ApiNotImplementedError = N4ApiNotImplementedError;
+    global.MigrationController = MigrationController;
+    global.MigrationContext = MigrationContext;
 
 })(typeof global === "object" ? global : self);

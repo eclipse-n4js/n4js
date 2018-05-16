@@ -48,7 +48,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceFragment.head.paths.add(folderName)
+		pd.sourceFragment.head.pathsRaw.add(folderName)
 		resource.save(null)
 		waitForAutoBuild();
 	}
@@ -58,7 +58,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceFragment.head.paths.remove(1)
+		pd.sourceFragment.head.pathsRaw.remove(1)
 		resource.save(null)
 		waitForAutoBuild();
 	}
@@ -68,8 +68,8 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceFragment.head.paths.clear
-		pd.sourceFragment.head.paths.add(name)
+		pd.sourceFragment.head.pathsRaw.clear
+		pd.sourceFragment.head.pathsRaw.add(name)
 		resource.save(null)
 		waitForAutoBuild();
 	}

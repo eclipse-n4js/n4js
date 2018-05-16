@@ -32,7 +32,7 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
-abstract class AbstractTypesBuilderTest {
+public abstract class AbstractTypesBuilderTest {
 
 	static val char dot = '.'
 	static val char slash = '/'

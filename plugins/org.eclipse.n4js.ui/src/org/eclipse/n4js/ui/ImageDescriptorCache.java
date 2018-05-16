@@ -68,7 +68,7 @@ public enum ImageDescriptorCache {
 		LIB_PATH("classpath.gif"),
 
 		/** External library path image reference. */
-		EXTERNAL_LIB_PATH("native_lib_path_attrib.gif"),
+		EXTERNAL_LIB_PATH("native_lib_path_attrib.png"),
 
 		/** Source folder image reference. */
 		SRC_FOLDER("packagefolder_obj.gif"),
@@ -77,16 +77,16 @@ public enum ImageDescriptorCache {
 		EXTERNAL_LIB_PROJECT("jar_l_obj.gif"),
 
 		/** Wizard banner for the new N4JS project wizard. */
-		NEW_PROJECT_WIZBAN("newprj_wiz.png"),
+		NEW_PROJECT_WIZBAN("newprj_wizban.png"),
 
 		/** Wizard banner for the new N4JS class wizard. */
-		NEW_CLASS_WIZBAN("newclass_wiz.png"),
+		NEW_CLASS_WIZBAN("newclass_wizban.png"),
 
 		/** Wizard banner for the new N4JS interface wizard. */
-		NEW_INTERFACE_WIZBAN("newint_wiz.png"),
+		NEW_INTERFACE_WIZBAN("newint_wizban.png"),
 
 		/** Wizard banner for the new N4JS enum wizard. */
-		NEW_ENUM_WIZBAN("newenum_wiz.png"),
+		NEW_ENUM_WIZBAN("newenum_wizban.png"),
 
 		/** Smart light bulb icon */
 		SMART_LIGHTBULB("smartmode_co.png"),

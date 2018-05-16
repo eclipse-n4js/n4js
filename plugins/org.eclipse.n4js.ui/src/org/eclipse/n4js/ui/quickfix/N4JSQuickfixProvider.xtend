@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.dialogs.ProgressMonitorDialog
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.binaries.IllegalBinaryStateException
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -39,6 +40,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4mf.ProjectDependency
+import org.eclipse.n4js.n4mf.SimpleProjectDependency
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -61,7 +63,6 @@ import org.eclipse.n4js.ui.utils.UIUtils
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
@@ -74,11 +75,14 @@ import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
-import org.eclipse.n4js.n4mf.SimpleProjectDependency
 import org.eclipse.n4js.utils.StatusHelper
 import org.eclipse.jface.dialogs.ErrorDialog
 import org.eclipse.n4js.utils.StatusUtils
 import org.eclipse.n4js.external.LibraryManager
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.ui.changes.ManifestChangeProvider
 
 /**
  * N4JS quick fixes.
@@ -729,7 +733,41 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 		acceptor.accept(issue, 'Install npm package to workspace', 'Download and install missing dependency from npm.', null, modification);
 	}
+	
+	/**
+	 * N4IDL-related quick-fix which adds a "@VersionAware" annotation to 
+	 * classes which do not declare an explicit type version.
+	 */
+	@Fix(IssueCodes.IDL_VERSIONED_ELEMENT_MISSING_VERSION)
+	def addVersionAwareAnnotation(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Declare this type as @VersionAware', 'Add @VersionAware annotation.', ImageNames.ANNOTATION_ADD) [ context, marker, offset, length, element |
+			return #[
+				insertLineAbove(context.xtextDocument, offset, "@"+AnnotationDefinition.VERSION_AWARE.name, true)
+			];
+		]
+	}
 
+
+	@Fix(IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING)
+	def changeProjectTypeToValidation(Issue issue, IssueResolutionAcceptor acceptor) {
+		// <--- do pre-processing here (if required)
+		val validationPT = ProjectType.VALIDATION.getName.toLowerCase;
+		val title = 'Change project type to ' + validationPT + '';
+		val descr = 'The project type \'' + validationPT + '\' does not generate code. Hence, output and source folders can be nested.';
+		acceptor.accept(issue, title, descr, null, new N4Modification() {
+			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				val resource = element.eResource;
+				val prjDescr = EcoreUtil2.getContainerOfType(element, ProjectDescription);
+				return #[ManifestChangeProvider.setProjectType(resource, validationPT, prjDescr)];
+			}
+			override supportsMultiApply() {
+				return false;
+			}
+			override isApplicableTo(IMarker marker) {
+				return true;
+			}
+		});
+	}
 
 	@Fix(IssueCodes.NODE_MODULES_OUT_OF_SYNC)
 	def synchronizeIndexToNodeModules(Issue issue, IssueResolutionAcceptor acceptor) {

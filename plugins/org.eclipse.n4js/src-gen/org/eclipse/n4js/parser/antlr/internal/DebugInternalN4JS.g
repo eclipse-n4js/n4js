@@ -12,10 +12,11 @@ grammar DebugInternalN4JS;
 
 // Rule Script
 ruleScript:
-	ruleScriptAnnotation
-	*
-	ruleScriptElement
-	*
+	(
+		ruleScriptAnnotation
+		    |
+		ruleScriptElement
+	)*
 ;
 
 // Rule ScriptElement
@@ -519,6 +520,7 @@ ruleFunctionHeader:
 	ruleTypeVariables?
 	ruleBindingIdentifier
 	?
+	ruleVersionDeclaration?
 	ruleStrictFormalParameters
 	(
 		(':')=>
@@ -531,6 +533,7 @@ norm1_FunctionHeader:
 	ruleTypeVariables?
 	norm1_BindingIdentifier
 	?
+	ruleVersionDeclaration?
 	ruleStrictFormalParameters
 	(
 		(':')=>
@@ -543,6 +546,7 @@ norm2_FunctionHeader:
 	ruleTypeVariables?
 	ruleBindingIdentifier
 	?
+	ruleVersionDeclaration?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
@@ -555,6 +559,7 @@ norm3_FunctionHeader:
 	ruleTypeVariables?
 	norm1_BindingIdentifier
 	?
+	ruleVersionDeclaration?
 	norm1_StrictFormalParameters
 	(
 		(':')=>

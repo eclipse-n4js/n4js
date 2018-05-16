@@ -18,18 +18,19 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.utils.Version;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+
 /**
  * Representation of a {@code npm} binary.
  */
+@Singleton
 public class NpmBinary implements Binary {
 
 	@Inject

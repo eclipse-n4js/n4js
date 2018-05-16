@@ -13,9 +13,6 @@ package org.eclipse.n4js.ts.utils;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.naming.QualifiedName;
-
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
@@ -35,6 +32,8 @@ import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructSetter;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
 
 /**
  * Internal class containing the logic for comparing types. Should not be used by client code; instead, use
@@ -91,6 +90,10 @@ import org.eclipse.n4js.ts.types.Type;
 			return -1;
 		}
 		if (t2 == null) {
+			return 1;
+		}
+		// before comparing FQNs, compare versions
+		if (t1.getVersion() != t2.getVersion()) {
 			return 1;
 		}
 		if (fqnProvider != null) {
