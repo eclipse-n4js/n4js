@@ -69,6 +69,7 @@ Contributors:
 
 		<!-- JSON tests -->
 		<module>org.eclipse.n4js.json.tests</module>
+		<module>org.eclipse.n4js.json.testsuite</module>
 
 		<!-- ************************************** JUnit Plugin Tests -->
 
