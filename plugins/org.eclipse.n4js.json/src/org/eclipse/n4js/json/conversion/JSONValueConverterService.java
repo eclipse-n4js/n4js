@@ -2,7 +2,6 @@ package org.eclipse.n4js.json.conversion;
 
 import java.math.BigDecimal;
 
-import org.eclipse.n4js.conversion.DoubleValueConverter;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.impl.AbstractDeclarativeValueConverterService;
@@ -18,7 +17,7 @@ public class JSONValueConverterService extends AbstractDeclarativeValueConverter
 	private JSONSTRINGValueConverter stringValueConverter;
 	
 	@Inject
-	private DoubleValueConverter doubleValueConverter;
+	private JSONDoubleValueConverter doubleValueConverter;
 	
 	/**
 	 * @return the registered value converter for the rule {@code STRING}
