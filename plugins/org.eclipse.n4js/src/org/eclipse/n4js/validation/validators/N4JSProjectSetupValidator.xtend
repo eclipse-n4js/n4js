@@ -49,6 +49,7 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.Version
+import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSIssueSeverities
@@ -417,17 +418,17 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	 * project.
 	 */
 	@Check
-	def checkTestedProjects(ProjectDescription pd) {
+	def checkTestedProjects(ProjectDescription it) {
 		if (TEST == projectType) {
-			val projects = pd.testedProjects;
+			val projects = it.testedProjects;
 			if (!projects.nullOrEmpty) {
-				val allProjects = pd.existingProjectIds;
+				val allProjects = it.existingProjectIds;
 				val head = projects.head;
 				val refProjectType = allProjects.get(head.projectId)?.projectType
 				if (projects.exists[testedProject | refProjectType != allProjects.get(testedProject.projectId)?.projectType]) {
 					addIssue(
 						messageForMISMATCHING_TESTED_PROJECT_TYPES,
-						pd,
+						it,
 						PROJECT_DESCRIPTION__TESTED_PROJECTS,
 						MISMATCHING_TESTED_PROJECT_TYPES
 					);
@@ -788,29 +789,38 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	private def checkFeature(ProjectDescription it, Iterable<? extends EStructuralFeature> features, Predicate<ProjectType> supportedTypesPredicate) {
+	private def boolean checkFeature(ProjectDescription pd, Iterable<? extends EStructuralFeature> features, Predicate<ProjectType> supportedTypesPredicate) {
 
 		// Assuming completely broken AST.
-		if (null === it || features.nullOrEmpty) {
+		if (null === pd || features.nullOrEmpty) {
 			return false;
 		}
 
 		// AST element does not exist at all.
-		val value = eGet(features.head);
+		val value = pd.eGet(features.head);
 		if (null === value) {
 			return false;
 		}
+		val pdNode = NodeModelUtils.findActualNodeFor(pd);
+		if (pdNode === null) {
+			return false;
+		}
+		val regionKwAndBlock = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(pdNode, features.head.name);
+		if (regionKwAndBlock === null) {
+			return false;
+		}
 
-		val rootAstElement = if (value instanceof EObject) value else it;
-		val values = getNestedValues(features);
+		val rootAstElement = if (value instanceof EObject) value else pd;
+		val values = pd.getNestedValues(features);
 
-		if (supportedTypesPredicate.apply(projectType)) {
+		if (supportedTypesPredicate.apply(pd.projectType)) {
 			if (values.empty) {
-				addIssue(getMessageForOBSOLETE_BLOCK(features.head.label), rootAstElement, OBSOLETE_BLOCK);
+				addIssue(getMessageForOBSOLETE_BLOCK(features.head.label), rootAstElement,
+					regionKwAndBlock.offset, regionKwAndBlock.length, OBSOLETE_BLOCK);
 			}
 		} else {
-			addIssue(getMessageForINVALID_FEATURE_FOR_PROJECT_TYPE(features.head.label.toFirstUpper, projectType.label),
-				rootAstElement, INVALID_FEATURE_FOR_PROJECT_TYPE
+			addIssue(getMessageForINVALID_FEATURE_FOR_PROJECT_TYPE(features.head.label.toFirstUpper, pd.projectType.label),
+				rootAstElement, regionKwAndBlock.offset, regionKwAndBlock.length, INVALID_FEATURE_FOR_PROJECT_TYPE
 			);
 			return false; // Interrupt any further validation.
 		}

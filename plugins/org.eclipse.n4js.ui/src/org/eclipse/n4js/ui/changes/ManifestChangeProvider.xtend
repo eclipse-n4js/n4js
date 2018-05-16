@@ -16,13 +16,11 @@ import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.utils.nodemodel.SiblingIterator
-import org.eclipse.xtext.Keyword
-import org.eclipse.xtext.nodemodel.ICompositeNode
+import org.eclipse.n4js.n4mf.SourceContainerDescription
+import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.n4mf.SourceContainerDescription
 
 /**
  * This class provides basic change functionality for N4JS manifest files.
@@ -91,15 +89,13 @@ class ManifestChangeProvider {
 		} else { //If empty dependency list, replace the whole empty block
 			textToInsert.append(ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY + " {");
 			withFrame = true;
-			val INode descNode = NodeModelUtils.findActualNodeFor(description);
-			val INode depsNode = (descNode as ICompositeNode).children
-				.findFirst[it.grammarElement instanceof Keyword
-					&& (it.grammarElement as Keyword).value==ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY];
-			val INode closingNode = new SiblingIterator(depsNode)
-				.findFirst[it.grammarElement instanceof Keyword
-					&& (it.grammarElement as Keyword).value=="}"];
-			offset = depsNode.offset;
-			length = (closingNode.offset + closingNode.length) - depsNode.offset;
+			val descNode = NodeModelUtils.findActualNodeFor(description);
+			val region = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(descNode, ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY);
+			if (region === null) {
+				return null;
+			}
+			offset = region.offset;
+			length = region.length;
 		}
 
 		textToInsert.append('''«FOR dep : dependencies SEPARATOR ","»«"\n\t" + dep»«ENDFOR»''')
@@ -145,15 +141,13 @@ class ManifestChangeProvider {
 		} else { //If empty dependency list, replace the whole empty block
 			textToInsert.append(ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY + " {");
 			withFrame = true;
-			val INode descNode = NodeModelUtils.findActualNodeFor(projectDescription);
-			val INode reqRTLibNode = (descNode as ICompositeNode).children
-				.findFirst[it.grammarElement instanceof Keyword
-					&& (it.grammarElement as Keyword).value==ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY];
-			val INode closingNode = new SiblingIterator(reqRTLibNode)
-				.findFirst[it.grammarElement instanceof Keyword
-					&& (it.grammarElement as Keyword).value=="}"];
-			offset = reqRTLibNode.offset;
-			length = (closingNode.offset + closingNode.length) - reqRTLibNode.offset;
+			val descNode = NodeModelUtils.findActualNodeFor(projectDescription);
+			val region = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(descNode, ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY);
+			if (region === null) {
+				return null;
+			}
+			offset = region.offset;
+			length = region.length;
 		}
 
 		textToInsert.append('''«FOR dep : dependencies SEPARATOR ","»«"\n\t" + dep»«ENDFOR»''')
