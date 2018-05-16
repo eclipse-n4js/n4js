@@ -11,14 +11,13 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.emf.ecore,
  org.eclipse.xtext.xbase.lib;bundle-version="2.13.0",
  org.antlr.runtime,
- org.eclipse.n4js.utils,
  org.eclipse.xtext.util,
  org.eclipse.emf.common,
  org.eclipse.xtend.lib;bundle-version="2.13.0",
  org.eclipse.n4js.json.model,
+ org.eclipse.osgi,
  org.eclipse.n4js.common.unicode,
- org.eclipse.n4js,
- org.eclipse.osgi
+ org.eclipse.n4js.utils
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.n4js.json
 Export-Package: org.eclipse.n4js.json.validation,

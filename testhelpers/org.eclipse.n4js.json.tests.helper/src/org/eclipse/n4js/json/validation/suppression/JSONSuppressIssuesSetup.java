@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.n4js.json.validation.JSONIssueCodes;
-import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
+import org.eclipse.n4js.xpect.validation.suppression.AbstractSuppressIssuesSetup;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetupRoot;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.XpectReplace;
@@ -27,12 +27,12 @@ import org.eclipse.xtext.resource.XtextResource;
 /**
  * An X!PECT setup that suppresses issues with specific issue codes when running X!PECT validation tests.
  *
- * @See {@link SuppressIssuesSetup}.
+ * @See {@link AbstractSuppressIssuesSetup}.
  */
 @XpectSetupFactory
 @XpectReplace(IssuesByLineProvider.class)
 @XpectImport({ SuppressIssuesSetupRoot.class })
-public class JSONSuppressIssuesSetup extends SuppressIssuesSetup {
+public class JSONSuppressIssuesSetup extends AbstractSuppressIssuesSetup {
 
 	/** Instantiates a new {@link JSONSuppressIssuesSetup}. */
 	public JSONSuppressIssuesSetup(@ThisResource XtextResource resource,

@@ -39,11 +39,21 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.TestingResour
  * To integrate this setup with an xpect runner, import this class via @XpectImport.
  *
  * For further configuration you can use {@link IssueConfiguration} in the XPECTSETUP of specific files.
+ * 
+ * <p>
+ * When sub-classing this setup class, the two following points must be fulfilled:
+ * 
+ * <ul>
+ * 	<li>The subclass must be decorated with the same set of <code>@Xpect*</code> annotations as this class.</li>
+ * 	<li>The subclass must implement a constructor with the same <code>@ThisResource</code> annotation on the
+ * 		<code>resource</code> parameters as in this class.</li>
+ * </ul>
+ * </p> 
  */
 @XpectSetupFactory
 @XpectReplace(IssuesByLineProvider)
 @XpectImport( #[SuppressIssuesSetupRoot])
-class SuppressIssuesSetup extends IssuesByLineProvider {
+abstract class AbstractSuppressIssuesSetup extends IssuesByLineProvider {
 
 	private final Collection<String> suppressedIssueCodes = new ArrayList<String>(this.defaultSuppressedIssueCodes);
 	private Multimap<IRegion, Issue> issuesByLine = null;
@@ -87,11 +97,10 @@ class SuppressIssuesSetup extends IssuesByLineProvider {
 	}
 	
 	/**
-	 * Returns the list of issue codes that are suppressed by default.
+	 * Returns the list of issue codes that are suppressed by default when 
+	 * using this suppress issues setup.
 	 */
-	protected def Collection<String> getDefaultSuppressedIssueCodes() {
-		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
-	}
+	abstract protected def Collection<String> getDefaultSuppressedIssueCodes()
 
 	/*
 	 * Override this method to remove suppressed issues from the
