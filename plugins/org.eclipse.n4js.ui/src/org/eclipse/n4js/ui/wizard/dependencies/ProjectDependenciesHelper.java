@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ui.handler;
+package org.eclipse.n4js.ui.wizard.dependencies;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * data that describes unknown or missing projects. Unlike {@link ManifestValuesParsingUtil} it allows to read manifest
  * of known projects, and not arbitrary {@code .n4mf} file.
  */
-class ProjectDependenciesHelper {
+public class ProjectDependenciesHelper {
 	private static final Logger LOGGER = Logger.getLogger(ProjectDependenciesHelper.class);
 
 	@Inject
