@@ -21,30 +21,39 @@ import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
-import org.eclipse.n4js.json.validation.validators.PackageJsonValidator;
+import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
+import org.eclipse.n4js.json.validation.extension.JSONValidatorExtensionRegistry;
 import org.eclipse.xtext.TerminalRule;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.Check;
-import org.eclipse.xtext.validation.ComposedChecks;
 
 import com.google.inject.Inject;
 
 /**
  * This class contains general validation with regard to JSON files. 
  */
-@ComposedChecks(validators = {
-	PackageJsonValidator.class
-})
-public class JSONValidator extends AbstractResourceDependentJSONValidator {
+public class JSONValidator extends AbstractJSONValidator {
 	
 	@Inject
 	JSONGrammarAccess grammarAccess;
+	
+	@Inject
+	JSONValidatorExtensionRegistry validatorExtensionRegistry;
 
 	JSONValidator() {
 		super();
+	}
+	
+	/**
+	 * Applies all registered {@link IJSONValidatorExtension} to the given {@link JSONDocument}.  
+	 */
+	@Check
+	public void checkUsingValidatorExtensions(JSONDocument document) {
+		validatorExtensionRegistry.getValidatorExtensions()
+			.forEach(validatorExtension -> validatorExtension.validateJSON(document, this.getChain()));
 	}
 	
 	/**
