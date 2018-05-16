@@ -76,7 +76,9 @@ class ManifestChangeProvider {
 
 
 		var StringBuilder textToInsert = new StringBuilder();
-		if (description.projectDependencies === null) { //If no dependency list (frame), create one.
+		val descNode = NodeModelUtils.findActualNodeFor(description);
+		val region = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(descNode, ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY);
+		if (region === null) { //If no dependency list (frame), create one.
 			textToInsert.append("\n" + ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY + " {");
 
 			val INode globalDescriptionNode = NodeModelUtils.findActualNodeFor(description);
@@ -89,11 +91,6 @@ class ManifestChangeProvider {
 		} else { //If empty dependency list, replace the whole empty block
 			textToInsert.append(ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY + " {");
 			withFrame = true;
-			val descNode = NodeModelUtils.findActualNodeFor(description);
-			val region = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(descNode, ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY);
-			if (region === null) {
-				return null;
-			}
 			offset = region.offset;
 			length = region.length;
 		}
@@ -129,7 +126,9 @@ class ManifestChangeProvider {
 		}
 
 		var StringBuilder textToInsert = new StringBuilder();
-		if (projectDescription.requiredRuntimeLibraries === null) { //If no runtime library list (frame), create one.
+		val descNode = NodeModelUtils.findActualNodeFor(projectDescription);
+		val region = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(descNode, ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY);
+		if (region === null) { //If no runtime library list (frame), create one.
 			textToInsert.append("\n" + ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY + " {");
 			val INode globalDescriptionNode = NodeModelUtils.findActualNodeFor(projectDescription);
 			offset = globalDescriptionNode.offset + globalDescriptionNode.length;
@@ -138,14 +137,9 @@ class ManifestChangeProvider {
 			val INode lastDep = NodeModelUtils.findActualNodeFor(projectDescription.requiredRuntimeLibraries.last);
 			offset = lastDep.offset + lastDep.length;
 			textToInsert.append(",");
-		} else { //If empty dependency list, replace the whole empty block
+		} else { //If empty runtime library list, replace the whole empty block
 			textToInsert.append(ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY + " {");
 			withFrame = true;
-			val descNode = NodeModelUtils.findActualNodeFor(projectDescription);
-			val region = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(descNode, ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY);
-			if (region === null) {
-				return null;
-			}
 			offset = region.offset;
 			length = region.length;
 		}
