@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { AT_IDE_1510_Intefaces } from "direct/AT_IDE-1510_Interfaces"
+
+
+var exec : AT_IDE_1510_Intefaces = new AT_IDE_1510_Intefaces();
+
+
+exec.test_Interface_provided_get();
+
+exec.test_Interface_provided_get_missing();
+
+exec.test_Interface_provided_method();
+
+exec.test_Interface_provided_method_missing();
+
+exec.test_Interface_provided_set();
+
+exec.test_Interface_provided_set_missing();
+
+exec.test_Interface_static_method();
+
+exec.test_Interface_static_method_missing();
+
+exec.test_Interface_static_getter_missing();
+
+exec.test_Interface_static_setter_missing();

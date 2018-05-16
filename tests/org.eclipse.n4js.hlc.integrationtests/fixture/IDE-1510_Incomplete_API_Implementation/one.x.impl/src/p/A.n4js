@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/**
+ * @psec a simple interface
+ */
+export public interface IA {
+	public field : IA;
+	public field2 : IA;
+	public someIA() : IA;
+} 
+
+/**                                
+ * @spec a simple class  
+ */ 
+export public class A implements IA {
+	@Override
+	public get field2() : IA { return null; }
+	@Override
+	public set field2(a : IA) { }
+	public s : string;
+	public get a () : string{ return "x"; }
+	public get a2 () : string{ return "x"; }
+	public set a2 (s : string){  }
+	public n() : number{ return 42;}
+	@Override
+	public someIA() : IA { return new A(); } 
+}
+ 
+console.log("Hello from Implementation one.x.impl::p.A.n4js !")

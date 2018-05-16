@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { Ifc , Ifb, Ifa } from "p/IF"
+import { Assert } from "direct/MiniAssertions"
+
+
+class A_with_Ifa  implements Ifa {  }
+
+
+
+export public class AT_IDE_1510_Consumed_Members_of_Missing_Interface_single_case {
+	
+	xA : Ifa = new A_with_Ifa();
+		
+	/**  */
+	@Test
+	public test_Ifa() : void {
+		Assert.throws( ()=>{  var l = 	this.xA.f; 			console.log("X_6"+l)	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xA.f="s3"; 	console.log("X_7"+this.xA.f)	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}	
+
+}

@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { F } from "fields/F"
+import { Assert } from "direct/MiniAssertions"
+    
+
+export class AT_IDEBUG_505_field_vs_getset {
+
+
+	/** check consructor works */
+	@Test
+	public test_constructor_works() : void {
+		Assert.doesNotThrow( ()=>{ new F() } );;
+	}
+
+
+
+	/** Access to member implemented in super-impl-only-class */
+	@Test
+	public test_memberX1_impl_byField() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberX1 },N4ApiNotImplementedError,"memberX1 gives a string expected.");
+	}	
+	
+	/** Access to member implemented in super-impl-only-class */
+	@Test
+	public test_memberX1_impl_byField2() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberX1="XX" },N4ApiNotImplementedError,"memberX1 takes a string expected.");
+	}
+	
+	/** Access to member implemented by get/set in super-impl-only-class */
+	@Test
+	public test_memberX2_impl_byGetSet() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberX2 },N4ApiNotImplementedError,"memberX2 gives a string expected.");
+	}	
+	
+	/** Access to member implemented by by get/set in super-impl-only-class */
+	@Test
+	public test_memberX2_impl_byGetSet2() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberX2="XX" },N4ApiNotImplementedError,"memberX2 takes a string expected.");
+	}
+	
+	
+
+	/** Access to member implemented by get-only in super-impl-only-class */
+	@Test
+	public test_memberX3_impl_byGetOnly() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberX3 },N4ApiNotImplementedError,"memberX3 gives a string expected.");
+	}	
+	/** Access to member implemented by get-only in super-impl-only-class */
+	@Test
+	public test_memberX3_impl_byGetOnly2() : void {
+		Assert.throws( ()=>{ new F().memberX3="DD" },N4ApiNotImplementedError,"memberX3 should miss the setter");
+	}	
+	
+	
+	
+	/** Access to member implemented partially by set-only in super-impl-only-class */
+	@Test
+	public test_memberX4_impl_bySetOnly() : void {
+		Assert.throws( ()=>{ new F().memberX4 }, N4ApiNotImplementedError,"memberX4 should miss the getter.");
+	}	
+	
+	/** Access to member implemented partially by set-only in super-impl-only-class */
+	@Test
+	public test_memberX4_impl_bySetOnly2() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberX4="XX" },N4ApiNotImplementedError,"memberX4 takes a string expected.");
+	}
+	
+	
+	
+	
+	
+	/** Access to get/set implemented in super-impl-only-class */
+	@Test
+	public test_getsetY1_impl_inSuper() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberY1 },N4ApiNotImplementedError,"memberY1 gives a string expected.");
+	}	
+	
+	/** Access to get/set implemented in super-impl-only-class */
+	@Test
+	public test_getsetY1_impl_inSuper2() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberY1="YY" },N4ApiNotImplementedError,"memberY1 takes a string expected.");
+	}
+	
+	/** Access to get/set implemented by memberin super-impl-only-class */
+	@Test
+	public test_getsetY2_impl_byField_inSuper() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberY2 },N4ApiNotImplementedError,"memberY2 gives a string expected.");
+	}	
+	
+	/** Access to get/set implemented by member in super-impl-only-class */
+	@Test
+	public test_getsetY2_impl_byField_inSuper2() : void {
+		Assert.doesNotThrow( ()=>{ new F().memberY2="YY" },N4ApiNotImplementedError,"memberY2 takes a string expected.");
+	}
+	
+	
+
+}

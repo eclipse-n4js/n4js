@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { AT_IDE_1510_Consumed_Members_of_Missing_Interface } from "if/AT_IDE-1510_Consumed_Members_of_Missing_Inteface"
+
+
+var exec = new AT_IDE_1510_Consumed_Members_of_Missing_Interface();
+
+exec.test_Ifa();
+exec.test_Ifb();
+exec.test_Ifc();
+
+exec.test_Ifa_Ifb();
+exec.test_Ifa_Ifc();
+exec.test_Ifb_Ifa();
+exec.test_Ifb_Ifc();
+exec.test_Ifc_Ifa();
+exec.test_Ifc_Ifb();
+
+exec.test_Ifa_Ifb_Ifc();
+exec.test_Ifa_Ifc_Ifb();
+exec.test_Ifb_Ifa_Ifc();
+exec.test_Ifb_Ifc_Ifa();
+exec.test_Ifc_Ifa_Ifb();
+exec.test_Ifc_Ifb_Ifa();
