@@ -15,8 +15,11 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.validation.Check;
+
+import com.google.inject.Inject;
 
 /**
  * A JSON validator extension that adds custom validation to {@code package.json} resources.
@@ -25,20 +28,20 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 	private static final String PACKAGE_JSON_FILENAME = "package.json";
 
+	@Inject
+	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
+
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		// this validator extension only applies to package.json files
-		return eObject.eResource().getURI().lastSegment().equals(PACKAGE_JSON_FILENAME);
+		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
+				.equals(PACKAGE_JSON_FILENAME);
 	}
 
-	/**
-	 * Checks the given JSONDocument for
-	 */
+	/***/
 	@Check
 	public void checkJSONDocument(JSONDocument document) {
 		// validate package.json files
-		addIssue(IssueCodes.ANN__ONLY_IN_N4JS, document,
-				IssueCodes.ANN__ONLY_IN_N4JS);
+		addIssue(IssueCodes.ANN__ONLY_IN_N4JS, document, IssueCodes.ANN__ONLY_IN_N4JS);
 	}
-
 }

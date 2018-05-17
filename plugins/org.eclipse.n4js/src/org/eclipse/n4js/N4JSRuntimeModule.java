@@ -73,7 +73,6 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
-import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
 import org.eclipse.xsemantics.runtime.StringRepresentation;
 import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
@@ -549,13 +548,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/** Bind N4JS composite generator */
 	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
 		return N4JSCompositeGenerator.class;
-	}
-
-	/** Bind N4JS-specific package.json validator extension. */
-	@SingletonBinding(eager = true)
-	public Class<? extends PackageJsonValidatorExtension> bindPackageJsonValidatorExtension() {
-
-		return PackageJsonValidatorExtension.class;
 	}
 
 	//// N4IDL specific bindings
