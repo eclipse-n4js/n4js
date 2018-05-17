@@ -15,6 +15,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.validation.Check;
 
 /**
@@ -36,6 +37,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	@Check
 	public void checkJSONDocument(JSONDocument document) {
 		// validate package.json files
+		addIssue(IssueCodes.ANN__ONLY_IN_N4JS, document,
+				IssueCodes.ANN__ONLY_IN_N4JS);
 	}
 
 }

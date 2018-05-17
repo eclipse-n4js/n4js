@@ -64,6 +64,9 @@ Contributors:
 		<module>org.eclipse.n4js.n4mf.tests</module>
 		<module>org.eclipse.n4js.n4mf.xpect.tests</module>
 		
+		<!-- Package.json tests -->
+		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
+		
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
 
