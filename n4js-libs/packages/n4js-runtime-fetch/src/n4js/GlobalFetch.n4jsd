@@ -10,8 +10,8 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {RequestInit} from "fetch/RequestInit"
 
+import {RequestInit} from "fetch/RequestInit";
 export public interface ~GlobalFetch {
     public async fetch(input: union{string, Request}, init: RequestInit=): Response;
 }

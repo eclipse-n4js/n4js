@@ -8,9 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {TestError} from "org/eclipse/n4js/mangelhaft/types/TestError"
 
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {TestError} from "org/eclipse/n4js/mangelhaft/types/TestError";
 export public class TestErrorTest {
     @Test
     throw__throw_throws_exception__basic() {

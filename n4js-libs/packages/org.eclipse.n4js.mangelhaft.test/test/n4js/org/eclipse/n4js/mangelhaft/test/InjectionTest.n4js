@@ -8,14 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test"
-import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test"
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {FIXME2Mock} from "org/eclipse/n4js/mangelhaft/test/helper/FIXMEMock"
-import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition"
-import {N4Injector} from "n4js/lang/N4Injector"
-import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent"
 
+import {N4Injector} from "n4js/lang/N4Injector";
+import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test";
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
+import {FIXME2Mock} from "org/eclipse/n4js/mangelhaft/test/helper/FIXMEMock";
+import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent";
 
 @Bind(IFIXME2, FIXME2Mock)
 @Binder

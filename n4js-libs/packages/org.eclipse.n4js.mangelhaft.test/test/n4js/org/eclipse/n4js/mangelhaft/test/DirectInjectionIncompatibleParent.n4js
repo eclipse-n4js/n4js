@@ -8,11 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test"
-import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test"
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {FIXME2Mock} from "org/eclipse/n4js/mangelhaft/test/helper/FIXMEMock"
 
+import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test";
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {FIXME2Mock} from "org/eclipse/n4js/mangelhaft/test/helper/FIXMEMock";
 @GenerateInjector
 class HiddenDIC{}
 

@@ -8,9 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {num} from "es-module-tests/ex14/A"
-import {incB} from "es-module-tests/ex14/B"
 
+import {num} from "es-module-tests/ex14/A";
+import {incB} from "es-module-tests/ex14/B";
 console.log(num); //0
 incB();
 console.log(num); //1
