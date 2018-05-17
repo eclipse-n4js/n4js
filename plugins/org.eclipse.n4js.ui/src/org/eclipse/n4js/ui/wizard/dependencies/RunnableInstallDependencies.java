@@ -31,7 +31,7 @@ import com.google.inject.Provider;
 /**
  * Runnable collector of the workspace projects setting files. Note single instance single use, not thread safe.
  */
-public class RunnableInstallDependnecies implements IRunnableWithProgress {
+public class RunnableInstallDependencies implements IRunnableWithProgress {
 	private MultiStatus multistatus;
 	private InstallOptions options;
 

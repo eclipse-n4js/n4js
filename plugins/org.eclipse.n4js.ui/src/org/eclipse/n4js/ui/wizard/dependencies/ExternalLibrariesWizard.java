@@ -29,7 +29,7 @@ public class ExternalLibrariesWizard extends Wizard {
 	private static final Logger LOGGER = Logger.getLogger(ExternalLibrariesWizard.class);
 
 	@Inject
-	private Provider<RunnableInstallDependnecies> installDependneciesRunnable;
+	private Provider<RunnableInstallDependencies> installDependneciesRunnable;
 
 	/** Public for SWTBot tests */
 	public static final String WINDOW_TITLE = "Setup External Libraries";
@@ -62,7 +62,7 @@ public class ExternalLibrariesWizard extends Wizard {
 			InstallOptions installOptions = new InstallOptions();
 			options.saveOptions(installOptions);
 
-			RunnableInstallDependnecies installDependnecies = installDependneciesRunnable.get();
+			RunnableInstallDependencies installDependnecies = installDependneciesRunnable.get();
 			installDependnecies.setInstallOptions(installOptions);
 			getContainer().run(true, true, installDependnecies);
 			IStatus resultStatus = installDependnecies.getResultStatus();
