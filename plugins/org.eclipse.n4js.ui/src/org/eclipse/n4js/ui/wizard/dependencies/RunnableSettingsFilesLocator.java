@@ -28,8 +28,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
  */
 public class RunnableSettingsFilesLocator implements IRunnableWithProgress {
 	private static final Logger LOGGER = Logger.getLogger(RunnableSettingsFilesLocator.class);
-	// TODO seems redundant
-	ProjectsSettingsFilesLocator files = null;
+	private ProjectsSettingsFilesLocator files = null;
 
 	@Override
 	synchronized public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
