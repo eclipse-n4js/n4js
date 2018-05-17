@@ -50,8 +50,7 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractN4jscTest {
 		final String[] args = { "--projectlocations", wsRoot,
 				"--buildType", "allprojects",
 				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--verbose" };
+				"--run", fileToRun };
 
 		// Run
 		final String out = runAndCaptureOutput(args);

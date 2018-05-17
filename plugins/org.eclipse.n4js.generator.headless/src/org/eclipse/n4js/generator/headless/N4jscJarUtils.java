@@ -116,7 +116,6 @@ public class N4jscJarUtils {
 		cmdline.addAll(javaOpts);
 		cmdline.addAll(Arrays.asList(
 				"-jar", getAbsoluteRunnableN4jsc().getAbsolutePath(),
-				// "--debug", "-v", // generate more output
 				"--buildType", "allprojects"));
 		cmdline.addAll(n4jscOpts);
 		cmdline.add("--projectlocations");
