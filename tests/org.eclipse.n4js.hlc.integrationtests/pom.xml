@@ -101,19 +101,6 @@ Contributors:
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
-				<configuration>
-					<argLine>-Xmx2048m</argLine>
-					<systemProperties>
-						<log4j.configuration>file:${project.build.outputDirectory}/NODEBUGlog4j.xml</log4j.configuration>
-						<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-						<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-					</systemProperties>
-			</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -144,6 +131,42 @@ Contributors:
 								<goal>integration-test</goal>
 								<goal>verify</goal>
 							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>${maven-antrun-plugin.version}</version>
+					<executions>
+						<!-- Start verdaccio -->
+						<execution>
+							<id>start-verdaccio</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<target>
+									<exec executable="verdaccio" spawn="true"/>
+								</target>
+							</configuration>
+						</execution>
+
+						<!-- Stop verdaccio -->
+						<execution>
+							<id>stop-verdaccio</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<target>
+									<exec executable="bash" spawn="false">
+										<arg value="${project.basedir}/../../stop-verdaccio.sh"/>
+									</exec>
+								</target>
+							</configuration>
 						</execution>
 					</executions>
 				</plugin>

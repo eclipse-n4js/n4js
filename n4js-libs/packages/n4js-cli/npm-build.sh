@@ -17,6 +17,8 @@ function echo_exec {
     $@
 }
 
+npm install
+
 echo "We are in $PWD"
 echo "Listing ../../../tools/org.eclipse.n4js.hlc/target"
 ls ../../../tools/org.eclipse.n4js.hlc

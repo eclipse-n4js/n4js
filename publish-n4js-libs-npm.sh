@@ -8,7 +8,6 @@ echo "Start publishing n4js-libs"
 cd `dirname $0`/n4js-libs
 
 # Start verdaccio
-verdaccio -l localhost:4873 > /dev/null &
 
 rm -rf node_modules
 
