@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect", fileExtensions = { "xt" })
-@XpectImport({JSONSuppressIssuesSetup.class})
-public class PackageJsonXpectPluginUITest {
+@XpectImport({PackageJsonXpectInjectorSetup.class, JSONSuppressIssuesSetup.class})
+public class PackageJsonXpectTest {
 	// test setup configuration class
 }
