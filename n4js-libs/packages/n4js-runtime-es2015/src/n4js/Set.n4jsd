@@ -66,4 +66,3 @@ export external public class Set<ValueT> extends Object implements Iterable<Valu
     public values(): IteratorExt<ValueT>;
 }
 
-/* -*- mode: typescript;-*- */

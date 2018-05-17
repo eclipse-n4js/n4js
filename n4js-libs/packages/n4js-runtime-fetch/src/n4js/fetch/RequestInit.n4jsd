@@ -28,4 +28,3 @@ export external public class ~RequestInit {
     public cache?: RequestCache;
 }
 
-/* -*- mode: typescript;-*- */

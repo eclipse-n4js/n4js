@@ -69,4 +69,4 @@ export public class AbstractVerifyRuntimeSupport {
     }
 }
 
-/* -*- mode: typescript;-*- */
+

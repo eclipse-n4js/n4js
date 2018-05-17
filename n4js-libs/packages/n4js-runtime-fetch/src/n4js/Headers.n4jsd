@@ -26,4 +26,3 @@ export external public class Headers implements Iterable<Iterable2<string, strin
     @Override public [Symbol.iterator](): IteratorExt<Iterable2<string, string>>;
 }
 
-/* -*- mode: typescript;-*- */

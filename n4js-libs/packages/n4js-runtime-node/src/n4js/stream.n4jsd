@@ -109,4 +109,4 @@ export external public class Transform extends EventEmitter implements IReadWrit
 
 export external public class PassThrough extends Transform {}
 
-/* -*- mode: typescript;-*- */
+

@@ -47,4 +47,3 @@ export external public class Response implements Body {
     @Override public async text(): string;
 }
 
-/* -*- mode: typescript;-*- */

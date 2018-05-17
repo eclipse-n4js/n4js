@@ -68,4 +68,3 @@ export external public class Map<KeyT, ValueT> extends Object implements Iterabl
     public values(): IteratorExt<ValueT>;
 }
 
-/* -*- mode: typescript;-*- */

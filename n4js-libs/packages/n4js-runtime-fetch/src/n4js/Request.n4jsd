@@ -43,4 +43,3 @@ export external public class Request implements Body {
     public clone(): Request;
 }
 
-/* -*- mode: typescript;-*- */

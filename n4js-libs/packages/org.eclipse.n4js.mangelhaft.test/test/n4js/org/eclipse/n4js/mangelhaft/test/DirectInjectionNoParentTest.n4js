@@ -54,6 +54,4 @@ export public class DirectInjectionNoParentTest {
         Assert.equal(this.fix2.logStr, "FIXME joe from Test", "should be from Mock");
     }
 }
-/*
--*- mode: typescript;-*-
-*/
+

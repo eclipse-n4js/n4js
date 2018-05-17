@@ -28,4 +28,3 @@ export public interface ~ArrayIterator<T> extends Iterator<T> {}
     public keys(): IteratorExt<int>;
 }
 
-/* -*- mode: typescript;-*- */

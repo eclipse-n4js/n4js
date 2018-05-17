@@ -21,4 +21,4 @@ export external public function inspect(object: Object+, options: ~Object with {
 }=): string;
 export external public function log(string: string): void;
 
-/* -*- mode: typescript;-*- */
+

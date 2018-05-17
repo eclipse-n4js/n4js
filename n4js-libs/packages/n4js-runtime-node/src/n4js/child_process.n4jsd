@@ -54,4 +54,4 @@ export external public function spawnSync(command: string, args: Array<string> =
     error: Error;
 };
 
-/* -*- mode: typescript;-*- */
+

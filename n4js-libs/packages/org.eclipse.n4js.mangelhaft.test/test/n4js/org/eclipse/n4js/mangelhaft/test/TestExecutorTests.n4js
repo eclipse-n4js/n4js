@@ -321,7 +321,3 @@ export public class TestExecutorTests {
     
 }
 
-/*
--*- mode: typescript;-*-
-*/
-

@@ -62,4 +62,4 @@ export external public interface ~RuntimeInfo {
     public get deviceId(): DeviceId;
 }
 
-/* -*- mode: typescript;-*- */
+

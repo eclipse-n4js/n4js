@@ -81,6 +81,4 @@ export public class InjectionTest {
         Assert.equal(this.subjectNoBind.fix2.logStr, "FIXME joe from Mangelhaft", "should be from Mangelhaft");
     }
 }
-/*
--*- mode: typescript;-*-
-*/
+

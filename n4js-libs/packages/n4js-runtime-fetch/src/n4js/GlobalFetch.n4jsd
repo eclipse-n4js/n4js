@@ -18,4 +18,3 @@ export public interface ~GlobalFetch {
 
 export external public async function fetch(input: union{string, Request}, init: RequestInit=): Response;
 
-/* -*- mode: typescript;-*- */

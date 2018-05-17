@@ -44,6 +44,4 @@ export public class DirectInjectionIncompatibleParent {
         Assert.fail("Should never be reached");
     }
 }
-/*
--*- mode: typescript;-*-
-*/
+
