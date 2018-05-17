@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectValidationTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectPluginUITest END_SETUP */
 {
 	"name": "duplicates",
 	// XPECT errors --> "There is no output folder defined, so compilation isn't possible." at "n4js"
