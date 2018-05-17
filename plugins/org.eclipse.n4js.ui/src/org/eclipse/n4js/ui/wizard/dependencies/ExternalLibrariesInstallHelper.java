@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 public class ExternalLibrariesInstallHelper {
 
 	@Inject
-	private ProjectDependenciesHelper dependneciesHelper;
+	private ProjectDependenciesHelper dependenciesHelper;
 
 	@Inject
 	private ExternalLibrariesActionsHelper externals;
@@ -49,7 +49,7 @@ public class ExternalLibrariesInstallHelper {
 		externals.maintenanceDeleteNpms(multistatus);
 
 		// install npms from target platform
-		Map<String, String> versionedPackages = dependneciesHelper.calculateDependenciesToInstall();
+		Map<String, String> versionedPackages = dependenciesHelper.calculateDependenciesToInstall();
 		final SubMonitor subMonitor3 = monitor.split(45);
 
 		externals.installNoUpdate(versionedPackages, multistatus, subMonitor3);
