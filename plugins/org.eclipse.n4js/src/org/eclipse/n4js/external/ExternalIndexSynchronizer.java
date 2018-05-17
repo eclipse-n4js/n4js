@@ -39,6 +39,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.ImplementedBy;
@@ -85,7 +86,11 @@ public abstract class ExternalIndexSynchronizer {
 	 *         {@link ExternalLibraryWorkspace} or {@link IN4JSCore}.
 	 */
 	final public boolean isProjectsSynchronized() {
+
+		Stopwatch stopwatch = Stopwatch.createStarted();
 		Collection<LibraryChange> changeSet = identifyChangeSet(Collections.emptyList());
+
+		System.out.println("sync took: " + stopwatch.stop());
 		return changeSet.isEmpty();
 	}
 

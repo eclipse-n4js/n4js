@@ -58,6 +58,8 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
+				"--npmrcRootLocation",
+				wsRoot,
 				// "--verbose",
 				// "--debug",
 				"--projectlocations", wsRoot,
@@ -89,6 +91,8 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"--installMissingDependencies",
 				"-rw", "nodejs",
 				"-r", fileToRun,
+				"--npmrcRootLocation",
+				wsRoot,
 				// "--verbose",
 				// "--debug",
 				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"

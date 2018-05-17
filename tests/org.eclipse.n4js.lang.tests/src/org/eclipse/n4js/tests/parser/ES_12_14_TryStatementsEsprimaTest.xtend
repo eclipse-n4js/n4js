@@ -152,7 +152,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionInFinallyBlockStrictMode() {
-		'"use strict"; try {} finally { function x() {} }'.parseWithError
+		'"use strict"; try {} finally { function x() {} }'.parseSuccessfully
 	}
 
 	@Test
