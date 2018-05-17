@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.wizard.dependencies;
 
-import static org.eclipse.jface.dialogs.MessageDialog.openError;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -19,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.swt.SWT;
@@ -157,11 +156,13 @@ public class SetupOptionsPage extends WizardPage {
 		try {
 			getContainer().run(true, true, runnableSettingsFilesLocator);
 		} catch (InvocationTargetException | InterruptedException e) {
-			String title = "Error during configuration files discovery.";
-			String userMessage = "Error scanning files system for the configuration files..\n"
-					+ "Please check your Error Log view for the detailed log about the failure.";
 			LOGGER.error("Error during configuration files discovery.", e);
-			UIUtils.getDisplay().asyncExec(() -> openError(UIUtils.getShell(), title, userMessage));
+			UIUtils.getDisplay().asyncExec(() -> {
+				String title = "Error during configuration files discovery.";
+				String message = "Error scanning files system for the configuration files..\n";
+				message += "Please check your Error Log view for the detailed log about the failure.";
+				MessageDialog.openError(UIUtils.getShell(), title, message);
+			});
 		}
 
 		Collection<File> fNPMRCs = runnableSettingsFilesLocator.getCollectedConfigFiles();

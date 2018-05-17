@@ -102,19 +102,21 @@ public class ExternalLibrariesWizard extends Wizard {
 	}
 
 	private static void showErrorMessage() {
-		UIUtils.getDisplay().asyncExec(() -> MessageDialog.openError(
-				UIUtils.getShell(),
-				"Setting up external libraries failed.",
-				"Error while setting up external libraries.\n"
-						+ "Please check your Error Log view for the detailed log about the failure.\n"
-						+ " (note that autobuild is " + (AutobuildUtils.get() ? "on" : "off") + ")"));
+		UIUtils.getDisplay().asyncExec(() -> {
+			String title = "Setting up external libraries failed.";
+			String message = "Error while setting up external libraries.\n";
+			message += "Please check your Error Log view for the detailed log about the failure.\n";
+			message += " (note that autobuild is " + (AutobuildUtils.get() ? "on" : "off") + ")";
+			MessageDialog.openError(UIUtils.getShell(), title, message);
+		});
 	}
 
 	private static void showWarnMessage() {
-		UIUtils.getDisplay().asyncExec(() -> MessageDialog.openWarning(
-				UIUtils.getShell(),
-				"Setting up external was cancelled.",
-				"Due to cancellation not all libraries were installed.\n"
-						+ " (note that autobuild is " + (AutobuildUtils.get() ? "on" : "off") + ")"));
+		UIUtils.getDisplay().asyncExec(() -> {
+			String title = "Setting up external was cancelled.";
+			String message = "Due to cancellation not all libraries were installed.\n";
+			message += " (note that autobuild is " + (AutobuildUtils.get() ? "on" : "off") + ")";
+			MessageDialog.openWarning(UIUtils.getShell(), title, message);
+		});
 	}
 }
