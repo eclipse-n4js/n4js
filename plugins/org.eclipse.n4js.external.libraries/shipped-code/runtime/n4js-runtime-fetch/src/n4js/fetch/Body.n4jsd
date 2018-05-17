@@ -20,4 +20,3 @@ export public interface ~Body {
     public async text(): string;
 }
 
-/* -*- mode: typescript;-*- */

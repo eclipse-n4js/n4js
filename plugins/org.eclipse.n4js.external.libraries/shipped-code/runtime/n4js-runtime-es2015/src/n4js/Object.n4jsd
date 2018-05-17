@@ -14,4 +14,4 @@
     public static assign(target: Object, ... sources: Object): Object;
 }
 
-/* -*- mode: typescript;-*- */
+
