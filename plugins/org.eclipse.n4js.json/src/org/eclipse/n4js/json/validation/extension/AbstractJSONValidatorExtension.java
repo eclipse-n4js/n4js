@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -13,8 +12,6 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-
-import com.google.inject.Inject;
 
 /**
  * An abstract implementation of {@link IJSONValidatorExtension} that enables the functionality of 
@@ -26,18 +23,7 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 	
 	@Override
 	public void register(EValidatorRegistrar registrar) {
-		// nop
-	}
-	
-	/** 
-	 * Registers this validator extension with the registry in case
-	 * the platform is not running and therefore the IExtensionRegistry is unavailable.
-	 */
-	@Inject
-	public void registerValidatorExtension(JSONValidatorExtensionRegistry registry) {
-		if (!Platform.isRunning()) {
-			registry.register(this);
-		}
+		// do not register with EMF registry (uses extension points instead)
 	}
 	
 	@Override

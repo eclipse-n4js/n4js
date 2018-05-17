@@ -29,6 +29,7 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.EValidatorRegistrar;
 
 import com.google.inject.Inject;
 
@@ -38,13 +39,18 @@ import com.google.inject.Inject;
 public class JSONValidator extends AbstractJSONValidator {
 	
 	@Inject
-	JSONGrammarAccess grammarAccess;
+	private JSONGrammarAccess grammarAccess;
 	
 	@Inject
-	JSONValidatorExtensionRegistry validatorExtensionRegistry;
+	private JSONValidatorExtensionRegistry validatorExtensionRegistry;
 
 	JSONValidator() {
 		super();
+	}
+	
+	@Override
+	public void register(EValidatorRegistrar registrar) {
+		super.register(registrar);
 	}
 	
 	/**
