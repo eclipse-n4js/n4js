@@ -779,8 +779,10 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
 					try {
 						libraryManager.synchronizeNpms(monitor);
+					} catch (InterruptedException e) {
+						// canceled by user
 					} catch (OperationCanceledException e) {
-						// ignore
+						// canceled by user
 					} catch (IllegalBinaryStateException e) {
 					} catch (CoreException e) {
 					}
