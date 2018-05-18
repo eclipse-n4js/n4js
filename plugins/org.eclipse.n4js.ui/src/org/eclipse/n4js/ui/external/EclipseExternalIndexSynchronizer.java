@@ -312,7 +312,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	 * Inspired by {@link MarkerCreator#createMarker(Issue, IResource, String)}
 	 */
 	private void addMarker(IResource resource) throws CoreException {
-		IMarker marker = resource.createMarker("org.eclipse.n4js.n4mf.ui.n4mf.check.normal");
+		IMarker marker = resource.createMarker("org.eclipse.n4js.ui.workspace.error");
 
 		marker.setAttribute(IMarker.LOCATION, "N4JS Index");
 		marker.setAttribute(Issue.CODE_KEY, IssueCodes.NODE_MODULES_OUT_OF_SYNC);

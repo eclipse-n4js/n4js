@@ -133,7 +133,7 @@ public class ExternalLibraryErrorMarkerManager {
 	 * Inspired by {@link MarkerCreator#createMarker(Issue, IResource, String)}
 	 */
 	private void addMarker(IProject projectForMarker, Issue issue, String locName, String uriKey) throws CoreException {
-		IMarker marker = projectForMarker.createMarker("org.eclipse.n4js.n4mf.ui.n4mf.check.normal");
+		IMarker marker = projectForMarker.createMarker("org.eclipse.n4js.ui.workspace.error");
 
 		marker.setAttribute(IMarker.LINE_NUMBER, 0);
 		marker.setAttribute(IMarker.CHAR_START, 0);
