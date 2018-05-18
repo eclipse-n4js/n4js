@@ -8,9 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo"
-import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor"
 
+import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
+import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
 
 export public interface IInstrumentedTest {
     public name: string;

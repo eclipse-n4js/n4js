@@ -8,43 +8,60 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+ 
+ /* TODO refactor test utilities from production code.
+  * This are test utilities used by mangelhaft when testing itself.
+  * They should be moved from production code and self-testing of mangelhaft
+  * should configured differently.
+  */
 
+/**
+ * Utility function that wraps {@code cb} in a way that when invoked, the wrapping will intercept all throws and invole {@code reject} callback.
+ * 
+ * @returns {@code Function} wrapped {@code cb} 
+ */
 export public function async(cb: Function, reject: Function): Function {
-    return function() {
-        try {
-            cb.apply(null, arguments as Array<?>);
-        } catch(ex) {
-            try {
-                reject.call({}, ex);
-            } catch (ex3) {
-                console.log(ex3);
-            }
-        }
-    }
+	return function() {
+			try {
+				cb.apply(null, arguments as Array<?>);
+			} catch(ex) {
+				try {
+					reject.call({}, ex);
+				} catch (ex3) {
+					console.log(ex3);
+				}
+			}
+		};
 }
 
+/** interface for self-testing injection inside mangelhaft */
 export public interface IFIXME {
-    public get logStr();
+	public get logStr();
 
 }
 
+/** class for self-testing injection inside mangelhaft */
 export public class FIXME1 implements IFIXME {
-    @Override
-    public get logStr() {
-        return "FIXME joe from Mangelhaft";
-    }
-}
-export public interface IFIXME2 {
-    @Internal public party = false;
-    public get logStr();
+
+	@Override
+	public get logStr() {
+		return "FIXME joe from Mangelhaft";
+	}
 }
 
-export public class FIXME2 implements IFIXME2 {
-    @Override
-    public get logStr() {
-        return "FIXME joe from Mangelhaft";
-    }
+/** interface for self-testing injection inside mangelhaft */
+export public interface IFIXME2 {
+
+	@Internal
+	public party = false;
+	public get logStr();
 }
-/*
--*- mode: typescript;-*-
-*/
+
+/** class for self-testing injection inside mangelhaft */
+export public class FIXME2 implements IFIXME2 {
+
+	@Override
+	public get logStr() {
+		return "FIXME joe from Mangelhaft";
+	}
+}

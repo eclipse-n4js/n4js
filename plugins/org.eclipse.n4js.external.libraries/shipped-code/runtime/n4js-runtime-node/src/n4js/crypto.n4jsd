@@ -99,4 +99,4 @@ export external public class Verify {
     public verify(object: string, signature: union{string, Buffer}=, signature_format:string=): boolean;
 }
 
-/* -*- mode: typescript;-*- */
+

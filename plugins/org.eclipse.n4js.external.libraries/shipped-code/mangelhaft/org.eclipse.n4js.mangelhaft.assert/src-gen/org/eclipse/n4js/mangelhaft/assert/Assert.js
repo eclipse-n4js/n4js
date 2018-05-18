@@ -4,10 +4,10 @@
 	'use strict';
 	System.register([
 		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError',
-		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet',
-		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/DeepEqual'
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/DeepEqual',
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet'
 	], function($n4Export) {
-		var AssertionError, PreconditionNotMet, deepEqual, getTypeName, DEFAULT_TIMEOUT, DEFAULT_POLLING_INTERVAL, isUndefinedOrNull, isArguments, expectedException, Assert;
+		var AssertionError, deepEqual, PreconditionNotMet, getTypeName, DEFAULT_TIMEOUT, DEFAULT_POLLING_INTERVAL, isUndefinedOrNull, isArguments, expectedException, Assert;
 		getTypeName = function getTypeName(val) {
 			if (typeof val === "object") {
 				let ctor = (val).constructor;
@@ -44,12 +44,12 @@
 					AssertionError = $exports.AssertionError;
 				},
 				function($exports) {
-					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
-					PreconditionNotMet = $exports.PreconditionNotMet;
-				},
-				function($exports) {
 					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/DeepEqual
 					deepEqual = $exports.deepEqual;
+				},
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				}
 			],
 			execute: function() {

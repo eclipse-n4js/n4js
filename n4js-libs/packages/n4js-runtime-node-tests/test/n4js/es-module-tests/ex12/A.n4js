@@ -8,9 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {B} from "es-module-tests/ex12/B"
 
 //Default export
+import {B} from "es-module-tests/ex12/B";
 export default class A extends B {
     constructor() {
         super();

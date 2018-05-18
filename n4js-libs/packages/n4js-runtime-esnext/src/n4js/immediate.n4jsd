@@ -13,4 +13,3 @@
 export external public function setImmediate(fn: Function): number;
 export external public function clearImmediate(handle: number): void;
 
-/* -*- mode: typescript;-*- */

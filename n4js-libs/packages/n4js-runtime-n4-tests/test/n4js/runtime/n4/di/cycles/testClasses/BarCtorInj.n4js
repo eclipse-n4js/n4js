@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {FooCtorInj} from "runtime/n4/di/cycles/testClasses/FooCtorInj"
 
+import {FooCtorInj} from "runtime/n4/di/cycles/testClasses/FooCtorInj";
 export class BarCtorInj {
 
     foo: FooCtorInj;

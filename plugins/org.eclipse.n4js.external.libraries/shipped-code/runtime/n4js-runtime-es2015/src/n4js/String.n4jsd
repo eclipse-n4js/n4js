@@ -21,4 +21,3 @@
     public repeat(count: number): string;
 }
 
-/* -*- mode: typescript;-*- */

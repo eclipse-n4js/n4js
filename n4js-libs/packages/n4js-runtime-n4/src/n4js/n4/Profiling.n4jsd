@@ -83,4 +83,4 @@ export public interface ~Profiling {
     public logTimed(): void;
 }
 
-/* -*- mode: typescript;-*- */
+

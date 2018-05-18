@@ -14,4 +14,3 @@
     public stack?: string;
 }
 
-/* -*- mode: typescript;-*- */
