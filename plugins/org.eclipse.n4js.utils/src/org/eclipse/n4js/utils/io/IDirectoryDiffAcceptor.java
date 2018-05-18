@@ -126,23 +126,23 @@ public interface IDirectoryDiffAcceptor {
 					sb.append(Joiner.on("\n  ").join(unexpected));
 				}
 				if (!missing.isEmpty()) {
-					sb.append("missing:");
+					sb.append("missing:\n  ");
 					sb.append(Joiner.on("\n  ").join(missing));
 				}
 				if (!fileInsteadOfDir.isEmpty()) {
-					sb.append("file instead of directory:");
+					sb.append("file instead of directory:\n  ");
 					sb.append(Joiner.on("\n  ").join(fileInsteadOfDir));
 				}
 				if (!dirInsteadOfFile.isEmpty()) {
-					sb.append("directory instead of file:");
+					sb.append("directory instead of file:\n  ");
 					sb.append(Joiner.on("\n  ").join(dirInsteadOfFile));
 				}
 				if (!diffLength.isEmpty()) {
-					sb.append("differing length:");
+					sb.append("differing length:\n  ");
 					sb.append(Joiner.on("\n  ").join(diffLength));
 				}
 				if (!diffContent.isEmpty()) {
-					sb.append("different content:");
+					sb.append("different content:\n  ");
 					sb.append(Joiner.on("\n  ").join(diffContent));
 				}
 			}
