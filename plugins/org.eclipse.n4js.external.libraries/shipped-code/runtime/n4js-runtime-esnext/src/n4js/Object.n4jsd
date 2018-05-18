@@ -15,4 +15,3 @@
     public static entries(obj: Object): [Iterable2<string, any>];
 }
 
-/* -*- mode: typescript;-*- */
