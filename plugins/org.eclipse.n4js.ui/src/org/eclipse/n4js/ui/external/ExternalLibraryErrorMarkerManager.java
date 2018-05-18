@@ -12,18 +12,15 @@ package org.eclipse.n4js.ui.external;
 
 import java.util.Collection;
 
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
@@ -38,6 +35,9 @@ public class ExternalLibraryErrorMarkerManager {
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private IWorkspaceMarkerSupport workspaceMarkerSupport;
 
 	/** Clears all error markers of external libraries */
 	public void clearAllMarkers() {
@@ -68,28 +68,9 @@ public class ExternalLibraryErrorMarkerManager {
 			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
 				IProject iProject = ((N4JSEclipseProject) prj).getProject();
 
-				try {
-					IMarker[] currentMarkers = iProject.findMarkers(null, true, IResource.DEPTH_ZERO);
-					for (IMarker marker : currentMarkers) {
-						String codeKey = marker.getAttribute(Issue.CODE_KEY, "");
-						String uriKey = marker.getAttribute(Issue.URI_KEY, "");
-
-						boolean pleaseDelete = false;
-						pleaseDelete |= IssueCodes.EXTERNAL_LIBRARY_ERRORS.equals(codeKey);
-						pleaseDelete |= IssueCodes.EXTERNAL_LIBRARY_WARNINGS.equals(codeKey);
-						pleaseDelete &= projectID == null || uriKey.equals(projectID);
-
-						if (pleaseDelete) {
-							try {
-								marker.delete();
-							} catch (CoreException e1) {
-								// ignore
-							}
-						}
-					}
-				} catch (CoreException e1) {
-					// ignore
-				}
+				workspaceMarkerSupport.deleteMarkersWithUriKey(iProject, projectID,
+						IssueCodes.EXTERNAL_LIBRARY_ERRORS,
+						IssueCodes.EXTERNAL_LIBRARY_WARNINGS);
 			}
 		}
 	}
@@ -119,41 +100,21 @@ public class ExternalLibraryErrorMarkerManager {
 			locationName += ", Line: " + issue.getLineNumber();
 			String uriKey = externalProject.getName();
 
-			try {
-				addMarker(oneWorkspaceProject.getProject(), issue, locationName, uriKey);
-			} catch (CoreException e) {
-				// ignore
+			IProject resource = oneWorkspaceProject.getProject();
+			String code = getCodeKey(issue);
+			String msg = getMessage(issue);
+
+			switch (issue.getSeverity()) {
+			case ERROR:
+				workspaceMarkerSupport.createError(resource, code, locationName, msg, uriKey, false);
+				break;
+			case WARNING:
+				workspaceMarkerSupport.createWarning(resource, code, locationName, msg, uriKey, false);
+				break;
+			default:
+				throw new IllegalArgumentException(String.valueOf(issue.getSeverity()));
 			}
-		}
-	}
 
-	/**
-	 * Adds an error marker to a given {@link IResource}, in this case to a {@link IProject}.
-	 * <p>
-	 * Inspired by {@link MarkerCreator#createMarker(Issue, IResource, String)}
-	 */
-	private void addMarker(IProject projectForMarker, Issue issue, String locName, String uriKey) throws CoreException {
-		IMarker marker = projectForMarker.createMarker("org.eclipse.n4js.ui.workspace.error");
-
-		marker.setAttribute(IMarker.LINE_NUMBER, 0);
-		marker.setAttribute(IMarker.CHAR_START, 0);
-		marker.setAttribute(IMarker.CHAR_END, 0);
-		marker.setAttribute(IMarker.LOCATION, locName);
-		marker.setAttribute(Issue.CODE_KEY, getCodeKey(issue));
-		marker.setAttribute(IMarker.SEVERITY, getSeverity(issue));
-		marker.setAttribute(IMarker.MESSAGE, getMessage(issue));
-		marker.setAttribute(Issue.URI_KEY, uriKey);
-		marker.setAttribute("FIXABLE_KEY", false);
-	}
-
-	private String getMessage(Issue issue) {
-		switch (issue.getSeverity()) {
-		case ERROR:
-			return IssueCodes.getMessageForEXTERNAL_LIBRARY_ERRORS(issue.getMessage());
-		case WARNING:
-			return IssueCodes.getMessageForEXTERNAL_LIBRARY_WARNINGS(issue.getMessage());
-		default:
-			throw new IllegalArgumentException(String.valueOf(issue.getSeverity()));
 		}
 	}
 
@@ -168,17 +129,15 @@ public class ExternalLibraryErrorMarkerManager {
 		}
 	}
 
-	/** copied from {@link MarkerCreator} */
-	private int getSeverity(Issue issue) {
+	private String getMessage(Issue issue) {
 		switch (issue.getSeverity()) {
 		case ERROR:
-			return IMarker.SEVERITY_ERROR;
+			return IssueCodes.getMessageForEXTERNAL_LIBRARY_ERRORS(issue.getMessage());
 		case WARNING:
-			return IMarker.SEVERITY_WARNING;
-		case INFO:
-			return IMarker.SEVERITY_INFO;
+			return IssueCodes.getMessageForEXTERNAL_LIBRARY_WARNINGS(issue.getMessage());
 		default:
 			throw new IllegalArgumentException(String.valueOf(issue.getSeverity()));
 		}
 	}
+
 }

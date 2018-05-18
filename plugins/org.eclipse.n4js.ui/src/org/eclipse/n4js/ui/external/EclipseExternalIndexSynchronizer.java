@@ -19,10 +19,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -32,14 +30,13 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.NpmLogger;
+import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
-import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -62,6 +59,9 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 
 	@Inject
 	private NpmLogger logger;
+
+	@Inject
+	private IWorkspaceMarkerSupport workspaceMarkerSupport;
 
 	/**
 	 * Call this method to synchronize the information in the Xtext index with all external projects in the external
@@ -276,6 +276,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	}
 
 	private void setOutOfSyncMarkers(boolean setMarkers) {
+		String code = IssueCodes.NODE_MODULES_OUT_OF_SYNC;
+
 		for (IN4JSProject prj : core.findAllProjects()) {
 			if (!prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
 				N4JSEclipseProject n4EclPrj = (N4JSEclipseProject) prj;
@@ -283,43 +285,16 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 				IResource markerResource = iProject;
 
 				// delete markers
-				try {
-					for (IMarker marker : markerResource.findMarkers(null, true, 0)) {
-						String issueCode = marker.getAttribute(Issue.CODE_KEY, "");
-						if (issueCode.equals(IssueCodes.NODE_MODULES_OUT_OF_SYNC)) {
-							marker.delete();
-						}
-					}
-				} catch (CoreException e1) {
-					// ignore
-				}
+				workspaceMarkerSupport.deleteMarkers(markerResource, code);
 
 				// add markers
 				if (setMarkers && !iProject.isHidden() && iProject.isAccessible()) {
-					try {
-						addMarker(markerResource);
-					} catch (CoreException e) {
-						e.printStackTrace();
-					}
+					String msg = IssueCodes.getMessageForNODE_MODULES_OUT_OF_SYNC();
+					String uriKey = markerResource.getLocation().toString();
+					workspaceMarkerSupport.createError(markerResource, code, "N4JS Index", msg, uriKey, true);
 				}
 			}
 		}
 	}
 
-	/**
-	 * Adds an error marker to a given {@link IResource}, in this case to a {@link IProject}.
-	 * <p>
-	 * Inspired by {@link MarkerCreator#createMarker(Issue, IResource, String)}
-	 */
-	private void addMarker(IResource resource) throws CoreException {
-		IMarker marker = resource.createMarker("org.eclipse.n4js.ui.workspace.error");
-
-		marker.setAttribute(IMarker.LOCATION, "N4JS Index");
-		marker.setAttribute(Issue.CODE_KEY, IssueCodes.NODE_MODULES_OUT_OF_SYNC);
-		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-		marker.setAttribute(IMarker.MESSAGE, "node_modules folder and N4JS index are out of sync");
-		marker.setAttribute(Issue.URI_KEY, resource.getLocation().toString());
-		marker.setAttribute("FIXABLE_KEY", true);
-
-	}
 }

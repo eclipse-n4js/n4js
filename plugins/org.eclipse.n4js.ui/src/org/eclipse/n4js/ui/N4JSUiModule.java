@@ -29,6 +29,7 @@ import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
+import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -391,6 +392,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<? extends ProcessExecutor> provideProcessExecutor() {
 		return Access.contributedProvider(ProcessExecutor.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends IWorkspaceMarkerSupport> provideIWorkspaceMarkerSupport() {
+		return Access.contributedProvider(IWorkspaceMarkerSupport.class);
 	}
 
 	/**

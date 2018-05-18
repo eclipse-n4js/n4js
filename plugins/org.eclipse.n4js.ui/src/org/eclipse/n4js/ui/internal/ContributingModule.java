@@ -33,6 +33,7 @@ import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocationProviderImpl;
+import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
@@ -200,6 +201,7 @@ public class ContributingModule implements Module {
 
 		binder.bind(TypesKeywordProvider.class);
 		binder.bind(ExternalLibraryErrorMarkerManager.class);
+		binder.bind(IWorkspaceMarkerSupport.class).to(WorkspaceMarkerSupport.class);
 
 	}
 }
