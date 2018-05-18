@@ -60,7 +60,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JS
@@ -83,7 +82,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.projects.toString(),
 				wsRoot + "/" + PROJECT_NAME_N4JSX

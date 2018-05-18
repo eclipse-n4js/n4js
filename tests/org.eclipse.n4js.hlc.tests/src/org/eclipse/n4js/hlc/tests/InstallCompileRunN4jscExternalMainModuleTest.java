@@ -59,8 +59,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractN4jscT
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--verbose"
+				"--run", fileToRun
 		};
 		final String actual = runAndCaptureOutput(args);
 		StringBuilder expected = new StringBuilder()

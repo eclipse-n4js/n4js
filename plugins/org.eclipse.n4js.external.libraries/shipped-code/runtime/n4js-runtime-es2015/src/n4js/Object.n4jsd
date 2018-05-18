@@ -12,6 +12,7 @@
 
 @Polyfill export external public class Object extends Object {
     public static assign(target: Object, ... sources: Object): Object;
+    public static setPrototypeOf(obj: Object, prototype: Object): Object;
 }
 
 
