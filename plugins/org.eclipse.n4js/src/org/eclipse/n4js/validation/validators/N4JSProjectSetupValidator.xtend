@@ -224,7 +224,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 						// register for error:
 						val keySet = newHashSet()
-						providers.forEach[keySet.add(it.libProjectDescription)]
+						providers.forEach[keySet.add(it.libraryProjectReference)]
 						val filledTypeFQN = providers.head.descriptionStandard //or: polyExport_QN
 						val message = filledTypeFQN + "#" + filledInMemberName
 						markerMapLibs2FilledName.put(keySet, message)

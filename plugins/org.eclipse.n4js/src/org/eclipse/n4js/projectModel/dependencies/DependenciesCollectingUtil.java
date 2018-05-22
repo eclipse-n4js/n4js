@@ -51,34 +51,20 @@ public class DependenciesCollectingUtil {
 
 	/** Add to the provided map all possible dependencies based on the {@link ProjectDescription} */
 	private static void updateFromProjectDescription(Map<String, String> dependencies,
-			ProjectDescription projectDescription) {
-		if (projectDescription != null) {
-			Stream.of(getVersionedDependencies(projectDescription),
+			ProjectDescription pd) {
+		if (pd != null) {
+			Stream.of(
+					pd.getProjectDependencies().stream().map(DependencyInfo::create),
 					// TODO GH-613, user projects can be misconfigured
-					getVersionedRequiredRuntimeLibraries(projectDescription),
-					getVersionedProvidedRuntimeLibraries(projectDescription),
-					getVersionedExtendedRuntimeEnvironment(projectDescription),
-					getVersionedTestedProjects(projectDescription),
-					getVersionedImplementedProjects(projectDescription))
+					pd.getRequiredRuntimeLibraries().stream().map(DependencyInfo::create),
+					pd.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create),
+					getVersionedExtendedRuntimeEnvironment(pd),
+					pd.getTestedProjects().stream().map(DependencyInfo::create),
+					pd.getImplementedProjects().stream().map(DependencyInfo::create))
 					.reduce(Stream::concat)
 					.orElseGet(Stream::empty)
 					.forEach(info -> dependencies.merge(info.name, info.version, DependencyInfo::resolve));
 		}
-	}
-
-	/** get id-version information about dependencies */
-	private static Stream<DependencyInfo> getVersionedDependencies(ProjectDescription description) {
-		return description.getProjectDependencies().stream().map(DependencyInfo::create);
-	}
-
-	/** TODO https://github.com/eclipse/n4js/issues/613 */
-	private static Stream<DependencyInfo> getVersionedRequiredRuntimeLibraries(ProjectDescription description) {
-		return description.getRequiredRuntimeLibraries().stream().map(DependencyInfo::create);
-	}
-
-	/** TODO https://github.com/eclipse/n4js/issues/613 */
-	private static Stream<DependencyInfo> getVersionedProvidedRuntimeLibraries(ProjectDescription description) {
-		return description.getProvidedRuntimeLibraries().stream().map(DependencyInfo::create);
 	}
 
 	/** TODO https://github.com/eclipse/n4js/issues/613 */
@@ -86,15 +72,4 @@ public class DependenciesCollectingUtil {
 		final ProjectReference re = description.getExtendedRuntimeEnvironment();
 		return re != null ? Stream.of(re).map(DependencyInfo::create) : Stream.empty();
 	}
-
-	/** TODO https://github.com/eclipse/n4js/issues/613 */
-	private static Stream<DependencyInfo> getVersionedTestedProjects(ProjectDescription description) {
-		return description.getTestedProjects().stream().map(DependencyInfo::create);
-	}
-
-	/** TODO https://github.com/eclipse/n4js/issues/613 */
-	private static Stream<DependencyInfo> getVersionedImplementedProjects(ProjectDescription description) {
-		return description.getImplementedProjects().stream().map(DependencyInfo::create);
-	}
-
 }

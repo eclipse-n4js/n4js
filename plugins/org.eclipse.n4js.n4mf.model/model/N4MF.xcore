@@ -176,8 +176,8 @@ class BootstrapModule {
  * implementation provided by the runtime.
  */
 enum ModuleFilterType {
-	NO_VALIDATE,
-	NO_MODULE_WRAPPING
+	NO_VALIDATE = 0,
+	NO_MODULE_WRAPPING = 1
 }
 
 class ProjectReference {
@@ -247,15 +247,15 @@ class VersionConstraint {
  * if it is a dependency at runtime (COMPILE).
  */
 enum ProjectDependencyScope {
-	COMPILE,
-	TEST
+	COMPILE = 0,
+	TEST = 1
 }
 
 /*
  * One of the Javascript module loading techniques.
  */
 enum ModuleLoader {
-	N4JS,
-	COMMONJS,
-	NODE_BUILTIN
+	N4JS = 0,
+	COMMONJS = 1,
+	NODE_BUILTIN = 2
 }
