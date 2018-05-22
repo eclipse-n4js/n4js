@@ -26,9 +26,9 @@ import org.eclipse.xtext.scoping.IScope;
  */
 public class TypingStrategyAwareMemberScope extends FilterWithErrorMarkerScope {
 
-	final TypingStrategyFilterDesc strategyFilter;
-	final boolean useSite;
-	final String receiverTypeName;
+	private final TypingStrategyFilterDesc strategyFilter;
+	private final boolean useSite;
+	private final String receiverTypeName;
 
 	/**
 	 * Creates new scope instance, filtering out members of parent not matching current typing strategy.
@@ -43,8 +43,8 @@ public class TypingStrategyAwareMemberScope extends FilterWithErrorMarkerScope {
 		boolean isLeftHand = ExpressionExtensions.isLeftHandSide(context);
 		strategyFilter = new TypingStrategyFilterDesc(TypeUtils.retrieveTypingStrategy(receiverType), isLeftHand);
 		useSite = receiverType != null && receiverType.isUseSiteStructuralTyping();
-		receiverTypeName = (receiverType == null || receiverType.eIsProxy()) ? "unknown type" : receiverType
-				.getTypeRefAsString();
+		receiverTypeName = (receiverType == null || receiverType.eIsProxy()) ? "unknown type"
+				: receiverType.getTypeRefAsString();
 	}
 
 	@Override
