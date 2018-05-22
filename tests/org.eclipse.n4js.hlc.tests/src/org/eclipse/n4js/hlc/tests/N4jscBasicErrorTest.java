@@ -82,7 +82,7 @@ public class N4jscBasicErrorTest extends AbstractN4jscTest {
 		// absolute src filename
 		String fileA = pathToP1 + "/src/A.n4js";
 
-		String[] args = { "--projectlocations", proot, "--runWith", "nodejs", "--run", fileA, "--verbose" };
+		String[] args = { "--projectlocations", proot, "--runWith", "nodejs", "--run", fileA };
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR);
 	}

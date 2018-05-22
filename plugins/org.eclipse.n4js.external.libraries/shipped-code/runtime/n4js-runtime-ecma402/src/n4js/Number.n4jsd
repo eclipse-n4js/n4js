@@ -26,4 +26,3 @@ import {NumberFormatOptions} from "IntlClasses";
     public toLocaleString (locales: string | [string]=, options: ~r~NumberFormatOptions=): string
 }
 
-/* -*- mode: typescript;-*- */

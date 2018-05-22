@@ -8,15 +8,7 @@
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestFunctionType',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor'
 	], function($n4Export) {
-		var TestController, IInstrumentedTest, TestFunctionType, TestMethodDescriptor, getAllPropertyNames, InstrumentedTest;
-		getAllPropertyNames = function getAllPropertyNames(objProt, propNames) {
-			propNames = propNames || new Map();
-			let names = Object.getOwnPropertyNames(objProt);
-			names.forEach(function(name) {
-				propNames.set(name, true);
-			});
-			return propNames;
-		};
+		var TestController, IInstrumentedTest, TestFunctionType, TestMethodDescriptor, InstrumentedTest;
 		InstrumentedTest = function InstrumentedTest(testClass, info, testObject, parameterizedName, parameterizedTests) {
 			this.tests = [];
 			this.beforeAlls = [];
@@ -84,9 +76,9 @@
 					},
 					getFixmeScope: {
 						value: function getFixmeScope___n4(fixme) {
-							let scope;
 							let scopes;
 							if (fixme) {
+								let scope;
 								if (fixme.details.length > 1) {
 									scope = fixme.details[1];
 								}
@@ -100,8 +92,11 @@
 					getTestMethodDescriptors: {
 						value: function getTestMethodDescriptors___n4(meths, tftype) {
 							return meths.map((methodDescriptor)=>{
-								const desc = methodDescriptor.anyAnnotation("Description"), fixmeAnnotation = methodDescriptor.anyAnnotation("Fixme"), ignoreAnnotation = this.classIgnoreAnnotation ? this.classIgnoreAnnotation : methodDescriptor.anyAnnotation("Ignore"), timeoutAnnotation = methodDescriptor.anyAnnotation("Timeout"), details = desc ? desc.details : [];
-								;
+								const desc = methodDescriptor.anyAnnotation("Description");
+								const details = desc ? desc.details : [];
+								const fixmeAnnotation = methodDescriptor.anyAnnotation("Fixme");
+								const ignoreAnnotation = this.classIgnoreAnnotation ? this.classIgnoreAnnotation : methodDescriptor.anyAnnotation("Ignore");
+								const timeoutAnnotation = methodDescriptor.anyAnnotation("Timeout");
 								return new TestMethodDescriptor({
 									timeout: timeoutAnnotation && timeoutAnnotation.details ? parseInt(timeoutAnnotation.details.pop()) : 60 * 1000,
 									description: details.length ? details.join(" ") : "",
@@ -131,7 +126,6 @@
 					},
 					load: {
 						value: function load___n4(testClass, info) {
-							let parentClass = Object.getPrototypeOf(testClass);
 							this.classIgnoreAnnotation = testClass.n4type.allAnnotations("Ignore")[0];
 							this.beforeAlls = this.getTestMethodDescriptors(testClass.n4type.methodsWithAnnotation("BeforeAll", true, false, false), TestFunctionType.BEFORE_ALL);
 							this.afterAlls = this.getTestMethodDescriptors(testClass.n4type.methodsWithAnnotation("AfterAll", true, false, false), TestFunctionType.AFTER_ALL);
@@ -148,6 +142,7 @@
 									return info.testMethods.indexOf(test.name) !== -1;
 								});
 							}
+							let parentClass = Object.getPrototypeOf(testClass);
 							let parentClassFn = parentClass;
 							if (parentClassFn !== Object) {
 								this.parent = new InstrumentedTest().load(parentClass);

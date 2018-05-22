@@ -59,7 +59,6 @@ public class N4jscDependentProjectDependenciesTest extends AbstractN4jscTest {
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};

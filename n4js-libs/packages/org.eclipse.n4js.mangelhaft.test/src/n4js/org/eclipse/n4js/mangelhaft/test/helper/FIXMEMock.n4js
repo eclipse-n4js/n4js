@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test"
 
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test";
 export public class FIXME2Mock implements IFIXME2 {
     @Override
     public get logStr() {

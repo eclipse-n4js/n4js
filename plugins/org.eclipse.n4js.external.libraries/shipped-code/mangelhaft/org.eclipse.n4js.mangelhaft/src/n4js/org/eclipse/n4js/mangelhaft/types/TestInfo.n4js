@@ -8,10 +8,17 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+ 
+ /** Describes given test class to be executed. */
 export public class ~TestInfo {
+    /** origin used for dynamic loading of the test class */
     public origin: string;
+    /** test class fqn used for dynamic loading */
     public fqn?: string;
+    /** name of the module containing test class */
     public module?: string;
+    /** names of the test methods from a given class to be executed */
     public testMethods?: Array<string>;
-    public constructor(@Spec spec: ~i~this){}
+
+    public constructor(@Spec spec: ~i~this) {}
 }

@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {IJoe} from "org/eclipse/n4js/mangelhaft/test/helper/IJoe"
-import {Stuff} from "org/eclipse/n4js/mangelhaft/test/helper/Thingy"
+import {IJoe} from "org/eclipse/n4js/mangelhaft/test/helper/IJoe";
+import {Stuff} from "org/eclipse/n4js/mangelhaft/test/helper/Thingy";
 export public class BaseJoe implements IJoe{
     @Inject
     constructor(stuffProvider: N4Provider<Stuff>) {

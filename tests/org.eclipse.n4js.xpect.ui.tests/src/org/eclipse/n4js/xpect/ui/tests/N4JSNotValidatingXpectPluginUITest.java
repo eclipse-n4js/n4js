@@ -26,7 +26,7 @@ import org.eclipse.n4js.xpect.ui.methods.HyperlinkXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
-import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
+import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 
 /**
  * Plugin for proposal test. This plugin turns <b>off</b> validation in xpect-tests by default since most input files
@@ -45,7 +45,7 @@ import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 		ContentAssistXpectMethod.class,
 		XpectTestResultTest.class
 })
-@XpectImport({ Config.class, VarDef.class, XpEnvironmentData.class, SuppressIssuesSetup.class })
+@XpectImport({ Config.class, VarDef.class, XpEnvironmentData.class, N4JSSuppressIssuesSetup.class })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "testdata_nonvalidating", fileExtensions = "xt")
 public class N4JSNotValidatingXpectPluginUITest {

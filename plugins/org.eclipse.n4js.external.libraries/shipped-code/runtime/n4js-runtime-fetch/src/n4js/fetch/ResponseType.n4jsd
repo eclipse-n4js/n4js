@@ -18,4 +18,3 @@ export @StringBased external public enum ResponseType {
     OPAQUE: "opaque"
 }
 
-/* -*- mode: typescript;-*- */
