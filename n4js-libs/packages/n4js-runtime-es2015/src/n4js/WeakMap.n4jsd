@@ -39,4 +39,3 @@ export external public class WeakMap<KeyT extends Object, ValueT> extends Object
     public set(key: KeyT, value: ValueT): this;
 }
 
-/* -*- mode: typescript;-*- */

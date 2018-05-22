@@ -57,8 +57,6 @@ public class N4jscDuplicateProjectsTest extends AbstractN4jscTest {
 		String pathToClient = proot + "/root2/Client";
 
 		String[] args = {
-				"--verbose",
-				"--debug",
 				"--buildType", BuildType.projects.toString(),
 				pathToClient,
 				pathToP1_1,
@@ -82,8 +80,6 @@ public class N4jscDuplicateProjectsTest extends AbstractN4jscTest {
 		String pathToClient = proot + "/root2/Client";
 
 		String[] args = {
-				"--verbose",
-				"--debug",
 				"--buildType", BuildType.projects.toString(),
 				pathToClient,
 				pathToP1_1,

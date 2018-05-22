@@ -15,7 +15,7 @@ import org.eclipse.xpect.setup.XpectSetupRoot
 import org.eclipse.xpect.xtext.lib.setup.InjectorSetup
 
 /**
- * An xpect setup root which allows to configure a {@link SuppressIssuesSetup}.
+ * An xpect setup root which allows to configure a {@link N4JSSuppressIssuesSetup}.
  *
  * Also see {@link IssueConfiguration}.
  */

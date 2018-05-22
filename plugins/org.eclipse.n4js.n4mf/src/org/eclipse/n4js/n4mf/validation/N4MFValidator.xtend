@@ -98,8 +98,8 @@ class N4MFValidator extends AbstractN4MFValidator {
 		if (mainModuleSpecifier !== null) { // this property is optional, so null is fine!
 			if (mainModuleSpecifier.empty || !isExistingModule(pd, mainModuleSpecifier)) {
 				val specifierToShow = if (mainModuleSpecifier.empty) "<empty string>" else mainModuleSpecifier;
-				addIssue(getMessageForNON_EXISTING_MODULE_SPECIFIER(specifierToShow), pd,
-					PROJECT_DESCRIPTION__MAIN_MODULE, NON_EXISTING_MODULE_SPECIFIER);
+				addIssue(getMessageForNON_EXISTING_MAIN_MODULE(specifierToShow), pd,
+					PROJECT_DESCRIPTION__MAIN_MODULE, NON_EXISTING_MAIN_MODULE);
 			}
 		}
 	}

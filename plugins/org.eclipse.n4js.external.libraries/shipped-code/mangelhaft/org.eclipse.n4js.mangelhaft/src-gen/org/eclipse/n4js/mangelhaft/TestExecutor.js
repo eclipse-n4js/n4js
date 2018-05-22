@@ -4,24 +4,45 @@
 	'use strict';
 	System.register([
 		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError',
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroups',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestResult',
-		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy',
-		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet'
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy'
 	], function($n4Export) {
-		var AssertionError, ResultGroup, ResultGroups, TestResult, TestSpy, PreconditionNotMet, TestExecutor;
+		var AssertionError, PreconditionNotMet, ResultGroup, ResultGroups, TestResult, TestSpy, TestExecutor, getExecutingFunction;
 		TestExecutor = function TestExecutor(spy) {
 			this.spy = undefined;
 			this.constext = undefined;
 			this.spy = spy;
 		};
 		$n4Export('TestExecutor', TestExecutor);
+		getExecutingFunction = function getExecutingFunction(instrumentedTest) {
+			return async(testMethodDescriptor)=>{
+				const doPromise = async(resolve, reject)=>{
+					const timeoutError = new Error(`Test object ${testMethodDescriptor.name} timed out after ${testMethodDescriptor.timeout} milliseconds`);
+					const timeoutId = setTimeout(()=>reject(timeoutError), testMethodDescriptor.timeout);
+					try {
+						await Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject));
+					} catch(error) {
+						reject(error);
+					} finally {
+						clearTimeout(timeoutId);
+					}
+					resolve(undefined);
+				};
+				await new Promise(doPromise);
+			};
+		};
 		return {
 			setters: [
 				function($exports) {
 					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError
 					AssertionError = $exports.AssertionError;
+				},
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				},
 				function($exports) {
 					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup
@@ -38,10 +59,6 @@
 				function($exports) {
 					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy
 					TestSpy = $exports.TestSpy;
-				},
-				function($exports) {
-					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
-					PreconditionNotMet = $exports.PreconditionNotMet;
 				}
 			],
 			execute: function() {
@@ -67,46 +84,33 @@
 							return testRes;
 						}
 					},
+					callAllGrouped: {
+						value: async function callAllGrouped___n4(instrumentedTest, testMethodDescriptors) {
+							for(const batch of testMethodDescriptors) {
+								await this.callAll(instrumentedTest, batch);
+							}
+						}
+					},
 					callAll: {
 						value: async function callAll___n4(instrumentedTest, testMethodDescriptors) {
-							let results = [];
-							var runTest = async function runTest(testMethodDescriptor) {
-								let timeoutId, testResult;
-								async function doPromise(resolve, reject) {
-									let res;
-									timeoutId = setTimeout(function() {
-										reject(new Error("Test object " + testMethodDescriptor.name + " timed out after " + testMethodDescriptor.timeout + " milliseconds"));
-									}, testMethodDescriptor.timeout);
-									try {
-										res = await Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject));
-									} catch(error) {
-										reject(error);
-									} finally {
-										clearTimeout(timeoutId);
-									}
-									resolve(res);
-								}
-								testResult = await new Promise(doPromise);
-								return testResult;
-							};
 							if (testMethodDescriptors) {
-								results = (await Promise.all(testMethodDescriptors.map(runTest)));
+								const runTestMethod = getExecutingFunction(instrumentedTest);
+								await Promise.all(testMethodDescriptors.map(runTestMethod));
 							}
-							return results;
 						}
 					},
 					getAncestorTestMethods: {
 						value: function getAncestorTestMethods___n4(iTest, testMethodName) {
-							let testMethods = [], nodeTestMethods, node = iTest;
-							;
+							let testMethods = [];
+							let node = iTest;
 							while(node.parent) {
 								node = node.parent;
 							}
 							do {
 								let nodeObj = node;
-								nodeTestMethods = nodeObj[testMethodName];
+								const nodeTestMethods = nodeObj[testMethodName];
 								if (nodeTestMethods && nodeTestMethods.length) {
-									testMethods = testMethods.concat(nodeTestMethods);
+									testMethods.push(nodeTestMethods);
 								}
 							} while(node = node.child);
 							return testMethods;
@@ -121,86 +125,94 @@
 					},
 					runGroup: {
 						value: async function runGroup___n4(iTest, scope) {
-							let rg, testObject, testRes, testResults = [], beforeAlls = this.getAncestorTestMethods(iTest, "beforeAlls"), befores = this.getAncestorTestMethods(iTest, "befores"), afters = this.getAncestorTestMethods(iTest, "afters").reverse(), afterAlls = this.getAncestorTestMethods(iTest, "afterAlls").reverse(), numTests, ii, start, end;
-							;
+							let testResults = [];
 							await this.spy.groupStarted.dispatch([
 								iTest
 							]);
-							if (iTest.error) {
-								testResults = await this.errorTests(iTest, iTest.error);
-							} else {
+							if (!iTest.error) {
 								try {
-									await this.callAll(iTest, beforeAlls);
-									numTests = iTest.tests.length;
-									for(ii = 0;ii < numTests;++ii) {
-										testObject = iTest.tests[ii];
-										try {
-											await this.spy.testStarted.dispatch([
-												iTest,
-												testObject
-											]);
-											start = new Date().getTime();
-											if (testObject.ignore) {
-												testRes = new TestResult({
-													testStatus: 'SKIPPED_IGNORE',
-													message: testObject.ignoreReason,
-													description: testObject.name
-												});
-											} else {
-												try {
-													await this.callAll(iTest, befores);
-													await this.callAll(iTest, [
-														testObject
-													]);
-													testRes = new TestResult({
-														testStatus: 'PASSED',
-														description: testObject.name
-													});
-												} finally {
-													await this.callAll(iTest, afters);
-												}
-											}
-											end = new Date().getTime();
-										} catch(er) {
-											let err = er;
-											end = new Date().getTime();
-											testRes = TestExecutor.generateFailureTestResult(err, testObject.name);
-										}
-										testRes.elapsedTime = end - start;
-										testRes = this.handleFixme(testObject, scope, testRes);
-										await this.spy.testFinished.dispatch([
-											iTest,
-											testObject,
-											testRes,
-											async()=>{
-												let allTests = iTest.tests;
-												;
-												iTest.tests = [
-													testObject
-												];
-												try {
-													await this.runTestsAsync([
-														iTest
-													]);
-												} finally {
-													iTest.tests = allTests;
-												}
-											}
-										]);
-										testResults.push(testRes);
-									}
-									await this.callAll(iTest, afterAlls);
+									const beforeAlls = this.getAncestorTestMethods(iTest, "beforeAlls");
+									await this.callAllGrouped(iTest, beforeAlls);
+									await this.runBeforesTestsAfters(testResults, iTest, scope);
+									const afterAlls = this.getAncestorTestMethods(iTest, "afterAlls").reverse();
+									await this.callAllGrouped(iTest, afterAlls);
 								} catch(error) {
 									let results = await this.errorTests(iTest, error);
 									testResults = testResults.concat(results);
 								}
+							} else {
+								testResults = await this.errorTests(iTest, iTest.error);
 							}
-							rg = new ResultGroup(testResults, `${iTest.name}`);
+							const result = new ResultGroup(testResults, `${iTest.name}`);
 							await this.spy.groupFinished.dispatch([
 								iTest,
-								rg
+								result
 							]);
-							return rg;
+							return result;
+						}
+					},
+					runBeforesTestsAfters: {
+						value: async function runBeforesTestsAfters___n4(testResults, iTest, scope) {
+							const numTests = iTest.tests.length;
+							for(let ii = 0;ii < numTests;++ii) {
+								let testMethod = iTest.tests[ii];
+								let start, end;
+								let testRes;
+								try {
+									await this.spy.testStarted.dispatch([
+										iTest,
+										testMethod
+									]);
+									start = new Date().getTime();
+									if (!testMethod.ignore) {
+										try {
+											const befores = this.getAncestorTestMethods(iTest, "befores");
+											await this.callAllGrouped(iTest, befores);
+											await this.callAll(iTest, [
+												testMethod
+											]);
+											testRes = new TestResult({
+												testStatus: 'PASSED',
+												description: testMethod.name
+											});
+										} finally {
+											const afters = this.getAncestorTestMethods(iTest, "afters").reverse();
+											await this.callAllGrouped(iTest, afters);
+										}
+									} else {
+										testRes = new TestResult({
+											testStatus: 'SKIPPED_IGNORE',
+											message: testMethod.ignoreReason,
+											description: testMethod.name
+										});
+									}
+									end = new Date().getTime();
+								} catch(er) {
+									end = new Date().getTime();
+									testRes = TestExecutor.generateFailureTestResult(er, testMethod.name);
+								}
+								testRes.elapsedTime = end - start;
+								testRes = this.handleFixme(testMethod, scope, testRes);
+								await this.spy.testFinished.dispatch([
+									iTest,
+									testMethod,
+									testRes,
+									async()=>{
+										let allTests = iTest.tests;
+										iTest.tests = [
+											testMethod
+										];
+										try {
+											await this.runTestsAsync([
+												iTest
+											]);
+										} finally {
+											iTest.tests = allTests;
+										}
+									}
+								]);
+								testResults.push(testRes);
+							}
 						}
 					},
 					runTestsAsync: {
@@ -233,15 +245,15 @@
 					},
 					errorTests: {
 						value: async function errorTests___n4(instrumentedTest, error) {
-							let len = instrumentedTest.tests.length, testResult, testResults = [], test, ii;
-							;
-							for(ii = 0;ii < len;++ii) {
-								test = instrumentedTest.tests[ii];
+							const testResults = [];
+							const len = instrumentedTest.tests.length;
+							for(let ii = 0;ii < len;++ii) {
+								const test = instrumentedTest.tests[ii];
 								await this.spy.testStarted.dispatch([
 									instrumentedTest,
 									test
 								]);
-								testResult = TestExecutor.generateFailureTestResult(error, test.name);
+								const testResult = TestExecutor.generateFailureTestResult(error, test.name);
 								testResult.elapsedTime = 0;
 								await this.spy.testFinished.dispatch([
 									instrumentedTest,
@@ -277,51 +289,90 @@
 					},
 					generateFailureTestResult: {
 						value: function generateFailureTestResult___n4(ex, description) {
-							if (!ex) {
-								ex = new Error("Unknown error: " + description);
-							} else if (typeof ex === "string") {
-								ex = new Error(ex);
-							}
-							let e = ex instanceof AssertionError ? ex : ex, reason = e.toString(), tr, status, trace;
-							;
-							if (reason.charAt(0) === "[") {
-								reason = e.name ? `${e.name} : ${description}` : description;
-							}
-							if (ex instanceof AssertionError) {
-								status = 'FAILED';
-							} else if (ex instanceof PreconditionNotMet) {
-								status = 'SKIPPED_PRECONDITION';
-							} else if (ex instanceof N4ApiNotImplementedError) {
-								status = 'SKIPPED_NOT_IMPLEMENTED';
-							} else {
-								status = 'ERROR';
-							}
-							if (e.message) {
-								reason = String(e);
-							}
-							if (e.stack) {
-								if (typeof e.stack === "string") {
-									trace = (e.stack).split("\n");
-								} else if (Array.isArray(e.stack)) {
-									trace = e.stack;
-								} else {
-									trace = [
-										(e.stack).toString()
-									];
-								}
-								trace = trace.map(function(line) {
-									return line.trim();
-								});
-							}
-							tr = new TestResult({
+							const status = this.getStatus(ex);
+							const error = this.getError(ex, description);
+							const reason = this.getReason(error, description);
+							const trace = this.getTrace(error);
+							const expected = this.getStringifiedOwnProperty(error, "expected");
+							const actual = this.getStringifiedOwnProperty(error, "actual");
+							let tr = new TestResult({
 								testStatus: status,
 								message: reason,
 								trace: trace,
 								description: description,
-								expected: e.hasOwnProperty("expected") ? this.getStringFromAbiguous(e.expected) : undefined,
-								actual: e.hasOwnProperty("actual") ? this.getStringFromAbiguous(e.actual) : undefined
+								expected: expected,
+								actual: actual
 							});
 							return tr;
+						}
+					},
+					getReason: {
+						value: function getReason___n4(error, description) {
+							if (error.message) {
+								return String(error);
+							}
+							let reason = error.toString();
+							if (reason.charAt(0) === "[") {
+								reason = error.name ? `${error.name} : ${description}` : description;
+							}
+							return reason;
+						}
+					},
+					getStringifiedOwnProperty: {
+						value: function getStringifiedOwnProperty___n4(object, name) {
+							if (!object.hasOwnProperty(name)) {
+								return undefined;
+							}
+							const prop = object[name];
+							const res = this.getStringFromAbiguous(prop);
+							return res;
+						}
+					},
+					getError: {
+						value: function getError___n4(ex, description) {
+							if (!ex) {
+								return new Error("Unknown error: " + description);
+							}
+							if (typeof ex === "string") {
+								return new Error(ex);
+							}
+							if (ex instanceof AssertionError) {
+								return ex;
+							}
+							return ex;
+						}
+					},
+					getStatus: {
+						value: function getStatus___n4(ex) {
+							if (ex instanceof AssertionError) {
+								return 'FAILED';
+							}
+							if (ex instanceof PreconditionNotMet) {
+								return 'SKIPPED_PRECONDITION';
+							}
+							if (ex instanceof N4ApiNotImplementedError) {
+								return 'SKIPPED_NOT_IMPLEMENTED';
+							}
+							return 'ERROR';
+						}
+					},
+					getTrace: {
+						value: function getTrace___n4(e) {
+							let trace;
+							if (e['stack']) {
+								const stack = e['stack'];
+								if (typeof stack === "string") {
+									trace = (stack).split("\n");
+								} else if (Array.isArray(stack)) {
+									trace = stack;
+								} else {
+									trace = [
+										(stack).toString()
+									];
+								}
+								trace = trace.map((line)=>line.trim());
+							}
+							return trace;
 						}
 					}
 				}, function(instanceProto, staticProto) {
@@ -366,9 +417,45 @@
 								annotations: []
 							}),
 							new N4Method({
+								name: 'getReason',
+								isStatic: true,
+								jsFunction: staticProto['getReason'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'getStringifiedOwnProperty',
+								isStatic: true,
+								jsFunction: staticProto['getStringifiedOwnProperty'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'getError',
+								isStatic: true,
+								jsFunction: staticProto['getError'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'getStatus',
+								isStatic: true,
+								jsFunction: staticProto['getStatus'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'getTrace',
+								isStatic: true,
+								jsFunction: staticProto['getTrace'],
+								annotations: []
+							}),
+							new N4Method({
 								name: 'handleFixme',
 								isStatic: false,
 								jsFunction: instanceProto['handleFixme'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'callAllGrouped',
+								isStatic: false,
+								jsFunction: instanceProto['callAllGrouped'],
 								annotations: []
 							}),
 							new N4Method({
@@ -393,6 +480,12 @@
 								name: 'runGroup',
 								isStatic: false,
 								jsFunction: instanceProto['runGroup'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'runBeforesTestsAfters',
+								isStatic: false,
+								jsFunction: instanceProto['runBeforesTestsAfters'],
 								annotations: []
 							}),
 							new N4Method({

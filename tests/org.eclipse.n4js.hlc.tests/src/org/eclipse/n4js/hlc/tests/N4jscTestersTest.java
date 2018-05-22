@@ -95,8 +95,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
-				"--test", fileFooTest,
-				"--verbose"
+				"--test", fileFooTest
 		};
 
 		new N4jscBase().doMain(args);
@@ -124,8 +123,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
-				"--test", fileFooTest,
-				"--verbose"
+				"--test", fileFooTest
 		};
 
 		new N4jscBase().doMain(args);
@@ -152,8 +150,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
-				"--test", fileFooTest,
-				"--verbose"
+				"--test", fileFooTest
 		};
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
@@ -180,8 +177,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
 				"--test", pathToDemoTest,
-				"--testReportRoot", testReportRoot,
-				"--verbose"
+				"--testReportRoot", testReportRoot
 		};
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
@@ -224,8 +220,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
-				"--test", pathToDemoTest,
-				"--verbose"
+				"--test", pathToDemoTest
 		};
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
@@ -244,8 +239,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		tempDir.deleteOnExit();
 		final String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
-				"--testCatalogFile", tempDir + "/test-catalog.json",
-				"--verbose"
+				"--testCatalogFile", tempDir + "/test-catalog.json"
 		};
 
 		new N4jscBase().doMain(args);
@@ -265,8 +259,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String proot = workspace.getAbsolutePath().toString();
 		final String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
-				"--testCatalogFile", "test-catalog.json",
-				"--verbose"
+				"--testCatalogFile", "test-catalog.json"
 		};
 
 		new N4jscBase().doMain(args);
@@ -291,8 +284,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 
 		final String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
-				"--testCatalogFile", "test-catalog.json",
-				"--verbose"
+				"--testCatalogFile", "test-catalog.json"
 		};
 
 		new N4jscBase().doMain(args);
@@ -311,8 +303,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		String proot = workspace.getAbsolutePath().toString();
 		final String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
-				"--testCatalogFile", "some/fake/folder/test-catalog.json",
-				"--verbose"
+				"--testCatalogFile", "some/fake/folder/test-catalog.json"
 		};
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
@@ -328,8 +319,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		tempDir.deleteOnExit();
 		final String[] args = { "--projectlocations", proot,
 				"--buildType", "allprojects",
-				"--testCatalogFile", tempDir.toString(),
-				"--verbose"
+				"--testCatalogFile", tempDir.toString()
 		};
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);

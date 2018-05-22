@@ -492,7 +492,7 @@ public class LibraryManager {
 				return operation.get();
 			} catch (final OperationCanceledException e) {
 				LOGGER.info("User cancelled operation.");
-				return statusHelper.createInfo("User cancelled operation.");
+				return statusHelper.createCancel("User cancelled operation.");
 			} finally {
 				Job.getJobManager().endRule(rule);
 			}

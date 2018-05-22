@@ -18,4 +18,4 @@
     public static trace(... args: any): void;
 }
 
-/* -*- mode: typescript;-*- */
+

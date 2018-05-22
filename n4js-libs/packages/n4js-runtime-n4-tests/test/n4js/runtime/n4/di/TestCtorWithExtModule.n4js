@@ -8,14 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {DIAsserts} from "runtime/n4/di/DIAsserts"
-import {N4Injector} from "n4js/lang/N4Injector"
-import { Sub , Subject } from "runtime/n4/di/ExtModuleForTestCtorWithModules"
 
 //=============================================================================
 // Set Up
 //=============================================================================
 
+import {N4Injector} from "n4js/lang/N4Injector";
+import {DIAsserts} from "runtime/n4/di/DIAsserts";
+import {Sub, Subject} from "runtime/n4/di/ExtModuleForTestCtorWithModules";
 class Node extends Sub {
     s: Subject;
     @Inject

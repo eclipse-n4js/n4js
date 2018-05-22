@@ -8,11 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition"
-import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet"
-import { PlatformId } from "n4/RuntimeInfo"
 
+import {PlatformId} from "n4/RuntimeInfo";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
+import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet";
 export public class PreconditionTest {
 
     constructor() {

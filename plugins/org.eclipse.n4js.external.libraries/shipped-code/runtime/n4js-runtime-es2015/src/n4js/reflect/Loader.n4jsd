@@ -52,4 +52,3 @@ export external public interface Loader {
     @Internal public get _commonJS(): boolean;
 }
 
-/* -*- mode: typescript;-*- */
