@@ -10,9 +10,10 @@
  */
 package org.eclipse.n4js.utils;
 
-import static org.eclipse.n4js.N4JSPluginId.N4JS_PLUGIN_ID;
+import static org.eclipse.core.runtime.IStatus.CANCEL;
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.IStatus.INFO;
+import static org.eclipse.n4js.N4JSPluginId.N4JS_PLUGIN_ID;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -45,6 +46,17 @@ public class StatusHelper {
 	 */
 	public IStatus cancel() {
 		return Status.CANCEL_STATUS;
+	}
+
+	/**
+	 * Creates a new {@link IStatus#CANCEL status} status with the given message.
+	 *
+	 * @param message
+	 *            the message of the new status.
+	 * @return a new info status with the given message.
+	 */
+	public IStatus createCancel(final String message) {
+		return new Status(CANCEL, N4JS_PLUGIN_ID, message);
 	}
 
 	/**

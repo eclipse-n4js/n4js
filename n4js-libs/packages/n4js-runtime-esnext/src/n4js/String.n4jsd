@@ -14,4 +14,3 @@
     public substr(begin: number, length: number=): string;
 }
 
-/* -*- mode: typescript;-*- */

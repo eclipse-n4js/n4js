@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.core.resources.IMarker
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.OperationCanceledException
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.dialogs.ErrorDialog
@@ -778,6 +779,10 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
 					try {
 						libraryManager.synchronizeNpms(monitor);
+					} catch (InterruptedException e) {
+						// canceled by user
+					} catch (OperationCanceledException e) {
+						// canceled by user
 					} catch (IllegalBinaryStateException e) {
 					} catch (CoreException e) {
 					}

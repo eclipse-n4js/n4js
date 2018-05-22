@@ -8,14 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import { getInjectedClassMeta , getBinderMeta , getDIComponentMeta } from "n4js/lang/N4Injector"
-import { A , B , C , D , E , F, G, H, I, J, K, L, M, N, O, P } from "runtime/n4/di/compiledMetaInfo/ScriptDeps"
 
 //=============================================================================
 // Test Data
 //=============================================================================
 
+import {getInjectedClassMeta, getBinderMeta, getDIComponentMeta} from "n4js/lang/N4Injector";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P} from "runtime/n4/di/compiledMetaInfo/ScriptDeps";
 class Injected extends P {
     @Inject fieldA: A;
     @Inject fieldPB: N4Provider<B>;

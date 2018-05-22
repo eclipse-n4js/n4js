@@ -9,5 +9,5 @@
  *   NumberFour AG - Initial API and implementation
  */
 //Single import
-import {a} from "es-module-tests/ex01/A"
+import {a} from "es-module-tests/ex01/A";
 console.log(a);
