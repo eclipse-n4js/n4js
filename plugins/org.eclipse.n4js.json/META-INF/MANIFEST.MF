@@ -5,19 +5,12 @@ Bundle-Vendor: org.eclipse.n4js
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.json; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext,
- org.eclipse.xtext.xbase,
- org.eclipse.equinox.common;bundle-version="3.5.0",
- org.eclipse.emf.ecore,
- org.eclipse.xtext.xbase.lib;bundle-version="2.13.0",
- org.antlr.runtime,
- org.eclipse.xtext.util,
- org.eclipse.emf.common,
- org.eclipse.xtend.lib;bundle-version="2.13.0",
+Require-Bundle: org.eclipse.xtext.xbase,
  org.eclipse.n4js.json.model,
  org.eclipse.osgi,
  org.eclipse.n4js.common.unicode,
- org.eclipse.n4js.utils
+ org.eclipse.n4js.utils,
+ org.eclipse.xtext.xtext.generator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.n4js.json
 Export-Package: org.eclipse.n4js.json.validation,
@@ -26,4 +19,3 @@ Export-Package: org.eclipse.n4js.json.validation,
  org.eclipse.n4js.json.parser.antlr.internal,
  org.eclipse.n4js.json,
  org.eclipse.n4js.json.serializer
-Import-Package: org.apache.log4j
