@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Source Fragment</b></em>'.
+ * A representation of the model object '<em><b>Source Container Description</b></em>'.
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
@@ -28,43 +28,43 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4mf.SourceFragment#getSourceFragmentType <em>Source Fragment Type</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.SourceFragment#getPathsRaw <em>Paths Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getSourceContainerType <em>Source Container Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getPathsRaw <em>Paths Raw</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceFragment()
+ * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceContainerDescription()
  * @model
  * @generated
  */
-public interface SourceFragment extends EObject {
+public interface SourceContainerDescription extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Source Fragment Type</b></em>' attribute.
-	 * The literals are from the enumeration {@link org.eclipse.n4js.n4mf.SourceFragmentType}.
+	 * Returns the value of the '<em><b>Source Container Type</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.n4js.n4mf.SourceContainerType}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Source Fragment Type</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Source Container Type</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source Fragment Type</em>' attribute.
-	 * @see org.eclipse.n4js.n4mf.SourceFragmentType
-	 * @see #setSourceFragmentType(SourceFragmentType)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceFragment_SourceFragmentType()
+	 * @return the value of the '<em>Source Container Type</em>' attribute.
+	 * @see org.eclipse.n4js.n4mf.SourceContainerType
+	 * @see #setSourceContainerType(SourceContainerType)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceContainerDescription_SourceContainerType()
 	 * @model unique="false"
 	 * @generated
 	 */
-	SourceFragmentType getSourceFragmentType();
+	SourceContainerType getSourceContainerType();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.SourceFragment#getSourceFragmentType <em>Source Fragment Type</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.SourceContainerDescription#getSourceContainerType <em>Source Container Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Source Fragment Type</em>' attribute.
-	 * @see org.eclipse.n4js.n4mf.SourceFragmentType
-	 * @see #getSourceFragmentType()
+	 * @param value the new value of the '<em>Source Container Type</em>' attribute.
+	 * @see org.eclipse.n4js.n4mf.SourceContainerType
+	 * @see #getSourceContainerType()
 	 * @generated
 	 */
-	void setSourceFragmentType(SourceFragmentType value);
+	void setSourceContainerType(SourceContainerType value);
 
 	/**
 	 * Returns the value of the '<em><b>Paths Raw</b></em>' attribute list.
@@ -76,7 +76,7 @@ public interface SourceFragment extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Paths Raw</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceFragment_PathsRaw()
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getSourceContainerDescription_PathsRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
@@ -93,10 +93,10 @@ public interface SourceFragment extends EObject {
 	 * interface.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" otherUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((null == other))\n{\n\treturn (-1);\n}\n&lt;%org.eclipse.n4js.n4mf.SourceFragmentType%&gt; _sourceFragmentType = this.getSourceFragmentType();\nboolean _tripleEquals = (null == _sourceFragmentType);\nif (_tripleEquals)\n{\n\tint _xifexpression = (int) 0;\n\t&lt;%org.eclipse.n4js.n4mf.SourceFragmentType%&gt; _sourceFragmentType_1 = other.getSourceFragmentType();\n\tboolean _tripleEquals_1 = (null == _sourceFragmentType_1);\n\tif (_tripleEquals_1)\n\t{\n\t\t_xifexpression = 0;\n\t}\n\telse\n\t{\n\t\t_xifexpression = 1;\n\t}\n\treturn _xifexpression;\n}\nreturn this.getSourceFragmentType().compareTo(other.getSourceFragmentType());'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if ((null == other))\n{\n\treturn (-1);\n}\n&lt;%org.eclipse.n4js.n4mf.SourceContainerType%&gt; _sourceContainerType = this.getSourceContainerType();\nboolean _tripleEquals = (null == _sourceContainerType);\nif (_tripleEquals)\n{\n\tint _xifexpression = (int) 0;\n\t&lt;%org.eclipse.n4js.n4mf.SourceContainerType%&gt; _sourceContainerType_1 = other.getSourceContainerType();\n\tboolean _tripleEquals_1 = (null == _sourceContainerType_1);\n\tif (_tripleEquals_1)\n\t{\n\t\t_xifexpression = 0;\n\t}\n\telse\n\t{\n\t\t_xifexpression = 1;\n\t}\n\treturn _xifexpression;\n}\nreturn this.getSourceContainerType().compareTo(other.getSourceContainerType());'"
 	 * @generated
 	 */
-	int compareByFragmentType(SourceFragment other);
+	int compareByFragmentType(SourceContainerDescription other);
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -107,4 +107,4 @@ public interface SourceFragment extends EObject {
 	 */
 	EList<String> getPaths();
 
-} // SourceFragment
+} // SourceContainerDescription

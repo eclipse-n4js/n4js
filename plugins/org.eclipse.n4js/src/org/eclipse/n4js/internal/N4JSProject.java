@@ -27,7 +27,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
-import org.eclipse.n4js.n4mf.ExecModule;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ModuleLoader;
@@ -230,7 +229,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return new ArrayList<>();
 		}
-		return pd.getAllInitModules();
+		return pd.getInitModules();
 	}
 
 	@Override
@@ -242,11 +241,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return absent();
 		}
-		final ExecModule execModule = pd.getExecModule();
-		if (null == execModule) {
-			return absent();
-		}
-		return Optional.fromNullable(execModule.getExecModule());
+		return Optional.fromNullable(pd.getExecModule());
 	}
 
 	@Override

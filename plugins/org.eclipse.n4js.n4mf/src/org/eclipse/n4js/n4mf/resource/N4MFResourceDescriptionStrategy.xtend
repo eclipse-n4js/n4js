@@ -12,11 +12,12 @@ package org.eclipse.n4js.n4mf.resource
 
 import com.google.common.collect.ImmutableMap
 import com.google.inject.Singleton
+import java.util.Collections
+import java.util.Map
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
-import java.util.Collections
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionStrategy
@@ -110,11 +111,11 @@ class N4MFResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy
 		return true;
 	}
 
-	private dispatch def getUserData(EObject object) {
+	private dispatch def Map<String, String> getUserData(EObject object) {
 		Collections.<String, String>emptyMap;
 	}
 
-	private dispatch def getUserData(ProjectDescription it) {
+	private dispatch def Map<String, String> getUserData(ProjectDescription it) {
 		val builder = ImmutableMap.builder;
 		builder.put(PROJECT_TYPE_KEY, '''«projectType»''');
 		builder.put(PROJECT_ID_KEY, projectId.nullToEmpty);
@@ -129,41 +130,41 @@ class N4MFResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy
 			builder.put(PROJECT_VERSION_KEY, versionWithQualifierStr);
 		}
 
-		val testedProjects = allTestedProjects;
+		val testedProjects = it.testedProjects;
 		if (!testedProjects.nullOrEmpty) {
 			builder.put(TESTED_PROJECT_IDS_KEY, testedProjects.asString);
 		}
 
-		val implementedProjects = allImplementedProjects;
+		val implementedProjects = it.implementedProjects;
 		if (!implementedProjects.nullOrEmpty) {
 			builder.put(IMPLEMENTED_PROJECT_IDS_KEY, implementedProjects.asString);
 		}
 
-		val projectDependencies = allProjectDependencies;
+		val projectDependencies = it.projectDependencies;
 		if (!projectDependencies.nullOrEmpty) {
 			builder.put(PROJECT_DEPENDENCY_IDS_KEY, projectDependencies.asString);
 		}
 
-		val providedRuntimeLibraries = allProvidedRuntimeLibraries;
+		val providedRuntimeLibraries = providedRuntimeLibraries;
 		if (!providedRuntimeLibraries.nullOrEmpty) {
 			builder.put(PROVIDED_RUNTIME_LIBRARY_IDS_KEY, providedRuntimeLibraries.asString);
 		}
 
-		val requiredRuntimeLibraries = allRequiredRuntimeLibraries;
+		val requiredRuntimeLibraries = requiredRuntimeLibraries;
 		if (!requiredRuntimeLibraries.nullOrEmpty) {
 			builder.put(REQUIRED_RUNTIME_LIBRARY_IDS_KEY, requiredRuntimeLibraries.asString);
 		}
 
-		val extRuntimeEnvironment = extendedRuntimeEnvironment?.extendedRuntimeEnvironment;
+		val extRuntimeEnvironment = it.extendedRuntimeEnvironment;
 		if (extRuntimeEnvironment !== null) {
-			builder.put(EXTENDED_RUNTIME_ENVIRONMENT_ID_KEY, Collections.singleton(extRuntimeEnvironment).asString);
+			builder.put(EXTENDED_RUNTIME_ENVIRONMENT_ID_KEY, Collections.singleton(it.extendedRuntimeEnvironment).asString);
 		}
 
 		return builder.build;
 	}
 
 	private def asString(Iterable<? extends ProjectReference> it) {
-		map[project].filterNull.map[projectId].filterNull.join(SEPARATOR)
+		it.filterNull.map[projectId].filterNull.join(SEPARATOR)
 	}
 
 	/**
