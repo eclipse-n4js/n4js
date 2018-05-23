@@ -36,7 +36,8 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.core.jobs,
  org.eclipse.core.resources,
  org.eclipse.n4js.smith,
- org.eclipse.n4js.flowgraphs
+ org.eclipse.n4js.flowgraphs,
+ org.eclipse.n4js.json.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.binaries,
