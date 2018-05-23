@@ -1,0 +1,971 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file seem similar and redundant but are necessary
+ * since all test methods rely on different algorithms. To verify these
+ * algorithms it is important that all test methods are tested with
+ * all supported language features.
+ */
+
+
+
+function ForStatement1() {
+	// ForStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement1 XPECT allEdges ---
+		"start" -LoopEnter-> ;, ; -LoopEnter|LoopInfinite-> ;
+	--- */
+	/* ForStatement1 XPECT allBranches ---
+		B0: "start" -> ;[B1|b2], B1: [B0] -> ;[b3], b2: [B0] -> [b4], b3: [B1] -> [b4],
+		b4: [b2|b3]"end"
+	--- */
+	/* ForStatement1 backward XPECT allBranches direction 'Backward' ---
+		B1: [b0] -> ;[B2|B3], B2: [B1] -> [B4], B3: [B1] -> ; -> [B4],
+		B4: [B2|B3]"start", b0: "end"[B1]
+	--- */
+	// ForStatement1 XPECT allPaths --> "start" -> ; -> ;
+	// ForStatement1 backward XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement1 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement1 XPECT path from '"start"' to ' ;' -->
+	// ForStatement1 XPECT path from ' ;' to ' ;' -->
+	// ForStatement1 XPECT commonPreds of ' ;' and '"end"' -->
+	// ForStatement1 XPECT commonPreds of ' ;' and '"start"' --> "start"
+	// ForStatement1 XPECT succs at '"start"' --> ;
+	// ForStatement1 XPECT succs at ' ;' --> ;
+	// ForStatement1 XPECT preds at 'for' --> "start"
+	// ForStatement1 XPECT succs at 'for' --> "end"
+	"start";
+	for (;;) ;
+	// ForStatement1 XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+function ForStatement2() {
+	// ForStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement2 XPECT allEdges ---
+		"start" -LoopEnter-> 5, 5 -LoopEnter|LoopInfinite-> 5
+	--- */
+	/* ForStatement2 XPECT allBranches ---
+		B0: "start" -> 5[B1|b2], B1: [B0] -> 5[b3], b2: [B0] -> [b4], b3: [B1] -> [b4],
+		b4: [b2|b3]"end"
+	--- */
+	/* ForStatement2 backward XPECT allBranches direction 'Backward' ---
+		B1: [b0] -> 5[B2|B3], B2: [B1] -> [B4], B3: [B1] -> 5 -> [B4],
+		B4: [B2|B3]"start", b0: "end"[B1]
+	--- */
+	// ForStatement2 XPECT allPaths --> "start" -> 5 -> 5
+	// ForStatement2 backward XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement2 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement2 XPECT path from '"start"' to '5' -->
+	// ForStatement2 XPECT path from '5' to '5' -->
+	// ForStatement2 XPECT commonPreds of '5' and '"end"' -->
+	// ForStatement2 XPECT commonPreds of '5' and '"start"' --> "start"
+	// ForStatement2 XPECT succs at '"start"' --> 5
+	// ForStatement2 XPECT succs at '5' --> 5
+	// ForStatement2 XPECT preds at 'for' --> "start"
+	// ForStatement2 XPECT succs at 'for' --> "end"
+	"start";
+	for (;;) 5;
+	// ForStatement2 XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+function ForStatement3() {
+	// ForStatement3 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement3 XPECT allEdges ---
+		"start" --> 1, 1 --> 2, 2 -LoopEnter-> 5, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, 5 --> 3
+	--- */
+	/* ForStatement3 XPECT allBranches ---
+		B0: "start" -> 1 -> 2[B1|B2],
+		B1: [B0] -> 5 -> 3 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 5 -> 3 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForStatement3 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> 5 -> 2 -> [B5], B5: [B1|B3|B4]1 -> "start"
+	--- */
+	/* ForStatement3 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 5 -> 3 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatement3 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 1 -> "start"
+	--- */
+	// ForStatement3 XPECT path from '"start"' to '"end"' -->
+	// ForStatement3 XPECT path from '3' to '2' -->
+	// ForStatement3 XPECT commonPreds of '5' and '"end"' --> 2, 5
+	// ForStatement3 XPECT commonPreds of '2' and '3' --> 2, 3
+	// ForStatement3 XPECT succs at '"start"' --> 1
+	// ForStatement3 XPECT succs at '1' --> 2
+	// ForStatement3 XPECT succs at '2' --> 5, "end"
+	// ForStatement3 XPECT succs type 'LoopEnter' at '2' --> 5
+	// ForStatement3 XPECT succs at '5' --> 3
+	// ForStatement3 XPECT succs at '3' --> 2
+	// ForStatement3 XPECT preds at 'for' --> "start"
+	// ForStatement3 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;2;3) 5;
+	"end";
+}
+
+function ForStatement4() {
+	// ForStatement4 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement4 XPECT allEdges ---
+		"start" --> 1, 1 -LoopEnter-> 5, 3 -LoopEnter|LoopInfinite-> 5, 5 --> 3
+	--- */
+	/* ForStatement4 XPECT allBranches ---
+		B0: "start" -> 1 -> 5 -> 3[B1|b2], B1: [B0] -> 5 -> 3[b3], b2: [B0] -> [b4],
+		b3: [B1] -> [b4], b4: [b2|b3]"end"
+	--- */
+	/* ForStatement4 backward XPECT allBranches direction 'Backward' ---
+		B1: [b0] -> 3 -> 5[B2|B3], B2: [B1] -> [B4], B3: [B1] -> 3 -> 5 -> [B4],
+		B4: [B2|B3]1 -> "start", b0: "end"[B1]
+	--- */
+	// ForStatement4 XPECT allPaths --> "start" -> 1 -> 5 -> 3 -> 5 -> 3
+	// ForStatement4 backward XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement4 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement4 XPECT path from '3' to '5' -->
+	// ForStatement4 XPECT commonPreds of '1' and '3' --> 1
+	// ForStatement4 XPECT commonPreds of '5' and '3' --> 3, 5
+	// ForStatement4 XPECT commonPreds of '5' and '"end"' -->
+	// ForStatement4 XPECT succs at '"start"' --> 1
+	// ForStatement4 XPECT succs at '1' --> 5
+	// ForStatement4 XPECT succs at '5' --> 3
+	// ForStatement4 XPECT succs type 'LoopInfinite' at '3' --> 5
+	// ForStatement4 XPECT preds at 'for' --> "start"
+	// ForStatement4 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;;3) 5;
+	// ForStatement4 XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+function ForStatement5() {
+	// ForStatement5 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement5 XPECT allEdges ---
+		"start" --> 1, 1 --> 2, 2 -LoopEnter-> 5, 2 -LoopExit-> "end",
+		5 -LoopRepeat-> 2
+	--- */
+	/* ForStatement5 XPECT allBranches ---
+		B0: "start" -> 1 -> 2[B1|B2],
+		B1: [B0] -> 5 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 5 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForStatement5 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 5 -> 2 -> [B5], B5: [B1|B3|B4]1 -> "start"
+	--- */
+	/* ForStatement5 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 5 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 5 -> 2 -> 5 -> 2 -> "end"
+	--- */
+	/* ForStatement5 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 2 -> 5 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> 1 -> "start"
+	--- */
+	// ForStatement5 XPECT path from '"start"' to '"end"' -->
+	// ForStatement5 XPECT path from '5' to '"end"' -->
+	// ForStatement5 XPECT commonPreds of '2' and '5' --> 2, 5
+	// ForStatement5 XPECT commonPreds of '"end"' and '5' --> 2, 5
+	// ForStatement5 XPECT succs at '"start"' --> 1
+	// ForStatement5 XPECT succs at '1' --> 2
+	// ForStatement5 XPECT succs at '2' --> 5, "end"
+	// ForStatement5 XPECT succs type 'LoopEnter' at '2' --> 5
+	// ForStatement5 XPECT succs at '5' --> 2
+	// ForStatement5 XPECT preds at 'for' --> "start"
+	// ForStatement5 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;2;) 5;
+	"end";
+}
+
+function ForStatement6() {
+	// ForStatement6 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement6 XPECT allEdges ---
+		"start" --> 2, 2 -LoopEnter-> 5, 2 -LoopExit-> "end", 3 -LoopRepeat-> 2,
+		5 --> 3
+	--- */
+	/* ForStatement6 XPECT allBranches ---
+		B0: "start" -> 2[B1|B2],
+		B1: [B0] -> 5 -> 3 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 5 -> 3 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForStatement6 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> 5 -> 2 -> [B5], B5: [B1|B3|B4]"start"
+	--- */
+	/* ForStatement6 XPECT allPaths ---
+		"start" -> 2 -> "end",
+		"start" -> 2 -> 5 -> 3 -> 2 -> "end",
+		"start" -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatement6 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> "start"
+	--- */
+	// ForStatement6 XPECT path from '"start"' to '"end"' -->
+	// ForStatement6 XPECT path from '2' to '3' -->
+	// ForStatement6 XPECT commonPreds of '2' and '5' --> 2, 5
+	// ForStatement6 XPECT commonPreds of '"end"' and '5' --> 2, 5
+	// ForStatement6 XPECT succs at '"start"' --> 2
+	// ForStatement6 XPECT succs at '2' --> 5, "end"
+	// ForStatement6 XPECT succs type 'LoopEnter' at '2' --> 5
+	// ForStatement6 XPECT succs at '5' --> 3
+	// ForStatement6 XPECT succs at '3' --> 2
+	// ForStatement6 XPECT preds at 'for' --> "start"
+	// ForStatement6 XPECT succs at 'for' --> "end"
+	"start";
+	for (;2;3) 5;
+	"end";
+}
+
+function ForStatement7() {
+	// ForStatement7 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement7 XPECT allEdges ---
+		"start" -LoopEnter-> 5, 3 -LoopEnter|LoopInfinite-> 5, 5 --> 3
+	--- */
+	/* ForStatement7 XPECT allBranches ---
+		B0: "start" -> 5 -> 3[B1|b2], B1: [B0] -> 5 -> 3[b3], b2: [B0] -> [b4],
+		b3: [B1] -> [b4], b4: [b2|b3]"end"
+	--- */
+	/* ForStatement7 backward XPECT allBranches direction 'Backward' ---
+		B1: [b0] -> 3 -> 5[B2|B3], B2: [B1] -> [B4], B3: [B1] -> 3 -> 5 -> [B4],
+		B4: [B2|B3]"start", b0: "end"[B1]
+	--- */
+	// ForStatement7 XPECT allPaths --> "start" -> 5 -> 3 -> 5 -> 3
+	// ForStatement7 backward XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement7 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement7 XPECT path from '5' notTo '"end"' -->
+	// ForStatement7 XPECT commonPreds of '5' and '3' --> 3, 5
+	// ForStatement7 XPECT succs at '"start"' --> 5
+	// ForStatement7 XPECT succs at '5' --> 3
+	// ForStatement7 XPECT succs type 'LoopInfinite' at '3' --> 5
+	// ForStatement7 XPECT preds at 'for' --> "start"
+	// ForStatement7 XPECT succs at 'for' --> "end"
+	"start";
+	for (;;3) 5;
+	// ForStatement7 XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+function ForStatement8() {
+	// ForStatement8 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement8 XPECT allEdges ---
+		"start" --> 2, 2 -LoopEnter-> 5, 2 -LoopExit-> "end", 5 -LoopRepeat-> 2
+	--- */
+	/* ForStatement8 XPECT allBranches ---
+		B0: "start" -> 2[B1|B2],
+		B1: [B0] -> 5 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 5 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForStatement8 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 5 -> 2 -> [B5], B5: [B1|B3|B4]"start"
+	--- */
+	/* ForStatement8 XPECT allPaths ---
+		"start" -> 2 -> "end",
+		"start" -> 2 -> 5 -> 2 -> "end",
+		"start" -> 2 -> 5 -> 2 -> 5 -> 2 -> "end"
+	--- */
+	/* ForStatement8 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> "start",
+		"end" -> 2 -> 5 -> 2 -> "start",
+		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> "start"
+	--- */
+	// ForStatement8 XPECT path from '"start"' to '"end"' -->
+	// ForStatement8 XPECT path from '5' to '"end"' -->
+	// ForStatement8 XPECT commonPreds of '2' and '5' --> 2, 5
+	// ForStatement8 XPECT succs at '"start"' --> 2
+	// ForStatement8 XPECT succs at '2' --> 5, "end"
+	// ForStatement8 XPECT succs type 'LoopEnter' at '2' --> 5
+	// ForStatement8 XPECT succs at '5' --> 2
+	// ForStatement8 XPECT preds at 'for' --> "start"
+	// ForStatement8 XPECT succs at 'for' --> "end"
+	"start";
+	for (;2;) 5;
+	"end";
+}
+
+function ForStatement9() {
+	// ForStatement9 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatement9 XPECT allEdges ---
+		"start" --> 1, 1 -LoopEnter-> 5, 5 -LoopEnter|LoopInfinite-> 5
+	--- */
+	/* ForStatement9 XPECT allBranches ---
+		B0: "start" -> 1 -> 5[B1|b2], B1: [B0] -> 5[b3], b2: [B0] -> [b4],
+		b3: [B1] -> [b4], b4: [b2|b3]"end"
+	--- */
+	/* ForStatement9 backward XPECT allBranches direction 'Backward' ---
+		B1: [b0] -> 5[B2|B3], B2: [B1] -> [B4], B3: [B1] -> 5 -> [B4],
+		B4: [B2|B3]1 -> "start", b0: "end"[B1]
+	--- */
+	// ForStatement9 XPECT allPaths --> "start" -> 1 -> 5 -> 5
+	// ForStatement9 backward XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement9 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement9 XPECT path from '5' notTo '"end"' -->
+	// ForStatement9 XPECT commonPreds of '1' and '5' --> 1
+	// ForStatement9 XPECT commonPreds of '1' and '1' --> 1
+	// ForStatement9 XPECT commonPreds of '5' and '5' --> 5
+	// ForStatement9 XPECT succs at '"start"' --> 1
+	// ForStatement9 XPECT succs at '1' --> 5
+	// ForStatement9 XPECT succs at '5' --> 5
+	// ForStatement9 XPECT preds at 'for' --> "start"
+	// ForStatement9 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;;) 5;
+	// ForStatement9 XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+function ForStatementDestructuring(arr : Array<number>) {
+	// ForStatementDestructuring XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementDestructuring XPECT allEdges ---
+		"loop" --> 3, "start" --> arr, 2 -LoopEnter-> "loop", 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, [a4\,b4\,c4] = arr --> 2, a4 --> b4, arr --> a4, b4 --> c4,
+		c4 --> [a4\,b4\,c4] = arr
+	--- */
+	/* ForStatementDestructuring XPECT allBranches ---
+		B0: "start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2[B1|B2],
+		B1: [B0] -> "loop" -> 3 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> "loop" -> 3 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForStatementDestructuring backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> "loop" -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> "loop" -> 2 -> [B5],
+		B5: [B1|B3|B4][a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start"
+	--- */
+	/* ForStatementDestructuring XPECT allPaths ---
+		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "end",
+		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "loop" -> 3 -> 2 -> "end",
+		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "loop" -> 3 -> 2 -> "loop" -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementDestructuring backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 3 -> "loop" -> 2 -> 3 -> "loop" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start",
+		"end" -> 2 -> 3 -> "loop" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start",
+		"end" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start"
+	--- */
+	// ForStatementDestructuring XPECT path from '"start"' to '"end"' -->
+	// ForStatementDestructuring XPECT path from 'continue;' to 'continue;' -->
+	// ForStatementDestructuring XPECT path from 'continue;' notTo '"end"' -->
+	// ForStatementDestructuring XPECT commonPreds of 'continue;' and '"end"' -->
+	// ForStatementDestructuring XPECT succs at '"start"' --> arr
+	// ForStatementDestructuring XPECT succs at '"loop"' --> 3
+	// ForStatementDestructuring XPECT preds at 'b1' --> a1
+	// ForStatementDestructuring XPECT succs at 'for' --> "end"
+	"start";
+	for(var [a4,b4,c4] = arr; 2; 3) {
+		"loop";
+	}
+	"end";
+}
+
+function ForOfStatement1() {
+	// ForOfStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForOfStatement1 XPECT allEdges ---
+		"start" --> i, 1 --> 2, 2 --> [1\,2], 3 -LoopEnter|LoopRepeat-> 3,
+		3 -LoopExit|LoopRepeat-> "end", [1\,2] -LoopEnter-> 3, [1\,2] -LoopExit-> "end", i --> 1
+	--- */
+	/* ForOfStatement1 XPECT allBranches ---
+		B0: "start" -> i -> 1 -> 2 -> [1\,2][B1|B2],
+		B1: [B0] -> 3[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 3 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForOfStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3[B3|B4], B3: [B2] -> [B5],
+		B4: [B2] -> 3 -> [B5], B5: [B1|B3|B4][1\,2] -> 2 -> 1 -> i -> "start"
+	--- */
+	/* ForOfStatement1 XPECT allPaths ---
+		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> 3 -> "end"
+	--- */
+	/* ForOfStatement1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 3 -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
+		"end" -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
+		"end" -> [1\,2] -> 2 -> 1 -> i -> "start"
+	--- */
+	// ForOfStatement1 XPECT path from '"start"' to '"end"' -->
+	// ForOfStatement1 XPECT path from '3' to '3' -->
+	// ForOfStatement1 XPECT path from '3' notTo '[1,2]' -->
+	// ForOfStatement1 XPECT commonPreds of '3' and '"end"' --> 3, [1\,2]
+	// ForOfStatement1 XPECT commonPreds of '3' and '[1,2]' --> [1\,2]
+	// ForOfStatement1 XPECT succs at '"start"' --> i
+	// ForOfStatement1 XPECT succs at 'i' --> 1
+	// ForOfStatement1 XPECT succs at '1' --> 2
+	// ForOfStatement1 XPECT succs at '2' --> [1\,2]
+	// ForOfStatement1 XPECT succs type 'LoopEnter' at '[1,2]' --> 3
+	// ForOfStatement1 XPECT succs at '[1,2]' --> 3, "end"
+	// ForOfStatement1 XPECT succs at '3' --> 3, "end"
+	// ForOfStatement1 XPECT preds at 'for' --> "start"
+	// ForOfStatement1 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i of [1,2]) 3;
+	"end";
+}
+
+function ForOfStatement2(x) {
+	// ForOfStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForOfStatement2 XPECT allEdges ---
+		"start" --> x, 1 --> 2, 2 --> [1\,2], 5 -LoopEnter|LoopRepeat-> 5,
+		5 -LoopExit|LoopRepeat-> "end", [1\,2] -LoopEnter-> 5, [1\,2] -LoopExit-> "end", x --> 1
+	--- */
+	/* ForOfStatement2 XPECT allBranches ---
+		B0: "start" -> x -> 1 -> 2 -> [1\,2][B1|B2],
+		B1: [B0] -> 5[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 5 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForOfStatement2 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 5[B3|B4], B3: [B2] -> [B5],
+		B4: [B2] -> 5 -> [B5], B5: [B1|B3|B4][1\,2] -> 2 -> 1 -> x -> "start"
+	--- */
+	/* ForOfStatement2 XPECT allPaths ---
+		"start" -> x -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> x -> 1 -> 2 -> [1\,2] -> 5 -> "end",
+		"start" -> x -> 1 -> 2 -> [1\,2] -> 5 -> 5 -> "end"
+	--- */
+	/* ForOfStatement2 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 5 -> 5 -> [1\,2] -> 2 -> 1 -> x -> "start",
+		"end" -> 5 -> [1\,2] -> 2 -> 1 -> x -> "start",
+		"end" -> [1\,2] -> 2 -> 1 -> x -> "start"
+	--- */
+	// ForOfStatement2 XPECT path from '"start"' to '"end"' -->
+	// ForOfStatement2 XPECT path from 'x' to '5' -->
+	// ForOfStatement2 XPECT commonPreds of 'x' and '5' --> x
+	// ForOfStatement2 XPECT succs at '"start"' --> x
+	// ForOfStatement2 XPECT succs at 'x' --> 1
+	// ForOfStatement2 XPECT succs at '1' --> 2
+	// ForOfStatement2 XPECT succs at '2' --> [1\,2]
+	// ForOfStatement2 XPECT succs at '[1,2]' --> "end", 5
+	// ForOfStatement2 XPECT succs at '5' --> "end", 5
+	// ForOfStatement2 XPECT succs type 'LoopEnter' at '[1,2]' --> 5
+	// ForOfStatement2 XPECT preds at 'for' --> "start"
+	// ForOfStatement2 XPECT succs at 'for' --> "end"
+	"start";
+	for (x of [1,2]) 5;
+	"end";
+}
+
+function ForOfStatementDestructuring(it : Array<Iterable2<Object,Object>>) {
+	// ForOfStatementDestructuring XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForOfStatementDestructuring XPECT allEdges ---
+		"loop" -LoopEnter|LoopRepeat-> "loop", "loop" -LoopExit|LoopRepeat-> "end",
+		"start" --> a1, [a1\,b1\,c1] --> it, a1 --> b1, b1 --> c1, c1 --> [a1\,b1\,c1],
+		it -LoopEnter-> "loop", it -LoopExit-> "end"
+	--- */
+	/* ForOfStatementDestructuring XPECT allBranches ---
+		B0: "start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it[B1|B2],
+		B1: [B0] -> "loop"[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> "loop" -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForOfStatementDestructuring backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> "loop"[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> "loop" -> [B5],
+		B5: [B1|B3|B4]it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start"
+	--- */
+	/* ForOfStatementDestructuring XPECT allPaths ---
+		"start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it -> "end",
+		"start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it -> "loop" -> "end",
+		"start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it -> "loop" -> "loop" -> "end"
+	--- */
+	/* ForOfStatementDestructuring backward XPECT allPaths direction 'Backward' ---
+		"end" -> "loop" -> "loop" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
+		"end" -> "loop" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
+		"end" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start"
+	--- */
+	// ForOfStatementDestructuring XPECT path from '"start"' to '"end"' -->
+	// ForOfStatementDestructuring XPECT path from 'continue;' to 'continue;' -->
+	// ForOfStatementDestructuring XPECT path from 'continue;' notTo '"end"' -->
+	// ForOfStatementDestructuring XPECT commonPreds of 'continue;' and '"end"' -->
+	// ForOfStatementDestructuring XPECT succs at '"start"' --> a1
+	// ForOfStatementDestructuring XPECT succs at '"loop"' --> "loop", "end"
+	// ForOfStatementDestructuring XPECT preds at 'b1' --> a1
+	// ForOfStatementDestructuring XPECT succs at 'for' --> "end"
+	"start";
+	for(var [a1,b1,c1] of it) {
+		"loop";
+	}
+	"end";
+}
+
+function ForInStatement1() {
+	// ForInStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForInStatement1 XPECT allEdges ---
+		"start" --> i, 1 --> 2, 2 --> [1\,2], 3 -LoopEnter|LoopRepeat-> 3,
+		3 -LoopExit|LoopRepeat-> "end", [1\,2] -LoopEnter-> 3, [1\,2] -LoopExit-> "end", i --> 1
+	--- */
+	/* ForInStatement1 XPECT allBranches ---
+		B0: "start" -> i -> 1 -> 2 -> [1\,2][B1|B2],
+		B1: [B0] -> 3[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 3 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForInStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3[B3|B4], B3: [B2] -> [B5],
+		B4: [B2] -> 3 -> [B5], B5: [B1|B3|B4][1\,2] -> 2 -> 1 -> i -> "start"
+	--- */
+	/* ForInStatement1 XPECT allPaths ---
+		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> 3 -> "end"
+	--- */
+	/* ForInStatement1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 3 -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
+		"end" -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
+		"end" -> [1\,2] -> 2 -> 1 -> i -> "start"
+	--- */
+	// ForInStatement1 XPECT path from '"start"' to '"end"' -->
+	// ForInStatement1 XPECT path from '3' to '3' -->
+	// ForInStatement1 XPECT path from '3' notTo '[1,2]' -->
+	// ForInStatement1 XPECT commonPreds of '3' and '"end"' --> 3, [1\,2]
+	// ForInStatement1 XPECT commonPreds of '3' and '[1,2]' --> [1\,2]
+	// ForInStatement1 XPECT succs at '"start"' --> i
+	// ForInStatement1 XPECT succs at 'i' --> 1
+	// ForInStatement1 XPECT succs at '1' --> 2
+	// ForInStatement1 XPECT succs at '2' --> [1\,2]
+	// ForInStatement1 XPECT succs type 'LoopEnter' at '[1,2]' --> 3
+	// ForInStatement1 XPECT succs at '[1,2]' --> 3, "end"
+	// ForInStatement1 XPECT succs at '3' --> 3, "end"
+	// ForInStatement1 XPECT preds at 'for' --> "start"
+	// ForInStatement1 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i in [1,2]) 3;
+	"end";
+}
+
+function ForInStatement2(x) {
+	// ForInStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForInStatement2 XPECT allEdges ---
+		"Hello" -LoopEnter-> 5, "Hello" -LoopExit-> "end", "start" --> x,
+		5 -LoopEnter|LoopRepeat-> 5, 5 -LoopExit|LoopRepeat-> "end", x --> "Hello"
+	--- */
+	/* ForInStatement2 XPECT allBranches ---
+		B0: "start" -> x -> "Hello"[B1|B2],
+		B1: [B0] -> 5[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 5 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForInStatement2 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 5[B3|B4], B3: [B2] -> [B5],
+		B4: [B2] -> 5 -> [B5], B5: [B1|B3|B4]"Hello" -> x -> "start"
+	--- */
+	/* ForInStatement2 XPECT allPaths ---
+		"start" -> x -> "Hello" -> "end",
+		"start" -> x -> "Hello" -> 5 -> "end",
+		"start" -> x -> "Hello" -> 5 -> 5 -> "end"
+	--- */
+	/* ForInStatement2 backward XPECT allPaths direction 'Backward' ---
+		"end" -> "Hello" -> x -> "start",
+		"end" -> 5 -> "Hello" -> x -> "start",
+		"end" -> 5 -> 5 -> "Hello" -> x -> "start"
+	--- */
+	// ForInStatement2 XPECT path from '"start"' to '"end"' -->
+	// ForInStatement2 XPECT path from 'x' to '5' -->
+	// ForInStatement2 XPECT commonPreds of 'x' and '5' --> x
+	// ForInStatement2 XPECT succs at '"start"' --> x
+	// ForInStatement2 XPECT succs at 'x' --> "Hello"
+	// ForInStatement2 XPECT succs at '"Hello"' --> "end", 5
+	// ForInStatement2 XPECT succs at '5' --> "end", 5
+	// ForInStatement2 XPECT succs type 'LoopEnter' at '"Hello"' --> 5
+	// ForInStatement2 XPECT preds at 'for' --> "start"
+	// ForInStatement2 XPECT succs at 'for' --> "end"
+	"start";
+	for (x in "Hello") 5;
+	"end";
+}
+
+function ForStatementVarDecl1() {
+	// ForStatementVarDecl1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementVarDecl1 XPECT allEdges ---
+		"start" --> 0, 0 --> i=0, 2 -LoopEnter-> 5, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, 5 --> 3, i=0 --> 2
+	--- */
+	/* ForStatementVarDecl1 XPECT allBranches ---
+		B0: "start" -> 0 -> i=0 -> 2[B1|B2],
+		B1: [B0] -> 5 -> 3 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 5 -> 3 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForStatementVarDecl1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> 5 -> 2 -> [B5], B5: [B1|B3|B4]i=0 -> 0 -> "start"
+	--- */
+	/* ForStatementVarDecl1 XPECT allPaths ---
+		"start" -> 0 -> i=0 -> 2 -> "end",
+		"start" -> 0 -> i=0 -> 2 -> 5 -> 3 -> 2 -> "end",
+		"start" -> 0 -> i=0 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementVarDecl1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> i=0 -> 0 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> i=0 -> 0 -> "start",
+		"end" -> 2 -> i=0 -> 0 -> "start"
+	--- */
+	// ForStatementVarDecl1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementVarDecl1 XPECT path from 'i=0' to '3' -->
+	// ForStatementVarDecl1 XPECT commonPreds of 'i=0' and '2' --> i=0
+	// ForStatementVarDecl1 XPECT succs at '"start"' --> 0
+	// ForStatementVarDecl1 XPECT succs at '0' --> i=0
+	// ForStatementVarDecl1 XPECT succs at 'i=0' --> 2
+	// ForStatementVarDecl1 XPECT succs at '2' --> 5, "end"
+	// ForStatementVarDecl1 XPECT succs type 'LoopEnter' at '2' --> 5
+	// ForStatementVarDecl1 XPECT succs at '5' --> 3
+	// ForStatementVarDecl1 XPECT succs at '3' --> 2
+	// ForStatementVarDecl1 XPECT preds at 'for' --> "start"
+	// ForStatementVarDecl1 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i=0; 2; 3) 5;
+	"end";
+}
+
+function ForStatementVarDecl2() {
+	// ForStatementVarDecl2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementVarDecl2 XPECT allEdges ---
+		"start" --> 0, 0 --> i=0, 1 --> j=1, 2 -LoopEnter-> 5, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, 5 --> 3, i=0 --> 1, j=1 --> 2
+	--- */
+	/* ForStatementVarDecl2 XPECT allBranches ---
+		B0: "start" -> 0 -> i=0 -> 1 -> j=1 -> 2[B1|B2],
+		B1: [B0] -> 5 -> 3 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 5 -> 3 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForStatementVarDecl2 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> 5 -> 2 -> [B5], B5: [B1|B3|B4]j=1 -> 1 -> i=0 -> 0 -> "start"
+	--- */
+	/* ForStatementVarDecl2 XPECT allPaths ---
+		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> "end",
+		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> 5 -> 3 -> 2 -> "end",
+		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementVarDecl2 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start",
+		"end" -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start"
+	--- */
+	// ForStatementVarDecl2 XPECT path from '"start"' to '"end"' -->
+	// ForStatementVarDecl2 XPECT path from 'i=0' to 'j=1' -->
+	// ForStatementVarDecl2 XPECT commonPreds of 'j=1' and 'i=0' --> i=0
+	// ForStatementVarDecl2 XPECT succs at '"start"' --> 0
+	// ForStatementVarDecl2 XPECT succs at '0' --> i=0
+	// ForStatementVarDecl2 XPECT succs at 'i=0' --> 1
+	// ForStatementVarDecl2 XPECT succs at '1' --> j=1
+	// ForStatementVarDecl2 XPECT succs at 'j=1' --> 2
+	// ForStatementVarDecl2 XPECT succs at '2' --> 5, "end"
+	// ForStatementVarDecl2 XPECT succs type 'LoopEnter' at '2' --> 5
+	// ForStatementVarDecl2 XPECT succs at '5' --> 3
+	// ForStatementVarDecl2 XPECT succs at '3' --> 2
+	// ForStatementVarDecl2 XPECT preds at 'for' --> "start"
+	// ForStatementVarDecl2 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i=0, j=1; 2; 3) 5;
+	"end";
+}
+
+
+
+
+
+function ForStatementBreak1() {
+	// ForStatementBreak1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementBreak1 XPECT allEdges ---
+		"start" --> 1, 1 --> 2, 2 -LoopEnter-> break;, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, break; -Break-> "end"
+	--- */
+	/* ForStatementBreak1 XPECT allBranches ---
+		B0: "start" -> 1 -> 2[B1|B2], B1: [B0] -> break;[b3|B4], B2: [B0] -> [B9],
+		B4: [B1] -> [B9], B5: [b3] -> break;[b7|B8], B6: [b3] -> [B9], B8: [B5] -> [B9],
+		B9: [B2|B4|B6|b7|B8]"end", b3: [B1] -> 3 -> 2[B5|B6], b7: [B5] -> 3 -> 2 -> [B9]
+	--- */
+	/* ForStatementBreak1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B10: [B4|B7|B9]1 -> "start", B1: [B0] -> [B3],
+		B2: [B0] -> break; -> [B3], B3: [B1|B2]2[B4|b5], B4: [B3] -> [B10], B6: [b5] -> break; -> 2[B7|b8],
+		B7: [B6] -> [B10], B9: [b8] -> break; -> 2 -> [B10], b5: [B3] -> 3[B6], b8: [B6] -> 3[B9]
+	--- */
+	/* ForStatementBreak1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> break; -> "end"
+	--- */
+	/* ForStatementBreak1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> break; -> 2 -> 1 -> "start"
+	--- */
+	// ForStatementBreak1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementBreak1 XPECT path from '3' to '"end"' -->
+	// ForStatementBreak1 XPECT path from '"start"' notTo '3' -->
+	// ForStatementBreak1 XPECT commonPreds of '3' and '2' --> 3
+	// ForStatementBreak1 XPECT commonPreds of 'break;' and '2' --> 2
+	// ForStatementBreak1 XPECT commonPreds of '"end"' and '3' --> 3
+	// ForStatementBreak1 XPECT succs at '"start"' --> 1
+	// ForStatementBreak1 XPECT succs at '1' --> 2
+	// ForStatementBreak1 XPECT succs at '2' --> break;, "end"
+	// ForStatementBreak1 XPECT succs type 'LoopEnter' at '2' --> break;
+	// ForStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
+	// ForStatementBreak1 XPECT succs at '3' --> 2
+	// ForStatementBreak1 XPECT preds at 'for' --> "start"
+	// ForStatementBreak1 XPECT succs at 'for' --> "end"
+	"start";
+	// ForStatementBreak1 XPECT warnings --> "Dead code." at "3"
+	for (1;2;3) break;
+	"end";
+}
+
+function ForStatementContinue1() {
+	// ForStatementContinue1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementContinue1 XPECT allEdges ---
+		"start" --> 1, 1 --> 2, 2 -LoopEnter-> continue;, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, continue; -Continue-> 3
+	--- */
+	/* ForStatementContinue1 XPECT allBranches ---
+		B0: "start" -> 1 -> 2[B1|B2], B10: [b8|B9]3 -> 2 -> [B11],
+		B11: [B2|B7|B10]"end", B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B11], B4: [B1] -> [B5],
+		B5: [b3|B4]3 -> 2[B6|B7], B6: [B5] -> continue;[b8|B9], B7: [B5] -> [B11], B9: [B6] -> [B10],
+		b3: [B1] -> [B5], b8: [B6] -> [B10]
+	--- */
+	/* ForStatementContinue1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B11: [b10] -> [B12],
+		B12: [B9|B11]continue; -> 2 -> [B13], B13: [B1|B7|B12]1 -> "start", B1: [B0] -> [B13], B2: [B0] -> 3[B3|b4],
+		B3: [B2] -> [B6], B5: [b4] -> [B6], B6: [B3|B5]continue; -> 2[B7|B8], B7: [B6] -> [B13],
+		B8: [B6] -> 3[B9|b10], B9: [B8] -> [B12], b10: [B8][B11], b4: [B2][B5]
+	--- */
+	/* ForStatementContinue1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> continue; -> 3 -> 2 -> "end",
+		"start" -> 1 -> 2 -> continue; -> 3 -> 2 -> continue; -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementContinue1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> 1 -> "start"
+	--- */
+	// ForStatementContinue1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue1 XPECT path from '3' to '"end"' -->
+	// ForStatementContinue1 XPECT path from '"start"' to '3' -->
+	// ForStatementContinue1 XPECT commonPreds of '3' and '2' --> 2, 3
+	// ForStatementContinue1 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue1 XPECT commonPreds of '"end"' and '3' --> 2, 3
+	// ForStatementContinue1 XPECT succs at '"start"' --> 1
+	// ForStatementContinue1 XPECT succs at '1' --> 2
+	// ForStatementContinue1 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue1 XPECT succs type 'LoopEnter' at '2' --> continue;
+	// ForStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 3
+	// ForStatementContinue1 XPECT succs at '3' --> 2
+	// ForStatementContinue1 XPECT preds at 'for' --> "start"
+	// ForStatementContinue1 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;2;3) continue;
+	"end";
+}
+
+function ForStatementContinue2() {
+	// ForStatementContinue2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementContinue2 XPECT allEdges ---
+		"start" --> 2, 2 -LoopEnter-> continue;, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, continue; -Continue-> 3
+	--- */
+	/* ForStatementContinue2 XPECT allBranches ---
+		B0: "start" -> 2[B1|B2], B10: [b8|B9]3 -> 2 -> [B11], B11: [B2|B7|B10]"end",
+		B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B11], B4: [B1] -> [B5], B5: [b3|B4]3 -> 2[B6|B7],
+		B6: [B5] -> continue;[b8|B9], B7: [B5] -> [B11], B9: [B6] -> [B10], b3: [B1] -> [B5], b8: [B6] -> [B10]
+	--- */
+	/* ForStatementContinue2 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B11: [b10] -> [B12],
+		B12: [B9|B11]continue; -> 2 -> [B13], B13: [B1|B7|B12]"start", B1: [B0] -> [B13], B2: [B0] -> 3[B3|b4],
+		B3: [B2] -> [B6], B5: [b4] -> [B6], B6: [B3|B5]continue; -> 2[B7|B8], B7: [B6] -> [B13],
+		B8: [B6] -> 3[B9|b10], B9: [B8] -> [B12], b10: [B8][B11], b4: [B2][B5]
+	--- */
+	/* ForStatementContinue2 XPECT allPaths ---
+		"start" -> 2 -> "end",
+		"start" -> 2 -> continue; -> 3 -> 2 -> "end",
+		"start" -> 2 -> continue; -> 3 -> 2 -> continue; -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementContinue2 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> "start"
+	--- */
+	// ForStatementContinue2 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue2 XPECT path from '3' to '"end"' -->
+	// ForStatementContinue2 XPECT path from '"start"' to '3' -->
+	// ForStatementContinue2 XPECT commonPreds of '3' and '2' --> 2, 3
+	// ForStatementContinue2 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue2 XPECT commonPreds of '"end"' and '3' --> 2, 3
+	// ForStatementContinue2 XPECT succs at '"start"' --> 2
+	// ForStatementContinue2 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue2 XPECT succs type 'LoopEnter' at '2' --> continue;
+	// ForStatementContinue2 XPECT succs type 'Continue' at 'continue;' --> 3
+	// ForStatementContinue2 XPECT succs at '3' --> 2
+	// ForStatementContinue2 XPECT preds at 'for' --> "start"
+	// ForStatementContinue2 XPECT succs at 'for' --> "end"
+	"start";
+	for (;2;3) continue;
+	"end";
+}
+
+function ForStatementContinue3() {
+	// ForStatementContinue3 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementContinue3 XPECT allEdges ---
+		"start" --> 2, 2 -LoopEnter-> continue;, 2 -LoopExit-> "end",
+		continue; -Continue|LoopRepeat-> 2
+	--- */
+	/* ForStatementContinue3 XPECT allBranches ---
+		B0: "start" -> 2[B1|B2], B10: [b8|B9]2 -> [B11], B11: [B2|B7|B10]"end",
+		B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B11], B4: [B1] -> [B5], B5: [b3|B4]2[B6|B7],
+		B6: [B5] -> continue;[b8|B9], B7: [B5] -> [B11], B9: [B6] -> [B10], b3: [B1] -> [B5], b8: [B6] -> [B10]
+	--- */
+	/* ForStatementContinue3 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2], B11: [b10] -> [B12],
+		B12: [B9|B11]continue; -> 2 -> [B13], B13: [B1|B7|B12]"start", B1: [B0] -> [B13], B2: [B0][B3|b4], B3: [B2] -> [B6],
+		B5: [b4] -> [B6], B6: [B3|B5]continue; -> 2[B7|B8], B7: [B6] -> [B13], B8: [B6][B9|b10],
+		B9: [B8] -> [B12], b10: [B8][B11], b4: [B2][B5]
+	--- */
+	/* ForStatementContinue3 XPECT allPaths ---
+		"start" -> 2 -> "end",
+		"start" -> 2 -> continue; -> 2 -> "end",
+		"start" -> 2 -> continue; -> 2 -> continue; -> 2 -> "end"
+	--- */
+	/* ForStatementContinue3 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> "start",
+		"end" -> 2 -> continue; -> 2 -> "start",
+		"end" -> 2 -> continue; -> 2 -> continue; -> 2 -> "start"
+	--- */
+	// ForStatementContinue3 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue3 XPECT path from 'continue;' to '"end"' -->
+	// ForStatementContinue3 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue3 XPECT commonPreds of '"end"' and 'continue;' --> 2, continue;
+	// ForStatementContinue3 XPECT succs at '"start"' --> 2
+	// ForStatementContinue3 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue3 XPECT succs type 'LoopEnter' at '2' --> continue;
+	// ForStatementContinue3 XPECT succs type 'Continue' at 'continue;' --> 2
+	// ForStatementContinue3 XPECT succs at 'continue;' --> 2
+	// ForStatementContinue3 XPECT preds at 'for' --> "start"
+	// ForStatementContinue3 XPECT succs at 'for' --> "end"
+	"start";
+	for (;2;) continue;
+	"end";
+}
+
+function ForStatementContinue4() {
+	// ForStatementContinue4 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementContinue4 XPECT allEdges ---
+		"start" -LoopEnter-> continue;, continue; -Continue|LoopEnter|LoopInfinite-> continue;
+	--- */
+	/* ForStatementContinue4 XPECT allBranches ---
+		B0: "start" -> continue;[b1|B2], B2: [B0] -> [B3], B3: [b1|B2][B4|b5],
+		B4: [B3]continue;[b6|B7], B7: [B4][B8], B8: [b6|B7][b9], b10: [b5|b9]"end", b1: [B0] -> [B3],
+		b5: [B3] ->  -> [b10], b6: [B4][B8], b9: [B8] ->  -> [b10]
+	--- */
+	/* ForStatementContinue4 backward XPECT allBranches direction 'Backward' ---
+		B10: [b9] -> [B11], B11: [B8|B10]continue; -> [B12], B12: [B6|B11]"start",
+		B1: [b0][B2|b3], B2: [B1] -> [B5], B4: [b3] -> [B5], B5: [B2|B4]continue;[B6|B7],
+		B6: [B5] -> [B12], B7: [B5][B8|b9], B8: [B7] -> [B11], b0: "end"[B1], b3: [B1][B4], b9: [B7][B10]
+	--- */
+	// ForStatementContinue4 XPECT allPaths --> "start" -> continue; -> continue;
+	// ForStatementContinue4 backward XPECT allPaths direction 'Backward' --> "end"
+	// ForStatementContinue4 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatementContinue4 XPECT path from 'continue;' to 'continue;' -->
+	// ForStatementContinue4 XPECT path from 'continue;' notTo '"end"' -->
+	// ForStatementContinue4 XPECT commonPreds of 'continue;' and '"end"' -->
+	// ForStatementContinue4 XPECT succs at '"start"' --> continue;
+	// ForStatementContinue4 XPECT succs at 'continue;' --> continue;
+	// ForStatementContinue4 XPECT preds at 'for' --> "start"
+	// ForStatementContinue4 XPECT succs at 'for' --> "end"
+	"start";
+	for (;;) continue;
+	// ForStatementContinue4 XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+function ForStatementInContinue1() {
+	// ForStatementInContinue1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementInContinue1 XPECT allEdges ---
+		"start" --> i, 1 --> [1], [1] -LoopEnter-> continue;, [1] -LoopExit-> "end",
+		continue; -Continue|LoopEnter|LoopRepeat-> continue;, continue; -Continue|LoopExit|LoopRepeat-> "end", i --> 1
+	--- */
+	/* ForStatementInContinue1 XPECT allBranches ---
+		B0: "start" -> i -> 1 -> [1][B1|B2], B10: [b8|B9][B11], B11: [B2|B7|B10]"end",
+		B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B11], B4: [B1] ->  -> [B5], B5: [b3|B4][B6|B7],
+		B6: [B5]continue;[b8|B9], B7: [B5][B11], B9: [B6] -> [B10], b3: [B1] ->  -> [B5], b8: [B6] -> [B10]
+	--- */
+	/* ForStatementInContinue1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B11: [b10] -> [B12], B12: [B9|B11]continue; -> [B13],
+		B13: [B1|B7|B12][1] -> 1 -> i -> "start", B1: [B0] -> [B13], B2: [B0][B3|b4], B3: [B2] -> [B6], B5: [b4] -> [B6],
+		B6: [B3|B5]continue;[B7|B8], B7: [B6] -> [B13], B8: [B6][B9|b10], B9: [B8] -> [B12], b10: [B8][B11],
+		b4: [B2][B5]
+	--- */
+	/* ForStatementInContinue1 XPECT allPaths ---
+		"start" -> i -> 1 -> [1] -> "end",
+		"start" -> i -> 1 -> [1] -> continue; -> "end", "start" -> i -> 1 -> [1] -> continue; -> continue; -> "end"
+	--- */
+	/* ForStatementInContinue1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> [1] -> 1 -> i -> "start",
+		"end" -> continue; -> [1] -> 1 -> i -> "start", "end" -> continue; -> continue; -> [1] -> 1 -> i -> "start"
+	--- */
+	// ForStatementInContinue1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementInContinue1 XPECT path from 'continue;' to '"end"' -->
+	// ForStatementInContinue1 XPECT commonPreds of 'continue;' and '[1]' --> [1]
+	// ForStatementInContinue1 XPECT commonPreds of '"end"' and 'continue;' --> [1], continue;
+	// ForStatementInContinue1 XPECT succs at '"start"' --> i
+	// ForStatementInContinue1 XPECT succs at '[1]' --> continue;, "end"
+	// ForStatementInContinue1 XPECT succs type 'LoopEnter' at '[1]' --> continue;
+	// ForStatementInContinue1 XPECT succs type 'Continue' at 'continue;' -->"end"
+	// ForStatementInContinue1 XPECT succs at 'continue;' -->"end", continue;
+	// ForStatementInContinue1 XPECT preds at 'for' --> "start"
+	// ForStatementInContinue1 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i in [1])
+		continue;
+	"end";
+}

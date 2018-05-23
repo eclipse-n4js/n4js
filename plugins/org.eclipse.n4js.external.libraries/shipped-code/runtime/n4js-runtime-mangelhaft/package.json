@@ -1,0 +1,20 @@
+{
+  "name": "n4js-runtime-mangelhaft",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js-libs"
+  },
+  "description": "N4JS Runtime Library for mangelhaft.",
+  "keywords": [
+    "n4js",
+    "mangelhaft"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

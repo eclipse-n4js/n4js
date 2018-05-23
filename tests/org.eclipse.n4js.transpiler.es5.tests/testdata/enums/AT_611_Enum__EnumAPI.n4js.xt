@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+RED
+RED
+enums.AT_611_Enum__EnumAPI.Color
+RED
+--
+US
+2
+enums.AT_611_Enum__EnumAPI.Country
+2
+--
+true
+stderr:
+==>
+--- */
+enum Color {
+	RED, GREEN, BLUE
+}
+enum Country {
+	DE: '1',
+	US: '2',
+	UK: '3'
+}
+
+var red : Color = Color.RED;
+var us : Country = Country.US;
+
+console.log(red.name);
+console.log(red.value);
+console.log(N4Type.of(red).fqn);
+console.log(red.toString());
+
+console.log("--");
+
+console.log(us.name);
+console.log(us.value);
+console.log(N4Type.of(us).fqn);
+console.log(us.toString());
+
+console.log("--");
+
+var b : boolean = Color.RED instanceof N4Enum;
+console.log(b);

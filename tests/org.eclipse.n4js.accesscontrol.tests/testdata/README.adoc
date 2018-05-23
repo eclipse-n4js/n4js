@@ -1,0 +1,20 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+
+The file 'Matrix.xlsx' specifies test scenarios and expectations for N4JS's access control modifier test cases.
+The following two files are deviated from it.
+- The file 'Matrix.csv' is used for a generator that generates and executes test cases and expects the specified verdicts.
+- The file 'Matrix.pdf' is simply a PDF rendition of the original table.
+
+Please see the JavaDoc of class AccessControlTest for more information about the intent and the format of these files.
+For an explanation of the different test expectations (y, n, u, y?, n?, u?, #), please see the JavaDoc of class
+Expectation.

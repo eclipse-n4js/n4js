@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<!-- releng/org.eclipse.n4js.parent/pom.xml -->
+<!-- main configuration, target platform defined in parent (=god) -->
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+	<prerequisites>
+		<maven>3.0</maven>
+	</prerequisites>
+
+	<groupId>org.eclipse.n4js</groupId>
+	<artifactId>org.eclipse.n4js.parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<!-- java version -->
+		<java-compile-version>8.0</java-compile-version>
+		<jdk-version>1.8</jdk-version>
+		<maven.compiler.source>${jdk-version}</maven.compiler.source>
+		<maven.compiler.target>${jdk-version}</maven.compiler.target>
+	
+		<!-- encoding -->
+		<project.encoding>UTF-8</project.encoding>
+		<file.encoding>${project.encoding}</file.encoding>
+		<project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
+		
+		<!-- tycho -->
+		<tycho-version>1.1.0</tycho-version>
+
+		<!-- Xtext, Xtend and their runtime -->
+		<xtext-version>2.13.0</xtext-version>
+		<mwe2-version>2.9.0.201605261059</mwe2-version>
+		<org.eclipse.xtext.builder.standalone-version>[${xtext-version}]</org.eclipse.xtext.builder.standalone-version>
+		<org.eclipse.xtext.common.types-version>[${xtext-version}]</org.eclipse.xtext.common.types-version>
+		<org.eclipse.xtext.xtext-version>[${xtext-version}]</org.eclipse.xtext.xtext-version>
+		<org.eclipse.xtext.xbase-version>[${xtext-version}]</org.eclipse.xtext.xbase-version>
+		<org.osgi.core-version>4.3.1</org.osgi.core-version>
+		<org.eclipse.core.resources-version>3.12.0</org.eclipse.core.resources-version>
+		<org.eclipse.text-version>3.5.101</org.eclipse.text-version>
+
+		<!-- maven plugins -->
+		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+		<codehaus-buildnumber-maven-plugin.version>1.4</codehaus-buildnumber-maven-plugin.version>
+		<codehaus-copy-rename-maven-plugin.version>1.0.1</codehaus-copy-rename-maven-plugin.version>
+		<codehaus-exec-maven-plugin.version>1.6.0</codehaus-exec-maven-plugin.version>
+		<fornax-oaw-m2-plugin.version>3.6.0</fornax-oaw-m2-plugin.version>
+		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
+		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+		<maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+		<maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
+		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+		<maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
+		<maven-failsafe-plugin.version>2.17</maven-failsafe-plugin.version>
+		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+		<maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+		<maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
+		<maven-pmd-plugin.version>3.2</maven-pmd-plugin.version>
+		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+		<maven-scm-plugin.version>1.9.5</maven-scm-plugin.version>
+		<maven-site-plugin.version>3.3</maven-site-plugin.version>
+		<maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
+		<maven-verifier-plugin.version>1.0</maven-verifier-plugin.version>
+		<xslt-generator-maven-plugin.version>1.8</xslt-generator-maven-plugin.version>
+
+		<!-- Flags for the java compiler, e.g. -g For debug-information (see http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html) -->
+		<java-compiler-arguments></java-compiler-arguments>
+
+		<!-- headless compiler options, used in tools/org.eclipse.n4js.hlc -->
+		<hlc.name>n4jsc</hlc.name>
+		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
+		
+		<!-- some memory -->
+		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
+		<lowMemoryArgs>-Xms64M -Xmx320M -XX:+HeapDumpOnOutOfMemoryError</lowMemoryArgs>
+		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
+
+		<!-- Test related dependency path tragets. -->
+		<classes-unpacked>classes-unpacked</classes-unpacked>
+		<cu_org.eclipse.n4js.runner>${classes-unpacked}/org.eclipse.n4js.runner</cu_org.eclipse.n4js.runner>
+
+	</properties>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>attach-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!--
+				Here the target file
+				deployed in the build of the targetplatform project is referenced via
+				the classifier used in the attach-artifacts process. Please note that it
+				is possible to use multiple target files in Maven build but in Eclipse
+				you can only choose one target file.
+				-->
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<target>
+						<artifact>
+							<groupId>org.eclipse.n4js</groupId>
+							<artifactId>org.eclipse.n4js.targetplatform</artifactId>
+							<version>${project.version}</version>
+							<classifier>org.eclipse.n4js.targetplatform</classifier>
+							<relativePath>../org.eclipse.n4js.targetplatform/pom.xml</relativePath>
+						</artifact>
+					</target>
+
+					<pomDependencies>consider</pomDependencies>
+					<environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!-- TYCHO -->
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-compiler-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<dependencies>
+<!-- 						<dependency> -->
+<!-- 						force specific (Luna) JDT compiler -->
+<!-- 						TODO: remove after switching to tycho 0.21.0 -->
+<!-- 						<groupId>org.eclipse.jdt</groupId> -->
+<!-- 						<artifactId>org.eclipse.jdt.core</artifactId> -->
+<!-- 						<version>${cbi-jdt-version}</version> -->
+<!-- 						</dependency> -->
+					</dependencies>
+					<configuration>
+						<encoding>${project.encoding}</encoding>
+						<meminitial>128m</meminitial>
+						<maxmem>1024m</maxmem>
+						<source>${java-compile-version}</source>
+						<target>${java-compile-version}</target>
+						<verbose>true</verbose>
+						<compilerArgument>${java-compiler-arguments}</compilerArgument>
+						<!-- GH-83
+							The following setting enables project specific settings in the
+							maven build so that specific Eclipse settings e.g. regarding
+							warning and error levels are respected. The reason that makes
+							specific settings necessary is the following (see GHOLD-408):
+							  The class XtextParametrizedRunner is accessing
+							  org.eclipse.xtext.testing.internal.InjectorProviders
+							  which results in the following exception:
+							    Access restriction: The type 'InjectorProviders' is not API.
+						-->
+						<useProjectSettings>true</useProjectSettings>
+						<compilerArgs>
+							<!--
+								The following line disables warnings in the generated source
+								folders, since their sources cause many warnings.
+							-->
+							<arg>-nowarn:[${project.basedir}/emf-gen${path.separator}${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen${path.separator}${project.basedir}/xsemantics-gen]</arg>
+						</compilerArgs>
+					</configuration>
+				</plugin>
+				<!-- enable source bundle generation -->
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-p2-repository-plugin</artifactId>
+					<version>${tycho-version}</version>
+				</plugin>
+				<!-- enable source feature generation (next two plug-ins required) -->
+				<plugin>
+					<groupId>org.eclipse.tycho.extras</groupId>
+					<artifactId>tycho-source-feature-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<executions>
+						<execution>
+							<id>source-feature</id>
+							<phase>package</phase>
+							<goals>
+								<goal>source-feature</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-p2-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<executions>
+						<execution>
+							<id>attach-p2-metadata</id>
+							<phase>package</phase>
+							<goals>
+								<goal>p2-metadata</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- APACHE MAVEN PLUGINS -->
+				<plugin>
+					<!--
+					This plugin can be used to execute additional logic
+					which cannot be done by existing Maven plugins but is available within ANT.
+					Currently this plugin is used inside the tests/pom.xml for setting the property
+					"coverageAgent" to an empty string when the Maven profile "codeCoverage" is
+					not activated and thus this property wouldn't exist when executing the Tycho
+					surefire plugin using this property in the argLine. As the code coverage plugin
+					JaCoCo sets the value of this property only when it doesn't exist yet we have to
+					use this work around as defining an empty property "coverageAgent" in Maven
+					would cause the JaCoCo plugin not to set the value of this property. As the
+					setting of this property is conditional we also have to add the ant-contrib plugin
+					that provides the possibility to work with if-else constructs within ANT.
+					-->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+				</plugin>
+				<plugin>
+					<!--
+					The clean plugin is here configured to
+					clean the src-gen folder of the grammar project as well as the src-gen
+					folder of the grammar ui project besides clean the xtend folder. As this
+					generalized here the grammar UI projects have to override the configuration
+					again to prevent that the src-gen folder is cleaned on their build execution
+					as the src-gen is filled when running the non UI grammar project.
+					-->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>${maven-clean-plugin.version}</version>
+					<configuration>
+						<filesets>
+							<fileset>
+								<directory>xtend-gen</directory>
+								<excludes>
+									<!--
+									When clean xtend-gen, the .gitignore should not be deleted,
+									as otherwise the hole folder got lost and in Eclipse you get
+									a error marker because of the missing folder.
+									-->
+									<exclude>.gitignore</exclude>
+								</excludes>
+							</fileset>
+						</filesets>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-scm-plugin</artifactId>
+					<version>${maven-scm-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${maven-assembly-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<!--
+					It is configured to raise the versions as preparation step.
+					-->
+					<artifactId>maven-release-plugin</artifactId>
+					<version>${maven-release-plugin.version}</version>
+					<configuration>
+						<preparationGoals>clean -DnewVersion=${releaseVersion}
+							-Dprudent=true
+							org.eclipse.tycho:tycho-versions-plugin:set-version
+							verify
+							scm:checkin</preparationGoals>
+						<arguments>-Prelease</arguments>
+					</configuration>
+				</plugin>
+				<plugin>
+					<!-- PMD code analysis and coding conventions -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>${maven-pmd-plugin.version}</version>
+					<configuration>
+						<excludeRoots>
+							<excludeRoot>src-gen</excludeRoot>
+							<excludeRoot>xtend-gen</excludeRoot>
+						</excludeRoots>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${build-helper-maven-plugin.version}</version>
+					<executions>
+						<execution>
+							<!-- add generated sources to class path -->
+							<id>add-source</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>add-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>src-gen</source>
+								</sources>
+								<sources>
+									<source>emf-gen</source>
+								</sources>
+								<sources>
+									<source>grammar-gen</source>
+								</sources>
+								<sources>
+									<!-- Maven xtend plugin generates into target, not in bundle root,
+										does it? -->
+									<!-- <source>${project.build.directory}/xtend-gen</source> -->
+									<source>xtend-gen</source>
+								</sources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>${codehaus-exec-maven-plugin.version}</version>
+				</plugin>
+				<!-- we do no sign yet <plugin> <groupId>org.eclipse.dash.maven</groupId>
+					<artifactId>eclipse-signing-maven-plugin</artifactId> <version>${eclipse-signing-maven-plugin.version}</version>
+					</plugin> -->
+				<plugin>
+					<groupId>org.eclipse.xtend</groupId>
+					<artifactId>xtend-maven-plugin</artifactId>
+					<version>${xtext-version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<outputDirectory>${basedir}/xtend-gen</outputDirectory>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.eclipse.xtend</groupId>
+							<artifactId>org.eclipse.xtend.lib</artifactId>
+							<version>${xtext-version}</version>
+							<type>pom</type>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<!-- enforce jdk version -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>${maven-enforcer-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>enforce-jdk-version</id>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<requireJavaVersion>
+										<version>${jdk-version}</version>
+									</requireJavaVersion>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<!-- to resolve this warning "[WARNING] Unable to locate Source XRef to
+		link to - DISABLED". With this warning PMD validation will work fine. -->
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>${maven-jxr-plugin.version}</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<!-- repositories for Maven plugins (Mojos), i.e. things that actually perform
+		the build -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>eclipse</id>
+			<url>https://repo.eclipse.org/content/repositories/eclipse-releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>fornax</id>
+			<url>http://www.fornax-platform.org/m2/repository</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>org.eclipse.xtend.lib</artifactId>
+				<version>${xtext-version}</version>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>vpn</id>
+			<activation>
+				<property>
+					<name>!noVPN</name>
+				</property>
+			</activation>
+
+			<!-- main artifact repo -->
+			<repositories>
+				<repository>
+					<id>sonatype_snapshots</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>eclipse</id>
+					<url>https://repo.eclipse.org/content/repositories/eclipse-releases/</url>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>daily</updatePolicy>
+						<checksumPolicy>fail</checksumPolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>daily</updatePolicy>
+						<checksumPolicy>fail</checksumPolicy>
+					</snapshots>
+				</pluginRepository>
+				<pluginRepository>
+					<id>sonatype_snapshots</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+		<profile>
+			<id>noVPN</id>
+			<activation>
+				<property>
+					<name>noVPN</name>
+				</property>
+			</activation>
+			<properties>
+				<noVPNInternal>true</noVPNInternal>
+			</properties>
+		</profile>
+		<profile>
+			<id>staging</id>
+			<activation>
+				<!--
+					ENABLE this if pre-releases are desired:
+					As long as we depend on a unstable pre-release activate the staging unless -DnoStaging is given.
+				<property>
+					<name>!noStaging</name>
+				</property>
+				 -->
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<xtext.version>2.11.0-SNAPSHOT</xtext.version>
+			</properties>
+			<repositories>
+					<repository>
+							<id>sonatype-staging</id>
+							<url>https://oss.sonatype.org/content/repositories/staging/</url>
+					</repository>
+			</repositories>
+			<pluginRepositories>
+					<pluginRepository>
+							<id>sonatype-staging</id>
+							<url>https://oss.sonatype.org/content/repositories/staging/</url>
+					</pluginRepository>
+			</pluginRepositories>
+		</profile>
+
+		<!-- Check correct enabling of noTests profile via property. -->
+		<profile>
+			<id>noTests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>enforce-noTests-property-for-notTests-profile</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireProperty>
+											<property>noTests</property>
+											<message>Missing 'noTests' property while noTests profile is activated. Please call maven with '-DnoTests' to activate profile noTests.</message>
+										</requireProperty>
+									</rules>
+									<fail>true</fail>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

@@ -1,0 +1,55 @@
+########################################
+# OS generated files 
+########################################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+#Icon?
+ehthumbs.db
+Thumbs.db
+*~
+########################################
+# Eclipse and Maven 
+########################################
+*.class
+.launch/
+.metadata/
+bin/
+.*._trace
+com.chronon.sb.browser.launcher.prefs
+m2repo/
+########################################
+# Xtext antlr
+########################################
+plugins/org.eclipse.n4js/.antlr-generator-*.*
+plugins/org.eclipse.n4js.ts/.antlr-generator-*.*
+plugins/org.eclipse.n4js.n4mf/.antlr-generator-*.*
+plugins/org.eclipse.n4js.regex/.antlr-generator-*.*
+########################################
+# Maven 
+########################################
+target/
+########################################
+# PMD
+########################################
+.pmd
+########################################
+# Latex
+########################################
+*.aux
+*.bbl
+*.dvi
+*.idx
+*.lof
+*.log
+*.out
+*.pdfsync
+*.synctex.gz
+*.synctex.gz(busy)
+*.toc
+########################################
+# groovy
+########################################
+groovy-src/

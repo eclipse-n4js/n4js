@@ -1,0 +1,85 @@
+/**
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {N4Injector} from "n4js/lang/N4Injector";
+import {InstrumentedTest} from "org/eclipse/n4js/mangelhaft/InstrumentedTest";
+import {TestExecutor} from "org/eclipse/n4js/mangelhaft/TestExecutor";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {MixedBag} from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers";
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
+class SubTestSpy extends TestSpy {}
+
+@Binder
+@Bind(TestSpy, SubTestSpy)
+class TestBinder {}
+
+@GenerateInjector
+@UseBinder(TestBinder)
+class TestSubject {
+    @Inject
+    executor: TestExecutor;
+}
+
+
+export public class ResultGroupsTest {
+    private subject: TestSubject;
+    private parentInjector: N4Injector;
+    private resultGroups: ResultGroups;
+    constructor (parentInjector: N4Injector) {
+        this.parentInjector = parentInjector;
+    }
+    @Before
+    async setup() {
+        let injector = N4Injector.of(TestSubject, this.parentInjector, new TestBinder());
+        let tests: Array<InstrumentedTest> = [];
+        this.subject = injector.create(TestSubject);
+        tests.push(new InstrumentedTest().load(MixedBag).setTestObject(new MixedBag()));
+        this.resultGroups = await this.subject.executor.runTestsAsync(tests);
+        this.resultGroups = ResultGroups.concat(this.resultGroups, this.resultGroups);
+    }
+
+    @Test 
+    resultGroupsTotalFailuresTest() {
+        Assert.strictEqual(this.resultGroups.failures, 2)
+    }
+    @Test 
+    resultGroupsTotalErrorsTest() {
+        Assert.strictEqual(this.resultGroups.errors, 2)
+    }
+
+    @Test 
+    resultGroupsTotalSuccessesTest() {
+        Assert.strictEqual(this.resultGroups.successes, 2)
+    }
+    @Test 
+    resultGroupsTotalSkipsTest() {
+        Assert.strictEqual(this.resultGroups.skipped, 6)
+    }
+    @Test 
+    resultGroupTotalFailuresTest() {
+        Assert.strictEqual(this.resultGroups.results[0].failures, 1)
+    }
+    @Test 
+    resultGroupTotalErrorsTest() {
+        Assert.strictEqual(this.resultGroups.results[0].errors, 1)
+    }
+    @Test 
+    resultGroupTotalSuccessesTest() {
+        Assert.strictEqual(this.resultGroups.results[0].successes, 1)
+    }
+    @Test 
+    resultGroupTotalSkipsTest() {
+        Assert.strictEqual(this.resultGroups.results[0].skipped, 3)
+    }
+
+}
+

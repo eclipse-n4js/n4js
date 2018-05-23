@@ -1,0 +1,103 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+class X {}
+
+var a : A;
+var b : B;
+var c : C;
+var x : X;
+
+
+// ----------------------------------------------------------------------------------------
+// PART I:
+// make sure that array literal gets inferred to Array<T>
+// if we do *not* have an IterableN as type expectation
+
+// XPECT type of '[b,c,b]' --> Array<union{B,C}>
+var v01 : Iterable<B> = [b,c,b];
+// XPECT type of '[b,c,b]' --> Array<B>
+var v02 : Array<B> = [b,c,b];
+// XPECT type of '[b,c,b]' --> Array<union{B,C}>
+var v03 = [b,c,b];
+// XPECT errors --> "Array<union{B,C}> is not a subtype of X." at "[b,c,b]"
+var v04 : X = [b,c,b];
+
+
+// ----------------------------------------------------------------------------------------
+// PART II:
+// actually check type inference of array literal for an expectation of IterableN<>
+
+
+// same length:
+
+// XPECT type of '[b,c,b]' --> Iterable3<B,C,B>
+var v11 : Iterable3<B,B,B> = [b,c,b];
+
+// XPECT errors --> "Iterable3<B,X,B> is not a subtype of Iterable3<B,B,B>." at "[b,x,b]"
+var v12 : Iterable3<B,B,B> = [b,x,b];
+
+
+// literal is longer:
+
+// case all remaining match XPECT type of '[b,c,b,b,b,c,b]' --> Iterable3<B,C,union{B,C}>
+var v13 : Iterable3<B,B,B> = [b,c,b,b,b,c,b];
+
+// found during IDE-1852: XPECT FIXME noerrors
+// case NOT all remaining match XPECT type of '[b,c,b,b,b,x,b]' --> Iterable3<B,B,union{B,X}>
+var v14 : Iterable3<B,B,B> = [b,c,b,b,b,x,b];
+
+
+// expectation is longer:
+
+// XPECT errors --> "Iterable3<B,B,B> is not a subtype of Iterable4<B,B,B,B>." at "[b,c,b]"
+var v15 : Iterable4<B,B,B,B> = [b,c,b];
+
+// XPECT errors --> "Iterable3<B,X,B> is not a subtype of Iterable4<B,B,B,B>." at "[b,x,b]"
+var v16 : Iterable4<B,B,B,B> = [b,x,b];
+
+
+// literal is longer than BuiltInTypeScope#ITERABLE_N__MAX_LEN (i.e. longer than 9)
+
+// XPECT type of '[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]' --> Iterable9<B,C,B,B,B,B,B,B,B>
+var v17 : Iterable9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b];
+
+// XPECT errors --> "Iterable9<B,B,B,B,B,B,B,B,union{B,X}> is not a subtype of Iterable9<B,B,B,B,B,B,B,B,B>." at "[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,x,b,b]"
+var v18 : Iterable9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,x,b,b];
+
+
+// expectation is a union of iterable types
+
+// XPECT type of '[a,b]' --> Iterable2<A,B>
+var v19 : union{Iterable2<A,A>,Iterable2<A,B>} = [a,b];
+
+// XPECT type of '[a,b]' --> Iterable2<A,B>
+var v20 : union{Iterable2<A,A>,Iterable2<A,X>} = [a,b];
+
+// found during IDE-1852: XPECT FIXME noerrors
+// XPECT type of '[a,x]' --> Iterable2<A,union{A,X}>
+var v21 : union{Iterable2<A,A>,Iterable2<A,X>} = [a,x];
+
+// XPECT errors --> "Iterable2<A,X> is not a subtype of union{Iterable2<A,A>,Iterable2<A,B>}." at "[a,x]"
+var v22 : union{Iterable2<A,A>,Iterable2<A,B>} = [a,x];
+
+
+// expectation is a union containing a non-iterable type
+
+// XPECT errors --> "Array<union{A,B}> is not a subtype of union{Iterable2<A,A>,X}." at "[a,b]"
+var v23 : union{Iterable2<A,A>,X} = [a,b];  // maybe in such a case, type inference of ArrayLiteral could be further improved (to get rid of error)

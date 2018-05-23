@@ -1,0 +1,66 @@
+# these use eval("<some invalid syntax>")
+
+test262/suite/ch07/7.3/S7.3_A2.1_T1.js
+test262/suite/ch07/7.3/S7.3_A2.2_T1.js
+test262/suite/ch07/7.3/S7.3_A2.3.js
+test262/suite/ch07/7.3/S7.3_A2.4.js
+test262/suite/ch07/7.3/S7.3_A3.1_T1.js
+test262/suite/ch07/7.3/S7.3_A3.1_T2.js
+test262/suite/ch07/7.3/S7.3_A3.2_T1.js
+test262/suite/ch07/7.3/S7.3_A3.2_T2.js
+test262/suite/ch07/7.3/S7.3_A3.3_T1.js
+test262/suite/ch07/7.3/S7.3_A3.3_T2.js
+test262/suite/ch07/7.3/S7.3_A3.4_T1.js
+test262/suite/ch07/7.3/S7.3_A3.4_T2.js
+
+test262/suite/ch08/8.4/S8.4_A7.1.js
+test262/suite/ch08/8.4/S8.4_A7.2.js
+test262/suite/ch08/8.4/S8.4_A7.3.js
+test262/suite/ch08/8.4/S8.4_A7.4.js
+
+test262/suite/ch11/11.3/11.3.1/S11.3.1_A1.1_T1.js
+test262/suite/ch11/11.3/11.3.1/S11.3.1_A1.1_T2.js
+test262/suite/ch11/11.3/11.3.1/S11.3.1_A1.1_T3.js
+test262/suite/ch11/11.3/11.3.1/S11.3.1_A1.1_T4.js
+
+test262/suite/ch11/11.3/11.3.2/S11.3.2_A1.1_T1.js
+test262/suite/ch11/11.3/11.3.2/S11.3.2_A1.1_T2.js
+test262/suite/ch11/11.3/11.3.2/S11.3.2_A1.1_T3.js
+
+test262/suite/ch11/11.3/11.3.2/S11.3.2_A1.1_T4.js
+
+test262/suite/ch12/12.5/S12.5_A2.js
+
+test262/suite/ch15/15.1/15.1.2/15.1.2.1/S15.1.2.1_A2_T2.js
+
+# expected exception to be thrown
+test262/suite/ch12/12.13/S12.13_A1.js
+
+# attempt to de-reference y which is not defined
+test262/suite/ch07/7.9/S7.9_A7_T7.js
+
+# tests accessing prototype, failing only at runtime due to null 'this' type in call or other problems.
+test262/suite/ch15/15.2/15.2.4/15.2.4.3/S15.2.4.3_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.3/S15.2.4.3_A13.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.4/S15.2.4.4_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.4/S15.2.4.4_A13.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.4/S15.2.4.4_A14.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.4/S15.2.4.4_A15.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.5/S15.2.4.5_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.5/S15.2.4.5_A13.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.6/S15.2.4.6_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.6/S15.2.4.6_A13.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.7/S15.2.4.7_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.7/S15.2.4.7_A13.js
+
+# negative tests that rely on linking errors which are suppressed in JS mode
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T1.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T2.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T3.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T4.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T5.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T6.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T7.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T8.js
+test262/suite/ch11/11.4/11.4.2/S11.4.2_A2_T2.js
+

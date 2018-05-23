@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.eclipse.n4js.doc</artifactId>
+    <packaging>eclipse-plugin</packaging>
+    <description>Converting AsciiDoc to HTML5, bundles documentation with IDE</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <asciidoctor.maven.plugin.version>1.5.5</asciidoctor.maven.plugin.version>
+        <asciidoctorj.version>1.5.4</asciidoctorj.version>
+        <jruby.version>1.7.21</jruby.version>
+        <asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>
+        <asciidoctor-epub3.version>1.5.0-alpha.6</asciidoctor-epub3.version>
+        <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
+
+        <eclipse.html>eclipse-html</eclipse.html>
+        <website.html>website-html</website.html>
+
+        <epub.target.dir>${basedir}/target/epub</epub.target.dir>
+        <pdf.dir>${basedir}/target/pdf</pdf.dir>
+
+        <eclipseHelpBaseDir>${basedir}/target</eclipseHelpBaseDir>
+        <eclipseHelpDir>${eclipseHelpBaseDir}/${eclipse.html}</eclipseHelpDir>
+        <eclipseUserguidesDir>${eclipseHelpDir}/userguides</eclipseUserguidesDir>
+
+        <help.userguides.list>userguide-list.txt</help.userguides.list>
+        <help.articles.list>article-list.txt</help.articles.list>
+
+        <indices.dir>${basedir}/src-gen/indices</indices.dir>
+        
+        <dist>dist</dist>
+        <distribution.dir>${basedir}/${dist}</distribution.dir>
+
+    </properties>
+
+    <parent>
+        <groupId>org.eclipse.n4js</groupId>
+        <artifactId>org.eclipse.n4js.docs</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>bintray.jmini.maven</id>
+            <url>http://dl.bintray.com/jmini/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>
+        <defaultGoal>process-resources</defaultGoal>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                    <configuration>
+                        <verbose>true</verbose>
+                        <filesets combine.children="append">
+                            <fileset>
+                                <directory>${distribution.dir}</directory>
+                                <includes>
+                                    <include>${eclipse.html}/**</include>
+                                </includes>
+                                <excludes>
+                                </excludes>
+                                <followSymlinks>false</followSymlinks>
+                            </fileset>
+                        </filesets>
+                    </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor.maven.plugin.version}</version>
+                <dependencies>
+                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+                    <dependency>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-complete</artifactId>
+                        <version>${jruby.version}</version>
+                    </dependency>
+                    <!-- Comment this section to use the default AsciidoctorJ artifact provided by the plugin -->
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj</artifactId>
+                        <version>${asciidoctorj.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-pdf</artifactId>
+                        <version>${asciidoctorj.pdf.version}</version>
+                    </dependency>
+                        <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-epub3</artifactId>
+                        <version>${asciidoctor-epub3.version}</version>
+                    </dependency>
+                </dependencies>
+
+                <executions>
+                    <!-- Generate Eclipse HTML-->
+                    <execution>
+                        <id>asciidoc-to-eclipse-html</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>src/</sourceDirectory>
+                            <preserveDirectories>true</preserveDirectories>
+                            <outputDirectory>${project.build.directory}/${eclipse.html}</outputDirectory>
+                            <backend>html5</backend>
+                            <sourceHighlighter></sourceHighlighter>
+                            <attributes> <!-- Individual attributes per conversion execution -->
+                                <doctype>book</doctype>
+                                <toc>false</toc> <!-- No embedded TOC -->
+                                <stylesdir>../assets/styles</stylesdir>
+                                <stylesheet>foundation.min.css</stylesheet>
+								<docinfo1>true</docinfo1>
+                                <docinfodir>${basedir}/assets/headers</docinfodir>
+                                <imagesdir></imagesdir>             
+                                <experimental>true</experimental>
+                                <commandkey>&#8984;</commandkey>
+                                <icons>font</icons>
+                                <sectanchors>true</sectanchors>
+                                <sectlinks>true</sectlinks>
+                                <linkattrs>true</linkattrs>
+                                <reproducible>true</reproducible>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- eclipse-help file list generation -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <!-- userguides file list generation -->
+                    <execution>
+                        <id>userguide-page-list-creation</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Running directory listing dir=${eclipseUserguidesDir}</echo>
+                                <fileset id="eclipseuserguides.pages" dir="${eclipseUserguidesDir}" includes="*.html" excludes=""/>
+                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipseuserguides.pages">
+                                    <map from="${project.build.directory}" to="${dist}" />
+                                </pathconvert>
+                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
+                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.userguides.list}">${prop.dist.contents}</echo>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <!-- articles and features file list generation -->
+                    <execution>
+                        <id>article-page-list-creation</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Running directory listing dir=${eclipseHelpDir}</echo>
+                                <fileset id="eclipsehelp.articles.pages" dir="${eclipseHelpDir}" includes="**/*.html" excludes="index.html,userguides/*.html,_headers/**/*.html,generated-docs/**/*.html"/>
+                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipsehelp.articles.pages">
+                                    <map from="${project.build.directory}" to="${dist}" />
+                                </pathconvert>
+                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
+                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.articles.list}">${prop.dist.contents}</echo>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+<!-- Plugin to copy the final output from the /target/ folder into the /dist/folder       -->
+
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-resources-plugin</artifactId>
+              <version>${maven-resources-plugin.version}</version>
+              <executions>
+                <execution>
+                  <id>distribute-eclipse-help-content</id>
+                  <phase>generate-resources</phase>
+                  <configuration>
+                    <outputDirectory>${distribution.dir}</outputDirectory>
+                    <overwrite>true</overwrite>
+                    <includeEmptyDirs>true</includeEmptyDirs>
+                    <resources>
+                      <resource>
+                        <directory>${project.build.directory}</directory>
+                        
+                        <includes>
+                          <!-- Insert more folders here. Make sure that folders end with slash ('/') -->
+                          <include>${eclipse.html}/</include>
+                        </includes>
+                        
+                        <filtering>false</filtering>
+                      </resource> 
+                    </resources>
+                  </configuration>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+
+            <!-- HTML to Eclipse TOC.XML -->
+            <plugin>
+                <groupId>com.bsiag.geneclipsetoc</groupId>
+                <artifactId>geneclipsetoc-maven-plugin</artifactId>
+                <version>1.0.2</version>
+                <executions>
+                    <!-- generating userguides TOC -->
+                    <execution>
+                        <id>userguides-toc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>geneclipsetoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFolder>${basedir}</sourceFolder>
+                            <pagesListFile>${indices.dir}/${help.userguides.list}</pagesListFile>
+                            <outputTocFile>${indices.dir}/userguides.xml</outputTocFile>
+                        </configuration>
+                    </execution>
+                    <!-- generating articles TOC -->
+                    <execution>
+                        <id>articles-toc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>geneclipsetoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFolder>${basedir}</sourceFolder>
+                            <pagesListFile>${indices.dir}/${help.articles.list}</pagesListFile>
+                            <outputTocFile>${indices.dir}/articles.xml</outputTocFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- disable tycho functionality in case of "-Dtycho.mode=maven" on command line -->
+        <profile>
+            <id>tycho.mode.maven</id>
+            <activation>
+            <property>
+                <name>tycho.mode</name>
+                <value>maven</value>
+            </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.tycho</groupId>
+                        <artifactId>tycho-packaging-plugin</artifactId>
+                        <version>${tycho-version}</version>
+                        <executions>
+                            <execution> <id>default-build-qualifier</id> <phase /> </execution>
+                            <execution> <id>default-validate-version</id> <phase /> </execution>
+                            <execution> <id>default-validate-id</id> <phase /> </execution>
+                            <execution> <id>default-package-plugin</id> <phase /> </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eclipse.tycho</groupId>
+                        <artifactId>tycho-compiler-plugin</artifactId>
+                        <version>${tycho-version}</version>
+                        <executions>
+                            <execution> <id>default-compile</id> <phase /> </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eclipse.tycho</groupId>
+                        <artifactId>tycho-p2-plugin</artifactId>
+                        <version>${tycho-version}</version>
+                        <executions>
+                            <execution> <id>default-p2-metadata-default</id> <phase /> </execution>
+                            <execution> <id>attach-p2-metadata</id> <phase /> </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

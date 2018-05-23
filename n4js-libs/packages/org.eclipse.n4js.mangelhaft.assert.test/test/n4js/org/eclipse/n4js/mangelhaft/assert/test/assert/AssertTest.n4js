@@ -1,0 +1,438 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {AssertionError} from "org/eclipse/n4js/mangelhaft/assert/AssertionError";
+import {ErrorPrimitiveType} from "org/eclipse/n4js/mangelhaft/assert/ErrorPrimitiveType";
+interface ICreature {}
+
+class Beast implements ICreature {}
+class Dog extends Beast {}
+
+export public class AssertTest {
+    @Test
+    assertEqual() {
+        Assert.doesNotThrow(function() {
+            Assert.equal(1, 1, "1 and 1 are truthy");
+        }, AssertionError, "1 and 1 are truthy");
+    }
+    @Test
+    assertEqualTruthy() {
+        Assert.doesNotThrow(function() {
+            Assert.equal(1, "1", "1 and '1' are truthily equal");
+        }, null, "1 and '1' are truthy");
+    }
+    @Test
+    assertEqualFailing() {
+        Assert.throws(function() {
+            Assert.equal(1, "2", "1 and '2' are not equal even truthily")
+        }, AssertionError, "Should throw AssertionError");
+    }
+    @Test
+    assertNotEqual() {
+        Assert.doesNotThrow(function() {
+            Assert.notEqual(1, 2, "1 and 2 not equal");
+        }, AssertionError, "should not throw since 1 and 2 are not equal");
+    }
+    @Test
+    assertNotEqualTruthy() {
+        Assert.doesNotThrow(function() {
+            Assert.notEqual(1, "2", "1 and '2' are truthily not equal");
+        }, null, "assert should pass");
+    }
+    @Test
+    assertNotEqualFailing() {
+        Assert.throws(function() {
+            Assert.notEqual(1, "1", "1 and '1' are truthily equal")
+        }, AssertionError, "Should throw AssertionError");
+    }
+
+    @Test
+    assertStrictEqual() {
+        Assert.doesNotThrow(function() {
+            Assert.equal(1, 1, "");
+        }, null, "1 and 1 are equal");
+    }
+    @Test
+    assertStrictEqualTruthy() {
+        Assert.throws(function() {
+            Assert.strictEqual(1, "1", "");
+        }, AssertionError, "1 and '1' are truthy but not equal");
+    }
+    @Test
+    assertStrictEqualFailing() {
+        Assert.throws(function() {
+            Assert.strictEqual(1, "2", "1 and '2' are not equal even truthily")
+        }, AssertionError, "Should throw AssertionError");
+    }
+    @Test
+    assertIsNull() {
+        Assert.doesNotThrow(function() {
+            Assert.isNull(null, "null is null");
+        }, AssertionError, "null is null");
+    }
+    @Test
+    assertIsNullFailing() {
+        Assert.throws(function() {
+            Assert.isNull(0, "0 is not (strictly) null")
+        }, AssertionError, "Should throw AssertionError");
+    }
+    @Test
+    assertIsUndefined() {
+        let undef;
+        Assert.doesNotThrow(function() {
+            Assert.isUndefined(undef, "undefined is undefined");
+        }, AssertionError, "isUndefined should not throw AssertionError here");
+    }
+    @Test
+    assertIsUndefinedFailing() {
+        Assert.throws(function() {
+            Assert.isUndefined(null, "null is not (strictly) undefined")
+        }, AssertionError, "isUndefined should throw AssertionError");
+    }
+    @Test
+    assertIsNotNull() {
+        Assert.doesNotThrow(function() {
+            Assert.isNotNull(0, "0 is not null");
+        }, AssertionError, "isNotNull should not throw AssertionError here");
+    }
+    @Test
+    assertIsNotNullFailing() {
+        Assert.throws(function() {
+            Assert.isNotNull(null, "null is null")
+        }, AssertionError, "Should throw AssertionError");
+    }
+    @Test
+    assertIsNotUndefined() {
+        Assert.doesNotThrow(function() {
+            Assert.isNotUndefined(null, "null is not (strictly) undefined");
+        }, AssertionError, "isNotUndefined should not throw AssertionError here");
+    }
+    @Test
+    assertIsNotUndefinedFailing() {
+        let undef;
+        Assert.throws(function() {
+            Assert.isNotUndefined(undef, "undefined is undefined")
+        }, AssertionError, "isNotUndefined should throw AssertionError");
+    }
+    @Test
+    assertIsNullOrUndefined() {
+        Assert.doesNotThrow(function() {
+            let undef;
+            Assert.isNullOrUndefined(null, "null is null");
+            Assert.isNullOrUndefined(undef, "undefined is undefined");
+        }, AssertionError, "AssertionError should not be thrown from isNullOrUndefined");
+    }
+    @Test
+    assertIsNullOrUndefinedFailing() {
+        Assert.throws(function() {
+            Assert.isNullOrUndefined(0, "0 is not (strictly) null nor is it undefined")
+        }, AssertionError, "Should throw AssertionError");
+    }
+    @Test
+    assertIsNotNullOrUndefined() {
+        Assert.doesNotThrow(function() {
+            Assert.isNotNullOrUndefined(0, "0 is not (strictly) null nor is it undefined");
+        }, AssertionError, "isNotNullOrUndefined should not throw AssertionError here");
+    }
+    @Test
+    assertIsNotNullOrUndefinedFailing() {
+        let undef;
+        Assert.throws(function() {
+            Assert.isNotNullOrUndefined(null, "undefined is undefined")
+        }, AssertionError, "isNotNullOrUndefined should throw AssertionError for null");
+        Assert.throws(function() {
+            Assert.isNotNullOrUndefined(undef, "undefined is undefined")
+        }, AssertionError, "isNotNullOrUndefined should throw AssertionError for undefined");
+
+    }
+    @Test
+    assertStrictNotEqual() {
+        //Assert.equal(1,2, "dunno what happened here");
+        Assert.doesNotThrow(function() {
+            Assert.notEqual(1, 2, "");
+        }, null, "1 and 2 are not equal");
+    }
+    @Test
+    assertNotStrictEqualTruthyFailing() {
+        Assert.doesNotThrow(function() {
+            Assert.notStrictEqual(1, "1", "");
+        }, AssertionError, "1 and '1' are truthy but not equal");
+    }
+    @Test
+    assertNotStrictEqualFailing() {
+        Assert.throws(function() {
+            Assert.notStrictEqual(1, 1, "1 and 1 are not not equal even truthily")
+        }, AssertionError, "Should throw AssertionError");
+    }
+
+    @Test
+    assertFail() {
+        let er: AssertionError = Assert.throws(function() {
+            Assert.fail("A certain error message");
+        }, AssertionError, "Plain fail call should throw AssertionError") as AssertionError;
+        Assert.equal(er.message, "A certain error message", "plain fail call should preserve message");
+    }
+
+    @Test
+    assertInstanceOfInherited() {
+            Assert.isInstanceOf(new Dog(), Beast, "Dog should be an instanceof Beast");
+    }
+
+    @Test
+    assertInstanceOfArray() {
+        Assert.doesNotThrow(() => {
+            Assert.isInstanceOf([], Array, "builtin type check");
+        }, null, "[] should be an instance of Array");
+    }
+
+    /**
+     * these tests do not use Assert.throws like in the rest of the tests
+     * because it is testing Assert.throws.
+     */
+    @Test
+    assertThrows() {
+        try {
+            Assert.throws(function() {
+                throw new Error("Oops");
+            }, Error)
+        } catch (e) {
+            Assert.fail("Assert.throws should not throw iff callback does throw with correct type");
+        }
+    }
+    @Test
+    assertThrowsWithWrongError() {
+        let error = null;
+        try {
+            Assert.throws(function() {
+                throw "oops";
+            }, Error)
+        } catch (e) {
+            error = e
+        }
+        Assert.isTrue(error !== null && error instanceof AssertionError, "throws should throw if wrong error type")
+    }
+    @Test
+    assertDoesNotThrow() {
+        let error = null;
+        try {
+            Assert.doesNotThrow(function() {
+                throw "oops";
+            }, Error)
+        } catch (e) {
+            error = e
+        }
+        Assert.isTrue(error !== null, "doesNotThrow should throw if callback throws")
+    }
+    @Test
+    async assertThrowsAsync() {
+        async function asyncTest() {
+            return new Promise<any,any>(function(resolve: {function(any)},reject: {function(any)}) {
+                setTimeout(function() {
+                    reject(new Error("badman"));
+                }, 1)
+            })
+        }
+
+        try {
+            await Assert.throwsAsync(asyncTest, Error, "method should throw with an Error type")
+        } catch (e) {
+            Assert.fail("Assert.throws should not throw iff callback does throw with correct type");
+        }
+    }
+    @Test
+    async assertThrowsAsyncWithWrongError() {
+        let error = null;
+        async function asyncTest() {
+            return new Promise<any,any>(function(resolve: {function(any)},reject: {function(any)}) {
+                setTimeout(function() {
+                    reject("badman");
+                }, 1)
+            })
+        }
+
+        try {
+            await Assert.throwsAsync(asyncTest, Error, "method should throw with an Error type")
+        } catch(e) {
+            error = e;
+        }
+        Assert.isTrue(error !== null && error instanceof AssertionError, "throws should throw if wrong error type")
+    }
+    @Test
+    async assertDoesNotThrowAsync() {
+        let error = null;
+        try {
+            Assert.doesNotThrow(function() {
+                throw "oops";
+            }, Error)
+        } catch (e) {
+            error = e
+        }
+        Assert.isTrue(error !== null, "doesNotThrow should throw if callback throws")
+    }
+
+    @Test async assertWaitForConditionWork() {
+        Assert.equal(await Assert.waitForCondition(function() { return 5; }, "wfc works"), 5);
+    }
+    @Test async assertWaitForConditionTimesOut() {
+        await Assert.throwsAsync(async () => {
+            try {
+                await Assert.waitForCondition(function() {}, "wfc times out", 50, 20);
+            } catch (exc) {
+                Assert.equal((exc as Error).message, "wfc times out");
+                throw exc;
+            }
+        });
+    }
+    @Test async assertWaitForConditionFails() {
+        await Assert.throwsAsync(async () => {
+            try {
+                await Assert.waitForCondition(function() {
+                    throw new Error("wfc fails");
+                });
+            } catch (exc) {
+                Assert.equal((exc as Error).message, "wfc fails");
+                throw exc;
+            }
+        });
+    }
+
+    @Test
+    testThrows() {
+        Assert.throws(()=>{throw "I was thrown"});
+    }
+    @Test
+    testThrowsMessageNullcheck() {
+        Assert.throws(()=>{throw "I was thrown"}, null, "I was NOT thrown");
+    }
+    @Test
+    testThrowsString() {
+        Assert.throws(()=>{throw "I was thrown"}, ErrorPrimitiveType.STRING, "I was thrown");
+    }
+    @Test
+    testThrowsNumber() {
+        Assert.throws(()=>{throw 0}, ErrorPrimitiveType.NUMBER, "I was thrown");
+    }
+    @Test
+    testThrowsFunction() {
+        let fcn = function(){}
+        Assert.throws(()=>{throw fcn}, ErrorPrimitiveType.FUNCTION, "I was thrown");
+    }
+    @Test
+    testThrowsObject() {
+        Assert.throws(()=>{throw {}}, ErrorPrimitiveType.OBJECT, "I was thrown");
+    }
+    @Test
+    testThrowsSymbol() {
+        Assert.throws(()=>{throw Symbol.iterator}, ErrorPrimitiveType.SYMBOL, "I was thrown");
+    }
+    @Test
+    testThrowsBoolean() {
+        Assert.throws(()=>{throw false}, ErrorPrimitiveType.BOOLEAN, "I was thrown");
+    }
+    @Test
+    testThrowsUndefined() {
+        let undef;
+        Assert.throws(()=>{throw undef}, ErrorPrimitiveType.UNDEFINED, "I was thrown");
+    }
+    @Test
+    testNegativePrimitive() {
+        Assert.throws(function() {
+            Assert.throws(()=>{throw false}, ErrorPrimitiveType.NUMBER, "I was thrown");
+        }, AssertionError, "Should throw AssertionError because primitive types don't match");
+    }
+    @Test
+    testSlbug16CircularRef() {
+        let o: any+ = Object.create(null);
+        o.f = o;
+        Assert.throws(() => {
+            Assert.isNullOrUndefined(o)
+        }, AssertionError, "Should be AssertionError not TypeError");
+
+    }
+    @Test
+    testSlbug8NullPrototype() {
+        let o = Object.create(null);
+        Assert.throws(() => {
+            Assert.isFalse(o);
+        }, AssertionError, "Should be AssertionError not TypeError");
+
+    }
+    @Test
+    error_adds_message___fail() {
+        try {
+            Assert.fail("TESTUM");
+        } catch (ex) {
+            let e: any+ = ex;
+            Assert.equal(e.message, "TESTUM", "message should be passed through")
+        }
+    }
+
+    @Test
+    error_adds_message___default_message() {
+        try {
+            Assert.equal(true, false);
+        } catch (ex) {
+            let e: any+ = ex;
+            Assert.isTrue(!!e.message.length, "a sensible default message should be provided")
+        }
+    }
+
+
+    @Test
+    rethrows_special___basic() {
+        Assert.throws(() => {
+            Assert.throws(()=> {throw new N4ApiNotImplementedError("test")})
+        }, N4ApiNotImplementedError, "Should be AssertionError not TypeError");
+    }
+    @Test
+    rethrows_special___expected() {
+        Assert.doesNotThrow(() => {
+            Assert.throws(()=> {throw new N4ApiNotImplementedError("test")}, N4ApiNotImplementedError)
+        }, null, "Should be AssertionError not TypeError");
+    }
+    @Test
+    rethrows_special___doesnot_basic() {
+        Assert.throws(() => {
+            Assert.doesNotThrow(()=> {throw new N4ApiNotImplementedError("test")})
+        }, N4ApiNotImplementedError, "Should be AssertionError not TypeError");
+    }
+    @Test
+    rethrows_special___doesnot_expected() {
+        Assert.throws(() => {
+            Assert.doesNotThrow(()=> {throw new N4ApiNotImplementedError("test")}, N4ApiNotImplementedError)
+        }, AssertionError, "Should be AssertionError not TypeError");
+    }
+    @Test
+    async rethrows_special___basic_async() {
+        await Assert.throwsAsync(async function() {
+            await Assert.throwsAsync(()=> {throw new N4ApiNotImplementedError("test")})
+        }, N4ApiNotImplementedError, "Should be AssertionError not TypeError");
+    }
+    @Test
+    async rethrows_special___expected_async() {
+        await Assert.doesNotThrowAsync(async function () {
+            await Assert.throwsAsync(()=> {throw new N4ApiNotImplementedError("test")}, N4ApiNotImplementedError)
+        }, null, "Should be AssertionError not TypeError");
+    }
+    @Test
+    async rethrows_special___doesnot_basic_async() {
+        await Assert.throwsAsync(async function() {
+            await Assert.doesNotThrowAsync(function (){throw new N4ApiNotImplementedError("test")})
+        }, N4ApiNotImplementedError, "Should be AssertionError not TypeError");
+    }
+    @Test
+    async rethrows_special___doesnot_expected_async() {
+        await Assert.throwsAsync(async ()=>{
+            await Assert.doesNotThrowAsync(()=> {throw new N4ApiNotImplementedError("test")}, N4ApiNotImplementedError)
+        }, AssertionError, "Should be AssertionError not TypeError");
+    }
+}

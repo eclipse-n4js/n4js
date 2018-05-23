@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+[ [ 1, 'a' ], [ 2, 'b' ], [ 3, 'c' ] ]
+[ [ 1, 'a' ], [ 2, 'b' ], [ 3, 'c' ] ]
+[ [ 1, 'a' ], [ 2, 'b' ], [ 3, 'c' ] ]
+[ [ 1, 'a' ], [ 2, 'b' ], [ 3, 'c' ] ]
+stderr:
+==>
+--- */
+
+var a = [1, 2, 3]
+var b = ['a', 'b', 'c']
+
+var c1 = a.map((e, i) => {
+    return [a[i], b[i]];
+})
+console.log(c1)
+
+var c2 = a.map((e, i) =>
+    [a[i], b[i]]
+)
+console.log(c2)
+
+var c3 = a.map((e, i) =>
+    [a[i], b[i]]
+)
+console.log(c3)
+
+var c4 = a.map( (e, i) => [a[i], b[i]] )
+console.log(c4)

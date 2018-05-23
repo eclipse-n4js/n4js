@@ -1,0 +1,22 @@
+{
+  "name": "org.eclipse.n4js.mangelhaft.assert.test",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js"
+  },
+  "description": "Assert library tests.",
+  "keywords": [
+    "n4js",
+    "testing",
+    "mangelhaft"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

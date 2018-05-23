@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ~~~
+<==
+stdout:
+The sum of this 4 numbers is 10
+The sum of this 1 number is 1
+stderr:
+==>
+~~~
+*/
+class A {
+
+	executeMe(num : number, ... numbers : number) {
+		var length = numbers.length;
+		var sum : number = num;
+		for(var i=0; i<length; i++) {
+			sum += numbers[i];
+		}
+		console.log('The sum of this ' + (1 + length) + ' number' + ((length > 1) ? 's' : '') + ' is ' + sum);
+	}
+}
+var a : A = new A()
+a.executeMe(1, 2, 3, 4)
+a.executeMe(1)

@@ -1,0 +1,1541 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+ * N4JS grammar based ECMAScript 2015.
+ *
+ * [N4JS] 	N4JS Specification / NumberFour AG. Berlin.
+ * 			Specification.
+ * 			https://github.com/NumberFour/specs/
+ *
+ * [ECM11] 	ECMAScript Language Specification. International Standard ECMA-262, 5.1 Edition, ISO/IEC,
+ *   		Geneva, Switzerland, June 2011.
+ *   		http://www.ecma-international.org/publications/standards/Ecma-262.htm
+ *
+ * [ECM15] 	ECMAScript 2015 Language Specification / ISO/IEC (ECMA-262, 6th Edition).
+ * 			International Standard.
+ * 			http://www.ecma-international.org/publications/ files/ECMA-ST/Ecma-262.pdf
+ *
+ * [ECMWiki] EcmaScript Wiki. http://wiki.ecmascript.org/
+ *
+ *
+ * This grammar is later post-processed in order to enable
+ * - automatic semicolon insertion
+ * - recognition of not allowed line terminations
+ * See AutomaticSemicolonInjector and related classes in releng project.
+ */
+grammar org.eclipse.n4js.N4JS with org.eclipse.n4js.ts.TypeExpressions
+
+import "http://www.eclipse.org/n4js/n4js/N4JS"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+import "http://www.eclipse.org/n4js/ts/Types" as types
+import "http://www.eclipse.org/n4js/ts/TypeRefs" as types
+
+// ****************************************************************************************************
+// [ECM11] A.5 Functions and Programs (p. 224)
+// [ECM15]
+// [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
+// ****************************************************************************************************
+Script: {Script}
+	( annotations+=ScriptAnnotation
+	| scriptElements+=ScriptElement )*;
+
+/*
+ * The top level elements in a script are type declarations, exports, imports or statements
+ */
+ScriptElement:
+	  AnnotatedScriptElement
+	| N4ClassDeclaration<Yield=false>
+	| N4InterfaceDeclaration<Yield=false>
+	| N4EnumDeclaration<Yield=false>
+	| ImportDeclaration
+	| ExportDeclaration
+	| RootStatement<Yield=false>
+;
+
+
+/**
+ * Left factored, annotated script elements.
+ *
+ * Pretty much inlined versions of type declarations, imports, exports and function declarations.
+ *
+ * The GrammarLinter ensures that the inlined content mirrors the content of the real declarations.
+ */
+AnnotatedScriptElement returns ScriptElement:
+	AnnotationList (
+		{ExportDeclaration.annotationList=current} ExportDeclarationImpl
+	|	{ImportDeclaration.annotationList=current} ImportDeclarationImpl
+	|	{FunctionDeclaration.annotationList=current}
+		=>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+			->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
+	|	(
+			(
+				{N4ClassDeclaration.annotationList=current}
+				(declaredModifiers+=N4Modifier)*
+				'class' typingStrategy=TypingStrategyDefSiteOperator?
+				name=BindingIdentifier<Yield=false>
+				VersionDeclaration?
+				TypeVariables?
+				ClassExtendsImplements<Yield=false>?
+			|   {N4InterfaceDeclaration.annotationList=current}
+				(declaredModifiers+=N4Modifier)*
+				'interface' typingStrategy=TypingStrategyDefSiteOperator?
+				name=BindingIdentifier<Yield=false>
+				VersionDeclaration?
+				TypeVariables?
+				InterfaceExtendsList?
+			)
+			Members<Yield=false>
+		)
+	|	{N4EnumDeclaration.annotationList=current}
+		(declaredModifiers+=N4Modifier)*
+		'enum' name=BindingIdentifier<Yield=false>
+		VersionDeclaration?
+		'{'
+			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+		'}'
+	)
+;
+
+ExportDeclaration:
+	{ExportDeclaration}
+	ExportDeclarationImpl
+;
+
+fragment ExportDeclarationImpl *:
+	'export' (
+		wildcardExport?='*' ExportFromClause Semi
+	|	ExportClause ->ExportFromClause? Semi
+	|	exportedElement=ExportableElement
+	|	defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
+	)
+;
+
+fragment ExportFromClause*:
+	'from' reexportedFrom=[types::TModule|ModuleSpecifier]
+;
+
+fragment ExportClause*:
+	'{'
+		(namedExports+=ExportSpecifier (',' namedExports+=ExportSpecifier)* ','?)?
+	'}'
+;
+
+ExportSpecifier:
+	element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+;
+
+ExportableElement:
+	  AnnotatedExportableElement<Yield=false>
+	| N4ClassDeclaration<Yield=false>
+	| N4InterfaceDeclaration<Yield=false>
+	| N4EnumDeclaration<Yield=false>
+	| FunctionDeclaration<Yield=false>
+	| ExportedVariableStatement
+;
+
+/**
+ * Left factored, annotated exportable elements.
+ *
+ * Pretty much inlined versions of type and function declarations.
+ *
+ * The GrammarLinter ensures that the inlined content mirrors the content of the real declarations.
+ */
+AnnotatedExportableElement <Yield> returns ExportableElement:
+	AnnotationList (
+		{FunctionDeclaration.annotationList=current}
+		(declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+		FunctionImpl<Yield, Yield, Expression=false>
+	|	{ExportedVariableStatement.annotationList=current}
+		(declaredModifiers+=N4Modifier)*
+		varStmtKeyword=VariableStatementKeyword
+		varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> ( ',' varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> )* Semi
+	|	(
+			(
+				{N4ClassDeclaration.annotationList=current}
+				(declaredModifiers+=N4Modifier)*
+				'class' typingStrategy=TypingStrategyDefSiteOperator?
+				name=BindingIdentifier<Yield>
+				TypeVariables?
+				ClassExtendsImplements<Yield>?
+			|	{N4InterfaceDeclaration.annotationList=current}
+				(declaredModifiers+=N4Modifier)*
+				('interface') typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
+				TypeVariables?
+				InterfaceExtendsList?
+			)
+			Members<Yield>
+		)
+	|	{N4EnumDeclaration.annotationList=current}
+		(declaredModifiers+=N4Modifier)*
+		'enum' name=BindingIdentifier<Yield>
+		'{'
+			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+		'}'
+	)
+;
+
+ImportDeclaration:
+	{ImportDeclaration}
+	ImportDeclarationImpl
+;
+
+fragment ImportDeclarationImpl*:
+	'import' (
+		ImportClause importFrom?='from'
+	)? module=[types::TModule|ModuleSpecifier] Semi
+;
+
+fragment ImportClause returns ImportDeclaration:
+		importSpecifiers+=DefaultImportSpecifier (',' ImportSpecifiersExceptDefault)?
+	|	ImportSpecifiersExceptDefault
+;
+
+fragment ImportSpecifiersExceptDefault returns ImportDeclaration:
+		importSpecifiers+=NamespaceImportSpecifier
+	|	'{' (importSpecifiers+=NamedImportSpecifier (',' importSpecifiers+=NamedImportSpecifier)* ','?)? '}'
+;
+
+NamedImportSpecifier:
+		importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
+	|	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
+;
+
+DefaultImportSpecifier:
+	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
+;
+
+NamespaceImportSpecifier: {NamespaceImportSpecifier} '*' 'as' alias=BindingIdentifier<false> (declaredDynamic?='+')?;
+
+ModuleSpecifier: STRING;
+
+/*
+ * A function declaration without annotations. The annotated variant is factored into
+ * an own production AnnotatedFunctionDeclaration to avoid the infinite lookahead
+ * of the annotation list
+ */
+FunctionDeclaration <Yield>:
+	=> ({FunctionDeclaration}
+		(declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+		-> FunctionImpl <Yield,Yield,Expression=false>
+	) => Semi?
+;
+
+
+fragment AsyncNoTrailingLineBreak *: (declaredAsync?='async' NoLineTerminator)?;
+
+fragment FunctionImpl<Yield, YieldIfGenerator, Expression>*:
+	'function'
+	(
+		generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression>
+	| 	FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>
+	)
+;
+
+fragment FunctionHeader<Yield, Generator>*:
+	TypeVariables?
+	name=BindingIdentifier<Yield>?
+	VersionDeclaration?
+	StrictFormalParameters<Yield=Generator>
+	(-> ColonSepReturnTypeRef)?
+;
+
+fragment FunctionBody <Yield, Expression>*:
+		<Expression> body=Block<Yield>
+	|	<!Expression> body=Block<Yield>?
+;
+
+/*
+ * Used only within statement blocks, the annotated functions on the root level
+ * are handled by the rule AnnotatedScriptElement and its inlined content of FunctionDeclaration
+ */
+AnnotatedFunctionDeclaration <Yield, Default> returns FunctionDeclaration:
+	annotationList=AnnotationList
+	(declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+	FunctionImpl<Yield,Yield,Expression=false>
+;
+
+
+FunctionExpression:
+	({FunctionExpression}
+	 	FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>
+	)
+;
+
+
+/**
+ * We cannot use fragments here since we have to combine the terminals into a syntactic predicate.
+ */
+AsyncFunctionExpression returns FunctionExpression:
+	 =>(declaredAsync?='async' NoLineTerminator 'function')
+		FunctionHeader<Yield=false,Generator=false> FunctionBody<Yield=false,Expression=true>
+;
+
+ArrowExpression <In, Yield> returns ArrowFunction:
+	=> (
+			(
+					// we cannot use fragments here since we have to combine the terminals into a syntactic predicate
+					// also, we have to use explicit alternatives instead of making async optional due to a generation bug
+					StrictFormalParameters<Yield> ColonSepReturnTypeRef?
+				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepReturnTypeRef?
+				| 	fpars+=BindingIdentifierAsFormalParameter<Yield>
+			)
+			/* no line terminator here, guaranteed implicitly */ '=>'
+		)
+		(-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}' | body=ExpressionDisguisedAsBlock<In>)
+;
+
+fragment StrictFormalParameters <Yield>*:
+	'(' (fpars+=FormalParameter<Yield> (',' fpars+=FormalParameter<Yield>)*)? ')'
+;
+
+BindingIdentifierAsFormalParameter <Yield> returns FormalParameter:	name=BindingIdentifier<Yield>;
+
+BlockMinusBraces <Yield> returns Block:	{Block} statements+=Statement<Yield>*;
+
+ExpressionDisguisedAsBlock <In> returns Block:
+	{Block} statements+=AssignmentExpressionStatement<In>
+;
+
+AssignmentExpressionStatement <In> returns ExpressionStatement:	expression=AssignmentExpression<In,Yield=false>;
+
+/**
+ * Left factored, annotated expression.
+ *
+ * Pretty much inlined versions of function expression and class expression.
+ *
+ * The GrammarLinter ensures that the inlined content mirrors the content of the real declarations.
+ */
+AnnotatedExpression <Yield> returns Expression:
+	ExpressionAnnotationList (
+		{N4ClassExpression.annotationList=current}
+		'class' name=BindingIdentifier<Yield>?
+		ClassExtendsImplements<Yield>?
+		Members<Yield>
+	|	{FunctionExpression.annotationList=current} AsyncNoTrailingLineBreak
+		FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>
+	)
+;
+
+@Override
+TypeVariable returns types::TypeVariable:
+	(declaredCovariant?='out' | declaredContravariant?='in')?
+	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?
+;
+
+FormalParameter <Yield>:
+	{FormalParameter} BindingElementFragment<Yield>
+;
+
+fragment BindingElementFragment <Yield>*:
+	( => bindingPattern=BindingPattern<Yield>
+	| annotations+=Annotation* BogusTypeRefFragment? variadic?='...'? name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
+	)
+	(hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
+;
+
+fragment BogusTypeRefFragment*:
+	bogusTypeRef=TypeRefWithModifiers
+;
+
+Block <Yield>: => ({Block} '{') statements+=Statement<Yield>* '}';
+
+// ****************************************************************************************************
+// [ECM11] A.4 Statements (p. 222)
+// ****************************************************************************************************
+RootStatement <Yield> returns Statement:
+	Block<Yield>
+	// Function declarations are modeled as statements to support legacy JS parsing
+	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
+	| VariableStatement<In=true,Yield>
+	| EmptyStatement
+	| LabelledStatement<Yield>
+	| ExpressionStatement<Yield>
+	| IfStatement<Yield>
+	| IterationStatement<Yield>
+	| ContinueStatement<Yield>
+	| BreakStatement<Yield>
+	// forbidden on the top-level but we allow it to provide better feedback.
+	| ReturnStatement<Yield>
+	| WithStatement<Yield>
+	| SwitchStatement<Yield>
+	| ThrowStatement<Yield>
+	| TryStatement<Yield>
+	| DebuggerStatement
+;
+
+Statement <Yield>:
+	AnnotatedFunctionDeclaration<Yield,Default=false>
+	| RootStatement<Yield>
+;
+
+enum VariableStatementKeyword:
+	var='var' | const='const' | let='let'
+;
+
+VariableStatement <In, Yield>:
+	=>({VariableStatement}
+		varStmtKeyword=VariableStatementKeyword
+	)
+	varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)* Semi
+;
+
+ExportedVariableStatement returns ExportedVariableStatement:
+	{ExportedVariableStatement}
+	(declaredModifiers+=N4Modifier)*
+	varStmtKeyword=VariableStatementKeyword
+	varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield=false> (',' varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield=false>)* Semi
+;
+
+VariableDeclarationOrBinding <In, Yield, OptionalInit>:
+		VariableBinding<In,Yield,OptionalInit>
+	| 	VariableDeclaration<In,Yield,true>
+;
+
+VariableBinding <In, Yield, OptionalInit>:
+	=> pattern=BindingPattern<Yield> (
+			<OptionalInit> ('=' expression=AssignmentExpression<In,Yield>)?
+		| 	<!OptionalInit> '=' expression=AssignmentExpression<In,Yield>
+	)
+;
+
+VariableDeclaration <In, Yield, AllowType>:
+	{VariableDeclaration} VariableDeclarationImpl<In,Yield,AllowType>;
+
+/**
+ * This rule was very complicated for Java like type annotations. It is much simpler with the ES4 colon style type annotations. However,
+ * just in case odd things will happen, may look at the previous version in the git history.
+ *
+ * The colon type annotation syntax clashes with object literals and object destruction. While we still support java type annotation in the
+ * former case, we do not allow types in the latter. This may be changed in the future.
+ */
+fragment VariableDeclarationImpl <In, Yield, AllowType>*:
+	annotations+=Annotation*
+	(
+		<AllowType> =>(
+			name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
+		) ('=' expression=AssignmentExpression<In,Yield>)?
+	|	<!AllowType> =>(
+		name=BindingIdentifier<Yield>
+		) ('=' expression=AssignmentExpression<In,Yield>)?
+	)
+;
+
+ExportedVariableDeclarationOrBinding <Yield> returns VariableDeclarationOrBinding:
+		ExportedVariableBinding<Yield>
+	| 	ExportedVariableDeclaration<Yield>
+;
+
+ExportedVariableBinding <Yield>:
+	=> pattern=BindingPattern<Yield> '=' expression=AssignmentExpression<In=true,Yield>
+;
+
+/**
+ * The created AST element has an additional reference to the inferred TVariable
+ */
+ExportedVariableDeclaration <Yield>:
+	{ExportedVariableDeclaration} VariableDeclarationImpl<In=true,Yield,AllowType=true>
+;
+
+	// Defined with Action in statement: Block: {Block}  '{' (statements+=Statement)* '}';
+EmptyStatement:	{EmptyStatement} ';';
+
+	// Lookahead (function, {) done elsewhere: see Statement and SourceElement definitions
+ExpressionStatement <Yield>: expression=Expression<In=true,Yield> Semi;
+
+IfStatement <Yield>: 'if' '(' expression=Expression<In=true,Yield> ')' ifStmt=Statement<Yield> (=> 'else' elseStmt=Statement<Yield>)?;
+
+IterationStatement <Yield>:
+		DoStatement<Yield>
+	| 	WhileStatement<Yield>
+	| 	ForStatement<Yield>
+;
+
+DoStatement <Yield>: 'do' statement=Statement<Yield> 'while' '(' expression=Expression<In=true,Yield> ')' => Semi?;
+WhileStatement <Yield>: 'while' '(' expression=Expression<In=true,Yield> ')' statement=Statement<Yield>;
+
+ForStatement <Yield>:
+	{ForStatement} 'for' '('
+	(
+		// this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
+			=>(initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')')
+		| 	(	->varStmtKeyword=VariableStatementKeyword
+				(
+						=>(varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->expression=AssignmentExpression<In=true,Yield>?)
+					|	varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,OptionalInit=true>
+						(
+								(',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?
+							| 	forIn?='in' expression=Expression<In=true,Yield>?
+							| 	forOf?='of' expression=AssignmentExpression<In=true,Yield>?
+						)
+				)
+			|	initExpr=Expression<In=false,Yield>
+				(
+						';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?
+					| 	forIn?='in' expression=Expression<In=true,Yield>?
+					| 	forOf?='of' expression=AssignmentExpression<In=true,Yield>?
+				)
+			| 	';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?
+			)
+		')'
+	) statement=Statement<Yield>
+;
+
+LetIdentifierRef returns IdentifierRef:
+	id=[types::IdentifiableElement|LetAsIdentifier]
+;
+
+LetAsIdentifier: 'let';
+
+BindingIdentifierAsVariableDeclaration <In, Yield> returns VariableDeclaration:
+//	annotations+=Annotation*
+	name=BindingIdentifier<Yield> // ('=' expression=AssignmentExpression<In, Yield>)?
+;
+
+/**
+ * The AutomaticSemicolonInjector rewrites the antlr grammar for this rule to inject the promotion of EOL to a statement delimiter.
+ */
+ContinueStatement <Yield>: {ContinueStatement} 'continue' (label=[LabelledStatement|BindingIdentifier<Yield>])? Semi;
+
+/**
+ * The AutomaticSemicolonInjector rewrites the antlr grammar for this rule to inject the promotion of EOL to a statement delimiter.
+ */
+BreakStatement <Yield>:	{BreakStatement} 'break' (label=[LabelledStatement|BindingIdentifier<Yield>])? Semi;
+
+/**
+ * The AutomaticSemicolonInjector rewrites the antlr grammar for this rule to inject the promotion of EOL to a statement delimiter.
+ */
+ReturnStatement <Yield>: {ReturnStatement} 'return' (expression=Expression<In=true,Yield>)? Semi;
+
+WithStatement <Yield>: 'with' '(' expression=Expression<In=true,Yield> ')' statement=Statement<Yield>;
+
+/*
+ * All clauses are added to a single list, in order to retain order of the clauses. In particular,
+ * the position of the default clause is
+ */
+SwitchStatement <Yield>:
+	'switch' '(' expression=Expression<In=true,Yield> ')' '{'
+	(cases+=CaseClause<Yield>)*
+	((cases+=DefaultClause<Yield>)
+	(cases+=CaseClause<Yield>)*)? '}'
+;
+
+CaseClause <Yield>:	'case' expression=Expression<In=true,Yield> ':' (statements+=Statement<Yield>)*;
+DefaultClause <Yield>: {DefaultClause} 'default' ':' (statements+=Statement<Yield>)*;
+
+/**
+ * Simplified: [ECM15] distinguishes between BindingIdentifier and LabelIdentifier which are effectively the same
+ */
+LabelledStatement <Yield>: => (name=BindingIdentifier<Yield> ':') statement=Statement<Yield>;
+
+	// This is rewritten by the AutomaticSemicolonInjector (see above)
+ThrowStatement <Yield>:
+	'throw' expression=Expression<In=true,Yield> Semi;
+
+TryStatement <Yield>:
+	'try' block=Block<Yield>
+	((catch=CatchBlock<Yield> finally=FinallyBlock<Yield>?) | finally=FinallyBlock<Yield>)
+;
+
+CatchBlock <Yield>:	{CatchBlock} 'catch' '(' catchVariable=CatchVariable<Yield> ')' block=Block<Yield>;
+
+/**
+ * CatchVariable must not have a type reference, this is tested during validation (to enable better error messages).
+ */
+CatchVariable <Yield>:
+		=>bindingPattern=BindingPattern<Yield>
+	|	=>(name=BindingIdentifier<Yield> -> ColonSepDeclaredTypeRef)
+	|	BogusTypeRefFragment? name=BindingIdentifier<Yield>
+;
+
+FinallyBlock <Yield>: {FinallyBlock} 'finally' block=Block<Yield>;
+
+/**
+ * This is rewritten by the AutomaticSemicolonInjector (see above)
+ */
+DebuggerStatement:
+	{DebuggerStatement} 'debugger' Semi;
+
+// ****************************************************************************************************
+// [ECM11] A.3 Expressions (p. 218)
+// ****************************************************************************************************
+
+// Primary expressions ([ECM11] 11.1)
+
+PrimaryExpression <Yield> returns Expression:
+	  ThisLiteral
+	| SuperLiteral
+	| IdentifierRef<Yield>
+	| JSXElement /* see JSX  */
+	| ParameterizedCallExpression<Yield>
+	| Literal
+	| ArrayLiteral<Yield>
+	| ObjectLiteral<Yield>
+	| ParenExpression<Yield>
+	| AnnotatedExpression<Yield>
+	| FunctionExpression
+	| AsyncFunctionExpression
+	| N4ClassExpression<Yield>
+	| TemplateLiteral<Yield>
+;
+
+ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
+
+IdentifierRef <Yield>:
+	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
+;
+
+SuperLiteral: {SuperLiteral} 'super';
+
+ThisLiteral: {ThisLiteral} 'this';
+
+/**
+ * As described in the spec, array literals may use elisions to influence the
+ * index of expressions in the array.
+ * This is achieved by special ArrayElements, called ArrayPadding, which are
+ * represented by a ',' in the concrete syntax.
+ *
+ * 	ArrayLiteral :
+ * 		[ Elision/opt ]
+ * 		[ ElementList ]
+ * 		[ ElementList , Elision/opt ]
+ * 	ElementList :
+ * 		Elision/opt AssignmentExpression
+ * 		ElementList , Elision/opt AssignmentExpression
+ * 	Elision :
+ * 		,
+ * 		Elision ,
+ *
+ */
+ArrayLiteral <Yield> returns ArrayLiteral:
+	{ArrayLiteral} '['
+		elements+=ArrayPadding* (
+			elements+=ArrayElement<Yield>
+			(',' elements+=ArrayPadding* elements+=ArrayElement<Yield>)*
+			(trailingComma?=',' elements+=ArrayPadding*)?
+		)?
+	']'
+;
+
+/**
+ * This array element is used to pad the remaining elements, e.g. to get the
+ * length and index right
+ */
+ArrayPadding returns ArrayElement: {ArrayPadding} ',';
+
+ArrayElement <Yield> returns ArrayElement: {ArrayElement} spread?='...'? expression=AssignmentExpression<In=true,Yield>;
+
+ObjectLiteral <Yield>: {ObjectLiteral}
+	'{'
+		( propertyAssignments+=PropertyAssignment<Yield>
+		  (',' propertyAssignments+=PropertyAssignment<Yield>)* ','?
+		)?
+	'}'
+;
+
+PropertyAssignment <Yield>:
+	  AnnotatedPropertyAssignment<Yield>
+	| PropertyNameValuePair<Yield>
+	| PropertyGetterDeclaration<Yield>
+	| PropertySetterDeclaration<Yield>
+	| PropertyMethodDeclaration<Yield>
+	| PropertyNameValuePairSingleName<Yield>
+;
+
+AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
+	PropertyAssignmentAnnotationList (
+	// TODO extract property header into an own instance to defer the object instantiation
+	=>(	{PropertyNameValuePair.annotationList=current} declaredTypeRef=TypeRefWithModifiers?
+			declaredName=LiteralOrComputedPropertyName<Yield> ':'
+		) expression=AssignmentExpression<In=true,Yield>
+	| =>({PropertyGetterDeclaration.annotationList=current}
+			GetterHeader<Yield>
+		) body=Block<Yield=false>
+	| =>({PropertySetterDeclaration.annotationList=current}
+			'set' ->declaredName=LiteralOrComputedPropertyName <Yield>
+		) (declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' body=Block<Yield=false>
+	| =>({PropertyMethodDeclaration.annotationList=current}
+			TypeVariables? returnTypeRef=TypeRefWithModifiers?
+			(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=true>
+				| declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
+			)
+		) ';'?
+	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRef=TypeRef? identifierRef=IdentifierRef<Yield>
+		( '=' expression=AssignmentExpression<In=true,Yield>)?)
+;
+
+PropertyMethodDeclaration <Yield>:
+	=> ({PropertyMethodDeclaration}
+		TypeVariables? returnTypeRef=TypeRefWithModifiers?
+			(
+				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>
+				| declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=false>
+			)
+		)
+	';'?
+;
+
+PropertyNameValuePair <Yield>:
+	=> (
+		{PropertyNameValuePair}
+		declaredTypeRef=TypeRefWithModifiers?
+		declaredName=LiteralOrComputedPropertyName<Yield>
+		(declaredOptional?='?')?
+		':'
+	)
+	expression=AssignmentExpression<In=true,Yield>
+;
+
+/*
+ * Support for single name syntax in ObjectLiteral (but disallowed in actual object literals by ASTStructureValidator
+ * except in assignment destructuring patterns)
+ */
+PropertyNameValuePairSingleName <Yield>:
+	declaredTypeRef=TypeRef?
+	identifierRef=IdentifierRef<Yield>
+	('=' expression=AssignmentExpression<In=true,Yield>)?
+;
+
+PropertyGetterDeclaration <Yield>:
+	=>(
+		{PropertyGetterDeclaration}
+		GetterHeader<Yield>
+	)
+	body=Block<Yield=false>
+;
+
+PropertySetterDeclaration <Yield>:
+	=>(
+		{PropertySetterDeclaration}
+		'set'
+		->declaredName=LiteralOrComputedPropertyName <Yield>
+	)
+	(declaredOptional?='?')?
+	'(' fpar=FormalParameter<Yield> ')'	body=Block<Yield=false>
+;
+
+/* Left-hand-side expressions (11.2) [ECM11]
+ * Heavily refactored to make them LL(*) compliant.
+ */
+
+ParameterizedCallExpression <Yield>:
+	ConcreteTypeArguments
+	target=IdentifierRef<Yield>
+	ArgumentsWithParentheses<Yield>
+;
+
+fragment ConcreteTypeArguments*:
+	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
+;
+
+LeftHandSideExpression <Yield> returns Expression:
+	MemberExpression<Yield> (
+		{ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
+		(
+			  {ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
+			| {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
+			| {ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield>
+			| ->({TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)
+		)*
+	)?
+;
+
+fragment ArgumentsWithParentheses <Yield>*:
+	'(' Arguments<Yield>? ')'
+;
+
+fragment Arguments <Yield>*:
+	arguments+=Argument<Yield> (',' arguments+=Argument<Yield>)*
+;
+
+Argument<Yield>:
+	spread?='...'? expression=AssignmentExpression<In=true, Yield>
+;
+
+MemberExpression <Yield> returns Expression:
+	=>({NewTarget} 'new' '.') 'target'
+	| => ({NewExpression} 'new') callee=MemberExpression<Yield> (-> ConcreteTypeArguments)?
+		(=> withArgs?='(' Arguments<Yield>? ')'
+			(
+				  {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
+				| {ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield>
+				| {TaggedTemplateString.target=current} template=TemplateLiteral<Yield>
+			)*
+		)?
+	| PrimaryExpression<Yield> (
+		  {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
+		| {ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield>
+		| {TaggedTemplateString.target=current} template=TemplateLiteral<Yield>
+		)*
+;
+
+fragment IndexedAccessExpressionTail <Yield>*:
+	'[' index=Expression<In=true,Yield> ']'
+;
+
+fragment ParameterizedPropertyAccessExpressionTail <Yield>*:
+	'.' ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName]
+;
+
+/**
+ * Postfix expressions ([ECM11] 11.3).
+ * The specification states that there are no line terminators allowed before the postfix operators.
+ * This is enforced by the call to promoteEOL in the action before ( '++' | '--' ),
+ * added during grammar post-processing.
+ * We only must promote EOLs when the la is '++' or '--' because this production is chained as all expression rules.
+ * In other words: only promote EOL when we are really in a postfix expression. A check on the la will ensure this.
+ */
+PostfixExpression <Yield> returns Expression:
+	LeftHandSideExpression<Yield> (
+		=>({PostfixExpression.expression=current} /* no line terminator here */
+			op=PostfixOperator
+		)
+	)?
+;
+
+enum PostfixOperator: inc='++' | dec='--';
+
+/* Cast expression (N4JS 6.2.3) */
+CastExpression <Yield> returns Expression: PostfixExpression<Yield>
+	(=>({CastExpression.expression=current} 'as') targetTypeRef=TypeRefForCast)?;
+
+/* Unary operators ([ECM11] 11.4) */
+UnaryExpression <Yield> returns Expression:
+	  CastExpression<Yield>
+	| ({UnaryExpression} op=UnaryOperator expression=UnaryExpression<Yield>);
+enum UnaryOperator:	delete | void | typeof | inc='++' | dec='--' | pos='+' | neg='-' | inv='~' | not='!';
+
+/* Multiplicative operators ([ECM11] 11.5) */
+MultiplicativeExpression <Yield> returns Expression: UnaryExpression<Yield>
+	(=>({MultiplicativeExpression.lhs=current} op=MultiplicativeOperator) rhs=UnaryExpression<Yield>)*;
+enum MultiplicativeOperator: times='*' | div='/' | mod='%';
+
+/* Additive operators ([ECM11] 11.6) */
+AdditiveExpression <Yield> returns Expression: MultiplicativeExpression<Yield>
+	(=>({AdditiveExpression.lhs=current} op=AdditiveOperator) rhs=MultiplicativeExpression<Yield>)*;
+enum AdditiveOperator: add='+' | sub='-';
+
+// Bitwise shift operators ([ECM11] 11.7)
+
+/**
+ * Note that the whole expression, including the rhs, must be in the syntactic
+ * predicate in order to avoid problems stemming from the parameterized function call
+ * and from the assignment operator >>>=
+ */
+ShiftExpression <Yield> returns Expression: AdditiveExpression<Yield>
+	(=>({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>))*
+;
+
+/**  solve conflict with generics, e.g., List<List<C>> */
+ShiftOperator returns ShiftOperator:
+	  '>' '>' '>'?
+	| '<<'
+;
+
+/*
+ * Note that the whole expression, including the rhs, must be in the syntactic
+ * predicate in order to avoid problems stemming from the parameterized function call
+ * and from the assignment operator >>>=
+ */
+// Relational operators (11.8)
+RelationalExpression <In, Yield> returns Expression: ShiftExpression<Yield>
+	=>({RelationalExpression.lhs=current} op=RelationalOperator<In> ->rhs=ShiftExpression<Yield>)*;
+
+RelationalOperator <In> returns RelationalOperator:
+	'<' | '>' | '<=' | '>=' | 'instanceof' | <In> 'in';
+
+	// Equality operators (11.9)
+EqualityExpression <In, Yield> returns Expression: RelationalExpression<In,Yield>
+	(=>({EqualityExpression.lhs=current} op=EqualityOperator) rhs=RelationalExpression<In,Yield>)*;
+
+enum EqualityOperator: same='===' | nsame='!==' | eq='==' | neq='!=';
+
+	// Binary bitwise operators (11.10, N4JS Spec 6.1.17)
+BitwiseANDExpression <In, Yield> returns Expression: EqualityExpression<In,Yield>
+	(=>({BinaryBitwiseExpression.lhs=current} op=BitwiseANDOperator) rhs=EqualityExpression<In,Yield>)*;
+
+BitwiseANDOperator returns BinaryBitwiseOperator: '&';
+
+BitwiseXORExpression <In, Yield> returns Expression: BitwiseANDExpression<In,Yield>
+	(=>({BinaryBitwiseExpression.lhs=current} op=BitwiseXOROperator) rhs=BitwiseANDExpression<In,Yield>)*;
+
+BitwiseXOROperator returns BinaryBitwiseOperator: '^';
+
+BitwiseORExpression <In, Yield> returns Expression: BitwiseXORExpression<In,Yield>
+	(=>({BinaryBitwiseExpression.lhs=current} op=BitwiseOROperator) rhs=BitwiseXORExpression<In,Yield>)*;
+
+BitwiseOROperator returns BinaryBitwiseOperator: '|';
+
+// $<Binary logical operators ([ECM11] 11.11)
+LogicalANDExpression <In, Yield> returns Expression: BitwiseORExpression<In,Yield>
+	(=> ({BinaryLogicalExpression.lhs=current} op=LogicalANDOperator) rhs=BitwiseORExpression<In,Yield>)*;
+
+LogicalANDOperator returns BinaryLogicalOperator: '&&';
+
+LogicalORExpression <In, Yield> returns Expression: LogicalANDExpression<In,Yield>
+	(=>({BinaryLogicalExpression.lhs=current} op=LogicalOROperator) rhs=LogicalANDExpression<In,Yield>)*;
+
+LogicalOROperator returns BinaryLogicalOperator: '||';
+
+/**
+ * Conditional operator ([ECM11] 11.12)
+ */
+ConditionalExpression <In, Yield> returns Expression: LogicalORExpression<In,Yield>
+	(=> ({ConditionalExpression.expression=current} '?') trueExpression=AssignmentExpression<In=true,Yield> ':' falseExpression=AssignmentExpression<In,Yield>)?;
+
+/*
+ * Assignment operators ([ECM11] 11.13)
+ */
+AssignmentExpression <In, Yield> returns Expression:
+	  AwaitExpression<In,Yield>
+	| PromisifyExpression<In,Yield>
+	| ArrowExpression<In,Yield>
+	| <Yield> YieldExpression<In>
+	| ConditionalExpression<In,Yield> (=> ({AssignmentExpression.lhs=current} op=AssignmentOperator) rhs=AssignmentExpression<In,Yield>)?
+;
+
+YieldExpression <In> returns Expression:
+	{YieldExpression} 'yield' => many?='*'? -> expression=AssignmentExpression<In,Yield=true>?
+;
+
+AssignmentOperator returns AssignmentOperator:
+	  '=' | '*=' | '/=' | '%=' | '+=' | '-='
+	| '<<='
+	| '>' '>'? '>='
+	| '&=' | '^=' | '|='
+;
+
+/*
+ * await should mimic precedence of 'yield' in [ECM15] (because it will be transpiled into a 'yield')
+ */
+AwaitExpression <In, Yield> returns Expression:
+	=>({AwaitExpression} 'await') expression=AssignmentExpression<In,Yield>;
+
+PromisifyExpression <In, Yield> returns Expression:
+	=> ({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>;
+
+	// $<Comma operator (11.14)
+
+Expression <In, Yield>:
+	AssignmentExpression<In,Yield> ({CommaExpression.exprs+=current} ',' exprs+=AssignmentExpression<In,Yield> (','	exprs+=AssignmentExpression<In,Yield>)*)?
+;
+
+TemplateLiteral <Yield>:
+	{TemplateLiteral} (
+		  segments+=NoSubstitutionTemplate
+		| segments+=TemplateHead segments+=Expression<In=true,Yield>? TemplateExpressionEnd
+			(
+				segments+=TemplateMiddle segments+=Expression<In=true,Yield>? TemplateExpressionEnd
+			)*
+			segments+=TemplateTail
+	)
+;
+
+TemplateExpressionEnd:
+	'}'
+;
+
+NoSubstitutionTemplate returns TemplateSegment:
+	{TemplateSegment} rawValue=NO_SUBSTITUTION_TEMPLATE_LITERAL
+;
+
+TemplateHead returns TemplateSegment:
+	{TemplateSegment} rawValue=TEMPLATE_HEAD
+;
+
+TemplateTail returns TemplateSegment:
+	{TemplateSegment} rawValue=TemplateTailLiteral;
+
+TemplateMiddle returns TemplateSegment:
+	{TemplateSegment} rawValue=TemplateMiddleLiteral;
+
+// ****************************************************************************************************
+// [ECM11] A.1 Lexical Grammar (p. 211)
+// note: 'undefined' is not a literal, but a property of the built-in global object
+// ****************************************************************************************************
+
+Literal: NumericLiteral | BooleanLiteral | StringLiteral | NullLiteral | RegularExpressionLiteral;
+NullLiteral: {NullLiteral} 'null';
+BooleanLiteral: {BooleanLiteral} (true?='true' | 'false');
+StringLiteral: value=STRING;
+NumericLiteral: DoubleLiteral | IntLiteral | BinaryIntLiteral | OctalIntLiteral | LegacyOctalIntLiteral | HexIntLiteral | ScientificIntLiteral;
+DoubleLiteral: value=DOUBLE;
+IntLiteral: value=INT;
+OctalIntLiteral: value=OCTAL_INT;
+LegacyOctalIntLiteral: value=LEGACY_OCTAL_INT;
+HexIntLiteral: value=HEX_INT;
+BinaryIntLiteral: value=BINARY_INT;
+ScientificIntLiteral: value=SCIENTIFIC_INT;
+RegularExpressionLiteral: value=REGEX_LITERAL;
+
+NumericLiteralAsString:
+	DOUBLE | INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
+;
+
+IdentifierOrThis:
+	IDENTIFIER
+	| 'This'
+	| 'Promisify'
+	| 'target';
+
+AnnotationName:
+	IDENTIFIER
+	| 'This'
+	| 'target';
+
+
+
+/**
+ * The terminal rules to represent number literals are listed below.
+ *
+ * They implement the constraint
+ * 'The source character immediately following a NumericLiteral must not be an IdentifierStart or DecimalDigit.'
+ * in the value converter. That is, the terminals consume a trailing identifier and
+ * later on, a meaningful error will be attached.
+ */
+terminal DOUBLE returns ecore::EBigDecimal:
+	'.' DECIMAL_DIGIT_FRAGMENT+ EXPONENT_PART?
+	| DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?
+;
+
+terminal HEX_INT returns ecore::EBigDecimal: '0' ('x' | 'X') INT_SUFFIX;
+
+terminal BINARY_INT returns ecore::EBigDecimal: '0' ('b' | 'B') INT_SUFFIX;
+
+terminal OCTAL_INT returns ecore::EBigDecimal: '0' ('o' | 'O') INT_SUFFIX;
+
+terminal LEGACY_OCTAL_INT returns ecore::EBigDecimal: '0' DECIMAL_DIGIT_FRAGMENT INT_SUFFIX;
+
+/**
+ * This terminal fragment includes the decimal digits '0'..'9' and also all other identifier part chars
+ * to have a relaxed grammar and better error messages from the value converter.
+ */
+terminal fragment INT_SUFFIX: IDENTIFIER_PART*;
+
+terminal SCIENTIFIC_INT returns ecore::EBigDecimal:
+	DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART
+;
+
+terminal fragment EXPONENT_PART:
+	  ('e' | 'E') SIGNED_INT
+	| IDENTIFIER
+;
+
+terminal fragment SIGNED_INT:
+	('+' | '-') DECIMAL_DIGIT_FRAGMENT+ IDENTIFIER?
+;
+
+/* This terminal rule is not as strict as the ECMA spec because we want to
+ * provide better error messages than the lexer does.
+ * Therefore, an unclosed string literal is consumed to the end of line
+ * and validated in the JSStringValueConverter afterwards.
+ */
+terminal STRING:
+	  '"' DOUBLE_STRING_CHAR* '"'?
+	| "'" SINGLE_STRING_CHAR* "'"?
+;
+
+terminal fragment DOUBLE_STRING_CHAR:
+	  !(LINE_TERMINATOR_FRAGMENT | '"' | '\\')
+	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+;
+
+terminal fragment SINGLE_STRING_CHAR:
+	  !(LINE_TERMINATOR_FRAGMENT | "'" | '\\')
+	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+;
+
+terminal fragment BACKSLASH_SEQUENCE:
+	'\\' !(LINE_TERMINATOR_FRAGMENT)?
+;
+
+terminal fragment REGEX_CHAR:
+	  !(LINE_TERMINATOR_FRAGMENT | '\\' | '/' | '[')
+	| BACKSLASH_SEQUENCE
+	| '[' REGEX_CHAR_OR_BRACKET* ']'?
+;
+
+terminal fragment REGEX_CHAR_OR_BRACKET:
+	  !(LINE_TERMINATOR_FRAGMENT | '\\' | ']')
+	| BACKSLASH_SEQUENCE
+;
+
+/**
+ * The regex literal is not very strict in the sense that the trailing parts are optional.
+ * This is to improve the error recovery in the generated lexer and parser. If the trailing slash
+ * was mandatory, the lexer would brick and the parser would not sync properly. Therefore
+ * we rely on value converters and validation to check the regex literals.
+ */
+REGEX_LITERAL:
+	('/' | '/=') REGEX_TAIL?
+;
+
+terminal fragment ACTUAL_REGEX_TAIL:
+	  REGEX_CHAR+ ('/' IDENTIFIER_PART*)?
+	| '/' IDENTIFIER_PART* // matches regular expression literals like /=/ or /=/g
+;
+
+terminal fragment REGEX_START:
+	('/' | '/=')
+;
+
+/** Rewritten in post-processing. */
+terminal REGEX_TAIL:
+	'//1' // never matched by lexer but required to have a terminal token
+;
+
+// Terminals for template literals below
+terminal TEMPLATE_HEAD:
+	"`" TEMPLATE_LITERAL_CHAR* '$'+ '{'
+;
+
+terminal NO_SUBSTITUTION_TEMPLATE_LITERAL:
+	'`' TEMPLATE_LITERAL_CHAR* '$'* "`"?
+;
+
+terminal fragment ACTUAL_TEMPLATE_END:
+	TEMPLATE_LITERAL_CHAR* ('$'+ ('{' | '`'?) | '`'?)
+;
+
+terminal fragment TEMPLATE_LITERAL_CHAR:
+	  !(LINE_TERMINATOR_FRAGMENT | '`' | '\\' | '$')
+	| '$'+ !('{' | '`' | '$')
+	| LINE_TERMINATOR_SEQUENCE_FRAGMENT
+	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+;
+
+TemplateTailLiteral:
+	TEMPLATE_END?
+;
+
+TemplateMiddleLiteral:
+	TEMPLATE_MIDDLE
+;
+
+/** Rewritten in post-processing. */
+terminal TEMPLATE_MIDDLE:
+	'//2' // will never be lexed
+;
+
+/** Rewritten in post-processing. */
+terminal TEMPLATE_END:
+	'//3' // will never be lexed
+;
+
+/** Rewritten in post-processing, only used for the coloring. */
+terminal fragment TEMPLATE_CONTINUATION:
+	'//4' // actually '}'
+;
+
+// ****************************************************************************************************
+// Helpers
+// ****************************************************************************************************
+
+/**
+ * Placeholder, will be replaced by manually written ANTLR rule.
+ * This rule handles semicolons reported by the lexer and situations where the ECMA 3 specification states there should be semicolons automatically inserted.
+ * The auto semicolons are not actually inserted but this rule behaves as if they were.
+ */
+Semi: ';';
+
+/**
+ * Will be completely replaced during post processing, need some dummy token to be able to define rule.
+ */
+fragment NoLineTerminator*: NO_LINE_TERMINATOR?;
+
+/** Rewritten in post-processing. */
+terminal NO_LINE_TERMINATOR:
+	'//5' // will never be lexed
+;
+
+// ****************************************************************************************************
+// N4JS Specific
+// ****************************************************************************************************
+
+// ****************************************************************************************************
+// Annotations
+// ****************************************************************************************************
+
+// cf. N4JSSpec §9
+Annotation:'@' AnnotationNoAtSign;
+ScriptAnnotation returns Annotation: '@@' AnnotationNoAtSign;
+
+AnnotationNoAtSign returns Annotation:
+	name=AnnotationName (=> '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+
+AnnotationArgument:
+	LiteralAnnotationArgument | TypeRefAnnotationArgument
+;
+
+LiteralAnnotationArgument:
+	literal=Literal
+;
+
+TypeRefAnnotationArgument:
+	typeRef=TypeRef
+;
+
+TypeRefForCast returns types::StaticBaseTypeRef:
+	  ParameterizedTypeRef
+	| ArrayTypeRef
+	| ThisTypeRef
+	| TypeTypeRef
+	| ArrowFunctionTypeExpression
+
+	| FunctionTypeExpressionOLD
+	| UnionTypeExpressionOLD
+	| IntersectionTypeExpressionOLD;
+
+AnnotationList:
+	=>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
+;
+
+ExpressionAnnotationList:
+	{ExpressionAnnotationList} annotations+=Annotation+
+;
+
+PropertyAssignmentAnnotationList:
+	{PropertyAssignmentAnnotationList} annotations+=Annotation+
+;
+
+N4MemberAnnotationList:
+	{N4MemberAnnotationList} annotations+=Annotation+
+;
+
+// ****************************************************************************************************
+// N4JS versions of type references and expressions, overriding rules in Types.xtext
+// ****************************************************************************************************
+
+// override to support referencing types via the namespace of namespace imports
+@Override
+fragment TypeReference*:
+	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+	declaredType=[types::Type|TypeReferenceName]
+;
+
+// override to disallow fully-qualified names in N4JS
+@Override
+TypeReferenceName:
+	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+;
+
+// ****************************************************************************************************
+// New Expressions, Statements, and other Features
+// ****************************************************************************************************
+
+// cf. N4JSSpec §2.2.1 -- const statements are handled by means of variable statement modifiers
+
+// ****************************************************************************************************
+// New Meta Types
+// ****************************************************************************************************
+
+
+// cf. N4JSSpec §14
+N4ClassDeclaration <Yield>:
+	=>(
+		(declaredModifiers+=N4Modifier)*
+		'class' typingStrategy=TypingStrategyDefSiteOperator?
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
+	)
+	TypeVariables?
+	ClassExtendsImplements<Yield>?
+	Members<Yield>
+;
+
+fragment Members <Yield>*:
+	'{'
+	ownedMembersRaw+=N4MemberDeclaration<Yield>*
+	'}'
+;
+
+// we allow incorrect order of 'extends' and 'implements'; a validation will ensure the correct order
+fragment ClassExtendsImplements <Yield>*:
+	  (ClassExtendsClause<Yield> ClassImplementsList?)
+	| (ClassImplementsList ClassExtendsClause<Yield>?)
+;
+
+fragment ClassExtendsClause <Yield>*:
+	'extends' (
+		  =>superClassRef=ParameterizedTypeRefNominal
+		| superClassExpression=LeftHandSideExpression<Yield>
+	)
+;
+
+fragment ClassImplementsList*:
+	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal
+	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
+;
+
+N4ClassExpression <Yield>:
+	{N4ClassExpression}
+	'class' name=BindingIdentifier<Yield>?
+	ClassExtendsImplements<Yield>?
+	Members<Yield>;
+
+// cf. N4JSSpec §16
+N4InterfaceDeclaration <Yield>:
+	=> (
+		(declaredModifiers+=N4Modifier)*
+		'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
+	)
+	TypeVariables?
+	InterfaceExtendsList?
+	Members<Yield>
+;
+
+// we allow both 'extends' and 'implements' here, a validation will ensure 'extends' is used
+fragment InterfaceExtendsList*:
+	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal
+	(',' superInterfaceRefs+=ParameterizedTypeRefNominal)*
+;
+
+// cf. N4JSSpec §13
+N4EnumDeclaration <Yield>:
+	=>(
+		{N4EnumDeclaration}
+		(declaredModifiers+=N4Modifier)*
+		'enum' name=BindingIdentifier<Yield>?
+		VersionDeclaration?
+	)
+	'{'
+		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
+	'}'
+;
+/*
+ * Only upper case literals are allows, this is to be checked by the validator
+ */
+N4EnumLiteral: name=IdentifierName (':' value=STRING)?;
+
+	// grammar allows use of these modifiers in many places that are not actually valid;
+// this is checked in N4JSSyntaxValidator (see N4Modifier in N4JS.xcore for details)
+enum N4Modifier: private | project | protected | public | external | abstract | static | const;
+
+	// TODO jvp: order matters, seems odd. What about object literal getters and setter?
+// TODO sz: what about it?
+N4MemberDeclaration <Yield>:
+	AnnotatedN4MemberDeclaration<Yield>
+	| N4GetterDeclaration<Yield>
+	| N4SetterDeclaration<Yield>
+	| N4MethodDeclaration<Yield>
+	| N4FieldDeclaration<Yield>
+	| N4CallableConstructorDeclaration<Yield>
+;
+
+/**
+ * Left factored, annotated member declarations.
+ *
+ * Pretty much inlined versions of getter, setter, method and field declarations with leading annotations.
+ *
+ * The GrammarLinter ensures that the inlined content mirrors the content of the real declarations.
+ */
+AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
+	N4MemberAnnotationList (
+			=> ({N4GetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* GetterHeader<Yield>) (body=Block<Yield>)? ';'?
+		| 	=> ({N4SetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* 'set' -> declaredName=LiteralOrComputedPropertyName <Yield>)
+				(declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
+		| 	=> (
+				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
+				(
+						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
+					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
+				)
+				)';'?
+		| 	{N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
+	)
+;
+
+fragment FieldDeclarationImpl <Yield>*:
+	(declaredModifiers+=N4Modifier)* BogusTypeRefFragment?
+	declaredName=LiteralOrComputedPropertyName<Yield>
+	(declaredOptional?='?')?
+	ColonSepDeclaredTypeRef?
+	('=' expression=Expression<In=true,Yield>)?
+	Semi
+;
+
+N4FieldDeclaration <Yield>:
+	{N4FieldDeclaration}
+	FieldDeclarationImpl<Yield>
+;
+
+N4MethodDeclaration <Yield>:
+	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables? BogusTypeRefFragment?
+		(
+				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
+			|	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
+		)
+	) ';'?
+;
+
+N4CallableConstructorDeclaration <Yield> returns N4MethodDeclaration:
+	MethodParamsReturnAndBody <Generator=false> ';'?
+;
+
+fragment MethodParamsAndBody <Generator>*:
+	StrictFormalParameters<Yield=Generator>
+	(body=Block<Yield=Generator>)?
+;
+
+fragment MethodParamsReturnAndBody <Generator>*:
+	StrictFormalParameters<Yield=Generator>
+	ColonSepReturnTypeRef?
+	(body=Block<Yield=Generator>)?
+;
+
+/*
+ * 'get' and 'set' are no reserved words, see BindingIdentifier.
+ */
+N4GetterDeclaration <Yield>:
+	=> ({N4GetterDeclaration}
+	(declaredModifiers+=N4Modifier)*
+	GetterHeader<Yield>)
+	(body=Block<Yield>)? ';'?
+;
+
+fragment GetterHeader <Yield>*:
+	BogusTypeRefFragment? 'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepDeclaredTypeRef?
+;
+
+N4SetterDeclaration <Yield>:
+	=>({N4SetterDeclaration}
+		(declaredModifiers+=N4Modifier)*
+		'set'
+		->declaredName=LiteralOrComputedPropertyName <Yield>
+	)
+	(declaredOptional?='?')?
+	'(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
+;
+
+BindingPattern <Yield>:
+	ObjectBindingPattern<Yield>
+	| ArrayBindingPattern<Yield>
+;
+
+ObjectBindingPattern <Yield> returns ObjectBindingPattern:
+	{ObjectBindingPattern}
+	'{' (properties+=BindingProperty<Yield,AllowType=false> (',' properties+=BindingProperty<Yield,AllowType=false>)*)?	'}'
+;
+
+ArrayBindingPattern <Yield> returns ArrayBindingPattern:
+	{ArrayBindingPattern}
+	'['
+		elements+=Elision* (
+			elements+=BindingRestElement<Yield>
+			(',' elements+=Elision* elements+=BindingRestElement<Yield>)*
+			(',' elements+=Elision*)?
+		)?
+	']'
+;
+
+/*
+ * In case of object destruction, no colon separated type can be declared in case of single name binding since this would
+ * be ambiguous (e.g., {prop: newVar} vs.  {propAndVarName: TypeForVar}.
+ * However it is possible with a preceding LiteralBindingPropertyName, as in this case we simply have three
+ * segment, e.g. { prop: newVar: TypeOfNewVar }.
+ */
+BindingProperty <Yield, AllowType>:
+	  =>(declaredName=LiteralOrComputedPropertyName<Yield> ':') value=BindingElement<Yield>
+	| value=SingleNameBinding<Yield,AllowType>
+;
+
+SingleNameBinding <Yield, AllowType> returns BindingElement:
+	varDecl=VariableDeclaration<In=true,Yield,AllowType>
+;
+
+BindingElement <Yield>:
+	BindingElementImpl<Yield>
+;
+
+BindingRestElement <Yield> returns BindingElement:
+	rest?='...'?
+	BindingElementImpl<Yield>
+;
+
+fragment BindingElementImpl<Yield> returns BindingElement:
+	=>(nestedPattern=BindingPattern<Yield>) ('=' expression=AssignmentExpression<In=true,Yield>)?
+	| varDecl=VariableDeclaration<In=true,Yield,AllowType=true>
+;
+
+Elision returns BindingElement:
+	{BindingElement} ','
+;
+
+LiteralOrComputedPropertyName <Yield>:
+	literalName=IdentifierName
+	| literalName=STRING
+	| literalName=NumericLiteralAsString
+	| '[' expression=AssignmentExpression<In=true,Yield> ']'
+;
+
+/**
+ * Intentionally unused to get rid of bogus lexer errors when
+ * the input contains an incomplete asyncArrow?='@=>' keyword, e.g. @=)
+ * TODO remove when @=> is removed.
+ */
+terminal INCOMPLETE_ASYNC_ARROW:
+	'@='
+;
+
+// ****************************************************************************************************
+// see https://facebook.github.io/jsx/
+// ****************************************************************************************************
+
+JSXElement:
+	'<' jsxElementName=JSXElementName JSXAttributes
+	(('>' jsxChildren+=JSXChild* JSXClosingElement) | ('/' '>'));
+
+fragment JSXClosingElement *:
+	'<' '/' jsxClosingName=JSXElementName '>';
+
+JSXChild:
+	JSXElement | JSXExpression
+	//	| JSXText -- not supported yet, cf. IDE-2414
+;
+
+// terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
+
+JSXExpression: '{' expression=AssignmentExpression<false,false> '}';
+
+JSXElementName:
+	expression=JSXElementNameExpression
+	;
+
+JSXElementNameExpression returns Expression:
+	IdentifierRef<false>
+	({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
+	//	| JSXNamedspacedName not supported
+;
+
+//JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
+//JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
+
+fragment JSXAttributes *:
+	jsxAttributes+=JSXAttribute*;
+
+JSXAttribute:
+	JSXSpreadAttribute
+	|
+	JSXPropertyAttribute;
+
+JSXSpreadAttribute:
+	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';
+
+JSXPropertyAttribute:
+	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | ('{'
+	jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')))?;
+
+
+/* Version (N4IDL) related rules */
+fragment VersionDeclaration*: declaredVersion=VERSION;

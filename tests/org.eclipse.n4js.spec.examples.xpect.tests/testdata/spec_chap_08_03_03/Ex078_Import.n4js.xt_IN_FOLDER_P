@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+// THIS test is TEMPORARLY moved to /org.eclipse.n4js.transpiler.es5.tests/testdata/p/Ex078_Import.n4js.xt since resulution of file from other dirs not yet fully supported.
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  
+   ResourceSet {
+        ThisFile {}
+        File "A.n4js" { from="../p/A.n4js"}
+        File "E.n4js" { from="../p/E.n4js"}
+        File "F.n4js" { from="../p/F.n4js"}
+        File "G.n4js" { from="../p/G.n4js"}
+        File "H.n4js" { from="../p/H.n4js"}
+   }
+   END_SETUP */
+
+/* XPECT output ~~~
+<==
+stdout:
+
+stderr:
+==>
+~~~ */
+
+/* XPECT compileResult ---
+
+--- */
+
+// IDEBUG-73: next line can be removed if bug is fixed.
+var dummy_refernce_to_IDEBUG_73 = 42; 
+
+import {A} from "p/A"
+import {C,D,E} from "p/E"
+import * from "p/F"
+import {A as G} from "p/G"
+import {A as H, B as I} from "p/H"
+
+
+
+
+// --§-§-§-§ additional check not in example 75: §-§-§-§--
+console.log(cf)
+var A a = new A();
+console.log(a);

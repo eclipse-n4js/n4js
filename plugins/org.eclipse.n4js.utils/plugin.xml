@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="injectorSupplier" name="Injector Supplier" schema="schema/injectorSupplier.exsd"/>
+   <extension-point id="org.eclipse.n4js.utils.fileExtensions" name="File Extensions" schema="schema/org.eclipse.n4js.utils.fileExtensions.exsd"/>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated Validation -->
+      <package
+            uri="http://www.eclipse.org/n4js/utils/Validation"
+            class="org.eclipse.n4js.utils.validation.ValidationPackage"
+            genModel="model/Validation.xcore"/>
+   </extension>
+
+   <extension
+      point="org.eclipse.n4js.utils.fileExtensions">
+	     <transpilableFileExtensions extensions="n4js, js, n4jsx, n4js, n4idl"/>
+	     <runnableFileExtensions extensions="n4js, js, n4jsx, jsx, n4idl"/>
+	     <testFileExtensions extensions="n4js, n4jsx, n4idl"/>
+	     <typableFileExtensions extensions="n4jsd, n4js, js, n4jsx, jsx, n4idl"/>
+	     <rawFileExtensions extensions="js"/>
+   </extension>
+</plugin>

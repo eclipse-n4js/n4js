@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test";
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
+import {FIXME2Mock} from "org/eclipse/n4js/mangelhaft/test/helper/FIXMEMock";
+import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent";
+@Binder
+@Bind(IFIXME2, FIXME2Mock)
+class DirectTestBinder {}
+
+@GenerateInjector
+@WithParentInjector(TestDIComponent)
+@UseBinder(DirectTestBinder)
+export public class DirectInjectionTest {
+    @Inject
+    fix: IFIXME;
+    @Inject
+    fix2: IFIXME2;
+
+    @BeforeAll
+    preconditionCheck() {
+        if(this.fix instanceof IFIXME === false || this.fix2 instanceof IFIXME2 === false){
+            Precondition.fail("no parent IFIXME bindings"
+                , "Tests should not run if parent bindings have not been set"
+            )
+        }
+    }
+
+    @Test
+    fromMangelhaft(){
+        Assert.equal(this.fix.logStr, "FIXME joe from Mangelhaft", "should be from Mangelhaft");
+    }
+    @Test
+    fromMock(){
+        Assert.equal(this.fix2.logStr, "FIXME joe from Test", "should be from Mock");
+    }
+}
+

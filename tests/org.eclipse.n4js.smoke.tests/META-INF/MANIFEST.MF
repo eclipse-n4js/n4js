@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.n4js.smoke.tests
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: %providerName
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.xtend.lib,
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.n4js.tests.helper,
+ com.google.inject,
+ org.eclipse.n4js.ui,
+ org.eclipse.n4js.ui.tests.helper,
+ org.eclipse.xtext.testing,
+ org.junit
+Automatic-Module-Name: org.eclipse.n4js.smoke.tests
+

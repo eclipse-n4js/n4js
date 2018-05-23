@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.N4JSExpectMatrixPendingTest END_SETUP  */
+
+// Declaring a string based enum
+
+@StringBased enum SBEnum1 {
+	// only strings are allowed as literals XPECT errors --> "mismatched input '1' expecting RULE_STRING" at "1"
+	a: 1
+}
+
+@StringBased enum SBEnum2 {
+	// unique literal names XPECT errors --> "Multiple literals with name a." at "a"
+	a: "a",
+	a: "b"
+}

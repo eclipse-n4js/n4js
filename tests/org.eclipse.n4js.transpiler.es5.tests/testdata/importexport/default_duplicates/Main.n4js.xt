@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "M.n4js" {}
+	}
+
+	END_SETUP
+*/
+
+
+// XPECT noerrors -->
+import * as NS from "importexport/default_duplicates/M"
+
+// duplicate import through namespace is ok!
+// XPECT errors --> "default from importexport/default_duplicates/M is already imported as NS.default." at "DefImp1"
+import DefImp1 from "importexport/default_duplicates/M"
+
+// duplicate is resolved only against original
+// XPECT errors --> "default from importexport/default_duplicates/M is already imported as NS.default." at "DefImp2"
+import DefImp2 from "importexport/default_duplicates/M"
+
+
+
+// XPECT noerrors -->
+NS;
+// XPECT noerrors --> default is available through namespace
+NS.default;
+
+
+// XPECT noerrors -->
+export default public class A {}
+export public class B {}
+// XPECT errors --> "Duplicate default export." at "default"
+export default public class C {}
+// XPECT errors --> "Duplicate default export." at "default"
+export default public class D {}

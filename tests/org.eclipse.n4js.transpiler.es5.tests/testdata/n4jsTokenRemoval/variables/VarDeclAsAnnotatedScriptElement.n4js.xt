@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+
+/* XPECT ! output ~~~
+<==
+stdout:
+b1
+c1_1
+c1_2
+stderr:
+==>
+~~~ */
+
+
+// had to disable this test, because there does no longer exist an annotation that can be put on VariableDeclarations
+// (losing this test should not be a problem, because this test was intended as a challenge for the *old* transpiler;
+// for the new transpiler, this test case should be trivial)
+
+
+//var @Undefined b1 : string = 'b1';
+//var @Undefined c1_1 : string = 'c1_1', @Undefined c1_2 : string = 'c1_2';
+
+//console.log(b1);
+//console.log(c1_1);
+//console.log(c1_2);

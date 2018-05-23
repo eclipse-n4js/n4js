@@ -1,0 +1,123 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+[Function: delete___n4] 'instance method renamed'
+[Function: delete____n4] 'instance method not renamed'
+[Function: delete___n4] 'static method renamed'
+[Function: delete____n4] 'static method not renamed'
+[Function: delete___n4] 'default instance method renamed'
+[Function: delete___n4] 'default static method renamed'
+[Function: delete___n4] 'super instance method renamed'
+[Function: delete___n4] 'super static method renamed'
+logging setter-getter 1
+logging setter-getter 2
+stderr:
+==>
+--- */
+
+//instance
+class A{
+    public delete (t) : void{
+        console.log(t, 'instance method renamed');
+    }
+    public delete_ (t) : void{
+        console.log(t, 'instance method not renamed');
+    }
+}
+var a = new A();
+// XPECT warnings --> "A reference to method delete is created detached from a (correct) this-instance." at "delete"
+a.delete(a.delete);
+// XPECT warnings --> "A reference to method delete_ is created detached from a (correct) this-instance." at "delete_"
+a.delete_(a.delete_);
+
+//static
+class B{
+    public static delete (t) : void{
+        console.log(t, 'static method renamed');
+    }
+    public static delete_ (t) : void{
+        console.log(t, 'static method not renamed');
+    }
+}
+// XPECT warnings --> "A reference to method delete is created detached from a (correct) this-instance." at "delete"
+B.delete(B.delete);
+// XPECT warnings --> "A reference to method delete_ is created detached from a (correct) this-instance." at "delete_"
+B.delete_(B.delete_);
+
+//default
+interface I {
+    public delete(t) : void{
+        console.log(t, 'default instance method renamed');
+    };
+        public static delete (t) : void{
+        console.log(t, 'default static method renamed');
+    }
+}
+
+class C implements I{}
+var c = new C();
+// XPECT warnings --> "A reference to method delete is created detached from a (correct) this-instance." at "delete"
+c.delete(c.delete)
+// XPECT warnings --> "A reference to method delete is created detached from a (correct) this-instance." at "delete"
+I.delete(I.delete)
+
+//super
+class S{
+    public delete(t) : void{
+        console.log(t, "super instance method renamed");
+    }
+    public static delete (t) : void{
+        console.log(t, 'super static method renamed');
+    }
+}
+
+class ES extends S{}
+
+var es = new ES();
+// XPECT warnings --> "A reference to method delete is created detached from a (correct) this-instance." at "delete"
+es.delete(es.delete);
+// XPECT warnings --> "A reference to method delete is created detached from a (correct) this-instance." at "delete"
+ES.delete(ES.delete);
+
+//getters-setters are renamed internally anyway
+class SG1{
+    private _delete : string = null;
+    public get delete() : string {
+        return this._delete;
+    }
+    public set delete(data : string) {
+        this._delete = data;
+    }
+}
+
+var sg1 = new SG1();
+sg1.delete = "logging setter-getter 1";
+console.log(sg1.delete);
+
+
+class SG2{
+    private delete : string = null;
+    public get _delete() : string {
+        return this.delete;
+    }
+    public set _delete(data : string) {
+        this.delete = data;
+    }
+}
+
+var sg2 = new SG2();
+sg2._delete = "logging setter-getter 2";
+console.log(sg2._delete);

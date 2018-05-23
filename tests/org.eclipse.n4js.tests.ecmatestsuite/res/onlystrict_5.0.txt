@@ -1,0 +1,19 @@
+# strict mode
+# These require proper bindings and additional validation
+test262/suite/ch07/7.8/7.8.3/7.8.3-3gs.js
+test262/suite/ch08/8.7/8.7.2/8.7.2-3-a-1gs.js
+test262/suite/ch08/8.7/8.7.2/8.7.2-3-a-2gs.js
+test262/suite/ch10/10.4/10.4.2/10.4.2.1-1gs.js
+test262/suite/ch10/10.6/10.6-2gs.js
+test262/suite/ch11/11.13/11.13.1/11.13.1-4-28gs.js
+test262/suite/ch11/11.13/11.13.1/11.13.1-4-29gs.js
+test262/suite/ch11/11.1/11.1.5/11.1.5-2gs.js
+test262/suite/ch11/11.4/11.4.1/11.4.1-5-a-5gs.js
+test262/suite/ch13/13.0/13.0_4-17gs.js
+test262/suite/ch13/13.1/13.1-5gs.js
+test262/suite/ch13/13.1/13.1-8gs.js
+test262/suite/ch13/13.2/13.2-19-b-3gs.js
+test262/suite/ch15/15.3/15.3.2/15.3.2.1/15.3.2.1-10-4gs.js
+test262/suite/ch15/15.3/15.3.2/15.3.2.1/15.3.2.1-10-6gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5-1gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5-2gs.js

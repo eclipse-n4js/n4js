@@ -1,0 +1,110 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+========================================
+called method m
+called method "a@b"
+called method Symbol.iterator
+called static method m
+called static method "a@b"
+called static method Symbol.iterator
+========================================
+stderr:
+==>
+--- */
+
+
+// here we test the 'jsFunction' property of the member descriptors in the 'ownedMembers' array of
+// the n4type meta-information
+
+// NOTE: the new transpiler also provides this property for getters and setters; but to be actually usable, a change
+// in the runtime code is required (so the parts for testing getters/setters are commented out, below)
+
+
+class C {
+	m() {
+		console.log('called method m');
+	}
+	["a@b"]() {
+		console.log('called method "a@b"');
+	}
+	[Symbol.iterator]() {
+		console.log('called method Symbol.iterator');
+	}
+	static m() {
+		console.log('called static method m');
+	}
+	static ["a@b"]() {
+		console.log('called static method "a@b"');
+	}
+	static [Symbol.iterator]() {
+		console.log('called static method Symbol.iterator');
+	}
+}
+
+//class Cg {
+//	get g() {
+//		console.log('called getter g');
+//		return null;
+//	}
+//	get ["a@b"]() {
+//		console.log('called getter "a@b"');
+//		return null;
+//	}
+//	get [Symbol.iterator]() {
+//		console.log('called getter Symbol.iterator');
+//		return null;
+//	}
+//}
+//
+//class Cs {
+//	set s(value) {
+//		console.log('called setter s');
+//	}
+//	set ["a@b"](value) {
+//		console.log('called setter "a@b"');
+//	}
+//	set [Symbol.iterator](value) {
+//		console.log('called setter Symbol.iterator');
+//	}
+//}
+
+
+// XPECT warnings --> "Unnecessary cast from N4Class to Object" at "C.n4type as Object"
+var c = (C.n4type as Object)['ownedMembers'];
+//// X---PECT warnings --> "Unnecessary cast from N4Class to Object" at "Cg.n4type as Object"
+//var cg = (Cg.n4type as Object)['ownedMembers'];
+//// X---PECT warnings --> "Unnecessary cast from N4Class to Object" at "Cs.n4type as Object"
+//var cs = (Cs.n4type as Object)['ownedMembers'];
+
+
+console.log('========================================');
+(c[0] as Object)['jsFunction']();
+(c[1] as Object)['jsFunction']();
+(c[2] as Object)['jsFunction']();
+(c[3] as Object)['jsFunction']();
+(c[4] as Object)['jsFunction']();
+(c[5] as Object)['jsFunction']();
+console.log('========================================');
+//(cg[0] as Object)['jsFunction']();
+//(cg[1] as Object)['jsFunction']();
+//(cg[2] as Object)['jsFunction']();
+//console.log('========================================');
+//(cs[0] as Object)['jsFunction']();
+//(cs[1] as Object)['jsFunction']();
+//(cs[2] as Object)['jsFunction']();
+//console.log('========================================');

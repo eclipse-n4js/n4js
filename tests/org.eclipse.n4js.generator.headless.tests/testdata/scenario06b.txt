@@ -1,0 +1,32 @@
+# wsp1/P1/ext1/c/X.js
+// same as scenario 6, but now we have a project that ONLY contains external
+// sources (i.e. *no* n4js file). This kind of project caused problems before.
+export public class A {
+	constructor() {
+		console.log(" in class "+A)
+	}
+}
+
+# wsp1/P1/manifest.n4mf
+ProjectId: P1
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: application
+ProjectVersion: 0.0.1-SNAPSHOT
+Output: "outfolder"
+Sources {
+	external {
+		"ext1","ext2"
+	}
+}
+ModuleFilters{
+	noModuleWrap { "c/*" in "ext2" }
+}
+
+
+# wsp1/P1/ext2/c/X2.js
+export public class C {
+	constructor() {
+		console.log(" in class "+C)
+	}
+} 

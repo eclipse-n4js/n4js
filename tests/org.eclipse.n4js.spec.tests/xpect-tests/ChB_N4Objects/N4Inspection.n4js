@@ -1,0 +1,255 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+function inspectPropertyAsMethod(prop : any, propName : string) {
+    if (typeof prop === 'undefined') {
+        console.log("  -", "test." + propName + " is undefined");
+        return;
+    }
+
+    if (prop instanceof N4Method) {
+        console.log("  -", "test." + propName + " is a N4Method " + (prop as N4Method).name);
+        return;
+    }
+
+    if (prop instanceof Function || typeof prop === 'function') {
+        var _str = (new String(prop)).toString();
+        if (_str === "function " + propName + "() { [native code] }") {
+            console.log("  -", "test." + propName + "  is native function");
+        } else {
+            var _name = _str;
+            _name = _name.substring('function '.length);
+            _name = _name.substring(0, _name.indexOf('('));
+            console.log("  -", "test." + propName + " is a function " + _name);
+        }
+    } else {
+        console.log("  -", "test." + propName + " is a" + typeof prop);
+    }
+}
+
+function inspectPropertyAsArray(prop : any, name : string) {
+    if (typeof prop === 'undefined') {
+        console.log("  -", "test." + name + " is undefined");
+        return;
+    }
+    if (prop instanceof Array === false) {
+        console.log("  -", "test." + name + " is not array");
+        return;
+    }
+
+    var arr : Array < any > = prop as Array < any > ;
+    if (arr.length > 0) {
+        arr.forEach(function (a : any, index : number) {
+            if (a instanceof N4NamedElement) {
+                console.log("    ", "test." + name + "[" + index + "] is " + (a as N4NamedElement).name);
+            } else if (a instanceof N4Annotation) {
+                console.log("    ", "test." + name + "[" + index + "] is N4Annotation " + (a as N4Annotation).name);
+            } else {
+                console.log("    ", "test." + name + "[" + index + "] is not unknown");
+            }
+        });
+    } else {
+        console.log("  -", "test." + name + " is empty");
+    }
+}
+
+function inspectPropertyAsString(prop : any, name : string) {
+    var propTypeof = typeof prop;
+    if (propTypeof === 'undefined') {
+        console.log("  -", "test." + name + " is undefined");
+        return
+    }
+
+    if (propTypeof === 'string') {
+        console.log("  -", "test." + name + " is a string " + prop);
+        return;
+    }
+
+    console.log("  -", "test." + name + " is not a string, it is " + propTypeof);
+}
+
+function inspectPropertyAsN4Class(prop : any, name : string) {
+    if (typeof prop === 'undefined') {
+        console.log("  -", "test." + name + " is undefined");
+        return
+    }
+
+    if (prop instanceof N4Class) {
+        console.log("  -", "test." + name + " is an N4Class " + (prop as N4Class).name);
+    }
+
+    console.log("  -", "test." + name + " is not an N4Class" + prop);
+}
+
+//==========================
+
+export function inspectAsObject(test : any) {
+    if (test instanceof Object === false) {
+        console.log(" =", "test object is not an Object")
+        return;
+    }
+
+    console.log(" =", "inspect test as Object")
+    var _test = test as Object;
+
+    if (_test['prototype'] !== 'undefined') {
+        var _constructor = _test['prototype'];
+        if (typeof _constructor === 'object') {
+            console.log("  -", "test.prototype is object :: ", _constructor)
+        } else {
+            console.log("  -", "test.prototype is not an object", typeof _constructor);
+        }
+    } else {
+        console.log("  -", "test.prototype is undefined)");
+    }
+
+    inspectPropertyAsMethod(_test.hasOwnProperty, "hasOwnProperty");
+    inspectPropertyAsMethod(_test.isPrototypeOf, "isPrototypeOf");
+    inspectPropertyAsMethod(_test.propertyIsEnumerable, "propertyIsEnumerable");
+    inspectPropertyAsMethod(_test.toLocaleString, "toLocaleString");
+    inspectPropertyAsMethod(_test.toString, "toString");
+    inspectPropertyAsMethod(_test.valueOf, "valueOf")
+}
+
+export function inspectAsN4Object(test : any) {
+    if (test instanceof N4Object === false) {
+        console.log(" =", "test is not instance of N4Object");
+        return;
+    }
+
+    console.log(" =", "inspect test as N4Obejct");
+    var _test = test as N4Object;
+
+    //static check
+    if ((_test.constructor as Object).hasOwnProperty('n4type')) {
+        inspectPropertyAsN4Class(_test.constructor.n4type, 'n4type (static)');
+    } else {
+        console.log("  -", "test.constructor does not have own property n4type");
+    }
+}
+
+export function inspectAsN4Element(test : any) {
+    if (test instanceof N4Element === false) {
+        console.log(" =", "test is not instance of N4Element");
+        return;
+    }
+
+    console.log(" =", "inspect test as N4Element")
+    var _test = test as N4Element;
+
+    if (_test.hasOwnProperty('origin')) {
+        inspectPropertyAsString(_test.origin, "origin");
+    } else {
+        console.log("  -", "test.name does not own property of origin");
+    }
+
+    inspectPropertyAsArray(_test.annotations, 'annotations')
+
+    if (typeof _test.allAnnotations !== 'undefined') {
+        inspectPropertyAsMethod(_test.allAnnotations, 'allAnnotations');
+    } else {
+        console.log("  -", "test.allAnnotations is undefined");
+    }
+
+    if (typeof _test.anyAnnotation !== 'undefined') {
+        inspectPropertyAsMethod(_test.allAnnotations, 'anyAnnotation');
+    } else {
+        console.log("  -", "test.anyAnnotation is undefined");
+    }
+}
+
+export function inspectAsN4NamedElement(test : any) {
+    if (test instanceof N4NamedElement === false) {
+        console.log("  =", "tested entity is not instance of N4NamedElement");
+        return;
+    }
+
+    console.log(" =", "inspect test as N4NamedElement")
+    var _test = test as N4NamedElement;
+
+    if (_test.hasOwnProperty('name')) {
+        inspectPropertyAsString(_test.name, "name");
+    } else {
+        console.log("  -", "test.name is not  own property of test");
+    }
+}
+
+export function inspectAsN4Type(test : any) {
+    if (test instanceof N4Type === false) {
+        console.log("  =", "tested entity is not instance of N4Type");
+        return;
+    }
+
+    console.log(" =", "inspect test as N4Type")
+    var _test = test as N4Type;
+	var _testCtor = _test.__proto__.constructor as constructor{N4Type};
+
+    if (_test.hasOwnProperty('fqn')) {
+        inspectPropertyAsString(_test.fqn, "fqn");
+    } else {
+        console.log("  -", "test.fqn is not own property of test");
+    }
+
+    inspectPropertyAsMethod(_testCtor.of, 'of');
+}
+
+export function inspectAsN4Classifier(test : any) {
+    if (test instanceof N4Classifier === false) {
+        console.log("  =", "tested entity is not instance of N4Classifier");
+        return;
+    }
+    console.log(" =", "inspect test as N4Classifier")
+    var _test = test as N4Classifier;
+    var _testCtor = _test.__proto__.constructor as constructor{N4Classifier};
+
+    inspectPropertyAsMethod(_testCtor, 'test.constructor')
+    inspectPropertyAsArray(_test.allImplementedInterfaces, 'allImplementedInterfaces')
+    inspectPropertyAsMethod(_test.dataFields, 'dataFields')
+    inspectPropertyAsMethod(_test.dataFieldsWithAnnotation, 'dataFieldsWithAnnotation')
+    inspectPropertyAsMethod(_test.members, 'members')
+    inspectPropertyAsMethod(_test.membersWithAnnotation, 'membersWithAnnotation')
+    inspectPropertyAsMethod(_test.methods, 'methods')
+    inspectPropertyAsMethod(_test.methodsWithAnnotation, 'methodsWithAnnotation')
+
+
+    if (_test.hasOwnProperty('n4superType')) {
+        inspectPropertyAsN4Class(_test.n4superType, 'n4superType')
+    } else {
+        console.log("  -", "test.n4superType is not own property of test")
+    }
+
+    //sneaky checks of private properties
+    inspectPropertyAsArray((test as Object)["ownedMembers"], 'ownedMembers')
+    inspectPropertyAsArray((test as Object)["consumedMembers"], 'consumedMembers')
+}
+
+export function inspectAsN4Class(test : any) {
+    if (test instanceof N4Class === false) {
+        console.log(" =", "tested entity is not instance of N4Class");
+        return;
+    }
+    console.log(" =", "inspect test as N4Class")
+    var _test = test as N4Class;
+
+    console.log("  -", "test is a class ::", _test.isClass === true && _test.isEnum === false && _test.isInterface === false)
+}
+
+export function inspectAsN4Interface(test : any) {
+    if (test instanceof N4Interface === false) {
+        console.log(" =", "tested entity is not instance of N4Interface");
+        return;
+    }
+    console.log(" =", "inspect test as N4Interface");
+    var _test = test as N4Interface;
+
+    console.log("  -", "test is a class ::", _test.isClass === false && _test.isEnum === false && _test.isInterface === false)
+}
+

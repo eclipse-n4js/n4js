@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+C initializes C.s with sC
+C initializes C.s2 with s2C
+D initializes D.sp3 with sp3D
+D initializes D.t with tD
+R1 initializes R1.u with uR1
+R2 initializes R2.v with vR2
+R2 initializes R2.w with undefined
+R2 initializes R2.sp5 with sp5R2
+D.constructor initializes D.constructor.sp1 with sp1Spec
+D.constructor initializes D.constructor.sp2 with undefined
+D.constructor initializes D.constructor.sp4 with undefined
+d :: s : sC
+d :: t : tD
+d :: u : uR1
+d :: v : vR2
+d :: w : undefined
+d :: undef : undefined
+d :: spundef : undefined
+d :: sp1 : sp1Spec
+d :: sp2 : undefined
+d :: sp3 : sp3D
+d :: sp4 : undefined
+d :: sp4 : sp5R2
+stderr:
+==>
+--- */
+function verboseInit(target, prop, val){console.log(target, "initializes" , target +"."+ prop, "with", val); return val;}
+function valCheck(instance, prop, val, expected){console.log(instance, "::", prop, ":", val); if(val != expected){console.error("expected instance of",instance, "to have property", prop, "equal", expected, "but it was", val)};}
+
+ interface R0 {
+ v : any = verboseInit("R0", "v","vR0");
+ w : any = verboseInit("R1", "w","wR1");
+ }
+
+ interface R1 {
+ s : any = verboseInit("R1", "s","vR1");
+ t : any = verboseInit("R1", "t","tR1");
+ u : any = verboseInit("R1", "u","uR1");
+ }
+
+ interface R2 extends R1, R0 {
+ 	@Override
+ 	t : any = verboseInit("R2", "t","tR2");
+ 	@Override
+ 	v : any = verboseInit("R2", "v","vR2");
+ 	@Override
+ 	w : any = verboseInit("R2", "w", undefined);
+ 	public sp4 : any = verboseInit("R2", "sp4","sp4R2");
+ 	public sp5 : any = verboseInit("R2", "sp5","sp5R2");
+ }
+
+ class C {
+ s : any = verboseInit("C", "s","sC");
+ s2 : any = verboseInit("C", "s2","s2C");
+ }
+
+
+ class D extends C implements R1, R2 {
+ 	public sp1 : any = verboseInit("D", "sp1","sp1D");
+ 	public sp2 : any = verboseInit("D", "sp2","sp2D");
+ 	public sp3 : any = verboseInit("D", "sp3","sp3D");
+ 	spundef = "not undef";
+ 	undef = undefined;
+
+ 	@Override
+ 	t : any = verboseInit("D", "t","tD");
+
+ 	constructor (@Spec spec : ~i~this){
+ 		this.sp1 = verboseInit("D.constructor", "sp1", "sp1Spec");//with non undef
+ 		this.sp2 = verboseInit("D.constructor", "sp2", undefined);//with undef
+ 		this.sp4 = verboseInit("D.constructor", "sp4", undefined);//with undef
+ 		this.spundef = undefined
+ 	}
+ }
+
+var d = new D({any sp1:"sp1Spec", any sp2:undefined, any sp4:undefined});
+valCheck("d", "s", d.s, "sC");
+valCheck("d", "t", d.t, "tD");
+valCheck("d", "u", d.u, "uR1");
+valCheck("d", "v", d.v, "vR2");
+valCheck("d", "w", d.w, undefined);
+valCheck("d", "undef", d.undef, undefined);
+valCheck("d", "spundef", d.spundef, undefined);
+valCheck("d", "sp1", d.sp1, "sp1Spec");
+valCheck("d", "sp2", d.sp2, undefined);
+valCheck("d", "sp3", d.sp3, "sp3D");
+valCheck("d", "sp4", d.sp4, undefined);
+valCheck("d", "sp4", d.sp5, "sp5R2");

@@ -1,0 +1,243 @@
+/**
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.flowgraphs.analysers;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.FGUtils;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
+import org.eclipse.n4js.n4JS.Block;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.ExpressionStatement;
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
+import org.eclipse.n4js.n4JS.ReturnStatement;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.Statement;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.TextRegion;
+
+/**
+ * Collects all reachable nodes and hence finds all unreachable nodes, alias <i>dead code</i>. Provides methods to
+ * determine if a given {@link ControlFlowElement} is dead code, or to compute a minimal set of {@link TextRegion}s of
+ * dead code.
+ */
+public class DeadCodeAnalyser extends GraphVisitor {
+	Set<ControlFlowElement> allLiveNodes = new HashSet<>();
+	Set<ControlFlowElement> allDeadNodes = new HashSet<>();
+
+	/** Constructor */
+	public DeadCodeAnalyser() {
+		super(TraverseDirection.Forward);
+	}
+
+	@Override
+	protected void visit(ControlFlowElement cfe) {
+		if (isLiveCode()) {
+			allLiveNodes.add(cfe);
+		}
+		if (isDeadCodeNode()) {
+			allDeadNodes.add(cfe);
+		}
+	}
+
+	/** @return all reachable {@link ControlFlowElement}s */
+	public Set<ControlFlowElement> getReachableCFEs() {
+		return allLiveNodes;
+	}
+
+	/** @return all unreachable {@link ControlFlowElement}s */
+	public Set<ControlFlowElement> getUnreachableCFEs() {
+		return allDeadNodes;
+	}
+
+	/**
+	 * This method deals with the fact that {@link Statement}s are not represented in the control flow graph.
+	 *
+	 * @return true iff the given {@link ControlFlowElement} is dead code.
+	 */
+	public boolean isDeadCode(ControlFlowElement cfe) {
+		cfe = CFEMapper.map(cfe);
+
+		if (FGUtils.isControlStatement(cfe)) {
+			Set<ControlFlowElement> succs = flowAnalyzer.getSuccessors(cfe);
+			for (ControlFlowElement succ : succs) {
+				if (!isDeadCode(succ)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		if (allLiveNodes.contains(cfe)) {
+			return false;
+		}
+		Set<ControlFlowElement> preds = flowAnalyzer.getPredecessorsSkipInternal(cfe);
+		if (preds.isEmpty()) {
+			return true;
+		}
+
+		Set<ControlFlowElement> visited = new HashSet<>();
+		while (!preds.isEmpty()) {
+			ControlFlowElement pred = preds.iterator().next();
+			preds.remove(pred);
+			if (visited.contains(pred))
+				continue;
+
+			if (allLiveNodes.contains(pred)) {
+				return false;
+			}
+			preds.addAll(flowAnalyzer.getPredecessorsSkipInternal(pred));
+			visited.add(pred);
+		}
+		return true;
+	}
+
+	/** @return all {@link TextRegion}s of dead code */
+	public Set<DeadCodeRegion> getDeadCodeRegions() {
+		Collection<Set<ControlFlowElement>> deadCodeGroups = separateOnTheirBlocks(getUnreachableCFEs());
+		Set<DeadCodeRegion> deadCodeRegions = new HashSet<>();
+		for (Set<ControlFlowElement> deadCodeGroup : deadCodeGroups) {
+			DeadCodeRegion textRegion = getDeadCodeRegion(deadCodeGroup);
+			deadCodeRegions.add(textRegion);
+		}
+		return deadCodeRegions;
+	}
+
+	/**
+	 * Separates the given set into sets where all {@link ControlFlowElement}s of each set have the same containing
+	 * {@link Block}.
+	 * <p>
+	 * Note that the assumption is:<br/>
+	 * <i>No block can contain more than one single dead code region.</i>
+	 */
+	private Collection<Set<ControlFlowElement>> separateOnTheirBlocks(Set<ControlFlowElement> unreachableElems) {
+		Map<EObject, Set<ControlFlowElement>> unreachablesMap = new HashMap<>();
+		for (ControlFlowElement unreachableElem : unreachableElems) {
+			HashSet<ControlFlowElement> moreUnreachableElems = new HashSet<>();
+			EObject cfeBlock = getReachableContainer(unreachableElems, unreachableElem, moreUnreachableElems);
+			if (cfeBlock == null)
+				continue;
+
+			if (!unreachablesMap.containsKey(cfeBlock)) {
+				unreachablesMap.put(cfeBlock, new HashSet<>());
+			}
+			Set<ControlFlowElement> unreachableInBlock = unreachablesMap.get(cfeBlock);
+			unreachableInBlock.add(unreachableElem);
+			unreachableInBlock.addAll(moreUnreachableElems);
+		}
+
+		return unreachablesMap.values();
+	}
+
+	/** Finds the nearest reachable {@link Block} of the given {@link ControlFlowElement} */
+	private EObject getReachableContainer(Set<ControlFlowElement> unreachableElems, ControlFlowElement unreachableElem,
+			Set<ControlFlowElement> moreUnreachableElems) {
+
+		EObject elemContainer = unreachableElem.eContainer();
+		if (elemContainer instanceof ExpressionStatement) {
+			moreUnreachableElems.add((ExpressionStatement) elemContainer);
+		}
+
+		EObject block = EcoreUtil2.getContainerOfType(unreachableElem, Block.class);
+		if (block == null) {
+			block = EcoreUtil2.getContainerOfType(unreachableElem, Script.class);
+		}
+
+		EObject blockContainer = block.eContainer();
+		boolean isDeadContainer = blockContainer instanceof ControlFlowElement;
+		isDeadContainer &= isDeadContainer && FGUtils.isControlStatement((ControlFlowElement) blockContainer);
+		isDeadContainer &= isDeadContainer && isDeadCode((ControlFlowElement) blockContainer);
+
+		if (isDeadContainer) {
+			ControlFlowElement cfe = (ControlFlowElement) blockContainer;
+			moreUnreachableElems.add(cfe);
+			return getReachableContainer(unreachableElems, cfe, moreUnreachableElems);
+		}
+
+		return block;
+	}
+
+	private DeadCodeRegion getDeadCodeRegion(Set<ControlFlowElement> deadCodeGroup) {
+		int startIdx = Integer.MAX_VALUE;
+		int endIdx = 0;
+		int firstElementOffset = Integer.MAX_VALUE;
+		ControlFlowElement firstElement = null;
+
+		for (ControlFlowElement deadCodeElement : deadCodeGroup) {
+			ICompositeNode compNode = NodeModelUtils.findActualNodeFor(deadCodeElement);
+			int elemStartIdx = compNode.getOffset();
+			int elemEndIdx = elemStartIdx + compNode.getLength();
+			startIdx = Math.min(startIdx, elemStartIdx);
+			endIdx = Math.max(endIdx, elemEndIdx);
+			if (elemStartIdx < firstElementOffset) {
+				firstElementOffset = elemStartIdx;
+				firstElement = deadCodeElement;
+			}
+		}
+
+		ControlFlowElement containerCFE = flowAnalyzer.getContainer(firstElement);
+		ControlFlowElement reachablePredecessor = findPrecedingStatement(firstElement);
+		return new DeadCodeRegion(startIdx, endIdx - startIdx, containerCFE, reachablePredecessor);
+	}
+
+	private ControlFlowElement findPrecedingStatement(ControlFlowElement cfe) {
+		ControlFlowElement precedingStatement = null;
+		Statement stmt = EcoreUtil2.getContainerOfType(cfe, Statement.class);
+		if (stmt != null) {
+			EObject stmtContainer = stmt.eContainer();
+			if (stmtContainer != null && stmtContainer instanceof Block) {
+				Block block = (Block) stmtContainer;
+				EList<Statement> stmts = block.getStatements();
+				int index = stmts.indexOf(stmt);
+				if (index > 0) {
+					precedingStatement = stmts.get(index - 1);
+				}
+			}
+		}
+		return precedingStatement;
+	}
+
+	/**
+	 * A dead code region is a {@link TextRegion} that also knows about its containing element such as
+	 * {@link FunctionOrFieldAccessor}, and the its last reachable preceding statement such as a
+	 * {@link ReturnStatement}.
+	 */
+	static public class DeadCodeRegion extends TextRegion {
+		final ControlFlowElement reachablePredecessor;
+		final ControlFlowElement container;
+
+		DeadCodeRegion(int offset, int length, ControlFlowElement container, ControlFlowElement reachablePredecessor) {
+			super(offset, length);
+			this.container = container;
+			this.reachablePredecessor = reachablePredecessor;
+		}
+
+		/** @return the containing element of this {@link DeadCodeRegion} */
+		public ControlFlowElement getContainer() {
+			return container;
+		}
+
+		/** @return the last reachable {@link ControlFlowElement} before this {@link DeadCodeRegion}. Can be null. */
+		public ControlFlowElement getReachablePredecessor() {
+			return reachablePredecessor;
+		}
+	}
+}

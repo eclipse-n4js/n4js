@@ -1,0 +1,1703 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsURI="http://www.eclipse.org/n4js/ts/Types")
+@GenModel(fileExtensions="n4ts",
+// modelPluginID isn't strictly necessary but causes some trouble
+//	modelPluginID="org.eclipse.n4js.ts.model",
+	rootExtendsClass="org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl",
+	modelDirectory="/org.eclipse.n4js.ts.model/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+package org.eclipse.n4js.ts.types
+
+import com.google.common.collect.Iterables
+import java.util.Collections
+import java.util.HashMap
+import java.util.List
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EMap
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
+import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
+import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.ts.versions.MigratableUtils
+
+type IterableOfTClassifier wraps Iterable<? extends TClassifier>
+type Variance wraps Variance
+
+/*
+ * Container used when explicitly defining types, e.g., for defining built in types or for tests.
+ */
+class TypeDefs {
+	/*
+	 * Types defined in a single file. These types must not reference external types.
+	 */
+	contains Type[] types
+}
+
+/**
+ * The TModule is the representation of the script on the type level.
+ */
+class TModule extends SyntaxRelatedTElement, TAnnotableElement {
+	/**
+	 * The qualified name of the module, which is derived from the file name.
+	 */
+	String qualifiedName
+	/**
+	 * The projectId of the project containing this module.
+	 */
+	String projectId
+	/**
+	 * The vendorId of the project containing this module.
+	 */
+	String vendorID
+	/**
+	 * The module loader supported by this module as defined in the containing project's manifest.
+	 * Value will be an EMF enum literal, i.e. something like <code>org.eclipse.n4js.n4mf.ModuleLoader.COMMONJS.getLiteral()</code>.
+	 */
+	String moduleLoader
+	/**
+	 * Flag indicating a module defined in an <code>.n4jsd</code> file.
+	 */
+	boolean n4jsdModule
+	/**
+	 * Flag indicating a static-polyfilling (not a standalone) module.
+	 */
+	boolean staticPolyfillModule
+	/**
+	 * Flag indicating a target of static-polyfilling (possibly a generated) module.
+	 * Only one of {@code #staticPolyfillModule} of {@code staticPolyfillAware} can be {@code true}
+	 */
+	boolean staticPolyfillAware
+	/**
+	 * Flag indicating a MainModule (see org.eclipse.n4js.n4mf.ProjectDescription#mainModule)
+	 * Used in scoping to adjust shadowing rules for the project imports (see org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope).
+	 */
+	boolean mainModule
+	
+	/**
+	 * True iff this TModule was created during pre-linking phase.
+	 */
+	transient boolean preLinkingPhase
+	/**
+	 * True iff this TModule was reconciled, i.e. was re-linked to an AST after its creation.
+	 * For details see {@code N4JSResource#isReconciled()}.
+	 */
+	transient boolean reconciled
+
+	// TODO jvp: what does that mean:
+	// TODO: make sure these are only top level types in the script
+	// (ß): currently these may also contain nested types since the traversal
+	// in the types builder processes the complete AST
+	/*
+	 * A list of all types declarations in the script on the top level.
+	 * These include the exported classes, interfaces, function as well
+	 * as the types inferred from type defining elements that are not marked as exported.
+	 * This allows for better validation messages and diagnostics in later stages
+	 * of the processing.
+	 */
+	contains Type[] topLevelTypes
+	/*
+	 * A list of all top level variables in the script.
+	 * These include the exported variables as well as the internal variables.
+	 * Similar to #topLevelTypes, this allows for better validation messages and diagnostics.
+	 */
+	contains TVariable[] variables
+	/*
+	 * Internal types may be populated incrementally by the type checker. Typically these
+	 * are types derived from nested structures of the AST.
+	 * <p>
+	 * An anonymous, internal function may be assigned to a variable and we have
+	 * to compute the type of that variable. Therefore the type has to be contained somewhere in
+	 * the resource. Even worse, a named internal function can be called by name, thus it would
+	 * have to become an IdentifiableElement which opens another can of worms. To avoid that, the
+	 * internal function defines a type which in turn is the identifiable element. EMF constrains
+	 * us to provide a container for that type, which is this containment reference.
+	 * It is not persisted in the index.
+	 */
+	contains transient Type[] internalTypes
+	/*
+	 * Sometimes, internal types are referenced by exported types, e.g. as the type of an exported
+	 * variable or a field of a class. The fact that internal types are not serialized would
+	 * lead to unresolved reference exceptions upon deserialization. Therefore, these internal
+	 * types are serialized by moving them from 'internalTypes' to this containment reference.
+	 * <p>
+	 * These are not directly referable from the outside but may specify the types of exported
+	 * variables, etc. Anonymous types of a script 'A' do not become visible to a script 'B' that
+	 * imports 'A'. To access those, the referring {@link #variables variable} has to be used.
+	 */
+	contains Type[] exposedInternalTypes
+
+	/**
+	 * MD5 hash (hex) of the AST from which this type model was created. This can be used to quickly
+	 * compare two type models created from -- maybe -- different versions of the same AST.
+	 * <p>
+	 * The MD5 is used since this is the fastest and easiest solution to compare the AST. More elegant
+	 * methods may would use the AST (in order to ignore comments and whitespaces), however this
+	 * is rather complicated to implement: No proxies must be resolved and the hash must be stable between
+	 * different runs (and between different machines to enable stable tests). This is rather hard to
+	 * achieve with traversing the AST.
+	 * 
+	 * @see org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.md5Hex(String)
+	 */
+	transient String astMD5
+
+	/**
+	 * Caches for composed members. Not serialized to the Xtext index.
+	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
+	 */
+	contains transient ComposedMemberCache[] composedMemberCaches
+
+	/**
+	 * As a rule, types must always be contained in a resource and resource set (as opposed to type references which
+	 * need not be contained). Therefore, when types are required to be created for a temporary purpose, they need to be
+	 * added somewhere, temporarily. This transient containment reference is used for that purpose.
+	 * <p>
+	 * IMPORTANT: code using this reference should
+	 * <ol>
+	 * <li>turn off notifications whenever adding/removing a type to this reference or when changing properties of an
+	 * already added type (to avoid unnecessary cache clear),
+	 * <li>remove the temporary type when it is no longer required,<br>
+	 * For convenience, the transpiler infrastructure will <b>clear this reference after transpilation</b> has
+	 * completed, so transpiler transformations do not have to handle removal of temporary types themselves.
+	 * <li>make sure no ordinary types ever refer to a temporary type contained here (references in the other direction
+	 * are ok, though),
+	 * <li>use the convenience methods for dealing with this reference provided in {@code N4JSResource}:
+	 * {@code addTemporaryType} and {@code clearTemporaryTypes}.
+	 * </ol>
+	 */
+	contains transient Type[] temporaryTypes
+
+	/**
+	 * Returns the qualified module name as a file path, using '/' as a segment delimiter. No file extension is added,
+	 * though.
+	 * <p>
+	 * TODO Since we changed the delimiter for our internal qualified names from '.' to '/', this is no longer required.
+	 * However, qualified names will soon be revisited in IDE-2227 and this might change again, so we keep this method.
+	 * Also see method <code>QualifiedNameComputer#getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(Type)</code>.
+	 */
+	derived String moduleSpecifier get {
+		return qualifiedName
+	}
+}
+
+/**
+ * A cache for composed members. Not serialized to the Xtext index.
+ * See {@link ComposedTypeRef#composedMemberCache()} for details.
+ */
+class ComposedMemberCache {
+	contains transient TMember[] cachedComposedMembers
+	// The compose type ref of the member being cached
+	contains transient TypeRef composedTypeRef
+}
+
+/*
+ * An element that has an (actual) type that can be inferred using the type system.
+ * <p>
+ * Notes:
+ * <ul>
+ * <li>not all typable elements have an expected type; only {@code Expression}s have an expected type.
+ * <li>subclasses of AbstractAnnotationList are <b>not</b> typable, even though they inherit from
+ *     {@code TypableElement} (this special case is handled in {@code N4JSLanguageUtils#isTypableNode()}.
+ * </ul>
+ * <p>
+ * Don't confuse with {@link org.eclipse.n4js.n4JS.TypedElement TypedElement}: a {@code TypedElement} can be
+ * given a type by the programmer via a type declaration (usually optional). {@code TypedElement}s are usually
+ * {@code TypableNode}s, but most {@code TypableNode}s aren't {@code TypedElement}s (e.g. expressions).
+ */
+interface TypableElement {
+	// empty (marker interface)
+}
+// TOOD merge documentation comments
+/*
+ * Every concept that is identifiable is an identifiable element.
+ *
+ * From a human's perspective, this includes first and foremost that these things have a name.
+ * Syntax errors or optional grammar elements in the concrete syntax may lead to unnamed identifiables.
+ * Thus the name is usually required but never guaranteed to be non-null or non-empty.
+ */
+/* Element with a name.
+ * Note that the name is guaranteed to be non-null, that is the name of named elements is not optional!
+ * This is true only for IdentifiableElements (Variables), and property or members (IdentifiableProperty).
+ * However, it is neither true for anonymous function expressions, nor for anonymous class declarations.
+ */
+/* Possible bind target of identifier references (IdentifierRef),
+ * such as variables (Variable) and named functions (FunctionDeclaration, NamedFunctionExpression).
+ * That is, all "top level" named elements, but not nested elements, i.e. PropertyIdentifier.
+ * <p>
+ * Local scoping actually binds all identifier refs to bindable identifiers of IdentifiableElements.
+ * Actually this is the main purposes of this abstract type.
+ */
+class IdentifiableElement extends TypableElement {
+	String name
+
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+	op TModule getContainingModule() {
+		return EcoreUtil2.getContainerOfType(this,TModule);
+	}
+}
+
+class TExportableElement extends IdentifiableElement {
+
+	String exportedName
+
+	op boolean isExported() {
+		exportedName!==null
+	}
+}
+
+class TAnnotation {
+	String name
+	contains TAnnotationArgument[] args
+	/**
+	 * Convenience method, returns true if an argument of type TAnnotatonStringArgument exists with given value.
+	 */
+	op boolean hasStringArgument(String argumentValue) {
+		return args.filter(TAnnotationStringArgument).exists[it.value == argumentValue]
+	}
+
+	op String getAnnotationAsString() {
+		val StringBuilder strb = new StringBuilder();
+		strb.append("@");
+		strb.append(name);
+		if (args.length>0) {
+    		strb.append("(");
+            for (var i=0; i<args.length; i++) {
+                if (i>0) strb.append(", ");
+                strb.append(args.get(i).getArgAsString());
+            }
+        	strb.append(")");
+		}
+        return strb.toString();
+	}
+}
+
+abstract class TAnnotationArgument {
+	op String getArgAsString()
+}
+
+class  TAnnotationStringArgument extends TAnnotationArgument {
+	String value
+
+	op String getArgAsString() {
+		return value;
+	}
+}
+
+interface TTypedElement {
+	contains TypeRef typeRef
+}
+
+class TAnnotationTypeRefArgument extends TAnnotationArgument, TTypedElement {
+	op String getArgAsString() {
+		return typeRef.typeRefAsString
+	}
+}
+
+/**
+ * Although most annotations are expected to be normal fields in the type model, it may be possible that
+ * some annotations are copied from the AST (see types builders).
+ *
+ * Annotations are best retrieved via AnnotationDefinition.hasAnnotation(), as this takes transitivity into account as well.
+ */
+class TAnnotableElement {
+	/**
+	 * Returns the owned annotations of the AST element; however it is recommended to access
+	 * annotations only via AnnotationDefinition.
+	 */
+	contains TAnnotation[] annotations
+}
+
+/*
+ * Typing strategy value for definition and use site.
+ * By default, nominal typing is used. This can be changed to
+ * structural typing on both, definition and use site. On use site
+ * it is also possible to set this to structuralFields only, which
+ * means that only the public fields are considered when computing
+ * the structural subtype relation.
+ */
+enum TypingStrategy {
+	^default as "?~" = 0
+	nominal as "" = 1
+	structural as "~" = 2
+	structuralFields as "~~" = 3
+	structuralReadOnlyFields as "~r~" = 4
+	structuralWriteOnlyFields as "~w~" = 5
+	structuralFieldInitializer as "~i~" = 6
+	empty as "~\u2205~" = -1 // ~∅~
+}
+
+class TypeVariable extends Type {
+	boolean declaredCovariant
+	boolean declaredContravariant
+	contains TypeRef declaredUpperBound
+
+	/*
+	 * Returns this type variable's {@link org.eclipse.n4js.ts.types.util.Variance variance}. Always returns
+	 * invariant, unless the type variable was explicitly declared on definition site to be co- or contravariant.
+	 */
+	op Variance getVariance() {
+		val co = declaredCovariant;
+		val contra = declaredContravariant;
+		if(co && !contra) {
+			return Variance.CO;
+		} else if(contra && !co) {
+			return Variance.CONTRA;
+		} else {
+			return Variance.INV;
+		}
+	}
+	op TypeVariable[] getTypeVars() {
+		return emptyEList();
+	}
+	op String getTypeAsString() {
+		return getTypeVariableAsString(declaredUpperBound);
+	}
+	op String getTypeVariableAsString(TypeRef upperBound) {
+		return (if(declaredCovariant) "out " else if(declaredContravariant) "in " else "")
+			+ name
+			+ (if (upperBound!==null) " extends " + upperBound.typeRefAsString else "");
+	}
+}
+
+/*
+ * Inference variables are meta-variables for types, i.e. they represent the unknown types searched for while solving a
+ * constraint system. See class {@code InferenceContext} for more details.
+ */
+class InferenceVariable extends TypeVariable {}
+
+/*
+ * Represents a function declaration. In JavaScript, functions are first-class objects, hence
+ * a function declaration also is a type declaration.
+ */
+class TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
+	boolean external
+	/*
+	 * Formal parameters
+	 */
+	contains TFormalParameter[] fpars
+	/*
+	 * Explicitly marks the return value of this TFunction as optional. This is only used for TFunctions that are
+	 * created programmatically. Those that appear in the AST (only possible in Types.xtext language) will instead have
+	 * a 'returnTypeRef' with 'followedByQuestionMark' set to <code>true</code>.
+	 * This will probably become obsolete once we implement undefined/null analysis.
+	 */
+	boolean returnValueMarkedOptional
+	op boolean isReturnValueOptional() {
+		return returnValueMarkedOptional || (returnTypeRef!==null && returnTypeRef.followedByQuestionMark);
+	}
+	/*
+	 * Return type
+	 */
+	contains TypeRef returnTypeRef
+	/*
+	 * Type parameters of a generic function or method. Do not confuse this with the formal parameters.
+	 */
+	contains TypeVariable[] typeVars
+	/*
+	 * optional thisType declaration (@This)
+	 */
+	contains TypeRef declaredThisType
+	/*
+	 * optional async modifier
+	 */
+	boolean declaredAsync
+	/*
+	 * optional generator modifier
+	 */
+	boolean declaredGenerator
+	/**
+	 * Whether this function is intentionally to be used as a constructor
+	 */
+	boolean constructor
+	/**
+	 * Tells whether this function is a method that represents a callable constructor.
+	 */
+	op boolean isCallableConstructor() {
+		val parent = eContainer;
+		return if(parent instanceof ContainerType<?>) parent.callableCtor===this else false;
+	}
+	/**
+	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call
+	 * or 'null' if 'argIndex' is invalid. This method takes into account optional and variadic parameters.
+	 */
+	op TFormalParameter getFparForArgIdx(int argIndex) {
+		val fparsSize = fpars.size();
+		if (argIndex >= 0 && argIndex < fparsSize) {
+			return fpars.get(argIndex);
+		} else if (argIndex >= fparsSize && fparsSize > 0 && fpars.get(fparsSize - 1).isVariadic) {
+			return fpars.get(fparsSize - 1);
+		}
+		return null;
+	}
+	/**
+	 * Returns string representation of this function similar according to the N4JS syntax.
+	 * This includes formal parameters and return type (if declared), but excludes annotations.
+	 */
+	op String getFunctionAsString() {
+		val StringBuilder strb = new StringBuilder();
+		if (generic) strb.append("<").append(typeVars.map[typeAsString].join(",")).append("> ");
+		if (declaredAsync) strb.append("async ");
+		strb.append("function ");
+		if (declaredGenerator) strb.append("* ");
+		strb.append(name).append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
+		if (returnTypeRef!==null) strb.append(": ").append(returnTypeRef.typeRefAsString);
+		if (returnValueOptional) strb.append('?');
+		return strb.toString();
+	}
+
+//	op String getFunctionAsHTML() {
+//		return (if (generic) "&lt;" + typeVars.map[typeAsHTML].join(",") + "> " else "")
+//		+ returnTypeRef?.typeRefAsHTML + " <b>" + UtilN4.sanitizeForHTML(name) + "</b>" + "(" + fpars.map[formalParameterAsHTML].join(", ") + ")"
+//	}
+	/**
+	 * There may be sub-types of a function type unless explicitly stated differently
+	 */
+	op boolean isFinal() {
+		return false;
+	}
+}
+
+/*
+ * Type access modifier as described in the N4JSSpec. Note that some languages may represent the
+ * this modifier differently, e.g., in N4JS, the publicApi type is expressed via the public modifier
+ * and the Api annotation.
+ * @see org.eclipse.n4js.ts.model.TMember.getMemberAccessModifier
+ */
+enum TypeAccessModifier {
+	undefined = 0
+	private = 1
+	project = 2
+	publicInternal = 3
+	public = 4
+}
+
+/*
+ * Member access modifier as described in the N4JSSpec. Note that some languages may represent the
+ * this modifier differently, e.g., in N4JS, the publicApi type is expressed via the public modifier
+ * and the Api annotation.
+ * For helper (relations etc.) see AccessModifiers.
+ * @see org.eclipse.n4js.ts.model.TMember.getMemberAccessModifier
+ */
+enum MemberAccessModifier {
+	undefined = 0
+	private = 1
+	project = 2
+	protectedInternal = 3
+	protected = 4
+	publicInternal = 5
+	public = 6
+}
+
+// TODO jvp: probably need more methods, cf. ECMAScript spec properties
+/*
+ * Base class for all types. This abstraction provides all necessary information
+ * when dealing with types, e.g. it helps with conformance checks and other constraints.
+ * <p>
+ * Note that this class must not be abstract.
+ * </p>
+ */
+//TODO why not abstract (doesn't work when it is abstract, but why?)
+class Type extends TExportableElement, TAnnotableElement, org.eclipse.n4js.ts.typeRefs.Versionable {
+
+	/**
+	 * Returns true if type's implementation is provided by runtime. Default implementation returns true, overridden in user-defined (meta) types.
+	 * Since it is about the implementation, types without implementation (structural types, primitive types) that are always handled as if they
+	 * were only provided by runtime. The flag is usually set via annotations.
+	 */
+	op boolean isProvidedByRuntime() {
+		return true;
+	}
+
+	/**
+	 * Returns true if type actually is a polyfill or a static-polyfill. The flag is usually set via annotations and false for most types (only TClass can actually be
+	 * declared to be a polyfill).  (c.f. {@link Type#isStaticPolyfill()})
+	 */
+	op boolean isPolyfill() {
+		return false;
+	}
+
+	/**
+	 * Returns true if type actually is a static polyfill. The flag is usually set via annotations and false for most types (only TClass can actually be
+	 * declared to be a static polyfill).  (c.f. {@link Type#isPolyfill()})
+	 */
+	op boolean isStaticPolyfill() {
+		return false;
+	}
+
+	/**
+	 * Returns true if type is final, that is no sub-types may be defined by the user.
+	 * Default implementation returns true, has to be overridden by subclasses.
+	 */
+	op boolean isFinal() {
+		return true;
+	}
+
+	/**
+	 * Returns whether references to this type may be flagged as dynamic.
+	 * This is false by default, but usually true for TClassifiers.
+	 */
+	op boolean isDynamizable() {
+		return false;
+	}
+
+	/**
+	 * Tells if this type has special support for index access with a numeric index.
+	 * Provided only for readability; will return <code>true</code> if and only if {@link #getElementType()}
+	 * returns a non-<code>null</code> value.
+	 */
+	op boolean isArrayLike() {
+		return elementType !== null;
+	}
+
+	/**
+	 * Returns the element type that would be returned if this was accessed by a numeric index or <code>null</code>
+	 * if this is not an array-like type.
+	 */
+	op TypeRef getElementType() {
+		// TODO evil workaround for bug in Xcore - signature of getElementType should be getElementType(Type):TypeRef
+		return ArrayLikes.getElementType(this) as TypeRef
+	}
+
+	/*
+	 * Returns the automatically computed type, that is public for built-in and pseudo types,
+	 * project for exported types and private for non-exported declared types.
+	 * This base implementation always returns public.
+	 */
+	op TypeAccessModifier getTypeAccessModifier() {
+		return TypeAccessModifier.PUBLIC;
+	}
+
+	/*
+	 * Convenience method, returns true if at least one type variable is defined.
+	 * This actually returns false for most kind of types, only ContainerTypes (such as TClassifiers) may be declared generic---
+	 * this method is introduced to simplify client code and reduce the number of instance-of cascades.
+	 */
+	op boolean isGeneric() {
+		return ! getTypeVars().isEmpty();
+	}
+	/*
+	 * Convenience method, returns the list of defined type variables or an empty list if the kind of type cannot be generic at all.
+	 * This actually returns an empty list for most kind of types, only ContainerTypes (such as TClassifiers) may be declared generic---
+	 * this method is introduced to simplify client code and reduce the number of instance-of cascades.
+	 */
+	op TypeVariable[] getTypeVars() {
+		return emptyEList
+	}
+	/*
+	 * Convenience method for obtaining the variance of this type's type variable with the given index.
+	 * For details see {@link TypeVariable#getVariance()}.
+	 */
+	op Variance getVarianceOfTypeVar(int idx) {
+		return if(idx>=0 && idx<typeVars.size) typeVars.get(idx).variance else null;
+	}
+	/*
+	 * Returns the raw type as string, i.e. the type without any type variables.
+	 */
+	op String getRawTypeAsString() {
+		name;
+	}
+	/*
+	 * Returns string representation of type, basically for testing and debugging.
+	 * As the returned string is used for comparison in tests, this method should not be changed.
+	 */
+	op String getTypeAsString() {
+		if (generic) {
+			name + "<" + typeVars.map[it.typeAsString].join(",") + ">"
+		} else {
+			name
+		}
+	}
+
+//	op String getTypeAsHTML() {
+//		return UtilN4.sanitizeForHTML(getTypeAsString());
+//	}
+}
+
+abstract class AccessibleTypeElement {
+	TypeAccessModifier declaredTypeAccessModifier
+
+	boolean declaredProvidedByRuntime
+
+	/**
+	 * Returns declaredProvidedByRuntime.
+	 */
+	op boolean isProvidedByRuntime() {
+		return declaredProvidedByRuntime;
+	}
+
+	/**
+	 * Returns declared type if specified, otherwise modifier is computed (exported = project, private otherwise)
+	 */
+	op TypeAccessModifier getTypeAccessModifier() {
+		if (declaredTypeAccessModifier == TypeAccessModifier.UNDEFINED) {
+			if (exported) {
+				return TypeAccessModifier.PROJECT;
+			} else {
+				return TypeAccessModifier.PRIVATE;
+			}
+		}
+		return declaredTypeAccessModifier
+	}
+
+	op boolean isExported()
+
+}
+
+class DeclaredTypeWithAccessModifier extends Type, AccessibleTypeElement {
+
+}
+
+type NameAndAccess wraps NameAndAccess
+
+type MemberList wraps List<? extends TMember>
+
+/*
+ * Base class for types containing members, such as TClassifier and PrimitiveTypes.
+ */
+abstract class ContainerType<MT extends TMember> extends Type {
+	transient EMap<NameAndAccess, ? extends TMember> ownedMembersByNameAndAccess
+
+	contains MT[] ownedMembers
+	contains TMethod callableCtor // required in TClass and TObjectPrototype
+
+	/*
+	 * type parameters of generic types
+	 */
+	contains TypeVariable[] typeVars
+
+	/**
+	 * Convenience method returning the owned constructor or <code>null</code> if not available.
+	 */
+	op TMethod getOwnedCtor() {
+		return ownedMembers.filter(TMethod).findFirst[isConstructor]
+	}
+
+	/*
+	 * Convenience method, similar to {code findMember(name, false)}.
+	 * That is, this method returns fields, methods, and getters rather then setters.
+	 */
+	op TMember findOwnedMember(String name) {
+		return findOwnedMember(name, false, false)
+	}
+
+	/**
+	 * Returns members with given name, writeable and static access.
+	 */
+	op TMember findOwnedMember(String name, boolean writeAccess, boolean staticAccess) {
+		val NameAndAccess nameAndAccess = new NameAndAccess(name, writeAccess, staticAccess);
+		return getOrCreateOwnedMembersByNameAndAccess.get(nameAndAccess);
+	}
+
+	/**
+	 * Creates member collection mapped by static and writable access, fields are listed twice (since they are read- and
+	 * writeable).
+	 */
+	op EMap<NameAndAccess, ? extends TMember> getOrCreateOwnedMembersByNameAndAccess() {
+		if (ownedMembersByNameAndAccess === null) {
+			val newRegistry = switch (ownedMembers.size()) {
+			case 0: Collections.emptyMap()
+			case 1: {
+				val singleMember = ownedMembers.get(0);
+				val NameAndAccess[] nameAndAccess = NameAndAccess.of(singleMember);
+				if (nameAndAccess.length > 1) {
+					val map = new HashMap<NameAndAccess, TMember>();
+					map.put(nameAndAccess.get(0), singleMember);
+					map.put(nameAndAccess.get(1), singleMember);
+					Collections.unmodifiableMap(map);
+				} else {
+					Collections.singletonMap(nameAndAccess.get(0), singleMember);
+				}
+			}
+			default:
+				Collections.unmodifiableMap(new MemberByNameAndAccessMap(ownedMembers))
+			};
+			EcoreUtilN4.doWithDeliver(false,[
+				ownedMembersByNameAndAccess = newRegistry;
+			],this);
+		}
+		return ownedMembersByNameAndAccess;
+	}
+}
+
+/*
+ * Used for predefining members shared by all types of a certain meta-tyes, such as
+ * enumerations all providing a getter method value. It sole purpose is to mix in the defined members here into the
+ * actual types transparently inheriting from that type.
+ */
+class VirtualBaseType extends ContainerType<TMember>, ArrayLike {
+	/*
+	 * Directly contained members, that is predefined members of all enums
+	 */
+	contains TMember[] declaredOwnedMembers
+}
+
+/*
+ * Virtual type for ES6 namespace imports. Not directly available for N4JS users, can be used only
+ * like TypeReferenceName. See ES6::9.4.6 Module Namespace Exotic Objects
+ */
+class ModuleNamespaceVirtualType extends Type, SyntaxRelatedTElement {
+	/*
+	 * reference to module which give namespace represents
+	 */
+	refers TModule module
+
+	/**
+	 * If true, tmodule behaves like a dynamic type enabling access to plain js
+	 * modules without n4jsd file.
+	 */
+	boolean declaredDynamic
+
+	op boolean isProvidedByRuntime() {
+		return false;
+	}
+}
+
+/*
+ * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot be parameterized.
+ */
+class PrimitiveType extends ContainerType<TMember>, ArrayLike {
+	/*
+	 * Specifies a type to and from which this type is assignment compatible.
+	 * Only used for special stringish types such as typename or pathSelector,
+	 * in these cases {@code string} is the value of this field.
+	 * Note however that this relation is not bidirectional, that is string does not
+	 * know which other types may be assignment compatible. During type inferencing
+	 * and other tests the client has to check that.
+	 */
+	refers PrimitiveType assignmentCompatible
+	/*
+	 * the corresponding object type whose properties are also available to the primitive type
+	 */
+	refers TClassifier autoboxedType
+}
+
+// SZ: update documentation below, maybe ContainerType?
+class BuiltInType extends Type {
+
+	op TypeVariable[] getTypeVars() {
+		return emptyEList();
+	}
+}
+
+class AnyType extends BuiltInType {
+	/**
+	 * Of course any can be subtyped, it is the bottom type.
+	 */
+	op boolean isFinal() {
+		return false;
+	}
+}
+
+/*
+ * Reference to undefined type. This type cannot be explicitly specified by the user but
+ * can only be inferred by the type inferencer.
+ */
+class UndefinedType extends BuiltInType {
+}
+
+/*
+ * Reference to null type. This type cannot be explicitly specified by the user but
+ * can only be inferred by the type inferencer.
+ */
+class NullType extends BuiltInType {
+}
+
+/*
+ * Reference to void type, this can only be explicitly used for the returned type of
+ * functions.
+ */
+class VoidType extends BuiltInType	 {
+}
+
+type TClassifierIterable wraps Iterable<TClassifier>
+
+class TStructuralType extends ContainerType<TStructMember>, SyntaxRelatedTElement {
+	/**
+	 * Structural types can be sub-typed, since only the structure is used for typing.
+	 */
+	op boolean isFinal() {
+		return false;
+	}
+}
+
+/**
+ * Base class for all versionable types.
+ */
+abstract class TVersionable extends Type {
+	/**
+	 * The declared version of the type. This is not used by N4JS at the moment but only
+	 * in derived languages such as N4IDL. It needs to be stored in the type model though as
+	 * it is required to be cached (i.e. stored in the Xtext index) for scoping etc.
+	 *
+	 * This is set by the N4IDL types builder.
+	 */
+	int declaredVersion
+
+	/*
+	 * Overrides default implementation of type, returns the actually declared version (which
+	 * is 0 in N4JS as it cannot be set there). Only used for derived languages such as N4IDL.
+	 */
+	op int getVersion() {
+		return declaredVersion;
+	}
+}
+
+/**
+ * A migratable element represent a type that can be subject to N4IDL migrations.
+ * 
+ * @see TMigration
+ */
+abstract class TMigratable {
+	/**
+	 * The declared migrations for this {@link TMigratable} element.
+	 */
+	refers TMigration[] migrations
+}
+
+/**
+ * Represents an N4IDL migration.
+ */
+class TMigration extends TFunction {
+	
+	/**
+	 * The source model version of this migration.
+	 */
+	int sourceVersion
+	/**
+	 * The target model version of this migration.
+	 */
+	int targetVersion
+	
+	/**
+	 * Returns {@code true} iff migration has an explicitly declared
+	 * source and target version.
+	 */
+	boolean hasDeclaredSourceAndTargetVersion
+	
+	/**
+	 * The source TypeRefs of this migration.
+	 */
+	refers TypeRef[] sourceTypeRefs
+	
+	/**
+	 * The target TypeRefs of this migration.
+	 */
+	refers TypeRef[] targetTypeRefs	
+	
+	
+	/** Transient principal argument type. Access through #getPrincipalArgumentType() */
+	refers transient TMigratable _principalArgumentType
+	
+	/**
+	 * The principal argument of this migration.
+	 */
+	op TMigratable getPrincipalArgumentType() {
+		if (_principalArgumentType === null) {
+			EcoreUtilN4.doWithDeliver(false,
+				[|
+					_principalArgumentType = MigratableUtils.findPrincipalMigrationArgument(sourceTypeRefs).orElse(null);
+				], this);
+		}
+		return _principalArgumentType;
+	}
+	
+	/**
+	 * Returns string representation of this migration.
+	 * 
+	 * This includes source types and target types.
+	 */
+	op String getMigrationAsString() {
+		return String.format("%s (%s) => (%s)",
+				this.name,
+				this.sourceTypeRefs.map[t | t.getTypeRefAsString()].join(", "),
+				this.targetTypeRefs.map[t | t.getTypeRefAsString()].join(", "));
+	}
+}
+
+/*
+ * Base class for N4 specific classifiers, i.e., class, interface, or role.
+ */
+abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement, TVersionable {
+
+	/*
+	 * Tells if this classifier is itself annotated with <code>@CovariantConstructor</code> or if it has an owned
+	 * constructor annotated with <code>@CovariantConstructor</code>.
+	 */
+	boolean declaredCovariantConstructor
+
+	op boolean isAbstract() {
+		return false
+	}
+
+	/**
+	 * Convenience method, returns all super classes and implemented or extended interfaces as classifiers.
+	 */
+	op IterableOfTClassifier getSuperClassifiers() {
+		// following code causes weird Xtend/Xcore bug
+		//return this.superClassifierRefs.filterNull.map[declaredType].filter(TClassifier);
+		// so let's do it the old-school way:
+		val List<TClassifier> result = <TClassifier>newArrayList;
+		val Object _superClassifierRefs = this.getSuperClassifierRefs();
+		for(Object superClassifierRef : (_superClassifierRefs as Iterable<?>)) {
+			if(superClassifierRef!==null) {
+				val Type declType = (superClassifierRef as TypeRef).getDeclaredType();
+				if(declType instanceof TClassifier) {
+					result.add(declType);
+				}
+			}
+		}
+		return result;
+//		return <TClassifier>emptyList;
+	}
+
+	/**
+	 * Convenience method, returns all super classes and implemented or extended interfaces as type references.
+	 */
+	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+		return <ParameterizedTypeRef>emptyList();
+	}
+
+	/**
+	 * Convenience method, returns all implemented (or extended) interfaces
+	 */
+	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+		return <ParameterizedTypeRef>emptyList();
+	}
+
+	/**
+	 * Classifiers are usually not final, unless they have a special modifier set.
+	 */
+	op boolean isFinal() {
+		return false;
+	}
+}
+
+/*
+ * Plain JavaScript objects with super type (=prototype).
+ * This is used for defining predefined types such as Object, String, Date etc.
+ */
+class TObjectPrototype extends TClassifier, DeclaredTypeWithAccessModifier, ArrayLike {
+	contains ParameterizedTypeRef superType
+
+	boolean declaredFinal
+
+	op TMethod getOwnedCtor() {
+		return ownedMembers.filter(TMethod).findFirst[name.equals('constructor')]
+	}
+
+	/**
+	 * Returns value of declaredFinal attribute.
+	 */
+	op boolean isFinal() {
+		return declaredFinal;
+	}
+}
+
+/**
+ * 'Trait' that allows to mark a certain type as "array like". If an elementType is
+ * provided, that one is assumed to be the return type of index access expressions with a numeric index.
+ * <p>
+ * IMPORTANT: types inheriting from this class are not always array like; they are array like only if they define
+ * property 'declaredElementType'.
+ */
+abstract class ArrayLike {
+	/**
+	 * The locally declared element type.
+	 */
+	contains TypeRef declaredElementType
+	/**
+	 * Returns the declared element type or the inherited information
+	 * iff no locally declared information is available.
+	 */
+	op TypeRef getElementType()
+}
+
+class TN4Classifier extends TClassifier, DeclaredTypeWithAccessModifier, TMigratable {
+	/*
+	 * Flag indicating whether references to this type may be flagged as dynamic.
+	 */
+	boolean dynamizable = "true"
+	/*
+	 * The typing strategy on definition site, nominal typing by default.
+	 * Could be changed to structural but not to structural field.
+	 * The latter is only available on use site.
+	 */
+	TypingStrategy typingStrategy
+}
+
+class TClass extends TN4Classifier {
+	boolean external
+	boolean declaredAbstract
+	boolean declaredN4JS
+	boolean declaredFinal
+	boolean declaredPolyfill
+	boolean declaredStaticPolyfill
+	boolean observable
+	contains ParameterizedTypeRef superClassRef
+	contains ParameterizedTypeRef[] implementedInterfaceRefs
+	op boolean isAbstract() {
+		return declaredAbstract
+	}
+	/**
+	 * Convenience method, return the explicitly declared super class casted to a {@link TClass} or <code>null</code> if
+	 * not possible, not available. Ignores implicit super types!
+	 */
+	op TClass getSuperClass() {
+		val superType = superClassRef?.declaredType;
+		return if(superType instanceof TClass) superType else null;
+	}
+	/**
+	 * Convenience method, returns all super classes, consumed roles and implemented or extend interfaces
+	 */
+	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+		if (getSuperClassRef !== null) {
+			return Iterables.concat(Collections.singleton(getSuperClassRef), implementedInterfaceRefs)
+		}
+		return Iterables.concat(implementedInterfaceRefs)
+	}
+
+	/**
+	 * Convenience method, returns all implemented (or extended) interfaces
+	 */
+	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+		return implementedInterfaceRefs;
+	}
+
+	/**
+	 * Returns true if the class actually is a polyfill or a static-polyfill. (c.f. {@link TClass#isStaticPolyfill()})
+	 */
+	op boolean isPolyfill() {
+		return declaredPolyfill;
+	}
+
+	/**
+	 * Returns true if the class actually is a static polyfill (c.f. {@link TClass#isPolyfill()})
+	 */
+	op boolean isStaticPolyfill() {
+		return declaredStaticPolyfill;
+	}
+
+	/**
+	 * Returns value of declaredFinal attribute.
+	 */
+	op boolean isFinal() {
+		return declaredFinal;
+	}
+}
+
+class TInterface extends TN4Classifier {
+	boolean external
+	contains ParameterizedTypeRef[] superInterfaceRefs
+
+	op boolean isAbstract() {
+		return true
+	}
+	/**
+	 * Convenience method, returns all super classes, consumed roles and implemented or extend interfaces
+	 */
+	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+		return superInterfaceRefs;
+	}
+	/**
+	 * Convenience method, returns all implemented (or extended) interfaces
+	 */
+	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+		return superInterfaceRefs;
+	}
+}
+
+/**
+ * Member type, there is no distinction between nominal and structural member types
+ */
+enum MemberType {
+	GETTER = 0
+	,
+	SETTER =1
+	,
+	FIELD = 2
+	,
+	METHOD = 3
+}
+
+abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRelatedTElement {
+	boolean declaredFinal
+	boolean declaredStatic
+	boolean declaredOverride
+
+	boolean hasComputedName
+
+	/** The constituent members if this member is a composed member. */
+	refers transient TMember[] constituentMembers
+
+	/** Tells if this member is a composed member created by {@code ComposedMemberFactory}. */
+	boolean composed
+
+	/**
+	 * Convenience method, returns the container casted to a container type or 'null'
+	 * if the container is not of type ContainerType.
+	 */
+	op ContainerType<?> getContainingType() {
+		// note: must check container's type here, because not only ContainerType
+		//       can contain TMembers (also StructuralTypeRef!)
+		val myContainer = eContainer;
+		return if(myContainer instanceof ContainerType<?>) myContainer else null;
+	}
+	/**
+	 * Returns either the declared access modifier (if possible) or
+	 * derives the access modifier from the type access modifier of the containing type.
+	 * This method needs to be implemented by subclasses, in particular by {@link TMemberWithAccessModifier}
+	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
+	 */
+	op MemberAccessModifier getMemberAccessModifier()
+	/**
+	 * Returns the member type enum, which is useful for validation etc.
+	 */
+	op MemberType getMemberType()
+	/**
+	 * Convenience method, returns true if member type is MemberType.FIELD
+	 */
+	op boolean isField() {
+		return memberType == MemberType.FIELD
+	}
+	/**
+	 * Convenience method, returns true if member type is MemberType.GETTER
+	 */
+	op boolean isGetter() {
+		return memberType == MemberType.GETTER
+	}
+	/**
+	 * Convenience method, returns true if member type is MemberType.SETTER
+	 */
+	op boolean isSetter() {
+		return memberType == MemberType.SETTER
+	}
+	/**
+	 * Convenience method, returns true if member type is MemberType.SETTER or MemberType.GETTER
+	 */
+	op boolean isAccessor() {
+		return memberType == MemberType.SETTER || memberType == MemberType.GETTER
+	}
+	/**
+	 * Convenience method, returns true if member type is MemberType.METHOD
+	 */
+	op boolean isMethod() {
+		return memberType == MemberType.METHOD
+	}
+	op boolean isConstructor() {
+		false
+	}
+	/*
+	 * Tells whether the entire member is optional. Applies only to data fields and field accessors (not methods).
+	 * Don't confuse this with optional return types of methods, see {@link TFunction#isReturnValueOptional()}.
+	 */
+	op boolean isOptional() {
+		false
+	}
+
+	/**
+	 * Default implementation always returns false, which is actually only true for fields.
+	 * Note however that "concrete" fields defined in interfaces may be overridden.
+	 */
+	op boolean isAbstract() {
+		return false;
+	}
+	op boolean isReadable() {
+		return true;
+	}
+	op boolean isWriteable() {
+		return false;
+	}
+
+	op String getMemberAsString() {
+		return name
+	}
+//	op String getMemberAsHTML() {
+//		return UtilN4.sanitizeForHTML(getMemberAsString())
+//	}
+
+	/**
+	 * Returns value of declaredFinal field.
+	 */
+	op boolean isFinal() {
+		return declaredFinal;
+	}
+	/**
+	 * Returns value of declaredStatic field.
+	 */
+	op boolean isStatic() {
+		return declaredStatic;
+	}
+	/**
+	 * Returns true if this member is a const field.
+	 */
+	op boolean isConst() {
+		return false;
+	}
+
+	/**
+	 * Convenience method returns true, if containing type is either a dynamic or static polyfill and therefore
+	 * this member has been poly-filled.
+	 */
+	op boolean isPolyfilled() {
+		val containingType = getContainingType();
+		if (containingType === null) {
+			return false;
+		}
+		return containingType.isPolyfill || containingType.isStaticPolyfill;
+	}
+}
+
+/**
+ * Base class for members with declared access modifiers.
+ */
+abstract class TMemberWithAccessModifier extends TMember {
+
+	/** TODO mover to TMethod and accessors (not done yet due to 500 named elements restriction) */
+	boolean hasNoBody
+	MemberAccessModifier declaredMemberAccessModifier
+	/**
+	 * Returns either the declared access modifier (if possible) or
+	 * derives the access modifier from the type access modifier of the containing type.
+	 * <p>
+	 * Note that the modifier is calculated in case no declared modifier is present, but it is not "fixed" (
+	 * cf. org.eclipse.n4js.ts.model.util.AccessModifiers.fixed(TMember)).
+	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
+	 */
+	op MemberAccessModifier getMemberAccessModifier() {
+		if (declaredMemberAccessModifier === MemberAccessModifier.UNDEFINED) {
+			val parent = this.eContainer
+			if (parent instanceof TInterface) { // IDEBUG-456 only interface-members inherit from enclosing type
+				val modifierDerivedFromType = org.eclipse.n4js.ts.types.util.AccessModifiers.toMemberModifier((parent as Type).getTypeAccessModifier())
+				if (modifierDerivedFromType !== MemberAccessModifier.PRIVATE) {
+					return modifierDerivedFromType
+				}
+			}
+			return MemberAccessModifier.PROJECT // default for all class-members, even abstract members.
+		}
+		return declaredMemberAccessModifier
+	}
+}
+
+/*
+ * Abstract base class for members defined in a structural type reference or in an object literal.
+ * Neither the access modifier (which is public for these members) nor static members are supported there.
+ *
+ * TODO Introduce abstract base class for TMember and/or rename memberAccessModifier to declaredMemberAccessModifier. Currently problematic due to XCore constraints.
+ */
+abstract class TStructMember extends TMember {
+	/*
+	 * A TStructMember can play the role of an AST node or a type model element (i.e. in a TModule).
+	 * Iff the receiving TStructMember is an AST node, then this cross-reference will point to the
+	 * corresponding TStructuralMember in the TStructuralType of the type model; otherwise it will
+	 * be <code>null</code>.
+	 * <p>
+	 * This property corresponds to property 'definedType' of subclasses of TypeDefiningElement in
+	 * the AST model. This property is set by the types builder and should never be changed by code
+	 * outside the types builder.
+	 */
+	refers transient TStructMember definedMember
+
+	/**
+	 * The default access modifier for struct members is public. This cannot be changed.
+	 */
+	op MemberAccessModifier getDefaultMemberAccessModifier() {
+		return MemberAccessModifier.PUBLIC
+	}
+	op boolean isStatic() {
+		return false
+	}
+	/*
+	 * The member access modifier for struct members is always public, this cannot be changed.
+	 */
+	op MemberAccessModifier getMemberAccessModifier() {
+		return MemberAccessModifier.PUBLIC
+	}
+}
+
+/*
+ * Method of a class.
+ *
+ * Attention: Order of super types matters, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=421592
+ */
+class TMethod extends TFunction, TMemberWithAccessModifier {
+	boolean declaredAbstract
+	/**
+	 * Knowing whether the body of the linked method contains occurrences of ThisLiteral or SuperLiteral
+	 * is useful in cross-resource scenarios (ie, so as to avoid parsing) when checking the (restrictive) conditions
+	 * under which a method reference can be assigned to a variable (IDE-1048, see implementation in N4JSExpressionValidator).
+	 */
+	boolean lacksThisOrSuperUsage
+	/**
+	 * Returns true if the method is either declared abstract or it is implicitly abstract, i.e. it is declared in a role and has no body.
+	 */
+	op boolean isAbstract() {
+		return declaredAbstract || (eContainer instanceof TInterface &&  hasNoBody)
+	}
+
+	/** Always returns METHOD */
+	op MemberType getMemberType() {
+		return MemberType.METHOD
+	}
+	op boolean isConstructor() {
+		return name == 'constructor' && !isStatic;
+	}
+	/**
+	 * Returns string representation of this function similar according to the N4JS syntax.
+	 * This includes formal parameters and return type (if declared), but excludes annotations.
+	 */
+	op String getFunctionAsString() {
+		val StringBuilder strb = new StringBuilder();
+		if (generic) strb.append("<").append(typeVars.map[typeAsString].join(",")).append("> ");
+		if (declaredAsync) strb.append("async ");
+		strb.append(name).append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
+		if (returnTypeRef!==null) strb.append(": ").append(returnTypeRef.typeRefAsString);
+		if (returnValueOptional) strb.append('?');
+		return strb.toString();
+	}
+
+	/**
+	 * Overrides TMember's method
+	 */
+	op String getMemberAsString() {
+		return getFunctionAsString();
+	}
+}
+
+class TStructMethod extends TMethod, TStructMember {
+}
+
+class TFormalParameter extends IdentifiableElement, TAnnotableElement, SyntaxRelatedTElement, TTypedElement {
+	boolean variadic
+	/*
+	 * If and only if the TFormalParameter is used as an AST node, this property holds the initializer
+	 * type reference. This occurs in a situation like this:
+	 * <pre>
+	 * val fn : function(p : int = undefined) => void;
+	 * </pre>
+	 */
+	String astInitializer
+	boolean hasInitializerAssignment
+
+	/* Convenience method, returns true if this fparam has an initializer. */
+	op boolean hasASTInitializer() {
+		return astInitializer !== null;
+	}
+
+	/* Convenience method, returns true if this or one of the preceding parameters have an initializer. */
+	op boolean isOptional() {
+		val EList<TFormalParameter> fpars = switch (eContainer) {
+            TFunction:				(eContainer as TFunction).fpars
+            FunctionTypeExprOrRef:	(eContainer as FunctionTypeExprOrRef).fpars
+            default: return false
+        };
+
+		for (var i=fpars.indexOf(this); i>=0; i--) {
+			val fpar = fpars.get(i);
+			if (fpar.isVariadic || fpar.hasInitializerAssignment) {
+				return true;
+			}
+		}
+		return false;
+	}
+	/* Convenience method, returns true iff this fpar is optional or variadic. */
+	// FIXME: remove this method, since isOptional returns the same result
+	op boolean isVariadicOrOptional() {
+		return variadic || optional;
+	}
+	/**
+	 * Returns string representation of formal parameter according to syntax definition, including
+	 * preceding variadic modifier and type. The parameter name is omitted. Use when displaying the
+	 * parameter as part of an type or a type expression.
+	 */
+	op String getFormalParameterAsTypesString() {
+		val StringBuilder strb = new StringBuilder();
+		if (variadic) strb.append("...");
+		if (typeRef !== null) {
+			strb.append(typeRef.typeRefAsString);
+		} else {
+			strb.append("null");
+		}
+		if (hasInitializerAssignment) strb.append("=…");
+		return strb.toString();
+	}
+	/**
+	 * Returns string representation of formal parameter according to syntax definition, including
+	 * preceding variadic modifier and colon separated type if declared.
+	 */
+	op String getFormalParameterAsString() {
+		val StringBuilder strb = new StringBuilder();
+		if (variadic) strb.append("...");
+		strb.append(name);
+		if (typeRef!==null) strb.append(": ").append(typeRef.typeRefAsString);
+		if (hasInitializerAssignment) strb.append("=…");
+		return strb.toString();
+	}
+//	op String getFormalParameterAsHTML() {
+//		return typeRef?.typeRefAsHTML + " <b>" + UtilN4.sanitizeForHTML(name) + "</b>"
+//	}
+
+}
+
+// TODO maybe introduce common super type for named and anonymous formal parameter
+class TAnonymousFormalParameter extends TFormalParameter {
+
+	/**
+	 * Returns the name of the anonymous parameter, maybe an artificial name
+	 * (_par_n with n is the index of the parameter in the parameter list, or just _par_ in case of setter).
+	 */
+	op String getName() {
+		val definedName = getDefinedName();
+		if (definedName!==null) {
+			return definedName;
+		}
+		// the fpar is actually anonymous -> create a default name
+		val containingFeature = eContainer().eGet(eContainingFeature())
+		if (containingFeature instanceof List<?>) { // in case of method
+			val index = (eContainer().eGet(eContainingFeature()) as List<?>).indexOf(this)
+			return "_par_" + index
+		} else { // in case of setter
+			return "_par_"
+		}
+	}
+
+	/**
+	 * Returns the declared name, may be null since parameter is anonymous and name is optional
+	 */
+	op String getDefinedName() {
+		return super.getName();
+	}
+}
+
+
+
+
+/*
+ * Field of a class, optionally complemented by getter(s) and setter(s).
+ */
+class TField extends TMemberWithAccessModifier, TTypedElement, TConstableElement {
+	boolean hasExpression
+	boolean optional
+
+	op boolean isStatic() {
+		return declaredStatic || const;
+	}
+	op boolean isReadable() {
+		return true; // note: for now, fields are always readable (to be changed later)
+	}
+	op boolean isWriteable() {
+		return !(const || final);
+	}
+	/** Always returns FIELD */
+	op MemberType getMemberType() {
+		return MemberType.FIELD
+	}
+	/**
+	 * Returns string representation of field according to syntax definition, including
+	 * colon separated type if declared. Overrides TMember's method.
+	 */
+	op String getMemberAsString() {
+		val StringBuilder strb = new StringBuilder();
+		strb.append(name);
+		if (optional) strb.append("?");
+		if (typeRef!==null) strb.append(": ").append(typeRef.typeRefAsString);
+		return strb.toString();
+	}
+
+//	op String getMemberAsHTML() {
+//		return typeRef?.typeRefAsHTML + " <b>" + UtilN4.sanitizeForHTML(name) + "</b>"
+//	}
+}
+
+/*
+ * Field defined in a structural type reference or in an object literal.
+ */
+class TStructField extends TField, TStructMember {
+}
+
+/*
+ * Base class for getter or setter, either of an ObjectLiteral or a Class
+ */
+abstract class FieldAccessor extends TMemberWithAccessModifier {
+	boolean optional
+	boolean declaredAbstract
+	contains TypeRef declaredThisType
+
+	op TypeRef getDeclaredTypeRef()
+
+	/**
+	 * Returns true if the method is either declared abstract or it is implicitly abstract, i.e. it is declared in a role and has no body.
+	 */
+	op boolean isAbstract() {
+		return declaredAbstract || (eContainer instanceof TInterface &&  hasNoBody)
+	}
+}
+
+/*
+ * Getter of a field, declaration (type, name) is derived from field (and its type).
+ */
+class TGetter extends FieldAccessor, TMemberWithAccessModifier {
+	contains TypeRef declaredTypeRef
+
+	/** Always returns GETTER */
+	op MemberType getMemberType() {
+		return MemberType.GETTER
+	}
+
+	/**
+	 * Returns string representation of getter according to syntax definition, including
+	 * colon separated (return) type if declared.  Overrides TMember's method.
+	 */
+	op String getMemberAsString() {
+		val StringBuilder strb = new StringBuilder("get ");
+		strb.append(name);
+		if (optional) strb.append("?");
+		strb.append("()");
+		if (declaredTypeRef!==null) strb.append(": ").append(declaredTypeRef.typeRefAsString);
+		return strb.toString();
+	}
+
+//	op String getMemberAsHTML() {
+//		return declaredTypeRef?.typeRefAsHTML + " <u>get</u> <b>" + UtilN4.sanitizeForHTML(name) + "</b>()";
+//	}
+}
+
+/*
+ * Getter defined in a structural type reference or in an object literal.
+ */
+class TStructGetter extends TGetter, TStructMember {
+}
+
+/*
+ * Setter of a field, declaration (type, name) is derived from field (and its type).
+ */
+class TSetter extends FieldAccessor, TMemberWithAccessModifier {
+	contains TFormalParameter fpar
+	op TypeRef getDeclaredTypeRef() {
+		return fpar?.typeRef;
+	}
+	op boolean isReadable() {
+		return false;
+	}
+	op boolean isWriteable() {
+		return true;
+	}
+	/** Always returns SETTER */
+	op MemberType getMemberType() {
+		return MemberType.SETTER
+	}
+	/**
+	 * Returns string representation of setter according to syntax definition.
+	 * Overrides TMember's method.
+	 */
+	op String getMemberAsString() {
+		return "set " + name + (if (optional) "?" else "") + "(" + fpar?.formalParameterAsString + ")";
+	}
+//	op String getMemberAsHTML() {
+//		return "<u>set</u> <b>" + UtilN4.sanitizeForHTML(name) + "</b>(" + fpar?.formalParameterAsHTML + ")";
+//	}
+}
+
+/*
+ * Setter defined in a structural type reference or in an object literal.
+ */
+class TStructSetter extends TSetter, TStructMember {
+	op boolean isWriteable() {
+		return true;
+	}
+}
+
+/*
+ * Represents a user defined enumeration type. All enums implicitly (and transparently
+ * to the user) inherit from N4Enum, which provides properties shared by all enums.
+ */
+class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable, TMigratable {
+
+	boolean external
+	contains TEnumLiteral[] literals
+	
+	op TypeVariable[] getTypeVars() {
+		return emptyEList();
+	}
+}
+
+/*
+ * Literal of a TEnum
+ */
+class TEnumLiteral extends SyntaxRelatedTElement, IdentifiableElement {
+	String value
+
+	op String getValueOrName() {
+		return value ?: name;
+	}
+}
+
+/*
+ * Link to AST element which defines the type related element. As this can
+ * be an arbitrary element (of ECMAScript or IDL), only an EObject can
+ * be specified here.
+ */
+abstract class SyntaxRelatedTElement {
+	refers EObject astElement
+}
+
+/*
+ * An element that may be declared 'const', i.e. a variable or field.
+ */
+abstract class TConstableElement {
+
+	boolean const
+
+	/**
+	 * Iff this element (variable or field) is declared 'const' AND has an initializer expression AND this expression
+	 * is a valid compile-time expression, then this property gives the serialized compile-time value of the initializer
+	 * expression, as returned by method {@code CompileTimeValue#serialize()}; otherwise this property will be
+	 * <code>null</code>.
+	 * <p>
+	 * This field is set by {@code CompileTimeExpressionProcessor#evaluateCompileTimeExpression()} and will be undefined
+	 * until the first phase of post-processing has completed, see {@code CompileTimeExpressionProcessor}.
+	 */
+	String compileTimeValue
+}
+
+/*
+ * Used for storing information about exported variables in the Xtext index, similar
+ * to Types (such as TClass, TInterface, TFunction). It references the variable declaration of the
+ * export declaration (via SyntaxRelatedTElement's astElement).
+ */
+class TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement {
+	boolean external
+	boolean objectLiteral
+	boolean newExpression
+
+	/**
+	 * Returns string representation of variable according to syntax definition.
+	 */
+	op String getVariableAsString() {
+		val StringBuilder strb = new StringBuilder();
+		if (const) strb.append("const ") else strb.append("var ");
+		strb.append(name);
+		if (typeRef!==null) strb.append(": ").append(typeRef.typeRefAsString);
+		return strb.toString();
+	}
+}

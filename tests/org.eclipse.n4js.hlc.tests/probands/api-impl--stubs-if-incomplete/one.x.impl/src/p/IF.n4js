@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+// Testing mixed in types.
+ export  public interface Ifa {
+	
+//	@ProvidesDefaultImplementation
+//	public string m1();
+//	
+//	@ProvidesDefaultImplementation
+//	public static string sm1();
+//
+//	@ProvidesDefaultImplementation
+//	public string get fa();
+//	
+//	@ProvidesDefaultImplementation
+//	public set fb(string s);
+//
+//	@ProvidesDefaultImplementation
+//	public string get fc();
+//	
+//	@ProvidesDefaultImplementation
+//	public set fc(string s);
+//
+//	@ProvidesInitializer 
+//	public string f; 
+//	
+}
+
+// export  public interface Ifb extends Ifa {
+//	  
+//}
+
+ export  public interface Ifc extends Ifa {
+	
+}
+
+console.log("Loaded Implementation one.x.impl::p.IF.n4js");

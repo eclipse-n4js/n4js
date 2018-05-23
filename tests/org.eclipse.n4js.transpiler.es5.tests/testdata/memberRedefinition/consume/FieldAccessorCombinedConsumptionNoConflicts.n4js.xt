@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+// Some tests in this folder were remove as part of IDE-2228.
+// See 192980b3133a5a7fce70630c70d577a8fd410002, c74c82650408278a26d1d3433b780122e7a63ce5, 9732be951c73ac638d7a12c5d6767fb5e5d4f7cd, cd24fa1498702f9a6fd731916b3caa413f0fabc6.
+
+/* XPECT output ---
+<==
+stdout:
+-- A --
+R0.get x
+R0._x
+R0.set x
+R0.get x
+newValue0
+-- B --
+R1.get x
+-- C --
+R2.set x: newValue1
+-- D --
+R1.get x
+R2.set x: newValue2
+R1.get x
+stderr:
+==>
+--- */
+
+interface R0 {
+	_x = "R0._x";
+	set x(x : string) { console.log("R0.set x"); this._x = x}
+	get x() : string { console.log("R0.get x");  return this._x}
+}
+
+interface RBase {
+	foo() {}
+}
+
+interface R1 extends RBase {
+	get x() : string { return "R1.get x"}
+}
+
+interface R2 {
+	set x(x : string) { console.log("R2.set x: " + x) }
+}
+
+class A implements R0 {}
+class B implements R1 {}
+class C implements R2 {}
+class D implements R1, R2 {}
+
+console.log("-- A --")
+var a = new A();
+console.log(a.x);
+a.x = "newValue0";
+console.log(a.x);
+
+console.log("-- B --")
+var b = new B();
+console.log(b.x);
+
+console.log("-- C --")
+var c = new C();
+c.x = "newValue1"
+
+console.log("-- D --")
+var d = new D();
+console.log(d.x)
+d.x = "newValue2"
+console.log(d.x)

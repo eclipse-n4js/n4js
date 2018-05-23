@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+[Function: A]
+@ Description [ '<\'>' ]
+  t1 <'>
+  t2 true
+  t3 "<'>"
+  t4 3 3
+stderr:
+==>
+--- */
+@Description("<'>")
+class A{}
+
+console.log(A)
+A.n4type.annotations.forEach(function(a){
+	console.log("@", a.name, a.details)
+	a.details.forEach(function(ad){
+		console.log(" ", "t1", ad)
+		console.log(" ", "t2",ad==="<'>")
+		console.log(" ", "t3",JSON.stringify(ad))
+		console.log(" ", "t4",ad.length, "<'>".length)
+	});
+});

@@ -1,0 +1,131 @@
+#
+# List of files and folders with third-party copyright.
+#
+#
+# This file is processed automatically by FileChecker.java to ensure the below information is kept up-to-date.
+#
+# Format:
+# every non-empty line in this file either starts with '#' and is then a comment (to be ignored) or must
+# contain the relative path to a file with third-party copyright. If a path ends in "/**" it must point to
+# a folder and its contents are declared to be third-party files. All paths must be relative to the folder
+# containing this file.
+#
+
+
+############################################################
+# code copies from various places
+
+## Torsten (copied from items AG)
+plugins/org.eclipse.n4js.ui/src/org/eclipse/n4js/ui/logging/EclipseLogAppender.java
+
+## Torsten copied from JDT:
+plugins/org.eclipse.n4js.ui/src/org/eclipse/n4js/ui/organize/imports/MultiElementListSelectionDialog.java
+
+## Akos copied from org.eclipse.core.resources
+plugins/org.eclipse.n4js.utils/src/org/eclipse/n4js/utils/resources/ComputeProjectOrder.java
+
+
+## code from items AG copied and adjusted by items consultants for NumberFour AG
+plugins/org.eclipse.n4js.xpect/src/org/eclipse/n4js/xpect/methods/scoping/N4JSCommaSeparatedValuesExpectation.java
+plugins/org.eclipse.n4js.xpect/src/org/eclipse/n4js/xpect/methods/scoping/ScopeXpectMethod.java
+testhelpers/org.eclipse.n4js.ui.tests.helper/src/org/eclipse/n4js/tests/builder/AbstractBuilderTest.java
+testhelpers/org.eclipse.n4js.ui.tests.helper/src/org/eclipse/n4js/tests/builder/BuilderUtil.java
+testhelpers/org.eclipse.n4js.ui.tests.helper/src/org/eclipse/n4js/tests/builder/DelegatingBuilderParticipant.java
+
+
+## taken from Eclipse code: org.eclipse.emf.ecore_2.10.1.v20140901-1043.jar
+## EPL 1.0
+tools/org.eclipse.n4js.hlc/src/main/resources/org/eclipse/emf/ecore/plugin/plugin.properties
+
+
+## contains text in API documentation that was copied from ECMAScript Language Specification
+plugins/org.eclipse.n4js.environments/src-env/env/builtin_js.n4ts
+## contains ECMAScript tests
+tests/org.eclipse.n4js.tests.ecmatestsuite/res/test262_5.0_LICENSE.txt
+tests/org.eclipse.n4js.tests.ecmatestsuite/res/test262_6.0_LICENSE.txt
+
+
+## Jakub copied from JDT:
+tools/org.eclipse.n4js.hlc/src/org/eclipse/jdt/internal/jarinjarloader/**
+
+
+############################################################
+# folders containing 3rd party projects in runners and external libraries (i.e. library manager)
+
+# external libraries (i.e. library manager)
+
+## TODO reconsider how to deal with mangelhaft
+## mangelhaft library, EPL
+## contains the following third-party artifacts:
+## MIT license, https://github.com/substack/node-deep-equal
+## MIT license, https://github.com/nodejs/node/blob/master/lib/assert.js
+## plugins/org.eclipse.n4js.external.libraries/shipped-code/mangelhaft/org.eclipse.n4js.mangelhaft.assert/src/n4js/n4/mangel/assert/Assert.n4js
+## MIT license, http://millermedeiros.github.com/js-signals/
+## plugins/org.eclipse.n4js.external.libraries/shipped-code/mangelhaft/org.eclipse.n4js.mangelhaft/src/n4js/n4/mangel/mangeltypes/signal/Signal.n4js
+plugins/org.eclipse.n4js.external.libraries/shipped-code/mangelhaft/**
+
+## promise library, MIT, https://www.npmjs.com/package/when
+plugins/org.eclipse.n4js.external.libraries/shipped-code/runtime/n4js-node/node_modules/when/**
+
+## module loader, MIT, https://www.npmjs.com/package/systemjs
+plugins/org.eclipse.n4js.external.libraries/shipped-code/runtime/n4js-node/node_modules/systemjs/**
+
+## window.fetch for node. MIT, https://www.npmjs.com/package/node-fetch
+plugins/org.eclipse.n4js.external.libraries/shipped-code/runtime/n4js-node/node_modules/node-fetch/**
+
+## string encoding util, MIT, https://www.npmjs.com/package/encoding
+plugins/org.eclipse.n4js.external.libraries/shipped-code/runtime/n4js-node/node_modules/encoding/**
+
+## string encoding util, MIT, https://www.npmjs.com/package/iconv-lite
+plugins/org.eclipse.n4js.external.libraries/shipped-code/runtime/n4js-node/node_modules/iconv-lite/**
+
+## node stream util, MIT, https://www.npmjs.com/package/is-stream
+plugins/org.eclipse.n4js.external.libraries/shipped-code/runtime/n4js-node/node_modules/is-stream/**
+
+
+
+############################################################
+## test cases copied from 3rd party
+
+#### Creative Commons attribution-noncommercial-sharealike License, http://lucumr.pocoo.org/2011/2/6/automatic-semicolon-insertion/
+tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/tests/parser/ES_07_09_AutomaticSemicolonInsertionParserTest.xtend
+
+
+
+############################################################
+# bundled jar files
+# TODO avoid bundling them
+
+## from Eclipse Orbit
+testhelpers/org.eclipse.n4js.tester.tests.helper/commons-codec-1.6.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/commons-lang3-3.3.2.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/commons-logging-1.1.3.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/hamcrest-core-1.3.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/hamcrest-library-1.3.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/httpcore-4.4.6.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/httpclient-4.5.2.jar
+
+## others
+### Apache 2.0
+testhelpers/org.eclipse.n4js.tester.tests.helper/httpmime-4.3.6.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/groovy-2.4.9.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/groovy-json-2.4.9.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/groovy-xml-2.4.9.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/rest-assured-2.4.0.jar
+testhelpers/org.eclipse.n4js.tester.tests.helper/tagsoup-1.2.0.jar
+
+
+
+############################################################
+# the following folder contains temporary copies of some of the above files
+# TODO remove this folder entirely
+#
+# there is only one third-party artifact not covered above:
+## "Public Domain", https://github.com/douglascrockford/JSON-js/blob/master/cycle.js
+## n4js-libs/org.eclipse.n4js.mangelhaft.assert/src/n4js/n4/mangel/assert/Decycle.n4js
+#
+#n4js-libs/**
+# new:
+#
+# covered above:
+n4js-libs/packages/org.eclipse.n4js.mangelhaft.assert/src/n4js/org/eclipse/n4js/mangelhaft/assert/Assert.n4js

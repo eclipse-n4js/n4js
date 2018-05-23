@@ -1,0 +1,19 @@
+{
+  "name": "n4js.lang",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js-libs"
+  },
+  "description": "N4JS core library.",
+  "keywords": [
+    "n4js"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

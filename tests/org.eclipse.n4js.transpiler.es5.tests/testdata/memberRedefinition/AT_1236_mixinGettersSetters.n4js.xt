@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP  */
+
+/* XPECT output ---
+<==
+stdout:
+data: testPair
+accessor: testPair
+data: testSetter
+accessor: testSetter
+data: testGetter
+accessor: testGetter
+stderr:
+==>
+--- */
+
+// pair
+interface R {
+	field : string;
+	get f() : string { return this.field }
+	set f(v : string) { this.field = v }
+}
+
+class C implements R {}
+var c = new C(); c.f = "testPair";
+console.log("data: " + c.f);
+console.log("accessor: "+c.field);
+
+
+// setter in interface, getter in class
+interface R1 {
+	field : string;
+	set f(v : string) { this.field = v }
+}
+class C1 implements R1 {
+	get f() : string { return this.field }
+}
+var c1 = new C1(); c1.f = "testSetter";
+console.log("data: " + c1.f);
+console.log("accessor: "+c1.field);
+
+
+// getter in interface, setter in class
+interface R2 {
+	field : string;
+	get f() : string { return this.field }
+}
+class C2 implements R2 {
+	set f(v : string) { this.field = v }
+}
+var c2 = new C2(); c2.f = "testGetter";
+console.log("data: " + c2.f);
+console.log("accessor: "+c2.field);

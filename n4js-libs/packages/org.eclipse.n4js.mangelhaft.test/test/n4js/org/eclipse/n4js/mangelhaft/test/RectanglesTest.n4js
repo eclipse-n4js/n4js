@@ -1,0 +1,103 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+class Rectangle {
+    length: number = 0;
+    width: number = 0;
+    area: number = 0;
+    disposed: boolean = false;
+    constructor(length: number, width: number) {
+        this.length = length;
+        this.width = width;
+        this.area = length * width;
+    }
+    public async dispose() {
+        this.disposed = /*async operation*/ true;
+    }
+}
+
+export public class RectanglesTest{
+    @Parameters("{index}: length: {0}, width: {1}")
+    public static getSomeParameters() {
+        return [[4, 5], [3, 2], [6000, 8]]
+    }
+    @Parameter
+    public length:int;
+    @Parameter(1)
+    public width:int;
+
+    private area: int;
+    private currentRect: Rectangle;
+    private icons: Array<?>;
+    private environment;
+
+    @BeforeAll
+    getEnvironment() {
+        this.environment = {}; //system.getEnvironment()
+    }
+
+    @BeforeAll
+    loadIcons() {
+        this.icons = ["icon1", "icon2", "icon3"]; //n4.loadIcons
+    }
+
+    @AfterAll
+    releaseEnvironment() {
+        this.environment = null; //system.releaseEnvironment;
+    }
+
+    @AfterAll
+    freeIcons() {
+        this.icons = null; //n4.releaseIcons()
+    }
+
+    @Before
+    createRectangleInstanceForTest() {
+        Assert.isNullOrUndefined(this.currentRect, "currentRect should be reset in @After");
+        this.currentRect = new Rectangle(this.length, this.width);// root.rect;
+        this.area = this.length * this.width;
+    }
+
+    @After
+    async disposeTestRectangleIfNeeded() {
+        if (!this.currentRect.disposed) {
+            await this.currentRect.dispose();
+        }
+        this.currentRect = null;
+    }
+
+    @Test
+    areaIsSet(){
+        Assert.isTrue(this.currentRect.area != 0
+                    , "rectangle's area has been set");
+    }
+
+    @Test
+    areaIsSetCorrectly(){
+        Assert.strictEqual(this.currentRect.area, this.area
+                         , "rectangle's area has been set Correctly");
+    }
+
+    @Test
+    @Description("Dispose method should be called and object disposed")
+    async disposeMethodShouldWork() {
+        Assert.isFalse(this.currentRect.disposed,
+            "initial rectangle not in disposed state");
+        await this.currentRect.dispose();
+        Assert.isTrue(this.currentRect.disposed,
+            "dispose function has been called");
+    }
+    @Test
+    iconsLoaded() {
+        Assert.deepEqual(this.icons, ["icon1", "icon2", "icon3"]
+                       , "icons equivalent to expected");
+    }
+}

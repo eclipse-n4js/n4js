@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+a
+b
+undefined
+c
+stderr:
+==>
+--- */
+
+
+class C {
+
+  topOfTheWorld(arg1, arg2) : {function():void} {
+
+	return () => { // lambda1
+		console.log(arguments[0]);
+		(() => { // lambda2
+			console.log(arguments[1]);
+			(() => { // lambda5
+				console.log(arguments[5]);
+			})();
+		})();
+		function second(arg3): {function():void} {
+			return () => { // lambda4
+				console.log(arguments[0]);
+			}
+		}
+		second('c')();
+	}
+  }
+}
+
+
+var c = new C
+c.topOfTheWorld('a', 'b')()

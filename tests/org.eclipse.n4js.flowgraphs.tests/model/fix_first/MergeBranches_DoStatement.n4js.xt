@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note: Tests of kind 'allMergeBranches' need to have single files for each test.
+ */
+
+
+/* DoStatement XPECT allMergeBranches ---
+	B0: [do 1; while (2);](entry) -> [do 1; while (2);](body),
+	B0: [do 1; while (2);](entry) -> [do 1; while (2);](body),
+	F1: [do 1; while (2);](conditionFork) -LoopExit-> [do 1; while (2);](exit),
+	F1: [do 1; while (2);](conditionFork) -LoopExit-> [do 1; while (2);](exit)
+--- */
+function DoStatement() {
+	"start";
+	do
+		1;
+	while (2);
+	"end";
+}

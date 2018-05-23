@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { Event } from 'n4/events/Event';
+export public function fireChangeNotification(owner : Object, property : string, newValue : any, oldValue : any, noChangeTracking : boolean=undefined) {
+	return null;
+}
+export public function callListenersWithEvent(owner : Object, event : Event) {
+	return null;
+}
+export public function observeProperty(owner : Object, property : string, newValue : any, oldValue : any, handler : {function()}=undefined) {
+	return null;
+}
+export public function makeObservable(pojso : Object) {
+	return null;
+}

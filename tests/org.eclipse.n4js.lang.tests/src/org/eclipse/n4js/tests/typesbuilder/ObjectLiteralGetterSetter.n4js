@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+export var callee = {
+	// data properties
+	
+	string a: "a",
+	$data_property_b: undefined,
+	string c: "c",
+	string d: "d",
+	$data_property_e: undefined,
+	
+	// access properties
+	
+	get b() {
+		return this.$data_property_b + "_getter";
+	},
+	
+	// isn't allowed
+//	get c() {
+//		return this.c + "_getter";
+//	}
+	
+	// isn't allowed
+//	set d(string newD) {
+//		this.d = newD + "_setter";
+//	}
+
+	set e(newE: string) {
+		return this.$data_property_e + "_setter";
+	}
+}

@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+[ 1, 2, 3 ]
+[ 1, 2, 3 ]
+[ 1, 2, 3 ]
+[ 1, 2, 3 ]
+stderr:
+==>
+--- */
+
+// IDEBUG-579 multi-line comment causing trouble in single-expr arrow-fun.
+
+var nums = [1, 2, 3]
+
+// and now multi-line comments, this time not preceding the lambda-body
+
+var res = nums.filter(n => n /*
+ *
+ * comment2*/
+  // single line
+// XPECT noerrors -->
+    > 0
+)
+console.log(res)
+
+res = nums.filter(n => n
+    /*comment3*/
+// XPECT noerrors -->
+    > 0
+)
+console.log(res)
+
+// XPECT noerrors -->
+res = nums.filter(n => n /*comment4*/ /*comment5*/ > 0
+)
+console.log(res)
+
+// XPECT noerrors -->
+res = nums.filter(n =>n>0)
+console.log(res)

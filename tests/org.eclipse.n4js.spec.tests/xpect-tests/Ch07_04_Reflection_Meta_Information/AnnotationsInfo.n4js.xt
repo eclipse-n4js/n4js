@@ -1,0 +1,88 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+// IDE-561
+
+/* XPECT output ---
+<==
+stdout:
+class annotations
+# extract of all annotations
+ =annotations : 
+  - name:  Ignore
+    value : because of reasons
+  - name:  Group
+    value : UT
+  - name:  Group
+    value : IT
+# has annotation Group true
+# has annotation Observable false
+# any annotations with name Observable null
+# any annotations with name Group N4Annotation { name: 'Group', details: [ 'IT' ] }
+# all annotations with name Ignore [ N4Annotation { name: 'Ignore', details: [ 'because of reasons' ] } ]
+# all annotations with name Group [ N4Annotation { name: 'Group', details: [ 'UT' ] },
+  N4Annotation { name: 'Group', details: [ 'IT' ] } ]
+# all annotations with name Observable []
+
+ member annotations
+m [ N4Annotation { name: 'Test', details: [] } ]
+fAnn [ N4Annotation { name: 'Nfon', details: [ 'a', 'b' ] } ]
+stderr:
+==>
+--- */
+
+
+@Ignore("because of reasons")
+@Group("UT")
+@Group("IT")
+export public class ClassWithAnnotations {
+
+	@Nfon("a", "b")
+	public fAnn = 'fAnn value';
+
+	@Test
+	m(){}
+
+}
+
+
+console.log("class annotations")
+
+var metaClass = ClassWithAnnotations.n4type
+
+console.log('# extract of all annotations')
+if(metaClass.annotations.length > 0){
+	console.log(" =annotations : ");
+	metaClass.annotations.forEach(function(an){
+		console.log("  - name: ", an.name);
+		an.details.forEach(function(detail){
+			console.log("    value :", detail);
+		});
+	});
+}else{
+	console.log("# no annotations");
+}
+
+console.log('# has annotation Group', metaClass.hasAnnotation('Group'))
+console.log('# has annotation Observable', metaClass.hasAnnotation('Observable'))
+
+console.log('# any annotations with name Observable', metaClass.anyAnnotation('Observable'))
+console.log('# any annotations with name Group', metaClass.anyAnnotation('Group'))
+
+console.log('# all annotations with name Ignore', metaClass.allAnnotations('Ignore'))
+console.log('# all annotations with name Group', metaClass.allAnnotations('Group'))
+console.log('# all annotations with name Observable', metaClass.allAnnotations('Observable'))
+
+
+console.log("\n", "member annotations");
+metaClass.membersWithAnnotation('Test').forEach(function(m : N4Member){console.log(m.name, m.annotations)});
+metaClass.membersWithAnnotation('Nfon').forEach(function(m : N4Member){console.log(m.name, m.annotations)});

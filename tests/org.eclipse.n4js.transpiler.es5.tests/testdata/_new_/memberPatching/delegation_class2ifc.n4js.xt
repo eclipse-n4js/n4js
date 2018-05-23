@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+========================================
+I#m()
+I#g()
+I#s(), p: hello setter!
+I#m()
+I#g()
+I#s(), p: hello setter!
+I#m()
+I#g()
+I#s(), p: hello setter!
+I#m()
+I#g()
+I#s(), p: hello setter!
+I#m()
+I#g()
+I#s(), p: hello setter!
+========================================
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+========================================
+stderr:
+==>
+--- */
+
+
+
+interface I {
+	m() {return 'I#m()';}
+	get g() {return 'I#g()';}
+	set s(p) {console.log('I#s(), p:', p);}
+}
+interface J extends I {}
+interface J_ext extends I {
+	@Override m() {return 'J_ext#m()';}
+	@Override get g() {return 'J_ext#g()';}
+	@Override set s(p) {console.log('J_ext#s(), p:', p);}
+}
+interface J_other {
+	m() {return 'J_other#m()';}
+	get g() {return 'J_other#g()';}
+	set s(p) {console.log('J_other#s(), p:', p);}
+}
+
+class A implements I {}
+class B extends A {}
+class C extends B implements J {}
+class C_ext extends B implements J_ext {}
+class C_other extends B implements J_other {}
+
+
+var a : A = new A();
+var b : B = new B();
+var c : C = new C();
+var c_ext : C_ext = new C_ext();
+var c_other : C_other = new C_other();
+
+
+console.log('========================================');
+console.log(a.m());
+console.log(a.g);
+a.s = 'hello setter!';
+console.log(b.m());
+console.log(b.g);
+b.s = 'hello setter!';
+console.log(c.m());
+console.log(c.g);
+c.s = 'hello setter!';
+console.log(c_ext.m()); // note: currently this prints "I#m()" as well; in the future we might want to let this print "J_ext#m()"
+console.log(c_ext.g); // note: currently this prints "I#g()" as well; in the future we might want to let this print "J_ext#g()"
+c_ext.s = 'hello setter!'; // note: currently this prints "I#s(), p: ..." as well; in the future we might want to let this print "J_ext#s(), p: ..."
+console.log(c_other.m());
+console.log(c_other.g);
+c_other.s = 'hello setter!';
+console.log('========================================');
+var i : any+ = I;
+console.log(A.prototype.hasOwnProperty('m') && a.m === i.$methods.m.value);
+console.log(A.prototype.hasOwnProperty('g'));
+console.log(A.prototype.hasOwnProperty('s'));
+console.log(!B.prototype.hasOwnProperty('m'));
+console.log(!B.prototype.hasOwnProperty('g'));
+console.log(!B.prototype.hasOwnProperty('s'));
+console.log(!C.prototype.hasOwnProperty('m'));
+console.log(!C.prototype.hasOwnProperty('g'));
+console.log(!C.prototype.hasOwnProperty('s'));
+console.log(!C_ext.prototype.hasOwnProperty('m')); // again, this might change in the future (see above)
+console.log(!C_ext.prototype.hasOwnProperty('g')); // again, this might change in the future (see above)
+console.log(!C_ext.prototype.hasOwnProperty('s')); // again, this might change in the future (see above)
+console.log(!C_other.prototype.hasOwnProperty('m'));
+console.log(!C_other.prototype.hasOwnProperty('g'));
+console.log(!C_other.prototype.hasOwnProperty('s'));
+console.log('========================================');

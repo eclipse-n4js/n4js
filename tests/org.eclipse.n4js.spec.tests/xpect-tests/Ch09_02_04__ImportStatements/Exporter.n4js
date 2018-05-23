@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+
+export public class C1 { version():string{return "C1.version";} }
+export public class C2 extends C1 { @Override version():string{return "C2.version";} }
+export public class C3 extends C1 { @Override version():string{return "C3.version";} }
+export public interface I1 { }
+export function f1 () : string { return "f1-version1" }
+export var var1 = 5;
+export let let1 = 7;
+export default let let2=4;
+export const cnst8 = 8;
+
+
+
+
+
+var var2 = 6;
+// export {var2 as F}; // -- unsupported feature
+
+// - redefine function f1:
+console.log( "f1():", f1());
+f1 = function() { return "f1-version2"; }
+console.log( "f1():", f1());
+
+
+

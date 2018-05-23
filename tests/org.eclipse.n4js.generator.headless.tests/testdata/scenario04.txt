@@ -1,0 +1,192 @@
+# wsp1/A/src/packA/A.n4js
+// Comment to the TESTER (YOU!): This File (scenario01.txt) assembles the content of many files
+// The File are separated by a single HASH character. So this Character is off limits to use otherwise
+// After the Hashmark up to the end of the line is the relative path of the file to create.
+// all other characters till the next HASH are the content of this file.
+export public class A {
+	public constructor() {
+		console.log(" in class "+A)
+	}
+}
+
+# wsp1/A/manifest.n4mf
+ProjectId: A
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# wsp1/notAproject
+# nest/wsp2/B/src/packB/B.n4js
+export public class B {
+	public constructor() {
+		console.log(" in class "+B)
+	}
+}
+
+# nest/wsp2/B/manifest.n4mf
+ProjectId: B
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# wsp3/C/src/packC/C.n4js
+import { B } from "packB/B"
+export public class C extends B {
+	constructor() {
+		console.log(" in class "+C)
+	}
+}
+
+# wsp3/C/manifest.n4mf
+ProjectId: C
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+ProjectDependencies { B }
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# nest/wsp2/D/src/packD/D.n4js
+import { A } from "packA/A"
+export public class D extends A {
+	constructor() {
+		console.log(" in class "+D)
+	}
+}
+
+# nest/wsp2/D/src/packD/D2.n4js
+import { B } from "packB/B"
+export public class D2 extends B {
+	constructor() {
+		console.log(" in class "+D2)
+	}
+}
+
+# nest/wsp2/D/manifest.n4mf
+ProjectId: D
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+ProjectDependencies { A,B }
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# nest/nest/wsp4/E/src/packE/E.n4js
+import { D } from "packD/D"
+export public class E extends D {
+	constructor() {
+		console.log(" in class "+E)
+	}
+}
+
+# nest/nest/wsp4/E/src/packE/E2.n4js
+import { C } from "packC/C"
+export public class E2 extends C {
+	constructor() {
+		console.log(" in class "+E2)
+	}
+}
+
+# nest/nest/wsp4/E/manifest.n4mf
+ProjectId: E
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+ProjectDependencies { D,C }
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# nest/wsp5/F/src/packF/F.n4js
+import { D } from "packD/D"
+export public class F extends D {
+	constructor() {
+		console.log(" in class "+F)
+	}
+}
+
+# nest/wsp5/F/manifest.n4mf
+ProjectId: F
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+ProjectDependencies { D }
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# wsp6/G/src/packG/G.n4js
+import { F } from "packF/F"
+export public class G extends F {
+	constructor() {
+		console.log(" in class "+G)
+	}
+}
+
+# wsp6/G/manifest.n4mf
+ProjectId: G
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+ProjectDependencies { F }
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# nest/nest/wsp4/H/src/packH/H.n4js
+import { G } from "packG/G"
+export public class H extends G {
+	constructor() {
+		console.log(" in class "+H)
+	}
+}
+
+# nest/nest/wsp4/H/manifest.n4mf
+ProjectId: H
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+ProjectDependencies { G }
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}

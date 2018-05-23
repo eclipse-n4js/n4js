@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+function
+1
+function
+2
+function
+3
+stderr:
+==>
+--- */
+
+var af = x => x;
+
+console.log(typeof af);
+console.log(af(1));
+
+var af2 = x =>
+x;
+
+console.log(typeof af2);
+console.log(af2(2));
+
+
+var af3 = x =>
+{ return x };
+
+console.log(typeof af3);
+console.log(af3(3));

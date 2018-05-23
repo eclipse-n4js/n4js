@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ~~~
+<==
+stdout:
+{"prop1":"test"}
+{"origin":"org.eclipse.n4js.transpiler.es5.tests","annotations":[],"name":"B","fqn":"classes.AT_874_InheritConstructor.AT_874_InheritFromBuiltInType.B","n4superType":{"origin":"n4js-es5","annotations":[],"name":"N4Object","fqn":"N4BuiltInClasses.N4Object","allImplementedInterfaces":[],"ownedMembers":[],"consumedMembers":[]},"allImplementedInterfaces":[],"ownedMembers":[{"annotations":[],"name":"prop1","isStatic":false}],"consumedMembers":[]}
+stderr:
+==>
+~~~ */
+
+class B {
+	prop1 : string = "test";
+}
+
+var b : B = new B()
+console.log(JSON.stringify(b, null, null))
+console.log(JSON.stringify(b.constructor.n4type, null, null))

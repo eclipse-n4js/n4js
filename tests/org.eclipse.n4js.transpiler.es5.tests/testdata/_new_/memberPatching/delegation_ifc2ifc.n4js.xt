@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+========================================
+I#m()
+I#g()
+I#s(), p: hello setter!
+I#m()
+I#g()
+I#s(), p: hello setter!
+========================================
+stderr:
+==>
+--- */
+
+
+
+interface I {
+	m() {
+		console.log('I#m()');
+	}
+	get g() {
+		console.log('I#g()');
+		return null;
+	}
+	set s(p) {
+		console.log('I#s(), p:', p);
+	}
+}
+interface J extends I {}
+interface K extends J {}
+
+
+
+console.log('========================================');
+
+// assert that a delegate to I#m() was added to J
+var j : any+ = J;
+j.$methods.m.value();
+j.$methods.g.get();
+j.$methods.s.set('hello setter!');
+
+// assert that a delegate to I#m() was added to K
+var k : any+ = K;
+k.$methods.m.value();
+k.$methods.g.get();
+k.$methods.s.set('hello setter!');
+
+console.log('========================================');

@@ -1,0 +1,39 @@
+{
+  "name": "n4js-node",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js-libs"
+  },
+  "description": "N4JS node.js runtime environment.",
+  "keywords": [
+    "n4js",
+    "es6",
+    "es2015",
+    "transpiler",
+    "ide",
+    "n4jside",
+    "n4js-ide"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  },
+  "bin": {
+    "n4js": "./src-gen/n4js-cli.js"
+  },
+  "main": "./src-gen/index.js",
+  "browser": "./src-gen/browser.js",
+  "react-native": "./src-gen/react-native.js",
+  "dependencies": {
+    "node-fetch": "~1.6.3",
+    "systemjs": "~0.19.40"
+  },
+  "files": [
+    "manifest.n4mf",
+    "src-gen"
+  ]
+}

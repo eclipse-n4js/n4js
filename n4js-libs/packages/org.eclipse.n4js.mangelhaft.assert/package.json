@@ -1,0 +1,20 @@
+{
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js"
+  },
+  "description": "An assert library used with the Mangelhaft testing framework.",
+  "keywords": [
+    "n4js",
+    "testing",
+    "mangelhaft"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

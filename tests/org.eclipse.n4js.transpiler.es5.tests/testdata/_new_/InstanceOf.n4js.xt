@@ -1,0 +1,86 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+========================================
+true
+false
+true
+false
+true
+false
+true
+false
+========================================
+$implements was called!
+$instanceof was called!
+========================================
+stderr:
+==>
+--- */
+
+
+
+interface I {}
+interface J {}
+
+class A {}
+class B extends A implements I {}
+class X {}
+
+var a : A = new B();
+
+var t : type{Object};
+
+
+console.log('========================================');
+
+
+console.log(a instanceof A);
+console.log(a instanceof X);
+
+console.log(a instanceof I);
+console.log(a instanceof J);
+
+t = A;
+console.log(a instanceof t);
+t = X;
+console.log(a instanceof t);
+
+t = I;
+console.log(a instanceof t);
+t = J;
+console.log(a instanceof t);
+
+
+console.log('========================================');
+
+
+// to assert that the proper built-in function is called for instance below, we change them as follows:
+var global = new Function('return this;')() as Object;
+global['$implements'] = function() {
+	console.log('$implements was called!')
+}
+global['$instanceof'] = function() {
+	console.log('$instanceof was called!')
+}
+
+a instanceof A; // this should not print anything (because the native instanceof operator is being used)!
+a instanceof I;
+a instanceof t;
+
+
+console.log('========================================');

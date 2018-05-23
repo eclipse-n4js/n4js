@@ -1,0 +1,417 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsURI="http://www.eclipse.org/n4js/n4js/IM")
+@GenModel(fileExtensions="n4js_im",
+//	modelPluginID="",
+	modelDirectory="/org.eclipse.n4js.transpiler/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	literalsInterface="true",
+	loadInitialization="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+
+package org.eclipse.n4js.transpiler.im
+
+import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.StringLiteral
+import org.eclipse.n4js.n4JS.VersionedIdentifierRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.versions.VersionableUtils
+
+
+
+class Script_IM extends Script {
+	contains SymbolTable symbolTable
+}
+
+class SymbolTable {
+	contains SymbolTableEntry[*] entries
+}
+
+/**
+ * Each <code>SymbolTableEntry</code> represents a named element in the intermediate model that may be the target of
+ * a reference from somewhere else in the intermediate model (represented by {@link ReferencingElement_IM}).
+ *
+ * <h2>Comparison of Use Cases</h2>
+ * The three subclasses represent three distinct use cases of symbol table entries, summarized in the following table:
+ * <p>
+ * <center>
+ * <table border="1">
+ * <tr>
+ *     <th>{@link SymbolTableEntryOriginal}</th>
+ *     <th>{@link SymbolTableEntryIMOnly}</th>
+ *     <th>{@link SymbolTableEntryInternal}</th>
+ * </tr>
+ * <tr>
+ *     <td>visible from N4JS</td>
+ *     <td>*not* visible from N4JS</td>
+ *     <td>*not* visible from N4JS</td>
+ * </tr>
+ * <tr>
+ *     <td>
+ *         defined in ...
+ *         <ul>
+ *         <li>original AST or
+ *         <li>another N4JS resource (maybe .n4jsd) or
+ *         <li>as part of built-in types.
+ *         </ul>
+ *     </td>
+ *     <td>defined in IM</td>
+ *     <td>defined elsewhere<br>(bootstrap code, runtime, etc.)</td>
+ * </tr>
+ * <tr>
+ *     <td>maybe* represented in IM<br>(see <code>elementsOfThisName</code>)</td>
+ *     <td>always represented in IM<br>(see <code>elementsOfThisName</code>)</td>
+ *     <td>never represented in IM<br>(<code>elementsOfThisName</code> is empty)</td>
+ * </tr>
+ * </table>
+ * </center>
+ * </p>
+ * <p>
+ * &#42; a SymbolTableEntryOriginal will be represented in the intermediate model (i.e. will have one or more elements in
+ * property <code>elementsOfThisName</code>) if and only if the element was defined in the original AST, because then
+ * a copy of that definition (e.g. a class declaration) will have been copied to the intermediate model during the
+ * preparation step.
+ * </p>
+ */
+abstract class SymbolTableEntry {
+	/*
+	 * Name of the entry in the symbol table.
+	 */
+	String name
+
+	/*
+	 * Lists all named things within the intermediate model that use this symbol. There can be more than one user, e.g.
+	 * after splitting up a class declaration into a variable-declaration accompanied by a function expression, both
+	 * will use the same name.
+	 */
+	refers NamedElement[0..*] elementsOfThisName
+
+	/*
+	 * All the elements of the intermediate model that refer to this symbol table entry.
+	 */
+	refers ReferencingElement_IM[] referencingElements opposite rewiredTarget
+}
+
+/**
+ * First of three cases of a <code>SymbolTableEntry</code>. This kind of symbol table entry represents an element that
+ * is visible from N4JS and is thus also represented by a corresponding TModule element or node in the original AST,
+ * which is given by property <code>originalTarget</code>. For a comparison, see {@link SymbolTableEntry here}.
+ */
+class SymbolTableEntryOriginal extends SymbolTableEntry {
+
+	/*
+	 * The original target element. Every reference in the intermediate model pointing to this SymbolTableEntry is
+	 * actually meant as a reference to this original target element.
+	 * <p>
+	 * This will either be
+	 * <ul>
+	 * <li>a <b>TModule element</b> (in case of elements that have a representation in the TModule, i.e.
+	 * exported top-level variables, classes, interfaces, members, etc.) or
+	 * <li>a <b>node in the original AST</b> (in case of elements that do *not* have a representation in the TModule,
+	 * i.e. non-exported top-level variables, local variables, formal parameters, etc).
+	 * </ul>
+	 * This value must never be <code>null</code>.
+	 * <p>
+	 * <b>WARNING: via this reference, you are leaving <strike>the American sector</strike> the intermediate model and
+	 * enter the original AST or TModule.</b>
+	 */
+	refers IdentifiableElement originalTarget
+
+	/*
+	 * If the original target was imported via an import statement, then this points to the corresponding import
+	 * specifier (in the intermediate model).
+	 * <p>
+	 * If non-<code>null</code>, this is either a {@link NamedImportSpecifier} or a {@link NamespaceImportSpecifier}.
+	 */
+	refers ImportSpecifier[0..1] importSpecifier
+
+	/*
+	 * For elements defined in the resource to compile, this is the name under which this element is exported and
+	 * another, remote resource can import it. For elements defined in remote resources, this is the name under which
+	 * this element is exported by the remote resource and can be imported in the resource to compile.
+	 */
+	op String exportedName() {
+		val trgt = originalTarget;
+		if(trgt instanceof TExportableElement) {
+			return trgt.exportedName;
+		}
+		return originalTarget.name;
+	}
+}
+
+/**
+ * Represents an element that was created programmatically by a transformation and is thus *not* visible from N4JS and
+ * does *not* have an original target. For a comparison, see {@link SymbolTableEntry here}.
+ */
+class SymbolTableEntryIMOnly extends SymbolTableEntry {
+	// no additional properties
+}
+
+/*
+ * Internal symbol table entries represent internal low-level identifiable elements that are not visible from N4JS and
+ * do not have a representation in the intermediate model (there are only references to this element in the intermediate
+ * model!). Therefore, they don't have an originalTarget and no elementsOfThisName. For a comparison, see
+ * {@link SymbolTableEntry here}.
+ * <p>
+ * Examples include <code>$makeClass</code>, <code>$n4export</code> but also SystemJS' <code>System</code> and
+ * <code>System.register</code>.
+ * <p>
+ * Background: sometimes the transpiler has to emit low-level code that uses some global objects that are not
+ * visible from N4JS. Therefore, we do not have any representation for these elements, neither in a TModule (or in
+ * the original AST, e.g. in case of non-exported variable declarations) nor in the intermediate model. For these
+ * cases, the special case of SymbolTableEntryInternal. Internal symbol table entries are the only STE's that are
+ * primarily identified by name. So when creating one or searching for them you only have to provide a name.
+ */
+class SymbolTableEntryInternal extends SymbolTableEntry {
+	// no additional properties
+}
+
+
+/*
+ * An element of the intermediate model that refers to some other element. The other element may either be an element
+ * within the same resource (AST or TModule) OR an element in a remote resource (TModule). The reference is not pointing
+ * to the original target element directly, but instead to a {@link SymbolTableEntry} (and is hence called a "rewired"
+ * reference).
+ */
+abstract class ReferencingElement_IM {
+	refers SymbolTableEntry rewiredTarget opposite referencingElements
+
+	/**
+	 * Convenience method. If the rewiredTarget is a SymbolTableEntryOriginal, returns its original target, otherwise
+	 * <code>null</code>.
+	 */
+	op IdentifiableElement getOriginalTargetOfRewiredTarget() {
+		val declaredTypeSTE = rewiredTarget;
+		if(declaredTypeSTE instanceof SymbolTableEntryOriginal) {
+			return declaredTypeSTE.originalTarget;
+		}
+		return null;
+	}
+}
+
+/** Base superclass for Expression-usable ReferencingElement_IM */
+abstract class ReferencingElementExpression_IM extends ReferencingElement_IM, Expression { }
+
+
+/*
+ * SymbolTable-aware replacement for {@link IdentifierRef}.
+ * Original property {@link IdentifierRef.id} is always {@code null}.
+ */
+class IdentifierRef_IM extends IdentifierRef, ReferencingElementExpression_IM {
+
+	op SymbolTableEntry getId_IM() {
+		return rewiredTarget;
+	}
+	op void setId_IM(SymbolTableEntry target) {
+		rewiredTarget = target;
+	}
+
+	/* overridden attribute access to always return null */
+	op  IdentifiableElement getId() { return null; }
+	op void setId(IdentifiableElement ix) { if(ix!==null) throw new IllegalArgumentException("IDRef_IM cannot accept Identifiers. Use #id_IM."); }
+}
+
+/*
+ * SymbolTable-aware replacement for {@link ParameterizedPropertyAccessExpression}.
+ * Original property {@link ParameterizedPropertyAccessExpression.property} is always {@code null}.
+ */
+class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAccessExpression, ReferencingElementExpression_IM {
+
+	boolean anyPlusAccess
+	/*
+	 * Name of the accessed property in case of a <code>any+</code> property access.
+	 */
+	String nameOfAnyPlusProperty
+
+	op SymbolTableEntry getProperty_IM() {
+		return rewiredTarget;
+	}
+	op void setProperty_IM(SymbolTableEntry target) {
+		rewiredTarget = target;
+	}
+
+	op String getPropertyName() {
+		return if(anyPlusAccess) nameOfAnyPlusProperty else {
+			val e = rewiredTarget;
+			if(e instanceof SymbolTableEntryOriginal){
+				val exName =  e.exportedName;
+				if(exName !== null)
+					return exName
+				else
+					return property_IM?.name;
+			}else
+				return property_IM?.name;
+		}
+	}
+
+	/* overridden attribute access to always return null */
+	op  IdentifiableElement getProperty() { return null; }
+	op void setProperty(IdentifiableElement ix) { if(ix!==null) throw new IllegalArgumentException("ParameterizedPropertyAccessExpression_IM cannot accept properties. Use #property_IM."); }
+}
+
+/*
+ * SymbolTable-aware replacement for {@link ParameterizedTypeRef}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class ParameterizedTypeRef_IM extends ParameterizedTypeRef, ReferencingElement_IM {
+
+	op SymbolTableEntry getDeclaredType_IM() {
+		return rewiredTarget;
+	}
+	op void setDeclaredType_IM(SymbolTableEntry target) {
+		rewiredTarget = target;
+	}
+
+	/* overridden attribute access to always return null */
+	op  Type getDeclaredType() { return null; }
+	op void setDeclaredType(Type ix) { if(ix!==null) throw new IllegalArgumentException("ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM."); }
+}
+
+/*
+ * SymbolTable-aware replacement for {@link ParameterizedTypeRefStructural}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class ParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, ParameterizedTypeRefStructural, ReferencingElement_IM {
+
+	op SymbolTableEntry getDeclaredType_IM() {
+		return rewiredTarget;
+	}
+	op void setDeclaredType_IM(SymbolTableEntry target) {
+		rewiredTarget = target;
+	}
+
+	/* overridden attribute access to always return null */
+	op  Type getDeclaredType() { return null; }
+	op void setDeclaredType(Type ix) { if(ix!==null) throw new IllegalArgumentException("ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM."); }
+}
+
+
+/*
+ * A pre-formatted code snippet that will be emitted to the target code as is.
+ */
+class Snippet extends Expression {
+	String code
+}
+
+
+abstract class DelegatingMember extends N4MemberDeclaration {
+	/*
+	 * The base type for finding the delegation target or <code>null</code> if the this member's containing type
+	 * should be used as the base. This must evaluate to the base type's constructor function, not its prototype.
+	 */
+	refers SymbolTableEntryOriginal delegationBaseType
+	/*
+	 * How often we should proceed to the super class of the base type for finding the delegation target or 0.
+	 * If 'baseType' denotes an interface, this should always be 0.
+	 */
+	int delegationSuperClassSteps
+	/* The delegation target. Must always be non-null. */
+	refers SymbolTableEntryOriginal delegationTarget
+	/* store information about the target - if true the target has no body */
+	boolean delegationTargetIsAbstract
+}
+
+class DelegatingGetterDeclaration extends N4GetterDeclaration, DelegatingMember {
+//	/* overridden attribute access to always return the name of the delegation target */
+//	op String getName() { return delegationTarget.name; }
+//	op void setName(String name) { throw new IllegalArgumentException("cannot set name of DelegatingGetterDeclaration; always has name of delegation target"); }
+}
+class DelegatingSetterDeclaration extends N4SetterDeclaration, DelegatingMember {}
+class DelegatingMethodDeclaration extends N4MethodDeclaration, DelegatingMember {}
+
+
+/*
+ * This special kind of {@link StringLiteral} should be used if the name of a symbol table entry is required somewhere
+ * in the form of a string literal. This will ensure that later changes to the symbol table entry's name will be
+ * reflected in the string literal.
+ * <p>
+ * Use this to emit code such as the <code>"field"</code> literal in the following example:
+ * <pre>
+ * if(!target.hasOwnProperty("field")) {
+ *     target.field = 42;
+ * }
+ * </pre>
+ */
+class StringLiteralForSTE extends StringLiteral {
+	refers SymbolTableEntry entry
+	/**
+	 * If true, use the element's exported name instead of its actual name. If true, the {@link #entry}'s original
+	 */
+	boolean useExportedName
+
+	op String getValueAsString() {
+		if(useExportedName) {
+			val e = entry;
+			if(e instanceof SymbolTableEntryOriginal) {
+				return e.exportedName;
+			}
+		}
+		return entry?.name
+	}
+}
+
+// ****************************************************************************************************
+// N4IDL related model elements
+// ****************************************************************************************************
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRef}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedParameterizedTypeRef_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRef {}
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRefStructural {}
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedIdentifierRef_IM extends IdentifierRef_IM, VersionedIdentifierRef {}
+
+/**
+ * Import specifier that is aware of multiple versions of the imported type.
+ */
+class VersionedNamedImportSpecifier_IM extends NamedImportSpecifier {
+	refers SymbolTableEntryOriginal[] importedTypeVersions
+
+	/**
+	 * Returns {@code true} if this import specifiers imports a
+	 * versioned type.
+	 */
+	boolean versionedTypeImport get {
+		return importedTypeVersions.size > 0 && (importedTypeVersions.size > 1 /*shortcut*/ ||
+			VersionableUtils.isTVersionable(importedTypeVersions.get(0).originalTarget));
+	}
+}

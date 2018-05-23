@@ -1,0 +1,20 @@
+{
+  "name": "n4js-es5",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NumberFour/n4js-libs"
+  },
+  "description": "(Abstract) N4JS ES5 runtime environment.",
+  "engines": {
+    "node": ">= 5.0.0"
+  },
+  "files": [
+    "manifest.n4mf",
+    "src-gen"
+  ]
+}

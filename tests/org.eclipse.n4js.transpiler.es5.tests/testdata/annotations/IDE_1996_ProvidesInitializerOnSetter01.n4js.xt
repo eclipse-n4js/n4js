@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+1
+42
+stderr:
+==>
+--- */
+
+class C {
+    public x : int = 5;
+    private _y : int = 1;
+
+    public get y() { return this._y; }
+    // XPECT noerrors -->
+    @ProvidesInitializer
+    public set y(v : int) { this._y = v; }
+
+    public constructor(@Spec spec : ~i~this) {}
+}
+
+console.log(new C({}).y);
+console.log(new C({y: 42}).y);

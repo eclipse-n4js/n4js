@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Err.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+ /* XPECT output ---
+<==
+stdout:
+true
+true
+false
+false
+stderr:
+==>
+--- */
+
+import { Error as Err } from "importexport/IDEBUG_684/Err"
+
+
+class MyErr extends Err{}
+class MyError extends Error{}
+
+var myErr = new MyErr();//instance of imported thing
+var myError = new MyError();//instnace of global error
+
+console.log(myErr instanceof Err)//true
+console.log(myError instanceof Error)//true
+
+console.log(myErr instanceof Error)//false
+console.log(myError instanceof Err)//false

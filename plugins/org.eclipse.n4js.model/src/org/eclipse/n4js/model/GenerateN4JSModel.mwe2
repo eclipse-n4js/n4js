@@ -1,0 +1,47 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+module org.eclipse.n4js.model.GenerateN4JSModel
+
+import org.eclipse.emf.mwe.utils.*
+import org.eclipse.xtext.generator.*
+import org.eclipse.xtext.ui.generator.*
+
+var projectName = "org.eclipse.n4js.model"
+var projectPath = "../${projectName}"
+
+Workflow {
+	bean = StandaloneSetup {
+		scanClassPath = true
+		platformUri = "${projectPath}/.."
+		registerGenModelFile = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel"
+	}
+
+	component = DirectoryCleaner {
+		directory = "${projectPath}/emf-gen"
+	}
+
+	component = de.itemis.xcore2java.XcoreReader {
+		register = org.eclipse.n4js.generation.xcore.CachedSetup : xcoreSetup {
+			delegate = org.eclipse.n4js.generation.xcore.NewlineAwareXcoreStandaloneSetup {}
+		}
+		path = "model"
+		slot = "model"
+	}
+
+	component = org.eclipse.xtext.generator.GeneratorComponent {
+		register = xcoreSetup
+		slot = 'model'
+		outlet = {
+			path = "emf-gen"
+		}
+	}
+
+}

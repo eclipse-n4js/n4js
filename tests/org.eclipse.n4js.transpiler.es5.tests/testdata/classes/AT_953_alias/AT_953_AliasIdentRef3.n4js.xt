@@ -1,0 +1,106 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "imported/dep.n4js" { from="imported/dep.n4js"}
+	}
+
+	END_SETUP
+ */
+
+/* XPECT output ---
+<==
+stdout:
+B.staticF()
+Before classes.AT_953_alias.other.dep.B bInstance call
+B.f()
+Before bHereClassInstance call
+B.f()
+interfaceElement: {
+ "$methods": {}
+}
+interfaceElement meta: {
+ "origin": "org.eclipse.n4js.transpiler.es5.tests",
+ "annotations": [],
+ "name": "I",
+ "fqn": "classes.AT_953_alias.imported.dep.I",
+ "allImplementedInterfaces": [],
+ "ownedMembers": [
+  {
+   "annotations": [],
+   "name": "fI",
+   "isStatic": false
+  }
+ ],
+ "consumedMembers": []
+}
+roleElement: {
+ "$methods": {
+  "fR": {}
+ }
+}
+color: {
+ "name": "BLUE",
+ "value": "BLUE"
+}
+Before localFun call
+typeof: function
+fun
+localVariable: 5
+localConstant: 7
+stderr:
+==>
+--- */
+import {
+	B as BHere,
+	R as RHere,
+	I as IHere,
+	COLOR as ColorHere,
+	fun as funHere,
+	variable as variableHere,
+	constant as constantHere
+} from "classes/AT_953_alias/imported/dep"
+
+BHere.staticF()
+
+var bInstance : BHere = new BHere()
+console.log("Before classes.AT_953_alias.other.dep.B bInstance call")
+bInstance.f();
+
+var bHereClass : constructor{BHere} = BHere
+var bHereClassInstance = new bHereClass();
+console.log("Before bHereClassInstance call")
+bHereClassInstance.f();
+
+var interfaceElement : type{IHere} = IHere
+console.log("interfaceElement: " + JSON.stringify(interfaceElement, null, " "))
+console.log("interfaceElement meta: " + JSON.stringify(interfaceElement.n4type, null, " "))
+
+var roleElement = RHere
+console.log("roleElement: " + JSON.stringify(roleElement, null, " "))
+
+var color : ColorHere = ColorHere.BLUE
+console.log("color: " + JSON.stringify(color, null, " "))
+
+var localFun: ()=>void = funHere
+console.log("Before localFun call")
+//localFun();
+console.log("typeof: " + (typeof localFun));
+localFun();
+
+var localVariable = variableHere
+console.log("localVariable: " + JSON.stringify(localVariable, null, " "))
+
+var localConstant = constantHere
+console.log("localConstant: " + JSON.stringify(localConstant, null, " "))

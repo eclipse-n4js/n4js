@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+
+/* XPECT output ~~~
+<==
+stdout:
+compiler works as expected
+stderr:
+==>
+~~~ */
+
+class Promise<S, F> {
+	public <Snew, Fnew> then(onFulfilled : {function(S):union{Snew, Promise<Snew, Fnew>}}, onRejected : {function(F):union{Fnew, Promise<Snew, Fnew>}}=undefined) : Promise<Snew, Fnew> { return null; }
+	public static all(iterable : Array<?>) : Promise<Array<any>, any> {return null;}
+}
+
+try{
+	Promise.all([]).<any, Error>then(function(ar : Array<any>) {return null}, null);
+	console.error("previous statement throw TypeError, but ...");
+}catch (te){
+	if(te instanceof TypeError){
+		var o = new Object (te);
+		if(o['message'] == "Cannot read property 'then' of null"){
+			console.log("compiler works as expected")
+		}
+	}
+}

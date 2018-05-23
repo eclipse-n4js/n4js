@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="*&#xA;Copyright (c) 2017 NumberFour AG.&#xA;All rights reserved. This program and the accompanying materials&#xA;are made available under the terms of the Eclipse Public License v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/epl-v10.html&#xA; *&#xA;Contributors:&#xA;  NumberFour AG - Initial API and implementation"
+    modelDirectory="/org.eclipse.n4js.regex/src-gen" modelPluginID="org.eclipse.n4js.regex"
+    forceOverwrite="true" modelName="RegularExpression" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="6.0" copyrightFields="false" runtimeVersion="2.11">
+  <genPackages prefix="RegularExpression" basePackage="org.eclipse.n4js.regex" disposableProviderFactory="true"
+      fileExtensions="regex" ecorePackage="RegularExpression.ecore#/">
+    <genClasses ecoreClass="RegularExpression.ecore#//RegularExpressionLiteral">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//RegularExpressionLiteral/body"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//RegularExpressionLiteral/flags"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//RegularExpressionBody">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//RegularExpressionBody/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//Pattern">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//Pattern/quantifier"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//Assertion"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//LineStart"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//LineEnd"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//WordBoundary">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//WordBoundary/not"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//LookAhead">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//LookAhead/not"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//LookAhead/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//PatternCharacter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//PatternCharacter/value"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//Wildcard"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//AtomEscape"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//CharacterClassEscapeSequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//CharacterClassEscapeSequence/sequence"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//CharacterEscapeSequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//CharacterEscapeSequence/sequence"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//ControlLetterEscapeSequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//ControlLetterEscapeSequence/sequence"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//HexEscapeSequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//HexEscapeSequence/sequence"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//UnicodeEscapeSequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//UnicodeEscapeSequence/sequence"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//IdentityEscapeSequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//IdentityEscapeSequence/sequence"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//DecimalEscapeSequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//DecimalEscapeSequence/sequence"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//CharacterClass">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//CharacterClass/negated"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//CharacterClass/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//CharacterClassElement"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//CharacterClassAtom">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//CharacterClassAtom/character"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//EscapedCharacterClassAtom"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//Backspace"/>
+    <genClasses ecoreClass="RegularExpression.ecore#//Group">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//Group/nonCapturing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//Group/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//Quantifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//Quantifier/nonGreedy"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//SimpleQuantifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//SimpleQuantifier/quantifier"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//ExactQuantifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//ExactQuantifier/min"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//ExactQuantifier/max"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//ExactQuantifier/unboundedMax"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//RegularExpressionFlags">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegularExpression.ecore#//RegularExpressionFlags/flags"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//Disjunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//Disjunction/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//Sequence">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//Sequence/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="RegularExpression.ecore#//CharacterClassRange">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//CharacterClassRange/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegularExpression.ecore#//CharacterClassRange/right"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

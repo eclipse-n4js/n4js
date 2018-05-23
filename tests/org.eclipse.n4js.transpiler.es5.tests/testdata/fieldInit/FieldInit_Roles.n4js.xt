@@ -1,0 +1,80 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+R1C1 initializes R1C1.f with fR1C1
+C1 :: f : fR1C1
+C2 initializes C2.f with fC2
+C2 :: f : fC2
+C2b initializes C2b.f with undefined
+C2b :: f : undefined
+R0C3 initializes R0C3.f with fR0C3
+C3 :: f : fR0C3
+C4 initializes C4.f with fC4
+C4 :: f : fC4
+C4b initializes C4b.f with undefined
+C4b :: f : undefined
+R1C5 initializes R1C5.f with fR1C5
+C5 :: f : fR1C5
+R1C5b initializes R1C5b.f with undefined
+C5b :: f : undefined
+stderr:
+==>
+--- */
+function verboseInit(target, prop, val){console.log(target, "initializes" , target +"."+ prop, "with", val); return val;}
+function valCheck(instance, prop, val, expected){console.log(instance, "::", prop, ":", val); if(val != expected){console.error("expected instance of",instance, "to have property", prop, "equal", expected, "but it was", val)};}
+
+
+
+
+interface R1C1{ f : any = verboseInit("R1C1","f", "fR1C1");}
+class C1 implements R1C1{}
+valCheck("C1", "f", (new C1()).f, "fR1C1");
+
+
+interface R1C2{ f : any = verboseInit("R1C2","f", "fR1C2");}
+class C2 implements R1C2{@Override f : any = verboseInit("C2","f", "fC2");}
+valCheck("C2", "f", (new C2()).f, "fC2");
+
+interface R1C2b{ f : any = verboseInit("R1C2b","f", "fR1C2b");}
+class C2b implements R1C2b{@Override f : any = verboseInit("C2b","f", undefined);}
+valCheck("C2b", "f", (new C2b()).f, undefined);
+
+interface R0C3{ f : any = verboseInit("R0C3","f", "fR0C3");}
+interface R1C3{}
+class C3 implements R1C3, R0C3{}
+valCheck("C3", "f", (new C3()).f, "fR0C3");
+
+interface R1C4{ f : any = verboseInit("R1C4", "f","fR1C4");}
+interface R2C4{ f : any = verboseInit("R2C4", "f","fR2C4");}
+class C4 implements R1C4, R2C4{@Override f : any = verboseInit("C4", "f","fC4");}
+valCheck("C4", "f", (new C4()).f, "fC4");
+
+interface R1C4b{ f : any = verboseInit("R1C4b", "f","fR1C4b");}
+interface R2C4b{ f : any = verboseInit("R2C4b", "f","fR2C4b");}
+class C4b implements R1C4b, R2C4b{@Override f : any = verboseInit("C4b", "f", undefined);}
+valCheck("C4b", "f", (new C4b()).f, undefined);
+
+
+
+interface R0C5{ f : any = verboseInit("R0C5", "f","fR0C5");}
+interface R1C5 extends R0C5{ @Override f : any = verboseInit("R1C5","f","fR1C5");}
+class C5 implements R1C5{}
+valCheck("C5", "f", (new C5()).f, "fR1C5");
+
+interface R0C5b{ f : any = verboseInit("R0C5b", "f","fR0C5b");}
+interface R1C5b extends R0C5b{ @Override f : any = verboseInit("R1C5b","f", undefined);}
+class C5b implements R1C5b{}
+valCheck("C5b", "f", (new C5b()).f, undefined);

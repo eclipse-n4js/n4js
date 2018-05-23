@@ -1,0 +1,205 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+include::{find}config.adoc[]
+:docinfodir: ../../../../../headers/apiModules
+:linkattrs:
+:toc:
+
+= Module A
+
+== Class A
+
+
+spec for class A from source code
+
+
+
+[[gsec:spec_A.A.field]]
+[role=memberdoc]
+=== ++Field field++
+
+==== Signature
+
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#field++[``++@Final public field: any++``]
+
+
+==== Description
+
+This is some documentation for a final field. *
+
+
+
+[[gsec:spec_A.A.getter.finalGetter]]
+[role=memberdoc]
+=== ++Getter finalGetter++
+
+==== Signature
+
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#<finalGetter++[``++@Final public get finalGetter(): string++``]
+
+
+==== Description
+
+This is some documentation for a final getter. *
+
+
+==== Semantics
+
+[TODO, title="test ++A.finalGetter++"]
+--
+Add tests specifying semantics for ``++get finalGetter(): string++``
+--
+
+
+
+[[gsec:spec_A.A.setter.finalSetter]]
+[role=memberdoc]
+=== ++Setter finalSetter++
+
+==== Signature
+
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#>finalSetter++[``++@Final public set finalSetter(n: any)++``]
+
+
+==== Description
+
+This is some documentation for a final setter. *
+
+
+==== Semantics
+
+[TODO, title="test ++A.finalSetter++"]
+--
+Add tests specifying semantics for ``++set finalSetter(n: any)++``
+--
+
+
+
+[[gsec:spec_A.A.bar]]
+[role=memberdoc]
+=== ++Method bar++
+
+==== Signature
+
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#bar++[``++project bar(n: number): string++``]
+
+
+==== Description
+
+spec for method A.bar from source code
+
+==== Semantics
+
+. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:ATest#testBarBasics++[Test]#)
+
+
+[[gsec:spec_A.A.baz]]
+[role=memberdoc]
+=== ++Method baz++
+
+==== Signature
+
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#baz++[``++project baz(): string++``]
+
+
+==== Description
+
+spec for method A.baz from source code
+
+
+==== Semantics
+
+[TODO, title="test ++A.baz++"]
+--
+Add tests specifying semantics for ``++baz(): string++``
+--
+
+
+
+[[gsec:spec_A.A.method]]
+[role=memberdoc]
+=== ++Method method++
+
+==== Signature
+
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#method++[``++@Final public method(): void++``]
+
+
+==== Description
+
+This is some documentation for a final method. *
+
+
+==== Semantics
+
+[TODO, title="test ++A.method++"]
+--
+Add tests specifying semantics for ``++method(): void++``
+--
+
+
+== Class B
+
+
+
+
+[[gsec:spec_A.B.foo]]
+[role=memberdoc]
+=== ++Method foo++
+
+==== Signature
+
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:B#foo++[``++project foo(s: string): void++``]
+
+
+
+==== Semantics
+
+[TODO, title="test ++B.foo++"]
+--
+Add tests specifying semantics for ``++foo(s: string): void++``
+--
+
+
+== Class D
+
+
+
+[[gsec:spec_D.A.bar]]
+[role=memberdoc]
+=== ++Method bar++
+
+Inherited from
+++class A++
+
+==== Semantics
+
+. *++Bar again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBarAgain++[Test]#)
+
+[[gsec:spec_D.A.baz]]
+[role=memberdoc]
+=== ++Method baz++
+
+Inherited from
+++class A++
+
+==== Semantics
+
+. *++Baz again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBazAgain++[Test]#)
++
+[.generatedApiConstraint]
+====
+
+Baz is supposed to do nothing.
+
+====
+

@@ -1,0 +1,124 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= N4JS
+
+The https://www.eclipse.org/n4js[Eclipse N4JS language and IDE] enable high-quality JavaScript development for large Node.js projects.
+N4JS enriches ECMAScript with a static type system and provides extensive support for static validation hosted within a feature-rich IDE.
+
+N4JS is based on ECMAScript Version 5 and ECMAScript 2015 is supported to a great extent. It adds a sound static type system inspired by Java 8, extended by concepts such as structural typing or union types. The language provides built-in support for state-of-the-art programming paradigms such as dependency injection and robust test support. The Eclipse based IDE for typed JavaScript is custom-built for exactly these concepts. Code is validated as you type in addition to tools such as content-assist and quick-fixes to ensure your code is written safely and intuitively.
+
+== Releases
+
+The Eclipse N4JS project is in the link:https://wiki.eclipse.org/Development_Resources/HOWTO/Incubation_Phase[Incubation Phase] and there is no official release available yet (for unofficial releases see the link:https://www.eclipse.org/n4js/download.html[download page].
+This doesn't mean that N4JS is unstable; we have an extensive test suite (>90.000 tests including the https://github.com/tc39/test262[ECMAScript test suites]) to ensure a stable nightly build.
+N4JS has been in use in several large non-public projects for years. 
+There still may be bugs (as there are always bugs) and features which are currently under development. 
+We encourage feedback from all users! For questions about getting started with the N4JS Language and IDE for developing your own projects, see the link:https://www.eclipse.org/forums/index.php/f/365/[the Eclipse N4JS forum].
+
+== Contribute
+
+Eclipse developers who want to develop N4JS itself should use the https://www.eclipse.org/downloads/[Oomph Eclipse installer]. The N4JS project is listed under "Eclipse Projects/N4JS"
+This setup installs the correct Eclipse version, creates a new workspace and clones all projects into it (for details see below).
+
+=== Eclipse Installer
+
+The recommended way to install the Eclipse IDE and set up the workspace is to use the Eclipse Installer.
+This installer is to be downloaded from https://wiki.eclipse.org/Eclipse_Installer
+
+Run the installer and apply the following steps:
+
+1. change to "Advance Mode" via the menu (upper-right corner) (no need to move the installer)
+2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "Oxygen"
+3. double-click the entry **Eclipse Projects/N4JS** so that it is shown in the catalog view below
+4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder.
+5. start installation
+
+The installer will then guide you through the rest of the installation. All plug-ins are downloaded and configured automatically, so is the workspace including downloading the git repository and setting up the workspace.
+
+=== Manual IDE Configuration
+
+For a manual install, clone the code and import all top-level projects from the docs, features, plugins, releng, testhelpers, and tests folders. Activate the targetplatform contained in the `releng/org.eclipse.n4js.targetplatform/` project.
+
+The N4JS IDE is developed with Eclipse Oxygen 4.7 or better since the system is based on Eclipse anyway.
+It is almost impossible to use another IDE to develop Eclipse plugins. The list of required plugins includes:
+
+- Xtext/Xtend 2.10.0
+- Xcore 1.4.0
+- Xsemantics 1.10.0
+- Xpect 0.1
+
+It is important to use the latest version of Xtext and the corresponding service release of Xcore. You will find the latest version numbers and plugins used in the target platform definition at
+https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatform/org.eclipse.n4js.targetplatform.target
+
+== Documentation
+
+- https://www.eclipse.org/n4js/userguides[User Guides and Tutorials]: IDE Setup, writing Node.js modules and exporting as npm with the N4JS IDE
+- https://www.eclipse.org/n4js/spec/N4JSSpec.html[N4JS Language Specification]
+- https://www.eclipse.org/n4js/features/[Complete Feature Table]
+- https://www.eclipse.org/n4js/releases/[Release Notes]
+
+== Participate
+
+- https://www.eclipse.org/n4js/faq/[FAQ]
+- https://www.eclipse.org/forums/index.php/f/365/[Eclipse Forum]
+- https://dev.eclipse.org/mailman/listinfo/n4js-dev[Developer Mailing List]
+- https://github.com/eclipse/n4js/issues/[Issues]
+- http://n4js.blogspot.de/[Eclipse N4JS Blog]
+- https://projects.eclipse.org/projects/technology.n4js[Eclipse Project Pages]
+- https://projects.eclipse.org/projects/technology.n4js/who[Who's Involved]
+
+== Build the N4JS IDE from command line
+
+Ensure you have
+
+- Java 8
+- Maven 3.2.x and
+- Node.js 6
+
+installed on your system.
+
+Clone the repository
+
+----
+git clone https://github.com/Eclipse/n4js.git
+----
+
+Change to the n4js folder:
+----
+cd n4js
+----
+
+Run the Maven build:
+----
+mvn clean verify
+----
+
+You may have to increase the memory for maven via `export MAVEN_OPTS="-Xmx2048m"` (Unix) or `set MAVEN_OPTS="-Xmx2048m"` (Windows).
+
+=== Publish maven-tooling `org.eclipse.n4js.releng.util`
+
+NOTE: For extending the N4JS-language in a different project, the `org.eclipse.n4js.releng.util` module needs to be published as a maven-plugin. You can deploy this SNAPSHOT-artifact to a local folder by providing the `local-snapshot-deploy-folder`-property pointing to an absolute path in the local file system:
+
+----
+mvn clean deploy -Dlocal-snapshot-deploy-folder=/var/lib/my/folder/local-mvn-deploy-repository
+----
+
+The existence of `local-snapshot-deploy-folder` will trigger a profile enabling the deploy-goal for the project `org.eclipse.n4js.releng.util`
+
+== License
+
+Copyright (c) 2017 NumberFour AG.
+
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html

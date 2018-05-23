@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>org.eclipse.n4js.plugins</artifactId>
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.eclipse.n4js</groupId>
+		<artifactId>org.eclipse.n4js.distribution</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<modules>
+		<!-- utilities -->
+		<module>org.eclipse.n4js.utils</module>
+		<module>org.eclipse.n4js.utils.ui</module>
+		<module>org.eclipse.n4js.utils.logging</module>
+		<module>org.eclipse.n4js.common.unicode</module>
+		<!-- types -->
+		<module>org.eclipse.n4js.ts.model</module>
+		<module>org.eclipse.n4js.ts</module>
+		<module>org.eclipse.n4js.ts.ui</module>
+		<!-- regex -->
+		<module>org.eclipse.n4js.regex</module>
+		<module>org.eclipse.n4js.regex.ui</module>
+		<!-- n4js -->
+		<module>org.eclipse.n4js.model</module>
+		<module>org.eclipse.n4js</module>
+		<module>org.eclipse.n4js.ui</module>
+		<!-- execution environments -->
+		<module>org.eclipse.n4js.environments</module>
+		<!-- external libraries bundles -->
+		<module>org.eclipse.n4js.external.libraries</module>
+		<module>org.eclipse.n4js.external.libraries.update</module>
+		<!-- runners -->
+		<module>org.eclipse.n4js.runner</module>
+		<module>org.eclipse.n4js.runner.ui</module>
+		<module>org.eclipse.n4js.runner.nodejs</module>
+		<module>org.eclipse.n4js.runner.nodejs.ui</module>
+		<module>org.eclipse.n4js.runner.chrome</module>
+		<module>org.eclipse.n4js.runner.chrome.ui</module>
+		<!-- n4mf -->
+		<module>org.eclipse.n4js.n4mf.model</module>
+		<module>org.eclipse.n4js.n4mf</module>
+		<module>org.eclipse.n4js.n4mf.ui</module>
+		<!-- json -->
+		<module>org.eclipse.n4js.json</module>
+		<module>org.eclipse.n4js.json.model</module>
+		<module>org.eclipse.n4js.json.ui</module>
+		<!-- transpiler -->
+		<module>org.eclipse.n4js.generator.headless</module>
+		<module>org.eclipse.n4js.transpiler</module>
+		<module>org.eclipse.n4js.transpiler.es</module>
+		<!-- jsdoc -->
+		<module>org.eclipse.n4js.jsdoc</module>
+		<!-- jsdoc to adoc exporter -->
+		<module>org.eclipse.n4js.jsdoc2spec</module>
+		<module>org.eclipse.n4js.jsdoc2spec.ui</module>
+		<!-- AST graph viewer -->
+		<module>org.eclipse.n4js.smith</module>
+		<module>org.eclipse.n4js.smith.ui</module>
+		<!-- Flow Graphs -->
+		<module>org.eclipse.n4js.flowgraphs</module>
+		<!-- xpect -->
+		<module>org.eclipse.n4js.xpect</module>
+		<module>org.eclipse.n4js.xpect.ui</module>
+		<module>org.eclipse.n4js.product</module>
+		<!-- tester -->
+		<module>org.eclipse.n4js.tester</module>
+		<module>org.eclipse.n4js.tester.ui</module>
+		<module>org.eclipse.n4js.tester.nodejs</module>
+		<module>org.eclipse.n4js.tester.nodejs.ui</module>
+		<!-- npm exporter -->
+		<module>org.eclipse.n4js.npmexporter</module>
+		<module>org.eclipse.n4js.npmexporter.ui</module>
+	</modules>
+
+	<properties>
+		<!-- mwe2 -->
+		<!-- by default MWE2 should not be executed, the corresponding plug-in 
+			projects switched that on by themselves -->
+		<skip.mwe2>true</skip.mwe2>
+		<!--MWE2: Additional dependency to artifacts of the current reactor for MWE Generation. 
+			See IDE-1433 --> 
+		<!--  Variant a)	
+		<additional-classes-of-n4ide.unicode>${basedir}/../org.eclipse.n4js.common.unicode/target/classes</additional-classes-of-n4ide.unicode>
+		<additional-classes-of-n4ide.releng.utils>${basedir}/../../releng/org.eclipse.n4js.releng.utils/target/classes</additional-classes-of-n4ide.releng.utils>
+		 	-->
+		<!-- Variant b) --> 
+		<additional-classes-of-n4ide.unicode>${basedir}/../org.eclipse.n4js.common.unicode/target/org.eclipse.n4js.common.unicode-${project.version}.jar</additional-classes-of-n4ide.unicode>
+		<additional-classes-of-n4ide.releng.utils>${basedir}/../../releng/org.eclipse.n4js.releng.utils/target/org.eclipse.n4js.releng.utils-${project.version}.jar</additional-classes-of-n4ide.releng.utils>
+ 		
+
+		<fornax-oaw-m2-plugin.version>3.6.0</fornax-oaw-m2-plugin.version>
+
+		<antlr-generator-version>[2.1.1, 3.0)</antlr-generator-version>
+	</properties>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>${project.build.directory}/xtext</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<!-- By default clean only xtend-gen folder, all other (src-gen, emf-gen, 
+					...) need to be configured in concrete cases -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>xtend-gen</directory>
+							<excludes>
+								<exclude>.gitignore</exclude>
+							</excludes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+				<!-- The plug-in to execute the language MWE2 workflows inside the grammar 
+					projects. This is base configuration, that is: * setting the timestampFileName, 
+					to be used to determine changes that makes regeneration of the code for the 
+					DSL necessary * setting the JVM params as this MWE2 workflow will run as 
+					separate Java process. These params include setting file encoding, memory 
+					as well as the log4j.xml to use for logging. The configuration is parameterized 
+					here so that the actual grammar project need to set * fill the property skip.mwe2 
+					to false * fill the property mwe2descriptor with the module name of the actual 
+					MWE2 file contained by this project -->
+
+<!--
+ # Switch back to the exec plugin, problem is that fornax plugin creates command line call exceeding 32K characters
+ # which breaks Windows api https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247(v=vs.85).aspx 
+	
+			<plugin>
+				<groupId>org.fornax.toolsupport</groupId>
+				<artifactId>fornax-oaw-m2-plugin</artifactId>
+				<version>${fornax-oaw-m2-plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.xtext</groupId>
+						<artifactId>xtext-antlr-generator</artifactId>
+						<version>${antlr-generator-version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>xtext</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run-workflow</goal>
+						</goals>
+						<configuration>
+							<skip>${skip.mwe2}</skip>
+							<workflowEngine>mwe2</workflowEngine>
+							<workflowDescriptor>${mwe2descriptor}</workflowDescriptor>
+							<timestampFileName>xtext-generator.timestamp</timestampFileName>
+							<jvmSettings>
+								<fork>true</fork>
+								<jvmArgs>
+									<jvmArg>-Dfile.encoding=UTF-8</jvmArg>
+									<jvmArg>-Xms1024m</jvmArg>
+									<jvmArg>-Xmx2048m</jvmArg>
+									<jvmArg>-Dlog4j.configuration=file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml</jvmArg>
+								</jvmArgs>
+							</jvmSettings>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+ -->
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven-resources-plugin.version}</version>
+					<executions>
+						<execution>
+							<!-- Copy all Xtext related sources to seperate folder that is registered 
+								as resource folder -->
+							<id>copy-resources</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<!-- fornax oaw/MWE2 plugin reqiures mwe2 and xtext in ${project.build.directory}/xtext -->
+								<outputDirectory>${project.build.directory}/xtext</outputDirectory>
+								<resources>
+									<resource>
+										<directory>src</directory>
+										<includes>
+											<include>**/*.xtext</include>
+											<include>**/*.xcore</include>
+											<include>**/*.mwe2</include>
+										</includes>
+									</resource>
+									<resource>
+										<directory>grammar-gen</directory>
+										<includes>
+											<include>**/*.xtext</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>

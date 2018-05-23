@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+when not needed DI data is undefined
+stderr:
+==>
+--- */
+
+class Foo{}
+class Bar{}
+class Baz{}
+
+
+class A{
+    fieldFoo : Foo;
+    fieldPB : N4Provider<Bar>;
+    fieldPPB : N4Provider<N4Provider<Baz>>;
+
+    constructor(cargFoo : Foo, cargPB : N4Provider<Bar>, cargPPB : N4Provider<N4Provider<Baz>>){}
+}
+
+var tA: Object = A;//just to supress validation of index access
+var diData = JSON.stringify(tA['$di'], null, '\t')
+console.log('when not needed DI data is', diData);

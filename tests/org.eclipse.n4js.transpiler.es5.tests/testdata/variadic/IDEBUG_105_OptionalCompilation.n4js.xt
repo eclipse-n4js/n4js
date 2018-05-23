@@ -1,0 +1,99 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+function declaration foo: 1, 2
+function declaration foo: 1, undefined
+annotated function declaration foo2: 1, 2
+annotated function declaration foo2: 1, undefined
+function expression f: 1, 2
+function expression f: 1, undefined
+annotated function expression f2: 1, 2
+annotated function expression f2: 1, undefined
+class constructor: 1, 2
+class constructor: 1, undefined
+class method foo: 1, 2
+class method foo: 1, undefined
+interface method foo: 1, 2
+interface method foo: 1, undefined
+object literal function foo: 1, 2
+object literal function foo: 1, undefined
+stderr:
+==>
+--- */
+
+class C{}
+
+function foo(n : number, m : number=undefined) {
+	console.log("function declaration foo: " + n + ", " + m)
+}
+
+@This(C)
+function foo2(n : number, m : number=undefined) {
+	console.log("annotated function declaration foo2: " + n + ", " + m)
+}
+
+var f = function f(n : number, m : number=undefined) {
+	console.log("function expression f: " + n + ", " + m)
+}
+
+var f2 = @This(C) function f2(n : number, m : number=undefined) {
+	console.log("annotated function expression f2: " + n + ", " + m)
+}
+
+class Class1 {
+
+	constructor(n : number, m : number=undefined) {
+		console.log("class constructor: " + n + ", " + m)
+	}
+
+	foo(n : number, m : number=undefined) {
+		console.log("class method foo: " + n + ", " + m)
+	}
+}
+
+interface Role1 {
+
+	foo(n : number, m : number=undefined) {
+		console.log("interface method foo: " + n + ", " + m)
+	}
+}
+
+class Class2 implements Role1 {
+
+}
+
+var ol = {
+	foo : function foo(n : number, m : number=undefined) {
+		console.log("object literal function foo: " + n + ", " + m)
+	}
+}
+
+foo(1, 2)
+foo(1)
+foo2(1, 2)
+foo2(1)
+f(1, 2)
+f(1)
+f2(1, 2)
+f2(1)
+var class1 = new Class1(1, 2)
+class1 = new Class1(1)
+class1.foo(1, 2)
+class1.foo(1)
+new Class2().foo(1, 2)
+new Class2().foo(1)
+ol.foo(1, 2)
+ol.foo(1)

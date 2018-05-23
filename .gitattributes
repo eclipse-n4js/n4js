@@ -1,0 +1,5 @@
+core.autocrlf=false
+core.eol=lf
+
+
+*.n4js* linguist-language=typescript

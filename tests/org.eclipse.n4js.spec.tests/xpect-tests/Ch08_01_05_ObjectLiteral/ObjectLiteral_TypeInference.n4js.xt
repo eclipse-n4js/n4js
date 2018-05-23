@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+var ol = {
+	s: "hello",
+	n: 42
+}
+var st1 : ~Object with { s : string; n : number;};
+
+// XPECT type of 'ol' --> ~Object with { s: string; n: int }
+ol;
+// XPECT noerrors -->
+st1 = ol;
+// XPECT noerrors -->
+ol = st1;

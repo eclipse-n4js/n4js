@@ -1,0 +1,67 @@
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* Ignored, as constructor.meta cannot be linked XPECT ! output ---
+<==
+stdout:
+a.constructor: 
+function A() {
+	this.field1 = undefined;
+	this.field2 = undefined;
+	this.field3 = undefined;
+}
+
+
+a.constructor.meta: 
+{
+    "name": "A.A",
+    "superTypes": [],
+    "nfonRead": [
+        "field1"
+    ],
+    "nfonWrite": [
+        "field2"
+    ],
+    "observable": [
+        "field1"
+    ]
+}
+
+
+A.prototype.constructor: 
+function A() {
+	this.field1 = undefined;
+	this.field2 = undefined;
+	this.field3 = undefined;
+}
+
+
+A.meta: 
+{
+    "name": "A.A",
+    "superTypes": [],
+    "nfonRead": [
+        "field1"
+    ],
+    "nfonWrite": [
+        "field2"
+    ],
+    "observable": [
+        "field1"
+    ]
+}
+stderr:
+==>
+--- */
+class A {
+	@nfon('read')
+	@observable
+	string field1;
+	@nfon('write')
+	string field2;
+	string field3;
+}
+var a = new A()
+console.log('a.constructor: \n' + a.constructor + '\n\n')
+console.log('a.constructor.meta: \n' + JSON.stringify(a.constructor.meta, null, 4) + '\n\n')
+console.log('A.prototype.constructor: \n' + A.prototype.constructor + '\n\n')
+console.log('A.meta: \n' + JSON.stringify(A.meta, null, 4))

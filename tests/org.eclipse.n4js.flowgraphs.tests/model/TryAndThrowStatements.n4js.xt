@@ -1,0 +1,772 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file seem similar and redundant but are necessary
+ * since all test methods rely on different algorithms. To verify these
+ * algorithms it is important that all test methods are tested with
+ * all supported language features.
+ */
+
+function ThrowStatement1() {
+	// ThrowStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> throw 1;
+	--- */
+	/* ThrowStatement1 XPECT allBranches ---
+		B0: "start" -> 1 -> throw 1;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+		b1: [B0] -> "end"[B3]
+	--- */
+	/* ThrowStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2],
+		B1: [B0][B4],
+		B3: [b2] -> [B4],
+		B4: [B1|B3]throw 1; -> 1 -> "start",
+		b2: [B0]"end"[B3]
+	--- */
+	// ThrowStatement1 XPECT allPaths --> "start" -> 1 -> throw 1;
+	// ThrowStatement1 backward XPECT allPaths direction 'Backward' -->  throw 1; -> 1 -> "start"
+	// ThrowStatement1 XPECT path from '"start"' notTo '"end"' -->
+	// ThrowStatement1 XPECT commonPreds of 'throw 1;' and '"end"' -->
+	// ThrowStatement1 XPECT succs at '"start"' --> 1
+	// ThrowStatement1 XPECT succs at '1' --> throw 1;
+	// ThrowStatement1 XPECT preds at 'throw 1;' --> 1
+	// ThrowStatement1 XPECT succs at 'throw 1;' -->
+	"start";
+	throw 1;
+	// ThrowStatement1 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
+	"end";
+}
+
+function ThrowStatement2() {
+	// ThrowStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowStatement2 XPECT allEdges ---
+		"start" --> 1,
+		1 -IfTrue-> 2,
+		2 --> throw 2;,
+		1 -IfFalse-> "end"
+	--- */
+	/* ThrowStatement2 XPECT allBranches ---
+	   B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> throw 2;[b3|B4], B2: [B0] -> [B5],
+	   B4: [B1][B6], B5: [B2|b3]"end"[B6], B6: [B4|B5], b3: [B1] -> [B5]
+	--- */
+	/* ThrowStatement2 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|B2], B1: [B0][B6], B2: [B0]"end"[B3|b4], B3: [B2] -> [B7],
+		B5: [b4] -> [B6], B6: [B1|B5]throw 2; -> 2 -> [B7], B7: [B3|B6]1 -> "start", b4: [B2][B5]
+	---	*/
+	/* ThrowStatement2 XPECT allPaths ---
+	   "start" -> 1 -> 2 -> throw 2;,
+	   "start" -> 1 -> "end"
+	--- */
+	/* ThrowStatement2 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start",
+		throw 2; -> 2 -> 1 -> "start"
+	---	*/
+	// ThrowStatement2 XPECT path from '"start"' to '"end"' -->
+	// ThrowStatement2 XPECT path from 'throw 2;' notTo '"end"' -->
+	// ThrowStatement2 XPECT commonPreds of 'throw 2;' and '"end"' --> 1
+	// ThrowStatement2 XPECT succs at '"start"' --> 1
+	// ThrowStatement2 XPECT succs at '1' --> 2, "end"
+	// ThrowStatement2 XPECT succs at '2' --> throw 2;
+	// ThrowStatement2 XPECT preds at 'throw 2;' --> 2
+	// ThrowStatement2 XPECT succs at 'throw 2;' -->
+	"start";
+	if (1) {
+		throw 2;
+	}
+	"end";
+}
+
+// ThrowStatement3 XPECT warnings --> "Variable names should start with lower case letter." at "ThrowStatement3"
+let ThrowStatement3 = function() {
+	// ThrowStatement3 XPECT cfContainer --> FunctionExpression::Block
+	/* ThrowStatement3 XPECT allEdges ---
+		"start" --> 1,
+		1 --> throw 1;
+	--- */
+	/* ThrowStatement3 XPECT allBranches ---
+		B0: "start" -> 1 -> throw 1;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+		b1: [B0] -> "end"[B3]
+	--- */
+	/* ThrowStatement3 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2],
+		B1: [B0][B4],
+		B3: [b2] -> [B4],
+		B4: [B1|B3]throw 1; -> 1 -> "start",
+		b2: [B0]"end"[B3]
+	--- */
+	// ThrowStatement3 XPECT allPaths --> "start" -> 1 -> throw 1;
+	// ThrowStatement3 backward XPECT allPaths direction 'Backward' -->  throw 1; -> 1 -> "start"
+	// ThrowStatement3 XPECT path from '"start"' notTo '"end"' -->
+	// ThrowStatement3 XPECT commonPreds of '1' and '"end"' -->
+	// ThrowStatement3 XPECT succs at '"start"' --> 1
+	// ThrowStatement3 XPECT succs at '1' --> throw 1;
+	// ThrowStatement3 XPECT preds at 'throw 1;' --> 1
+	// ThrowStatement3 XPECT succs at 'throw 1;' -->
+	"start";
+	throw 1;
+	// ThrowStatement3 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
+	"end";
+};
+
+
+class ThrowStatement4 {
+    get getterThrowStatement4() {
+		// ThrowStatement4 XPECT cfContainer --> N4GetterDeclaration::Block
+    	/* ThrowStatement4 XPECT allEdges ---
+			"start" --> 1,
+			1 --> throw 1;
+		--- */
+		/* ThrowStatement4 XPECT allBranches ---
+			B0: "start" -> 1 -> throw 1;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+			b1: [B0] -> "end"[B3]
+		--- */
+		/* ThrowStatement4 backward XPECT allBranches direction 'Backward' ---
+			B0: [B1|b2],
+			B1: [B0][B4],
+			B3: [b2] -> [B4],
+			B4: [B1|B3]throw 1; -> 1 -> "start",
+			b2: [B0]"end"[B3]
+		---	*/
+		// ThrowStatement4 XPECT allPaths --> "start" -> 1 -> throw 1;
+		/* ThrowStatement4 backward XPECT allPaths direction 'Backward' ---
+			throw 1; -> 1 -> "start"
+		---	*/
+		// ThrowStatement4 XPECT path from '"start"' notTo '"end"' -->
+		// ThrowStatement4 XPECT commonPreds of 'throw 1;' and '"end"' -->
+		// ThrowStatement4 XPECT succs at '1' --> throw 1;
+		// ThrowStatement4 XPECT preds at 'throw 1;' --> 1
+		// ThrowStatement4 XPECT succs at 'throw 1;' -->
+		"start";
+        throw 1;
+		// ThrowStatement4 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
+		"end";
+    }
+}
+
+function TryCatchStatement1() {
+	// TryCatchStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* TryCatchStatement1 XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 2,
+		1 --> "end",
+		1 --> 2,
+		2 --> "end"
+	--- */
+	/* TryCatchStatement1 XPECT allBranches ---
+		B0: "start"[B1|B2],
+		B1: [B0] -> 1[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> [B5],
+		B4: [B1] -> [B6],
+		B5: [B2|B3]2 -> [B6],
+		B6: [B4|B5]"end"
+	--- */
+	/* TryCatchStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 2[B3|B4], B3: [B2] -> [B6],
+		B4: [B2] -> [B5], B5: [B1|B4]1 -> [B6], B6: [B3|B5]"start"
+	---	*/
+	// TryCatchStatement1 XPECT allPaths --> "start" -> 1 -> "end", "start" -> 1 -> 2 -> "end", "start" -> 2 -> "end"
+	/* TryCatchStatement1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start",
+		"end" -> 2 -> "start",
+		"end" -> 2 -> 1 -> "start"
+	---	*/
+	// TryCatchStatement1 XPECT path from '"start"' to '"end"' -->
+	// TryCatchStatement1 XPECT commonPreds of '1' and '2' -->"start", 1
+	// TryCatchStatement1 XPECT succs at '"start"' --> 1, 2
+	// TryCatchStatement1 XPECT succs at '1' --> "end", 2
+	// TryCatchStatement1 XPECT succs at '2' --> "end"
+	// TryCatchStatement1 XPECT preds at 'try' --> "start"
+	// TryCatchStatement1 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+	} catch (e) {
+		2;
+	}
+	"end";
+}
+
+function TryCatchFinallyStatement1() {
+	// TryCatchFinallyStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* TryCatchFinallyStatement1 XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 2,
+		1 --> 2,
+		1 --> 3,
+		2 --> 3,
+		3 --> "end"
+	--- */
+	/* TryCatchFinallyStatement1 XPECT allBranches ---
+		B0: "start"[B1|B2],
+		B1: [B0] -> 1[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> [B5],
+		B4: [B1] -> [B6],
+		B5: [B2|B3]2 -> [B6],
+		B6: [B4|B5]3 -> "end"
+	--- */
+	/* TryCatchFinallyStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 3[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 2[B3|B4],
+		B3: [B2] -> [B6], B4: [B2] -> [B5], B5: [B1|B4]1 -> [B6], B6: [B3|B5]"start"
+	---	*/
+	/* TryCatchFinallyStatement1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> "end",
+		"start" -> 1 -> 3 -> "end",
+		"start" -> 2 -> 3 -> "end"
+	--- */
+	/* TryCatchFinallyStatement1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 3 -> 1 -> "start",
+		"end" -> 3 -> 2 -> "start",
+		"end" -> 3 -> 2 -> 1 -> "start"
+	---	*/
+	// TryCatchFinallyStatement1 XPECT path from '"start"' to '"end"' -->
+	// TryCatchFinallyStatement1 XPECT commonPreds of '1' and '3' --> "start", 1
+	// TryCatchFinallyStatement1 XPECT succs at '"start"' --> 1, 2
+	// TryCatchFinallyStatement1 XPECT succs at '1' --> 2, 3
+	// TryCatchFinallyStatement1 XPECT succs at '2' --> 3
+	// TryCatchFinallyStatement1 XPECT succs at '3' --> "end"
+	// TryCatchFinallyStatement1 XPECT preds at 'try' --> "start"
+	// TryCatchFinallyStatement1 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+	} catch (e) {
+		2;
+	} finally {
+		3;
+	}
+	"end";
+}
+
+function ThrowTryCatchStatement1() {
+	// ThrowTryCatchStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryCatchStatement1 XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 3,
+		1 --> 2,
+		2 --> throw 2;,
+		3 --> "end",
+		throw 2; -Throw-> 3
+	--- */
+	/* ThrowTryCatchStatement1 XPECT allBranches ---
+		B0: "start"[B1|B2], B1: [B0] -> 1 -> 2 -> throw 2;[b3|B4], B2: [B0] -> [B7],
+		B4: [B1] -> [B7], B5: [b3] -> [B7], B6: [b3] -> [B8], B7: [B2|B4|B5]3 -> [B8], B8: [B6|B7]"end",
+		b3: [B1][B5|B6]
+	--- */
+	/* ThrowTryCatchStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[b1|B2], B2: [B0] -> 3[B3|B4|b5], B3: [B2] -> [B9], B4: [B2] -> [B8],
+		B7: [b6] ->  -> [B8], B8: [B4|B7]throw 2; -> 2 -> 1 -> [B9], B9: [B3|B8]"start", b1: [B0][b6],
+		b5: [B2][b6], b6: [b1|b5][B7]
+	---	*/
+	// ThrowTryCatchStatement1 XPECT allPaths --> "start" -> 1 -> 2 -> throw 2; -> 3 -> "end", "start" -> 3 -> "end"
+	/* ThrowTryCatchStatement1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 3 -> "start",
+		"end" -> 3 -> throw 2; -> 2 -> 1 -> "start"
+	---	*/
+	// ThrowTryCatchStatement1 XPECT path from '"start"' to '"end"' -->
+	// ThrowTryCatchStatement1 XPECT commonPreds of '3' and '2' --> "start", 2
+	// ThrowTryCatchStatement1 XPECT succs at '"start"' --> 1, 3
+	// ThrowTryCatchStatement1 XPECT succs at '1' --> 2
+	// ThrowTryCatchStatement1 XPECT succs at '2' --> throw 2;
+	// ThrowTryCatchStatement1 XPECT succs at 'throw 2;' --> 3
+	// ThrowTryCatchStatement1 XPECT succs at '3' --> "end"
+	// ThrowTryCatchStatement1 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchStatement1 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+		throw 2;
+
+	} catch (e) {
+		3;
+	}
+	"end";
+}
+
+function ThrowTryCatchStatement2() {
+	// ThrowTryCatchStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryCatchStatement2 XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 2,
+		1 --> "end",
+		1 --> 2,
+		2 --> 3,
+		3 --> throw 3;
+	--- */
+	/* ThrowTryCatchStatement2 XPECT allBranches ---
+		B0: "start"[B1|B2], B1: [B0] -> 1[B3|B4], B2: [B0] -> [B5], B3: [B1] -> [B5],
+		B4: [B1] -> [B8], B5: [B2|B3]2 -> 3 -> throw 3;[b6|B7], B7: [B5][B9], B8: [B4|b6]"end"[B9],
+		B9: [B7|B8], b6: [B5] -> [B8]
+	--- */
+	/* ThrowTryCatchStatement2 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|B2], B10: [B7|B9]"start", B1: [B0][B6], B2: [B0]"end"[B3|b4],
+		B3: [B2] -> [B9], B5: [b4] -> [B6], B6: [B1|B5]throw 3; -> 3 -> 2[B7|B8], B7: [B6] -> [B10],
+		B8: [B6] -> [B9], B9: [B3|B8]1 -> [B10], b4: [B2][B5]
+	---	*/
+	/* ThrowTryCatchStatement2 XPECT allPaths ---
+		"start" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 3 -> throw 3;,
+		"start" -> 2 -> 3 -> throw 3;
+	--- */
+	/* ThrowTryCatchStatement2 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start",
+		throw 3; -> 3 -> 2 -> "start",
+		throw 3; -> 3 -> 2 -> 1 -> "start"
+	---	*/
+	// ThrowTryCatchStatement2 XPECT path from '"start"' to '"end"' -->
+	// ThrowTryCatchStatement2 XPECT commonPreds of '3' and '2' --> 2
+	// ThrowTryCatchStatement2 XPECT succs at '"start"' --> 1, 2
+	// ThrowTryCatchStatement2 XPECT succs at '1' --> "end", 2
+	// ThrowTryCatchStatement2 XPECT succs at '2' --> 3
+	// ThrowTryCatchStatement2 XPECT succs at '3' --> throw 3;
+	// ThrowTryCatchStatement2 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchStatement2 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+	} catch (e) {
+		2;
+		throw 3;
+	}
+	"end";
+}
+
+function ThrowTryCatchStatement3() {
+	// ThrowTryCatchStatement3 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryCatchStatement3 XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 5,
+		1 --> 2,
+		1 --> 4,
+		2 --> 3,
+		3 --> throw 3;,
+		4 --> "end",
+		4 --> 5,
+		5 --> "end",
+		throw 3; -Throw-> 4
+	--- */
+	/* ThrowTryCatchStatement3 XPECT allBranches ---
+		B0: "start"[B1|B2], B10: [B8|B9][B11|B12], B11: [B10][B13], B12: [B10][B14],
+		B13: [B2|B11]5 -> [B14], B14: [B12|B13]"end", B1: [B0] -> 1[B3|B4], B2: [B0] -> [B13],
+		B3: [B1] -> 2 -> 3 -> throw 3;[b5|B6], B4: [B1] -> [B9], B6: [B3] -> [B9], B7: [b5] -> [B9], B8: [b5] ->  -> [B10],
+		B9: [B4|B6|B7]4 ->  -> [B10], b5: [B3][B7|B8]
+	--- */
+	/* ThrowTryCatchStatement3 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B12: [b11] ->  ->  -> [B13],
+		B13: [B9|B12]throw 3; -> 3 -> 2 -> [B14], B14: [B8|B13]1 -> [B15], B15: [B3|B14]"start", B1: [B0] -> [B5],
+		B2: [B0] -> 5[B3|B4], B3: [B2] -> [B15], B4: [B2] -> [B5], B5: [B1|B4][b6|B7], B7: [B5]4[B8|B9|b10],
+		B8: [B7] -> [B14], B9: [B7] -> [B13], b10: [B7][b11], b11: [b6|b10][B12], b6: [B5][b11]
+	--- */
+	/* ThrowTryCatchStatement3 XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> throw 3; -> 4 -> "end",
+		"start" -> 1 -> 2 -> 3 -> throw 3; -> 4 -> 5 -> "end",
+		"start" -> 1 -> 4 -> "end",
+		"start" -> 1 -> 4 -> 5 -> "end",
+		"start" -> 5 -> "end"
+	--- */
+	/* ThrowTryCatchStatement3 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 4 -> 1 -> "start",
+		"end" -> 4 -> throw 3; -> 3 -> 2 -> 1 -> "start",
+		"end" -> 5 -> "start",
+		"end" -> 5 -> 4 -> 1 -> "start",
+		"end" -> 5 -> 4 -> throw 3; -> 3 -> 2 -> 1 -> "start"
+	--- */
+	// ThrowTryCatchStatement3 XPECT path from '"start"' to '"end"' -->
+	// ThrowTryCatchStatement3 XPECT commonPreds of '4' and '2' --> 1, 2
+	// ThrowTryCatchStatement3 XPECT succs at '"start"' --> 1, 5
+	// ThrowTryCatchStatement3 XPECT succs at '1' --> 2, 4
+	// ThrowTryCatchStatement3 XPECT succs at '2' --> 3
+	// ThrowTryCatchStatement3 XPECT succs at '3' --> throw 3;
+	// ThrowTryCatchStatement3 XPECT succs at 'throw 3;' --> 4
+	// ThrowTryCatchStatement3 XPECT succs at '4' --> "end", 5
+	// ThrowTryCatchStatement3 XPECT succs at '5' --> "end"
+	// ThrowTryCatchStatement3 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchStatement3 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+		try {
+			2;
+			throw 3;
+		} catch (e) {
+			4;
+		}
+	} catch (e) {
+		5;
+	}
+	"end";
+}
+
+function ThrowTryCatchStatement4() {
+	// ThrowTryCatchStatement4 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryCatchStatement4 XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 2,
+		"start" --> 4,
+		1 --> "end",
+		1 --> 2,
+		1 --> 4,
+		2 --> 3,
+		3 --> throw 3;,
+		4 --> 5,
+		5 --> "end",
+		throw 3; -Throw-> 4
+	--- */
+	/* ThrowTryCatchStatement4 XPECT allBranches ---
+		B0: "start"[B1|B2], B10: [b8] -> [B12], B11: [b8] -> [B13],
+		B12: [B7|B9|B10]4 -> [B13], B13: [B11|B12]5 -> [B14], B14: [B4|B13]"end", B1: [B0] -> 1[B3|B4],
+		B2: [B0] ->  -> [B5], B3: [B1] ->  -> [B5], B4: [B1] -> [B14], B5: [B2|B3][B6|B7],
+		B6: [B5]2 -> 3 -> throw 3;[b8|B9], B7: [B5][B12], B9: [B6] -> [B12], b8: [B6][B10|B11]
+	--- */
+	/* ThrowTryCatchStatement4 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2], B10: [B6|B9]throw 3; -> 3 -> 2 ->  -> [B11],
+		B11: [B5|B10][B12|B13], B12: [B11][B15], B13: [B11][B14], B14: [B1|B13]1 -> [B15],
+		B15: [B12|B14]"start", B1: [B0] -> [B14], B2: [B0] -> 5[b3|B4], B4: [B2] -> 4[B5|B6|b7],
+		B5: [B4] ->  -> [B11], B6: [B4] -> [B10], B9: [b8] ->  -> [B10], b3: [B2][b8], b7: [B4][b8],
+		b8: [b3|b7][B9]
+	--- */
+	/* ThrowTryCatchStatement4 XPECT allPaths ---
+		"start" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 3 -> throw 3; -> 4 -> 5 -> "end",
+		"start" -> 1 -> 4 -> 5 -> "end",
+		"start" -> 2 -> 3 -> throw 3; -> 4 -> 5 -> "end",
+		"start" -> 4 -> 5 -> "end"
+	--- */
+	/* ThrowTryCatchStatement4 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start", "end" -> 5 -> 4 -> "start",
+		"end" -> 5 -> 4 -> 1 -> "start",
+		"end" -> 5 -> 4 -> throw 3; -> 3 -> 2 -> "start",
+		"end" -> 5 -> 4 -> throw 3; -> 3 -> 2 -> 1 -> "start"
+	--- */
+	// ThrowTryCatchStatement4 XPECT path from '"start"' to '"end"' -->
+	// ThrowTryCatchStatement4 XPECT commonPreds of '4' and '2' --> "start", 1, 2
+	// ThrowTryCatchStatement4 XPECT succs at '"start"' --> 1, 2, 4
+	// ThrowTryCatchStatement4 XPECT succs at '2' --> 3
+	// ThrowTryCatchStatement4 XPECT succs at '3' --> throw 3;
+	// ThrowTryCatchStatement4 XPECT succs at 'throw 3;' --> 4
+	// ThrowTryCatchStatement4 XPECT succs at '4' --> 5
+	// ThrowTryCatchStatement4 XPECT succs at '5' --> "end"
+	// ThrowTryCatchStatement4 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchStatement4 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+	} catch (e) {
+		try {
+			2;
+			throw 3;
+		} catch (ee) {
+			4;
+		}
+		5;
+	}
+	"end";
+}
+
+function ThrowTryFinallyStatement1() {
+	// ThrowTryFinallyStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryFinallyStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> throw 2;,
+		throw 2; -Throw-> 3,
+		3 --> "end"
+	--- */
+	/* ThrowTryFinallyStatement1 XPECT allBranches ---
+		B0: "start" -> 1 -> 2 -> throw 2;[B1|b2], B1: [B0] -> 3,
+		b2: [B0] -> 3 -> "end"
+	--- */
+	/* ThrowTryFinallyStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2], B1: [B0]3 -> [B4], B3: [b2] -> [B4],
+		B4: [B1|B3]throw 2; -> 2 -> 1 -> "start", b2: [B0]"end" -> 3[B3]
+	--- */
+	// ThrowTryFinallyStatement1 XPECT allPaths --> "start" -> 1 -> 2 -> throw 2; -> 3
+	/* ThrowTryFinallyStatement1 backward XPECT allPaths direction 'Backward' ---
+		3 -> throw 2; -> 2 -> 1 -> "start"
+	--- */
+	// ThrowTryFinallyStatement1 XPECT path from '"start"' to '"end"' -->
+	// ThrowTryFinallyStatement1 XPECT commonPreds of '3' and '2' -->    2
+	// ThrowTryFinallyStatement1 XPECT succs at '"start"' --> 1
+	// ThrowTryFinallyStatement1 XPECT succs at '1' --> 2
+	// ThrowTryFinallyStatement1 XPECT succs at '2' --> throw 2;
+	// ThrowTryFinallyStatement1 XPECT succs at 'throw 2;' --> 3
+	// ThrowTryFinallyStatement1 XPECT succs at '3' --> "end"
+	// ThrowTryFinallyStatement1 XPECT preds at 'try' --> "start"
+	// ThrowTryFinallyStatement1 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+		throw 2;
+
+	} finally {
+		3;
+	}
+	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+function ThrowTryFinallyStatement2() {
+	// ThrowTryFinallyStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryFinallyStatement2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 3,
+		3 --> throw 3;
+	--- */
+	/* ThrowTryFinallyStatement2 XPECT allBranches ---
+		B0: "start" -> 1 -> 2 -> 3 -> throw 3;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+		b1: [B0] -> "end"[B3]
+	--- */
+	/* ThrowTryFinallyStatement2 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2], B1: [B0][B4], B3: [b2] -> [B4],
+		B4: [B1|B3]throw 3; -> 3 -> 2 -> 1 -> "start", b2: [B0]"end"[B3]
+	--- */
+	// ThrowTryFinallyStatement2 XPECT allPaths --> "start" -> 1 -> 2 -> 3 -> throw 3;
+	/* ThrowTryFinallyStatement2 backward XPECT allPaths direction 'Backward' ---
+		throw 3; -> 3 -> 2 -> 1 -> "start"
+	--- */
+	// ThrowTryFinallyStatement2 XPECT path from '"start"' notTo '"end"' -->
+	// ThrowTryFinallyStatement2 XPECT commonPreds of '1' and '2' --> 1
+	// ThrowTryFinallyStatement2 XPECT succs at '"start"' --> 1
+	// ThrowTryFinallyStatement2 XPECT succs at '1' --> 2
+	// ThrowTryFinallyStatement2 XPECT succs at '2' --> 3
+	// ThrowTryFinallyStatement2 XPECT succs at '3' --> throw 3;
+	// ThrowTryFinallyStatement2 XPECT succs at 'throw 3;' -->
+	// ThrowTryFinallyStatement2 XPECT preds at 'try' --> "start"
+	// ThrowTryFinallyStatement2 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+	} finally {
+		2;
+		throw 3;
+	}
+	// ThrowTryFinallyStatement2 XPECT warnings --> "Dead code." at ""end";"
+	"end";
+}
+
+function ThrowTryFinallyStatement3() {
+	// ThrowTryFinallyStatement3 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryFinallyStatement3 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		1 --> 4,
+		2 --> 3,
+		3 --> throw 3;,
+		4 --> 5,
+		5 --> "end",
+		throw 3; -Throw-> 4
+	--- */
+	/* ThrowTryFinallyStatement3 XPECT allBranches ---
+		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> 3 -> throw 3;[b3|B4],
+		B2: [B0] -> [B7], B4: [B1] -> [B7], B5: [b3] -> [B7], B6: [b3] -> [B8], B7: [B2|B4|B5]4 -> [B8],
+		B8: [B6|B7]5 -> "end", b3: [B1][B5|B6]
+	--- */
+	/* ThrowTryFinallyStatement3 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 5[b1|B2], B2: [B0] -> 4[B3|B4|b5], B3: [B2] -> [B9],
+		B4: [B2] -> [B8], B7: [b6] ->  -> [B8], B8: [B4|B7]throw 3; -> 3 -> 2 -> [B9],
+		B9: [B3|B8]1 -> "start", b1: [B0][b6], b5: [B2][b6], b6: [b1|b5][B7]
+	--- */
+	/* ThrowTryFinallyStatement3 XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> throw 3; -> 4 -> 5 -> "end",
+		"start" -> 1 -> 4 -> 5 -> "end"
+	--- */
+	/* ThrowTryFinallyStatement3 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 5 -> 4 -> 1 -> "start",
+		"end" -> 5 -> 4 -> throw 3; -> 3 -> 2 -> 1 -> "start"
+	--- */
+	// ThrowTryFinallyStatement3 XPECT path from '"start"' to '"end"' -->
+	// ThrowTryFinallyStatement3 XPECT commonPreds of '4' and '2' --> 1, 2
+	// ThrowTryFinallyStatement3 XPECT succs at '"start"' --> 1
+	// ThrowTryFinallyStatement3 XPECT succs at '1' --> 2, 4
+	// ThrowTryFinallyStatement3 XPECT succs at '2' --> 3
+	// ThrowTryFinallyStatement3 XPECT succs at '3' --> throw 3;
+	// ThrowTryFinallyStatement3 XPECT succs at 'throw 3;' --> 4
+	// ThrowTryFinallyStatement3 XPECT succs at '4' --> 5
+	// ThrowTryFinallyStatement3 XPECT succs at '5' --> "end"
+	// ThrowTryFinallyStatement3 XPECT preds at 'try' --> "start"
+	// ThrowTryFinallyStatement3 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+	} finally {
+		try {
+			2;
+			throw 3;
+		} catch (e) {
+			4;
+		}
+		5;
+	}
+	"end";
+}
+
+function ThrowTryCatchFinallyStatement1() {
+	// ThrowTryCatchFinallyStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryCatchFinallyStatement1 XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 3,
+		1 --> 2,
+		2 --> throw 2;,
+		3 --> 4,
+		4 --> "end",
+		throw 2; -Throw-> 3
+	--- */
+	/* ThrowTryCatchFinallyStatement1 XPECT allBranches ---
+		B0: "start"[B1|B2], B1: [B0] -> 1 -> 2 -> throw 2;[b3|B4], B2: [B0] -> [B7],
+		B4: [B1] -> [B7], B5: [b3] -> [B7], B6: [b3] -> [B8], B7: [B2|B4|B5]3 -> [B8],
+		B8: [B6|B7]4 -> "end", b3: [B1][B5|B6]
+	--- */
+	/* ThrowTryCatchFinallyStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 4[b1|B2], B2: [B0] -> 3[B3|B4|b5], B3: [B2] -> [B9],
+		B4: [B2] -> [B8], B7: [b6] ->  -> [B8], B8: [B4|B7]throw 2; -> 2 -> 1 -> [B9],
+		B9: [B3|B8]"start", b1: [B0][b6], b5: [B2][b6], b6: [b1|b5][B7]
+	--- */
+	// ThrowTryCatchFinallyStatement1 XPECT allPaths --> "start" -> 1 -> 2 -> throw 2; -> 3 -> 4 -> "end", "start" -> 3 -> 4 -> "end"
+	/* ThrowTryCatchFinallyStatement1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 4 -> 3 -> "start",
+		"end" -> 4 -> 3 -> throw 2; -> 2 -> 1 -> "start"
+	--- */
+	// ThrowTryCatchFinallyStatement1 XPECT path from '"start"' to '"end"' -->
+	// ThrowTryCatchFinallyStatement1 XPECT commonPreds of '3' and '4' --> 3
+	// ThrowTryCatchFinallyStatement1 XPECT succs at '"start"' --> 1, 3
+	// ThrowTryCatchFinallyStatement1 XPECT succs at '1' --> 2
+	// ThrowTryCatchFinallyStatement1 XPECT succs at '2' --> throw 2;
+	// ThrowTryCatchFinallyStatement1 XPECT succs at 'throw 2;' --> 3
+	// ThrowTryCatchFinallyStatement1 XPECT succs at '3' --> 4
+	// ThrowTryCatchFinallyStatement1 XPECT succs at '4' --> "end"
+	// ThrowTryCatchFinallyStatement1 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchFinallyStatement1 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+		throw 2;
+
+	} catch (e) {
+		3;
+	} finally {
+		4;
+	}
+	"end";
+}
+
+function ThrowTryCatchFinallyStatement2() {
+	// ThrowTryCatchFinallyStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryCatchFinallyStatement2 XPECT allEdges ---
+		"start" --> 1,
+		"start" --> 2,
+		1 --> 2,
+		1 --> 4,
+		2 --> 3,
+		3 --> throw 3;,
+		4 --> "end",
+		throw 3; -Throw-> 4
+	--- */
+	/* ThrowTryCatchFinallyStatement2 XPECT allBranches ---
+		B0: "start"[B1|B2], B1: [B0] -> 1[B3|B4], B2: [B0] -> [B5], B3: [B1] -> [B5],
+		B4: [B1] -> 4 -> [B8], B5: [B2|B3]2 -> 3 -> throw 3;[B6|b7], B6: [B5] -> 4, B8: [B4|b7]"end",
+		b7: [B5] -> 4 -> [B8]
+	--- */
+	/* ThrowTryCatchFinallyStatement2 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|B2], B1: [B0]4 -> [B6], B2: [B0]"end" -> 4[B3|b4],
+		B3: [B2] -> 1 -> "start", B5: [b4] -> [B6], B6: [B1|B5]throw 3; -> 3 -> 2[B7|B8], B7: [B6] -> [B9],
+		B8: [B6] -> 1 -> [B9], B9: [B7|B8]"start", b4: [B2][B5]
+	---	*/
+	/* ThrowTryCatchFinallyStatement2 XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> throw 3; -> 4,
+		"start" -> 1 -> 4 -> "end",
+		"start" -> 2 -> 3 -> throw 3; -> 4
+	--- */
+	/* ThrowTryCatchFinallyStatement2 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 4 -> 1 -> "start",
+		4 -> throw 3; -> 3 -> 2 -> "start",
+		4 -> throw 3; -> 3 -> 2 -> 1 -> "start"
+	---	*/
+	// ThrowTryCatchFinallyStatement2 XPECT path from '"start"' to '"end"' -->
+	// ThrowTryCatchFinallyStatement2 XPECT commonPreds of '3' and '4' --> 1, 3
+	// ThrowTryCatchFinallyStatement2 XPECT succs at '"start"' --> 1, 2
+	// ThrowTryCatchFinallyStatement2 XPECT succs at '1' --> 2, 4
+	// ThrowTryCatchFinallyStatement2 XPECT succs at '2' --> 3
+	// ThrowTryCatchFinallyStatement2 XPECT succs at '3' --> throw 3;
+	// ThrowTryCatchFinallyStatement2 XPECT succs at 'throw 3;' --> 4
+	// ThrowTryCatchFinallyStatement2 XPECT succs at '4' --> "end"
+	// ThrowTryCatchFinallyStatement2 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchFinallyStatement2 XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+
+	} catch (e) {
+		2;
+		throw 3;
+
+	} finally {
+		4;
+	}
+	"end";
+}
+
+
+function ThrowTryIfReturnFinallyStatement() {
+	// ThrowTryIfReturnFinallyStatement XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryIfReturnFinallyStatement XPECT allEdges ---
+		"finally" --> "end",
+		"start" --> 1,
+		1 --> 2,
+		2 -IfFalse-> 3,
+		2 -IfTrue-> return;,
+		3 --> "finally",
+		return; -Return-> "finally"
+	--- */
+	/* ThrowTryIfReturnFinallyStatement XPECT allBranches ---
+		B0: "start" -> 1 -> 2[B1|B2], B1: [B0] -> return;[B3|b4], B2: [B0] -> [B5],
+		B3: [B1] -> "finally", B5: [B2|b4]3 -> "finally" -> "end", b4: [B1] -> [B5]
+	--- */
+	/* ThrowTryIfReturnFinallyStatement backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|B2], B1: [B0]"finally" -> [B6], B2: [B0]"end" -> "finally" -> 3[B3|b4],
+		B3: [B2] -> 2 -> 1 -> "start", B5: [b4] -> [B6], B6: [B1|B5]return; -> 2 -> 1 -> "start", b4: [B2][B5]
+	---	*/
+	/* ThrowTryIfReturnFinallyStatement XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> "finally" -> "end",
+		"start" -> 1 -> 2 -> return; -> "finally"
+	--- */
+	/* ThrowTryIfReturnFinallyStatement backward XPECT allPaths direction 'Backward' ---
+		"end" -> "finally" -> 3 -> 2 -> 1 -> "start",
+		"finally" -> return; -> 2 -> 1 -> "start"
+	---	*/
+	// ThrowTryIfReturnFinallyStatement XPECT path from '"start"' to '"end"' -->
+	// ThrowTryIfReturnFinallyStatement XPECT commonPreds of '3' and '"finally"' --> 2, 3
+	// ThrowTryIfReturnFinallyStatement XPECT succs at '"start"' --> 1
+	// ThrowTryIfReturnFinallyStatement XPECT succs at '1' --> 2
+	// ThrowTryIfReturnFinallyStatement XPECT succs at '2' --> 3, return;
+	// ThrowTryIfReturnFinallyStatement XPECT succs at '3' --> "finally"
+	// ThrowTryIfReturnFinallyStatement XPECT preds at 'try' --> "start"
+	// ThrowTryIfReturnFinallyStatement XPECT succs at 'try' --> "end"
+	"start";
+	try {
+		1;
+		if (2)
+			return;
+		3;
+	} finally {
+		"finally";
+	}
+	"end";
+}

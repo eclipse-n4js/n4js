@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class C {
+
+	@Parameter
+	f1;
+
+	@Parameter(42)
+	f2;
+
+	@Parameter(43)
+	set s(value) {}
+
+	@Parameters
+	static m1() {}
+
+	@Parameters("woot!")
+	static m2() {}
+}
+
+
+console.log(C.n4type.dataFields()[0].annotations);
+console.log(C.n4type.dataFields()[1].annotations);
+console.log(C.n4type.members()[2].annotations);
+console.log(C.n4type.methods(false,false,true)[0].annotations);
+console.log(C.n4type.methods(false,false,true)[1].annotations);
+
+
+/* XPECT output ---
+<==
+stdout:
+[ N4Annotation { name: 'Parameter', details: [] } ]
+[ N4Annotation { name: 'Parameter', details: [ '42' ] } ]
+[ N4Annotation { name: 'Parameter', details: [ '43' ] } ]
+[ N4Annotation { name: 'Parameters', details: [] } ]
+[ N4Annotation { name: 'Parameters', details: [ 'woot!' ] } ]
+stderr:
+==>
+--- */
