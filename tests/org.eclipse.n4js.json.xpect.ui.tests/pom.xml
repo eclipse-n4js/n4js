@@ -14,7 +14,7 @@ Contributors:
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.n4js.json.xpect.tests</artifactId>
+	<artifactId>org.eclipse.n4js.json.xpect.ui.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<parent>
@@ -32,5 +32,41 @@ Contributors:
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>execute-plugin-tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-surefire-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>TychoSurefirePluginTest</id>
+								<phase>integration-test</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>execute-plugin-ui-tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-surefire-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>TychoSurefirePluginUITest</id>
+								<phase>integration-test</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

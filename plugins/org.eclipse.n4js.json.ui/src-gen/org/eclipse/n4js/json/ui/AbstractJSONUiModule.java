@@ -86,6 +86,16 @@ public abstract class AbstractJSONUiModule extends DefaultUiModule {
 		return Access.getJavaProjectsState();
 	}
 	
+	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
+	public Class<? extends IContentFormatterFactory> bindIContentFormatterFactory() {
+		return ContentFormatterFactory.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.ui.contentAssist.ContentAssistFragment2
+	public Class<? extends IContentProposalProvider> bindIContentProposalProvider() {
+		return JSONProposalProvider.class;
+	}
+	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
 	public Class<? extends IProposalConflictHelper> bindIProposalConflictHelper() {
 		return AntlrProposalConflictHelper.class;
@@ -137,11 +147,6 @@ public abstract class AbstractJSONUiModule extends DefaultUiModule {
 		return DefaultDependentElementsCalculator.class;
 	}
 	
-	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
-	public Class<? extends IContentFormatterFactory> bindIContentFormatterFactory() {
-		return ContentFormatterFactory.class;
-	}
-	
 	// contributed by org.eclipse.xtext.xtext.generator.ui.labeling.LabelProviderFragment2
 	public Class<? extends ILabelProvider> bindILabelProvider() {
 		return JSONLabelProvider.class;
@@ -165,11 +170,6 @@ public abstract class AbstractJSONUiModule extends DefaultUiModule {
 	// contributed by org.eclipse.xtext.xtext.generator.ui.quickfix.QuickfixProviderFragment2
 	public Class<? extends IssueResolutionProvider> bindIssueResolutionProvider() {
 		return JSONQuickfixProvider.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.ui.contentAssist.ContentAssistFragment2
-	public Class<? extends IContentProposalProvider> bindIContentProposalProvider() {
-		return JSONProposalProvider.class;
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.ui.refactoring.RefactorElementNameFragment2
