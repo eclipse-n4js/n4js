@@ -15,6 +15,13 @@ Contributors:
    <extension-point id="resourceDescriptionsPersisterContribution" name="Resource Descriptions Persister Contribution" schema="schema/resourceDescriptionsPersisterContribution.exsd"/>
    <extension-point id="workingSetManager" name="N4JS Working Set Manager" schema="schema/workingSetManager.exsd"/>
 
+  <extension
+        point="org.eclipse.xtext.ui.shared.overridingGuiceModule">
+     <module
+           class="org.eclipse.n4js.ui.MyReferenceSearchResultContentProviderCustomModule">
+     </module>
+   </extension>  
+  
 <!-- CUSTOM CODE -->
 <!--
   A specialized Types representation is registered for n4ts files that are loaded
@@ -41,7 +48,7 @@ Contributors:
      <wizard
            category="org.eclipse.wizards"
            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.classes.N4JSNewClassWizard"
-           icon="icons/newclass_wiz.gif"
+           icon="icons/newclass_wiz.png"
            id="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard"
            name="N4JS Class"
            project="false">
@@ -52,7 +59,7 @@ Contributors:
       <wizard
            category="org.eclipse.wizards"
            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.interfaces.N4JSNewInterfaceWizard"
-           icon="icons/newint_wiz.gif"
+           icon="icons/newint_wiz.png"
            id="org.eclipse.n4js.ui.wizard.N4JSNewInterfaceWizard"
            name="N4JS Interface"
            project="false">
@@ -347,13 +354,13 @@ Contributors:
                   id="org.eclipse.n4js.ui.toolbar">
                <command
                      commandId="org.eclipse.n4js.ui.search.openTypeSelectionDialog"
-                     icon="icons/opentype.gif"
+                     icon="icons/opentype.png"
                      label="Open N4JS Type"
                      style="push">
                </command>
                <command
                      commandId="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences"
-                     icon="icons/native_lib_path_attrib.gif"
+                     icon="icons/native_lib_path_attrib.png"
                      label="Open Built-in Libraries Preferences"
                      style="push">
                </command>
@@ -361,11 +368,12 @@ Contributors:
                      commandId="org.eclipse.n4js.ui.handler.LibrariesFix"
                      icon="icons/debugt_obj.png"
                      label="Fix Libraries setup"
+                     tooltip="Install missing dependencies"
                      style="push">
                </command>
                <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newclass_wiz.gif"
+                     icon="icons/newclass_wiz.png"
                      label="New N4JS Class"
                      id="org.eclipse.toolbar.newN4JSElement"
                      tooltip="Creates a new N4JS Class"
@@ -384,7 +392,7 @@ Contributors:
          <menuContribution locationURI="menu:org.eclipse.toolbar.newN4JSElement">
             <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newclass_wiz.gif"
+                     icon="icons/newclass_wiz.png"
                      label="New N4JS Class"
                      id="org.eclipse.toolbar.newN4JSElement.newClassInModule"
                      style="push">
@@ -395,7 +403,7 @@ Contributors:
             </command>
             <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newclass_wiz.gif"
+                     icon="icons/newclass_wiz.png"
                      label="New N4JS Class in this module"
                      id="org.eclipse.toolbar.newN4JSElement.newClassInModule"
                      style="push">
@@ -413,7 +421,7 @@ Contributors:
             </command>
             <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newint_wiz.gif"
+                     icon="icons/newint_wiz.png"
                      label="New N4JS Interface"
                      id="org.eclipse.toolbar.newN4JSElement.newInterfaceInModule"
                      style="push">
@@ -424,7 +432,7 @@ Contributors:
             </command>
             <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newint_wiz.gif"
+                     icon="icons/newint_wiz.png"
                      label="New N4JS Interface in this module"
                      id="org.eclipse.toolbar.newN4JSElement.newInterfaceInModule"
                      style="push">
@@ -1301,7 +1309,7 @@ Contributors:
             category="org.eclipse.wizards"
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             finalPerspective="org.eclipse.n4js.product.N4JSPerspective"
-            icon="icons/newprj_wiz.gif"
+            icon="icons/newprj_wiz.png"
             id="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             name="N4JS Tasks Example"
             project="true">
@@ -1314,7 +1322,7 @@ Contributors:
             category="org.eclipse.ui.Examples"
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             finalPerspective="org.eclipse.n4js.product.N4JSPerspective"
-            icon="icons/newprj_wiz.gif"
+            icon="icons/newprj_wiz.png"
             id="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             name="N4JS Tasks Example">
          <description>

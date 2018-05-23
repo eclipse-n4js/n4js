@@ -67,10 +67,12 @@ public class N4JSClusteringBuilderConfiguration extends AbstractModule {
 		@Override
 		protected void logClusterCapped(ResourceSet resourceSet, int alreadyProcessed, long freeMemory,
 				long totalMemory) {
-			LOGGER.info(
-					"Cluster capped at " + alreadyProcessed + '/' + resourceSet.getResources().size()
-							+ " processed/loaded resources; " + (freeMemory >> 20) + "/" + (totalMemory >> 20)
-							+ " free/total memory");
+
+			int loadedResources = resourceSet.getResources().size();
+			String msg = "";
+			msg += "Cluster capped at " + alreadyProcessed + '/' + loadedResources + " processed/loaded resources; ";
+			msg += (freeMemory >> 20) + "/" + (totalMemory >> 20) + " free/total MB memory";
+			LOGGER.info(msg);
 		}
 	}
 

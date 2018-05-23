@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ts.ui;
 
 import com.google.inject.Injector;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.ts.ui.internal.TypesActivator;
 import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
@@ -23,12 +24,13 @@ public class TypesExecutableExtensionFactory extends AbstractGuiceAwareExecutabl
 
 	@Override
 	protected Bundle getBundle() {
-		return TypesActivator.getInstance().getBundle();
+		return Platform.getBundle(TypesActivator.PLUGIN_ID);
 	}
 	
 	@Override
 	protected Injector getInjector() {
-		return TypesActivator.getInstance().getInjector(TypesActivator.ORG_ECLIPSE_N4JS_TS_TYPES);
+		TypesActivator activator = TypesActivator.getInstance();
+		return activator != null ? activator.getInjector(TypesActivator.ORG_ECLIPSE_N4JS_TS_TYPES) : null;
 	}
-	
+
 }

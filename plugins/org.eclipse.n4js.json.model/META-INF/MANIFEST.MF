@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.n4js.json.model
+Bundle-SymbolicName: org.eclipse.n4js.json.model; singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: org.eclipse.n4js
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.emf.ecore.xcore.lib,
+ org.eclipse.emf.ecore.xcore;bundle-version="1.1.0",
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.releng.utils
+Automatic-Module-Name: org.eclipse.n4js.json.model
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.eclipse.n4js.json.JSON,
+ org.eclipse.n4js.json.JSON.util

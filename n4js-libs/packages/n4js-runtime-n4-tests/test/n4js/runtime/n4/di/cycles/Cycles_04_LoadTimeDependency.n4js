@@ -8,15 +8,15 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {N4Injector} from "n4js/lang/N4Injector"
-import {Bar} from "runtime/n4/di/cycles/testClasses/Bar"
-import {Foo} from "runtime/n4/di/cycles/testClasses/Foo"
 
 //=============================================================================
 // Set Up
 //=============================================================================
 
+import {N4Injector} from "n4js/lang/N4Injector";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {Bar} from "runtime/n4/di/cycles/testClasses/Bar";
+import {Foo} from "runtime/n4/di/cycles/testClasses/Foo";
 
 @GenerateInjector
 class DIC {}

@@ -40,6 +40,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 	protected String getRuleName(AbstractElement element) {
 		if (nameMappings == null) {
 			ImmutableMap.Builder<AbstractElement, String> nameMappingsBuilder = ImmutableMap.builder();
+			nameMappingsBuilder.put(grammarAccess.getScriptAccess().getAlternatives_1(), "rule__Script__Alternatives_1");
 			nameMappingsBuilder.put(grammarAccess.getScriptElementAccess().getAlternatives(), "rule__ScriptElement__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getAlternatives_1(), "rule__AnnotatedScriptElement__Alternatives_1");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getAlternatives_1_3_0(), "rule__AnnotatedScriptElement__Alternatives_1_3_0");
@@ -593,8 +594,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getWildcardAccess().getGroup_1_1(), "rule__Wildcard__Group_1_1__0");
 			nameMappingsBuilder.put(grammarAccess.getWildcardNewNotationAccess().getGroup_0(), "rule__WildcardNewNotation__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getWildcardNewNotationAccess().getGroup_1(), "rule__WildcardNewNotation__Group_1__0");
-			nameMappingsBuilder.put(grammarAccess.getScriptAccess().getAnnotationsAssignment_1(), "rule__Script__AnnotationsAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getScriptAccess().getScriptElementsAssignment_2(), "rule__Script__ScriptElementsAssignment_2");
+			nameMappingsBuilder.put(grammarAccess.getScriptAccess().getAnnotationsAssignment_1_0(), "rule__Script__AnnotationsAssignment_1_0");
+			nameMappingsBuilder.put(grammarAccess.getScriptAccess().getScriptElementsAssignment_1_1(), "rule__Script__ScriptElementsAssignment_1_1");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_2_1_0_0(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_2_1_0_0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_3_0_0_1(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_3_0_0_1");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getTypingStrategyAssignment_1_3_0_0_3(), "rule__AnnotatedScriptElement__TypingStrategyAssignment_1_3_0_0_3");
@@ -876,7 +877,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getExpressionAnnotationListAccess().getAnnotationsAssignment_1(), "rule__ExpressionAnnotationList__AnnotationsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getPropertyAssignmentAnnotationListAccess().getAnnotationsAssignment_1(), "rule__PropertyAssignmentAnnotationList__AnnotationsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getN4MemberAnnotationListAccess().getAnnotationsAssignment_1(), "rule__N4MemberAnnotationList__AnnotationsAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeReferenceAccess().getNamespaceAssignment_0_0(), "rule__TypeReference__NamespaceAssignment_0_0");
+			nameMappingsBuilder.put(grammarAccess.getTypeReferenceAccess().getAstNamespaceAssignment_0_0(), "rule__TypeReference__AstNamespaceAssignment_0_0");
 			nameMappingsBuilder.put(grammarAccess.getTypeReferenceAccess().getDeclaredTypeAssignment_1(), "rule__TypeReference__DeclaredTypeAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getN4ClassDeclarationAccess().getDeclaredModifiersAssignment_0_0_0(), "rule__N4ClassDeclaration__DeclaredModifiersAssignment_0_0_0");
 			nameMappingsBuilder.put(grammarAccess.getN4ClassDeclarationAccess().getTypingStrategyAssignment_0_0_2(), "rule__N4ClassDeclaration__TypingStrategyAssignment_0_0_2");

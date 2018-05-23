@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -31,6 +32,7 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.common.base.Function;
@@ -68,11 +70,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	 * @param location
 	 *            project directory containing manifest.n4mf directly
 	 */
-	public void registerProject(URI location) {
-		if (location.lastSegment().isEmpty()) {
+	public void registerProject(URI unsafeLocation) {
+		if (unsafeLocation.lastSegment().isEmpty()) {
 			throw new IllegalArgumentException("lastSegment may not be empty");
 		}
 
+		URI location = URIUtils.normalize(unsafeLocation);
 		if (!projectElementHandles.containsKey(location)) {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location, false);
 			projectElementHandles.put(location, lazyDescriptionHandle);
@@ -97,7 +100,8 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI findProjectWith(URI nestedLocation) {
+	public URI findProjectWith(URI unsafeLocation) {
+		URI nestedLocation = URIUtils.normalize(unsafeLocation);
 		int maxSegments = nestedLocation.segmentCount();
 		OUTER: for (URI known : projectElementHandles.keySet()) {
 			if (known.segmentCount() <= maxSegments) {
@@ -140,7 +144,8 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public ProjectDescription getProjectDescription(URI location) {
+	public ProjectDescription getProjectDescription(URI unsafeLocation) {
+		URI location = URIUtils.normalize(unsafeLocation);
 		LazyProjectDescriptionHandle handle = projectElementHandles.get(location);
 		if (handle == null) {
 			// check case without trailing path separator
@@ -162,9 +167,10 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI getLocation(URI projectURI, ProjectReference projectReference,
+	public URI getLocation(URI unsafeLocation, ProjectReference projectReference,
 			N4JSSourceContainerType expectedN4JSSourceContainerType) {
-		String projectId = projectReference.getProject().getProjectId();
+		URI projectURI = URIUtils.normalize(unsafeLocation);
+		String projectId = projectReference.getProjectId();
 		if (expectedN4JSSourceContainerType == N4JSSourceContainerType.ARCHIVE) {
 			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
 			if (baseHandle != null && !baseHandle.isArchive()) {
@@ -208,7 +214,8 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public Iterator<URI> getArchiveIterator(final URI archiveLocation, String archiveRelativeLocation) {
+	public Iterator<URI> getArchiveIterator(final URI unsafeLocation, String archiveRelativeLocation) {
+		URI archiveLocation = URIUtils.normalize(unsafeLocation);
 		File archiveFile = new File(java.net.URI.create(archiveLocation.toString()));
 		ZipInputStream stream = null;
 		try {
@@ -216,7 +223,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 			Iterator<ZipEntry> entries = getArchiveIterator(stream, archiveRelativeLocation);
 			return toArchiveURIs(archiveLocation, entries);
 		} catch (FileNotFoundException e) {
-			return Iterators.emptyIterator();
+			return Collections.emptyIterator();
 		} finally {
 			if (stream != null) {
 				try {
@@ -229,9 +236,19 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public Iterator<URI> getFolderIterator(URI folderLocation) {
-		final File sourceContainerDirectory = new File(java.net.URI.create(folderLocation.toString()));
-		if (sourceContainerDirectory.isDirectory()) {
+	public Iterator<URI> getFolderIterator(URI unsafeLocation) {
+		URI folderLocation = URIUtils.normalize(unsafeLocation);
+		java.net.URI create = java.net.URI.create(folderLocation.toString());
+
+		File sourceContainerDirectory = null;
+		try {
+			sourceContainerDirectory = new File(create);
+		} catch (IllegalArgumentException iae) {
+			// TODO GH-793 handle broken project data passed to the workspace
+			System.err.println(this.getClass().getName() + " invalid URI " + unsafeLocation);
+			iae.printStackTrace();
+		}
+		if (sourceContainerDirectory != null && sourceContainerDirectory.isDirectory()) {
 			AbstractTreeIterator<File> treeIterator = new AbstractTreeIterator<File>(sourceContainerDirectory,
 					false) {
 				@Override
@@ -239,7 +256,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 					if (root instanceof File && ((File) root).isDirectory()) {
 						return Arrays.asList(((File) root).listFiles()).iterator();
 					}
-					return Iterators.emptyIterator();
+					return Collections.emptyIterator();
 				}
 			};
 			return Iterators.unmodifiableIterator(Iterators.transform(
@@ -255,11 +272,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 						}
 					}));
 		}
-		return Iterators.emptyIterator();
+		return Collections.emptyIterator();
 	}
 
 	@Override
-	public URI findArtifactInFolder(URI folderLocation, String folderRelativePath) {
+	public URI findArtifactInFolder(URI unsafeLocation, String folderRelativePath) {
+		URI folderLocation = URIUtils.normalize(unsafeLocation);
 		final Path sourceContainerDirectory = Paths.get(java.net.URI.create(folderLocation.toString()));
 		final Path subPath = Paths.get(folderRelativePath.replace("/", File.separator));
 		final File file = sourceContainerDirectory.resolve(subPath).toFile().getAbsoluteFile();

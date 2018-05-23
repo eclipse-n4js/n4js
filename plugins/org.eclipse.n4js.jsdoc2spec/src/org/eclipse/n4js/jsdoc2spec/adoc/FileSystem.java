@@ -54,7 +54,7 @@ public class FileSystem {
 			root.mkdir();
 		}
 
-		if (!DIR_ADOC_GEN.equals(root.getName().equals(root))) {
+		if (!DIR_ADOC_GEN.equals(root.getName())) {
 			root.toPath().resolve(DIR_ADOC_GEN).toFile().mkdir();
 		}
 

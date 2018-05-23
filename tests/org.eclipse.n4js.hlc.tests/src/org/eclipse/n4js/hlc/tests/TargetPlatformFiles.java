@@ -19,6 +19,5 @@ import java.io.File;
 @SuppressWarnings("javadoc")
 public class TargetPlatformFiles {
 	public File targetPlatformInstallLocation;
-	public File targetPlatformFile;
 	public File root;
 }

@@ -43,8 +43,10 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
 import org.eclipse.n4js.n4idl.scoping.FailedToInferContextVersionWrappingScope
+import org.eclipse.n4js.n4idl.scoping.MigrationScopeHelper
 import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScope
 import org.eclipse.n4js.n4idl.scoping.NonVersionAwareContextScope
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.n4jsx.ReactHelper
@@ -71,6 +73,7 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
@@ -150,6 +153,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject private VersionHelper versionHelper;
 	
 	@Inject private ValidatorMessageHelper messageHelper;
+	
+	@Inject private MigrationScopeHelper migrationScopeHelper;
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -201,14 +206,16 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
 		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
-			val namespace = (context as ParameterizedTypeRef).namespace;
-			if (namespace!==null) {
-				return createScopeForNamespaceAccess(namespace, context);
+			if (context instanceof ParameterizedTypeRef) {
+				val namespace = context.astNamespace;
+				if (namespace!==null) {
+					return createScopeForNamespaceAccess(namespace, context);
+				}
 			}
 		}
 		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
-			|| reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__NAMESPACE) {
-			return new ValidatingScope(getTypeScope(context, reference, false),
+			|| reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
+			return new ValidatingScope(getTypeScope(context, false),
 				context.getTypesFilterCriteria(reference));
 		}
 
@@ -494,8 +501,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val TypeRef typeRef = if(typeRefRaw!==null) ts.upperBound(G, typeRefRaw).value else null;
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
+		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val checkVisibility = true;
-		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess);
+		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
 	}
 
 	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context) {
@@ -503,7 +511,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val result = if (module !== null && !module.eIsProxy) {
 				scope_AllTopLevelElementsFromModule(module, context)
 			} else {
-				IScope.NULLSCOPE
+				// error cases
+				if (namespace.eIsProxy) {
+					// name space does not exist -> avoid duplicate error messages
+					// (cf. MemberScopingHelper#members(UnknownTypeRef, MemberScopeRequest))
+					new DynamicPseudoScope()
+				} else {
+					// name space exists, but imported module does not -> show additional error at location of reference
+					IScope.NULLSCOPE
+				}
 			};
 		if (namespace.declaredDynamic && !(result instanceof DynamicPseudoScope)) {
 			return new DynamicPseudoScope(result);
@@ -514,25 +530,25 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/**
 	 * Is entered (and later recursively called) to initially bind "T" in <pre>var x : T;</pre> or other parameterized type references.
 	 */
-	def public IScope getTypeScope(EObject context, EReference reference, boolean fromStaticContext) {
+	def public IScope getTypeScope(EObject context, boolean fromStaticContext) {
 		switch context {
 			Script: {
-				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, reference, delegate);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, delegate);
 			}
 			TModule: {
-				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context.astElement as Script, reference, delegate);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context.astElement as Script, delegate);
 			}
 			N4FieldDeclaration: {
 				val isStaticContext = context.static;
-				return getTypeScope(context.eContainer, reference, isStaticContext); // use new static access status for parent scope
+				return getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
 			}
 			N4FieldAccessor: {
 				val isStaticContext = context.static;
-				return getTypeScope(context.eContainer, reference, isStaticContext); // use new static access status for parent scope
+				return getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
 			}
 			TypeDefiningElement: {
 				val isStaticContext = context instanceof N4MemberDeclaration && (context as N4MemberDeclaration).static;
-				val IScope parent = getTypeScope(context.eContainer, reference, isStaticContext); // use new static access status for parent scope
+				val IScope parent = getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
 				if (context instanceof N4ClassDeclaration) {
 					if ( context.isPolyfill
 						||	context.isStaticPolyfill ) { // in polyfill? delegate to filled type and its type variables
@@ -544,11 +560,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				return scopeWithTypeAndItsTypeVariables(parent, context.definedType, fromStaticContext); // use old static access status for current scope
 			}
 			TStructMethod: {
-				val parent = getTypeScope(context.eContainer, reference, fromStaticContext);
+				val parent = getTypeScope(context.eContainer, fromStaticContext);
 				return scopeWithTypeVarsOfTStructMethod(parent, context);
 			}
 			FunctionTypeExpression: {
-				val parent = getTypeScope(context.eContainer, reference, fromStaticContext);
+				val parent = getTypeScope(context.eContainer, fromStaticContext);
 				return scopeWithTypeVarsOfFunctionTypeExpression(parent, context);
 			}
 			TypeDefs: {
@@ -567,21 +583,21 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 							// area #1: upper/lower bound of type parameter of polyfill, e.g. the 2nd 'T' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T,S extends T> extends ToBeFilled<T,S> {}
-							val IScope parent = getTypeScope(context.eContainer, reference, false);
+							val IScope parent = getTypeScope(context.eContainer, false);
 							return scopeWithTypeAndItsTypeVariables(parent, container.definedType, fromStaticContext);
 						} else if (container.superClassRef === context) {
 							// area #2: super type reference of polyfill, e.g. everything after 'extends' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T> extends ToBeFilled<T> {}
 							val script = EcoreUtil2.getContainerOfType(container, Script);
-							val parent = scopeWithLocallyKnownTypesForPolyfillSuperRef(script, reference, delegate,
+							val parent = scopeWithLocallyKnownTypesForPolyfillSuperRef(script, delegate,
 								container.definedType);
 							return parent;
 						}
 					}
 				}
 
-				return getTypeScope(container, reference, fromStaticContext);
+				return getTypeScope(container, fromStaticContext);
 			}
 		}
 	}
@@ -603,6 +619,19 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		// are detected and prevented.
 		if (!VersionUtils.isVersionAwareContext(context)) {
 			return new NonVersionAwareContextScope(contextVersionScope, true, messageHelper);
+		} else {
+			// detect whether this scope is lexically contained by a migration declaration
+			val migrationDeclaration = MigrationUtils.getMigrationDeclaration(context)
+			if (migrationDeclaration.present) {
+				// if the context is a 'migrate' calls
+				if (context instanceof IdentifierRef && MigrationUtils.isMigrateCallIdentifier(context as IdentifierRef)) {
+					// provide an argument-sensitive migration scope 
+					val callExpression = context.eContainer as ParameterizedCallExpression;
+					return migrationScopeHelper.migrationsScope(callExpression.arguments, context);
+				} else { // otherwise make sure to include the MigrationContext 'context' identifier
+					return migrationScopeHelper.migrationContextAwareScope(migrationDeclaration.get(), contextVersionScope);
+				}
+			}
 		}
 		
 		return contextVersionScope;
@@ -661,11 +690,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				val TypeRef propsTypeRef = jsxElem.getPropsType();
 				val checkVisibility = true;
 				val staticAccess = false;
+				val structFieldInitMode = false;
 				if (propsTypeRef !== null) {
 					// Prevent "Cannot resolve to element" error message of unknown attributes since
 					// we want to issue a warning instead
 					val memberScope = memberScopingHelper.createMemberScope(propsTypeRef, context, checkVisibility,
-						staticAccess);
+						staticAccess, structFieldInitMode);
 					return new DynamicPseudoScope(memberScope);
 				} else {
 					val scope = getN4JSScope(context, reference);

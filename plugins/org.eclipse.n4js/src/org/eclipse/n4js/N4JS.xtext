@@ -45,8 +45,8 @@ import "http://www.eclipse.org/n4js/ts/TypeRefs" as types
 // [ECMWiki] http://wiki.ecmascript.org/doku.php?id=harmony:modules
 // ****************************************************************************************************
 Script: {Script}
-	annotations+=ScriptAnnotation*
-	scriptElements+=ScriptElement*;
+	( annotations+=ScriptAnnotation
+	| scriptElements+=ScriptElement )*;
 
 /*
  * The top level elements in a script are type declarations, exports, imports or statements
@@ -243,6 +243,7 @@ fragment FunctionImpl<Yield, YieldIfGenerator, Expression>*:
 fragment FunctionHeader<Yield, Generator>*:
 	TypeVariables?
 	name=BindingIdentifier<Yield>?
+	VersionDeclaration?
 	StrictFormalParameters<Yield=Generator>
 	(-> ColonSepReturnTypeRef)?
 ;
@@ -1216,8 +1217,8 @@ N4MemberAnnotationList:
 
 // override to support referencing types via the namespace of namespace imports
 @Override
-fragment TypeReference *:
-	(namespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+fragment TypeReference*:
+	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
 	declaredType=[types::Type|TypeReferenceName]
 ;
 

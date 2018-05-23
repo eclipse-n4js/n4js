@@ -277,7 +277,7 @@ public class ExternalProjectsCollector {
 
 		return from(n4Project.getAllDirectDependencies())
 				.filter(IN4JSProject.class)
-				.filter(p -> p.exists() && p.isExternal())
+				.filter(p -> p.isExternal())
 				.transform(p -> p.getProjectId());
 	}
 

@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.resource.AccessibleSerializer;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ui.organize.imports.ImportsRegionHelper;
 import org.eclipse.n4js.ui.utils.ImportSpacerUserPreferenceHelper;
 import org.eclipse.n4js.utils.Lazy;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -96,6 +97,9 @@ public class ImportRewriter {
 
 	@Inject
 	private ImportSpacerUserPreferenceHelper spacerPreference;
+
+	@Inject
+	private ImportsRegionHelper importsRegionHelper;
 
 	private final String lineDelimiter;
 	private final Script script;
@@ -311,11 +315,18 @@ public class ImportRewriter {
 					result = importNode.getTotalOffset() + getLengthWithoutAutomaticSemicolon(importNode);
 				}
 			} else {
-				// Otherwise, we assume there is no import declarations yet, we can put it to the top of the document.
-				return result;
+				// We assume that all import declarations are to be found in one place, thus
+				// at this point we must have seen all of them.
+				break;
 			}
 		}
-		return result;
+		// If previously, an existing import declaration could be found, use it as offset.
+		if (result != 0) {
+			return result;
+		}
+		// Otherwise, we assume there is no import declarations yet. Use {@link ImportsRegionHelper}
+		// to obtain an offset for the insertion of a new import declaration.
+		return importsRegionHelper.getImportOffset(script);
 	}
 
 	/**

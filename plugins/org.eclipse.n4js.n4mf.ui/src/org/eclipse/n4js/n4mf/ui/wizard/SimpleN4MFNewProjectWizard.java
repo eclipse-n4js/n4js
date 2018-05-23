@@ -10,19 +10,17 @@
  */
 package org.eclipse.n4js.n4mf.ui.wizard;
 
-import static org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin;
-
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
+import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.ui.wizard.IProjectCreator;
 import org.eclipse.xtext.ui.wizard.IProjectInfo;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
 
 /**
  * Project wizard that creates a new N4JS Project.
@@ -31,9 +29,8 @@ import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
  */
 public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.XtextNewProjectWizard {
 
-	private static final String FILE_PATH = "icons/newprj_wiz.png";
-	private static final String PLUGIN_ID = N4MFActivator.getInstance().getBundle().getSymbolicName();
-	private static final ImageDescriptor NEW_PROJECT_WIZBAN_DESC = imageDescriptorFromPlugin(PLUGIN_ID, FILE_PATH);
+	private static final ImageDescriptor NEW_PROJECT_WIZBAN_DESC = ImageRef.NEW_PROJECT_WIZBAN.asImageDescriptor()
+			.orNull();
 
 	private static final String DIALOG_SETTINGS_SECTION_KEY = "org.eclipse.n4js.n4mf.ui.wizard.SimpleN4MFNewProjectWizard";
 	private static final String CREATE_GREETER_SETTINGS_KEY = "createGreeterFile";
@@ -107,7 +104,7 @@ public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.Xtex
 		 *
 		 * This means that even for test projects the whole second page can be completely skipped.
 		 */
-		return (!ProjectType.TEST.equals(n4mfWizardNewProjectCreationPage) &&
+		return (!ProjectType.TEST.equals(projectInfo.getProjectType()) &&
 				n4mfWizardNewProjectCreationPage.isPageComplete()) || super.canFinish();
 	}
 

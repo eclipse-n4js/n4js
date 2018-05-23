@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Stuff} from "org/eclipse/n4js/mangelhaft/test/helper/Thingy"
-import {N4Injector} from "n4js/lang/N4Injector"
+import {N4Injector} from "n4js/lang/N4Injector";
+import {Stuff} from "org/eclipse/n4js/mangelhaft/test/helper/Thingy";
 export public class BaseJoe{
     @Inject
     constructor(stuffProvider: N4Provider<Stuff>) {
@@ -35,6 +35,4 @@ export public class InjectionTest {
     }
 }
 
-/*
--*- mode: typescript;-*-
-*/
+

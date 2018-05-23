@@ -117,6 +117,7 @@ import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
+import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.MultiplicativeOperator;
@@ -1423,6 +1424,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass migrationContextVariableEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum variableStatementKeywordEEnum = null;
 
 	/**
@@ -1582,6 +1590,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		N4JSPackageImpl theN4JSPackage = (N4JSPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof N4JSPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new N4JSPackageImpl());
 
 		isInited = true;
+
+		// Initialize simple dependencies
+		EcorePackage.eINSTANCE.eClass();
+		TypesPackage.eINSTANCE.eClass();
+		TypeRefsPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theN4JSPackage.createPackageContents();
@@ -2512,8 +2525,26 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getFunctionDeclaration__migrationContext() {
+		return (EReference)functionDeclarationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EOperation getFunctionDeclaration__IsExternal() {
 		return functionDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getFunctionDeclaration__GetMigrationContextVariable() {
+		return functionDeclarationEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -6418,6 +6449,24 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getMigrationContextVariable() {
+		return migrationContextVariableEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getMigrationContextVariable__GetName() {
+		return migrationContextVariableEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getVariableStatementKeyword() {
 		return variableStatementKeywordEEnum;
 	}
@@ -6726,7 +6775,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		functionDeclarationEClass = createEClass(FUNCTION_DECLARATION);
 		createEAttribute(functionDeclarationEClass, FUNCTION_DECLARATION__NAME);
+		createEReference(functionDeclarationEClass, FUNCTION_DECLARATION__MIGRATION_CONTEXT);
 		createEOperation(functionDeclarationEClass, FUNCTION_DECLARATION___IS_EXTERNAL);
+		createEOperation(functionDeclarationEClass, FUNCTION_DECLARATION___GET_MIGRATION_CONTEXT_VARIABLE);
 
 		functionExpressionEClass = createEClass(FUNCTION_EXPRESSION);
 		createEAttribute(functionExpressionEClass, FUNCTION_EXPRESSION__NAME);
@@ -7300,6 +7351,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		versionedIdentifierRefEClass = createEClass(VERSIONED_IDENTIFIER_REF);
 		createEOperation(versionedIdentifierRefEClass, VERSIONED_IDENTIFIER_REF___GET_VERSION);
 
+		migrationContextVariableEClass = createEClass(MIGRATION_CONTEXT_VARIABLE);
+		createEOperation(migrationContextVariableEClass, MIGRATION_CONTEXT_VARIABLE___GET_NAME);
+
 		// Create enums
 		variableStatementKeywordEEnum = createEEnum(VARIABLE_STATEMENT_KEYWORD);
 		propertyNameKindEEnum = createEEnum(PROPERTY_NAME_KIND);
@@ -7387,6 +7441,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		functionOrFieldAccessorEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		functionDefinitionEClass.getESuperTypes().add(this.getFunctionOrFieldAccessor());
 		functionDefinitionEClass.getESuperTypes().add(this.getTypeDefiningElement());
+		functionDefinitionEClass.getESuperTypes().add(this.getVersionedElement());
 		fieldAccessorEClass.getESuperTypes().add(this.getFunctionOrFieldAccessor());
 		fieldAccessorEClass.getESuperTypes().add(this.getTypeProvidingElement());
 		fieldAccessorEClass.getESuperTypes().add(this.getPropertyNameOwner());
@@ -7605,6 +7660,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
 		versionedIdentifierRefEClass.getESuperTypes().add(this.getIdentifierRef());
 		versionedIdentifierRefEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
+		migrationContextVariableEClass.getESuperTypes().add(this.getVariable());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(namedElementEClass, NamedElement.class, "NamedElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -7770,8 +7826,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(functionDeclarationEClass, FunctionDeclaration.class, "FunctionDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getFunctionDeclaration_Name(), theEcorePackage.getEString(), "name", null, 0, 1, FunctionDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFunctionDeclaration__migrationContext(), this.getMigrationContextVariable(), null, "_migrationContext", null, 0, 1, FunctionDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getFunctionDeclaration__IsExternal(), theEcorePackage.getEBoolean(), "isExternal", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getFunctionDeclaration__GetMigrationContextVariable(), this.getMigrationContextVariable(), "getMigrationContextVariable", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(functionExpressionEClass, FunctionExpression.class, "FunctionExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getFunctionExpression_Name(), theEcorePackage.getEString(), "name", null, 0, 1, FunctionExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8472,6 +8531,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(versionedIdentifierRefEClass, VersionedIdentifierRef.class, "VersionedIdentifierRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getVersionedIdentifierRef__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(migrationContextVariableEClass, MigrationContextVariable.class, "MigrationContextVariable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getMigrationContextVariable__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(variableStatementKeywordEEnum, VariableStatementKeyword.class, "VariableStatementKeyword");

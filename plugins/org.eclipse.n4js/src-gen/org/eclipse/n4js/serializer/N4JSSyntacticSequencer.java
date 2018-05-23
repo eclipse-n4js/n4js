@@ -293,6 +293,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredAsync?='async' NO_LINE_TERMINATOR? 'function' '(' ')' (ambiguity) (rule end)
 	 *     declaredModifiers+=N4Modifier 'function' '(' ')' (ambiguity) (rule end)
+	 *     declaredVersion=VERSION '(' ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     generator?='*' '(' ')' (ambiguity) (rule end)
 	 *     name=BindingIdentifier '(' ')' (ambiguity) (rule end)
@@ -400,6 +401,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' body=Block
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' fpars+=FormalParameter
 	 *     declaredAsync?='async' (ambiguity) 'function' '<' typeVars+=TypeVariable
+	 *     declaredAsync?='async' (ambiguity) 'function' declaredVersion=VERSION
 	 *     declaredAsync?='async' (ambiguity) 'function' generator?='*'
 	 *     declaredAsync?='async' (ambiguity) 'function' name=BindingIdentifier
 	 *     declaredAsync?='async' (ambiguity) declaredName=LiteralOrComputedPropertyName
@@ -438,10 +440,10 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
 	 *     (rule start) (ambiguity) arrayTypeLiteral?='['
+	 *     (rule start) (ambiguity) astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
-	 *     (rule start) (ambiguity) namespace=[ModuleNamespaceVirtualType|TypeReferenceName]
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */

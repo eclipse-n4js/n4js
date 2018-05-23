@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -36,10 +37,12 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
 import org.eclipse.xtext.ui.editor.model.edit.IssueModificationContext;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
 import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator;
 import org.eclipse.xtext.ui.util.IssueUtil;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -50,10 +53,15 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 
 	@Inject
 	private IssueUtil issueUtil;
+
 	@Inject
 	private ChangeManager changeManager;
+
 	@Inject
 	private IssueModificationContext.Factory modificationContextFactory;
+
+	@Inject
+	private IssueResolutionProvider resolutionProvider;
 
 	@Inject(optional = true)
 	private IWorkbench workbench;
@@ -215,6 +223,12 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 			showError_UnsavedChanges();
 			return new IMarkerResolution[0];
 		}
+		if (marker.getResource() instanceof IProject) {
+			// This happens with IssueCodes.NODE_MODULES_OUT_OF_SYNC
+			Issue issue = getIssueUtil().createIssue(marker);
+			Iterable<IssueResolution> result = resolutionProvider.getResolutions(issue);
+			return getAdaptedResolutions(Lists.newArrayList(result));
+		}
 		return super.getResolutions(marker);
 	}
 
@@ -250,9 +264,15 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 	 * Same as {@link #isMarkerStillValid(IMarker, IAnnotationModel)}, but obtains the annotation model from the
 	 * marker's editor.
 	 */
+	@SuppressWarnings("deprecation")
 	private boolean isMarkerStillValid(IMarker marker) {
 		if (marker == null)
 			return false;
+		if (marker.getResource() instanceof IProject) {
+			// This happens with IssueCodes.NODE_MODULES_OUT_OF_SYNC
+			return true;
+		}
+
 		final XtextEditor editor = getEditor(marker.getResource());
 		if (editor == null)
 			return false;
@@ -275,7 +295,7 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 			return context.getXtextDocument().readOnly((XtextResource resource) -> {
 				return resource.getEObject(issueUtil.getUriToProblem(marker).fragment());
 			});
-		} catch (Throwable t) {
+		} catch (Exception e) {
 			return null;
 		}
 	}

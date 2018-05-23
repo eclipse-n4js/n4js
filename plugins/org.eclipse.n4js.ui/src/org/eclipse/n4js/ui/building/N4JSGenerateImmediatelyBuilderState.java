@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.building;
 
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
-import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -20,6 +19,8 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,10 +35,12 @@ import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -127,6 +130,8 @@ import com.google.inject.Injector;
  * "invalidated" the serialized {@link TModule} information for module B we will consider class {@code B} as a changed
  * one and based on the above described workflow we will rebuild module B and queue module C.
  *
+ * <p>
+ * This class gets injected by {@link N4JSClusteringBuilderConfiguration}.
  */
 @SuppressWarnings("restriction")
 public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState {
@@ -255,17 +260,6 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		N4JSResourceSetCleanerUtils.clearResourceSet(resourceSet);
 	}
 
-	private IProject getProject(BuildData buildData) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(buildData.getProjectName());
-		if (null == project || !project.isAccessible()) {
-			final IProject externalProject = getExternalLibraryWorkspace().getProject(buildData.getProjectName());
-			if (null != externalProject && externalProject.exists()) {
-				project = externalProject;
-			}
-		}
-		return project;
-	}
-
 	private N4JSBuilderParticipant findJSBuilderParticipant() {
 		ImmutableList<IXtextBuilderParticipant> all = builderParticipant.getParticipants();
 		for (IXtextBuilderParticipant candidate : all) {
@@ -381,9 +375,23 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		}
 	}
 
-	private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
-		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
-		return injector.getInstance(ExternalLibraryWorkspace.class);
+	static private IProject getProject(BuildData buildData) {
+		String projectName = buildData.getProjectName();
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot root = workspace.getRoot();
+		IProject project = root.getProject(projectName); // creates a project instance if not existing
+
+		if (null == project || !project.isAccessible()) {
+			final IProject externalProject = getExternalLibraryWorkspace().getProject(projectName);
+			if (null != externalProject && externalProject.exists()) {
+				project = externalProject;
+			}
+		}
+		return project;
 	}
 
+	static private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
+		final Injector injector = new N4JSInjectorSupplier().get();
+		return injector.getInstance(ExternalLibraryWorkspace.class);
+	}
 }

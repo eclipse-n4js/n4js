@@ -27,7 +27,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
-import org.eclipse.n4js.n4mf.ExecModule;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ModuleLoader;
@@ -37,6 +36,7 @@ import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -73,14 +73,14 @@ public class N4JSProject implements IN4JSProject {
 			return true;
 		}
 		if (obj instanceof N4JSProject) {
-			return location.equals(((N4JSProject) obj).getLocation());
+			return URIUtils.equals(getLocation(), ((N4JSProject) obj).getLocation());
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return location.hashCode();
+		return URIUtils.hashCode(getLocation());
 	}
 
 	protected N4JSModel getModel() {
@@ -229,7 +229,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return new ArrayList<>();
 		}
-		return pd.getAllInitModules();
+		return pd.getInitModules();
 	}
 
 	@Override
@@ -241,11 +241,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return absent();
 		}
-		final ExecModule execModule = pd.getExecModule();
-		if (null == execModule) {
-			return absent();
-		}
-		return Optional.fromNullable(execModule.getExecModule());
+		return Optional.fromNullable(pd.getExecModule());
 	}
 
 	@Override

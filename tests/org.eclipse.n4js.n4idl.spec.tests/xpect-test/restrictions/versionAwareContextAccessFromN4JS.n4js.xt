@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest 
-   
-   ResourceSet {
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest 
+	
+	ResourceSet {
 		ThisFile {}
 		Resource "Somewhere.n4idl" {from="Somewhere.n4idl"}
 	}
-   
-   END_SETUP
+	
+	END_SETUP
  */
 
 // type imports cause an issue when importing an @VersionAware annotated element XPECT errors --> "The version-aware class SomethingVersionAware can only be referenced from n4idl files." at "SomethingVersionAware"

@@ -33,6 +33,8 @@ import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TFunction
 
 /**
  * This helper provides utilities for looking up React definitions such as React.Component or React.Element or
@@ -52,6 +54,70 @@ class ReactHelper {
 	public final static String REACT_ELEMENT_FACTORY_FUNCTION_NAME = "createElement";
 
 	private final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
+
+	/**
+	 * Returns the {@link TModule} which contains the definitions of the React 
+	 * JSX backend (e.g. {@code Component}, {@code createElement}).
+	 * 
+	 * Returns {@code null} if no valid React implementation can be found in the index.  
+	 */
+	def public TModule getJsxBackendModule(Resource resource) {
+		val String key = REACT_KEY + "." + "TMODULE";
+		return resourceScopeCacheHelper.get(key, resource, [
+			val scope = (scopeProvider as N4JSScopeProvider).getScopeForImplicitImports(resource as N4JSResource);
+			val matchingDescriptions = scope.getElements(QualifiedName.create(REACT_PROJECT_ID));
+			// resolve all found 'react.js' files, until a valid react implementation is found
+			return matchingDescriptions.map[desc |
+				if(desc === null)
+				return null
+				return EcoreUtil2.resolve(desc.EObjectOrProxy, resource) as TModule
+			]
+			// filter for valid react modules only
+			.filter[module | module.isValidReactModule].head;
+		]);
+	}
+	
+	/**
+	 * Returns the preferred name of the namespace used to import the JSX backend.
+	 */
+	def public String getJsxBackendNamespaceName() {
+		return REACT_NAMESPACE_NAME;
+	}
+
+	/**
+	 * Returns the name of the element factory function to use with React as JSX backend.
+	 */
+	def getJsxBackendElementFactoryFunctionName() {
+		return REACT_ELEMENT_FACTORY_FUNCTION_NAME;
+	}
+
+	/**
+	 * Calculate the type that an JSX element is binding to, usually class/function type
+	 * 
+	 * @param jsxElem the input JSX element
+	 * @return the typeref that the JSX element is binding to and null if not found
+	 */
+	def public TypeRef getJsxElementBindingType(JSXElement jsxElem) {
+		val expr = jsxElem.jsxElementName.expression;
+		val G = expr.newRuleEnvironment;
+		val exprResult = ts.type(G, expr);
+		if (exprResult.failed)
+			return null;
+
+		return exprResult.value;
+	}
+	
+	/**
+	 * Returns the element factory function for JSX elements which can be extracted
+	 * from the given {@link Resource}.
+	 */
+	def public TFunction getJsxBackendElementFactoryFunction(Resource resource) {
+		val module = this.getJsxBackendModule(resource);
+		if (module !== null) {
+			return lookUpReactElementFactoryFunction(module);
+		}
+		return null;
+	}
 
 	/**
 	 * Look up React.Element in the index.
@@ -74,56 +140,6 @@ class ReactHelper {
 	}
 
 	/**
-	 * Lookup React component/element type. For increased efficiency, the found results are cached.
-	 * 
-	 * @param context the EObject serving the context to look for React classifiers.
-	 * @param reactClassifierName the name of React classifier.
-	 */
-	def private TClassifier lookUpReactClassifier(EObject context, String reactClassifierName) {
-		val resource = context.eResource;
-		val String key = REACT_KEY + "." + reactClassifierName;
-		return resourceScopeCacheHelper.get(key, resource, [
-			val tModule = lookUpReactTModule(resource);
-			if (tModule === null)
-				return null;
-
-			val tClassifier = tModule.topLevelTypes.filter(TClassifier).findFirst[name == reactClassifierName];
-			return tClassifier;
-		]);
-	}
-
-	/**
-	 * Look up react's main TModule in the index.
-	 */
-	def public TModule lookUpReactTModule(Resource resource) {
-		val String key = REACT_KEY + "." + "TMODULE";
-		return resourceScopeCacheHelper.get(key, resource, [
-			val scope = (scopeProvider as N4JSScopeProvider).getScopeForImplicitImports(resource as N4JSResource);
-			val desc = scope.getSingleElement(QualifiedName.create(REACT_PROJECT_ID));
-			if(desc === null)
-				return null
-			val tModule =  EcoreUtil2.resolve(desc.EObjectOrProxy, resource)
-			return tModule as TModule;
-		]);
-	}
-
-	/**
-	 * Calculate the type that an JSX element is binding to, usually class/function type
-	 * 
-	 * @param jsxElem the input JSX element
-	 * @return the typeref that the JSX element is binding to and null if not found
-	 */
-	def public TypeRef getJSXElementBindingType(JSXElement jsxElem) {
-		val expr = jsxElem.jsxElementName.expression;
-		val G = expr.newRuleEnvironment;
-		val exprResult = ts.type(G, expr);
-		if (exprResult.failed)
-			return null;
-
-		return exprResult.value;
-	}
-
-	/**
 	 * Calculate the "props" type of an JSX element. It is either the first type parameter of React.Component class or
 	 * the type of the first parameter of a functional React component
 	 * 
@@ -131,7 +147,7 @@ class ReactHelper {
 	 * @return the typeref if exists and null otherwise
 	 */
 	def public TypeRef getPropsType(JSXElement jsxElem) {
-		val TypeRef exprTypeRef = jsxElem.JSXElementBindingType
+		val TypeRef exprTypeRef = jsxElem.jsxElementBindingType
 		if (exprTypeRef === null)
 			return null;
 
@@ -172,5 +188,55 @@ class ReactHelper {
 			return ts.tau(member, context);
 
 		throw new IllegalArgumentException(member + " must be either a TField or TGetter");
+	}
+	
+	/**
+	 * Lookup React component/element type. For increased efficiency, the found results are cached.
+	 * 
+	 * @param context the EObject serving the context to look for React classifiers.
+	 * @param reactClassifierName the name of React classifier.
+	 */
+	def private TClassifier lookUpReactClassifier(EObject context, String reactClassifierName) {
+		val resource = context.eResource;
+		val String key = REACT_KEY + "." + reactClassifierName;
+		return resourceScopeCacheHelper.get(key, resource, [
+			val tModule = getJsxBackendModule(resource);
+			if (tModule === null)
+				return null;
+
+			val tClassifier = tModule.topLevelTypes.filter(TClassifier).findFirst[name == reactClassifierName];
+			return tClassifier;
+		]);
+	}
+	
+	/**
+	 * Looks up the element factory function to use, assuming the react implementation in use
+	 * is to be found in the given {@code module}.
+	 * 
+	 * Returns {@code null} if no factory function can be found in the given module.
+	 */
+	def private TFunction lookUpReactElementFactoryFunction(TModule module) {
+		if (module !== null) {
+			for (Type currTopLevelType : module.getTopLevelTypes()) {
+				if (currTopLevelType instanceof TFunction
+						&& REACT_ELEMENT_FACTORY_FUNCTION_NAME.equals(currTopLevelType.getName())) {
+					return currTopLevelType as TFunction;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns {@code true} if the given {@code module} is a {@link TModule}
+	 * that represents a valid implementation of React.
+	 * 
+	 * Returns {@code false} otherwise.
+	 * 
+	 * Note that this requires type definitions to be available for the given {@link TModule}.
+	 */
+	def private boolean isValidReactModule(TModule module) {
+		// check for existence of the element factory function
+		return lookUpReactElementFactoryFunction(module) !== null;
 	}
 }

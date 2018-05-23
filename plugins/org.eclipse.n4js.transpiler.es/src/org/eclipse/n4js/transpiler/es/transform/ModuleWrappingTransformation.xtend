@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils
-import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
@@ -57,6 +56,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
@@ -248,7 +248,7 @@ class ModuleWrappingTransformation extends Transformation {
 		val IdentifiableElement originalTarget = importedElementEntry.getOriginalTarget();
 
 		// if applicable use versioned internal name for internal STE
-		if (VersionUtils.isTVersionable(originalTarget)) {
+		if (VersionableUtils.isTVersionable(originalTarget)) {
 			return getSymbolTableEntryInternal(N4IDLTranspilerUtils.getVersionedInternalName(originalTarget), true);
 		}
 		return getSymbolTableEntryInternal(importedElementEntry.exportedName, true);

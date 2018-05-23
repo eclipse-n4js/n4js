@@ -13,7 +13,6 @@ package org.eclipse.n4js;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,8 +30,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import com.google.common.io.CharStreams;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteSource;
+import com.google.common.io.CharSource;
 
 /**
  * Provides utility methods to work with zipped resource.
@@ -117,17 +116,18 @@ public class TestCodeProvider {
 
 	/***/
 	public static String getContentsFromFileEntry(final ZipEntry entry, String rootName) throws IOException,
-	URISyntaxException {
+			URISyntaxException {
 		URL rootURL = Thread.currentThread().getContextClassLoader().getResource(rootName);
 		try (final ZipFile root = new ZipFile(new File(rootURL.toURI()));) {
-			InputSupplier<InputStreamReader> readerSupplier = CharStreams.newReaderSupplier(
-					new InputSupplier<InputStream>() {
-						@Override
-						public InputStream getInput() throws IOException {
-							return root.getInputStream(entry);
-						}
-					}, Charsets.UTF_8);
-			return CharStreams.toString(readerSupplier);
+			ByteSource byteSource = new ByteSource() {
+				@Override
+				public InputStream openStream() throws IOException {
+					return root.getInputStream(entry);
+				}
+			};
+
+			CharSource charSrc = byteSource.asCharSource(Charsets.UTF_8);
+			return charSrc.read();
 		}
 	}
 
@@ -139,11 +139,11 @@ public class TestCodeProvider {
 		Enumeration<? extends ZipEntry> entries = file.entries();
 		Iterator<? extends ZipEntry> fileEntries = Iterators.filter(Iterators.forEnumeration(entries),
 				new Predicate<ZipEntry>() {
-			@Override
-			public boolean apply(ZipEntry input) {
-				return !input.isDirectory();
-			}
-		});
+					@Override
+					public boolean apply(ZipEntry input) {
+						return !input.isDirectory();
+					}
+				});
 		List<ZipEntry> entriesAsList = Lists.newArrayList(fileEntries);
 		files.addAll(Lists.transform(entriesAsList, new Function<ZipEntry, JSLibSingleTestConfig>() {
 			@Override

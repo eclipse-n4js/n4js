@@ -58,6 +58,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeLiteral <em>Array Type Literal</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstNamespace <em>Ast Namespace</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -114,6 +115,16 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @ordered
 	 */
 	protected boolean arrayTypeLiteral = ARRAY_TYPE_LITERAL_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getAstNamespace() <em>Ast Namespace</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAstNamespace()
+	 * @generated
+	 * @ordered
+	 */
+	protected ModuleNamespaceVirtualType astNamespace;
 
 	/**
 	 * The default value of the '{@link #getASTNodeOptionalFieldStrategy() <em>AST Node Optional Field Strategy</em>}' attribute.
@@ -281,6 +292,44 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		arrayTypeLiteral = newArrayTypeLiteral;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL, oldArrayTypeLiteral, arrayTypeLiteral));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ModuleNamespaceVirtualType getAstNamespace() {
+		if (astNamespace != null && astNamespace.eIsProxy()) {
+			InternalEObject oldAstNamespace = (InternalEObject)astNamespace;
+			astNamespace = (ModuleNamespaceVirtualType)eResolveProxy(oldAstNamespace);
+			if (astNamespace != oldAstNamespace) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE, oldAstNamespace, astNamespace));
+			}
+		}
+		return astNamespace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ModuleNamespaceVirtualType basicGetAstNamespace() {
+		return astNamespace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setAstNamespace(ModuleNamespaceVirtualType newAstNamespace) {
+		ModuleNamespaceVirtualType oldAstNamespace = astNamespace;
+		astNamespace = newAstNamespace;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE, oldAstNamespace, astNamespace));
 	}
 
 	/**
@@ -501,6 +550,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return getTypeArgs();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL:
 				return isArrayTypeLiteral();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
+				if (resolve) return getAstNamespace();
+				return basicGetAstNamespace();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return getASTNodeOptionalFieldStrategy();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:
@@ -530,6 +582,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL:
 				setArrayTypeLiteral((Boolean)newValue);
+				return;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
+				setAstNamespace((ModuleNamespaceVirtualType)newValue);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy((OptionalFieldStrategy)newValue);
@@ -561,6 +616,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL:
 				setArrayTypeLiteral(ARRAY_TYPE_LITERAL_EDEFAULT);
 				return;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
+				setAstNamespace((ModuleNamespaceVirtualType)null);
+				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy(AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT);
 				return;
@@ -587,6 +645,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return typeArgs != null && !typeArgs.isEmpty();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL:
 				return arrayTypeLiteral != ARRAY_TYPE_LITERAL_EDEFAULT;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
+				return astNamespace != null;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return aSTNodeOptionalFieldStrategy != AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:

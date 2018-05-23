@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ts.validation
 
 import com.google.inject.Singleton
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.types.BuiltInType
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -32,7 +33,9 @@ import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.ts.types.TypingStrategy
 
 /**
  * Helper returning the keyword of a given AST or type element, e.g., "class" for a class declaration.
@@ -45,6 +48,21 @@ class TypesKeywordProvider {
 		val firstChar = if(keyword.length>0) Character.toLowerCase(keyword.charAt(0));
 		val startsWithVowel = 'aeiou'.indexOf(firstChar)>=0;
 		return if(startsWithVowel) 'an ' + keyword else 'a ' + keyword;
+	}
+
+	def String keyword(EObject elem, TypingStrategy typingStrategy) {
+		if (typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER) {
+			val replacementType = switch(elem) {
+				TStructGetter: TypesPackage.eINSTANCE.TStructSetter
+				TStructSetter: TypesPackage.eINSTANCE.TStructGetter
+				TGetter: TypesPackage.eINSTANCE.TSetter
+				TSetter: TypesPackage.eINSTANCE.TGetter
+			};
+			if (replacementType !== null) {
+				return keyword(TypesFactory.eINSTANCE.create(replacementType))
+			}
+		}
+		return keyword(elem);
 	}
 
 	def dispatch String keyword(EObject eobj) {

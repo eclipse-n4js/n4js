@@ -10,29 +10,34 @@
  */
 package org.eclipse.n4js.ui;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
-import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
-import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
+import org.eclipse.n4js.binaries.BinariesValidator;
+import org.eclipse.n4js.binaries.BinaryCommandFactory;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
+import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.GitCloneSupplier;
+import org.eclipse.n4js.external.NpmLogger;
+import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
+import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
 import org.eclipse.n4js.ui.containers.N4JSAllContainersStateProvider;
@@ -63,14 +68,25 @@ import org.eclipse.n4js.ui.editor.syntaxcoloring.TemplateAwarePartitionTokenScan
 import org.eclipse.n4js.ui.editor.syntaxcoloring.TemplateAwareTokenScanner;
 import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenToAttributeIdMapper;
 import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenTypeToPartitionMapper;
+import org.eclipse.n4js.ui.external.BuildOrderComputer;
+import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
+import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
+import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.external.ExternalProjectProvider;
+import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
 import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
+import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
+import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
 import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
 import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
+import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.outline.MetaTypeAwareComparator;
 import org.eclipse.n4js.ui.outline.N4JSFilterLocalTypesOutlineContribution;
 import org.eclipse.n4js.ui.outline.N4JSFilterNonPublicMembersOutlineContribution;
@@ -84,6 +100,7 @@ import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
+import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
 import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
@@ -91,7 +108,10 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
+import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
+import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
@@ -117,6 +137,7 @@ import org.eclipse.xtext.ui.editor.contentassist.IContentAssistantFactory;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider;
 import org.eclipse.xtext.ui.editor.findrefs.EditorResourceAccess;
+import org.eclipse.xtext.ui.editor.findrefs.ReferenceSearchResultContentProvider;
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHover;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
@@ -135,6 +156,7 @@ import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
+import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.util.IssueUtil;
@@ -142,7 +164,6 @@ import org.eclipse.xtext.validation.IResourceValidator;
 
 import com.google.inject.Binder;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 /**
@@ -165,27 +186,207 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		N4jsUiLoggingInitializer.init();
 	}
 
+	/** Delegate to shared injector */
+	public Provider<MarkerCreator> provideMarkerCreator() {
+		return Access.contributedProvider(MarkerCreator.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalLibraryWorkspace> provideExternalLibraryWorkspace() {
+		return Access.contributedProvider(ExternalLibraryWorkspace.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<EclipseExternalLibraryWorkspace> provideEclipseExternalLibraryWorkspace() {
+		return Access.contributedProvider(EclipseExternalLibraryWorkspace.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalIndexSynchronizer> provideExternalIndexSynchronizer() {
+		return Access.contributedProvider(ExternalIndexSynchronizer.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<EclipseExternalIndexSynchronizer> provideEclipseExternalIndexSynchronizer() {
+		return Access.contributedProvider(EclipseExternalIndexSynchronizer.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<GitCloneSupplier> provideGitCloneSupplier() {
+		return Access.contributedProvider(GitCloneSupplier.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalProjectCacheLoader> provideExternalProjectCacheLoader() {
+		return Access.contributedProvider(ExternalProjectCacheLoader.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ProjectStateChangeListener> provideProjectStateChangeListener() {
+		return Access.contributedProvider(ProjectStateChangeListener.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalIndexUpdater> provideExternalIndexUpdater() {
+		return Access.contributedProvider(ExternalIndexUpdater.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalLibraryBuildJobProvider> provideExternalLibraryBuildJobProvider() {
+		return Access.contributedProvider(ExternalLibraryBuildJobProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalLibraryBuilder> provideExternalLibraryBuilder() {
+		return Access.contributedProvider(ExternalLibraryBuilder.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<BuildOrderComputer> provideBuildOrderComputer() {
+		return Access.contributedProvider(BuildOrderComputer.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<NpmLogger> provideNpmLogger() {
+		return Access.contributedProvider(NpmLogger.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<OutputStreamProvider> provideOutputStreamProvider() {
+		return Access.contributedProvider(OutputStreamProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ConsoleOutputStreamProvider> provideConsoleOutputStreamProvider() {
+		return Access.contributedProvider(ConsoleOutputStreamProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalProjectsCollector> provideExternalProjectsCollector() {
+		return Access.contributedProvider(ExternalProjectsCollector.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalProjectProvider> provideExternalProjectProvider() {
+		return Access.contributedProvider(ExternalProjectProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<RebuildWorkspaceProjectsScheduler> provideRebuildWorkspaceProjectsScheduler() {
+		return Access.contributedProvider(RebuildWorkspaceProjectsScheduler.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalLibraryPreferenceStore> provideExternalLibraryPreferenceStore() {
+		return Access.contributedProvider(ExternalLibraryPreferenceStore.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<WorkingSetManagerBroker> provideWorkingSetManagerBroker() {
+		return Access.contributedProvider(WorkingSetManagerBroker.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<WorkingSetManagerBrokerImpl> provideWorkingSetManagerBrokerImpl() {
+		return Access.contributedProvider(WorkingSetManagerBrokerImpl.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<BinariesPreferenceStore> provideBinariesPreferenceStore() {
+		return Access.contributedProvider(BinariesPreferenceStore.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<TargetPlatformInstallLocationProvider> provideTargetPlatformInstallLocationProvider() {
+		return Access.contributedProvider(TargetPlatformInstallLocationProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<TypeDefinitionGitLocationProvider> provideTypeDefinitionGitLocationProvider() {
+		return Access.contributedProvider(TypeDefinitionGitLocationProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<IN4JSCore> provideIN4JSCore() {
+		return Access.contributedProvider(IN4JSCore.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<IN4JSEclipseCore> provideIN4JSEclipseCore() {
+		return Access.contributedProvider(IN4JSEclipseCore.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<N4JSEclipseCore> provideN4JSEclipseCore() {
+		return Access.contributedProvider(N4JSEclipseCore.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<EclipseBasedN4JSWorkspace> provideEclipseBasedN4JSWorkspace() {
+		return Access.contributedProvider(EclipseBasedN4JSWorkspace.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends WorkspaceRepositoriesProvider> provideWorkspaceRepositoryProvider() {
+		return Access.contributedProvider(WorkspaceRepositoriesProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends BinaryCommandFactory> provideBinaryCommandFactory() {
+		return Access.contributedProvider(BinaryCommandFactory.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends ExternalLibraryUriHelper> provideExternalLibraryUriHelper() {
+		return Access.contributedProvider(ExternalLibraryUriHelper.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends FileBasedExternalPackageManager> provideFileBasedExternalPackageManager() {
+		return Access.contributedProvider(FileBasedExternalPackageManager.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends N4JSModel> provideN4JSModel() {
+		return Access.contributedProvider(N4JSModel.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends N4JSProjectExplorerHelper> provideN4JSProjectExplorerHelper() {
+		return Access.contributedProvider(N4JSProjectExplorerHelper.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends StatusHelper> provideStatusHelper() {
+		return Access.contributedProvider(StatusHelper.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends OutputStreamPrinterThreadProvider> provideOutputStreamPrinterThreadProvider() {
+		return Access.contributedProvider(OutputStreamPrinterThreadProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends TypesKeywordProvider> provideTypesKeywordProvider() {
+		return Access.contributedProvider(TypesKeywordProvider.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends BinariesValidator> provideBinariesValidator() {
+		return Access.contributedProvider(BinariesValidator.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<? extends ProcessExecutor> provideProcessExecutor() {
+		return Access.contributedProvider(ProcessExecutor.class);
+	}
+
 	/**
 	 * Bind the {@link IXtextBuilderParticipant} being aware of generating the Javascript files in the output directory.
 	 */
 	@Override
 	public Class<? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant() {
 		return N4JSBuilderParticipant.class;
-	}
-
-	/**
-	 * Re-binds the {@link Singleton @Singleton} {@link ExternalLibraryWorkspace N4JS external library workspace}
-	 * instance declared and created in the {@link N4JSRuntimeModule}.
-	 */
-	public Provider<ExternalLibraryWorkspace> provideN4JSExternalLibraryWorkspace() {
-		return Access.contributedProvider(ExternalLibraryWorkspace.class);
-	}
-
-	/**
-	 * Re-binds the {@link GitCloneSupplier} to the singleton instance declared in the contribution module.
-	 */
-	public Provider<GitCloneSupplier> provideGitCloneSupplier() {
-		return Access.contributedProvider(GitCloneSupplier.class);
 	}
 
 	@Override
@@ -237,72 +438,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return SynchronizedXtextResourceSet.class;
 	}
 
-	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by the Eclipse workspace.
-	 */
-	public Class<? extends IN4JSCore> bindIN4JSCore() {
-		return IN4JSEclipseCore.class;
-	}
-
-	/**
-	 * Binds the external library preference store to use the {@link OsgiExternalLibraryPreferenceStore OSGi} one. This
-	 * provider binding is required to share the same singleton instance between modules, hence injectors.
-	 */
-	public Provider<ExternalLibraryPreferenceStore> provideExternalLibraryPreferenceStore() {
-		return Access.contributedProvider(ExternalLibraryPreferenceStore.class);
-	}
-
-	/**
-	 * Binds the broker for the working set managers in a singleton scope.
-	 */
-	public Provider<WorkingSetManagerBroker> provideWorkingSetManagerBroker() {
-		return Access.contributedProvider(WorkingSetManagerBroker.class);
-	}
-
-	/**
-	 * Binds the broker implementation for the working set managers in a singleton scope.
-	 */
-	public Provider<WorkingSetManagerBrokerImpl> provideWorkingSetManagerBrokerImpl() {
-		return Access.contributedProvider(WorkingSetManagerBrokerImpl.class);
-	}
-
-	/**
-	 * Binds the binaries preference store to use the {@link OsgiBinariesPreferenceStore} one. This provider binding is
-	 * required to share the same singleton instance between modules, hence injectors.
-	 */
-	public Provider<BinariesPreferenceStore> provideBinariesPreferenceStore() {
-		return Access.contributedProvider(BinariesPreferenceStore.class);
-	}
-
-	/**
-	 * Binds the target platform location provider to the Eclipse based implementation. This requires a running
-	 * {@link Platform platform} and an existing and available {@link IWorkspace workspace}.
-	 */
-	public Provider<TargetPlatformInstallLocationProvider> provideTargetPlatformInstallLocationProvider() {
-		return Access.contributedProvider(TargetPlatformInstallLocationProvider.class);
-	}
-
-	/**
-	 * Binds the type definition Git location provider.
-	 */
-	public Provider<TypeDefinitionGitLocationProvider> provideTypeDefinitionGitLocationProvider() {
-		return Access.contributedProvider(TypeDefinitionGitLocationProvider.class);
-	}
-
-	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by the Eclipse workspace.
-	 */
-	public Provider<IN4JSEclipseCore> provideIN4JSEclipseCore() {
-		return Access.contributedProvider(IN4JSEclipseCore.class);
-	}
-
-	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by the Eclipse workspace.
-	 */
-	public Provider<EclipseBasedN4JSWorkspace> provideEclipseBasedN4JSWorkspace() {
-		return Access.contributedProvider(EclipseBasedN4JSWorkspace.class);
-	}
-
 	@Override
 	public Class<? extends IResourceForEditorInputFactory> bindIResourceForEditorInputFactory() {
 		return NFARAwareResourceForEditorInputFactory.class;
@@ -347,13 +482,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends LastSegmentFinder> bindLastSegmentFinder() {
 		return SimpleLastSegmentFinder.class;
-	}
-
-	/**
-	 * Binds the output stream provider to the console based one in the UI.
-	 */
-	public Class<? extends OutputStreamProvider> bindOutputStreamProvider() {
-		return ConsoleOutputStreamProvider.class;
 	}
 
 	/**
@@ -661,11 +789,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSHyperlinkDetector.class;
 	}
 
-	/** */
-	public Class<? extends WorkspaceRepositoriesProvider> bindWorkspaceRepositoryProvider() {
-		return WorkspaceRepositoriesProvider.class;
-	}
-
 	@Override
 	public void configureXtextEditorErrorTickUpdater(com.google.inject.Binder binder) {
 		binder.bind(IXtextEditorCallback.class).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
@@ -680,5 +803,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Bind N4JS composite generator */
 	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
 		return N4JSCompositeGenerator.class;
+	}
+
+	/** Bind custom ReferenceSearchResultContentProvider. Workaround to fix GH-724. */
+	public Class<? extends ReferenceSearchResultContentProvider> bindReferenceSearchResultContentProvider() {
+		return MyReferenceSearchResultContentProvider.class;
 	}
 }

@@ -156,7 +156,7 @@ public interface ExistentialTypeRef extends TypeRef {
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.typeRefs.Wildcard%> _wildcard = this.getWildcard();\n<%java.lang.String%> _typeRefAsString = null;\nif (_wildcard!=null)\n{\n\t_typeRefAsString=_wildcard.getTypeRefAsString();\n}\nreturn _typeRefAsString;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.n4js.ts.typeRefs.Wildcard%&gt; _wildcard = this.getWildcard();\n&lt;%java.lang.String%&gt; _typeRefAsString = null;\nif (_wildcard!=null)\n{\n\t_typeRefAsString=_wildcard.getTypeRefAsString();\n}\nreturn _typeRefAsString;'"
 	 * @generated
 	 */
 	String getTypeRefAsString();

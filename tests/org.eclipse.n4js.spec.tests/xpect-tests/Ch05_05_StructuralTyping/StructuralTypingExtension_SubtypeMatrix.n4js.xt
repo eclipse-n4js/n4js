@@ -395,13 +395,13 @@ wa5 = ra5
 
 // XPECT errors --> "~r~A5 is not a structural subtype of ~i~A1: missing field s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ra5"
 ia1 = ra5
-// XPECT errors --> "~r~A5 is not a structural subtype of ~i~A2: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ra5"
+// XPECT errors --> "~r~A5 is not a structural subtype of ~i~A2: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ra5"
 ia2 = ra5
 // XPECT noerrors --> "" at "ra5"
 ia3 = ra5
 // XPECT noerrors --> "" at "ra5"
 ia4 = ra5
-// XPECT errors --> "~r~A5 is not a structural subtype of ~i~A5: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ra5"
+// XPECT errors --> "~r~A5 is not a structural subtype of ~i~A5: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ra5"
 ia5 = ra5
 
 
@@ -483,13 +483,13 @@ wa5 = wa2
 
 // XPECT errors --> "~w~A2 is not a structural subtype of ~i~A1: missing field s; s failed: non-optional writable field requires a getter in subtype." at "wa2"
 ia1 = wa2
-// XPECT errors --> "~w~A2 is not a structural subtype of ~i~A2: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "wa2"
+// XPECT errors --> "~w~A2 is not a structural subtype of ~i~A2: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "wa2"
 ia2 = wa2
 // XPECT noerrors --> "" at "wa2"
 ia3 = wa2
 // XPECT noerrors --> "" at "wa2"
 ia4 = wa2
-// XPECT errors --> "~w~A2 is not a structural subtype of ~i~A5: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "wa2"
+// XPECT errors --> "~w~A2 is not a structural subtype of ~i~A5: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "wa2"
 ia5 = wa2
 
 
@@ -527,13 +527,13 @@ wa5 = wa3
 
 // XPECT errors --> "~w~A3 is not a structural subtype of ~i~A1: s failed: non-optional writable field requires a getter in subtype." at "wa3"
 ia1 = wa3
-// XPECT errors --> "~w~A3 is not a structural subtype of ~i~A2: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "wa3"
+// XPECT errors --> "~w~A3 is not a structural subtype of ~i~A2: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "wa3"
 ia2 = wa3
 // XPECT noerrors --> "" at "wa3"
 ia3 = wa3
 // XPECT noerrors --> "" at "wa3"
 ia4 = wa3
-// XPECT errors --> "~w~A3 is not a structural subtype of ~i~A5: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "wa3"
+// XPECT errors --> "~w~A3 is not a structural subtype of ~i~A5: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "wa3"
 ia5 = wa3
 
 
@@ -571,13 +571,13 @@ wa5 = wa4
 
 // XPECT errors --> "~w~A4 is not a structural subtype of ~i~A1: missing field s; s failed: non-optional writable field requires a getter in subtype." at "wa4"
 ia1 = wa4
-// XPECT errors --> "~w~A4 is not a structural subtype of ~i~A2: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "wa4"
+// XPECT errors --> "~w~A4 is not a structural subtype of ~i~A2: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "wa4"
 ia2 = wa4
 // XPECT noerrors --> "" at "wa4"
 ia3 = wa4
 // XPECT noerrors --> "" at "wa4"
 ia4 = wa4
-// XPECT errors --> "~w~A4 is not a structural subtype of ~i~A5: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "wa4"
+// XPECT errors --> "~w~A4 is not a structural subtype of ~i~A5: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "wa4"
 ia5 = wa4
 
 
@@ -615,13 +615,13 @@ wa5 = wa5
 
 // XPECT errors --> "~w~A5 is not a structural subtype of ~i~A1: missing field s; s failed: non-optional writable field requires a getter in subtype." at "wa5"
 ia1 = wa5
-// XPECT errors --> "~w~A5 is not a structural subtype of ~i~A2: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "wa5"
+// XPECT errors --> "~w~A5 is not a structural subtype of ~i~A2: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "wa5"
 ia2 = wa5
 // XPECT noerrors --> "" at "wa5"
 ia3 = wa5
 // XPECT noerrors --> "" at "wa5"
 ia4 = wa5
-// XPECT errors --> "~w~A5 is not a structural subtype of ~i~A5: missing setter s; s failed: non-optional writable field requires a getter in subtype." at "wa5"
+// XPECT errors --> "~w~A5 is not a structural subtype of ~i~A5: missing getter s; s failed: non-optional writable field requires a getter in subtype." at "wa5"
 ia5 = wa5
 
 
@@ -835,11 +835,11 @@ wa5 = ia5
 
 // XPECT errors --> "~i~A5 is not a structural subtype of ~i~A1: missing field s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ia5"
 ia1 = ia5
-// XPECT errors --> "~i~A5 is not a structural subtype of ~i~A2: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ia5"
+// XPECT errors --> "~i~A5 is not a structural subtype of ~i~A2: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ia5"
 ia2 = ia5
 // XPECT noerrors --> "" at "ia5"
 ia3 = ia5
 // XPECT noerrors --> "" at "ia5"
 ia4 = ia5
-// XPECT errors --> "~i~A5 is not a structural subtype of ~i~A5: missing setter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ia5"
+// XPECT errors --> "~i~A5 is not a structural subtype of ~i~A5: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ia5"
 ia5 = ia5

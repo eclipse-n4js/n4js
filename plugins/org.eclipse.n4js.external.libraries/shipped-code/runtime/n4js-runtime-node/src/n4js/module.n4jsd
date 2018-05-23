@@ -20,4 +20,4 @@ export external public const __dirname: string;
  */
 export external public const __filename: string;
 
-/* -*- mode: typescript;-*- */
+

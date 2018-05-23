@@ -63,12 +63,11 @@ class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 
 		val String[] args = #[
 				"--systemLoader", COMMON_JS.getId(),
-				"-rw", "nodejs",
-				"-r", fileToRun,
-				"--verbose",
-				"-bt", BuildType.projects.toString(),
+				"--runWith", "nodejs",
+				"--run", fileToRun,
+				"--buildType", BuildType.projects.toString(),
 				projectToCompile,
-				"-r",
+				"--run",
 				fileToRun];
 		
 		return runAndCaptureOutput(args);

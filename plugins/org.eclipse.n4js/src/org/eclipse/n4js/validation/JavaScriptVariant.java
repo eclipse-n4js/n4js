@@ -12,8 +12,6 @@ package org.eclipse.n4js.validation;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
-
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
@@ -21,6 +19,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * JavaScript variant to adjust validation. See ECMAScript Spec, 10.2.1 Strict Mode Code.
@@ -42,7 +41,9 @@ public enum JavaScriptVariant {
 	/** N4JS mode */
 	n4js,
 	/** external mode */
-	external;
+	external,
+	/** N4IDL mode */
+	n4idl;
 
 	/**
 	 * Literal value to indicate strict mode: "use strict" (or 'use strict')

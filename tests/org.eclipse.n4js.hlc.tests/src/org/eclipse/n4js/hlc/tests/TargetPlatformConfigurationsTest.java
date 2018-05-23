@@ -10,14 +10,16 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static java.util.Collections.singletonMap;
+import static com.google.common.base.Preconditions.checkState;
+import static org.eclipse.n4js.utils.io.FileUtils.createDirectory;
+import static org.eclipse.n4js.utils.io.FileUtils.createTempDirectory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
+import java.nio.file.Path;
 
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
@@ -25,6 +27,7 @@ import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.hlc.base.SuccessExitStatus;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,63 +35,41 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express' for different target platform configurations.
  */
-public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
+public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	File workspace;
+
+	private final TargetPlatformFiles platformFiles = new TargetPlatformFiles();
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
+		setupExternals(platformFiles, description.getMethodName());
 		workspace = setupWorkspace("external_with_n4jsd_tpt");
 	}
 
 	/** Delete workspace. */
 	@After
 	public void deleteWorkspace() throws IOException {
+		cleanupExternals(platformFiles);
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	@Override
-	protected Map<String, String> getNpmDependencies() {
-		return singletonMap("express", "@4.13.4");
+	/** Initializes the target platform install location. */
+	public static void setupExternals(TargetPlatformFiles platformFiles, String tmpPrefix) {
+		checkState(null == platformFiles.targetPlatformInstallLocation);
+
+		final Path tempRoot = createTempDirectory("hlcTest-time-" + System.currentTimeMillis());
+		platformFiles.root = tempRoot.toFile();
+		platformFiles.targetPlatformInstallLocation = createDirectory(tempRoot, tmpPrefix).toFile();
 	}
 
-	// ===== normal failures
-
-	/**
-	 * Test failure when compiling without target platform file.
-	 */
-	@Test
-	public void testCompileFailsIfNoTargetPlatformFile() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_CONFIGURATION_ERROR);
+	/** Cleans up the target platform install location. */
+	public static void cleanupExternals(TargetPlatformFiles platformFiles) {
+		if (null != platformFiles.targetPlatformInstallLocation) {
+			FileUtils.deleteFileOrFolder(platformFiles.targetPlatformInstallLocation);
+			platformFiles.targetPlatformInstallLocation = null;
+		}
 	}
-
-	/**
-	 * Test failure when compiling without target platform file.
-	 */
-	@Test
-	public void testCompileFailsIfNoInstallLocation() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_CONFIGURATION_ERROR);
-	}
-
-	// test install location management
 
 	/**
 	 * Test creating install location.
@@ -101,18 +82,17 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 
 		// force creating install location
-		FileDeleter.delete(getTargetPlatformInstallLocation());
+		FileDeleter.delete(platformFiles.targetPlatformInstallLocation);
 
 		final String[] args = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
+				"--installMissingDependencies",
+				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
-		assertTrue("install location was not created", getTargetPlatformInstallLocation().exists());
+		assertTrue("install location was not created", platformFiles.targetPlatformInstallLocation.exists());
 	}
 
 	/**
@@ -126,16 +106,15 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 
 		// force creating install location
-		File testFile = new File(getTargetPlatformInstallLocation(), "tst.txt");
+		File testFile = new File(platformFiles.targetPlatformInstallLocation, "tst.txt");
 		testFile.createNewFile();
 		assertTrue("setup error, test file should exist yet at " + testFile.getAbsolutePath(), testFile.exists());
 
 		final String[] args = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
+				"--clean",
+				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
@@ -143,80 +122,21 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				testFile.exists());
 	}
 
-	// ===== skip installation
-
 	/**
 	 * Test skip install when compiling without target platform file.
 	 */
 	@Test
-	public void testCompileFailsIfNoTargetPlatformFileWithSkipped() {
+	public void testCompileFailsIfNoDependenciesNotInstalled() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 
 		final String[] args = {
-				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
+				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString(),
-				"--targetPlatformSkipInstall"
+				"--buildType", BuildType.allprojects.toString()
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
 	}
 
-	/**
-	 * Test skip install when compiling without target platform file.
-	 */
-	@Test
-	public void testCompileFailsIfNoInstallLocationWithSkipped() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString(),
-				"--targetPlatformSkipInstall"
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
-	}
-
-	/**
-	 * Test skip install forced
-	 */
-	@Test
-	public void testCompileForceSkippInstall() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
-	}
-
-	/**
-	 * Test skip install combined with forced
-	 */
-	@Test
-	public void testCompileSkippInstallAndForceSkipInstall() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-
-		final String[] args = {
-				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
-				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString(),
-				"--targetPlatformSkipInstall"
-		};
-		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
-	}
-
-	// combined compiler invocations
 	/**
 	 * Test compiling with external libraries installation, then invoke compilation without installing. We expect second
 	 * invocation to re-use installed external libraries in first invocation.
@@ -229,28 +149,24 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 
 		final String[] argsInstall = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--verbose",
+				"--installMissingDependencies",
+				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
-		new N4jscBase().doMain(argsInstall);
 		SuccessExitStatus statusInstall = new N4jscBase().doMain(argsInstall);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, statusInstall.code);
-		assertTrue("install location was not created", getTargetPlatformInstallLocation().exists());
+		assertTrue("install location was not created", platformFiles.targetPlatformInstallLocation.exists());
 
 		final String[] argsSkipInstall = {
-				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
-				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--targetPlatformSkipInstall",
-				"--verbose",
+				// "--installMissingDependencies",
+				"--targetPlatformInstallLocation", platformFiles.targetPlatformInstallLocation.getAbsolutePath(),
 				"--projectlocations", wsRoot,
-				"-bt", BuildType.allprojects.toString()
+				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus statusSkipInstall = new N4jscBase().doMain(argsSkipInstall);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, statusSkipInstall.code);
-		assertTrue("install location still exists", getTargetPlatformInstallLocation().exists());
+		assertTrue("install location still exists", platformFiles.targetPlatformInstallLocation.exists());
 
 	}
 }

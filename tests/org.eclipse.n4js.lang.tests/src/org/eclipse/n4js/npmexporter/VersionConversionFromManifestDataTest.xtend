@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.npmexporter
 
+import java.util.List
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil
 import org.eclipse.n4js.n4mf.VersionConstraint
 import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil
-import java.util.List
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
@@ -73,7 +73,7 @@ class VersionConversionFromManifestDataTest {
 // test utils
 	private def fromDependency(CharSequence expected, CharSequence input) {
 		val dependency = input.toString.parseDependency.getAST;
-		val packageName = dependency.project.projectId;
+		val packageName = dependency.projectId;
 		val packageVersion = npmFormat(dependency.versionConstraint)
 		assertEquals(expected.toString, packageName + packageVersion)
 	}

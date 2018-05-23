@@ -225,7 +225,11 @@ export public class N4Injector{
      * @param delegate instance of N4Injector to which we are delegating creation of dependencies
      * @param cachedInstances cache with instances created in this injection phase
      */
-    private <T extends N4Object> internalCreate(ctor: type{T}, delegate: N4Injector, cachedInstances: Map<string, N4Object>): T {
+     // TODO GH-709 As a developer I need custom DI scopes
+     // https://github.com/eclipse/n4js/issues/709
+     // this method should be private again once
+     // support for custom scopes is added
+    public <T extends N4Object> internalCreate(ctor: type{T}, delegate: N4Injector, cachedInstances: Map<string, N4Object>): T {
         if(!ctor){
             //can happen if there is a load time cycle,
             //in which case our module loader
@@ -725,4 +729,3 @@ export public class N4Injector{
     }
 }
 
-/* -*- mode: typescript;-*- */

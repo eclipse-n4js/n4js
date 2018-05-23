@@ -8,10 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {AssertionError} from "org/eclipse/n4js/mangelhaft/assert/AssertionError"
-import {ErrorPrimitiveType} from "org/eclipse/n4js/mangelhaft/assert/ErrorPrimitiveType"
-import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet"
+import {AssertionError} from "org/eclipse/n4js/mangelhaft/assert/AssertionError";
 import {deepEqual} from "org/eclipse/n4js/mangelhaft/assert/DeepEqual";
+import {ErrorPrimitiveType} from "org/eclipse/n4js/mangelhaft/assert/ErrorPrimitiveType";
+import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet";
 
 function getTypeName(val): string {
     if (typeof val === "object") {
@@ -464,4 +464,3 @@ export public class Assert {
     }
 }
 
-/* -*- mode: javascript;-*- */

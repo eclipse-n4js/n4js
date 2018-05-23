@@ -42,7 +42,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
  * @model kind="package"
- *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4trs' rootExtendsClass='org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl' modelDirectory='/org.eclipse.n4js.ts.model/emf-gen' forceOverwrite='true' updateClasspath='false' complianceLevel='6.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.ts'"
+ *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4trs' rootExtendsClass='org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl' modelDirectory='/org.eclipse.n4js.ts.model/emf-gen' forceOverwrite='true' updateClasspath='false' complianceLevel='8.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.ts'"
  * @generated
  */
 public interface TypeRefsPackage extends EPackage {
@@ -2972,13 +2972,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = BASE_TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE = BASE_TYPE_REF_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -2987,7 +2996,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>Parameterized Type Ref</em>' class.
@@ -2996,7 +3005,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -3386,6 +3395,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -4987,6 +5005,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
 
 	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+
+	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6135,6 +6162,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
 
 	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+
+	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6476,6 +6512,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_FUNCTION_TYPE_REF__ARRAY_TYPE_LITERAL = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_FUNCTION_TYPE_REF__AST_NAMESPACE = VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -6891,6 +6936,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_LITERAL = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NAMESPACE = VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -7927,6 +7981,17 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getParameterizedTypeRef_ArrayTypeLiteral();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Ast Namespace</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace()
+	 * @see #getParameterizedTypeRef()
+	 * @generated
+	 */
+	EReference getParameterizedTypeRef_AstNamespace();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8897,7 +8962,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Parameterized Type Ref Iterable</em>'.
 	 * @see java.lang.Iterable
-	 * @model instanceClass="java.lang.Iterable<org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef>"
+	 * @model instanceClass="java.lang.Iterable&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;"
 	 * @generated
 	 */
 	EDataType getParameterizedTypeRefIterable();
@@ -9484,6 +9549,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = eINSTANCE.getParameterizedTypeRef_ArrayTypeLiteral();
+
+		/**
+		 * The meta object literal for the '<em><b>Ast Namespace</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PARAMETERIZED_TYPE_REF__AST_NAMESPACE = eINSTANCE.getParameterizedTypeRef_AstNamespace();
 
 		/**
 		 * The meta object literal for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute feature.

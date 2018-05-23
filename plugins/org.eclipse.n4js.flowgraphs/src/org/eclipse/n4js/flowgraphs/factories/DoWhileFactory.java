@@ -31,7 +31,7 @@ class DoWhileFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), doStmt);
 
 		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), doStmt);
-		Node bodyNode = DelegatingNodeFactory.create(astpp, NodeNames.BODY, doStmt, doStmt.getStatement());
+		Node bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, doStmt, doStmt.getStatement());
 		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, doStmt,
 				doStmt.getExpression());
 		Node conditionForkNode = new HelperNode(NodeNames.CONDITION_FORK, astpp.pos(), doStmt);
@@ -51,7 +51,7 @@ class DoWhileFactory {
 		cNode.setExitNode(exitNode);
 
 		// catch for short-circuits
-		conditionForkNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue));
+		bodyNode.addCatchToken(new CatchToken(ControlFlowType.IfTrue, ControlFlowType.LoopReenter));
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.IfFalse, ControlFlowType.LoopExit));
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(doStmt);

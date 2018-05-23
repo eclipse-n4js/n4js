@@ -44,7 +44,7 @@ new C1({});
 // XPECT noerrors --> ""
 new C1({y : 36});
 
-// XPECT errors --> "~Object is not a structural subtype of ~i~C2: missing setter y; y failed: non-optional writable field requires a readable field or a getter in subtype." at "{}"
+// XPECT errors --> "~Object is not a structural subtype of ~i~C2: missing getter y; y failed: non-optional writable field requires a readable field or a getter in subtype." at "{}"
 new C2({});
 // XPECT noerrors --> ""
 new C2({y : 36});

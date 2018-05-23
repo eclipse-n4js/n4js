@@ -51,6 +51,7 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.generator,
  org.eclipse.n4js.internal,
  org.eclipse.n4js.n4idl,
+ org.eclipse.n4js.n4idl.migrations,
  org.eclipse.n4js.n4idl.scoping,
  org.eclipse.n4js.n4idl.scoping.utils,
  org.eclipse.n4js.n4idl.versioning,
@@ -83,4 +84,4 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.validation.validators.utils,
  org.eclipse.n4js.xsemantics,
  org.eclipse.n4js.xsemantics.validation
-
+Automatic-Module-Name: org.eclipse.n4js

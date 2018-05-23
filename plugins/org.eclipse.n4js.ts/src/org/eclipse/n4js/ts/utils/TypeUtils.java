@@ -501,6 +501,189 @@ public class TypeUtils {
 	}
 
 	/**
+	 * Merges type modifiers of 'source' into 'target', taking into account 'target's current type modifiers and
+	 * assuming the type modification represented by the type modifiers in 'target' took place before the one
+	 * represented by the type modifiers in 'source'.
+	 * <p>
+	 * Type modifiers handled: {@link BaseTypeRef#setDynamic(boolean) dynamic},
+	 * {@link ParameterizedTypeRefStructural#setTypingStrategy(TypingStrategy) typingStrategy}.
+	 * <p>
+	 * This method will copy 'target' on demand, i.e. 'target' will be copied if and only if its type modifiers actually
+	 * change due to this operation. Returns 'target' unchanged if
+	 * <ol>
+	 * <li>the type modifiers in 'target' are the same before and after the merge operation, or
+	 * <li>the merge operation is not supported yet (e.g. merging a typing strategy into a type reference that does not
+	 * support structural typing).
+	 * </ol>
+	 *
+	 * @see #concatTypingStrategies(TypingStrategy, TypingStrategy)
+	 */
+	public static TypeArgument mergeTypeModifiers(TypeArgument target, TypeRef source) {
+		if (target instanceof Wildcard) {
+			return mergeTypeModifiers((Wildcard) target, source);
+		} else {
+			return mergeTypeModifiers((TypeRef) target, source);
+		}
+	}
+
+	/** Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef)}, but for the special case of {@link Wildcard}s. */
+	public static Wildcard mergeTypeModifiers(Wildcard target, TypeRef source) {
+		final TypeRef ub = target.getDeclaredOrImplicitUpperBound();
+		if (ub != null) {
+			final TypeRef ubMerged = mergeTypeModifiers(ub, source);
+			if (ubMerged != ub) {
+				target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+				target.setDeclaredUpperBound(ubMerged);
+			}
+		}
+		return target;
+	}
+
+	/** Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef)}, but for the special case of {@link TypeRef}s. */
+	public static TypeRef mergeTypeModifiers(TypeRef target, TypeRef source) {
+		if (target instanceof ExistentialTypeRef) {
+			final Wildcard wc = ((ExistentialTypeRef) target).getWildcard();
+			if (wc != null) {
+				final Wildcard wcMerged = mergeTypeModifiers(wc, source);
+				if (wcMerged != wc) {
+					target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+					((ExistentialTypeRef) target).setWildcard(wcMerged);
+				}
+			}
+			return target;
+		} else {
+			TypeRef result = target;
+			result = mergeTypingStrategies(result, source.getTypingStrategy());
+			result = mergeDynamicModifiers(result, source.isDynamic(), result != target);
+			return result;
+		}
+	}
+
+	// must adhere to the on-demand copy semantics specified in API doc of #mergeTypeModifiers(TypeRef, ...)
+	private static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source) {
+		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source);
+		if (combined != target.getTypingStrategy()) {
+			if (target instanceof ParameterizedTypeRef) {
+				final ParameterizedTypeRefStructural ptrs = copyToParameterizedTypeRefStructural(
+						(ParameterizedTypeRef) target);
+				ptrs.setTypingStrategy(combined);
+				target = ptrs;
+			} else {
+				// TODO IDE-2965 support for other kinds of type references
+				// (except ExistentialTypeRef, which is handled up-front in #mergeTypeModifiers(TypeRef, TypeRef))
+			}
+		}
+		return target;
+	}
+
+	// must adhere to the on-demand copy semantics specified in API doc of #mergeTypeModifiers(TypeRef, ...)
+	private static TypeRef mergeDynamicModifiers(TypeRef target, boolean source, boolean targetAlreadyCopied) {
+		final boolean combined = target.isDynamic() || source;
+		if (combined != target.isDynamic()) {
+			if (target instanceof BaseTypeRef) {
+				if (!targetAlreadyCopied) {
+					target = copy(target);
+				}
+				((BaseTypeRef) target).setDynamic(combined);
+			} else {
+				// TODO IDE-2965 support for other kinds of type references
+				// (except ExistentialTypeRef, which is handled up-front in #mergeTypeModifiers(TypeRef, TypeRef))
+			}
+		}
+		return target;
+	}
+
+	/**
+	 * Concatenates the two given typing strategies, forming a new typing strategy that represents this concatenation.
+	 * Order matters, e.g. ~i~(~w~C) results to ~i~C whereas ~w~(~i~C) results to ~∅~C.
+	 */
+	public static TypingStrategy concatTypingStrategies(TypingStrategy first, TypingStrategy second) {
+		if (first == null) {
+			return second;
+		} else if (second == null) {
+			return first;
+		}
+		switch (first) {
+		case DEFAULT:
+		case NOMINAL:
+			return second;
+		case EMPTY:
+			return TypingStrategy.EMPTY;
+		case STRUCTURAL:
+			switch (second) {
+			case DEFAULT:
+				return first;
+			case NOMINAL:
+				return first; // disallow going back to nominal!
+			case EMPTY:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL:
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_READ_ONLY_FIELDS:
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return second;
+			}
+			break;
+		case STRUCTURAL_FIELDS:
+			switch (second) {
+			case DEFAULT:
+				return first;
+			case NOMINAL:
+				return first; // disallow going back to nominal!
+			case EMPTY:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL:
+				return TypingStrategy.STRUCTURAL_FIELDS;
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_READ_ONLY_FIELDS:
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return second;
+			}
+			break;
+		case STRUCTURAL_WRITE_ONLY_FIELDS:
+			switch (second) {
+			case DEFAULT:
+				return first;
+			case NOMINAL:
+				return first; // disallow going back to nominal!
+			case EMPTY:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL:
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+				return TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS;
+			case STRUCTURAL_READ_ONLY_FIELDS:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+			}
+			break;
+		case STRUCTURAL_READ_ONLY_FIELDS:
+		case STRUCTURAL_FIELD_INITIALIZER:
+			switch (second) {
+			case DEFAULT:
+				return first;
+			case NOMINAL:
+				return first; // disallow going back to nominal!
+			case EMPTY:
+				return TypingStrategy.EMPTY;
+			case STRUCTURAL:
+			case STRUCTURAL_FIELDS:
+			case STRUCTURAL_READ_ONLY_FIELDS:
+				return first;
+			case STRUCTURAL_WRITE_ONLY_FIELDS:
+			case STRUCTURAL_FIELD_INITIALIZER:
+				return TypingStrategy.EMPTY;
+			}
+			break;
+		}
+		throw new UnsupportedOperationException(
+				"unsupported combination of typing strategies: first==" + first + ", second==" + second);
+	}
+
+	/**
 	 * Copies all properties related to structural typing from 'src' to 'dest', taking care of the special handling
 	 * required for 'astStructuralTypeRef'.
 	 * <p>

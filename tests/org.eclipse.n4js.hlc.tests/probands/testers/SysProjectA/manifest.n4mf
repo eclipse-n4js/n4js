@@ -16,9 +16,6 @@ ProjectType: library
 ProjectVersion: 0.0.1-SNAPSHOT
 Output: "src-gen"
 Sources {
-	source {
-		"src"
-	}
 	test {
 		'test'
 	}

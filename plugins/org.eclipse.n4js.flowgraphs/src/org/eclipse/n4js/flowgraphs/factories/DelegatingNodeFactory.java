@@ -17,13 +17,26 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * Factory class to create Delegating nodes. It also re-enters the AST iterator.
+ * <p>
+ * Reasoning of method {@link #createOrHelper(ReentrantASTIterator, String, ControlFlowElement, ControlFlowElement)
+ * createOrHelper}
+ * <ol>
+ * <li/>Since the flow graph is created from the AST, nodes are only created iff an AST node exists (e.g. if there is no
+ * else-node in the AST, the flow graph does not have a corresponding node). In other words, node are not created if the
+ * corresponding AST element is missing.
+ * <li/>After the nodes in the flow graph have been created, they are connected by edges. These connection procedures
+ * assume a flow graph that is based on a valid AST.
+ * <li/>However, to simplify this edge creation, it is convenient to have some pseudo nodes are created even when the
+ * corresponding AST element is missing. This is in particular true for broken/invalid ASTs where some arbitrary AST
+ * elements are missing.
+ * </ol>
  */
 public class DelegatingNodeFactory {
 
 	/**
 	 * Returns control flow after the delegate {@link ControlFlowElement} was visited.
 	 *
-	 * @return a new {@link DelegatingNode} instance
+	 * @return a new {@link DelegatingNode} instance, iff the delegate is non-null.
 	 */
 	static DelegatingNode create(ReentrantASTIterator astpp, String name, ControlFlowElement parent,
 			ControlFlowElement delegate) {
@@ -40,7 +53,7 @@ public class DelegatingNodeFactory {
 	/**
 	 * Returns control flow after the delegate {@link ControlFlowElement} was visited.
 	 *
-	 * @return a new {@link DelegatingNode} instance
+	 * @return a new {@link DelegatingNode} instance. Iff the delegate is null, a {@link HelperNode} is returned.
 	 */
 	static Node createOrHelper(ReentrantASTIterator astpp, String name, ControlFlowElement parent,
 			ControlFlowElement delegate) {

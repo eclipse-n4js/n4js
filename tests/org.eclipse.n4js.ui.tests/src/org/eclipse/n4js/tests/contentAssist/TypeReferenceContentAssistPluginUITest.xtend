@@ -19,13 +19,11 @@ import org.junit.Ignore
 class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTest {
 
 	@Test def void testTypeProposals_ignoreCase() {
-		//TODO IDE-1869 should be ...assertText("MyFirstClass", "MySecondClass");
-		newBuilder().append("var varName: my").assertText("path.Libs.MyFirstClass", "path.Libs.MySecondClass");
+		newBuilder().append("var varName: my").assertText("MyFirstClass", "MySecondClass");
 	}
 
 	@Test def void testTypeProposals_importAdded() {
-		//TODO IDE-1869 should be ...assertProposal("MyFirstClass")
-		newBuilder().append("var x: My").assertProposal("path.Libs.MyFirstClass").withDisplayString('MyFirstClass - path/Libs').apply.expectContent('''
+		newBuilder().append("var x: My").assertProposal("MyFirstClass").withDisplayString('MyFirstClass - path/Libs').apply.expectContent('''
 			import {MyFirstClass} from "path/Libs";
 			var x: MyFirstClass''')
 	}
@@ -35,7 +33,7 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 			import * as L from 'path/Libs'
 
 			var varName: L.MyF<|>
-		''').assertProposalAtCursor("L.MyFirstClass").withDisplayString('MyFirstClass - L').apply.expectContent('''
+		''').assertProposalAtCursor("MyFirstClass").withDisplayString('MyFirstClass - path/Libs').apply.expectContent('''
 			import * as L from 'path/Libs'
 
 			var varName: L.MyFirstClass''');
@@ -46,19 +44,18 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 			import * as L from 'path/Libs'
 
 			var varName: MyF<|>
-		''').assertProposalAtCursor("L.MyFirstClass").withDisplayString('MyFirstClass - L').apply.expectContent('''
+		''').assertProposalAtCursor("MyFirstClass").withDisplayString('MyFirstClass - path/Libs').apply.expectContent('''
 			import * as L from 'path/Libs'
 
 			var varName: L.MyFirstClass''');
 	}
 
 	@Test def void testTypeProposals_importAdjusted() {
-		//TODO IDE-1869 should be ...assertProposal("MyFirstClass")
 		newBuilder().append('''
 			import {MySecondClass} from 'path/Libs'
 
 			var varName: MyF<|>
-		''').assertProposalAtCursor("path.Libs.MyFirstClass").withDisplayString('MyFirstClass - path/Libs').apply.expectContent(
+		''').assertProposalAtCursor("MyFirstClass").withDisplayString('MyFirstClass - path/Libs').apply.expectContent(
 // original expectation:
 //		'''
 //			import { MySecondClass , MyFirstClass } from 'path/Libs'
@@ -76,12 +73,11 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 
 	@Ignore("One comment is lost by the serializer: in front of 'from'")
 	@Test def void testTypeProposals_commentsPreserved() {
-		//TODO IDE-1869 should be ...assertProposal("MyFirstClass")
 		newBuilder().append('''
 			import /* a */ { /* b */ MySecondClass /* c */ } /* d */ from 'path/Libs'
 
 			var varName: MyF<|>
-		''').assertProposalAtCursor("path.Libs.MyFirstClass").withDisplayString('MyFirstClass - path.Libs').apply.expectContent('''
+		''').assertProposalAtCursor("MyFirstClass").withDisplayString('MyFirstClass - path.Libs').apply.expectContent('''
 			import /* a */ { /* b */ MySecondClass /* c */ , MyFirstClass } /* d */ from 'path/Libs'
 
 			var varName: MyFirstClass<|>
@@ -92,8 +88,8 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 		newBuilder().append('''
 			/* some comment */
 			var varName: MLiFi''').applyProposal("path.MoreLibs.MoreLibFirstClass").expectContent('''
-			import {MoreLibFirstClass} from "path/MoreLibs";
 			/* some comment */
+			import {MoreLibFirstClass} from "path/MoreLibs";
 			var varName: MoreLibFirstClass''')
 	}
 
@@ -154,9 +150,8 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 	}
 
 	@Test def void testTypeProposals_aliasProposed() {
-			//TODO IDE-1869 should be ...assertText("MyRenamedClass", "MyFirstClass", "MySecondClass")
 		newBuilder().append("import {MyFirstClass as MyRenamedClass} from 'path/Libs' var varName: my")
-			.assertText("MyRenamedClass", "path.Libs.MyFirstClass", "path.Libs.MySecondClass");
+			.assertText("MyRenamedClass", "MyFirstClass", "MySecondClass");
 	}
 
 	@Test def void testTypeProposals_aliasExplained() {

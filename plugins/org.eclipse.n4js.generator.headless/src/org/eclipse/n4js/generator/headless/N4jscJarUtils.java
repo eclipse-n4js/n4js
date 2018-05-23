@@ -116,10 +116,9 @@ public class N4jscJarUtils {
 		cmdline.addAll(javaOpts);
 		cmdline.addAll(Arrays.asList(
 				"-jar", getAbsoluteRunnableN4jsc().getAbsolutePath(),
-				// "--debug", "-v", // generate more output
-				"-bt", "allprojects"));
+				"--buildType", "allprojects"));
 		cmdline.addAll(n4jscOpts);
-		cmdline.add("-pl");
+		cmdline.add("--projectlocations");
 		cmdline.addAll(workspaceRootsAbsolute);
 
 		ProcessBuilder pb = new ProcessBuilder(cmdline);

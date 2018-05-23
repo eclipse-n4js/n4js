@@ -62,7 +62,7 @@ class N4JSScopingTestWithIndexTest {
 			"src/org/eclipse/n4js/tests/scoping/Client.n4js",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS" astMD5="7db65ac965ae43f2b3673735d7296d9b">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
@@ -72,7 +72,7 @@ class N4JSScopingTestWithIndexTest {
 				    <astElement href="#/0/@scriptElements.0/@exportedElement"/>
 				  </topLevelTypes>
 				</types:TModule>
-			''');
+			''', "7db65ac965ae43f2b3673735d7296d9b");
 	}
 
 	/*
@@ -85,7 +85,7 @@ class N4JSScopingTestWithIndexTest {
 			"SupplierWithBuiltIn", "src/org/eclipse/n4js/tests/scoping/ClientWithBuiltIn.n4js",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS" astMD5="7a7bda036db41c8e954e99535f496cff">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="SupplierWithBuiltIn" exportedName="SupplierWithBuiltIn">
 				    <ownedMembers xsi:type="types:TField" name="s" declaredMemberAccessModifier="public">
@@ -101,11 +101,11 @@ class N4JSScopingTestWithIndexTest {
 				    <astElement href="#/0/@scriptElements.0/@exportedElement"/>
 				  </topLevelTypes>
 				</types:TModule>
-			''');
+			''', "7a7bda036db41c8e954e99535f496cff");
 	}
 
 	def void doTestImportExportMemberDeserialize(String supplierFileName, String supplierClassName,
-		String clientFileName, String supplierUserData) {
+		String clientFileName, String supplierUserData, String astMD5) {
 		var rs = resourceSetProvider.get
 
 		val supplierJS = rs.URIConverter.normalize(URI.createURI(supplierFileName))
@@ -124,8 +124,13 @@ class N4JSScopingTestWithIndexTest {
 
 		val eoDescs = resourceDescriptions.getResourceDescription(supplierJS).exportedObjects
 		assertEquals("Wrong number, found: " + eoDescs.map[it.name], 2, eoDescs.size)
+		
+		
+		val moduleDescription = eoDescs.iterator.toList.findFirst[name.lastSegment == supplierClassName];
 		assertEquals("Stored user data", supplierUserData, UserdataMapper.getDeserializedModuleFromDescriptionAsString(
-				eoDescs.iterator.toList.findFirst[name.lastSegment == supplierClassName], supplierJS))
+				moduleDescription, supplierJS))
+		assertEquals("Stored astMD5 hash",
+				astMD5, moduleDescription.getUserData(UserdataMapper.USERDATA_KEY_AST_MD5))
 //			eoDescs.iterator.toList.findFirst[name.lastSegment == supplierClassName].getUserData(
 //				UserdataMapper::USERDATA_KEY_SERIALIZED_SCRIPT))
 

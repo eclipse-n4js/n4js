@@ -19,12 +19,15 @@ import java.util.concurrent.atomic.AtomicReference
 import org.eclipse.core.resources.IMarker
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.OperationCanceledException
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.jface.dialogs.ErrorDialog
 import org.eclipse.jface.dialogs.ProgressMonitorDialog
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.binaries.IllegalBinaryStateException
-import org.eclipse.n4js.external.NpmManager
+import org.eclipse.n4js.external.LibraryManager
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ModifiableElement
@@ -40,6 +43,9 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4mf.ProjectDependency
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.ProjectReference
+import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -53,16 +59,19 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.binaries.IllegalBinaryStateDialog
 import org.eclipse.n4js.ui.changes.IChange
+import org.eclipse.n4js.ui.changes.ManifestChangeProvider
 import org.eclipse.n4js.ui.changes.SemanticChangeProvider
 import org.eclipse.n4js.ui.internal.N4JSActivator
 import org.eclipse.n4js.ui.labeling.helper.ImageNames
 import org.eclipse.n4js.ui.quickfix.TopLevelVisibilityFixProvider.TopLevelVisibilityFix
 import org.eclipse.n4js.ui.utils.ImportUtil
 import org.eclipse.n4js.ui.utils.UIUtils
+import org.eclipse.n4js.utils.StatusHelper
+import org.eclipse.n4js.utils.StatusUtils
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.N4JSLanguageConstants
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
@@ -71,12 +80,10 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
-import static org.eclipse.jface.dialogs.MessageDialog.openError
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
-import org.eclipse.n4js.n4mf.SimpleProjectDependency
 
 /**
  * N4JS quick fixes.
@@ -90,6 +97,9 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	extension ImportUtil
 
 	@Inject
+	extension StatusHelper
+
+	@Inject
 	extension QuickfixUtil.IssueUserDataKeysExtension
 
 	@Inject
@@ -101,13 +111,16 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Inject
 	protected JavaScriptVariantHelper jsVariantHelper;
 
+	@Inject
+	private LibraryManager libraryManager;
+
 	/** Retrieve annotation constants from AnnotationDefinition */
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
 	static final String FINAL_ANNOTATION = AnnotationDefinition.FINAL.name;
 
 	@Inject
-	NpmManager npmManager;
+	LibraryManager npmManager;
 
 
 	// EXAMPLE FOR STYLE #1 (lambda expression)
@@ -660,16 +673,14 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			var boolean multipleInvocations;
 
 			override Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				multipleInvocations = false;
-				invokeNpmManager(element, !multipleInvocations);
+				invokeNpmManager(element);
 			}
 			override Collection<? extends IChange> computeOneOfMultipleChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
-				multipleInvocations = true;
-				invokeNpmManager(element, !multipleInvocations);
+				invokeNpmManager(element);
 			}
 			override void computeFinalChanges() throws Exception {
 				if (multipleInvocations) {
-					new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
+					new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
 						try {
 							ResourcesPlugin.getWorkspace().build(CLEAN_BUILD, monitor);
 						} catch (IllegalBinaryStateException e) {
@@ -679,40 +690,41 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				}
 			}
 
-			def Collection<? extends IChange> invokeNpmManager(EObject element, boolean triggerCleanbuild) throws Exception {
-				val dependency = element as SimpleProjectDependency;
-				val packageName = dependency.project.projectId;
+			def Collection<? extends IChange> invokeNpmManager(EObject element) throws Exception {
+				val dependency = element as ProjectReference;
+				val packageName = dependency.projectId;
 				val packageVersion = if (dependency instanceof ProjectDependency) {
 						dependency.versionConstraint.npmFormat;
 					} else {
 						"";
 					};
 
-				val errorStatusRef = new AtomicReference;
 				val illegalBinaryExcRef = new AtomicReference
+				val multiStatus = createMultiStatus("Installing npm '" + packageName + "'.");
 
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<String, String> package = Collections.singletonMap(packageName, packageVersion);
-						val status = npmManager.installDependencies(package, monitor, triggerCleanbuild);
-						if (!status.OK) {
-							errorStatusRef.set(status);
-						}
+						multiStatus.merge(npmManager.installNPMs(package, monitor));
+
 					} catch (IllegalBinaryStateException e) {
 						illegalBinaryExcRef.set(e);
+
+					} catch (Exception e) {
+						val msg = "Error while uninstalling npm dependency: '" + packageName + "'.";
+						multiStatus.merge(createError(msg, e));
 					}
 				]);
 
 				if (null !== illegalBinaryExcRef.get) {
 					new IllegalBinaryStateDialog(illegalBinaryExcRef.get).open;
-				} else if (null !== errorStatusRef.get) {
-					N4JSActivator.getInstance().getLog().log(errorStatusRef.get());
+
+				} else if (!multiStatus.isOK()) {
+					N4JSActivator.getInstance().getLog().log(multiStatus);
 					UIUtils.display.asyncExec([
-						openError(
-							UIUtils.shell,
-							"npm Install Failed",
-							"Error while installing '" + packageName + "' npm package." +
-							"\nPlease check your Error Log view for the detailed npm log about the failure.");
+						val title = "NPM Install Failed";
+						val descr = StatusUtils.getErrorMessage(multiStatus, true);
+						ErrorDialog.openError(UIUtils.shell, title, descr, multiStatus);
 					]);
 				}
 
@@ -722,4 +734,68 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 		acceptor.accept(issue, 'Install npm package to workspace', 'Download and install missing dependency from npm.', null, modification);
 	}
+	
+	/**
+	 * N4IDL-related quick-fix which adds a "@VersionAware" annotation to 
+	 * classes which do not declare an explicit type version.
+	 */
+	@Fix(IssueCodes.IDL_VERSIONED_ELEMENT_MISSING_VERSION)
+	def addVersionAwareAnnotation(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Declare this type as @VersionAware', 'Add @VersionAware annotation.', ImageNames.ANNOTATION_ADD) [ context, marker, offset, length, element |
+			return #[
+				insertLineAbove(context.xtextDocument, offset, "@"+AnnotationDefinition.VERSION_AWARE.name, true)
+			];
+		]
+	}
+
+
+	@Fix(IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING)
+	def changeProjectTypeToValidation(Issue issue, IssueResolutionAcceptor acceptor) {
+		// <--- do pre-processing here (if required)
+		val validationPT = ProjectType.VALIDATION.getName.toLowerCase;
+		val title = 'Change project type to ' + validationPT + '';
+		val descr = 'The project type \'' + validationPT + '\' does not generate code. Hence, output and source folders can be nested.';
+		acceptor.accept(issue, title, descr, null, new N4Modification() {
+			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				val resource = element.eResource;
+				val prjDescr = EcoreUtil2.getContainerOfType(element, ProjectDescription);
+				return #[ManifestChangeProvider.setProjectType(resource, validationPT, prjDescr)];
+			}
+			override supportsMultiApply() {
+				return false;
+			}
+			override isApplicableTo(IMarker marker) {
+				return true;
+			}
+		});
+	}
+
+	@Fix(IssueCodes.NODE_MODULES_OUT_OF_SYNC)
+	def synchronizeIndexToNodeModules(Issue issue, IssueResolutionAcceptor acceptor) {
+		val title = "Synchronize N4JS Index to node_modules folder";
+		val descr = "This quickfix will scan and compare the node_modules folder and the N4JS Index to adjust the index to the node_modules folder.";
+		acceptor.accept(issue, title, descr, null, new N4Modification() {
+			override computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				new ProgressMonitorDialog(UIUtils.shell).run(true, true, [monitor |
+					try {
+						libraryManager.synchronizeNpms(monitor);
+					} catch (InterruptedException e) {
+						// canceled by user
+					} catch (OperationCanceledException e) {
+						// canceled by user
+					} catch (IllegalBinaryStateException e) {
+					} catch (CoreException e) {
+					}
+				]);
+				return #[];
+			}
+			override supportsMultiApply() {
+				return false;
+			}
+			override isApplicableTo(IMarker marker) {
+				return true;
+			}
+		});
+	}
+
 }

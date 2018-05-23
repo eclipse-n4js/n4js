@@ -3,17 +3,17 @@
 (function(System) {
 	'use strict';
 	System.register([
+		'n4js.lang/src-gen/n4js/lang/N4Injector',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/InstrumentedTest',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestExecutor',
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroups',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestFunctionType',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor',
-		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy',
-		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet',
-		'n4js.lang/src-gen/n4js/lang/N4Injector'
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy'
 	], function($n4Export) {
-		var InstrumentedTest, TestExecutor, ResultGroup, ResultGroups, TestFunctionType, TestMethodDescriptor, TestSpy, PreconditionNotMet, N4Injector, TestController;
+		var N4Injector, InstrumentedTest, TestExecutor, PreconditionNotMet, ResultGroup, ResultGroups, TestFunctionType, TestMethodDescriptor, TestSpy, MAX_GROUPS_PER_TEST_BATCH, notNull, TestController;
 		TestController = function TestController() {
 			this.spy = undefined;
 			this.executor = undefined;
@@ -24,12 +24,20 @@
 		return {
 			setters: [
 				function($exports) {
+					// n4js.lang/src-gen/n4js/lang/N4Injector
+					N4Injector = $exports.N4Injector;
+				},
+				function($exports) {
 					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/InstrumentedTest
 					InstrumentedTest = $exports.InstrumentedTest;
 				},
 				function($exports) {
 					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestExecutor
 					TestExecutor = $exports.TestExecutor;
+				},
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
+					PreconditionNotMet = $exports.PreconditionNotMet;
 				},
 				function($exports) {
 					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup
@@ -50,100 +58,129 @@
 				function($exports) {
 					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy
 					TestSpy = $exports.TestSpy;
-				},
-				function($exports) {
-					// org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet
-					PreconditionNotMet = $exports.PreconditionNotMet;
-				},
-				function($exports) {
-					// n4js.lang/src-gen/n4js/lang/N4Injector
-					N4Injector = $exports.N4Injector;
 				}
 			],
 			execute: function() {
+				MAX_GROUPS_PER_TEST_BATCH = 10;
+				notNull = (thing)=>thing !== null;
 				$makeClass(TestController, N4Object, [], {
 					runGroups: {
-						value: async function runGroups___n4(testInfoObject, numTests, scope) {
-							if (!testInfoObject) {
-								throw new Error("TestController::runGroups called with a null testInfoObject");
+						value: async function runGroups___n4(testCatalog, numTests, scope) {
+							if (!testCatalog) {
+								throw new Error("TestController::runGroups called with a null testCatalog");
 							}
-							let executor = this.executor, reses = [], res, testInfos = testInfoObject.testDescriptors, batchedTestInfos = [], ii = 0, testInfosBatch, instrumentedTestsBatch2d, instrumentedTestsBatch;
-							;
-							if (numTests === undefined) {
-								numTests = testInfoObject.testDescriptors.reduce(function(acc, info) {
-									return acc + info.testMethods.length;
-								}, 0);
-							}
-							testInfoObject.testDescriptors = testInfoObject.testDescriptors.sort((x, y)=>{
-								let xVal = x.fqn ? x.fqn : x.module, yVal = y.fqn ? y.fqn : y.module;
+							const testInfos = testCatalog.testDescriptors.sort((x, y)=>{
+								let xVal = x.fqn ? x.fqn : x.module;
+								let yVal = y.fqn ? y.fqn : y.module;
 								return xVal.localeCompare(yVal);
 							});
+							if (numTests === undefined) {
+								numTests = testInfos.reduce((acc, info)=>acc + info.testMethods.length, 0);
+							}
 							try {
 								await this.spy.testingStarted.dispatch([
 									testInfos.length,
-									testInfoObject.sessionId,
+									testCatalog.sessionId,
 									numTests
 								]);
 							} catch(ex) {
 								console.log("testingStarted.dispatch is bad", ex);
 							}
-							for(ii = 0;ii < testInfos.length;ii += TestController.MAX_GROUPS_PER_TEST_BATCH) {
-								batchedTestInfos.push(testInfos.slice(ii, ii + TestController.MAX_GROUPS_PER_TEST_BATCH));
-							}
-							for(ii = 0, instrumentedTestsBatch = [];ii < batchedTestInfos.length;++ii, instrumentedTestsBatch = []) {
-								testInfosBatch = batchedTestInfos[ii];
-								try {
-									instrumentedTestsBatch2d = (await Promise.resolve(await Promise.all(testInfosBatch.map(this.instrument.bind(this)).filter(function(test) {
-										return test !== null;
-									}))));
-									instrumentedTestsBatch = (Array.prototype.concat.apply([], instrumentedTestsBatch2d));
-									res = await executor.runTestsAsync(instrumentedTestsBatch, scope);
-									reses.push(res);
-								} catch(er) {
-									console.error(er);
-									throw er;
-								}
-							}
-							;
-							res = ResultGroups.concatArray(reses);
+							const res = await this.runInBatches(testInfos, scope);
 							await this.spy.testingFinished.dispatch([
 								res
 							]);
 							return res;
 						}
 					},
+					runInBatches: {
+						value: async function runInBatches___n4(testInfos, scope) {
+							let res;
+							const batchedTestInfos = [];
+							for(let batchedCount = 0;batchedCount < testInfos.length;batchedCount += MAX_GROUPS_PER_TEST_BATCH) {
+								const batch = testInfos.slice(batchedCount, batchedCount + MAX_GROUPS_PER_TEST_BATCH);
+								batchedTestInfos.push(batch);
+							}
+							const mapper = async(testInfo)=>await this.instrument(testInfo);
+							const flatten = (arr)=>Array.prototype.concat.apply([], arr);
+							const instrumentBatch = async function(testInfosBatch) {
+								const instrumentedBatches = testInfosBatch.map(mapper).filter(notNull);
+								const instrumentedTestsBatch1d = await Promise.all(instrumentedBatches);
+								const instrumentedTestsBatch2d = await Promise.resolve(instrumentedTestsBatch1d);
+								const instrumentedTestsBatch = flatten(instrumentedTestsBatch2d);
+								return instrumentedTestsBatch;
+							};
+							const resultGroups = [];
+							for(let numOfBatches = 0;numOfBatches < batchedTestInfos.length;++numOfBatches) {
+								try {
+									const testInfosBatch = batchedTestInfos[numOfBatches];
+									const instrumentedTestsBatch = await instrumentBatch(testInfosBatch);
+									res = await this.executor.runTestsAsync(instrumentedTestsBatch, scope);
+									resultGroups.push(res);
+								} catch(er) {
+									console.error(er);
+									throw er;
+								}
+							}
+							res = ResultGroups.concatArray(resultGroups);
+							return res;
+						}
+					},
+					instrument: {
+						value: async function instrument___n4(info) {
+							let testClasses;
+							const parts = info.fqn.split("/");
+							const ctorName = parts.pop();
+							const moduleName = parts.join("/");
+							try {
+								const groupModule = System.throwPendingError(await System.import(info.origin + "/" + moduleName));
+								testClasses = [
+									groupModule[ctorName]
+								];
+							} catch(ex) {
+								await this.errorGroup(info, info.origin + "/" + moduleName, null, ex);
+								return null;
+							}
+							if (!testClasses) {
+								await this.errorGroup(info, info.origin + "/" + parts.join("/"));
+								return null;
+							}
+							let instrumentedTests = [];
+							for(const testClass of testClasses) {
+								if (!testClass) {
+									await this.errorGroup(info, info.origin + "/" + moduleName, null, new Error("Empty object loaded (is the test class exported?)"));
+									continue;
+								}
+								try {
+									const testInjector = this.getTestInjector(testClass);
+									let classITO = InstrumentedTest.getInstrumentedTest(testClass, info, testInjector, this);
+									instrumentedTests.push(classITO);
+								} catch(ex2) {
+									const stubTestInstrumentationError = new InstrumentedTest(testClass, info).setTestObject(new N4Object()).setError(ex2);
+									instrumentedTests.push(stubTestInstrumentationError);
+								}
+							}
+							const result = (await Promise.all(instrumentedTests)).filter(notNull);
+							return result;
+						}
+					},
 					errorGroup: {
 						value: async function errorGroup___n4(info, loadPath, testObject, originalError) {
-							let error = originalError ? originalError : new Error("could not load test " + loadPath), that = this, testResult, testResults = [], unknownTest = new TestMethodDescriptor({
-								name: "",
-								type: TestFunctionType.TEST,
-								value: function() {}
-							});
-							;
 							if (!testObject) {
-								testObject = new InstrumentedTest();
-								info.module = info.module || "";
-								info.fqn = info.fqn || info.module.replace(/\//g, ".") + ".*";
-								testObject.load(N4Object, info).setTestObject(new N4Object());
-								testObject.tests = info.testMethods ? info.testMethods.map(function(methName) {
-									return new TestMethodDescriptor({
-										name: methName,
-										type: TestFunctionType.TEST,
-										value: function() {}
-									});
-								}) : [
-									unknownTest
-								];
+								testObject = this.getInstrumentedTestStub(info);
 							}
 							await this.spy.groupStarted.dispatch([
 								testObject
 							]);
-							for(let test of testObject.tests) {
+							const testResults = [];
+							const that = this;
+							for(const test of testObject.tests) {
 								await that.spy.testStarted.dispatch([
 									testObject,
 									test
 								]);
-								testResult = TestExecutor.generateFailureTestResult(error, "could not load test " + loadPath);
+								const error = originalError ? originalError : new Error("could not load test " + loadPath);
+								const testResult = TestExecutor.generateFailureTestResult(error, "could not load test " + loadPath);
 								testResults.push(testResult);
 								await that.spy.testFinished.dispatch([
 									testObject,
@@ -158,65 +195,60 @@
 							return true;
 						}
 					},
-					instrument: {
-						value: async function instrument___n4(info) {
-							let parts, ctorName, groupModule, testClasses, testClass, instrumentedTestObjects = [], moduleName;
-							;
-							parts = info.fqn.split("/");
-							ctorName = parts.pop();
-							moduleName = parts.join("/");
-							try {
-								groupModule = System.throwPendingError(await System.import(info.origin + "/" + moduleName));
-							} catch(ex) {
-								await this.errorGroup(info, info.origin + "/" + moduleName, null, ex);
-								return null;
-							}
-							testClasses = [
-								groupModule[ctorName]
-							];
-							if (testClasses) {
-								instrumentedTestObjects = [];
-								for(testClass of testClasses) {
-									if (!testClass) {
-										await this.errorGroup(info, info.origin + "/" + moduleName, null, new Error("Empty object loaded (is the test class exported?)"));
-										continue;
-									} else {
-										try {
-											let diClass = testClass;
-											let testInjector;
-											let testType = testClass.n4type;
-											for(;testType;testType = testType.n4superType, diClass = Object.getPrototypeOf(diClass)) {
-												if (testType.allAnnotations("GenerateInjector").length) {
-													if (testType.allAnnotations("WithParentInjector").length) {
-														if (!this.injector.canBeParentOf(diClass)) {
-															throw new PreconditionNotMet("Test called with incompatible parent injector");
-														}
-														testInjector = N4Injector.of.call(N4Injector, diClass, this.injector);
-													} else {
-														testInjector = N4Injector.of.call(N4Injector, diClass);
-													}
-													break;
-												}
-											}
-											if (!testType) {
-												testInjector = this.injector;
-											}
-											let classITO = InstrumentedTest.getInstrumentedTest(testClass, info, testInjector);
-											instrumentedTestObjects.push(classITO);
-										} catch(ex2) {
-											instrumentedTestObjects.push(new InstrumentedTest(testClass, info).setTestObject(new N4Object()).setError(ex2));
-										}
-									}
-								}
+					getInstrumentedTestStub: {
+						value: function getInstrumentedTestStub___n4(info) {
+							const testObject = new InstrumentedTest();
+							info.module = info.module || "";
+							info.fqn = info.fqn || info.module.replace(/\//g, ".") + ".*";
+							testObject.load(N4Object, info).setTestObject(new N4Object());
+							if (info.testMethods) {
+								testObject.tests = info.testMethods.map((methName)=>new TestMethodDescriptor({
+									name: methName,
+									type: TestFunctionType.TEST,
+									value: function() {}
+								}));
 							} else {
-								await this.errorGroup(info, info.origin + "/" + parts.join("/"));
-								return null;
+								testObject.tests = [
+									new TestMethodDescriptor({
+										name: "",
+										type: TestFunctionType.TEST,
+										value: function() {}
+									})
+								];
 							}
-							let arr = (await Promise.all(instrumentedTestObjects)).filter((item)=>item !== null);
-							return arr;
+							return testObject;
+						}
+					},
+					getTestInjector: {
+						value: function getTestInjector___n4(testClass) {
+							let testInjector;
+							let diClass = testClass;
+							let testType = testClass.n4type;
+							while(testType) {
+								if (testType.hasAnnotation("GenerateInjector")) {
+									if (testType.hasAnnotation("WithParentInjector")) {
+										if (!this.injector.canBeParentOf(diClass)) {
+											throw new PreconditionNotMet("Test called with incompatible parent injector");
+										}
+										testInjector = N4Injector.of(diClass, this.injector);
+									} else {
+										testInjector = N4Injector.of(diClass);
+									}
+									break;
+								}
+								testType = testType.n4superType;
+								diClass = Object.getPrototypeOf(diClass);
+							}
+							if (!testType) {
+								testInjector = this.injector;
+							}
+							return testInjector;
 						}
 					},
 					reporters: {
+						get: function getReporters___n4() {
+							return this.reportersVal;
+						},
 						set: function setReporters___n4(reporters) {
 							reporters.forEach(function(reporter) {
 								let dummy = reporter.register();
@@ -241,12 +273,7 @@
 						value: undefined,
 						writable: true
 					}
-				}, {
-					MAX_GROUPS_PER_TEST_BATCH: {
-						value: undefined,
-						writable: true
-					}
-				}, function(instanceProto, staticProto) {
+				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestController',
 						origin: 'org.eclipse.n4js.mangelhaft',
@@ -254,11 +281,6 @@
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],
 						ownedMembers: [
-							new N4DataField({
-								name: 'MAX_GROUPS_PER_TEST_BATCH',
-								isStatic: true,
-								annotations: []
-							}),
 							new N4DataField({
 								name: 'spy',
 								isStatic: false,
@@ -296,6 +318,12 @@
 							}),
 							new N4Accessor({
 								name: 'reporters',
+								getter: true,
+								isStatic: false,
+								annotations: []
+							}),
+							new N4Accessor({
+								name: 'reporters',
 								getter: false,
 								isStatic: false,
 								annotations: []
@@ -307,15 +335,33 @@
 								annotations: []
 							}),
 							new N4Method({
-								name: 'errorGroup',
+								name: 'runInBatches',
 								isStatic: false,
-								jsFunction: instanceProto['errorGroup'],
+								jsFunction: instanceProto['runInBatches'],
 								annotations: []
 							}),
 							new N4Method({
 								name: 'instrument',
 								isStatic: false,
 								jsFunction: instanceProto['instrument'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'errorGroup',
+								isStatic: false,
+								jsFunction: instanceProto['errorGroup'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'getInstrumentedTestStub',
+								isStatic: false,
+								jsFunction: instanceProto['getInstrumentedTestStub'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'getTestInjector',
+								isStatic: false,
+								jsFunction: instanceProto['getTestInjector'],
 								annotations: []
 							})
 						],
@@ -324,7 +370,6 @@
 					});
 					return metaClass;
 				});
-				TestController.MAX_GROUPS_PER_TEST_BATCH = 10;
 				Object.defineProperty(TestController, '$di', {
 					value: {
 						fieldsInjectedTypes: [

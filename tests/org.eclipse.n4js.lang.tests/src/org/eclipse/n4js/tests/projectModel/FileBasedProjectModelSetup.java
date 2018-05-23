@@ -21,11 +21,10 @@ import java.util.zip.ZipOutputStream;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
-import com.google.common.io.OutputSupplier;
 
 /**
  */
@@ -78,7 +77,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	protected void createTempProjects() {
 		try {
 			workspaceRoot = Files.createTempDir();
-			URI myProjectURI = createTempProject(host.myProjectId);
+			URI myProjectURI = URIUtils.normalize(createTempProject(host.myProjectId));
 			host.setMyProjectURI(myProjectURI);
 			createManifest(myProjectURI, "ProjectId: " + host.myProjectId + "\n" +
 					"ProjectType: library\n" +
@@ -94,7 +93,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"}" +
 					"ProjectDependencies { " + host.libProjectId + ", " + host.archiveProjectId + " }\n");
 			createArchive(myProjectURI);
-			URI libProjectURI = createTempProject(host.libProjectId);
+			URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectId));
 			host.setLibProjectURI(libProjectURI);
 			createManifest(libProjectURI, "ProjectId: " + host.libProjectId + "\n" +
 					"ProjectType: library\n" +
@@ -129,7 +128,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 
 		zipOutputStream.putNextEntry(new ZipEntry(IN4JSProject.N4MF_MANIFEST));
 		// this will close the stream
-		CharStreams.write("ProjectId: " + host.archiveProjectId + "\n" +
+		zipOutputStream.write(("ProjectId: " + host.archiveProjectId + "\n" +
 				"ProjectType: library\n" +
 				"ProjectVersion: 0.0.1-SNAPSHOT\n" +
 				"VendorId: org.eclipse.n4js\n" +
@@ -139,14 +138,9 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 				"	source {" +
 				"		\"src\"\n" +
 				"	}\n" +
-				"}",
-				CharStreams.newWriterSupplier(new OutputSupplier<ZipOutputStream>() {
-					@Override
-					public ZipOutputStream getOutput() throws IOException {
-						return zipOutputStream;
-					}
-				}, Charsets.UTF_8));
-		host.setArchiveFileURI(URI.createURI(nfar.toURI().toString()));
+				"}").getBytes(Charsets.UTF_8));
+		zipOutputStream.close();
+		host.setArchiveFileURI(URIUtils.normalize(URI.createURI(nfar.toURI().toString())));
 	}
 
 	private void createManifest(URI projectDir, String string) throws IOException {

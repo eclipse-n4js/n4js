@@ -11,7 +11,6 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Collection
 import java.util.List
 import java.util.Set
@@ -37,6 +36,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.RecursionGuard
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -122,7 +122,13 @@ class GenericsComputer extends TypeSystemHelperStrategy {
 		// resolve typeArg
 		var Object actualTypeArg = typeArg;
 		while(G.hasSubstitutionFor(actualTypeArg)) {
-			actualTypeArg = G.environment.get((actualTypeArg as TypeRef).declaredType);
+			val actualTypeArgCasted = actualTypeArg as TypeRef; // otherwise #hasSubstitutionFor() would not have returned true
+			val fromEnv = G.environment.get(actualTypeArgCasted.declaredType);
+			actualTypeArg = if(fromEnv instanceof TypeRef) {
+				TypeUtils.mergeTypeModifiers(fromEnv, actualTypeArgCasted)
+			} else {
+				fromEnv
+			};
 		}
 
 		// resolve wildcards

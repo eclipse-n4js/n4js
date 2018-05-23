@@ -27,7 +27,6 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser;
 import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.xtext.AbstractElement;
-import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Group;
 import org.eclipse.xtext.UnorderedGroup;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
@@ -107,26 +106,6 @@ public class CustomN4JSParser extends N4JSParser {
 		CustomInternalN4JSParser result = new CustomInternalN4JSParser();
 		result.setGrammarAccess(getGrammarAccess());
 		return result;
-	}
-
-	@Override
-	public void initializeFor(AbstractRule rule) {
-		// TODO: GH-61.
-		// Remove this function to see test errors in GHOLD-92-LINKING_DIAGNOSTIC_import_missing_B.n4js.xt
-		/*
-		 * Comment by Sebastian: This is a super nasty side effect of some Xpect internals: Xpect uses own injectors
-		 * thus reflectively creates a new injector for the language. Effectively two injectors for N4JS exist at that
-		 * time. Both have their own 'singleton'-bindings, their own in-memory gramar representation etc. This is highly
-		 * problematic since all sorts of assumptions do no longer hold in such a setup. That is, especially the grammar
-		 * elements are supposed to be singletons and to be comparable by identity. Now we have each grammar element
-		 * twice in memory. Further there appears to be a blurry boundary between which object is obtain from which of
-		 * both injectors, so in the end, we face a parser instance that was produced by the real injector being used by
-		 * objects that were produced by the second injector. To be honest, I wonder wow this can even work. This is a
-		 * super critical misbehavior of Xpect from my point of view.
-		 */
-		if (super.getEntryRule() == null) {
-			super.initializeFor(rule);
-		}
 	}
 
 	@Inject

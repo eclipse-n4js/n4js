@@ -11,7 +11,6 @@
 package org.eclipse.n4js.validation
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.lang.reflect.Method
 import java.util.List
 import org.eclipse.emf.common.util.EList
@@ -66,6 +65,7 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -505,7 +505,36 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 			}
 		offsetAndLength
 	}
-
+	
+	/**
+	 * Returns the offset and length for a list feature.
+	 * 
+	 * That is the offset of the first list element and the length
+	 * from the first feature node to the last feature node (cf. {@link NodeModelUtils#findNodeForFeature}).
+	 */
+	def Pair<Integer, Integer> findListFeatureOffsetAndLength(EObject obj, EStructuralFeature feature) {
+		val nodes = NodeModelUtils.findNodesForFeature(obj, feature);
+		
+		if (nodes.empty) {
+			return 0 -> 0;
+		}
+		
+		val start = nodes.head.offset;
+		val end = nodes.last.offset + nodes.last.length;
+		return start -> end - start;
+	}
+	
+	/**
+	 * Adds an issues, just as {@link #addIssue} but marks all nodes associated with the multi-value feature {@code feature}
+	 * as an error.
+	 * 
+	 * For multi-value features (such as list attributes), this results in all list elements to be marked as error.
+	 */
+	protected def void addIssueToMultiValueFeature(String message, EObject source, EStructuralFeature feature, String issueCode, String... issueData) {
+		val offsetAndLength = findListFeatureOffsetAndLength(source, feature);
+			this.addIssue(message, source, offsetAndLength.key, offsetAndLength.value, issueCode, issueData);
+	}
+	
 	def private INode findChildNode(ICompositeNode compositeNode, EObject grammarElement) {
 		for (childNode : compositeNode.children) {
 			if (childNode.grammarElement == grammarElement) {

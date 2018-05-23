@@ -19,4 +19,5 @@ Export-Package: org.eclipse.n4js.jsdoc;uses:="org.eclipse.emf.ecore,org.eclipse.
  org.eclipse.n4js.jsdoc.lookup;uses:="org.eclipse.emf.ecore",
  org.eclipse.n4js.jsdoc.tags;uses:="org.eclipse.n4js.jsdoc,org.eclipse.n4js.jsdoc.dom",
  org.eclipse.n4js.jsdoc.tokenizers;uses:="org.eclipse.n4js.jsdoc"
+Automatic-Module-Name: org.eclipse.n4js.jsdoc
 

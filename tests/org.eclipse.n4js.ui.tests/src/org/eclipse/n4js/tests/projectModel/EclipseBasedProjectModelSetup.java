@@ -29,8 +29,6 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.util.StringInputStream;
 
 import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
-import com.google.common.io.OutputSupplier;
 
 /**
  */
@@ -108,25 +106,24 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 		zipOutputStream.putNextEntry(new ZipEntry("src/sub/leaf/D.js"));
 
 		zipOutputStream.putNextEntry(new ZipEntry(IN4JSProject.N4MF_MANIFEST));
-		// this will close the stream
-		CharStreams.write("ProjectId: " + host.archiveProjectId + "\n" +
-				"ProjectType: library\n" +
-				"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-				"VendorId: org.eclipse.n4js\n" +
-				"VendorName: \"Eclipse N4JS Project\"\n" +
-				"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
-				"Output: \"src-gen\"" +
-				"Sources {\n" +
-				"	source { " +
-				"		\"src\"\n" +
-				"	}\n" +
-				"}\n", CharStreams.newWriterSupplier(new OutputSupplier<ZipOutputStream>() {
-					@Override
-					public ZipOutputStream getOutput() throws IOException {
-						return zipOutputStream;
-					}
-				}, Charsets.UTF_8));
 
+		try {
+			zipOutputStream.write(("ProjectId: " + host.archiveProjectId + "\n" +
+					"ProjectType: library\n" +
+					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
+					"VendorId: org.eclipse.n4js\n" +
+					"VendorName: \"Eclipse N4JS Project\"\n" +
+					"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
+					"Output: \"src-gen\"" +
+					"Sources {\n" +
+					"	source { " +
+					"		\"src\"\n" +
+					"	}\n" +
+					"}\n").getBytes(Charsets.UTF_8));
+
+		} finally {
+			zipOutputStream.close();
+		}
 		archiveFile.create(new ByteArrayInputStream(byteArrayOutputSteam.toByteArray()), false, null);
 
 		host.setArchiveFileURI(URI.createPlatformResourceURI(archiveFile.getFullPath().toString(), true));

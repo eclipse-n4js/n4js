@@ -36,7 +36,6 @@ import org.eclipse.n4js.generator.GeneratorException;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
-import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -46,6 +45,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.utils.Lazy;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Collections2;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -369,7 +369,7 @@ public class N4HeadlessCompiler {
 	public void cleanProjects(List<File> projectPaths)
 			throws N4JSCompileException {
 		List<URI> projectURIs = convertProjectPathsToProjectURIs(projectPaths);
-		registerProjectsToFileBasedWorkspace(projectURIs);
+		HeadlessHelper.registerProjectsToFileBasedWorkspace(projectURIs, n4jsFileBasedWorkspace, logger);
 		List<N4JSProject> projectsToClean = getN4JSProjects(projectURIs);
 		projectsToClean.forEach(project -> {
 			cleanProject(project);
@@ -387,20 +387,6 @@ public class N4HeadlessCompiler {
 		// Convert absolute locations to file URIs.
 		List<URI> projectURIs = createFileURIs(absProjectPaths);
 		return projectURIs;
-	}
-
-	private void registerProjectsToFileBasedWorkspace(Iterable<URI> projectURIs) throws N4JSCompileException {
-		// Register all projects with the file based workspace.
-		for (URI projectURI : projectURIs) {
-			try {
-				if (logger.isCreateDebugOutput()) {
-					logger.debug("Registering project '" + projectURI + "'");
-				}
-				n4jsFileBasedWorkspace.registerProject(projectURI);
-			} catch (N4JSBrokenProjectException e) {
-				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);
-			}
-		}
 	}
 
 	/**
@@ -489,7 +475,8 @@ public class N4HeadlessCompiler {
 		List<N4JSProject> discoveredProjects = getN4JSProjects(discoveredProjectURIs);
 
 		// Register all projects with the file based workspace.
-		registerProjectsToFileBasedWorkspace(Iterables.concat(requestedProjectURIs, discoveredProjectURIs));
+		HeadlessHelper.registerProjectsToFileBasedWorkspace(
+				Iterables.concat(requestedProjectURIs, discoveredProjectURIs), n4jsFileBasedWorkspace, logger);
 
 		// Create a filter that applies only to the given single source files if any were requested to be compiled.
 		Predicate<URI> resourceFilter;
@@ -527,7 +514,8 @@ public class N4HeadlessCompiler {
 		}
 
 		// convert back to Files:
-		return result.stream().map(u -> new File(u.toFileString())).collect(Collectors.toList());
+		return result.stream().map(URIUtils::normalize).map(u -> new File(u.toFileString()))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -539,7 +527,8 @@ public class N4HeadlessCompiler {
 	 * @return the list of URIs
 	 */
 	private List<URI> createFileURIs(List<File> files) {
-		return files.stream().map(f -> URI.createFileURI(f.toString())).collect(Collectors.toList());
+		return files.stream().map(f -> URI.createFileURI(f.toString())).map(URIUtils::normalize)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -550,9 +539,11 @@ public class N4HeadlessCompiler {
 	 * @return a list of projects at the given URIs
 	 */
 	private List<N4JSProject> getN4JSProjects(List<URI> projectURIs) {
-		return projectURIs.stream().map(u -> n4jsModel.getN4JSProject(u)).collect(Collectors.toList());
+		return projectURIs.stream().map(URIUtils::normalize).map(u -> n4jsModel.getN4JSProject(u))
+				.collect(Collectors.toList());
 	}
 
+	// TODO GH-793 processing broken projects causes exceptions
 	private void configureResourceSetContainerState(final List<N4JSProject> allProjects) {
 		// a container is a project.
 		List<String> containers = new LinkedList<>();

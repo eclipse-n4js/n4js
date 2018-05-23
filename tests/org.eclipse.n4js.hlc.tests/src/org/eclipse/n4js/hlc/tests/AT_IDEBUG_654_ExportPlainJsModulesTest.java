@@ -47,7 +47,10 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractN4jscTest {
 
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/IDEBUG-654/src/Client.n4js";
-		final String[] args = { "-pl", wsRoot, "-bt", "allprojects", "-rw", "nodejs", "-r", fileToRun, "-v" };
+		final String[] args = { "--projectlocations", wsRoot,
+				"--buildType", "allprojects",
+				"--runWith", "nodejs",
+				"--run", fileToRun };
 
 		// Run
 		final String out = runAndCaptureOutput(args);

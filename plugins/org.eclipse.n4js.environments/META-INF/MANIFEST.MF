@@ -11,3 +11,4 @@ Require-Bundle: com.google.inject;bundle-version="3.0.0",
  org.eclipse.n4js,
  org.eclipse.core.resources
 Import-Package: org.eclipse.xtext.ui.resource
+Automatic-Module-Name: org.eclipse.n4js.environments

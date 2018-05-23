@@ -57,6 +57,7 @@ import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
+import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
@@ -99,6 +100,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver;
 import org.eclipse.n4js.n4jsx.ReactHelper;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
@@ -345,6 +347,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   public final static String TYPEMODULENAMESPACE = "org.eclipse.n4js.xsemantics.TypeModuleNamespace";
   
   public final static String TYPEJSXELEMENT = "org.eclipse.n4js.xsemantics.TypeJSXElement";
+  
+  public final static String TYPEMIGRATIONCONTEXTVARIABLE = "org.eclipse.n4js.xsemantics.TypeMigrationContextVariable";
   
   public final static String SUBTYPETYPEARGUMENT = "org.eclipse.n4js.xsemantics.SubtypeTypeArgument";
   
@@ -2149,7 +2153,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeIndexedAccessExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IndexedAccessExpression expr) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    /* { expr.target === null || expr.index === null; T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = ASTMetaInfoUtils.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess) val memberDesc = if(memberName!==null && !memberName.isEmpty()) { scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName)) }; val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) { memberDesc.getEObjectOrProxy() }; if(member instanceof TMember && !member.eIsProxy) { G |- (member as TMember) : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
+    /* { expr.target === null || expr.index === null; T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = ASTMetaInfoUtils.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val structFieldInitMode = targetTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER val checkVisibility = false val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess, structFieldInitMode) val memberDesc = if(memberName!==null && !memberName.isEmpty()) { scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName)) }; val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) { memberDesc.getEObjectOrProxy() }; if(member instanceof TMember && !member.eIsProxy) { G |- (member as TMember) : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
     {
       RuleFailedException previousFailure = null;
       try {
@@ -2160,7 +2164,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
-        /* { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = ASTMetaInfoUtils.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess) val memberDesc = if(memberName!==null && !memberName.isEmpty()) { scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName)) }; val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) { memberDesc.getEObjectOrProxy() }; if(member instanceof TMember && !member.eIsProxy) { G |- (member as TMember) : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
+        /* { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = ASTMetaInfoUtils.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val structFieldInitMode = targetTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER val checkVisibility = false val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess, structFieldInitMode) val memberDesc = if(memberName!==null && !memberName.isEmpty()) { scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName)) }; val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) { memberDesc.getEObjectOrProxy() }; if(member instanceof TMember && !member.eIsProxy) { G |- (member as TMember) : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
         {
           try {
             Expression _target = expr.getTarget();
@@ -2217,8 +2221,10 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             } else {
               if ((memberName != null)) {
                 final boolean staticAccess = (targetTypeRef instanceof TypeTypeRef);
+                TypingStrategy _typingStrategy = targetTypeRef.getTypingStrategy();
+                final boolean structFieldInitMode = (_typingStrategy == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER);
                 final boolean checkVisibility = false;
-                final IScope scope = this.memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess);
+                final IScope scope = this.memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess, structFieldInitMode);
                 IEObjectDescription _xifexpression_1 = null;
                 if (((memberName != null) && (!memberName.isEmpty()))) {
                   _xifexpression_1 = scope.getSingleElement(this.qualifiedNameConverter.toQualifiedName(memberName));
@@ -2604,7 +2610,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         if (_isDynamic) {
           T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
         } else {
-          T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+          if ((MigrationUtils.isMigrateCall(expr) && (targetTypeRef instanceof UnknownTypeRef))) {
+            T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
+          } else {
+            T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+          }
         }
       }
     }
@@ -3608,6 +3618,35 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
     }
     return new Result<TypeRef>(T);
+  }
+  
+  protected Result<TypeRef> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final MigrationContextVariable lmigrationContextVar) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final Result<TypeRef> _result_ = applyRuleTypeMigrationContextVariable(G, _subtrace_, lmigrationContextVar);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return ruleName("typeMigrationContextVariable") + stringRepForEnv(G) + " |- " + stringRep(lmigrationContextVar) + " : " + stringRep(_result_.getFirst());
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyRuleTypeMigrationContextVariable) {
+    	typeThrowException(ruleName("typeMigrationContextVariable") + stringRepForEnv(G) + " |- " + stringRep(lmigrationContextVar) + " : " + "ParameterizedTypeRef",
+    		TYPEMIGRATIONCONTEXTVARIABLE,
+    		e_applyRuleTypeMigrationContextVariable, lmigrationContextVar, new ErrorInformation[] {new ErrorInformation(lmigrationContextVar)});
+    	return null;
+    }
+  }
+  
+  protected Result<TypeRef> applyRuleTypeMigrationContextVariable(final RuleEnvironment G, final RuleApplicationTrace _trace_, final MigrationContextVariable lmigrationContextVar) throws RuleFailedException {
+    
+    return new Result<TypeRef>(_applyRuleTypeMigrationContextVariable_1(G, lmigrationContextVar));
+  }
+  
+  private ParameterizedTypeRef _applyRuleTypeMigrationContextVariable_1(final RuleEnvironment G, final MigrationContextVariable lmigrationContextVar) throws RuleFailedException {
+    ParameterizedTypeRef _migrationContextTypeRef = RuleEnvironmentExtensions.migrationContextTypeRef(G);
+    return _migrationContextTypeRef;
   }
   
   protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeArgument left, final TypeArgument right) throws RuleFailedException {
@@ -6774,18 +6813,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     if ((_declaredType instanceof TypeVariable)) {
       Type _declaredType_1 = typeRef.getDeclaredType();
       final TypeVariable typeVar = ((TypeVariable) _declaredType_1);
-      /* { var temp = env(G, typeVar, TypeRef) if (typeRef instanceof ParameterizedTypeRefStructural) { if (temp instanceof ParameterizedTypeRef) { var ptrs = TypeUtils.copyToParameterizedTypeRefStructural(temp); ptrs.setTypingStrategy(typeRef.getTypingStrategy()); temp = ptrs; } } val tempDeclaredType = temp.declaredType if (typeVar !== tempDeclaredType && (TypeUtils.isOrContainsRefToTypeVar(temp) || (tempDeclaredType !== null && tempDeclaredType.generic)) && G.get(GUARD_SUBST_TYPE_VARS -> temp) === null) { val G2 = G.wrap; G2.add(GUARD_SUBST_TYPE_VARS -> temp, Boolean.TRUE) G2 |- temp ~> result result = TypeUtils.copy(result); } else { result = TypeUtils.copy(temp); } TypeUtils.copyTypeModifiers(result, typeRef) } or { val List<TypeRef> l_raw = env(G, typeVar, List) val l = newArrayList; for(var i=0;i<l_raw.size;i++) { val temp = l_raw.get(i); val tempDeclaredType = temp.declaredType; if(typeVar !== tempDeclaredType && (TypeUtils.isOrContainsRefToTypeVar(temp) || (tempDeclaredType !== null && tempDeclaredType.generic)) && G.get(GUARD_SUBST_TYPE_VARS -> temp) === null) { val G2 = G.wrap; G2.add(GUARD_SUBST_TYPE_VARS -> temp, Boolean.TRUE) G2 |- temp ~> var TypeRef tempResult tempResult = TypeUtils.copy(tempResult); l += tempResult; } else { l += TypeUtils.copy(temp); } } result = if(typeVar.declaredCovariant) { typeSystemHelper.createIntersectionType(G,l) } else if(typeVar.declaredContravariant) { typeSystemHelper.createUnionType(G,l) } else { G.addInconsistentSubstitutions(typeVar, l); TypeRefsFactory.eINSTANCE.createUnknownTypeRef }; TypeUtils.copyTypeModifiers(result, typeRef) } or { } */
+      /* { val tempFromEnv = env(G, typeVar, TypeRef) val temp = TypeUtils.mergeTypeModifiers(tempFromEnv, typeRef); val tempDeclaredType = temp.declaredType if (typeVar !== tempDeclaredType && (TypeUtils.isOrContainsRefToTypeVar(temp) || (tempDeclaredType !== null && tempDeclaredType.generic)) && G.get(GUARD_SUBST_TYPE_VARS -> temp) === null) { val G2 = G.wrap; G2.add(GUARD_SUBST_TYPE_VARS -> temp, Boolean.TRUE) G2 |- temp ~> result result = TypeUtils.copy(result); } else { result = TypeUtils.copy(temp); } } or { val List<TypeRef> l_raw = env(G, typeVar, List) val l = newArrayList; for(var i=0;i<l_raw.size;i++) { val temp = l_raw.get(i); val tempDeclaredType = temp.declaredType; if(typeVar !== tempDeclaredType && (TypeUtils.isOrContainsRefToTypeVar(temp) || (tempDeclaredType !== null && tempDeclaredType.generic)) && G.get(GUARD_SUBST_TYPE_VARS -> temp) === null) { val G2 = G.wrap; G2.add(GUARD_SUBST_TYPE_VARS -> temp, Boolean.TRUE) G2 |- temp ~> var TypeRef tempResult tempResult = TypeUtils.copy(tempResult); l += tempResult; } else { l += TypeUtils.copy(temp); } } result = if(typeVar.declaredCovariant) { typeSystemHelper.createIntersectionType(G,l) } else if(typeVar.declaredContravariant) { typeSystemHelper.createUnionType(G,l) } else { G.addInconsistentSubstitutions(typeVar, l); TypeRefsFactory.eINSTANCE.createUnknownTypeRef }; TypeUtils.copyTypeModifiers(result, typeRef) } or { } */
       {
         RuleFailedException previousFailure = null;
         try {
-          TypeRef temp = this.<TypeRef>env(G, typeVar, TypeRef.class);
-          if ((typeRef instanceof ParameterizedTypeRefStructural)) {
-            if ((temp instanceof ParameterizedTypeRef)) {
-              ParameterizedTypeRefStructural ptrs = TypeUtils.copyToParameterizedTypeRefStructural(((ParameterizedTypeRef)temp));
-              ptrs.setTypingStrategy(((ParameterizedTypeRefStructural)typeRef).getTypingStrategy());
-              temp = ptrs;
-            }
-          }
+          final TypeRef tempFromEnv = this.<TypeRef>env(G, typeVar, TypeRef.class);
+          final TypeRef temp = TypeUtils.mergeTypeModifiers(tempFromEnv, typeRef);
           final Type tempDeclaredType = temp.getDeclaredType();
           if ((((typeVar != tempDeclaredType) && (TypeUtils.isOrContainsRefToTypeVar(temp) || ((tempDeclaredType != null) && tempDeclaredType.isGeneric()))) && (G.get(Pair.<String, TypeRef>of(RuleEnvironmentExtensions.GUARD_SUBST_TYPE_VARS, temp)) == null))) {
             final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
@@ -6804,7 +6837,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           } else {
             result = TypeUtils.<TypeRef>copy(temp);
           }
-          TypeUtils.copyTypeModifiers(result, typeRef);
         } catch (Exception e) {
           previousFailure = extractRuleFailedException(e);
           /* { val List<TypeRef> l_raw = env(G, typeVar, List) val l = newArrayList; for(var i=0;i<l_raw.size;i++) { val temp = l_raw.get(i); val tempDeclaredType = temp.declaredType; if(typeVar !== tempDeclaredType && (TypeUtils.isOrContainsRefToTypeVar(temp) || (tempDeclaredType !== null && tempDeclaredType.generic)) && G.get(GUARD_SUBST_TYPE_VARS -> temp) === null) { val G2 = G.wrap; G2.add(GUARD_SUBST_TYPE_VARS -> temp, Boolean.TRUE) G2 |- temp ~> var TypeRef tempResult tempResult = TypeUtils.copy(tempResult); l += tempResult; } else { l += TypeUtils.copy(temp); } } result = if(typeVar.declaredCovariant) { typeSystemHelper.createIntersectionType(G,l) } else if(typeVar.declaredContravariant) { typeSystemHelper.createUnionType(G,l) } else { G.addInconsistentSubstitutions(typeVar, l); TypeRefsFactory.eINSTANCE.createUnknownTypeRef }; TypeUtils.copyTypeModifiers(result, typeRef) } or { } */

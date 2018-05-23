@@ -15,6 +15,7 @@ pipeline {
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
             args '-v n4js-m2-repository:/usr/share/maven/ref/repository/'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
+            label 'mesos-xlarge'
         }
     }
     options {
@@ -29,10 +30,15 @@ pipeline {
         timeout(time: 5, unit: 'HOURS')
         timestamps()
     }
-    triggers {
-        pollSCM('H/5 * * * *') // every 5 minutes
-        cron   ('H   1 * * *') // Nightly build every day a 1am
+
+    environment {
+        MAVEN_OPTS = '-XX:+UseConcMarkSweepGC '          +
+                     '-XX:+UnlockExperimentalVMOptions ' +
+                     '-XX:+UseCGroupMemoryLimitForHeap ' +
+                     '-XX:MaxRAMFraction=2 '             +
+                     '-XshowSettings:vm '
     }
+
     stages {
 
         stage('fs browse') {
@@ -47,12 +53,9 @@ pipeline {
             }
         }
 
-        stage('ci') {
-            when {
-                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
-            }
+        stage('build') {
             steps {
-                sshagent(['github-n4js-sandbox']) {
+                sshagent(['github-com-ssh-key']) {
                     script {
                         def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                         def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
@@ -62,35 +65,7 @@ pipeline {
                             'execute-plugin-ui-tests'
                         ].join(',')
 
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
-                    }
-                }
-            }
-        }
-
-        stage('nightly') {
-            // Run in nightly build only
-            // There should be a better way, see issue
-            // https://issues.jenkins-ci.org/browse/JENKINS-41272
-            when {
-                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
-            }
-            steps {
-                sshagent(['github-n4js-sandbox']) {
-                    script {
-                        def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                        def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
-                        def profiles = [
-                            'buildProduct',
-                            'execute-plugin-tests',
-                            'execute-plugin-ui-tests',
-                            'execute-ecma-tests',
-                            'execute-performance-tests',
-                            'execute-swtbot-performance-tests',
-                            'execute-accesscontrol-tests '
-                        ].join(',')
-
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        sh "${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }

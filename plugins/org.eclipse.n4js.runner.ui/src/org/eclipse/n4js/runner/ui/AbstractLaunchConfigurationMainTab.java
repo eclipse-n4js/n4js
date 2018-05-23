@@ -19,7 +19,14 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
+import org.eclipse.n4js.n4JS.N4MethodDeclaration;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -37,10 +44,6 @@ import org.eclipse.ui.dialogs.ResourceListSelectionDialog;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.runner.RunConfiguration;
-
 /**
  * Base implementation for the main tab of Eclipse launch configurations for N4JS runners and testers.
  */
@@ -54,10 +57,61 @@ public abstract class AbstractLaunchConfigurationMainTab extends AbstractLaunchC
 
 	/** Text widget for the resource to run, test, etc. */
 	protected Text txtResource;
-	/** Button for searching for a resource to run, test, etc. */
-	protected Button btnSearch;
+
+	/** Text widget for the method to run; maybe empty */
+	protected Text txtTestMethod;
 	/** Text widget for the implementation ID to use. */
 	protected Text txtImplementationId;
+
+	/**
+	 * Returns the "Resource to Run", using the workspace relative location retrieved via the attribute in
+	 * {@link RunConfiguration#USER_SELECTION} If attribute is not present, an empty string is returned. A concrete test
+	 * method are removed, use getTestMethod instead.
+	 */
+	public static String getResourceRunAsText(ILaunchConfiguration configuration) throws CoreException {
+		String uriStr;
+		uriStr = configuration.getAttribute(RunConfiguration.USER_SELECTION, "");
+		final URI uri = uriStr.trim().length() > 0 ? URI.createURI(uriStr) : null;
+		final String wsRelativePath = uri != null ? uri.toPlatformString(true) : null;
+		return wsRelativePath != null ? wsRelativePath : "";
+	}
+
+	/**
+	 * Returns the name of the class and method if the USER_SELECTION URI refers to a method. Otherwise an empty string
+	 * is returned.
+	 */
+	public String getTestMethod(ILaunchConfiguration configuration) {
+		try {
+			String uriStr = configuration.getAttribute(RunConfiguration.USER_SELECTION, "");
+			if (uriStr == null) {
+				return "";
+			}
+			final URI uri = uriStr.trim().length() > 0 ? URI.createURI(uriStr) : null;
+			if (uri == null) {
+				return "";
+			}
+			final URI trimmedUri = uri.hasFragment() ? uri.trimFragment() : uri;
+			final IN4JSProject project = in4jsCore.findProject(trimmedUri).orNull();
+			if (project != null) {
+				ResourceSet resSet = in4jsCore.createResourceSet(Optional.of(project));
+				if (resSet != null) {
+					EObject eobject = resSet.getEObject(uri, true);
+					if (eobject instanceof N4MethodDeclaration) {
+						N4MethodDeclaration method = (N4MethodDeclaration) eobject;
+						String name = ((N4MethodDeclaration) eobject).getName();
+						if (method.getOwner() instanceof N4ClassDeclaration) {
+							return ((N4ClassDeclaration) method.getOwner()).getName() + "." + name;
+						}
+						return name;
+					}
+				}
+			}
+		} catch (Exception ex) {
+			// be robust here
+		}
+		return "";
+
+	}
 
 	/**
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
@@ -97,14 +151,13 @@ public abstract class AbstractLaunchConfigurationMainTab extends AbstractLaunchC
 		txtResource.setLayoutData(gd);
 		txtResource.setFont(parent.getFont());
 		txtResource.addModifyListener(new ModifyListener() {
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void modifyText(ModifyEvent e) {
 				updateLaunchConfigurationDialog();
 			}
 		});
 
-		btnSearch = createPushButton(group, "Search...", null); //$NON-NLS-1$
+		Button btnSearch = createPushButton(group, "Search...", null); //$NON-NLS-1$
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -114,6 +167,13 @@ public abstract class AbstractLaunchConfigurationMainTab extends AbstractLaunchC
 					txtResource.setText(resourceStr);
 			}
 		});
+
+		txtTestMethod = new Text(group, SWT.SINGLE | SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		txtTestMethod.setLayoutData(gd);
+		txtTestMethod.setFont(parent.getFont());
+		txtTestMethod.setEditable(false);
+
 	}
 
 	/**
@@ -192,10 +252,10 @@ public abstract class AbstractLaunchConfigurationMainTab extends AbstractLaunchC
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
-			final String uriStr = configuration.getAttribute(getResourceRunConfigKey(), "");
-			final URI uri = uriStr.trim().length() > 0 ? URI.createURI(uriStr) : null;
-			final String wsRelativePath = uri != null ? uri.toPlatformString(true) : null;
-			txtResource.setText(wsRelativePath != null ? wsRelativePath : "");
+			final String wsRelativePath = getResourceRunAsText(configuration);
+			txtResource.setText(wsRelativePath);
+			String testMethod = getTestMethod(configuration);
+			txtTestMethod.setText(testMethod);
 
 			final String implId = configuration.getAttribute(RunConfiguration.IMPLEMENTATION_ID, "");
 			txtImplementationId.setText(implId);

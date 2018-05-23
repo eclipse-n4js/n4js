@@ -220,8 +220,7 @@ import org.eclipse.n4js.tester.domain.TestTree;
 		if (isLeaf()) {
 			// no cached status in this case; we directly read the status from the TestResult of the TestCase every
 			// time #getStatus() is called -> so nothing to update here
-		}
-		else {
+		} else {
 			// derive cached childrenStatus from children
 			childrenStatus.clear();
 			for (ResultNode child : children) {
@@ -229,8 +228,7 @@ import org.eclipse.n4js.tester.domain.TestTree;
 					final TestStatus childStatus = child.getStatus();
 					if (childStatus != null)
 						childrenStatus.increment(childStatus);
-				}
-				else {
+				} else {
 					childrenStatus.increment(child.childrenStatus);
 				}
 			}
@@ -253,5 +251,30 @@ import org.eclipse.n4js.tester.domain.TestTree;
 			}));
 		}
 		return Stream.of(this);
+	}
+
+	/**
+	 * Returns (maybe empty) list of all test cases that have failed or errors.
+	 */
+	public List<TestCase> getFailed() {
+		List<TestCase> failed = new ArrayList<>();
+		collectFailed(failed);
+		return failed;
+	}
+
+	private void collectFailed(List<TestCase> failed) {
+		if (getTestCase() != null) {
+			TestResult result = getTestCase().getResult();
+			if (result != null) {
+				TestStatus status = result.getTestStatus();
+				if (status != null && status.isFailedOrError()) {
+					failed.add(getTestCase());
+				}
+			}
+		} else if (!isLeaf()) {
+			for (ResultNode node : getChildren()) {
+				failed.addAll(node.getFailed());
+			}
+		}
 	}
 }

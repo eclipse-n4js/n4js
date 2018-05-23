@@ -98,7 +98,8 @@ abstract class AbstractOperatorExpressionTypesystemTest extends AbstractTypesyst
 		while (i < subExpr.length) {
 			val actualExpectedTypeResult = ts.expectedTypeIn(G, expr, subExpr.get(i));
 			assertNoFailure(actualExpectedTypeResult);
-			assertEquals(expression+", operand " + i, expectedSubTypes.get(i), actualExpectedTypeResult.value.typeRefAsString);
+			assertEquals(expression+", operand " + i + " in mode " + variant.name, 
+				expectedSubTypes.get(i), actualExpectedTypeResult.value.typeRefAsString);
 			i = i + 1
 		}
 	}

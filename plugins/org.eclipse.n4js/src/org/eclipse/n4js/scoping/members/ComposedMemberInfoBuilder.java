@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.xbase.lib.Pair;
-
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
@@ -38,7 +36,25 @@ public class ComposedMemberInfoBuilder {
 	private boolean writeAccess;
 	private Resource resource;
 	private N4JSTypeSystem ts;
-	private List<Pair<TMember, RuleEnvironment>> siblings;
+	private List<ToBeComposedMemberInfo> siblings;
+
+	/**
+	 * Required information on each member that is to be composed into a {@link ComposedMemberInfo}. In other words, two
+	 * or more {@link ToBeComposedMemberInfo}s are composed into a single {@link ComposedMemberInfo} by using
+	 * {@link ComposedMemberInfoBuilder}.
+	 */
+	public static final class ToBeComposedMemberInfo {
+		final TMember member;
+		final RuleEnvironment G;
+		final boolean structFieldInitMode;
+
+		/** See {@link ToBeComposedMemberInfo}. */
+		public ToBeComposedMemberInfo(TMember member, RuleEnvironment G, boolean structFieldInitMode) {
+			this.member = member;
+			this.G = G;
+			this.structFieldInitMode = structFieldInitMode;
+		}
+	}
 
 	/**
 	 * Initializes the static methods. (Also refer to the life cycle mentioned above.)
@@ -55,14 +71,17 @@ public class ComposedMemberInfoBuilder {
 	/**
 	 * Adds a sibling member on which a new composed member is based upon. (Also refer to the life cycle mentioned
 	 * above.)
+	 *
+	 * @param member
+	 *            the member to be added or <code>null</code> to denote a missing member.
 	 */
-	public void addMember(TMember member, RuleEnvironment G) {
+	public void addMember(TMember member, RuleEnvironment G, boolean structFieldInitMode) {
 		Objects.nonNull(siblings);
-		Pair<TMember, RuleEnvironment> pair = null;
+		ToBeComposedMemberInfo info = null;
 		if (member != null) {
-			pair = new Pair<>(member, G);
+			info = new ToBeComposedMemberInfo(member, G, structFieldInitMode);
 		}
-		siblings.add(pair); // adds null to indicate missing members
+		siblings.add(info); // adds null to indicate missing members
 	}
 
 	/**

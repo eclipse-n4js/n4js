@@ -11,9 +11,6 @@
 package org.eclipse.n4js.ui.internal;
 
 import static org.eclipse.core.runtime.Status.OK_STATUS;
-import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
-
-import java.lang.reflect.InvocationTargetException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IWorkspace;
@@ -23,9 +20,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution;
+import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.n4js.utils.StatusHelper;
 
 import com.google.inject.Inject;
@@ -42,10 +39,7 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 			.getLogger(N4JSExternalLibraryResourceDescriptionsPersisterContribution.class);
 
 	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
-	private ExternalLibrariesReloadHelper externalLibrariesReloadHelper;
+	private LibraryManager libraryManager;
 
 	@Inject
 	private StatusHelper statusHelper;
@@ -63,9 +57,8 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 						@Override
 						public void run(final IProgressMonitor progress) throws CoreException {
 							try {
-								externalLibraryWorkspace.updateState();
-								externalLibrariesReloadHelper.reloadLibraries(false, progress);
-							} catch (final InvocationTargetException e) {
+								libraryManager.reloadAllExternalProjects(progress);
+							} catch (final Exception e) {
 								throw new CoreException(statusHelper.createError(e));
 							}
 						}
@@ -96,7 +89,7 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 
 	@Override
 	public Injector getInjector() {
-		return N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
+		return new N4JSInjectorSupplier().get();
 	}
 
 }
