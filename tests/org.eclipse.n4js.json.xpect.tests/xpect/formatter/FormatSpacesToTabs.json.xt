@@ -9,8 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.json.xpect.ui.tests.JSONXpectPluginTest END_SETUP  */
-/* XPECT formattedLines 28 ---
+/* XPECT_SETUP org.eclipse.n4js.json.xpect.tests.JSONXpectTest END_SETUP  */
+/* spaces are converted to tabs according to preferences XPECT formattedLines 29 ---
 {
 	"a": 1,
 	"b": 2,
@@ -42,17 +42,31 @@
 }
 --- */
 {
-	"a": 1,
-	"b": 2,
-	"f": [1, 2, 3 ],
-	"c": [1, 2, 3, 
-		[
-			1,
-			2,
-			3
-		]
-	],
-	"d": {
-		"a": 1, "b": 1, "c": 3, "d": [ 1, 2, 3]
-	}
+    "a": 1,
+    "b": 2,
+    "f": [
+        1,
+        2,
+        3
+    ],
+    "c": [
+        1,
+        2,
+        3,
+        [
+            1,
+            2,
+            3
+        ]
+    ],
+    "d": {
+        "a": 1,
+        "b": 1,
+        "c": 3,
+        "d": [
+            1,
+            2,
+            3
+        ]
+    }
 }

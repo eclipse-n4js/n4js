@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.json.xpect.ui.tests;
+package org.eclipse.n4js.json.xpect.tests;
 
 import org.eclipse.n4js.json.validation.suppression.JSONSuppressIssuesSetup;
 import org.eclipse.n4js.xpect.methods.FormatterXpectMethod;
@@ -27,8 +27,8 @@ import org.junit.runner.RunWith;
 		FormatterXpectMethod.class
 })
 @RunWith(XpectRunner.class)
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect/nonui", fileExtensions = { "xt" })
+@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect", fileExtensions = { "xt" })
 @XpectImport({ JSONSuppressIssuesSetup.class })
-public class JSONXpectPluginTest {
+public class JSONXpectTest {
 	// nothing more required
 }
