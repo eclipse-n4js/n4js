@@ -5,6 +5,7 @@ import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.validation.JSONValidator;
+import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
 import org.eclipse.n4js.json.validation.extension.JSONValidatorExtensionRegistry;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 import org.eclipse.xpect.XpectFile;
@@ -33,11 +34,11 @@ public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 	public Injector createInjector() {
 		// make sure N4JS injector is initialized
 		final Injector n4jsInjector = N4JSStandaloneSetup.doSetup();
-		// obtain JSON injector using the common X!PECT method
+		// obtain JSON injector using the super method
 		final Injector jsonInjector = super.createInjector();
 		
 		// obtain N4JS-specific package.json validator
-		final PackageJsonValidatorExtension validatorExtension = n4jsInjector.getInstance(PackageJsonValidatorExtension.class);
+		final AbstractJSONValidatorExtension validatorExtension = n4jsInjector.getInstance(PackageJsonValidatorExtension.class);
 		// obtain JSON validation extension registry
 		final JSONValidatorExtensionRegistry extensionRegistry = jsonInjector.getInstance(JSONValidatorExtensionRegistry.class);
 		

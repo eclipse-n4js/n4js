@@ -14,6 +14,8 @@ import com.google.inject.Singleton;
 
 /**
  * A singleton registry for all registered {@link IJSONValidatorExtension}.
+ * 
+ * Validator extensions may also be registered programmatically via {@link #register(IJSONValidatorExtension)}.
  */
 @Singleton
 public class JSONValidatorExtensionRegistry {

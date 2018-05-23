@@ -11,13 +11,16 @@
 package org.eclipse.n4js.validation.validators.packagejson;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.json.JSON.JSONStringLiteral;
+import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
+import org.eclipse.n4js.json.validation.extension.CheckProperty;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.xtext.validation.Check;
 
 import com.google.inject.Inject;
 
@@ -25,6 +28,9 @@ import com.google.inject.Inject;
  * A JSON validator extension that adds custom validation to {@code package.json} resources.
  */
 public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtension {
+
+	/** regular expression for valid package.json identifier (e.g. package name) */
+	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("(^)?[A-z_][A-z_\\-\\.0-9]*");
 
 	private static final String PACKAGE_JSON_FILENAME = "package.json";
 
@@ -38,10 +44,18 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				.equals(PACKAGE_JSON_FILENAME);
 	}
 
-	/***/
-	@Check
-	public void checkJSONDocument(JSONDocument document) {
-		// validate package.json files
-		addIssue(IssueCodes.ANN__ONLY_IN_N4JS, document, IssueCodes.ANN__ONLY_IN_N4JS);
+	/** Validates the project/package name. */
+	@CheckProperty(propertyPath = "name", mandatory = true)
+	public void checkName(JSONValue projectNameValue) {
+		// first check for the type of the name value
+		if (!checkIsType(projectNameValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
+			return;
+		}
+		final JSONStringLiteral projectName = (JSONStringLiteral) projectNameValue;
+
+		if (!IDENTIFIER_PATTERN.matcher(projectName.getValue()).matches()) {
+			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectName.getValue()),
+					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
+		}
 	}
 }

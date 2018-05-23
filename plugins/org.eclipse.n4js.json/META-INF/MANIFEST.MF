@@ -7,14 +7,16 @@ Bundle-SymbolicName: org.eclipse.n4js.json; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.xbase,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
- org.eclipse.n4js.json.model,
+ org.eclipse.n4js.json.model;visibility:=reexport,
  org.eclipse.osgi,
  org.eclipse.n4js.common.unicode,
  org.eclipse.n4js.utils,
- org.eclipse.xtext.xtext.generator
+ org.eclipse.xtext.xtext.generator,
+ org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.n4js.json
 Export-Package: org.eclipse.n4js.json.validation,
+ org.eclipse.n4js.json.validation.extension,
  org.eclipse.n4js.json.parser.antlr,
  org.eclipse.n4js.json.services,
  org.eclipse.n4js.json.parser.antlr.internal,
