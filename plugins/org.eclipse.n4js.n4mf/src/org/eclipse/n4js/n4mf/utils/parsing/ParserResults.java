@@ -17,14 +17,14 @@ import java.util.List;
 /**
  * Container for data created during parsing process.
  *
- * Note that result can contain instance of {@link #ast} and {@link #errors} at the same time. It is up to the caller
- * to decide how to proceed.
+ * Note that result can contain instance of {@link #ast} and {@link #errors} at the same time. It is up to the caller to
+ * decide how to proceed.
  */
 public final class ParserResults<T> {
 	T ast = null;
 	final List<String> errors = new ArrayList<>();
 
-	/** Instance of the object during parsing. Can be null. */
+	/** Instance of the object during parsing. Can be <code>null</code> in case of errors. */
 	public T getAST() {
 		return this.ast;
 	}

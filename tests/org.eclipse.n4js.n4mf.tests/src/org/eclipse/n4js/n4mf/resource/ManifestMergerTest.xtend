@@ -61,12 +61,12 @@ class ManifestMergerTest extends Assert {
 		val result = merger.mergeContent(from, to);
 
 		assertTrue(
-			'Expected 3 project dependencies after the merge. Got ' + result.allProjectDependencies.size + ' instead.',
-			result.allProjectDependencies.size === 3
+			'Expected 3 project dependencies after the merge. Got ' + result.projectDependencies.size + ' instead.',
+			result.projectDependencies.size === 3
 		);
 		assertTrue(
-			'Expected 3 required runtime libraries after the merge. Got ' + result.allRequiredRuntimeLibraries.size + ' instead.',
-			result.allRequiredRuntimeLibraries.size === 3
+			'Expected 3 required runtime libraries after the merge. Got ' + result.requiredRuntimeLibraries.size + ' instead.',
+			result.requiredRuntimeLibraries.size === 3
 		);
 	}
 
@@ -91,12 +91,12 @@ class ManifestMergerTest extends Assert {
 		val result = merger.mergeContent(from, to);
 
 		assertTrue(
-			'Expected 1 project dependency after the merge. Got ' + result.allProjectDependencies.size + ' instead.',
-			result.allProjectDependencies.size === 1
+			'Expected 1 project dependency after the merge. Got ' + result.projectDependencies.size + ' instead.',
+			result.projectDependencies.size === 1
 		);
 		assertTrue(
-			'Expected 1 required runtime library after the merge. Got ' + result.allRequiredRuntimeLibraries.size + ' instead.',
-			result.allRequiredRuntimeLibraries.size === 1
+			'Expected 1 required runtime library after the merge. Got ' + result.requiredRuntimeLibraries.size + ' instead.',
+			result.requiredRuntimeLibraries.size === 1
 		);
 	}
 

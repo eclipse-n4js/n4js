@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.validation.helper;
 
+import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
-
-import org.eclipse.n4js.n4mf.RuntimeProjectDependency;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 
 /**
  */
@@ -41,17 +40,17 @@ public class PolyFilledProvision {
 	public final IEObjectDescription ieoDescrOfPolyfill;
 
 	/**
-	 * The Projectdescription as the place for the Error-Marker
+	 * The {@link ProjectReference} as the place for the Error-Marker
 	 */
-	public final RuntimeProjectDependency libProjectDescription;
+	public final ProjectReference libraryProjectReference;
 
 	/**
 	 *
 	 */
-	public PolyFilledProvision(String library, RuntimeProjectDependency libProjectDescription,
+	public PolyFilledProvision(String library, ProjectReference libProjectDescription,
 			IEObjectDescription ieoDescrOfPolyfill) {
 		this.library = library;
-		this.libProjectDescription = libProjectDescription;
+		this.libraryProjectReference = libProjectDescription;
 		this.ieoDescrOfPolyfill = ieoDescrOfPolyfill;
 		descriptionPolyfill = ieoDescrOfPolyfill.toString();
 		descriptionStandard = withoutPolyfillAsString(ieoDescrOfPolyfill.getQualifiedName());
@@ -67,7 +66,7 @@ public class PolyFilledProvision {
 		// Assumption: 2nd-last segment is "!POLY"
 		String last = qualifiedName.getLastSegment();
 		String poly = qualifiedName.skipLast(1).getLastSegment();
-		assert(N4TSQualifiedNameProvider.POLYFILL_SEGMENT.equals(poly));
+		assert (N4TSQualifiedNameProvider.POLYFILL_SEGMENT.equals(poly));
 		QualifiedName ret = qualifiedName.skipLast(2).append(last);
 		return ret.toString();
 	}

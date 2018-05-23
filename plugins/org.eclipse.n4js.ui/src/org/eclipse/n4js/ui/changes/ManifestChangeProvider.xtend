@@ -10,16 +10,17 @@
  */
 package org.eclipse.n4js.ui.changes
 
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.SourceFragment
-import org.eclipse.n4js.n4mf.SourceFragmentType
 import java.util.ArrayList
 import java.util.Collection
 import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.n4mf.N4mfPackage
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.SourceContainerDescription
+import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.n4js.n4mf.N4mfPackage
 
 /**
  * This class provides basic change functionality for N4JS manifest files.
@@ -35,7 +36,7 @@ class ManifestChangeProvider {
 	public static def IAtomicChange addSourceFoldersToManifest(Resource manifestResource, List<String> sourceFolders) {
 		val manifestSourceFolders = new ArrayList<String>(sourceFolders);
 
-		val sourceFragment = manifestResource.allContents.filter(SourceFragment).filter[ fragment | fragment.sourceFragmentType == SourceFragmentType.SOURCE].head;
+		val sourceFragment = manifestResource.allContents.filter(SourceContainerDescription).filter[ fragment | fragment.sourceContainerType == SourceContainerType.SOURCE].head;
 		manifestSourceFolders.addAll(sourceFragment.paths);
 
 		val sourceFragmentNode = NodeModelUtils.findActualNodeFor(sourceFragment);
@@ -66,7 +67,7 @@ class ManifestChangeProvider {
 
 		// Remove all dependencies, that are already part of the list
 		if (description.projectDependencies !== null) {
-			dependencies.removeIf [ description.projectDependencies.projectDependencies.map[project.projectId].contains(it) ]
+			dependencies.removeIf [ description.projectDependencies.map[it.projectId].contains(it) ]
 		}
 
 		if (dependencies.length < 1) {
@@ -75,22 +76,23 @@ class ManifestChangeProvider {
 
 
 		var StringBuilder textToInsert = new StringBuilder();
-		if (description.projectDependencies === null) { //If no dependency list (frame), create one.
+		val descNode = NodeModelUtils.findActualNodeFor(description);
+		val region = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(descNode, ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY);
+		if (region === null) { //If no dependency list (frame), create one.
 			textToInsert.append("\n" + ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY + " {");
 
 			val INode globalDescriptionNode = NodeModelUtils.findActualNodeFor(description);
 			offset = globalDescriptionNode.offset + globalDescriptionNode.length;
 			withFrame = true;
-		} else if (description.projectDependencies.projectDependencies.length > 0) { //If existing dependency list, append after the last one
-			val INode lastDep = NodeModelUtils.findActualNodeFor(description.projectDependencies.projectDependencies.last);
+		} else if (description.projectDependencies.length > 0) { //If existing dependency list, append after the last one
+			val INode lastDep = NodeModelUtils.findActualNodeFor(description.projectDependencies.last);
 			offset = lastDep.offset + lastDep.length;
 			textToInsert.append(",");
 		} else { //If empty dependency list, replace the whole empty block
 			textToInsert.append(ManifestChangeProvider.PROJECT_DEPENDENCIES_KEY + " {");
 			withFrame = true;
-			val INode depsNode = NodeModelUtils.findActualNodeFor(description.projectDependencies);
-			offset = depsNode.offset;
-			length = depsNode.length;
+			offset = region.offset;
+			length = region.length;
 		}
 
 		textToInsert.append('''«FOR dep : dependencies SEPARATOR ","»«"\n\t" + dep»«ENDFOR»''')
@@ -116,7 +118,7 @@ class ManifestChangeProvider {
 
 		// Remove all dependencies, that are already part of the list
 		if (projectDescription.requiredRuntimeLibraries !== null) {
-			dependencies.removeIf [ projectDescription.requiredRuntimeLibraries.requiredRuntimeLibraries.map[project.projectId].contains(it)]
+			dependencies.removeIf [ projectDescription.requiredRuntimeLibraries.map[it.projectId].contains(it)]
 		}
 
 		if (dependencies.length < 1) {
@@ -124,21 +126,22 @@ class ManifestChangeProvider {
 		}
 
 		var StringBuilder textToInsert = new StringBuilder();
-		if (projectDescription.requiredRuntimeLibraries === null) { //If no runtime library list (frame), create one.
+		val descNode = NodeModelUtils.findActualNodeFor(projectDescription);
+		val region = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(descNode, ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY);
+		if (region === null) { //If no runtime library list (frame), create one.
 			textToInsert.append("\n" + ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY + " {");
 			val INode globalDescriptionNode = NodeModelUtils.findActualNodeFor(projectDescription);
 			offset = globalDescriptionNode.offset + globalDescriptionNode.length;
 			withFrame = true;
-		} else if (projectDescription.requiredRuntimeLibraries.requiredRuntimeLibraries.length > 0) { //If existing runtime library list, append after the last one
-			val INode lastDep = NodeModelUtils.findActualNodeFor(projectDescription.requiredRuntimeLibraries.requiredRuntimeLibraries.last);
+		} else if (projectDescription.requiredRuntimeLibraries.length > 0) { //If existing runtime library list, append after the last one
+			val INode lastDep = NodeModelUtils.findActualNodeFor(projectDescription.requiredRuntimeLibraries.last);
 			offset = lastDep.offset + lastDep.length;
 			textToInsert.append(",");
-		} else { //If empty dependency list, replace the whole empty block
+		} else { //If empty runtime library list, replace the whole empty block
 			textToInsert.append(ManifestChangeProvider.REQUIRED_RUNTIME_LIBRARIES_KEY + " {");
 			withFrame = true;
-			val INode requiredRuntimeNode = NodeModelUtils.findActualNodeFor(projectDescription.requiredRuntimeLibraries);
-			offset = requiredRuntimeNode.offset;
-			length = requiredRuntimeNode.length;
+			offset = region.offset;
+			length = region.length;
 		}
 
 		textToInsert.append('''«FOR dep : dependencies SEPARATOR ","»«"\n\t" + dep»«ENDFOR»''')
@@ -182,7 +185,7 @@ class ManifestChangeProvider {
 		val prjTypeNodes = NodeModelUtils.findNodesForFeature(projectDescription, N4mfPackage.Literals.PROJECT_DESCRIPTION__PROJECT_TYPE);
 		if (prjTypeNodes.isEmpty) {
 			// Append a new entry
-			val pidNodes = NodeModelUtils.findNodesForFeature(projectDescription, N4mfPackage.Literals.SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID);
+			val pidNodes = NodeModelUtils.findNodesForFeature(projectDescription, N4mfPackage.Literals.PROJECT_DESCRIPTION__PROJECT_ID);
 			val location = if (pidNodes.isEmpty) 0 else pidNodes.get(0).endOffset;
 			val newEntry = "\n" + PROJECT_TYPE_KEY + ": " + newProjectType + (if (location === 0) "\n" else "");
 			return new Replacement(manifestResource.URI, location, 0, newEntry);

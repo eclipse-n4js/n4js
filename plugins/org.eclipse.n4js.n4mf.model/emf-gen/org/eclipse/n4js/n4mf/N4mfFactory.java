@@ -39,87 +39,6 @@ public interface N4mfFactory extends EFactory {
 	ProjectDescription createProjectDescription();
 
 	/**
-	 * Returns a new object of class '<em>Exec Module</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Exec Module</em>'.
-	 * @generated
-	 */
-	ExecModule createExecModule();
-
-	/**
-	 * Returns a new object of class '<em>Tested Projects</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Tested Projects</em>'.
-	 * @generated
-	 */
-	TestedProjects createTestedProjects();
-
-	/**
-	 * Returns a new object of class '<em>Init Modules</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Init Modules</em>'.
-	 * @generated
-	 */
-	InitModules createInitModules();
-
-	/**
-	 * Returns a new object of class '<em>Implemented Projects</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Implemented Projects</em>'.
-	 * @generated
-	 */
-	ImplementedProjects createImplementedProjects();
-
-	/**
-	 * Returns a new object of class '<em>Project Dependencies</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Project Dependencies</em>'.
-	 * @generated
-	 */
-	ProjectDependencies createProjectDependencies();
-
-	/**
-	 * Returns a new object of class '<em>Provided Runtime Libraries</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Provided Runtime Libraries</em>'.
-	 * @generated
-	 */
-	ProvidedRuntimeLibraries createProvidedRuntimeLibraries();
-
-	/**
-	 * Returns a new object of class '<em>Required Runtime Libraries</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Required Runtime Libraries</em>'.
-	 * @generated
-	 */
-	RequiredRuntimeLibraries createRequiredRuntimeLibraries();
-
-	/**
-	 * Returns a new object of class '<em>Simple Project Description</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Simple Project Description</em>'.
-	 * @generated
-	 */
-	SimpleProjectDescription createSimpleProjectDescription();
-
-	/**
-	 * Returns a new object of class '<em>Tested Project</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Tested Project</em>'.
-	 * @generated
-	 */
-	TestedProject createTestedProject();
-
-	/**
 	 * Returns a new object of class '<em>Declared Version</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -129,13 +48,13 @@ public interface N4mfFactory extends EFactory {
 	DeclaredVersion createDeclaredVersion();
 
 	/**
-	 * Returns a new object of class '<em>Source Fragment</em>'.
+	 * Returns a new object of class '<em>Source Container Description</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Source Fragment</em>'.
+	 * @return a new object of class '<em>Source Container Description</em>'.
 	 * @generated
 	 */
-	SourceFragment createSourceFragment();
+	SourceContainerDescription createSourceContainerDescription();
 
 	/**
 	 * Returns a new object of class '<em>Module Filter</em>'.
@@ -156,15 +75,6 @@ public interface N4mfFactory extends EFactory {
 	BootstrapModule createBootstrapModule();
 
 	/**
-	 * Returns a new object of class '<em>Extended Runtime Environment</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Extended Runtime Environment</em>'.
-	 * @generated
-	 */
-	ExtendedRuntimeEnvironment createExtendedRuntimeEnvironment();
-
-	/**
 	 * Returns a new object of class '<em>Project Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -174,15 +84,6 @@ public interface N4mfFactory extends EFactory {
 	ProjectReference createProjectReference();
 
 	/**
-	 * Returns a new object of class '<em>Simple Project Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Simple Project Dependency</em>'.
-	 * @generated
-	 */
-	SimpleProjectDependency createSimpleProjectDependency();
-
-	/**
 	 * Returns a new object of class '<em>Module Filter Specifier</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -190,24 +91,6 @@ public interface N4mfFactory extends EFactory {
 	 * @generated
 	 */
 	ModuleFilterSpecifier createModuleFilterSpecifier();
-
-	/**
-	 * Returns a new object of class '<em>Required Runtime Library Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Required Runtime Library Dependency</em>'.
-	 * @generated
-	 */
-	RequiredRuntimeLibraryDependency createRequiredRuntimeLibraryDependency();
-
-	/**
-	 * Returns a new object of class '<em>Provided Runtime Library Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Provided Runtime Library Dependency</em>'.
-	 * @generated
-	 */
-	ProvidedRuntimeLibraryDependency createProvidedRuntimeLibraryDependency();
 
 	/**
 	 * Returns a new object of class '<em>Project Dependency</em>'.

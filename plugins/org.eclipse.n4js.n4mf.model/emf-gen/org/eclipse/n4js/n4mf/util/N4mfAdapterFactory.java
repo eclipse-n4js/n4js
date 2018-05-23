@@ -80,48 +80,12 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 				return createProjectDescriptionAdapter();
 			}
 			@Override
-			public Adapter caseExecModule(ExecModule object) {
-				return createExecModuleAdapter();
-			}
-			@Override
-			public Adapter caseTestedProjects(TestedProjects object) {
-				return createTestedProjectsAdapter();
-			}
-			@Override
-			public Adapter caseInitModules(InitModules object) {
-				return createInitModulesAdapter();
-			}
-			@Override
-			public Adapter caseImplementedProjects(ImplementedProjects object) {
-				return createImplementedProjectsAdapter();
-			}
-			@Override
-			public Adapter caseProjectDependencies(ProjectDependencies object) {
-				return createProjectDependenciesAdapter();
-			}
-			@Override
-			public Adapter caseProvidedRuntimeLibraries(ProvidedRuntimeLibraries object) {
-				return createProvidedRuntimeLibrariesAdapter();
-			}
-			@Override
-			public Adapter caseRequiredRuntimeLibraries(RequiredRuntimeLibraries object) {
-				return createRequiredRuntimeLibrariesAdapter();
-			}
-			@Override
-			public Adapter caseSimpleProjectDescription(SimpleProjectDescription object) {
-				return createSimpleProjectDescriptionAdapter();
-			}
-			@Override
-			public Adapter caseTestedProject(TestedProject object) {
-				return createTestedProjectAdapter();
-			}
-			@Override
 			public Adapter caseDeclaredVersion(DeclaredVersion object) {
 				return createDeclaredVersionAdapter();
 			}
 			@Override
-			public Adapter caseSourceFragment(SourceFragment object) {
-				return createSourceFragmentAdapter();
+			public Adapter caseSourceContainerDescription(SourceContainerDescription object) {
+				return createSourceContainerDescriptionAdapter();
 			}
 			@Override
 			public Adapter caseModuleFilter(ModuleFilter object) {
@@ -132,32 +96,12 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 				return createBootstrapModuleAdapter();
 			}
 			@Override
-			public Adapter caseExtendedRuntimeEnvironment(ExtendedRuntimeEnvironment object) {
-				return createExtendedRuntimeEnvironmentAdapter();
-			}
-			@Override
 			public Adapter caseProjectReference(ProjectReference object) {
 				return createProjectReferenceAdapter();
 			}
 			@Override
-			public Adapter caseSimpleProjectDependency(SimpleProjectDependency object) {
-				return createSimpleProjectDependencyAdapter();
-			}
-			@Override
 			public Adapter caseModuleFilterSpecifier(ModuleFilterSpecifier object) {
 				return createModuleFilterSpecifierAdapter();
-			}
-			@Override
-			public Adapter caseRuntimeProjectDependency(RuntimeProjectDependency object) {
-				return createRuntimeProjectDependencyAdapter();
-			}
-			@Override
-			public Adapter caseRequiredRuntimeLibraryDependency(RequiredRuntimeLibraryDependency object) {
-				return createRequiredRuntimeLibraryDependencyAdapter();
-			}
-			@Override
-			public Adapter caseProvidedRuntimeLibraryDependency(ProvidedRuntimeLibraryDependency object) {
-				return createProvidedRuntimeLibraryDependencyAdapter();
 			}
 			@Override
 			public Adapter caseProjectDependency(ProjectDependency object) {
@@ -202,132 +146,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ExecModule <em>Exec Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ExecModule
-	 * @generated
-	 */
-	public Adapter createExecModuleAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.TestedProjects <em>Tested Projects</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.TestedProjects
-	 * @generated
-	 */
-	public Adapter createTestedProjectsAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.InitModules <em>Init Modules</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.InitModules
-	 * @generated
-	 */
-	public Adapter createInitModulesAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ImplementedProjects <em>Implemented Projects</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ImplementedProjects
-	 * @generated
-	 */
-	public Adapter createImplementedProjectsAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ProjectDependencies <em>Project Dependencies</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ProjectDependencies
-	 * @generated
-	 */
-	public Adapter createProjectDependenciesAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries <em>Provided Runtime Libraries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries
-	 * @generated
-	 */
-	public Adapter createProvidedRuntimeLibrariesAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.RequiredRuntimeLibraries <em>Required Runtime Libraries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.RequiredRuntimeLibraries
-	 * @generated
-	 */
-	public Adapter createRequiredRuntimeLibrariesAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.SimpleProjectDescription <em>Simple Project Description</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.SimpleProjectDescription
-	 * @generated
-	 */
-	public Adapter createSimpleProjectDescriptionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.TestedProject <em>Tested Project</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.TestedProject
-	 * @generated
-	 */
-	public Adapter createTestedProjectAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.DeclaredVersion <em>Declared Version</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -342,16 +160,16 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.SourceFragment <em>Source Fragment</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.SourceContainerDescription <em>Source Container Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.SourceFragment
+	 * @see org.eclipse.n4js.n4mf.SourceContainerDescription
 	 * @generated
 	 */
-	public Adapter createSourceFragmentAdapter() {
+	public Adapter createSourceContainerDescriptionAdapter() {
 		return null;
 	}
 
@@ -384,20 +202,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment <em>Extended Runtime Environment</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment
-	 * @generated
-	 */
-	public Adapter createExtendedRuntimeEnvironmentAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ProjectReference <em>Project Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -412,20 +216,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.SimpleProjectDependency <em>Simple Project Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.SimpleProjectDependency
-	 * @generated
-	 */
-	public Adapter createSimpleProjectDependencyAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ModuleFilterSpecifier <em>Module Filter Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -436,48 +226,6 @@ public class N4mfAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createModuleFilterSpecifierAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.RuntimeProjectDependency <em>Runtime Project Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.RuntimeProjectDependency
-	 * @generated
-	 */
-	public Adapter createRuntimeProjectDependencyAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency <em>Required Runtime Library Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency
-	 * @generated
-	 */
-	public Adapter createRequiredRuntimeLibraryDependencyAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency <em>Provided Runtime Library Dependency</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency
-	 * @generated
-	 */
-	public Adapter createProvidedRuntimeLibraryDependencyAdapter() {
 		return null;
 	}
 

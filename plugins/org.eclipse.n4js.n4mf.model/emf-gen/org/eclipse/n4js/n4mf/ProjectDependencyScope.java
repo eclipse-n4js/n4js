@@ -49,7 +49,7 @@ public enum ProjectDependencyScope implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	TEST(0, "TEST", "TEST");
+	TEST(1, "TEST", "TEST");
 
 	/**
 	 * The '<em><b>COMPILE</b></em>' literal value.
@@ -79,7 +79,7 @@ public enum ProjectDependencyScope implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TEST_VALUE = 0;
+	public static final int TEST_VALUE = 1;
 
 	/**
 	 * An array of all the '<em><b>Project Dependency Scope</b></em>' enumerators.
@@ -148,6 +148,7 @@ public enum ProjectDependencyScope implements Enumerator {
 	public static ProjectDependencyScope get(int value) {
 		switch (value) {
 			case COMPILE_VALUE: return COMPILE;
+			case TEST_VALUE: return TEST;
 		}
 		return null;
 	}
