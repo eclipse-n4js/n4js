@@ -10,8 +10,8 @@
  */
 
 
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet"
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet";
 export public class Precondition extends Assert {
     @Override
     public static fail_(actual: any, expected: any, message: string=, operator: string=, stackStartFunction: Function=) {

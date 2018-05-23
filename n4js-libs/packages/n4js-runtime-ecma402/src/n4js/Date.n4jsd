@@ -46,4 +46,3 @@ import {DateTimeFormatOptions} from "IntlClasses";
 	public toLocaleTimeString(locales: string | [string]=, options: ~r~DateTimeFormatOptions=): string
 }
 
-/* -*- mode: typescript;-*- */

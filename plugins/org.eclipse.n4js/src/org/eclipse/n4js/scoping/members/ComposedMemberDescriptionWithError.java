@@ -15,16 +15,16 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TField;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 
 /**
  * This description wraps a member of a composed type that is not present in all contained types or is somehow
@@ -112,7 +112,7 @@ public abstract class ComposedMemberDescriptionWithError extends AbstractDescrip
 		super(delegate);
 		this.composedTypeRef = composedTypeRef;
 		this.subScopes = subScopes;
-		max = subScopes.length;
+		this.max = subScopes.length;
 		this.writeAccess = writeAccess;
 	}
 
@@ -130,6 +130,8 @@ public abstract class ComposedMemberDescriptionWithError extends AbstractDescrip
 
 	private boolean initialize() {
 		if (message == null) {
+			List<TypeRef> typeRefs = composedTypeRef.getTypeRefs();
+
 			IEObjectDescription[] descriptions = new IEObjectDescription[subScopes.length];
 			MapOfIndexes<String> indexesPerMemberType = new MapOfIndexes<>(); // use string here, since EnumLiteral is
 																				// not a TMember!
@@ -142,7 +144,9 @@ public abstract class ComposedMemberDescriptionWithError extends AbstractDescrip
 				if (description != null) {
 					descriptions[i] = description;
 					EObject eobj = description.getEObjectOrProxy();
-					String type = getMemberTypeName(eobj);
+					boolean structFieldInitMode = typeRefs.get(i)
+							.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+					String type = getMemberTypeName(eobj, structFieldInitMode);
 					indexesPerMemberType.add(type, i);
 					if (description instanceof IEObjectDescriptionWithError) {
 						String subCode = ((IEObjectDescriptionWithError) description).getIssueCode();

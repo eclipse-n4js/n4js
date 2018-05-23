@@ -52,8 +52,6 @@ public class DependencyInfo {
 		String version = NO_VERSION;
 		if (projectReference instanceof ProjectDependency)
 			version = npmFormat(((ProjectDependency) projectReference).getVersionConstraint());
-		else if (projectReference instanceof ProjectDependency)
-			version = npmFormat(((ProjectDependency) projectReference).getVersionConstraint());
 		return version;
 	}
 }

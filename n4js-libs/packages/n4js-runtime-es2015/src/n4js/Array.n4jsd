@@ -10,8 +10,8 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {IteratorExt} from "Iterator"
 
+import {IteratorExt} from "Iterator";
 export public interface ~ArrayLike<T> {
     public get length(): int;
 }
@@ -28,4 +28,3 @@ export public interface ~ArrayIterator<T> extends Iterator<T> {}
     public keys(): IteratorExt<int>;
 }
 
-/* -*- mode: typescript;-*- */

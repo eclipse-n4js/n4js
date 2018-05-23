@@ -56,17 +56,17 @@ Resources {
 }
 ModuleFilters {
 	noValidate {
-// XPECT errors --> "Module specifier p/wolfgangsUglyHack.js doesn't exist." at "\"p/wolfgangsUglyHack.js\""
+// XPECT warnings --> "Module specifier p/wolfgangsUglyHack.js doesn't exist." at "\"p/wolfgangsUglyHack.js\""
 		"p/wolfgangsUglyHack.js",
-// XPECT errors --> "Module specifier p/wolfgangsUglyHack.* doesn't exist." at "\"p/wolfgangsUglyHack.*\""
+// XPECT warnings --> "Module specifier p/wolfgangsUglyHack.* doesn't exist." at "\"p/wolfgangsUglyHack.*\""
 		"p/wolfgangsUglyHack.*",
 		"p/wolfgangsUglyHack",
 		"p/juergensHacks/*",
 // XPECT errors --> "Duplicate module specifier." at "\"p/juergensHacks/*\""
 		"p/juergensHacks/*",
-// XPECT errors --> "Module specifier p/doesntexist/ doesn't exist." at "\"p/doesntexist/\""
+// XPECT warnings--> "Module specifier p/doesntexist/ doesn't exist." at "\"p/doesntexist/\""
 		"p/doesntexist/",
-// XPECT errors --> "Module specifier **/External doesn't exist." at "\"**/External\""
+// XPECT warnings --> "Module specifier **/External doesn't exist." at "\"**/External\""
 		"**/External" in "src",
 // External is available in src-external but not in src
 		"p/External" in "src-external",

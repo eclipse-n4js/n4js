@@ -15,4 +15,3 @@ export external public function clearTimeout(handle: number): void;
 export external public function setInterval(callback: Function, timeout: number): number;
 export external public function clearInterval(handle: number): void;
 
-/* -*- mode: typescript;-*- */

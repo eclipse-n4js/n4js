@@ -22,5 +22,5 @@ Sources {
 		"src"
 	}
 }
-// XPECT errors --> "Module specifier a/b/DummyWRONG doesn't exist." at ""a/b/DummyWRONG""
+// XPECT errors --> "Main module specifier a/b/DummyWRONG does not exist." at ""a/b/DummyWRONG""
 MainModule: "a/b/DummyWRONG"

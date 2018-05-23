@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import { IDERunnerSystemJSModuleTest } from "es-module-tests/IDERunnerSystemJSModuleTest"
 
+import {IDERunnerSystemJSModuleTest} from "es-module-tests/IDERunnerSystemJSModuleTest";
 /**
  * N4JS transpiled run files being ide-runner executed via node.js/require().
  */

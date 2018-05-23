@@ -40,9 +40,9 @@ public class PolyFilledProvision {
 	public final IEObjectDescription ieoDescrOfPolyfill;
 
 	/**
-	 * The Projectdescription as the place for the Error-Marker
+	 * The {@link ProjectReference} as the place for the Error-Marker
 	 */
-	public final ProjectReference libProjectDescription;
+	public final ProjectReference libraryProjectReference;
 
 	/**
 	 *
@@ -50,7 +50,7 @@ public class PolyFilledProvision {
 	public PolyFilledProvision(String library, ProjectReference libProjectDescription,
 			IEObjectDescription ieoDescrOfPolyfill) {
 		this.library = library;
-		this.libProjectDescription = libProjectDescription;
+		this.libraryProjectReference = libProjectDescription;
 		this.ieoDescrOfPolyfill = ieoDescrOfPolyfill;
 		descriptionPolyfill = ieoDescrOfPolyfill.toString();
 		descriptionStandard = withoutPolyfillAsString(ieoDescrOfPolyfill.getQualifiedName());

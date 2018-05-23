@@ -33,4 +33,3 @@ export external public abstract class Reflect__ {
 export external public const Reflect: Reflect__;
 export external public const System: Loader;
 
-/* -*- mode: typescript;-*- */
