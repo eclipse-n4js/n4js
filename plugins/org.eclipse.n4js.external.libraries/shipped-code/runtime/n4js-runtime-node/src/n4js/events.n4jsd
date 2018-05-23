@@ -32,4 +32,4 @@ export external public class EventEmitter implements IEventEmitter {
     @Override public emit(event: string, ...args: any): boolean;
 }
 
-/* -*- mode: typescript;-*- */
+

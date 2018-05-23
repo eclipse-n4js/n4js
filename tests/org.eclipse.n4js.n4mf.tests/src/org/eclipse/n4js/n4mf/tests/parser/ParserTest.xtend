@@ -16,7 +16,7 @@ import org.eclipse.n4js.n4mf.N4MFInjectorProvider
 import org.eclipse.n4js.n4mf.ProjectDependencyScope
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceFragmentType
+import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -109,13 +109,13 @@ class ParserTest {
 		val errors = project.eResource.errors
 		assertTrue(errors.toString, errors.empty)
 
-		assertEquals(3, project.sourceFragment.size)
-		assertEquals(SourceFragmentType.SOURCE, project.sourceFragment.head.sourceFragmentType)
-		assertEquals(#["src", "src2"], project.sourceFragment.head.paths)
-		assertEquals(SourceFragmentType.TEST, project.sourceFragment.get(1).sourceFragmentType)
-		assertEquals(#["src-test"], project.sourceFragment.get(1).paths)
-		assertEquals(SourceFragmentType.EXTERNAL, project.sourceFragment.last.sourceFragmentType)
-		assertEquals(#["external", "external2"], project.sourceFragment.last.paths)
+		assertEquals(3, project.sourceContainers.size)
+		assertEquals(SourceContainerType.SOURCE, project.sourceContainers.head.getSourceContainerType)
+		assertEquals(#["src", "src2"], project.sourceContainers.head.paths)
+		assertEquals(SourceContainerType.TEST, project.sourceContainers.get(1).getSourceContainerType)
+		assertEquals(#["src-test"], project.sourceContainers.get(1).paths)
+		assertEquals(SourceContainerType.EXTERNAL, project.sourceContainers.last.getSourceContainerType)
+		assertEquals(#["external", "external2"], project.sourceContainers.last.paths)
 
 		assertEquals(2, project.moduleFilters.size)
 		assertEquals(ModuleFilterType.NO_VALIDATE, project.moduleFilters.head.moduleFilterType)
@@ -123,26 +123,26 @@ class ParserTest {
 		assertEquals(ModuleFilterType.NO_MODULE_WRAPPING, project.moduleFilters.get(1).moduleFilterType)
 		assertEquals(#["**/*Wrapped.*", "**/wrapped/*.js"], project.moduleFilters.get(1).moduleSpecifiers.map[moduleSpecifierWithWildcard])
 
-		assertEquals(project.allProjectDependencies.size, 2)
-		assertEquals("org.eclipse.n4js", project.allProjectDependencies.head.project.vendorId)
-		assertEquals("my.project.one", project.allProjectDependencies.head.project.projectId)
+		assertEquals(project.projectDependencies.size, 2)
+		assertEquals("org.eclipse.n4js", project.projectDependencies.head.vendorId)
+		assertEquals("my.project.one", project.projectDependencies.head.projectId)
 
-		assertEquals(true, project.allProjectDependencies.head.versionConstraint.exclLowerBound)
-		assertEquals(0, project.allProjectDependencies.head.versionConstraint.lowerVersion.major)
-		assertEquals(0, project.allProjectDependencies.head.versionConstraint.lowerVersion.minor)
-		assertEquals(1, project.allProjectDependencies.head.versionConstraint.lowerVersion.micro)
-		assertEquals(false, project.allProjectDependencies.head.versionConstraint.exclUpperBound)
-		assertEquals(0, project.allProjectDependencies.head.versionConstraint.upperVersion.major)
-		assertEquals(0, project.allProjectDependencies.head.versionConstraint.upperVersion.minor)
-		assertEquals(2, project.allProjectDependencies.head.versionConstraint.upperVersion.micro)
-		assertEquals(ProjectDependencyScope.COMPILE, project.allProjectDependencies.head.scope)
+		assertEquals(true, project.projectDependencies.head.versionConstraint.exclLowerBound)
+		assertEquals(0, project.projectDependencies.head.versionConstraint.lowerVersion.major)
+		assertEquals(0, project.projectDependencies.head.versionConstraint.lowerVersion.minor)
+		assertEquals(1, project.projectDependencies.head.versionConstraint.lowerVersion.micro)
+		assertEquals(false, project.projectDependencies.head.versionConstraint.exclUpperBound)
+		assertEquals(0, project.projectDependencies.head.versionConstraint.upperVersion.major)
+		assertEquals(0, project.projectDependencies.head.versionConstraint.upperVersion.minor)
+		assertEquals(2, project.projectDependencies.head.versionConstraint.upperVersion.micro)
+		assertEquals(ProjectDependencyScope.COMPILE, project.projectDependencies.head.scope)
 
-		assertEquals(null, project.allProjectDependencies.last.versionConstraint.upperVersion, null)
-		assertEquals(1, project.allProjectDependencies.last.versionConstraint.lowerVersion.major)
-		assertEquals(0, project.allProjectDependencies.last.versionConstraint.lowerVersion.minor)
-		assertEquals("if no number given 0 should be set by default", 0, project.allProjectDependencies.last.versionConstraint.lowerVersion.micro)
-		assertEquals(null, project.allProjectDependencies.last.versionConstraint.lowerVersion.qualifier)
-		assertEquals(ProjectDependencyScope.COMPILE, project.allProjectDependencies.last.scope)
+		assertEquals(null, project.projectDependencies.last.versionConstraint.upperVersion, null)
+		assertEquals(1, project.projectDependencies.last.versionConstraint.lowerVersion.major)
+		assertEquals(0, project.projectDependencies.last.versionConstraint.lowerVersion.minor)
+		assertEquals("if no number given 0 should be set by default", 0, project.projectDependencies.last.versionConstraint.lowerVersion.micro)
+		assertEquals(null, project.projectDependencies.last.versionConstraint.lowerVersion.qualifier)
+		assertEquals(ProjectDependencyScope.COMPILE, project.projectDependencies.last.scope)
 	}
 
 	@Test def void testProjectDependencyWithoutScope() {
@@ -165,7 +165,7 @@ class ParserTest {
 		val errors = project.eResource.errors
 		assertTrue(errors.toString, errors.empty)
 		// compile should be assigned by default
-		assertEquals(ProjectDependencyScope.COMPILE, project.allProjectDependencies.last.scope)
+		assertEquals(ProjectDependencyScope.COMPILE, project.projectDependencies.last.scope)
 	}
 
 	@Test def void testProjectDependencyWithoutVersion() {
@@ -187,7 +187,7 @@ class ParserTest {
 		'''.parse
 		val errors = project.eResource.errors
 		assertTrue(errors.toString, errors.empty)
-		assertNull(project.allProjectDependencies.last.versionConstraint)
+		assertNull(project.projectDependencies.last.versionConstraint)
 	}
 
 	@Test def void testProjectDependencyWithoutVendor() {
@@ -210,7 +210,7 @@ class ParserTest {
 		val errors = project.eResource.errors
 		assertTrue(errors.toString, errors.empty)
 		// when no vendorId is given the vendorId of the current project should be used
-		assertEquals("org.eclipse.n4js", project.allProjectDependencies.last.project.vendorId)
+		assertEquals("org.eclipse.n4js", project.projectDependencies.last.vendorId)
 	}
 
 	@Test def void testProjectWithNoUpperBound() {
@@ -234,15 +234,15 @@ class ParserTest {
 		val errors = project.eResource.errors
 		assertTrue(errors.toString, errors.empty)
 		// when no vendorId is given the vendorId of the current project should be used
-		assertEquals("org.eclipse.n4js", project.allProjectDependencies.last.project.vendorId)
+		assertEquals("org.eclipse.n4js", project.projectDependencies.last.vendorId)
 
-		assertEquals(0, project.allProjectDependencies.last.versionConstraint.lowerVersion.major)
-		assertEquals(0, project.allProjectDependencies.last.versionConstraint.lowerVersion.minor)
-		assertEquals(1, project.allProjectDependencies.last.versionConstraint.lowerVersion.micro)
-		assertTrue(project.allProjectDependencies.last.versionConstraint.exclLowerBound)
-		assertEquals(null, project.allProjectDependencies.last.versionConstraint.upperVersion, null)
+		assertEquals(0, project.projectDependencies.last.versionConstraint.lowerVersion.major)
+		assertEquals(0, project.projectDependencies.last.versionConstraint.lowerVersion.minor)
+		assertEquals(1, project.projectDependencies.last.versionConstraint.lowerVersion.micro)
+		assertTrue(project.projectDependencies.last.versionConstraint.exclLowerBound)
+		assertEquals(null, project.projectDependencies.last.versionConstraint.upperVersion, null)
 
-		assertFalse(project.allProjectDependencies.head.versionConstraint.exclLowerBound)
+		assertFalse(project.projectDependencies.head.versionConstraint.exclLowerBound)
 	}
 
 	@Test def void testOrderIndependence() {

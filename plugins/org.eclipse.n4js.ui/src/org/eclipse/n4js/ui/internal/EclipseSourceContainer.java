@@ -16,7 +16,7 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSProjectSourceContainer;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 
@@ -29,7 +29,7 @@ public class EclipseSourceContainer extends N4JSProjectSourceContainer implement
 	/**
 	 * Creates a new EclipseSourceContainer that is backed by the given folder.
 	 */
-	protected EclipseSourceContainer(N4JSEclipseProject project, SourceFragmentType type, IContainer container) {
+	protected EclipseSourceContainer(N4JSEclipseProject project, SourceContainerType type, IContainer container) {
 		super(project, type, container.getProjectRelativePath().toString());
 		this.container = container;
 	}

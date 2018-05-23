@@ -49,8 +49,8 @@ import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.SourceFragment;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.n4mf.SourceContainerDescription;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
@@ -228,8 +228,7 @@ public class ProjectTestsUtils {
 		IFile config = project.getFile("manifest.n4mf");
 		URI uri = URI.createPlatformResourceURI(config.getFullPath().toString(), true);
 		ProjectDescription projectDesc = N4mfFactory.eINSTANCE.createProjectDescription();
-		projectDesc.setProjectDependencies(N4mfFactory.eINSTANCE.createProjectDependencies());
-		projectDesc.setDeclaredVendorId("org.eclipse.n4js");
+		projectDesc.setVendorId("org.eclipse.n4js");
 		projectDesc.setVendorName("Eclipse N4JS Project");
 		projectDesc.setProjectId(project.getName());
 		projectDesc.setProjectType(ProjectType.LIBRARY);
@@ -239,20 +238,15 @@ public class ProjectTestsUtils {
 		projectVersion.setMicro(1);
 		projectDesc.setProjectVersion(projectVersion);
 		projectDesc.setOutputPath(outputFolder);
-		SourceFragment sourceProjectPath = N4mfFactory.eINSTANCE.createSourceFragment();
-		sourceProjectPath.setSourceFragmentType(SourceFragmentType.SOURCE);
+		SourceContainerDescription sourceProjectPath = N4mfFactory.eINSTANCE.createSourceContainerDescription();
+		sourceProjectPath.setSourceContainerType(SourceContainerType.SOURCE);
 		sourceProjectPath.getPathsRaw().add(sourceFolder);
-		projectDesc.getSourceFragment().add(sourceProjectPath);
+		projectDesc.getSourceContainers().add(sourceProjectPath);
 		if (manifestAdjustments != null)
 			manifestAdjustments.accept(projectDesc);
 		ResourceSet rs = createResourceSet(project);
 		Resource res = rs.createResource(uri);
 		res.getContents().add(projectDesc);
-
-		// Workaround to avoid any unnecessary warnings due to empty project dependency block
-		if (projectDesc.getAllProjectDependencies().isEmpty()) {
-			projectDesc.setProjectDependencies(null);
-		}
 
 		try {
 			res.save(Collections.EMPTY_MAP);

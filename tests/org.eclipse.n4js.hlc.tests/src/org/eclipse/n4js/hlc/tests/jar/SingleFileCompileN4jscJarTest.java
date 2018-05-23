@@ -183,8 +183,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		Process p = createAndStartProcess("-pl", proot,
 				"--buildType", "dontcompile",
 				"--runWith", "nodejs",
-				"--run", fileA,
-				"--verbose");
+				"--run", fileA);
 
 		int exitCode = p.waitFor();
 

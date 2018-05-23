@@ -21,6 +21,7 @@ import java.util.LinkedHashSet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
@@ -114,8 +115,13 @@ public class NpmCLI {
 		Collection<LibraryChange> actualChanges = new LinkedHashSet<>();
 		File installPath = new File(locationProvider.getTargetPlatformInstallLocation());
 
+		final String jobName = addressedType.name().toLowerCase();
+
 		int i = 0;
 		for (LibraryChange reqChg : requestedChanges) {
+			if (subMonitor.isCanceled())
+				throw new OperationCanceledException("Operation <" + jobName + "> was canceled.");
+
 			if (reqChg.type == addressedType) {
 				String msgTail = " [package " + i++ + " of " + pckCount + "]";
 				subMonitor.setTaskName(reqChg.toString() + msgTail);
@@ -128,7 +134,6 @@ public class NpmCLI {
 		}
 
 		if (!batchStatus.isOK()) {
-			String jobName = addressedType.name().toLowerCase();
 			logger.logInfo("Some packages could not be " + jobName + "ed due to errors, see log for details.");
 			status.merge(batchStatus);
 		}

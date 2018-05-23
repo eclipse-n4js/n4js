@@ -121,29 +121,46 @@ public interface IDirectoryDiffAcceptor {
 			if (isEmpty()) {
 				sb.append("No differences.");
 			} else {
+				boolean needNewLine = false;
 				if (!unexpected.isEmpty()) {
 					sb.append("unexpected:\n  ");
 					sb.append(Joiner.on("\n  ").join(unexpected));
+					needNewLine |= true;
 				}
 				if (!missing.isEmpty()) {
-					sb.append("missing:");
+					if (needNewLine)
+						sb.append("\n");
+					sb.append("missing:\n  ");
 					sb.append(Joiner.on("\n  ").join(missing));
+					needNewLine |= true;
 				}
 				if (!fileInsteadOfDir.isEmpty()) {
-					sb.append("file instead of directory:");
+					if (needNewLine)
+						sb.append("\n");
+					sb.append("file instead of directory:\n  ");
 					sb.append(Joiner.on("\n  ").join(fileInsteadOfDir));
+					needNewLine |= true;
 				}
 				if (!dirInsteadOfFile.isEmpty()) {
-					sb.append("directory instead of file:");
+					if (needNewLine)
+						sb.append("\n");
+					sb.append("directory instead of file:\n  ");
 					sb.append(Joiner.on("\n  ").join(dirInsteadOfFile));
+					needNewLine |= true;
 				}
 				if (!diffLength.isEmpty()) {
-					sb.append("differing length:");
+					if (needNewLine)
+						sb.append("\n");
+					sb.append("different length:\n  ");
 					sb.append(Joiner.on("\n  ").join(diffLength));
+					needNewLine |= true;
 				}
 				if (!diffContent.isEmpty()) {
-					sb.append("different content:");
+					if (needNewLine)
+						sb.append("\n");
+					sb.append("different content:\n  ");
 					sb.append(Joiner.on("\n  ").join(diffContent));
+					needNewLine |= true;
 				}
 			}
 			return sb.toString();

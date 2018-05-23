@@ -9,6 +9,6 @@
  *   NumberFour AG - Initial API and implementation
  */
 //Import module for side-effect.
-import * as A from "es-module-tests/ex10/A"
 
+import * as A from "es-module-tests/ex10/A";
 A

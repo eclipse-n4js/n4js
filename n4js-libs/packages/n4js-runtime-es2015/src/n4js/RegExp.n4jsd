@@ -14,4 +14,4 @@
     public get flags(): string;
 }
 
-/* -*- mode: typescript;-*- */
+

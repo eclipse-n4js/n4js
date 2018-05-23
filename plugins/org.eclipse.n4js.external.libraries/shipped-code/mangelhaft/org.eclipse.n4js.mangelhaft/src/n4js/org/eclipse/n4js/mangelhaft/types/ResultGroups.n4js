@@ -12,9 +12,9 @@
 
 
 
-import {ResultGroup} from "org/eclipse/n4js/mangelhaft/types/ResultGroup"
-import { TestResult } from "org/eclipse/n4js/mangelhaft/types/TestResult"
-import { aggregateTestStatuses } from "org/eclipse/n4js/mangelhaft/types/TestStatus"
+import {ResultGroup} from "org/eclipse/n4js/mangelhaft/types/ResultGroup";
+import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
+import {aggregateTestStatuses} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
 export public class ResultGroups {
     public results: Array<ResultGroup>;
     public successes: number = 0;

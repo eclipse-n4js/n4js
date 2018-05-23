@@ -38,8 +38,8 @@ Sources {
 	}
 }
 
-// XPECT warnings -->"Tested projects should have the same project type." at "TestedProjects { test.data.re.project, test.data.rl.project.one }"
 TestedProjects {
+	// XPECT warnings -->"Tested projects should have the same project type." at "test.data.re.project"
 	test.data.re.project,
 	test.data.rl.project.one
 }

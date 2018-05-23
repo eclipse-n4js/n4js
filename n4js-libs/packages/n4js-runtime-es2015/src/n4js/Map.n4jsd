@@ -10,8 +10,8 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {IteratorExt} from "Iterator"
 
+import {IteratorExt} from "Iterator";
 export external public class Map<KeyT, ValueT> extends Object implements Iterable<Iterable2<KeyT, ValueT>> {
     public constructor(arg: Iterable<Iterable2<KeyT, ValueT>> =);
 
@@ -68,4 +68,3 @@ export external public class Map<KeyT, ValueT> extends Object implements Iterabl
     public values(): IteratorExt<ValueT>;
 }
 
-/* -*- mode: typescript;-*- */

@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
 
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 export public class DIAsserts {
     static equalsClassName(obj: N4Object, simpleClassName: string) {
        Assert.equal(N4Class.of(obj).name, simpleClassName);

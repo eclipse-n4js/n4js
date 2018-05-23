@@ -8,15 +8,15 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition"
-import {N4Injector} from "n4js/lang/N4Injector"
-import {DIUnsatisfiedBindingError} from "n4js/lang/N4Injector"
 
 //=============================================================================
 // Set Up
 //=============================================================================
 
+import {DIUnsatisfiedBindingError} from "n4js/lang/N4Injector";
+import {N4Injector} from "n4js/lang/N4Injector";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
 interface IA{}
 
 @GenerateInjector
