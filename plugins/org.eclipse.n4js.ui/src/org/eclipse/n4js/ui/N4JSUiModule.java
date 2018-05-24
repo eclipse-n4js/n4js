@@ -108,6 +108,7 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
@@ -324,6 +325,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Delegate to shared injector */
 	public Provider<EclipseBasedN4JSWorkspace> provideEclipseBasedN4JSWorkspace() {
 		return Access.contributedProvider(EclipseBasedN4JSWorkspace.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ProjectDescriptionHelper> provideProjectDescriptionHelper() {
+		return Access.contributedProvider(ProjectDescriptionHelper.class);
 	}
 
 	/** Delegate to shared injector */

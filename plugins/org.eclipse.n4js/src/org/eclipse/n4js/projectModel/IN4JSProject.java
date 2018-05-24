@@ -42,6 +42,11 @@ import com.google.common.collect.ImmutableList;
 public interface IN4JSProject extends IN4JSSourceContainerAware {
 
 	/**
+	 * The name of the package.json file.
+	 */
+	public final static String PACKAGE_JSON = "package.json";
+
+	/**
 	 * The name of the manifest file
 	 */
 	public final static String N4MF_MANIFEST = N4MFConstants.N4MF_MANIFEST;

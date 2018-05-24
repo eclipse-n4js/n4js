@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.n4mf.parser.antlr.N4MFParser;
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess;
 import org.eclipse.n4js.n4mf.utils.N4MFConstants;
@@ -61,6 +62,14 @@ public class ManifestValuesParsingUtil {
 	 */
 	public static ParserResults<DeclaredVersion> parseDeclaredVersion(String manifestText) {
 		return parse(getGrammarAccess().getDeclaredVersionRule(), DeclaredVersion.class, manifestText);
+	}
+
+	/**
+	 * Creates instance of {@link VersionConstraint} from provided value. Never returns <code>null</code>, but the 'ast'
+	 * property in the returned {@link ParserResults} may be <code>null</code> in case of error.
+	 */
+	public static ParserResults<VersionConstraint> parseVersionConstraint(String manifestText) {
+		return parse(getGrammarAccess().getVersionConstraintRule(), VersionConstraint.class, manifestText);
 	}
 
 	private static <T extends EObject> ParserResults<T> parse(ParserRule parserRule, Class<T> expectedTypeOfRoot,
