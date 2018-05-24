@@ -30,6 +30,7 @@ import org.osgi.framework.BundleContext;
  */
 public class RegularExpressionActivator extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.n4js.regex.ui";
 	public static final String ORG_ECLIPSE_N4JS_REGEX_REGULAREXPRESSION = "org.eclipse.n4js.regex.RegularExpression";
 	
 	private static final Logger logger = Logger.getLogger(RegularExpressionActivator.class);
@@ -96,5 +97,6 @@ public class RegularExpressionActivator extends AbstractUIPlugin {
 	protected Module getSharedStateModule() {
 		return new SharedStateModule();
 	}
+	
 	
 }
