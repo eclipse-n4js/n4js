@@ -58,42 +58,58 @@ class N4MFValidator extends AbstractN4MFValidator {
 			}
 		};
 	}
-
+	
+	/**
+	 * Collect various specified folders from a ProjectDescription and 
+	 */
 	@Check
 	def void checkProjectDescription(ProjectDescription projectDescription) {
+		// keep list of all occuring folder types
 		val types = <Object>newArrayList
+		
+		// keep map of all paths in the description (maps type to list of folders)
 		val allPaths = <Object, List<String>>newHashMap
-		val sourceTypes = projectDescription.sourceContainers
-		val allSourcePaths = sourceTypes.toInvertedMap[paths]
+		// keep list of paths that must exist
 		val pathsWhichMustExists = <EAttribute, List<String>>newHashMap
+		
+		// extract all source paths to be found in the source container section
+		val sourceTypes = projectDescription.sourceContainers
+		val allSourcePaths = sourceTypes.toInvertedMap[type | type.paths]
+		// add source container types to list of folder types
 		types.addAll(sourceTypes)
 		allPaths.putAll(allSourcePaths)
+	
+		// if present add output path feature to types
 		val outputPathFeature = PROJECT_DESCRIPTION__OUTPUT_PATH_RAW
 		types.add(outputPathFeature)
-		// output path must not exist, usually not added to git and created on the fly, cf. IDEBUG-197
+		// output path does not have to exist, usually not added to git and created on the fly, cf. IDEBUG-197
+		// if present, add output folder to list of paths
 		allPaths.put(outputPathFeature,
 			if (projectDescription.outputPath !== null) #[projectDescription.outputPath] else #[])
+
+		// if present, add library paths to list of types + paths 
 		val libraryPathFeature = PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW
 		types.add(libraryPathFeature)
 		pathsWhichMustExists.put(libraryPathFeature, projectDescription.libraryPaths)
+
+		// if present, add resources path to list of types + paths
 		val resourcesPathFeature = PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW
 		types.add(resourcesPathFeature)
 		pathsWhichMustExists.put(resourcesPathFeature, projectDescription.resourcePaths)
 		allPaths.putAll(pathsWhichMustExists)
 
-		projectDescription.checkMainModule();
-
 		projectDescription.checkForExistingPaths(pathsWhichMustExists)
 
-		types.forEach [
-			checkForDuplicatePaths(projectDescription, allPaths)
+		types.forEach [ folderType |
+			folderType.checkForDuplicatePaths(projectDescription, allPaths)
 		]
 	}
 
 	/**
 	 * Checks the <code>MainModule</code> property of the given project description for validity.
 	 */
-	def private void checkMainModule(ProjectDescription pd) {
+	@Check
+	def public void checkMainModule(ProjectDescription pd) {
 		val mainModuleSpecifier = pd.mainModule;
 		if (mainModuleSpecifier !== null) { // this property is optional, so null is fine!
 			if (mainModuleSpecifier.empty || !isExistingModule(pd, mainModuleSpecifier)) {

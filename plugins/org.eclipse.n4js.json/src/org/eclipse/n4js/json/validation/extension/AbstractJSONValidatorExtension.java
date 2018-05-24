@@ -163,6 +163,20 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 	 * Adds an {@link JSONIssueCodes#JSON_EXPECTED_DIFFERENT_VALUE_TYPE} to {@code value} if not.
 	 */
 	protected boolean checkIsType(JSONValue value, EClass valueClass) {
+		return checkIsType(value, valueClass, "");
+	}
+	
+	/**
+	 * Checks that the given JSON {@code value} is an instance of the given {@code valueClass}.
+	 *
+	 * Adds an {@link JSONIssueCodes#JSON_EXPECTED_DIFFERENT_VALUE_TYPE} to {@code value} if not.
+	 * 
+	 * @param value The value whose type to check.
+	 * @param valueClass The expected class
+	 * @param locationClause Additional clause to append to the error message to improve the validation 
+	 * 	message quality (e.g. Expected string instead of object <<for property 'Z'>>.)
+	 */
+	protected boolean checkIsType(JSONValue value, EClass valueClass, String locationClause) {
 		if (!valueClass.isInstance(value)) {
 			addIssue(JSONIssueCodes.getMessageForJSON_EXPECTED_DIFFERENT_VALUE_TYPE(getJSONValueDescription(valueClass),
 					getJSONValueDescription(value), ""), value, JSONIssueCodes.JSON_EXPECTED_DIFFERENT_VALUE_TYPE);

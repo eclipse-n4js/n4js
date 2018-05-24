@@ -14,12 +14,17 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
 import org.eclipse.n4js.json.validation.extension.CheckProperty;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.validation.IssueCodes;
 
 import com.google.inject.Inject;
@@ -45,7 +50,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Validates the project/package name. */
-	@CheckProperty(propertyPath = "name", mandatory = true)
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__NAME, mandatory = true)
 	public void checkName(JSONValue projectNameValue) {
 		// first check for the type of the name value
 		if (!checkIsType(projectNameValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
@@ -57,5 +62,52 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectName.getValue()),
 					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
 		}
+	}
+
+	@CheckProperty(propertyPath = "n4js." + ProjectDescriptionHelper.PROP__SOURCES, mandatory = true)
+	public void checkSourceContainers(JSONValue sourceContainerValue) {
+		// first check for the type of the source-container value
+		if (!checkIsType(sourceContainerValue, JSONPackage.Literals.JSON_OBJECT, " in source container section.")) {
+			return;
+		}
+		final JSONObject sourceContainerObject = (JSONObject) sourceContainerValue;
+
+		for (NameValuePair pair : sourceContainerObject.getNameValuePairs()) {
+			checkSourceContainerSection(pair);
+		}
+	}
+
+	private boolean checkSourceContainerSection(NameValuePair pair) {
+		final String sourceContainerType = pair.getName();
+
+		// check that sourceContainerType represents a valid source container type
+		if (!isValidSourceContainerTypeLiteral(sourceContainerType)) {
+			addIssue(IssueCodes.getMessageForPKGJ_INVALID_SOURCE_CONTAINER_TYPE(sourceContainerType),
+					pair.getValue(), IssueCodes.PKGJ_INVALID_SOURCE_CONTAINER_TYPE);
+			return false;
+		}
+
+		// check type of RHS
+		if (!checkIsType(pair.getValue(), JSONPackage.Literals.JSON_ARRAY)) {
+			return false;
+		}
+
+		// check each source container specifier
+		final JSONArray sourceContainerSpecifiers = (JSONArray) pair.getValue();
+		for (JSONValue specifier : sourceContainerSpecifiers.getElements()) {
+
+		}
+
+		return true;
+	}
+
+	/**
+	 * Returns {@code true} iff the given {@code typeLiteral} represents a valid SourceContainerType (e.g. source,
+	 * test).
+	 */
+	private boolean isValidSourceContainerTypeLiteral(String typeLiteral) {
+		// check that typeLiteral is all lower-case and a corresponding enum literal exists
+		return typeLiteral.toLowerCase().equals(typeLiteral) &&
+				SourceContainerType.get(typeLiteral.toUpperCase()) != null;
 	}
 }
