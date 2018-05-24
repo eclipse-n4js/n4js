@@ -52,9 +52,9 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
-
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4JS.VersionedIdentifierRef;
+
 import org.eclipse.n4js.transpiler.im.*;
 
 import org.eclipse.n4js.ts.typeRefs.BaseTypeRef;
@@ -65,10 +65,10 @@ import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
-
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.VersionedReference;
+
 import org.eclipse.n4js.ts.types.TypableElement;
 
 /**

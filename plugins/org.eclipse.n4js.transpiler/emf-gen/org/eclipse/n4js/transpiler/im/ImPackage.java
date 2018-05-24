@@ -32,16 +32,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
  *   <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * <!-- begin-model-doc -->
- * *
- * Copyright (c) 2016 NumberFour AG.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *  * Contributors:
- *   NumberFour AG - Initial API and implementation
- * <!-- end-model-doc -->
  * @see org.eclipse.n4js.transpiler.im.ImFactory
  * @model kind="package"
  *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4js_im' modelDirectory='/org.eclipse.n4js.transpiler/emf-gen' forceOverwrite='true' updateClasspath='false' literalsInterface='true' loadInitialization='false' complianceLevel='8.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.transpiler'"
@@ -3032,7 +3022,6 @@ public interface ImPackage extends EPackage {
 	 */
 	int STRING_LITERAL_FOR_STE_OPERATION_COUNT = N4JSPackage.STRING_LITERAL_OPERATION_COUNT + 1;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl <em>Versioned Parameterized Type Ref IM</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -4017,7 +4006,6 @@ public interface ImPackage extends EPackage {
 	 */
 	int VERSIONED_IDENTIFIER_REF_IM_OPERATION_COUNT = IDENTIFIER_REF_IM_OPERATION_COUNT + 3;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl <em>Versioned Named Import Specifier IM</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -4108,6 +4096,7 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM_OPERATION_COUNT = N4JSPackage.NAMED_IMPORT_SPECIFIER_OPERATION_COUNT + 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.Script_IM <em>Script IM</em>}'.
