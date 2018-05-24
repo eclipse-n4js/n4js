@@ -13,7 +13,7 @@ package org.eclipse.n4js.transpiler.sourcemap;
 import java.util.TreeSet;
 
 /**
- * TreeSet with improved toString method for simplifying debugging. The line mappings are a tree set to automatially
+ * TreeSet with improved toString method for simplifying debugging. The line mappings are a tree set to automatically
  * sort the mappings by column.
  */
 public class LineMappings extends TreeSet<MappingEntry> {
@@ -34,6 +34,18 @@ public class LineMappings extends TreeSet<MappingEntry> {
 			strb.append(entry.toString());
 		}
 		return strb.toString();
+	}
+
+	/**
+	 * Returns the closes mapping entry or null, if no such entry is found.
+	 */
+	MappingEntry findEntryByGenColumn(int col) {
+		for (MappingEntry entry : this) {
+			if (entry.srcColumn <= col) {
+				return entry;
+			}
+		}
+		return null;
 	}
 
 }

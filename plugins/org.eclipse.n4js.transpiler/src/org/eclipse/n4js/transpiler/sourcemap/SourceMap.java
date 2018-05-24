@@ -11,10 +11,18 @@
 package org.eclipse.n4js.transpiler.sourcemap;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 
 /**
  * Source map data structure according to the
@@ -29,6 +37,27 @@ public class SourceMap {
 	 */
 	public static SourceMap parse(CharSequence s) {
 		return SourceMapParser.parse(s);
+	}
+
+	/**
+	 * Loads a source map from given file and resolves all paths as long as their location is defined relative to the
+	 * given source map path.
+	 */
+	public static SourceMap loadAndResolve(Path sourceMapPath) throws IOException {
+		InputStream inStream = Files.newInputStream(sourceMapPath);
+		try (InputStreamReader reader = new InputStreamReader(inStream, Charsets.UTF_8)) {
+			SourceMap sourceMap = parse(CharStreams.toString(reader));
+			sourceMap.resolvedMapFile = sourceMapPath;
+			Path sourceMapFolder = sourceMapPath.getParent();
+			sourceMap.resolvedFile = sourceMapFolder.resolve(sourceMap.file);
+			ArrayList<Path> list = new ArrayList<>(sourceMap.sources.size());
+			for (String src : sourceMap.sources) {
+				Path path = sourceMapFolder.resolve(src);
+				list.add(path);
+			}
+			sourceMap.resolvedSources = Collections.unmodifiableList(list);
+			return sourceMap;
+		}
 	}
 
 	/**
@@ -55,6 +84,19 @@ public class SourceMap {
 	 * The mappings, the index of the mapping defines the zero-based line number.
 	 */
 	final List<LineMappings> mappings = new ArrayList<>();
+
+	/**
+	 * set only in {@link #loadAndResolve(Path)}
+	 */
+	Path resolvedMapFile = null;
+	/**
+	 * set only in {@link #loadAndResolve(Path)}
+	 */
+	Path resolvedFile = null;
+	/**
+	 * The list of resolved source files, set only in {@link #loadAndResolve(Path)}
+	 */
+	List<Path> resolvedSources = Collections.emptyList();
 
 	/**
 	 * Adds a new mapping entry.
@@ -187,6 +229,71 @@ public class SourceMap {
 			}
 		}
 
+	}
+
+	/**
+	 * Returns the resolved map file. This is only set if the source map was created via {@link #loadAndResolve(Path)}.
+	 */
+	public Path getResolvedMapFile() {
+		return resolvedMapFile;
+	}
+
+	/**
+	 * Returns the resolved generated file. This is only set if the source map was created via
+	 * {@link #loadAndResolve(Path)}.
+	 */
+	public Path getResolvedFile() {
+		return resolvedFile;
+	}
+
+	/**
+	 * Returns the resolved source files in the same order as the sources. This is only set if the source map was
+	 * created via {@link #loadAndResolve(Path)}.
+	 */
+	public List<Path> getResolvedSources() {
+		return resolvedSources;
+	}
+
+	/**
+	 * Find mapping entry at given generated (JavaScript) position.
+	 * 
+	 * @return the closest entry or null, if no such entry was found.
+	 */
+	public MappingEntry findMappingForGenPosition(int genLine, int genColumns) {
+		if (genLine >= mappings.size()) {
+			return null;
+		}
+		LineMappings lineMappings = mappings.get(genLine);
+		if (lineMappings == null) {
+			return null;
+		}
+		MappingEntry entry = lineMappings.findEntryByGenColumn(genColumns);
+		return entry;
+	}
+
+	/**
+	 * Find mapping entry at given source (N4JS) position.
+	 * 
+	 * @return the closest entry or null, if no such entry was found.
+	 */
+	public MappingEntry findMappingForSrcPosition(int sourceIndex, int sourceLine, int sourceColumn) {
+		MappingEntry entry = null;
+		for (LineMappings lineMapping : mappings) {
+			for (MappingEntry e : lineMapping) {
+				if (e.srcLine == sourceLine
+						&& e.srcColumn <= sourceColumn
+						&& e.srcIndex == sourceIndex) {
+					if (entry == null
+							|| (sourceColumn - e.srcColumn < sourceColumn - entry.srcColumn)) {
+						entry = e;
+						if (entry.srcColumn == sourceColumn) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		return entry;
 	}
 
 }

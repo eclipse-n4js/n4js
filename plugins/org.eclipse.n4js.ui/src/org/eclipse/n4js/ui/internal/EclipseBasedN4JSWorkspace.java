@@ -88,6 +88,16 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 				&& nestedLocation.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
 			return URI.createPlatformResourceURI(nestedLocation.segment(1), true);
 		}
+		if (nestedLocation.isFile()) {
+			String nested = nestedLocation.toString();
+			for (IProject proj : workspace.getProjects()) {
+				URI projURI = URI.createFileURI(proj.getLocation().toFile().toString());
+				String ps = projURI.toString();
+				if (nested.startsWith(ps)) {
+					return projURI;
+				}
+			}
+		}
 		return null;
 	}
 

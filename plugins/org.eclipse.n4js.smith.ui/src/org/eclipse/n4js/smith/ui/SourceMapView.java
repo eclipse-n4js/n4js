@@ -10,26 +10,38 @@
  */
 package org.eclipse.n4js.smith.ui;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.n4js.ui.handler.GeneratedJsFileLocator;
+import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
+import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
+import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.Bullet;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.CaretEvent;
+import org.eclipse.swt.custom.CaretListener;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GlyphMetrics;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TabFolder;
@@ -39,7 +51,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Optional;
 import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 
@@ -54,24 +65,23 @@ public class SourceMapView extends ViewPart {
 	private final String MAP_EXT = "map";
 	private final String N4JS_EXT = "n4js";
 
-	private TabFolder tabsOrg;
-	private Map<IFile, StyledText> textOrgs;
+	private CTabFolder tabsOrg;
+	private Map<File, StyledText> textOrgs;
 	private StyledText textGen;
 	private StyledText textMappings;
 	private StyledText textMapFile;
 	private StyledText textMessages;
 
 	private IEditorPart activeEditor;
-	private IFile mapFile;
-	private IFile genFile;
-	private final Map<String, IFile> orgFiles = new LinkedHashMap<>();
 
 	private Color[] colors;
 
-	@Inject
-	private GeneratedJsFileLocator fileLocator;
-
 	private Font font;
+
+	@Inject
+	private SourceMapFileLocator sourceMapFileLocator;
+
+	private SourceMap sourceMap;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -79,22 +89,42 @@ public class SourceMapView extends ViewPart {
 		font = new Font(parent.getDisplay(), "Courier New", 12, SWT.NORMAL);
 		int diff = 60, shades = 3;
 		int index = 0;
-		colors = new Color[2 * 3 * shades];
-		for (int r = 0; r < shades; r++) {
-			for (int g = 0; g < shades; g++) {
-				for (int b = 0; b < shades; b++) {
-					if (r != g || r != b || g != b) {
-						colors[index++] = new Color(display, 255 - diff * r, 255 - diff * g, 255 - diff * b);
-					}
-				}
-			}
-		}
+		// colors = new Color[2 * 3 * shades];
+		// for (int r = 0; r < shades; r++) {
+		// for (int g = 0; g < shades; g++) {
+		// for (int b = 0; b < shades; b++) {
+		// if (r != g || r != b || g != b) {
+		// colors[index++] = new Color(display, 255 - diff * r, 255 - diff * g, 255 - diff * b);
+		// }
+		// }
+		// }
+		// }
 
 		SashForm codeMapping = new SashForm(parent, SWT.VERTICAL);
 		SashForm orgGen = new SashForm(codeMapping, SWT.HORIZONTAL);
-		tabsOrg = new TabFolder(orgGen, SWT.BORDER);
+		tabsOrg = new CTabFolder(orgGen, SWT.BORDER);
+
 		textOrgs = new LinkedHashMap<>();
 		textGen = createText(orgGen, true);
+		textGen.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				int offset = textGen.getOffsetAtLocation(new Point(e.x, e.y));
+				int line = textGen.getLineAtOffset(offset);
+				int column = offset - textGen.getOffsetAtLine(line);
+				selectSrcByGenPos(line, column);
+			}
+		});
+		textGen.addCaretListener(new CaretListener() {
+
+			@Override
+			public void caretMoved(CaretEvent event) {
+				int offset = event.caretOffset;
+				int line = textGen.getLineAtOffset(offset);
+				int column = offset - textGen.getOffsetAtLine(line);
+				selectSrcByGenPos(line, column);
+			}
+		});
 
 		SashForm mappingAndMessages = new SashForm(codeMapping, SWT.HORIZONTAL);
 
@@ -118,9 +148,9 @@ public class SourceMapView extends ViewPart {
 	@Override
 	public void dispose() {
 		font.dispose();
-		for (int i = 0; i < colors.length; i++) {
-			colors[i].dispose();
-		}
+		// for (int i = 0; i < colors.length; i++) {
+		// colors[i].dispose();
+		// }
 	}
 
 	private StyledText createText(Composite parent, boolean nonPropFont) {
@@ -142,6 +172,10 @@ public class SourceMapView extends ViewPart {
 	}
 
 	void log(String s) {
+		textMessages.append("\n" + s);
+	}
+
+	void err(String s) {
 		textMessages.append("\n" + s);
 	}
 
@@ -180,7 +214,8 @@ public class SourceMapView extends ViewPart {
 
 	private void updateActiveEditor(IEditorPart editorPart) {
 
-		if (editorPart != activeEditor) {
+		if (editorPart != activeEditor && editorPart != null) {
+			activeEditor = editorPart;
 			IFileEditorInput fei = (IFileEditorInput) activeEditor.getEditorInput();
 			activeEditor = editorPart;
 
@@ -188,125 +223,60 @@ public class SourceMapView extends ViewPart {
 
 			IFile editorFile = fei.getFile();
 			String editorFileExt = editorFile.getFileExtension().toLowerCase();
+			Path path = Paths.get(editorFile.getLocation().toFile().toURI());
 
 			if (MAP_EXT.equals(editorFileExt)) {
 				log("Found map file in editor, try to resolve original and generated code.");
-				mapFile = editorFile;
 				try {
-					String s = readFile(mapFile);
-					textMapFile.setText(s);
-					resolveFromMapFile(s);
+					resolveFromMap(path);
 				} catch (Exception ex) {
-					log("Error reading map file " + mapFile + ": " + ex);
+					err("Error reading map file " + editorFile + ": " + ex);
 				}
 			} else if (GEN_EXT.equals(editorFileExt)) {
 				log("Found javascript file in editor, try to resolve map file and original code.");
-				genFile = editorFile;
 				try {
-					String genCode = readFile(genFile);
-					textGen.setText(genCode);
-					resolveFromGen(genCode);
+					resolveFromGen(path);
 				} catch (Exception ex) {
-					log("Error reading javascript file " + genFile + ": " + ex);
 				}
 			} else if (N4JS_EXT.equals(editorFileExt)) {
 				log("Found n4js file in editor, try to resolve map file and generated code.");
-				addOrg(editorFile);
 				try {
-					resolveFromN4JS(editorFile);
+					resolveFromSrc(path);
 				} catch (Exception ex) {
-					log("Error reading javascript file " + genFile + ": " + ex);
+					err("Error reading source file " + editorFile + ": " + ex);
 				}
 			}
-
-			List<IFile> orgFiles = new ArrayList<>();
-			IFile genFile = null;
-			textMapFile.setText("Mappings file not loaded");
-			textMappings.setText("No mappings loaded.");
-
-			final Optional<IFile> generatedSource = fileLocator.tryGetGeneratedSourceForN4jsFile(orgFile);
-			if (generatedSource.isPresent()) {
-				genFile = generatedSource.get();
-				textGen.setText("Loading " + genFile);
-			} else {
-				textGen.setText("Generated file not found.");
-			}
-
-			boolean error = false;
-
-			try {
-				textOrg.setText(readFile(orgFile));
-			} catch (Exception ex) {
-				textOrg.setText("Error loading " + orgFile + "\n" + ex);
-				error = true;
-			}
-			String genCode = null;
-			if (genFile != null && genFile.exists()) {
-				try {
-					genCode = readFile(genFile);
-					textGen.setText(genCode);
-				} catch (Exception ex) {
-					textGen.setText("Error loading " + genFile + "\n" + ex);
-					error = true;
-				}
-
-				if (genCode != null) {
-					int beginIndex = genCode.lastIndexOf(SOURCEMAP_INDICATOR);
-					if (beginIndex >= 0) {
-						int endIndex = genCode.indexOf('\n', beginIndex);
-						if (endIndex < 0)
-							endIndex = genCode.length();
-						String mapFileName = genCode.substring(beginIndex + SOURCEMAP_INDICATOR.length(), endIndex)
-								.trim();
-						mapFile = (IFile) genFile.getParent().findMember(mapFileName);
-						textMapFile.setText("Loading " + mapFile);
-					}
-				}
-				if (mapFile == null) {
-					String genFileName = genFile.getName();
-					mapFile = (IFile) genFile.getParent().findMember(genFileName + ".map");
-					if (!mapFile.exists()) {
-						String ext = genFile.getFileExtension();
-						String mapFileName = genFileName.substring(0, genFileName.length() - ext.length()) + ".map";
-						mapFile = (IFile) genFile.getParent().findMember(mapFileName);
-					}
-				}
-			}
-			if (mapFile != null && mapFile.exists()) {
-				try {
-					String mapCode = readFile(mapFile);
-					textMapFile.setText(mapCode);
-				} catch (Exception ex) {
-					textMapFile.setText("Error loading " + mapFile + "\n" + ex);
-					error = true;
-				}
-			}
-
 		}
-		markText();
 	}
 
-	/**
-	 * @param editorFile
-	 */
-	private void resolveFromN4JS(IFile editorFile) {
-		// TODO Auto-generated method stub
-
+	private void resolveFromSrc(Path path) throws Exception {
+		File file = sourceMapFileLocator.resolveSourceMapFromSrc(path);
+		if (file == null)
+			return;
+		resolveFromMap(file.toPath());
 	}
 
-	/**
-	 * @param genCode
-	 */
-	private void resolveFromGen(String genCode) {
-		// TODO Auto-generated method stub
-
+	private void resolveFromGen(Path path) throws Exception {
+		File file = sourceMapFileLocator.resolveSourceMapFromGen(path);
+		if (file == null)
+			return;
+		resolveFromMap(file.toPath());
 	}
 
-	/**
-	 * @param s
-	 */
-	private void resolveFromMapFile(String s) {
+	private void resolveFromMap(Path path) throws Exception {
+		File mapFile = path.toFile();
+		String s = readFile(mapFile);
+		textMapFile.setText(s);
 
+		sourceMap = SourceMap.loadAndResolve(path);
+
+		File file = sourceMap.getResolvedFile().toFile();
+		s = readFile(file);
+		textGen.setText(s);
+
+		for (Path srcPath : sourceMap.getResolvedSources()) {
+			addOrg(srcPath.toFile());
+		}
 	}
 
 	/**
@@ -320,36 +290,39 @@ public class SourceMapView extends ViewPart {
 		for (StyledText t : textOrgs.values()) {
 			t.dispose();
 		}
-		TabItem[] items = tabsOrg.getItems();
-		for (TabItem item : items) {
+		CTabItem[] items = tabsOrg.getItems();
+		for (CTabItem item : items) {
 			item.dispose();
 		}
 		textOrgs.clear();
-
-		mapFile = null;
-		genFile = null;
-		orgFiles.clear();
+		sourceMap = null;
 
 	}
 
-	private void addOrg(IFile file) {
+	private void addOrg(File file) throws IOException {
+		File canFile = file.getCanonicalFile();
+		if (textOrgs.containsKey(canFile)) {
+			return;
+		}
 		String code;
 		try {
-			code = readFile(file);
+			code = readFile(canFile);
 		} catch (Exception e) {
 			log("Error loading original file " + file + ": " + e);
 			return;
 		}
-		TabItem tabItem = new TabItem(tabsOrg, SWT.NULL);
-		tabItem.setText(file.getName());
+		CTabItem tabItem = new CTabItem(tabsOrg, SWT.NONE);
 		StyledText text = createText(tabsOrg, true);
-		tabItem.setControl(text);
 		text.setText(code);
-		textOrgs.put(file, text);
+		tabItem.setControl(text);
+		tabItem.setText(file.getName());
+		textOrgs.put(canFile, text);
+		tabsOrg.setSelection(tabsOrg.getItemCount() - 1);
+
 	}
 
-	private String readFile(IFile file) throws Exception {
-		InputStream in = file.getContents();
+	private String readFile(File file) throws Exception {
+		InputStream in = new FileInputStream(file);
 		try (InputStreamReader reader = new InputStreamReader(in, Charsets.UTF_8)) {
 			return CharStreams.toString(reader);
 		}
@@ -359,6 +332,20 @@ public class SourceMapView extends ViewPart {
 	public void setFocus() {
 		// TODO Auto-generated method stub
 
+	}
+
+	private void selectSrcByGenPos(int genLine, int genColumn) {
+		if (sourceMap != null) {
+			MappingEntry entry = sourceMap.findMappingForGenPosition(genLine, genColumn);
+			if (entry != null) {
+				Path srcPath = sourceMap.getResolvedSources().get(entry.srcIndex);
+				StyledText text = textOrgs.get(srcPath.normalize().toFile());
+				int delta = genColumn - entry.genColumn;
+				int srcOffset = text.getOffsetAtLine(entry.srcLine)
+						+ entry.srcColumn + delta;
+				text.setSelection(srcOffset, srcOffset + 1);
+			}
+		}
 	}
 
 }

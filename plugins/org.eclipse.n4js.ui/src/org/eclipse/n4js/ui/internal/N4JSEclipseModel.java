@@ -79,15 +79,15 @@ public class N4JSEclipseModel extends N4JSModel {
 		}
 
 		final String projectName = location.lastSegment();
-		final IProject project;
-		if (location.isFile()) {
+		IProject project;
+		project = workspace.getProject(projectName);
+		if (project == null && location.isFile()) {
 			project = externalLibraryWorkspace.getProject(projectName);
 			checkNotNull(project, "Project does not exist in external workspace. URI: " + location);
-		} else {
-			project = workspace.getProject(projectName);
 		}
 
-		return doGetN4JSProject(project, location);
+		checkNotNull(project, "Project not found. URI: " + location);
+		return getN4JSProject(project);
 	}
 
 	@Override
@@ -121,11 +121,27 @@ public class N4JSEclipseModel extends N4JSModel {
 
 				if (location.isFile()) {
 					final IN4JSEclipseProject eclipseProject = findProjectWith(location);
-					if (null != eclipseProject && eclipseProject.exists()) {
+					if (eclipseProject != null && eclipseProject.exists()) {
 						if (eclipseProject.getProject() instanceof ExternalProject) {
 							final IResource resource = externalLibraryWorkspace.getResource(location);
-							if (null != resource) {
+							if (resource != null) {
 								n4jsContainer = getN4JSSourceContainer(resource);
+							}
+						} else {
+							String locString = location.toFileString();
+
+							String projPathString = eclipseProject.getLocationPath().toString();
+							if (locString.startsWith(projPathString)) {
+								locString = eclipseProject.getLocation().toString()
+										+ locString.substring(projPathString.length());
+							}
+
+							for (IN4JSEclipseSourceContainer sc : eclipseProject.getSourceContainers()) {
+								String scLoc = sc.getLocation().toString();
+								if (locString.startsWith(scLoc)) {
+									return Optional.of(sc);
+
+								}
 							}
 						}
 					}
