@@ -11,6 +11,7 @@
 package org.eclipse.n4js.n4mf.resource
 
 import com.google.inject.Inject
+import org.eclipse.n4js.n4mf.ModuleLoader
 import org.eclipse.n4js.n4mf.N4MFInjectorProvider
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.xtext.testing.InjectWith
@@ -19,8 +20,6 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.n4mf.ModuleLoader
-import java.io.ByteArrayOutputStream
 
 /**
  * Test for the N4JS manifest merger.
@@ -69,16 +68,6 @@ class ManifestMergerTest extends Assert {
 			'Expected 3 required runtime libraries after the merge. Got ' + result.requiredRuntimeLibraries.size + ' instead.',
 			result.requiredRuntimeLibraries.size === 3
 		);
-		
-		from.contents.clear();
-		from.contents.add(result);
-		
-		val output = new ByteArrayOutputStream();
-		from.save(output, emptyMap);
-		
-		println(new String(output.toByteArray));
-		
-		println(result.requiredRuntimeLibraries);
 	}
 
 	@Test
