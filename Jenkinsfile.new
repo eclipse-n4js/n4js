@@ -78,6 +78,7 @@ pipeline {
             archive '**/builds/**/target/products/*.zip'
             // platform independent headless jar
             archive '**/tools/**/target/n4jsc.jar'
+            archive '**/logs/*.log'
             junit '**/surefire-reports/**/*.xml'
             deleteDir()
         }
