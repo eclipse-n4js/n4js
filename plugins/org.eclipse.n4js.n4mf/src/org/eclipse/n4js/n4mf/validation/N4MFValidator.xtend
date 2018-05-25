@@ -37,6 +37,8 @@ import static org.eclipse.n4js.n4mf.N4mfPackage.Literals.*
 import static org.eclipse.n4js.n4mf.utils.N4MFUtils.*
 import static org.eclipse.n4js.n4mf.validation.IssueCodes.*
 import org.eclipse.n4js.n4mf.SourceContainerDescription
+import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.emf.ecore.EObject
 
 class N4MFValidator extends AbstractN4MFValidator {
 
@@ -59,45 +61,84 @@ class N4MFValidator extends AbstractN4MFValidator {
 		};
 	}
 	
+	private enum FolderType {
+		SOURCE,
+		SOURCE_EXTERNAL,
+		SOURCE_TEST,
+		OUTPUT,
+		LIBRARY,
+		RESOURCE
+	}
+	
+	static def FolderType sourceContainerFolderType(SourceContainerType type) {
+		return switch (type) {
+			case SourceContainerType.SOURCE: FolderType.SOURCE
+			case SourceContainerType.EXTERNAL: FolderType.SOURCE_EXTERNAL
+			case SourceContainerType.TEST: FolderType.SOURCE_TEST
+		}
+	}
+	
+	static def String folderTypeDescription(FolderType type) {
+		return switch (type) {
+			case FolderType.SOURCE:
+				"SOURCE"
+			case FolderType.SOURCE_EXTERNAL:
+				"EXTERNAL"
+			case FolderType.SOURCE_TEST:
+				"TEST"
+			case FolderType.RESOURCE:
+				"Resources"
+			case FolderType.LIBRARY:
+				"Libraries"
+			case FolderType.OUTPUT:
+				"Output"
+			default:
+				"<unknown>"
+		}
+	}
+	
 	/**
 	 * Collect various specified folders from a ProjectDescription and 
 	 */
 	@Check
 	def void checkProjectDescription(ProjectDescription projectDescription) {
-		// keep list of all occuring folder types
-		val types = <Object>newArrayList
+		// keep list of all occurring folder types
+		val types = <FolderType>newArrayList
 		
 		// keep map of all paths in the description (maps type to list of folders)
-		val allPaths = <Object, List<String>>newHashMap
+		val allPaths = <FolderType, List<String>>newHashMap
 		// keep list of paths that must exist
-		val pathsWhichMustExists = <EAttribute, List<String>>newHashMap
+		val pathsWhichMustExists = <FolderType, List<String>>newHashMap
 		
 		// extract all source paths to be found in the source container section
 		val sourceTypes = projectDescription.sourceContainers
-		val allSourcePaths = sourceTypes.toInvertedMap[type | type.paths]
+		val allSourcePaths = sourceTypes.toMap(
+			[type | type.sourceContainerType.sourceContainerFolderType], 
+			[type | type.paths]
+		)
 		// add source container types to list of folder types
-		types.addAll(sourceTypes)
+		types.addAll(sourceTypes.map[d | d.sourceContainerType.sourceContainerFolderType])
 		allPaths.putAll(allSourcePaths)
 	
 		// if present add output path feature to types
-		val outputPathFeature = PROJECT_DESCRIPTION__OUTPUT_PATH_RAW
-		types.add(outputPathFeature)
+		types.add(FolderType.OUTPUT)
 		// output path does not have to exist, usually not added to git and created on the fly, cf. IDEBUG-197
 		// if present, add output folder to list of paths
-		allPaths.put(outputPathFeature,
+		allPaths.put(FolderType.OUTPUT,
 			if (projectDescription.outputPath !== null) #[projectDescription.outputPath] else #[])
 
 		// if present, add library paths to list of types + paths 
-		val libraryPathFeature = PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW
-		types.add(libraryPathFeature)
-		pathsWhichMustExists.put(libraryPathFeature, projectDescription.libraryPaths)
+		types.add(FolderType.LIBRARY)
+		pathsWhichMustExists.put(FolderType.LIBRARY, projectDescription.libraryPaths)
 
 		// if present, add resources path to list of types + paths
-		val resourcesPathFeature = PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW
-		types.add(resourcesPathFeature)
-		pathsWhichMustExists.put(resourcesPathFeature, projectDescription.resourcePaths)
+		types.add(FolderType.RESOURCE)
+		pathsWhichMustExists.put(FolderType.RESOURCE, projectDescription.resourcePaths)
+		
+		// add mandatory paths to allPaths
 		allPaths.putAll(pathsWhichMustExists)
-
+		
+		
 		projectDescription.checkForExistingPaths(pathsWhichMustExists)
 
 		types.forEach [ folderType |
@@ -120,21 +161,30 @@ class N4MFValidator extends AbstractN4MFValidator {
 		}
 	}
 
+	
 	def private checkForExistingPaths(ProjectDescription projectDescription,
-		HashMap<EAttribute, List<String>> containerToPath) {
+		HashMap<FolderType, List<String>> containerToPath) {
 		val uri = projectDescription.eResource.URI
 		val absoluteProjectPath = pathProvider.getAbsoluteProjectPath(uri)
+		
 		for (entry : containerToPath.entrySet) {
 			for (path : entry.value) {
 				val absolutePath = absoluteProjectPath + File.separator + path
 				val file = new File(absolutePath)
 				if (!file.exists || file.file) {
-					val pathContainer = entry.key
 					val messageFileDoesntExist = getMessageForNON_EXISTING_PATH(path)
 					val messageFileNoFolder = getMessageForNO_FOLDER_PATH(path)
-					val container = getContainer(pathContainer, projectDescription)
-					val feature = getFeature(pathContainer, projectDescription)
-					val index = getIndex(pathContainer, projectDescription, path)
+
+					val FolderType folderType = entry.key
+					
+					// obtain EObject of the attribute that contains the path  
+					val container = getContainer(folderType, projectDescription)
+					// obtain EAttribute for the given folder type
+					val feature = getAttribute(folderType)
+					
+					
+					val index = getIndex(folderType, projectDescription, path)
+					
 					if (index == -2) {
 						if (!file.exists) {
 							addIssue(messageFileDoesntExist, container, feature, NON_EXISTING_PATH)
@@ -167,10 +217,10 @@ class N4MFValidator extends AbstractN4MFValidator {
 		paths.entrySet.map[value -> key].forEach(e|e.key.forEach[pathToContainer.put(it, e.value)])
 	}
 
-	def checkForDuplicatePaths(Object pathContainer, ProjectDescription projectDescription,
-		Map<Object, List<String>> paths) {
+	def checkForDuplicatePaths(FolderType folderType, ProjectDescription projectDescription,
+		Map<FolderType, List<String>> paths) {
 
-		val pathToContainer = <String, List<Object>>newHashMap
+		val pathToContainer = <String, List<FolderType>>newHashMap
 		paths.entrySet.map[value -> key].forEach(
 			e |
 				e.key.forEach [
@@ -180,28 +230,17 @@ class N4MFValidator extends AbstractN4MFValidator {
 				]
 		)
 		val duplicatePaths = pathToContainer.keySet.filter[pathToContainer.get(it).size > 1]
-		val container = getContainer(pathContainer, projectDescription)
-		val feature = getFeature(pathContainer, projectDescription)
+		val container = getContainer(folderType, projectDescription)
+		val feature = getAttribute(folderType)
 		for (duplicatePath : duplicatePaths) {
-			val duplicatePlaces = (pathToContainer.get(duplicatePath)).filter[it != pathContainer].map [
-				switch (it) {
-					SourceContainerDescription:
-						getSourceContainerType.getName
-					EAttribute:
-						switch (it) {
-							case PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW: "Resources"
-							case PROJECT_DESCRIPTION__OUTPUT_PATH_RAW: "Output"
-							case PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW: "Libraries"
-							default: it.name
-						}
-					default:
-						it
-				}
-			]
+			val duplicatePlaces = (pathToContainer.get(duplicatePath)).filter[it != folderType]
+			
 			if (!duplicatePlaces.empty && !isSourcesAndOutputDuplicate(feature, duplicatePlaces)) {
-				val message = getMessageForDUPLICATE_PATH(duplicatePlaces.map[toString].sort.join(", "))
+				// construct error message
+				val message = getMessageForDUPLICATE_PATH(duplicatePlaces
+						.map[p | p.folderTypeDescription].sort.join(", "))
 
-				val index = getIndex(pathContainer, projectDescription, duplicatePath)
+				val index = getIndex(folderType, projectDescription, duplicatePath)
 				if (index == -2) {
 					addIssue(message, container, feature, DUPLICATE_PATH)
 				} else if (index > -1) {
@@ -211,9 +250,9 @@ class N4MFValidator extends AbstractN4MFValidator {
 		}
 	}
 
-	private def boolean isSourcesAndOutputDuplicate(EAttribute feature, Iterable<Object> duplicatePlaces) {
-		val placesHasOutput = !duplicatePlaces.filter["Output".equals(it)].isEmpty;
-		val placesHasSTE = !duplicatePlaces.filter["SOURCE".equals(it) || "TEST".equals(it) || "EXTERNAL".equals(it)].isEmpty;
+	private def boolean isSourcesAndOutputDuplicate(EAttribute feature, Iterable<FolderType> duplicatePlaces) {
+		val placesHasOutput = !duplicatePlaces.filter[ p | p == FolderType.OUTPUT].isEmpty;
+		val placesHasSTE = !duplicatePlaces.filter[ p | FolderType.SOURCE == p || FolderType.SOURCE_TEST == p || FolderType.SOURCE_EXTERNAL == p].isEmpty;
 
 		if (placesHasSTE && feature.name == "outputPathRaw")
 			return true;
@@ -222,37 +261,52 @@ class N4MFValidator extends AbstractN4MFValidator {
 		return false;
 	}
 
-	private def getContainer(Object pathContainer, ProjectDescription projectDescription) {
+	/** Returns the EObject that holds the list of paths for the given FolderType. */
+	private def EObject getContainer(FolderType pathContainer, ProjectDescription projectDescription) {
 		switch (pathContainer) {
-			SourceContainerDescription: pathContainer
+			case SOURCE: projectDescription.sourceContainers.findFirst[c | c.sourceContainerType == SourceContainerType.SOURCE]
+			case SOURCE_EXTERNAL: projectDescription.sourceContainers.findFirst[c | c.sourceContainerType == SourceContainerType.EXTERNAL]
+			case SOURCE_TEST: projectDescription.sourceContainers.findFirst[c | c.sourceContainerType == SourceContainerType.TEST]
 			default: projectDescription
 		}
 	}
 
-	private def getFeature(Object pathContainer, ProjectDescription projectDescription) {
-		switch (pathContainer) {
-			SourceContainerDescription: SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW
-			EAttribute: pathContainer
+	private def EAttribute getAttribute(FolderType type) {
+		switch (type) {
+			case SOURCE: SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW
+			case SOURCE_EXTERNAL: SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW
+			case SOURCE_TEST: SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW
+			case RESOURCE: PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW
+			case LIBRARY: PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW
+			case OUTPUT: PROJECT_DESCRIPTION__OUTPUT_PATH_RAW
 		}
 	}
 
-	private def getIndex(Object pathContainer, ProjectDescription projectDescription, String path) {
-		switch (pathContainer) {
-			SourceContainerDescription:
-				pathContainer.paths.lastIndexOf(path)
-			EAttribute:
-				switch (pathContainer) {
-					case PROJECT_DESCRIPTION__RESOURCE_PATHS_RAW:
+	private def getIndex(FolderType folderType, ProjectDescription projectDescription, String path) {
+		switch (folderType) {
+			case FolderType.SOURCE: {
+				val container = getContainer(folderType, projectDescription) as SourceContainerDescription;
+				return container.paths.lastIndexOf(path)
+			}
+			case FolderType.SOURCE_EXTERNAL: {
+				val container = getContainer(folderType, projectDescription) as SourceContainerDescription;
+				return container.paths.lastIndexOf(path)
+			}
+			case FolderType.SOURCE_TEST: {
+				val container = getContainer(folderType, projectDescription) as SourceContainerDescription;
+				return container.paths.lastIndexOf(path)
+			}
+			default:
+				switch (folderType) {
+					case FolderType.RESOURCE:
 						projectDescription.resourcePaths.lastIndexOf(path)
-					case PROJECT_DESCRIPTION__OUTPUT_PATH_RAW:
+					case FolderType.OUTPUT:
 						if (path.equals(projectDescription.outputPath)) -2 else -1
-					case PROJECT_DESCRIPTION__LIBRARY_PATHS_RAW:
+					case FolderType.LIBRARY:
 						projectDescription.libraryPaths.lastIndexOf(path)
 					default:
 						-1
 				}
-			default:
-				-1
 		}
 	}
 
