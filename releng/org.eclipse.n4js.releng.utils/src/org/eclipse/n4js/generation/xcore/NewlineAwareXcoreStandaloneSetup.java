@@ -1,4 +1,5 @@
 /**
+
  * Copyright (c) 2016 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -14,6 +15,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xcore.XcoreStandaloneSetup;
 import org.eclipse.emf.ecore.xcore.XcoreStandaloneSetup.XcoreStandaloneRuntimeModule.XcoreResourceSetInitializer;
+import org.eclipse.emf.ecore.xcore.util.XcoreEcoreBuilder;
 import org.eclipse.xtext.formatting.ILineSeparatorInformation;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
@@ -22,6 +24,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
+ *
  */
 public class NewlineAwareXcoreStandaloneSetup extends XcoreStandaloneSetup {
 
@@ -36,6 +39,12 @@ public class NewlineAwareXcoreStandaloneSetup extends XcoreStandaloneSetup {
 			@SuppressWarnings("unused")
 			public Class<? extends XcoreResourceSetInitializer> bindXcoreResourceSetInitializer() {
 				return CreateResourceGuardedResourceSetInitializer.class;
+			}
+
+			@SuppressWarnings("unused")
+			/** Binds XcoreEcoreBuilder that does not parse the copyright header of the xcore file. */
+			public Class<? extends XcoreEcoreBuilder> bindXcoreEcoreBuilder() {
+				return NoDocumentationXcoreEcoreBuilder.class;
 			}
 		});
 	}
