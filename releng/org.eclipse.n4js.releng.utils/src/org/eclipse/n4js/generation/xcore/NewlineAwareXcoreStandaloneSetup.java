@@ -42,9 +42,12 @@ public class NewlineAwareXcoreStandaloneSetup extends XcoreStandaloneSetup {
 			}
 
 			@SuppressWarnings("unused")
-			/** Binds XcoreEcoreBuilder that does not parse the copyright header of the xcore file. */
+			/**
+			 * Binds XcoreEcoreBuilder that aligns the MWE2 workflow trigger xcore generation with the incremental
+			 * builder.
+			 */
 			public Class<? extends XcoreEcoreBuilder> bindXcoreEcoreBuilder() {
-				return NoDocumentationXcoreEcoreBuilder.class;
+				return NoDocumentationInferenceXcoreEcoreBuilder.class;
 			}
 		});
 	}
