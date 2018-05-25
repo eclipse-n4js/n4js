@@ -10,20 +10,25 @@
  */
 package org.eclipse.n4js.ui.utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import org.eclipse.jface.util.Geometry;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Resource;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 
@@ -263,7 +268,8 @@ public abstract class UIUtils {
 
 		return new Point(centerPoint.x - (initialSize.x / 2), Math.max(
 				monitorBounds.y, Math.min(centerPoint.y
-						- (initialSize.y * 2 / 3), monitorBounds.y
+						- (initialSize.y * 2 / 3),
+						monitorBounds.y
 								+ monitorBounds.height - initialSize.y)));
 	}
 
@@ -304,6 +310,39 @@ public abstract class UIUtils {
 
 	private UIUtils() {
 		//
+	}
+
+	/**
+	 * Shows an error dialog that gives information on the given {@link Throwable}.
+	 *
+	 * This static method may be invoked at any point during startup as it does not rely on activators to be loaded.
+	 */
+	public static void showError(Throwable t) {
+		int dialogW = 400;
+		int dialogH = 300;
+
+		Display display = new Display();
+		Shell shell = new Shell(display);
+		Rectangle bounds = display.getPrimaryMonitor().getBounds();
+		shell.setLocation(bounds.width / 2 - dialogW / 2, bounds.height / 2 - dialogH / 2);
+		shell.setText("Fatal Error with Dependency Injection.");
+		shell.setSize(dialogW, dialogH);
+		shell.setLayout(new FillLayout());
+
+		Text text = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		t.printStackTrace(pw);
+		String sStackTrace = sw.toString();
+		text.setText(sStackTrace);
+
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		display.dispose();
 	}
 
 }

@@ -257,7 +257,7 @@ class N4MFManifestSerializerTest extends Assert {
 		}
 		'''
 		
-		assertEquals("The serialized project description equals the original manifest.",
+		assertEquals("The serialized project description equals the expected result of a manifest merge.",
 			expectation, serializer.serialize(result))
 	}
 	
@@ -294,7 +294,7 @@ class N4MFManifestSerializerTest extends Assert {
 		ModuleLoader: commonjs
 		'''
 		
-		assertEquals("The serialized project description equals the original manifest.",
+		assertEquals("The serialized project description equals the expected result of a manifest merge.",
 			expectation, serializer.serialize(result))
 	}
 }
