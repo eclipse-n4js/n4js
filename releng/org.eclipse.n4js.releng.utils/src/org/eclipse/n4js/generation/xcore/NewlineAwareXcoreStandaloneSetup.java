@@ -41,10 +41,13 @@ public class NewlineAwareXcoreStandaloneSetup extends XcoreStandaloneSetup {
 				return CreateResourceGuardedResourceSetInitializer.class;
 			}
 
+			/**
+			 * Binds XcoreEcoreBuilder that aligns the MWE2 workflow trigger xcore generation with the incremental
+			 * builder.
+			 */
 			@SuppressWarnings("unused")
-			/** Binds XcoreEcoreBuilder that does not parse the copyright header of the xcore file. */
 			public Class<? extends XcoreEcoreBuilder> bindXcoreEcoreBuilder() {
-				return NoDocumentationXcoreEcoreBuilder.class;
+				return NoDocumentationInferenceXcoreEcoreBuilder.class;
 			}
 		});
 	}
