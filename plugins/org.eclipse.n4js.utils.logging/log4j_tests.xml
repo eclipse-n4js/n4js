@@ -24,14 +24,14 @@ Contributors:
 
 	<appender name="fileAppender"
 		class="org.apache.log4j.RollingFileAppender">
-		<param name="threshold" value="WARN" />
+		<param name="threshold" value="DEBUG" />
 		<param name="maxFileSize" value="10MB" />
 		<param name="maxBackupIndex" value="100" />
 		<param name="File" value="logs/n4js_test.log" />
 		<param name="Append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="%d{dd MMM yyyy HH:mm:ss.SSS} - %25t - %-5p - %30c{1} - (%C{1}.java:%L) - %m%n" />
+				value="%d{dd MMM yyyy HH:mm:ss.SSS} - %25t - %-5p - %30c{1} - (%C{30}.java:%L) - %m%n" />
 		</layout>
 	</appender>
 

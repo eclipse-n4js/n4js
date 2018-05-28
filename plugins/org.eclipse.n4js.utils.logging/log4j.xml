@@ -18,7 +18,7 @@ Contributors:
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="%d{dd MMM yyyy HH:mm:ss.SSS} - %25t - %-5p - %30c{1} - (%C{1}.java:%L) - %m%n" />
+				value="%d{dd MMM yyyy HH:mm:ss.SSS} - %25t - %-5p - %30c{1} - (%C{30}.java:%L) - %m%n" />
 		</layout>
 	</appender>
 
@@ -31,7 +31,7 @@ Contributors:
 		<param name="Append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="%d{dd MMM yyyy HH:mm:ss.SSS} - %25t - %-5p - %30c{1} - (%C{1}.java:%L) - %m%n" />
+				value="%d{dd MMM yyyy HH:mm:ss.SSS} - %25t - %-5p - %30c{1} - (%C{30}.java:%L) - %m%n" />
 		</layout>
 	</appender>
 
