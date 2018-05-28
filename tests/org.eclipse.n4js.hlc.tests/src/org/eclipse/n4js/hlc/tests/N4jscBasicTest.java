@@ -138,8 +138,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String[] args = { "-pl", proot,
 				"--buildType", "projects", pathToP1,
 				"--runWith", "nodejs",
-				"--run", fileA,
-				"--verbose"
+				"--run", fileA
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
@@ -214,10 +213,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String proot = workspace.getAbsolutePath().toString();
 		// Project
 		String pathToBLAH = "/BLAH";
-		String[] args = { "-pl", proot,
-				"--buildType", "projects", pathToBLAH,
-				"--verbose"
-		};
+		String[] args = { "-pl", proot, "--buildType", "projects", pathToBLAH };
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_SRCFILES_INVALID);
 	}

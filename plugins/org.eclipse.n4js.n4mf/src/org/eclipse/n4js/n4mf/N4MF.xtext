@@ -17,42 +17,41 @@ ProjectDescription:
 		('ProjectId'		':' projectId=N4mfIdentifier)
 	&	('ProjectType' 		':' projectType=ProjectType)
 	&	('ProjectVersion'	':' projectVersion=DeclaredVersion)
-	&	('VendorId' 		':' declaredVendorId=N4mfIdentifier)
+	&	('VendorId' 		':' vendorId=N4mfIdentifier)
 	&	('VendorName' 		':' vendorName=STRING)?
 
 	&	('MainModule'		':' mainModule=STRING)?
 
 	// only available for runtime environments
-	&	(extendedRuntimeEnvironment=ExtendedRuntimeEnvironment)?
+	&	('ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference)?
 
 	// only in case of runtime libraries or runtime environment:
-	&	(providedRuntimeLibraries=ProvidedRuntimeLibraries)?
+	&	('ProvidedRuntimeLibraries' '{' (providedRuntimeLibraries+=ProjectReference (',' providedRuntimeLibraries+=ProjectReference)*)? '}')?
 
 	// not available in runtime environments:
-	&	(requiredRuntimeLibraries=RequiredRuntimeLibraries)?
+	&	('RequiredRuntimeLibraries' '{' (requiredRuntimeLibraries+=ProjectReference (',' requiredRuntimeLibraries+=ProjectReference)*)? '}')?
 
 	// only available in N4JS components (Apps, Libs, Processor)
-	&	(projectDependencies=ProjectDependencies)?
+	&	('ProjectDependencies' '{' (projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)? '}')?
 
 	// only available in N4JS components (Apps, Libs, Processor)
 	&	('ImplementationId' ':' implementationId=N4mfIdentifier)?
 
 	// only available in N4JS components (Apps, Libs, Processor)
-	&	(implementedProjects=ImplementedProjects)?
+	&	('ImplementedProjects' '{' (implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)? '}')?
 
 	//only RuntimeLibrary and RuntimeEnvironemnt
-	&	(initModules=InitModules)?
-	&	(execModule=ExecModule)?
-
+	&	('InitModules'		'{' (initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)? '}' )?
+	&	('ExecModule'		':' execModule=BootstrapModule)?
 
 	&	('Output' 			':' outputPathRaw=STRING)?
 	&	('Libraries' 		'{' libraryPathsRaw+=STRING (',' libraryPathsRaw+=STRING)* '}')?
 	&	('Resources' 		'{' resourcePathsRaw+=STRING (',' resourcePathsRaw+=STRING)* '}')?
-	&	('Sources' 			'{' sourceFragment+=SourceFragment+ '}')?
+	&	('Sources' 			'{' sourceContainers+=SourceContainerDescription+ '}')?
 
 	& 	('ModuleFilters'	'{' moduleFilters+=ModuleFilter+ '}')?
 
-	&	(testedProjects=TestedProjects)?
+	&	('TestedProjects'	'{' (testedProjects+=ProjectDependency (',' testedProjects+=ProjectDependency)*)? '}')?
 
 	&	('ModuleLoader'		':' moduleLoader=ModuleLoader)?
 ;
@@ -68,70 +67,16 @@ enum ProjectType :
 	VALIDATION = "validation"
 ;
 
-ExecModule returns ExecModule:
-	{ExecModule}
-	'ExecModule' ':' execModule=BootstrapModule
-;
-
-
-TestedProjects returns TestedProjects:
-	{TestedProjects}
-	'TestedProjects' '{'
-		(testedProjects+=TestedProject (',' testedProjects+=TestedProject)*)?
-	'}'
-;
-
-
-InitModules returns InitModules:
-	{InitModules}
-	'InitModules' '{'
-		(initModules+=BootstrapModule (',' initModules+=BootstrapModule)*)?
-	'}'
-;
-
-ImplementedProjects returns ImplementedProjects:
-	{ImplementedProjects}
-	'ImplementedProjects' '{'
-		(implementedProjects+=ProjectReference (',' implementedProjects+=ProjectReference)*)?
-	'}'
-;
-
-ProjectDependencies returns ProjectDependencies:
-	{ProjectDependencies}
-	'ProjectDependencies' '{'
-		(projectDependencies+=ProjectDependency (',' projectDependencies+=ProjectDependency)*)?
-	'}'
-;
-
-ProvidedRuntimeLibraries returns ProvidedRuntimeLibraries:
-	{ProvidedRuntimeLibraries}
-	'ProvidedRuntimeLibraries' '{'
-		(providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency (',' providedRuntimeLibraries+=ProvidedRuntimeLibraryDependency)*)?
-	'}'
-;
-
-RequiredRuntimeLibraries returns RequiredRuntimeLibraries:
-	{RequiredRuntimeLibraries}
-	'RequiredRuntimeLibraries' '{'
-		(requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency (',' requiredRuntimeLibraries+=RequiredRuntimeLibraryDependency)*)?
-	'}'
-;
-
-ExtendedRuntimeEnvironment returns ExtendedRuntimeEnvironment:
-	{ExtendedRuntimeEnvironment}
-	'ExtendedRuntimeEnvironment' ':' extendedRuntimeEnvironment=ProjectReference
-;
-
 //TODO build meta data not supported https://semver.org/#spec-item-10
 DeclaredVersion :
 	major=INT ('.' minor=INT ('.' micro=INT)?)? ('-' qualifier=N4mfIdentifier)?
 ;
 
-SourceFragment:
-	sourceFragmentType=SourceFragmentType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}'
+SourceContainerDescription:
+	sourceContainerType=SourceContainerType '{' pathsRaw+=STRING (',' pathsRaw+=STRING)* '}'
 ;
 
-enum SourceFragmentType :
+enum SourceContainerType :
 	SOURCE = 'source' | EXTERNAL = 'external' | TEST = 'test'
 ;
 
@@ -153,30 +98,18 @@ enum ModuleFilterType:
 	NO_VALIDATE = 'noValidate' | NO_MODULE_WRAPPING = 'noModuleWrap'
 ;
 
-ProvidedRuntimeLibraryDependency:
-	project=SimpleProjectDescription
-;
-
-RequiredRuntimeLibraryDependency:
-	project=SimpleProjectDescription
-;
-
-TestedProject:
-	project=SimpleProjectDescription
+/*
+ * scope is optional, default scope is compile
+ */
+ProjectReference:
+	ProjectIdWithOptionalVendor
 ;
 
 /*
  * scope is optional, default scope is compile
  */
-ProjectReference :
-	project=SimpleProjectDescription
-;
-
-/*
- * scope is optional, default scope is compile
- */
-ProjectDependency :
-	project=SimpleProjectDescription
+ProjectDependency:
+	ProjectIdWithOptionalVendor
 	(versionConstraint=VersionConstraint)?
 	(declaredScope=ProjectDependencyScope)?
 ;
@@ -184,7 +117,7 @@ ProjectDependency :
 /*
  * vendorN4mfIdentifier is optional, if it is not specified, vendor id of current project is used.
  */
-SimpleProjectDescription :
+fragment ProjectIdWithOptionalVendor*:
 	(declaredVendorId=N4mfIdentifier ':')? projectId=N4mfIdentifier
 ;
 

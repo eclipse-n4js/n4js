@@ -54,15 +54,21 @@ public final class ProjectsSettingsFilesLocator {
 	 * @return instance with all data found during scanning.
 	 */
 	public static ProjectsSettingsFilesLocator findFiles(IProgressMonitor monitor) {
+		ProjectsSettingsFilesLocator locator = new ProjectsSettingsFilesLocator();
+
+		if (monitor.isCanceled())
+			return locator;
 
 		Set<File> files = new HashSet<>();
 		final Set<File> roots = new HashSet<>();
 		IResource[] resources = getResources();
 		if (resources == null)
-			return null;
+			return locator;
 
 		// initial sets of files and folders
 		for (IResource resource : resources) {
+			if (monitor.isCanceled())
+				break;
 			File file = resource.getLocation().makeAbsolute().toFile();
 			if (file.isDirectory()) {
 				roots.add(file);
@@ -71,8 +77,8 @@ public final class ProjectsSettingsFilesLocator {
 			}
 		}
 
-		ProjectsSettingsFilesLocator locator = new ProjectsSettingsFilesLocator();
-		locator.scan(roots, files, monitor);
+		if (!monitor.isCanceled())
+			locator.scan(roots, files, monitor);
 		return locator;
 	}
 
@@ -93,6 +99,8 @@ public final class ProjectsSettingsFilesLocator {
 		shallowMonitor.beginTask("Scanning workspace roots for config files", 10);
 		shallowMonitor.beginTask("Shallow workspace scan...", files.size());
 		for (File file : files) {
+			if (monitor.isCanceled())
+				break;
 			processFile(file);
 			shallowMonitor.worked(1);
 		}
@@ -102,6 +110,8 @@ public final class ProjectsSettingsFilesLocator {
 		final SubMonitor deepMonitor = subMonitor.split(90);
 		deepMonitor.beginTask("Deep workspace scan...", roots.size());
 		for (Path path : actualRoots) {
+			if (monitor.isCanceled())
+				break;
 			File root = path.toFile();
 			deepMonitor.setTaskName("Scanning " + root.getName() + "...");
 			processContainer(root);

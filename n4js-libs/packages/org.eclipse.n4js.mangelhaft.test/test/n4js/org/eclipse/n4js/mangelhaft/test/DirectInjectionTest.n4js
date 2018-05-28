@@ -8,13 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test"
-import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test"
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {FIXME2Mock} from "org/eclipse/n4js/mangelhaft/test/helper/FIXMEMock"
-import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition"
-import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent"
 
+import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test";
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
+import {FIXME2Mock} from "org/eclipse/n4js/mangelhaft/test/helper/FIXMEMock";
+import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent";
 @Binder
 @Bind(IFIXME2, FIXME2Mock)
 class DirectTestBinder {}
@@ -46,6 +46,4 @@ export public class DirectInjectionTest {
         Assert.equal(this.fix2.logStr, "FIXME joe from Test", "should be from Mock");
     }
 }
-/*
--*- mode: typescript;-*-
-*/
+

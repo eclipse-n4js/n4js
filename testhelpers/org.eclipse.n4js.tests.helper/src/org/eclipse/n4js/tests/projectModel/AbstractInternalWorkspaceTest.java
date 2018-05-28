@@ -19,15 +19,14 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 
 import org.eclipse.emf.common.util.URI;
-import org.junit.Test;
-
-import com.google.common.collect.Sets;
-
 import org.eclipse.n4js.ArchiveURIUtil;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.junit.Test;
+
+import com.google.common.collect.Sets;
 
 /**
  */
@@ -80,7 +79,7 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	@Test
 	public void testGetLocation_01() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
-		ProjectDependency dependency = description.getAllProjectDependencies().get(0);
+		ProjectDependency dependency = description.getProjectDependencies().get(0);
 		URI resolvedLocation = getWorkspace().getLocation(myProjectURI, dependency,
 				N4JSSourceContainerType.PROJECT);
 		assertEquals(libProjectURI, resolvedLocation);
@@ -90,7 +89,7 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	@Test
 	public void testGetLocation_02() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
-		ProjectDependency dependencyOnArchive = description.getAllProjectDependencies().get(1);
+		ProjectDependency dependencyOnArchive = description.getProjectDependencies().get(1);
 		URI resolvedArchiveLocation = getWorkspace().getLocation(myProjectURI, dependencyOnArchive,
 				N4JSSourceContainerType.ARCHIVE);
 		assertEquals(archiveFileURI, resolvedArchiveLocation);
@@ -100,7 +99,7 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	@Test
 	public void testGetLocation_03() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
-		ProjectDependency dependencyOnArchive = description.getAllProjectDependencies().get(1);
+		ProjectDependency dependencyOnArchive = description.getProjectDependencies().get(1);
 		URI expectedToBeNull = getWorkspace().getLocation(myProjectURI, dependencyOnArchive,
 				N4JSSourceContainerType.PROJECT);
 		assertNull(expectedToBeNull);
@@ -110,7 +109,7 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	@Test
 	public void testGetLocation_04() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
-		ProjectDependency dependencyOnArchive = description.getAllProjectDependencies().get(0);
+		ProjectDependency dependencyOnArchive = description.getProjectDependencies().get(0);
 		URI expectedToBeNull = getWorkspace().getLocation(myProjectURI, dependencyOnArchive,
 				N4JSSourceContainerType.ARCHIVE);
 		assertNull(expectedToBeNull);

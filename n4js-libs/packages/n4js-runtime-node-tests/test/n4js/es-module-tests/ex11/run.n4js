@@ -8,8 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import A from "es-module-tests/ex11/A" //<- default import
-import {B} from "es-module-tests/ex11/B" //<- named import
+ //<- default import
+ //<- named import
 
+import A from "es-module-tests/ex11/A";
+import {B} from "es-module-tests/ex11/B";
 new A();
 new B();

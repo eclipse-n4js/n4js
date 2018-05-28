@@ -35,5 +35,5 @@ Sources {
 	}
 }
 
-// XPECT warnings --> "Extended runtime environment cannot be specified for test projects." at "ExtendedRuntimeEnvironment: test.data.rl.project.one"
+// XPECT warnings --> "Extended runtime environment cannot be specified for test projects." at "ExtendedRuntimeEnvironment"
 ExtendedRuntimeEnvironment: test.data.rl.project.one

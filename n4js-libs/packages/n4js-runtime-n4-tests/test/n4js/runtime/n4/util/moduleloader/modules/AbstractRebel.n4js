@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {BadFileImporter} from "runtime/n4/util/moduleloader/modules/BadFileImporter"
 
+import {BadFileImporter} from "runtime/n4/util/moduleloader/modules/BadFileImporter";
 export public class AbstractRebel {
     public fuk () {
         console.log(BadFileImporter);

@@ -49,6 +49,7 @@ import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.n4js.utils.resources.IExternalResource;
@@ -89,7 +90,12 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	 */
 	@Inject
 	void init() {
-		projectProvider.ensureInitialized();
+		try {
+			projectProvider.ensureInitialized();
+		} catch (Throwable t) {
+			logger.error("Failed to initialize external library workspace.", t);
+			UIUtils.showError(t);
+		}
 		projectProvider.addExternalLocationsUpdatedListener(indexUpdater);
 	}
 
@@ -105,7 +111,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 		if (PROJECT.equals(expectedN4JSSourceContainerType)) {
 
-			String name = reference.getProject().getProjectId();
+			String name = reference.getProjectId();
 			ExternalProject project = projectProvider.getProject(name);
 
 			if (null == project) {

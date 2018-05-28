@@ -8,10 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter"
-import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups"
-import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
 
+import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
 export public class NoOpReporter implements ITestReporter {
     static argCalls: Array<any> = [];
     @Override @Inject protected spy: TestSpy;

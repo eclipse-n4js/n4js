@@ -21,7 +21,7 @@ import org.eclipse.n4js.ArchiveURIUtil;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 
 /**
  */
@@ -30,7 +30,7 @@ public class N4JSArchiveSourceContainer extends AbstractSourceContainer implemen
 
 	private final N4JSArchive archive;
 
-	protected N4JSArchiveSourceContainer(N4JSArchive archive, SourceFragmentType type, String relativeLocation) {
+	protected N4JSArchiveSourceContainer(N4JSArchive archive, SourceContainerType type, String relativeLocation) {
 		super(type, relativeLocation);
 		this.archive = archive;
 	}

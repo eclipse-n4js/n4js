@@ -250,7 +250,8 @@ class MemberScopingHelper {
 		}
 
 		val subScopes = uniontypeexp.typeRefs.map [ elementTypeRef |
-			val scope = members(elementTypeRef, request);
+			val structFieldInitMode = elementTypeRef.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+			val scope = members(elementTypeRef, request.setStructFieldInitMode(structFieldInitMode));
 			return scope;
 		]
 
@@ -267,7 +268,8 @@ class MemberScopingHelper {
 		}
 
 		val List<IScope> subScopes = intersectiontypeexp.typeRefs.map [ elementTypeRef |
-			val scope = members(elementTypeRef, request);
+			val structFieldInitMode = elementTypeRef.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+			val scope = members(elementTypeRef, request.setStructFieldInitMode(structFieldInitMode));
 			return scope;
 		]
 

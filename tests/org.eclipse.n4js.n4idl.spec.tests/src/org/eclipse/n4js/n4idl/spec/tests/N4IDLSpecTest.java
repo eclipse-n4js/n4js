@@ -16,7 +16,7 @@ import org.eclipse.n4js.xpect.methods.ModelVersionXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeSwitchXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
-import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
+import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
@@ -40,7 +40,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect-test", fileExtensions = { "xt" })
-@XpectImport({ N4JSStandaloneTestsModule.class, SuppressIssuesSetup.class })
+@XpectImport({ N4JSStandaloneTestsModule.class, N4JSSuppressIssuesSetup.class })
 public class N4IDLSpecTest {
 	//
 }

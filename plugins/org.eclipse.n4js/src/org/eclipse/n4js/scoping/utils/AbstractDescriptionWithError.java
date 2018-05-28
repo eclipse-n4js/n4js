@@ -13,10 +13,6 @@ package org.eclipse.n4js.scoping.utils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.AbstractEObjectDescription;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TField;
@@ -24,6 +20,9 @@ import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.AbstractEObjectDescription;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * A special {@link IEObjectDescription} that is recognized by the {@link ErrorAwareLinkingService} to produce a
@@ -110,7 +109,7 @@ public abstract class AbstractDescriptionWithError extends AbstractEObjectDescri
 	/**
 	 * Returns the name of the member type, e.g., method or field.
 	 */
-	protected static String getMemberTypeName(EObject eObject) {
+	protected static String getMemberTypeName(EObject eObject, boolean structFieldInitMode) {
 		if (eObject instanceof TMethod) {
 			return "method";
 		}
@@ -121,7 +120,7 @@ public abstract class AbstractDescriptionWithError extends AbstractEObjectDescri
 			return "getter";
 		}
 		if (eObject instanceof TSetter) {
-			return "setter";
+			return structFieldInitMode ? "getter" : "setter";
 		}
 		if (eObject instanceof TEnumLiteral) {
 			return "enum literal";

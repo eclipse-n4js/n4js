@@ -11,11 +11,11 @@
 package org.eclipse.n4js.n4mf.formatting2
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.SimpleProjectDescription
+import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.Assignment
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.formatting2.AbstractFormatter2
@@ -59,15 +59,15 @@ class N4MFFormatter extends AbstractFormatter2 {
 		]
 
 		region.keywords(".", "-").forEach[ surround(NO_SPACE) ]
-		region.keywords(",", ":").filter[ grammarElement !== simpleProjectDescriptionAccess.colonKeyword_0_1 ].forEach[ prepend(NO_SPACE).append(ONE_SPACE) ]
+		region.keywords(",", ":").filter[ grammarElement !== projectIdWithOptionalVendorAccess.colonKeyword_0_1 ].forEach[ prepend(NO_SPACE).append(ONE_SPACE) ]
 
 		region.keywords(",").filter[ grammarElement !== versionConstraintAccess.commaKeyword_0_2_0_0].forEach[ append(NEW_LINE) ]
 		region.keywords("(", "[").forEach[ append(NO_SPACE) ]
 		region.keywords(")", "]").forEach[ prepend(NO_SPACE) ]
 
 		switch it {
-			SimpleProjectDescription:
-				region.keyword(simpleProjectDescriptionAccess.colonKeyword_0_1).surround(NO_SPACE)
+			ProjectReference:
+				region.keyword(projectIdWithOptionalVendorAccess.colonKeyword_0_1).surround(NO_SPACE)
 			ModuleFilterSpecifier:
 				region.keyword(moduleFilterSpecifierAccess.inKeyword_1_0).surround(NO_NEW_LINES)
 		}
