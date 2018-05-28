@@ -110,6 +110,9 @@ public class ASTProcessor extends AbstractProcessor {
 		if (resource === null)
 			throw new IllegalArgumentException("resource may not be null");
 
+if (resource.URI.toString().endsWith(".js"))
+	println("processing: " + resource.URI);
+
 		// the following is required, because typing may have been initiated by resolution of a proxy
 		// -> when traversing the AST, we will sooner or later try to resolve this same proxy, which would be
 		// interpreted as a cyclic proxy resolution by method LazyLinkingResource#getEObject(String,Triple)

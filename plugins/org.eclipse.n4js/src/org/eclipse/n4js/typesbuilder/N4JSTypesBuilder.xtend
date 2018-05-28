@@ -35,17 +35,18 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 
 /**
  * This class with its {@link N4JSTypesBuilder#createTModuleFromSource(DerivedStateAwareResource,boolean) createTModuleFromSource()}
@@ -172,24 +173,25 @@ public class N4JSTypesBuilder {
 				}
 			}
 
-			result.copyAnnotations(script, preLinkingPhase);
+			if (!N4JSLanguageUtils.isOpaqueModule(resource.URI)) {
+				result.copyAnnotations(script, preLinkingPhase);
 
-			script.buildNamespaceTypesFromModuleImports(result,preLinkingPhase);
+				script.buildNamespaceTypesFromModuleImports(result,preLinkingPhase);
 
-			result.n4jsdModule = jsVariantHelper.isExternalMode(script);
+				result.n4jsdModule = jsVariantHelper.isExternalMode(script);
 
-			// Setting Polyfill property.
-			result.staticPolyfillModule = result.isContainedInStaticPolyfillModule;
-			result.staticPolyfillAware = result.isContainedInStaticPolyfillAware;
+				// Setting Polyfill property.
+				result.staticPolyfillModule = result.isContainedInStaticPolyfillModule;
+				result.staticPolyfillAware = result.isContainedInStaticPolyfillAware;
 
-			script.buildTypesFromTypeRefs(result,preLinkingPhase);
+				script.buildTypesFromTypeRefs(result,preLinkingPhase);
 
-			script.buildTypes(result,preLinkingPhase);
+				script.buildTypes(result,preLinkingPhase);
+			}
 
 			result.astElement = script;
 			script.module = result;
 			(resource as N4JSResource).sneakyAddToContent(result);
-
 //			UtilN4.takeSnapshotInGraphView("TB end (preLinking=="+preLinkingPhase+")",resource.resourceSet);
 
 		} else {
