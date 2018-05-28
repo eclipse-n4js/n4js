@@ -53,7 +53,7 @@ pipeline {
                 script {
                     def isNotStartedByUser = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause) == null
                     if (isNotStartedByUser) {
-                        println 'Aborting build because: branch is not master and not started by user'
+                        println 'Aborting build because: branch is not master and build not started by user'
                         currentBuild.result = 'ABORTED'
                         return
                     }
