@@ -145,9 +145,14 @@ public class ProjectDescriptionHelper {
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
 		ProjectDescription fromPackageJSON = loadPackageJSONAtLocation(location);
-		ProjectDescription fromManifest = loadManifestAtLocation(location);
-		ProjectDescription merged = mergeProjectDescriptions(fromPackageJSON, fromManifest);
-		return merged;
+		if (fromPackageJSON != null) {
+			return fromPackageJSON;
+		}
+		return loadManifestAtLocation(location);
+		// ProjectDescription fromPackageJSON = loadPackageJSONAtLocation(location);
+		// ProjectDescription fromManifest = loadManifestAtLocation(location);
+		// ProjectDescription merged = mergeProjectDescriptions(fromPackageJSON, fromManifest);
+		// return merged;
 	}
 
 	private ProjectDescription loadPackageJSONAtLocation(URI location) {
@@ -199,6 +204,10 @@ public class ProjectDescriptionHelper {
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();
 			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
+			if (!rootPairs.stream().map(p -> p.getName()).anyMatch(name -> PROP__N4JS.equals(name))) {
+				// FIXME temporary: ignore all package.json that do not have an "n4js" property on top level
+				return null;
+			}
 			convertRootPairs(result, rootPairs);
 			return result;
 		}
