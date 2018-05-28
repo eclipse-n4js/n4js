@@ -67,7 +67,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 		SOURCE_TEST,
 		OUTPUT,
 		LIBRARY,
-		RESOURCE
+		RESOURCE;
 	}
 	
 	static def FolderType sourceContainerFolderType(SourceContainerType type) {
@@ -92,14 +92,11 @@ class N4MFValidator extends AbstractN4MFValidator {
 				"Libraries"
 			case FolderType.OUTPUT:
 				"Output"
-			default:
-				"<unknown>"
 		}
 	}
 	
 	/**
-	 * Collect various specified folders from a ProjectDescription and checks 
-	 * for duplicate paths between the sections Output, Libraries, Resources or Sources. 
+	 * Collect all specified paths in the section Output, Libraries, Resources and Sources and checks for duplicates. 
 	 */
 	@Check
 	def void checkProjectDescription(ProjectDescription projectDescription) {
@@ -126,14 +123,15 @@ class N4MFValidator extends AbstractN4MFValidator {
 		allPaths.put(FolderType.OUTPUT,
 			if (projectDescription.outputPath !== null) #[projectDescription.outputPath] else #[])
 
-		// if present, add library paths to list of types + paths 
+		// Libraries section
 		types.add(FolderType.LIBRARY);
 		allPaths.put(FolderType.LIBRARY, projectDescription.libraryPaths);
-		// if present, add resources path to list of types + paths
+
+		// Resources section
 		types.add(FolderType.RESOURCE)
 		allPaths.put(FolderType.RESOURCE, projectDescription.resourcePaths);
 		
-		// for each folder type, check for duplicate paths
+		// for each folder type, check for duplicate paths across all collection sections
 		types.forEach [ folderType |
 			folderType.checkForDuplicatePaths(projectDescription, allPaths)
 		]
@@ -181,7 +179,7 @@ class N4MFValidator extends AbstractN4MFValidator {
 					val index = projectDescription.getIndex(folderType, path)
 					
 					if (index == -2) {
-						// add issue to single-valued feature
+						// add issue to single-valued feature 'feature'
 						if (!file.exists) {
 							addIssue(messageFileDoesntExist, container, feature, NON_EXISTING_PATH)
 						} else { // file must be directory
@@ -252,10 +250,10 @@ class N4MFValidator extends AbstractN4MFValidator {
 				val index = projectDescription.getIndex(folderType, duplicatePath)
 
 				if (index == -2) {
-					// index == -2 indicates a non-multi feature (e.g. Output)
+					// index == -2 indicates a single-valued feature (e.g. Output)
 					addIssue(message, container, feature, DUPLICATE_PATH)
 				} else if (index > -1) {
-					// otherwise add the issue only to index-th element of feature
+					// otherwise add the issue only to index-th element of multi-valued feature 'feature'
 					addIssue(message, container, feature, index, DUPLICATE_PATH)
 				}
 			}

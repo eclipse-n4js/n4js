@@ -21,18 +21,17 @@ import com.google.inject.Singleton;
 public class JSONValidatorExtensionRegistry {
 	private static final String JSON_VALIDATORS_EXTENSIONS_POINT_ID = "org.eclipse.n4js.json.validation";
 	private static final String JSON_VALIDATORS_EXTENSIONS_POINT_CLASS_PROPERTY = "class";
-	
+
 	private static final Logger LOGGER = Logger.getLogger(JSONValidatorExtensionRegistry.class);
-	
+
 	private boolean isInitialized = false;
-	
+
 	// Cached result of the a query to the IExtensionRegistry.
 	// Only access via #getValidatorExtensions().
 	private Set<IJSONValidatorExtension> validatorExtensions;
-	
+
 	/**
-	 * Initializes the registry by querying the {@link IExtensionRegistry} for 
-	 * all registered JSON validator extensions.
+	 * Initializes the registry by querying the {@link IExtensionRegistry} for all registered JSON validator extensions.
 	 */
 	private void initialize() {
 		if (this.isInitialized) {
@@ -41,22 +40,22 @@ public class JSONValidatorExtensionRegistry {
 		}
 		// make sure validatorExtensions is set to non-null value
 		this.validatorExtensions = new HashSet<>();
-		
+
 		this.isInitialized = true;
-		
+
 		// query the extension registry for JSON validator extensions and register them
 		final IExtensionRegistry registry = RegistryFactory.getRegistry();
 		if (registry != null) {
 			final IExtension[] extensions = registry.getExtensionPoint(JSON_VALIDATORS_EXTENSIONS_POINT_ID)
 					.getExtensions();
-			
+
 			for (IExtension extension : extensions) {
 				final IConfigurationElement[] configElems = extension.getConfigurationElements();
 				for (IConfigurationElement elem : configElems) {
 					try {
 						final IJSONValidatorExtension validatorExtension = (IJSONValidatorExtension) elem
 								.createExecutableExtension(JSON_VALIDATORS_EXTENSIONS_POINT_CLASS_PROPERTY);
-						
+
 						register(validatorExtension);
 					} catch (Exception ex) {
 						LOGGER.error(
@@ -68,16 +67,16 @@ public class JSONValidatorExtensionRegistry {
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns a list of all {@link IJSONValidatorExtension}s that were 
-	 * registered via the JSON validation extension point. 
+	 * Returns a list of all {@link IJSONValidatorExtension}s that were registered via the JSON validation extension
+	 * point.
 	 */
 	public Collection<IJSONValidatorExtension> getValidatorExtensions() {
 		ensureInitialization(); // trigger lazy initialization, if required
 		return this.validatorExtensions;
 	}
-	
+
 	/**
 	 * Registers the given {@code validatorExtension} with the {@link JSONValidatorExtensionRegistry}.
 	 */
@@ -85,7 +84,7 @@ public class JSONValidatorExtensionRegistry {
 		ensureInitialization(); // trigger lazy initialization, if required
 		this.validatorExtensions.add(validatorExtension);
 	}
-	
+
 	/** Ensures that the registry is initialized and {@link #validatorExtensions} is not {@code null}. */
 	private void ensureInitialization() {
 		// if un-initialized, populate validator extensions
