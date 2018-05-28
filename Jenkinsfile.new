@@ -40,9 +40,9 @@ pipeline {
                      '-XshowSettings:vm '
     }
 
-        triggers {
-         pollSCM('H/5 * * * *') // every 5 minutes
-     }
+    triggers {
+        pollSCM('H/5 * * * *') // every 5 minutes
+    }
 
     stages {
 
