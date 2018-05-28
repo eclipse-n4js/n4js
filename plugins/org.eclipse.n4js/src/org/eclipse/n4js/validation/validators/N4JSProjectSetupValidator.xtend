@@ -648,24 +648,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	@Check
-	def void checkOutdatedProjectDependency(ProjectDependency projectDependency) {
-		if (projectDependency.versionConstraint !== null) {
-			return;
-		}
-
-		val projectMapping = findAllProjectMappings();
-		val projectName = projectDependency.project.declaredVendorId;
-		val externalProject = projectMapping.get(projectName);
-		val installedVersion = externalProject.version;
-		if (!externalProject.isExternal || installedVersion === null) {
-			return;
-		}
-
-		println(projectName + " installed in version " + installedVersion);
-		// continue here
-	}
-
 	/**
 	 * Returns with a new predicate instance that provides {@code true} only and if only the followings are true:
 	 * <ul>

@@ -272,8 +272,8 @@ public class LibraryManager {
 				installedNpmNames.add(change.name);
 			}
 		}
-		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter
-				.adaptPackages(installedNpmNames);
+		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result;
+		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames);
 
 		IStatus adaptionStatus = result.getFirst();
 
