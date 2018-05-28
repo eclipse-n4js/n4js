@@ -47,7 +47,7 @@ pipeline {
     stages {
 
         stage('Check trigger conditions') {
-            when { 
+            when {
                 beforeAgent true
                 not { branch 'master' }
             }
