@@ -78,6 +78,7 @@ pipeline {
             archiveArtifacts allowEmptyArchive: false, artifacts: '**/tools/**/target/n4jsc.jar'
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
             junit '**/surefire-reports/**/*.xml'
+            deleteDir()
         }
     }
 }
