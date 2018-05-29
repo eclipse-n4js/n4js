@@ -18,7 +18,6 @@ pipeline {
             label 'mesos-xlarge'
         }
     }
-
     options {
         ansiColor('xterm')
         buildDiscarder(
@@ -40,28 +39,7 @@ pipeline {
                      '-XshowSettings:vm '
     }
 
-    triggers {
-        pollSCM('H/5 * * * *') // every 5 minutes
-    }
-
     stages {
-
-        stage('Check trigger conditions') {
-            when {
-                beforeAgent true
-                not { branch 'master' }
-            }
-            steps {
-                script {
-                    def isNotStartedByUser = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause) == null
-                    if (isNotStartedByUser) {
-                        println 'Aborting build because: branch is not master and build not started by user'
-                        currentBuild.result = 'ABORTED'
-                        return
-                    }
-                }
-            }
-        }
 
         stage('fs browse') {
             steps {
