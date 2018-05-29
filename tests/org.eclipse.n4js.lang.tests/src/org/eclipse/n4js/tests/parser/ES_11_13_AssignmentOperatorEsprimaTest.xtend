@@ -21,7 +21,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAssignment_01() {
-		val program = 'x = 42'.parseSuccessfully
+		val program = 'x = 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -35,7 +35,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAssignment_02() {
-		val program = 'eval = 42'.parseSuccessfully
+		val program = 'eval = 42'.parseESWithError
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -49,7 +49,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAssignment_03() {
-		val program = 'arguments = 42'.parseSuccessfully
+		val program = 'arguments = 42'.parseESWithError
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -63,7 +63,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testMultAssignment() {
-		val program = 'x *= 42'.parseSuccessfully
+		val program = 'x *= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -77,7 +77,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDivAssignment() {
-		val program = 'x /= 42'.parseSuccessfully
+		val program = 'x /= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -91,7 +91,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testModAssignment() {
-		val program = 'x %= 42'.parseSuccessfully
+		val program = 'x %= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -105,7 +105,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAddAssignment() {
-		val program = 'x += 42'.parseSuccessfully
+		val program = 'x += 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -119,7 +119,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSubAssignment() {
-		val program = 'x -= 42'.parseSuccessfully
+		val program = 'x -= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -133,7 +133,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLeftShiftAssignment() {
-		val program = 'x <<= 42'.parseSuccessfully
+		val program = 'x <<= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -142,7 +142,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testRightShiftAssignment() {
-		val program = 'x >>= 42'.parseSuccessfully
+		val program = 'x >>= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -156,7 +156,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testUnsignedRightShiftAssignment() {
-		val program = 'x >>>= 42'.parseSuccessfully
+		val program = 'x >>>= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -165,7 +165,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAndAssignment() {
-		val program = 'x &= 42'.parseSuccessfully
+		val program = 'x &= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -179,7 +179,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testXorAssignment() {
-		val program = 'x ^= 42'.parseSuccessfully
+		val program = 'x ^= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -193,7 +193,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOrAssignment() {
-		val program = 'x |= 42'.parseSuccessfully
+		val program = 'x |= 42'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op
@@ -217,7 +217,7 @@ class ES_11_13_AssignmentOperatorEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testAssignmentAssignment() {
-		val program = 'x = y = z'.parseSuccessfully
+		val program = 'x = y = z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AssignmentExpression
 		val op = expression.op

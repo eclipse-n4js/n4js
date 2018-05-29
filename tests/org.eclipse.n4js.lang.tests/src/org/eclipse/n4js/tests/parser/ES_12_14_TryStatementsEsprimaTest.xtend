@@ -21,7 +21,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_Simple() {
-		val script = 'try { } catch (e) { }'.parseSuccessfully
+		val script = 'try { } catch (e) { }'.parseESSuccessfully
 		val tryStmt = script.scriptElements.head as TryStatement
 		val block = tryStmt.block
 		assertTrue(block.statements.empty)
@@ -33,7 +33,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_withType() {
-		val script = 'try { } catch (e: any) { }'.parseSuccessfully
+		val script = 'try { } catch (e: any) { }'.parseESSuccessfully
 		val tryStmt = script.scriptElements.head as TryStatement
 		val block = tryStmt.block
 		assertTrue(block.statements.empty)
@@ -45,7 +45,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_SimpleEval() {
-		val script = 'try { } catch (eval) { }'.parseSuccessfully
+		val script = 'try { } catch (eval) { }'.parseESWithError
 		val tryStmt = script.scriptElements.head as TryStatement
 		val block = tryStmt.block
 		assertTrue(block.statements.empty)
@@ -57,7 +57,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_SimpleArguments() {
-		val script = 'try { } catch (arguments) { }'.parseSuccessfully
+		val script = 'try { } catch (arguments) { }'.parseESWithError
 		val tryStmt = script.scriptElements.head as TryStatement
 		val block = tryStmt.block
 		assertTrue(block.statements.empty)
@@ -69,7 +69,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_WithCatchBlock() {
-		val script = 'try { } catch (e) { say(e) }'.parseSuccessfully
+		val script = 'try { } catch (e) { say(e) }'.parseESSuccessfully
 		val tryStmt = script.scriptElements.head as TryStatement
 		val block = tryStmt.block
 		assertTrue(block.statements.empty)
@@ -83,7 +83,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_WithFinallyBlock() {
-		val script = 'try { } finally { cleanup(stuff) }'.parseSuccessfully
+		val script = 'try { } finally { cleanup(stuff) }'.parseESSuccessfully
 		val tryStmt = script.scriptElements.head as TryStatement
 		val block = tryStmt.block
 		assertTrue(block.statements.empty)
@@ -99,7 +99,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_WithCatchBlock2() {
-		val script = 'try { doThat(); } catch (e) { say(e) }'.parseSuccessfully
+		val script = 'try { doThat(); } catch (e) { say(e) }'.parseESSuccessfully
 		val tryStmt = script.scriptElements.head as TryStatement
 		val block = tryStmt.block
 
@@ -118,7 +118,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_WithCatchAndFinallyBlock() {
-		val script = 'try { doThat(); } catch (e) { say(e) } finally { cleanup(stuff) }'.parseSuccessfully
+		val script = 'try { doThat(); } catch (e) { say(e) } finally { cleanup(stuff) }'.parseESSuccessfully
 		val tryStmt = script.scriptElements.head as TryStatement
 		val block = tryStmt.block
 
@@ -141,7 +141,7 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionInCatchBlockStrictMode() {
-		val script = '"use strict"; try {} catch (e) { function x() {} }'.parseSuccessfully
+		val script = '"use strict"; try {} catch (e) { function x() {} }'.parseESSuccessfully
 		val tryStmt = script.scriptElements.last as TryStatement
 
 		val catchBlock = tryStmt.^catch
@@ -152,12 +152,12 @@ class ES_12_14_TryStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionInFinallyBlockStrictMode() {
-		'"use strict"; try {} finally { function x() {} }'.parseSuccessfully
+		'"use strict"; try {} finally { function x() {} }'.parseESWithError
 	}
 
 	@Test
 	def void testFunctionInFinallyBlock() {
-		'try {} finally { function x() {} }'.parseSuccessfully
+		'try {} finally { function x() {} }'.parseESWithError
 	}
 
 

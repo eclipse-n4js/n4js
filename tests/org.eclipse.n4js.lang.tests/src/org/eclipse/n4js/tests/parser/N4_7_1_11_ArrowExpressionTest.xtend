@@ -26,7 +26,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 	def void testInvokedArrowExpression() {
 		'''
 			((a, b)=>a + b)()
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -66,14 +66,14 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 	def void testParenthesizedArrowExpression() {
 		'''
 			((a, b)=>a + b)
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
 	def void testNoArgArrowExpression() {
 		'''
 			()=>{}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 
@@ -81,7 +81,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 	def void testSingleArgArrowExpression() {
 		val script = '''
 			x=>x
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		val expressionStatement = script.scriptElements.head as ExpressionStatement
 		val functionExpression = expressionStatement.expression as FunctionExpression
 		assertTrue(functionExpression.arrowFunction)
@@ -92,7 +92,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 	def void testVariadicArgArrowExpression() {
 		val script = '''
 			(...x: any)=>x
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		val expressionStatement = script.scriptElements.head as ExpressionStatement
 		val functionExpression = expressionStatement.expression as FunctionExpression
 		assertTrue(functionExpression.arrowFunction)
@@ -104,7 +104,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 		'''
 			x
 			=>x
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
@@ -112,21 +112,21 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 		'''
 			x /*
 			*/ =>x
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
 	def void testSingleLineMLCommentBeforeArrow() {
 		'''
 			x /* comment */ =>x
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
 	def void testNestedArrowExpressions() {
 		val script = '''
 			x => x => x
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		val expressionStatement = script.scriptElements.head as ExpressionStatement
 		val functionExpression = expressionStatement.expression as FunctionExpression
 		assertTrue(functionExpression.arrowFunction)
@@ -160,7 +160,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			}
 
 			outer.call(self);
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -172,7 +172,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			}
 
 			f();
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -230,7 +230,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			var i = ({a = 1}) => a;
 			assert.equal(i({}), 1);
 			assert.equal(i({a: 2}), 2);
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -239,7 +239,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			function f() {
 			  (1 ? ({a=0}) => {} : 1);
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -248,49 +248,49 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			function f() {
 			  ({a = (0, {a = 0})} = {})
 			}
-		'''.parseSuccessfully
+		'''.parseESWithError
 	}
 
 	@Test
 	def void testTraceur_Error_CoverInitialiser2() {
 		'''
 			({a = 0});
-		'''.parseSuccessfully
+		'''.parseESWithError
 	}
 
 	@Test
 	def void testTraceur_Error_InvalidFormalParameter() {
 		'''
 			var f = (a, b + 5) => a + b;
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
 	def void testTraceur_Error_Precedence() {
 		'''
 			var identity = (x) => {x}.bind({});
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
 	def void testTraceur_Error_Precedence2() {
 		'''
 			(x) + (y) => y;
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
 	def void testTraceur_Error_Precedence3() {
 		'''
 			(x) + y => y;
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
 	def void testTraceur_Error_SpreadOutsideFormals() {
 		'''
 			var f = (x, ...xs);
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
@@ -298,7 +298,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 		'''
 			var identity = (identityParam) => identityParam;
 			assert.equal(1234, identity(1234));
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -321,7 +321,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 
 			var real = {borrow: obj.method};
 			assert.equal(real.borrow()(), real);
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	/**
@@ -339,7 +339,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			            $scope.comments = commentLists.reduce((a, b) => a.concat(b));
 			        });
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	/**
@@ -363,7 +363,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			            });
 			        });
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	/**
@@ -379,7 +379,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			var reflect = function(value) {
 			    return value;
 			};
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -392,7 +392,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			var sum = function(num1, num2) {
 			    return num1 + num2;
 			};
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -405,7 +405,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			var sum = function() {
 			    return 1 + 2;
 			};
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -418,7 +418,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			var sum = function(num1, num2) {
 			    return num1 + num2;
 			};
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -435,7 +435,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			        name: "Temp"
 			    };
 			};
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -455,7 +455,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			        console.log("Handling " + type  + " for " + this.id);
 			    }
 			};
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -475,7 +475,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			        console.log("Handling " + type  + " for " + this.id);
 			    }
 			};
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -494,7 +494,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			        console.log("Handling " + type  + " for " + this.id);
 			    }
 			};
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -504,7 +504,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			    return a - b;
 			});
 			var result = values.sort((a, b) => a - b);
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -516,7 +516,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 				 		return z(x)
 				 	}
 				 }
-		'''.parseWithError
+		'''.parseESWithError
 		val fun = script.scriptElements.head as FunctionDeclaration
 		val variableStmt = fun.body.statements.head as VariableStatement
 		val z = variableStmt.varDecl.head
@@ -537,7 +537,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			 		return z(x);
 			 	}
 			 }
-		'''.parseWithError
+		'''.parseESWithError
 		val fun = script.scriptElements.head as FunctionDeclaration
 		val variableStmt = fun.body.statements.head as VariableStatement
 		val z = variableStmt.varDecl.head
@@ -558,7 +558,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			 		return z(x);
 			 	};
 			 };
-		'''.parseWithError
+		'''.parseESWithError
 		val fun = script.scriptElements.head as FunctionDeclaration
 		val variableStmt = fun.body.statements.head as VariableStatement
 		val z = variableStmt.varDecl.head
@@ -579,7 +579,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			 		return z(x)
 			 	}
 			 }
-		'''.parseWithError
+		'''.parseESWithError
 		val fun = script.scriptElements.head as FunctionDeclaration
 		val variableStmt = fun.body.statements.head as VariableStatement
 		val z = variableStmt.varDecl.head
@@ -600,7 +600,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			 		return z(x)
 			 	}
 			 }
-		'''.parseWithError
+		'''.parseESWithError
 		val fun = script.scriptElements.head as FunctionDeclaration
 		val variableStmt = fun.body.statements.head as VariableStatement
 		val z = variableStmt.varDecl.head
@@ -621,7 +621,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 			 		return z(x)
 			 	}
 			 }
-		'''.parseWithError
+		'''.parseESWithError
 		val fun = script.scriptElements.head as FunctionDeclaration
 		val variableStmt = fun.body.statements.head as VariableStatement
 		val z = variableStmt.varDecl.head

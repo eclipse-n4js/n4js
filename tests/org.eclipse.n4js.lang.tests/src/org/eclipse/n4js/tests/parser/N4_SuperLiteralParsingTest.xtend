@@ -20,127 +20,127 @@ class N4_SuperLiteralParsingTest extends AbstractParserTest {
 	def void testSuperLiteralInScript_01() {
 		val script = '''
 			super;
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInScript_02() {
 		val script = '''
 			super();
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInScript_03() {
 		val script = '''
 			super.m();
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInBlock_01() {
 		val script = '''
 			{ super; }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInBlock_02() {
 		val script = '''
 			{ super(); }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInBlock_03() {
 		val script = '''
 			{ super.m(); }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInObjectLiteral_01() {
 		val script = '''
 			{ a: super; }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInObjectLiteral_02() {
 		val script = '''
 			{ a: super(); }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInObjectLiteral_03() {
 		val script = '''
 			{ a: super.m(); }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInFunction_01() {
 		val script = '''
 			(function() { super; })
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInFunction_02() {
 		val script = '''
 			(function() { super(); })
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInFunction_03() {
 		val script = '''
 			(function() { super.m(); })
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInMethod_01() {
 		val script = '''
 			class C { m() { super; } }
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 
 		val errors = script.eResource.errors
 		assertEquals(errors.toString, 0, errors.size)
@@ -150,24 +150,24 @@ class N4_SuperLiteralParsingTest extends AbstractParserTest {
 	def void testSuperLiteralInMethod_02() {
 		val script = '''
 			class C { m() { super(); } }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInMethod_03() {
 		'''
 			class C { m() { super.a(); } }
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
 	def void testSuperLiteralInConstructor_01() {
 		val script = '''
 			class C { constructor() { super; } }
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 
 		val errors = script.eResource.errors
 		assertEquals(errors.toString, 0, errors.size)
@@ -177,7 +177,7 @@ class N4_SuperLiteralParsingTest extends AbstractParserTest {
 	def void testSuperLiteralInConstructor_02() {
 		val script = '''
 			class C { constructor() { super(); } }
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 
 		val errors = script.eResource.errors
 		assertEquals(errors.toString, 0, errors.size)
@@ -187,33 +187,33 @@ class N4_SuperLiteralParsingTest extends AbstractParserTest {
 	def void testSuperLiteralInConstructor_03() {
 		'''
 			class C { constructor() { super.a(); } }
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
 	def void testSuperLiteralInInterface_01() {
 		val script = '''
 			interface C { m() { super; } }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInInterface_02() {
 		val script = '''
 			interface C { m() { super(); } }
-		'''.parseSuccessfully
+		'''.parseESWithError
 
 		val errors = script.eResource.errors
-		assertEquals(errors.toString, 0, errors.size)
+		assertEquals(errors.toString, 1, errors.size)
 	}
 
 	@Test
 	def void testSuperLiteralInInterface_03() {
 		'''
 			interface C { m() { super.a(); } }
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 }

@@ -34,9 +34,11 @@ import org.eclipse.xtext.EcoreUtil2;
  */
 public enum JavaScriptVariant {
 
-	/** Default non-strict JavaScript variant */
+	/** JavaScript (non-strict) mode */
+	@Deprecated // until GH-855 is solved
 	unrestricted,
-	/** Strict mode */
+	/** JavaScript (strict) mode */
+	@Deprecated // until GH-855 is solved
 	strict,
 	/** N4JS mode */
 	n4js,

@@ -22,7 +22,7 @@ class ES_11_12_ConditionalExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testConditional_1() {
-		val program = 'y ? 1 : 2'.parseSuccessfully
+		val program = 'y ? 1 : 2'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val cond = statement.expression as ConditionalExpression
 		assertNotNull(cond)
@@ -37,7 +37,7 @@ class ES_11_12_ConditionalExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testConditional_2() {
-		val program = 'x && y ? 1 : 2'.parseSuccessfully
+		val program = 'x && y ? 1 : 2'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val cond = statement.expression as ConditionalExpression
 		assertNotNull(cond)

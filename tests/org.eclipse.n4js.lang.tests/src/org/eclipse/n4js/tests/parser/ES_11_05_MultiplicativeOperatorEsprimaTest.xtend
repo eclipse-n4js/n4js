@@ -20,7 +20,7 @@ class ES_11_05_MultiplicativeOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testTimes() {
-		val program = 'x * y'.parseSuccessfully
+		val program = 'x * y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as MultiplicativeExpression
 		val op = expression.op
@@ -34,7 +34,7 @@ class ES_11_05_MultiplicativeOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDiv() {
-		val program = 'x / y'.parseSuccessfully
+		val program = 'x / y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as MultiplicativeExpression
 		val op = expression.op
@@ -48,7 +48,7 @@ class ES_11_05_MultiplicativeOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testMod() {
-		val program = 'x % y'.parseSuccessfully
+		val program = 'x % y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as MultiplicativeExpression
 		val op = expression.op
@@ -72,7 +72,7 @@ class ES_11_05_MultiplicativeOperatorEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testTimesTimes() {
-		val program = 'x * y * z'.parseSuccessfully
+		val program = 'x * y * z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as MultiplicativeExpression
 		val op = expression.op

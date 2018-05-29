@@ -53,7 +53,7 @@ class WrongTypeAnnotationsTest extends AbstractParserTest {
 				abstract bar()
 				baz(p: A?)
 			}
-		'''.parseSuccessfully
+		'''.parseESWithError
 	// assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
 

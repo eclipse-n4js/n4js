@@ -23,7 +23,7 @@ class ES_12_13_ThrowStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_Simple() {
-		val script = 'throw x;'.parseSuccessfully
+		val script = 'throw x;'.parseESSuccessfully
 		val throwStmt = script.scriptElements.head as ThrowStatement
 		val identifier = throwStmt.expression as IdentifierRef
 		assertEquals("x", identifier.text)
@@ -31,7 +31,7 @@ class ES_12_13_ThrowStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_Mult() {
-		val script = 'throw x * y'.parseSuccessfully
+		val script = 'throw x * y'.parseESSuccessfully
 		val throwStmt = script.scriptElements.head as ThrowStatement
 		val expression = throwStmt.expression as MultiplicativeExpression
 		val op = expression.op
@@ -46,7 +46,7 @@ class ES_12_13_ThrowStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThrow_ObjLit() {
-		val script = 'throw { message: "Error" }'.parseSuccessfully
+		val script = 'throw { message: "Error" }'.parseESSuccessfully
 		val throwStmt = script.scriptElements.head as ThrowStatement
 		val ol = throwStmt.expression as ObjectLiteral
 		val prop = ol.propertyAssignments.get(0) as PropertyNameValuePair
