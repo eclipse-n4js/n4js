@@ -17,6 +17,7 @@ import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.validation.JavaScriptVariant.*
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
+import org.eclipse.n4js.validation.JavaScriptVariant
 
 /**
  * Test class for operator test (6.1.10- 6.1.18)
@@ -28,7 +29,7 @@ class N6_1_10_PostfixExpressionTypesystemTest extends AbstractOperatorExpression
 
 	@Test
 	def void testTypePostfixExpression() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			assertOperatorType(mode, "number", '''n1++''');
 			assertOperatorType(mode, "number", '''n1--''');
 			assertOperatorType(mode, "number", '''s1++''');
@@ -38,8 +39,9 @@ class N6_1_10_PostfixExpressionTypesystemTest extends AbstractOperatorExpression
 
 	@Test
 	def void testExpectedTypeInPostfix() {
-		assertUnaryOperatorExpectedType(unrestricted, "any", "n1++");
-		assertUnaryOperatorExpectedType(strict, "any", "n1++");
+		// GH-855: uncomment when solved
+		//	assertUnaryOperatorExpectedType(unrestricted, "any", "n1++");
+		//	assertUnaryOperatorExpectedType(strict, "any", "n1++");
 		assertUnaryOperatorExpectedType(n4js, "number", "n1++");
 
 		assertOperatorSuccess(n4js, "n1++");
