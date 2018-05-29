@@ -1,5 +1,6 @@
 {
   "name": "n4js-node",
+  "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"

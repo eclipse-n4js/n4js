@@ -35,6 +35,7 @@
     "moduleLoader": "n4js"
   },
   "name": "org.eclipse.n4js.mangelhaft.assert",
+  "version": "0.1.0",
   "dependencies": {
     "n4js-node": "latest"
   },
