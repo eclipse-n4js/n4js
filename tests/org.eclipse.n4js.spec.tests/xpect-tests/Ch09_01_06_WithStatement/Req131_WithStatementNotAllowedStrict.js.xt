@@ -21,6 +21,6 @@ class A {
 }
 
 var a = new A();
-// disabled issues until IDE-2145 is solved
-// XPECT noerrors --> "With statement not allowed." at "with"
+// disabled issues until GH-855 is solved
+// X-PECT errors --> "With statement not allowed." at "with"
 with (a) {}

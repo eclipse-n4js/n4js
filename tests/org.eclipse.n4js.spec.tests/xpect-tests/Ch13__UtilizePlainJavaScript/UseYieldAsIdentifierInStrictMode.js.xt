@@ -18,8 +18,8 @@ function nonStrict() {
 }
 function strictMode() {
 	'use strict';
-	// disabled issues until IDE-2145 is solved
-	// XPECT noerrors --> "yield is a reserved identifier." at "yield"
+	// disabled issues until GH-855 is solved
+	// X-PECT noerrors --> "yield is a reserved identifier." at "yield"
 	var yield = 4;
 }
 function nonStrict1() {
