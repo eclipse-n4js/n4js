@@ -26,10 +26,6 @@ Contributors:
 	<modules>
         <!-- *************************************** Headless Tools Tests -->
 		<module>org.eclipse.n4js.hlc.integrationtests</module>
-
-		<!-- Xsemantics tests -->
-		<module>org.eclipse.n4js.xsemantics.tests</module>
-
 	</modules>
 
 
