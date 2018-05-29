@@ -16,5 +16,22 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
+  },
+  "n4js": {
+    "projectType": "runtimeLibrary",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src/n4js"
+      ]
+    },
+    "moduleFilters": {
+    },
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-es2015"
+    ],
+    "moduleLoader": "n4js"
   }
 }
