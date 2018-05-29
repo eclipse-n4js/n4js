@@ -27,7 +27,6 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.utils.EcoreUtilN4;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -63,9 +62,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		final N4JSResource resourceCasted = (N4JSResource) resource;
 		final ASTMetaInfoCache cache = createASTMetaInfoCache(resourceCasted);
 		try {
-			if (!N4JSLanguageUtils.isOpaqueModule(resource.getURI())) {
-				postProcessN4JSResource(resourceCasted, cancelIndicator);
-			}
+			postProcessN4JSResource(resourceCasted, cancelIndicator);
 		} catch (Throwable th) {
 			operationCanceledManager.propagateIfCancelException(th);
 			if (cache.hasBrokenAST()) {
