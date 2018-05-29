@@ -29,7 +29,6 @@
         "test/n4js"
       ]
     },
-    "moduleFilters": {},
     "requiredRuntimeLibraries": [
       "n4js-runtime-n4",
       "n4js-runtime-v8",

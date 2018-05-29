@@ -28,7 +28,6 @@
         "src/n4js"
       ]
     },
-    "moduleFilters": {},
     "moduleLoader": "n4js"
   },
   "dependencies": {},

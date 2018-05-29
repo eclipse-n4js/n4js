@@ -23,7 +23,6 @@
     "vendorName": "Eclipse N4JS Project",
     "output": "src-gen",
     "sources": {},
-    "moduleFilters": {},
     "moduleLoader": "n4js"
   },
   "dependencies": {},

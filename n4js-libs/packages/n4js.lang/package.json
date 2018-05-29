@@ -26,7 +26,6 @@
         "src/n4js"
       ]
     },
-    "moduleFilters": {},
     "requiredRuntimeLibraries": [
       "n4js-runtime-es2015"
     ],
