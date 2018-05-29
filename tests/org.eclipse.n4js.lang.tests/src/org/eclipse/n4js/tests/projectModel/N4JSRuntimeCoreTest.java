@@ -10,21 +10,19 @@
  */
 package org.eclipse.n4js.tests.projectModel;
 
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.testing.XtextRunner;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.junit.runner.RunWith;
-
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Provider;
-
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.ClasspathPackageManager;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.junit.runner.RunWith;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /**
  */
@@ -33,10 +31,10 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 
 	@Inject
-	private Provider<XtextResourceSet> resourceSetProvider;
+	private ClasspathPackageManager classpathPackageManager;
 
 	@Inject
-	private ClasspathPackageManager classpathPackageManager;
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	@Inject
 	private Injector injector;
@@ -52,7 +50,7 @@ public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 
 	@Override
 	public void setUp() {
-		workspace = new FileBasedWorkspace(resourceSetProvider, classpathPackageManager);
+		workspace = new FileBasedWorkspace(classpathPackageManager, projectDescriptionHelper);
 		N4JSModel model = new N4JSModel(workspace);
 		injector.injectMembers(model);
 		testMe = new N4JSRuntimeCore(workspace, model);

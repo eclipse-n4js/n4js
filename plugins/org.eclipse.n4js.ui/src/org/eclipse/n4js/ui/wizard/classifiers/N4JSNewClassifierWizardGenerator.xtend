@@ -168,7 +168,7 @@ abstract class N4JSNewClassifierWizardGenerator<M extends N4JSClassifierWizardMo
 			throw new WorkspaceWizardGeneratorException("The target project couldn't be found.");
 		}
 
-		val manifestLocation = project.get().manifestLocation;
+		val manifestLocation = project.get().projectDescriptionLocation;
 		val manifest = getResource(manifestLocation.get());
 
 		// Gather referenced projects

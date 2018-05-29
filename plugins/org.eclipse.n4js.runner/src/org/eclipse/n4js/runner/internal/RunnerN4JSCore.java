@@ -19,21 +19,29 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
+import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 
 import com.google.common.base.Strings;
+import com.google.inject.Inject;
 
 /**
- * Provides access to the custom bootstrap code projects. In a way provides limited functionality of {@link IN4JSCore}.
+ * Provides access to the shipped code projects.
+ *
+ * Provides similar functionality to {@link IN4JSCore} but limited to projects included with the shipped code.
  */
 public class RunnerN4JSCore {
 	private static final Logger LOGGER = Logger.getLogger(RunnerN4JSCore.class);
 
 	private static final int DANGLING_SEGMENT_COUNT = 1;
+
+	@Inject
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/**
 	 * Returns all shipped projects as iterable. Returned projects are stubs for real {@link N4JSProject}. They
@@ -43,11 +51,11 @@ public class RunnerN4JSCore {
 	 *
 	 * @return iterable of shipped code wrapped in {@link IN4JSProject} interface
 	 */
-	public static Iterable<IN4JSProject> getAllShippedProjects() {
+	public Iterable<IN4JSProject> getAllShippedProjects() {
 
 		final RunnerTargetPlatformInstallLocationProvider locationProvider = new RunnerTargetPlatformInstallLocationProvider();
 		final RunnerClasspathPackageManager manager = new RunnerClasspathPackageManager();
-		final RunnerExternalLibraryWorkspace workspace = new RunnerExternalLibraryWorkspace(manager);
+		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, projectDescriptionHelper);
 		final N4JSModel model = new N4JSModel(workspace, locationProvider);
 
 		ShippedCodeAccess.getAllShippedPaths().forEach(path -> discoveProjects(path, workspace));
@@ -73,7 +81,7 @@ public class RunnerN4JSCore {
 	 * @param workspace
 	 *            workspace used for project registration
 	 */
-	private static void discoveProjects(String rootLocation, RunnerExternalLibraryWorkspace workspace) {
+	private void discoveProjects(String rootLocation, FileBasedWorkspace workspace) {
 		File root = new File(rootLocation);
 
 		Arrays.asList(root.listFiles()).stream().filter(File::isDirectory).forEach(projectDir -> {
@@ -96,7 +104,7 @@ public class RunnerN4JSCore {
 	 *            file system location to transform
 	 * @return {@link URI} for the provided location
 	 */
-	private static URI createProjectUri(File location) {
+	private URI createProjectUri(File location) {
 		URI createURI = null;
 		try {
 			createURI = URI.createURI(location.toURI().toURL().toString());

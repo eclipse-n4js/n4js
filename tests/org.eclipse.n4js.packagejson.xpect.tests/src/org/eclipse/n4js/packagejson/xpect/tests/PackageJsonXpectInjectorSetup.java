@@ -1,7 +1,10 @@
 package org.eclipse.n4js.packagejson.xpect.tests;
 
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.validation.JSONValidator;
@@ -55,6 +58,16 @@ public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 		
 		// finally, manually register the N4JS package.json validation extension
 		extensionRegistry.register(validatorExtension);
+	
+		// TODO re-think this approach
+		// In order for the FileBasedWorkspace to correctly detect the test data as valid N4JS projects,
+		// (cf. FileBasedWorkspace#tryFindProjectRecursivelyByManifest) we must explicitly register the 
+		// JSONFactory as resource factory for '*.xt' as otherwise, EMF will fall-back to its XMI parser 
+		// for 'package.json.xt' resources.
+		Map<String, Object> factoryMap = Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap();
+		
+		Object jsonFactory = factoryMap.get("json");
+		factoryMap.put("xt", jsonFactory);
 		
 		return jsonInjector;
 	}

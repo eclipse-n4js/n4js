@@ -17,7 +17,6 @@ import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.json.JSONGlobals;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
-import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
 import org.eclipse.n4js.json.validation.extension.JSONValidatorExtensionRegistry;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
@@ -26,6 +25,7 @@ import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
+import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 
 import com.google.inject.Inject;
@@ -61,7 +61,7 @@ public class HeadlessExtensionRegistrationHelper {
 	private NodeTesterDescriptorProvider nodeTesterDescriptorProvider;
 
 	@Inject
-	private AbstractJSONValidatorExtension packageJsonValidatorExtension;
+	private PackageJsonValidatorExtension packageJsonValidatorExtension;
 
 	/**
 	 * Register extensions manually. This method should become obsolete when extension point fully works in headless

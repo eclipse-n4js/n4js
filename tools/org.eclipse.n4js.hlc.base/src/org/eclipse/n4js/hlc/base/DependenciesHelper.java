@@ -21,9 +21,9 @@ import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.utils.parsing.ProjectDescriptionProviderUtil;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.dependencies.DependenciesCollectingUtil;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Throwables;
 import com.google.inject.Inject;
@@ -38,6 +38,12 @@ class DependenciesHelper {
 
 	@Inject
 	private FileBasedWorkspace n4jsFileBasedWorkspace;
+
+	@Inject
+	private HeadlessHelper headlessHelper;
+
+	@Inject
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/**
 	 * Discovers projects in the provided locations and projects containing provided files, then returns missing
@@ -59,13 +65,13 @@ class DependenciesHelper {
 			locations.addAll(ProjectLocationsUtil.convertToFiles(projectLocations));
 		}
 		// Discover projects in search paths.
-		List<File> discoveredProjectLocations = HeadlessHelper.collectAllProjectPaths(locations);
+		List<File> discoveredProjectLocations = headlessHelper.collectAllProjectPaths(locations);
 
 		// Discover projects for single source files.
 		List<File> singleSourceProjectLocations = new ArrayList<>();
 		try {
 			singleSourceProjectLocations
-					.addAll(HeadlessHelper.findProjectsForSingleFiles(srcFiles, n4jsFileBasedWorkspace));
+					.addAll(headlessHelper.findProjectsForSingleFiles(srcFiles, n4jsFileBasedWorkspace));
 		} catch (N4JSCompileException e) {
 			System.err.println(Throwables.getStackTraceAsString(e));
 		}
@@ -75,21 +81,23 @@ class DependenciesHelper {
 
 		Map<String, String> dependencies = new HashMap<>();
 
-		DependenciesCollectingUtil.updateMissingDependneciesMap(dependencies,
-				getAvailableProjectsDescriptions(allProjectsRoots));
+		DependenciesCollectingUtil.updateMissingDependenciesMap(dependencies,
+				getAvailableProjectDescriptions(allProjectsRoots));
 
 		return dependencies;
 	}
 
-	private Iterable<ProjectDescription> getAvailableProjectsDescriptions(List<File> allProjectsRoots) {
+	private Iterable<ProjectDescription> getAvailableProjectDescriptions(List<File> allProjectsRoots) {
 		List<ProjectDescription> descriptions = new ArrayList<>();
 		allProjectsRoots.forEach(root -> {
-			File manifest = new File(root, IN4JSProject.N4MF_MANIFEST);
-			if (!manifest.isFile()) {
-				System.out.println("Cannot read manifest at " + root);
+			final ProjectDescription projectDescription = projectDescriptionHelper
+					.loadProjectDescriptionAtLocation(URIUtils.toFileUri(root.toURI()));
+
+			if (projectDescription == null) {
+				System.out.println("Cannot load project description for project at " + root.getPath()
+						+ ". Make sure the project contains a valid package.json file.");
 				return;
 			}
-			ProjectDescription projectDescription = ProjectDescriptionProviderUtil.getFromFile(manifest);
 			descriptions.add(projectDescription);
 
 		});

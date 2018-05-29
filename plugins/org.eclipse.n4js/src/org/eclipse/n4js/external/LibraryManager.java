@@ -412,6 +412,7 @@ public class LibraryManager {
 
 			File packageRoot = new File(uri);
 			PackageJson packageJson = npmPackageToProjectAdapter.getPackageJson(packageRoot);
+			// this remains valid for now, since manifest adaptation is still enabled
 			File manifest = new File(packageRoot, N4MF_MANIFEST);
 			if (!manifest.isFile()) {
 				String message = "Cannot locate N4JS manifest for '" + packageName + "' at '" + manifest + "'.";

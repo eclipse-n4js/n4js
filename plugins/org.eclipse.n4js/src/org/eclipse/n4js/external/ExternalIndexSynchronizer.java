@@ -229,10 +229,11 @@ public abstract class ExternalIndexSynchronizer {
 		URI location = URI.createURI(locationString);
 		String name = locationString.substring(nodeModulesLocation.length());
 
-		boolean isManifest = true;
-		isManifest &= resLocation.endsWith(IN4JSProject.N4MF_MANIFEST);
-		isManifest &= resLocation.substring(resLocation.length()).split(File.separator).length == 1;
-		if (isManifest) {
+		boolean isProjectDescriptionFile = true;
+		isProjectDescriptionFile &= resLocation.endsWith(IN4JSProject.N4MF_MANIFEST);
+		isProjectDescriptionFile &= resLocation.substring(resLocation.length()).split(File.separator).length == 1;
+
+		if (isProjectDescriptionFile) {
 			Iterable<IEObjectDescription> pds = res.getExportedObjectsByType(N4mfPackage.Literals.PROJECT_DESCRIPTION);
 
 			IEObjectDescription pDescription = pds.iterator().next();
@@ -242,7 +243,7 @@ public abstract class ExternalIndexSynchronizer {
 			version = pDescription.getUserData(N4MFResourceDescriptionStrategy.PROJECT_VERSION_KEY);
 		}
 
-		if (!npmsIndex.containsKey(name) || isManifest) {
+		if (!npmsIndex.containsKey(name) || isProjectDescriptionFile) {
 			npmsIndex.put(name, Pair.of(location, version));
 		}
 	}

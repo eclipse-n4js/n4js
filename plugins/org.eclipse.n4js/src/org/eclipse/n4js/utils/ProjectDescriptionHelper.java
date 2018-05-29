@@ -12,14 +12,14 @@ package org.eclipse.n4js.utils;
 
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EAttribute;
@@ -31,8 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.n4js.ArchiveURIUtil;
-import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
-import org.eclipse.n4js.internal.LazyProjectDescriptionHandle;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -54,11 +53,11 @@ import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.xtext.resource.XtextResourceSet;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -128,20 +127,13 @@ public class ProjectDescriptionHelper {
 	public static final String PROP__MODULE = "module";
 
 	@Inject
-	private IN4JSCore n4jsCore;
-
-	@Inject
-	private IWorkspaceRoot workspace;
+	private Provider<XtextResourceSet> resourceSetProvider;
 
 	/**
-	 * TODO has to be aligned with
-	 * <ul>
-	 * <li>{@link FileBasedExternalPackageManager#loadManifest(URI)} and
-	 * {@link FileBasedExternalPackageManager#loadManifestFromProjectRoot(URI)}
-	 * <li>{@link LazyProjectDescriptionHandle#createProjectElementHandle()} and
-	 * {@link LazyProjectDescriptionHandle#loadManifest(URI)}
-	 * </ul>
-	 * (for headless case and external libraries)
+	 * Loads the project description of the N4JS project at the given {@code location}.
+	 *
+	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json and
+	 * manifest.n4mf file).
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
 		ProjectDescription fromPackageJSON = loadPackageJSONAtLocation(location);
@@ -152,6 +144,13 @@ public class ProjectDescriptionHelper {
 
 	private ProjectDescription loadPackageJSONAtLocation(URI location) {
 		JSONDocument packageJSON = loadXtextFileAtLocation(location, IN4JSProject.PACKAGE_JSON, JSONDocument.class);
+
+		if (packageJSON == null) {
+			packageJSON = loadXtextFileAtLocation(location,
+					IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION,
+					JSONDocument.class);
+		}
+
 		return packageJSON != null ? convertToProjectDescription(packageJSON) : null;
 	}
 
@@ -163,7 +162,9 @@ public class ProjectDescriptionHelper {
 		final T result;
 		if (location.isPlatformResource() && location.segmentCount() == DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
 			result = loadXtextFile(location.appendSegment(name), expectedTypeOfRoot);
-		} else {
+		} else if (location.isFile()) {
+			result = loadXtextFile(location.appendSegment(name), expectedTypeOfRoot);
+		} else { // consider removing archive case
 			result = loadXtextFile(ArchiveURIUtil.createURI(location, name), expectedTypeOfRoot);
 		}
 		return result;
@@ -171,12 +172,12 @@ public class ProjectDescriptionHelper {
 
 	private <T extends EObject> T loadXtextFile(URI uri, Class<T> expectedTypeOfRoot) {
 		try {
-			String platformPath = uri.toPlatformString(true);
-			if (uri.isArchive() || (platformPath != null && workspace.getFile(new Path(platformPath)).exists())) {
-				ResourceSet resourceSet = n4jsCore.createResourceSet(Optional.absent());
+			if (uri.isArchive() || exists(uri)) {
+				ResourceSet resourceSet = resourceSetProvider.get();
 				Resource resource = resourceSet.getResource(uri, true);
 				if (resource != null) {
 					List<EObject> contents = resource.getContents();
+
 					if (!contents.isEmpty()) {
 						EObject root = contents.get(0);
 						if (expectedTypeOfRoot.isInstance(root)) {
@@ -190,8 +191,20 @@ public class ProjectDescriptionHelper {
 			}
 			return null;
 		} catch (Exception e) {
+			// TODO Luca: I think this message is not valid anymore?
 			throw new WrappedException("unexpected Xtext file URI: " + uri, e);
 		}
+	}
+
+	/**
+	 * Checks whether the given {@link URI} exists on the file system.
+	 *
+	 * This method can be used both for platform as well as file-based URIs.
+	 */
+	private boolean exists(URI uri) {
+		// obtain file: based local URI
+		final URI localURI = CommonPlugin.asLocalURI(uri);
+		return new File(localURI.toFileString()).exists();
 	}
 
 	private ProjectDescription convertToProjectDescription(JSONDocument packageJSON) {

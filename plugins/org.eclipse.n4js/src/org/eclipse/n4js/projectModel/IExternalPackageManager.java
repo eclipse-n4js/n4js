@@ -18,17 +18,7 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 public interface IExternalPackageManager {
 
 	/**
-	 * Loads the N4JS manifest content and returns with a project description instance which actually the representation
-	 * of the manifest content.
-	 *
-	 * @param manifest
-	 *            location of the external package manifest.
-	 * @return the project description instance for the external library.
-	 */
-	ProjectDescription loadManifest(URI manifest);
-
-	/**
-	 * Convenience method for {@link #loadManifest(URI)}
+	 * Loads the N4JS {@link ProjectDescription} for the given external project root location.
 	 */
 	ProjectDescription loadManifestFromProjectRoot(URI rootLocation);
 

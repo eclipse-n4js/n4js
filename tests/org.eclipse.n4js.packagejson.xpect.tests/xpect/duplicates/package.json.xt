@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectPluginUITest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
 {
 	"name": "duplicates",
 	// XPECT errors --> "There is no output folder defined, so compilation isn't possible." at "n4js"
@@ -24,7 +24,8 @@
 				"src",
 				// IDEBUG-339 XPECT warnings --> "Source path src_does_not_exist doesn't exist." at ""src_does_not_exist""
 				"src_does_not_exist",
-				// XPECT errors --> "Wild card not allowed in this place." at ""src/p/juergensHacks/*.js""
+				// X!PECT errors --> "Wild card not allowed in this place." at ""src/p/juergensHacks/*.js""
+				// XPECT warnings --> "Source container path src/p/juergensHack/*.js does not exist." at ""src/p/juergensHacks/*.js""
 				"src/p/juergensHack/*.js",
 				// XPECT errors --> "Path src/p/myAlreadyAsModuleHack.js points to a file, but it should point to a folder." at ""src/p/myAlreadyAsModuleHack.js""
 				"src/p/myAlreadyAsModuleHack.js",

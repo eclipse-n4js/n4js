@@ -275,6 +275,9 @@ public class N4jscBase implements IApplication {
 	@Inject
 	private DependenciesHelper dependencyHelper;
 
+	@Inject
+	private HeadlessHelper headlessHelper;
+
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		int exitCode;
@@ -1004,9 +1007,9 @@ public class N4jscBase implements IApplication {
 			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
 					"Require option for projectlocations.");
 
-		HeadlessHelper.registerProjects(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider),
+		headlessHelper.registerProjects(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider),
 				n4jsFileBasedWorkspace);
-		HeadlessHelper.registerProjects(ProjectLocationsUtil.convertToFiles(projectLocations), n4jsFileBasedWorkspace);
+		headlessHelper.registerProjects(ProjectLocationsUtil.convertToFiles(projectLocations), n4jsFileBasedWorkspace);
 	}
 
 	/**

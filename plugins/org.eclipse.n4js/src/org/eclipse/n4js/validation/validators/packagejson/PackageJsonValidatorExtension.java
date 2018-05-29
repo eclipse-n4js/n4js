@@ -137,7 +137,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final Path absoluteProjectPath = getAbsoluteProjectPath(resourceURI);
 
 		if (absoluteProjectPath == null) {
-			return false;
+			throw new IllegalStateException(
+					"Failed to compute project path for package.json at " + resourceURI.toString());
 		}
 
 		final String relativePath = pathLiteral.getValue();
