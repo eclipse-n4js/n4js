@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.generator.headless;
 
-import static com.google.common.base.Preconditions.checkState;
 import static org.apache.log4j.Logger.getLogger;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,57 +36,24 @@ public class N4jscJarUtils {
 
 	private static final Logger LOGGER = getLogger(N4jscJarUtils.class);
 
-	/**
-	 * Environment variable to pass in the location of the {@code n4jsc.jar}.
-	 */
-	public static final String PROVIDED_N4JSC_JAR_ENV = "PROVIDED_N4JSC_JAR";
-
-	/**
-	 * Path and file name of default n4jsc.jar to use if environment variable {@link #PROVIDED_N4JSC_JAR_ENV} is unset.
-	 */
-	public static final String DEFAULT_N4JSC_JAR = "target/n4jsc.jar";
-
 	private static final long PROCESS_TIMEOUT_IN_MINUTES = 60L;
 
 	/**
-	 * Returns with the absolute file resource representing the location of the {@code n4jsc.jar}. If no location is
-	 * provided by the {@value #PROVIDED_N4JSC_JAR_ENV} variable then it will fall back to the {@code /target/n4jsc.jar}
-	 * location. This method never returns with a file pointing to an non-existing resource but throws a runtime
-	 * exception instead.
-	 *
-	 * @return the runnable file of n4jsc.
+	 * Calls {@link #buildHeadlessWithN4jscJar(Path, File, List, List)} with <code>-Xmx2000m</code> and not N4JSC
+	 * options.
 	 */
-	public static File getAbsoluteRunnableN4jsc() {
-		final File jar;
-		final String providedJar = System.getenv(PROVIDED_N4JSC_JAR_ENV);
-		if (null == providedJar || "".equals(providedJar.trim()) || "null".equals(providedJar)) {
-			LOGGER.info("Environment variable \"" + PROVIDED_N4JSC_JAR_ENV + "\" is unset; using default \""
-					+ DEFAULT_N4JSC_JAR + "\"");
-			jar = new File(DEFAULT_N4JSC_JAR).getAbsoluteFile();
-		} else {
-			LOGGER.info("Environment variable \"" + PROVIDED_N4JSC_JAR_ENV + "\" is set to: " + providedJar);
-			jar = new File(providedJar).getAbsoluteFile();
-		}
-		LOGGER.info("Using n4jsc.jar at: " + jar.getAbsolutePath());
-		checkState(jar.exists(), "n4jsc.jar does not exist at location: " + jar);
-		return jar;
-	}
-
-	/**
-	 * Calls {@link #buildHeadlessWithN4jscJar(File, List, List)} with <code>-Xmx2000m</code> and not N4JSC options.
-	 */
-	public static void buildHeadlessWithN4jscJar(File workspaceRoot) {
+	public static void buildHeadlessWithN4jscJar(Path pathToN4JSCJar, File workspaceRoot) {
 		List<String> javaOpts = Arrays.asList("-Xmx2000m");
 		List<String> n4jscOpts = Collections.emptyList();
-		buildHeadlessWithN4jscJar(Collections.singletonList(workspaceRoot), javaOpts, n4jscOpts);
+		buildHeadlessWithN4jscJar(pathToN4JSCJar, Collections.singletonList(workspaceRoot), javaOpts, n4jscOpts);
 	}
 
 	/**
-	 * Same as {@link #buildHeadlessWithN4jscJar(Collection, List, List)}, but for a single workspace root.
+	 * Same as {@link #buildHeadlessWithN4jscJar(Path, Collection, List, List)}, but for a single workspace root.
 	 */
-	public static void buildHeadlessWithN4jscJar(File workspaceRoot, List<String> javaOpts,
+	public static void buildHeadlessWithN4jscJar(Path pathToN4JSCJar, File workspaceRoot, List<String> javaOpts,
 			List<String> n4jscOpts) {
-		buildHeadlessWithN4jscJar(Collections.singletonList(workspaceRoot), javaOpts, n4jscOpts);
+		buildHeadlessWithN4jscJar(pathToN4JSCJar, Collections.singletonList(workspaceRoot), javaOpts, n4jscOpts);
 	}
 
 	/**
@@ -99,7 +66,8 @@ public class N4jscJarUtils {
 	 * @param n4jscOpts
 	 *            zero or more additional command line options that will be sent to the {@code n4jsc.jar}.
 	 */
-	public static void buildHeadlessWithN4jscJar(Collection<? extends File> workspaceRoots, List<String> javaOpts,
+	public static void buildHeadlessWithN4jscJar(Path pathToN4JSCJar, Collection<? extends File> workspaceRoots,
+			List<String> javaOpts,
 			List<String> n4jscOpts) {
 		Objects.requireNonNull(workspaceRoots);
 		Objects.requireNonNull(javaOpts);
@@ -114,13 +82,20 @@ public class N4jscJarUtils {
 		final List<String> cmdline = new ArrayList<>();
 		cmdline.add("java");
 		cmdline.addAll(javaOpts);
+		List<String> debugOpts = new ArrayList<>();
+		debugOpts.add("-Xdebug");
+		debugOpts.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1044");
+
+		cmdline.addAll(debugOpts);
 		cmdline.addAll(Arrays.asList(
-				"-jar", getAbsoluteRunnableN4jsc().getAbsolutePath(),
+				"-jar", pathToN4JSCJar.toAbsolutePath().toString(),
 				// "--debug", "-v", // generate more output
 				"--buildType", "allprojects"));
 		cmdline.addAll(n4jscOpts);
 		cmdline.add("--projectlocations");
 		cmdline.addAll(workspaceRootsAbsolute);
+
+		String cmdString = Joiner.on(" ").join(cmdline);
 
 		ProcessBuilder pb = new ProcessBuilder(cmdline);
 		pb.directory(null); // set to home of current process, which should be the module (mvn: ${project.basedir})

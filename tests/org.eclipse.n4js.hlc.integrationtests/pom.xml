@@ -122,13 +122,19 @@ Contributors:
 						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
 						<includes>
 							<include>**/*JarTest.java</include>
+							<include>**/*CliTest.java</include>
 						</includes>
 					</configuration>
 					<executions>
 						<execution>
-							<phase>integration-test</phase>
+							<id>integration-test</id>
 							<goals>
 								<goal>integration-test</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>verify</id>
+							<goals>
 								<goal>verify</goal>
 							</goals>
 						</execution>
@@ -139,6 +145,24 @@ Contributors:
 					<artifactId>maven-antrun-plugin</artifactId>
 					<version>${maven-antrun-plugin.version}</version>
 					<executions>
+						<!-- Stop verdaccio if exists to free port -->
+						<execution>
+							<id>stop-verdaccio-before-start</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<target>
+									<exec executable="docker" spawn="false">
+										<arg value="rm"/>
+										<arg value="-f"/>
+										<arg value="verdaccio"/>
+									</exec>
+								</target>
+							</configuration>
+						</execution>
+						
 						<!-- Start verdaccio -->
 						<execution>
 							<id>start-verdaccio</id>
@@ -148,7 +172,19 @@ Contributors:
 							</goals>
 							<configuration>
 								<target>
-									<exec executable="verdaccio" spawn="true"/>
+									<exec executable="docker" spawn="false">
+										<arg value="run"/>
+										<arg value="-d"/>
+										<arg value="-it"/>
+										<arg value="--rm"/>
+										<arg value="--name"/>
+										<arg value="verdaccio"/>
+										<arg value="-p"/>
+										<arg value="4873:4873"/>
+										<arg value="-v"/>
+										<arg value="${project.basedir}/verdaccioConfig/config.yaml:/verdaccio/conf/config.yaml"/>
+										<arg value="verdaccio/verdaccio"/>
+									</exec>
 								</target>
 							</configuration>
 						</execution>
@@ -162,21 +198,22 @@ Contributors:
 							</goals>
 							<configuration>
 								<target>
-									<exec executable="bash" spawn="false">
-										<arg value="${project.basedir}/../../stop-verdaccio.sh"/>
+									<exec executable="docker" spawn="false">
+										<arg value="rm"/>
+										<arg value="-f"/>
+										<arg value="verdaccio"/>
 									</exec>
 								</target>
 							</configuration>
 						</execution>
 					</executions>
 				</plugin>
-
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
 					<version>${codehaus-exec-maven-plugin.version}</version>
 					<executions>
-						<!-- Publish n4js-libs and n4js-cli before integration test -->
+						<!-- Publish n4js-libs before integration test -->
 						<execution>
 							<id>publish-n4js-libs</id>
 							<phase>pre-integration-test</phase>

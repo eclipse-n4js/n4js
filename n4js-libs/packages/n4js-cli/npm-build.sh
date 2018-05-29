@@ -9,6 +9,7 @@
 # Contributors:
 #   NumberFour AG - Initial API and implementation
 #
+echo "Start running npm-build"
 set -e
 cd `dirname $0`
 
@@ -28,3 +29,4 @@ echo_exec cp ../../../tools/org.eclipse.n4js.hlc/target/n4jsc.jar ./bin/n4jsc.ja
 
 npm test
 
+echo "End running npm-build"

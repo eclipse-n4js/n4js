@@ -2,22 +2,22 @@
 
 set -e
 
-echo "Start publishing n4js-libs"
+echo "Start publishing n4js-libs and n4js-cli"
 
 # Navigate to n4js-libs folder
 cd `dirname $0`/n4js-libs
 
-# Start verdaccio
-
 rm -rf node_modules
 
-# Install dependencies in order to prepare npm-task script
-yarn install
+# Install dependencies and prepare npm task scripts
+echo "=== Install dependencies and prepare npm task scripts"
+npm install
 
-# Build n4js-cli
-yarn run build
+# Build n4js-cli lib
+echo "=== Run lerna run build to build n4js-cli"
+lerna run build
 
 # Run npm task script 'publish-canary'
 yarn run publish-canary
 
-echo "End publishing n4js-libs"
+echo "End publishing n4js-libs and n4js-cli"
