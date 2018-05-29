@@ -27,11 +27,14 @@
         "src/n4js"
       ]
     },
-    "moduleFilters": {
-    },
+    "moduleFilters": {},
     "requiredRuntimeLibraries": [
       "n4js-runtime-es2015"
     ],
     "moduleLoader": "n4js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "n4js-runtime-es2015": "latest"
   }
 }

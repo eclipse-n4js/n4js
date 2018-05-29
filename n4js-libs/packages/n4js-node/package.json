@@ -30,7 +30,8 @@
   "react-native": "./src-gen/react-native.js",
   "dependencies": {
     "node-fetch": "~1.6.3",
-    "systemjs": "~0.19.40"
+    "systemjs": "~0.19.40",
+    "n4js-es5": "latest"
   },
   "files": [
     "manifest.n4mf",
@@ -63,5 +64,6 @@
     ],
     "moduleLoader": "n4js",
     "execModule": "n4js-cli"
-  }
+  },
+  "devDependencies": {}
 }

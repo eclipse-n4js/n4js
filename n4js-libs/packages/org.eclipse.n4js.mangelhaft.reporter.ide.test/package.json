@@ -29,8 +29,7 @@
         "test/n4js"
       ]
     },
-    "moduleFilters": {
-    },
+    "moduleFilters": {},
     "requiredRuntimeLibraries": [
       "n4js-runtime-fetch",
       "n4js-runtime-mangelhaft"
@@ -39,5 +38,14 @@
       "org.eclipse.n4js.mangelhaft.reporter.ide"
     ],
     "moduleLoader": "n4js"
+  },
+  "dependencies": {
+    "org.eclipse.n4js.mangelhaft.assert": "latest",
+    "org.eclipse.n4js.mangelhaft": "latest",
+    "n4js-node": "latest"
+  },
+  "devDependencies": {
+    "n4js-runtime-fetch": "latest",
+    "n4js-runtime-mangelhaft": "latest"
   }
 }

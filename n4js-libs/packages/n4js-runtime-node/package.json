@@ -27,8 +27,9 @@
         "src/n4js"
       ]
     },
-    "moduleFilters": {
-    },
+    "moduleFilters": {},
     "moduleLoader": "node_builtin"
-  }
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

@@ -45,5 +45,15 @@
       "n4js-runtime-n4"
     ],
     "moduleLoader": "n4js"
+  },
+  "dependencies": {
+    "n4js.lang": "latest",
+    "org.eclipse.n4js.mangelhaft.assert": "latest",
+    "n4js-node": "latest"
+  },
+  "devDependencies": {
+    "n4js-runtime-n4": "latest",
+    "n4js-runtime-es2015": "latest",
+    "n4js-runtime-v8": "latest"
   }
 }
