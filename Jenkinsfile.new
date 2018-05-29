@@ -74,10 +74,9 @@ pipeline {
 
     post {
         always {
-            // zipped platform specific IDEs
-            archive '**/builds/**/target/products/*.zip'
-            // platform independent headless jar
-            archive '**/tools/**/target/n4jsc.jar'
+            archiveArtifacts allowEmptyArchive: false, artifacts: '**/builds/**/target/products/*.zip'
+            archiveArtifacts allowEmptyArchive: false, artifacts: '**/tools/**/target/n4jsc.jar'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
             junit '**/surefire-reports/**/*.xml'
             deleteDir()
         }
