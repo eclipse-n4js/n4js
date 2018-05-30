@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,8 @@ import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.libraries.PackageJson;
+import org.eclipse.n4js.n4mf.ProjectDependency;
+import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
@@ -194,12 +197,44 @@ public class LibraryManager {
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
 
 			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, versionedNPMs, emptyList());
+
 			indexSynchronizer.synchronizeNpms(monitor, actualChanges);
+
+			installDependenciesOfNPMs(monitor, actualChanges);
 
 			return status;
 
 		} finally {
 			monitor.done();
+		}
+	}
+
+	/**
+	 * GH-862: Please remove this after GH-821 is solved
+	 */
+	private void installDependenciesOfNPMs(IProgressMonitor monitor, List<LibraryChange> actualChanges) {
+		String msg;
+		Map<String, String> dependencies = new HashMap<>();
+		for (LibraryChange libChange : actualChanges) {
+			if (libChange.type == LibraryChangeType.Added) {
+				N4JSExternalProject addedPrj = externalLibraryWorkspace.getProject(libChange.name);
+				if (addedPrj != null) {
+					ProjectDescription pd = externalLibraryWorkspace.getProjectDescription(libChange.location);
+					for (ProjectDependency pDep : pd.getProjectDependencies()) {
+						String name = pDep.getProjectId();
+						String version = NO_VERSION;
+						if (pDep.getVersionConstraint() != null) {
+							version = pDep.getVersionConstraint().toString();
+						}
+						dependencies.put(name, version);
+					}
+				}
+			}
+		}
+		if (!dependencies.isEmpty()) {
+			msg = "Installing dependencies: " + String.join(", ", dependencies.keySet());
+			logger.logInfo(msg);
+			installNPMsInternal(dependencies, monitor);
 		}
 	}
 
