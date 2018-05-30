@@ -175,7 +175,7 @@ Contributors:
 									<jvmArg>-Dfile.encoding=UTF-8</jvmArg>
 									<jvmArg>-Xms1024m</jvmArg>
 									<jvmArg>-Xmx2048m</jvmArg>
-									<jvmArg>-Dlog4j.configuration=file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml</jvmArg>
+									<jvmArg>${loggingArgs}</jvmArg>
 								</jvmArgs>
 							</jvmSettings>
 						</configuration>
