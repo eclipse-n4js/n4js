@@ -10,37 +10,52 @@ Contributors:
   NumberFour AG - Initial API and implementation
 -->
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-	<appender class="org.apache.log4j.ConsoleAppender" name="default">
+<log4j:configuration
+	xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="default"
+		class="org.apache.log4j.ConsoleAppender">
+		<param name="threshold" value="ERROR" />
+		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param value="%-4r [%t] %-5p %c %x - %m%n" name="ConversionPattern" />
+			<param name="ConversionPattern"
+				value="%d{YYY-MM-DD-hh:mm:ss.sssZ} - %25t - %-5p - %30c{1} - (%C{30}.java:%L) - %m%n" />
 		</layout>
 	</appender>
-	<appender class="org.eclipse.xtext.logging.EclipseLogAppender"
-		name="eclipse">
+
+	<appender name="fileAppender"
+		class="org.apache.log4j.RollingFileAppender">
+		<param name="threshold" value="WARN" />
+		<param name="maxFileSize" value="10MB" />
+		<param name="maxBackupIndex" value="100" />
+		<param name="File" value="logs/n4js.log" />
+		<param name="Append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param value="%c %x - %m%n" name="ConversionPattern" />
+			<param name="ConversionPattern"
+				value="%d{YYY-MM-DD-hh:mm:ss.sssZ} - %25t - %-5p - %30c{1} - (%C{30}.java:%L) - %m%n" />
 		</layout>
 	</appender>
+
 	<logger name="org.eclipse.n4js">
-		<level value="warn" />
+		<level value="WARN" />
 	</logger>
 	<logger name="org.eclipse.xtext">
-		<level value="warn" />
+		<level value="WARN" />
 	</logger>
-	<logger name="org.eclipse.xtext.ui.editor.contentassist.antlr.internal">
-		<level value="warn" />
+	<logger
+		name="org.eclipse.xtext.ui.editor.contentassist.antlr.internal">
+		<level value="WARN" />
 	</logger>
 	<logger name="org.eclipse.xtext.ui.editor.outline">
-		<level value="warn" />
+		<level value="WARN" />
 	</logger>
 
-	<logger name="org.eclipse.xtext.ui.editor.toggleComments.ToggleSLCommentAction" >
-		<level value="warn" />
+	<logger
+		name="org.eclipse.xtext.ui.editor.toggleComments.ToggleSLCommentAction">
+		<level value="WARN" />
 	</logger>
 
 	<root>
-		<level value="warn" />
+		<level value="WARN" />
 		<appender-ref ref="default" />
 	</root>
 </log4j:configuration>
