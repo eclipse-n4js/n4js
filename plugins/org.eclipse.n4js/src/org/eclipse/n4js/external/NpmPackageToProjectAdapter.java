@@ -262,9 +262,11 @@ public class NpmPackageToProjectAdapter {
 
 		String packageName = packageRoot.getName();
 		File packageN4JSDsRoot = new File(definitionsFolder, packageName);
-		if (!(packageN4JSDsRoot.exists() && packageN4JSDsRoot.isDirectory())) {
-			LOGGER.info("No type definitions found for '" + packageRoot + "' npm package at '" + packageN4JSDsRoot + "'"
-					+ (!packageN4JSDsRoot.isDirectory() ? " (which is not a directory)" : "") + ".");
+		if (!packageN4JSDsRoot.isDirectory()) {
+			String message = "No type definitions found for '" + packageRoot + "' npm package at '" + packageN4JSDsRoot
+					+ "'";
+			logger.logInfo(message);
+			LOGGER.info(message + (!packageN4JSDsRoot.isDirectory() ? " (which is not a directory)" : "") + ".");
 			return statusHelper.OK();
 		}
 
@@ -292,14 +294,17 @@ public class NpmPackageToProjectAdapter {
 				final String versions = Iterables.toString(availableTypeDefinitionsVersions);
 				details = " Type definitions are available only in versions : " + versions + ".";
 			}
-			logger.logInfo("Type definitions for '" + packageName + "' npm package in version " + packageVersion
-					+ " are not available." + details);
+			String message = "Type definitions for '" + packageName + "' npm package in version " + packageVersion
+					+ " are not available." + details;
+			logger.logInfo(message);
+			LOGGER.info(message);
 			return statusHelper.OK();
 		}
 
 		if (!(definitionsFolder.exists() && definitionsFolder.isDirectory())) {
 			final String message = "Cannot find type definitions folder for '" + packageName
 					+ "' npm package for version '" + closestMatchingVersion + "'.";
+			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message);
 		}
@@ -313,6 +318,7 @@ public class NpmPackageToProjectAdapter {
 		} catch (IOException e) {
 			final String message = "Error while trying to update type definitions content for '" + packageName
 					+ "' npm package.";
+			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message, e);
 		}
@@ -324,6 +330,7 @@ public class NpmPackageToProjectAdapter {
 		} catch (IOException e) {
 			final String message = "Error while trying to prepare manifest fragments for '" + packageName
 					+ "' npm package.";
+			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message, e);
 		}
