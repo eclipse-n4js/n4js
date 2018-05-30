@@ -30,6 +30,9 @@ public class TesterFileBasedShippedCodeConfigurationHelper extends RunnerFileBas
 	@Inject
 	private TesterRegistry testerRegistry;
 
+	@Inject
+	private RunnerN4JSCore runnerN4JSCore;
+
 	/**
 	 * Reconfigures provided run configuration in regards of {@link TestConfiguration#getExecModule()},
 	 * {@link TestConfiguration#getInitModules()} and {@link TestConfiguration#getCoreProjectPaths()} by plain using
@@ -42,7 +45,7 @@ public class TesterFileBasedShippedCodeConfigurationHelper extends RunnerFileBas
 	 *            the configuration to be reconfigured.
 	 */
 	public void configureFromFileSystem(TestConfiguration config) {
-		Iterable<IN4JSProject> allShippedProjects = RunnerN4JSCore.getAllShippedProjects();
+		Iterable<IN4JSProject> allShippedProjects = runnerN4JSCore.getAllShippedProjects();
 		IN4JSProject customRuntimeEnvironment = getCustomRuntimeEnvironment(config, allShippedProjects);
 		reconfigure(config, allShippedProjects, customRuntimeEnvironment);
 	}

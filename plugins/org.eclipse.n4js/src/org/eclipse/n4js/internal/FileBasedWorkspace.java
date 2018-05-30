@@ -32,8 +32,8 @@ import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -41,7 +41,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -50,14 +49,15 @@ import com.google.inject.Singleton;
 @Singleton
 public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
-	private final Provider<XtextResourceSet> resourceSetProvider;
+	private final ProjectDescriptionHelper projectDescriptionHelper;
 
 	private final ClasspathPackageManager packageManager;
 
 	@Inject
-	public FileBasedWorkspace(Provider<XtextResourceSet> resourceSetProvider, ClasspathPackageManager packageManager) {
-		this.resourceSetProvider = resourceSetProvider;
+	public FileBasedWorkspace(ClasspathPackageManager packageManager,
+			ProjectDescriptionHelper projectDescriptionHelper) {
 		this.packageManager = packageManager;
+		this.projectDescriptionHelper = projectDescriptionHelper;
 	}
 
 	private final Map<URI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
@@ -79,7 +79,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		if (!projectElementHandles.containsKey(location)) {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location, false);
 			projectElementHandles.put(location, lazyDescriptionHandle);
-			for (String libraryPath : lazyDescriptionHandle.createProjectElementHandle().getLibraryPaths()) {
+			for (String libraryPath : lazyDescriptionHandle.resolve().getLibraryPaths()) {
 				URI libraryFolder = location.appendSegment(libraryPath);
 				File lib = new File(java.net.URI.create(libraryFolder.toString()));
 				if (lib.isDirectory()) {
@@ -96,7 +96,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location, boolean archive) {
-		return new LazyProjectDescriptionHandle(location, archive, resourceSetProvider);
+		return new LazyProjectDescriptionHandle(location, archive, projectDescriptionHelper);
 	}
 
 	@Override
@@ -131,6 +131,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 				}
 				if (directory.isDirectory()) {
 					if (new File(directory, IN4JSProject.N4MF_MANIFEST).exists()) {
+						URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
+						registerProject(projectLocation);
+						return projectLocation;
+					}
+					if (new File(directory, IN4JSProject.PACKAGE_JSON).exists() ||
+							new File(directory, IN4JSProject.PACKAGE_JSON + ".xt").exists()) {
 						URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
 						registerProject(projectLocation);
 						return projectLocation;
@@ -175,7 +181,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 			LazyProjectDescriptionHandle baseHandle = projectElementHandles.get(projectURI);
 			if (baseHandle != null && !baseHandle.isArchive()) {
 				String archiveFileName = projectId + IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT;
-				for (String libraryPath : baseHandle.createProjectElementHandle().getLibraryPaths()) {
+				for (String libraryPath : baseHandle.resolve().getLibraryPaths()) {
 					URI archiveURI = projectURI.appendSegments(new String[] { libraryPath, archiveFileName });
 					if (projectElementHandles.containsKey(archiveURI)) {
 						return archiveURI;

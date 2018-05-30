@@ -1,0 +1,117 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
+{
+	"name": "duplicates",
+	// XPECT errors --> "There is no output folder defined, so compilation isn't possible." at "n4js"
+	"n4js": {
+		"projectType": "library",
+		"projectVersion": "0.0.1-SNAPSHOT",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		"sources": {
+			"source": [
+				// XPECT warnings --> "Duplicate path, has been already defined in EXTERNAL." at "\"src\""
+				"src",
+				// IDEBUG-339 XPECT warnings --> "Source path src_does_not_exist doesn't exist." at ""src_does_not_exist""
+				"src_does_not_exist",
+				// X!PECT errors --> "Wild card not allowed in this place." at ""src/p/juergensHacks/*.js""
+				// XPECT warnings --> "Source container path src/p/juergensHack/*.js does not exist." at ""src/p/juergensHacks/*.js""
+				"src/p/juergensHack/*.js",
+				// XPECT errors --> "Path src/p/myAlreadyAsModuleHack.js points to a file, but it should point to a folder." at ""src/p/myAlreadyAsModuleHack.js""
+				"src/p/myAlreadyAsModuleHack.js",
+				// XPECT warnings --> "Duplicate path, has been already defined in Libraries, Resources." at "\"lib\""
+				"lib",
+				"src2",
+				"src3"
+			],
+			"external": [
+				// XPECT warnings --> "Duplicate path, has been already defined in SOURCE." at "\"src\""
+				"src",
+				"src-external"
+			]
+		},
+		"libraries": [
+			// XPECT warnings --> "Duplicate path, has been already defined in Resources, SOURCE." at "\"lib\""
+			"lib",
+			// XPECT errors --> "There must be only one library path." at "\"lib2\""
+			"lib2"
+		],
+		"resources": [
+			"resources",
+			// XPECT errors --> "Duplicate path." at "\"resources\""
+			"resources",
+			// XPECT warnings --> "Duplicate path, has been already defined in Libraries, SOURCE." at "\"lib\""
+			"lib",
+			// XPECT errors --> "Path resources2 doesn't exist." at "\"resources2\""
+			"resources2",
+			// XPECT errors --> "Path resources/info.txt points to a file, but it should point to a folder." at "\"resources/info.txt\""
+			"resources/info.txt"
+		],
+		"moduleFilters": {
+			"noValidate": [
+				// XPECT errors --> "Module specifier p/wolfgangsUglyHack.js doesn't exist." at "\"p/wolfgangsUglyHack.js\""
+				"p/wolfgangsUglyHack.js",
+				// XPECT errors --> "Module specifier p/wolfgangsUglyHack.* doesn't exist." at "\"p/wolfgangsUglyHack.*\""
+				"p/wolfgangsUglyHack.*",
+				"p/wolfgangsUglyHack",
+				"p/juergensHacks/*",
+				// XPECT errors --> "Duplicate module specifier." at "\"p/juergensHacks/*\""
+				"p/juergensHacks/*",
+				// XPECT errors --> "Module specifier p/doesntexist/ doesn't exist." at "\"p/doesntexist/\""
+				"p/doesntexist/",
+				{
+					// XPECT errors --> "Module specifier **/External doesn't exist." at "\"**/External\""
+					"src": "**/External"
+				},
+				{
+					// External is available in src-external but not in src
+					"src-external": "p/External"
+				},
+				// XPECT errors --> "\"***\" isn't a valid character sequence in a wild card." at "\"***/A\""
+				"***/A",
+				// XPECT errors --> "Relative navigation isn't allowed in a module specifier." at "\"**/../p/A\""
+				"**/../p/A",
+				// XPECT errors --> "noValidate paths shouldn't match n4js files." at "\"other/*\""
+				"other/*",
+				{
+					"src2": "**/*"
+				},
+				{
+					"src3": "**/*"
+				}
+			],
+			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 60)." at "\"noValidate\""
+			"noValidate": [
+				"p/A"
+			],
+			"noModuleWrap": [
+				"p/myAlreadyAsModuleHack",
+				// XPECT errors --> "noModuleWrap paths shouldn't match n4js files." at "\"other/*\""
+				"other/*"
+			]
+		},
+		"requiredRuntimeLibraries": [
+			"vendorA:libA",
+			// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+			"libB",
+			"vendorB:libA",
+			// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libA." at "libA"
+			"libA",
+			// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libA." at "MyVendorID:libA"
+			"MyVendorID:libA",
+			// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+			"libB",
+			"MyVendorID:libC"
+		]
+	}
+}

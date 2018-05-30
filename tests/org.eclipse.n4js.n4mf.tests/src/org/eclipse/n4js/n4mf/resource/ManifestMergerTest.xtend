@@ -11,6 +11,7 @@
 package org.eclipse.n4js.n4mf.resource
 
 import com.google.inject.Inject
+import org.eclipse.n4js.n4mf.ModuleLoader
 import org.eclipse.n4js.n4mf.N4MFInjectorProvider
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.xtext.testing.InjectWith
@@ -19,7 +20,6 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.n4mf.ModuleLoader
 
 /**
  * Test for the N4JS manifest merger.

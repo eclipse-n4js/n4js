@@ -96,18 +96,18 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Optional<URI> getManifestLocation() {
-		final File manifestFile = getManifestFile().orNull();
-		if (null == manifestFile) {
+	public Optional<URI> getProjectDescriptionLocation() {
+		final File projectDescriptionFile = getProjectDescriptionFile().orNull();
+		if (null == projectDescriptionFile) {
 			return absent();
 		}
-		return fromNullable(getFileUri(manifestFile));
+		return fromNullable(getFileUri(projectDescriptionFile));
 	}
 
 	/**
-	 * Returns with the {@link URI EMF URI} of the file. Returns with {@code null} if the file argument is {@code null}
-	 * or the file does not exist. This method may throw runtime exception if the canonical file cannot be retrieved of
-	 * the argument.
+	 * Returns with the {@link org.eclipse.emf.common.util.URI} of the file. Returns with {@code null} if the file
+	 * argument is {@code null} or the file does not exist. This method may throw runtime exception if the canonical
+	 * file cannot be retrieved of the argument.
 	 *
 	 * @param file
 	 *            the file to get the URI of.
@@ -121,22 +121,22 @@ public class N4JSProject implements IN4JSProject {
 			final File canonicalFile = file.getCanonicalFile();
 			return createFileURI(canonicalFile.getAbsolutePath());
 		} catch (final IOException e) {
-			throw new RuntimeException("Error while trying to getting canonical file of the N4JS manifest.", e);
+			throw new RuntimeException("Error while resolving the canonical File of package.json file " + file.getPath() + ".", e);
 		}
 	}
 
-	private Optional<File> getManifestFile() {
+	private Optional<File> getProjectDescriptionFile() {
 		final File locationAsFile = new File(java.net.URI.create(location.toString()));
 		if (locationAsFile.exists() && locationAsFile.isDirectory()) {
-			final File manifest = new File(locationAsFile, IN4JSProject.N4MF_MANIFEST);
-			return manifest.isFile() ? fromNullable(manifest) : absent();
+			final File packageJSON = new File(locationAsFile, IN4JSProject.PACKAGE_JSON);
+			return packageJSON.isFile() ? fromNullable(packageJSON) : absent();
 		}
 
 		return absent();
 	}
 
 	protected boolean checkExists() {
-		return getManifestFile().isPresent();
+		return getProjectDescriptionFile().isPresent();
 	}
 
 	@Override

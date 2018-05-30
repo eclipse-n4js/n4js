@@ -64,6 +64,7 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
@@ -273,6 +274,9 @@ public class N4jscBase implements IApplication {
 
 	@Inject
 	private DependenciesHelper dependencyHelper;
+
+	@Inject
+	private HeadlessHelper headlessHelper;
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -773,6 +777,7 @@ public class N4jscBase implements IApplication {
 		TypesStandaloneSetup.doSetup();
 		N4MFStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
+		JSONStandaloneSetup.doSetup();
 
 		final Injector injector = Guice.createInjector(overridenModule);
 		new N4JSStandaloneSetup().register(injector);
@@ -1002,9 +1007,9 @@ public class N4jscBase implements IApplication {
 			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
 					"Require option for projectlocations.");
 
-		HeadlessHelper.registerProjects(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider),
+		headlessHelper.registerProjects(ProjectLocationsUtil.getTargetPlatformWritableDir(installLocationProvider),
 				n4jsFileBasedWorkspace);
-		HeadlessHelper.registerProjects(ProjectLocationsUtil.convertToFiles(projectLocations), n4jsFileBasedWorkspace);
+		headlessHelper.registerProjects(ProjectLocationsUtil.convertToFiles(projectLocations), n4jsFileBasedWorkspace);
 	}
 
 	/**

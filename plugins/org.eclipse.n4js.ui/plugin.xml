@@ -1396,4 +1396,10 @@ Contributors:
          </command>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.n4js.json.validation">
+      <validator
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension"
+      />
+   </extension>
 </plugin>

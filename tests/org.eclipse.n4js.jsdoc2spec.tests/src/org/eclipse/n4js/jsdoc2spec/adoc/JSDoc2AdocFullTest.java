@@ -63,7 +63,7 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 			for (String lsep : new String[] { "\n", "\r\n", "\r" }) {
 				System.setProperty("line.separator", lsep);
 				String expectationFileName = projectId + "/expected.adoc";
-				workspace = new FileBasedWorkspace(resourceSetProvider, classpathPackageManager);
+				workspace = new FileBasedWorkspace(classpathPackageManager, projectDescriptionHelper);
 
 				URI uriProject = URI.createFileURI(new File(TESTRESOURCES + projectId).getAbsolutePath());
 				workspace.registerProject(uriProject);
