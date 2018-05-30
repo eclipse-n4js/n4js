@@ -20,9 +20,11 @@ import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -144,9 +146,10 @@ public class ProjectDescriptionHelper {
 	 * (for headless case and external libraries)
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
-		ProjectDescription fromPackageJSON = loadPackageJSONAtLocation(location);
-		if (fromPackageJSON != null) {
-			return fromPackageJSON;
+		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
+		ProjectDescription pdFromPackageJSON = packageJSON != null ? convertToProjectDescription(packageJSON) : null;
+		if (pdFromPackageJSON != null) {
+			return pdFromPackageJSON;
 		}
 		return loadManifestAtLocation(location);
 		// ProjectDescription fromPackageJSON = loadPackageJSONAtLocation(location);
@@ -155,9 +158,8 @@ public class ProjectDescriptionHelper {
 		// return merged;
 	}
 
-	private ProjectDescription loadPackageJSONAtLocation(URI location) {
-		JSONDocument packageJSON = loadXtextFileAtLocation(location, IN4JSProject.PACKAGE_JSON, JSONDocument.class);
-		return packageJSON != null ? convertToProjectDescription(packageJSON) : null;
+	private JSONDocument loadPackageJSONAtLocation(URI location) {
+		return loadXtextFileAtLocation(location, IN4JSProject.PACKAGE_JSON, JSONDocument.class);
 	}
 
 	private ProjectDescription loadManifestAtLocation(URI location) {
@@ -245,6 +247,7 @@ public class ProjectDescriptionHelper {
 			JSONValue value = pair.getValue();
 			switch (name) {
 			case PROP__PROJECT_TYPE:
+				// TODO default should be "validation"
 				target.setProjectType(parseProjectType(asStringOrNull(value)));
 				break;
 			case PROP__VENDOR_ID:
@@ -269,6 +272,7 @@ public class ProjectDescriptionHelper {
 				convertModuleFilters(target, asNameValuePairsOrEmpty(value));
 				break;
 			case PROP__MAIN_MODULE:
+				// TODO use official "main" property + default must be "index.js"
 				target.setMainModule(asStringOrNull(value));
 				break;
 			case PROP__TESTED_PROJECTS:
@@ -389,39 +393,41 @@ public class ProjectDescriptionHelper {
 	}
 
 	private ProjectType parseProjectType(String projectTypeStr) {
-		EEnumLiteral eLit = projectTypeStr != null
-				? N4mfPackage.eINSTANCE.getProjectType().getEEnumLiteral(projectTypeStr)
-				: null;
-		return eLit != null
-				? (ProjectType) eLit.getInstance()
-				: (ProjectType) N4mfPackage.eINSTANCE.getProjectType().getDefaultValue();
+		if ("runtimeEnvironment".equals(projectTypeStr))
+			return ProjectType.RUNTIME_ENVIRONMENT;
+		if ("runtimeLibrary".equals(projectTypeStr))
+			return ProjectType.RUNTIME_LIBRARY;
+		return parseEnumLiteral(N4mfPackage.eINSTANCE.getProjectType(), ProjectType.class,
+				projectTypeStr);
 	}
 
 	private ModuleLoader parseModuleLoader(String moduleLoaderStr) {
-		EEnumLiteral eLit = moduleLoaderStr != null
-				? N4mfPackage.eINSTANCE.getModuleLoader().getEEnumLiteral(moduleLoaderStr)
-				: null;
-		return eLit != null
-				? (ModuleLoader) eLit.getInstance()
-				: (ModuleLoader) N4mfPackage.eINSTANCE.getModuleLoader().getDefaultValue();
+		return parseEnumLiteral(N4mfPackage.eINSTANCE.getModuleLoader(), ModuleLoader.class,
+				moduleLoaderStr);
 	}
 
 	private SourceContainerType parseSourceContainerType(String sourceContainerTypeStr) {
-		EEnumLiteral eLit = sourceContainerTypeStr != null
-				? N4mfPackage.eINSTANCE.getSourceContainerType().getEEnumLiteral(sourceContainerTypeStr)
-				: null;
-		return eLit != null
-				? (SourceContainerType) eLit.getInstance()
-				: (SourceContainerType) N4mfPackage.eINSTANCE.getSourceContainerType().getDefaultValue();
+		return parseEnumLiteral(N4mfPackage.eINSTANCE.getSourceContainerType(), SourceContainerType.class,
+				sourceContainerTypeStr);
 	}
 
 	private ModuleFilterType parseModuleFilterType(String moduleFilterTypeStr) {
-		EEnumLiteral eLit = moduleFilterTypeStr != null
-				? N4mfPackage.eINSTANCE.getModuleFilterType().getEEnumLiteral(moduleFilterTypeStr)
-				: null;
-		return eLit != null
-				? (ModuleFilterType) eLit.getInstance()
-				: (ModuleFilterType) N4mfPackage.eINSTANCE.getModuleFilterType().getDefaultValue();
+		if ("noValidate".equals(moduleFilterTypeStr))
+			return ModuleFilterType.NO_VALIDATE;
+		if ("noModuleWrapping".equals(moduleFilterTypeStr))
+			return ModuleFilterType.NO_MODULE_WRAPPING;
+		return parseEnumLiteral(N4mfPackage.eINSTANCE.getModuleFilterType(), ModuleFilterType.class,
+				moduleFilterTypeStr);
+	}
+
+	private <T extends Enumerator> T parseEnumLiteral(EEnum emfEnumType, Class<T> javaEnumType, String enumLiteralStr) {
+		EEnumLiteral emfLit = enumLiteralStr != null ? emfEnumType.getELiterals().stream()
+				.filter(lit -> lit.getName().equalsIgnoreCase(enumLiteralStr))
+				.findFirst().orElse(null) : null;
+		Enumerator javaLit = emfLit != null ? emfLit.getInstance() : (Enumerator) emfEnumType.getDefaultValue();
+		@SuppressWarnings("unchecked")
+		T javaLitCasted = javaEnumType.isInstance(javaLit) ? (T) javaLit : null;
+		return javaLitCasted;
 	}
 
 	private String asStringOrNull(JSONValue jsonValue) {
