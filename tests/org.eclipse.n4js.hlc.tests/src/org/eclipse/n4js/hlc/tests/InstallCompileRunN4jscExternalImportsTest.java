@@ -20,6 +20,7 @@ import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -47,6 +48,7 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest
 	 * running it with Common JS.
 	 */
 	@Test
+	@Ignore // remove @Ignore when IDE-2988 is done
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/external.project/src/Main.n4js";
