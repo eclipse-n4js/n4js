@@ -121,8 +121,8 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 				"--run", WSP + "/"
 						+ "IDE-1510_Incomplete_API_Implementation/one.x.impl/src/AT_IDE-1510_Missing_Method.n4js", // ----
 				"--buildType", "allprojects", // ----
-				"IDE-1510_Incomplete_API_Implementation/one.api",
-				"IDE-1510_Incomplete_API_Implementation/one.x.impl");
+				"wsp/IDE-1510_Incomplete_API_Implementation/one.api",
+				"wsp/IDE-1510_Incomplete_API_Implementation/one.x.impl");
 
 		int exitCode = p.waitFor();
 
@@ -183,8 +183,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 		Process p = createAndStartProcess("-pl", proot,
 				"--buildType", "dontcompile",
 				"--runWith", "nodejs",
-				"--run", fileA,
-				"--verbose");
+				"--run", fileA);
 
 		int exitCode = p.waitFor();
 

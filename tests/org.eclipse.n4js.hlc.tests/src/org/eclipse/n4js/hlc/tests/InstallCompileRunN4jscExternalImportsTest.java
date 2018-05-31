@@ -57,7 +57,6 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				"--verbose",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};

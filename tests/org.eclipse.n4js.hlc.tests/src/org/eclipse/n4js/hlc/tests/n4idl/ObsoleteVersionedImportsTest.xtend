@@ -65,7 +65,6 @@ class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 				"--systemLoader", COMMON_JS.getId(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				"--verbose",
 				"--buildType", BuildType.projects.toString(),
 				projectToCompile,
 				"--run",

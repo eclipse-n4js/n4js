@@ -65,7 +65,7 @@ Contributors:
 				<configuration>
 					<argLine>-Xmx2048m</argLine>
 					<systemProperties>
-						<log4j.configuration>file:${project.build.outputDirectory}/NODEBUGlog4j.xml</log4j.configuration>
+						<log4j.configuration>${loggingArgs}</log4j.configuration>
 						<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
 						<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 					</systemProperties>

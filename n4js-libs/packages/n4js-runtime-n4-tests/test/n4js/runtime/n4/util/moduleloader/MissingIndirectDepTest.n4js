@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
 
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 export public class MissingIndirectDepTest {
     private base = MissingIndirectDepTest.n4type.origin + "/runtime/n4/util/moduleloader/modules/";
 

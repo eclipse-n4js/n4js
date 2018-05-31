@@ -12,6 +12,7 @@ package org.eclipse.n4js.utils.languages;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -68,6 +69,16 @@ public class N4LanguageUtils {
 		Objects.requireNonNull(serviceType);
 		final URI uri = URI.createPlatformResourceURI(iResource.getFullPath().toString(), true);
 		return uri != null ? getServiceForContext(uri, serviceType) : Optional.empty();
+	}
+
+	/**
+	 * Same as {@link #getServiceForContext(URI, Class)}, but accepts the file extension of an Xtext language as
+	 * context.
+	 */
+	public static <T> Optional<T> getServiceForContext(String fileExtOfContextLanguage, Class<T> serviceType) {
+		final String uriStr = "__synthetic_" + new Random().nextInt(Integer.MAX_VALUE) + "." + fileExtOfContextLanguage;
+		final URI uri = URI.createURI(uriStr);
+		return getServiceForContext(uri, serviceType);
 	}
 
 	/**

@@ -22,22 +22,19 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.resource.ManifestMerger;
+import org.eclipse.n4js.n4mf.serialization.N4MFManifestSerializer;
 import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 import org.eclipse.n4js.utils.LightweightException;
 import org.eclipse.n4js.utils.OSInfo;
@@ -48,7 +45,6 @@ import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.process.ProcessResult;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
@@ -56,7 +52,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * Adapts given npm package to n4js project form
@@ -81,10 +76,10 @@ public class NpmPackageToProjectAdapter {
 	private ManifestMerger manifestMerger;
 
 	@Inject
-	private BinaryCommandFactory commandFactory;
+	private N4MFManifestSerializer manifestSerializer;
 
 	@Inject
-	private Provider<XtextResourceSet> resourceSetProvider;
+	private BinaryCommandFactory commandFactory;
 
 	@Inject
 	private GitCloneSupplier gitCloneSupplier;
@@ -389,13 +384,11 @@ public class NpmPackageToProjectAdapter {
 		}
 
 		if (pd != null) {
-			ResourceSet resourceSet = resourceSetProvider.get();
-			Resource resource = resourceSet.getResource(manifestURI, true);
-			List<EObject> contents = resource.getContents();
-			contents.clear();
-			contents.add(pd);
-			try {
-				resource.save(null);
+			final String adjustedManifestContent = manifestSerializer.serialize(pd);
+
+			try (FileWriter fw = new FileWriter(manifest)) {
+				// write adjusted manifest content to file
+				fw.write(adjustedManifestContent);
 				return statusHelper.OK();
 			} catch (IOException e) {
 				final String message = "Error while trying to write N4JS manifest content for: " + manifestURI + ".";

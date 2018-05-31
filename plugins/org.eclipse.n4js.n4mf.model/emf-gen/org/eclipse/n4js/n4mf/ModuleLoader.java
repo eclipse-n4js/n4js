@@ -47,7 +47,7 @@ public enum ModuleLoader implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	COMMONJS(0, "COMMONJS", "COMMONJS"),
+	COMMONJS(1, "COMMONJS", "COMMONJS"),
 
 	/**
 	 * The '<em><b>NODE BUILTIN</b></em>' literal object.
@@ -57,7 +57,7 @@ public enum ModuleLoader implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	NODE_BUILTIN(0, "NODE_BUILTIN", "NODE_BUILTIN");
+	NODE_BUILTIN(2, "NODE_BUILTIN", "NODE_BUILTIN");
 
 	/**
 	 * The '<em><b>N4JS</b></em>' literal value.
@@ -87,7 +87,7 @@ public enum ModuleLoader implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMONJS_VALUE = 0;
+	public static final int COMMONJS_VALUE = 1;
 
 	/**
 	 * The '<em><b>NODE BUILTIN</b></em>' literal value.
@@ -102,7 +102,7 @@ public enum ModuleLoader implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int NODE_BUILTIN_VALUE = 0;
+	public static final int NODE_BUILTIN_VALUE = 2;
 
 	/**
 	 * An array of all the '<em><b>Module Loader</b></em>' enumerators.
@@ -172,6 +172,8 @@ public enum ModuleLoader implements Enumerator {
 	public static ModuleLoader get(int value) {
 		switch (value) {
 			case N4JS_VALUE: return N4JS;
+			case COMMONJS_VALUE: return COMMONJS;
+			case NODE_BUILTIN_VALUE: return NODE_BUILTIN;
 		}
 		return null;
 	}

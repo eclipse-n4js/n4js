@@ -66,7 +66,7 @@ pipeline {
                             'execute-hlc-integration-tests'
                         ].join(',')
 
-                        sh "${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
+                        sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }
@@ -75,10 +75,9 @@ pipeline {
 
     post {
         always {
-            // zipped platform specific IDEs
-            archive '**/builds/**/target/products/*.zip'
-            // platform independent headless jar
-            archive '**/tools/**/target/n4jsc.jar'
+            archiveArtifacts allowEmptyArchive: false, artifacts: '**/builds/**/target/products/*.zip'
+            archiveArtifacts allowEmptyArchive: false, artifacts: '**/tools/**/target/n4jsc.jar'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
             junit '**/surefire-reports/**/*.xml'
             deleteDir()
         }

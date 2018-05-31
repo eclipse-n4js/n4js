@@ -10,12 +10,12 @@
  */
 package org.eclipse.n4js.tests.manifest
 
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.junit.Before
 import org.junit.Test
 
@@ -48,7 +48,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceFragment.head.paths.add(folderName)
+		pd.sourceContainers.head.pathsRaw.add(folderName)
 		resource.save(null)
 		waitForAutoBuild();
 	}
@@ -58,7 +58,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceFragment.head.paths.remove(1)
+		pd.sourceContainers.head.pathsRaw.remove(1)
 		resource.save(null)
 		waitForAutoBuild();
 	}
@@ -68,8 +68,8 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceFragment.head.paths.clear
-		pd.sourceFragment.head.paths.add(name)
+		pd.sourceContainers.head.pathsRaw.clear
+		pd.sourceContainers.head.pathsRaw.add(name)
 		resource.save(null)
 		waitForAutoBuild();
 	}

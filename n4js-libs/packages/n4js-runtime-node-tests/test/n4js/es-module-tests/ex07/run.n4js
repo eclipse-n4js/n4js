@@ -8,5 +8,5 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import theNumber, {a} from "es-module-tests/ex07/A"
+import theNumber, {a} from "es-module-tests/ex07/A";
 console.log(theNumber, a);

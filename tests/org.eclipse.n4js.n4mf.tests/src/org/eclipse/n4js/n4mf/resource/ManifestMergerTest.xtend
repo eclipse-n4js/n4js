@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -41,18 +41,18 @@ class ManifestMergerTest extends Assert {
 			    org.eclipse.n4js.mangelhaft,
 			    eu.numberfour.mangelhaft.reporter.console
 			}
-
+			
 			RequiredRuntimeLibraries {
 			    runtime.fetch,
 			    runtime.es6
 			}
 		''').eResource;
 
-	val to = parseHelper.parse('''
+		val to = parseHelper.parse('''
 			ProjectDependencies {
 			    express
 			}
-
+			
 			RequiredRuntimeLibraries {
 			    runtime.nodejs
 			}
@@ -61,12 +61,13 @@ class ManifestMergerTest extends Assert {
 		val result = merger.mergeContent(from, to);
 
 		assertTrue(
-			'Expected 3 project dependencies after the merge. Got ' + result.allProjectDependencies.size + ' instead.',
-			result.allProjectDependencies.size === 3
+			'Expected 3 project dependencies after the merge. Got ' + result.projectDependencies.size + ' instead.',
+			result.projectDependencies.size === 3
 		);
 		assertTrue(
-			'Expected 3 required runtime libraries after the merge. Got ' + result.allRequiredRuntimeLibraries.size + ' instead.',
-			result.allRequiredRuntimeLibraries.size === 3
+			'Expected 3 required runtime libraries after the merge. Got ' + result.requiredRuntimeLibraries.size +
+				' instead.',
+			result.requiredRuntimeLibraries.size === 3
 		);
 	}
 
@@ -78,11 +79,11 @@ class ManifestMergerTest extends Assert {
 			}
 		''').eResource;
 
-	val to = parseHelper.parse('''
+		val to = parseHelper.parse('''
 			ProjectDependencies {
 			    express
 			}
-
+			
 			RequiredRuntimeLibraries {
 			    runtime.nodejs
 			}
@@ -91,12 +92,13 @@ class ManifestMergerTest extends Assert {
 		val result = merger.mergeContent(from, to);
 
 		assertTrue(
-			'Expected 1 project dependency after the merge. Got ' + result.allProjectDependencies.size + ' instead.',
-			result.allProjectDependencies.size === 1
+			'Expected 1 project dependency after the merge. Got ' + result.projectDependencies.size + ' instead.',
+			result.projectDependencies.size === 1
 		);
 		assertTrue(
-			'Expected 1 required runtime library after the merge. Got ' + result.allRequiredRuntimeLibraries.size + ' instead.',
-			result.allRequiredRuntimeLibraries.size === 1
+			'Expected 1 required runtime library after the merge. Got ' + result.requiredRuntimeLibraries.size +
+				' instead.',
+			result.requiredRuntimeLibraries.size === 1
 		);
 	}
 
@@ -105,7 +107,8 @@ class ManifestMergerTest extends Assert {
 		val from = parseHelper.parse('''ProjectId: from.id''');
 		val to = parseHelper.parse('''ProjectId: to.id''');
 		val result = merger.mergeContent(from.eResource, to.eResource);
-		assertTrue('Expected to.id project ID. Was ' + result.projectId + '.instead.', result.projectId.equals('from.id'));
+		assertTrue('Expected to.id project ID. Was ' + result.projectId + '.instead.',
+			result.projectId.equals('from.id'));
 
 	}
 
@@ -117,9 +120,9 @@ class ManifestMergerTest extends Assert {
 			}
 		''').eResource;
 
-	val to = parseHelper.parse('''
+		val to = parseHelper.parse('''
 			ModuleLoader: «ModuleLoader.COMMONJS.toString.toLowerCase»
-
+			
 			RequiredRuntimeLibraries {
 			    runtime.nodejs
 			}

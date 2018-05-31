@@ -13,9 +13,6 @@ package org.eclipse.n4js.scoping.accessModifiers;
 import java.util.HashMap;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker.MemberVisibility;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -23,6 +20,8 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 
 /**
  * Filters members that are not accessible from the given context (that is, from the location of the

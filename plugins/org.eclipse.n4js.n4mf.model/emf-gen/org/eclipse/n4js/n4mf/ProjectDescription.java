@@ -12,32 +12,19 @@ package org.eclipse.n4js.n4mf;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Project Description</b></em>'.
  * <!-- end-user-doc -->
  *
- * <!-- begin-model-doc -->
- * *
- * Describes a project by making it identifiable by projectId, vendorId and
- * declared version.
- *  * The project type defines how a project should be bundled.
- *  * Project paths decide about which resources should be bundled and be visible
- * to other projects that list this project as dependency. So e.g. the files
- * contained in a declared source folder will be in scope for a project that
- * has this project as a test scoped dependency.
- *  * The listed dependencies lists all projects this project depends on. A dependency
- * is categorized to be only while testing or at runtime. This plays together with
- * projects paths (source or test).
- *  * To be later validated
- * - validate if manifest is in project
- * - check if file is in root folder
- * <!-- end-model-doc -->
- *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectId <em>Project Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getVendorId <em>Vendor Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getVendorName <em>Vendor Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectVersion <em>Project Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectType <em>Project Type</em>}</li>
@@ -50,10 +37,10 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getImplementedProjects <em>Implemented Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getInitModules <em>Init Modules</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getExecModule <em>Exec Module</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath <em>Output Path</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPaths <em>Library Paths</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePaths <em>Resource Paths</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceFragment <em>Source Fragment</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getLibraryPathsRaw <em>Library Paths Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getResourcePathsRaw <em>Resource Paths Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleLoader <em>Module Loader</em>}</li>
@@ -63,7 +50,59 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface ProjectDescription extends SimpleProjectDescription {
+public interface ProjectDescription extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Project Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Project Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Project Id</em>' attribute.
+	 * @see #setProjectId(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ProjectId()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getProjectId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectId <em>Project Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Project Id</em>' attribute.
+	 * @see #getProjectId()
+	 * @generated
+	 */
+	void setProjectId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Vendor Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vendor Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Vendor Id</em>' attribute.
+	 * @see #setVendorId(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_VendorId()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getVendorId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getVendorId <em>Vendor Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Vendor Id</em>' attribute.
+	 * @see #getVendorId()
+	 * @generated
+	 */
+	void setVendorId(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Vendor Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -180,12 +219,12 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Extended Runtime Environment</em>' containment reference.
-	 * @see #setExtendedRuntimeEnvironment(ExtendedRuntimeEnvironment)
+	 * @see #setExtendedRuntimeEnvironment(ProjectReference)
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ExtendedRuntimeEnvironment()
 	 * @model containment="true"
 	 * @generated
 	 */
-	ExtendedRuntimeEnvironment getExtendedRuntimeEnvironment();
+	ProjectReference getExtendedRuntimeEnvironment();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getExtendedRuntimeEnvironment <em>Extended Runtime Environment</em>}' containment reference.
@@ -195,85 +234,55 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * @see #getExtendedRuntimeEnvironment()
 	 * @generated
 	 */
-	void setExtendedRuntimeEnvironment(ExtendedRuntimeEnvironment value);
+	void setExtendedRuntimeEnvironment(ProjectReference value);
 
 	/**
-	 * Returns the value of the '<em><b>Provided Runtime Libraries</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Provided Runtime Libraries</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectReference}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Provided Runtime Libraries</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Provided Runtime Libraries</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Provided Runtime Libraries</em>' containment reference.
-	 * @see #setProvidedRuntimeLibraries(ProvidedRuntimeLibraries)
+	 * @return the value of the '<em>Provided Runtime Libraries</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ProvidedRuntimeLibraries()
 	 * @model containment="true"
 	 * @generated
 	 */
-	ProvidedRuntimeLibraries getProvidedRuntimeLibraries();
+	EList<ProjectReference> getProvidedRuntimeLibraries();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProvidedRuntimeLibraries <em>Provided Runtime Libraries</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Provided Runtime Libraries</em>' containment reference.
-	 * @see #getProvidedRuntimeLibraries()
-	 * @generated
-	 */
-	void setProvidedRuntimeLibraries(ProvidedRuntimeLibraries value);
-
-	/**
-	 * Returns the value of the '<em><b>Required Runtime Libraries</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Required Runtime Libraries</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectReference}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Required Runtime Libraries</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Required Runtime Libraries</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Required Runtime Libraries</em>' containment reference.
-	 * @see #setRequiredRuntimeLibraries(RequiredRuntimeLibraries)
+	 * @return the value of the '<em>Required Runtime Libraries</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_RequiredRuntimeLibraries()
 	 * @model containment="true"
 	 * @generated
 	 */
-	RequiredRuntimeLibraries getRequiredRuntimeLibraries();
+	EList<ProjectReference> getRequiredRuntimeLibraries();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getRequiredRuntimeLibraries <em>Required Runtime Libraries</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Required Runtime Libraries</em>' containment reference.
-	 * @see #getRequiredRuntimeLibraries()
-	 * @generated
-	 */
-	void setRequiredRuntimeLibraries(RequiredRuntimeLibraries value);
-
-	/**
-	 * Returns the value of the '<em><b>Project Dependencies</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Project Dependencies</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectDependency}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Project Dependencies</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Project Dependencies</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Project Dependencies</em>' containment reference.
-	 * @see #setProjectDependencies(ProjectDependencies)
+	 * @return the value of the '<em>Project Dependencies</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ProjectDependencies()
 	 * @model containment="true"
 	 * @generated
 	 */
-	ProjectDependencies getProjectDependencies();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getProjectDependencies <em>Project Dependencies</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Project Dependencies</em>' containment reference.
-	 * @see #getProjectDependencies()
-	 * @generated
-	 */
-	void setProjectDependencies(ProjectDependencies value);
+	EList<ProjectDependency> getProjectDependencies();
 
 	/**
 	 * Returns the value of the '<em><b>Implementation Id</b></em>' attribute.
@@ -302,56 +311,36 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	void setImplementationId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Implemented Projects</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Implemented Projects</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectReference}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Implemented Projects</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Implemented Projects</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Implemented Projects</em>' containment reference.
-	 * @see #setImplementedProjects(ImplementedProjects)
+	 * @return the value of the '<em>Implemented Projects</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ImplementedProjects()
 	 * @model containment="true"
 	 * @generated
 	 */
-	ImplementedProjects getImplementedProjects();
+	EList<ProjectReference> getImplementedProjects();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getImplementedProjects <em>Implemented Projects</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Implemented Projects</em>' containment reference.
-	 * @see #getImplementedProjects()
-	 * @generated
-	 */
-	void setImplementedProjects(ImplementedProjects value);
-
-	/**
-	 * Returns the value of the '<em><b>Init Modules</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Init Modules</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.BootstrapModule}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Init Modules</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Init Modules</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Init Modules</em>' containment reference.
-	 * @see #setInitModules(InitModules)
+	 * @return the value of the '<em>Init Modules</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_InitModules()
 	 * @model containment="true"
 	 * @generated
 	 */
-	InitModules getInitModules();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getInitModules <em>Init Modules</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Init Modules</em>' containment reference.
-	 * @see #getInitModules()
-	 * @generated
-	 */
-	void setInitModules(InitModules value);
+	EList<BootstrapModule> getInitModules();
 
 	/**
 	 * Returns the value of the '<em><b>Exec Module</b></em>' containment reference.
@@ -362,12 +351,12 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Exec Module</em>' containment reference.
-	 * @see #setExecModule(ExecModule)
+	 * @see #setExecModule(BootstrapModule)
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ExecModule()
 	 * @model containment="true"
 	 * @generated
 	 */
-	ExecModule getExecModule();
+	BootstrapModule getExecModule();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getExecModule <em>Exec Module</em>}' containment reference.
@@ -377,81 +366,81 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * @see #getExecModule()
 	 * @generated
 	 */
-	void setExecModule(ExecModule value);
+	void setExecModule(BootstrapModule value);
 
 	/**
-	 * Returns the value of the '<em><b>Output Path</b></em>' attribute.
+	 * Returns the value of the '<em><b>Output Path Raw</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Output Path</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Output Path Raw</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Output Path</em>' attribute.
-	 * @see #setOutputPath(String)
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_OutputPath()
+	 * @return the value of the '<em>Output Path Raw</em>' attribute.
+	 * @see #setOutputPathRaw(String)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_OutputPathRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getOutputPath();
+	String getOutputPathRaw();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath <em>Output Path</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPathRaw <em>Output Path Raw</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Output Path</em>' attribute.
-	 * @see #getOutputPath()
+	 * @param value the new value of the '<em>Output Path Raw</em>' attribute.
+	 * @see #getOutputPathRaw()
 	 * @generated
 	 */
-	void setOutputPath(String value);
+	void setOutputPathRaw(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Library Paths</b></em>' attribute list.
+	 * Returns the value of the '<em><b>Library Paths Raw</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Library Paths</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Library Paths Raw</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Library Paths</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_LibraryPaths()
+	 * @return the value of the '<em>Library Paths Raw</em>' attribute list.
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_LibraryPathsRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
-	EList<String> getLibraryPaths();
+	EList<String> getLibraryPathsRaw();
 
 	/**
-	 * Returns the value of the '<em><b>Resource Paths</b></em>' attribute list.
+	 * Returns the value of the '<em><b>Resource Paths Raw</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Resource Paths</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Resource Paths Raw</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Resource Paths</em>' attribute list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ResourcePaths()
+	 * @return the value of the '<em>Resource Paths Raw</em>' attribute list.
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_ResourcePathsRaw()
 	 * @model unique="false"
 	 * @generated
 	 */
-	EList<String> getResourcePaths();
+	EList<String> getResourcePathsRaw();
 
 	/**
-	 * Returns the value of the '<em><b>Source Fragment</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4mf.SourceFragment}.
+	 * Returns the value of the '<em><b>Source Containers</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.SourceContainerDescription}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Source Fragment</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Source Containers</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source Fragment</em>' containment reference list.
-	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_SourceFragment()
+	 * @return the value of the '<em>Source Containers</em>' containment reference list.
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_SourceContainers()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<SourceFragment> getSourceFragment();
+	EList<SourceContainerDescription> getSourceContainers();
 
 	/**
 	 * Returns the value of the '<em><b>Module Filters</b></em>' containment reference list.
@@ -470,30 +459,20 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	EList<ModuleFilter> getModuleFilters();
 
 	/**
-	 * Returns the value of the '<em><b>Tested Projects</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Tested Projects</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4mf.ProjectDependency}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Tested Projects</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Tested Projects</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Tested Projects</em>' containment reference.
-	 * @see #setTestedProjects(TestedProjects)
+	 * @return the value of the '<em>Tested Projects</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_TestedProjects()
 	 * @model containment="true"
 	 * @generated
 	 */
-	TestedProjects getTestedProjects();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Tested Projects</em>' containment reference.
-	 * @see #getTestedProjects()
-	 * @generated
-	 */
-	void setTestedProjects(TestedProjects value);
+	EList<ProjectDependency> getTestedProjects();
 
 	/**
 	 * Returns the value of the '<em><b>Module Loader</b></em>' attribute.
@@ -527,85 +506,37 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenient method for getting all tested projects defined for the current project description.
-	 * Returns with an empty list if no test projects are set for the current project, otherwise returns with them.
-	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4mf.TestedProject%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.n4mf.TestedProjects%&gt; _testedProjects = this.getTestedProjects();\nboolean _tripleEquals = (null == _testedProjects);\nif (_tripleEquals)\n{\n\t_xifexpression = &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.n4mf.TestedProject%&gt;&gt;emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getTestedProjects().getTestedProjects();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(this.getOutputPathRaw());'"
 	 * @generated
 	 */
-	EList<TestedProject> getAllTestedProjects();
+	String getOutputPath();
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenient method for getting all initializer bootstrap modules defined for the current project description.
-	 * Returns with an empty list if no initializer modules are set for the current project, otherwise returns with them.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4mf.BootstrapModule%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.n4mf.InitModules%&gt; _initModules = this.getInitModules();\nboolean _tripleEquals = (null == _initModules);\nif (_tripleEquals)\n{\n\t_xifexpression = &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.n4mf.BootstrapModule%&gt;&gt;emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getInitModules().getInitModules();\n}\nreturn _xifexpression;'"
+	 * @model newOutputPathUnique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='this.setOutputPathRaw(newOutputPath);'"
 	 * @generated
 	 */
-	EList<BootstrapModule> getAllInitModules();
+	void setOutputPath(String newOutputPath);
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenient method for getting all implemented modules defined for the current project description.
-	 * Returns with an empty list if no modules are implemented by the current project, otherwise returns with them.
-	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4mf.ProjectReference%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.n4mf.ImplementedProjects%&gt; _implementedProjects = this.getImplementedProjects();\nboolean _tripleEquals = (null == _implementedProjects);\nif (_tripleEquals)\n{\n\t_xifexpression = &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.n4mf.ProjectReference%&gt;&gt;emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getImplementedProjects().getImplementedProjects();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getLibraryPathsRaw(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; paths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _libraryPathsRaw = this.getLibraryPathsRaw();\nfor (final &lt;%java.lang.String%&gt; pathRaw : _libraryPathsRaw)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(pathRaw);\n\t\tpaths.add(normalizedPath);\n\t}\n}\nreturn paths;'"
 	 * @generated
 	 */
-	EList<ProjectReference> getAllImplementedProjects();
+	EList<String> getLibraryPaths();
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenient method for getting all project dependencies for the current project description.
-	 * Returns with an empty list if the current project does not depend on any other projects, otherwise returns with them.
-	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4mf.ProjectDependency%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.n4mf.ProjectDependencies%&gt; _projectDependencies = this.getProjectDependencies();\nboolean _tripleEquals = (null == _projectDependencies);\nif (_tripleEquals)\n{\n\t_xifexpression = &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.n4mf.ProjectDependency%&gt;&gt;emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getProjectDependencies().getProjectDependencies();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _length = ((&lt;%java.lang.Object%&gt;[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getResourcePathsRaw(), &lt;%java.lang.Object%&gt;.class)).length;\nfinal &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; paths = new &lt;%org.eclipse.emf.common.util.BasicEList%&gt;&lt;&lt;%java.lang.String%&gt;&gt;(_length);\n&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%java.lang.String%&gt;&gt; _resourcePathsRaw = this.getResourcePathsRaw();\nfor (final &lt;%java.lang.String%&gt; pathRaw : _resourcePathsRaw)\n{\n\t{\n\t\tfinal &lt;%java.lang.String%&gt; normalizedPath = &lt;%org.eclipse.n4js.utils.io.FileUtils%&gt;.normalizeDotWhenEmpty(pathRaw);\n\t\tpaths.add(normalizedPath);\n\t}\n}\nreturn paths;'"
 	 * @generated
 	 */
-	EList<ProjectDependency> getAllProjectDependencies();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenient method for getting all provided runtime libraries defined for the current project description.
-	 * Returns with an empty list if no runtime libraries are provided by the current project, otherwise returns with them.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries%&gt; _providedRuntimeLibraries = this.getProvidedRuntimeLibraries();\nboolean _tripleEquals = (null == _providedRuntimeLibraries);\nif (_tripleEquals)\n{\n\t_xifexpression = &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency%&gt;&gt;emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getProvidedRuntimeLibraries().getProvidedRuntimeLibraries();\n}\nreturn _xifexpression;'"
-	 * @generated
-	 */
-	EList<ProvidedRuntimeLibraryDependency> getAllProvidedRuntimeLibraries();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenient method for getting all required runtime libraries for the current project description.
-	 * Returns with an empty list if no required runtime libraries are specified by the current project, otherwise returns with them.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='&lt;%org.eclipse.emf.common.util.EList%&gt;&lt;&lt;%org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency%&gt;&gt; _xifexpression = null;\n&lt;%org.eclipse.n4js.n4mf.RequiredRuntimeLibraries%&gt; _requiredRuntimeLibraries = this.getRequiredRuntimeLibraries();\nboolean _tripleEquals = (null == _requiredRuntimeLibraries);\nif (_tripleEquals)\n{\n\t_xifexpression = &lt;%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%&gt;.&lt;&lt;%org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency%&gt;&gt;emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getRequiredRuntimeLibraries().getRequiredRuntimeLibraries();\n}\nreturn _xifexpression;'"
-	 * @generated
-	 */
-	EList<RequiredRuntimeLibraryDependency> getAllRequiredRuntimeLibraries();
+	EList<String> getResourcePaths();
 
 } // ProjectDescription

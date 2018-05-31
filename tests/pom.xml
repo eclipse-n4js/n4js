@@ -28,7 +28,6 @@ Contributors:
 		<module>org.eclipse.n4js.hlc.integrationtests</module>
 	</modules>
 
-
 	<properties>
 		<!-- jacoco (ECLEmma), code coverage -->
 		<jacoco-maven-plugin.version>0.7.1.201405082137</jacoco-maven-plugin.version>

@@ -34,10 +34,6 @@ class IssueCode {
 
 	new(String name) throws IllegalArgumentException {
 		this.name = name;
-
-		if (IssueCodes.fields.filter[field | field.name == name].empty) {
-			throw new IllegalArgumentException("Unknown issue code " + name);
-		}
 	}
 
 	def getName() {

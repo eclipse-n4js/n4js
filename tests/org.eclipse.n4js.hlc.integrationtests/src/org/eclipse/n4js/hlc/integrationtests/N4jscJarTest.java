@@ -56,8 +56,7 @@ public class N4jscJarTest extends AbstractN4jscJarTest {
 				"--projectlocations", WSP,
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
-				"--test", pathToDemoTest,
-				"--verbose");
+				"--test", pathToDemoTest);
 
 		int exitCode = p.waitFor();
 
@@ -99,8 +98,7 @@ public class N4jscJarTest extends AbstractN4jscJarTest {
 				"--buildType", "allprojects",
 				"--testWith", "nodejs_mangelhaft",
 				"--test", pathToDemoTest,
-				"--testReportRoot", testReportRoot,
-				"--verbose");
+				"--testReportRoot", testReportRoot);
 
 		int exitCode = p.waitFor();
 

@@ -46,4 +46,3 @@ export @StringBased external public enum RequestContext {
     XSLT: "xslt"
 }
 
-/* -*- mode: typescript;-*- */

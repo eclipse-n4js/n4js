@@ -21,4 +21,3 @@ export public interface ~IteratorExt<out T> extends Iterator<T>, Iterable<T> {
 //    public [Symbol.iterator](): IteratorExt<T>; // must return this
 }
 
-/* -*- mode: typescript;-*- */

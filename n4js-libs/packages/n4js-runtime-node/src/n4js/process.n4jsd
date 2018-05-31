@@ -10,10 +10,10 @@
  */
 @@Global @@ProvidedByRuntime
 
-import { EventEmitter } from "events"
-import { IReadableStream } from "stream"
-import { IWritableStream } from "stream"
 
+import {EventEmitter} from "events";
+import {IReadableStream} from "stream";
+import {IWritableStream} from "stream";
 export external public class ~Process extends EventEmitter {
     public abort(): void;
     public arch: string;
@@ -65,4 +65,4 @@ export external public class ~Process extends EventEmitter {
 
 export external public const process: Process;
 
-/* -*- mode: typescript;-*- */
+
