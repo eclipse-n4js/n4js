@@ -143,14 +143,17 @@ public class NodeProcessBuilder {
 		Builder<String> builder = ImmutableList.<String> builder();
 		NpmBinary npmBinary = npmBinaryProvider.get();
 		String saveCommand = save ? NPM_OPTION_SAVE : "";
+		String resolvedPackageName = (packageName == null) ? "" : packageName;
 
 		if (isWindows()) {
 			builder.add(WIN_SHELL_COMAMNDS);
-			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), simpleCommand, packageName, saveCommand);
+			builder.add(escapeBinaryPath(npmBinary.getBinaryAbsolutePath()), simpleCommand, resolvedPackageName,
+					saveCommand);
 		} else {
 			builder.add(NIX_SHELL_COMAMNDS);
 			builder.add(
-					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " " + simpleCommand + " " + packageName + " "
+					escapeBinaryPath(npmBinary.getBinaryAbsolutePath()) + " " + simpleCommand + " "
+							+ resolvedPackageName + " "
 							+ saveCommand);
 		}
 
