@@ -113,3 +113,12 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         xauth \
         xvfb
+
+#
+# docker install
+# 
+ RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-18.03.1-ce.tgz && \
+ 	tar xvf docker-18.03.1-ce.tgz
+ 	
+ CMD ["/docker/dockerd &"]
+ 
