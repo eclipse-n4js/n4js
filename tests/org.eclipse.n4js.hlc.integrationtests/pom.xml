@@ -22,7 +22,10 @@ Contributors:
 	<name>org.eclipse.n4js.hlc.integrationtests</name>
 	<packaging>eclipse-test-plugin</packaging>
 	<description>Test the headless N4js compiler bundled into one jar.</description>
-	
+
+	<properties>
+		<npmLocalRegistry>http://localhost:4873</npmLocalRegistry>
+	</properties>
 	<dependencies>
 	<!-- pull jar for integration tests on the jar -->
 		<dependency>
@@ -122,7 +125,7 @@ Contributors:
 						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
 						<includes>
 							<include>**/*JarTest.java</include>
-							<include>**/*CliTest.java</include>
+							<include>**/*cliTest.java</include>
 						</includes>
 					</configuration>
 					<executions>
@@ -224,6 +227,7 @@ Contributors:
 								<executable>bash</executable>
 								<arguments>
 									<argument>${project.basedir}/../../publish-n4js-libs-npm.sh</argument>
+									<argument>${npmLocalRegistry}</argument>
 								</arguments>
 							</configuration>
 						</execution>

@@ -113,8 +113,3 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         xauth \
         xvfb
-
-#
-# Install verdaccio
-#
-RUN yarn global add verdaccio

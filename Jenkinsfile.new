@@ -62,7 +62,8 @@ pipeline {
                         def profiles = [
                             'buildProduct',
                             'execute-plugin-tests',
-                            'execute-plugin-ui-tests'
+                            'execute-plugin-ui-tests',
+                            'execute-hlc-integration-tests'
                         ].join(',')
 
                         sh "${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"

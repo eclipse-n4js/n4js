@@ -14,7 +14,8 @@ set -e
 cd `dirname $0`
 cd `pwd -P`
 
-NPM_REGISTRY="http://localhost:4873"
+# "http://localhost:4873"
+NPM_REGISTRY=$1
 
 echo "We are currently in $PWD"
 
@@ -22,4 +23,5 @@ echo "We are currently in $PWD"
 # npm-cli-login -u testuser -p testpass -e test@pass.com -r $NPM_REGISTRY
 
 # Publish using canary version
+echo "Publishing to $NPM_REGISTRY"
 lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --force-publish --exact --canary --yes --sort

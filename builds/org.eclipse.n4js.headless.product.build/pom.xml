@@ -53,7 +53,7 @@ Contributors:
 						<artifactId>exec-maven-plugin</artifactId>
 						<version>${codehaus-exec-maven-plugin.version}</version>
 						<executions>
-							<!-- Publish n4js-libs to staging area -->
+							<!-- Publish n4js-libs to staging area when the parameter -DstagingNpmRegistry is set -->
 							<execution>
 								<id>publish-n4js-libs</id>
 								<phase>verify</phase>

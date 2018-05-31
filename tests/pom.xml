@@ -24,7 +24,7 @@ Contributors:
 	</parent>
 
 	<modules>
-        <!-- *************************************** Headless Tools Tests -->
+ 		<!-- *************************************** Headless integration tests -->
 		<module>org.eclipse.n4js.hlc.integrationtests</module>
 	</modules>
 

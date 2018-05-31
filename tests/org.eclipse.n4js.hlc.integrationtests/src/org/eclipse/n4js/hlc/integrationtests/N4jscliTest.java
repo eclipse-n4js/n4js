@@ -13,7 +13,6 @@ package org.eclipse.n4js.hlc.integrationtests;
 import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.TARGET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +40,11 @@ import com.google.inject.Inject;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSInjectorProvider.class)
-public class N4JSCliTest extends AbstractN4jscJarTest {
+public class N4jscliTest extends AbstractN4jscJarTest {
+
+	private static final int PORT = 4873;
+
+	private static final String LOCALHOST = "localhost";
 
 	private static final String NODE_MODULES = "node_modules";
 
@@ -53,18 +56,18 @@ public class N4JSCliTest extends AbstractN4jscJarTest {
 	@Inject
 	private BinaryCommandFactory commandFactory;
 
-	private final String localNpmRegstry = "http://localhost:4873";
+	private final String localNpmRegstry = "http://" + LOCALHOST + ":" + PORT;
 
 	/**
 	 * Constructor
 	 *
 	 */
-	public N4JSCliTest() {
+	public N4jscliTest() {
 		super("fixture");
 	}
 
 	private static boolean checkHostAvailability() {
-		try (Socket s = new Socket("localhost", 4873)) {
+		try (Socket s = new Socket(LOCALHOST, PORT)) {
 			return true;
 		} catch (IOException ex) {
 			// Do nothing
@@ -121,10 +124,9 @@ public class N4JSCliTest extends AbstractN4jscJarTest {
 	@Test
 	public void testN4JSCliHelp() throws Exception {
 		logFile();
-		fail("===BLAH I am failing intentionally testN4JSCliHelp!");
 		// Step 1: Call npm install in PSingleTestNpm folder
 		final ProcessResult result1 = commandFactory
-				.createInstallPackageCommand(pathToProject(PROJECT_NAME).toFile(), null, false).execute();
+				.createInstallPackageCommand(pathToProject(PROJECT_NAME).toFile(), "", false).execute();
 		assertEquals("Calling npm install failed", 0, result1.getExitCode());
 
 		// Step 2: Call npm install n4js-cli in the project 'PSingleTestNpm'
