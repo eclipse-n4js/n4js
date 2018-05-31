@@ -30,10 +30,45 @@
   "react-native": "./src-gen/react-native.js",
   "dependencies": {
     "node-fetch": "~1.6.3",
-    "systemjs": "~0.19.40"
+    "systemjs": "~0.19.40",
+    "n4js-es5": "latest"
   },
   "files": [
     "manifest.n4mf",
     "src-gen"
-  ]
+  ],
+  "devDependencies": {},
+  "n4js_manifest": {
+    "ProjectId": "n4js-node",
+    "VendorId": "org.eclipse.n4js",
+    "VendorName": "Eclipse N4JS Project",
+    "ProjectType": "runtimeEnvironment",
+    "ProjectVersion": "0.3.3",
+    "ExtendedRuntimeEnvironment": "n4js-es5",
+    "ProvidedRuntimeLibraries": [
+      "n4js-runtime-n4",
+      "n4js-runtime-v8",
+      "n4js-runtime-es2015",
+      "n4js-runtime-esnext",
+      "n4js-runtime-fetch",
+      "n4js-runtime-node",
+      "n4js-runtime-ecma402"
+    ],
+    "ProjectDependencies": [
+      "node-fetch 1.6.3",
+      "systemjs 0.19.40"
+    ],
+    "Output": "src-gen",
+    "Sources": {
+      "external": [
+        "\"src/js\""
+      ]
+    },
+    "ExecModule": "n4js-cli",
+    "ModuleFilters": {
+      "noModuleWrap": [
+        "\"**\""
+      ]
+    }
+  }
 }

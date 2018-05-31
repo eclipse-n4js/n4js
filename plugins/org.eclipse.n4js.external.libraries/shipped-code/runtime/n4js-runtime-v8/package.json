@@ -16,5 +16,20 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "n4js_manifest": {
+    "ProjectId": "n4js-runtime-v8",
+    "VendorId": "org.eclipse.n4js",
+    "VendorName": "Eclipse N4JS Project",
+    "ProjectType": "runtimeLibrary",
+    "ProjectVersion": "0.3.0",
+    "Output": "src-gen",
+    "Sources": {
+      "source": [
+        "\"src/n4js\""
+      ]
+    }
   }
 }
