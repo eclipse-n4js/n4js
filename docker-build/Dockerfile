@@ -119,6 +119,8 @@ RUN apt-get update && \
 # 
  RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-18.03.1-ce.tgz && \
  	tar xvf docker-18.03.1-ce.tgz
- 	
+ 
+ COPY docker/* /usr/local/bin/
+
  CMD ["/docker/dockerd &"]
  
