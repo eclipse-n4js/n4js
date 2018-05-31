@@ -1,6 +1,6 @@
 {
+  "name": "N4JSXpectTests",
   "version": "0.0.1-SNAPSHOT",
-  "name": "org.eclipse.n4js.spec.tests",
   "n4js": {
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",
@@ -8,8 +8,10 @@
     "output": "src-gen",
     "sources": {
       "source": [
-        "xpect-tests"
+        "model",
+        "model_ui"
       ]
-    }
+    },
+    "moduleLoader": "n4js"
   }
 }
