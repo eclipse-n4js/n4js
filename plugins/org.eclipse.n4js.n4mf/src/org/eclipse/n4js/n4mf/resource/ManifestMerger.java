@@ -65,6 +65,14 @@ public class ManifestMerger extends EObjectFeatureMerger {
 
 			final Resource from = fromResourceSet.getResource(fromLocation, true);
 			final Resource to = toResourceSet.getResource(toLocation, true);
+
+			EList<Diagnostic> errorsInManifest = to.getErrors();
+			if (!errorsInManifest.isEmpty()) {
+				String msg = "Existing Manifest.n4mf is broken. Source URI: " + to.getURI().toString() + ".";
+				LOGGER.error(msg);
+				return null;
+			}
+
 			return mergeContent(from, to);
 
 		} catch (final Exception e) {
@@ -89,12 +97,6 @@ public class ManifestMerger extends EObjectFeatureMerger {
 	public ProjectDescription mergeContent(final Resource from, final Resource to) {
 
 		try {
-			EList<Diagnostic> errorsInManifest = to.getErrors();
-			if (!errorsInManifest.isEmpty()) {
-				String msg = "Existing Manifest.n4mf is broken. Source URI: " + to.getURI().toString() + ".";
-				LOGGER.error(msg);
-				throw new RuntimeException(msg);
-			}
 
 			final EObject fromContent = from.getContents().get(0);
 			final EObject toContent = to.getContents().get(0);
