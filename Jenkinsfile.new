@@ -62,7 +62,6 @@ pipeline {
                         def profiles = [
                             'buildProduct',
                             'execute-plugin-tests',
-                            'execute-plugin-ui-tests',
                             'execute-hlc-integration-tests'
                         ].join(',')
 
