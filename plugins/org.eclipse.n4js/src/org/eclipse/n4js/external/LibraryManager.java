@@ -210,10 +210,13 @@ public class LibraryManager {
 	}
 
 	/**
+	 * This method will install all dependencies of the requested NPMs. Since it calls
+	 * {@link #installNPMsInternal(Map, IProgressMonitor)}, this method will install all transitive dependencies of the
+	 * requested NPMs.
+	 * <p>
 	 * GH-862: Please remove this after GH-821 is solved
 	 */
 	private void installDependenciesOfNPMs(IProgressMonitor monitor, List<LibraryChange> actualChanges) {
-		String msg;
 		Map<String, String> dependencies = new HashMap<>();
 		for (LibraryChange libChange : actualChanges) {
 			if (libChange.type == LibraryChangeType.Added) {
@@ -232,7 +235,7 @@ public class LibraryManager {
 			}
 		}
 		if (!dependencies.isEmpty()) {
-			msg = "Installing dependencies: " + String.join(", ", dependencies.keySet());
+			String msg = "Installing dependencies: " + String.join(", ", dependencies.keySet());
 			logger.logInfo(msg);
 			installNPMsInternal(dependencies, monitor);
 		}
