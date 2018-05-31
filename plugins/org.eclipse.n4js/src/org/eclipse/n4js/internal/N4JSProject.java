@@ -121,11 +121,13 @@ public class N4JSProject implements IN4JSProject {
 			final File canonicalFile = file.getCanonicalFile();
 			return createFileURI(canonicalFile.getAbsolutePath());
 		} catch (final IOException e) {
-			throw new RuntimeException("Error while resolving the canonical File of package.json file " + file.getPath() + ".", e);
+			throw new RuntimeException(
+					"Error while resolving the canonical File of package.json file " + file.getPath() + ".", e);
 		}
 	}
 
 	private Optional<File> getProjectDescriptionFile() {
+		// absent() if package-n4js.json does not exist and external is true
 		final File locationAsFile = new File(java.net.URI.create(location.toString()));
 		if (locationAsFile.exists() && locationAsFile.isDirectory()) {
 			final File packageJSON = new File(locationAsFile, IN4JSProject.PACKAGE_JSON);

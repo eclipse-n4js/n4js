@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.internal;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
@@ -20,6 +21,8 @@ import org.eclipse.n4js.utils.ProjectDescriptionHelper;
  */
 @SuppressWarnings("javadoc")
 public class LazyProjectDescriptionHandle {
+
+	private static final Logger LOGGER = Logger.getLogger(LazyProjectDescriptionHandle.class);
 
 	private final URI location;
 	private final boolean archive;
@@ -61,6 +64,11 @@ public class LazyProjectDescriptionHandle {
 	 * Loads the {@link ProjectDescription} for the project at the given {@code projectLocation}.
 	 */
 	protected ProjectDescription loadProjectDescriptionFromLocation(URI projectLocation) {
+		if (this.isArchive()) {
+			LOGGER.warn("Cannot load project description for " + projectLocation.toString() + ": "
+					+ "Loading the project description of an N4JS archive is no longer supported.");
+		}
+
 		return descriptionHelper.loadProjectDescriptionAtLocation(projectLocation);
 	}
 

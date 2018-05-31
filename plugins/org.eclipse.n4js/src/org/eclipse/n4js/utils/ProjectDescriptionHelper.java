@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
-import org.eclipse.n4js.ArchiveURIUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -172,15 +171,16 @@ public class ProjectDescriptionHelper {
 			result = loadXtextFile(location.appendSegment(name), expectedTypeOfRoot);
 		} else if (location.isFile()) {
 			result = loadXtextFile(location.appendSegment(name), expectedTypeOfRoot);
-		} else { // consider removing archive case
-			result = loadXtextFile(ArchiveURIUtil.createURI(location, name), expectedTypeOfRoot);
+		} else {
+			// we only handle workspace and file-based cases
+			return null;
 		}
 		return result;
 	}
 
 	private <T extends EObject> T loadXtextFile(URI uri, Class<T> expectedTypeOfRoot) {
 		try {
-			if (uri.isArchive() || exists(uri)) {
+			if (exists(uri)) {
 				ResourceSet resourceSet = resourceSetProvider.get();
 				Resource resource = resourceSet.getResource(uri, true);
 				if (resource != null) {
@@ -274,7 +274,7 @@ public class ProjectDescriptionHelper {
 				target.setOutputPath(asStringOrNull(value));
 				break;
 			case PROP__LIBRARIES:
-				// TODO libraryPathsRaw (probably obsolete)
+				// TODO libraries (probably obsolete, corresponding tests were removed)
 				break;
 			case PROP__RESOURCES:
 				// TODO resourcePathsRaw (probably obsolete)
@@ -477,6 +477,13 @@ public class ProjectDescriptionHelper {
 	private List<ProjectReference> asProjectReferencesInArrayOrEmpty(JSONValue jsonValue) {
 		return asArrayElementsOrEmpty(jsonValue).stream()
 				.map(this::asProjectReferenceOrNull)
+				.filter(pref -> pref != null)
+				.collect(Collectors.toList());
+	}
+
+	private List<String> asStringLiteralsInArrayOrEmpty(JSONValue jsonValue) {
+		return asArrayElementsOrEmpty(jsonValue).stream()
+				.map(v -> (v instanceof JSONStringLiteral) ? ((JSONStringLiteral) v).getValue() : null)
 				.filter(pref -> pref != null)
 				.collect(Collectors.toList());
 	}

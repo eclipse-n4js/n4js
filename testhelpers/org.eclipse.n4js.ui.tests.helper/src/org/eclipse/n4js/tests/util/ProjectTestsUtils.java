@@ -201,20 +201,20 @@ public class ProjectTestsUtils {
 
 	/**
 	 * @param manifestAdjustments
-	 *            for details see method {@link #createManifestN4MFFile(IProject, String, String, Consumer)}.
+	 *            for details see method {@link #createProjectDescriptionFile(IProject, String, String, Consumer)}.
 	 */
 	public static IProject createJSProject(String projectName, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
 		IProject result = createSimpleProject(projectName);
 		createSubFolder(result.getProject(), sourceFolder);
 		createSubFolder(result.getProject(), outputFolder);
-		createManifestN4MFFile(result.getProject(), sourceFolder, outputFolder, manifestAdjustments);
+		createProjectDescriptionFile(result.getProject(), sourceFolder, outputFolder, manifestAdjustments);
 		return result;
 	}
 
 	/***/
-	public static void createManifestN4MFFile(IProject project) throws CoreException {
-		createManifestN4MFFile(project, "src", "src-gen", null);
+	public static void createProjectDescriptionFile(IProject project) throws CoreException {
+		createProjectDescriptionFile(project, "src", "src-gen", null);
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class ProjectTestsUtils {
 	 *            properties (the ProjectDescription object passed to the procedure will already contain all default
 	 *            values). May be <code>null</code> if no adjustments are required.
 	 */
-	public static void createManifestN4MFFile(IProject project, String sourceFolder, String outputFolder,
+	public static void createProjectDescriptionFile(IProject project, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
 		IFile config = project.getFile("manifest.n4mf");
 		URI uri = URI.createPlatformResourceURI(config.getFullPath().toString(), true);

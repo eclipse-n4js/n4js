@@ -13,6 +13,7 @@ package org.eclipse.n4js;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
+import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
@@ -74,6 +75,7 @@ public class N4JSStandaloneSetup implements ISetup {
 		TypesStandaloneSetup.doSetup();
 		N4MFStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
+		JSONStandaloneSetup.doSetup();
 
 		Injector injector = createInjector();
 		register(injector);

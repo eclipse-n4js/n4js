@@ -122,13 +122,13 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void createManifestN4MFFile(IProject javaProject) throws CoreException {
-		ProjectTestsUtils.createManifestN4MFFile(javaProject.getProject());
+		ProjectTestsUtils.createProjectDescriptionFile(javaProject.getProject());
 	}
 
 	/***/
 	protected void createManifestN4MFFile(IProject javaProject, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
-		ProjectTestsUtils.createManifestN4MFFile(javaProject.getProject(), sourceFolder, outputFolder,
+		ProjectTestsUtils.createProjectDescriptionFile(javaProject.getProject(), sourceFolder, outputFolder,
 				manifestAdjustments);
 	}
 
