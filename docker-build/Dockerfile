@@ -121,7 +121,7 @@ RUN apt-get update && \
 #	tar xvf docker-18.03.1-ce.tgz
 # COPY docker /usr/local/bin/
 
-RUN apt-get update && \n 
+RUN apt-get update && \ 
   apt-get install \
      apt-transport-https \
      ca-certificates \
