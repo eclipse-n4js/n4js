@@ -34,8 +34,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
+import org.eclipse.n4js.tests.util.PackageJSONTestUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -73,6 +75,9 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	@Inject
 	private IssueUtil issueUtil;
 
+	@Inject
+	protected PackageJSONTestHelper projectDescriptionTestHelper;
+
 	Predicate<IMarker> ignoreSomeWarnings = (IMarker marker) -> {
 		String code = issueUtil.getCode(marker);
 		switch (code) {
@@ -96,7 +101,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected IProject createJSProject(String projectName, String sourceFolder, String outputFolder,
-			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
+			Consumer<JSONObject> manifestAdjustments) throws CoreException {
 		return ProjectTestsUtils.createJSProject(projectName, sourceFolder, outputFolder, manifestAdjustments);
 	}
 
@@ -114,22 +119,11 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	 *             if the project creation failed.
 	 */
 	protected IProject createN4JSProject(String projectName, ProjectType type) throws CoreException {
-		final IProject project = createJSProject(projectName, "src", "src-gen", t -> t.setProjectType(type));
+		final IProject project = createJSProject(projectName, "src", "src-gen",
+				o -> PackageJSONTestUtils.setProjectType(o, type));
 		configureProjectWithXtext(project);
 		waitForAutoBuild();
 		return project;
-	}
-
-	/***/
-	protected void createManifestN4MFFile(IProject javaProject) throws CoreException {
-		ProjectTestsUtils.createProjectDescriptionFile(javaProject.getProject());
-	}
-
-	/***/
-	protected void createManifestN4MFFile(IProject javaProject, String sourceFolder, String outputFolder,
-			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
-		ProjectTestsUtils.createProjectDescriptionFile(javaProject.getProject(), sourceFolder, outputFolder,
-				manifestAdjustments);
 	}
 
 	/***/

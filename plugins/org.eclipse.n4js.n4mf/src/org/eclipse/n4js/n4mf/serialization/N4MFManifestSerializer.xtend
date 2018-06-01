@@ -75,7 +75,7 @@ public class N4MFManifestSerializer {
 				»Resources «d.resourcePathsRaw
 							.map[p | p.asStringLiteral]
 							.toCommaList»«ENDIF»
-			«IF d.libraryPathsRaw !== null && !d.sourceContainers.empty
+			«IF d.sourceContainers !== null && !d.sourceContainers.empty
 			»Sources {
 				«d.sourceContainers
 					.map[sc | serializeSourceContainerDescription(sc)]

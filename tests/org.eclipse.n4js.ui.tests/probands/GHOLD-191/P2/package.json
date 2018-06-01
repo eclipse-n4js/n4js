@@ -1,0 +1,19 @@
+{
+	"name": "P2",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"P1": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"moduleLoader": "n4js"
+	}
+}

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -45,18 +44,17 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.n4mf.DeclaredVersion;
-import org.eclipse.n4js.n4mf.N4mfFactory;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.SourceContainerDescription;
-import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONFactory;
+import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
@@ -177,38 +175,21 @@ public class ProjectTestsUtils {
 	}
 
 	/***/
-	public static IProject createJSProject(String projectName) throws CoreException {
+	public static IProject createJSProject(String projectName)
+			throws CoreException {
 		return createJSProject(projectName, "src", "src-gen", null);
 	}
 
 	/**
-	 * Creates a new N4JS project with the given name and project type. The source and output folders will be named as
-	 * {@code src} and {@code src-gen}. The Xtext project nature will be already configured on the N4JS project.
-	 *
-	 * @param projectName
-	 *            the name of the project.
-	 * @param type
-	 *            the desired project type of the new project.
-	 * @return the new N4JS project with the desired type.
-	 * @throws CoreException
-	 *             if the project creation failed.
-	 */
-	public static IProject createN4JSProject(String projectName, ProjectType type) throws CoreException {
-		final IProject project = createJSProject(projectName, "src", "src-gen", t -> t.setProjectType(type));
-		configureProjectWithXtext(project);
-		return project;
-	}
-
-	/**
-	 * @param manifestAdjustments
+	 * @param packageJSONAdjustments
 	 *            for details see method {@link #createProjectDescriptionFile(IProject, String, String, Consumer)}.
 	 */
 	public static IProject createJSProject(String projectName, String sourceFolder, String outputFolder,
-			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
+			Consumer<JSONObject> packageJSONAdjustments) throws CoreException {
 		IProject result = createSimpleProject(projectName);
 		createSubFolder(result.getProject(), sourceFolder);
 		createSubFolder(result.getProject(), outputFolder);
-		createProjectDescriptionFile(result.getProject(), sourceFolder, outputFolder, manifestAdjustments);
+		createProjectDescriptionFile(result.getProject(), sourceFolder, outputFolder, packageJSONAdjustments);
 		return result;
 	}
 
@@ -218,44 +199,41 @@ public class ProjectTestsUtils {
 	}
 
 	/**
-	 * @param manifestAdjustments
-	 *            before saving the manifest this procedure will be called to allow adjustments to the manifest's
-	 *            properties (the ProjectDescription object passed to the procedure will already contain all default
-	 *            values). May be <code>null</code> if no adjustments are required.
+	 * @param packageJSONAdjustments
+	 *            before saving the package.json file this procedure will be called to allow adjustments to the
+	 *            package.json's root {@link JSONObject} (the {@link JSONObject} object passed to the procedure will
+	 *            already contain all default values). May be <code>null</code> if no adjustments are required.
 	 */
 	public static void createProjectDescriptionFile(IProject project, String sourceFolder, String outputFolder,
-			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
-		IFile config = project.getFile("manifest.n4mf");
-		URI uri = URI.createPlatformResourceURI(config.getFullPath().toString(), true);
-		ProjectDescription projectDesc = N4mfFactory.eINSTANCE.createProjectDescription();
-		projectDesc.setVendorId("org.eclipse.n4js");
-		projectDesc.setVendorName("Eclipse N4JS Project");
-		projectDesc.setProjectId(project.getName());
-		projectDesc.setProjectType(ProjectType.LIBRARY);
-		DeclaredVersion projectVersion = N4mfFactory.eINSTANCE.createDeclaredVersion();
-		projectVersion.setMajor(0);
-		projectVersion.setMinor(0);
-		projectVersion.setMicro(1);
-		projectDesc.setProjectVersion(projectVersion);
-		projectDesc.setOutputPath(outputFolder);
-		SourceContainerDescription sourceProjectPath = N4mfFactory.eINSTANCE.createSourceContainerDescription();
-		sourceProjectPath.setSourceContainerType(SourceContainerType.SOURCE);
-		sourceProjectPath.getPathsRaw().add(sourceFolder);
-		projectDesc.getSourceContainers().add(sourceProjectPath);
-		if (manifestAdjustments != null)
-			manifestAdjustments.accept(projectDesc);
-		ResourceSet rs = createResourceSet(project);
-		Resource res = rs.createResource(uri);
-		res.getContents().add(projectDesc);
+			Consumer<JSONObject> packageJSONAdjustments) throws CoreException {
+		IFile projectDescriptionWorkspaceFile = project.getFile(N4JSGlobals.PACKAGE_JSON);
+		URI uri = URI.createPlatformResourceURI(projectDescriptionWorkspaceFile.getFullPath().toString(), true);
+
+		final JSONObject projectDescriptionObject = PackageJSONTestUtils.createSimplePackageJSON(project.getName(),
+				sourceFolder,
+				outputFolder);
+
+		if (packageJSONAdjustments != null)
+			packageJSONAdjustments.accept(projectDescriptionObject);
+
+		// create new JSON document with the project description JSON object as content
+		final JSONDocument jsonDocument = JSONFactory.eINSTANCE.createJSONDocument();
+		jsonDocument.setContent(projectDescriptionObject);
+
+		final ResourceSet rs = createResourceSet(project);
+		final Resource projectDescriptionResource = rs.createResource(uri);
+		projectDescriptionResource.getContents().add(jsonDocument);
 
 		try {
-			res.save(Collections.EMPTY_MAP);
+			// save formatted package.json file to disk
+			projectDescriptionResource.save(SaveOptions.newBuilder().format().getOptions().toOptionsMap());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor());
 		waitForAutoBuild();
-		Assert.assertTrue("manifest.n4mf should have been created", config.exists());
+		Assert.assertTrue("manifest.n4mf should have been created", projectDescriptionWorkspaceFile.exists());
 	}
 
 	// moved here from AbstractBuilderParticipantTest:

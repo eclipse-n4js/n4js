@@ -51,31 +51,41 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 	protected void createTempProjects() {
 		try {
 			host.setMyProjectURI(createTempProject(host.myProjectId));
-			createProject(host.myProjectId, "ProjectId: " + host.myProjectId + "\n" +
-					"ProjectType: library\n" +
-					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-					"VendorId: org.eclipse.n4js\n" +
-					"VendorName: \"Eclipse N4JS Project\"\n" +
-					"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
-					"Output: \"src-gen\"" +
-					"Sources {\n" +
-					"	source {\n" +
-					"		\"src\"\n" +
-					"	}\n" +
-					"}\n" +
-					"ProjectDependencies { " + host.libProjectId + "} \n");
+			createProject(host.myProjectId, "{\n" +
+					"  \"name\": \"" + host.myProjectId + "\",\n" +
+					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
+					"  \"dependencies\": {\n" +
+					"    \"" + host.libProjectId + "\": \"0.0.1-SNAPSHOT\"\n" +
+					"  },\n" +
+					"  \"n4js\": {\n" +
+					"    \"projectType\": \"library\",\n" +
+					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
+					"    \"vendorName\": \"Eclipse N4JS Project\",\n" +
+					"    \"output\": \"src-gen\",\n" +
+					"    \"sources\": {\n" +
+					"      \"source\": [\n" +
+					"        \"src\"\n" +
+					"      ]\n" +
+					"    },\n" +
+					"    \"moduleLoader\": \"n4js\"\n" +
+					"  }\n" +
+					"}");
 			host.setLibProjectURI(createTempProject(host.libProjectId));
-			createProject(host.libProjectId, "ProjectId: " + host.libProjectId + "\n" +
-					"ProjectType: library\n" +
-					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-					"VendorId: org.eclipse.n4js\n" +
-					"VendorName: \"Eclipse N4JS Project\"\n" +
-					"Output: \"src-gen\"" +
-					"Sources {\n" +
-					"	source { " +
-					"		\"src\"\n" +
-					"	}\n" +
-					"}\n");
+			createProject(host.libProjectId, "{\n" +
+					"  \"name\": \"" + host.libProjectId + "\",\n" +
+					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
+					"  \"n4js\": {\n" +
+					"    \"projectType\": \"library\",\n" +
+					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
+					"    \"vendorName\": \"Eclipse N4JS Project\",\n" +
+					"    \"output\": \"src-gen\",\n" +
+					"    \"sources\": {\n" +
+					"      \"source\": [\n" +
+					"        \"src\"\n" +
+					"      ]\n" +
+					"    }\n" +
+					"  }\n" +
+					"}");
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		} catch (UnsupportedEncodingException e) {

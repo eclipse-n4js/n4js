@@ -130,11 +130,6 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 					break;
 				}
 				if (directory.isDirectory()) {
-					if (new File(directory, IN4JSProject.N4MF_MANIFEST).exists()) {
-						URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
-						registerProject(projectLocation);
-						return projectLocation;
-					}
 					if (new File(directory, IN4JSProject.PACKAGE_JSON).exists() ||
 							new File(directory, IN4JSProject.PACKAGE_JSON + ".xt").exists()) {
 						URI projectLocation = URI.createFileURI(directory.getAbsolutePath());

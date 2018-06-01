@@ -332,6 +332,16 @@ public class ProjectDescriptionHelper {
 				// FIXME Scope !!!!!!!!!!!!!!
 				target.getProjectDependencies().add(dep);
 			}
+
+			// TODO proper support for version wildcards such as "*", "" etc. (see
+			// https://docs.npmjs.com/files/package.json#dependencies)
+			if (name != null && versionConstraint == null && "*".equals(asStringOrNull(value))) {
+				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
+				dep.setProjectId(name);
+				// do not set a version constraint
+				// FIXME Scope !!!!!!!!!!!!!!
+				target.getProjectDependencies().add(dep);
+			}
 		}
 	}
 

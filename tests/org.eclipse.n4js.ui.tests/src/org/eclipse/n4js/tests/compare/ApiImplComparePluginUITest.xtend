@@ -28,6 +28,8 @@ import org.junit.runner.RunWith
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature
 
 import static extension org.eclipse.n4js.tests.util.ProjectTestsUtils.*
+import org.eclipse.n4js.json.JSON.JSONObject
+import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 
 /**
  * Tests for the API / implementation compare logic (not for the UI part!).
@@ -81,13 +83,13 @@ class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
 	public def void testMultipleImplementationsWithSameId() {
 		val clashIdApi = "org.eclipse.clash.api";
 		val IProject pApi = createJSProject(clashIdApi)
-		val IProject pImpl1 = ProjectTestsUtils.createJSProject("org.eclipse.clash.n4js","src","src-gen",[pd|
-			pd.implementationId = "impl.n4js"
-			pd.implementedProjects += createProjectReference(clashIdApi)
+		val IProject pImpl1 = ProjectTestsUtils.createJSProject("org.eclipse.clash.n4js","src","src-gen", [ JSONObject o |
+			PackageJSONTestUtils.setImplementationId(o, "impl.n4js");
+			PackageJSONTestUtils.setImplementedProjects(o, #[clashIdApi]);
 		])
-		val IProject pImpl2 = ProjectTestsUtils.createJSProject("org.eclipse.clash.ios","src","src-gen",[pd|
-			pd.implementationId = "impl.n4js" // n.b.: same implementation id!
-			pd.implementedProjects += createProjectReference(clashIdApi)
+		val IProject pImpl2 = ProjectTestsUtils.createJSProject("org.eclipse.clash.ios" ,"src","src-gen",[ JSONObject o |
+			PackageJSONTestUtils.setImplementationId(o, "impl.n4js");
+			PackageJSONTestUtils.setImplementedProjects(o, #[clashIdApi]);
 		])
 		pApi.configureProjectWithXtext
 		pImpl1.configureProjectWithXtext
