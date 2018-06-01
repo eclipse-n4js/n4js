@@ -120,8 +120,24 @@ RUN apt-get update && \
 # RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-18.03.1-ce.tgz && \
 #	tar xvf docker-18.03.1-ce.tgz
 # COPY docker /usr/local/bin/
-RUN apt-get install docker-ce
-		 
 
- CMD ["/docker/dockerd &"]
+RUN apt-get update && \n 
+  apt-get install \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+     
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+
+RUN apt-get install docker-ce
+
+ #CMD ["/docker/dockerd &"]
  
