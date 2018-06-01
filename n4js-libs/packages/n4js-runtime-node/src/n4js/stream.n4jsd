@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import { IEventEmitter , EventEmitter } from "events";
+import {IEventEmitter, EventEmitter} from "events";
 
 export external public interface IReadableStream extends IEventEmitter {
     readable: boolean;
@@ -109,4 +109,4 @@ export external public class Transform extends EventEmitter implements IReadWrit
 
 export external public class PassThrough extends Transform {}
 
-/* -*- mode: typescript;-*- */
+

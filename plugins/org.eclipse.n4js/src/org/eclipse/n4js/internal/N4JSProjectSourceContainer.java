@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -30,7 +30,7 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 
 	private final N4JSProject project;
 
-	protected N4JSProjectSourceContainer(N4JSProject project, SourceFragmentType type, String relativeLocation) {
+	protected N4JSProjectSourceContainer(N4JSProject project, SourceContainerType type, String relativeLocation) {
 		super(type, relativeLocation);
 		this.project = project;
 	}

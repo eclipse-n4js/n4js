@@ -19,18 +19,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.testing.XtextRunner;
-import org.eclipse.xtext.testing.util.ParseHelper;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -39,6 +27,17 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.PrimitiveType;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.xtext.testing.util.ParseHelper;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.google.inject.Inject;
 
 /**
  */
@@ -65,8 +64,7 @@ public class BuiltInTypeScopeTest {
 			}
 		}
 
-		Assert.assertEquals("Resources definine built-in types must have no error."
-				, "", s);
+		Assert.assertEquals("Resources definine built-in types must have no error.", "", s);
 	}
 
 	@SuppressWarnings("javadoc")
@@ -85,9 +83,9 @@ public class BuiltInTypeScopeTest {
 	public void testResolveAllBuiltInTypes() {
 		BuiltInTypeScope scope = BuiltInTypeScope.get(resourceSet);
 		scope.getSingleElement(QualifiedName.create("any")); // trigger loading
-		Assert.assertEquals(5, resourceSet.getResources().size());
+		Assert.assertEquals(6, resourceSet.getResources().size());
 		EcoreUtil.resolveAll(resourceSet);
-		Assert.assertEquals(5, resourceSet.getResources().size());
+		Assert.assertEquals(6, resourceSet.getResources().size());
 
 		Map<EObject, Collection<Setting>> unresolvedProxies = EcoreUtil.UnresolvedProxyCrossReferencer
 				.find(resourceSet);

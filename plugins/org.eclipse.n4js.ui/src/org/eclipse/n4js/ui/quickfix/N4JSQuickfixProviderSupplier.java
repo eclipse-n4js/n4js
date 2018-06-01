@@ -10,9 +10,7 @@
  */
 package org.eclipse.n4js.ui.quickfix;
 
-import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
-
-import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.n4js.utils.ui.quickfix.QuickfixProviderSupplier;
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 
@@ -29,7 +27,7 @@ public class N4JSQuickfixProviderSupplier implements QuickfixProviderSupplier {
 	}
 
 	private Injector getInjector() {
-		return N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
+		return new N4JSInjectorSupplier().get();
 	}
 
 }

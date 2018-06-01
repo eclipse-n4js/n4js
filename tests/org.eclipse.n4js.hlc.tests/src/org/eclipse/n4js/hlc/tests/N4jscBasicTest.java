@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.hlc.base.SuccessExitStatus;
@@ -137,8 +138,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String[] args = { "-pl", proot,
 				"--buildType", "projects", pathToP1,
 				"--runWith", "nodejs",
-				"--run", fileA,
-				"--verbose"
+				"--run", fileA
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
@@ -203,5 +203,18 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		new N4jscBase().doMain(args);
 
 		assertEquals(0, countFilesCompiledToES(proot)); // 0 = 0 in all projects inside wsp/basic
+	}
+
+	/**
+	 * Test that the compiler reports an error when the source files or projects contain invalid file or directory.
+	 */
+	@Test
+	public void testInvalidSrcFiles() {
+		String proot = workspace.getAbsolutePath().toString();
+		// Project
+		String pathToBLAH = "/BLAH";
+		String[] args = { "-pl", proot, "--buildType", "projects", pathToBLAH };
+
+		expectCompilerException(args, ErrorExitCode.EXITCODE_SRCFILES_INVALID);
 	}
 }

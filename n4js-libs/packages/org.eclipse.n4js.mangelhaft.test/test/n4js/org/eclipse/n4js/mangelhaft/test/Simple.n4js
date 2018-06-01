@@ -1,5 +1,5 @@
-import { Assert } from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import { Precondition } from "org/eclipse/n4js/mangelhaft/precondition/Precondition"
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
 /**
  * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials

@@ -22,4 +22,3 @@
 	public toLocaleString(locales: string | [string]=, options: any+ =): string
 }
 
-/* -*- mode: typescript;-*- */

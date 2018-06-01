@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.utils.collections
 
+import java.util.Iterator
 import java.util.List
 
 import static java.util.Collections.singletonList
@@ -49,6 +50,29 @@ class Iterables2 {
 		val indexOf = copy.indexOf(ref);
 		checkArgument(0 <= indexOf, '''Element «ref» does not contained in «elements».''');
 		return (copy.subList(indexOf, copy.size) + copy.subList(0, indexOf) + singletonList(ref)).toList;
+	}
+	/**
+	 * Returns an {@link Iterable} which aligns values of iterable1 and iterable2 by their indices.
+	 * 
+	 * The size of the resulting iterable is the minimum of iterable1.size and iterable2.size.
+	 */
+	def static <T1, T2> Iterable<Pair<T1, T2>> align(Iterable<T1> iterable1, Iterable<T2> iterable2) {
+		return [
+				val it1 = iterable1.iterator;
+				val it2 = iterable2.iterator;
+				
+				return new Iterator<Pair<T1, T2>>() {
+					
+					override hasNext() {
+						return it1.hasNext && it2.hasNext;
+					}
+					
+					override next() {
+						return it1.next -> it2.next
+					}
+					
+				}
+		]
 	}
 
 }

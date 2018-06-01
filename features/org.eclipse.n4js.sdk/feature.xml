@@ -88,6 +88,10 @@ Contributors:
          id="org.eclipse.n4js.jsdoc2spec.sdk"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.n4js.json.sdk"
+         version="0.0.0"/>
+
    <plugin
          id="org.eclipse.n4js.utils"
          download-size="0"

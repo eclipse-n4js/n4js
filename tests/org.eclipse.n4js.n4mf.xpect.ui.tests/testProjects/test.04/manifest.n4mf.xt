@@ -69,7 +69,7 @@ ImplementedProjects { }
 // XPECT warnings --> "Init modules cannot be specified for test projects." at "InitModules { }"
 InitModules { }
 
-// XPECT warnings --> "Exec module cannot be specified for test projects." at "ExecModule: "some-execution-module""
+// XPECT warnings --> "Exec module cannot be specified for test projects." at "ExecModule"
 ExecModule: "some-execution-module"
 
 // XPECT warnings --> "Obsolete required runtime libraries block." at "RequiredRuntimeLibraries { }"

@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.n4mf.tests
 
-import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.junit.Assert
 import org.eclipse.n4js.internal.N4JSProjectSourceContainer
 import org.junit.Test
+import org.eclipse.n4js.n4mf.SourceContainerType
 
 /**
  * Tests, if all available source containers are recognized.
@@ -23,7 +23,7 @@ class SourceContainerTest {
 	@Test
 	def void testSourceContainer() {
 		val location = "dummy"
-		for(value : SourceFragmentType.enumConstants) {
+		for(value : SourceContainerType.enumConstants) {
 			// this shouldn't throw an exception
 			val testContainer = new TestContainer(value, location)
 			Assert.assertEquals(location, testContainer.relativeLocation)
@@ -33,7 +33,7 @@ class SourceContainerTest {
 
 class TestContainer extends N4JSProjectSourceContainer {
 
-	protected new(SourceFragmentType type, String relativeLocation) {
+	protected new(SourceContainerType type, String relativeLocation) {
 		super(null, type, relativeLocation)
 	}
 }

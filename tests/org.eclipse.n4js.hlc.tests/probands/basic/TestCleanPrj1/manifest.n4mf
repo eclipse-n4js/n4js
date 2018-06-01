@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-ProjectId: TestCleanBuildProject
+ProjectId: TestCleanPrj1
 VendorId: org.eclipse.n4js
 VendorName: "Eclipse N4JS Project"
 ProjectType: library

@@ -38,7 +38,7 @@ package org.eclipse.n4js.n4mf;
  * @model
  * @generated
  */
-public interface ProjectDependency extends SimpleProjectDependency {
+public interface ProjectDependency extends ProjectReference {
 	/**
 	 * Returns the value of the '<em><b>Version Constraint</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

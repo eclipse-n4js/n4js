@@ -45,6 +45,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 
 /**
  * This class with its {@link N4JSTypesBuilder#createTModuleFromSource(DerivedStateAwareResource,boolean) createTModuleFromSource()}
@@ -73,6 +74,8 @@ public class N4JSTypesBuilder {
 	@Inject extension N4JSFunctionDefinitionTypesBuilder
 	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesFromTypeRefBuilder
+	@Inject extension N4JSNamespaceImportTypesBuilder
+	
 	@Inject extension ModuleNameComputer
 	@Inject private IN4JSCore n4jscore
 	@Inject private IQualifiedNameConverter qualifiedNameConverter
@@ -111,7 +114,7 @@ public class N4JSTypesBuilder {
 			}
 			module.reconciled = true;
 
-			script.buildNamespacesTypesFromModuleImports(module,preLinkingPhase);
+			script.relinkNamespaceTypes(module, preLinkingPhase)
 
 			script.buildTypesFromTypeRefs(module, preLinkingPhase);
 
@@ -171,7 +174,7 @@ public class N4JSTypesBuilder {
 
 			result.copyAnnotations(script, preLinkingPhase);
 
-			script.buildNamespacesTypesFromModuleImports(result,preLinkingPhase);
+			script.buildNamespaceTypesFromModuleImports(result,preLinkingPhase);
 
 			result.n4jsdModule = jsVariantHelper.isExternalMode(script);
 
@@ -194,25 +197,18 @@ public class N4JSTypesBuilder {
 		}
 	}
 
-
-	def private void buildNamespacesTypesFromModuleImports(Script script, TModule target, boolean preLinkingPhase) {
+	/**
+	 * Creates new {@link ModuleNamespaceVirtualType} instances for the namespace imports in {@code script}
+	 * and adds them to the given {@code target} module's {@link TModule#internalTypes}.
+	 */
+	def private void buildNamespaceTypesFromModuleImports(Script script, TModule target, boolean preLinkingPhase) {
 		if(!preLinkingPhase) {
 			//process namespace imports
 			for (importDeclaration : script.scriptElements.filter(ImportDeclaration).toList) {
-				val namespaceImportSpecifiers = importDeclaration.importSpecifiers.filter(NamespaceImportSpecifier).toList
-				if(!namespaceImportSpecifiers.empty){
-					//for NamespaceImportpecifiers there is only ImportSpecifier one in the ImportDeclaration
-					val namespaceImportSpecifier = namespaceImportSpecifiers.head
-					val type = TypesFactory.eINSTANCE.createModuleNamespaceVirtualType
-					type.name = namespaceImportSpecifier.alias
-					/* don't resolve module proxy */
-					type.module = importDeclaration.eGet(N4JSPackage.eINSTANCE.importDeclaration_Module, false)  as TModule;
-					type.declaredDynamic = namespaceImportSpecifier.declaredDynamic;
-					// link
-					type.astElement = namespaceImportSpecifier;
-					namespaceImportSpecifier.definedType = type;
-
-					target.internalTypes += type;
+				val namespaceImport = getNamespaceImportSpecifier(importDeclaration)
+				if(namespaceImport !== null) {
+					val importedModule = importDeclaration.eGet(N4JSPackage.eINSTANCE.importDeclaration_Module, false) as TModule
+					target.internalTypes += createModuleNamespaceVirtualType(namespaceImport, importedModule);
 				}
 			}
 		}
@@ -266,7 +262,7 @@ public class N4JSTypesBuilder {
 	}
 
 	def protected dispatch int relinkType(NamespaceImportSpecifier nsImpSpec, TModule target, boolean preLinkingPhase, int idx) {
-		// already handled up-front in #buildNamespacesTypesFromModuleImports()
+		// already handled up-front in N4JSNamespaceImportTypesBuilder#relinkNamespaceTypes
 		return idx;
 	}
 

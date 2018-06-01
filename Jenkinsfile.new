@@ -39,10 +39,6 @@ pipeline {
                      '-XshowSettings:vm '
     }
 
-    triggers {
-        pollSCM('H/5 * * * *') // every 5 minutes
-        cron   ('H   1 * * *') // Nightly build every day a 1am
-    }
     stages {
 
         stage('fs browse') {
@@ -57,10 +53,7 @@ pipeline {
             }
         }
 
-        stage('ci') {
-            when {
-                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
-            }
+        stage('build') {
             steps {
                 sshagent(['github-com-ssh-key']) {
                     script {
@@ -72,35 +65,6 @@ pipeline {
                             'execute-plugin-ui-tests'
                         ].join(',')
 
-                        sh "${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
-                    }
-                }
-            }
-        }
-
-        stage('nightly') {
-            // Run in nightly build only
-            // There should be a better way, see issue
-            // https://issues.jenkins-ci.org/browse/JENKINS-41272
-            when {
-                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
-            }
-            steps {
-                sshagent(['github-com-ssh-key']) {
-                    script {
-                        def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                        def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
-                        def profiles = [
-                            'buildProduct',
-                            'execute-plugin-tests',
-                            'execute-plugin-ui-tests',
-                            'execute-ecma-tests',
-                            'execute-performance-tests',
-                            'execute-swtbot-performance-tests',
-                            'execute-accesscontrol-tests',
-                            'execute-smoke-tests'
-                        ].join(',')
-
                         sh "${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
@@ -110,10 +74,9 @@ pipeline {
 
     post {
         always {
-            // zipped platform specific IDEs
-            archive '**/builds/**/target/products/*.zip'
-            // platform independent headless jar
-            archive '**/tools/**/target/n4jsc.jar'
+            archiveArtifacts allowEmptyArchive: false, artifacts: '**/builds/**/target/products/*.zip'
+            archiveArtifacts allowEmptyArchive: false, artifacts: '**/tools/**/target/n4jsc.jar'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs/*.log'
             junit '**/surefire-reports/**/*.xml'
             deleteDir()
         }

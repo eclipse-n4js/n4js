@@ -193,4 +193,4 @@ export external public function createWriteStream(path: string, options: ~Object
     mode?: number;
 }=): WriteStream;
 
-/* -*- mode: typescript;-*- */
+

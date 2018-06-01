@@ -248,7 +248,7 @@ public class N4jscBase implements IApplication {
 	private TargetPlatformInstallLocationProvider installLocationProvider;
 
 	@Inject
-	private LibraryManager npmManager;
+	private LibraryManager libManager;
 
 	@Inject
 	private TesterRegistry testerRegistry;
@@ -381,6 +381,20 @@ public class N4jscBase implements IApplication {
 				return SuccessExitStatus.INSTANCE;
 			}
 
+			StringJoiner sj = new StringJoiner(",");
+
+			// Make sure the srcFiles are valid
+			for (File srcFile : srcFiles) {
+				if (!srcFile.isFile() && !srcFile.isDirectory()) {
+					sj.add(srcFile.toString());
+				}
+			}
+			if (!sj.toString().isEmpty()) {
+				System.err.println(
+						"These source files or projects are invalid (neither file nor directory): " + sj.toString());
+				throw new ExitCodeException(ErrorExitCode.EXITCODE_SRCFILES_INVALID);
+			}
+
 			EnumSet<BuildType> noSrcRequired = EnumSet.of(BuildType.allprojects, BuildType.dontcompile);
 			// missing arguments (only build all doesn't require one OR if nothing will be compiled).
 			if (srcFiles.isEmpty() && (!noSrcRequired.contains(buildtype))) {
@@ -497,7 +511,7 @@ public class N4jscBase implements IApplication {
 						});
 					}
 
-					IStatus status = npmManager.installNPMs(dependencies, new NullProgressMonitor());
+					IStatus status = libManager.installNPMs(dependencies, new NullProgressMonitor());
 					if (!status.isOK())
 						if (keepCompiling)
 							warn(status.getMessage());
@@ -597,7 +611,7 @@ public class N4jscBase implements IApplication {
 				gitLocationProvider.getGitLocation().getRemoteBranch(), true);
 		pull(localClonePath);
 
-		// generate n4tp file for NpmManager to use
+		// generate n4tp file for libManager to use
 		PackageJson packageJson = TargetPlatformFactory.createN4Default();
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
 		File packageJsonFile = new File(new File(platformLocation), PackageJson.PACKAGE_JSON);

@@ -8,6 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+ 
 ProjectId: org.eclipse.n4js.mangelhaft.runner.ide
 VendorId: org.eclipse.n4js
 VendorName: "Eclipse N4JS Project"
@@ -19,12 +20,11 @@ Sources {
         "src/n4js"
     }
 }
-
 RequiredRuntimeLibraries {
-    n4js-runtime-n4
-    ,n4js-runtime-fetch
+    n4js-runtime-n4,
+    n4js-runtime-fetch,
+    n4js-runtime-v8
 }
-
 ProjectDependencies {
     n4js.lang,
     org.eclipse.n4js.mangelhaft,

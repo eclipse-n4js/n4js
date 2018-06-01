@@ -10,12 +10,12 @@
  */
 package org.eclipse.n4js.tests.manifest
 
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.n4mf.N4mfFactory
-import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.n4mf.N4mfFactory
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.xtext.util.StringInputStream
 import org.junit.Before
 import org.junit.Test
@@ -57,11 +57,8 @@ class TransitiveDependencyPluginTest extends AbstractBuilderParticipantTest {
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
 		val dependency = N4mfFactory.eINSTANCE.createProjectDependency
-		val otherProject = N4mfFactory.eINSTANCE.createSimpleProjectDescription
-		pd.projectDependencies = N4mfFactory.eINSTANCE.createProjectDependencies
-		otherProject.setProjectId(projectId)
-		dependency.setProject(otherProject)
-		pd.projectDependencies.projectDependencies.add(dependency)
+		dependency.setProjectId(projectId)
+		pd.projectDependencies.add(dependency)
 		resource.save(null)
 		waitForAutoBuild();
 	}

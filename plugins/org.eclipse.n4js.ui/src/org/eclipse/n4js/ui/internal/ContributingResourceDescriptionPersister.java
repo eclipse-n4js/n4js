@@ -21,13 +21,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution;
 import org.eclipse.xtext.builder.builderState.EMFBasedPersister;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution;
 
 /**
  * Persisted state provider that is responsible for notifying all registered
@@ -72,7 +71,7 @@ public class ContributingResourceDescriptionPersister extends EMFBasedPersister 
 
 	private Iterable<IResourceDescriptionPersisterContribution> getContributions() {
 		return from(Arrays.asList(Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_POINT_ID)))
-				.transform(config -> createInstance(config));
+				.transform(config -> createInstance(config)).filter(elem -> elem != null);
 	}
 
 	private IResourceDescriptionPersisterContribution createInstance(final IConfigurationElement config) {
@@ -83,13 +82,18 @@ public class ContributingResourceDescriptionPersister extends EMFBasedPersister 
 				contribution.getInjector().injectMembers(contribution);
 				return contribution;
 			}
+
 			final String message = "Expected persister contribution type. Was: " + extension;
 			LOGGER.error(message);
 			throw new IllegalStateException(message);
+
 		} catch (final CoreException e) {
 			final String message = "Error while instantiating contribution.";
 			LOGGER.error(message, e);
 			throw new RuntimeException(message, e);
+
+		} catch (InjectorNotYetAvailableException e) {
+			return null;
 		}
 	}
 

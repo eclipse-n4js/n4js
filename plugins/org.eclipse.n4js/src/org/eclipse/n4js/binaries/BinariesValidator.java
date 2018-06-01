@@ -16,16 +16,17 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.process.ProcessResult;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 /**
  * Class for validating {@link Binary binaries} with respect to their existence, accessibility and version.
  */
+@Singleton
 public class BinariesValidator {
 	private static final Logger LOGGER = Logger.getLogger(BinariesValidator.class);
 

@@ -10,11 +10,11 @@
  */
 @@ProvidedByRuntime
 
-import {Method} from "fetch/Method"
-import {RequestMode} from "fetch/RequestMode"
-import {RequestCredentials} from "fetch/RequestCredentials"
-import {RequestCache} from "fetch/RequestCache"
 
+import {Method} from "fetch/Method";
+import {RequestCache} from "fetch/RequestCache";
+import {RequestCredentials} from "fetch/RequestCredentials";
+import {RequestMode} from "fetch/RequestMode";
 export external public class ~RequestInit {
     public method?: Method;
     public headers?: union{Headers, Array<Array<string>>, Object};
@@ -28,4 +28,3 @@ export external public class ~RequestInit {
     public cache?: RequestCache;
 }
 
-/* -*- mode: typescript;-*- */

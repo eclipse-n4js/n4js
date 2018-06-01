@@ -10,16 +10,16 @@
  */
 package org.eclipse.n4js.internal;
 
-import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 
 /**
  */
 abstract class AbstractSourceContainer {
 
-	private final SourceFragmentType type;
+	private final SourceContainerType type;
 	private final String relativeLocation;
 
-	protected AbstractSourceContainer(SourceFragmentType type, String relativeLocation) {
+	protected AbstractSourceContainer(SourceContainerType type, String relativeLocation) {
 		this.type = type;
 		switch (type) {
 		case SOURCE:
@@ -35,15 +35,15 @@ abstract class AbstractSourceContainer {
 	}
 
 	public boolean isTest() {
-		return type == SourceFragmentType.TEST;
+		return type == SourceContainerType.TEST;
 	}
 
 	public boolean isSource() {
-		return type == SourceFragmentType.SOURCE;
+		return type == SourceContainerType.SOURCE;
 	}
 
 	public boolean isExternal() {
-		return type == SourceFragmentType.EXTERNAL;
+		return type == SourceContainerType.EXTERNAL;
 	}
 
 	public String getRelativeLocation() {

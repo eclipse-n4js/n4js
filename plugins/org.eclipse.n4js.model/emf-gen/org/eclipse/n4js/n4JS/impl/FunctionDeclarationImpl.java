@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.math.BigDecimal;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -40,6 +42,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
+import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -50,6 +53,7 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
+import org.eclipse.n4js.n4JS.VersionedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -75,12 +79,14 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getBody <em>Body</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#get_lok <em>lok</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getDefinedType <em>Defined Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getReturnTypeRef <em>Return Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#get_migrationContext <em>migration Context</em>}</li>
  * </ul>
  *
  * @generated
@@ -125,6 +131,26 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * @ordered
 	 */
 	protected Type definedType;
+
+	/**
+	 * The default value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final BigDecimal DECLARED_VERSION_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected BigDecimal declaredVersion = DECLARED_VERSION_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getFpars() <em>Fpars</em>}' containment reference list.
@@ -215,6 +241,16 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #get_migrationContext() <em>migration Context</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #get_migrationContext()
+	 * @generated
+	 * @ordered
+	 */
+	protected MigrationContextVariable _migrationContext;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -376,6 +412,27 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public BigDecimal getDeclaredVersion() {
+		return declaredVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
+		BigDecimal oldDeclaredVersion = declaredVersion;
+		declaredVersion = newDeclaredVersion;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DECLARATION__DECLARED_VERSION, oldDeclaredVersion, declaredVersion));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<FormalParameter> getFpars() {
 		if (fpars == null) {
 			fpars = new EObjectContainmentEList<FormalParameter>(FormalParameter.class, this, N4JSPackage.FUNCTION_DECLARATION__FPARS);
@@ -506,8 +563,72 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public MigrationContextVariable get_migrationContext() {
+		return _migrationContext;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSet_migrationContext(MigrationContextVariable new_migrationContext, NotificationChain msgs) {
+		MigrationContextVariable old_migrationContext = _migrationContext;
+		_migrationContext = new_migrationContext;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT, old_migrationContext, new_migrationContext);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void set_migrationContext(MigrationContextVariable new_migrationContext) {
+		if (new_migrationContext != _migrationContext) {
+			NotificationChain msgs = null;
+			if (_migrationContext != null)
+				msgs = ((InternalEObject)_migrationContext).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT, null, msgs);
+			if (new_migrationContext != null)
+				msgs = ((InternalEObject)new_migrationContext).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT, null, msgs);
+			msgs = basicSet_migrationContext(new_migrationContext, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT, new_migrationContext, new_migrationContext));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MigrationContextVariable getMigrationContextVariable() {
+		MigrationContextVariable __migrationContext = this.get_migrationContext();
+		boolean _tripleEquals = (__migrationContext == null);
+		if (_tripleEquals) {
+			final MigrationContextVariable newMigrationContext = N4JSFactory.eINSTANCE.createMigrationContextVariable();
+			newMigrationContext.setName("context");
+			final Procedure0 _function = new Procedure0() {
+				public void apply() {
+					FunctionDeclarationImpl.this.set_migrationContext(newMigrationContext);
+				}
+			};
+			EcoreUtilN4.doWithDeliver(false, _function, this);
+		}
+		return this.get_migrationContext();
 	}
 
 	/**
@@ -613,6 +734,33 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean hasDeclaredVersion() {
+		BigDecimal _declaredVersion = this.getDeclaredVersion();
+		return (_declaredVersion != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getDeclaredVersionOrZero() {
+		int _xifexpression = (int) 0;
+		boolean _hasDeclaredVersion = this.hasDeclaredVersion();
+		if (_hasDeclaredVersion) {
+			_xifexpression = this.getDeclaredVersion().intValue();
+		}
+		else {
+			_xifexpression = 0;
+		}
+		return _xifexpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public LocalArgumentsVariable getLocalArgumentsVariable() {
 		LocalArgumentsVariable __lok = this.get_lok();
 		boolean _tripleEquals = (__lok == null);
@@ -678,6 +826,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return basicSetReturnTypeRef(null, msgs);
 			case N4JSPackage.FUNCTION_DECLARATION__TYPE_VARS:
 				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
+			case N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT:
+				return basicSet_migrationContext(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -699,6 +849,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 			case N4JSPackage.FUNCTION_DECLARATION__DEFINED_TYPE:
 				if (resolve) return getDefinedType();
 				return basicGetDefinedType();
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_VERSION:
+				return getDeclaredVersion();
 			case N4JSPackage.FUNCTION_DECLARATION__FPARS:
 				return getFpars();
 			case N4JSPackage.FUNCTION_DECLARATION__RETURN_TYPE_REF:
@@ -711,6 +863,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return getTypeVars();
 			case N4JSPackage.FUNCTION_DECLARATION__NAME:
 				return getName();
+			case N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT:
+				return get_migrationContext();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -737,6 +891,9 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 			case N4JSPackage.FUNCTION_DECLARATION__DEFINED_TYPE:
 				setDefinedType((Type)newValue);
 				return;
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_VERSION:
+				setDeclaredVersion((BigDecimal)newValue);
+				return;
 			case N4JSPackage.FUNCTION_DECLARATION__FPARS:
 				getFpars().clear();
 				getFpars().addAll((Collection<? extends FormalParameter>)newValue);
@@ -756,6 +913,9 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return;
 			case N4JSPackage.FUNCTION_DECLARATION__NAME:
 				setName((String)newValue);
+				return;
+			case N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT:
+				set_migrationContext((MigrationContextVariable)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -781,6 +941,9 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 			case N4JSPackage.FUNCTION_DECLARATION__DEFINED_TYPE:
 				setDefinedType((Type)null);
 				return;
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_VERSION:
+				setDeclaredVersion(DECLARED_VERSION_EDEFAULT);
+				return;
 			case N4JSPackage.FUNCTION_DECLARATION__FPARS:
 				getFpars().clear();
 				return;
@@ -798,6 +961,9 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return;
 			case N4JSPackage.FUNCTION_DECLARATION__NAME:
 				setName(NAME_EDEFAULT);
+				return;
+			case N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT:
+				set_migrationContext((MigrationContextVariable)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -819,6 +985,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return _lok != null;
 			case N4JSPackage.FUNCTION_DECLARATION__DEFINED_TYPE:
 				return definedType != null;
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_VERSION:
+				return DECLARED_VERSION_EDEFAULT == null ? declaredVersion != null : !DECLARED_VERSION_EDEFAULT.equals(declaredVersion);
 			case N4JSPackage.FUNCTION_DECLARATION__FPARS:
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.FUNCTION_DECLARATION__RETURN_TYPE_REF:
@@ -831,6 +999,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return typeVars != null && !typeVars.isEmpty();
 			case N4JSPackage.FUNCTION_DECLARATION__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT:
+				return _migrationContext != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -883,6 +1053,12 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 		if (baseClass == TypeDefiningElement.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.FUNCTION_DECLARATION__DEFINED_TYPE: return N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE;
+				default: return -1;
+			}
+		}
+		if (baseClass == VersionedElement.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.FUNCTION_DECLARATION__DECLARED_VERSION: return N4JSPackage.VERSIONED_ELEMENT__DECLARED_VERSION;
 				default: return -1;
 			}
 		}
@@ -962,6 +1138,12 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 		if (baseClass == TypeDefiningElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE: return N4JSPackage.FUNCTION_DECLARATION__DEFINED_TYPE;
+				default: return -1;
+			}
+		}
+		if (baseClass == VersionedElement.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.VERSIONED_ELEMENT__DECLARED_VERSION: return N4JSPackage.FUNCTION_DECLARATION__DECLARED_VERSION;
 				default: return -1;
 			}
 		}
@@ -1046,6 +1228,13 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				default: return -1;
 			}
 		}
+		if (baseClass == VersionedElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.VERSIONED_ELEMENT___HAS_DECLARED_VERSION: return N4JSPackage.FUNCTION_DECLARATION___HAS_DECLARED_VERSION;
+				case N4JSPackage.VERSIONED_ELEMENT___GET_DECLARED_VERSION_OR_ZERO: return N4JSPackage.FUNCTION_DECLARATION___GET_DECLARED_VERSION_OR_ZERO;
+				default: return -1;
+			}
+		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.FUNCTION_DEFINITION___IS_RETURN_VALUE_OPTIONAL: return N4JSPackage.FUNCTION_DECLARATION___IS_RETURN_VALUE_OPTIONAL;
@@ -1087,6 +1276,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 		switch (operationID) {
 			case N4JSPackage.FUNCTION_DECLARATION___IS_EXTERNAL:
 				return isExternal();
+			case N4JSPackage.FUNCTION_DECLARATION___GET_MIGRATION_CONTEXT_VARIABLE:
+				return getMigrationContextVariable();
 			case N4JSPackage.FUNCTION_DECLARATION___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.FUNCTION_DECLARATION___IS_EXPORTED_AS_DEFAULT:
@@ -1101,6 +1292,10 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return isAsync();
 			case N4JSPackage.FUNCTION_DECLARATION___GET_DEFINED_FUNCTION:
 				return getDefinedFunction();
+			case N4JSPackage.FUNCTION_DECLARATION___HAS_DECLARED_VERSION:
+				return hasDeclaredVersion();
+			case N4JSPackage.FUNCTION_DECLARATION___GET_DECLARED_VERSION_OR_ZERO:
+				return getDeclaredVersionOrZero();
 			case N4JSPackage.FUNCTION_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE:
 				return getLocalArgumentsVariable();
 			case N4JSPackage.FUNCTION_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR:
@@ -1123,6 +1318,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (declaredModifiers: ");
 		result.append(declaredModifiers);
+		result.append(", declaredVersion: ");
+		result.append(declaredVersion);
 		result.append(", generator: ");
 		result.append(generator);
 		result.append(", declaredAsync: ");

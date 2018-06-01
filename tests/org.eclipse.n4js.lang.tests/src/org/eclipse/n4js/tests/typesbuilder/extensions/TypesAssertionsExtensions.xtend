@@ -35,7 +35,7 @@ class TypesAssertionsExtensions {
 	private extension TypeEqualityAssertionsExtension
 
 	def Iterable<IEObjectDescription> assertAllExportedElementAreOnIndex(String phase, IResourceDescriptions resourceDescriptions, List<? extends Pair<? extends Class<? extends EObject>, String>> expectedExportedTypeToNamePairs) {
-		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension == "n4js"].map[exportedObjects].flatten
+		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension != "n4ts"].map[exportedObjects].flatten
 		val expectedTestContentCount = expectedExportedTypeToNamePairs.size // type roots
 		assertEquals(phase + ": count of elements are marked as exported should equal to EResourceDescriptions", expectedTestContentCount, eoDescs.size)
 		assertExpectedTypes(phase, eoDescs, expectedExportedTypeToNamePairs)
@@ -44,7 +44,7 @@ class TypesAssertionsExtensions {
 	
 	def void assertUserDataCreated(String phase, Resource testResource) {
 		val resourceDescriptions = assertIndexHasBeenFilled(phase, testResource);
-		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension == "n4js"].map[exportedObjects].flatten
+		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension != "n4ts"].map[exportedObjects].flatten
 		val syntaxEoDesc = eoDescs.head;
 		assertNotNull(phase + ": user data not found", syntaxEoDesc.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT));
 	}

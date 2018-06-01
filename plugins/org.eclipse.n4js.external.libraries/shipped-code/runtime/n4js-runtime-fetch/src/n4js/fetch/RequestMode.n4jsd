@@ -17,4 +17,3 @@ export @StringBased external public enum RequestMode {
     CORS_WITH_FORCED_PREFLIGHT: "cors-with-forced-preflight"
 }
 
-/* -*- mode: typescript;-*- */
