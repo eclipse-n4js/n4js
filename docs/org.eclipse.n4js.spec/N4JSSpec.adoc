@@ -9,6 +9,8 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
+// ip valid 0
+
 :find:
 include::{find}config.adoc[]
 
