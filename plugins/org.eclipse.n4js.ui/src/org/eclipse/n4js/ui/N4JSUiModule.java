@@ -79,9 +79,11 @@ import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
 import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
+import org.eclipse.n4js.ui.internal.ContributingModule;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
+import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
@@ -160,6 +162,7 @@ import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.util.IssueUtil;
+import org.eclipse.xtext.ui.validation.IResourceUIValidatorExtension;
 import org.eclipse.xtext.validation.IResourceValidator;
 
 import com.google.inject.Binder;
@@ -184,11 +187,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		super(plugin);
 		// get the logging initialized for UI presentation:
 		N4jsUiLoggingInitializer.init();
-	}
-
-	/** Delegate to shared injector */
-	public Provider<MarkerCreator> provideMarkerCreator() {
-		return Access.contributedProvider(MarkerCreator.class);
 	}
 
 	/** Delegate to shared injector */
@@ -387,6 +385,20 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public Class<? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant() {
 		return N4JSBuilderParticipant.class;
+	}
+
+	/**
+	 * Bind the {@link IResourceUIValidatorExtension}.
+	 */
+	public Class<? extends IResourceUIValidatorExtension> bindIResourceUIValidatorExtension() {
+		return ResourceUIValidatorExtension.class;
+	}
+
+	/**
+	 * Bind the {@link MarkerCreator}. Do not delegate to {@link ContributingModule}, see GH-866.
+	 */
+	public Class<? extends MarkerCreator> bindMarkerCreator() {
+		return MarkerCreator.class;
 	}
 
 	@Override
