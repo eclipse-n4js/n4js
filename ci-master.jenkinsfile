@@ -18,6 +18,7 @@ pipeline {
             label 'mesos-xlarge'
         }
     }
+
     options {
         ansiColor('xterm')
         buildDiscarder(
@@ -37,6 +38,10 @@ pipeline {
                      '-XX:+UseCGroupMemoryLimitForHeap ' +
                      '-XX:MaxRAMFraction=2 '             +
                      '-XshowSettings:vm '
+    }
+
+    triggers {
+        pollSCM('H/5 * * * *') // every 5 minutes
     }
 
     stages {
@@ -65,7 +70,7 @@ pipeline {
                             'execute-plugin-ui-tests'
                         ].join(',')
 
-                        sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
+                        sh "export SWT_GTK3=0; ${xvfb} mvn  --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }

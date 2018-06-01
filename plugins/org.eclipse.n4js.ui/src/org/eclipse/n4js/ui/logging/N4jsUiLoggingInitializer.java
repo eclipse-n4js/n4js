@@ -14,7 +14,6 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-
 import org.eclipse.n4js.ui.N4JSUiModule;
 
 /**
@@ -35,6 +34,7 @@ public class N4jsUiLoggingInitializer {
 		// log4j.appender.eclipse=org.eclipse.xtext.logging.EclipseLogAppender
 		EclipseLogAppender eclipseAppender = new EclipseLogAppender();
 		eclipseAppender.setName("eclipse");
+		eclipseAppender.setThreshold(Level.ERROR);
 		rootLogger.addAppender(eclipseAppender);
 
 		// log4j.appender.eclipse.layout=org.apache.log4j.PatternLayout
