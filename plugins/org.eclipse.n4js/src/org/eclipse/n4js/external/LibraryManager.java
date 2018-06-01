@@ -278,8 +278,8 @@ public class LibraryManager {
 			String versionRequested = Strings.emptyIfNull(reqestedNpm.getValue());
 			if (installedNpms.containsKey(name)) {
 				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
-				String versionInstalled = installedNpms.get(name).getValue();
-				if (versionRequested.equals(Strings.emptyIfNull(versionInstalled))) {
+				String versionInstalled = Strings.emptyIfNull(installedNpms.get(name).getValue());
+				if (versionRequested.isEmpty() || versionRequested.equals(versionInstalled)) {
 					// already installed
 				} else {
 					// wrong version installed -> update (uninstall, then install)
