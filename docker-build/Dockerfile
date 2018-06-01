@@ -132,6 +132,8 @@ RUN apt-get update && \
 
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 
+RUN lsb_release -cs
+
 RUN add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/debian \
    $(lsb_release -cs) \
