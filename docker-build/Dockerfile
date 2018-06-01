@@ -122,7 +122,7 @@ RUN apt-get update && \
 # COPY docker /usr/local/bin/
 
 RUN apt-get update && \ 
-  apt-get install \
+  apt-get install -y --no-install-recommends \
      apt-transport-https \
      ca-certificates \
      curl \
@@ -137,7 +137,7 @@ RUN add-apt-repository \
    $(lsb_release -cs) \
    stable"
 
-RUN apt-get install docker-ce
+RUN apt-get install -y docker-ce
 
  #CMD ["/docker/dockerd &"]
  
