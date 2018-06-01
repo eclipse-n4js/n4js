@@ -74,7 +74,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public ExternalProject getProject(final String projectName) {
+	public N4JSExternalProject getProject(final String projectName) {
 		return null;
 	}
 

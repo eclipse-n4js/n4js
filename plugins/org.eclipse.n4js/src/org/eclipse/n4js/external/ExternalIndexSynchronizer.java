@@ -97,7 +97,7 @@ public abstract class ExternalIndexSynchronizer {
 
 		java.net.URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
 		File nodeModulesFolder = new File(nodeModulesLocation.getPath());
-		if (nodeModulesFolder.exists() && nodeModulesFolder.isDirectory()) {
+		if (nodeModulesFolder.isDirectory()) {
 			for (File npmLibrary : nodeModulesFolder.listFiles()) {
 				if (npmLibrary.isDirectory()) {
 					String npmName = npmLibrary.getName();

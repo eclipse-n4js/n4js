@@ -80,7 +80,7 @@ Contributors:
 
 	<root>
 		<priority value="ALL" />
-		<appender-ref ref="fileAppender" />
 		<appender-ref ref="default" />
+		<appender-ref ref="fileAppender" />
 	</root>
 </log4j:configuration>

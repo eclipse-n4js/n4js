@@ -15,9 +15,11 @@ import static com.google.common.collect.FluentIterable.from;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.utils.emf.EObjectFeatureMerger;
@@ -63,6 +65,14 @@ public class ManifestMerger extends EObjectFeatureMerger {
 
 			final Resource from = fromResourceSet.getResource(fromLocation, true);
 			final Resource to = toResourceSet.getResource(toLocation, true);
+
+			EList<Diagnostic> errorsInManifest = to.getErrors();
+			if (!errorsInManifest.isEmpty()) {
+				String msg = "Existing Manifest.n4mf is broken. Source URI: " + to.getURI().toString() + ".";
+				LOGGER.error(msg);
+				return null;
+			}
+
 			return mergeContent(from, to);
 
 		} catch (final Exception e) {

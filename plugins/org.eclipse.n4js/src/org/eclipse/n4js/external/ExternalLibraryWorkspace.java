@@ -156,7 +156,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the unique name of the project.
 	 * @return the project, or {@code null} if does not exist.
 	 */
-	public abstract ExternalProject getProject(final String projectName);
+	public abstract N4JSExternalProject getProject(final String projectName);
 
 	/**
 	 * Returns with the project with the given location. Or {@code null} if the project does not exist.
