@@ -14,6 +14,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
+import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Uninstall;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 
 import java.io.File;
@@ -243,17 +245,17 @@ public class LibraryManager {
 					// already installed
 				} else {
 					// wrong version installed -> update (uninstall, then install)
-					LibraryChangeType uninstall = LibraryChangeType.Uninstall;
-					requestedChanges.add(new LibraryChange(uninstall, location, name, versionRequested));
+					requestedChanges.add(new LibraryChange(Uninstall, location, name, versionInstalled));
+					requestedChanges.add(new LibraryChange(Install, location, name, versionRequested));
 				}
 			} else {
-				requestedChanges.add(new LibraryChange(LibraryChangeType.Install, null, name, versionRequested));
+				requestedChanges.add(new LibraryChange(Install, null, name, versionRequested));
 			}
 		}
 
 		for (String name : removeRequested) {
 			if (installedNpms.containsKey(name)) {
-				requestedChanges.add(new LibraryChange(LibraryChangeType.Uninstall, null, name, ""));
+				requestedChanges.add(new LibraryChange(Uninstall, null, name, ""));
 			} else {
 				// already removed
 			}
