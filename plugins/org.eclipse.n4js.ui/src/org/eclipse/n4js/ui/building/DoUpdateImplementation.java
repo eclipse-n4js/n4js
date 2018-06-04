@@ -265,7 +265,8 @@ class DoUpdateImplementation {
 		final IResourceDescription oldDescription = state.getResourceDescription(uri);
 		final IResourceDescription newDesc = newState.getResourceDescription(uri);
 		ResourceDescriptionImpl indexReadyDescription = newDesc != null
-				? BuilderStateUtil.create(newDesc) : null;
+				? BuilderStateUtil.create(newDesc)
+				: null;
 		if ((oldDescription != null || indexReadyDescription != null)
 				&& oldDescription != indexReadyDescription) {
 			newDelta = new DefaultResourceDescriptionDelta(oldDescription,
@@ -285,7 +286,7 @@ class DoUpdateImplementation {
 		if (!buildData.isIndexingOnly()) {
 			try {
 				progress.subTask("Compiling " + newDelta.getUri().lastSegment());
-				state.pleaseUpdateMarkers(newDelta, resourceSet, progress.split(2));
+				state.updateMarkers(newDelta, resourceSet, progress.split(2));
 			} catch (OperationCanceledException e) {
 				loadOperation.cancel();
 				throw e;

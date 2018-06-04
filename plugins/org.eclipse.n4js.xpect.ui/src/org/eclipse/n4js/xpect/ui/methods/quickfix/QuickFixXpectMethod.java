@@ -94,9 +94,6 @@ public class QuickFixXpectMethod {
 	}
 
 	@Inject
-	private XpectN4JSES5TranspilerHelper xpectN4JSES5TranpilerHelper;
-
-	@Inject
 	private IssueResolutionProvider quickfixProvider;
 
 	/*-

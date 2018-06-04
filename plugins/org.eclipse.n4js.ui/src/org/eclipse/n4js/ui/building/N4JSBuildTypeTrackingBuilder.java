@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.building;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +24,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
+import org.eclipse.n4js.ui.internal.N4MFProjectDependencyStrategy;
 import org.eclipse.n4js.ui.internal.ProjectDescriptionLoadListener;
 import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -33,9 +35,12 @@ import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.builder.impl.XtextBuilder;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -52,12 +57,40 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	@BuilderState
 	private IBuildLogger builderStateLogger;
 
+	private N4MFProjectDependencyStrategy projectDependencyStrategy;
+
+	@Inject
+	private void injectN4MFProjectDependencyStrategy(ISharedStateContributionRegistry registry) {
+		this.projectDependencyStrategy = registry.getSingleContributedInstance(N4MFProjectDependencyStrategy.class);
+	}
+
 	@Override
 	protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor)
 			throws CoreException {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		try {
-			return super.build(kind, args, toBuilderMonitor(monitor).split(1, SubMonitor.SUPPRESS_SETTASKNAME));
+			IProject[] result = super.build(kind, args,
+					toBuilderMonitor(monitor).split(1, SubMonitor.SUPPRESS_SETTASKNAME));
+			/*
+			 * Here we suffer from a race between the builder and the listener to project changes. The listener is
+			 * supposed to update the project description on change. The build needs to return the references as
+			 * configured in the project description.
+			 *
+			 * We cannot sync the builder with the listener due to limitations of the eclipse resource model thus we
+			 * will bypass this mechanism and obtain the dependencies directly from the project.
+			 *
+			 * Dynamic references have been superseded in Eclipse Photon anyways :(
+			 */
+			List<IProject> dependencies = projectDependencyStrategy.getProjectDependencies(getProject());
+			if (dependencies.isEmpty()) {
+				return result;
+			}
+			/*
+			 * And merge them with the static project references that are persisted to disc.
+			 */
+			IProject[] staticReferences = getProject().getDescription().getReferencedProjects();
+			return FluentIterable.from(dependencies).append(staticReferences).copyInto(Sets.newLinkedHashSet())
+					.toArray(new IProject[0]);
 		} finally {
 			stopwatch.stop();
 			if (LOGGER.isDebugEnabled()) {
