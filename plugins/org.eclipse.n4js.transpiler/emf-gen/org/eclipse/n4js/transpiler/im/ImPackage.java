@@ -2609,6 +2609,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__DEFINED_TYPE = N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION__DECLARED_VERSION = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_VERSION;
+
+	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2805,6 +2814,24 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Has Declared Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___HAS_DECLARED_VERSION = N4JSPackage.N4_METHOD_DECLARATION___HAS_DECLARED_VERSION;
+
+	/**
+	 * The operation id for the '<em>Get Declared Version Or Zero</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_VERSION_OR_ZERO;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -3004,7 +3031,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int STRING_LITERAL_FOR_STE_OPERATION_COUNT = N4JSPackage.STRING_LITERAL_OPERATION_COUNT + 1;
-
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl <em>Versioned Parameterized Type Ref IM</em>}' class.
@@ -3990,7 +4016,6 @@ public interface ImPackage extends EPackage {
 	 */
 	int VERSIONED_IDENTIFIER_REF_IM_OPERATION_COUNT = IDENTIFIER_REF_IM_OPERATION_COUNT + 3;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl <em>Versioned Named Import Specifier IM</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -4081,6 +4106,7 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM_OPERATION_COUNT = N4JSPackage.NAMED_IMPORT_SPECIFIER_OPERATION_COUNT + 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.Script_IM <em>Script IM</em>}'.

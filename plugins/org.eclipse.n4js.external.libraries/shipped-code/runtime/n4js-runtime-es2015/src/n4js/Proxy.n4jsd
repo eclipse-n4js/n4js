@@ -42,4 +42,4 @@ export external public interface ~ProxyHandler<T extends Object> {
     public static <T extends Object> revocable(target: T, handler: ~ProxyHandler<T>): ~Object with { proxy: T; revoke: Function; };
 }
 
-/* -*- mode: typescript;-*- */
+

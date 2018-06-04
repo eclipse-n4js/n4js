@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLSpecTest END_SETUP */
 
 interface I#1 {}
 
@@ -32,8 +32,8 @@ class B#2 {
 // some function that accepts constructors as parameter
 function some(ctor : constructor{N4Object}) {}
 
-@Migration
-function f() {
+@Migration(1,2)
+function f(a : A#1) : A#2 {
 	// XPECT noerrors
 	console.log(A#1.staticField1)
 	// XPECT noerrors
@@ -61,4 +61,6 @@ function f() {
 
 	// In NewExpression XPECT noerrors
 	new A#1();
+	
+	return null;
 }

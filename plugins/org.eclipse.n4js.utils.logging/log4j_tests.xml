@@ -9,33 +9,78 @@ http://www.eclipse.org/legal/epl-v10.html
 Contributors:
   NumberFour AG - Initial API and implementation
 -->
-<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-	<appender class="org.apache.log4j.ConsoleAppender" name="default">
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration
+	xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="default"
+		class="org.apache.log4j.ConsoleAppender">
+		<param name="threshold" value="ERROR" />
+		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param value="%-4r [%t] %-5p %c %x - %m%n" name="ConversionPattern" />
+			<param name="ConversionPattern"
+				value="%d{YYY-MM-DD-hh:mm:ss.sssZ} - %25t - %-5p - %30c{1} - (%C{30}.java:%L) - %m%n" />
 		</layout>
 	</appender>
-	<appender class="org.eclipse.xtext.logging.EclipseLogAppender"
-		name="eclipse">
+
+	<appender name="fileAppender"
+		class="org.apache.log4j.RollingFileAppender">
+		<param name="threshold" value="DEBUG" />
+		<param name="maxFileSize" value="10MB" />
+		<param name="maxBackupIndex" value="100" />
+		<param name="File" value="logs/n4js_test.log" />
+		<param name="Append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param value="%c %x - %m%n" name="ConversionPattern" />
+			<param name="ConversionPattern"
+				value="%d{YYY-MM-DD-hh:mm:ss.sssZ} - %25t - %-5p - %30c{1} - (%C{30}.java:%L) - %m%n" />
 		</layout>
 	</appender>
+
+	<appender name="asyncAppender"
+		class="org.apache.log4j.AsyncAppender">
+		<appender-ref ref="fileAppender" />
+	</appender>
+
+
 	<logger name="org.eclipse.n4js">
-		<level value="warn" />
+		<level value="WARN" />
 	</logger>
 	<logger name="org.eclipse.xtext">
-		<level value="warn" />
+		<level value="WARN" />
 	</logger>
-	<logger name="org.eclipse.xtext.ui.editor.contentassist.antlr.internal">
-		<level value="warn" />
+	<logger
+		name="org.eclipse.xtext.ui.editor.contentassist.antlr.internal">
+		<level value="WARN" />
 	</logger>
 	<logger name="org.eclipse.xtext.ui.editor.outline">
-		<level value="warn" />
+		<level value="WARN" />
 	</logger>
+
+	<!-- don't log matchers, this is very high amount of chatter -->
+	<category name="org.eclipse.swtbot.swt.finder.matchers">
+		<priority value="WARN" />
+	</category>
+
+	<!-- don't log widget notification events, this is moderately high chatter -->
+	<category name="org.eclipse.swtbot.swt.finder.widgets">
+		<priority value="WARN" />
+	</category>
+
+	<!-- don't log finders, this is moderate chatter -->
+	<category name="org.eclipse.swtbot.swt.finder.finders">
+		<priority value="DEBUG" />
+	</category>
+
+	<category name="org.eclipse.swtbot.swt.finder.keyboard">
+		<priority value="DEBUG" />
+	</category>
+
+	<category name="org.eclipse.swtbot">
+		<priority value="ALL" />
+	</category>
+
 	<root>
-		<level value="warn" />
+		<priority value="ALL" />
 		<appender-ref ref="default" />
+		<appender-ref ref="fileAppender" />
 	</root>
 </log4j:configuration>

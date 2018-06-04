@@ -50,7 +50,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 
 		String proot = workspace.getAbsolutePath().toString();
 
-		String[] args = { "--projectlocations", proot, "--buildType", "allprojects", "--verbose" };
+		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
 
 		// compile
 		new N4jscBase().doMain(args);

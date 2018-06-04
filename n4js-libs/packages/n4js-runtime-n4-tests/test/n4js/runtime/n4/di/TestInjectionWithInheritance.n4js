@@ -8,11 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {N4Injector} from "n4js/lang/N4Injector"
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
 //=============================================================================
 // Test Data
 //=============================================================================
+import {N4Injector} from "n4js/lang/N4Injector";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 class Foo {}
 class Bar{}
 class Baz{}

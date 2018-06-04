@@ -53,4 +53,3 @@ import {CollatorOptions} from "IntlClasses";
 	public toLocaleUpperCase(locales: string | [string]=): string
 }
 
-/* -*- mode: typescript;-*- */

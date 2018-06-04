@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
-import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.resource.N4JSEObjectDescription
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker
@@ -38,10 +37,10 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
-import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.naming.IQualifiedNameProvider
@@ -208,11 +207,11 @@ class ImportedElementsScopingHelper {
 
 	private def void addNamedImports(NamedImportSpecifier specifier, TExportableElement element, QualifiedName importedName,
 		IEODesc2ISpec originatorMap, ImportedElementsMap validImports) {
-		if (variantHelper.allowVersionedTypes(specifier) && VersionUtils.isTVersionable(element)) {
+		if (variantHelper.allowVersionedTypes(specifier) && VersionableUtils.isTVersionable(element)) {
 			// If the current context supports versioned types, import all versions of the
 			// specified type.
-			versionHelper.findTypeVersions(element as TClassifier).forEach[ classifier |
-				val description = validImports.putOrError(classifier, importedName,
+			versionHelper.findTypeVersions(element as Type).forEach[ type |
+				val description = validImports.putOrError(type, importedName,
 					IssueCodes.IMP_AMBIGUOUS
 				);
 				originatorMap.putWithOrigin(description, specifier);

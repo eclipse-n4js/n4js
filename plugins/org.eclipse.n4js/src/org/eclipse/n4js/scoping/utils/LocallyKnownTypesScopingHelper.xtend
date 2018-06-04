@@ -105,13 +105,23 @@ class LocallyKnownTypesScopingHelper {
 				TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
 			// but imported types are preferred (or maybe renamed with aliases):
 			val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script);
-			val TModule local = script.module;
-			if (local === null || local.eIsProxy) {
-				return importScope;
-			}
-			return scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.map [ topLevelType |
-				EObjectDescription.create(topLevelType.name, topLevelType) ]);
+			// finally, add locally declared types as the outer scope
+			val localTypes = scopeWithLocallyDeclaredTypes(script, importScope);
+			
+			return localTypes;
 		];
+	}
+	
+	/**
+	 * Returns scope with locally declared types (without import scope).
+	 */
+	def IScope scopeWithLocallyDeclaredTypes(Script script, IScope parent) {
+		val TModule local = script.module;
+		if (local === null || local.eIsProxy) {
+			return parent;
+		}
+		return scopesHelper.mapBasedScopeFor(script, parent, local.topLevelTypes.map [ topLevelType |
+			EObjectDescription.create(topLevelType.name, topLevelType) ]);
 	}
 
 	/**

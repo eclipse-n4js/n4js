@@ -45,6 +45,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.utils.Lazy;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Collections2;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -513,7 +514,8 @@ public class N4HeadlessCompiler {
 		}
 
 		// convert back to Files:
-		return result.stream().map(u -> new File(u.toFileString())).collect(Collectors.toList());
+		return result.stream().map(URIUtils::normalize).map(u -> new File(u.toFileString()))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -525,7 +527,8 @@ public class N4HeadlessCompiler {
 	 * @return the list of URIs
 	 */
 	private List<URI> createFileURIs(List<File> files) {
-		return files.stream().map(f -> URI.createFileURI(f.toString())).collect(Collectors.toList());
+		return files.stream().map(f -> URI.createFileURI(f.toString())).map(URIUtils::normalize)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -536,9 +539,11 @@ public class N4HeadlessCompiler {
 	 * @return a list of projects at the given URIs
 	 */
 	private List<N4JSProject> getN4JSProjects(List<URI> projectURIs) {
-		return projectURIs.stream().map(u -> n4jsModel.getN4JSProject(u)).collect(Collectors.toList());
+		return projectURIs.stream().map(URIUtils::normalize).map(u -> n4jsModel.getN4JSProject(u))
+				.collect(Collectors.toList());
 	}
 
+	// TODO GH-793 processing broken projects causes exceptions
 	private void configureResourceSetContainerState(final List<N4JSProject> allProjects) {
 		// a container is a project.
 		List<String> containers = new LinkedList<>();

@@ -19,4 +19,3 @@ export @StringBased external public enum RequestCache {
     ONLY_IF_CACHED: "only-if-cached"
 }
 
-/* -*- mode: typescript;-*- */

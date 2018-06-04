@@ -293,6 +293,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredAsync?='async' NO_LINE_TERMINATOR? 'function' '(' ')' (ambiguity) (rule end)
 	 *     declaredModifiers+=N4Modifier 'function' '(' ')' (ambiguity) (rule end)
+	 *     declaredVersion=VERSION '(' ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     generator?='*' '(' ')' (ambiguity) (rule end)
 	 *     name=BindingIdentifier '(' ')' (ambiguity) (rule end)
@@ -400,6 +401,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' body=Block
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' fpars+=FormalParameter
 	 *     declaredAsync?='async' (ambiguity) 'function' '<' typeVars+=TypeVariable
+	 *     declaredAsync?='async' (ambiguity) 'function' declaredVersion=VERSION
 	 *     declaredAsync?='async' (ambiguity) 'function' generator?='*'
 	 *     declaredAsync?='async' (ambiguity) 'function' name=BindingIdentifier
 	 *     declaredAsync?='async' (ambiguity) declaredName=LiteralOrComputedPropertyName

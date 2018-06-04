@@ -19,7 +19,9 @@
 	loadInitialization="false",
 	complianceLevel="8.0",
 	copyrightFields="false",
+	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
 	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	documentation="*\nCopyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n * Contributors:\n  NumberFour AG - Initial API and implementation",
 	language="")
 
 package org.eclipse.n4js.n4JS
@@ -472,7 +474,7 @@ abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnviron
 /* A function definition is either a FunctionDeclaration, a FunctionExpression or a MethodDeclaration.
  * Note that, since an anonymous function expression has no name, the function definition is not a named element.
  */
-abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
+abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement, VersionedElement {
 	contains FormalParameter[] fpars
 	/*
 	 * Tells if the return value is optional.
@@ -555,6 +557,22 @@ class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Sta
 	 */
 	op boolean isExternal() {
 		declaredModifiers.contains(N4Modifier.EXTERNAL)
+	}
+	
+	
+	/** Transient {@code MigrationContext} arguments variable. Access through #getMigrationContextVariable()  */
+	contains transient MigrationContextVariable _migrationContext
+	/** Lazy initialized reference to transient localArgurmentsVariable */
+	op MigrationContextVariable getMigrationContextVariable() {
+		if (_migrationContext === null) {
+			val newMigrationContext = N4JSFactory::eINSTANCE.createMigrationContextVariable;
+			newMigrationContext.name = "context";
+			EcoreUtilN4.doWithDeliver(false,
+				[|
+					_migrationContext = newMigrationContext;
+				], this);
+		}
+		return _migrationContext;
 	}
 }
 
@@ -2279,5 +2297,12 @@ class VersionedIdentifierRef extends IdentifierRef, VersionedReference {
 	 */
 	op int getVersion() {
 		return requestedVersionOrZero
+	}
+}
+
+/**  Implicit variable in migration bodies referencing the current {@code MigrationContext}. */
+class MigrationContextVariable extends Variable {
+	op String getName() {
+		return "context";
 	}
 }

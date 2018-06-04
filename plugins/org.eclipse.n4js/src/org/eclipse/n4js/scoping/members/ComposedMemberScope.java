@@ -32,11 +32,13 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypesFactory;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -44,8 +46,6 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.AbstractScope;
 
 import com.google.common.collect.Iterators;
-
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Scope implementation for ComposedTypeRefs, i.e. union types and intersection types.
@@ -176,8 +176,9 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			final Resource res = EcoreUtilN4.getResource(request.context, composedTypeRef);
 			final RuleEnvironment GwithSubstitutions = ts.createRuleEnvironmentForContext(typeRef, res);
 			final TMember member = findMemberInSubScope(subScope, memberName);
-			cmiBuilder.addMember(member, GwithSubstitutions);
-
+			final boolean structFieldInitMode = typeRef
+					.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+			cmiBuilder.addMember(member, GwithSubstitutions, structFieldInitMode);
 		}
 		// produce result
 		ComposedMemberInfo cmi = cmiBuilder.get();

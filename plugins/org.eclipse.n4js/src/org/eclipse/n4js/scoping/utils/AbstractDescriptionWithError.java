@@ -62,7 +62,7 @@ public abstract class AbstractDescriptionWithError extends ForwardingEObjectDesc
 	/**
 	 * Returns the name of the member type, e.g., method or field.
 	 */
-	protected static String getMemberTypeName(EObject eObject) {
+	protected static String getMemberTypeName(EObject eObject, boolean structFieldInitMode) {
 		if (eObject instanceof TMethod) {
 			return "method";
 		}
@@ -73,7 +73,7 @@ public abstract class AbstractDescriptionWithError extends ForwardingEObjectDesc
 			return "getter";
 		}
 		if (eObject instanceof TSetter) {
-			return "setter";
+			return structFieldInitMode ? "getter" : "setter";
 		}
 		if (eObject instanceof TEnumLiteral) {
 			return "enum literal";

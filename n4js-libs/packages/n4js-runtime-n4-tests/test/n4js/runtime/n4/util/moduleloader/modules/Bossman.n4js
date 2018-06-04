@@ -8,6 +8,6 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {AbstractRebel} from "runtime/n4/util/moduleloader/modules/AbstractRebel"
 
+import {AbstractRebel} from "runtime/n4/util/moduleloader/modules/AbstractRebel";
 export public class Bossman extends AbstractRebel {}

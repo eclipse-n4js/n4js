@@ -8,9 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {Nvp} from "org/eclipse/n4js/mangelhaft/types/Nvp";
-import {TestFunctionType} from "org/eclipse/n4js/mangelhaft/types/TestFunctionType"
 
+import {Nvp} from "org/eclipse/n4js/mangelhaft/types/Nvp";
+import {TestFunctionType} from "org/eclipse/n4js/mangelhaft/types/TestFunctionType";
 class TypedNvp <T, TT extends N4Enum> extends Nvp<T> {
      public type: TT;
 }

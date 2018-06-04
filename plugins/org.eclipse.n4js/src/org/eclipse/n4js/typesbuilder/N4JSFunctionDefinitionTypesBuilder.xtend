@@ -17,8 +17,10 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -32,6 +34,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 	@Inject extension N4JSFormalParameterTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
+	@Inject extension N4IDLMigrationTypesBuilder
 
 	def package boolean relinkTFunction(FunctionDeclaration functionDecl, TModule target, boolean preLinkingPhase, int idx) {
 		val functionDefinedType = functionDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
@@ -49,6 +52,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.relinkFormalParameters(functionDecl, preLinkingPhase)
 		functionType.astElement = functionDecl
 		functionDecl.definedType = functionType
+		
 		return true;
 	}
 
@@ -82,8 +86,16 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.declaredAsync = functionDecl.async // TODO change to declaredAsync once the annotation is gone
 		functionType.declaredGenerator = functionDecl.generator
 
+		// set declared version
+		VersionedTypesBuilderUtil.setTypeVersion(functionType, functionDecl);
+
 		// set container
 		target.topLevelTypes += functionType
+		
+		// if applicable initialise function as TMigration
+		if (MigrationUtils.isMigrationDefinition(functionDecl)) {
+			initialiseTMigration(functionDecl, functionType as TMigration, preLinkingPhase)
+		}
 	}
 
 	/**
@@ -155,7 +167,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	}
 
 	def private TFunction createAndLinkTFunction(FunctionDefinition functionDef, boolean preLinkingPhase) {
-		val functionType = TypesFactory::eINSTANCE.createTFunction();
+		val functionType = this.createTFunction(functionDef);
 		if(functionDef instanceof FunctionDeclaration) {
 			functionType.exportedName = functionDef.exportedName;
 			functionType.external = functionDef.external;
@@ -169,5 +181,18 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionDef.definedType = functionType
 
 		return functionType
+	}
+	
+	/**
+	 * Creates a new plain instance of {@link TFunction} or of the subtype {@link TMigration}.
+	 * 
+	 * @see N4IDLMigrationTypesBuilder#isMigrationDeclaration
+	 */
+	def private TFunction createTFunction(FunctionDefinition functionDef) {
+		if (MigrationUtils.isMigrationDefinition(functionDef)) {
+			return createTMigration();
+		} else {
+			return TypesFactory::eINSTANCE.createTFunction();
+		}
 	}
 }

@@ -20,10 +20,12 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.ts.types.TVersionable;
-import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.typeRefs.Versionable;
 
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
+import org.eclipse.n4js.ts.types.TVersionable;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -38,7 +40,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public abstract class TVersionableImpl extends ProxyResolvingEObjectImpl implements TVersionable {
+public abstract class TVersionableImpl extends TypeImpl implements TVersionable {
 	/**
 	 * The default value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -164,6 +166,28 @@ public abstract class TVersionableImpl extends ProxyResolvingEObjectImpl impleme
 				return declaredVersion != DECLARED_VERSION_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == Versionable.class) {
+			switch (baseOperationID) {
+				case TypeRefsPackage.VERSIONABLE___GET_VERSION: return TypesPackage.TVERSIONABLE___GET_VERSION;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == Type.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TYPE___GET_VERSION: return TypesPackage.TVERSIONABLE___GET_VERSION;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
 	/**

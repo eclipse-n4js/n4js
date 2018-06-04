@@ -766,6 +766,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createVersionedIdentifierRefAdapter();
 			}
 			@Override
+			public Adapter caseMigrationContextVariable(MigrationContextVariable object) {
+				return createMigrationContextVariableAdapter();
+			}
+			@Override
 			public Adapter caseTypableElement(TypableElement object) {
 				return createTypableElementAdapter();
 			}
@@ -3192,6 +3196,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createVersionedIdentifierRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.MigrationContextVariable <em>Migration Context Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.MigrationContextVariable
+	 * @generated
+	 */
+	public Adapter createMigrationContextVariableAdapter() {
 		return null;
 	}
 

@@ -11,4 +11,4 @@
 
 export external public function start(options: Object=): any+;
 
-/* -*- mode: typescript;-*- */
+

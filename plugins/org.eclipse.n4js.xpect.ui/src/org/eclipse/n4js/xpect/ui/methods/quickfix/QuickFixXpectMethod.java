@@ -30,6 +30,7 @@ import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
@@ -40,18 +41,6 @@ import org.eclipse.n4js.xpect.ui.common.QuickFixTestHelper;
 import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.ILeafNode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
-import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
-import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
 import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
@@ -69,10 +58,23 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.ConsumedIssues;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.IssuesByLine;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.TestingResourceValidator;
+import org.eclipse.xtext.diagnostics.Severity;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /**
  * Provides XPEXT test methods for quick fixes
@@ -368,13 +370,22 @@ public class QuickFixXpectMethod {
 			FileSetupContext fileSetupContext, ResourceTweaker resourceTweaker) {
 
 		try {
-			return xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init,
+			return getXpectN4JSES5TranspilerHelper().doCompileAndExecute(resource, init,
 					fileSetupContext,
 					false,
 					resourceTweaker, GeneratorOption.DEFAULT_OPTIONS, SystemLoaderInfo.SYSTEM_JS);
 		} catch (IOException e) {
 			throw new RuntimeException("Error while compiling script.", e);
 		}
+	}
+
+	/**
+	 * Asking the injector is necessary, since the Xpect methods get also called from N4MF context. see test is
+	 * org.eclipse.n4js.xpect.ui/n4mf/quickfix/
+	 */
+	private XpectN4JSES5TranspilerHelper getXpectN4JSES5TranspilerHelper() {
+		Injector injector = new N4JSInjectorSupplier().get();
+		return injector.getInstance(XpectN4JSES5TranspilerHelper.class);
 	}
 
 	/*-

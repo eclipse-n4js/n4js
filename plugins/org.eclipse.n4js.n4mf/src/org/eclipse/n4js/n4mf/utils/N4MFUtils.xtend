@@ -12,28 +12,28 @@ package org.eclipse.n4js.n4mf.utils
 
 import java.util.List
 
-import static org.eclipse.n4js.n4mf.SourceFragmentType.*
-import org.eclipse.n4js.n4mf.SourceFragmentType
-import org.eclipse.n4js.n4mf.SourceFragment
+import static org.eclipse.n4js.n4mf.SourceContainerType.*
+import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.n4mf.SourceContainerDescription
 
 /**
  */
 class N4MFUtils {
 
-	def static filterGenerationAwareN4JSContainer(List<SourceFragment> sourceFragments) {
-		sourceFragments.filter[isGenerationAwareN4JSContainer(sourceFragmentType)].toList
+	def static filterGenerationAwareN4JSContainer(List<SourceContainerDescription> sourceFragments) {
+		sourceFragments.filter[isGenerationAwareN4JSContainer(it.sourceContainerType)].toList
 	}
 
-	def static isGenerationAwareN4JSContainer(SourceFragmentType sourceFragmentType) {
+	def static isGenerationAwareN4JSContainer(SourceContainerType sourceFragmentType) {
 		sourceFragmentType.isInTypes(#[SOURCE, EXTERNAL, TEST])
 	}
 
 
-	def static isInTypes(SourceFragmentType sourceFragmentType, SourceFragmentType... relevantTypes) {
+	def static isInTypes(SourceContainerType sourceFragmentType, SourceContainerType... relevantTypes) {
 		relevantTypes.contains(sourceFragmentType)
 	}
 
-	def static isNotInTypes(SourceFragmentType sourceFragmentType, SourceFragmentType... relevantTypes) {
+	def static isNotInTypes(SourceContainerType sourceFragmentType, SourceContainerType... relevantTypes) {
 		!relevantTypes.contains(sourceFragmentType)
 	}
 }

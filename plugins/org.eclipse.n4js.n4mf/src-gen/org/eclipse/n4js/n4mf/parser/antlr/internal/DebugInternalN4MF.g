@@ -40,17 +40,50 @@ ruleProjectDescription:
 		RULE_STRING
 	)?
 	    |
-	ruleExtendedRuntimeEnvironment
-	?
+	(
+		'ExtendedRuntimeEnvironment'
+		':'
+		ruleProjectReference
+	)?
 	    |
-	ruleProvidedRuntimeLibraries
-	?
+	(
+		'ProvidedRuntimeLibraries'
+		'{'
+		(
+			ruleProjectReference
+			(
+				','
+				ruleProjectReference
+			)*
+		)?
+		'}'
+	)?
 	    |
-	ruleRequiredRuntimeLibraries
-	?
+	(
+		'RequiredRuntimeLibraries'
+		'{'
+		(
+			ruleProjectReference
+			(
+				','
+				ruleProjectReference
+			)*
+		)?
+		'}'
+	)?
 	    |
-	ruleProjectDependencies
-	?
+	(
+		'ProjectDependencies'
+		'{'
+		(
+			ruleProjectDependency
+			(
+				','
+				ruleProjectDependency
+			)*
+		)?
+		'}'
+	)?
 	    |
 	(
 		'ImplementationId'
@@ -58,14 +91,37 @@ ruleProjectDescription:
 		ruleN4mfIdentifier
 	)?
 	    |
-	ruleImplementedProjects
-	?
+	(
+		'ImplementedProjects'
+		'{'
+		(
+			ruleProjectReference
+			(
+				','
+				ruleProjectReference
+			)*
+		)?
+		'}'
+	)?
 	    |
-	ruleInitModules
-	?
+	(
+		'InitModules'
+		'{'
+		(
+			ruleBootstrapModule
+			(
+				','
+				ruleBootstrapModule
+			)*
+		)?
+		'}'
+	)?
 	    |
-	ruleExecModule
-	?
+	(
+		'ExecModule'
+		':'
+		ruleBootstrapModule
+	)?
 	    |
 	(
 		'Output'
@@ -98,7 +154,7 @@ ruleProjectDescription:
 	(
 		'Sources'
 		'{'
-		ruleSourceFragment
+		ruleSourceContainerDescription
 		+
 		'}'
 	)?
@@ -111,8 +167,18 @@ ruleProjectDescription:
 		'}'
 	)?
 	    |
-	ruleTestedProjects
-	?
+	(
+		'TestedProjects'
+		'{'
+		(
+			ruleProjectDependency
+			(
+				','
+				ruleProjectDependency
+			)*
+		)?
+		'}'
+	)?
 	    |
 	(
 		'ModuleLoader'
@@ -120,104 +186,6 @@ ruleProjectDescription:
 		ruleModuleLoader
 	)?
 	)*
-;
-
-// Rule ExecModule
-ruleExecModule:
-	'ExecModule'
-	':'
-	ruleBootstrapModule
-;
-
-// Rule TestedProjects
-ruleTestedProjects:
-	'TestedProjects'
-	'{'
-	(
-		ruleTestedProject
-		(
-			','
-			ruleTestedProject
-		)*
-	)?
-	'}'
-;
-
-// Rule InitModules
-ruleInitModules:
-	'InitModules'
-	'{'
-	(
-		ruleBootstrapModule
-		(
-			','
-			ruleBootstrapModule
-		)*
-	)?
-	'}'
-;
-
-// Rule ImplementedProjects
-ruleImplementedProjects:
-	'ImplementedProjects'
-	'{'
-	(
-		ruleProjectReference
-		(
-			','
-			ruleProjectReference
-		)*
-	)?
-	'}'
-;
-
-// Rule ProjectDependencies
-ruleProjectDependencies:
-	'ProjectDependencies'
-	'{'
-	(
-		ruleProjectDependency
-		(
-			','
-			ruleProjectDependency
-		)*
-	)?
-	'}'
-;
-
-// Rule ProvidedRuntimeLibraries
-ruleProvidedRuntimeLibraries:
-	'ProvidedRuntimeLibraries'
-	'{'
-	(
-		ruleProvidedRuntimeLibraryDependency
-		(
-			','
-			ruleProvidedRuntimeLibraryDependency
-		)*
-	)?
-	'}'
-;
-
-// Rule RequiredRuntimeLibraries
-ruleRequiredRuntimeLibraries:
-	'RequiredRuntimeLibraries'
-	'{'
-	(
-		ruleRequiredRuntimeLibraryDependency
-		(
-			','
-			ruleRequiredRuntimeLibraryDependency
-		)*
-	)?
-	'}'
-;
-
-// Rule ExtendedRuntimeEnvironment
-ruleExtendedRuntimeEnvironment:
-	'ExtendedRuntimeEnvironment'
-	':'
-	ruleProjectReference
 ;
 
 // Rule DeclaredVersion
@@ -237,9 +205,9 @@ ruleDeclaredVersion:
 	)?
 ;
 
-// Rule SourceFragment
-ruleSourceFragment:
-	ruleSourceFragmentType
+// Rule SourceContainerDescription
+ruleSourceContainerDescription:
+	ruleSourceContainerType
 	'{'
 	RULE_STRING
 	(
@@ -279,37 +247,22 @@ ruleModuleFilterSpecifier:
 	)?
 ;
 
-// Rule ProvidedRuntimeLibraryDependency
-ruleProvidedRuntimeLibraryDependency:
-	ruleSimpleProjectDescription
-;
-
-// Rule RequiredRuntimeLibraryDependency
-ruleRequiredRuntimeLibraryDependency:
-	ruleSimpleProjectDescription
-;
-
-// Rule TestedProject
-ruleTestedProject:
-	ruleSimpleProjectDescription
-;
-
 // Rule ProjectReference
 ruleProjectReference:
-	ruleSimpleProjectDescription
+	ruleProjectIdWithOptionalVendor
 ;
 
 // Rule ProjectDependency
 ruleProjectDependency:
-	ruleSimpleProjectDescription
+	ruleProjectIdWithOptionalVendor
 	ruleVersionConstraint
 	?
 	ruleProjectDependencyScope
 	?
 ;
 
-// Rule SimpleProjectDescription
-ruleSimpleProjectDescription:
+// Rule ProjectIdWithOptionalVendor
+ruleProjectIdWithOptionalVendor:
 	(
 		ruleN4mfIdentifier
 		':'
@@ -403,11 +356,13 @@ ruleProjectType:
 		'runtimeLibrary'
 		    |
 		'test'
+		    |
+		'validation'
 	)
 ;
 
-// Rule SourceFragmentType
-ruleSourceFragmentType:
+// Rule SourceContainerType
+ruleSourceContainerType:
 	(
 		'source'
 		    |

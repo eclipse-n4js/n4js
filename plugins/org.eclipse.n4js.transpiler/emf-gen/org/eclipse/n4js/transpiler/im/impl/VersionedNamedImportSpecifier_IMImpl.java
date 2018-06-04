@@ -20,11 +20,11 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl;
 
-import org.eclipse.n4js.n4idl.versioning.VersionUtils;
-
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
+
+import org.eclipse.n4js.ts.versions.VersionableUtils;
 
 /**
  * <!-- begin-user-doc -->
@@ -99,7 +99,7 @@ public class VersionedNamedImportSpecifier_IMImpl extends NamedImportSpecifierIm
 	 */
 	public boolean isVersionedTypeImport() {
 		return ((this.getImportedTypeVersions().size() > 0) && ((this.getImportedTypeVersions().size() > 1) || 
-			VersionUtils.isTVersionable(this.getImportedTypeVersions().get(0).getOriginalTarget())));
+			VersionableUtils.isTVersionable(this.getImportedTypeVersions().get(0).getOriginalTarget())));
 	}
 
 	/**

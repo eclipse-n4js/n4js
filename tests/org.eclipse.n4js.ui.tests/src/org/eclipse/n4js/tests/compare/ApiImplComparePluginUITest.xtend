@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.n4js.ApiImplCompareTestHelper
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.compare.ProjectCompareHelper
-import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.ui.compare.ProjectCompareTreeHelper
 import org.eclipse.xtext.testing.InjectWith
@@ -86,18 +85,12 @@ class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
 		val clashIdApi = "org.eclipse.clash.api";
 		val IProject pApi = createJSProject(clashIdApi)
 		val IProject pImpl1 = ProjectTestsUtils.createJSProject("org.eclipse.clash.n4js","src","src-gen",[pd|
-			if (null === pd.implementedProjects) {
-				pd.implementedProjects = N4mfFactory.eINSTANCE.createImplementedProjects;
-			}
 			pd.implementationId = "impl.n4js"
-			pd.implementedProjects.implementedProjects += createProjectReference(clashIdApi)
+			pd.implementedProjects += createProjectReference(clashIdApi)
 		])
 		val IProject pImpl2 = ProjectTestsUtils.createJSProject("org.eclipse.clash.ios","src","src-gen",[pd|
-			if (null === pd.implementedProjects) {
-				pd.implementedProjects = N4mfFactory.eINSTANCE.createImplementedProjects;
-			}
 			pd.implementationId = "impl.n4js" // n.b.: same implementation id!
-			pd.implementedProjects.implementedProjects += createProjectReference(clashIdApi)
+			pd.implementedProjects += createProjectReference(clashIdApi)
 		])
 		pApi.configureProjectWithXtext
 		pImpl1.configureProjectWithXtext

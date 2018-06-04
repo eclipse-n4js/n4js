@@ -25,4 +25,4 @@ export external public function totalmem(): number;
 export external public function type(): string;
 export external public function uptime(): number;
 
-/* -*- mode: typescript;-*- */
+

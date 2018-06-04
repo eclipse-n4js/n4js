@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import { ModuleTest } from "es-module-tests/ModuleTest"
 
+import {ModuleTest} from "es-module-tests/ModuleTest";
 /**
  * N4JS transpiled run files being ide-runner executed via SystemJS.
  */

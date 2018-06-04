@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
 
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
 export public interface ITestReporter {
     protected spy: TestSpy;
     public async register(): any;

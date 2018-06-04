@@ -56,4 +56,4 @@ export external public const win32: ~Object with {
     resolve: {function(...path: string): string};
 };
 
-/* -*- mode: typescript;-*- */
+

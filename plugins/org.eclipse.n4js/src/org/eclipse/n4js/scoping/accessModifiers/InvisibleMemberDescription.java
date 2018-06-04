@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.scoping.accessModifiers;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.IssueUserDataKeys.VIS_ILLEGAL_MEMBER_ACCESS;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * This description wraps an invisible member.
@@ -44,12 +43,13 @@ public class InvisibleMemberDescription extends AbstractDescriptionWithError {
 	public InvisibleMemberDescription(IEObjectDescription delegate, String accessorSuggestion) {
 		super(delegate);
 		this.accessModifierSuggestion = accessorSuggestion;
-
 	}
 
 	@Override
 	public String getMessage() {
-		String memberTypeName = getMemberTypeName(getEObjectOrProxy());
+		String memberTypeName = getMemberTypeName(getEObjectOrProxy(), false); // Flag structFieldInitMode always false,
+		// here, because error message refers not to the member available in the type but to the missing member accessed
+		// by the source code.
 		String memberName = getName().getLastSegment();
 		return IssueCodes.getMessageForVIS_ILLEGAL_MEMBER_ACCESS(memberTypeName, memberName);
 	}
