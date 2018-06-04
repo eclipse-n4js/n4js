@@ -1,4 +1,4 @@
-/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
 
     Workspace {
         JavaProject "client" {
