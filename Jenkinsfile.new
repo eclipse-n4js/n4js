@@ -44,12 +44,12 @@ pipeline {
         stage('fs browse') {
             steps {
                 script {
-                		sh "chmod 777 /var/run/docker.sock"
-                		sh "docker --help"
                         sh """\
                                 pwd
                                 git status
                                 ls -la
+                                chmod 777 /var/run/docker.sock
+                                docker --help
                            """
                 }
             }
