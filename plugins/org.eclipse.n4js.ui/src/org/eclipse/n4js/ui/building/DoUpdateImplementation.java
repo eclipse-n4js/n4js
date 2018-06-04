@@ -30,7 +30,6 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.builder.MonitorBasedCancelIndicator;
 import org.eclipse.xtext.builder.builderState.BuilderStateUtil;
-import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
 import org.eclipse.xtext.builder.clustering.CurrentDescriptions;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
 import org.eclipse.xtext.builder.impl.BuildData;
@@ -203,7 +202,7 @@ class DoUpdateImplementation {
 					if (resource != null) {
 						resourceSet.getResources().remove(resource);
 					}
-					newDelta = createDelta(changedURI, newDelta);
+					newDelta = createRemoveDelta(changedURI);
 				}
 			}
 			// long elapsedMillis = resourceWatch.elapsed(TimeUnit.MILLISECONDS);
@@ -258,20 +257,14 @@ class DoUpdateImplementation {
 
 	/**
 	 * @param uri
-	 * @param newDelta
 	 * @return
 	 */
-	private Delta createDelta(URI uri, Delta newDelta) {
+	private Delta createRemoveDelta(URI uri) {
 		final IResourceDescription oldDescription = state.getResourceDescription(uri);
-		final IResourceDescription newDesc = newState.getResourceDescription(uri);
-		ResourceDescriptionImpl indexReadyDescription = newDesc != null
-				? BuilderStateUtil.create(newDesc) : null;
-		if ((oldDescription != null || indexReadyDescription != null)
-				&& oldDescription != indexReadyDescription) {
-			newDelta = new DefaultResourceDescriptionDelta(oldDescription,
-					indexReadyDescription);
+		if (oldDescription != null) {
+			return new DefaultResourceDescriptionDelta(oldDescription, null);
 		}
-		return newDelta;
+		return null;
 	}
 
 	private boolean processNewDelta(Delta newDelta) {
@@ -318,7 +311,7 @@ class DoUpdateImplementation {
 								try {
 									newDelta = resolveLinks(resourceURI, casted);
 								} catch (WrappedException ex) {
-									newDelta = createDelta(resourceURI, newDelta);
+									newDelta = createRemoveDelta(resourceURI);
 								}
 								if (newDelta != null && processNewDelta(newDelta)) {
 									changedDeltas.add(newDelta);

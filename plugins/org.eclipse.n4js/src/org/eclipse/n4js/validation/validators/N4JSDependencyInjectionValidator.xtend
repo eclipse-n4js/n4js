@@ -994,11 +994,6 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		// note: AllSuperTypesCollector ignores implicit super types and polyfills, but that is ok, because
 		// we assume that members of implicit super types and polyfilled members won't have an @Inject
 		// TODO use an 'all super types' iterator instead of collector
-
-		// mmews: error printout for: N4JS-Inhouse-CI/job/IDE-2852-build/44
-		println("# requiresInjection");
-		println("# resource: " + type.eResource.URI.toString);
-		println("# type: " + type.name);
 		AllSuperTypesCollector.collect(type)
 		.exists[t|
 			t.ownedMembers.exists[m|
