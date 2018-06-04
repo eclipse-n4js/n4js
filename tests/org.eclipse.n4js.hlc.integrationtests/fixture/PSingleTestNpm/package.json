@@ -1,6 +1,6 @@
 {
 	"name": "PSingleTestNpm",
 	"dependencies": {
-		"n4js-node": "canary"
+		"n4js-node": "test"
 	}
 }

@@ -131,7 +131,7 @@ public class N4jscliTest extends AbstractN4jscJarTest {
 
 		// Step 2: Call npm install n4js-cli in the project 'PSingleTestNpm'
 		final ProcessResult result2 = commandFactory
-				.createInstallPackageCommand(pathToProject(PROJECT_NAME).toFile(), "n4js-cli@canary", false)
+				.createInstallPackageCommand(pathToProject(PROJECT_NAME).toFile(), "n4js-cli@test", false)
 				.execute();
 		assertEquals("Calling npm install n4js-cli@canary failed", 0, result2.getExitCode());
 

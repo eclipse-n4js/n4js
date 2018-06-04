@@ -14,14 +14,20 @@ set -e
 cd `dirname $0`
 cd `pwd -P`
 
-# "http://localhost:4873"
-NPM_REGISTRY=$1
-
 echo "We are currently in $PWD"
 
 # Login as a test user
 # npm-cli-login -u testuser -p testpass -e test@pass.com -r $NPM_REGISTRY
 
 # Publish using canary version
-echo "Publishing to $NPM_REGISTRY"
-lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --force-publish --exact --canary --yes --sort
+if [ -z $NPM_REGISTRY ]; then
+	echo "Publishing using .npmrc configuration";
+	lerna publish --loglevel silly --skip-git --force-publish --exact --canary --yes --sort
+else
+	echo "Publishing to $NPM_REGISTRY";
+	# We publish the npms to the test channel 
+	lerna publish --force --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --force-publish --exact --canary --yes --sort --npm-tag=test
+fi
+
+
+
