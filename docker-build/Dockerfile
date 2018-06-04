@@ -1,6 +1,7 @@
 FROM openjdk:8u151-jdk
 
 USER root
+RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
 
 LABEL version="0.1.0" \
       description="Build n4js with Maven. Includes xvfb, node." \
