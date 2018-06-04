@@ -18,7 +18,7 @@
 					File "OverrideAccess1.n4js" {}
 				}
 			}
-			File "manifest.n4mf" { from="./manifest1.n4mf"}
+			File "package.json" { from="./package1.json"}
 		}
 		JavaProject "Project2" {
 			SrcFolder {
@@ -26,7 +26,7 @@
 					ThisFile {}
 				}
 			}
-			File "manifest.n4mf" { from="./manifest2.n4mf"}
+			File "package.json" { from="./package2.json"}
 		}
 	}
 

@@ -16,13 +16,13 @@
 //   	 	Folder "src" {
 //   	 		 File "A.n4js" { from="A_uses_a01.n4js.xt"}
 //   	 	}
-//   	 	File "manifest.n4mf" { from="manifest_uses_a01.n4mf" }
+//   	 	File "package.json" { from="package_uses_a01.json" }
 //   	 }
    	 Project "P_RTL_A00" {
    	 	Folder "src" {
    	 		 File "ObjectExtension1.n4jsd" {}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_rtl_a00.n4mf" }
+   	 	File "package.json" { from="package_rtl_a00.json" }
    	 }
    	 Project "P_RTL_A01" {
    	 	Folder "src" {Folder "g" {
@@ -30,7 +30,7 @@
    	 		 // File "WrongObjectExtension2.n4jsd" { }
    	 		 ThisFile { }
    	 	}}
-   	 	File "manifest.n4mf" { from="manifest_rtl_a01_wrong.n4mf.xt" }
+   	 	File "package.json" { from="package_rtl_a01_wrong.json.xt" }
    	 }
    }
 

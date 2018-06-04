@@ -22,7 +22,7 @@
 				}
 			}
 			Folder "src-gen" {}
-			File "manifest.n4mf" { from="../../../manifest_nv.n4mf" }
+			File "package.json" { from="../../../package.json" }
 		}
 	}
    END_SETUP

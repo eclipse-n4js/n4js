@@ -1,0 +1,17 @@
+{
+	"name": "N4JSXpectTests",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "runtimeLibrary",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		"sources": {
+			"source": [
+				"src"
+			],
+			"external": [
+				"src-external"
+			]
+		}
+	}
+}

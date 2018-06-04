@@ -19,7 +19,7 @@
    	 	Folder "src" {
    	 		ThisFile "TestModule.n4js" { from="TestModule_PolyfillModule.n4js.xt"}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_getter_setter.n4mf" }
+   	 	File "package.json" { from="package_getter_setter.json" }
    	 }
    }
 
