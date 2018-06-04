@@ -80,7 +80,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Validates the source container section of N4JS package.json files */
-	@CheckProperty(propertyPath = "n4js." + ProjectDescriptionHelper.PROP__SOURCES, mandatory = true)
+	@CheckProperty(propertyPath = "n4js." + ProjectDescriptionHelper.PROP__SOURCES, mandatory = false)
 	public void checkSourceContainers(JSONValue sourceContainerValue) {
 		// obtain source-container-related content of the section and validate its structure
 		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers(

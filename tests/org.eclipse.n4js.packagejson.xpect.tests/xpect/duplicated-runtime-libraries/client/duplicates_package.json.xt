@@ -1,0 +1,41 @@
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest
+
+    Workspace {
+        JavaProject "client" {
+            File "package.json" {from="../client/duplicates_package.json.xt"}
+        }
+        JavaProject "libA" {
+            File "package.json" {from="../libA/package.json"}
+        }
+        JavaProject "libB" {
+            File "package.json" {from="../libB/package.json"}
+        }
+        JavaProject "libC" {
+            File "package.json" {from="../libC/package.json"}
+        }
+    }
+
+    END_SETUP
+ */
+ 
+{
+	"name": "client",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		"output": "src-gen",
+		"requiredRuntimeLibraries": [
+			//XPECT noerrors --> "first occurance"
+			"libA",
+			//XPECT noerrors --> "first occurance"
+			"MyVendorID:libB",
+			// XPECT errors -->"Duplicate project reference MyVendorID:libA." at "MyVendorID:libA"
+			"MyVendorID:libA",
+			// XPECT errors -->"Duplicate project reference MyVendorID:libB." at "libB"
+			"libB",
+			"MyVendorID:libC"
+		]
+	}
+}

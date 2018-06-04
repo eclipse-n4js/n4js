@@ -75,6 +75,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	@Inject
 	private IssueUtil issueUtil;
 
+	/** Helper to create and modify package.json project description files */
 	@Inject
 	protected PackageJSONTestHelper projectDescriptionTestHelper;
 
