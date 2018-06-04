@@ -66,8 +66,6 @@ pipeline {
                         ].join(',')
 
                         sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
-                        sh 'echo "docker found in" which docker'
-                        sh 'which docker'
                     }
                 }
             }

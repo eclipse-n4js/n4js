@@ -1,5 +1,7 @@
 FROM openjdk:8u151-jdk
 
+USER root
+
 LABEL version="0.1.0" \
       description="Build n4js with Maven. Includes xvfb, node." \
       maintainer="N4JS Team <n4js-dev@eclipse.org>"
