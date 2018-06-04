@@ -142,5 +142,5 @@ RUN add-apt-repository \
 RUN apt-get update && \
   apt-get install -y docker-ce
 
- CMD ["service docker start"]
+ CMD [/usr/bin/dockerd]
  
