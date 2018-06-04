@@ -123,8 +123,8 @@ class Version implements Comparable<Version> {
 		if (versionString !== null) {
 			val split = versionString.split(".");
 			if (split.length > place && split.get(place).length() > 0) {
-				val major = Integer.parseInt(split.get(place));
-				return major
+				val versionNumber = Integer.parseInt(split.get(place));
+				return versionNumber
 			}
 		}
 		return 0;
