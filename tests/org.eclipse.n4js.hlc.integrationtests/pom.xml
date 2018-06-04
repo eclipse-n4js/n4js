@@ -202,6 +202,8 @@ Contributors:
 							<configuration>
 								<target>
 									<exec executable="docker" spawn="false">
+										<arg value="-v"/>
+										<arg value="/var/run/docker.sock:/var/run/docker.sock"/>
 										<arg value="rm"/>
 										<arg value="-f"/>
 										<arg value="verdaccio"/>
