@@ -16,8 +16,6 @@ pipeline {
             args '-v n4js-m2-repository:/usr/share/maven/ref/repository/ -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
             label 'mesos-xlarge'
-            echo "docker found in"
-			which docker
         }
     }
     options {
@@ -68,6 +66,8 @@ pipeline {
                         ].join(',')
 
                         sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
+                        sh 'echo "docker found in" which docker'
+                        sh 'which docker'
                     }
                 }
             }
