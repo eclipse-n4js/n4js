@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -95,6 +96,7 @@ import com.google.inject.Inject;
  * information), and thus it must be able to resolve this first element. This is transparently done in the custom
  * contents class {@link ModuleAwareContentsList}.
  */
+@SuppressWarnings("restriction")
 public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource {
 	private final static Logger LOGGER = Logger.getLogger(N4JSResource.class);
 
@@ -523,7 +525,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
-	@SuppressWarnings("restriction")
 	private void superLoad(Map<?, ?> options) throws IOException {
 		super.load(options);
 	}
@@ -827,7 +828,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * Specialized to allow reconciliation of the TModule. We need to handle invocations of
 	 * {@link #installDerivedState(boolean)} where the contents list does already contain two elements.
 	 */
-	@SuppressWarnings("restriction")
 	@Override
 	public void installDerivedState(boolean preIndexingPhase) {
 		if (!isLoaded)
@@ -963,14 +963,20 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					// obtain target EObject from targetResource in the usual way
 					// (might load targetResource from disk if it wasn't loaded from index above)
 					targetObject = resSet.getEObject(targetUri, true);
-				} catch (Exception fnf) {
-					if (fnf.getCause() instanceof FileNotFoundException) {
-						// This happens for instance when an external library was removed,
+				} catch (Exception exc) {
+					if (exc.getCause() instanceof FileNotFoundException) {
+						// This happens when an external library was removed,
 						// but another external library depends on the removed one.
-						LOGGER.warn("File not found during proxy resolution", fnf);
+						LOGGER.warn("File not found during proxy resolution", exc);
 						return proxy;
 					}
-					throw fnf;
+					if (exc.getCause() instanceof ResourceException) {
+						// This happens when a workspace project was removed,
+						// but another project depends on the removed one.
+						// not return proxy, because this exception will be catched
+						// in DoUpdateImplementation#doUpdateCluster() to clear the Description of this resource.
+					}
+					throw exc;
 				}
 				// special handling #2:
 				// if targetResource exists, make sure it is post-processed *iff* this resource is post-processed
