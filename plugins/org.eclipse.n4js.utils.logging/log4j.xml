@@ -55,7 +55,8 @@ Contributors:
 	</logger>
 
 	<root>
-		<level value="WARN" />
+		<priority value="ALL" />
 		<appender-ref ref="default" />
+		<appender-ref ref="fileAppender" />
 	</root>
 </log4j:configuration>
