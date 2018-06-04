@@ -13,7 +13,7 @@ pipeline {
         dockerfile {
             dir 'docker-build/'
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
-            args '--group-add docker -v n4js-m2-repository:/usr/share/maven/ref/repository/ -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
+            args 'n4js-m2-repository:/usr/share/maven/ref/repository/ -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
             label 'mesos-xlarge'
         }
@@ -44,6 +44,7 @@ pipeline {
         stage('fs browse') {
             steps {
                 script {
+                		sh "chmod 777 /var/run/docker.sock"
                 		sh "docker --help"
                         sh """\
                                 pwd
