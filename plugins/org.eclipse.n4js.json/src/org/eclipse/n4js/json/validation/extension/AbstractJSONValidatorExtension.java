@@ -39,13 +39,14 @@ import com.google.common.collect.Multimap;
  * Subclasses may further customize their scope by overriding {@link #isResponsible(Map, EObject)} so that they only
  * apply to certain resources.
  */
-public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator implements IJSONValidatorExtension {
+public abstract class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
+		implements IJSONValidatorExtension {
 
 	@Override
 	public final void validateJSON(JSONDocument document, DiagnosticChain diagnosticChain) {
 		// use a new empty context for validator extension
 		Map<Object, Object> context = new HashMap<>();
-		
+
 		// early exit, if this validator is not responsible for this particular document
 		if (!this.isResponsible(context, document)) {
 			return;
@@ -85,11 +86,6 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 			final String keyPath = annotation.propertyPath();
 			final Collection<JSONValue> values = documentValues.get(keyPath);
 
-			// if the property is mandatory, check for its presence first
-			if (annotation.mandatory()) {
-				checkIsPresent(document, documentValues, keyPath);
-			}
-
 			if (!isValidCheckKeyMethod(method)) {
 				throw new IllegalStateException("Not a valid @CheckJSONKey validation method " + method + "."
 						+ " Only methods with a single JSONValue parameter are considered valid @CheckJSONKey methods.");
@@ -104,7 +100,8 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 						throw new IllegalStateException("Failed to invoke @CheckJSONKey method " + method + ": " + e);
 					} catch (InvocationTargetException e) {
 						e.getTargetException().printStackTrace();
-						throw new IllegalStateException("Failed to invoke @CheckJSONKey method " + method + ": " + e.getTargetException());
+						throw new IllegalStateException(
+								"Failed to invoke @CheckJSONKey method " + method + ": " + e.getTargetException());
 					}
 				}
 			}
@@ -153,17 +150,19 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 	/**
 	 * Checks that in the given JSON {@code documentValues}, a value has been set for the given property path.
 	 *
-	 * Adds an {@code IssueCodes#JSON_MISSING_PROPERTY} issue to {@code document} otherwise.
+	 * Adds an {@code IssueCodes#JSON_MISSING_PROPERTY} issue to {@code issueTarget} otherwise.
 	 */
-	protected void checkIsPresent(JSONDocument document, Multimap<String, JSONValue> documentValues,
+	protected void checkIsPresent(EObject issueTarget, Multimap<String, JSONValue> documentValues,
 			String propertyPath) {
 		if (!documentValues.containsKey(propertyPath)) {
-			addIssue(JSONIssueCodes.getMessageForJSON_MISSING_PROPERTY(propertyPath), document,
+			addIssue(JSONIssueCodes.getMessageForJSON_MISSING_PROPERTY(propertyPath), issueTarget,
 					JSONIssueCodes.JSON_MISSING_PROPERTY);
 		}
 	}
 
-	/** Similar to super method but with an adjusted issue severity computation using {@link #getJSONSeverity(String)}. */
+	/**
+	 * Similar to super method but with an adjusted issue severity computation using {@link #getJSONSeverity(String)}.
+	 */
 	@Override
 	protected void addIssue(String message, EObject source, EStructuralFeature feature, int index, String issueCode,
 			String... issueData) {
@@ -192,9 +191,8 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 	 * First considers severities as defined by {@link JSONIssueCodes}. If this is not successful, this method performs
 	 * the common severity computation via {@link #getIssueSeverities(Map, EObject)}.
 	 * 
-	 * In extensions that extend this class, this will lead to a behavior in which first the
-	 * JSON bundle severities are considered and then the issue severities of the bundle that
-	 * provides an extension.
+	 * In extensions that extend this class, this will lead to a behavior in which first the JSON bundle severities are
+	 * considered and then the issue severities of the bundle that provides an extension.
 	 */
 	private Severity getJSONSeverity(String issueCode) {
 		final Severity jsonSeverity = JSONIssueCodes.getDefaultSeverity(issueCode);
@@ -233,7 +231,8 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 		}
 		if (!valueClass.isInstance(value)) {
 			addIssue(JSONIssueCodes.getMessageForJSON_EXPECTED_DIFFERENT_VALUE_TYPE(getJSONValueDescription(valueClass),
-					getJSONValueDescription(value), locationClause), value, JSONIssueCodes.JSON_EXPECTED_DIFFERENT_VALUE_TYPE);
+					getJSONValueDescription(value), locationClause), value,
+					JSONIssueCodes.JSON_EXPECTED_DIFFERENT_VALUE_TYPE);
 			return false;
 		}
 		return true;
@@ -248,7 +247,7 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 	/**
 	 * Collects all key-path-value associations that can be extracted from the given JSON {@code document}.
 	 */
-	private Multimap<String, JSONValue> collectDocumentValues(JSONDocument document) {
+	protected Multimap<String, JSONValue> collectDocumentValues(JSONDocument document) {
 		if (document == null || document.getContent() == null) {
 			return ImmutableMultimap.<String, JSONValue> of(); // empty map
 		}
@@ -259,7 +258,21 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 		}
 
 		return collectDocumentValues((JSONObject) documentContent,
-				LinkedHashMultimap.<String, JSONValue> create(), "");
+				LinkedHashMultimap.<String, JSONValue> create(), "", -1);
+	}
+
+	/**
+	 * Collect all name-value associations that can be extracted from the given {@link JSONObject}.
+	 * 
+	 * Does not recursively traverse any nested objects. 
+	 */
+	protected Multimap<String, JSONValue> collectObjectValues(JSONObject object) {
+		if (object == null) {
+			return ImmutableMultimap.<String, JSONValue> of(); // empty map
+		}
+
+		return collectDocumentValues(object,
+				LinkedHashMultimap.<String, JSONValue> create(), "", 1);
 	}
 
 	/**
@@ -267,7 +280,7 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 	 * {@code documentValues}.
 	 *
 	 * Key-paths are represented in terms of concatenated strings, separated by a {@code .} character (e.g.
-	 * nested.name.value => JSONValue).
+	 * "nested.name.value" => JSONValue).
 	 *
 	 * @param object
 	 *            The {@link JSONObject} to collect the values form.
@@ -275,9 +288,18 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 	 *            The map to store the values to.
 	 * @param prefix
 	 *            The prefix to use for key-paths.
+	 * @param depth
+	 *            The depth up to which the given {@link JSONObject} should be traversed. If {@code -1} no depth limit
+	 *            is assumed.
 	 */
 	private Multimap<String, JSONValue> collectDocumentValues(JSONObject object,
-			Multimap<String, JSONValue> documentValues, String prefix) {
+			Multimap<String, JSONValue> documentValues, String prefix, int depth) {
+		// If maximum depth has been reached, do not traverse object further.
+		// For negative depths this will always evaluate to false -> no depth limit
+		if (depth == 0) {
+			return documentValues;
+		}
+
 		for (NameValuePair pair : object.getNameValuePairs()) {
 			final String pairName = pair.getName();
 			final String name = prefix.isEmpty() ? pairName : prefix + "." + pairName;
@@ -285,7 +307,8 @@ public class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 			documentValues.put(name, value);
 
 			if (value instanceof JSONObject) {
-				collectDocumentValues((JSONObject) value, documentValues, name);
+				// recursively collect all values from pair value
+				collectDocumentValues((JSONObject) value, documentValues, name, depth - 1);
 			}
 		}
 		return documentValues;

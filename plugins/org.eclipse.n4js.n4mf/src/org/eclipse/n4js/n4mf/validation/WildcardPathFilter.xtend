@@ -19,7 +19,7 @@ import java.util.regex.Pattern
 
 /**
  */
-// methods have to static as this class is used in N4JSModel that is used in the Xtext SharedStateModule
+// methods have to be static as this class is used in N4JSModel that is used in the Xtext SharedStateModule
 class WildcardPathFilter {
 	private static final String MATCHING_FILE_EXT = ".*js*"
 	private static final List<String> supportedFileExtension = #[".js", ".n4js", ".n4jsd", ".n4js.xt", ".n4jsd.xt", ".js.xt"]

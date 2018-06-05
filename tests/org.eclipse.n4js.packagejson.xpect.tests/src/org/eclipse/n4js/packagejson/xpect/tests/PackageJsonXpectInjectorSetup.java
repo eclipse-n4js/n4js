@@ -2,6 +2,7 @@ package org.eclipse.n4js.packagejson.xpect.tests;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -22,53 +23,70 @@ import org.eclipse.xtext.validation.EValidatorRegistrar;
 import com.google.inject.Injector;
 
 /**
- * Custom injector setup for package.json X!PECT tests that makes sure that 
- * both the JSON and the N4JS injectors are initialized and the N4JS package.json
- * validation extension is registered properly. 
+ * Custom injector setup for package.json X!PECT tests that makes sure that both
+ * the JSON and the N4JS injectors are initialized and the N4JS package.json
+ * validation extension is registered properly.
  */
 @XpectSetupFactory
 @XpectReplace(InjectorSetup.class)
 public class PackageJsonXpectInjectorSetup extends InjectorSetup {
+
 	public PackageJsonXpectInjectorSetup(XpectJavaModel xjm, XpectFile file) {
 		super(xjm, file);
 	}
 
 	@Creates
 	public Injector createInjector() {
+		// if the Eclipse Platform Runtime is available, there is no need for a custom injector setup
+		if (Platform.isRunning()) {
+			throw new IllegalStateException("Detected use of the PackageJsonXpectInjectorSetup although the Eclipse Platform is running."
+					+ " Do not use this injector setup for Plug-In UI Tests.");
+		}
+
 		// make sure N4JS injector is initialized
 		final Injector n4jsInjector = N4JSStandaloneSetup.doSetup();
 		// obtain JSON injector using the super method
 		final Injector jsonInjector = super.createInjector();
-		
+
 		// obtain N4JS-specific package.json validator
-		final AbstractJSONValidatorExtension validatorExtension = n4jsInjector.getInstance(PackageJsonValidatorExtension.class);
+		final AbstractJSONValidatorExtension validatorExtension = n4jsInjector
+				.getInstance(PackageJsonValidatorExtension.class);
 		// obtain JSON validation extension registry
-		final JSONValidatorExtensionRegistry extensionRegistry = jsonInjector.getInstance(JSONValidatorExtensionRegistry.class);
-		
-		// X!PECTs injector initialization causes an invalid state of the EValidator registry 
-		// in which the registered validators use a different injector than the rest of the
-		// language infrastructure (see https://github.com/eclipse/Xpect/issues/233). Therefore, 
-		// at this point we clear the validator registry and re-initialize it to restore a consistent state.
+		final JSONValidatorExtensionRegistry extensionRegistry = jsonInjector
+				.getInstance(JSONValidatorExtensionRegistry.class);
+
+		// X!PECTs injector initialization causes an invalid state of the EValidator
+		// registry
+		// in which the registered validators use a different injector than the rest of
+		// the
+		// language infrastructure (see https://github.com/eclipse/Xpect/issues/233).
+		// Therefore,
+		// at this point we clear the validator registry and re-initialize it to restore
+		// a consistent state.
 		final Registry validatorRegistry = EValidator.Registry.INSTANCE;
 		validatorRegistry.remove(JSONPackage.eINSTANCE);
-		
-		// register the correct instance of the generic JSON validator as sole validator for the JSON package
+
+		// register the correct instance of the generic JSON validator as sole validator
+		// for the JSON package
 		final JSONValidator jsonValidator = jsonInjector.getInstance(JSONValidator.class);
 		jsonValidator.register(jsonInjector.getInstance(EValidatorRegistrar.class));
-		
+
 		// finally, manually register the N4JS package.json validation extension
 		extensionRegistry.register(validatorExtension);
-	
+
 		// TODO re-think this approach
-		// In order for the FileBasedWorkspace to correctly detect the test data as valid N4JS projects,
-		// (cf. FileBasedWorkspace#tryFindProjectRecursivelyByManifest) we must explicitly register the 
-		// JSONFactory as resource factory for '*.xt' as otherwise, EMF will fall-back to its XMI parser 
+		// In order for the FileBasedWorkspace to correctly detect the test data as
+		// valid N4JS projects,
+		// (cf. FileBasedWorkspace#tryFindProjectRecursivelyByManifest) we must
+		// explicitly register the
+		// JSONFactory as resource factory for '*.xt' as otherwise, EMF will fall-back
+		// to its XMI parser
 		// for 'package.json.xt' resources.
 		Map<String, Object> factoryMap = Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap();
-		
+
 		Object jsonFactory = factoryMap.get("json");
 		factoryMap.put("xt", jsonFactory);
-		
+
 		return jsonInjector;
 	}
 }
