@@ -46,6 +46,7 @@ import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.libraries.PackageJson;
+import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -230,7 +231,7 @@ public class LibraryManager {
 						String name = pDep.getProjectId();
 						String version = NO_VERSION;
 						if (pDep.getVersionConstraint() != null) {
-							version = pDep.getVersionConstraint().toString();
+							version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
 						}
 						dependencies.put(name, version);
 					}
