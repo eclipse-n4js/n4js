@@ -973,8 +973,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					if (exc.getCause() instanceof ResourceException) {
 						// This happens when a workspace project was removed,
 						// but another project depends on the removed one.
-						// not return proxy, because this exception will be catched
-						// in DoUpdateImplementation#doUpdateCluster() to clear the Description of this resource.
 						LOGGER.warn("Resource not found during proxy resolution", exc);
 						return proxy;
 					}
