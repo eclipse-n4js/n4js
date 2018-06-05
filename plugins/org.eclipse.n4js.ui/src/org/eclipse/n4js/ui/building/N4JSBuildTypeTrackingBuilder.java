@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.building;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +62,11 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 
 	@Inject
 	private void injectN4MFProjectDependencyStrategy(ISharedStateContributionRegistry registry) {
-		this.projectDependencyStrategy = registry.getSingleContributedInstance(N4MFProjectDependencyStrategy.class);
+		try {
+			this.projectDependencyStrategy = registry.getSingleContributedInstance(N4MFProjectDependencyStrategy.class);
+		} catch (RuntimeException e) {
+			// happens if the contribution is not part of the loaded bundles, e.g. in types specific tests
+		}
 	}
 
 	@Override
@@ -81,7 +86,9 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			 *
 			 * Dynamic references have been superseded in Eclipse Photon anyways :(
 			 */
-			List<IProject> dependencies = projectDependencyStrategy.getProjectDependencies(getProject());
+			List<IProject> dependencies = projectDependencyStrategy != null
+					? projectDependencyStrategy.getProjectDependencies(getProject())
+					: Collections.emptyList();
 			if (dependencies.isEmpty()) {
 				return result;
 			}
