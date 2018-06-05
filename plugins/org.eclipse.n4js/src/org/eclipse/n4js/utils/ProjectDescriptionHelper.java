@@ -13,6 +13,7 @@ package org.eclipse.n4js.utils;
 import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
@@ -53,13 +55,28 @@ import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.n4mf.VersionConstraint;
-import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+/*
+ * NOTE:
+ *
+ * The following properties were verified to be unused in stdlib, fabelhaft, and OPR:
+ * - ProjectReference#declaredVendorId
+ * - ProjectDependency#versionConstraint (except in ProjectDescription#projectDependencies!!)
+ * - ProjectDependency#declaredScope
+ * - BootstrapModule#sourcePath
+ * - libraryPathsRaw
+ * - resourcePathsRaw
+ *
+ * Exceptions:
+ * resourcePathsRaw used in: n4js-chrome
+ *
+ */
 
 /**
  * Load a {@link ProjectDescription} from disk. For the moment, both package.json and the legacy manifest.n4mf are
@@ -91,10 +108,6 @@ public class ProjectDescriptionHelper {
 	public static final String PROP__VENDOR_NAME = "vendorName";
 	/** Key of package.json property "output". */
 	public static final String PROP__OUTPUT = "output";
-	/** Key of package.json property "libraries". */
-	public static final String PROP__LIBRARIES = "libraries";
-	/** Key of package.json property "resources". */
-	public static final String PROP__RESOURCES = "resources";
 	/** Key of package.json property "sources". */
 	public static final String PROP__SOURCES = "sources";
 	/** Key of package.json property "moduleFilters". */
@@ -142,6 +155,7 @@ public class ProjectDescriptionHelper {
 		if (pdFromPackageJSON != null) {
 			return pdFromPackageJSON;
 		}
+		System.out.println("USING MANIFEST.N4MF: " + location);
 		return loadManifestAtLocation(location);
 		// ProjectDescription fromPackageJSON = loadPackageJSONAtLocation(location);
 		// ProjectDescription fromManifest = loadManifestAtLocation(location);
@@ -273,12 +287,6 @@ public class ProjectDescriptionHelper {
 			case PROP__OUTPUT:
 				target.setOutputPath(asStringOrNull(value));
 				break;
-			case PROP__LIBRARIES:
-				// TODO libraries (probably obsolete, corresponding tests were removed)
-				break;
-			case PROP__RESOURCES:
-				// TODO resourcePathsRaw (probably obsolete)
-				break;
 			case PROP__SOURCES:
 				convertSourceContainers(target, asNameValuePairsOrEmpty(value));
 				break;
@@ -290,7 +298,7 @@ public class ProjectDescriptionHelper {
 				target.setMainModule(asStringOrNull(value));
 				break;
 			case PROP__TESTED_PROJECTS:
-				// TODO
+				target.getTestedProjects().addAll(toProjectDependencies(asProjectReferencesInArrayOrEmpty(value)));
 				break;
 			case PROP__IMPLEMENTATION_ID:
 				target.setImplementationId(asStringOrNull(value));
@@ -311,10 +319,10 @@ public class ProjectDescriptionHelper {
 				target.setModuleLoader(parseModuleLoader(asStringOrNull(value)));
 				break;
 			case PROP__INIT_MODULES:
-				// TODO
+				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
 				break;
 			case PROP__EXEC_MODULE:
-				// TODO
+				target.setExecModule(asBootstrapModuleOrNull(value));
 				break;
 			}
 		}
@@ -329,7 +337,6 @@ public class ProjectDescriptionHelper {
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(name);
 				dep.setVersionConstraint(versionConstraint);
-				// FIXME Scope !!!!!!!!!!!!!!
 				target.getProjectDependencies().add(dep);
 			}
 
@@ -338,8 +345,7 @@ public class ProjectDescriptionHelper {
 			if (name != null && versionConstraint == null && "*".equals(asStringOrNull(value))) {
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(name);
-				// do not set a version constraint
-				// FIXME Scope !!!!!!!!!!!!!!
+				// do not set a version constraint!
 				target.getProjectDependencies().add(dep);
 			}
 		}
@@ -409,11 +415,19 @@ public class ProjectDescriptionHelper {
 	}
 
 	private DeclaredVersion parseVersion(String versionStr) {
-		return ManifestValuesParsingUtil.parseDeclaredVersion(versionStr).getAST();
+		DeclaredVersion result = ProjectDescriptionUtils.parseVersion(versionStr);
+		if (result == null) {
+			System.err.println("WARNING: invalid or unsupported version: " + versionStr);
+		}
+		return result;
 	}
 
 	private VersionConstraint parseVersionConstraint(String versionConstraintStr) {
-		return ManifestValuesParsingUtil.parseVersionConstraint(versionConstraintStr).getAST();
+		VersionConstraint result = ProjectDescriptionUtils.parseVersionRange(versionConstraintStr);
+		if (result == null) {
+			System.err.println("WARNING: invalid or unsupported version constraint: " + versionConstraintStr);
+		}
+		return result;
 	}
 
 	private ProjectType parseProjectType(String projectTypeStr) {
@@ -478,7 +492,6 @@ public class ProjectDescriptionHelper {
 		if (valueStr != null) {
 			final ProjectReference result = N4mfFactory.eINSTANCE.createProjectReference();
 			result.setProjectId(valueStr);
-			// TODO do we need support for 'declaredVendorId' here?
 			return result;
 		}
 		return null;
@@ -491,6 +504,24 @@ public class ProjectDescriptionHelper {
 				.collect(Collectors.toList());
 	}
 
+	private BootstrapModule asBootstrapModuleOrNull(JSONValue jsonValue) {
+		String valueStr = asStringOrNull(jsonValue);
+		if (valueStr != null) {
+			final BootstrapModule result = N4mfFactory.eINSTANCE.createBootstrapModule();
+			result.setModuleSpecifierWithWildcard(valueStr);
+			return result;
+		}
+		return null;
+	}
+
+	private List<BootstrapModule> asBootstrapModulesInArrayOrEmpty(JSONValue jsonValue) {
+		return asArrayElementsOrEmpty(jsonValue).stream()
+				.map(this::asBootstrapModuleOrNull)
+				.filter(boomod -> boomod != null)
+				.collect(Collectors.toList());
+	}
+
+	@SuppressWarnings("unused")
 	private List<String> asStringLiteralsInArrayOrEmpty(JSONValue jsonValue) {
 		return asArrayElementsOrEmpty(jsonValue).stream()
 				.map(v -> (v instanceof JSONStringLiteral) ? ((JSONStringLiteral) v).getValue() : null)
@@ -555,12 +586,26 @@ public class ProjectDescriptionHelper {
 
 	}
 
+	private List<ProjectDependency> toProjectDependencies(Collection<? extends ProjectReference> prefs) {
+		if (prefs == null) {
+			return null;
+		}
+		List<ProjectDependency> result = new ArrayList<>(prefs.size());
+		for (ProjectReference pref : prefs) {
+			ProjectDependency pdep = N4mfFactory.eINSTANCE.createProjectDependency();
+			pdep.setProjectId(pref.getProjectId());
+			result.add(pdep);
+		}
+		return result;
+	}
+
 	// ******************************************************************************************
 	// TODO remove the following method/class when removing legacy support for N4MF
 
 	/**
 	 * May return target or source unchanged or target with (in-place) changes.
 	 */
+	@SuppressWarnings("unused")
 	private ProjectDescription mergeProjectDescriptions(ProjectDescription target, ProjectDescription source) {
 		if (source == null) {
 			return target; // covers case that both are null
