@@ -44,13 +44,15 @@ pipeline {
         stage('fs browse') {
             steps {
                 script {
-                        sh """\
-                                pwd
-                                git status
-                                ls -la
-                                which docker
-                                docker --help
-                           """
+                    pwd
+                    git status
+                    ls -la
+                    echo "Before executing which docker"
+                    which docker
+                    echo "After executing which docker"
+                    ls -la $(which docker)
+                    docker --help
+
                 }
             }
         }
