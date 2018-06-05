@@ -49,7 +49,7 @@ pipeline {
                                 git status
                                 ls -la
                                 which docker
-                                ls -l $(which docker)
+                                ls -l "$(which docker)"
                                 docker --help
                            """
                 }
