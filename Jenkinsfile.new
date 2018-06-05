@@ -47,12 +47,10 @@ pipeline {
                     pwd
                     git status
                     ls -la
-                    echo "Before executing which docker"
+                    echo 'Before executing which docker'
                     which docker
-                    echo "After executing which docker"
-
+                    echo 'After executing which docker'
                     docker --help
-
                 }
             }
         }
