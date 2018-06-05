@@ -49,7 +49,7 @@ pipeline {
                             git status
                             ls -la
                             echo \"Before executing which docker\"
-                    		which docker
+                    		ls -la /usr/bin/docker
                     		echo \"After executing which docker\"
                     		docker --help
                        """
