@@ -50,7 +50,7 @@ pipeline {
                     echo "Before executing which docker"
                     which docker
                     echo "After executing which docker"
-                    ls -la $(which docker)
+                    #ls -la "$(which docker)"
                     docker --help
 
                 }
