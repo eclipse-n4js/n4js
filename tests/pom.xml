@@ -132,7 +132,6 @@ Contributors:
 	<properties>
 		<!-- jacoco (ECLEmma), code coverage -->
 		<jacoco-maven-plugin.version>0.7.1.201405082137</jacoco-maven-plugin.version>
-		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 		<ant-contrib.version>1.0b3</ant-contrib.version>
 		<ant-nodeps.version>1.8.1</ant-nodeps.version>
 
