@@ -234,6 +234,7 @@ public class HeadlessHelper {
 
 	private static Stream<File> getProjectStream(List<File> absProjectRoots) {
 		return absProjectRoots.stream()
+				.filter(f -> f.exists())
 				// find all contained folders
 				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
 				// only those with package.json file
