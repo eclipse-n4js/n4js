@@ -11,7 +11,7 @@ VOLUME /workspace
 WORKDIR /workspace
 
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
-CMD ["mvn"]
+#CMD ["mvn"]
 
 #
 # Maven installation:

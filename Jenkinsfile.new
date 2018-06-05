@@ -48,7 +48,8 @@ pipeline {
                                 pwd
                                 git status
                                 ls -la
-                                chmod 777 /var/run/docker.sock
+                                which docker
+                                ls -l $(which docker)
                                 docker --help
                            """
                 }
