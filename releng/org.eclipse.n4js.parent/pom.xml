@@ -16,6 +16,8 @@ Contributors:
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<modelVersion>4.0.0</modelVersion>
+	<!-- we shouldn't use this field, but mvn versions plugin is STILL using it,
+	see https://github.com/mojohaus/versions-maven-plugin/issues/48 -->
 	<prerequisites>
 		<maven>${maven-version}</maven>
 	</prerequisites>
@@ -71,7 +73,7 @@ Contributors:
 		<maven-failsafe-plugin.version>2.21.1</maven-failsafe-plugin.version>
 		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
 		<maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
 		<maven-pmd-plugin.version>3.9.0</maven-pmd-plugin.version>
 		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
