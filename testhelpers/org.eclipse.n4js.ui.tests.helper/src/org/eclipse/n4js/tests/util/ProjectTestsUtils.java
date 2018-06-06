@@ -21,6 +21,7 @@ import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSubFo
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
@@ -125,25 +126,31 @@ public class ProjectTestsUtils {
 
 		IProgressMonitor monitor = new NullProgressMonitor();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-		IProjectDescription newProjectDescription = workspace.newProjectDescription(projectName);
 		IProject project = workspace.getRoot().getProject(projectName);
-		project.create(newProjectDescription, monitor);
-		project.open(monitor);
-		if (!project.getLocation().toFile().exists()) {
-			throw new IllegalArgumentException("test project correctly created in " + project.getLocation());
-		}
 
-		IOverwriteQuery overwriteQuery = new IOverwriteQuery() {
-			@Override
-			public String queryOverwrite(String file) {
-				return ALL;
+		workspace.run((mon) -> {
+			IProjectDescription newProjectDescription = workspace.newProjectDescription(projectName);
+			project.create(newProjectDescription, mon);
+			project.open(mon);
+			if (!project.getLocation().toFile().exists()) {
+				throw new IllegalArgumentException("test project correctly created in " + project.getLocation());
 			}
-		};
-		ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectSourceFolder,
-				FileSystemStructureProvider.INSTANCE, overwriteQuery);
-		importOperation.setCreateContainerStructure(false);
-		importOperation.run(monitor);
+
+			IOverwriteQuery overwriteQuery = new IOverwriteQuery() {
+				@Override
+				public String queryOverwrite(String file) {
+					return ALL;
+				}
+			};
+			ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectSourceFolder,
+					FileSystemStructureProvider.INSTANCE, overwriteQuery);
+			importOperation.setCreateContainerStructure(false);
+			try {
+				importOperation.run(mon);
+			} catch (InvocationTargetException | InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}, monitor);
 
 		return project;
 	}
