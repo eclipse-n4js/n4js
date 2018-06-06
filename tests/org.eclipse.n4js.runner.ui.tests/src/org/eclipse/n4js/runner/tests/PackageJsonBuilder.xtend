@@ -20,11 +20,11 @@ import static com.google.common.base.Preconditions.checkNotNull
 import static org.eclipse.n4js.n4mf.ProjectType.LIBRARY
 
 /**
- * Convenient builder for creating N4JS manifest file content.
+ * Convenient builder for creating N4JS package.json file content.
  */
-class ManifestBuilder {
+class PackageJsonBuilder {
 
-	@Inject extension ManifestContentProvider
+	@Inject extension PackageJsonContentProvider
 
 	ProjectType type
 	Collection<String> providedRLs
@@ -43,9 +43,11 @@ class ManifestBuilder {
 	}
 
 	/**
-	 * Builds the N4JS manifest with the given project name.
+	 * Builds the N4JS package.json for a project with the given name.
+	 * 
 	 * @param projectId the name of the project. Cannot be {@code null}.
-	 * @return the N4JS manifest content as a string.
+	 * 
+	 * @return the N4JS package.json content as a string.
 	 */
 	def build(String projectId) {
 		checkNotNull(projectId).getContent(type, fromNullable(extendedRE), projectDependencies, providedRLs, requiredRLs, fromNullable(implementationId), implementedProjects)
@@ -121,9 +123,8 @@ class ManifestBuilder {
 	}
 
 
-
 	override toString() {
-		build('!!! This is just a preview of the N4JS manifest file !!!')
+		build('!!! This is just a preview of the N4JS package.json file !!!')
 	}
 
 }

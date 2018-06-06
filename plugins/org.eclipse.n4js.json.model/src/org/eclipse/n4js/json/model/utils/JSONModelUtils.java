@@ -230,7 +230,7 @@ public class JSONModelUtils {
 	 *
 	 * See {@link #createArray(Collection)} and {@link #createStringLiteral(String)}.
 	 */
-	public static JSONArray createStringArray(Collection<String> values) {
+	public static JSONArray createStringArray(Iterable<String> values) {
 		JSONArray result = JSONFactory.eINSTANCE.createJSONArray();
 		values.forEach(v -> result.getElements().add(createStringLiteral(v)));
 		return result;

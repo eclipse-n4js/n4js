@@ -17,37 +17,37 @@ import com.google.inject.Singleton
 import static org.eclipse.n4js.n4mf.ProjectType.*
 
 /**
- * Class for providing N4JS manifest builder instances.
+ * Class for providing N4JS package.json builder instances.
  */
 @Singleton
-class ManifestBuilderProvider implements Provider<ManifestBuilder> {
+class PackageJsonBuilderProvider implements Provider<PackageJsonBuilder> {
 
 	@Inject
-	Provider<ManifestBuilder> delegate
+	Provider<PackageJsonBuilder> delegate
 
 	override get() {
 		delegate.get
 	}
 
 	/**
-	 * Returns with a new N4JS manifest builder instance which is configured for system project type by default.
-	 * @return the new manifest builder instance for default system project type.
+	 * Returns with a new N4JS package.json builder instance which is configured for system project type by default.
+	 * @return the new package.json builder instance for default system project type.
 	 */
 	def newBuilder() {
 		get
 	}
 
 	/**
-	 * Returns with a new N4JS manifest builder with runtime environment project type.
-	 * @return the new manifest builder for runtime environment project type.
+	 * Returns with a new N4JS package.json builder with runtime environment project type.
+	 * @return the new package.json builder for runtime environment project type.
 	 */
 	def newBuilderForRE() {
 		get.withType(RUNTIME_ENVIRONMENT)
 	}
 
 	/**
-	 * Returns with a new N4JS manifest builder with runtime library project type.
-	 * @return the new manifest builder for runtime library project type.
+	 * Returns with a new N4JS package.json builder with runtime library project type.
+	 * @return the new package.json builder for runtime library project type.
 	 */
 	def newBuilderForRL() {
 		get.withType(RUNTIME_LIBRARY)
