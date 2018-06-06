@@ -143,4 +143,5 @@ RUN add-apt-repository \
 RUN apt-get update && \
   apt-get install -y docker-ce
 
- 
+# TODO: Remove this
+ENV NPM_TOKEN abc
