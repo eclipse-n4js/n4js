@@ -1,9 +1,6 @@
 {
-	"name": "N4JSXSpecTest",
+	"name": "TestProject",
 	"version": "0.0.1-SNAPSHOT",
-	"dependencies": {
-		"react": "*"
-	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",
