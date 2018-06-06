@@ -122,6 +122,15 @@ public final class N4JSGlobals {
 	 * The name of an NPM's package json file.
 	 */
 	public static final String PACKAGE_JSON = "package.json";
+	/**
+	 * The name of the N4JS-specific json file used for marking sub-folders of the "node_modules" folder that were
+	 * installed directly, instead of only indirectly by "npm install".
+	 */
+	public static final String PACKAGE_N4JS_JSON = "package-n4js.json";
+	/**
+	 * Name of the package.json fragment file from the "n4jsd" type definitions repository.
+	 */
+	public static final String PACKAGE_FRAGMENT_JSON = "package-fragment.json";
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.

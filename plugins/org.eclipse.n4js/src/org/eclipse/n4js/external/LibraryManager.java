@@ -16,7 +16,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Uninstall;
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +44,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -451,19 +449,9 @@ public class LibraryManager {
 			}
 
 			File packageRoot = new File(uri);
-			PackageJson packageJson = npmPackageToProjectAdapter.getPackageJson(packageRoot);
-			// this remains valid for now, since manifest adaptation is still enabled
-			File manifest = new File(packageRoot, N4MF_MANIFEST);
-			if (!manifest.isFile()) {
-				String message = "Cannot locate N4JS manifest for '" + packageName + "' at '" + manifest + "'.";
-				IStatus error = statusHelper.createError(message);
-				logger.logError(error);
-			}
 
 			IStatus status = npmPackageToProjectAdapter.addTypeDefinitions(
 					packageRoot,
-					packageJson,
-					manifest,
 					definitionsFolder);
 
 			if (!status.isOK()) {

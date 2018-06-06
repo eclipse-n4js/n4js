@@ -295,6 +295,8 @@ public class ProjectDescriptionHelper {
 				break;
 			case PROP__MAIN_MODULE:
 				// TODO use official "main" property + default must be "index.js"
+				// for resolving the path in the official "main" property, see following method on master:
+				// org.eclipse.n4js.external.NpmPackageToProjectAdapter.computeMainModule(File)
 				target.setMainModule(asStringOrNull(value));
 				break;
 			case PROP__TESTED_PROJECTS:
