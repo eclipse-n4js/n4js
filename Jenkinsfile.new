@@ -64,7 +64,7 @@ pipeline {
                             'execute-plugin-tests',
                             'execute-plugin-ui-tests'
                         ].join(',')
-                        sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots versions:display-plugin-updates  ${options}"
+
                         sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
