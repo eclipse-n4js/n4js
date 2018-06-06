@@ -58,7 +58,7 @@ class NonResolvingImportScope extends ImportScope {
 						resolvedQualifiedName = resolvedName;
 					else if (!resolvedQualifiedName.equals(resolvedName)) {
 						// change is here
-						if (result.get(0).getEObjectURI().equals(resolvedElement.getEObjectOrProxy())) {
+						if (result.get(0).getEObjectURI().equals(resolvedElement.getEObjectURI())) {
 							return emptyList();
 						}
 						// change is above
