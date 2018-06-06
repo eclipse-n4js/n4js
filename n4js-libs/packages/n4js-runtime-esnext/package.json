@@ -1,5 +1,6 @@
 {
   "name": "n4js-runtime-esnext",
+  "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -17,5 +18,19 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
-  }
+  },
+  "n4js": {
+    "projectType": "runtimeLibrary",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src/n4js"
+      ]
+    },
+    "moduleLoader": "n4js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

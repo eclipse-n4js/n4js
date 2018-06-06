@@ -18,14 +18,14 @@
    	 	Folder "src" {
 			 File "Imported.n4js" {}
    	 	}
-   	 	File "manifest.n4mf" { from="IDEBUG_0261_manifest.n4mf" }
+   	 	File "package.json" { from="IDEBUG_0261_package.json" }
    	 }
 
    	 Project "IDEBUG-261_B" {
    	 	Folder "src" {
    	 		 ThisFile {}
    	 	}
-   	 	File "manifest.n4mf" { from="IDEBUG_0261_manifest_B.n4mf" }
+   	 	File "package.json" { from="IDEBUG_0261_package_B.json" }
    	 }
    }
    END_SETUP

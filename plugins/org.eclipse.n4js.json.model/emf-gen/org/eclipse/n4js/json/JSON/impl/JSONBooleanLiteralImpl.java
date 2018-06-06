@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.json.JSON.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -157,14 +159,24 @@ public class JSONBooleanLiteralImpl extends JSONValueImpl implements JSONBoolean
 	 * @generated
 	 */
 	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case JSONPackage.JSON_BOOLEAN_LITERAL___TO_STRING:
+				return toString();
+		}
+		return super.eInvoke(operationID, arguments);
+	}
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (booleanValue: ");
-		result.append(booleanValue);
-		result.append(')');
-		return result.toString();
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		boolean _isBooleanValue = this.isBooleanValue();
+		String _plus = ("JSONBooleanLiteral(" + Boolean.valueOf(_isBooleanValue));
+		return (_plus + ")");
 	}
 
 } //JSONBooleanLiteralImpl

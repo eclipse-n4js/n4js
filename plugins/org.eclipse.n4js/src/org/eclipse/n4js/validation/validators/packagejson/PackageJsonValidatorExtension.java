@@ -11,7 +11,9 @@
 package org.eclipse.n4js.validation.validators.packagejson;
 
 import java.io.File;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
@@ -37,6 +40,7 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.validation.Check;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
@@ -64,8 +68,58 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				.equals(IN4JSProject.PACKAGE_JSON);
 	}
 
+	/**
+	 * Validates the initial structure of a package.json {@link JSONDocument}.
+	 *
+	 * This includes checking for the existence of mandatory properties (e.g. name, version).
+	 */
+	@Check
+	public void checkDocument(JSONDocument document) {
+		final JSONValue rootValue = document.getContent();
+		// early exit for broken AST
+		if (rootValue == null) {
+			return;
+		}
+
+		// make sure the document root is an object
+		if (!checkIsType(rootValue, JSONPackage.Literals.JSON_OBJECT,
+				" as document root of a package.json file.")) {
+			return;
+		}
+
+		final JSONObject root = (JSONObject) rootValue;
+		final Multimap<String, JSONValue> documentValues = collectObjectValues(root);
+
+		// check for mandatory top-level properties
+		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__NAME);
+		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__VERSION);
+		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__N4JS);
+	}
+
+	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS)
+	public void checkN4JSSection(JSONValue n4jsSection) {
+		// make sure n4js section is an object
+		if (!checkIsType(n4jsSection, JSONPackage.Literals.JSON_OBJECT,
+				" as package.json n4js section.")) {
+			return;
+		}
+
+		final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
+
+		// check for mandatory n4js-section properties
+		checkIsPresent(n4jsSection, n4jsValues, ProjectDescriptionHelper.PROP__VENDOR_ID);
+		checkIsPresent(n4jsSection, n4jsValues, ProjectDescriptionHelper.PROP__PROJECT_TYPE);
+
+		// special error message in case of a missing output property
+		if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
+			addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
+					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
+		}
+	}
+
 	/** Validates the project/package name. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__NAME, mandatory = true)
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__NAME)
 	public void checkName(JSONValue projectNameValue) {
 		// first check for the type of the name value
 		if (!checkIsType(projectNameValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package name")) {
@@ -80,7 +134,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Validates the source container section of N4JS package.json files */
-	@CheckProperty(propertyPath = "n4js." + ProjectDescriptionHelper.PROP__SOURCES, mandatory = true)
+	@CheckProperty(propertyPath = "n4js." + ProjectDescriptionHelper.PROP__SOURCES)
 	public void checkSourceContainers(JSONValue sourceContainerValue) {
 		// obtain source-container-related content of the section and validate its structure
 		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers(
@@ -89,13 +143,9 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// check each source container sub-section (e.g. sources, external, etc.)
 		for (Entry<SourceContainerType, List<JSONStringLiteral>> subSection : sourceContainers
 				.entries()) {
-			// check each specified source folder to actually exist
+			// check each specified source path to actually exist
 			for (JSONStringLiteral containerLiteral : subSection.getValue()) {
-				// check path for existence
-				if (!pathExists(containerLiteral)) {
-					addIssue(IssueCodes.getMessageForPKGJ_EXISTING_SOURCE_PATH(containerLiteral.getValue()),
-							containerLiteral, IssueCodes.PKGJ_EXISTING_SOURCE_PATH);
-				}
+				checkSourceContainerLiteral(containerLiteral);
 			}
 		}
 
@@ -109,30 +159,55 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		for (List<JSONStringLiteral> duplicateGroup : containerDuplicates) {
 			// indicates whether the duplicates are spread across multiple container types (e.g. external, sources)
 			final String normalizedPath = FileUtils.normalize(duplicateGroup.get(0).getValue());
-			final Set<SourceContainerType> types = duplicateGroup.stream()
-					.map(d -> getSourceContainerType(d))
-					.collect(Collectors.toSet());
-
-			// Construct in-clause (e.g. "in external, test"). Use empty clause, if all duplicates
-			// originate from the same source container type
-			final String inClause = types.size() == 1 ? ""
-					: " in " + types.stream().map(t -> t.getLiteral().toLowerCase())
-							.collect(Collectors.joining(", "));
 
 			for (JSONStringLiteral duplicate : duplicateGroup) {
+				final String inClause = createInSourceContainerTypeClause(duplicate, duplicateGroup);
 				addIssue(IssueCodes.getMessageForPKGJ_DUPLICATE_SOURCE_CONTAINER(normalizedPath, inClause),
 						duplicate, IssueCodes.PKGJ_DUPLICATE_SOURCE_CONTAINER);
 			}
 		}
 	}
 
+	/** Checks a single source container literal for validity. */
+	private boolean checkSourceContainerLiteral(JSONStringLiteral containerLiteral) {
+		return holdsValidRelativePath(containerLiteral) && // check path for validity
+				holdsExistingDirectoryPath(containerLiteral); // check directory for existence
+	}
+
 	/**
-	 * Returns {@code true} iff the given project-relative path as given by the string value of the given
-	 * {@code pathLiteral} exists on the file system.
-	 *
-	 * Returns {@code false} otherwise.
+	 * Checks whether the given path literal represents a valid (relative) file-system path and adds a
+	 * {@link IssueCodes#PKGJ_INVALID_PATH} or {@link IssueCodes#PKGJ_INVALID_ABSOLUTE_PATH} otherwise.
 	 */
-	private boolean pathExists(JSONStringLiteral pathLiteral) {
+	private boolean holdsValidRelativePath(JSONStringLiteral pathLiteral) {
+		try {
+			// this will throw for invalid paths
+			final Path path = Paths.get(pathLiteral.getValue());
+			// check for path being relative
+			if (path.isAbsolute()) {
+				addIssue(IssueCodes.getMessageForPKGJ_INVALID_ABSOLUTE_PATH(pathLiteral.getValue()),
+						pathLiteral, IssueCodes.PKGJ_INVALID_ABSOLUTE_PATH);
+				return false;
+			}
+			// check for the use of the '*' character (e.g. invalid wildcards)
+			if (pathLiteral.getValue().contains("*")) {
+				addIssue(IssueCodes.getMessageForPKGJ_INVALID_PATH(pathLiteral.getValue()),
+						pathLiteral, IssueCodes.PKGJ_INVALID_PATH);
+				return false;
+			}
+			return true;
+		} catch (InvalidPathException e) {
+			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PATH(pathLiteral.getValue()),
+					pathLiteral, IssueCodes.PKGJ_INVALID_PATH);
+			return false;
+		}
+	}
+
+	/**
+	 * Checks whether the given {@code pathLiteral} represents an existing relative path to a directory in the project.
+	 *
+	 * Returns {@code false} and adds issues to {@code pathLiteral} otherwise.
+	 */
+	private boolean holdsExistingDirectoryPath(JSONStringLiteral pathLiteral) {
 		final URI resourceURI = pathLiteral.eResource().getURI();
 		final Path absoluteProjectPath = getAbsoluteProjectPath(resourceURI);
 
@@ -142,7 +217,47 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 
 		final String relativePath = pathLiteral.getValue();
-		return new File(absoluteProjectPath.toString() + "/" + relativePath).exists();
+		final File file = new File(absoluteProjectPath.toString() + "/" + relativePath);
+
+		if (!file.exists()) {
+			addIssue(IssueCodes.getMessageForPKGJ_EXISTING_SOURCE_PATH(relativePath),
+					pathLiteral, IssueCodes.PKGJ_EXISTING_SOURCE_PATH);
+			return false;
+		}
+
+		if (!file.isDirectory()) {
+			addIssue(IssueCodes.getMessageForPKGJ_EXPECTED_DIRECTORY_PATH(relativePath),
+					pathLiteral, IssueCodes.PKGJ_EXPECTED_DIRECTORY_PATH);
+			return false;
+		}
+
+		return true;
+
+	}
+
+	/**
+	 * Constructs in-clause (e.g. "in external, test") for sections in which a source container path can be declared.
+	 *
+	 * If the source container type of {@code issueTarget} is the only section (e.g. external) in which
+	 * {@code duplicates} appear, the in-clause is empty. Otherwise the in-clause lists all source container types for
+	 * which duplicates have been declared.
+	 */
+	private String createInSourceContainerTypeClause(JSONStringLiteral issueTarget,
+			List<JSONStringLiteral> duplicates) {
+		final SourceContainerType targetContainerType = getSourceContainerType(issueTarget);
+		final Set<SourceContainerType> otherTypes = duplicates.stream()
+				.filter(d -> d != issueTarget)
+				.map(d -> getSourceContainerType(d))
+				.collect(Collectors.toSet());
+
+		// if issueTarget's type is the only type for which there have been declared duplicate paths
+		if (otherTypes.size() == 1 && otherTypes.iterator().next() == targetContainerType) {
+			return ""; // do not use an in-clause
+		}
+
+		// otherwise list all other types for which the path of issueTarget has been declared as well
+		return " in " + otherTypes.stream().map(t -> t.getLiteral().toLowerCase())
+				.collect(Collectors.joining(", "));
 	}
 
 	/**

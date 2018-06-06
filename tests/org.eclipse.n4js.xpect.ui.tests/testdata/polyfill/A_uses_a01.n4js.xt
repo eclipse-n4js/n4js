@@ -16,19 +16,19 @@
    	 	Folder "src" {
    	 		 ThisFile {}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_uses_a01.n4mf" }
+   	 	File "package.json" { from="package_uses_a01.json" }
    	 }
    	 Project "P_RTL_A00" {
    	 	Folder "src" {
    	 		 File "ObjectExtension1.n4jsd" {}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_rtl_a00.n4mf" }
+   	 	File "package.json" { from="package_rtl_a00.json" }
    	 }
    	 Project "P_RTL_A01" {
    	 	Folder "src" {
    	 		 File "ObjectExtension2.n4jsd" {}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_rtl_a01.n4mf" }
+   	 	File "package.json" { from="package_rtl_a01.json" }
    	 }
    }
 

@@ -27,7 +27,4 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 public @interface CheckProperty {
 	/** The key path in the JSON document that is checked by this method. */
 	public String propertyPath();
-
-	/** Specifies whether {@code propertyPath} is considered mandatory in a document. */
-	public boolean mandatory() default false;
 }

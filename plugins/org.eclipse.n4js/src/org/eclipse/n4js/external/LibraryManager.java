@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
+import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -51,6 +52,7 @@ import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Strings;
@@ -227,7 +229,7 @@ public class LibraryManager {
 						String name = pDep.getProjectId();
 						String version = NO_VERSION;
 						if (pDep.getVersionConstraint() != null) {
-							version = pDep.getVersionConstraint().toString();
+							version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
 						}
 						dependencies.put(name, version);
 					}
@@ -273,19 +275,21 @@ public class LibraryManager {
 
 		for (Map.Entry<String, String> reqestedNpm : installRequested.entrySet()) {
 			String name = reqestedNpm.getKey();
-			String versionRequested = Strings.emptyIfNull(reqestedNpm.getValue());
+			String versionRequestedString = reqestedNpm.getValue();
+			Version versionRequested = new Version(versionRequestedString);
 			if (installedNpms.containsKey(name)) {
 				org.eclipse.emf.common.util.URI location = installedNpms.get(name).getKey();
-				String versionInstalled = installedNpms.get(name).getValue();
-				if (versionRequested.equals(Strings.emptyIfNull(versionInstalled))) {
+				String versionInstalledString = Strings.emptyIfNull(installedNpms.get(name).getValue());
+				Version versionInstalled = new Version(versionInstalledString);
+				if (versionInstalledString.isEmpty() || versionRequested.compareTo(versionInstalled) == 0) {
 					// already installed
 				} else {
 					// wrong version installed -> update (uninstall, then install)
-					requestedChanges.add(new LibraryChange(Uninstall, location, name, versionInstalled));
-					requestedChanges.add(new LibraryChange(Install, location, name, versionRequested));
+					requestedChanges.add(new LibraryChange(Uninstall, location, name, versionInstalledString));
+					requestedChanges.add(new LibraryChange(Install, location, name, versionRequestedString));
 				}
 			} else {
-				requestedChanges.add(new LibraryChange(Install, null, name, versionRequested));
+				requestedChanges.add(new LibraryChange(Install, null, name, versionRequestedString));
 			}
 		}
 

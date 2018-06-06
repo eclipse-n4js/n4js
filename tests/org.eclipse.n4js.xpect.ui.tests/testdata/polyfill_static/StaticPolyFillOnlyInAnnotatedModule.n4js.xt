@@ -18,7 +18,7 @@
 	   	 		ThisFile {  }
 	   	 	}
 	   	}
-   	 	File "manifest.n4mf" { from="manifest_uses_b00.n4mf" }
+   	 	File "package.json" { from="package_uses_b00.json" }
    	 }
    }
 

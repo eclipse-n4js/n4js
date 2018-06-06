@@ -1,0 +1,18 @@
+{
+	"name": "project.using.external.from.n4jsx",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"express": "4.15.3"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JSX Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}
