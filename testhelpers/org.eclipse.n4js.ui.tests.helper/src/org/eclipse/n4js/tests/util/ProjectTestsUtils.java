@@ -372,7 +372,7 @@ public class ProjectTestsUtils {
 		boolean foundJob = false;
 		do {
 			try {
-				List<String> foundJobs = listJobsRunnuingWaiting();
+				List<String> foundJobs = listJobsRunningWaiting();
 				if (!foundJobs.isEmpty()) {
 					foundJob = true;
 					// Job.getJobManager().join(null, null);
@@ -391,7 +391,7 @@ public class ProjectTestsUtils {
 		}
 	}
 
-	private static List<String> listJobsRunnuingWaiting() {
+	private static List<String> listJobsRunningWaiting() {
 		return from(newArrayList(getJobManager().find(null)))
 				.filter(job -> job.getState() != Job.SLEEPING || job.getState() != Job.NONE)
 				.transform(job -> " - " + job.getName() + " : " + job.getState())
