@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.tests.repeat;
 
-import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.junit.runners.model.Statement;
 
 /**
- *
+ * Encapsulates the logic for tests that should be executed in a tight loop.
  */
 class RepeatableTestStatement extends Statement {
 	private final int times;
@@ -28,7 +27,7 @@ class RepeatableTestStatement extends Statement {
 	@Override
 	public void evaluate() throws Throwable {
 		for (int i = 1; i <= times; i++) {
-			RaceDetectionHelper.log("Run %d of %d\n", i, times);
+			System.out.printf("Run %d of %d\n", i, times);
 			statement.evaluate();
 		}
 	}

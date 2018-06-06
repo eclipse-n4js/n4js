@@ -33,11 +33,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.n4js.tests.repeat.RepeatedTestRule;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
@@ -46,6 +48,7 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -103,6 +106,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	 */
 	@Before
 	public void setupWorkspace() throws Exception {
+		RaceDetectionHelper.log(">>> SETUP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
 
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -132,6 +137,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		assertTrue("Error while saving external library preference changes.", result.isOK());
 		waitForAutoBuild();
 		super.tearDown();
+		RaceDetectionHelper.log(">>> TEARDOWN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 
 	/***/
@@ -189,12 +195,22 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		// @formatter:on
 	}
 
+	/**
+	 * Test rule to enable repeat tests.
+	 */
+	@Rule
+	public RepeatedTestRule rule = new RepeatedTestRule();
+
 	/***/
 	@Test
+	// @RepeatTest(times = 1000)
 	public void runClientWithTwoClosedWorkspaceProjectsWithDirectDependency() throws CoreException {
+		RaceDetectionHelper.log(">>> START >>>>>>>>>>>>>>>>>>>");
 
 		for (final String libProjectName : newArrayList(PB, PC)) {
+			RaceDetectionHelper.log("About to close " + libProjectName);
 			getProjectByName(libProjectName).close(new NullProgressMonitor());
+			RaceDetectionHelper.log("Did close " + libProjectName);
 			waitForAutoBuildCheckIndexRigid();
 		}
 
@@ -206,13 +222,13 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 				"External C<init>" + NL +
 				"Workspace D<init>" + NL,
 				result.getStdOut());
+		RaceDetectionHelper.log(">>> END >>>>>>>>>>>>>>>>>>>");
 		// @formatter:on
 	}
 
 	/***/
 	@Test
 	public void runClientWithTwoClosedWorkspaceProjectsThenReopenThem() throws CoreException {
-
 		for (final String libProjectName : newArrayList(PB, PD)) {
 			getProjectByName(libProjectName).close(new NullProgressMonitor());
 			waitForAutoBuildCheckIndexRigid();
@@ -350,6 +366,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 
 	@Override
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
+		waitForNotReallyBuildButHousekeepingJobs();
 		// simulate auto-build loop by synchronized and fast
 		for (int i = 0; i < 10; i++) {
 			IResourcesSetupUtil.waitForBuild();
