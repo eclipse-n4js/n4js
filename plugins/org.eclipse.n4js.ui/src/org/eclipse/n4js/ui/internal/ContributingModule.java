@@ -49,6 +49,7 @@ import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
 import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
@@ -142,6 +143,7 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalIndexUpdater.class);
 		binder.bind(ExternalLibraryBuildJobProvider.class);
 		binder.bind(ExternalLibraryBuilder.class);
+		binder.bind(ExternalLibraryBuildQueue.class);
 		binder.bind(BuildOrderComputer.class);
 		binder.bind(NpmLogger.class);
 		binder.bind(OutputStreamProvider.class).to(ConsoleOutputStreamProvider.class);
@@ -158,6 +160,7 @@ public class ContributingModule implements Module {
 		binder.bind(XtextResourceSet.class);
 		binder.bind(IEagerContribution.class).to(ProjectDescriptionLoadListener.class);
 		binder.bind(ProjectDescriptionLoadListener.Strategy.class).to(N4MFProjectDependencyStrategy.class);
+		binder.bind(N4MFProjectDependencyStrategy.class);
 		binder.bind(IResourceSetInitializer.class).to(ScopeInitializer.class);
 		binder.bind(ClassLoader.class).toInstance(getClass().getClassLoader());
 
@@ -198,6 +201,5 @@ public class ContributingModule implements Module {
 		binder.bind(NpmrcBinary.class);
 
 		binder.bind(TypesKeywordProvider.class);
-
 	}
 }

@@ -45,12 +45,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.BuildData;
@@ -420,6 +422,7 @@ public class ExternalLibraryBuilder {
 		 *            monitor for the operation.
 		 */
 		private void run(ExternalLibraryBuilder helper, N4JSEclipseProject n4EclPrj, IProgressMonitor monitor) {
+			RaceDetectionHelper.log("%s: external project ", name(), n4EclPrj.getProjectId());
 
 			monitor.setTaskName("Collecting resource for '" + n4EclPrj.getProjectId() + "'...");
 			SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
@@ -510,5 +513,29 @@ public class ExternalLibraryBuilder {
 		}
 
 		builderState.clean(toBeRemoved, monitor);
+	}
+
+	/**
+	 * Cleans and builds all the projects encapsulated in the given task.
+	 *
+	 * @param task
+	 *            the task to work on
+	 * @param monitor
+	 *            the progress monitor.
+	 */
+	public void process(Task task, IProgressMonitor monitor) {
+		if (task.isEmpty()) {
+			return;
+		}
+		monitor.beginTask("Building external libraries...", IProgressMonitor.UNKNOWN);
+		try {
+			clean(task.toClean.toArray(new N4JSExternalProject[0]), monitor);
+			build(task.toBuild.toArray(new N4JSExternalProject[0]), monitor);
+		} catch (RuntimeException | Error e) {
+			// re-add the projects if there was an exception while building the stuff (e.g. operation cancelled)
+			task.reschedule();
+			throw e;
+		}
+
 	}
 }

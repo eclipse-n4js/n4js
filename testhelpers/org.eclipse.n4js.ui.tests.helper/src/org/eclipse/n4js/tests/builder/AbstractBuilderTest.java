@@ -32,6 +32,8 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
@@ -80,6 +82,8 @@ public abstract class AbstractBuilderTest {
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 	@Inject
 	private ExternalLibraryBuilder externalLibraryBuilderHelper;
+	@Inject
+	private ExternalLibraryBuildQueue externalBuilderQueue;
 
 	/***/
 	@Before
@@ -206,6 +210,7 @@ public abstract class AbstractBuilderTest {
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
+		externalLibraryBuilderHelper.process(externalBuilderQueue.exhaust(), new NullProgressMonitor());
 		ProjectTestsUtils.waitForAutoBuild();
 		ProjectTestsUtils.waitForAllJobs();
 		if (assertValidityOfXtextIndex)

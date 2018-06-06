@@ -13,8 +13,6 @@ package org.eclipse.n4js.ui.external;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -27,6 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.N4JSExternalProject;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Provides a workspace job to clients that can be run to perform external project clean/build. This workspace job is
@@ -34,10 +33,14 @@ import com.google.inject.Inject;
  * usage. This class should be used for instance from a {@link IResourceChangeListener} implementation, when we are in
  * the middle of a workspace modification and we would like to avoid any deadlocks.
  */
+@Singleton
 public class ExternalLibraryBuildJobProvider {
 
 	@Inject
 	private ExternalLibraryBuilder builderHelper;
+
+	@Inject
+	private ExternalLibraryBuildQueue builderQueue;
 
 	/**
 	 * Creates a new build job that cleans and builds the given external projects.
@@ -48,39 +51,28 @@ public class ExternalLibraryBuildJobProvider {
 	 *            the projects that has to be cleaned.
 	 * @return a job for building and cleaning the projects.
 	 */
-	public Job createBuildJob(final Collection<N4JSExternalProject> toBuild,
-			final Collection<N4JSExternalProject> toClean) {
-
-		return new ExternalLibraryBuildJob(builderHelper, toBuild, toClean);
+	public Job createBuildJob(Collection<N4JSExternalProject> toBuild, Collection<N4JSExternalProject> toClean) {
+		builderQueue.enqueue(toBuild, toClean);
+		return new ExternalLibraryBuildJob(builderHelper, builderQueue);
 	}
 
 	private static class ExternalLibraryBuildJob extends WorkspaceJob {
-		private final Iterable<N4JSExternalProject> toBuild;
-		private final Iterable<N4JSExternalProject> toClean;
 		private final ExternalLibraryBuilder builderHelper;
+		private final ExternalLibraryBuildQueue builderQueue;
 
 		private ExternalLibraryBuildJob(final ExternalLibraryBuilder builderHelper,
-				final Collection<N4JSExternalProject> toBuild, final Collection<N4JSExternalProject> toClean) {
+				final ExternalLibraryBuildQueue builderQueue) {
 
 			super("External library build");
 			this.builderHelper = checkNotNull(builderHelper, "builderHelper");
-			this.toBuild = checkNotNull(Collections.unmodifiableCollection(new LinkedList<>(toBuild)), "toBuild");
-			this.toClean = checkNotNull(Collections.unmodifiableCollection(new LinkedList<>(toClean)), "toClean");
+			this.builderQueue = builderQueue;
 			setSystem(true);
 			setRule(builderHelper.getRule());
 		}
 
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-			monitor.beginTask("Building external libraries...", IProgressMonitor.UNKNOWN);
-
-			for (final N4JSExternalProject project : toClean) {
-				builderHelper.clean(project, monitor);
-			}
-			for (final N4JSExternalProject project : toBuild) {
-				builderHelper.build(project, monitor);
-			}
-
+			builderHelper.process(builderQueue.exhaust(), monitor);
 			return Status.OK_STATUS;
 		}
 
