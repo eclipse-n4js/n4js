@@ -122,42 +122,25 @@ RUN apt-get update && \
 #
 # docker install
 # 
-# RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-18.03.1-ce.tgz && \
-#	tar xvf docker-18.03.1-ce.tgz
-# COPY docker /usr/local/bin/
-
-#RUN apt-get update && \ 
-#  apt-get install -y --no-install-recommends \
-#     apt-transport-https \
-#     ca-certificates \
-#     curl \
-#     gnupg2 \
-#     software-properties-common
-     
-
-#RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-
-#RUN lsb_release -cs
-
-#RUN add-apt-repository \
-#   "deb [arch=amd64] https://download.docker.com/linux/debian \
-#   $(lsb_release -cs) \
-#   stable"
-
-#RUN apt-get update && \
-#  apt-get install -y docker-ce
-
-RUN apt-get update && \
-RUN apt-get -y install apt-transport-https \
+RUN apt-get update && \ 
+  apt-get install -y --no-install-recommends \
+     apt-transport-https \
      ca-certificates \
      curl \
      gnupg2 \
-     software-properties-common && \
-RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey && \
+     software-properties-common
+     
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+
+RUN lsb_release -cs
+
 RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
    $(lsb_release -cs) \
-   stable" && \
+   stable"
+
 RUN apt-get update && \
-RUN apt-get -y install docker-ce
+  apt-get install -y docker-ce
+
  
