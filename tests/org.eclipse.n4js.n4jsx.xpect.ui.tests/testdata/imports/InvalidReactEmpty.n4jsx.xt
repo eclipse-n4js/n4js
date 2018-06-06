@@ -18,11 +18,11 @@
 					ThisFile {}
 				}
 			}
-			File "manifest.n4mf" { from="../../manifest.n4mf" }
+			File "package.json" { from="../../package.json" }
 		}
 		Project "react" {
 			File "react.js" { from = "../../react-implementations/empty/react.js" }
-			File "manifest.n4mf" { from = "../../react-implementations/empty/manifest.n4mf" }
+			File "package.json" { from = "../../react-implementations/empty/package.json" }
 		}
 	}
 

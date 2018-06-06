@@ -1,5 +1,5 @@
 {
-	"name": "N4JSXXpectTests",
+	"name": "ComponentSuperA",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
 		"react": "*"
@@ -11,8 +11,7 @@
 		"output": "src-gen",
 		"sources": {
 			"source": [
-				"model",
-				"model_ui"
+				"src"
 			]
 		}
 	}

@@ -1,7 +1,8 @@
 {
-	"name": "N4JSXXpectTests",
+	"name": "ComponentSuperB",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
+		"ComponentSuperA": "*",
 		"react": "*"
 	},
 	"n4js": {
@@ -11,8 +12,7 @@
 		"output": "src-gen",
 		"sources": {
 			"source": [
-				"model",
-				"model_ui"
+				"src"
 			]
 		}
 	}
