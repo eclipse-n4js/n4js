@@ -8,6 +8,9 @@
 		"sources": {
 			"source": [
 				"src"
+			],
+			"external": [
+				"src-ext"
 			]
 		}
 	}

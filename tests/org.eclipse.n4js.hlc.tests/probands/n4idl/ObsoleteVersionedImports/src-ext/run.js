@@ -14,6 +14,6 @@
  * This is just a runner file that includes the N4IDL implementation.
  */
 
-import {f} from "imports/ImplicitVersionImport";
+const versionedModule = require("./imports/ImplicitVersionImport")
 
-f();
+versionedModule.f(null);
