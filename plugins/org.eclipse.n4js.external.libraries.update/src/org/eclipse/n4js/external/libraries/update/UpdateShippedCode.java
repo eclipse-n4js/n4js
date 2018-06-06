@@ -238,14 +238,16 @@ public class UpdateShippedCode implements IWorkflowComponent {
 
 			ProcessBuilder pb = nodeProcessBuilder.getNpmInstallProcessBuilder(workingDirectory, "", true);
 			final Process p = pb.start();
-			p.waitFor();
+			final int exitCode = p.waitFor();
+			if (exitCode != 0) {
+				throw new IllegalStateException("npm exited with non-zero exit code: " + exitCode);
+			}
 			println(N4JSGlobals.NPM_INSTALL + " finished.");
 		} catch (Throwable th) {
 			println("Error while running \"" + N4JSGlobals.NPM_INSTALL + "\"");
 			th.printStackTrace();
 			throw new RuntimeException(th);
 		}
-
 	}
 
 	private static void cleanJsonFiles(File workingDirectory) {
