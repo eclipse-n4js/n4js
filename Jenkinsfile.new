@@ -38,6 +38,7 @@ pipeline {
                      '-XX:+UseCGroupMemoryLimitForHeap ' +
                      '-XX:MaxRAMFraction=2 '             +
                      '-XshowSettings:vm '
+     	NPM_TOKEN = 'abcd'
     }
 
     stages {
