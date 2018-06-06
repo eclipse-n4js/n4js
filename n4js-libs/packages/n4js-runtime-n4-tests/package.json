@@ -1,5 +1,6 @@
 {
   "name": "n4js-runtime-n4-tests",
+  "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -17,5 +18,43 @@
   ],
   "engines": {
     "node": ">= 5.0.0"
+  },
+  "n4js": {
+    "projectType": "test",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "external": [
+        "test/js"
+      ],
+      "test": [
+        "test/n4js"
+      ]
+    },
+    "moduleFilters": {
+      "noModuleWrapping": [
+        "runtime/n4/util/moduleloader/modules/TestModulePlainCJS"
+      ]
+    },
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-n4",
+      "n4js-runtime-es2015",
+      "n4js-runtime-v8"
+    ],
+    "testedProjects": [
+      "n4js-runtime-n4"
+    ],
+    "moduleLoader": "n4js"
+  },
+  "dependencies": {
+    "n4js.lang": "latest",
+    "org.eclipse.n4js.mangelhaft.assert": "latest",
+    "n4js-node": "latest"
+  },
+  "devDependencies": {
+    "n4js-runtime-n4": "latest",
+    "n4js-runtime-es2015": "latest",
+    "n4js-runtime-v8": "latest"
   }
 }
