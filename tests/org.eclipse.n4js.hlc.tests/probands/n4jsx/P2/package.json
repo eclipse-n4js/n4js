@@ -1,0 +1,17 @@
+{
+	"name": "P2",
+	"version": "0.0.1",
+	"dependencies": {
+		"react": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}
