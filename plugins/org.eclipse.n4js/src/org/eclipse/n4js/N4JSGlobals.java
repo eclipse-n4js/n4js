@@ -123,14 +123,14 @@ public final class N4JSGlobals {
 	 */
 	public static final String PACKAGE_JSON = "package.json";
 	/**
-	 * The name of the N4JS-specific json file used for marking sub-folders of the "node_modules" folder that were
-	 * installed directly, instead of only indirectly by "npm install".
-	 */
-	public static final String PACKAGE_N4JS_JSON = "package-n4js.json";
-	/**
 	 * Name of the package.json fragment file from the "n4jsd" type definitions repository.
 	 */
 	public static final String PACKAGE_FRAGMENT_JSON = "package-fragment.json";
+	/**
+	 * The name of the N4JS-specific marker file used to denote sub-folders of the external libraries "node_modules"
+	 * folder that were installed directly, instead of only indirectly by "npm install" as a transitive dependency.
+	 */
+	public static final String PACKAGE_MARKER = "package.n4js-marker";
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.

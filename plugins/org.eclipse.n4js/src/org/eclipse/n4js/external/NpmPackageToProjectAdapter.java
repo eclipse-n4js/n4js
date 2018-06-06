@@ -80,8 +80,8 @@ public class NpmPackageToProjectAdapter {
 	 * <li>add n4jsd files from P's corresponding folder in the type definitions repository (if any),
 	 * <li>if no {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} was added by the previous step (either
 	 * because P has no folder in the type definitions repository or that folder does not contain a package.json
-	 * fragment), then a {@link N4JSGlobals#PACKAGE_N4JS_JSON marker file} will be added to the package to denote that
-	 * this package was part of the given 'namesOfPackagesToAdapt' (for later use by other code).
+	 * fragment), then a {@link N4JSGlobals#PACKAGE_MARKER marker file} will be added to the package to denote that this
+	 * package was part of the given 'namesOfPackagesToAdapt' (for later use by other code).
 	 * </ul>
 	 *
 	 * Returned set of N4JS project folders will not include those installed by the npm but without matching names in
@@ -102,18 +102,14 @@ public class NpmPackageToProjectAdapter {
 		for (File packageRoot : packageRoots) {
 			try {
 				// add type definitions
-				boolean havePackageJsonFragment = false;
 				if (n4jsdsFolder != null) {
 					addTypeDefinitions(packageRoot, n4jsdsFolder);
-					havePackageJsonFragment = new File(packageRoot, N4JSGlobals.PACKAGE_FRAGMENT_JSON).isFile();
 				}
 				// create marker file to denote that his package was among "namesOfPackagesToAdapt"
-				// (unless we already have a fragment, which can serve that purpose too;
-				// compare with: ExternalProjectLocationsProvider#isExternalProjectDirectory(File))
-				if (!havePackageJsonFragment) {
-					File markerFile = new File(packageRoot, N4JSGlobals.PACKAGE_N4JS_JSON);
-					Files.write(markerFile.toPath(), Collections.singletonList("{}")); // will overwrite existing file
-				}
+				// (compare with: ExternalProjectLocationsProvider#isExternalProjectDirectory(File))
+				File markerFile = new File(packageRoot, N4JSGlobals.PACKAGE_MARKER);
+				Files.write(markerFile.toPath(), Collections.singletonList( // will overwrite existing file
+						"Temporary marker file. See N4JSGlobals#PACKAGE_MARKER for details."));
 			} catch (final Exception e) {
 				status.merge(
 						statusHelper.createError("Unexpected error occurred while adapting '" + packageRoot.getName()

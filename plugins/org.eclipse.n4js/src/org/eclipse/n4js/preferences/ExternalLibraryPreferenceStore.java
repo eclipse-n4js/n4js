@@ -164,14 +164,12 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 			if (!projectDirectory.isDirectory()) {
 				return false;
 			}
-			// check whether package.json and (package-n4js.json or package-fragment.json) file exists
-			// (we require one of package-n4js.json or package-fragment.json in order to return false for packages that
-			// have been installed as transitive dependency, i.e. indirectly by "npm install")
+			// check whether package.json and package.marker files exists
+			// (we here require package.marker in order to return false for packages that have been installed as
+			// transitive dependency, i.e. indirectly by "npm install"; see N4JSGlobals#PACKAGE_MARKER for details)
 			final File packageJsonFile = new File(projectDirectory, N4JSGlobals.PACKAGE_JSON);
-			final File packageN4jsJsonFile = new File(projectDirectory, N4JSGlobals.PACKAGE_N4JS_JSON);
-			final File packageFragmentJsonFile = new File(projectDirectory, N4JSGlobals.PACKAGE_FRAGMENT_JSON);
-			return existsFile(packageJsonFile)
-					&& (existsFile(packageN4jsJsonFile) || existsFile(packageFragmentJsonFile));
+			final File packageMarkerFile = new File(projectDirectory, N4JSGlobals.PACKAGE_MARKER);
+			return existsFile(packageJsonFile) && existsFile(packageMarkerFile);
 		}
 
 		private static boolean existsFile(File file) {
