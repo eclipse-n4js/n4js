@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.Block;
@@ -52,6 +53,8 @@ public enum JavaScriptVariant {
 	/** N4IDL mode */
 	n4idl;
 
+	private final static Logger LOGGER = Logger.getLogger(JavaScriptVariant.class);
+
 	/**
 	 * Literal value to indicate strict mode: "use strict" (or 'use strict')
 	 */
@@ -72,7 +75,7 @@ public enum JavaScriptVariant {
 					}
 				}
 			} catch (Exception e) {
-				// ignore
+				LOGGER.error("Error when collecting all non-@Deprecated JavaScriptVariants", e);
 			}
 		}
 		return nonDepricated;

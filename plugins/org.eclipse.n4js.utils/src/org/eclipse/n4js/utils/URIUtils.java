@@ -22,6 +22,11 @@ import org.eclipse.emf.common.util.URI;
  */
 public class URIUtils {
 
+	/** Workspace relative URI starts with this letter */
+	private static final String L = "L/";
+	/** Workspace relative URI starts with this letter */
+	private static final String P = "P/";
+
 	/**
 	 * Converts the given {@link IResource} to a {@link org.eclipse.emf.common.util.URI}. In case the given resource is
 	 * a workspace resource, a <i>platform resource URI</i> is returned. In case the given resource is a file based
@@ -38,7 +43,7 @@ public class URIUtils {
 		String fullPathString = iResource.getFullPath().toString();
 
 		org.eclipse.emf.common.util.URI uri;
-		if (projectPath.startsWith("P/") || projectPath.startsWith("L/")) {
+		if (projectPath.startsWith(P) || projectPath.startsWith(L)) {
 			uri = org.eclipse.emf.common.util.URI.createPlatformResourceURI(fullPathString, true);
 		} else {
 			uri = org.eclipse.emf.common.util.URI.createFileURI(fullPathString);

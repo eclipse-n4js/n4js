@@ -651,7 +651,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			try (Scanner s = new Scanner(inputStream); Scanner ss = s.useDelimiter("\\A");) {
 				completeString = ss.hasNext() ? ss.next() : "";
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Error when reading contents of JS file", e);
 			}
 			return completeString;
 		}
@@ -678,15 +678,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 		void setText(String text) {
 			try {
-				Method basicSetCompleteContent = RootNode.class.getDeclaredMethod("basicSetCompleteContent",
-						String.class);
+				String methodName = "basicSetCompleteContent";
+				Method basicSetCompleteContent = RootNode.class.getDeclaredMethod(methodName, String.class);
 				basicSetCompleteContent.setAccessible(true);
 				basicSetCompleteContent.invoke(rootNode, text);
 
-				// basicSetGrammarElement
-
 			} catch (Exception e) {
-				// ignore
+				LOGGER.error("Error when setting contents of JS file", e);
 			}
 		}
 
