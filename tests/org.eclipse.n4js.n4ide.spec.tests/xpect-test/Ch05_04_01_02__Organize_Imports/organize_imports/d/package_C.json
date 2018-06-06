@@ -1,0 +1,18 @@
+{
+	"name": "IDEBUG-314_C_differentVendor",
+	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"IDEBUG-314_A": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.XXX",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}
