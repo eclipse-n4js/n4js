@@ -201,7 +201,6 @@ public abstract class AbstractBuilderTest {
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
 		assertEquals(0, root().getProjects().length);
-		System.out.println("Checking index consistency");
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
 				countResourcesInIndex());
 	}
