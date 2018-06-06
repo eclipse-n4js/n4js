@@ -22,11 +22,11 @@ echo "We are currently in $PWD"
 # Publish using canary version
 if [ -z $NPM_REGISTRY ]; then
 	echo "Publishing using .npmrc configuration";
-	lerna publish --loglevel silly --skip-git --force-publish --exact --canary --yes --sort
+	lerna publish --loglevel silly --skip-git --exact --canary --yes --sort
 else
 	echo "Publishing to $NPM_REGISTRY";
 	# We publish the npms to the test channel 
-	lerna publish --force --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --force-publish --exact --canary --yes --sort --npm-tag=test
+	lerna publish --force --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --exact --canary --yes --sort --npm-tag=test
 fi
 
 

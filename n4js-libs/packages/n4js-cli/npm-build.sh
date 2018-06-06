@@ -22,7 +22,7 @@ npm install
 
 echo "We are in $PWD"
 echo "Listing ../../../tools/org.eclipse.n4js.hlc/target"
-ls ../../../tools/org.eclipse.n4js.hlc
+ls ../../../tools/org.eclipse.n4js.hlc/target
 
 echo "Copy freshly built tools/org.eclipse.n4js.hlc/target/n4jsc.jar to ./bin folder"
 echo_exec cp ../../../tools/org.eclipse.n4js.hlc/target/n4jsc.jar ./bin/n4jsc.jar
