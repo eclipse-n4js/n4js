@@ -48,7 +48,7 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest
 	 * running it with Common JS.
 	 */
 	@Test
-	@Ignore // remove @Ignore when IDE-2988 is done
+	@Ignore // remove @Ignore when GH-887 is merged
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/external.project/src/Main.n4js";
