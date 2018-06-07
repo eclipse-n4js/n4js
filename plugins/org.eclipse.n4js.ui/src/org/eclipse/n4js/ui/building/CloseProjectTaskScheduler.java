@@ -52,10 +52,6 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 			setRule(ResourcesPlugin.getWorkspace().getRoot());
 		}
 
-		/**
-		 * @param name
-		 *            the name of the job. May be null.
-		 */
 		private RemoveProjectJob(String name) {
 			super(name);
 		}
@@ -67,41 +63,14 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-			processTaskNow(closedProjectQueue.exhaust(), monitor);
+			processClosedProjects(monitor);
 			return Status.OK_STATUS;
-		}
-
-		private void processTaskNow(Task task, IProgressMonitor monitor) {
-			if (task.isEmpty()) {
-				return;
-			}
-			String projectNames = Joiner.on(", ").join(task.projectNames);
-			String taskName = Messages.ProjectOpenedOrClosedListener_RemovingProject + projectNames
-					+ Messages.ProjectOpenedOrClosedListener_FromIndex;
-			RaceDetectionHelper.log(taskName);
-			monitor.setTaskName(taskName);
-			SubMonitor progress = SubMonitor.convert(monitor, 1);
-			try {
-				ResourceSet resourceSet = getResourceSetProvider().get(null);
-				resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.NAMED_BUILDER_SCOPE, Boolean.TRUE);
-				if (resourceSet instanceof ResourceSetImpl) {
-					((ResourceSetImpl) resourceSet).setURIResourceMap(Maps.<URI, Resource> newHashMap());
-				}
-				BuildData buildData = new BuildData(projectNames, resourceSet, task.toBeBuilt,
-						queuedBuildData);
-				getBuilderState().update(buildData, progress.newChild(1));
-			} catch (Error | RuntimeException e) {
-				task.reschedule();
-				throw e;
-			} finally {
-				monitor.done();
-			}
 		}
 	}
 
 	private final ClosedProjectQueue closedProjectQueue;
 
-	private final RemoveProjectJob removeProjectJob = new RemoveProjectJob("Dummy");
+	private final RemoveProjectJob removeProjectJob = new RemoveProjectJob("");
 
 	@Inject
 	private QueuedBuildData queuedBuildData;
@@ -115,11 +84,9 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 		this.closedProjectQueue = closedProjectQueue;
 	}
 
-	/*
-	 * This overrides the super implementation to avoid races between the builder and other jobs.
-	 *
-	 * We schedule a job only if the project will no longer be seen by any Xtext project, otherwise we rely on the
-	 * N4JSBuildTypeTrackingBuilder to update the index when it processes the downstream project.
+	/**
+	 * Specialized behavior of the super impl. We schedule a job, that will process all closed projects in bulk rather
+	 * than individually.
 	 */
 	@Override
 	protected void scheduleRemoveProjectJob(final IProject project) {
@@ -127,19 +94,55 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 		if (toBeBuilt.getToBeDeleted().isEmpty() && toBeBuilt.getToBeUpdated().isEmpty()) {
 			return;
 		}
-		RaceDetectionHelper.log("Enqueue remove project job for %s", project.getName());
-		closedProjectQueue.enqueue(ImmutableSet.of(project.getName()), toBeBuilt);
-		scheduleJob(project.getName());
+		scheduleJob(project.getName(), toBeBuilt);
 	}
 
-	private void scheduleJob(String name) {
+	private void scheduleJob(String name, ToBeBuilt toBeBuilt) {
+		RaceDetectionHelper.log("Enqueue remove project job for %s", name);
+		closedProjectQueue.enqueue(ImmutableSet.of(name), toBeBuilt);
 		removeProjectJob.setName(Messages.ProjectOpenedOrClosedListener_RemovingProject + name
 				+ Messages.ProjectOpenedOrClosedListener_FromIndex);
 		removeProjectJob.schedule();
 	}
 
 	/**
+	 * Process the closed projects now. Must be called when holding the workspace lock.
+	 * 
+	 * @param monitor
+	 *            the monitor.
+	 */
+	public void processClosedProjects(IProgressMonitor monitor) {
+		Task task = closedProjectQueue.exhaust();
+		if (task.isEmpty()) {
+			return;
+		}
+		String projectNames = Joiner.on(", ").join(task.projectNames);
+		String taskName = Messages.ProjectOpenedOrClosedListener_RemovingProject + projectNames
+				+ Messages.ProjectOpenedOrClosedListener_FromIndex;
+		RaceDetectionHelper.log(taskName);
+		monitor.setTaskName(taskName);
+		SubMonitor progress = SubMonitor.convert(monitor, 1);
+		try {
+			ResourceSet resourceSet = getResourceSetProvider().get(null);
+			resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.NAMED_BUILDER_SCOPE, Boolean.TRUE);
+			if (resourceSet instanceof ResourceSetImpl) {
+				((ResourceSetImpl) resourceSet).setURIResourceMap(Maps.<URI, Resource> newHashMap());
+			}
+			BuildData buildData = new BuildData(projectNames, resourceSet, task.toBeBuilt,
+					queuedBuildData);
+			getBuilderState().update(buildData, progress.newChild(1));
+		} catch (Error | RuntimeException e) {
+			task.reschedule();
+			throw e;
+		} finally {
+			monitor.done();
+		}
+	}
+
+	/**
 	 * Wait for the removeProjectJob to finish.
+	 *
+	 * Public for testing purpose.
 	 */
 	public void joinRemoveProjectJob() {
 		try {

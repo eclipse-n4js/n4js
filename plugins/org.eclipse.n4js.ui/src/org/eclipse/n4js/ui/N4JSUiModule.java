@@ -72,7 +72,7 @@ import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
@@ -231,8 +231,8 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<ExternalLibraryBuildJobProvider> provideExternalLibraryBuildJobProvider() {
-		return Access.contributedProvider(ExternalLibraryBuildJobProvider.class);
+	public Provider<ExternalLibraryBuildScheduler> provideExternalLibraryBuildJobProvider() {
+		return Access.contributedProvider(ExternalLibraryBuildScheduler.class);
 	}
 
 	/** Delegate to shared injector */

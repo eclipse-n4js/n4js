@@ -30,7 +30,7 @@ public class ClosedProjectQueue {
 	/**
 	 * Encapsulates the changes that need to be performed after one or more projects have been removed / closed.
 	 */
-	public class Task {
+	class Task {
 		/**
 		 * The names of the projects as encapsulated by this task.
 		 */
@@ -75,7 +75,7 @@ public class ClosedProjectQueue {
 	 * @param toBeBuilt
 	 *            their contents.
 	 */
-	public void enqueue(Set<String> projectNames, ToBeBuilt toBeBuilt) {
+	void enqueue(Set<String> projectNames, ToBeBuilt toBeBuilt) {
 		internalQueue.addLast(new Task(ImmutableSet.copyOf(projectNames), toBeBuilt));
 	}
 
@@ -87,7 +87,7 @@ public class ClosedProjectQueue {
 	 * @param toBeBuilt
 	 *            their contents.
 	 */
-	public void insert(Set<String> projectNames, ToBeBuilt toBeBuilt) {
+	void insert(Set<String> projectNames, ToBeBuilt toBeBuilt) {
 		internalQueue.addFirst(new Task(ImmutableSet.copyOf(projectNames), toBeBuilt));
 	}
 
@@ -96,7 +96,7 @@ public class ClosedProjectQueue {
 	 *
 	 * @return the normalized task that has all the stuff that is to be done.
 	 */
-	public Task exhaust() {
+	Task exhaust() {
 		Set<String> projectNames = new LinkedHashSet<>();
 		ToBeBuilt toBeBuilt = new ToBeBuilt();
 		Task next = internalQueue.poll();

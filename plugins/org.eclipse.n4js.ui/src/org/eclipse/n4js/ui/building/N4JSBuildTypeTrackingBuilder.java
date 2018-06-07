@@ -30,8 +30,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4MFProjectDependencyStrategy;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
@@ -64,16 +63,17 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	@BuilderState
 	private IBuildLogger builderStateLogger;
 
-	private ExternalLibraryBuilder builderHelper;
+	private CloseProjectTaskScheduler closedProjectTaskScheduler;
 
-	private ExternalLibraryBuildQueue builderQueue;
+	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 
 	private N4MFProjectDependencyStrategy projectDependencyStrategy;
 
 	@Inject
 	private void injectSharedContributions(ISharedStateContributionRegistry registry) {
-		this.builderHelper = registry.getSingleContributedInstance(ExternalLibraryBuilder.class);
-		this.builderQueue = registry.getSingleContributedInstance(ExternalLibraryBuildQueue.class);
+		this.externalLibraryBuildJobProvider = registry
+				.getSingleContributedInstance(ExternalLibraryBuildScheduler.class);
+		this.closedProjectTaskScheduler = registry.getSingleContributedInstance(CloseProjectTaskScheduler.class);
 		try {
 			this.projectDependencyStrategy = registry.getSingleContributedInstance(N4MFProjectDependencyStrategy.class);
 		} catch (RuntimeException e) {
@@ -88,14 +88,17 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			throws CoreException {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		try {
+			RaceDetectionHelper.log("About to build %s", getProject());
+
+			SubMonitor builderMonitor = toBuilderMonitor(monitor);
+
 			/*
 			 * Make sure that announced changes to the libraries have been actually processed
 			 */
-			builderHelper.process(builderQueue.exhaust(), monitor);
+			closedProjectTaskScheduler.processClosedProjects(builderMonitor.split(50));
+			externalLibraryBuildJobProvider.buildExternalProjectsNow(builderMonitor.split(50));
 
-			RaceDetectionHelper.log("About to build %s", getProject());
-			IProject[] result = super.build(kind, args,
-					toBuilderMonitor(monitor).split(1, SubMonitor.SUPPRESS_SETTASKNAME));
+			IProject[] result = super.build(kind, args, builderMonitor.split(1000, SubMonitor.SUPPRESS_SETTASKNAME));
 			/*
 			 * Here we suffer from a race between the builder and the listener to project changes. The listener is
 			 * supposed to update the project description on change. The build needs to return the references as
@@ -338,7 +341,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 
 	private SubMonitor toBuilderMonitor(IProgressMonitor monitor) {
 		monitor.subTask("Building " + getProject().getName());
-		SubMonitor progress = SubMonitor.convert(monitor, 1);
+		SubMonitor progress = SubMonitor.convert(monitor, 1100);
 		return progress;
 	}
 

@@ -48,7 +48,7 @@ import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
@@ -141,7 +141,7 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalProjectCacheLoader.class);
 		binder.bind(ProjectStateChangeListener.class);
 		binder.bind(ExternalIndexUpdater.class);
-		binder.bind(ExternalLibraryBuildJobProvider.class);
+		binder.bind(ExternalLibraryBuildScheduler.class);
 		binder.bind(ExternalLibraryBuilder.class);
 		binder.bind(ExternalLibraryBuildQueue.class);
 		binder.bind(BuildOrderComputer.class);

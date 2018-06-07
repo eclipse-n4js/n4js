@@ -32,17 +32,17 @@ public class ExternalLibraryBuildQueue {
 	/**
 	 * Encapsulates the changes that need to be performed in the external workspace.
 	 */
-	public class Task {
+	class Task {
 		/**
 		 * The projects that need to be build.
 		 */
-		public final Collection<N4JSExternalProject> toBuild;
+		final Collection<N4JSExternalProject> toBuild;
 		/**
 		 * The projects that need to be cleaned.
 		 */
-		public final Collection<N4JSExternalProject> toClean;
+		final Collection<N4JSExternalProject> toClean;
 
-		private Task(ImmutableSet<N4JSExternalProject> toBuild, ImmutableSet<N4JSExternalProject> toClean) {
+		Task(ImmutableSet<N4JSExternalProject> toBuild, ImmutableSet<N4JSExternalProject> toClean) {
 			this.toBuild = toBuild;
 			this.toClean = toClean;
 		}
@@ -77,7 +77,7 @@ public class ExternalLibraryBuildQueue {
 	 * @param toClean
 	 *            the projects to be cleaned.
 	 */
-	public void enqueue(Collection<N4JSExternalProject> toBuild, Collection<N4JSExternalProject> toClean) {
+	void enqueue(Collection<N4JSExternalProject> toBuild, Collection<N4JSExternalProject> toClean) {
 		internalQueue.addLast(new Task(ImmutableSet.copyOf(toBuild), ImmutableSet.copyOf(toClean)));
 	}
 
@@ -89,7 +89,7 @@ public class ExternalLibraryBuildQueue {
 	 * @param toClean
 	 *            the projects to be cleaned.
 	 */
-	public void insert(Collection<N4JSExternalProject> toBuild, Collection<N4JSExternalProject> toClean) {
+	void insert(Collection<N4JSExternalProject> toBuild, Collection<N4JSExternalProject> toClean) {
 		internalQueue.addFirst(new Task(ImmutableSet.copyOf(toBuild), ImmutableSet.copyOf(toClean)));
 	}
 
@@ -99,7 +99,7 @@ public class ExternalLibraryBuildQueue {
 	 *
 	 * @return the normalized task that has all the stuff that is to be done.
 	 */
-	public Task exhaust() {
+	Task exhaust() {
 		Collection<N4JSExternalProject> toBuild = new LinkedHashSet<>();
 		Collection<N4JSExternalProject> toClean = new LinkedHashSet<>();
 		Task next = internalQueue.poll();

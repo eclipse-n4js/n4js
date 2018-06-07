@@ -38,6 +38,7 @@ public class DefaultSharedContributionOverridingRegistry extends SharedStateCont
 			binder.bind(ProjectOpenedOrClosedListener.class)
 					.to(CloseProjectTaskScheduler.class);
 			binder.bind(ClosedProjectQueue.class);
+			binder.bind(CloseProjectTaskScheduler.class);
 		}
 	}
 
