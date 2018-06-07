@@ -18,7 +18,6 @@ import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
@@ -31,14 +30,10 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.base.Optional;
-import com.google.inject.Inject;
 
 /**
  */
 public abstract class AbstractN4JSCore implements IN4JSCore {
-
-	@Inject
-	private ExternalLibraryUriHelper externalLibraryUriHelper;
 
 	@Override
 	public boolean isInSameProject(URI nestedLocation1, URI nestedLocation2) {
@@ -52,22 +47,16 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Override
 	public boolean isNoValidate(URI nestedLocation) {
-
-		if (externalLibraryUriHelper.isExternalLocation(nestedLocation)) {
-			return true;
-		}
-
 		boolean noValidate = false;
+
 		ModuleFilter validationFilter = getModuleValidationFilter(nestedLocation);
 		if (validationFilter != null) {
-			noValidate = isPathContainedByFilter(nestedLocation, validationFilter);
+			noValidate |= isPathContainedByFilter(nestedLocation, validationFilter);
 		}
 
-		if (!noValidate) {
-			ModuleFilter noModuleWrappingFilter = getNoModuleWrappingFilter(nestedLocation);
-			if (noModuleWrappingFilter != null) {
-				noValidate = isPathContainedByFilter(nestedLocation, noModuleWrappingFilter);
-			}
+		ModuleFilter noModuleWrappingFilter = getNoModuleWrappingFilter(nestedLocation);
+		if (noModuleWrappingFilter != null) {
+			noValidate |= isPathContainedByFilter(nestedLocation, noModuleWrappingFilter);
 		}
 
 		return noValidate;

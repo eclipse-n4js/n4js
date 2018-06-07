@@ -101,8 +101,11 @@ public class TargetURIKey {
 			}
 
 			if (object instanceof IdentifiableElement) {
-				typesOrModulesToFind.add(qualifiedNameProvider
-						.getFullyQualifiedName(((IdentifiableElement) object).getContainingModule()));
+				TModule containingModule = ((IdentifiableElement) object).getContainingModule();
+				QualifiedName fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(containingModule);
+				if (fullyQualifiedName != null) { // remove this when GH-733 is fixed
+					typesOrModulesToFind.add(fullyQualifiedName);
+				}
 			}
 		}
 
