@@ -48,12 +48,9 @@ import com.google.inject.Singleton;
 public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 
 	private final class RemoveProjectJob extends WorkspaceJob {
-		{
-			setRule(ResourcesPlugin.getWorkspace().getRoot());
-		}
-
 		private RemoveProjectJob(String name) {
 			super(name);
+			setRule(ResourcesPlugin.getWorkspace().getRoot());
 		}
 
 		@Override
@@ -107,7 +104,7 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 
 	/**
 	 * Process the closed projects now. Must be called when holding the workspace lock.
-	 * 
+	 *
 	 * @param monitor
 	 *            the monitor.
 	 */
