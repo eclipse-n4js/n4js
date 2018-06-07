@@ -142,3 +142,6 @@ RUN add-apt-repository \
 
 RUN apt-get update && \
   apt-get install -y docker-ce
+
+EXPOSE 4873
+EXPOSE 4874
