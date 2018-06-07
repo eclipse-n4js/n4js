@@ -15,7 +15,9 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
+import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.internal.ProjectDescriptionLoadListener;
 import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -58,6 +60,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			throws CoreException {
 		try {
 			updateProjectReferencesIfNecessary();
+			checkExternalLibraries();
 			N4JSBuildTypeTracker.setBuildType(getProject(), BuildType.CLEAN);
 			super.doClean(toBeBuilt, monitor);
 			getProject().touch(monitor);
@@ -89,4 +92,13 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		final ProjectDescriptionLoadListener loadListener = injector.getInstance(ProjectDescriptionLoadListener.class);
 		loadListener.updateProjectReferencesIfNecessary(getProject());
 	}
+
+	private void checkExternalLibraries() {
+		final Injector injector = new N4JSInjectorSupplier().get();
+		final ExternalIndexSynchronizer indexSynchronizer = injector.getInstance(ExternalIndexSynchronizer.class);
+		if (indexSynchronizer instanceof EclipseExternalIndexSynchronizer) {
+			((EclipseExternalIndexSynchronizer) indexSynchronizer).checkAndSetOutOfSyncMarkers();
+		}
+	}
+
 }

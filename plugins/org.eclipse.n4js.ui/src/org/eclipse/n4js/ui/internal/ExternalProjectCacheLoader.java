@@ -61,7 +61,7 @@ public class ExternalProjectCacheLoader
 				return Optional.of(Tuples.create(ppp, projectDescription));
 			}
 		} catch (N4JSBrokenProjectException e) {
-			LOGGER.error("Failed to obtain project description for external library.", e);
+			LOGGER.error("Failed to obtain project description for external library.");
 		}
 		return Optional.absent();
 	}

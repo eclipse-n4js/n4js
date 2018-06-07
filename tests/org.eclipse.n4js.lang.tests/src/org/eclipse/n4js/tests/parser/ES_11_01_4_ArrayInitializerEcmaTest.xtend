@@ -20,7 +20,7 @@ class ES_11_01_4_ArrayInitializerEcmaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_01() {
-		val script = 'x = [,,]'.parseSuccessfully
+		val script = 'x = [,,]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
