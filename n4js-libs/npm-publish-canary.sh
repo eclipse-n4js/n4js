@@ -29,7 +29,7 @@ fi
 
 HOST_NAME=`hostname`
 NPM_TAG=test
-NPM_REGISTRY="http://${HOST_NAME}:4873"
+NPM_REGISTRY="http://localhost:${NPM_REGISTRY_PORT}"
 
 # Create an .npmrc only if we are publishing to the public
 if [ "$DESTINATION" = "public" ]; then
