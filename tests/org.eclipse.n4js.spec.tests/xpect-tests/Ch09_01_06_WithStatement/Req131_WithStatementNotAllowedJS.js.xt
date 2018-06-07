@@ -19,5 +19,6 @@ class A {
 }
 
 var a = new A();
-// XPECT noerrors --> "With statement allowed in unrestricted mode." at "with (a) {}"
+// disabled issues until GH-855 is solved
+// X-PECT errors --> "With statement allowed in unrestricted mode." at "with (a) {}"
 with (a) {}

@@ -23,49 +23,49 @@ class ES_12_03_EmptyStatementTest extends AbstractParserTest {
 
 	@Test
 	def void testEmptyFile() {
-		val script = ''.parseSuccessfully
+		val script = ''.parseESSuccessfully
 		assertTrue(script.scriptElements.empty)
 	}
 
 	@Test
 	def void testOnlyLineBreak() {
-		val script = '\n'.parseSuccessfully
+		val script = '\n'.parseESSuccessfully
 		assertTrue(script.scriptElements.empty)
 	}
 
 	@Test
 	def void testOnlyComment() {
-		val script = '/*\n*/'.parseSuccessfully
+		val script = '/*\n*/'.parseESSuccessfully
 		assertTrue(script.scriptElements.empty)
 	}
 
 	@Test
 	def void testOnlyLineComment() {
-		val script = '// comment '.parseSuccessfully
+		val script = '// comment '.parseESSuccessfully
 		assertTrue(script.scriptElements.empty)
 	}
 
 	@Test
 	def void testOnlyEmptyLineComment() {
-		val script = '//'.parseSuccessfully
+		val script = '//'.parseESSuccessfully
 		assertTrue(script.scriptElements.empty)
 	}
 
 	@Test
 	def void testOnlyLineCommentWithLineBreak() {
-		val script = '// comment\n'.parseSuccessfully
+		val script = '// comment\n'.parseESSuccessfully
 		assertTrue(script.scriptElements.empty)
 	}
 
 	@Test
 	def void testEmptyStatement() {
-		val script = ';'.parseSuccessfully
+		val script = ';'.parseESSuccessfully
 		assertTrue(script.scriptElements.head instanceof EmptyStatement)
 	}
 
 	@Test
 	def void testEmptyStatementAfterLineBreak() {
-		val script = '\r\n;'.parseSuccessfully
+		val script = '\r\n;'.parseESSuccessfully
 		assertTrue(script.scriptElements.head instanceof EmptyStatement)
 	}
 

@@ -21,7 +21,7 @@ class ES_12_08_BreakStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBreak_Simple() {
-		val script = 'while (true) { break }'.parseSuccessfully
+		val script = 'while (true) { break }'.parseESSuccessfully
 		val statement = script.scriptElements.head as WhileStatement
 
 		val bool = statement.expression as BooleanLiteral
@@ -34,7 +34,7 @@ class ES_12_08_BreakStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBreak_SimpleASI() {
-		val script = 'while (true) { break }'.parseSuccessfully
+		val script = 'while (true) { break }'.parseESSuccessfully
 		val statement = script.scriptElements.head as WhileStatement
 
 		val bool = statement.expression as BooleanLiteral
@@ -47,7 +47,7 @@ class ES_12_08_BreakStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBreak_LabelASI() {
-		val script = 'done: while (true) { break done }'.parseSuccessfully
+		val script = 'done: while (true) { break done }'.parseESSuccessfully
 		val labeledStatement = script.scriptElements.head as LabelledStatement
 		val statement = labeledStatement.statement as WhileStatement
 
@@ -61,7 +61,7 @@ class ES_12_08_BreakStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBreak_Label() {
-		val script = 'done: while (true) { break done; }'.parseSuccessfully
+		val script = 'done: while (true) { break done; }'.parseESSuccessfully
 		val labeledStatement = script.scriptElements.head as LabelledStatement
 		val statement = labeledStatement.statement as WhileStatement
 
@@ -75,7 +75,7 @@ class ES_12_08_BreakStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBreak_LabelProto() {
-		val script = '__proto__: while (true) { break __proto__; }'.parseSuccessfully
+		val script = '__proto__: while (true) { break __proto__; }'.parseESSuccessfully
 		val labeledStatement = script.scriptElements.head as LabelledStatement
 		val statement = labeledStatement.statement as WhileStatement
 

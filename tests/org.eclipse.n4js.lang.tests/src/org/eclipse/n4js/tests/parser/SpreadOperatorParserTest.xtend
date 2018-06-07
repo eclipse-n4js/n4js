@@ -26,7 +26,7 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 			function myFunction(p0, p1, p2, p3, p4) {}
 			var args = [0, 1, 2, 3, 4];
 			myFunction(...args);
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 
 		val callExpr = script.eAllContents.filter(ParameterizedCallExpression).head;
 		assertNotNull(callExpr);
@@ -39,7 +39,7 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 			function myFunction(p0, p1, p2, p3, p4) {}
 			var args = [0, 1, 2];
 			myFunction('a', ...args, 'b');
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 
 		val callExpr = script.eAllContents.filter(ParameterizedCallExpression).head;
 		assertNotNull(callExpr);
@@ -54,7 +54,7 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 			function myFunction(p0, p1, p2, p3, p4) {}
 			var args = [0, 1];
 			myFunction(...args, 'a', ...args);
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 
 		val callExpr = script.eAllContents.filter(ParameterizedCallExpression).head;
 		assertNotNull(callExpr);
@@ -73,7 +73,7 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 			}
 			var args = [0, 1, 2, 3, 4];
 			new C(...args);
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 
 		val newExpr = script.eAllContents.filter(NewExpression).head;
 		assertNotNull(newExpr);
@@ -88,7 +88,7 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 			}
 			var args = [0, 1, 2];
 			new C('a', ...args, 'b');
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 
 		val newExpr = script.eAllContents.filter(NewExpression).head;
 		assertNotNull(newExpr);
@@ -105,7 +105,7 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 			}
 			var args = [0, 1];
 			new C(...args, 'a', ...args);
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 
 		val newExpr = script.eAllContents.filter(NewExpression).head;
 		assertNotNull(newExpr);

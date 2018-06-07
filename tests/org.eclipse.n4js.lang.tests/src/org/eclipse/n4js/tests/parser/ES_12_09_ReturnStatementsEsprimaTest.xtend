@@ -23,7 +23,7 @@ class ES_12_09_ReturnStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testReturn_SimpleASI() {
-		val script = '(function(){ return })'.parseSuccessfully
+		val script = '(function(){ return })'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		// paren expressions are explicitly modeled (in Esprima, they are not modeled explicitly)
 		val parenExpr = statement.expression as ParenExpression
@@ -36,7 +36,7 @@ class ES_12_09_ReturnStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testReturn_Simple() {
-		val script = '(function(){ return; })'.parseSuccessfully
+		val script = '(function(){ return; })'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		// paren expressions are explicitly modeled (in Esprima, they are not modeled explicitly)
 		val parenExpr = statement.expression as ParenExpression
@@ -49,7 +49,7 @@ class ES_12_09_ReturnStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testReturn_WithArgument() {
-		val script = '(function(){ return x; })'.parseSuccessfully
+		val script = '(function(){ return x; })'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		// paren expressions are explicitly modeled (in Esprima, they are not modeled explicitly)
 		val parenExpr = statement.expression as ParenExpression
@@ -64,7 +64,7 @@ class ES_12_09_ReturnStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testReturn_WithArgumentASI() {
-		val script = '(function(){ return x })'.parseSuccessfully
+		val script = '(function(){ return x })'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		// paren expressions are explicitly modeled (in Esprima, they are not modeled explicitly)
 		val parenExpr = statement.expression as ParenExpression
@@ -78,7 +78,7 @@ class ES_12_09_ReturnStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testReturn_WithArgumentASI2() {
-		val script = '(function(){ return \n x*y })'.parseSuccessfully
+		val script = '(function(){ return \n x*y })'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		// paren expressions are explicitly modeled (in Esprima, they are not modeled explicitly)
 		val parenExpr = statement.expression as ParenExpression
@@ -91,7 +91,7 @@ class ES_12_09_ReturnStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testReturn_WithArgumentMult() {
-		val script = '(function(){ return x * y })'.parseSuccessfully
+		val script = '(function(){ return x * y })'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		// paren expressions are explicitly modeled (in Esprima, they are not modeled explicitly)
 		val parenExpr = statement.expression as ParenExpression
@@ -112,7 +112,7 @@ class ES_12_09_ReturnStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testReturn_WithArgumentMultASI() {
-		val script = '(function(){ return x\n * y })'.parseSuccessfully
+		val script = '(function(){ return x\n * y })'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		// paren expressions are explicitly modeled (in Esprima, they are not modeled explicitly)
 		val parenExpr = statement.expression as ParenExpression

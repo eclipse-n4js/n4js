@@ -316,8 +316,8 @@ public class LibraryManager {
 				installedNpmNames.add(change.name);
 			}
 		}
-		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter
-				.adaptPackages(installedNpmNames);
+		org.eclipse.xtext.util.Pair<IStatus, Collection<File>> result;
+		result = npmPackageToProjectAdapter.adaptPackages(installedNpmNames);
 
 		IStatus adaptionStatus = result.getFirst();
 
@@ -409,28 +409,34 @@ public class LibraryManager {
 			return statusHelper.OK();
 		}
 
-		SubMonitor subMonitor = SubMonitor.convert(monitor, packageNames.size() + 1);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		try {
 
-			logger.logInfo("Refreshing installed all external projects (including NPMs).");
-			subMonitor.setTaskName("Refreshing npm type definitions...");
-
-			performGitPull(subMonitor.newChild(1, SubMonitor.SUPPRESS_ALL_LABELS));
-
-			for (String packageName : packageNames) {
-				IStatus status = refreshInstalledNpmPackage(packageName, subMonitor.newChild(1));
-				if (!status.isOK()) {
-					logger.logError(status);
-					refreshStatus.merge(status);
-				}
-			}
-
-			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(1));
+			refreshAllInstalledPackages(refreshStatus, packageNames, subMonitor.newChild(1));
+			indexSynchronizer.reindexAllExternalProjects(subMonitor.newChild(9));
 
 			return refreshStatus;
 
 		} finally {
 			subMonitor.done();
+		}
+	}
+
+	private void refreshAllInstalledPackages(MultiStatus refreshStatus, Collection<String> packageNames,
+			SubMonitor subMonitor) {
+
+		logger.logInfo("Refreshing installed all external projects (including NPMs).");
+		SubMonitor subsubMonitor = SubMonitor.convert(subMonitor, packageNames.size() + 1);
+		subsubMonitor.setTaskName("Refreshing npm type definitions...");
+
+		performGitPull(subsubMonitor.newChild(1, SubMonitor.SUPPRESS_ALL_LABELS));
+
+		for (String packageName : packageNames) {
+			IStatus status = refreshInstalledNpmPackage(packageName, subsubMonitor.newChild(1));
+			if (!status.isOK()) {
+				logger.logError(status);
+				refreshStatus.merge(status);
+			}
 		}
 	}
 

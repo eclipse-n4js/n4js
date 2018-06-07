@@ -23,7 +23,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.inject.Singleton;
 
@@ -79,7 +78,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public ExternalProject getProject(URI projectLocation) {
+	public N4JSExternalProject getProject(URI projectLocation) {
 		return null;
 	}
 
