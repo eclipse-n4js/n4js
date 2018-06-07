@@ -240,11 +240,7 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 						findMaxProblemSeverity = file.findMaxProblemSeverity(null, true, IResource.DEPTH_INFINITE);
 					}
 					// the final decision to build:
-					boolean result = findMaxProblemSeverity != IMarker.SEVERITY_ERROR;
-					if (!result) {
-						return result;
-					}
-					return result;
+					return findMaxProblemSeverity != IMarker.SEVERITY_ERROR;
 				}
 			}
 			return false;
