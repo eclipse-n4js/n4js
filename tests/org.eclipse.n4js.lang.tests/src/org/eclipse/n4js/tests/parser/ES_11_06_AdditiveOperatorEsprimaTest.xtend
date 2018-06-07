@@ -21,7 +21,7 @@ class ES_11_06_AdditiveOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAdd() {
-		val program = 'x + y'.parseSuccessfully
+		val program = 'x + y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AdditiveExpression
 		val op = expression.op
@@ -35,7 +35,7 @@ class ES_11_06_AdditiveOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSub() {
-		val program = 'x - y'.parseSuccessfully
+		val program = 'x - y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AdditiveExpression
 		val op = expression.op
@@ -49,7 +49,7 @@ class ES_11_06_AdditiveOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAddString() {
-		val program = '"use strict" + y'.parseSuccessfully
+		val program = '"use strict" + y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AdditiveExpression
 		val op = expression.op
@@ -73,7 +73,7 @@ class ES_11_06_AdditiveOperatorEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testAddAdd() {
-		val program = 'x + y + z'.parseSuccessfully
+		val program = 'x + y + z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AdditiveExpression
 		val op = expression.op

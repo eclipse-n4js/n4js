@@ -19,7 +19,7 @@ class ES_12_04_ExpressionStatementEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testIdentifierRef_01() {
-		val script = 'x'.parseSuccessfully
+		val script = 'x'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val x = statement.expression as IdentifierRef
 		assertEquals('x', x.text)
@@ -27,7 +27,7 @@ class ES_12_04_ExpressionStatementEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testIdentifierRef_02() {
-		val script = 'x, y'.parseSuccessfully
+		val script = 'x, y'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val comma = statement.expression as CommaExpression
 		assertEquals(2, comma.exprs.size)
@@ -39,7 +39,7 @@ class ES_12_04_ExpressionStatementEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testEscapedIdentifierRef_01() {
-		val script = 'var a; \\u0061'.parseSuccessfully
+		val script = 'var a; \\u0061'.parseESSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val xRef = statement.expression as IdentifierRef
 		assertEquals('\\u0061', xRef.text)
@@ -49,7 +49,7 @@ class ES_12_04_ExpressionStatementEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testEscapedIdentifierRef_02() {
-		val script = 'var aa; a\\u0061'.parseSuccessfully
+		val script = 'var aa; a\\u0061'.parseESSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val xRef = statement.expression as IdentifierRef
 		assertEquals('a\\u0061', xRef.text)
@@ -59,7 +59,7 @@ class ES_12_04_ExpressionStatementEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testEscapedIdentifierRef_03() {
-		val script = 'var aa; \\u0061a '.parseSuccessfully
+		val script = 'var aa; \\u0061a '.parseESSuccessfully
 		val statement = script.scriptElements.last as ExpressionStatement
 		val xRef = statement.expression as IdentifierRef
 		assertEquals('\\u0061a', xRef.text)

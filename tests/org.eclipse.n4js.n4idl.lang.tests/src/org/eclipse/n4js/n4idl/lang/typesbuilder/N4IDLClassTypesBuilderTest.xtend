@@ -20,7 +20,7 @@ public class N4IDLClassTypesBuilderTest extends AbstractParserTest {
 
 	@Test
 	def void testVersionedClass_01() {
-		val Script script = 'class C #1 {}'.parseSuccessfully
+		val Script script = 'class C #1 {}'.parseESSuccessfully
 		val TModule module = script.module
 		val TClass tclass = module.topLevelTypes.get(0) as TClass;
 		assertEquals("C", tclass.name);

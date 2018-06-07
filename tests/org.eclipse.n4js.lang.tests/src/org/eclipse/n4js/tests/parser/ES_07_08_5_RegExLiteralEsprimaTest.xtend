@@ -20,42 +20,42 @@ class ES_07_08_5_RegExLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testRegEx_01() {
-		val script = 'var x = /[a-z]/i'.parseSuccessfully
+		val script = 'var x = /[a-z]/i'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/[a-z]/i', regex.value)
 	}
 	@Test
 	def void testRegEx_02() {
-		val script = 'var x = /[x-z]/i'.parseSuccessfully
+		val script = 'var x = /[x-z]/i'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/[x-z]/i', regex.value)
 	}
 	@Test
 	def void testRegEx_03() {
-		val script = 'var x = /[a-c]/i'.parseSuccessfully
+		val script = 'var x = /[a-c]/i'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/[a-c]/i', regex.value)
 	}
 	@Test
 	def void testRegEx_04() {
-		val script = 'var x = /[P QR]/i'.parseSuccessfully
+		val script = 'var x = /[P QR]/i'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/[P QR]/i', regex.value)
 	}
 	@Test
 	def void testRegEx_05() {
-		val script = 'var x = /foo\\/bar/'.parseSuccessfully
+		val script = 'var x = /foo\\/bar/'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/foo\\/bar/', regex.value)
 	}
 	@Test
 	def void testRegEx_06() {
-		val script = 'var x = /=([^=\\s])+/g'.parseSuccessfully
+		val script = 'var x = /=([^=\\s])+/g'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/=([^=\\s])+/g', regex.value)
@@ -63,7 +63,7 @@ class ES_07_08_5_RegExLiteralEsprimaTest extends AbstractParserTest {
 	@Test
 	@Ignore("TODO value converter / clarify if we want to keep the escaped char or the real thing")
 	def void testRegEx_07() {
-		val script = 'var x = /[P QR]/\\u0067'.parseSuccessfully
+		val script = 'var x = /[P QR]/\\u0067'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/[P QR]/g', regex.value)
@@ -71,14 +71,14 @@ class ES_07_08_5_RegExLiteralEsprimaTest extends AbstractParserTest {
 	@Test
 	@Ignore("TODO clarify")
 	def void testRegEx_08() {
-		val script = 'var x = /[P QR]/\\g'.parseSuccessfully
+		val script = 'var x = /[P QR]/\\g'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/[P QR]/g', regex.value)
 	}
 	@Test
 	def void testRegEx_09() {
-		val script = 'var x = /42/g.test'.parseSuccessfully
+		val script = 'var x = /42/g.test'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val accessExpression = statement.varDecl.head.expression as ParameterizedPropertyAccessExpression
 		val regex = accessExpression.target as RegularExpressionLiteral

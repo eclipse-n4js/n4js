@@ -14,9 +14,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.ResourceException;
@@ -64,12 +67,15 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
+import org.eclipse.xtext.nodemodel.impl.RootNode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -618,7 +624,84 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (contents != null && !contents.isEmpty()) {
 			discardStateFromDescription(true);
 		}
-		super.doLoad(inputStream, options);
+		if (N4JSLanguageUtils.isOpaqueModule(this.uri)) {
+			IParseResult result = new JSParseResult(inputStream);
+			updateInternalState(this.getParseResult(), result);
+		} else {
+			super.doLoad(inputStream, options);
+		}
+	}
+
+	static class JSParseResult implements IParseResult {
+		final EObject scriptNode;
+		final RootNode rootNode;
+
+		JSParseResult(InputStream inputStream) {
+			this(getCompleteString(inputStream));
+		}
+
+		JSParseResult(String text) {
+			scriptNode = N4JSFactory.eINSTANCE.createScript();
+			rootNode = new RootNode();
+			setText(text);
+			scriptNode.eAdapters().add(rootNode);
+		}
+
+		private static String getCompleteString(InputStream inputStream) {
+			String completeString = "";
+			try (Scanner s = new Scanner(inputStream); Scanner ss = s.useDelimiter("\\A");) {
+				completeString = ss.hasNext() ? ss.next() : "";
+			} catch (Exception e) {
+				LOGGER.error("Error when reading contents of JS file", e);
+			}
+			return completeString;
+		}
+
+		@Override
+		public EObject getRootASTElement() {
+			return scriptNode;
+		}
+
+		@Override
+		public ICompositeNode getRootNode() {
+			return rootNode;
+		}
+
+		@Override
+		public Iterable<INode> getSyntaxErrors() {
+			return Collections.emptyList();
+		}
+
+		@Override
+		public boolean hasSyntaxErrors() {
+			return false;
+		}
+
+		void setText(String text) {
+			try {
+				String methodName = "basicSetCompleteContent";
+				Method basicSetCompleteContent = RootNode.class.getDeclaredMethod(methodName, String.class);
+				basicSetCompleteContent.setAccessible(true);
+				basicSetCompleteContent.invoke(rootNode, text);
+
+			} catch (Exception e) {
+				LOGGER.error("Error when setting contents of JS file", e);
+			}
+		}
+
+	}
+
+	@Override
+	public void update(int offset, int replacedTextLength, String newText) {
+		if (N4JSLanguageUtils.isOpaqueModule(this.uri)) {
+			String oldText = this.getParseResult().getRootNode().getText();
+			String newCompleteString = oldText.substring(0, offset) + newText
+					+ oldText.substring(offset + replacedTextLength);
+			JSParseResult jsParseResult = (JSParseResult) this.getParseResult();
+			jsParseResult.setText(newCompleteString);
+		} else {
+			super.update(offset, replacedTextLength, newText);
+		}
 	}
 
 	@Override

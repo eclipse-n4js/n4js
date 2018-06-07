@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -34,7 +34,6 @@ class Version implements Comparable<Version> {
 	/** Singleton for representing a missing version. */
 	public val static MISSING = new Version(0, 0, 0, null);
 
-
 	val int major;
 	val int minor;
 	val int micro;
@@ -56,7 +55,7 @@ class Version implements Comparable<Version> {
 			return MISSING;
 		}
 
-		//Strip all leading non-numeric characters.
+		// Strip all leading non-numeric characters.
 		var finished = false;
 		var firstDigitIndex = 0;
 		while (!finished && firstDigitIndex < toRead.length) {
@@ -73,13 +72,12 @@ class Version implements Comparable<Version> {
 		}
 
 		val tailValues = values.get(2).split('-', 2);
-		if(tailValues.size == 2){
+		if (tailValues.size == 2) {
 			values.set(2, tailValues.get(0))
 			values.add(tailValues.get(1))
-		}else if(tailValues.size > 2){
+		} else if (tailValues.size > 2) {
 			LOGGER.warn('''Error while parsing version qualifier form string '«toRead»'. Ignoring qualifier.''');
 		}
-
 
 		val int[] numbers = newIntArrayOfSize(3);
 		try {
@@ -91,7 +89,8 @@ class Version implements Comparable<Version> {
 			return MISSING;
 		}
 
-		return new Version(numbers.get(0), numbers.get(1), numbers.get(2), if (4 === values.length) values.get(3) else null);
+		return new Version(numbers.get(0), numbers.get(1), numbers.get(2),
+			if (4 === values.length) values.get(3) else null);
 	}
 
 	static def Version findClosestMatching(Iterable<Version> versions, Version toFind) {
@@ -118,6 +117,36 @@ class Version implements Comparable<Version> {
 		}
 
 		return current;
+	}
+
+	static def int getVersionNumber(String versionString, int place) {
+		if (versionString !== null) {
+			val split = versionString.split(".");
+			if (split.length > place && split.get(place).length() > 0) {
+				val versionNumber = Integer.parseInt(split.get(place));
+				return versionNumber
+			}
+		}
+		return 0;
+	}
+
+	static def String getVersionQualifier(String versionString) {
+		if (versionString !== null) {
+			val split = versionString.split("-");
+			if (split.length > 1) {
+				return split.get(1)
+			}
+		}
+		return "";
+	}
+
+	new(String versionString) {
+		this(
+			getVersionNumber(versionString, 0),
+			getVersionNumber(versionString, 1),
+			getVersionNumber(versionString, 2),
+			getVersionQualifier(versionString)
+		);
 	}
 
 	new(int major, int minor, int micro) {

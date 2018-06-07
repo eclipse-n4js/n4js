@@ -70,7 +70,9 @@ class UndefinedHandlingTest {
 		function f() {
 			this.undefined;
 		}
-		'''.parse(JavaScriptVariant.unrestricted).assertNoErrors
+		'''.parse(JavaScriptVariant.n4js) // GH-855: change back to unrestricted variant
+			.assertError(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
+				Diagnostic.LINKING_DIAGNOSTIC); // GH-855: change back to assertNoErrors
 	}
 
 	@Test

@@ -18,7 +18,7 @@ class N4_09_02_4_ImportStatement extends AbstractParserTest {
 
 	@Test
 	def void testNamespaceImport() {
-		val script = 'import * as X from "X"'.parseSuccessfully
+		val script = 'import * as X from "X"'.parseESSuccessfully
 		val importDecl = script.scriptElements.get(0) as ImportDeclaration
 		val nsis = importDecl.importSpecifiers.get(0) as NamespaceImportSpecifier;
 
@@ -28,7 +28,7 @@ class N4_09_02_4_ImportStatement extends AbstractParserTest {
 
 	@Test
 	def void testNamespaceImportDynnamic() {
-		val script = 'import * as X+ from "X"'.parseSuccessfully
+		val script = 'import * as X+ from "X"'.parseESSuccessfully
 		val importDecl = script.scriptElements.get(0) as ImportDeclaration
 		val nsis = importDecl.importSpecifiers.get(0) as NamespaceImportSpecifier;
 

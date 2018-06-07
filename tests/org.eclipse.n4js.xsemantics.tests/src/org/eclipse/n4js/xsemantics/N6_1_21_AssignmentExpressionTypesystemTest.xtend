@@ -17,8 +17,6 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.n4js.validation.JavaScriptVariant.*
-
 /**
  * Test class for assignment expressions (6.1.21)
  *
@@ -32,7 +30,7 @@ class N6_1_21_AssignmentExpressionTypesystemTest extends AbstractOperatorExpress
 
 	@Test
 	def void testSimpleAssignmentType() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			val dyn = if(mode.isECMAScript) "+" else "";
 
 			assertOperatorType(mode, "number"+dyn, '''s1 = n2''')
@@ -56,7 +54,7 @@ class N6_1_21_AssignmentExpressionTypesystemTest extends AbstractOperatorExpress
 
 	@Test
 	def void testAddCompoundAssignmentType() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			assertOperatorType(mode, "string", '''n1 += s1''')
 
 			assertOperatorType(mode, "string", '''s1 += n2''')
@@ -79,7 +77,7 @@ class N6_1_21_AssignmentExpressionTypesystemTest extends AbstractOperatorExpress
 
 	@Test
 	def void testOtherCompundAssignments() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			for (op : #["*=", "/=", "%=", "-=", "<<=", ">>=", ">>>=", "&=", "^=", "|="]) {
 				assertOperatorType(mode, "number", '''s1 «op» n2''')
 				assertOperatorType(mode, "number", '''s1 «op» s2''')
@@ -117,7 +115,7 @@ class N6_1_21_AssignmentExpressionTypesystemTest extends AbstractOperatorExpress
 
 	@Test
 	def void testExpectedTypeSimpleAssignment() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			assertExpectedType(mode, BOTTOM_TYPE, "string", '''s1 = n2''')
 			assertExpectedType(mode, BOTTOM_TYPE, "string", '''s1 = s2''')
 			assertExpectedType(mode, BOTTOM_TYPE, "string", '''s1 = f2''')
@@ -134,7 +132,7 @@ class N6_1_21_AssignmentExpressionTypesystemTest extends AbstractOperatorExpress
 
 	@Test
 	def void testExpectedTypeAddCompoundAssignmentType() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			assertExpectedType(mode,  "intersection{number,string}", "any", '''s1 += n2''')
 			assertExpectedType(mode,  "intersection{number,string}", "any", '''s1 += s2''')
 			assertExpectedType(mode,  "intersection{number,string}", "any", '''s1 += f2''')
@@ -151,7 +149,7 @@ class N6_1_21_AssignmentExpressionTypesystemTest extends AbstractOperatorExpress
 
 	@Test
 	def void testExpectedTypeOtherCompundAssignments() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			for (op : #["*=", "/=", "%=", "-=", "<<=", ">>=", ">>>=", "&=", "^=", "|="]) {
 				assertExpectedType(mode,  "number", "number", '''s1 «op» n2''')
 				assertExpectedType(mode,  "number", "number", '''s1 «op» s2''')
