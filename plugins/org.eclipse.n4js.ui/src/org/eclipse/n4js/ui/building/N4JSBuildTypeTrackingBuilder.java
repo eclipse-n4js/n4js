@@ -42,6 +42,7 @@ import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.builder.impl.ToBeBuiltComputer;
 import org.eclipse.xtext.builder.impl.XtextBuilder;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
@@ -63,8 +64,6 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	@BuilderState
 	private IBuildLogger builderStateLogger;
 
-	private CloseProjectTaskScheduler closedProjectTaskScheduler;
-
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 
 	private N4MFProjectDependencyStrategy projectDependencyStrategy;
@@ -73,7 +72,6 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	private void injectSharedContributions(ISharedStateContributionRegistry registry) {
 		this.externalLibraryBuildJobProvider = registry
 				.getSingleContributedInstance(ExternalLibraryBuildScheduler.class);
-		this.closedProjectTaskScheduler = registry.getSingleContributedInstance(CloseProjectTaskScheduler.class);
 		try {
 			this.projectDependencyStrategy = registry.getSingleContributedInstance(N4MFProjectDependencyStrategy.class);
 		} catch (RuntimeException e) {
@@ -90,12 +88,11 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		try {
 			RaceDetectionHelper.log("About to build %s", getProject());
 
-			SubMonitor builderMonitor = toBuilderMonitor(monitor);
+			SubMonitor builderMonitor = toBuilderMonitor(monitor, 1100);
 
 			/*
 			 * Make sure that announced changes to the libraries have been actually processed
 			 */
-			closedProjectTaskScheduler.processClosedProjects(builderMonitor.split(50));
 			externalLibraryBuildJobProvider.buildExternalProjectsNow(builderMonitor.split(50));
 
 			IProject[] result = super.build(kind, args, builderMonitor.split(1000, SubMonitor.SUPPRESS_SETTASKNAME));
@@ -217,7 +214,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	private void processedAbsentReferencedProjects(IResourceDeltaVisitor visitor) throws CoreException {
 		final IProject[] interestingProjects = optimisticInvoke("getInterestingProjects");
 		for (IProject more : interestingProjects) {
-			if (!more.isAccessible()) {
+			if (!XtextProjectHelper.hasNature(more)) {
 				IResourceDelta interestingDelta = getDelta(more);
 				if (interestingDelta != null) {
 					interestingDelta.accept(visitor);
@@ -320,38 +317,37 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		if (isNoop(toBeBuilt, queuedBuildData, indexingOnly))
 			return;
 
-		SubMonitor progress = toBuilderMonitor(monitor);
+		SubMonitor progress = toBuilderMonitor(monitor, 1);
 
-		ResourceSet resourceSet = createResourceSet();
-		BuildData buildData = new BuildData(getProject().getName(), resourceSet, toBeBuilt, queuedBuildData,
+		IProject project = getProject();
+		ResourceSet resourceSet = createResourceSet(project);
+		BuildData buildData = new BuildData(project.getName(), resourceSet, toBeBuilt, queuedBuildData,
 				indexingOnly);
 		getBuilderState().update(buildData, progress.split(1, SubMonitor.SUPPRESS_NONE));
 		if (!indexingOnly) {
 			try {
-				getProject().getWorkspace().checkpoint(false);
+				project.getWorkspace().checkpoint(false);
 			} catch (NoClassDefFoundError e) { // guard against broken Eclipse installations / bogus project
 												// configuration
 				throw new RuntimeException(e);
 			}
 		}
-		resourceSet.eSetDeliver(false);
-		resourceSet.getResources().clear();
-		resourceSet.eAdapters().clear();
 	}
 
-	private SubMonitor toBuilderMonitor(IProgressMonitor monitor) {
+	private SubMonitor toBuilderMonitor(IProgressMonitor monitor, int ticks) {
 		monitor.subTask("Building " + getProject().getName());
-		SubMonitor progress = SubMonitor.convert(monitor, 1100);
+		SubMonitor progress = SubMonitor.convert(monitor, ticks);
 		return progress;
 	}
 
-	private ResourceSet createResourceSet() {
-		ResourceSet resourceSet = getResourceSetProvider().get(getProject());
+	private ResourceSet createResourceSet(IProject project) {
+		ResourceSet resourceSet = getResourceSetProvider().get(project);
 		resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.NAMED_BUILDER_SCOPE, Boolean.TRUE);
 		return resourceSet;
 	}
 
-	private boolean isNoop(ToBeBuilt toBeBuilt, QueuedBuildData queuedBuildData, boolean indexingOnly) {
+	private boolean isNoop(ToBeBuilt toBeBuilt, QueuedBuildData queuedBuildData,
+			boolean indexingOnly) {
 		return new BuildData(getProject().getName(), null, toBeBuilt, queuedBuildData, indexingOnly).isEmpty();
 	}
 
