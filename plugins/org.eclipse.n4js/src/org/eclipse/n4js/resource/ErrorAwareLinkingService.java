@@ -91,9 +91,11 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 			IEObjectDescription eObjectDescription = scope.getSingleElement(qualifiedLinkName);
 			IEObjectDescriptionWithError errorDescr;
 			Resource resource = context.eResource();
-			if (resource != null && !n4jsCore.isNoValidate(resource.getURI())
+			if (resource != null
 					&& (errorDescr = IEObjectDescriptionWithError
-							.getDescriptionWithError(eObjectDescription)) != null) {
+							.getDescriptionWithError(eObjectDescription)) != null
+					// isNoValidate traverses the file system so it should be the last part of the check
+					&& !n4jsCore.isNoValidate(resource.getURI())) {
 				addError(context, node, errorDescr);
 			} else if (eObjectDescription instanceof UnresolvableObjectDescription) {
 				return Collections.<EObject> singletonList((EObject) context.eGet(ref, false));
