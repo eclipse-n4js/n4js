@@ -22,6 +22,12 @@ public final class RaceDetectionHelper {
 	public static final boolean ENABLED = Boolean
 			.parseBoolean(System.getProperty(RaceDetectionHelper.class.getName() + ".enabled", "false"));
 
+	static {
+		log("*******************************");
+		log("* RACEDETECTIONHELPER ENABLED *");
+		log("*******************************");
+	}
+
 	private RaceDetectionHelper() {
 		throw new AssertionError("Unexpected constructor call");
 	}
