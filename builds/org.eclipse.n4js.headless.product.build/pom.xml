@@ -43,7 +43,7 @@ Contributors:
 			<id>stagingNpmRegistry</id>
 			<activation>
 				<property>
-					<name>stagingNpmRegistry</name>
+					<name>stagingNpmRegistryPort</name>
 				</property>
 			</activation>
 			<build>
@@ -65,7 +65,7 @@ Contributors:
 									<arguments>
 										<argument>${project.basedir}/../../publish-n4js-libs-npm.sh</argument>
 										<argument>bridge</argument>
-										<argument>${stagingNpmRegistry}</argument>
+										<argument>${stagingNpmRegistryPort}</argument>
 									</arguments>
 								</configuration>
 							</execution>

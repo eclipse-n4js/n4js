@@ -48,3 +48,5 @@ max_body_size: 100mb
 publish:
   allow_offline: true
 
+listen:
+  - 0.0.0.0:4873
