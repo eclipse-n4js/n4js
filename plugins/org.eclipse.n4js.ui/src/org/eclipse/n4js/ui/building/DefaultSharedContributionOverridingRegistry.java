@@ -23,7 +23,8 @@ import com.google.inject.Singleton;
 import com.google.inject.util.Modules;
 
 /**
- * Overrides the {@link DefaultSharedContribution} to special
+ * Overrides the {@link DefaultSharedContribution} to specialize the {@link ProjectOpenedOrClosedListener}. We have to
+ * use a little trick here and override the {@link DefaultSharedContribution} to replace the original binding.
  */
 @SuppressWarnings("restriction")
 @Singleton

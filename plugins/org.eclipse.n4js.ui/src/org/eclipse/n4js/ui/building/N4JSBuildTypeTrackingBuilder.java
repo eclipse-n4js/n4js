@@ -181,8 +181,9 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		doBuild(toBeBuilt, progress.newChild(8), BuildType.INCREMENTAL);
 	}
 
-	/*
-	 * Extract from local method to make it reusable.
+	/**
+	 * Creates a visitor that is used to traverse the information that is obtained from {@link #getDelta(IProject)}. It
+	 * accumulates its findings in the given <code>toBeBuilt</code>.
 	 */
 	private IResourceDeltaVisitor createDeltaVisitor(ToBeBuiltComputer toBeBuiltComputer, final ToBeBuilt toBeBuilt,
 			final SubMonitor progress) {
