@@ -141,7 +141,7 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 			IResourceDescriptions oldState,
 			CurrentDescriptions newState,
 			final IProgressMonitor monitor) {
-		new WriteNewResourceDescriptionsImplementation(this, buildData, oldState, newState, monitor,
+		new WriteNewResourceDescriptionsImplementation(this, buildData, oldState, newState, monitor, buildLogger,
 				globalIndexResourceLoader, clusteringPolicy, compilerPhases)
 						.writeNewResourceDescriptions();
 	}
