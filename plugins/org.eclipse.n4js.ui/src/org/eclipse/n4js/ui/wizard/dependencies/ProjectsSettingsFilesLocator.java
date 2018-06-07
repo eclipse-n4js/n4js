@@ -77,8 +77,6 @@ public final class ProjectsSettingsFilesLocator {
 			}
 		}
 
-		System.out.println("SCANNING " + roots.size() + " folders and " + files.size() + " files.");
-
 		if (!monitor.isCanceled())
 			locator.scan(roots, files, monitor);
 		return locator;
@@ -109,12 +107,9 @@ public final class ProjectsSettingsFilesLocator {
 
 		Set<Path> actualRoots = getProjectsRoots(roots);
 
-		System.out.println("SCAN " + actualRoots.size() + " roots:");
-
 		final SubMonitor deepMonitor = subMonitor.split(90);
 		deepMonitor.beginTask("Deep workspace scan...", roots.size());
 		for (Path path : actualRoots) {
-			System.out.println("### " + path);
 			if (monitor.isCanceled())
 				break;
 			File root = path.toFile();
@@ -180,19 +175,8 @@ public final class ProjectsSettingsFilesLocator {
 
 	/** If the extension of a given file matches {@link #NPMRC} then it is collected. */
 	private void processFile(File file) {
-		// if (file.toString().startsWith("/Users/jakub.siberski/n4p/devtools/user_code/git/onlinepresence/")) {
-		// System.out.println(" === " + file);
-		// System.out.println(" --- " + file.getAbsolutePath());
-		// System.out.println(" :: " + Files.getFileExtension(file.getAbsolutePath()));
-		// if (NPMRC == Files.getFileExtension(file.getAbsolutePath()))
-		// System.out.println("!!!");
-		// }
-		// if (file.toString().startsWith("/Users/jakub.siberski/n4p/devtools/user_code/git/onlinepresence/.npmrc"))
-		// System.out.println("********");
 		switch (Files.getFileExtension(file.getAbsolutePath())) {
 		case NPMRC:
-			System.out.println("ADDING " + file);
-			System.out.println("_____ " + file.hashCode());
 			foundNPMRC.add(file);
 			break;
 		default:
