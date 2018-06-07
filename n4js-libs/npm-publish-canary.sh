@@ -27,11 +27,14 @@ if [ -f .npmrc ]; then
 	rm .npmrc
 fi
 
+HOST_NAME=`hostname`
 NPM_TAG=test
+NPM_REGISTRY="http://${HOST_NAME}:4873"
+
 # Create an .npmrc only if we are publishing to the public
 if [ "$DESTINATION" = "public" ]; then
 	if [ -z $NPM_TOKEN]; then
-		echo "Publishing to public requires the NPM_TAG to be set but it has not been set!"
+		echo "Publishing to public requires the NPM_TOKEN to be set but it has not been set!"
 		exit 0;
 	fi
 	NPM_TAG=latest
