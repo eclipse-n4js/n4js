@@ -14,20 +14,45 @@ set -e
 cd `dirname $0`
 cd `pwd -P`
 
+DIR_ROOT=`pwd`
+
 echo "We are currently in $PWD"
 
-# Login as a test user
-# npm-cli-login -u testuser -p testpass -e test@pass.com -r $NPM_REGISTRY
+function echo_exec {
+    echo "$@"
+    $@
+}
 
-# Publish using canary version
-if [ -z $NPM_REGISTRY ]; then
-	echo "Publishing using .npmrc configuration";
-	lerna publish --loglevel silly --skip-git --exact --canary --yes --sort
-else
-	echo "Publishing to $NPM_REGISTRY";
-	# We publish the npms to the test channel 
-	lerna publish --force --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --exact --canary --yes --sort --npm-tag=test
+if [ -f .npmrc ]; then
+	rm .npmrc
 fi
 
+NPM_TAG=test
+# Create an .npmrc only if we are publishing to the public
+if [ "$DESTINATION" = "public" ]; then
+	if [ -z $NPM_TOKEN]; then
+		echo "Publishing to public requires the NPM_TAG to be set but it has not been set!"
+		exit 0;
+	fi
+	NPM_TAG=latest
+else
+	# Dummy token
+	NPM_TOKEN=dummy	
+fi;
+NPM_REGISTRY_WITHOUT_PROTOCOL=$(echo ${NPM_REGISTRY} | awk -F"//" '{print $2}')
 
 
+DIRS=$(find ./packages/ -type d -mindepth 1 -maxdepth 1)
+
+for dir in $DIRS
+do
+	touch "$dir/.npmrc"
+	echo "//${NPM_REGISTRY_WITHOUT_PROTOCOL}/:_authToken=${NPM_TOKEN}" > "$dir/.npmrc"
+done
+
+echo "Publishing using .npmrc configuration";
+echo "${NPM_REGISTRY}"
+#export NPM_CONFIG_USERCONFIG="$DIR_ROOT/packages/n4js-node/.npmrc"
+#ls -la ./packages/n4js-node
+#echo "${NPM_CONFIG_USERCONFIG}"
+lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --exact --canary --yes --sort --npm-tag="${NPM_TAG}" --force-publish

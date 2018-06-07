@@ -227,6 +227,7 @@ Contributors:
 								<executable>bash</executable>
 								<arguments>
 									<argument>${project.basedir}/../../publish-n4js-libs-npm.sh</argument>
+									<argument>local</argument>
 									<argument>${npmLocalRegistry}</argument>
 								</arguments>
 							</configuration>
