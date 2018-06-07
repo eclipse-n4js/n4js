@@ -21,6 +21,9 @@ public class RepeatedTestRule implements TestRule {
 	@Override
 	public Statement apply(Statement statement, Description description) {
 		RepeatTest repeat = description.getAnnotation(RepeatTest.class);
+		if (repeat == null) {
+			repeat = description.getTestClass().getAnnotation(RepeatTest.class);
+		}
 		if (repeat != null) {
 			return new RepeatableTestStatement(repeat.times(), statement);
 		}
