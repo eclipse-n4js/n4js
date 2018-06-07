@@ -163,8 +163,6 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 						fsa.generateFile(sourceMapFileName, COMPILER_ID,
 								optSourceMapData.get().sourceMapBuff.toString());
 					}
-				} else {
-					System.out.println("ROOT WAS NULL");
 				}
 			}
 		}
