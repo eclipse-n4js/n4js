@@ -107,8 +107,8 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 					IssueCodes.EXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION_RIGHT);
 			return false;
 		}
-		return true;
 
+		return true;
 	}
 
 	/**
