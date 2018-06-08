@@ -30,7 +30,6 @@ import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
@@ -73,8 +72,6 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Provides XPEXT test methods for quick fixes
@@ -92,9 +89,6 @@ public class QuickFixXpectMethod {
 	private static class ExecutionResult {
 		public String result;
 	}
-
-	@Inject
-	private IssueResolutionProvider quickfixProvider;
 
 	/*-
 	contentAssist kind 'smart' at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
@@ -367,22 +361,19 @@ public class QuickFixXpectMethod {
 			FileSetupContext fileSetupContext, ResourceTweaker resourceTweaker) {
 
 		try {
-			return getXpectN4JSES5TranspilerHelper().doCompileAndExecute(resource, init,
+			/**
+			 * Asking the injector is necessary, since the Xpect methods get also called from N4MF context. see test is
+			 * org.eclipse.n4js.xpect.ui/n4mf/quickfix/
+			 */
+			XpectN4JSES5TranspilerHelper transpilerHelper = resource.getResourceServiceProvider()
+					.get(XpectN4JSES5TranspilerHelper.class);
+			return transpilerHelper.doCompileAndExecute(resource, init,
 					fileSetupContext,
 					false,
 					resourceTweaker, GeneratorOption.DEFAULT_OPTIONS, SystemLoaderInfo.SYSTEM_JS);
 		} catch (IOException e) {
 			throw new RuntimeException("Error while compiling script.", e);
 		}
-	}
-
-	/**
-	 * Asking the injector is necessary, since the Xpect methods get also called from N4MF context. see test is
-	 * org.eclipse.n4js.xpect.ui/n4mf/quickfix/
-	 */
-	private XpectN4JSES5TranspilerHelper getXpectN4JSES5TranspilerHelper() {
-		Injector injector = new N4JSInjectorSupplier().get();
-		return injector.getInstance(XpectN4JSES5TranspilerHelper.class);
 	}
 
 	/*-
@@ -451,6 +442,9 @@ public class QuickFixXpectMethod {
 		for (Issue issue : allIssues) {
 			if (issue.getLineNumber() == offsetNode.getStartLine()
 					&& issue.getLineNumber() <= offsetNode.getEndLine()) {
+
+				IssueResolutionProvider quickfixProvider = resource.getResourceServiceProvider()
+						.get(IssueResolutionProvider.class);
 				Display.getDefault().syncExec(() -> resolutions.addAll(quickfixProvider.getResolutions(issue)));
 			}
 		}

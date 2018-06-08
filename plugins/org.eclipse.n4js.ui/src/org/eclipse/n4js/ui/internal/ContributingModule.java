@@ -160,6 +160,7 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalLibraryPreferenceStore.class).to(OsgiExternalLibraryPreferenceStore.class);
 		binder.bind(OsgiExternalLibraryPreferenceStore.class);
 		binder.bind(XtextResourceSet.class);
+		binder.bind(ProjectDescriptionLoadListener.class);
 		binder.bind(IEagerContribution.class).to(ProjectDescriptionLoadListener.class);
 		binder.bind(ProjectDescriptionLoadListener.Strategy.class).to(N4MFProjectDependencyStrategy.class);
 		binder.bind(N4MFProjectDependencyStrategy.class);

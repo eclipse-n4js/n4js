@@ -42,7 +42,6 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -59,12 +58,12 @@ import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Produces the compiled js files immediately after the validation in order save CPU cycles, e.g. the file is already
@@ -153,6 +152,18 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	@Inject
 	@BuilderState
 	private IBuildLogger builderStateLogger;
+
+	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private void injectExternalLibraryWorkspace(ISharedStateContributionRegistry contributionRegistry) {
+		try {
+			this.externalLibraryWorkspace = contributionRegistry
+					.getSingleContributedInstance(ExternalLibraryWorkspace.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * After the load phase, checks whether the underlying index content is empty or a recovery builder was scheduled,
@@ -380,14 +391,14 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	// in turn gives us different state of workspace
 
 	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */
-	static private IProject getProject(BuildData buildData) {
+	private IProject getProject(BuildData buildData) {
 		String projectName = buildData.getProjectName();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		IProject project = root.getProject(projectName); // creates a project instance if not existing
 
 		if (null == project || !project.isAccessible()) {
-			final IProject externalProject = getExternalLibraryWorkspace().getProject(projectName);
+			final IProject externalProject = externalLibraryWorkspace.getProject(projectName);
 			if (null != externalProject && externalProject.exists()) {
 				project = externalProject;
 			}
@@ -396,9 +407,4 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		return project;
 	}
 
-	/** delegate to N4JS injector stored in activator to get the same @Singletons */
-	static private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
-		final Injector injector = new N4JSInjectorSupplier().get();
-		return injector.getInstance(ExternalLibraryWorkspace.class);
-	}
 }

@@ -27,7 +27,7 @@ import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ts.ui.internal.TypesActivator;
-import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.InjectorCollector;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
@@ -103,7 +103,7 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 		Map<Injector, String> injectors = new HashMap<>();
 
 		injectors.putAll(InjectorCollector.getSharedInjectors());
-		injectors.put(new N4JSInjectorSupplier().get(),
+		injectors.put(N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS),
 				"N4JS-Injector");
 		injectors.put(N4MFActivator.getInstance().getInjector(N4MFActivator.ORG_ECLIPSE_N4JS_N4MF_N4MF),
 				"N4MF-Injector");
