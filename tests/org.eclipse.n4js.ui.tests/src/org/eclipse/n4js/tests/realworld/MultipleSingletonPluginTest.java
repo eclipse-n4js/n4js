@@ -23,7 +23,8 @@ import java.util.Map;
 
 import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
 import org.eclipse.n4js.regex.ui.internal.RegularExpressionActivator;
-import org.eclipse.n4js.tester.TesterModule;
+import org.eclipse.n4js.tester.internal.TesterActivator;
+import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ts.ui.internal.TypesActivator;
@@ -112,7 +113,9 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 				"Regex-Injector");
 		injectors.put(TypesActivator.getInstance().getInjector(TypesActivator.ORG_ECLIPSE_N4JS_TS_TYPES),
 				"Types-Injector");
-		injectors.put(TesterModule.getInjector(TesterModule.N4_TESTER_MODULE_ID),
+		injectors.put(TesterUiActivator.getInjector(),
+				"Tester-UI-Injector");
+		injectors.put(TesterActivator.getInjector(),
 				"Tester-Injector");
 
 		return injectors;

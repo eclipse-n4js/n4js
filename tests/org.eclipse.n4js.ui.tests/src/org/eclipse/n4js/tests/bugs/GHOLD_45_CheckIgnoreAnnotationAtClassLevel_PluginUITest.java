@@ -29,7 +29,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
-import org.eclipse.n4js.tester.ui.N4TesterUiModule;
+import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.console.IConsole;
@@ -220,7 +220,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	}
 
 	private Injector getTesterInjector() {
-		return N4TesterUiModule.getInjector(N4TesterUiModule.N4_TESTER_UI_MODULE_ID);
+		return TesterUiActivator.getInjector();
 	}
 
 	/**
