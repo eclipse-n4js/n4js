@@ -176,10 +176,10 @@ public class N4jscJarUtils {
 			List<String> n4jscOpts) {
 		// Install n4js-cli from npm registry -> node_modules folder
 		final ProcessResult result = commandFactory
-				.createInstallPackageCommand(workspaceRoot, "n4js-cli@canary", false)
+				.createInstallPackageCommand(workspaceRoot, "n4js-cli@test", false)
 				.execute();
 		if (result.getExitCode() != 0) {
-			final String msg = "Cannot install n4js-cli@canary";
+			final String msg = "Cannot install n4js-cli@test";
 			LOGGER.error(msg);
 			throw new IllegalStateException(msg);
 		}
