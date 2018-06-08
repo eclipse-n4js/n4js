@@ -167,8 +167,12 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// Import of D cannot be resolved.
 		assertMarkers("file should have four errors", c, 4);
 	}
+	
+//	@Rule
+//	public RepeatedTestRule rule = new RepeatedTestRule();
 
 	@Test
+//	@RepeatTest(times=20)
 	def void testTwoFilesProjectNewlyCreated() throws Exception {
 		addProjectToDependencies("thirdProject")
 		val c = createTestFile(src, "C",

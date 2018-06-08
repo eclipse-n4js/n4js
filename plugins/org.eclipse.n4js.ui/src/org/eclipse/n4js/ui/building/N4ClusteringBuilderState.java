@@ -141,7 +141,7 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 			IResourceDescriptions oldState,
 			CurrentDescriptions newState,
 			final IProgressMonitor monitor) {
-		new WriteNewResourceDescriptionsImplementation(this, buildData, oldState, newState, monitor,
+		new WriteNewResourceDescriptionsImplementation(this, buildData, oldState, newState, monitor, buildLogger,
 				globalIndexResourceLoader, clusteringPolicy, compilerPhases)
 						.writeNewResourceDescriptions();
 	}
@@ -262,10 +262,11 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 		return resourceServiceProvider.getResourceDescriptionManager();
 	}
 
-	/** Visibility workaround, called by the {@link DoUpdateImplementation} */
-	void pleaseUpdateMarkers(IResourceDescription.Delta delta, ResourceSet resourceSet, IProgressMonitor monitor)
+	/* Visibility workaround, called by the {@link DoUpdateImplementation} */
+	@Override
+	protected void updateMarkers(IResourceDescription.Delta delta, ResourceSet resourceSet, IProgressMonitor monitor)
 			throws OperationCanceledException {
-		updateMarkers(delta, resourceSet, monitor);
+		super.updateMarkers(delta, resourceSet, monitor);
 	}
 
 }

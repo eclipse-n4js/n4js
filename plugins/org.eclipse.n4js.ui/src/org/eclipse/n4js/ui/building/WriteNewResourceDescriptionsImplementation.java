@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.builder.clustering.CopiedResourceDescription;
 import org.eclipse.xtext.builder.clustering.CurrentDescriptions;
+import org.eclipse.xtext.builder.debug.IBuildLogger;
 import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.resourceloader.IResourceLoader;
 import org.eclipse.xtext.builder.resourceloader.IResourceLoader.LoadOperation;
@@ -54,11 +55,14 @@ class WriteNewResourceDescriptionsImplementation {
 	private final SubMonitor progress;
 	private final ResourceSet resourceSet;
 	private final IProject currentProject;
+	private final IBuildLogger buildLogger;
 	private LoadOperation loadOperation;
 
 	public WriteNewResourceDescriptionsImplementation(N4ClusteringBuilderState state, BuildData buildData,
 			IResourceDescriptions oldState,
-			CurrentDescriptions newState, IProgressMonitor monitor, IResourceLoader globalIndexResourceLoader,
+			CurrentDescriptions newState, IProgressMonitor monitor,
+			IBuildLogger buildLogger,
+			IResourceLoader globalIndexResourceLoader,
 			IResourceClusteringPolicy clusteringPolicy, CompilerPhases compilerPhases) {
 		this.compilerPhases = compilerPhases;
 		this.clusteringPolicy = clusteringPolicy;
@@ -68,6 +72,7 @@ class WriteNewResourceDescriptionsImplementation {
 		this.oldState = oldState;
 		this.newState = newState;
 		this.progress = SubMonitor.convert(monitor, buildData.getToBeUpdated().size());
+		this.buildLogger = buildLogger;
 		this.resourceSet = buildData.getResourceSet();
 		this.currentProject = state.getBuiltProject(buildData);
 	}
@@ -107,6 +112,7 @@ class WriteNewResourceDescriptionsImplementation {
 		try {
 			uri = loadResult.getUri();
 			progress.subTask("Indexing " + uri.lastSegment());
+			buildLogger.log("Indexing " + uri);
 			resource = state.addResource(loadResult.getResource(), resourceSet);
 
 			registerDelta(uri, resource);
@@ -138,8 +144,7 @@ class WriteNewResourceDescriptionsImplementation {
 		if (manager != null) {
 			final IResourceDescription description = manager.getResourceDescription(resource);
 			final IResourceDescription copiedDescription = new CopiedResourceDescription(description);
-			newState.register(
-					new DefaultResourceDescriptionDelta(oldState.getResourceDescription(uri), copiedDescription));
+			newState.register(manager.createDelta(oldState.getResourceDescription(uri), copiedDescription));
 			buildData.queueURI(uri);
 		}
 	}

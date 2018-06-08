@@ -128,8 +128,7 @@ class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
 	private static def IProject importTestProject(String name) {
 		val project = importProject(new File("probands/ApiImplCompare"), name);
 		addNature(project, XtextProjectHelper.NATURE_ID);
-		IResourcesSetupUtil.cleanBuild
-		waitForAutoBuild
+		IResourcesSetupUtil.waitForBuild
 		assertMarkers("imported test project '"+name+"' should have no errors/warnings", project, 0)
 		return project;
 	}

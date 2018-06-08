@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.manifest;
 
+import org.eclipse.n4js.dirtystate.BuilderParticipantPluginTest;
+import org.eclipse.n4js.dirtystate.IncrementalBuilderCornerCasesPluginTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -18,9 +20,13 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
+		BuilderParticipantPluginTest.class,
+		IncrementalBuilderCornerCasesPluginTest.class,
+		TransitiveDependencyPluginTest.class,
+		NoValidationPluginTest.class,
 		MultiProjectPluginTest.class,
-		SingleProjectPluginTest.class,
-		TransitiveDependencyPluginTest.class })
+		SingleProjectPluginTest.class
+})
 public class AllTests {
 	// empty
 }

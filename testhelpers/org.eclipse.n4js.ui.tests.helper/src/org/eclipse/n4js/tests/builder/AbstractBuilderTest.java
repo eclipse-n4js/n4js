@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -31,8 +32,9 @@ import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -79,7 +81,9 @@ public abstract class AbstractBuilderTest {
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 	@Inject
-	private ExternalLibraryBuilder externalLibraryBuilderHelper;
+	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
+	@Inject
+	private CloseProjectTaskScheduler closedProjectTaskProcessor;
 
 	/***/
 	@Before
@@ -206,10 +210,19 @@ public abstract class AbstractBuilderTest {
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
+		waitForNotReallyBuildButHousekeepingJobs();
 		ProjectTestsUtils.waitForAutoBuild();
 		ProjectTestsUtils.waitForAllJobs();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
+	}
+
+	/**
+	 * Waits for the jobs that do the housekeeping after project close or removal.
+	 */
+	protected void waitForNotReallyBuildButHousekeepingJobs() {
+		closedProjectTaskProcessor.joinRemoveProjectJob();
+		externalLibraryBuildJobProvider.joinBuildJob();
 	}
 
 	/***/
@@ -267,7 +280,7 @@ public abstract class AbstractBuilderTest {
 	 */
 	protected void assertXtextIndexIsValid() {
 		// ensure no build is running while we examine the Xtext index
-		final ISchedulingRule rule = externalLibraryBuilderHelper.getRule();
+		final ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
 		try {
 			Job.getJobManager().beginRule(rule, null);
 			assertXtextIndexIsValidInternal();

@@ -177,7 +177,7 @@ class DoUpdateImplementation {
 				}
 
 				// resourceWatch.start();
-				buildLogger.log("indexing " + changedURI);
+				buildLogger.log("Linking " + changedURI);
 				newDelta = resolveLinks(actualResourceURI, resource);
 			} catch (final WrappedException ex) {
 				if (ex instanceof LoadOperationException) {
@@ -278,7 +278,8 @@ class DoUpdateImplementation {
 		if (!buildData.isIndexingOnly()) {
 			try {
 				progress.subTask("Compiling " + newDelta.getUri().lastSegment());
-				state.pleaseUpdateMarkers(newDelta, resourceSet, progress.split(2));
+				buildLogger.log("Compiling " + newDelta.getUri());
+				state.updateMarkers(newDelta, resourceSet, progress.split(2));
 			} catch (OperationCanceledException e) {
 				loadOperation.cancel();
 				throw e;

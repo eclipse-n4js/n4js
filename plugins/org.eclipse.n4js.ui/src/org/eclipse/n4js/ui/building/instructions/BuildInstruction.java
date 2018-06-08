@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.generator.GeneratorException;
 import org.eclipse.n4js.generator.ICompositeGenerator;
+import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
@@ -101,16 +102,19 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 			public boolean beforeFileDeletion(IFile file) {
 				derivedResources.remove(file);
 				needRebuild();
+				RaceDetectionHelper.log("beforeFileDeletion: %s", file);
 				return true;
 			}
 
 			@Override
 			public void afterFileUpdate(IFile file) {
+				RaceDetectionHelper.log("afterFileUpdate: %s", file);
 				handleFileAccess(file);
 			}
 
 			@Override
 			public void afterFileCreation(IFile file) {
+				RaceDetectionHelper.log("afterFileCreation: %s", file);
 				handleFileAccess(file);
 			}
 
@@ -127,7 +131,9 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 		});
 		if (delta.getNew() != null) {
 			try {
+				RaceDetectionHelper.log("About to handleChangedContents of %s", delta.getUri());
 				handleChangedContents(delta, project, resourceSet);
+				RaceDetectionHelper.log("Did handleChangedContents of %s", delta.getUri());
 			} catch (OperationCanceledException e) {
 				throw e;
 			} catch (Exception e) {
