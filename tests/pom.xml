@@ -113,7 +113,8 @@ Contributors:
 		<module>org.eclipse.n4js.hlc.tests</module>
 
 		<!-- *************************************** n4jsx Tests -->
-		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
+		<!-- Re-activate in GH-893 -->
+		<!-- <module>org.eclipse.n4js.n4jsx.lang.tests</module> -->
 		<module>org.eclipse.n4js.n4jsx.spec.ui.tests</module>
 		<module>org.eclipse.n4js.n4jsx.xpect.ui.tests</module>
 		<module>org.eclipse.n4js.n4jsx.ui.tests</module>
