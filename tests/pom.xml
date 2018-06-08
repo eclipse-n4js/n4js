@@ -49,7 +49,8 @@ Contributors:
 		<!-- JS tests -->
 		<module>org.eclipse.n4js.lang.tests</module>
 		<module>org.eclipse.n4js.spec.tests</module>
-		<module>org.eclipse.n4js.tests.ecmatestsuite</module>
+		<!-- Re-activate in GH-893 -->
+		<!-- <module>org.eclipse.n4js.tests.ecmatestsuite</module> -->
 		<module>org.eclipse.n4js.xpect.tests</module>
 
 		<!-- Xsemantics tests -->
