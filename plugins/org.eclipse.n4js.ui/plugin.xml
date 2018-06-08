@@ -1112,12 +1112,6 @@ Contributors:
        </decorator>
     </extension>
         <extension
-              point="org.eclipse.n4js.utils.injectorSupplier">
-           <supplier
-                 class="org.eclipse.n4js.ui.utils.N4JSInjectorSupplier">
-           </supplier>
-        </extension>
-        <extension
               point="org.eclipse.ui.startup">
            <startup
                  class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.N4JSExternalLibraryStartup">
@@ -1132,13 +1126,6 @@ Contributors:
                  class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.internal.N4JSExternalLibraryResourceDescriptionsPersisterContribution">
            </contribution>
         </extension>
-        <extension
-              point="org.eclipse.n4js.utils.ui.quickfixProviderSupplier">
-           <supplier
-                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.quickfix.N4JSQuickfixProviderSupplier">
-           </supplier>
-        </extension>
-
         <extension
                 point="org.eclipse.ui.navigator.viewer">
             <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
