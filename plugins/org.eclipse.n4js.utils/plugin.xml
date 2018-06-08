@@ -11,7 +11,6 @@ Contributors:
 -->
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="injectorSupplier" name="Injector Supplier" schema="schema/injectorSupplier.exsd"/>
    <extension-point id="org.eclipse.n4js.utils.fileExtensions" name="File Extensions" schema="schema/org.eclipse.n4js.utils.fileExtensions.exsd"/>
 
    <extension point="org.eclipse.emf.ecore.generated_package">

@@ -58,6 +58,7 @@ import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.quickfix.N4JSQuickfixProvider;
 import org.eclipse.n4js.ui.scoping.builtin.ScopeInitializer;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
@@ -160,6 +161,7 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalLibraryPreferenceStore.class).to(OsgiExternalLibraryPreferenceStore.class);
 		binder.bind(OsgiExternalLibraryPreferenceStore.class);
 		binder.bind(XtextResourceSet.class);
+		binder.bind(ProjectDescriptionLoadListener.class);
 		binder.bind(IEagerContribution.class).to(ProjectDescriptionLoadListener.class);
 		binder.bind(ProjectDescriptionLoadListener.Strategy.class).to(N4MFProjectDependencyStrategy.class);
 		binder.bind(N4MFProjectDependencyStrategy.class);
@@ -205,5 +207,12 @@ public class ContributingModule implements Module {
 		binder.bind(TypesKeywordProvider.class);
 		binder.bind(ExternalLibraryErrorMarkerManager.class);
 		binder.bind(IWorkspaceMarkerSupport.class).to(WorkspaceMarkerSupport.class);
+
+		// we want to expose the N4JSQuickfixProvider as a shared contribution
+		// To be removed when N4MF does no longer use the quickfix provider of n4js
+		binder.bind(N4JSQuickfixProvider.class).toProvider(() -> {
+			return N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS)
+					.getInstance(N4JSQuickfixProvider.class);
+		});
 	}
 }

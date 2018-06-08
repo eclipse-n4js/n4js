@@ -10,20 +10,19 @@
  */
 package org.eclipse.n4js.tester.internal;
 
-import static com.google.inject.name.Names.named;
-import static org.eclipse.n4js.tester.TesterModule.N4_TESTER_MODULE_ID;
+import static java.util.Collections.singletonMap;
 import static org.eclipse.n4js.tester.TesterModuleDefaults.HTTP_SERVER_PORT_KEY;
 import static org.eclipse.n4js.tester.server.HttpServerManager.HTTP_PORT;
-import static java.util.Collections.singletonMap;
-
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-
-import com.google.inject.Injector;
-import com.google.inject.Key;
 
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.server.HttpServerManager;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.name.Named;
 
 /**
  * Activator for the {@code tester.core} module. This activator is responsible for automatically starting the embedded
@@ -37,6 +36,8 @@ public class TesterActivator implements BundleActivator {
 	private static BundleContext context;
 	private static TesterActivator instance;
 
+	private Injector injector;
+
 	/* default */static BundleContext getContext() {
 		return context;
 	}
@@ -47,43 +48,43 @@ public class TesterActivator implements BundleActivator {
 	}
 
 	/** effective server port after starting up. */
-	private int serverPort = -1;
+	private int effectiveServerPort = -1;
+
+	@Named(HTTP_SERVER_PORT_KEY)
+	@Inject
+	private Integer configuredServerPort;
+
+	@Inject
+	private HttpServerManager serverManager;
 
 	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		TesterActivator.context = bundleContext;
-		final HttpServerManager serverManager = getServerManager();
-		final int port = getPort();
-		final int usedPort = serverManager.startServer(singletonMap(HTTP_PORT, port));
-		this.serverPort = usedPort;
 		instance = this;
+		injector = Guice.createInjector(new TesterModule());
+		injector.injectMembers(this);
+		this.effectiveServerPort = serverManager.startServer(singletonMap(HTTP_PORT, configuredServerPort));
 	}
 
 	@Override
 	public void stop(final BundleContext bundleContext) throws Exception {
 		instance = null;
 		TesterActivator.context = null;
-		this.serverPort = -1;
-		final HttpServerManager serverManager = getServerManager();
+		this.effectiveServerPort = -1;
 		// -1 to make sure all servers all stopped
 		serverManager.stopServer(-1);
 	}
 
 	/** Effectively used port */
 	public int getServerPort() {
-		return serverPort;
+		return effectiveServerPort;
 	}
 
-	private HttpServerManager getServerManager() {
-		return getInjector().getInstance(HttpServerManager.class);
-	}
-
-	private int getPort() {
-		return getInjector().getInstance(Key.get(Integer.class, named(HTTP_SERVER_PORT_KEY)));
-	}
-
-	private Injector getInjector() {
-		return TesterModule.getInjector(N4_TESTER_MODULE_ID);
+	/**
+	 * @return the ui-independent tester injector
+	 */
+	public static Injector getInjector() {
+		return getInstance().injector;
 	}
 
 }

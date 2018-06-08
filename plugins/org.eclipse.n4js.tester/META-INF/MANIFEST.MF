@@ -28,6 +28,8 @@ Export-Package: org.eclipse.n4js.tester,
  org.eclipse.n4js.tester.domain,
  org.eclipse.n4js.tester.events,
  org.eclipse.n4js.tester.extension,
+ org.eclipse.n4js.tester.fsm,
+ org.eclipse.n4js.tester.internal,
  org.eclipse.n4js.tester.server,
  org.eclipse.n4js.tester.server.resources
 Bundle-Activator: org.eclipse.n4js.tester.internal.TesterActivator
