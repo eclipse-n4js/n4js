@@ -47,7 +47,7 @@ public class ContributingResourceDescriptionPersister extends EMFBasedPersister 
 	@Override
 	protected void scheduleRecoveryBuild() {
 		requiresRecoveryBuild.compareAndSet(false, true);
-		super.scheduleRecoveryBuild();
+		// super.scheduleRecoveryBuild();
 	}
 
 	/**
@@ -79,21 +79,15 @@ public class ContributingResourceDescriptionPersister extends EMFBasedPersister 
 			final Object extension = config.createExecutableExtension(CLAZZ_PROPERTY_NAME);
 			if (extension instanceof IResourceDescriptionPersisterContribution) {
 				IResourceDescriptionPersisterContribution contribution = (IResourceDescriptionPersisterContribution) extension;
-				contribution.getInjector().injectMembers(contribution);
 				return contribution;
 			}
-
 			final String message = "Expected persister contribution type. Was: " + extension;
 			LOGGER.error(message);
 			throw new IllegalStateException(message);
-
 		} catch (final CoreException e) {
 			final String message = "Error while instantiating contribution.";
 			LOGGER.error(message, e);
 			throw new RuntimeException(message, e);
-
-		} catch (InjectorNotYetAvailableException e) {
-			return null;
 		}
 	}
 

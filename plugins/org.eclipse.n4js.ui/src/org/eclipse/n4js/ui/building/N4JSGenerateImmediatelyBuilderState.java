@@ -40,7 +40,6 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
-import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -147,9 +146,6 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	private RegistryBuilderParticipant builderParticipant;
 
 	@Inject
-	private ContributingResourceDescriptionPersister descriptionPersister;
-
-	@Inject
 	@BuilderState
 	private IBuildLogger builderStateLogger;
 
@@ -169,14 +165,14 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	 * After the load phase, checks whether the underlying index content is empty or a recovery builder was scheduled,
 	 * if so, populates the index content with the external libraries as well.
 	 */
-	@Override
-	public synchronized void load() {
-		super.load();
-		// On the very first startup there will be recovery build.
-		if (descriptionPersister.isRecoveryBuildRequired()) {
-			descriptionPersister.scheduleRecoveryBuildOnContributions();
-		}
-	}
+	// @Override
+	// public synchronized void load() {
+	// super.load();
+	// // On the very first startup there will be recovery build.
+	// if (descriptionPersister.isRecoveryBuildRequired()) {
+	// descriptionPersister.scheduleRecoveryBuildOnContributions();
+	// }
+	// }
 
 	/**
 	 * {@inheritDoc}

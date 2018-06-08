@@ -1129,7 +1129,7 @@ Contributors:
         <extension
               point="org.eclipse.n4js.ui.resourceDescriptionsPersisterContribution">
            <contribution
-                 class="org.eclipse.n4js.ui.internal.N4JSExternalLibraryResourceDescriptionsPersisterContribution">
+                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.internal.N4JSExternalLibraryResourceDescriptionsPersisterContribution">
            </contribution>
         </extension>
         <extension

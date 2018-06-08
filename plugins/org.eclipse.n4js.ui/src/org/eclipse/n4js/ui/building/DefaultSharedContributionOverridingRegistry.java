@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.building;
 
 import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
+import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
 import org.eclipse.xtext.ui.shared.contribution.SharedStateContribution;
 import org.eclipse.xtext.ui.shared.internal.DefaultSharedContribution;
 import org.eclipse.xtext.ui.shared.internal.SharedStateContributionRegistryImpl;
@@ -40,6 +41,7 @@ public class DefaultSharedContributionOverridingRegistry extends SharedStateCont
 					.to(CloseProjectTaskScheduler.class);
 			binder.bind(ClosedProjectQueue.class);
 			binder.bind(CloseProjectTaskScheduler.class);
+			binder.bind(IEagerContribution.class).to(ListenerRegistrarWithoutRecoveryBuild.class);
 		}
 	}
 
