@@ -10,12 +10,8 @@
  */
 package org.eclipse.n4js.tester;
 
-import static java.lang.String.valueOf;
-import static java.util.UUID.randomUUID;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestTree;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +29,9 @@ public class TestCatalogSupplier implements Supplier<String> {
 
 	@Inject
 	private TestTreeTransformer treeTransformer;
+
+	@Inject
+	private TestDiscoveryHelper testDiscoveryHelper;
 
 	/**
 	 * Returns with the test catalog as a string representing all available tests in the workspace. This method may
@@ -53,8 +52,11 @@ public class TestCatalogSupplier implements Supplier<String> {
 	}
 
 	/** @return the {@link TestTree} for all tests */
-	protected TestTree getTreeForAllTests() {
-		return new TestTree(new ID(valueOf(randomUUID())));
-	}
+	// protected TestTree getTreeForAllTests() {
+	// return new TestTree(new ID(valueOf(randomUUID())));
+	// }
 
+	protected TestTree getTreeForAllTests() {
+		return testDiscoveryHelper.collectAllTestsFromWorkspace();
+	}
 }
