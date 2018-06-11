@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.CatchVariable;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.ModifierUtils;
@@ -79,36 +78,6 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 		return holdsNoInvalidOrDuplicateModifiers(elem)
 				&& holdsNotMoreThanOneAccessModifier(elem)
 				&& holdsCorrectOrder(elem);
-	}
-
-	/** https://github.com/eclipse/n4js/issues/486 */
-	@Check
-	private boolean checkBinaryExpression(BinaryLogicalExpression ble) {
-
-		if (ble.getLhs() == null) {
-			addIssue(
-					IssueCodes.getMessageForEXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION("null"),
-					ble,
-					IssueCodes.EXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION);
-			return false;
-
-		}
-		if (ble.getRhs() == null) {
-			addIssue(
-					IssueCodes.getMessageForEXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION_RIGHT("null"),
-					ble,
-					IssueCodes.EXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION_RIGHT);
-			return false;
-		}
-		if (ble.getOp() == null) {
-			addIssue(
-					IssueCodes.getMessageForTHINGS_THAT_SHOULD_NOT_BE("Operator was null."),
-					ble,
-					IssueCodes.EXP_FORBIDDEN_TYPE_IN_BINARY_LOGICAL_EXPRESSION_RIGHT);
-			return false;
-		}
-
-		return true;
 	}
 
 	/**

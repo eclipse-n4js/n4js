@@ -1123,8 +1123,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkBinaryLogicalExpression(BinaryLogicalExpression e) {
 
-		// wrong parsed
-		if (e.lhs === null) {
+		if (e === null || e.lhs === null || e.rhs === null) {
+		// wrong parsed, handled in org.eclipse.n4js.validation.ASTStructureValidator
 			return
 		}
 

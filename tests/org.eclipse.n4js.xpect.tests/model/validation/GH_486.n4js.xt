@@ -12,13 +12,13 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 function m() {
-	// XPECT errors --> "null is not allowed on the right hand side of a logical expression." at "true &&"
+	// XPECT errors --> "The logical expression is missing right operand." at "true &&"
 	let valid = true &&
 	return valid;
 }
 
 function n() {
-	// XPECT errors --> "null is not allowed on the right hand side of a logical expression." at "true && true &&"
+	// XPECT errors --> "The logical expression is missing right operand." at "true && true &&"
 	let valid = true && true &&
 	return valid;
 }
