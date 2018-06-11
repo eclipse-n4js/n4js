@@ -15,15 +15,19 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -47,14 +51,19 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * A JSON validator extension that adds custom validation to {@code package.json} resources.
  */
+@Singleton
 public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtension {
 
 	/** regular expression for valid package.json identifier (e.g. package name, vendor ID) */
 	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("(^)?[A-z_][A-z_\\-\\.0-9]*");
+
+	/** key for memoization of the n4js.sources section of a package.json. See #getSourceContainers(). */
+	private static final String N4JS_SOURCE_CONTAINERS = "N4JS_SOURCE_CONTAINERS";
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -87,8 +96,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
-		final JSONObject root = (JSONObject) rootValue;
-		final Multimap<String, JSONValue> documentValues = collectObjectValues(root);
+		final Multimap<String, JSONValue> documentValues = getDocumentValues();
 
 		// check for mandatory top-level properties
 		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__NAME);
@@ -106,10 +114,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 
 		final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
-
-		// check for mandatory n4js-section properties
-		checkIsPresent(n4jsSection, n4jsValues, ProjectDescriptionHelper.PROP__VENDOR_ID);
-		checkIsPresent(n4jsSection, n4jsValues, ProjectDescriptionHelper.PROP__PROJECT_TYPE);
 
 		// special error message in case of a missing output property
 		if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
@@ -134,11 +138,10 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/** Validates the source container section of N4JS package.json files */
-	@CheckProperty(propertyPath = "n4js." + ProjectDescriptionHelper.PROP__SOURCES)
-	public void checkSourceContainers(JSONValue sourceContainerValue) {
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES)
+	public void checkSourceContainers() {
 		// obtain source-container-related content of the section and validate its structure
-		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers(
-				sourceContainerValue);
+		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers();
 
 		// check each source container sub-section (e.g. sources, external, etc.)
 		for (Entry<SourceContainerType, List<JSONStringLiteral>> subSection : sourceContainers
@@ -172,6 +175,62 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	private boolean checkSourceContainerLiteral(JSONStringLiteral containerLiteral) {
 		return holdsValidRelativePath(containerLiteral) && // check path for validity
 				holdsExistingDirectoryPath(containerLiteral); // check directory for existence
+	}
+
+	/**
+	 * Checks the <code>n4js.mainModule</code> property of the {@code package.json}.
+	 */
+	@CheckProperty(propertyPath = "n4js." + ProjectDescriptionHelper.PROP__MAIN_MODULE)
+	public void checkMainModule(JSONValue mainModuleValue) {
+		if (!checkIsType(mainModuleValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as main module specifier")) {
+			return;
+		}
+
+		final JSONStringLiteral mainModuleLiteral = (JSONStringLiteral) mainModuleValue;
+		final String mainModuleSpecifier = mainModuleLiteral.getValue();
+
+		if (mainModuleSpecifier.isEmpty() || !isExistingModule(mainModuleLiteral)) {
+			final String specifierToShow = mainModuleSpecifier.isEmpty() ? "<empty string>" : mainModuleSpecifier;
+			addIssue(IssueCodes.getMessageForPKGJ_NON_EXISTING_MAIN_MODULE(specifierToShow),
+					mainModuleLiteral, IssueCodes.PKGJ_NON_EXISTING_MAIN_MODULE);
+		}
+	}
+
+	/**
+	 * Tells if for the given moduleSpecifier of the form "a/b/c/M" (without project ID) a module exists in the N4JS
+	 * project with the given module specifier.
+	 *
+	 * Checks if a corresponding .js, .jsx, .n4js, .n4jsx, or .n4jsd file exists in any of the project's source
+	 * containers.
+	 */
+	private boolean isExistingModule(JSONStringLiteral moduleSpecifierLiteral) {
+		final URI uri = moduleSpecifierLiteral.eResource().getURI();
+		final String moduleSpecifier = moduleSpecifierLiteral.getValue();
+		final String relativeModulePath = moduleSpecifier.replace('/', File.separator.charAt(0));
+
+		final Path absoluteProjectPath = getAbsoluteProjectPath(uri);
+
+		// obtain a stream of File representations of all declared source containers
+		final Stream<File> sourceFolders = getSourceContainers().entries().stream()
+				.flatMap(e -> e.getValue().stream())
+				.map(p -> p.getValue().replace('/', File.separator.charAt(0)))
+				.map(sourcePath -> new File(absoluteProjectPath.toFile(), sourcePath));
+
+		// all file extension that represent a valid module
+		final List<String> moduleExtensions = Arrays.asList(
+				N4JSGlobals.N4JS_FILE_EXTENSION,
+				N4JSGlobals.N4JSX_FILE_EXTENSION,
+				N4JSGlobals.N4JSD_FILE_EXTENSION,
+				N4JSGlobals.JS_FILE_EXTENSION,
+				N4JSGlobals.JSX_FILE_EXTENSION);
+
+		// checks whether any of the declared sourceFolders contains a file at moduleSpecifier
+		// using any of the abovementioned file extensions
+		return sourceFolders
+				.filter(sourceFolder -> moduleExtensions.stream() // check each file extension
+						.filter(ext -> new File(sourceFolder, relativeModulePath + "." + ext).exists())
+						.findAny().isPresent())
+				.findAny().isPresent();
 	}
 
 	/**
@@ -294,11 +353,30 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
+	 * Returns the source container information that can be extracted from the currently validated {@link JSONDocument}.
+	 */
+	private Multimap<SourceContainerType, List<JSONStringLiteral>> getSourceContainers() {
+		return contextMemoize(N4JS_SOURCE_CONTAINERS, this::doGetSourceContainers);
+	}
+
+	/**
 	 * Validates the correct structure of a {@link ProjectDescriptionHelper#PROP__SOURCES} section and returns a map
 	 * between the declared source container types and corresponding {@link JSONStringLiteral}s that specify the various
 	 * source container paths.
 	 */
-	private Multimap<SourceContainerType, List<JSONStringLiteral>> getSourceContainers(JSONValue sourcesValue) {
+	private Multimap<SourceContainerType, List<JSONStringLiteral>> doGetSourceContainers() {
+		final Collection<JSONValue> sourcesValues = getDocumentValue(
+				ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES);
+
+		// first check whether n4js.sources section has been defined at all
+		if (sourcesValues.isEmpty()) {
+			// return an empty map
+			return ImmutableMultimap.<SourceContainerType, List<JSONStringLiteral>> of();
+		}
+
+		// only consider the first n4js.sources section (in case of duplicates)
+		final JSONValue sourcesValue = sourcesValues.iterator().next();
+
 		// first check for the type of the source-container value
 		if (!checkIsType(sourcesValue, JSONPackage.Literals.JSON_OBJECT, "as source container section")) {
 			// return an empty map

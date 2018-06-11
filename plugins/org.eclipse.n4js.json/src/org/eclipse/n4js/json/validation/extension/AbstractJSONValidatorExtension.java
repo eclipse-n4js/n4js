@@ -26,6 +26,7 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -42,6 +43,9 @@ import com.google.common.collect.Multimap;
 public abstract class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 		implements IJSONValidatorExtension {
 
+	private static final String JSON_DOCUMENT_VALUES = "JSON_DOCUMENT_VALUES";
+	private static final String JSON_DOCUMENT = "JSON_DOCUMENT";
+
 	@Override
 	public final void validateJSON(JSONDocument document, DiagnosticChain diagnosticChain) {
 		// use a new empty context for validator extension
@@ -52,9 +56,12 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 			return;
 		}
 
+		// allow access to validated JSONDocument instance via the validation context
+		context.put(JSON_DOCUMENT, document);
+
 		// validate document itself
 		this.validate(JSONPackage.Literals.JSON_DOCUMENT, document, diagnosticChain, context);
-
+		
 		// validate all contents
 		document.eAllContents().forEachRemaining(child -> {
 			this.validate(child.eClass(), child, diagnosticChain, context);
@@ -62,17 +69,18 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	}
 
 	/**
-	 * Collects all {@code CheckJSONKey} methods of this class and invokes them on the corresponding properties in the
+	 * Collects all {@link CheckProperty} methods of this class and invokes them on the corresponding properties in the
 	 * given JSON document
 	 */
 	@Check
-	public void checkUsingCheckKeyMethods(JSONDocument document) {
+	public void checkUsingCheckPropertyMethods(JSONDocument document) {
+		System.out.println("Checking " + document + " using @CheckProperty methods.");
 		final List<Method> allMethods = Arrays.asList(this.getClass().getDeclaredMethods());
 		final List<Pair<CheckProperty, Method>> checkKeyMethods = allMethods.stream()
-				// filter for methods with CheckJSONKey annotation
+				// filter for methods with CheckProperty annotation
 				.filter(m -> m.getAnnotationsByType(CheckProperty.class).length != 0)
 				// filter for methods with a single parameter type
-				.filter(m -> m.getParameterTypes().length == 1)
+				.filter(m -> isValidCheckKeyMethod(m))
 				// map to annotation instance + method pair
 				.map(m -> Pair.of(m.getAnnotationsByType(CheckProperty.class)[0], m))
 				.collect(Collectors.toList());
@@ -85,23 +93,23 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 			final String keyPath = annotation.propertyPath();
 			final Collection<JSONValue> values = documentValues.get(keyPath);
-
-			if (!isValidCheckKeyMethod(method)) {
-				throw new IllegalStateException("Not a valid @CheckJSONKey validation method " + method + "."
-						+ " Only methods with a single JSONValue parameter are considered valid @CheckJSONKey methods.");
-			}
-
+			
 			// check each value that has been specified for keyPath
 			for (JSONValue value : values) {
 				if (value != null) {
 					try {
-						method.invoke(this, value);
+						// invoke method without any or with value as single argument
+						if (method.getParameterTypes().length == 0) {
+							method.invoke(this);
+						} else {
+							method.invoke(this, value);
+						}
 					} catch (IllegalAccessException | IllegalArgumentException e) {
-						throw new IllegalStateException("Failed to invoke @CheckJSONKey method " + method + ": " + e);
+						throw new IllegalStateException("Failed to invoke @CheckProperty method " + method + ": " + e);
 					} catch (InvocationTargetException e) {
 						e.getTargetException().printStackTrace();
 						throw new IllegalStateException(
-								"Failed to invoke @CheckJSONKey method " + method + ": " + e.getTargetException());
+								"Failed to invoke @CheckProperty method " + method + ": " + e.getTargetException());
 					}
 				}
 			}
@@ -111,6 +119,46 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	@Override
 	public void register(EValidatorRegistrar registrar) {
 		// do not register with EMF registry (uses designated extension points instead)
+	}
+
+	/**
+	 * Returns a multimap that allows keyPath-access to all values that occur in the currently validated
+	 * {@link JSONDocument}.
+	 * 
+	 * A key-path is a dot separated specifier of nested property access (e.g. {@code n4js.sources}).
+	 */
+	protected Multimap<String, JSONValue> getDocumentValues() {
+		// collect all document values for key-path-based access in check methods and
+		// store resulting multimap in the validation context
+		return contextMemoize(JSON_DOCUMENT_VALUES, () -> {
+			return collectDocumentValues((JSONDocument) this.getContext().get(JSON_DOCUMENT));
+		});
+	}
+
+	/**
+	 * Memoizes the value as given by {@code supplier} in the current validation context and returns its value.
+	 * 
+	 * Only invokes {@code supplier} once and re-uses its result in later invocations of this method with the same
+	 * {@code key}.
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T> T contextMemoize(String key, Supplier<T> supplier) {
+		// first check context for cached multimap of the document values
+		if (this.getContext().containsKey(key)) {
+			return (T) this.getContext().get(key);
+		}
+
+		final T value = supplier.get();
+		this.getContext().put(key, value);
+		return value;
+	}
+
+	/**
+	 * Returns the collection of {@link JSONValue} that have been associated with the given key-path (includes
+	 * duplicates).
+	 */
+	protected Collection<JSONValue> getDocumentValue(String keyPath) {
+		return getDocumentValues().get(keyPath);
 	}
 
 	/** Returns a user-facing description of the given {@link JSONValue} */
@@ -238,10 +286,14 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 		return true;
 	}
 
-	/** Returns {@code true} iff {@code method} is a valid {@code @CheckJSONKey} method. */
+	/** 
+	 * Returns {@code true} iff {@code method} is a valid {link CheckProperty} method. 
+	 * 
+	 * A valid {@link CheckProperty} is a valid without any or with only one parameter of type {@link JSONValue}. 
+	 * */
 	private boolean isValidCheckKeyMethod(Method method) {
-		return method.getParameterTypes().length == 1 &&
-				method.getParameterTypes()[0] == JSONValue.class;
+		return method.getParameterTypes().length == 0 ||
+				(method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == JSONValue.class);
 	}
 
 	/**
@@ -264,7 +316,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	/**
 	 * Collect all name-value associations that can be extracted from the given {@link JSONObject}.
 	 * 
-	 * Does not recursively traverse any nested objects. 
+	 * Does not recursively traverse any nested objects.
 	 */
 	protected Multimap<String, JSONValue> collectObjectValues(JSONObject object) {
 		if (object == null) {

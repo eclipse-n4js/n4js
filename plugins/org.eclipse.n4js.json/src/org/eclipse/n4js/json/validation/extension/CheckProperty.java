@@ -16,11 +16,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONValue;
 
 /**
  * Method annotation to be used in combination with {@link AbstractJSONValidatorExtension}
  * in order to declaratively specify validation check methods that validate only certain
  * properties of a {@link JSONDocument}.
+ * 
+ * Methods annotated with this annotation may either have no parameter at all or a single 
+ * parameter of type {@link JSONValue}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })

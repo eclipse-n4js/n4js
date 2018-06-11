@@ -20,6 +20,8 @@ import org.eclipse.xpect.state.Creates;
 import org.eclipse.xpect.xtext.lib.setup.InjectorSetup;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.inject.Injector;
 
 /**
@@ -31,6 +33,8 @@ import com.google.inject.Injector;
 @XpectReplace(InjectorSetup.class)
 public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 
+	private static Supplier<Injector> n4jsInjector = Suppliers.memoize(() -> N4JSStandaloneSetup.doSetup());
+			
 	public PackageJsonXpectInjectorSetup(XpectJavaModel xjm, XpectFile file) {
 		super(xjm, file);
 	}
@@ -43,13 +47,11 @@ public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 					+ " Do not use this injector setup for Plug-In UI Tests.");
 		}
 
-		// make sure N4JS injector is initialized
-		final Injector n4jsInjector = N4JSStandaloneSetup.doSetup();
 		// obtain JSON injector using the super method
 		final Injector jsonInjector = super.createInjector();
 
 		// obtain N4JS-specific package.json validator
-		final AbstractJSONValidatorExtension validatorExtension = n4jsInjector
+		final AbstractJSONValidatorExtension validatorExtension = n4jsInjector.get()
 				.getInstance(PackageJsonValidatorExtension.class);
 		// obtain JSON validation extension registry
 		final JSONValidatorExtensionRegistry extensionRegistry = jsonInjector
