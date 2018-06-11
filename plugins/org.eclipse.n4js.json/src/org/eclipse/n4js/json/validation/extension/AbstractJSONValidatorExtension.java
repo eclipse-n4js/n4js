@@ -159,6 +159,23 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	protected Collection<JSONValue> getDocumentValue(String keyPath) {
 		return getDocumentValues().get(keyPath);
 	}
+	
+	/**
+	 * Returns one of the {@link JSONValue}s that have been associated with the given key-path (ignores duplicates).
+	 * 
+	 * The {@link JSONValue} at the given key-path must be of type {@code expectedClass}. If this is not the
+	 * case, this method returns {@code null}.
+	 * 
+	 * Returns {@code null} if no value has been associated with the given {@code keyPath}.
+	 */
+	protected <T extends JSONValue> T getSingleDocumentValue(String keyPath, Class<T> expectedClass) {
+		Collection<JSONValue> values = getDocumentValues().get(keyPath);
+		final JSONValue value = !values.isEmpty() ? values.iterator().next() : null;
+		if (!expectedClass.isInstance(value)) {
+			return null;
+		}
+		return expectedClass.cast(value);
+	}
 
 	/** Returns a user-facing description of the given {@link JSONValue} */
 	protected static String getJSONValueDescription(JSONValue value) {

@@ -11,7 +11,11 @@
 
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
 {
-	// XPECT errors --> "The package name "project-name-mismatch" does not match project folder name "project-name" used on the file system." at ""project-name-mismatch""
-	"name": "project-name-mismatch",
-	"version": "0.0.1-SNAPSHOT"
+	"name": "missing-implemented-projects",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"output": "src-gen",
+		// XPECT errors --> "When defining an implementation ID, you also have to define one or more API projects that are implemented by this project using property n4js.implementedProjects." at ""implementationId""
+		"implementationId": "some-id"
+	}
 }

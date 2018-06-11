@@ -26,6 +26,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
@@ -144,6 +149,41 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			addIssue(IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(projectName.getValue(), packageFolderName),
 					projectName, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
 		}
+
+		// in case the Platform is running (can be UI and headless)
+		if (Platform.isRunning()) {
+			// TODO consider external workspace case in which we are dealing with
+			// original package.json of npm packages
+			final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			final URI packageJsonUri = projectNameValue.eResource().getURI();
+
+			String platformProjectContainer = null;
+			if (packageJsonUri.isPlatformResource()) {
+				// in UI case, assume platform:resource URIs
+				final String platformURI = packageJsonUri.trimSegments(1).toPlatformString(true);
+				final IResource resolvedResource = root.findMember(platformURI);
+				if (resolvedResource instanceof IProject) {
+					platformProjectContainer = resolvedResource.getName();
+				}
+			} else {
+				// in headless case, assume file-based workspace representation
+				platformProjectContainer = new File(packageJsonUri.toFileString()).getParentFile().getName();
+			}
+
+			if (platformProjectContainer == null) {
+				throw new IllegalStateException("Failed to determine project name "
+						+ "for resource " + packageJsonUri.toString());
+			}
+
+			if (!platformProjectContainer.equals(projectName.getValue())) {
+				final String message = IssueCodes.getMessageForPKGJ_PROJECT_NAME_ECLIPSE_MISMATCH(
+						projectName.getValue(),
+						platformProjectContainer);
+				addIssue(message, projectName,
+						IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
+			}
+		}
+
 	}
 
 	/** Validates the source container section of N4JS package.json files */
@@ -203,6 +243,76 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			final String specifierToShow = mainModuleSpecifier.isEmpty() ? "<empty string>" : mainModuleSpecifier;
 			addIssue(IssueCodes.getMessageForPKGJ_NON_EXISTING_MAIN_MODULE(specifierToShow),
 					mainModuleLiteral, IssueCodes.PKGJ_NON_EXISTING_MAIN_MODULE);
+		}
+	}
+
+	/**
+	 * Validates basic properties of the {@code n4js.implementationId}.
+	 */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS +
+			"." + ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID)
+	public void checkImplementationId(JSONValue value) {
+		final JSONArray implementedProjectsValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." +
+				ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, JSONArray.class);
+
+		// check for correct type of implementationId
+		if (!checkIsType(value, JSONPackage.Literals.JSON_STRING_LITERAL, "as implementation ID")) {
+			return;
+		}
+
+		final JSONStringLiteral implementationId = (JSONStringLiteral) value;
+
+		// at this point we may assume that the implementationId was set
+		if ((implementedProjectsValue == null || implementedProjectsValue.getElements().isEmpty())) {
+			// missing implemented projects
+			addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_PROJECTS(),
+					implementationId.eContainer(), JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+					IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_PROJECTS);
+		}
+	}
+
+	/**
+	 * Validates basic properties of the list of {@code n4js.implementedProjects}.
+	 */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS +
+			"." + ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS)
+	public void checkImplementedProjects(JSONValue value) {
+		// obtain implementationId, if present. null otherwise
+		final JSONStringLiteral implementationId = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS +
+				"." + ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID, JSONStringLiteral.class);
+
+		// check for correct types of implementedProjects
+		if (!checkIsType(value, JSONPackage.Literals.JSON_ARRAY, "as list of implemented projects")) {
+			return;
+		}
+
+		// check for correct types of all implementedProjects elements (they represent project references)
+		final List<JSONValue> implementedProjectValues = ((JSONArray) value).getElements();
+		List<JSONStringLiteral> implementedProjectLiterals = implementedProjectValues.stream()
+				.map(v -> {
+					if (!checkIsType(v, JSONPackage.Literals.JSON_STRING_LITERAL, "as implemented project reference")) {
+						return null;
+					}
+					return ((JSONStringLiteral) v);
+				})
+				// filter null-projects and obtain list of readable project references
+				.filter(p -> p != null).collect(Collectors.toList());
+
+		// obtain the declared project name (name property)
+		final JSONStringLiteral declaredProjectNameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME,
+				JSONStringLiteral.class);
+
+		for (JSONStringLiteral implementedProjectLiteral : implementedProjectLiterals) {
+			if (implementedProjectLiteral.getValue().equals(declaredProjectNameValue.getValue())) {
+				// reflexive implementation
+				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_REFLEXIVE(), implementedProjectLiteral,
+						IssueCodes.PKGJ_APIIMPL_REFLEXIVE);
+			}
+		}
+
+		if (implementationId == null && !implementedProjectLiterals.isEmpty()) {
+			addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_PROJECTS(), value.eContainer(),
+					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_PROJECTS);
 		}
 	}
 
