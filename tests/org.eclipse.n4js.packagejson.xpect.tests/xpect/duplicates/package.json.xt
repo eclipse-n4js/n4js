@@ -41,36 +41,35 @@
 		"moduleFilters": {
 			"noValidate": [
 				// TODO re-enable the following assertions
-				// X!PECT errors --> "Module specifier p/wolfgangsUglyHack.js doesn't exist." at "\"p/wolfgangsUglyHack.js\""
+				// XPECT warnings --> "Module filter "p/wolfgangsUglyHack.js" does not match any modules." at ""p/wolfgangsUglyHack.js""
 				"p/wolfgangsUglyHack.js",
-				// X!PECT errors --> "Module specifier p/wolfgangsUglyHack.* doesn't exist." at "\"p/wolfgangsUglyHack.*\""
+				// XPECT warnings --> "Module filter "p/wolfgangsUglyHack.*" does not match any modules." at ""p/wolfgangsUglyHack.*""
 				"p/wolfgangsUglyHack.*",
 				"p/wolfgangsUglyHack",
+				// XPECT errors --> "Duplicate module filter specifier." at ""p/juergensHacks/*""
 				"p/juergensHacks/*",
-				// X!PECT errors --> "Duplicate module specifier." at "\"p/juergensHacks/*\""
+				// XPECT errors --> "Duplicate module filter specifier." at ""p/juergensHacks/*""
 				"p/juergensHacks/*",
-				// X!PECT errors --> "Module specifier p/doesntexist/ doesn't exist." at "\"p/doesntexist/\""
+				// XPECT warnings --> "Module filter "p/doesntexist/" does not match any modules." at ""p/doesntexist/""
 				"p/doesntexist/",
+				// XPECT warnings --> "Module filter "**/External" does not match any modules." at "["src", "**/External"]"
+				["src", "**/External"],
+				// External is available in src-external but not in src XPECT noIssues
 				{
-					// X!PECT errors --> "Module specifier **/External doesn't exist." at "\"**/External\""
-					"src": "**/External"
+					"sourceContainer": "src-external",
+					"module": "p/External"
 				},
-				{
-					// External is available in src-external but not in src
-					"src-external": "p/External"
-				},
-				// X!PECT errors --> "\"***\" isn't a valid character sequence in a wild card." at "\"***/A\""
+				// XPECT errors --> ""***" is not a valid character sequence in a wildcard." at ""***/A""
 				"***/A",
-				// X!PECT errors --> "Relative navigation isn't allowed in a module specifier." at "\"**/../p/A\""
+				// XPECT errors --> "Relative navigation is not allowed in a module filter specifier." at "\"**/../p/A\""
 				"**/../p/A",
-				// X!PECT errors --> "noValidate paths shouldn't match n4js files." at "\"other/*\""
+				// XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at "\"other/*\""
 				"other/*",
 				{
-					"src2": "**/*"
+					"sourceContainer": "src2",
+					"module": "**/*"
 				},
-				{
-					"src3": "**/*"
-				}
+				["src3", "**/*"]
 			],
 			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 42)." at "\"noValidate\""
 			"noValidate": [
@@ -78,7 +77,7 @@
 			],
 			"noModuleWrap": [
 				"p/myAlreadyAsModuleHack",
-				// X!PECT errors --> "noModuleWrap paths shouldn't match n4js files." at "\"other/*\""
+				// XPECT errors --> "Module filters of type noModuleWrap must not match N4JS modules/files." at "\"other/*\""
 				"other/*"
 			]
 		},

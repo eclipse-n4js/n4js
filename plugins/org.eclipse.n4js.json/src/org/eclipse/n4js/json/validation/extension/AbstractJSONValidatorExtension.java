@@ -74,7 +74,6 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	 */
 	@Check
 	public void checkUsingCheckPropertyMethods(JSONDocument document) {
-		System.out.println("Checking " + document + " using @CheckProperty methods.");
 		final List<Method> allMethods = Arrays.asList(this.getClass().getDeclaredMethods());
 		final List<Pair<CheckProperty, Method>> checkKeyMethods = allMethods.stream()
 				// filter for methods with CheckProperty annotation

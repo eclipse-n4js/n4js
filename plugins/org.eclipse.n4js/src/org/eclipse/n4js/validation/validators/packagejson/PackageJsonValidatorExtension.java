@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,6 +38,7 @@ import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
 import org.eclipse.n4js.json.validation.extension.CheckProperty;
+import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -131,9 +133,17 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		final JSONStringLiteral projectName = (JSONStringLiteral) projectNameValue;
 
+		// make sure the name adheres to the IDENTIFIER_PATTERN
 		if (!IDENTIFIER_PATTERN.matcher(projectName.getValue()).matches()) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectName.getValue()),
 					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
+		}
+
+		// make sure the package name equals the package folder name
+		final String packageFolderName = projectNameValue.eResource().getURI().trimSegments(1).lastSegment();
+		if (!packageFolderName.equals(projectName.getValue())) {
+			addIssue(IssueCodes.getMessageForPKGJ_PACKAGE_NAME_MISMATCH(projectName.getValue(), packageFolderName),
+					projectName, IssueCodes.PKGJ_PACKAGE_NAME_MISMATCH);
 		}
 	}
 
@@ -180,7 +190,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Checks the <code>n4js.mainModule</code> property of the {@code package.json}.
 	 */
-	@CheckProperty(propertyPath = "n4js." + ProjectDescriptionHelper.PROP__MAIN_MODULE)
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
+			+ ProjectDescriptionHelper.PROP__MAIN_MODULE)
 	public void checkMainModule(JSONValue mainModuleValue) {
 		if (!checkIsType(mainModuleValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as main module specifier")) {
 			return;
@@ -194,6 +205,262 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			addIssue(IssueCodes.getMessageForPKGJ_NON_EXISTING_MAIN_MODULE(specifierToShow),
 					mainModuleLiteral, IssueCodes.PKGJ_NON_EXISTING_MAIN_MODULE);
 		}
+	}
+
+	/**
+	 * Checks the n4js.moduleFilters section of the {@code package.json}.
+	 */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
+			+ ProjectDescriptionHelper.PROP__MODULE_FILTERS)
+	public void checkModuleFilters(JSONValue moduleFilterSection) {
+		if (!checkIsType(moduleFilterSection, JSONPackage.Literals.JSON_OBJECT, "as moduleFilters section")) {
+			return;
+		}
+		((JSONObject) moduleFilterSection).getNameValuePairs().stream()
+				.forEach(pair -> checkModuleFilterType(pair));
+	}
+
+	/** Checks whether the given {@code moduleFilterPair} represents a valid module-filter section entry. */
+	private void checkModuleFilterType(NameValuePair moduleFilterPair) {
+		// obtain enum-representation of the validated module filter type
+		final ModuleFilterType filterType = parseModuleFilterType(moduleFilterPair.getName());
+
+		// make sure the module filter type could be parsed successfully
+		if (filterType == null) {
+			final String message = IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_TYPE(
+					moduleFilterPair.getName(), "noValidate and noModuleWrap");
+			addIssue(message, moduleFilterPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
+					IssueCodes.PKGJ_INVALID_MODULE_FILTER_TYPE);
+		}
+
+		// check type of RHS
+		if (!checkIsType(moduleFilterPair.getValue(), JSONPackage.Literals.JSON_ARRAY, "as module filter specifiers")) {
+			return;
+		}
+
+		// obtain a list of all declared filter specifiers
+		final List<JSONValue> specifierValues = ((JSONArray) moduleFilterPair.getValue()).getElements();
+		// obtain a list of all declared source container paths
+		final Set<String> sourceContainerPaths = getAllSourceContainerPaths();
+
+		// first, validate all declared filter specifiers
+		final List<ModuleFilterSpecifier> declaredFilterSpecifiers = specifierValues.stream()
+				.map(v -> getModuleFilterInformation(v, filterType)).collect(Collectors.toList());
+		declaredFilterSpecifiers.forEach(specifier -> checkModuleFilterSpecifier(specifier));
+
+		// determine the groups of duplicate module filter specifiers (same source container and same filter)
+		final Map<String, List<ModuleFilterSpecifier>> duplicateGroups = declaredFilterSpecifiers.stream()
+				.filter(i -> i != null)
+				.flatMap(i -> {
+					if (i.sourceContainerPath == null) {
+						// If no source container path has been declared, the filter applies to all declared
+						// source container paths.
+						return sourceContainerPaths.stream()
+								.map(sourceContainer -> new ModuleFilterSpecifier(i.filter, sourceContainer,
+										i.filterType, i.astRepresentation));
+					} else {
+						// the module specifier filter only applies to the declared source container path
+						return Stream.of(i);
+					}
+				})
+				.collect(Collectors.groupingBy(s -> s.filter + ":" + s.sourceContainerPath));
+
+		// compute set of AST elements that declare duplicate module filters
+		final Set<JSONValue> duplicateASTElements = new HashSet<>();
+
+		// add an issue for all duplicate module filter specifiers
+		duplicateGroups.entrySet().stream()
+				// filter actual duplicates
+				.filter(e -> e.getValue().size() > 1)
+				.forEach(e -> {
+					// add an issue for each duplicate but its first occurrence
+					for (ModuleFilterSpecifier duplicate : e.getValue()) {
+						duplicateASTElements.add(duplicate.astRepresentation);
+					}
+				});
+
+		// finally add one issue per duplicate-defining AST element
+		duplicateASTElements.forEach(duplicateAstElement -> {
+			addIssue(IssueCodes.getMessageForPKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER(),
+					duplicateAstElement, IssueCodes.PKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER);
+		});
+	}
+
+	/** Validates the given {@link ModuleFilterSpecifier}. */
+	private void checkModuleFilterSpecifier(ModuleFilterSpecifier specifier) {
+		if (specifier != null && holdsIsValidModuleFilterSpecifier(specifier)) {
+			holdsModuleFilterSpecifierHasMatches(specifier);
+		}
+	}
+
+	private boolean holdsIsValidModuleFilterSpecifier(ModuleFilterSpecifier specifier) {
+		final Set<String> sourceContainerPaths = getAllSourceContainerPaths();
+
+		// make sure moduleFilterSpecifier.sourceContainerPath has been declared as source container
+		if (specifier.sourceContainerPath != null &&
+				!sourceContainerPaths.contains(specifier.sourceContainerPath)) {
+			addIssue(IssueCodes.getMessageForPKGJ_SRC_IN_IN_IS_NO_DECLARED_SOURCE(specifier.sourceContainerPath),
+					specifier.astRepresentation, IssueCodes.PKGJ_SRC_IN_IN_IS_NO_DECLARED_SOURCE);
+			return false;
+		}
+
+		// make sure moduleFilterSpecifier does not use invalid wildcard patterns
+		if (specifier.filter != null) {
+			final String wrongWildcardPattern = "***";
+			if (specifier.filter.contains(wrongWildcardPattern)) {
+				addIssue(IssueCodes.getMessageForPKGJ_INVALID_WILDCARD(wrongWildcardPattern),
+						specifier.astRepresentation,
+						IssueCodes.PKGJ_INVALID_WILDCARD);
+				return false;
+			}
+			final String wrongRelativeNavigation = "../";
+
+			if (specifier.filter.contains(wrongRelativeNavigation)) {
+				addIssue(IssueCodes.getMessageForPKGJ_NO_RELATIVE_NAVIGATION(),
+						specifier.astRepresentation,
+						IssueCodes.PKGJ_NO_RELATIVE_NAVIGATION);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Checks whether the given module filter {@code specifier} matches any existing modules/files and add an
+	 * appropriate issue otherwise.
+	 */
+	private boolean holdsModuleFilterSpecifierHasMatches(ModuleFilterSpecifier specifier) {
+		final URI uri = specifier.astRepresentation.eResource().getURI();
+		final Path absoluteProjectPath = getAbsoluteProjectPath(uri);
+
+		// first determine the set of source container paths to resolve the filter against (e.g. all paths or a
+		// specifier path)
+		Collection<String> sourceContainerPathsToCheck;
+		if (specifier.sourceContainerPath != null) {
+			sourceContainerPathsToCheck = Arrays.asList(specifier.sourceContainerPath);
+		} else {
+			sourceContainerPathsToCheck = getAllSourceContainerPaths();
+		}
+
+		final boolean hasAnyMatches = !sourceContainerPathsToCheck.stream()
+				.filter(sourceContainerPath -> {
+					final String basePathToCheck = absoluteProjectPath.toString() + File.separator
+							+ sourceContainerPath;
+					final String pathsToFind = File.separator + specifier.filter;
+					final List<String> results = WildcardPathFilterUtils.collectPathsByWildcardPath(basePathToCheck,
+							pathsToFind);
+
+					// check whether this module filter matches N4JS modules/files
+					if (results.stream().filter(r -> r.endsWith(N4JSGlobals.N4JS_FILE_EXTENSION)
+							|| r.endsWith(N4JSGlobals.N4JS_FILE_EXTENSION)).findAny().isPresent()) {
+						handleN4JSModuleMatchForModuleFilter(specifier);
+					}
+					return !results.isEmpty();
+				}).findAny().isPresent();
+
+		if (hasAnyMatches) {
+			addIssue(IssueCodes.getMessageForPKGJ_MODULE_FILTER_DOES_NOT_MATCH(specifier.filter),
+					specifier.astRepresentation, IssueCodes.PKGJ_MODULE_FILTER_DOES_NOT_MATCH);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Adds an issue to the given {@link ModuleFilterSpecifier} which indicates that filters of such type must never
+	 * match N4JS modules/resources assuming they do in the validated project.
+	 */
+	private void handleN4JSModuleMatchForModuleFilter(ModuleFilterSpecifier specifier) {
+		addIssue(
+				IssueCodes.getMessageForPKGJ_FILTER_NO_N4JS_MATCH(
+						getModuleFilterTypeRepresentation(specifier.filterType)),
+				specifier.astRepresentation,
+				IssueCodes.PKGJ_FILTER_NO_N4JS_MATCH);
+	}
+
+	/**
+	 * Intermediate representation of a module filter specifier.
+	 */
+	private static class ModuleFilterSpecifier {
+		final String filter;
+		final String sourceContainerPath;
+		final ModuleFilterType filterType;
+
+		final JSONValue astRepresentation;
+
+		/** Instantiates a new module filter specifier from the given values. */
+		public ModuleFilterSpecifier(String filter, String sourceContainerPath,
+				ModuleFilterType filterType, JSONValue astRepresentation) {
+			this.filter = filter;
+			this.sourceContainerPath = sourceContainerPath;
+			this.filterType = filterType;
+			this.astRepresentation = astRepresentation;
+		}
+
+		@Override
+		public String toString() {
+			return "ModuleFilterSpecifer(" + filter +
+					(this.sourceContainerPath != null ? " in " + this.sourceContainerPath : "") + ")";
+		}
+	}
+
+	/**
+	 * Validates the structure of the given {@code value} as module filter specifier and returns the information that
+	 * can be extracted from it.
+	 *
+	 * Returns the module filter specifier information of {@code value} in terms of a {@link ModuleFilterSpecifier}.
+	 *
+	 * Returns {@code null} if the given {@code value} is not a valid representation of a module filter specifier.
+	 */
+	private ModuleFilterSpecifier getModuleFilterInformation(JSONValue value, ModuleFilterType type) {
+		// 1st variant:
+		if (value instanceof JSONStringLiteral) {
+			return new ModuleFilterSpecifier(((JSONStringLiteral) value).getValue(), null, type, value);
+		}
+		// 2nd variant:
+		if (value instanceof JSONArray) {
+			final List<JSONValue> elements = ((JSONArray) value).getElements();
+			if (elements.size() == 2) {
+				final JSONValue sourceContainer = elements.get(0);
+				final JSONValue moduleFilter = elements.get(1);
+				if (sourceContainer instanceof JSONStringLiteral && moduleFilter instanceof JSONStringLiteral) {
+					return new ModuleFilterSpecifier(
+							((JSONStringLiteral) moduleFilter).getValue(),
+							((JSONStringLiteral) sourceContainer).getValue(), type, value);
+				}
+			}
+		}
+		// 3rd variant:
+		if (value instanceof JSONObject) {
+			final List<NameValuePair> pairs = ((JSONObject) value).getNameValuePairs();
+
+			final NameValuePair sourceContainerPair = pairs.stream()
+					.filter(p -> ProjectDescriptionHelper.PROP__SOURCE_CONTAINER.equals(p.getName()))
+					.findFirst().orElse(null);
+			final NameValuePair moduleFilterPair = pairs.stream()
+					.filter(p -> ProjectDescriptionHelper.PROP__MODULE.equals(p.getName())).findFirst()
+					.orElse(null);
+
+			// make sure the pairs are of correct type (or null in case of sourceContainerPair)
+			if ((sourceContainerPair == null
+					|| checkIsType(sourceContainerPair.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL)) &&
+					(moduleFilterPair != null
+							&& checkIsType(moduleFilterPair.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL))) {
+				final String sourceContainer = sourceContainerPair != null
+						? ((JSONStringLiteral) sourceContainerPair.getValue()).getValue()
+						: null;
+				final String moduleFilter = ((JSONStringLiteral) moduleFilterPair.getValue()).getValue();
+
+				return new ModuleFilterSpecifier(moduleFilter, sourceContainer, type, value);
+			}
+		}
+
+		// otherwise 'value' does not represent a valid module filter specifier
+		addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_SPECIFIER(), value,
+				IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER);
+
+		return null;
 	}
 
 	/**
@@ -211,9 +478,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final Path absoluteProjectPath = getAbsoluteProjectPath(uri);
 
 		// obtain a stream of File representations of all declared source containers
-		final Stream<File> sourceFolders = getSourceContainers().entries().stream()
-				.flatMap(e -> e.getValue().stream())
-				.map(p -> p.getValue().replace('/', File.separator.charAt(0)))
+		final Stream<File> sourceFolders = getAllSourceContainerPaths().stream()
 				.map(sourcePath -> new File(absoluteProjectPath.toFile(), sourcePath));
 
 		// all file extension that represent a valid module
@@ -360,6 +625,16 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
+	 * Returns the set of all declared source container paths in the currently validated {@code package.json} file.
+	 */
+	private Set<String> getAllSourceContainerPaths() {
+		return this.getSourceContainers().entries().stream()
+				.flatMap(e -> e.getValue().stream())
+				.map(literal -> literal.getValue())
+				.collect(Collectors.toSet());
+	}
+
+	/**
 	 * Validates the correct structure of a {@link ProjectDescriptionHelper#PROP__SOURCES} section and returns a map
 	 * between the declared source container types and corresponding {@link JSONStringLiteral}s that specify the various
 	 * source container paths.
@@ -447,5 +722,33 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// check that typeLiteral is all lower-case and a corresponding enum literal exists
 		return typeLiteral.toLowerCase().equals(typeLiteral) &&
 				SourceContainerType.get(typeLiteral.toUpperCase()) != null;
+	}
+
+	/**
+	 * Parses the {@link ModuleFilterType} from the given string representation.
+	 *
+	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ModuleFilterType}.
+	 */
+	private ModuleFilterType parseModuleFilterType(String value) {
+		if (value.equals("noValidate")) {
+			return ModuleFilterType.NO_VALIDATE;
+		} else if (value.equals("noModuleWrap")) {
+			return ModuleFilterType.NO_MODULE_WRAPPING;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns the string representation of the given {@link ModuleFilterType}.
+	 */
+	private String getModuleFilterTypeRepresentation(ModuleFilterType type) {
+		if (type == ModuleFilterType.NO_VALIDATE) {
+			return "noValidate";
+		} else if (type == ModuleFilterType.NO_MODULE_WRAPPING) {
+			return "noModuleWrap";
+		} else {
+			return "<invalid module filter type>";
+		}
 	}
 }
