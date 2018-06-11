@@ -12,13 +12,13 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 function m() {
-	// XPECT errors --> "The logical expression is missing right operand." at "true &&"
+	// XPECT errors --> "The logical expression is missing the right operand." at "true &&"
 	let valid = true &&
 	return valid;
 }
 
 function n() {
-	// XPECT errors --> "The logical expression is missing right operand." at "true && true &&"
+	// XPECT errors --> "The logical expression is missing the right operand." at "true && true &&"
 	let valid = true && true &&
 	return valid;
 }
