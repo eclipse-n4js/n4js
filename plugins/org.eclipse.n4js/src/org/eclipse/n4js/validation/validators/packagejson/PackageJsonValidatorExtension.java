@@ -103,7 +103,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// check for mandatory top-level properties
 		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__NAME);
 		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__VERSION);
-		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__N4JS);
 	}
 
 	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
