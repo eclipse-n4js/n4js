@@ -18,11 +18,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.ExternalLibraryUtils;
 import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
@@ -58,7 +58,7 @@ public class RunnerN4JSCore {
 		final FileBasedWorkspace workspace = new FileBasedWorkspace(manager, projectDescriptionHelper);
 		final N4JSModel model = new N4JSModel(workspace, locationProvider);
 
-		ShippedCodeAccess.getAllShippedPaths().forEach(path -> discoveProjects(path, workspace));
+		ShippedCodeAccess.getAllShippedPaths().forEach(path -> discoverProjects(path, workspace));
 
 		// we need to collect projects provided by the workspace iterator into iterable instance to allow caller to make
 		// multiple iterations over it. Note that just wrapping iterator into iterable (e.g. via
@@ -81,18 +81,16 @@ public class RunnerN4JSCore {
 	 * @param workspace
 	 *            workspace used for project registration
 	 */
-	private void discoveProjects(String rootLocation, FileBasedWorkspace workspace) {
+	private void discoverProjects(String rootLocation, FileBasedWorkspace workspace) {
 		File root = new File(rootLocation);
 
 		Arrays.asList(root.listFiles()).stream().filter(File::isDirectory).forEach(projectDir -> {
-
-			File manifest = new File(projectDir, N4MFConstants.N4MF_MANIFEST);
-			if (manifest.exists()) {
+			if (ExternalLibraryUtils.isExternalProjectDirectory(projectDir)) {
 				URI createURI = createProjectUri(projectDir);
-
 				workspace.registerProject(createURI);
 			} else {
-				LOGGER.warn("Cannot locate manifest file at " + manifest.getAbsolutePath());
+				LOGGER.warn("Cannot locate project description file (i.e. package.json) file at "
+						+ projectDir.getAbsolutePath());
 			}
 		});
 	}

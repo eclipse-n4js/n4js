@@ -95,8 +95,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 			for (IResourceDescription.Delta delta : deltas) {
 				URI uri = delta.getUri();
 				// if uri looks like a N4JS project description file (package.json or manifest.n4mf)
-				if (IN4JSProject.N4MF_MANIFEST.equalsIgnoreCase(uri.lastSegment()) ||
-						IN4JSProject.PACKAGE_JSON.equalsIgnoreCase(uri.lastSegment())) {
+				if (IN4JSProject.PACKAGE_JSON.equalsIgnoreCase(uri.lastSegment())) {
 					URI prefixURI = uri.trimSegments(1).appendSegment("");
 					if (candidate.getURI().replacePrefix(prefixURI, prefixURI) != null) {
 						return true;

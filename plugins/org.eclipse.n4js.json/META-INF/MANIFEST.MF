@@ -16,8 +16,10 @@ Require-Bundle: org.eclipse.xtext.xbase,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.n4js.json
 Export-Package: org.eclipse.n4js.json,
+ org.eclipse.n4js.json.extension,
  org.eclipse.n4js.json.parser.antlr,
  org.eclipse.n4js.json.parser.antlr.internal,
+ org.eclipse.n4js.json.resource,
  org.eclipse.n4js.json.serializer,
  org.eclipse.n4js.json.services,
  org.eclipse.n4js.json.validation,

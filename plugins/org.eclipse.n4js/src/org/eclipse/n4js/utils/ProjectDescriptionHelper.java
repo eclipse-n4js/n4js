@@ -40,6 +40,7 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
@@ -151,6 +152,15 @@ public class ProjectDescriptionHelper {
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
+		return loadProjectDescriptionAtLocation(location, packageJSON);
+	}
+
+	/**
+	 * Same as {@link #loadPackageJSONAtLocation(URI)}, but for cases in which the JSONDocument of the main package.json
+	 * file (but not the fragment) has already been loaded.
+	 */
+	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
+		mergePackageJSONFragmentAtLocation(location, packageJSON);
 		ProjectDescription pdFromPackageJSON = packageJSON != null ? convertToProjectDescription(packageJSON) : null;
 		if (pdFromPackageJSON != null) {
 			return pdFromPackageJSON;
@@ -173,6 +183,19 @@ public class ProjectDescriptionHelper {
 		}
 
 		return packageJSON;
+	}
+
+	private void mergePackageJSONFragmentAtLocation(URI location, JSONDocument targetPackageJSON) {
+		// load and merge fragment (if any)
+		JSONDocument fragment = loadXtextFileAtLocation(location, N4JSGlobals.PACKAGE_FRAGMENT_JSON,
+				JSONDocument.class);
+		if (fragment != null) {
+			JSONValue packageJsonContent = targetPackageJSON.getContent();
+			JSONValue fragmentContent = fragment.getContent();
+			if (packageJsonContent instanceof JSONObject && fragmentContent instanceof JSONObject) {
+				JSONModelUtils.merge((JSONObject) packageJsonContent, (JSONObject) fragmentContent, false, true);
+			}
+		}
 	}
 
 	private ProjectDescription loadManifestAtLocation(URI location) {
@@ -339,15 +362,6 @@ public class ProjectDescriptionHelper {
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(name);
 				dep.setVersionConstraint(versionConstraint);
-				target.getProjectDependencies().add(dep);
-			}
-
-			// TODO proper support for version wildcards such as "*", "" etc. (see
-			// https://docs.npmjs.com/files/package.json#dependencies)
-			if (name != null && versionConstraint == null && "*".equals(asStringOrNull(value))) {
-				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
-				dep.setProjectId(name);
-				// do not set a version constraint!
 				target.getProjectDependencies().add(dep);
 			}
 		}

@@ -17,8 +17,9 @@ import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.json.JSONGlobals;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
-import org.eclipse.n4js.json.validation.extension.JSONValidatorExtensionRegistry;
+import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
+import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
@@ -63,6 +64,9 @@ public class HeadlessExtensionRegistrationHelper {
 	@Inject
 	private PackageJsonValidatorExtension packageJsonValidatorExtension;
 
+	@Inject
+	private PackageJsonResourceDescriptionExtension packageJsonResourceDescriptionExtension;
+
 	/**
 	 * Register extensions manually. This method should become obsolete when extension point fully works in headless
 	 * case.
@@ -93,8 +97,8 @@ public class HeadlessExtensionRegistrationHelper {
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JSX_FILE_EXTENSION);
 		subGeneratorRegistry.register(n4idlSubGenerator, N4IDLGlobals.N4IDL_FILE_EXTENSION);
 
-		// register N4JS-specific package.json validation with JSONValidatorExtensionRegistray
-		registerJSONValidatorExtension();
+		// register N4JS-specific package.json behavior with JSONExtensionRegistry
+		registerJSONLanguageExtension();
 
 	}
 
@@ -152,11 +156,11 @@ public class HeadlessExtensionRegistrationHelper {
 	}
 
 	/**
-	 * Register the N4JS-specific package.json validator extension with the JSON validator extension registry.
+	 * Register the N4JS-specific package.json language extension with the JSON extension registry.
 	 *
 	 * Assumes that the {@link JSONStandaloneSetup} has been performed beforehand.
 	 */
-	private void registerJSONValidatorExtension() {
+	private void registerJSONLanguageExtension() {
 		final IResourceServiceProvider jsonServiceProvider = (IResourceServiceProvider) IResourceServiceProvider.Registry.INSTANCE
 				.getExtensionToFactoryMap().get(JSONGlobals.FILE_EXTENSION);
 
@@ -165,9 +169,12 @@ public class HeadlessExtensionRegistrationHelper {
 					+ " Has the standlone setup of the JSON language been performed.");
 		}
 
-		final JSONValidatorExtensionRegistry jsonValidatorExtensionRegistry = jsonServiceProvider
-				.get(JSONValidatorExtensionRegistry.class);
-		jsonValidatorExtensionRegistry.register(packageJsonValidatorExtension);
+		final JSONExtensionRegistry jsonExtensionRegistry = jsonServiceProvider
+				.get(JSONExtensionRegistry.class);
+
+		jsonExtensionRegistry.register(packageJsonValidatorExtension);
+		jsonExtensionRegistry.register(packageJsonResourceDescriptionExtension);
+
 	}
 
 }

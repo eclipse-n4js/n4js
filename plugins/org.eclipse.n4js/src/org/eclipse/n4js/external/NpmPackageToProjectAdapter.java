@@ -134,12 +134,12 @@ public class NpmPackageToProjectAdapter {
 	 */
 	PackageJson getPackageJson(File packageRoot) throws IOException {
 
-		final File packageJsonResource = new File(packageRoot, PACKAGE_JSON);
-		if (!packageJsonResource.exists() || !packageJsonResource.isFile()) {
-			throw new IOException("Cannot read package.json content for package '" + packageJsonResource.getName()
-					+ "' at '" + packageJsonResource + "'.");
+		final File packageJsonFile = new File(packageRoot, PACKAGE_JSON);
+		if (!packageJsonFile.isFile()) {
+			throw new IOException("Cannot read package.json content for package '" + packageRoot.getName()
+					+ "' at '" + packageJsonFile + "'.");
 		}
-		return PackageJson.readValue(packageJsonResource.toURI());
+		return PackageJson.readValue(packageJsonFile.toURI());
 	}
 
 	private static String NPM_DEFINITIONS_FOLDER_NAME = "npm";
@@ -254,11 +254,13 @@ public class NpmPackageToProjectAdapter {
 
 		// copy package.json fragment
 		try {
-			Files.copy(
-					sourcePath.resolve(N4JSGlobals.PACKAGE_FRAGMENT_JSON),
-					targetPath.resolve(N4JSGlobals.PACKAGE_FRAGMENT_JSON),
-					StandardCopyOption.REPLACE_EXISTING);
-			FileCopier.copy(sourcePath, targetPath, COPY_N4JSD_PREDICATE);
+			Path sourceFragmentPath = sourcePath.resolve(N4JSGlobals.PACKAGE_FRAGMENT_JSON);
+			if (sourceFragmentPath.toFile().isFile()) {
+				Files.copy(
+						sourceFragmentPath,
+						targetPath.resolve(N4JSGlobals.PACKAGE_FRAGMENT_JSON),
+						StandardCopyOption.REPLACE_EXISTING);
+			}
 		} catch (IOException e) {
 			final String message = "Error while trying to copy the package.json fragment '"
 					+ N4JSGlobals.PACKAGE_FRAGMENT_JSON + "' for '" + packageName + "' npm package.";

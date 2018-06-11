@@ -95,10 +95,14 @@ public class ProjectDescriptionUtils {
 		VersionConstraint result = N4mfFactory.eINSTANCE.createVersionConstraint();
 		result.setExclLowerBound(false);
 		result.setExclUpperBound(true);
+		if ("*".equals(str)) {
+			result.setLowerVersion(parseVersion("0.0.0")); // >=0.0.0
+			return result;
+		}
 		if ("latest".equals(str)) {
 			// cannot represent "latest" exactly with class VersionConstraint
-			// -> using ">=0.0.1"
-			result.setLowerVersion(parseVersion("0.0.1"));
+			// -> using ">=0.0.0"
+			result.setLowerVersion(parseVersion("0.0.0"));
 			return result;
 		}
 		if (str.startsWith("~")) {

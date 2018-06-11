@@ -11,9 +11,11 @@
 package org.eclipse.n4js.json;
 
 import org.eclipse.n4js.json.conversion.JSONValueConverterService;
+import org.eclipse.n4js.json.resource.JSONResourceDescriptionStrategy;
 import org.eclipse.n4js.json.validation.JSONIssueCodes;
 import org.eclipse.n4js.json.validation.JSONIssueSeveritiesProvider;
 import org.eclipse.xtext.conversion.IValueConverterService;
+import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.validation.IssueSeveritiesProvider;
 
 /**
@@ -26,8 +28,13 @@ public class JSONRuntimeModule extends AbstractJSONRuntimeModule {
 		return JSONValueConverterService.class;
 	}
 	
-	/** Bind custom JSOn issue severities provider that operates based on {@link JSONIssueCodes}. */
+	/** Bind custom JSON issue severities provider that operates based on {@link JSONIssueCodes}. */
 	public Class<? extends IssueSeveritiesProvider> bindIssueSeveritiesProvider() {
 		return JSONIssueSeveritiesProvider.class;
+	}
+	
+	/** Bind extension based resource description strategy for JSON resources. */
+	public Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
+		return JSONResourceDescriptionStrategy.class;
 	}
 }
