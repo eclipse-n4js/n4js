@@ -19,6 +19,7 @@ pipeline {
         }
     }
 
+
     options {
         ansiColor('xterm')
         buildDiscarder(
