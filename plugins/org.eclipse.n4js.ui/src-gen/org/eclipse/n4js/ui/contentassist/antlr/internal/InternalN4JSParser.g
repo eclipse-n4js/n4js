@@ -78,7 +78,6 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 		tokenNameToValue.put("LessThanSignEqualsSign", "'<='");
 		tokenNameToValue.put("EqualsSignEqualsSign", "'=='");
 		tokenNameToValue.put("EqualsSignGreaterThanSign", "'=>'");
-		tokenNameToValue.put("GreaterThanSignEqualsSign", "'>='");
 		tokenNameToValue.put("CommercialAtCommercialAt", "'@@'");
 		tokenNameToValue.put("CircumflexAccentEqualsSign", "'^='");
 		tokenNameToValue.put("As", "'as'");
@@ -11887,9 +11886,9 @@ rule__RelationalOperator__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1()); }
-		GreaterThanSign
-		{ after(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1()); }
+		{ before(grammarAccess.getRelationalOperatorAccess().getGroup_1()); }
+		(rule__RelationalOperator__Group_1__0)
+		{ after(grammarAccess.getRelationalOperatorAccess().getGroup_1()); }
 	)
 	|
 	(
@@ -11899,15 +11898,9 @@ rule__RelationalOperator__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignEqualsSignKeyword_3()); }
-		GreaterThanSignEqualsSign
-		{ after(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignEqualsSignKeyword_3()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_4()); }
+		{ before(grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_3()); }
 		Instanceof
-		{ after(grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_4()); }
+		{ after(grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_3()); }
 	)
 ;
 finally {
@@ -11926,9 +11919,9 @@ norm1_RelationalOperator__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1()); }
-		GreaterThanSign
-		{ after(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1()); }
+		{ before(grammarAccess.getRelationalOperatorAccess().getGroup_1()); }
+		(norm1_RelationalOperator__Group_1__0)
+		{ after(grammarAccess.getRelationalOperatorAccess().getGroup_1()); }
 	)
 	|
 	(
@@ -11938,21 +11931,15 @@ norm1_RelationalOperator__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignEqualsSignKeyword_3()); }
-		GreaterThanSignEqualsSign
-		{ after(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignEqualsSignKeyword_3()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_4()); }
+		{ before(grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_3()); }
 		Instanceof
-		{ after(grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_4()); }
+		{ after(grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_3()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getRelationalOperatorAccess().getInKeyword_5_0()); }
+		{ before(grammarAccess.getRelationalOperatorAccess().getInKeyword_4_0()); }
 		In
-		{ after(grammarAccess.getRelationalOperatorAccess().getInKeyword_5_0()); }
+		{ after(grammarAccess.getRelationalOperatorAccess().getInKeyword_4_0()); }
 	)
 ;
 finally {
@@ -47446,6 +47433,114 @@ finally {
 }
 
 
+rule__RelationalOperator__Group_1__0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__RelationalOperator__Group_1__0__Impl
+	rule__RelationalOperator__Group_1__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__RelationalOperator__Group_1__0__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1_0()); }
+	GreaterThanSign
+	{ after(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1_0()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__RelationalOperator__Group_1__1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__RelationalOperator__Group_1__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__RelationalOperator__Group_1__1__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getRelationalOperatorAccess().getEqualsSignKeyword_1_1()); }
+	(EqualsSign)?
+	{ after(grammarAccess.getRelationalOperatorAccess().getEqualsSignKeyword_1_1()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+norm1_RelationalOperator__Group_1__0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	norm1_RelationalOperator__Group_1__0__Impl
+	norm1_RelationalOperator__Group_1__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+norm1_RelationalOperator__Group_1__0__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1_0()); }
+	GreaterThanSign
+	{ after(grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1_0()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+norm1_RelationalOperator__Group_1__1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	norm1_RelationalOperator__Group_1__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+norm1_RelationalOperator__Group_1__1__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getRelationalOperatorAccess().getEqualsSignKeyword_1_1()); }
+	(EqualsSign)?
+	{ after(grammarAccess.getRelationalOperatorAccess().getEqualsSignKeyword_1_1()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 rule__EqualityExpression__Group__0
 	@init {
 		int stackSize = keepStackSize();
@@ -53972,7 +54067,7 @@ rule__AssignmentOperator__Group_7__1__Impl
 :
 (
 	{ before(grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_1()); }
-	(GreaterThanSign)?
+	GreaterThanSign
 	{ after(grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_1()); }
 )
 ;
@@ -53986,6 +54081,7 @@ rule__AssignmentOperator__Group_7__2
 	}
 :
 	rule__AssignmentOperator__Group_7__2__Impl
+	rule__AssignmentOperator__Group_7__3
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -53997,9 +54093,35 @@ rule__AssignmentOperator__Group_7__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignEqualsSignKeyword_7_2()); }
-	GreaterThanSignEqualsSign
-	{ after(grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignEqualsSignKeyword_7_2()); }
+	{ before(grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_2()); }
+	(GreaterThanSign)?
+	{ after(grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_2()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__AssignmentOperator__Group_7__3
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__AssignmentOperator__Group_7__3__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__AssignmentOperator__Group_7__3__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_7_3()); }
+	EqualsSign
+	{ after(grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_7_3()); }
 )
 ;
 finally {

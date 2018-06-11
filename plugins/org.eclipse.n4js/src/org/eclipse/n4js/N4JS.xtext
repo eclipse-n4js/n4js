@@ -851,7 +851,7 @@ RelationalExpression <In, Yield> returns Expression: ShiftExpression<Yield>
 	=>({RelationalExpression.lhs=current} op=RelationalOperator<In> ->rhs=ShiftExpression<Yield>)*;
 
 RelationalOperator <In> returns RelationalOperator:
-	'<' | '>' | '<=' | '>=' | 'instanceof' | <In> 'in';
+	'<' | '>' '='? | '<=' | 'instanceof' | <In> 'in';
 
 	// Equality operators (11.9)
 EqualityExpression <In, Yield> returns Expression: RelationalExpression<In,Yield>
@@ -910,7 +910,7 @@ YieldExpression <In> returns Expression:
 AssignmentOperator returns AssignmentOperator:
 	  '=' | '*=' | '/=' | '%=' | '+=' | '-='
 	| '<<='
-	| '>' '>'? '>='
+	| '>' '>' '>'? '='
 	| '&=' | '^=' | '|='
 ;
 
@@ -921,7 +921,7 @@ AwaitExpression <In, Yield> returns Expression:
 	=>({AwaitExpression} 'await') expression=AssignmentExpression<In,Yield>;
 
 PromisifyExpression <In, Yield> returns Expression:
-	=> ({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>;
+	=>({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>;
 
 	// $<Comma operator (11.14)
 
