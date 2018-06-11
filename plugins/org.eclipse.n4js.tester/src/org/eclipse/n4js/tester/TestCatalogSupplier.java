@@ -52,10 +52,6 @@ public class TestCatalogSupplier implements Supplier<String> {
 	}
 
 	/** @return the {@link TestTree} for all tests */
-	// protected TestTree getTreeForAllTests() {
-	// return new TestTree(new ID(valueOf(randomUUID())));
-	// }
-
 	protected TestTree getTreeForAllTests() {
 		return testDiscoveryHelper.collectAllTestsFromWorkspace();
 	}

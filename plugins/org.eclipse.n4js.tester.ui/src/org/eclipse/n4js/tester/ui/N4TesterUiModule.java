@@ -41,8 +41,7 @@ public class N4TesterUiModule extends AbstractModule {
 		bind(TestFsmRegistryImpl.class).toProvider(() -> getTesterInjector().getInstance(TestFsmRegistryImpl.class));
 		bind(TestTreeRegistryImpl.class).toProvider(() -> getTesterInjector().getInstance(TestTreeRegistryImpl.class));
 		bind(JettyManager.class).toProvider(() -> getTesterInjector().getInstance(JettyManager.class));
-
-		bind(TestCatalogSupplier.class).to(EclipseTestCatalogSupplier.class);
+		bind(TestCatalogSupplier.class);
 	}
 
 	private Injector getTesterInjector() {
