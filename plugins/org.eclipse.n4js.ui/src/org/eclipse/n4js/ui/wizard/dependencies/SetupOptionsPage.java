@@ -13,8 +13,8 @@ package org.eclipse.n4js.ui.wizard.dependencies;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -102,7 +102,7 @@ public class SetupOptionsPage extends WizardPage {
 		defaultItem.setText(0, "default");
 		defaultItem.setText(1, "default settings");
 
-		data.forEach((name, path) -> {
+		data.forEach((path, name) -> {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(0, name);
 			item.setText(1, path);
@@ -166,9 +166,9 @@ public class SetupOptionsPage extends WizardPage {
 		}
 
 		Collection<File> fNPMRCs = runnableSettingsFilesLocator.getCollectedConfigFiles();
-
-		Map<String, String> npmrcs = new HashMap<>();
-		fNPMRCs.forEach(f -> npmrcs.put(f.getName(), f.getAbsolutePath()));
+		// sorted map by key (path) length in ascending order, good for the UI
+		Map<String, String> npmrcs = new TreeMap<>((p1, p2) -> ((Integer) p1.length()).compareTo(p2.length()));
+		fNPMRCs.forEach(f -> npmrcs.put(f.getAbsolutePath(), f.getName()));
 		updateConfigs(npmrcs);
 	}
 

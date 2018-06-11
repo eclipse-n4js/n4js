@@ -26,7 +26,7 @@ class ES_06_UnicodeEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testUnicodeIdentifier_01() {
-		val script = '日本語 = []'.parseSuccessfully
+		val script = '日本語 = []'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -37,7 +37,7 @@ class ES_06_UnicodeEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testUnicodeIdentifier_02() {
-		val script = 'T\u203F = []'.parseSuccessfully
+		val script = 'T\u203F = []'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -48,7 +48,7 @@ class ES_06_UnicodeEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testUnicodeIdentifier_03() {
-		val script = 'T\u200C = []'.parseSuccessfully
+		val script = 'T\u200C = []'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -59,7 +59,7 @@ class ES_06_UnicodeEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testUnicodeIdentifier_04() {
-		val script = 'T\u200D = []'.parseSuccessfully
+		val script = 'T\u200D = []'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -70,7 +70,7 @@ class ES_06_UnicodeEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testUnicodeIdentifier_05() {
-		val script = '\u2163\u2161 = []'.parseSuccessfully
+		val script = '\u2163\u2161 = []'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -81,7 +81,7 @@ class ES_06_UnicodeEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testUnicodeIdentifier_06() {
-		val script = '\u2163\u2161\u200A=\u2009[]'.parseSuccessfully
+		val script = '\u2163\u2161\u200A=\u2009[]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef

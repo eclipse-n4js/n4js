@@ -23,7 +23,7 @@ class ES_11_01_SimpleEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThis() {
-		val script = 'this\n'.parseSuccessfully
+		val script = 'this\n'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val thisExpression = statement.expression as ThisLiteral
 		assertNotNull(thisExpression) // to avoid the unused warning
@@ -31,7 +31,7 @@ class ES_11_01_SimpleEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNull() {
-		val script = 'null\n'.parseSuccessfully
+		val script = 'null\n'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val nullLiteral = statement.expression as NullLiteral
 		assertNotNull(nullLiteral) // to avoid the unused warning
@@ -39,7 +39,7 @@ class ES_11_01_SimpleEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testIntegerLiteral() {
-		val script = '\n    42\n\n'.parseSuccessfully
+		val script = '\n    42\n\n'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val intLiteral = statement.expression as IntLiteral
 		assertEquals(42, intLiteral.toInt)
@@ -47,7 +47,7 @@ class ES_11_01_SimpleEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinaryOperation_01() {
-		val script = '(1 + 2 ) * 3'.parseSuccessfully
+		val script = '(1 + 2 ) * 3'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val multiplication = statement.expression as MultiplicativeExpression
 		assertEquals(3, (multiplication.rhs as IntLiteral).toInt)
@@ -58,7 +58,7 @@ class ES_11_01_SimpleEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinaryOperation_02() {
-		val script = '(1) + (2 ) + 3'.parseSuccessfully
+		val script = '(1) + (2 ) + 3'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val sum = statement.expression as AdditiveExpression
 		assertEquals(3, (sum.rhs as IntLiteral).toInt)
@@ -69,7 +69,7 @@ class ES_11_01_SimpleEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinaryOperation_03() {
-		val script = '4 + 5 << (6)'.parseSuccessfully
+		val script = '4 + 5 << (6)'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val shift = statement.expression as ShiftExpression
 		assertEquals(6, (shift.rhs.unwrap as IntLiteral).toInt)

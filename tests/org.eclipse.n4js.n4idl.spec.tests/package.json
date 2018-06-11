@@ -10,7 +10,6 @@
       "source": [
         "xpect-test"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   }
 }

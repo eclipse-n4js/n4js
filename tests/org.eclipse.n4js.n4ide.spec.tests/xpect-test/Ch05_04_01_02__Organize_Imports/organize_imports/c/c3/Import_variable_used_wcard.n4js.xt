@@ -17,7 +17,7 @@
    	 						 File "ExpVarB.n4js" { from="../../a/ExpVarB.n4js" } }
    	 			Folder "c"  { ThisFile {} }
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_c3.n4mf" }
+   	 	File "package.json" { from="package_c3.json" }
    	 }
    }
    END_SETUP

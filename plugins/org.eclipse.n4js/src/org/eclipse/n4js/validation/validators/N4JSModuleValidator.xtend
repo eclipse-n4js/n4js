@@ -38,6 +38,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.utils.ResourceType
 
 /**
  * Contains module-level validations, i.e. validations that need to be checked once per module / file.
@@ -73,8 +74,11 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkModuleSpecifier(Script script) {
+		val resType = ResourceType.getResourceType(script.module.eResource);
+		val correctType = resType === ResourceType.N4JS || resType === ResourceType.N4JSD || resType === ResourceType.N4JSX;
 		val moduleQN = script.module.qualifiedName
-		if (moduleQN.contains(".")) {
+
+		if (correctType && moduleQN.contains(".")) {
 			val qualifiedName = qualifiedNameConverter.toQualifiedName(moduleQN);
 
 			// Determine which parts of the module specifier contains a dot so that we 
@@ -86,9 +90,9 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 
 			if (filenameContainsDot) { locationSubject.add("filename"); }
 			if (moduleFoldersContainDot) { locationSubject.add("containing folders"); }
-			
+
 			val locationSubjectDescription = locationSubject.join(" and ").toFirstUpper;
-			
+
 			// add the issue to the very beginning of the file with length 0
 			addIssue(IssueCodes.getMessageForMOD_NAME_MUST_NOT_CONTAIN_DOTS(locationSubjectDescription, script.module.qualifiedName),
 				script, 0, 0, IssueCodes.MOD_NAME_MUST_NOT_CONTAIN_DOTS);

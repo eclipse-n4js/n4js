@@ -22,7 +22,7 @@ class ES_11_11_LogicalOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOr() {
-		val program = 'x || y'.parseSuccessfully
+		val program = 'x || y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as BinaryLogicalExpression
 		assertNotNull(expression)
@@ -36,7 +36,7 @@ class ES_11_11_LogicalOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAnd() {
-		val program = 'x && y'.parseSuccessfully
+		val program = 'x && y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as BinaryLogicalExpression
 		assertNotNull(expression)
@@ -60,7 +60,7 @@ class ES_11_11_LogicalOperatorEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testOrOr() {
-		val program = 'x || y || z'.parseSuccessfully
+		val program = 'x || y || z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as BinaryLogicalExpression
 		assertEquals(BinaryLogicalOperator.OR, expression.op)
@@ -88,7 +88,7 @@ class ES_11_11_LogicalOperatorEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testAndAnd() {
-		val program = 'x && y && z'.parseSuccessfully
+		val program = 'x && y && z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 
 		val expression = statement.expression as BinaryLogicalExpression
@@ -117,7 +117,7 @@ class ES_11_11_LogicalOperatorEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testOrAnd() {
-		val program = 'x || y && z'.parseSuccessfully
+		val program = 'x || y && z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 
 		val expression = statement.expression as BinaryLogicalExpression
@@ -145,7 +145,7 @@ class ES_11_11_LogicalOperatorEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testOrXor() {
-		val program = 'x || y ^ z'.parseSuccessfully
+		val program = 'x || y ^ z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 
 		val expression = statement.expression as BinaryLogicalExpression

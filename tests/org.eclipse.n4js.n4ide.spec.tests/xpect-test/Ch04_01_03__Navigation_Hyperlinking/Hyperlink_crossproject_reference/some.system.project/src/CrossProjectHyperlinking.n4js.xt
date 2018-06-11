@@ -13,13 +13,13 @@
 
 	Workspace {
 		Project "some.system.project" {
-			File "manifest.n4mf" { from="../../some.system.project/manifest.n4mf" }
+			File "package.json" { from="../../some.system.project/package.json" }
 			Folder "src" {
 				ThisFile { from="../../some.system.project/src/CrossProjectHyperlinking.n4js.xt" }
 			}
 		}
 		Project "some.other.system.project" {
-			File "manifest.n4mf" { from="../../some.other.system.project/manifest.n4mf" }
+			File "package.json" { from="../../some.other.system.project/package.json" }
 			Folder "src" {
 				File "A.n4js" { from="../../some.other.system.project/src/A.n4js" }
 			}

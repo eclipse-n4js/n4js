@@ -11,12 +11,11 @@
 package org.eclipse.n4js.xsemantics
 
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import static org.eclipse.n4js.validation.JavaScriptVariant.*
 
 /**
  * Test class for operator test (6.1.10- 6.1.18)
@@ -28,7 +27,7 @@ class N6_1_16_EqualityExpressionTypesystemTest extends AbstractOperatorExpressio
 
 	@Test
 	def void testType() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			for (op : #["==", "!=", "===", "!=="]) {
 				assertOperatorType(mode, "boolean", '''n1 «op» n2''')
 				assertOperatorType(mode, "boolean", '''s1 «op» s2''')
@@ -40,7 +39,7 @@ class N6_1_16_EqualityExpressionTypesystemTest extends AbstractOperatorExpressio
 
 	@Test
 	def void testExpectedType_NonStrict() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			for (op : #["==", "!="]) {
 				assertBinaryOperatorExpectedType(mode, "any", "any", '''n1 «op» n2''');
 				assertBinaryOperatorExpectedType(mode, "any", "any", '''s1 «op» s2''');
@@ -53,7 +52,7 @@ class N6_1_16_EqualityExpressionTypesystemTest extends AbstractOperatorExpressio
 
 	@Test
 	def void testExpectedType_Strict() {
-		for (mode : values()) {
+		for (mode : JavaScriptVariant.nonDepricatedValues()) {
 			for (op : #["===", "!=="]) {
 				assertBinaryOperatorExpectedType(mode, "any", "any", '''n1 «op» n2''');
 				assertBinaryOperatorExpectedType(mode, "any", "any", '''s1 «op» s2''');

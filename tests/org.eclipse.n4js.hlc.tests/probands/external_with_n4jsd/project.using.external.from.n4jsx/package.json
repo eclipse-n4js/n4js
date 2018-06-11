@@ -13,6 +13,9 @@
 			"source": [
 				"src"
 			]
-		}
+		},
+		"requiredRuntimeLibraries": [
+			"n4js-runtime-node"
+		]
 	}
 }

@@ -231,7 +231,7 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 					// ...
 				}
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -245,7 +245,7 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 				[ /*comment*/ '@abc2']: string = "5";
 				['@abc3'  /*comment*/ ]: string = "6";
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -256,7 +256,7 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 				s: any = null;
 				s = null;
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 

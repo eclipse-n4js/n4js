@@ -25,7 +25,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNewButton_01() {
-		val script = 'new Button'.parseSuccessfully
+		val script = 'new Button'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val newExpression = statement.expression as NewExpression
 		val button = newExpression.callee as IdentifierRef
@@ -35,7 +35,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNewButton_02() {
-		val script = 'new Button()'.parseSuccessfully
+		val script = 'new Button()'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val newExpression = statement.expression as NewExpression
 		val button = newExpression.callee as IdentifierRef
@@ -45,7 +45,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNewNewFoo_01() {
-		val script = 'new new foo'.parseSuccessfully
+		val script = 'new new foo'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val outerNewExpression = statement.expression as NewExpression
 		val innerNewExpression = outerNewExpression.callee as NewExpression
@@ -57,7 +57,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNewNewFoo_02() {
-		val script = 'new new foo()'.parseSuccessfully
+		val script = 'new new foo()'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val outerNewExpression = statement.expression as NewExpression
 		val innerNewExpression = outerNewExpression.callee as NewExpression
@@ -69,7 +69,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNewFooBar_01() {
-		val script = 'new foo().bar()'.parseSuccessfully
+		val script = 'new foo().bar()'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val call = statement.expression as ParameterizedCallExpression
 		val bar = call.target as ParameterizedPropertyAccessExpression
@@ -82,7 +82,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNewIndexAccess() {
-		val script = 'new foo[bar]'.parseSuccessfully
+		val script = 'new foo[bar]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val newExpression = statement.expression as NewExpression
 		val indexAccess = newExpression.callee as IndexedAccessExpression
@@ -94,7 +94,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNewDotAccess_01() {
-		val script = 'new foo.bar()'.parseSuccessfully
+		val script = 'new foo.bar()'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val newExpression = statement.expression as NewExpression
 		val fooBar = newExpression.callee as ParameterizedPropertyAccessExpression
@@ -106,7 +106,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNewDotAccess_02() {
-		val script = '( new foo).bar()'.parseSuccessfully
+		val script = '( new foo).bar()'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val call = statement.expression as ParameterizedCallExpression
 		val bar = call.target as ParameterizedPropertyAccessExpression
@@ -119,7 +119,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testCallExpression_01() {
-		val script = 'foo(bar, baz)'.parseSuccessfully
+		val script = 'foo(bar, baz)'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val foo = statement.expression as ParameterizedCallExpression
 		assertEquals('foo', (foo.target as IdentifierRef).text)
@@ -130,7 +130,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testCallExpression_02() {
-		val script = '(    foo  )()'.parseSuccessfully
+		val script = '(    foo  )()'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val call = statement.expression as ParameterizedCallExpression
 		val foo = (call.target as ParenExpression).expression as IdentifierRef
@@ -140,7 +140,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDotAccess_01() {
-		val script = 'universe.milkyway'.parseSuccessfully
+		val script = 'universe.milkyway'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val milkyway = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('milkyway', milkyway.propertyText)
@@ -149,7 +149,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDotAccess_02() {
-		val script = 'universe.milkyway.solarsystem'.parseSuccessfully
+		val script = 'universe.milkyway.solarsystem'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val solarsystem = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('solarsystem', solarsystem.propertyText)
@@ -161,7 +161,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDotAccess_03() {
-		val script = 'universe.milkyway.solarsystem.Earth'.parseSuccessfully
+		val script = 'universe.milkyway.solarsystem.Earth'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val earth = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('Earth', earth.propertyText)
@@ -175,7 +175,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testIndexAccess_01() {
-		val script = 'universe[galaxyName, otherUselessName]'.parseSuccessfully
+		val script = 'universe[galaxyName, otherUselessName]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val universe = statement.expression as IndexedAccessExpression
 		assertEquals('universe', (universe.target as IdentifierRef).text)
@@ -185,7 +185,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testIndexAccess_02() {
-		val script = 'universe[galaxyName]'.parseSuccessfully
+		val script = 'universe[galaxyName]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val universe = statement.expression as IndexedAccessExpression
 		assertEquals('universe', (universe.target as IdentifierRef).text)
@@ -195,7 +195,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDotAccess_04() {
-		val script = 'universe[42].galaxies'.parseSuccessfully
+		val script = 'universe[42].galaxies'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val galaxies = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('galaxies', galaxies.propertyText)
@@ -208,7 +208,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDotAccess_05() {
-		val script = 'universe(42).galaxies'.parseSuccessfully
+		val script = 'universe(42).galaxies'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val galaxies = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('galaxies', galaxies.propertyText)
@@ -221,7 +221,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDotAccess_06() {
-		val script = 'universe(42).galaxies(14, 3, 77).milkyway'.parseSuccessfully
+		val script = 'universe(42).galaxies(14, 3, 77).milkyway'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val milkyway = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('milkyway', milkyway.propertyText)
@@ -243,7 +243,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDotAccess_07() {
-		val script = 'earth.asia.Indonesia.prepareForElection(2014)'.parseSuccessfully
+		val script = 'earth.asia.Indonesia.prepareForElection(2014)'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val call = statement.expression as ParameterizedCallExpression
 		assertEquals(2014, (call.arguments.head.expression as IntLiteral).toInt)
@@ -251,7 +251,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testKeyword_01() {
-		val script = 'universe.if'.parseSuccessfully
+		val script = 'universe.if'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val keyword = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('universe',(keyword.target as IdentifierRef).text)
@@ -260,7 +260,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testKeyword_02() {
-		val script = 'universe.true'.parseSuccessfully
+		val script = 'universe.true'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val keyword = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('universe',(keyword.target as IdentifierRef).text)
@@ -269,7 +269,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testKeyword_03() {
-		val script = 'universe.false'.parseSuccessfully
+		val script = 'universe.false'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val keyword = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('universe',(keyword.target as IdentifierRef).text)
@@ -278,7 +278,7 @@ class ES_11_02_LeftHandSideExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testKeyword_04() {
-		val script = 'universe.null'.parseSuccessfully
+		val script = 'universe.null'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val keyword = statement.expression as ParameterizedPropertyAccessExpression
 		assertEquals('universe',(keyword.target as IdentifierRef).text)

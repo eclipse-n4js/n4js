@@ -21,7 +21,7 @@ class AT_IDEBUG215_ASI_FunctionCall extends AbstractParserTest {
 				f({}
 				g;
 			}
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 	@Test
@@ -30,7 +30,7 @@ class AT_IDEBUG215_ASI_FunctionCall extends AbstractParserTest {
 			f({})
 			g;
 		}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -39,7 +39,7 @@ class AT_IDEBUG215_ASI_FunctionCall extends AbstractParserTest {
 			f({});
 			g;
 		}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -55,7 +55,7 @@ class AT_IDEBUG215_ASI_FunctionCall extends AbstractParserTest {
 				f({}
 				g ;
 			}
-		'''.parseWithError
+		'''.parseESWithError
 
 		'''
 			function f ( any ) {
@@ -67,7 +67,7 @@ class AT_IDEBUG215_ASI_FunctionCall extends AbstractParserTest {
 				g ;
 			}
 
-		'''.parseWithError
+		'''.parseESWithError
 	}
 
 }

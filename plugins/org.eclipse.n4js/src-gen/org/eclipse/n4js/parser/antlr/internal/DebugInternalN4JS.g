@@ -5055,10 +5055,9 @@ ruleRelationalOperator:
 		'<'
 		    |
 		'>'
+		'='?
 		    |
 		'<='
-		    |
-		'>='
 		    |
 		'instanceof'
 	)
@@ -5070,10 +5069,9 @@ norm1_RelationalOperator:
 		'<'
 		    |
 		'>'
+		'='?
 		    |
 		'<='
-		    |
-		'>='
 		    |
 		'instanceof'
 		    |
@@ -5744,8 +5742,9 @@ ruleAssignmentOperator:
 		'<<='
 		    |
 		'>'
+		'>'
 		'>'?
-		'>='
+		'='
 		    |
 		'&='
 		    |

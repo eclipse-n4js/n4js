@@ -48,7 +48,7 @@ class IDEBUG_085_Test extends AbstractParserTest {
 			export function lenAnnotatedExportableElement(s: string) : number {
 				return s.length;
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		val expressions = script.eAllContents.filter[ it instanceof FunctionExpression ].toList
 		assertTrue(expressions.toString, expressions.isEmpty)
 	}
@@ -60,7 +60,7 @@ class IDEBUG_085_Test extends AbstractParserTest {
 				@This(any)
 				function g() {}
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 		val expressions = script.eAllContents.filter[ it instanceof FunctionExpression ].toList
 		assertTrue(expressions.toString, expressions.isEmpty)
 	}

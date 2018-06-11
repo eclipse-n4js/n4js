@@ -15,14 +15,14 @@
    	 	Folder "src" { 
    	 		ThisFile {}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_p1.n4mf" }
+   	 	File "package.json" { from="package_p1.json" }
    	 }
    	 Project "MixedModuleProject" {
    	 	Folder "src" { 
    	 		File "A.n4js" { from="../../MixedModuleProject/A.n4js" }
    	 		File "B.n4js" { from="../../MixedModuleProject/B.n4js" }
    	 	}
-   	 	File "manifest.n4mf" { from="../../MixedModuleProject/manifest_MixedModuleProject.n4mf" }
+   	 	File "package.json" { from="../../MixedModuleProject/package_MixedModuleProject.json" }
    	 }
    }
    END_SETUP

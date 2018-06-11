@@ -13,18 +13,18 @@
 
 	Workspace {
 		Project "calling.project" {
-			File "manifest.n4mf" { from="../../calling.project/manifest.n4mf" }
+			File "package.json" { from="../../calling.project/package.json" }
 			Folder "src" {
 				ThisFile { from="../../calling.project/src/SameProject.n4js.xt" }
 				File "DeclarationSameProject.n4js" { from="../../calling.project/src/DeclarationSameProject.n4js" }
 			}
 		}
 		Project "other.project.same.vendor" {
-			File "manifest.n4mf" { from="../../other.project.same.vendor/manifest.n4mf" }
+			File "package.json" { from="../../other.project.same.vendor/package.json" }
 			Folder "src" { }
 		}
 		Project "other.project.other.vendor" {
-			File "manifest.n4mf" { from="../../other.project.other.vendor/manifest.n4mf" }
+			File "package.json" { from="../../other.project.other.vendor/package.json" }
 			Folder "src" { }
 		}
 	}

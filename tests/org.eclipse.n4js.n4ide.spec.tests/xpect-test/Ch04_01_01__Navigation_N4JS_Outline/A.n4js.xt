@@ -22,7 +22,7 @@
 				}
 			}
 			Folder "src-gen" {}
-			File "manifest.n4mf" {}
+			File "package.json" {}
 		}
 	}
 

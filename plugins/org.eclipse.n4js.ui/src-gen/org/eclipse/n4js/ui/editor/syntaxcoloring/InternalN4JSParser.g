@@ -11587,20 +11587,23 @@ ruleRelationalOperator
 		announce($LessThanSignKeyword_0, grammarAccess.getRelationalOperatorAccess().getLessThanSignKeyword_0());
 	}
 	    |
-	GreaterThanSignKeyword_1=GreaterThanSign {
-		announce($GreaterThanSignKeyword_1, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1());
-	}
+	(
+		GreaterThanSignKeyword_1_0=GreaterThanSign {
+			announce($GreaterThanSignKeyword_1_0, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1_0());
+		}
+		(
+			EqualsSignKeyword_1_1=EqualsSign {
+				announce($EqualsSignKeyword_1_1, grammarAccess.getRelationalOperatorAccess().getEqualsSignKeyword_1_1());
+			}
+		)?
+	)
 	    |
 	LessThanSignEqualsSignKeyword_2=LessThanSignEqualsSign {
 		announce($LessThanSignEqualsSignKeyword_2, grammarAccess.getRelationalOperatorAccess().getLessThanSignEqualsSignKeyword_2());
 	}
 	    |
-	GreaterThanSignEqualsSignKeyword_3=GreaterThanSignEqualsSign {
-		announce($GreaterThanSignEqualsSignKeyword_3, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignEqualsSignKeyword_3());
-	}
-	    |
-	InstanceofKeyword_4=Instanceof {
-		announce($InstanceofKeyword_4, grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_4());
+	InstanceofKeyword_3=Instanceof {
+		announce($InstanceofKeyword_3, grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_3());
 	}
 )
 ;
@@ -11616,24 +11619,27 @@ norm1_RelationalOperator
 		announce($LessThanSignKeyword_0, grammarAccess.getRelationalOperatorAccess().getLessThanSignKeyword_0());
 	}
 	    |
-	GreaterThanSignKeyword_1=GreaterThanSign {
-		announce($GreaterThanSignKeyword_1, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1());
-	}
+	(
+		GreaterThanSignKeyword_1_0=GreaterThanSign {
+			announce($GreaterThanSignKeyword_1_0, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1_0());
+		}
+		(
+			EqualsSignKeyword_1_1=EqualsSign {
+				announce($EqualsSignKeyword_1_1, grammarAccess.getRelationalOperatorAccess().getEqualsSignKeyword_1_1());
+			}
+		)?
+	)
 	    |
 	LessThanSignEqualsSignKeyword_2=LessThanSignEqualsSign {
 		announce($LessThanSignEqualsSignKeyword_2, grammarAccess.getRelationalOperatorAccess().getLessThanSignEqualsSignKeyword_2());
 	}
 	    |
-	GreaterThanSignEqualsSignKeyword_3=GreaterThanSignEqualsSign {
-		announce($GreaterThanSignEqualsSignKeyword_3, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignEqualsSignKeyword_3());
+	InstanceofKeyword_3=Instanceof {
+		announce($InstanceofKeyword_3, grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_3());
 	}
 	    |
-	InstanceofKeyword_4=Instanceof {
-		announce($InstanceofKeyword_4, grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_4());
-	}
-	    |
-	InKeyword_5_0=In {
-		announce($InKeyword_5_0, grammarAccess.getRelationalOperatorAccess().getInKeyword_5_0());
+	InKeyword_4_0=In {
+		announce($InKeyword_4_0, grammarAccess.getRelationalOperatorAccess().getInKeyword_4_0());
 	}
 )
 ;
@@ -13489,13 +13495,16 @@ ruleAssignmentOperator
 		GreaterThanSignKeyword_7_0=GreaterThanSign {
 			announce($GreaterThanSignKeyword_7_0, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_0());
 		}
+		GreaterThanSignKeyword_7_1=GreaterThanSign {
+			announce($GreaterThanSignKeyword_7_1, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_1());
+		}
 		(
-			GreaterThanSignKeyword_7_1=GreaterThanSign {
-				announce($GreaterThanSignKeyword_7_1, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_1());
+			GreaterThanSignKeyword_7_2=GreaterThanSign {
+				announce($GreaterThanSignKeyword_7_2, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_2());
 			}
 		)?
-		GreaterThanSignEqualsSignKeyword_7_2=GreaterThanSignEqualsSign {
-			announce($GreaterThanSignEqualsSignKeyword_7_2, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignEqualsSignKeyword_7_2());
+		EqualsSignKeyword_7_3=EqualsSign {
+			announce($EqualsSignKeyword_7_3, grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_7_3());
 		}
 	)
 	    |

@@ -502,8 +502,6 @@ EqualsSignEqualsSign : '==';
 
 EqualsSignGreaterThanSign : '=>';
 
-GreaterThanSignEqualsSign : '>=';
-
 CommercialAtCommercialAt : '@@';
 
 CircumflexAccentEqualsSign : '^=';

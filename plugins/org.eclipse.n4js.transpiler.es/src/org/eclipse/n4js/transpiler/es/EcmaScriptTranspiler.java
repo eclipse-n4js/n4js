@@ -42,7 +42,7 @@ import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
-import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.common.base.Optional;
@@ -198,8 +198,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	 * @return true if the code should only be wrapped.
 	 */
 	private boolean noTranspile(N4JSResource eResource) {
-		ResourceType resourceType = ResourceType.getResourceType(eResource);
-		return resourceType.equals(ResourceType.JS);
+		return N4JSLanguageUtils.isOpaqueModule(eResource.getURI());
 	}
 
 }
