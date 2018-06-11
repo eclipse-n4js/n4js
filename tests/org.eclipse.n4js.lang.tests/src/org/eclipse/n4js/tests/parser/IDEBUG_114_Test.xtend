@@ -27,7 +27,7 @@ class IDEBUG_114_Test extends AbstractParserTest {
 			})
 			(function <T> () {
 			})
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -41,7 +41,7 @@ class IDEBUG_114_Test extends AbstractParserTest {
 			}
 			function <T> f() {
 			}
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
@@ -55,7 +55,7 @@ class IDEBUG_114_Test extends AbstractParserTest {
 			function <S extends string, T, P> len(s: S, t: T, p: P, a, n: number?, ...vas: string) : number {
 				return (s+t+p+a+n+vas).length
 			})
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 }

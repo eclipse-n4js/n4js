@@ -152,6 +152,11 @@ public class NpmCLI {
 		if (reqChg.type == LibraryChangeType.Install) {
 			packageProcessingStatus = install(reqChg.name, reqChg.version, installPath);
 
+			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
+				batchStatus.merge(packageProcessingStatus);
+				return null;
+			}
+
 			actualChangeType = LibraryChangeType.Added;
 			actualVersion = getActualVersion(batchStatus, reqChg, completePath);
 		}
@@ -159,18 +164,17 @@ public class NpmCLI {
 			actualVersion = getActualVersion(batchStatus, reqChg, completePath);
 
 			packageProcessingStatus = uninstall(reqChg.name, installPath);
+			if (packageProcessingStatus == null || !packageProcessingStatus.isOK()) {
+				batchStatus.merge(packageProcessingStatus);
+				return null;
+			}
+
 			actualChangeType = LibraryChangeType.Removed;
 		}
 
-		if (packageProcessingStatus != null) {
-			if (batchStatus.isOK() && !packageProcessingStatus.isOK()) {
-				logger.logError(packageProcessingStatus);
-				batchStatus.merge(packageProcessingStatus);
-			}
-			if (batchStatus.isOK()) {
-				URI actualLocation = URI.createFileURI(completePath.toString());
-				actualChange = new LibraryChange(actualChangeType, actualLocation, reqChg.name, actualVersion);
-			}
+		if (packageProcessingStatus != null && packageProcessingStatus.isOK() && batchStatus.isOK()) {
+			URI actualLocation = URI.createFileURI(completePath.toString());
+			actualChange = new LibraryChange(actualChangeType, actualLocation, reqChg.name, actualVersion);
 		}
 
 		return actualChange;

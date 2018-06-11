@@ -37,7 +37,7 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 		val script = '''
 			import 'p/A' /*
 			*/ import 'p/A';import 'p/A'
-			import "p/A"'''.parseSuccessfully
+			import "p/A"'''.parseESSuccessfully
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		assertEquals(4, script.scriptElements.size);
@@ -113,7 +113,7 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 		val script = '''
 			export * from 'p/A'/*
 			*/export * from 'p/A'; export * from 'p/A'
-			export * from "p/A"'''.parseSuccessfully
+			export * from "p/A"'''.parseESSuccessfully
 
 		assertEquals(4, script.scriptElements.size);
 		assertTrue(script.scriptElements.forall[it instanceof ExportDeclaration])
@@ -138,7 +138,7 @@ class N4_07_02_ImportExportTest extends AbstractParserTest{
 			export default function () {}
 			export default class {}
 			export default x = 7
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 
 		assertEquals(16, script.scriptElements.size);
 		assertTrue(script.scriptElements.forall[it instanceof ExportDeclaration])

@@ -14,10 +14,12 @@ import javax.inject.Provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.StatusHelper;
 
 import com.google.inject.Inject;
 
@@ -30,6 +32,9 @@ public class ExternalLibrariesWizard extends Wizard {
 
 	@Inject
 	private Provider<RunnableInstallDependencies> installDependenciesRunnable;
+
+	@Inject
+	private StatusHelper statusHelper;
 
 	/** Public for SWTBot tests */
 	public static final String WINDOW_TITLE = "Setup External Libraries";
@@ -70,7 +75,7 @@ public class ExternalLibrariesWizard extends Wizard {
 				switch (resultStatus.getSeverity()) {
 				case IStatus.ERROR:
 					LOGGER.error(resultStatus.toString());
-					showErrorMessage();
+					showErrorMessage(resultStatus);
 					break;
 				case IStatus.CANCEL:
 					LOGGER.info(resultStatus.toString());
@@ -90,7 +95,7 @@ public class ExternalLibrariesWizard extends Wizard {
 				}
 		} catch (Throwable throwable) {
 			LOGGER.error("unhandled error while setting up dependencies", throwable);
-			showErrorMessage();
+			showErrorMessage(throwable);
 		}
 
 		return true;
@@ -101,17 +106,22 @@ public class ExternalLibrariesWizard extends Wizard {
 		return true;
 	}
 
-	private static void showErrorMessage() {
+	private void showErrorMessage(Throwable throwable) {
+		final IStatus status = statusHelper.createError(throwable);
+		showErrorMessage(status);
+	}
+
+	private void showErrorMessage(IStatus status) {
 		UIUtils.getDisplay().asyncExec(() -> {
 			String title = "Setting up external libraries failed.";
 			String message = "Error while setting up external libraries.\n";
 			message += "Please check your Error Log view for the detailed log about the failure.\n";
 			message += " (note that autobuild is " + (AutobuildUtils.get() ? "on" : "off") + ")";
-			MessageDialog.openError(UIUtils.getShell(), title, message);
+			ErrorDialog.openError(UIUtils.getShell(), title, message, status);
 		});
 	}
 
-	private static void showWarnMessage() {
+	private void showWarnMessage() {
 		UIUtils.getDisplay().asyncExec(() -> {
 			String title = "Setting up external was cancelled.";
 			String message = "Due to cancellation not all libraries were installed.\n";

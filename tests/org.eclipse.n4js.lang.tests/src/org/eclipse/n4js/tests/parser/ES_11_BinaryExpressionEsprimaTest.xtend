@@ -32,7 +32,7 @@ class ES_11_BinaryExpressionEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testAddMul() {
-		val program = 'x + y * z'.parseSuccessfully
+		val program = 'x + y * z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 
 		val expression = statement.expression as AdditiveExpression
@@ -58,7 +58,7 @@ class ES_11_BinaryExpressionEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testAddDiv() {
-		val program = 'x + y / z'.parseSuccessfully
+		val program = 'x + y / z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 
 		val expression = statement.expression as AdditiveExpression
@@ -84,7 +84,7 @@ class ES_11_BinaryExpressionEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testAddMod() {
-		val program = 'x + y % z'.parseSuccessfully
+		val program = 'x + y % z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 
 		val expression = statement.expression as AdditiveExpression
@@ -111,7 +111,7 @@ class ES_11_BinaryExpressionEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testSubMod() {
-		val program = 'x - y % z'.parseSuccessfully
+		val program = 'x - y % z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 
 		val expression = statement.expression as AdditiveExpression
@@ -139,7 +139,7 @@ class ES_11_BinaryExpressionEsprimaTest extends AbstractParserTest {
 	 */
 	@Test
 	def void testTimesAdd() {
-		val program = 'x * y + z'.parseSuccessfully
+		val program = 'x * y + z'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as AdditiveExpression
 		val op = expression.op

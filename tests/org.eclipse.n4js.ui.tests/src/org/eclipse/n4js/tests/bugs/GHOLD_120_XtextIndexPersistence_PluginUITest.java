@@ -122,7 +122,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		// Make sure both test module and project description file get into the index.
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
-		assertMarkers("Expected exactly zero issues.", project, 0);
+		assertMarkers("Expected exactly 12 issues.", project, 12); // issues are in external libraries
 
 		final Resource resource = persister.createResource();
 		assertNotNull("Test resource was null.", resource);
@@ -164,7 +164,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		waitForAutoBuild();
 		resource.getContents().clear();
 
-		assertMarkers("Expected exactly zero issues.", project, 0);
+		assertMarkers("Expected exactly 12 issues.", project, 12); // issues are in external libraries
 
 		final Set<org.eclipse.emf.common.util.URI> afterCrashBuilderState = from(
 				builderState.getAllResourceDescriptions())

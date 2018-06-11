@@ -16,148 +16,149 @@ class ES_07_08_3_NumericLiteralsErrorTest extends AbstractParserTest {
 
 	@Test
 	def void testAsUnicode() {
-		'\\u0030'.parseWithError
+		'\\u0030'.parseESWithError
 	}
 
 	@Test
 	def void testZero() {
-		'0i'.parseWithError
+		'0i'.parseESWithError
 	}
 
 	@Test
 	def void testFourtyTwo() {
-		'42a'.parseWithError
+		'42a'.parseESWithError
 	}
 
 	@Test
 	def void testThree() {
-		'3_'.parseWithError
+		'3_'.parseESWithError
 	}
 
 	@Test
 	def void testFive() {
-		'5$'.parseWithError
+		'5$'.parseESWithError
 	}
 
 
 	@Test
 	def void testDot14() {
-		'.14i'.parseWithError
+		'.14i'.parseESWithError
 	}
 
 	@Test
 	def void testPi() {
-		'3.14159m'.parseWithError
+		'3.14159m'.parseESWithError
 	}
 
 	@Test
 	def void testLargeDecimal() {
-		'6.02214179e+23a'.parseWithError
+		'6.02214179e+23a'.parseESWithError
 	}
 
 	@Test
 	def void testSmallDecimal() {
-		'1.492417830e-10a'.parseWithError
+		'1.492417830e-10a'.parseESWithError
 	}
 
 	@Test
 	def void testHexInteger_01() {
-		'0x0G'.parseWithError
+		'0x0G'.parseESWithError
 	}
 
 	@Test
 	def void testHexInteger_02() {
-		'0x0$;'.parseWithError
+		'0x0$;'.parseESWithError
 	}
 
 	@Test
 	def void testScientificInteger() {
-		'0e+100_'.parseWithError
+		'0e+100_'.parseESWithError
 	}
 
 	@Test
 	def void testHexAbc() {
-		'0xabch;'.parseWithError
+		'0xabch;'.parseESWithError
 	}
 
 	@Test
 	def void testHexDef() {
-		'0xdefi;'.parseWithError
+		'0xdefi;'.parseESWithError
 	}
 
 	@Test
 	def void testHex1A() {
-		'0X1A_;'.parseWithError
+		'0X1A_;'.parseESWithError
 	}
 
 	@Test
 	def void testHex10() {
-		'0x10$;'.parseWithError
+		'0x10$;'.parseESWithError
 	}
 
 	@Test
 	def void testHex100() {
-		'0x100q;'.parseWithError
+		'0x100q;'.parseESWithError
 	}
 
 	@Test
 	def void testHex04() {
-		'0X04_;'.parseWithError
+		'0X04_;'.parseESWithError
 	}
 
 	@Test
 	def void testBinary1() {
-		'0b1_;'.parseWithError
+		'0b1_;'.parseESWithError
 	}
 
 	@Test
 	def void testBinary2() {
-		'0b'.parseWithError
+		'0b'.parseESWithError
 	}
 
 	@Test
 	def void testBinary3() {
-		'0b_;'.parseWithError
+		'0b_;'.parseESWithError
 	}
 
 	@Test
 	def void testBinary4() {
-		'0b2;'.parseWithError
+		'0b2;'.parseESWithError
 	}
 
 	@Test
 	def void testOctal02() {
-		'0o2$;'.parseWithError
+		'0o2$;'.parseESWithError
 	}
 
 	@Test
 	def void testOctal0129() {
-		'"use strict";0o129;'.parseWithError
+		'"use strict";0o129;'.parseESWithError
 	}
 
 	@Test
 	def void testOctal0129NonStrict() {
-		'0o129;'.parseWithError
+		'0o129;'.parseESWithError
 	}
 
 	@Test
 	def void testOctal0012() {
-		'0o012o;'.parseWithError
+		'0o012o;'.parseESWithError
 	}
 
 	@Test
 	def void testLegacyOctal02() {
-		'02$;'.parseWithError
-	}
-
-	@Test
-	def void testLegacyOctal012() {
-		'"use strict";0129;'.parseWithError
+		'02$;'.parseESWithError
 	}
 
 	@Test
 	def void testLegacyOctal0012() {
-		'0012o;'.parseWithError
+		'0012o;'.parseESWithError
+	}
+
+	// NOTE: strict mode is validated in the validation, not in the parser
+	@Test
+	def void testLegacyOctal012() {
+		'"use strict";0129;'.parseESWithError
 	}
 
 }
