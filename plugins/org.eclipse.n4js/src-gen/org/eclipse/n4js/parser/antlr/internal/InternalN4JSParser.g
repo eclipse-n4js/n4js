@@ -20661,11 +20661,20 @@ ruleRelationalOperator returns [AntlrDatatypeRuleToken current=new AntlrDatatype
 			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getLessThanSignKeyword_0());
 		}
 		    |
-		kw=GreaterThanSign
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1());
-		}
+		(
+			kw=GreaterThanSign
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1_0());
+			}
+			(
+				kw=EqualsSign
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getEqualsSignKeyword_1_1());
+				}
+			)?
+		)
 		    |
 		kw=LessThanSignEqualsSign
 		{
@@ -20673,16 +20682,10 @@ ruleRelationalOperator returns [AntlrDatatypeRuleToken current=new AntlrDatatype
 			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getLessThanSignEqualsSignKeyword_2());
 		}
 		    |
-		kw=GreaterThanSignEqualsSign
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignEqualsSignKeyword_3());
-		}
-		    |
 		kw=Instanceof
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_4());
+			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_3());
 		}
 	)
 ;
@@ -20703,11 +20706,20 @@ norm1_RelationalOperator returns [AntlrDatatypeRuleToken current=new AntlrDataty
 			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getLessThanSignKeyword_0());
 		}
 		    |
-		kw=GreaterThanSign
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1());
-		}
+		(
+			kw=GreaterThanSign
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignKeyword_1_0());
+			}
+			(
+				kw=EqualsSign
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getEqualsSignKeyword_1_1());
+				}
+			)?
+		)
 		    |
 		kw=LessThanSignEqualsSign
 		{
@@ -20715,22 +20727,16 @@ norm1_RelationalOperator returns [AntlrDatatypeRuleToken current=new AntlrDataty
 			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getLessThanSignEqualsSignKeyword_2());
 		}
 		    |
-		kw=GreaterThanSignEqualsSign
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getGreaterThanSignEqualsSignKeyword_3());
-		}
-		    |
 		kw=Instanceof
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_4());
+			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getInstanceofKeyword_3());
 		}
 		    |
 		kw=In
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getInKeyword_5_0());
+			newLeafNode(kw, grammarAccess.getRelationalOperatorAccess().getInKeyword_4_0());
 		}
 	)
 ;
@@ -24129,17 +24135,22 @@ ruleAssignmentOperator returns [AntlrDatatypeRuleToken current=new AntlrDatatype
 				$current.merge(kw);
 				newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_0());
 			}
+			kw=GreaterThanSign
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_1());
+			}
 			(
 				kw=GreaterThanSign
 				{
 					$current.merge(kw);
-					newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_1());
+					newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignKeyword_7_2());
 				}
 			)?
-			kw=GreaterThanSignEqualsSign
+			kw=EqualsSign
 			{
 				$current.merge(kw);
-				newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getGreaterThanSignEqualsSignKeyword_7_2());
+				newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_7_3());
 			}
 		)
 		    |
