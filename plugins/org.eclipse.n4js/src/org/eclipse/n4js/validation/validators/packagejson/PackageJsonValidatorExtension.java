@@ -32,6 +32,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
@@ -113,24 +114,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__VERSION);
 	}
 
-	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS)
-	public void checkN4JSSection(JSONValue n4jsSection) {
-		// make sure n4js section is an object
-		if (!checkIsType(n4jsSection, JSONPackage.Literals.JSON_OBJECT,
-				" as package.json n4js section.")) {
-			return;
-		}
-
-		final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
-
-		// special error message in case of a missing output property
-		if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
-			addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
-					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
-		}
-	}
-
 	/** Validates the project/package name. */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__NAME)
 	public void checkName(JSONValue projectNameValue) {
@@ -187,6 +170,121 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			}
 		}
 
+	}
+
+	/** Check the version property. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__VERSION)
+	public void checkVersion(JSONValue versionValue) {
+		checkIsType(versionValue, JSONPackage.Literals.JSON_STRING_LITERAL, "as package version");
+	}
+
+	/** Check the dependencies section structure. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
+	public void checkDependenciesStructure(JSONValue dependenciesValue) {
+		checkIsDependenciesSection(dependenciesValue);
+	}
+
+	/** Check the devDependencies section structure. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
+	public void checkDevDependenciesStructure(JSONValue devDependenciesValue) {
+		checkIsDependenciesSection(devDependenciesValue);
+	}
+
+	/** Checks whether the given {@code sectionValue} is a structurally valid package.json dependency section. */
+	private void checkIsDependenciesSection(JSONValue sectionValue) {
+		if (!checkIsType(sectionValue, JSONPackage.Literals.JSON_OBJECT, "as list of dependencies")) {
+			return;
+		}
+		final JSONObject dependenciesObject = (JSONObject) sectionValue;
+		for (NameValuePair entry : dependenciesObject.getNameValuePairs()) {
+			checkIsType(entry.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier");
+		}
+	}
+
+	/** Check the projectType value structure. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
+			+ ProjectDescriptionHelper.PROP__PROJECT_TYPE)
+	public void checkProjectTypeStructure(JSONValue projectTypeValue) {
+		if (!checkIsType(projectTypeValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
+			return;
+		}
+		// check whether the given value represents a valid project type
+		final String projectTypeString = ((JSONStringLiteral) projectTypeValue).getValue();
+		if (packageJsonHelper.parseProjectType(projectTypeString) == null) {
+			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_TYPE(projectTypeString),
+					projectTypeValue, IssueCodes.PKGJ_INVALID_PROJECT_TYPE);
+		}
+	}
+
+	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS)
+	public void checkN4JSSection(JSONValue n4jsSection) {
+		// make sure n4js section is an object
+		if (!checkIsType(n4jsSection, JSONPackage.Literals.JSON_OBJECT,
+				" as package.json n4js section.")) {
+			return;
+		}
+
+		final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
+
+		// check for correct types (null-values (non-existent) will not lead to issues)
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_ID),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as vendor ID");
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_NAME),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as vendor name");
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as output folder path");
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as output folder path");
+
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as reference to extended runtime environment");
+		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as required runtime libraries", "as library reference");
+		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as provided runtime libraries", "as library reference");
+		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as required runtime libraries", "as library reference");
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__MODULE_LOADER),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as module loader");
+		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__INIT_MODULES),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as init modules", "as init module reference");
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXEC_MODULE),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as exec module");
+
+		// special error message in case of a missing output property
+		if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
+			addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
+					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
+		}
+	}
+
+	/**
+	 * Checks all given {@code values} to be instances of the given {@code valueClass}.
+	 *
+	 * @See {@link #checkIsType(JSONValue, EClass, String)}
+	 */
+	private boolean checkIsType(Iterable<JSONValue> values, EClass valueClass, String locationClause) {
+		boolean overallResult = true;
+		for (JSONValue value : values) {
+			overallResult &= checkIsType(value, valueClass, locationClause);
+		}
+		return overallResult;
+	}
+
+	/**
+	 * Checks the given {@code values} to be {@link JSONArray}s with element type {@code elementClass}.
+	 *
+	 * @See {@link #checkIsType(JSONValue, EClass, String)}
+	 */
+	private boolean checkIsArrayOfType(Iterable<JSONValue> values, EClass elementClass,
+			String locationClass, String elementLocation) {
+		boolean overallResult = true;
+		for (JSONValue value : values) {
+			overallResult &= checkIsType(value, JSONPackage.Literals.JSON_ARRAY, locationClass);
+			overallResult &= checkIsType(((JSONArray) value).getElements(), elementClass, elementLocation);
+		}
+		return overallResult;
 	}
 
 	/** Validates the source container section of N4JS package.json files */

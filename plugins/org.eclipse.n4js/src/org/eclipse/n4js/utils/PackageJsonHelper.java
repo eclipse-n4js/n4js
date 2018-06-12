@@ -28,7 +28,7 @@ import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.N4mfPackage;
-import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 
@@ -144,30 +144,17 @@ public class PackageJsonHelper {
 	}
 
 	/**
-	 * Returns a list of {@link ProjectReference}s representing the list of required runtime libraries as given by
-	 * {@code value}.
+	 * Parses a {@link ProjectType} from the given string representation.
 	 *
-	 * Returns {@code null} if {@code value} does not represent a valid list of project references.
+	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ProjectType}.
 	 */
-	public List<ProjectReference> getRequiredRuntimeLibraries(JSONValue value) {
-		return asProjectReferencesInArrayOrEmpty(value);
-	}
-
-	private List<ProjectReference> asProjectReferencesInArrayOrEmpty(JSONValue jsonValue) {
-		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(this::asProjectReferenceOrNull)
-				.filter(pref -> pref != null)
-				.collect(Collectors.toList());
-	}
-
-	private ProjectReference asProjectReferenceOrNull(JSONValue jsonValue) {
-		String valueStr = asStringOrNull(jsonValue);
-		if (valueStr != null) {
-			final ProjectReference result = N4mfFactory.eINSTANCE.createProjectReference();
-			result.setProjectId(valueStr);
-			return result;
-		}
-		return null;
+	public ProjectType parseProjectType(String projectTypeStr) {
+		if ("runtimeEnvironment".equals(projectTypeStr))
+			return ProjectType.RUNTIME_ENVIRONMENT;
+		if ("runtimeLibrary".equals(projectTypeStr))
+			return ProjectType.RUNTIME_LIBRARY;
+		return parseEnumLiteral(N4mfPackage.eINSTANCE.getProjectType(), ProjectType.class,
+				projectTypeStr);
 	}
 
 	private ModuleFilterSpecifier createModuleFilterSpecifier(String sourcePath, String moduleSpecifierWithWildcard) {
@@ -186,7 +173,10 @@ public class PackageJsonHelper {
 		EEnumLiteral emfLit = enumLiteralStr != null ? emfEnumType.getELiterals().stream()
 				.filter(lit -> lit.getName().equalsIgnoreCase(enumLiteralStr))
 				.findFirst().orElse(null) : null;
-		Enumerator javaLit = emfLit != null ? emfLit.getInstance() : (Enumerator) emfEnumType.getDefaultValue();
+		if (emfLit == null) {
+			return null;
+		}
+		final Enumerator javaLit = emfLit.getInstance();
 		@SuppressWarnings("unchecked")
 		T javaLitCasted = javaEnumType.isInstance(javaLit) ? (T) javaLit : null;
 		return javaLitCasted;

@@ -334,6 +334,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		val JSONValue sourcesSection = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES, JSONValue);
 		val List<SourceContainerDescription> sourceContainers = packageJsonHelper.getSourceContainerDescriptions(sourcesSection);
+		
+		if (sourceContainers === null) {
+			return;
+		}
+		
 		val hasTestFragment = sourceContainers.findFirst[sf| SourceContainerType.TEST.equals(sf.getSourceContainerType)] !== null;
 
 		if(!hasTestFragment){

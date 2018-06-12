@@ -51,7 +51,6 @@ import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -280,8 +279,9 @@ public class ProjectDescriptionHelper {
 			JSONValue value = pair.getValue();
 			switch (name) {
 			case PROP__PROJECT_TYPE:
-				// TODO default should be "validation"
-				target.setProjectType(parseProjectType(asStringOrNull(value)));
+				// parseProjectType returns null if value is invalid, this will
+				// cause the setProjectType setter to use default value of ProjectType.
+				target.setProjectType(packageJsonHelper.parseProjectType(asStringOrNull(value)));
 				break;
 			case PROP__VENDOR_ID:
 				target.setVendorId(asStringOrNull(value));
@@ -425,15 +425,6 @@ public class ProjectDescriptionHelper {
 			System.err.println("WARNING: invalid or unsupported version constraint: " + versionConstraintStr);
 		}
 		return result;
-	}
-
-	private ProjectType parseProjectType(String projectTypeStr) {
-		if ("runtimeEnvironment".equals(projectTypeStr))
-			return ProjectType.RUNTIME_ENVIRONMENT;
-		if ("runtimeLibrary".equals(projectTypeStr))
-			return ProjectType.RUNTIME_LIBRARY;
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getProjectType(), ProjectType.class,
-				projectTypeStr);
 	}
 
 	private ModuleLoader parseModuleLoader(String moduleLoaderStr) {
