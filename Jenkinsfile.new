@@ -38,7 +38,6 @@ pipeline {
                      '-XX:+UseCGroupMemoryLimitForHeap ' +
                      '-XX:MaxRAMFraction=2 '             +
                      '-XshowSettings:vm '
-     	NPM_TOKEN = 'abcd'
     }
 
     stages {
@@ -46,15 +45,11 @@ pipeline {
         stage('fs browse') {
             steps {
                 script {
-                	sh """\
-                            pwd
-                            git status
-                            ls -la
-                            echo \"Before executing which docker\"
-                    		ls -la /usr/bin/docker
-                    		echo \"After executing which docker\"
-                    		docker --help
-                       """
+                        sh """\
+                                pwd
+                                git status
+                                ls -la
+                           """
                 }
             }
         }
@@ -68,6 +63,7 @@ pipeline {
                         def profiles = [
                             'buildProduct',
                             'execute-plugin-tests',
+                            'execute-plugin-ui-tests',
                             'execute-hlc-integration-tests'
                         ].join(',')
 
