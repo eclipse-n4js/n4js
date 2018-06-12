@@ -262,7 +262,7 @@ class N4ClusteringBuilderState extends AbstractBuilderState {
 		return resourceServiceProvider.getResourceDescriptionManager();
 	}
 
-	/* Visibility workaround, called by the {@link DoUpdateImplementation} */
+	/** Visibility workaround, called by the {@link DoUpdateImplementation} */
 	@Override
 	protected void updateMarkers(IResourceDescription.Delta delta, ResourceSet resourceSet, IProgressMonitor monitor)
 			throws OperationCanceledException {
