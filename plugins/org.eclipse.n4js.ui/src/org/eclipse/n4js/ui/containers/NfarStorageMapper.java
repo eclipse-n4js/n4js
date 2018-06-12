@@ -30,6 +30,13 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
 import org.eclipse.xtext.ui.resource.UriValidator;
 import org.eclipse.xtext.util.Pair;
@@ -42,14 +49,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseArchive;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
-import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 
 /**
  * Put the URIs that are found in NFARs into the URI cache such that they become available as {@link IStorage storages}
@@ -82,6 +81,7 @@ public class NfarStorageMapper implements IStorage2UriMapperContribution {
 								affectedProjects.add(project);
 							}
 							// traverse if the delta contains a manifest change
+							// FIXME delete entire class
 							if (delta.findMember(new Path(IN4JSProject.N4MF_MANIFEST)) != null)
 								return true;
 							// or the project has a manifest

@@ -330,7 +330,8 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		affectedURIs.removeAll(allRemainingURIs);
 
 		for (URI currAffURI : affectedURIs) {
-			if (!N4MF_MANIFEST.equals(currAffURI.lastSegment())) {
+			if (!N4MF_MANIFEST.equals(currAffURI.lastSegment())
+					|| !N4JSGlobals.PACKAGE_JSON.equals(currAffURI.lastSegment())) {
 
 				/*-
 				 * This logic here is required to get rid of the invalid serialized TModules information from the index

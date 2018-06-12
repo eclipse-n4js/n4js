@@ -112,9 +112,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Inject
 	private PackageJsonHelper packageJsonHelper;
 	
-	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
-	
 	override boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		// this validator extension only applies to package.json files
 		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())

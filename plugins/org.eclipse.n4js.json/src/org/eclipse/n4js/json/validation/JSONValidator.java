@@ -20,9 +20,9 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
-import org.eclipse.n4js.json.validation.extension.JSONValidatorExtensionRegistry;
 import org.eclipse.xtext.TerminalRule;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
@@ -41,7 +41,7 @@ public class JSONValidator extends AbstractJSONValidator {
 	private JSONGrammarAccess grammarAccess;
 
 	@Inject
-	private JSONValidatorExtensionRegistry validatorExtensionRegistry;
+	private JSONExtensionRegistry validatorExtensionRegistry;
 
 	JSONValidator() {
 		super();

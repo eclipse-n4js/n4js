@@ -12,11 +12,16 @@ package org.eclipse.n4js.json.model.utils;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
@@ -205,6 +210,68 @@ public class JSONModelUtils {
 	 */
 	public static JSONStringLiteral setProperty(JSONObject object, String name, String value) {
 		return addProperty(object, name, createStringLiteral(value));
+	}
+
+	/**
+	 * Returns a map relating property names to the corresponding {@link NameValuePair}. Duplicate name-value pairs with
+	 * the same name will be ignored.
+	 *
+	 * @param useLinked
+	 *            iff true, a {@link LinkedHashMap} will be used instead of a simple one.
+	 */
+	public static Map<String, NameValuePair> getPropertiesAsMap(JSONObject object, boolean useLinked) {
+		return object.getNameValuePairs().stream().collect(Collectors.toMap(
+				pair -> pair.getName(),
+				pair -> pair,
+				(pair1, pair2) -> pair1,
+				() -> useLinked ? new LinkedHashMap<>() : new HashMap<>()));
+	}
+
+	/**
+	 * Like {@link #merge(JSONObject, JSONObject, boolean, boolean)}, but for {@link JSONDocument}.
+	 */
+	public static void merge(JSONDocument target, JSONDocument source, boolean copy, boolean recursive) {
+		JSONValue targetContent = target.getContent();
+		JSONValue sourceContent = source.getContent();
+		if (sourceContent instanceof JSONObject && targetContent instanceof JSONObject) {
+			merge((JSONObject) targetContent, (JSONObject) sourceContent, copy, recursive);
+		} else {
+			target.setContent(copy ? EcoreUtil.copy(sourceContent) : sourceContent);
+		}
+	}
+
+	/**
+	 * Moves or copies all {@link NameValuePair}s from object 'source' to object 'target', replacing any
+	 * {@code NameValuePair}s of same name present in 'target'. The order of properties is preserved.
+	 *
+	 * @param target
+	 *            target object; will be changed in place.
+	 * @param source
+	 *            source object; won't be changed iff 'copy' is set to <code>true</code>.
+	 * @param copy
+	 *            tells if {@link NameValuePair}s should be copied over, instead of being moved.
+	 * @param recursive
+	 *            tells if a recursive merge is to be performed in case an object value in 'target' is overwritten by an
+	 *            object value in 'source' (i.e. in case of nested objects on both sides).
+	 */
+	public static void merge(JSONObject target, JSONObject source, boolean copy, boolean recursive) {
+		final Map<String, NameValuePair> targetPairsPerName = JSONModelUtils.getPropertiesAsMap(target, true);
+		for (NameValuePair sourcePair : source.getNameValuePairs()) {
+			final String sourcePairName = sourcePair.getName();
+			final JSONValue sourcePairValue = sourcePair.getValue();
+			if (recursive && sourcePairValue instanceof JSONObject) {
+				final NameValuePair targetPair = targetPairsPerName.get(sourcePairName);
+				final JSONValue targetPairValue = targetPair != null ? targetPair.getValue() : null;
+				if (targetPairValue instanceof JSONObject) {
+					merge((JSONObject) targetPairValue, (JSONObject) sourcePairValue, copy, recursive);
+					continue;
+				}
+			}
+			targetPairsPerName.put(sourcePairName, copy ? EcoreUtil.copy(sourcePair) : sourcePair);
+		}
+		final List<NameValuePair> targetList = target.getNameValuePairs();
+		targetList.clear();
+		targetList.addAll(targetPairsPerName.values());
 	}
 
 	/**

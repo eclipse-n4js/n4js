@@ -16,7 +16,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Uninstall;
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
@@ -53,6 +52,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.git.GitUtils;
@@ -99,6 +99,9 @@ public class LibraryManager {
 
 	@Inject
 	private ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/**
 	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
@@ -221,19 +224,33 @@ public class LibraryManager {
 	 * GH-862: Please remove this after GH-821 is solved
 	 */
 	private void installDependenciesOfNPMs(IProgressMonitor monitor, List<LibraryChange> actualChanges) {
+		Set<String> installedProjectsIds = externalLibraryWorkspace.getProjects().stream()
+				.map(p -> p.getName())
+				.collect(Collectors.toSet());
 		Map<String, String> dependencies = new HashMap<>();
 		for (LibraryChange libChange : actualChanges) {
 			if (libChange.type == LibraryChangeType.Added) {
 				N4JSExternalProject addedPrj = externalLibraryWorkspace.getProject(libChange.name);
 				if (addedPrj != null) {
-					ProjectDescription pd = externalLibraryWorkspace.getProjectDescription(libChange.location);
-					for (ProjectDependency pDep : pd.getProjectDependencies()) {
-						String name = pDep.getProjectId();
-						String version = NO_VERSION;
-						if (pDep.getVersionConstraint() != null) {
-							version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
+					// load descriptions from package.json fragment only! (we are only interested in dependencies
+					// defined in the n4jsd repository, not in the original package.json file)
+					ProjectDescription pd = projectDescriptionHelper
+							.loadProjectDescriptionFragmentAtLocation(libChange.location);
+					if (pd != null) {
+						for (ProjectDependency pDep : pd.getProjectDependencies()) {
+							String name = pDep.getProjectId();
+							// Note: need to make sure the project is not installed yet; method #installNPMsInternal()
+							// (which will be invoked below) is doing this as well, but that method does not consider
+							// the shipped code. For example, without the next line, "n4js-runtime-node" would be
+							// installed even though it is already available via the shipped code.
+							if (!installedProjectsIds.contains(name)) {
+								String version = NO_VERSION;
+								if (pDep.getVersionConstraint() != null) {
+									version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
+								}
+								dependencies.put(name, version);
+							}
 						}
-						dependencies.put(name, version);
 					}
 				}
 			}
@@ -461,19 +478,9 @@ public class LibraryManager {
 			}
 
 			File packageRoot = new File(uri);
-			PackageJson packageJson = npmPackageToProjectAdapter.getPackageJson(packageRoot);
-			// this remains valid for now, since manifest adaptation is still enabled
-			File manifest = new File(packageRoot, N4MF_MANIFEST);
-			if (!manifest.isFile()) {
-				String message = "Cannot locate N4JS manifest for '" + packageName + "' at '" + manifest + "'.";
-				IStatus error = statusHelper.createError(message);
-				logger.logError(error);
-			}
 
 			IStatus status = npmPackageToProjectAdapter.addTypeDefinitions(
 					packageRoot,
-					packageJson,
-					manifest,
 					definitionsFolder);
 
 			if (!status.isOK()) {

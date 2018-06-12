@@ -103,14 +103,14 @@ class DeclaredVersion {
  * </description>
  */
 enum ProjectType {
-	APPLICATION = 0,
-	PROCESSOR = 1,
-	LIBRARY = 2,
-	API = 3,
-	RUNTIME_ENVIRONMENT = 4,
-	RUNTIME_LIBRARY = 5,
-	TEST = 6,
-	VALIDATION = 7
+	VALIDATION = 0,
+	APPLICATION = 1,
+	PROCESSOR = 2,
+	LIBRARY = 3,
+	API = 4,
+	RUNTIME_ENVIRONMENT = 5,
+	RUNTIME_LIBRARY = 6,
+	TEST = 7
 }
 
 /**

@@ -106,12 +106,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				" as document root of a package.json file.")) {
 			return;
 		}
-
-		final Multimap<String, JSONValue> documentValues = getDocumentValues();
-
-		// check for mandatory top-level properties
-		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__NAME);
-		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__VERSION);
 	}
 
 	/** Validates the project/package name. */
@@ -252,11 +246,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXEC_MODULE),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as exec module");
 
-		// special error message in case of a missing output property
-		if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
-			addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
-					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
-		}
+		// // special error message in case of a missing output property
+		// if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
+		// addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
+		// JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
+		// }
 	}
 
 	/**

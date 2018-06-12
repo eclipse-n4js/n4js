@@ -10,12 +10,18 @@
  */
 package org.eclipse.n4js.utils;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.VersionConstraint;
+
+import com.google.common.base.Joiner;
 
 /**
  *
@@ -23,6 +29,79 @@ import org.eclipse.n4js.n4mf.VersionConstraint;
 public class ProjectDescriptionUtils {
 
 	private static final Pattern PATTERN_DOT = Pattern.compile("\\.");
+
+	/**
+	 * Given a path to the main module of an NPM project as given by the "main" property in a package.json, this method
+	 * will return the corresponding N4JS module specifier. Returns <code>null</code> if given <code>null</code> or an
+	 * invalid path (e.g. absolute path).
+	 */
+	public static String sanitizeMainModulePath(String path, List<String> sourceContainerPaths) {
+		if (path == null) {
+			return null;
+		}
+		// strip file extension
+		if (path.endsWith(".js")) {
+			path = path.substring(0, path.length() - 3);
+		} else {
+			return null; // in the standard package.json property "main", we ignore all files other than plain js files
+		}
+		// normalize path segments
+		path = normalizeRelativePath(path);
+		if (path == null) {
+			return null;
+		}
+		// Now 'path' must point to a file inside a source container.
+		// If that is true, then we want to return a path relative to that source container:
+		List<String> sourceContainerPathsNormalized = sourceContainerPaths.stream()
+				.map(ProjectDescriptionUtils::normalizeRelativePath)
+				.filter(p -> p != null)
+				.collect(Collectors.toList());
+		for (String scp : sourceContainerPathsNormalized) {
+			if (".".equals(scp)) {
+				return path;
+			} else {
+				String scpSlash = scp + "/";
+				if (path.startsWith(scpSlash)) {
+					return path.substring(scpSlash.length());
+				}
+			}
+		}
+		return null;
+	}
+
+	private static String normalizeRelativePath(String path) {
+		if (path == null || path.isEmpty()) {
+			return null;
+		}
+		// enforce relative path
+		if (path.startsWith("/")) {
+			return null;
+		}
+		// normalize separator character
+		if (File.separatorChar != '/') {
+			path = path.replace(File.separatorChar, '/');
+		}
+		// normalize ".", "..", and empty path segments
+		List<String> segmentsNew = new ArrayList<>();
+		for (String segment : path.split("/", -1)) {
+			if (segment.isEmpty()) {
+				continue; // simply ignore //
+			} else if (".".equals(segment)) {
+				continue; // simply ignore /./
+			} else if ("..".equals(segment)) {
+				if (segmentsNew.isEmpty()) {
+					return null;
+				}
+				segmentsNew.remove(segmentsNew.size() - 1);
+			} else {
+				segmentsNew.add(segment);
+			}
+		}
+		if (segmentsNew.isEmpty()) {
+			return ".";
+		}
+		return Joiner.on('/').join(segmentsNew);
+	}
 
 	/**
 	 * Parses a SemVer version string according to the SemVer Specification at https://semver.org/
@@ -95,10 +174,14 @@ public class ProjectDescriptionUtils {
 		VersionConstraint result = N4mfFactory.eINSTANCE.createVersionConstraint();
 		result.setExclLowerBound(false);
 		result.setExclUpperBound(true);
+		if ("*".equals(str)) {
+			result.setLowerVersion(parseVersion("0.0.0")); // >=0.0.0
+			return result;
+		}
 		if ("latest".equals(str)) {
 			// cannot represent "latest" exactly with class VersionConstraint
-			// -> using ">=0.0.1"
-			result.setLowerVersion(parseVersion("0.0.1"));
+			// -> using ">=0.0.0"
+			result.setLowerVersion(parseVersion("0.0.0"));
 			return result;
 		}
 		if (str.startsWith("~")) {
@@ -168,9 +251,18 @@ public class ProjectDescriptionUtils {
 			result.setLowerVersion(lower);
 			result.setUpperVersion(upper);
 		} else {
-			DeclaredVersion ver = parseVersion(str);
+			DeclaredVersion ver = parseVersionPartial(str);
 			if (ver == null) {
 				return null;
+			}
+			// allow partial versions, i.e. 1 == 1.0.0 and 1.2 == 1.2.0
+			// (strictly speaking, this is not part of SemVer but of coercion;
+			// see API doc of function #coerce(version) of npm package 'semver')
+			if (ver.getMinor() == -1) {
+				ver.setMinor(0);
+			}
+			if (ver.getMicro() == -1) {
+				ver.setMicro(0);
 			}
 			DeclaredVersion lower = ver;
 			DeclaredVersion upper = EcoreUtil.copy(ver);

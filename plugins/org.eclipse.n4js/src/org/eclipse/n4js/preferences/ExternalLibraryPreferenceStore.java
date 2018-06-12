@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.ExternalLibraryUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.base.Function;
@@ -154,22 +154,6 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 		private static final Logger LOGGER = Logger.getLogger(ExternalProjectLocationsProvider.class);
 
 		/**
-		 * Returns {@code true} iff the given {@link File} represents a project directory in the workspace that is
-		 * available to the projects in the N4JS workspace in that workspace projects may declare dependencies on them.
-		 *
-		 * This excludes packages that have been installed to the external workspace as transitive dependency of a
-		 * package that has been explicitly installed on user request.
-		 */
-		public static boolean isExternalProjectDirectory(File projectDirectory) {
-			if (!projectDirectory.isDirectory()) {
-				return false;
-			}
-			// check whether package.json file exists
-			final File projectDescriptionFile = new File(projectDirectory, N4JSGlobals.PACKAGE_JSON);
-			return projectDescriptionFile.exists() && projectDescriptionFile.isFile();
-		}
-
-		/**
 		 * Converts the given external library root location URIs into an iterable of existing external folder locations
 		 * URIs.
 		 *
@@ -186,7 +170,7 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 					if (isExistingFolder(rootFolder)) {
 						return from(getDirectoryContents(rootFolder))
 								.filter(f -> isExistingFolder(f))
-								.filter(f -> isExternalProjectDirectory(f))
+								.filter(f -> ExternalLibraryUtils.isExternalProjectDirectory(f))
 								.transform(file -> file.toURI());
 					}
 					return emptyList();

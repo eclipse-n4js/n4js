@@ -1012,6 +1012,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		// Initialize enums and add enum literals
 		initEEnum(projectTypeEEnum, ProjectType.class, "ProjectType");
+		addEEnumLiteral(projectTypeEEnum, ProjectType.VALIDATION);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.APPLICATION);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.PROCESSOR);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.LIBRARY);
@@ -1019,7 +1020,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		addEEnumLiteral(projectTypeEEnum, ProjectType.RUNTIME_ENVIRONMENT);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.RUNTIME_LIBRARY);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.TEST);
-		addEEnumLiteral(projectTypeEEnum, ProjectType.VALIDATION);
 
 		initEEnum(sourceContainerTypeEEnum, SourceContainerType.class, "SourceContainerType");
 		addEEnumLiteral(sourceContainerTypeEEnum, SourceContainerType.SOURCE);
