@@ -10,7 +10,7 @@ import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.validation.JSONValidator;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
-import org.eclipse.n4js.json.validation.extension.JSONValidatorExtensionRegistry;
+import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 import org.eclipse.xpect.XpectFile;
 import org.eclipse.xpect.XpectJavaModel;
@@ -52,8 +52,7 @@ public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 		final AbstractJSONValidatorExtension validatorExtension = n4jsInjector
 				.getInstance(PackageJsonValidatorExtension.class);
 		// obtain JSON validation extension registry
-		final JSONValidatorExtensionRegistry extensionRegistry = jsonInjector
-				.getInstance(JSONValidatorExtensionRegistry.class);
+		final JSONExtensionRegistry extensionRegistry = jsonInjector.getInstance(JSONExtensionRegistry.class);
 
 		// X!PECTs injector initialization causes an invalid state of the EValidator
 		// registry
