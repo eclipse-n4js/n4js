@@ -111,7 +111,7 @@ class BuildScopeAwareParallelLoader extends ParallelResourceLoader {
 	public LoadOperation create(ResourceSet parent, IProject project) {
 		this.resourceSetProvider = new BuiltInTypesReferencingResourceSetProvider(parent,
 				super.getResourceSetProvider());
-		// when we only need to load few resources (threshhold < 3 * numThreads), we load on the main thread
+		// when we only need to load few resources (threshold < 3 * numThreads), we load on the main thread
 		return new LoadOperation() {
 
 			LoadOperation delegate;
