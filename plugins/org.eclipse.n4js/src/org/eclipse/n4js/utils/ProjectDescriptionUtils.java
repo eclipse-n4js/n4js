@@ -251,9 +251,18 @@ public class ProjectDescriptionUtils {
 			result.setLowerVersion(lower);
 			result.setUpperVersion(upper);
 		} else {
-			DeclaredVersion ver = parseVersion(str);
+			DeclaredVersion ver = parseVersionPartial(str);
 			if (ver == null) {
 				return null;
+			}
+			// allow partial versions, i.e. 1 == 1.0.0 and 1.2 == 1.2.0
+			// (strictly speaking, this is not part of SemVer but of coercion;
+			// see API doc of function #coerce(version) of npm package 'semver')
+			if (ver.getMinor() == -1) {
+				ver.setMinor(0);
+			}
+			if (ver.getMicro() == -1) {
+				ver.setMicro(0);
 			}
 			DeclaredVersion lower = ver;
 			DeclaredVersion upper = EcoreUtil.copy(ver);

@@ -81,6 +81,13 @@ class ProjectDescriptionUtilsTest {
 		assertVersionConstraint(
 			constraint(false, version(1, 2, 3), false, version(1, 2, 3)),
 			parseVersionRange("1.2.3"));
+		// here, partial versions are supported:
+		assertVersionConstraint(
+			constraint(false, version(1, 0, 0), false, version(1, 0, 0)),
+			parseVersionRange("1"));
+		assertVersionConstraint(
+			constraint(false, version(1, 2, 0), false, version(1, 2, 0)),
+			parseVersionRange("1.2"));
 	}
 
 	@Test

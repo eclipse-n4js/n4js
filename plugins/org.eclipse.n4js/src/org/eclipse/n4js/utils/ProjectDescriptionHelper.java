@@ -497,6 +497,9 @@ public class ProjectDescriptionHelper {
 	}
 
 	private DeclaredVersion parseVersion(String versionStr) {
+		if (versionStr == null) {
+			return null;
+		}
 		DeclaredVersion result = ProjectDescriptionUtils.parseVersion(versionStr);
 		if (result == null) {
 			System.err.println("WARNING: invalid or unsupported version: " + versionStr);
@@ -505,6 +508,9 @@ public class ProjectDescriptionHelper {
 	}
 
 	private VersionConstraint parseVersionConstraint(String versionConstraintStr) {
+		if (versionConstraintStr == null) {
+			return null;
+		}
 		VersionConstraint result = ProjectDescriptionUtils.parseVersionRange(versionConstraintStr);
 		if (result == null) {
 			System.err.println("WARNING: invalid or unsupported version constraint: " + versionConstraintStr);
