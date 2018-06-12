@@ -1,0 +1,98 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
+{
+	"name": "duplicates",
+	"version": "0.0.1-SNAPSHOT",
+	// TODO re-consider whether this validation is desired X!PECT errors --> "There is no output folder defined, so compilation isn't possible." at ""n4js""
+	"n4js": {
+		"projectType": "library",
+		"projectVersion": "0.0.1-SNAPSHOT",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		"sources": {
+			"source": [
+				// XPECT warnings --> "Duplicate path "src" has already been declared as source container in external." at "\"src\""
+				"src",
+				// IDEBUG-339 XPECT warnings --> "Source container path src_does_not_exist does not exist." at ""src_does_not_exist""
+				"src_does_not_exist",
+				// XPECT errors --> ""src/p/juergensHack/*.js" is not a valid path." at ""src/p/juergensHack/*.js""
+				"src/p/juergensHack/*.js",
+				// XPECT errors --> "Path "src/p/myAlreadyAsModuleHack.js" does not point to a directory." at ""src/p/myAlreadyAsModuleHack.js""
+				"src/p/myAlreadyAsModuleHack.js",
+				"src2",
+				"src3"
+			],
+			"external": [
+				// XPECT warnings --> "Duplicate path "src" has already been declared as source container in source." at "\"src\""
+				"src",
+				"src-external"
+			]
+		},
+		"moduleFilters": {
+			"noValidate": [
+				// TODO re-enable the following assertions
+				// XPECT warnings --> "Module filter "p/wolfgangsUglyHack.js" does not match any modules." at ""p/wolfgangsUglyHack.js""
+				"p/wolfgangsUglyHack.js",
+				// XPECT warnings --> "Module filter "p/wolfgangsUglyHack.*" does not match any modules." at ""p/wolfgangsUglyHack.*""
+				"p/wolfgangsUglyHack.*",
+				"p/wolfgangsUglyHack",
+				// XPECT errors --> "Duplicate module filter specifier." at ""p/juergensHacks/*""
+				"p/juergensHacks/*",
+				// XPECT errors --> "Duplicate module filter specifier." at ""p/juergensHacks/*""
+				"p/juergensHacks/*",
+				// XPECT warnings --> "Module filter "p/doesntexist/" does not match any modules." at ""p/doesntexist/""
+				"p/doesntexist/",
+				// XPECT warnings --> "Module filter "**/External" does not match any modules." at "["src", "**/External"]"
+				["src", "**/External"],
+				// External is available in src-external but not in src XPECT noIssues
+				{
+					"sourceContainer": "src-external",
+					"module": "p/External"
+				},
+				// XPECT errors --> ""***" is not a valid character sequence in a wildcard." at ""***/A""
+				"***/A",
+				// XPECT errors --> "Relative navigation is not allowed in a module filter specifier." at "\"**/../p/A\""
+				"**/../p/A",
+				// XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at "\"other/*\""
+				"other/*",
+				{
+					"sourceContainer": "src2",
+					"module": "**/*"
+				},
+				["src3", "**/*"]
+			],
+			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 42)." at "\"noValidate\""
+			"noValidate": [
+				"p/A"
+			],
+			"noModuleWrap": [
+				"p/myAlreadyAsModuleHack",
+				// XPECT errors --> "Module filters of type noModuleWrap must not match N4JS modules/files." at "\"other/*\""
+				"other/*"
+			]
+		},
+		"requiredRuntimeLibraries": [
+			"vendorA:libA",
+			// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+			"libB",
+			"vendorB:libA",
+			// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libA." at "libA"
+			"libA",
+			// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libA." at "MyVendorID:libA"
+			"MyVendorID:libA",
+			// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+			"libB",
+			"MyVendorID:libC"
+		]
+	}
+}

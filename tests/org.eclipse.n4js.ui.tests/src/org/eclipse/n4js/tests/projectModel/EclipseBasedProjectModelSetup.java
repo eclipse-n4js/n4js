@@ -11,11 +11,7 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -24,7 +20,6 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.util.StringInputStream;
 
@@ -56,86 +51,55 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 	protected void createTempProjects() {
 		try {
 			host.setMyProjectURI(createTempProject(host.myProjectId));
-			createManifest(host.myProjectId, "ProjectId: " + host.myProjectId + "\n" +
-					"ProjectType: library\n" +
-					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-					"VendorId: org.eclipse.n4js\n" +
-					"VendorName: \"Eclipse N4JS Project\"\n" +
-					"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
-					"Output: \"src-gen\"" +
-					"Sources {\n" +
-					"	source {\n" +
-					"		\"src\"\n" +
-					"	}\n" +
-					"}\n" +
-					"ProjectDependencies { " + host.libProjectId + ", " + host.archiveProjectId + " } \n");
-			createArchive(host.myProjectId);
+			createProject(host.myProjectId, "{\n" +
+					"  \"name\": \"" + host.myProjectId + "\",\n" +
+					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
+					"  \"dependencies\": {\n" +
+					"    \"" + host.libProjectId + "\": \"0.0.1-SNAPSHOT\"\n" +
+					"  },\n" +
+					"  \"n4js\": {\n" +
+					"    \"projectType\": \"library\",\n" +
+					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
+					"    \"vendorName\": \"Eclipse N4JS Project\",\n" +
+					"    \"output\": \"src-gen\",\n" +
+					"    \"sources\": {\n" +
+					"      \"source\": [\n" +
+					"        \"src\"\n" +
+					"      ]\n" +
+					"    },\n" +
+					"    \"moduleLoader\": \"n4js\"\n" +
+					"  }\n" +
+					"}");
 			host.setLibProjectURI(createTempProject(host.libProjectId));
-			createManifest(host.libProjectId, "ProjectId: " + host.libProjectId + "\n" +
-					"ProjectType: library\n" +
-					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-					"VendorId: org.eclipse.n4js\n" +
-					"VendorName: \"Eclipse N4JS Project\"\n" +
-					"Output: \"src-gen\"" +
-					"Sources {\n" +
-					"	source { " +
-					"		\"src\"\n" +
-					"	}\n" +
-					"}\n");
+			createProject(host.libProjectId, "{\n" +
+					"  \"name\": \"" + host.libProjectId + "\",\n" +
+					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
+					"  \"n4js\": {\n" +
+					"    \"projectType\": \"library\",\n" +
+					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
+					"    \"vendorName\": \"Eclipse N4JS Project\",\n" +
+					"    \"output\": \"src-gen\",\n" +
+					"    \"sources\": {\n" +
+					"      \"source\": [\n" +
+					"        \"src\"\n" +
+					"      ]\n" +
+					"    }\n" +
+					"  }\n" +
+					"}");
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
 		}
 	}
 
-	private void createArchive(String projectName) throws CoreException, IOException {
+	private void createProject(String projectName, String string) throws CoreException, UnsupportedEncodingException {
 		IProject project = workspace.getProject(projectName);
-		IFolder libFolder = project.getFolder(LIB_FOLDER_NAME);
-		libFolder.create(false, true, null);
-
-		IFile archiveFile = libFolder.getFile(host.archiveProjectId + ".nfar");
-		ByteArrayOutputStream byteArrayOutputSteam = new ByteArrayOutputStream();
-		final ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputSteam);
-		zipOutputStream.putNextEntry(new ZipEntry("src/A.js"));
-		zipOutputStream.putNextEntry(new ZipEntry("src/B.js"));
-		zipOutputStream.putNextEntry(new ZipEntry("src/sub/B.js"));
-		zipOutputStream.putNextEntry(new ZipEntry("src/sub/C.js"));
-		zipOutputStream.putNextEntry(new ZipEntry("src/sub/leaf/D.js"));
-
-		zipOutputStream.putNextEntry(new ZipEntry(IN4JSProject.N4MF_MANIFEST));
-
-		try {
-			zipOutputStream.write(("ProjectId: " + host.archiveProjectId + "\n" +
-					"ProjectType: library\n" +
-					"ProjectVersion: 0.0.1-SNAPSHOT\n" +
-					"VendorId: org.eclipse.n4js\n" +
-					"VendorName: \"Eclipse N4JS Project\"\n" +
-					"Libraries { \"" + LIB_FOLDER_NAME + "\"\n }\n" +
-					"Output: \"src-gen\"" +
-					"Sources {\n" +
-					"	source { " +
-					"		\"src\"\n" +
-					"	}\n" +
-					"}\n").getBytes(Charsets.UTF_8));
-
-		} finally {
-			zipOutputStream.close();
-		}
-		archiveFile.create(new ByteArrayInputStream(byteArrayOutputSteam.toByteArray()), false, null);
-
-		host.setArchiveFileURI(URI.createPlatformResourceURI(archiveFile.getFullPath().toString(), true));
-	}
-
-	private void createManifest(String projectName, String string) throws CoreException, UnsupportedEncodingException {
-		IProject project = workspace.getProject(projectName);
-		IFile manifestFile = project.getFile(IN4JSProject.N4MF_MANIFEST);
+		IFile projectDescriptionFile = project.getFile(PROJECT_DESCRIPTION_FILENAME);
 		@SuppressWarnings("resource")
 		StringInputStream content = new StringInputStream(string, Charsets.UTF_8.name());
-		manifestFile.create(content, false, null);
-		manifestFile.setCharset(Charsets.UTF_8.name(), null);
+		projectDescriptionFile.create(content, false, null);
+		projectDescriptionFile.setCharset(Charsets.UTF_8.name(), null);
 
 		IFolder src = project.getFolder("src");
 		src.create(false, true, null);

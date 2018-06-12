@@ -22,6 +22,12 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
@@ -32,13 +38,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
-import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 
 /**
  * Add the contents of NFARs to the list of to-be-built resources in to make sure they are indexed properly.
@@ -109,8 +108,9 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 				knownEntries.put(key, cachedURIs);
 				toBeBuilt.getToBeUpdated().addAll(cachedURIs);
 				return true;
-			} else if (IN4JSProject.N4MF_MANIFEST.equals(file.getName())) {
-				// changed manifest - schedule all resources from source folders
+			} else if (IN4JSProject.N4MF_MANIFEST.equals(file.getName()) ||
+					IN4JSProject.PACKAGE_JSON.equals(file.getName())) {
+				// changed project description resource - schedule all resources from source folders
 				final IN4JSEclipseProject project = eclipseCore.create(file.getProject()).orNull();
 				if (null != project && project.exists()) {
 

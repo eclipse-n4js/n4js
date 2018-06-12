@@ -64,12 +64,17 @@ Contributors:
 		<module>org.eclipse.n4js.n4mf.tests</module>
 		<module>org.eclipse.n4js.n4mf.xpect.tests</module>
 		
+		<!-- Package.json tests -->
+		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
+		<module>org.eclipse.n4js.packagejson.xpect.ui.tests</module>
+		
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
 
 		<!-- JSON tests -->
 		<module>org.eclipse.n4js.json.tests</module>
 		<module>org.eclipse.n4js.json.xpect.tests</module>
+		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
 
 		<!-- ************************************** JUnit Plugin Tests -->
 
@@ -87,9 +92,7 @@ Contributors:
 
 		<!-- Manifest tests -->
 		<module>org.eclipse.n4js.n4mf.xpect.ui.tests</module>
-		<!-- JSON tests -->
-		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
-		<!-- Runner tests -->
+				<!-- Runner tests -->
 		<module>org.eclipse.n4js.runner.ui.tests</module>
 
 		<!--  **************************************Other tests -->

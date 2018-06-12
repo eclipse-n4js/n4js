@@ -21,16 +21,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.operation.ModalContext;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
-
-import com.google.common.collect.Iterators;
-
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.export.AbstractExportOperation;
 import org.eclipse.n4js.ui.export.N4ExportMessages;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
+
+import com.google.common.collect.Iterators;
 
 /**
  * Operation for exporting a resource and its children to a new .zip or .tar.gz file.
@@ -94,6 +93,7 @@ public class NFARExportOperation extends AbstractExportOperation {
 				exportResource(iterator.next(), hasCompiledFiles);
 			}
 		}
+		// FIXME delete entire class
 		exportResource(project.getLocation().appendSegment(IN4JSProject.N4MF_MANIFEST), false);
 	}
 

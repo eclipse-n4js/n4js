@@ -1,0 +1,18 @@
+{
+	"name": "PC",
+	"version": "0.3.0",
+	"n4js": {
+		"projectType": "runtimeLibrary",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"requiredRuntimeLibraries": [
+			"PA"
+		]
+	}
+}

@@ -15,6 +15,7 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.resource.ModuleToModuleProxyPluginTest
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
 import org.junit.Test
+import org.eclipse.n4js.N4JSGlobals
 
 /**
  * Tests a corner case of dependencies between resources. See also {@link ModuleToModuleProxyPluginTest}.
@@ -48,8 +49,8 @@ class ResourceLoadingCornerCasesPluginUITest extends AbstractBuilderParticipantT
 	def void testModule2ModuleReferencesBug() {
 		val project = createJSProject("NastyBug")
 		val srcFolder = configureProjectWithXtext(project)
-		val manifest = project.getFile("manifest.n4mf")
-		assertMarkers("manifest should have no errors", manifest, 0)
+		val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON)
+		assertMarkers("project description file (package.json) should have no errors", projectDescriptionFile, 0)
 
 		val fileC = createTestFile(srcFolder, "C", '''
 			export public class C {

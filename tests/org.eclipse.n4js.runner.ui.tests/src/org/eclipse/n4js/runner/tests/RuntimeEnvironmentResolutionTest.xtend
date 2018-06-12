@@ -11,17 +11,18 @@
 package org.eclipse.n4js.runner.tests
 
 import com.google.inject.Inject
-import org.eclipse.n4js.N4JSStandaloneSetup
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper
-import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException
-import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException
-import org.eclipse.n4js.runner.^extension.RuntimeEnvironment
 import java.io.File
 import java.io.IOException
 import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSStandaloneSetup
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.runner.RunnerHelper
+import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper
+import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException
+import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException
+import org.eclipse.n4js.runner.^extension.RuntimeEnvironment
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,8 +30,6 @@ import org.junit.rules.TestName
 
 import static com.google.common.base.Preconditions.checkNotNull
 import static com.google.common.base.Throwables.propagate
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST
-import static org.eclipse.n4js.runner.^extension.RuntimeEnvironment.*
 import static java.nio.file.Files.createDirectory
 import static java.nio.file.Files.createFile
 import static java.nio.file.Files.createTempDirectory
@@ -40,10 +39,10 @@ import static org.apache.log4j.Level.*
 import static org.apache.log4j.Logger.getLogger
 import static org.apache.log4j.Logger.getRootLogger
 import static org.eclipse.emf.common.util.URI.createFileURI
-import static org.junit.Assert.*
-import static org.hamcrest.core.IsNot.not
+import static org.eclipse.n4js.runner.^extension.RuntimeEnvironment.*
 import static org.hamcrest.core.IsCollectionContaining.*
-import org.eclipse.n4js.runner.RunnerHelper
+import static org.hamcrest.core.IsNot.not
+import static org.junit.Assert.*
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -63,7 +62,7 @@ class RuntimeEnvironmentResolutionTest {
 	private extension RunnerHelper
 
 	@Inject
-	private extension ManifestBuilderProvider
+	private extension PackageJsonBuilderProvider
 
 	@Inject
 	private IN4JSCore core
@@ -131,7 +130,7 @@ class RuntimeEnvironmentResolutionTest {
 	}
 
 	/**
-	 * Resolving the RE should fail when the project depends itself causing invalid manifest.
+	 * Resolving the RE should fail when the project depends itself causing invalid package.json.
 	 */
 	@Test(expected = DependencyCycleDetectedException)
 	def void testCannotResolveExecutionEnvironmentForProjectWithDependencyToItself() {
@@ -626,16 +625,16 @@ class RuntimeEnvironmentResolutionTest {
 	}
 
 	/**
-	 * This method creates a new project in the workspace then generates a N4JS manifest file in the brand new project's root
+	 * This method creates a new project in the workspace then generates a N4JS package.json file in the brand new project's root
 	 * with the given content.
 	 *
 	 * @param projectId the unique projectId of the new project.
-	 * @param manifestContent the content of the new manifest file.
+	 * @param packageJsonContent the content of the new package.json file.
 	 * @return returns with the URI referencing the brand new project.
 	 */
-	protected def createProjectWithManifest(String projectId, String manifestContent) {
+	protected def createProjectWithPackageJson(String projectId, String packageJsonContent) {
 		val projectFolder = createProjectFolder(projectId)
-		writeManifestContent(createManifestFile(projectFolder), manifestContent)
+		writePackageJsonContent(createPackageJsonFile(projectFolder), packageJsonContent)
 		toUri(projectFolder);
 	}
 
@@ -648,19 +647,19 @@ class RuntimeEnvironmentResolutionTest {
 		}
 	}
 
-	private def IN4JSProject createProject(ManifestBuilder builder, RuntimeEnvironment re) {
+	private def IN4JSProject createProject(PackageJsonBuilder builder, RuntimeEnvironment re) {
 		createProject(builder, '''«re.getProjectId»''')
 	}
 
-	private def IN4JSProject createProject(ManifestBuilder builder, String projectId) {
+	private def IN4JSProject createProject(PackageJsonBuilder builder, String projectId) {
 		val content = builder.build(projectId)
 		if (LOGGER.debugEnabled) {
 			LOGGER.debug('------------------------NEW PROJECT------------------------')
 			LOGGER.debug('''New project: «projectId»''')
-			LOGGER.debug('''Manifest:«'\n'»«content»''')
+			LOGGER.debug('''Package.json contents:«'\n'»«content»''')
 			LOGGER.debug('--------------------END OF NEW PROJECT---------------------')
 		}
-		val uri = createProjectWithManifest(projectId, content)
+		val uri = createProjectWithPackageJson(projectId, content)
 		val project = core.create(uri)
 		assertTrue(project.exists)
 		core.findProject(uri) // Registers the project.
@@ -678,21 +677,21 @@ class RuntimeEnvironmentResolutionTest {
 		}
 	}
 
-	private def File createManifestFile(File projectFolder) {
+	private def File createPackageJsonFile(File projectFolder) {
 		try {
-			val path = get(projectFolder.toPath.toString, N4MF_MANIFEST)
+			val path = get(projectFolder.toPath.toString, IN4JSProject.PACKAGE_JSON)
 			assertAccessable(createFile(path).toFile.doDeleteOnExit)
 		} catch (IOException e) {
-			LOGGER.error('''Error while creating manifest file in folder '«projectFolder»'.''', e)
+			LOGGER.error('''Error while creating package.json file in folder '«projectFolder»'.''', e)
 			throw propagate(e)
 		}
 	}
 
-	private def File writeManifestContent(File manifest, String content) {
+	private def File writePackageJsonContent(File packageJsonFile, String content) {
 		try {
-			return write(assertFileAccessable(manifest).toPath, content.getBytes).toFile
+			return write(assertFileAccessable(packageJsonFile).toPath, content.getBytes).toFile
 		} catch (IOException e) {
-			LOGGER.error('Error while writing manifest file content.', e)
+			LOGGER.error('Error while writing package.json file content.', e)
 			throw propagate(e)
 		}
 	}

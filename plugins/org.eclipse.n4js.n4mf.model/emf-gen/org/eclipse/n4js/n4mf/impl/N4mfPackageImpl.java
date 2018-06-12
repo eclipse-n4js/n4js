@@ -490,6 +490,15 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDeclaredVersion_BuildMetaData() {
+		return (EAttribute)declaredVersionEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getSourceContainerDescription() {
 		return sourceContainerDescriptionEClass;
 	}
@@ -842,6 +851,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		createEAttribute(declaredVersionEClass, DECLARED_VERSION__MINOR);
 		createEAttribute(declaredVersionEClass, DECLARED_VERSION__MICRO);
 		createEAttribute(declaredVersionEClass, DECLARED_VERSION__QUALIFIER);
+		createEAttribute(declaredVersionEClass, DECLARED_VERSION__BUILD_META_DATA);
 
 		sourceContainerDescriptionEClass = createEClass(SOURCE_CONTAINER_DESCRIPTION);
 		createEAttribute(sourceContainerDescriptionEClass, SOURCE_CONTAINER_DESCRIPTION__SOURCE_CONTAINER_TYPE);
@@ -957,6 +967,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		initEAttribute(getDeclaredVersion_Minor(), theEcorePackage.getEInt(), "minor", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDeclaredVersion_Micro(), theEcorePackage.getEInt(), "micro", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDeclaredVersion_Qualifier(), theEcorePackage.getEString(), "qualifier", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDeclaredVersion_BuildMetaData(), theEcorePackage.getEString(), "buildMetaData", null, 0, 1, DeclaredVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sourceContainerDescriptionEClass, SourceContainerDescription.class, "SourceContainerDescription", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSourceContainerDescription_SourceContainerType(), this.getSourceContainerType(), "sourceContainerType", null, 0, 1, SourceContainerDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1001,6 +1012,7 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 
 		// Initialize enums and add enum literals
 		initEEnum(projectTypeEEnum, ProjectType.class, "ProjectType");
+		addEEnumLiteral(projectTypeEEnum, ProjectType.VALIDATION);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.APPLICATION);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.PROCESSOR);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.LIBRARY);
@@ -1008,7 +1020,6 @@ public class N4mfPackageImpl extends EPackageImpl implements N4mfPackage {
 		addEEnumLiteral(projectTypeEEnum, ProjectType.RUNTIME_ENVIRONMENT);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.RUNTIME_LIBRARY);
 		addEEnumLiteral(projectTypeEEnum, ProjectType.TEST);
-		addEEnumLiteral(projectTypeEEnum, ProjectType.VALIDATION);
 
 		initEEnum(sourceContainerTypeEEnum, SourceContainerType.class, "SourceContainerType");
 		addEEnumLiteral(sourceContainerTypeEEnum, SourceContainerType.SOURCE);

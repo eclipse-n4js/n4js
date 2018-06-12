@@ -12,10 +12,9 @@ package org.eclipse.n4js.tests.manifest
 
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.n4mf.N4mfFactory
-import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.eclipse.xtext.util.StringInputStream
 import org.junit.Before
 import org.junit.Test
@@ -52,14 +51,10 @@ class TransitiveDependencyPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	def void addProjectToDependencies(IProject dependendProject, String projectId) {
-		val uri = URI.createPlatformResourceURI(dependendProject.project.getFile("manifest.n4mf").fullPath.toString, true);
-		val rs = getResourceSet(dependendProject.project);
-		val resource = rs.getResource(uri, true);
-		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		val dependency = N4mfFactory.eINSTANCE.createProjectDependency
-		dependency.setProjectId(projectId)
-		pd.projectDependencies.add(dependency)
-		resource.save(null)
+		val projectDescriptionFile = dependendProject.project.getFile(N4JSGlobals.PACKAGE_JSON);
+		projectDescriptionTestHelper.updateProjectDescription(projectDescriptionFile) [ root |
+			PackageJSONTestUtils.addProjectDependency(root, projectId, "*")
+		]
 		waitForAutoBuild();
 	}
 

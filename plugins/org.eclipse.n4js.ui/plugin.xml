@@ -1445,4 +1445,19 @@ Contributors:
          </command>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.n4js.json.validation">
+      <validator
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension"
+      />
+      <validator
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension"
+      />
+   </extension>
+   <extension
+         point="org.eclipse.n4js.json.resourceDescription">
+      <resourceDescriptionStrategy
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension">
+      </resourceDescriptionStrategy>
+   </extension>
 </plugin>

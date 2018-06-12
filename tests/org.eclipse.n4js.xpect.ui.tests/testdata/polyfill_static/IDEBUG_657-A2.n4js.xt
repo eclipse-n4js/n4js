@@ -23,7 +23,7 @@
 	   	 		File "A.n4js" { from="IDEBUG_657_wrong_binding_filled-A.n4js"}
 	   	 	}
 	   	}
-   	 	File "manifest.n4mf" { from="manifest_uses_b00.n4mf" }
+   	 	File "package.json" { from="package_uses_b00.json" }
    	 }
    }
 

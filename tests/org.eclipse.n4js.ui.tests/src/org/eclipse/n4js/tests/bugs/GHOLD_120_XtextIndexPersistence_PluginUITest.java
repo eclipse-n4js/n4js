@@ -119,7 +119,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		assertTrue("Test project is not accessible.", project.isAccessible());
 
 		// Since we do not know whether the built-in initialization or the test project import happened earlier...
-		// Make sure both test module and manifest get into the index.
+		// Make sure both test module and project description file get into the index.
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 		assertMarkers("Expected exactly 12 issues.", project, 12); // issues are in external libraries
@@ -153,7 +153,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		// Couldn't resolve reference to TExportableElement 'Assert'.
 		// Import of Assert cannot be resolved.
 
-		// Manifest issues:
+		// package.json issues:
 		// Project does not exist with project ID: org.eclipse.n4js.mangelhaft.
 		// Project does not exist with project ID: org.eclipse.n4js.mangelhaft.assert.
 		// Project with test fragment should depend on org.eclipse.n4js.mangelhaft.

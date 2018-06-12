@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -13,9 +13,11 @@ package org.eclipse.n4js.tests.manifest
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.n4js.tests.util.PackageJSONTestUtils
+import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Before
 import org.junit.Test
 
@@ -26,51 +28,47 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	IProject projectUnderTest
 	IFolder src
 	IFolder src2
-	IFile manifest
+	IFile projectDescriptionFile
 
 	@Before
 	override void setUp() {
 		super.setUp
 		projectUnderTest = createJSProject("singleProjectTest")
 		src = configureProjectWithXtext(projectUnderTest)
-		manifest = projectUnderTest.project.getFile("manifest.n4mf")
+		projectDescriptionFile = projectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
 		src2 = projectUnderTest.project.getFolder("src2");
 		src2.create(false, true, null)
 		waitForAutoBuild
 	}
 
 	private def void addSrc2ToSources() {
-		addSrc2ToSources("src2")
-	}
-
-	private def void addSrc2ToSources(String folderName) {
-		val uri = URI.createPlatformResourceURI(manifest.fullPath.toString, true);
-		val rs = getResourceSet(projectUnderTest.project);
-		val resource = rs.getResource(uri, true);
-		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceContainers.head.pathsRaw.add(folderName)
-		resource.save(null)
-		waitForAutoBuild();
+		updateSourceContainers("src", "src2");
 	}
 
 	private def void removeSrc2FromSource() {
-		val uri = URI.createPlatformResourceURI(manifest.fullPath.toString, true);
-		val rs = getResourceSet(projectUnderTest.project);
-		val resource = rs.getResource(uri, true);
-		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceContainers.head.pathsRaw.remove(1)
-		resource.save(null)
+		updateSourceContainers("src");
+	}
+
+	private def void addSrc3ToSources() {
+		updateSourceContainers("src", "src3");
+	}
+
+	private def void updateSourceContainers(String... sourceContainers) {
+		projectDescriptionTestHelper.updateProjectDescription(projectDescriptionFile, [ root |
+			// add 'src2' to the end of the list of SOURCE source containers
+			PackageJSONTestUtils.setSourceContainerSpecifiers(root, SourceContainerType.SOURCE, sourceContainers);
+		])
 		waitForAutoBuild();
 	}
 
 	private def void useSourceFolder(String name) {
-		val uri = URI.createPlatformResourceURI(manifest.fullPath.toString, true);
-		val rs = getResourceSet(projectUnderTest.project);
-		val resource = rs.getResource(uri, true);
-		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.sourceContainers.head.pathsRaw.clear
-		pd.sourceContainers.head.pathsRaw.add(name)
-		resource.save(null)
+		projectDescriptionTestHelper.updateProjectDescription(projectDescriptionFile) [ root |
+			PackageJSONTestUtils.setSourceContainerSpecifiers(
+				root,
+				SourceContainerType.SOURCE,
+				#[name]
+			)
+		]
 		waitForAutoBuild();
 	}
 
@@ -92,7 +90,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	@Test
-	def void testBrokenFileInSrc2ShowsErrorAfterManifestChange() throws Exception {
+	def void testBrokenFileInSrc2ShowsErrorAfterProjectDescriptionChange() throws Exception {
 		val file = createTestFile(src2, "C", "class C extends Unknown {}");
 		assertMarkers("file should have no errors", file, 0);
 		addSrc2ToSources
@@ -107,12 +105,14 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testFileInSrcWithMissingDep() throws Exception {
-		val c = createTestFile(src, "C",
-				'''
-					import { D } from "D"
-					class C extends D {}
-				'''
-			);
+		val c = createTestFile(
+			src,
+			"C",
+			'''
+				import { D } from "D"
+				class C extends D {}
+			'''
+		);
 
 		// Cannot resolve import target :: resolving simple module import : found no matching modules
 		// Couldn't resolve reference to IdentifiableElement 'D'.
@@ -125,12 +125,14 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testFileInSrcWithMissingDepInOtherFolder() throws Exception {
-		val c = createTestFile(src, "C",
-				'''
-					import { D } from "D"
-					class C extends D {}
-				'''
-			);
+		val c = createTestFile(
+			src,
+			"C",
+			'''
+				import { D } from "D"
+				class C extends D {}
+			'''
+		);
 
 		// Cannot resolve import target :: resolving simple module import : found no matching modules
 		// Couldn't resolve reference to IdentifiableElement 'D'.
@@ -138,7 +140,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		// Import of D cannot be resolved.
 		assertMarkers("file should have four errors", c, 4);
 		createTestFile(src2, "D", "export class D {}");
-		//Same as above, src2 folder is not set as source folder yet.
+		// Same as above, src2 folder is not set as source folder yet.
 		assertMarkers("file should have four errors", c, 4);
 		addSrc2ToSources
 		assertMarkers("file should have no errors", c, 0);
@@ -146,7 +148,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testDuplicateModuleInOtherFolder() throws Exception {
-		val c1 = createTestFile(src,  "C", "class C1 {}")
+		val c1 = createTestFile(src, "C", "class C1 {}")
 		val c2 = createTestFile(src2, "C", "class C2 {}");
 		assertMarkers("file should have no errors", c1, 0);
 		assertMarkers("file should have no errors", c2, 0);
@@ -162,7 +164,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	def void testDuplicateN4JSDInOtherFolder() throws Exception {
 		addSrc2ToSources
-		val c1 = createTestFile(src,  "C", "class C {}")
+		val c1 = createTestFile(src, "C", "class C {}")
 		val c2 = doCreateTestFile(src2, "C.n4jsd", "export external public class C {}");
 		assertMarkers("file should have a single error", c1, 1);
 		assertMarkers("file should have a single error", c2, 1);
@@ -171,7 +173,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	def void testJSIsNoDuplicate_01() throws Exception {
 		addSrc2ToSources
-		val c1 = doCreateTestFile(src,  "C.js", "var c = {}")
+		val c1 = doCreateTestFile(src, "C.js", "var c = {}")
 		val c2 = doCreateTestFile(src2, "C.n4jsd", "export external public class C {}");
 		assertMarkers("file should have no errors", c1, 0);
 		assertMarkers("file should have no errors", c2, 0);
@@ -179,21 +181,23 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testJSIsNoDuplicate_02() throws Exception {
-		val c1 = doCreateTestFile(src,  "C.js", "var c = {}")
+		val c1 = doCreateTestFile(src, "C.js", "var c = {}")
 		val c2 = doCreateTestFile(src, "C.n4js", "export public class C {}");
 		assertMarkers("file should have no errors", c1, 0);
 		assertMarkers("file should have no errors", c2, 0);
 	}
 
 	@Test
-	def void testTwoFilesSourceFolderRemovedFromManifest() throws Exception {
+	def void testTwoFilesSourceFolderRemovedFromProjectDescription() throws Exception {
 		addSrc2ToSources
-		val c = createTestFile(src, "C",
-				'''
-					import { D } from "D"
-					class C extends D {}
-				'''
-			);
+		val c = createTestFile(
+			src,
+			"C",
+			'''
+				import { D } from "D"
+				class C extends D {}
+			'''
+		);
 		createTestFile(src2, "D", "export class D {}");
 		assertMarkers("file should have no errors", c, 0);
 		removeSrc2FromSource
@@ -207,13 +211,15 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testTwoFilesSourceFolderRenamed() throws Exception {
-		addSrc2ToSources("src3")
-		val c = createTestFile(src, "C",
-				'''
-					import { D } from "D"
-					class C extends D {}
-				'''
-			);
+		addSrc3ToSources();
+		val c = createTestFile(
+			src,
+			"C",
+			'''
+				import { D } from "D"
+				class C extends D {}
+			'''
+		);
 		createTestFile(src2, "D", "export class D {}");
 
 		// Cannot resolve import target :: resolving simple module import : found no matching modules
@@ -276,21 +282,21 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	@Test
-	def void testManifestRemoved() throws Exception {
+	def void testProjectDescriptionFileRemoved() throws Exception {
 		val file = createTestFile(src, "C", "class C extends Unknown {}");
 		assertMarkers("file should have an error", file, 1);
-		manifest.delete(false, null)
+		projectDescriptionFile.delete(false, null)
 		waitForAutoBuild
 		assertMarkers("file should have no errors because it is no longer validated", file, 0);
 	}
 
 	@Test
-	def void testManifestRecreated() throws Exception {
-		manifest.delete(false, null)
+	def void testProjectDescriptionFileRecreated() throws Exception {
+		projectDescriptionFile.delete(false, null)
 		getResourceSet(projectUnderTest.project).resources.clear
 		val file = createTestFile(src, "C", "class C extends Unknown {}");
 		waitForAutoBuild
-		createManifestN4MFFile(projectUnderTest)
+		ProjectTestsUtils.createProjectDescriptionFile(projectUnderTest)
 		assertMarkers("file should have an error", file, 1);
 	}
 

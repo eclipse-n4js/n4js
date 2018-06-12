@@ -34,6 +34,7 @@ import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -84,6 +85,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	@Inject
 	private ProcessExecutor processExecutor;
 
+	@Inject
+	private ShippedCodeInitializeTestHelper shippedCodeInitializer;
+
 	/**
 	 * Checks whether the platform is running or not.
 	 */
@@ -100,6 +104,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
 				0 == projects.length);
+
+		shippedCodeInitializer.setupBuiltIns();
+
 		final URI externalRootLocation = getResourceUri(PROBANDS, EXT_LOC);
 		externalLibraryPreferenceStore.add(externalRootLocation);
 		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());

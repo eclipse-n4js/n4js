@@ -126,6 +126,9 @@ public class N4HeadlessCompiler {
 	@Inject
 	private ClassLoader classLoader;
 
+	@Inject
+	private HeadlessHelper headlessHelper;
+
 	/** if set to true should try to compile even if errors are in some projects */
 	private boolean keepOnCompiling = false;
 
@@ -257,10 +260,10 @@ public class N4HeadlessCompiler {
 	public void compileAllProjects(List<File> searchPaths, IssueAcceptor issueAcceptor)
 			throws N4JSCompileException {
 		// make absolute, since downstream URI conversion doesn't work if relative directory only.
-		List<File> absProjectPaths = HeadlessHelper.toAbsoluteFileList(searchPaths);
+		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(searchPaths);
 
 		// Collect all projects in first Level.
-		List<File> projectPaths = HeadlessHelper.collectAllProjectPaths(absProjectPaths);
+		List<File> projectPaths = headlessHelper.collectAllProjectPaths(absProjectPaths);
 
 		compileProjects(searchPaths, projectPaths, Collections.emptyList(), issueAcceptor);
 	}
@@ -352,9 +355,9 @@ public class N4HeadlessCompiler {
 	 */
 	public void cleanProjectsInSearchPath(List<File> searchPaths)
 			throws N4JSCompileException {
-		List<File> absProjectPaths = HeadlessHelper.toAbsoluteFileList(searchPaths);
+		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(searchPaths);
 		// Collect all projects in first Level.
-		List<File> projectPaths = HeadlessHelper.collectAllProjectPaths(absProjectPaths);
+		List<File> projectPaths = headlessHelper.collectAllProjectPaths(absProjectPaths);
 		cleanProjects(projectPaths);
 	}
 
@@ -369,7 +372,7 @@ public class N4HeadlessCompiler {
 	public void cleanProjects(List<File> projectPaths)
 			throws N4JSCompileException {
 		List<URI> projectURIs = convertProjectPathsToProjectURIs(projectPaths);
-		HeadlessHelper.registerProjectsToFileBasedWorkspace(projectURIs, n4jsFileBasedWorkspace, logger);
+		headlessHelper.registerProjectsToFileBasedWorkspace(projectURIs, n4jsFileBasedWorkspace, logger);
 		List<N4JSProject> projectsToClean = getN4JSProjects(projectURIs);
 		projectsToClean.forEach(project -> {
 			cleanProject(project);
@@ -383,7 +386,7 @@ public class N4HeadlessCompiler {
 	}
 
 	private List<URI> convertProjectPathsToProjectURIs(List<File> projectPaths) throws N4JSCompileException {
-		List<File> absProjectPaths = HeadlessHelper.toAbsoluteFileList(projectPaths);
+		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(projectPaths);
 		// Convert absolute locations to file URIs.
 		List<URI> projectURIs = createFileURIs(absProjectPaths);
 		return projectURIs;
@@ -452,12 +455,12 @@ public class N4HeadlessCompiler {
 			List<File> singleSourceFiles) throws N4JSCompileException {
 
 		// Make absolute, since downstream URI conversion doesn't work if relative dir only.
-		List<File> absSearchPaths = HeadlessHelper.toAbsoluteFileList(searchPaths);
-		List<File> absProjectPaths = HeadlessHelper.toAbsoluteFileList(projectPaths);
-		List<File> absSingleSourceFiles = HeadlessHelper.toAbsoluteFileList(singleSourceFiles);
+		List<File> absSearchPaths = headlessHelper.toAbsoluteFileList(searchPaths);
+		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(projectPaths);
+		List<File> absSingleSourceFiles = headlessHelper.toAbsoluteFileList(singleSourceFiles);
 
 		// Discover projects in search paths.
-		List<File> discoveredProjectLocations = HeadlessHelper.collectAllProjectPaths(absSearchPaths);
+		List<File> discoveredProjectLocations = headlessHelper.collectAllProjectPaths(absSearchPaths);
 
 		// Discover projects for single source files.
 		List<File> singleSourceProjectLocations = findProjectsForSingleFiles(absSingleSourceFiles);
@@ -475,7 +478,7 @@ public class N4HeadlessCompiler {
 		List<N4JSProject> discoveredProjects = getN4JSProjects(discoveredProjectURIs);
 
 		// Register all projects with the file based workspace.
-		HeadlessHelper.registerProjectsToFileBasedWorkspace(
+		headlessHelper.registerProjectsToFileBasedWorkspace(
 				Iterables.concat(requestedProjectURIs, discoveredProjectURIs), n4jsFileBasedWorkspace, logger);
 
 		// Create a filter that applies only to the given single source files if any were requested to be compiled.
@@ -987,6 +990,13 @@ public class N4HeadlessCompiler {
 				});
 			}
 		}
+
+		// obtain URI to file providing the project description
+		Optional<URI> projectDescriptionLocation = markedProject.project.getProjectDescriptionLocation();
+		if (projectDescriptionLocation.isPresent()) {
+			final Resource projectDescriptionResource = resourceSet.createResource(projectDescriptionLocation.get());
+			markedProject.resources.add(projectDescriptionResource);
+		}
 	}
 
 	/**
@@ -1076,7 +1086,7 @@ public class N4HeadlessCompiler {
 		}
 
 		// Index manifest file, too. Index artifact names among project types and library dependencies.
-		Optional<URI> manifestUri = markedProject.project.getManifestLocation();
+		Optional<URI> manifestUri = markedProject.project.getProjectDescriptionLocation();
 		if (manifestUri.isPresent()) {
 			final Resource manifestResource = resourceSet.getResource(manifestUri.get(), true);
 			if (manifestResource != null) {

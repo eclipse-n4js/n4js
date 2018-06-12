@@ -16,7 +16,7 @@
    	 		Folder "imports" { File "ImportData.n4js" {} }
    	 		Folder "importing"  { ThisFile {} }
    	 	}
-   	 	File "manifest.n4mf" { from="manifest.n4mf" }
+   	 	File "package.json" { from="package.json" }
    	 }
    }
    END_SETUP

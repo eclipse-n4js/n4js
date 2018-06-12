@@ -42,6 +42,11 @@ import com.google.common.collect.ImmutableList;
 public interface IN4JSProject extends IN4JSSourceContainerAware {
 
 	/**
+	 * The name of the package.json file.
+	 */
+	public final static String PACKAGE_JSON = "package.json";
+
+	/**
 	 * The name of the manifest file
 	 */
 	public final static String N4MF_MANIFEST = N4MFConstants.N4MF_MANIFEST;
@@ -185,12 +190,14 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	Optional<BootstrapModule> getExecModule();
 
 	/**
-	 * Returns with the URI of the N4JS manifest file from the project. Optional, could return with an absent instance
-	 * if the manifest file does not exist in the project. Never {@code null}.
+	 * Returns with the URI of the file that contains the project description of this project.
 	 *
-	 * @return the URI of the N4JS manifest file. Optional, may be missing but never {@code null}.
+	 * Optional, could return with an absent instance if the project description file does not exist in the project.
+	 * Never {@code null}.
+	 *
+	 * @return the URI of the project description file. Optional, may be missing but never {@code null}.
 	 */
-	Optional<URI> getManifestLocation();
+	Optional<URI> getProjectDescriptionLocation();
 
 	/**
 	 * Returns with a collection of the tested projects for the current project. May return with an empty collection if:

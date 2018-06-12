@@ -17,19 +17,19 @@
 				ThisFile {}
 				File "Main.n4js" { from="../src/Main.n4js" }
 			}
-			File "manifest.n4mf" { from="../manifest.n4mf"}
+			File "package.json" { from="../package.json"}
 		}
 		Project "A" {
 			Folder "src" {
 					File "Main.n4js" { from="../../A/src/Main.n4js" }
 				}
-			File "manifest.n4mf" { from="../../A/manifest.n4mf"}
+			File "package.json" { from="../../A/package.json"}
 			}
 		Project "B" {
 			Folder "src" {
 					File "Main.n4js" { from="../../B/src/Main.n4js" }
 				}
-			File "manifest.n4mf" { from="../../B/manifest.n4mf"}
+			File "package.json" { from="../../B/package.json"}
 			}
 	}
 

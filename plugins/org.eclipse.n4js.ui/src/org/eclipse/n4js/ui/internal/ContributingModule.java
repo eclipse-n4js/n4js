@@ -65,6 +65,8 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetManualAssociationWizard;
 import org.eclipse.n4js.ui.workingsets.WorkingSetProjectNameFilterWizard;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.InjectorCollector;
+import org.eclipse.n4js.utils.PackageJsonHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
@@ -109,6 +111,8 @@ public class ContributingModule implements Module {
 		binder.bind(NfarStorageMapper.class);
 		binder.bind(InternalN4JSWorkspace.class).to(EclipseBasedN4JSWorkspace.class);
 		binder.bind(EclipseBasedN4JSWorkspace.class);
+		binder.bind(ProjectDescriptionHelper.class);
+		binder.bind(PackageJsonHelper.class);
 		binder.bind(IWorkspaceRoot.class).toProvider(new Provider<IWorkspaceRoot>() {
 			@Inject
 			IWorkspace workspace;

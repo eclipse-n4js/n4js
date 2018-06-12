@@ -57,7 +57,7 @@ public class ProjectDependenciesHelper {
 	 */
 	public Map<String, String> calculateDependenciesToInstall() {
 		Map<String, String> versionedPackages = new HashMap<>();
-		DependenciesCollectingUtil.updateMissingDependneciesMap(versionedPackages, getAvailableProjectsDescriptions());
+		DependenciesCollectingUtil.updateMissingDependenciesMap(versionedPackages, getAvailableProjectsDescriptions());
 		if (LOGGER.isDebugEnabled()) {
 			StringJoiner messages = new StringJoiner(System.lineSeparator());
 			messages.add("dependencies to install: ");

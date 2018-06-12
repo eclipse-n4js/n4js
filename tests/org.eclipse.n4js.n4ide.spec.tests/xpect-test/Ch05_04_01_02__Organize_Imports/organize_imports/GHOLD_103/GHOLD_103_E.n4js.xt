@@ -17,7 +17,7 @@
    	 		Folder "a2" { File "A.n4js" { from="../a/a2/A.n4js" } }
 			Folder "c"  { ThisFile {} }
    	 	}}
-   	 	File "manifest.n4mf" { from="manifest_p1.n4mf" }
+   	 	File "package.json" { from="package_p1.json" }
    	 }
    }
    END_SETUP

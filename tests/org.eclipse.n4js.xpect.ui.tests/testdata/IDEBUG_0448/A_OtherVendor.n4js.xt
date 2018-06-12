@@ -17,14 +17,14 @@
    	 	Folder "src" {
 			ThisFile {}
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_pjothervendor.n4mf" }
+   	 	File "package.json" { from="package_pjothervendor.json" }
    	 }
 
    	 Project "PjDefine" {
    	 	Folder "src" {
    	 		 File "A.n4js" { }
    	 	}
-   	 	File "manifest.n4mf" { from="manifest_pjdefine.n4mf" }
+   	 	File "package.json" { from="package_pjdefine.json" }
    	 }
    }
    END_SETUP

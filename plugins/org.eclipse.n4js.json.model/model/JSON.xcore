@@ -24,12 +24,15 @@
 
 package org.eclipse.n4js.json.JSON
 
-/** Represents the root of a JSON document. */
 class JSONDocument {
 	/**
 	 * The content of this JSON document.
 	 */
 	contains JSONValue content
+	
+	op String toString() {
+		return "JSONDocument " + this.content.toString;
+	}
 }
 
 /**
@@ -45,6 +48,10 @@ class JSONObject extends JSONValue {
 	 * The name-value associations stored in this object.
 	 */
 	contains NameValuePair[] nameValuePairs
+	
+	op String toString() {
+		return "{\n" + this.nameValuePairs.map[e | e.toString()].join(",\n") + "\n}";
+	}
 }
 
 /**
@@ -52,6 +59,10 @@ class JSONObject extends JSONValue {
  */
 class JSONArray extends JSONValue {
 	contains JSONValue[] elements
+	
+	op String toString() {
+		return "[\n" + this.elements.map[e | e.toString()].join(",\n") + "\n]";
+	}
 }
 
 /**
@@ -60,18 +71,34 @@ class JSONArray extends JSONValue {
 class NameValuePair {
 	String name
 	contains JSONValue value
+	
+	op String toString() {
+		return this.name + ": " + this.value.toString;
+	}
 }
 
 class JSONStringLiteral extends JSONValue {
 	String value
+	
+	op String toString() {
+		return "JSONStringLiteral(\"" + this.value.toString + "\")";
+	}
 }
 
 class JSONNumericLiteral extends JSONValue {
 	BigDecimal value
+	
+	op String toString() {
+		return "JSONNumericLiteral(" + this.value.toString + ")";
+	}
 }
 
 class JSONBooleanLiteral extends JSONValue {
 	boolean ^booleanValue
+	
+	op String toString() {
+		return "JSONBooleanLiteral(" + this.booleanValue + ")";
+	}
 }
 
 class JSONNullLiteral extends JSONValue {}

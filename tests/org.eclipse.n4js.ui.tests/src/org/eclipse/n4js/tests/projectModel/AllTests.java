@@ -18,7 +18,6 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-		EclipseArchivePluginTest.class,
 		EclipseBasedInternalWorkspacePluginTest.class,
 		EclipseProjectPluginTest.class,
 		N4JSEclipseCorePluginTest.class })

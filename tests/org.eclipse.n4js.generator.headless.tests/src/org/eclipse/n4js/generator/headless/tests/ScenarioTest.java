@@ -140,10 +140,10 @@ public class ScenarioTest {
 	}
 
 	/**
-	 * Broken manifest will result in parse-error.
+	 * Broken project description file (package.json) will result in parse-error.
 	 */
 	@Test(expected = N4JSCompileException.class)
-	public void testScenario02brokenManifest() throws N4JSCompileException {
+	public void testScenario02brokenProjectDescriptionFile() throws N4JSCompileException {
 		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario02");
 		List<File> pProjectRoots = Arrays.asList(//
@@ -225,7 +225,7 @@ public class ScenarioTest {
 	}
 
 	/**
-	 * Testing for different output-folder, configured in manifest. Testing for external source and configuration of
+	 * Testing for different output-folder, configured in package.json. Testing for external source and configuration of
 	 * noModuleWrapFilter
 	 */
 	@Test

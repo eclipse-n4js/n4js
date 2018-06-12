@@ -16,7 +16,7 @@
 			Folder "src" {
 				ThisFile {}
 			}
-			File "manifest.n4mf" { from="../manifest.n4mf"}
+			File "package.json" { from="../package.json"}
 		}
 		Project "IDE_2051_b" {
 			Folder "src" {
@@ -29,7 +29,7 @@
 				}
 				File "def.n4js" { from="../../IDE_2051_b/src/def.n4js" }
 			}
-			File "manifest.n4mf" { from="../../IDE_2051_b/manifest.n4mf"}
+			File "package.json" { from="../../IDE_2051_b/package.json"}
 		}
 		Project "IDE_2051_clash" {
 			Folder "src" {
@@ -43,7 +43,7 @@
 					}
 				}
 			}
-			File "manifest.n4mf" { from="../../IDE_2051_clash/manifest.n4mf"}
+			File "package.json" { from="../../IDE_2051_clash/package.json"}
 		}
 	}
 

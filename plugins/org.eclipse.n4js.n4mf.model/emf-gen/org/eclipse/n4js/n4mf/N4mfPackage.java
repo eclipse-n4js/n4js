@@ -377,13 +377,22 @@ public interface N4mfPackage extends EPackage {
 	int DECLARED_VERSION__QUALIFIER = 3;
 
 	/**
+	 * The feature id for the '<em><b>Build Meta Data</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DECLARED_VERSION__BUILD_META_DATA = 4;
+
+	/**
 	 * The number of structural features of the '<em>Declared Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DECLARED_VERSION_FEATURE_COUNT = 4;
+	int DECLARED_VERSION_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Declared Version</em>' class.
@@ -1193,6 +1202,17 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getDeclaredVersion_Qualifier();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.DeclaredVersion#getBuildMetaData <em>Build Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Build Meta Data</em>'.
+	 * @see org.eclipse.n4js.n4mf.DeclaredVersion#getBuildMetaData()
+	 * @see #getDeclaredVersion()
+	 * @generated
+	 */
+	EAttribute getDeclaredVersion_BuildMetaData();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4mf.SourceContainerDescription <em>Source Container Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1812,6 +1832,14 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DECLARED_VERSION__QUALIFIER = eINSTANCE.getDeclaredVersion_Qualifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Build Meta Data</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DECLARED_VERSION__BUILD_META_DATA = eINSTANCE.getDeclaredVersion_BuildMetaData();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4mf.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.

@@ -35,7 +35,7 @@ public class DependenciesCollectingUtil {
 	 * present. In case of different versions simple resolution is performed, first found with non empty version is
 	 * used.
 	 */
-	public static void updateMissingDependneciesMap(Map<String, String> versionedPackages,
+	public static void updateMissingDependenciesMap(Map<String, String> versionedPackages,
 			Iterable<ProjectDescription> projectDescriptions) {
 		final Set<String> availableProjectsIds = new HashSet<>();
 		projectDescriptions.forEach(pd -> {

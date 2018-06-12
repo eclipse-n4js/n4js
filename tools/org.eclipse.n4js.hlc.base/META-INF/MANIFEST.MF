@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.core.runtime,
  org.eclipse.n4js.transpiler.es,
  org.eclipse.n4js.runner.nodejs,
- org.eclipse.n4js.tester.nodejs
+ org.eclipse.n4js.tester.nodejs,
+ org.eclipse.n4js.json
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.hlc.base
 Automatic-Module-Name: org.eclipse.n4js.hlc.base
