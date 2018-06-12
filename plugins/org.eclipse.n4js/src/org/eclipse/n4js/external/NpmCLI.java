@@ -172,7 +172,7 @@ public class NpmCLI {
 			actualChangeType = LibraryChangeType.Removed;
 		}
 
-		if (packageProcessingStatus != null && packageProcessingStatus.isOK() && batchStatus.isOK()) {
+		if (packageProcessingStatus != null && packageProcessingStatus.isOK()) {
 			URI actualLocation = URI.createFileURI(completePath.toString());
 			actualChange = new LibraryChange(actualChangeType, actualLocation, reqChg.name, actualVersion);
 		}
