@@ -143,12 +143,6 @@ class DoUpdateImplementation {
 		allRemainingURIs = getRemainingURIs();
 	}
 
-	/**
-	 * @param allRemainingURIs
-	 * @param baseIndex
-	 * @param monitor
-	 * @return
-	 */
 	private int doUpdateCluster(int baseIndex) {
 		int clusterIndex = 0;
 
@@ -219,12 +213,6 @@ class DoUpdateImplementation {
 		return clusterIndex;
 	}
 
-	/**
-	 * @param actualResourceURI
-	 * @param resource
-	 * @param newDelta
-	 * @return
-	 */
 	private Delta resolveLinks(URI actualResourceURI, Resource resource) {
 		final IResourceDescription.Manager manager = state
 				.getResourceDescriptionManager(resource, actualResourceURI);
@@ -253,10 +241,6 @@ class DoUpdateImplementation {
 		progress.split(1);
 	}
 
-	/**
-	 * @param uri
-	 * @return
-	 */
 	private Delta createRemoveDelta(URI uri) {
 		final IResourceDescription oldDescription = state.getResourceDescription(uri);
 		if (oldDescription != null) {
@@ -288,9 +272,6 @@ class DoUpdateImplementation {
 		return newDelta.haveEObjectDescriptionsChanged();
 	}
 
-	/**
-	 * @param processedInThisCluster
-	 */
 	private void clearResourceSetIfNecessary(int processedInThisCluster) {
 		if (!queue.isEmpty() && !continueProcessing(processedInThisCluster)) {
 			// System.out.println("Start release memory");
@@ -329,25 +310,15 @@ class DoUpdateImplementation {
 		}
 	}
 
-	/**
-	 *
-	 */
 	private void done() {
 		if (loadOperation != null)
 			loadOperation.cancel();
 	}
 
-	/**
-	 * @param clusterIndex
-	 * @return
-	 */
 	private boolean continueProcessing(int clusterIndex) {
 		return this.clusteringPolicy.continueProcessing(resourceSet, null, clusterIndex);
 	}
 
-	/**
-	 *
-	 */
 	private void initLoadOperation() {
 		if (!queue.isEmpty()) {
 			loadOperation = crossLinkingResourceLoader.create(resourceSet, currentProject);
@@ -355,10 +326,6 @@ class DoUpdateImplementation {
 		}
 	}
 
-	/**
-	 * @param changedURI
-	 * @return
-	 */
 	private boolean removeFromQueue(URI changedURI) {
 		queue.remove(changedURI);
 		if (toBeDeleted.contains(changedURI)) {
@@ -367,9 +334,6 @@ class DoUpdateImplementation {
 		return true;
 	}
 
-	/**
-	 *
-	 */
 	private void addPendingDeltas() {
 		Collection<Delta> pendingDeltas = buildData.getAndRemovePendingDeltas();
 		allDeltas.addAll(pendingDeltas);
@@ -380,10 +344,6 @@ class DoUpdateImplementation {
 				splitMonitor(changedDeltas.size()));
 	}
 
-	/**
-	 * @param changedDeltas
-	 * @return
-	 */
 	private SubMonitor splitMonitor(int consumeWork) {
 		return progress.split(consumeWork);
 	}
