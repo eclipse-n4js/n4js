@@ -25,6 +25,7 @@ import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
+import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 
@@ -62,6 +63,9 @@ public class HeadlessExtensionRegistrationHelper {
 
 	@Inject
 	private PackageJsonValidatorExtension packageJsonValidatorExtension;
+
+	@Inject
+	private N4JSProjectSetupJsonValidatorExtension projectSetupValidatorExtension;
 
 	/**
 	 * Register extensions manually. This method should become obsolete when extension point fully works in headless
@@ -168,6 +172,7 @@ public class HeadlessExtensionRegistrationHelper {
 		final JSONValidatorExtensionRegistry jsonValidatorExtensionRegistry = jsonServiceProvider
 				.get(JSONValidatorExtensionRegistry.class);
 		jsonValidatorExtensionRegistry.register(packageJsonValidatorExtension);
+		jsonValidatorExtensionRegistry.register(projectSetupValidatorExtension);
 	}
 
 }

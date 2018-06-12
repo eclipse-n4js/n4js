@@ -1450,5 +1450,8 @@ Contributors:
       <validator
       	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension"
       />
+      <validator
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension"
+      />
    </extension>
 </plugin>

@@ -48,6 +48,7 @@ import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
+import org.eclipse.n4js.utils.PackageJsonHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -76,6 +77,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	private IN4JSCore n4jsCore;
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
+	@Inject
+	private PackageJsonHelper packageJsonHelper;
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
@@ -137,7 +140,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		final JSONStringLiteral projectName = (JSONStringLiteral) projectNameValue;
 
-		// make sure the name adheres to the IDENTIFIER_PATTERN
+		// make sure the name conforms to the IDENTIFIER_PATTERN
 		if (!IDENTIFIER_PATTERN.matcher(projectName.getValue()).matches()) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectName.getValue()),
 					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
@@ -332,7 +335,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/** Checks whether the given {@code moduleFilterPair} represents a valid module-filter section entry. */
 	private void checkModuleFilterType(NameValuePair moduleFilterPair) {
 		// obtain enum-representation of the validated module filter type
-		final ModuleFilterType filterType = parseModuleFilterType(moduleFilterPair.getName());
+		final ModuleFilterType filterType = packageJsonHelper.parseModuleFilterType(moduleFilterPair.getName());
 
 		// make sure the module filter type could be parsed successfully
 		if (filterType == null) {
@@ -483,7 +486,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	private void handleN4JSModuleMatchForModuleFilter(ModuleFilterSpecifier specifier) {
 		addIssue(
 				IssueCodes.getMessageForPKGJ_FILTER_NO_N4JS_MATCH(
-						getModuleFilterTypeRepresentation(specifier.filterType)),
+						packageJsonHelper.getModuleFilterTypeRepresentation(specifier.filterType)),
 				specifier.astRepresentation,
 				IssueCodes.PKGJ_FILTER_NO_N4JS_MATCH);
 	}
@@ -521,6 +524,9 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * Returns the module filter specifier information of {@code value} in terms of a {@link ModuleFilterSpecifier}.
 	 *
 	 * Returns {@code null} if the given {@code value} is not a valid representation of a module filter specifier.
+	 *
+	 * Similar to {@link PackageJsonHelper#getModuleFilterSpecifier(JSONValue)} but also validates the structure along
+	 * the way.
 	 */
 	private ModuleFilterSpecifier getModuleFilterInformation(JSONValue value, ModuleFilterType type) {
 		// 1st variant:
@@ -727,13 +733,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
-	 * Returns the source container information that can be extracted from the currently validated {@link JSONDocument}.
-	 */
-	private Multimap<SourceContainerType, List<JSONStringLiteral>> getSourceContainers() {
-		return contextMemoize(N4JS_SOURCE_CONTAINERS, this::doGetSourceContainers);
-	}
-
-	/**
 	 * Returns the set of all declared source container paths in the currently validated {@code package.json} file.
 	 */
 	private Set<String> getAllSourceContainerPaths() {
@@ -741,6 +740,15 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				.flatMap(e -> e.getValue().stream())
 				.map(literal -> literal.getValue())
 				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Returns the source container information that can be extracted from the currently validated {@link JSONDocument}.
+	 *
+	 * Adds validation issues in case of an invalid source container structure.
+	 */
+	private Multimap<SourceContainerType, List<JSONStringLiteral>> getSourceContainers() {
+		return contextMemoize(N4JS_SOURCE_CONTAINERS, this::doGetSourceContainers);
 	}
 
 	/**
@@ -831,33 +839,5 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// check that typeLiteral is all lower-case and a corresponding enum literal exists
 		return typeLiteral.toLowerCase().equals(typeLiteral) &&
 				SourceContainerType.get(typeLiteral.toUpperCase()) != null;
-	}
-
-	/**
-	 * Parses the {@link ModuleFilterType} from the given string representation.
-	 *
-	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ModuleFilterType}.
-	 */
-	private ModuleFilterType parseModuleFilterType(String value) {
-		if (value.equals("noValidate")) {
-			return ModuleFilterType.NO_VALIDATE;
-		} else if (value.equals("noModuleWrap")) {
-			return ModuleFilterType.NO_MODULE_WRAPPING;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Returns the string representation of the given {@link ModuleFilterType}.
-	 */
-	private String getModuleFilterTypeRepresentation(ModuleFilterType type) {
-		if (type == ModuleFilterType.NO_VALIDATE) {
-			return "noValidate";
-		} else if (type == ModuleFilterType.NO_MODULE_WRAPPING) {
-			return "noModuleWrap";
-		} else {
-			return "<invalid module filter type>";
-		}
 	}
 }

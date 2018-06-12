@@ -176,6 +176,15 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 		}
 		return expectedClass.cast(value);
 	}
+	
+	/**
+	 * Returns one of the {@link JSONValue}s that have been associated with the given key-path (ignores duplicates).
+	 * 
+	 * Returns {@code null} if no value has been associated with the given {@code keyPath}.
+	 */
+	protected JSONValue getSingleDocumentValue(String keyPath) {
+		return this.getSingleDocumentValue(keyPath, JSONValue.class);
+	}
 
 	/** Returns a user-facing description of the given {@link JSONValue} */
 	protected static String getJSONValueDescription(JSONValue value) {
