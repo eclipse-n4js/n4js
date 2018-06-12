@@ -38,44 +38,7 @@ Contributors:
 		<buildTime>${maven.build.timestamp}</buildTime>
 		<gitSha1>${buildNumber}</gitSha1>
 	</properties>
-	<profiles>
-		<profile>
-			<id>stagingNpmRegistry</id>
-			<activation>
-				<property>
-					<name>stagingNpmRegistryPort</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>${codehaus-exec-maven-plugin.version}</version>
-						<executions>
-							<!-- Publish n4js-libs to staging area when the parameter -DstagingNpmRegistry is set -->
-							<execution>
-								<id>publish-n4js-libs</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<executable>bash</executable>
-									<arguments>
-										<argument>${project.basedir}/../../publish-n4js-libs-npm.sh</argument>
-										<argument>bridge</argument>
-										<argument>${stagingNpmRegistryPort}</argument>
-									</arguments>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	
+
 	<build>
 		<plugins>
 			<plugin>
