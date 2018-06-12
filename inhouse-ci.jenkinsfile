@@ -18,6 +18,8 @@ pipeline {
             label 'test-ec2-m5xlarge'
         }
     }
+
+
     options {
         ansiColor('xterm')
         buildDiscarder(
@@ -26,7 +28,6 @@ pipeline {
                 artifactDaysToKeepStr: '30',
                 artifactNumToKeepStr:  '15',
                 daysToKeepStr:         '30'))
-        disableConcurrentBuilds()
         timeout(time: 5, unit: 'HOURS')
         timestamps()
     }
@@ -37,6 +38,10 @@ pipeline {
                      '-XX:+UseCGroupMemoryLimitForHeap ' +
                      '-XX:MaxRAMFraction=2 '             +
                      '-XshowSettings:vm '
+    }
+
+    triggers {
+        pollSCM('H/5 * * * *') // every 5 minutes
     }
 
     stages {
