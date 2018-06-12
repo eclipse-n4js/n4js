@@ -60,7 +60,7 @@ public class N4JSExternalLibraryStartup implements IStartup {
 				// trigger index loading which will potentially announce a recovery build on all projects to be
 				// necessary
 
-				// XXX is is curical to call isEmpty before isRecoveryBuildRequired is checked, since isEmpty
+				// XXX is is crucial to call isEmpty before isRecoveryBuildRequired is checked, since isEmpty
 				// will set internal state that is afterwards queried by isRecoveryBuildRequired
 				boolean indexIsEmpty = builderState.isEmpty();
 
