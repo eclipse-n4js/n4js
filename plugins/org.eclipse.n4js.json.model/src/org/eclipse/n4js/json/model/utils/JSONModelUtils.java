@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
@@ -224,6 +225,19 @@ public class JSONModelUtils {
 				pair -> pair,
 				(pair1, pair2) -> pair1,
 				() -> useLinked ? new LinkedHashMap<>() : new HashMap<>()));
+	}
+
+	/**
+	 * Like {@link #merge(JSONObject, JSONObject, boolean, boolean)}, but for {@link JSONDocument}.
+	 */
+	public static void merge(JSONDocument target, JSONDocument source, boolean copy, boolean recursive) {
+		JSONValue targetContent = target.getContent();
+		JSONValue sourceContent = source.getContent();
+		if (sourceContent instanceof JSONObject && targetContent instanceof JSONObject) {
+			merge((JSONObject) targetContent, (JSONObject) sourceContent, copy, recursive);
+		} else {
+			target.setContent(copy ? EcoreUtil.copy(sourceContent) : sourceContent);
+		}
 	}
 
 	/**

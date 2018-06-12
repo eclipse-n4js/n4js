@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -96,6 +97,8 @@ public class ProjectDescriptionHelper {
 	public static final String PROP__DEPENDENCIES = "dependencies";
 	/** Key of package.json property "devDependences". */
 	public static final String PROP__DEV_DEPENDENCIES = "devDependencies";
+	/** Key of package.json property "main". */
+	public static final String PROP__MAIN = "main";
 	/** Key of package.json property "n4js". */
 	public static final String PROP__N4JS = "n4js";
 
@@ -163,6 +166,7 @@ public class ProjectDescriptionHelper {
 		mergePackageJSONFragmentAtLocation(location, packageJSON);
 		ProjectDescription pdFromPackageJSON = packageJSON != null ? convertToProjectDescription(packageJSON) : null;
 		if (pdFromPackageJSON != null) {
+			applyDefaults(pdFromPackageJSON, location);
 			return pdFromPackageJSON;
 		}
 		System.out.println("USING MANIFEST.N4MF: " + location);
@@ -171,6 +175,50 @@ public class ProjectDescriptionHelper {
 		// ProjectDescription fromManifest = loadManifestAtLocation(location);
 		// ProjectDescription merged = mergeProjectDescriptions(fromPackageJSON, fromManifest);
 		// return merged;
+	}
+
+	/**
+	 * Loads the project description defined in a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} at the
+	 * given location or <code>null</code> if no fragment is found at this location.
+	 */
+	public ProjectDescription loadProjectDescriptionFragmentAtLocation(URI location) {
+		JSONDocument packageJSON = JSONFactory.eINSTANCE.createJSONDocument();
+		if (mergePackageJSONFragmentAtLocation(location, packageJSON)) {
+			return convertToProjectDescription(packageJSON);
+		}
+		return null;
+	}
+
+	private void applyDefaults(ProjectDescription pd, URI location) {
+		// implementation note: we do not have to set the default for 'projectType' here,
+		// because this default is already handled by EMF by defining VALIDATION as the
+		// first literal of enum ProjectType in N4MF.xcore.
+		if (pd.getProjectId() == null) {
+			pd.setProjectId(location.lastSegment()); // name of folder containing the package.json file
+		}
+		if (pd.getProjectVersion() == null) {
+			pd.setProjectVersion(parseVersion("0.0.1"));
+		}
+		if (pd.getVendorId() == null) {
+			pd.setVendorId("vendor.default");
+		}
+		if (pd.getMainModule() == null) {
+			pd.setMainModule("index");
+		}
+		if (pd.getOutputPathRaw() == null) {
+			pd.setOutputPathRaw(".");
+		}
+		SourceContainerDescription scd = pd.getSourceContainers().stream()
+				.filter(sc -> sc.getSourceContainerType() == SourceContainerType.SOURCE)
+				.findFirst().orElse(null);
+		if (scd == null) {
+			SourceContainerDescription scdNew = N4mfFactory.eINSTANCE.createSourceContainerDescription();
+			scdNew.setSourceContainerType(SourceContainerType.SOURCE);
+			scdNew.getPathsRaw().add(".");
+			pd.getSourceContainers().add(scdNew);
+		} else if (scd.getPathsRaw().isEmpty()) {
+			scd.getPathsRaw().add(".");
+		}
 	}
 
 	private JSONDocument loadPackageJSONAtLocation(URI location) {
@@ -185,17 +233,16 @@ public class ProjectDescriptionHelper {
 		return packageJSON;
 	}
 
-	private void mergePackageJSONFragmentAtLocation(URI location, JSONDocument targetPackageJSON) {
-		// load and merge fragment (if any)
+	private boolean mergePackageJSONFragmentAtLocation(URI location, JSONDocument targetPackageJSON) {
 		JSONDocument fragment = loadXtextFileAtLocation(location, N4JSGlobals.PACKAGE_FRAGMENT_JSON,
 				JSONDocument.class);
-		if (fragment != null) {
-			JSONValue packageJsonContent = targetPackageJSON.getContent();
-			JSONValue fragmentContent = fragment.getContent();
-			if (packageJsonContent instanceof JSONObject && fragmentContent instanceof JSONObject) {
-				JSONModelUtils.merge((JSONObject) packageJsonContent, (JSONObject) fragmentContent, false, true);
-			}
+		if (fragment == null) {
+			return false;
 		}
+		if (fragment.getContent() instanceof JSONObject) {
+			JSONModelUtils.merge(targetPackageJSON, fragment, false, true);
+		}
+		return true;
 	}
 
 	private ProjectDescription loadManifestAtLocation(URI location) {
@@ -257,10 +304,10 @@ public class ProjectDescriptionHelper {
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();
 			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
-			if (!rootPairs.stream().map(p -> p.getName()).anyMatch(name -> PROP__N4JS.equals(name))) {
-				// FIXME temporary: ignore all package.json that do not have an "n4js" property on top level
-				return null;
-			}
+			// if (!rootPairs.stream().map(p -> p.getName()).anyMatch(name -> PROP__N4JS.equals(name))) {
+			// // FIXME temporary: ignore all package.json that do not have an "n4js" property on top level
+			// return null;
+			// }
 			convertRootPairs(result, rootPairs);
 			return result;
 		}
@@ -268,6 +315,7 @@ public class ProjectDescriptionHelper {
 	}
 
 	private void convertRootPairs(ProjectDescription target, List<NameValuePair> rootPairs) {
+		String valueOfTopLevelMainProperty = null;
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
 			JSONValue value = pair.getValue();
@@ -285,9 +333,26 @@ public class ProjectDescriptionHelper {
 				// TODO consider separating normal from dev deps internally
 				convertDependencies(target, asNameValuePairsOrEmpty(value));
 				break;
+			case PROP__MAIN:
+				// need to handle this value later after all source containers have been read (see below)
+				valueOfTopLevelMainProperty = asStringOrNull(value);
+				break;
 			case PROP__N4JS:
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
 				break;
+			}
+		}
+		// sanitize and set value of top-level property "main"
+		if (valueOfTopLevelMainProperty != null) {
+			if (target.getMainModule() == null) { // only if no "mainModule" property was given
+				List<String> sourceContainerPaths = target.getSourceContainers().stream()
+						.flatMap(scd -> scd.getPaths().stream())
+						.collect(Collectors.toList());
+				String mainModulePath = ProjectDescriptionUtils.sanitizeMainModulePath(valueOfTopLevelMainProperty,
+						sourceContainerPaths);
+				if (mainModulePath != null) {
+					target.setMainModule(mainModulePath);
+				}
 			}
 		}
 	}
@@ -298,7 +363,6 @@ public class ProjectDescriptionHelper {
 			JSONValue value = pair.getValue();
 			switch (name) {
 			case PROP__PROJECT_TYPE:
-				// TODO default should be "validation"
 				target.setProjectType(parseProjectType(asStringOrNull(value)));
 				break;
 			case PROP__VENDOR_ID:
@@ -317,9 +381,6 @@ public class ProjectDescriptionHelper {
 				convertModuleFilters(target, asNameValuePairsOrEmpty(value));
 				break;
 			case PROP__MAIN_MODULE:
-				// TODO use official "main" property + default must be "index.js"
-				// for resolving the path in the official "main" property, see following method on master:
-				// org.eclipse.n4js.external.NpmPackageToProjectAdapter.computeMainModule(File)
 				target.setMainModule(asStringOrNull(value));
 				break;
 			case PROP__TESTED_PROJECTS:
@@ -357,11 +418,16 @@ public class ProjectDescriptionHelper {
 		for (NameValuePair pair : depPairs) {
 			String name = pair.getName();
 			JSONValue value = pair.getValue();
-			VersionConstraint versionConstraint = parseVersionConstraint(asStringOrNull(value));
+			String valueStr = asStringOrNull(value);
+			VersionConstraint versionConstraint = parseVersionConstraint(valueStr);
 			if (name != null && versionConstraint != null) {
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(name);
-				dep.setVersionConstraint(versionConstraint);
+				if ("*".equals(valueStr) || "latest".equals(valueStr)) {
+					dep.setVersionConstraint(null); // FIXME
+				} else {
+					dep.setVersionConstraint(versionConstraint);
+				}
 				target.getProjectDependencies().add(dep);
 			}
 		}

@@ -16,7 +16,10 @@ import com.google.inject.Inject
 import java.util.Collection
 import java.util.Collections
 import java.util.Map
+import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.^extension.IJSONResourceDescriptionExtension
@@ -27,6 +30,7 @@ import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionStrategy
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.IResourceDescription
@@ -106,52 +110,74 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	@Inject
 	private ProjectDescriptionHelper projectDescriptionHelper;
 
+    private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
+
+
+	override QualifiedName getFullyQualifiedName(EObject obj) {
+		if (!obj.isPackageJSON) {
+			return null; // not responsible
+		}
+
+		// delegate to the N4JS qualified name provider
+		// (will return non-null only for JSONDocument, i.e. the root AST node in JSON files)
+		return qualifiedNameProvider.getFullyQualifiedName(obj);
+	}
+
 
 	override boolean isAffected(Collection<Delta> deltas, IResourceDescription candidate, IResourceDescriptions context) {
+		if (!candidate.isPackageJSON) {
+			return false; // not responsible
+		}
 
-		if (candidate.isPackageJSON) {
-			// Contains only those project IDs that were changed via its N4JS manifest.
-			val changedProjectIds = deltas.map[uri].filter[isPackageJSON].map[projectIdFromPackageJSONUri].toSet;
+		// Contains only those project IDs that were changed via its N4JS manifest.
+		val changedProjectIds = deltas.map[uri].filter[isPackageJSON].map[projectIdFromPackageJSONUri].toSet;
 
-			// Collect all referenced project IDs of the candidate.
-			val referencedProjectIds = newLinkedList;
-			candidate.getExportedObjectsByType(N4mfPackage.eINSTANCE.projectDescription).forEach[
-				referencedProjectIds.addAll(testedProjectIds);
-				referencedProjectIds.addAll(implementedProjectIds);
-				referencedProjectIds.addAll(projectDependencyIds);
-				referencedProjectIds.addAll(providedRuntimeLibraryIds);
-				referencedProjectIds.addAll(requiredRuntimeLibraryIds);
-				val extRuntimeEnvironmentId = extendedRuntimeEnvironmentId;
-				if (!extRuntimeEnvironmentId.nullOrEmpty) {
-					referencedProjectIds.add(extRuntimeEnvironmentId);
-				}
-			];
+		// Collect all referenced project IDs of the candidate.
+		val referencedProjectIds = newLinkedList;
+		candidate.getExportedObjectsByType(N4mfPackage.eINSTANCE.projectDescription).forEach[
+			referencedProjectIds.addAll(testedProjectIds);
+			referencedProjectIds.addAll(implementedProjectIds);
+			referencedProjectIds.addAll(projectDependencyIds);
+			referencedProjectIds.addAll(providedRuntimeLibraryIds);
+			referencedProjectIds.addAll(requiredRuntimeLibraryIds);
+			val extRuntimeEnvironmentId = extendedRuntimeEnvironmentId;
+			if (!extRuntimeEnvironmentId.nullOrEmpty) {
+				referencedProjectIds.add(extRuntimeEnvironmentId);
+			}
+		];
 
-			// Here we consider only direct project dependencies because this implementation is aligned to the
-			// N4JS based resource description manager's #isAffected logic. In the N4JS implementation we consider
-			// only direct project dependencies when checking whether a candidate is affected or not.
-			//
-			// See: N4JSResourceDescriptionManager#basicIsAffected and N4JSResourceDescriptionManager#hasDependencyTo
-			for (referencedProjectId : referencedProjectIds) {
-				if (changedProjectIds.contains(referencedProjectId)) {
-					return true;
-				}
+		// Here we consider only direct project dependencies because this implementation is aligned to the
+		// N4JS based resource description manager's #isAffected logic. In the N4JS implementation we consider
+		// only direct project dependencies when checking whether a candidate is affected or not.
+		//
+		// See: N4JSResourceDescriptionManager#basicIsAffected and N4JSResourceDescriptionManager#hasDependencyTo
+		for (referencedProjectId : referencedProjectIds) {
+			if (changedProjectIds.contains(referencedProjectId)) {
+				return true;
 			}
 		}
 
 		return false;
 	}
 
-	override createJSONDocumentDescriptions(JSONDocument document, IAcceptor<IEObjectDescription> acceptor) {
-		val qualifiedName = qualifiedNameProvider.getFullyQualifiedName(document);
-
-		if (qualifiedName !== null) {
-			val projectLocation = document.eResource.URI.trimSegments(1);
-			val description = projectDescriptionHelper.loadProjectDescriptionAtLocation(projectLocation, document);
-
-			val userData = createProjectDescriptionUserData(description);
-			acceptor.accept(new EObjectDescription(qualifiedName, document, userData));
+	override void createJSONDocumentDescriptions(JSONDocument document, IAcceptor<IEObjectDescription> acceptor) {
+		val qualifiedName = getFullyQualifiedName(document);
+		if (qualifiedName === null) {
+			return; // not responsible
 		}
+
+		val projectLocation = document?.eResource?.URI?.trimSegments(1);
+		if(projectLocation === null) {
+			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
+			return;
+		}
+		val description = projectDescriptionHelper.loadProjectDescriptionAtLocation(projectLocation, document);
+		if(description === null) {
+			LOGGER.error("creation of EObjectDescriptions failed: cannot load project description at location: " + projectLocation);
+			return;
+		}
+		val userData = createProjectDescriptionUserData(description);
+		acceptor.accept(new EObjectDescription(qualifiedName, document, userData));
 	}
 
 	/**
@@ -305,11 +331,19 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		return uri.segment(uri.segmentCount - 2);
 	}
 
-	private static def boolean isPackageJSON(URI uri) {
-		uri !== null && uri.lastSegment == N4JSGlobals.PACKAGE_JSON;
+	private static def boolean isPackageJSON(IResourceDescription desc) {
+		return desc !== null && isPackageJSON(desc.URI);
 	}
 
-	private static def boolean isPackageJSON(IResourceDescription desc) {
-		desc?.URI !== null && desc.URI.lastSegment == N4JSGlobals.PACKAGE_JSON;
+	private static def boolean isPackageJSON(EObject obj) {
+		return obj !== null && isPackageJSON(obj.eResource);
+	}
+
+	private static def boolean isPackageJSON(Resource res) {
+		return res !== null && isPackageJSON(res.URI);
+	}
+
+	private static def boolean isPackageJSON(URI uri) {
+		return uri !== null && uri.lastSegment == N4JSGlobals.PACKAGE_JSON;
 	}
 }

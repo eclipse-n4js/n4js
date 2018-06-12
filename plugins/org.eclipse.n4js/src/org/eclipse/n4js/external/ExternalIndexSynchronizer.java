@@ -216,7 +216,6 @@ public abstract class ExternalIndexSynchronizer {
 
 		if (isProjectDescriptionFile) {
 			Iterable<IEObjectDescription> pds = res.getExportedObjectsByType(JSONPackage.eINSTANCE.getJSONDocument());
-
 			IEObjectDescription pDescription = pds.iterator().next();
 			String nameFromPackageJSON = pDescription
 					.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_ID_KEY);
