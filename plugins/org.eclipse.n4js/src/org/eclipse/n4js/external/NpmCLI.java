@@ -130,6 +130,9 @@ public class NpmCLI {
 					actualChanges.add(actChg);
 				}
 				subMonitor.worked(1);
+				if (!batchStatus.isOK()) {
+					break; // fail fast and do not let the user wait for the problem
+				}
 			}
 		}
 
