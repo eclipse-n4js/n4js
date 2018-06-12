@@ -87,12 +87,14 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
-		final JSONObject root = (JSONObject) rootValue;
-		final Multimap<String, JSONValue> documentValues = collectObjectValues(root);
-
-		// check for mandatory top-level properties
-		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__NAME);
-		checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__VERSION);
+		// FIXME consider requiring the following iff projectType is defined and other than VALIDATION
+		// final JSONObject root = (JSONObject) rootValue;
+		// final Multimap<String, JSONValue> documentValues = collectObjectValues(root);
+		//
+		// // check for mandatory top-level properties
+		// checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__NAME);
+		// checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__VERSION);
+		// checkIsPresent(document, documentValues, ProjectDescriptionHelper.PROP__N4JS);
 	}
 
 	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
@@ -104,17 +106,18 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 
-		final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
-
-		// check for mandatory n4js-section properties
-		checkIsPresent(n4jsSection, n4jsValues, ProjectDescriptionHelper.PROP__VENDOR_ID);
-		checkIsPresent(n4jsSection, n4jsValues, ProjectDescriptionHelper.PROP__PROJECT_TYPE);
-
-		// special error message in case of a missing output property
-		if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
-			addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
-					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
-		}
+		// FIXME consider requiring the following iff projectType is defined and other than VALIDATION
+		// final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
+		//
+		// // check for mandatory n4js-section properties
+		// checkIsPresent(n4jsSection, n4jsValues, ProjectDescriptionHelper.PROP__VENDOR_ID);
+		// checkIsPresent(n4jsSection, n4jsValues, ProjectDescriptionHelper.PROP__PROJECT_TYPE);
+		//
+		// // special error message in case of a missing output property
+		// if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
+		// addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
+		// JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
+		// }
 	}
 
 	/** Validates the project/package name. */
