@@ -97,7 +97,7 @@ public class JSONArrayImpl extends JSONValueImpl implements JSONArray {
 		};
 		String _join = IterableExtensions.join(XcoreEListExtensions.<JSONValue, String>map(this.getElements(), _function), ",\n");
 		String _plus = ("[\n" + _join);
-		return (_plus + "]");
+		return (_plus + "\n]");
 	}
 
 	/**

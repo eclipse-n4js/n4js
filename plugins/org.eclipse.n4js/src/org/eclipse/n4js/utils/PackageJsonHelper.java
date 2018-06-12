@@ -26,6 +26,7 @@ import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
+import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectType;
@@ -155,6 +156,16 @@ public class PackageJsonHelper {
 			return ProjectType.RUNTIME_LIBRARY;
 		return parseEnumLiteral(N4mfPackage.eINSTANCE.getProjectType(), ProjectType.class,
 				projectTypeStr);
+	}
+
+	/**
+	 * Parses a {@link ModuleLoader} from the given string representation.
+	 *
+	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ModuleLoader}.
+	 */
+	public ModuleLoader parseModuleLoader(String moduleLoaderStr) {
+		return parseEnumLiteral(N4mfPackage.eINSTANCE.getModuleLoader(), ModuleLoader.class,
+				moduleLoaderStr);
 	}
 
 	private ModuleFilterSpecifier createModuleFilterSpecifier(String sourcePath, String moduleSpecifierWithWildcard) {

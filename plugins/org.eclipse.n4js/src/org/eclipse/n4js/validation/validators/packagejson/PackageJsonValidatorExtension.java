@@ -195,6 +195,45 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 	}
 
+	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS)
+	public void checkN4JSSection(JSONValue n4jsSection) {
+		// make sure n4js section is an object
+		if (!checkIsType(n4jsSection, JSONPackage.Literals.JSON_OBJECT,
+				"as package.json n4js section.")) {
+			return;
+		}
+
+		final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
+
+		// Check for correct types (null-values (non-existent) will not lead to issues)
+		// Properties that are not checked here, have their own check-method which also validates their types.
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_ID),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as vendor ID");
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_NAME),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as vendor name");
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as output folder path");
+
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as reference to extended runtime environment");
+		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as provided runtime libraries", "as library reference");
+		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as required runtime libraries", "as library reference");
+
+		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__INIT_MODULES),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as init modules", "as init module reference");
+		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXEC_MODULE),
+				JSONPackage.Literals.JSON_STRING_LITERAL, "as exec module");
+
+		// // special error message in case of a missing output property
+		// if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
+		// addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
+		// JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
+		// }
+	}
+
 	/** Check the projectType value structure. */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
 			+ ProjectDescriptionHelper.PROP__PROJECT_TYPE)
@@ -210,47 +249,19 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 	}
 
-	/** Checks basic structural properties of the 'n4js' section (e.g. mandatory properties). */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS)
-	public void checkN4JSSection(JSONValue n4jsSection) {
-		// make sure n4js section is an object
-		if (!checkIsType(n4jsSection, JSONPackage.Literals.JSON_OBJECT,
-				" as package.json n4js section.")) {
+	/** Check the projectType value structure. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
+			+ ProjectDescriptionHelper.PROP__MODULE_LOADER)
+	public void checkModuleLoaderStructure(JSONValue moduleLoaderValue) {
+		if (!checkIsType(moduleLoaderValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
 		}
-
-		final Multimap<String, JSONValue> n4jsValues = collectObjectValues((JSONObject) n4jsSection);
-
-		// check for correct types (null-values (non-existent) will not lead to issues)
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_ID),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as vendor ID");
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_NAME),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as vendor name");
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as output folder path");
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as output folder path");
-
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as reference to extended runtime environment");
-		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as required runtime libraries", "as library reference");
-		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as provided runtime libraries", "as library reference");
-		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as required runtime libraries", "as library reference");
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__MODULE_LOADER),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as module loader");
-		checkIsArrayOfType(n4jsValues.get(ProjectDescriptionHelper.PROP__INIT_MODULES),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as init modules", "as init module reference");
-		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXEC_MODULE),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as exec module");
-
-		// // special error message in case of a missing output property
-		// if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
-		// addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
-		// JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
-		// }
+		// check whether the given value represents a valid project type
+		final String moduleLoaderString = ((JSONStringLiteral) moduleLoaderValue).getValue();
+		if (packageJsonHelper.parseModuleLoader(moduleLoaderString) == null) {
+			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_LOADER(moduleLoaderString),
+					moduleLoaderValue, IssueCodes.PKGJ_INVALID_MODULE_LOADER);
+		}
 	}
 
 	/**
@@ -267,16 +278,27 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
+	 * Checks the given {@code value} to be a {@link JSONArray} with element type {@code elemetnClass}.
+	 *
+	 * @See {@link #checkIsType(JSONValue, EClass, String)}.
+	 */
+	private boolean checkIsArrayOfType(JSONValue value, EClass elementClass,
+			String locationClass, String elementLocation) {
+		return checkIsType(value, JSONPackage.Literals.JSON_ARRAY, locationClass) &&
+				checkIsType(((JSONArray) value).getElements(), elementClass, elementLocation);
+	}
+
+	/**
 	 * Checks the given {@code values} to be {@link JSONArray}s with element type {@code elementClass}.
 	 *
-	 * @See {@link #checkIsType(JSONValue, EClass, String)}
+	 * @See {@link #checkIsType(JSONValue, EClass, String)}.
 	 */
 	private boolean checkIsArrayOfType(Iterable<JSONValue> values, EClass elementClass,
 			String locationClass, String elementLocation) {
 		boolean overallResult = true;
 		for (JSONValue value : values) {
-			overallResult &= checkIsType(value, JSONPackage.Literals.JSON_ARRAY, locationClass);
-			overallResult &= checkIsType(((JSONArray) value).getElements(), elementClass, elementLocation);
+			overallResult &= checkIsType(value, JSONPackage.Literals.JSON_ARRAY, locationClass) &&
+					checkIsType(((JSONArray) value).getElements(), elementClass, elementLocation);
 		}
 		return overallResult;
 	}
@@ -397,6 +419,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final JSONStringLiteral declaredProjectNameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME,
 				JSONStringLiteral.class);
 
+		// exit early if project name cannot be determined
+		if (declaredProjectNameValue == null) {
+			return;
+		}
+
 		for (JSONStringLiteral implementedProjectLiteral : implementedProjectLiterals) {
 			if (implementedProjectLiteral.getValue().equals(declaredProjectNameValue.getValue())) {
 				// reflexive implementation
@@ -408,6 +435,18 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (implementationId == null && !implementedProjectLiterals.isEmpty()) {
 			addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_PROJECTS(), value.eContainer(),
 					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_PROJECTS);
+		}
+	}
+
+	/**
+	 * Checks the n4js.testedProjects section of the {@code package.json}.
+	 */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." +
+			ProjectDescriptionHelper.PROP__TESTED_PROJECTS)
+	public void checkTestedProjects(JSONValue testedProjectsValues) {
+		if (!checkIsArrayOfType(testedProjectsValues, JSONPackage.Literals.JSON_STRING_LITERAL,
+				"as list of tested projects", "as tested project reference")) {
+			return;
 		}
 	}
 
@@ -858,15 +897,16 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return ImmutableMultimap.<SourceContainerType, List<JSONStringLiteral>> of();
 		}
 
-		// only consider the first n4js.sources section (in case of duplicates)
-		final JSONValue sourcesValue = sourcesValues.iterator().next();
-
-		// first check for the type of the source-container value
-		if (!checkIsType(sourcesValue, JSONPackage.Literals.JSON_OBJECT, "as source container section")) {
+		// first check type of all occuring 'sources' sections
+		if (!checkIsType(sourcesValues, JSONPackage.Literals.JSON_OBJECT, "as source container section")) {
 			// return an empty map
 			return ImmutableMultimap.<SourceContainerType, List<JSONStringLiteral>> of();
 		}
+
+		// only consider the first n4js.sources section for further validation (in case of duplicates)
+		final JSONValue sourcesValue = sourcesValues.iterator().next();
 		final JSONObject sourceContainerObject = (JSONObject) sourcesValue;
+
 		final Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainerValues = HashMultimap.create();
 
 		for (NameValuePair pair : sourceContainerObject.getNameValuePairs()) {

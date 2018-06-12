@@ -21,12 +21,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.CommonPlugin;
-import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -47,9 +44,7 @@ import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
-import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.N4mfFactory;
-import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
@@ -409,7 +404,7 @@ public class ProjectDescriptionHelper {
 				target.getRequiredRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
 			case PROP__MODULE_LOADER:
-				target.setModuleLoader(parseModuleLoader(asStringOrNull(value)));
+				target.setModuleLoader(packageJsonHelper.parseModuleLoader(asStringOrNull(value)));
 				break;
 			case PROP__INIT_MODULES:
 				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
@@ -458,7 +453,9 @@ public class ProjectDescriptionHelper {
 	private void convertSourceContainers(ProjectDescription target, JSONValue sourcesSection) {
 		final List<SourceContainerDescription> sourceContainerDescriptions = packageJsonHelper
 				.getSourceContainerDescriptions(sourcesSection);
-		target.getSourceContainers().addAll(sourceContainerDescriptions);
+		if (sourceContainerDescriptions != null) {
+			target.getSourceContainers().addAll(sourceContainerDescriptions);
+		}
 	}
 
 	/**
@@ -515,21 +512,6 @@ public class ProjectDescriptionHelper {
 			System.err.println("WARNING: invalid or unsupported version constraint: " + versionConstraintStr);
 		}
 		return result;
-	}
-
-	private ModuleLoader parseModuleLoader(String moduleLoaderStr) {
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getModuleLoader(), ModuleLoader.class,
-				moduleLoaderStr);
-	}
-
-	private <T extends Enumerator> T parseEnumLiteral(EEnum emfEnumType, Class<T> javaEnumType, String enumLiteralStr) {
-		EEnumLiteral emfLit = enumLiteralStr != null ? emfEnumType.getELiterals().stream()
-				.filter(lit -> lit.getName().equalsIgnoreCase(enumLiteralStr))
-				.findFirst().orElse(null) : null;
-		Enumerator javaLit = emfLit != null ? emfLit.getInstance() : (Enumerator) emfEnumType.getDefaultValue();
-		@SuppressWarnings("unchecked")
-		T javaLitCasted = javaEnumType.isInstance(javaLit) ? (T) javaLit : null;
-		return javaLitCasted;
 	}
 
 	private String asStringOrNull(JSONValue jsonValue) {

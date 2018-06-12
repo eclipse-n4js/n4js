@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -42,6 +43,8 @@ import com.google.common.collect.Multimap;
  */
 public abstract class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 		implements IJSONValidatorExtension {
+	
+	private static final Logger LOGGER = Logger.getLogger(AbstractJSONValidatorExtension.class);
 
 	private static final String JSON_DOCUMENT_VALUES = "JSON_DOCUMENT_VALUES";
 	private static final String JSON_DOCUMENT = "JSON_DOCUMENT";
@@ -106,9 +109,8 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 					} catch (IllegalAccessException | IllegalArgumentException e) {
 						throw new IllegalStateException("Failed to invoke @CheckProperty method " + method + ": " + e);
 					} catch (InvocationTargetException e) {
+						LOGGER.error("Failed to invoke @CheckProperty method " + method + ": " + e.getTargetException());
 						e.getTargetException().printStackTrace();
-						throw new IllegalStateException(
-								"Failed to invoke @CheckProperty method " + method + ": " + e.getTargetException());
 					}
 				}
 			}
