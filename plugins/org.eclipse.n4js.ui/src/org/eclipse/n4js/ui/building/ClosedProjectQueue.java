@@ -62,7 +62,7 @@ public class ClosedProjectQueue {
 		}
 	}
 
-	/*
+	/**
 	 * Use a concurrent linked queue internally to allow concurrent read and add operations.
 	 */
 	private final Deque<Task> internalQueue = new ConcurrentLinkedDeque<>();
