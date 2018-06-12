@@ -82,6 +82,7 @@ import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.json.JSON.JSONObject
 
 /**
  * A JSON validator extension that validates {@code package.json} resources 
@@ -96,6 +97,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	static val RL_TYPE = anyOf(RUNTIME_LIBRARY);
 	static val TEST_TYPE = anyOf(TEST);
 	static val RE_OR_RL_TYPE = anyOf(RUNTIME_ENVIRONMENT, RUNTIME_LIBRARY);
+
+	/**
+	 * Key to store a converted ProjectDescription instance in the validation context for re-use across different check-methods
+	 * @See #get
+	 */
+	private static final String PROJECT_DESCRIPTION_CACHE = "PROJECT_DESCRIPTION_CACHE";
 
 	@Inject
 	private extension IN4JSCore
@@ -112,10 +119,24 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Inject
 	private PackageJsonHelper packageJsonHelper;
 	
+	@Inject
+	private ProjectDescriptionHelper projectDescriptionHelper;
+	
 	override boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		// this validator extension only applies to package.json files
 		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
 				.equals(IN4JSProject.PACKAGE_JSON);
+	}
+	
+	/**
+	 * Returns the {@link ProjectDescription} that can be created based on the information
+	 * to be found in the currently validated {@link JSONDocument}.
+	 * 
+	 * @See {@link ProjectDescriptionHelper}
+	 */
+	protected def ProjectDescription getProjectDescription() {
+		return contextMemoize(PROJECT_DESCRIPTION_CACHE,
+			[projectDescriptionHelper.convertToProjectDescription(this.document)]);
 	}
 	
 	/**
@@ -130,13 +151,13 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		// lookup of Names in n4mf &
 		val Map<String, JSONStringLiteral> mQName2rtDep = newHashMap()
 	
-		// obtain ProjectDescription representation of 'document'
-		val projectNameLiteral = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME, JSONStringLiteral);
-		// if project name cannot be determined, exit early
-		if (projectNameLiteral === null || projectNameLiteral.value === null) {
+		val description = getProjectDescription();
+		val projectName = description.projectId;
+		
+		// if the project name cannot be determined, exit early
+		if (projectName === null) {
 			return;
 		}
-		val projectName = projectNameLiteral.value;
 
 		// gather required runtime libraries in terms of JSONStringLiterals
 		val requiredRuntimeLibrariesValue = getSingleDocumentValue(
@@ -345,7 +366,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if(!anyDependsOnTestLibrary(#[project])){
 			addIssue(
 					getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT),
-					dependenciesValue,
+					dependenciesValue.eContainer,
 					JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
 					PROJECT_DEPENDENCY_CYCLE
 				);
@@ -372,61 +393,25 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/**
-	 * Raises a validation warning if the project type is 'System'. <br>
-	 * This check (and the corresponding issue code) should be cleaned up once 'System' type is eliminated.
-	 *
-	 * <p>
-	 * Also raises a warning if the project type is Library but 'lib' is used instead of the recommended 'library'.
-	 *
-	 * <p>
-	 * Also raises a warning if the project type is Library but 'app' is used instead of the recommended 'application'.
-	 *
-	 */
-	@Check
-	def checkProjectType(ProjectDescription it) {
-		if (LIBRARY == projectType) {
-			val projectTypeNodes = NodeModelUtils.findNodesForFeature(it, PROJECT_DESCRIPTION__PROJECT_TYPE);
-			if (projectTypeNodes.nullOrEmpty || projectTypeNodes.exists[!text.nullToEmpty.toLowerCase.contains(LIBRARY.literal.toLowerCase)]) {
-				addIssue(
-					getMessageForDEPRECATED_PROJECT_TYPE('lib', '''Use 'library' instead.'''),
-					it,
-					PROJECT_DESCRIPTION__PROJECT_TYPE,
-					DEPRECATED_PROJECT_TYPE
-				);
-			}
-		} else if (APPLICATION == projectType) {
-			val projectTypeNodes = NodeModelUtils.findNodesForFeature(it, PROJECT_DESCRIPTION__PROJECT_TYPE);
-			if (projectTypeNodes.nullOrEmpty || projectTypeNodes.exists[!text.nullToEmpty.toLowerCase.contains(APPLICATION.literal.toLowerCase)]) {
-				addIssue(
-					getMessageForDEPRECATED_PROJECT_TYPE('app', '''Use 'application' instead.'''),
-					it,
-					PROJECT_DESCRIPTION__PROJECT_TYPE,
-					DEPRECATED_PROJECT_TYPE
-				);
-			}
-		}
-	}
-
-	/**
 	 * Checks whether a test project either tests APIs or libraries. Raises a validation issue, if the test project
 	 * tests both APIs and libraries. Does nothing if the project description of the validated project is NOT a test
 	 * project.
 	 */
-	@Check
-	def checkTestedProjects(ProjectDescription it) {
-		if (TEST == projectType) {
-			val projects = it.testedProjects;
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__TESTED_PROJECTS)
+	def checkTestedProjects(JSONValue testedProjectsValue) {
+		val description = getProjectDescription();
+		
+		if (TEST == description.projectType) {
+			val projects = description.testedProjects;
 			if (!projects.nullOrEmpty) {
-				val allProjects = it.existingProjectIds;
+				val allProjects = getAllExistingProjectIds();
 				val head = projects.head;
 				val refProjectType = allProjects.get(head.projectId)?.projectType
 				if (projects.exists[testedProject | refProjectType != allProjects.get(testedProject.projectId)?.projectType]) {
 					addIssue(
-						messageForMISMATCHING_TESTED_PROJECT_TYPES,
-						it,
-						PROJECT_DESCRIPTION__TESTED_PROJECTS,
-						MISMATCHING_TESTED_PROJECT_TYPES
-					);
+						messageForMISMATCHING_TESTED_PROJECT_TYPES, 
+						testedProjectsValue,
+						MISMATCHING_TESTED_PROJECT_TYPES);
 				}
 			}
 		}
@@ -436,26 +421,31 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Checks whether a library project, that belongs to a specific implementation (has defined implementation ID) does not
 	 * depend on any other libraries that belong to any other implementation. In such cases, raises validation issue.
 	 */
-	@Check
-	def checkHasConsistentImplementationIdChain(ProjectDescription it) {
-		if (LIBRARY == projectType && !implementationId.nullOrEmpty) {
-			val expectedImplementationId = implementationId;
-			val dependencies = it.projectDependencies;
-			if (!dependencies.nullOrEmpty) {
-				val allProjects = existingProjectIds;
-				dependencies.filterNull.forEach[
-					val actualImplementationId = allProjects.get(it.projectId)?.implementationId?.orNull;
-					if (!actualImplementationId.nullOrEmpty && actualImplementationId != expectedImplementationId) {
-						addIssue(
-							getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, it.projectId, actualImplementationId),
-							it.eContainer,
-							PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES,
-							dependencies.indexOf(it),
-							MISMATCHING_IMPLEMENTATION_ID
-						);
-					}
-				];
-			}
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
+	def checkHasConsistentImplementationIdChain(JSONValue dependenciesValue) {
+		// exit early in case of a malformed dependencies section (structural validation is handled elsewhere)
+		if (!(dependenciesValue instanceof JSONObject)) {
+			return;
+		}
+		
+		// pairs that represent project dependencies
+		val dependencyPairs = (dependenciesValue as JSONObject).nameValuePairs;
+		// obtain project description for higher-level access to contained information
+		val description = getProjectDescription();
+		
+		if (LIBRARY == description.projectType && !description.implementationId.nullOrEmpty) {
+			val expectedImplementationId = description.implementationId;
+			val allProjects = getAllExistingProjectIds();
+			
+			dependencyPairs.filterNull.forEach[ pair |
+				val dependencyProjectId = pair.name;
+				val actualImplementationId = allProjects.get(dependencyProjectId)?.implementationId?.orNull;
+				if (!actualImplementationId.nullOrEmpty && actualImplementationId != expectedImplementationId) {
+					val message = getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, 
+						dependencyProjectId, actualImplementationId);
+					addIssue(message, pair, MISMATCHING_IMPLEMENTATION_ID);
+				}
+			];
 		}
 	}
 
@@ -463,16 +453,17 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Checks if any transitive external dependency of a workspace project references to a workspace
 	 * project. If so, raises a validation warning.
 	 */
-	@Check
-	def checkExternalProjectDoesNotReferenceeWorkspaceProject(ProjectDescription desc) {
-
-		// Probably it has a broken model state.
-		if (desc.projectId.nullOrEmpty) {
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
+	def checkExternalProjectDoesNotReferenceeWorkspaceProject(JSONValue dependenciesValue) {
+		val allProjects = getAllExistingProjectIds();
+		val description = getProjectDescription();
+		
+		// if the project name cannot be determined, exit early
+		if (description.projectId === null) {
 			return;
 		}
-
-		val allProjects = desc.existingProjectIds;
-		val currentProject = allProjects.get(desc.projectId);
+		
+		val currentProject = allProjects.get(description.projectId);
 
 		// Nothing to do with non-existing, missing and/or external projects.
 		if (null === currentProject || !currentProject.exists || currentProject.external) {
@@ -502,8 +493,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				val message = getMessageForEXTERNAL_PROJECT_REFERENCES_WORKSPACE_PROJECT(actualId, workspaceDependencyId);
 				addIssue(
 					message,
-					desc,
-					PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES,
+					dependenciesValue,
 					EXTERNAL_PROJECT_REFERENCES_WORKSPACE_PROJECT
 				);
 				return;
@@ -517,7 +507,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Check
 	def checkReferencedProjects(ProjectDescription it) {
 
-		val allProjects = existingProjectIds;
+		val allProjects = getAllExistingProjectIds();
 
 		// Project dependencies feature check. Obsolete or not allowed.
 		val projectDescriptionFeatures = #[N4mfPackage.Literals.PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES];
@@ -878,9 +868,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), eObject, NO_MATCHING_VERSION)
 	}
 
-	private def Map<String, IN4JSProject> getExistingProjectIds(EObject it) {
+	/**
+	 * Returns a map between all available project IDs and their corresponding {@link IN4JSProject} representations.
+	 */
+	private def Map<String, IN4JSProject> getAllExistingProjectIds() {
 		val Map<String, IN4JSProject> res = new HashMap
-		findAllProjects.filter[exists].forEach[res.put(it.projectId, it)]
+		findAllProjects.filter[exists].forEach[p | res.put(p.projectId, p)]
 		return res
 	}
 

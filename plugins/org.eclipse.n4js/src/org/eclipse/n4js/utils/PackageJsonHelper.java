@@ -145,6 +145,17 @@ public class PackageJsonHelper {
 	}
 
 	/**
+	 * Returns the {@link ProjectType} that is represented by the given {@link JSONValue}.
+	 *
+	 * Returns {@code null} if {@code projectTypeValue} is not a valid representation of a {@link ProjectType}.
+	 *
+	 * For simple project type parsing see {@link #parseProjectType(String)}.
+	 */
+	public ProjectType getProjectType(JSONValue projectTypeValue) {
+		return parseProjectType(asStringOrNull(projectTypeValue));
+	}
+
+	/**
 	 * Parses a {@link ProjectType} from the given string representation.
 	 *
 	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ProjectType}.

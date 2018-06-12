@@ -135,6 +135,13 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 			return collectDocumentValues((JSONDocument) this.getContext().get(JSON_DOCUMENT));
 		});
 	}
+	
+	/**
+	 * Returns the currently validated {@link JSONDocument} instance.
+	 */
+	protected JSONDocument getDocument() {
+		return (JSONDocument) this.getContext().get(JSON_DOCUMENT);
+	}
 
 	/**
 	 * Memoizes the value as given by {@code supplier} in the current validation context and returns its value.
