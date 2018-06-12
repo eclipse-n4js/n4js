@@ -130,6 +130,9 @@ public class NpmCLI {
 					actualChanges.add(actChg);
 				}
 				subMonitor.worked(1);
+				if (!batchStatus.isOK()) {
+					break; // fail fast and do not let the user wait for the problem
+				}
 			}
 		}
 
@@ -172,7 +175,7 @@ public class NpmCLI {
 			actualChangeType = LibraryChangeType.Removed;
 		}
 
-		if (packageProcessingStatus != null && packageProcessingStatus.isOK() && batchStatus.isOK()) {
+		if (packageProcessingStatus != null && packageProcessingStatus.isOK()) {
 			URI actualLocation = URI.createFileURI(completePath.toString());
 			actualChange = new LibraryChange(actualChangeType, actualLocation, reqChg.name, actualVersion);
 		}
