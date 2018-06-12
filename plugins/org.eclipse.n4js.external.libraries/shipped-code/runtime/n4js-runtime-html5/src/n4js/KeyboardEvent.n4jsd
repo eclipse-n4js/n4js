@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@@Global @@ProvidedByRuntime
+
+export external public class ~KeyboardEvent extends Event {
+    public constructor(type: string, options: Object+);
+    @Final public keyCode: number;
+    @Final public shiftKey: boolean;
+    @Final public ctrlKey: boolean;
+    @Final public altKey: boolean;
+    @Final public metaKey: boolean;
+    @Final public repeat: boolean;
+    @Final public which: number;
+    @Final public charCode: number;
+    @Final public key: string;
+    @Final public code: string;
+}
+
+/* -*- mode: typescript;-*- */

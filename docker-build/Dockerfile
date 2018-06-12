@@ -46,8 +46,8 @@ RUN sed -i -e 's|MAVEN_CENTRAL_URL|'"$MAVEN_CENTRAL_URL"'|g' /usr/share/maven/re
 # https://github.com/nodejs/docker-node/blob/master/8.9/wheezy/Dockerfile
 #
 
-#RUN groupadd --gid 1000 node && \
-#    useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+RUN groupadd --gid 1000 node && \
+    useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 RUN set -ex && \
     for key in \

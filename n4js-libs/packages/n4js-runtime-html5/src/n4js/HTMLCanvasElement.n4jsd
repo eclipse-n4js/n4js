@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@@Global @@ProvidedByRuntime
+
+/**
+ * TODO
+ */
+
+export external public abstract class HTMLCanvasElement extends HTMLElement {
+    public height: number;
+    public width: number;
+    public getContext(id: string): CanvasRenderingContext2D;
+}
+
+export external public abstract class CanvasRenderingContext2D{
+    public font: string;
+    public clearRect(x: number, y: number, width: number, height: number): void;
+    public measureText(text: string): TextMetrics
+}
+
+export external public abstract class TextMetrics{
+    public width: number;
+    public actualBoundingBoxLeft: number;
+    public actualBoundingBoxRight: number;
+    public fontBoundingBoxAscent: number;
+    public fontBoundingBoxDescent: number;
+    public actualBoundingBoxAscent: number;
+    public actualBoundingBoxDescent: number;
+    public emHeightAscent: number;
+    public emHeightDescent: number;
+    public hangingBaseline: number;
+    public alphabeticBaseline: number;
+    public ideographicBaseline: number;
+}
+
+/* -*- mode: typescript;-*- */
