@@ -17,11 +17,12 @@ else
 	export DESTINATION=$1
 fi
 
-# The second parameter is the port, if not exists default to npmjs
+# The second parameter is the url to npm registry (http://localhost:4873), if not exists default to npmjs
 if [ -z "$2" ]; then
-	export NPM_REGISTRY_PORT=80
+	echo "The url to npm registry must be specified"
+	exit
 else
-	export NPM_REGISTRY_PORT=$2
+	export NPM_REGISTRY=$2
 fi
 
 # Navigate to n4js-libs folder

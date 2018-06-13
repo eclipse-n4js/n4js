@@ -21,6 +21,7 @@
 		"packages/n4js-runtime-n4",
 		"packages/n4js-runtime-node",
 		"packages/n4js-runtime-v8",
+		"packages/n4js-runtime-html5",
 		"packages/n4js.lang",
 		"packages/org.eclipse.n4js.mangelhaft",
 		"packages/org.eclipse.n4js.mangelhaft.assert",

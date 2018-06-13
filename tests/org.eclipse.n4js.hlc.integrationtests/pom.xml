@@ -24,7 +24,7 @@ Contributors:
 	<description>Test the headless N4js compiler bundled into one jar.</description>
 
 	<properties>
-		<npmLocalRegistryPort>4873</npmLocalRegistryPort>
+		<npmLocalRegistry>http://localhost:4873</npmLocalRegistry>
 	</properties>
 	<dependencies>
 	<!-- pull jar for integration tests on the jar -->
@@ -228,7 +228,7 @@ Contributors:
 								<arguments>
 									<argument>${project.basedir}/../../publish-n4js-libs-npm.sh</argument>
 									<argument>local</argument>
-									<argument>${npmLocalRegistryPort}</argument>
+									<argument>${npmLocalRegistry}</argument>
 								</arguments>
 							</configuration>
 						</execution>
