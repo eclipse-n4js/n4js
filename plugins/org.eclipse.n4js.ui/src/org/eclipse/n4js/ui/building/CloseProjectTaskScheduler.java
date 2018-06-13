@@ -142,6 +142,15 @@ public class CloseProjectTaskScheduler extends ProjectOpenedOrClosedListener {
 	 * Public for testing purpose.
 	 */
 	public void joinRemoveProjectJob() {
+		/*
+		 * szarnekow: Tests in tight loops revealed that join does not always wait for the job to really finish.
+		 * Including the wait serves as a poor attempt to ensure that the current thread really sees the correct
+		 * internal state of the job instance when it tries to join.
+		 *
+		 * To be honest, I do not understand why the synchronized block in the job manager is not sufficient for this,
+		 * but after the synchronized block was introduced here, I do no longer see spurious races between the join and
+		 * the job execution. I suspect it is related to the Java memory model, but that is only a vague feeling.
+		 */
 		try {
 			// Pseudo fence to make sure that we see what we want to see.
 			synchronized (this) {
