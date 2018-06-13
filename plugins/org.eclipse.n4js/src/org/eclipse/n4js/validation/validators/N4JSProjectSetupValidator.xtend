@@ -631,15 +631,15 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def checkForDuplicateModuleSpecifiers(ModuleFilter moduleFilter) {
-		val filtersWithoutFile = new HashSet<ModuleFilterSpecifier>();
+		val validFilterSpecifier = new HashSet<ModuleFilterSpecifier>();
 		for (ModuleFilterSpecifier filterSpecifier : moduleFilter.moduleSpecifiers) {
 			val valid = checkForValidWildcardModuleSpecifier(filterSpecifier);
 			if (valid) {
-				filtersWithoutFile.add(filterSpecifier);
+				validFilterSpecifier.add(filterSpecifier);
 			}
 		}
 		val project = findProject(moduleFilter.eResource.URI).get;
-		internalCheckModuleSpecifierHasFile(project, filtersWithoutFile);
+		internalCheckModuleSpecifierHasFile(project, validFilterSpecifier);
 	}
 
 	def private checkForValidWildcardModuleSpecifier(ModuleFilterSpecifier moduleFilterSpecifier) {
@@ -668,21 +668,9 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		return true
 	}
 
-//	def private handleNoValidationForN4JSFiles(ModuleFilterSpecifier moduleFilterSpecifier,
-//		String moduleFilterSpecifierWithWildcard) {
-//		addIssue(
-//			getMessageForDISALLOWED_NO_VALIDATE_FOR_N4JS(
-//				(moduleFilterSpecifier.eContainer as ModuleFilter).moduleFilterType.getModuleFilterName
-//			),
-//			moduleFilterSpecifier,
-//			MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
-//			DISALLOWED_NO_VALIDATE_FOR_N4JS
-//		)
-//	}
-
 	def private internalCheckModuleSpecifierHasFile(IN4JSProject project, Set<ModuleFilterSpecifier> filterSpecifiers) {
 		try {
-			val treeWalker = new ModuleSpecifierFileVisitor(wildcardHelper, project, filterSpecifiers);
+			val treeWalker = new ModuleSpecifierFileVisitor(this, project, filterSpecifiers);
 			Files.walkFileTree(project.locationPath, treeWalker);
 		} catch (Exception e) {}
 
@@ -693,12 +681,12 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	static class ModuleSpecifierFileVisitor extends SimpleFileVisitor<java.nio.file.Path> {
-		private final WildcardPathFilterHelper wildcardHelper;
+		private final N4JSProjectSetupValidator setupValidator;
 		private final IN4JSProject project;
 		private final Set<ModuleFilterSpecifier> filterSpecifiers;
 
-		new (WildcardPathFilterHelper wildcardHelper, IN4JSProject project, Set<ModuleFilterSpecifier> filterSpecifiers) {
-			this.wildcardHelper = wildcardHelper;
+		new (N4JSProjectSetupValidator wildcardHelper, IN4JSProject project, Set<ModuleFilterSpecifier> filterSpecifiers) {
+			this.setupValidator = wildcardHelper;
 			this.project = project;
 			this.filterSpecifiers = filterSpecifiers;
 		}
@@ -707,14 +695,19 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			for (val iter = filterSpecifiers.iterator(); iter.hasNext();) {
 				val filterSpecifier = iter.next();
 				val specifier = filterSpecifier.moduleSpecifierWithWildcard;
-				val checkIt = isModuleSpecifier(specifier) && path.toFile.isFile || !isModuleSpecifier(specifier)
 
-				if (checkIt) {
-					val location = getFileInSources(project, filterSpecifier, path);
-					if (location !== null) {
-						val hasFile = wildcardHelper.isPathContainedByFilter(location, filterSpecifier);
-						if (hasFile) {
-							iter.remove();
+
+				val checkForMatches = isModuleSpecifier(specifier) && path.toFile.isFile || !isModuleSpecifier(specifier);
+				val location = getFileInSources(project, filterSpecifier, path);
+				if (checkForMatches && location !== null) {
+					val hasFile = setupValidator.wildcardHelper.isPathContainedByFilter(location, filterSpecifier);
+					if (hasFile) {
+						iter.remove();
+
+						val checkForNoValidate = isModuleSpecifier(path.toString());
+						if (checkForNoValidate) {
+							val moduleFilter = filterSpecifier.eContainer as ModuleFilter;
+							setupValidator.handleNoValidationForN4JSFiles(moduleFilter, filterSpecifier);
 						}
 					}
 				}
@@ -726,17 +719,27 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
     			return FileVisitResult.CONTINUE;
 			}
 		}
+
+		def private URI getFileInSources(IN4JSProject project, ModuleFilterSpecifier filterSpecifier, java.nio.file.Path filePath) {
+			val lPath = project.locationPath;
+			val filePathString = lPath.relativize(filePath).toString;
+			val uri = URI.createPlatformResourceURI(project.projectId + "/" + filePathString, true);
+			return uri;
+		}
+
+		def private boolean isModuleSpecifier(String fileSpecifier) {
+			return fileSpecifier.endsWith(".n4js") || fileSpecifier.endsWith(".n4jsx")
+		}
 	}
 
-	def static private URI getFileInSources(IN4JSProject project, ModuleFilterSpecifier filterSpecifier, java.nio.file.Path filePath) {
-		val lPath = project.locationPath;
-		val filePathString = lPath.relativize(filePath).toString;
-		val uri = URI.createPlatformResourceURI(project.projectId + "/" + filePathString, true);
-		return uri;
-	}
-
-	def static private boolean isModuleSpecifier(String fileSpecifier) {
-		return fileSpecifier.endsWith(".n4js") || fileSpecifier.endsWith(".n4jsx")
+	def private handleNoValidationForN4JSFiles(ModuleFilter moduleFilter, ModuleFilterSpecifier moduleFilterSpecifier) {
+		val moduleFilterName = keyword(moduleFilter.moduleFilterType);
+		addIssue(
+			getMessageForDISALLOWED_NO_VALIDATE_FOR_N4JS(moduleFilterName),
+			moduleFilterSpecifier,
+			MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
+			DISALLOWED_NO_VALIDATE_FOR_N4JS
+		)
 	}
 
 	@Check

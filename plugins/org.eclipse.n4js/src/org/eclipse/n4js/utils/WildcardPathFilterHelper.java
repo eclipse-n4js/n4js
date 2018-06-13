@@ -39,6 +39,7 @@ public class WildcardPathFilterHelper {
 
 	/** @return true iff the given location is matched the given filter */
 	public boolean isPathContainedByFilter(URI location, ModuleFilter filter) {
+
 		for (ModuleFilterSpecifier spec : filter.getModuleSpecifiers()) {
 			String prjRelativeLocation = getProjectRelativeLocation(location, spec);
 			if (prjRelativeLocation != null) {
