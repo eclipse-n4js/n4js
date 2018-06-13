@@ -29,5 +29,6 @@
 		"packages/org.eclipse.n4js.mangelhaft.runner.ide",
 		"packages/n4js-cli",
 		"packages/n4js-mangelhaft-cli",
+		"packages/n4mf-parser",
 	]
 }
