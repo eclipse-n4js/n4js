@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -202,12 +203,27 @@ public class LibraryManager {
 		}
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
-
-			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, versionedNPMs, emptyList());
+			Map<String, String> npmsToInstall = versionedNPMs;
+			Set<LibraryChange> actualChanges = new HashSet<>();
+			do {
+				List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
+				actualChanges.addAll(deltaChanges);
+				npmsToInstall = getDependenciesOfNPMs(deltaChanges);
+				Set<String> installedProjectsIds = externalLibraryWorkspace.getProjects().stream()
+						.map(p -> p.getName())
+						.collect(Collectors.toSet());
+				// Note: need to make sure the projects in npmsToInstall are not installed yet; method
+				// #installUninstallNPMs() (which will be invoked in a moment) is doing this as well, but that method
+				// does not consider the shipped code. For example, without the next line, "n4js-runtime-node" would be
+				// installed even though it is already available via the shipped code.
+				npmsToInstall.keySet().removeAll(installedProjectsIds);
+				if (!npmsToInstall.isEmpty()) {
+					msg = "Installing transitive dependencies: " + String.join(", ", npmsToInstall.keySet());
+					logger.logInfo(msg);
+				}
+			} while (!npmsToInstall.isEmpty());
 
 			indexSynchronizer.synchronizeNpms(monitor, actualChanges);
-
-			installDependenciesOfNPMs(monitor, actualChanges);
 
 			return status;
 
@@ -223,43 +239,31 @@ public class LibraryManager {
 	 * <p>
 	 * GH-862: Please remove this after GH-821 is solved
 	 */
-	private void installDependenciesOfNPMs(IProgressMonitor monitor, List<LibraryChange> actualChanges) {
-		Set<String> installedProjectsIds = externalLibraryWorkspace.getProjects().stream()
-				.map(p -> p.getName())
-				.collect(Collectors.toSet());
+	private Map<String, String> getDependenciesOfNPMs(List<LibraryChange> actualChanges) {
 		Map<String, String> dependencies = new HashMap<>();
 		for (LibraryChange libChange : actualChanges) {
 			if (libChange.type == LibraryChangeType.Added) {
-				N4JSExternalProject addedPrj = externalLibraryWorkspace.getProject(libChange.name);
-				if (addedPrj != null) {
-					// load descriptions from package.json fragment only! (we are only interested in dependencies
-					// defined in the n4jsd repository, not in the original package.json file)
-					ProjectDescription pd = projectDescriptionHelper
-							.loadProjectDescriptionFragmentAtLocation(libChange.location);
-					if (pd != null) {
-						for (ProjectDependency pDep : pd.getProjectDependencies()) {
-							String name = pDep.getProjectId();
-							// Note: need to make sure the project is not installed yet; method #installNPMsInternal()
-							// (which will be invoked below) is doing this as well, but that method does not consider
-							// the shipped code. For example, without the next line, "n4js-runtime-node" would be
-							// installed even though it is already available via the shipped code.
-							if (!installedProjectsIds.contains(name)) {
-								String version = NO_VERSION;
-								if (pDep.getVersionConstraint() != null) {
-									version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
-								}
-								dependencies.put(name, version);
-							}
+				// load descriptions from package.json fragment only! (we are only interested in dependencies
+				// defined in the n4jsd repository, not in the original package.json file)
+				ProjectDescription pd = projectDescriptionHelper
+						.loadProjectDescriptionFragmentAtLocation(libChange.location);
+				// FIXME roll back to the following code:
+				// ProjectDescription pd =
+				// filbasedPackageManger.loadProjectDescriptionFromProjectRoot(libChange.location);
+				if (pd != null) {
+					for (ProjectDependency pDep : pd.getProjectDependencies()) {
+						String name = pDep.getProjectId();
+						String version = NO_VERSION;
+						if (pDep.getVersionConstraint() != null) {
+							version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
 						}
+						dependencies.put(name, version);
 					}
 				}
 			}
 		}
-		if (!dependencies.isEmpty()) {
-			String msg = "Installing dependencies: " + String.join(", ", dependencies.keySet());
-			logger.logInfo(msg);
-			installNPMsInternal(dependencies, monitor);
-		}
+
+		return dependencies;
 	}
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
