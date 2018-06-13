@@ -13,7 +13,7 @@
 
     Workspace {
         JavaProject "client" {
-            File "package.json" {from="../client/duplicates_package.json.xt"}
+            File "package.json" {from="../client/package.json.xt"}
         }
         JavaProject "libA" {
             File "package.json" {from="../libA/package.json"}
@@ -41,12 +41,12 @@
 			//XPECT noerrors --> "first occurance"
 			"libA",
 			//XPECT noerrors --> "first occurance"
-			"MyVendorID:libB",
-			// XPECT errors -->"Duplicate project reference MyVendorID:libA." at "MyVendorID:libA"
-			"MyVendorID:libA",
-			// XPECT errors -->"Duplicate project reference MyVendorID:libB." at "libB"
 			"libB",
-			"MyVendorID:libC"
+			// XPECT errors -->"Duplicate project reference libA." at ""libA""
+			"libA",
+			// XPECT errors -->"Duplicate project reference libB." at ""libB""
+			"libB",
+			"libC"
 		]
 	}
 }

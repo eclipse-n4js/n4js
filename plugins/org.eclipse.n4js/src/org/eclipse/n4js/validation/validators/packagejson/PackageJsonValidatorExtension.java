@@ -45,6 +45,7 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
 import org.eclipse.n4js.json.validation.extension.CheckProperty;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
+import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -447,6 +448,58 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (!checkIsArrayOfType(testedProjectsValues, JSONPackage.Literals.JSON_STRING_LITERAL,
 				"as list of tested projects", "as tested project reference")) {
 			return;
+		}
+	}
+
+	/**
+	 * Checks that the output folder and the declared source containers are not nested in way that can lead to conflicts
+	 * wrt. transpile loops and workspace clean operations (e.g. output folder is considered source folder).
+	 */
+	@CheckProperty(propertyPath = ((ProjectDescriptionHelper.PROP__N4JS + ".") + ProjectDescriptionHelper.PROP__OUTPUT))
+	public void checkOutputFolder(final JSONValue outputPathValue) {
+		if ((!(outputPathValue instanceof JSONStringLiteral))) {
+			return;
+		}
+		// use normalized output path for validation
+		final String outputPath = FileUtils.normalize(((JSONStringLiteral) outputPathValue).getValue());
+
+		// do not perform check for projects of type 'validation'
+		if (((getProjectType() == ProjectType.VALIDATION) || (outputPath == null))) {
+			return;
+		}
+
+		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers();
+
+		for (Entry<SourceContainerType, List<JSONStringLiteral>> sourceContainerType : sourceContainers.entries()) {
+			// iterate over all source container paths (in terms of string literals)
+			for (JSONStringLiteral sourceContainerSpecifier : sourceContainerType.getValue()) {
+				// use normalized source path for checks
+				final String sourcePath = FileUtils.normalize(sourceContainerSpecifier.getValue());
+
+				// obtain descriptive name of the source container type
+				final String srcFrgmtName = sourceContainerType.getKey().getLiteral().toLowerCase();
+
+				// handle case that output path is nested within a source folder (or equal)
+				if (((".".equals(sourcePath) || sourcePath.equals(outputPath))
+						|| outputPath.startsWith(sourcePath))) {
+					final String containingFolder = "The output";
+					final String nestedFolder = ("a " + srcFrgmtName);
+					final String message = IssueCodes
+							.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+
+					addIssue(message, outputPathValue, IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING);
+				}
+
+				// handle case that source container is nested within output directory (or equal)
+				if ((".".equals(outputPath) || sourcePath.startsWith(outputPath))) {
+					final String containingFolder = ("A " + srcFrgmtName);
+					final String nestedFolder = "the output";
+					final String message = IssueCodes
+							.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+
+					addIssue(message, sourceContainerSpecifier, IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING);
+				}
+			}
 		}
 	}
 
@@ -871,6 +924,21 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				.flatMap(e -> e.getValue().stream())
 				.map(literal -> literal.getValue())
 				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Returns the project type as declared by the currently validated {@link JSONDocument}.
+	 *
+	 * Returns {@code null} if the project type cannot be determined.
+	 */
+	private ProjectType getProjectType() {
+		final JSONValue projectTypeValue = getSingleDocumentValue(
+				ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__PROJECT_TYPE);
+		if (projectTypeValue instanceof JSONStringLiteral) {
+			return packageJsonHelper.getProjectType(projectTypeValue);
+		} else {
+			return null;
+		}
 	}
 
 	/**

@@ -24,30 +24,27 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import java.util.Stack
-import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
+import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.JSON.JSONValue
+import org.eclipse.n4js.json.JSON.NameValuePair
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.json.validation.^extension.AbstractJSONValidatorExtension
 import org.eclipse.n4js.json.validation.^extension.CheckProperty
 import org.eclipse.n4js.n4mf.DeclaredVersion
-import org.eclipse.n4js.n4mf.N4mfPackage
-import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerDescription
 import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.n4mf.VersionConstraint
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
-import org.eclipse.n4js.projectModel.IN4JSArchive
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
@@ -59,10 +56,10 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.PackageJsonHelper
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.n4js.utils.Version
-import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.helper.PolyFilledProvisionPackageJson
 import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
+import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
 import org.eclipse.xtext.resource.IContainer.Manager
@@ -71,18 +68,12 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.validation.Check
 
-import static com.google.common.base.CaseFormat.LOWER_CAMEL
-import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE
 import static com.google.common.base.Preconditions.checkState
-import static java.util.Collections.singletonList
-import static java.util.Collections.unmodifiableMap
-import static org.eclipse.n4js.n4mf.N4mfPackage.Literals.*
 import static org.eclipse.n4js.n4mf.ProjectType.*
 import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.json.JSON.JSONObject
 
 /**
  * A JSON validator extension that validates {@code package.json} resources 
@@ -321,7 +312,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	
 	/** IDEBUG-266 issue error warning on cyclic dependencies*/
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
-	def checkCyclicDependencyies(JSONValue dependenciesValue) {
+	def checkCyclicDependencies(JSONValue dependenciesValue) {
 		val project = findProject(dependenciesValue.eResource.URI).orNull;
 		if (null !== project) {
 			val result = new SoureContainerAwareDependencyTraverser(project).result;
@@ -398,9 +389,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * project.
 	 */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__TESTED_PROJECTS)
-	def checkTestedProjects(JSONValue testedProjectsValue) {
+	def checkTestedProjectsType(JSONValue testedProjectsValue) {
 		val description = getProjectDescription();
 		
+		// make sure the listed tested projects do not mismatch in their type (API vs. library)
 		if (TEST == description.projectType) {
 			val projects = description.testedProjects;
 			if (!projects.nullOrEmpty) {
@@ -454,7 +446,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * project. If so, raises a validation warning.
 	 */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
-	def checkExternalProjectDoesNotReferenceeWorkspaceProject(JSONValue dependenciesValue) {
+	def checkExternalProjectDoesNotReferenceWorkspaceProject(JSONValue dependenciesValue) {
 		val allProjects = getAllExistingProjectIds();
 		val description = getProjectDescription();
 		
@@ -501,136 +493,163 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 			stack.addAll(actualDirectDependencies.filter[external]);
 		}
-
 	}
 
-	@Check
-	def checkReferencedProjects(ProjectDescription it) {
-
-		val allProjects = getAllExistingProjectIds();
-
-		// Project dependencies feature check. Obsolete or not allowed.
-		val projectDescriptionFeatures = #[N4mfPackage.Literals.PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES];
-		if (checkFeature(
-			projectDescriptionFeatures,
-			not(RE_OR_RL_TYPE)
-		)) {
-			// Non-existing project dependencies or duplicates.
-			val predicate = switch(projectType) {
-				case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
-				case API: createProjectPredicateForAPIs
-				default: not(or(RE_OR_RL_TYPE, TEST_TYPE)).forN4jsProjects
-			}
-			checkReferencedProjects(projectDescriptionFeatures, allProjects, predicate);
+	/** Validates the 'dependencies' section of the {@code package.json}. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
+	def checkDependencies(JSONValue dependenciesValue) {
+		// make sure 'dependencies' are allowed in combination with the current project type
+		if (!checkFeature("dependencies", dependenciesValue, not(RE_OR_RL_TYPE))) {
+			return;
+		}
+		
+		val projectType = getProjectDescription().projectType;
+		
+		val dependenciesPredicate = switch(projectType) {
+			case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
+			case API: createProjectPredicateForAPIs
+			default: not(or(RE_OR_RL_TYPE, TEST_TYPE)).forN4jsProjects
 		}
 
-		// Extended runtime environment feature check. Obsolete or not allowed.
-		val extendedREFeatures = #[N4mfPackage.Literals.PROJECT_DESCRIPTION__EXTENDED_RUNTIME_ENVIRONMENT];
-		if (checkFeature(
-			extendedREFeatures,
-			RE_TYPE
-		)) {
-			// Extended RE check.
-			checkReferencedProjects(extendedREFeatures, allProjects, RE_TYPE.forN4jsProjects);
+		val references = getReferencesFromDependenciesObject(dependenciesValue);
+		checkReferencedProjects(references, dependenciesPredicate, "dependencies"); 
+	}
+	
+	/** Validates the 'devDependencies' section of the {@code package.json}. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
+	def checkDevDependencies(JSONValue devDependenciesValue) {
+		// make sure 'devDependencies' are allowed in combination with the current project type
+		if (!checkFeature("devDependencies", devDependenciesValue, not(RE_OR_RL_TYPE))) {
+			return;
+		}
+		
+		val projectType = getProjectDescription().projectType;
+		
+		val dependenciesPredicate = switch(projectType) {
+			case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
+			case API: createProjectPredicateForAPIs
+			default: not(or(RE_OR_RL_TYPE, TEST_TYPE)).forN4jsProjects
 		}
 
-		// Required runtime library feature check. Obsolete or not allowed.
-		val requiredRLFeatures = #[N4mfPackage.Literals.PROJECT_DESCRIPTION__REQUIRED_RUNTIME_LIBRARIES];
-		if (checkFeature(
-			requiredRLFeatures,
-			not(RE_TYPE)
-		)) {
-			// Required RL check.
-			checkReferencedProjects(requiredRLFeatures, allProjects, RL_TYPE.forN4jsProjects);
-		}
-
-		// Provided RL feature check. Obsolete or not allowed.
-		val providedRLFeatures = #[N4mfPackage.Literals.PROJECT_DESCRIPTION__PROVIDED_RUNTIME_LIBRARIES];
-		if (checkFeature(
-			providedRLFeatures,
-			RE_TYPE
-		)) {
-			// Provided RL check.
-			checkReferencedProjects(providedRLFeatures, allProjects, RL_TYPE.forN4jsProjects);
-		}
-
-		// Tested projects feature check. Obsolete or not allowed.
-		val testProjectsFeatures = #[N4mfPackage.Literals.PROJECT_DESCRIPTION__TESTED_PROJECTS];
-		if (checkFeature(
-			testProjectsFeatures,
-			TEST_TYPE
-		)) {
-			// Tested projects check.
-			checkReferencedProjects(testProjectsFeatures, allProjects, not(TEST_TYPE).forN4jsProjects);
-		}
-
-
-		// Initializer module feature check for REs and RLs. Obsolete or not allowed.
-		if (checkFeature(
-			#[N4mfPackage.Literals.PROJECT_DESCRIPTION__INIT_MODULES],
-			RE_OR_RL_TYPE
-		)) {
-			//
-		}
-
-		// Executer module feature check for REs and RLs. Obsolete or not allowed.
-		if (checkFeature(
-			#[N4mfPackage.Literals.PROJECT_DESCRIPTION__EXEC_MODULE],
-			RE_OR_RL_TYPE
-		)) {
-			//
-		}
-
-		// Implementation ID feature check for applications, libraries and processors. Obsolete or not allowed.
-		if (checkFeature(
-			#[N4mfPackage.Literals.PROJECT_DESCRIPTION__IMPLEMENTATION_ID],
-			not(or(RE_OR_RL_TYPE, TEST_TYPE))
-		)) {
-			//
-		}
-
-		// Implemented projects feature check for applications, libraries and processors. Obsolete or not allowed.
-		val implementedProjectsFeatures = #[N4mfPackage.Literals.PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS];
-		if (checkFeature(
-			implementedProjectsFeatures,
-			LIBRARY_TYPE
-		)) {
-			//
-			checkReferencedProjects(implementedProjectsFeatures, allProjects, API_TYPE.forN4jsProjects);
-		}
+		val references = getReferencesFromDependenciesObject(devDependenciesValue);
+		checkReferencedProjects(references, dependenciesPredicate, "devDependencies"); 
 	}
 
-	@Check
-	def void checkOutputFolder(ProjectDescription projectDescription) {
-		val outputPathName = projectDescription.outputPath;
-		if (projectDescription.projectType === ProjectType.VALIDATION || outputPathName === null) {
+	/** Checks the 'n4js.extendedRuntimeEnvironment' section. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT)
+	def checkExtendedRuntimeEnvironment(JSONValue extendedRuntimeEnvironmentValue) {
+		// make sure 'extendedRuntimeEnvironment' is allowed in combination with the current project type
+		if (!checkFeature("extended runtime environment", extendedRuntimeEnvironmentValue, RE_TYPE)) {
 			return;
 		}
 
-		val outputPath = new Path(outputPathName);
-		val sourceTypes = projectDescription.sourceContainers;
-
-		for (SourceContainerDescription sourceFrgmt : sourceTypes) {
-			for (var i = 0; i < sourceFrgmt.paths.size; i++) {
-				val sourcePathStr = sourceFrgmt.paths.get(i);
-				val sourcePath = new Path(sourcePathStr);
-				val srcFrgmtName = sourceFrgmt.getSourceContainerType.getName().toString;
-
-				if (".".equals(sourcePathStr) || sourcePath.equals(outputPath) || sourcePath.isPrefixOf(outputPath)) {
-					val containingFolder = "The output";
-					val nestedFolder = "a " + srcFrgmtName;
-					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
-					addIssue(message, projectDescription, PROJECT_DESCRIPTION__OUTPUT_PATH_RAW, OUTPUT_AND_SOURCES_FOLDER_NESTING);
-				}
-
-				if (".".equals(outputPathName) || outputPath.isPrefixOf(sourcePath)) {
-					val containingFolder = "A " + srcFrgmtName;
-					val nestedFolder = "the output";
-					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
-					addIssue(message, sourceFrgmt, SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW, i, OUTPUT_AND_SOURCES_FOLDER_NESTING);
-				}
-			}
+		val references =  extendedRuntimeEnvironmentValue.referencesFromJSONStringLiteral
+		checkReferencedProjects(references, RE_TYPE.forN4jsProjects, "extended runtime environment");
+	}
+	
+	/** Checks the 'n4js.requiredRuntimeLibraries' section. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES)
+	def checkRequiredRuntimeLibraries(JSONValue requiredRuntimeLibrariesValue) {
+		// make sure 'requiredRuntimeLibraries' is allowed in combination with the current project type
+		if (!checkFeature("required runtime libraries", requiredRuntimeLibrariesValue, not(RE_TYPE))) {
+			return;
 		}
+		
+		val references =  requiredRuntimeLibrariesValue.referencesFromJSONStringArray
+		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "required runtime libraries");
+	}
+	
+	/** Checks the 'n4js.providedRuntimeLibraries' section. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES)
+	def checkProvidedRuntimeLibraries(JSONValue providedRuntimeLibraries) {
+		// make sure 'requiredRuntimeLibraries' is allowed in combination with the current project type
+		if (!checkFeature("provided runtime libraries", providedRuntimeLibraries, RE_TYPE)) {
+			return;
+		}
+		
+		val references =  providedRuntimeLibraries.referencesFromJSONStringArray
+		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "provided runtime libraries");
+	}
+	
+	/** Checks the 'n4js.testedProjects' section. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__TESTED_PROJECTS)
+	def checkTestedProjects(JSONValue testedProjectsValue) {
+		// make sure 'testedProjects' is allowed in combination with the current project type
+		if (!checkFeature("tested projects", testedProjectsValue, TEST_TYPE)) {
+			return;
+		}
+		
+		val references =  testedProjectsValue.referencesFromJSONStringArray
+		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "tested projects");
+	}
+	
+	/** Checks the 'n4js.initModules' section. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__INIT_MODULES)
+	def checkInitModules(JSONValue initModulesValue) {
+		// initModule usage restriction
+		checkFeature(ProjectDescriptionHelper.PROP__INIT_MODULES, initModulesValue, RE_OR_RL_TYPE);
+	}
+	
+	/** Checks the 'n4js.execModule' section. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__EXEC_MODULE)
+	def checkExecModule(JSONValue execModuleValue) {
+		// execModule usage restriction
+		checkFeature(ProjectDescriptionHelper.PROP__EXEC_MODULE, execModuleValue, RE_OR_RL_TYPE);
+	}
+	
+	/** Checks the 'n4js.implementationId' section. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID)
+	def checkImplementationId(JSONValue implementationIdValue) {
+		// implemenationId usage restriction
+		checkFeature(ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID, implementationIdValue, 
+			not(or(RE_OR_RL_TYPE, TEST_TYPE)));
+	}
+	
+	/** Checks the 'n4js.implementedProjects' section. */
+	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS)
+	def checkImplementedProjects(JSONValue implementedProjectsValue) {
+		// implementedProjects usage restriction
+		if(checkFeature(ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, implementedProjectsValue, 
+			not(or(RE_OR_RL_TYPE, TEST_TYPE)))) {
+		
+			val references = implementedProjectsValue.referencesFromJSONStringArray;
+			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects");
+		}
+	}
+
+	/**
+	 * Checks whether a given {@code feature} can be used with the declared project ({@link #getProjectDescription()}),
+	 * using the criteria defined by {@code supportedTypesPredicate}.
+	 * 
+	 * Adds INVALID_FEATURE_FOR_PROJECT_TYPE to {@code pair} otherwise.
+	 * 
+	 * @param featureDescription A textual user-facing description of the checked feature.
+	 * @param supportedTypesPredicate A predicate which indicates whether the feature may be used for a given project type.
+	 */
+	def boolean checkFeature(String featureDescription, JSONValue value, Predicate<ProjectType> supportedTypesPredicate) {
+		val type = getProjectDescription()?.projectType;
+		if (type === null) {
+			// cannot check feature if project type cannot be determined
+			return false;
+		}
+		
+		// if container is a NameValuePair use whole pair as issue target
+		val issueTarget = if (value.eContainer instanceof NameValuePair) value.eContainer else value;
+		
+		// check whether the feature can be used with the current project type
+		if (!supportedTypesPredicate.apply(type)) {
+			addIssue(getMessageForINVALID_FEATURE_FOR_PROJECT_TYPE(featureDescription.toFirstUpper, type.label),
+				issueTarget, INVALID_FEATURE_FOR_PROJECT_TYPE);
+			return false;
+		}
+		
+		// add obsolete-block-warning for empty arrays
+		if (value instanceof JSONArray && (value as JSONArray).elements.empty) {
+			addIssue(getMessageForOBSOLETE_BLOCK(featureDescription), issueTarget, OBSOLETE_BLOCK);
+			return false;
+		}
+		
+		return true;
 	}
 
 	/**
@@ -645,79 +664,138 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		return Predicates.or(API_TYPE.forN4jsProjects, [LIBRARY_TYPE.apply(projectType) && !implementationId.present]);
 	}
 
-	private def checkReferencedProjects(ProjectDescription desc, Iterable<? extends EStructuralFeature> features,
-		Map<String, IN4JSProject> allProjects, Predicate<IN4JSProject> projectPredicate) {
-
-		if (null === desc || features.nullOrEmpty) {
-			return;
+	@Data
+	private static class ValidationProjectReference {
+		String referencedProjectId;
+		VersionConstraint versionConstraint;
+		EObject astRepresentation;
+	}
+	
+	/**
+	 * Returns a list of {@link ValidationProjectReference}s that can be extracted from the given {@code value},
+	 * assuming it represents a valid {@code package.json} array of project IDs.
+	 * 
+	 * The returned references do not include version constraints. 
+	 * 
+	 * Fails silently and returns an empty list, in case {@code value} is malformed. 
+	 */
+	private def List<ValidationProjectReference> getReferencesFromJSONStringArray(JSONValue value) {
+		if (!(value instanceof JSONArray)) {
+			return emptyList;
 		}
+		return (value as JSONArray).elements.filter(JSONStringLiteral)
+			.flatMap[literal | literal.referencesFromJSONStringLiteral ].toList;
+	}
+	
+	/**
+	 * Returns a list of {@link ValidationProjectReference}s that can be extracted from the given {@code value},
+	 * assuming it represents a valid {@code package.json} dependencies object.
+	 * 
+	 * The returned references include version constraints. 
+	 * 
+	 * Fails silently and returns an empty list, in case {@code value} is malformed. 
+	 */
+	private def List<ValidationProjectReference> getReferencesFromDependenciesObject(JSONValue value) {
+		if (!(value instanceof JSONObject)) {
+			return emptyList;
+		}
+		return (value as JSONObject).nameValuePairs
+			.filter[pair | pair.value instanceof JSONStringLiteral]
+			.map[pair |
+				return new ValidationProjectReference(
+					pair.name, 
+					packageJsonHelper.parseVersionConstraint((pair.value as JSONStringLiteral).value),
+					 pair
+				);
+			].toList
+	}
+	
+	/**
+	 * Returns a singleton list of the {@link ValidationProjectReference} that can be created from {@code literal}
+	 * assuming is of type {@link JSONStringLiteral}.
+	 * 
+	 * Returns an empty list, if this does not hold true. 
+	 */ 
+	private def List<ValidationProjectReference> getReferencesFromJSONStringLiteral(JSONValue value) {
+		if (value instanceof JSONStringLiteral) {
+			return #[new ValidationProjectReference(value.value, null, value)];
+		} else {
+			emptyList;
+		}
+	}
+	
+	/**
+	 * Checks the given iterable of referenced projects.
+	 * 
+	 * This includes checking whether the referenced project can be found and validating the given 
+	 * {@link ValidationProjectReference#versionConstraint} if specified.
+	 * 
+	 * @param currentProjectId The project name of the currently validated project.
+	 * @param references The list of project references to validate.
+	 * @param allProjects A map of all projects that are accessible in the workspace.
+	 * @param sectionLabel A user-facing description of which section of project references is currently validated (e.g. "tested projects").
+	 */
+	private def checkReferencedProjects(Iterable<ValidationProjectReference> references, Predicate<IN4JSProject> projectPredicate, String sectionLabel) {
 
-		val references = getNestedValues(desc, features);
-		val existentIds = HashMultimap.<String, ProjectReference>create;
+		val description = getProjectDescription();
+		val currentProjectId = description.projectId;
+		val allProjects = getAllExistingProjectIds();
+		
+		val existentIds = HashMultimap.<String, ValidationProjectReference>create;
 
 		// Check project existence.
-		references.filter(ProjectReference).forEach[
-
-			val id = it?.projectId;
+		references.forEach[ ref |
+			val id = ref.referencedProjectId;
 			// Assuming completely broken AST.
 			if (null !== id) {
+				// obtain corresponding IN4JSProject handle
+				var project = allProjects.get(id);
 
-				var project = null as IN4JSProject;
-				if (allProjects.containsKey(id)) {
-					project = allProjects.get(id);
-				} else {
-					val currentProject = allProjects.get(desc.projectId);
-					project = currentProject?.libraryDependencies?.get(id);
-				}
-
-				// Type cannot be resolved neither from index, hence project does not exist in workspace.
-				// Nor from used libraries of the current project.
+				// Type cannot be resolved from index, hence project does not exist in workspace.
 				if (null === project || null === project.projectType) {
-					val manifestURI = it.eResource.URI;
-					val projectOfManifest = findProject(manifestURI).orNull;
-					if (!projectOfManifest.isExternal) { // in GH-821: remove this condition
-						addIssue(getMessageForNON_EXISTING_PROJECT(id), it, NON_EXISTING_PROJECT);
+					val projectDescriptionFileURI = ref.astRepresentation.eResource.URI;
+					val currentProject = findProject(projectDescriptionFileURI).orNull;
+					if (!currentProject.isExternal) { // in GH-821: remove this condition
+						addIssue(getMessageForNON_EXISTING_PROJECT(id), ref.astRepresentation, NON_EXISTING_PROJECT);
 					}
 				} else {
-					// Create only one single validation issue for a particular project reference.
-					if (desc?.projectId == id) {
-						addProjectReferencesItselfIssue(it.eContainer, features.last, references.indexOf(it));
-					}else if (!projectPredicate.apply(project)) {
-						addInvalidProjectTypeIssue(it.eContainer, id, project.projectType, features.last, references.indexOf(it));
-					}else{
-						checkVersions(it, id, allProjects)
+					// create only one single validation issue for a particular project reference.
+					if (currentProjectId == id) {
+						addProjectReferencesItselfIssue(ref.astRepresentation);
+					} else if (!projectPredicate.apply(project)) {
+						addInvalidProjectTypeIssue(ref.astRepresentation, id, 
+							project.projectType, sectionLabel);
+					} else{
+						checkVersions(ref, id, allProjects)
 					}
-					existentIds.put(id, it);
+					existentIds.put(id, ref);
 				}
 			}
 		];
 
-		checkForDuplicateRuntimeLibraries(desc, existentIds)
+		checkForDuplicateRuntimeLibraries(existentIds)
 	}
 
-	private def checkForDuplicateRuntimeLibraries(ProjectDescription desc,
-		HashMultimap<String, ProjectReference> validProjectRefs) {
-
-		val currentVendor = desc.vendorId
+	private def checkForDuplicateRuntimeLibraries(HashMultimap<String, ValidationProjectReference> validProjectRefs) {
+		// obtain vendor ID of the currently validated project
+		val currentVendor = getProjectDescription().vendorId;
+		
 		validProjectRefs.asMap.keySet.forEach [
-			//grouped just by projectID
+			// grouped just by projectID
 			if (validProjectRefs.get(it).size > 1) {
-				val referencesByNameAndVendor = HashMultimap.<String, ProjectReference>create;
+				val referencesByNameAndVendor = HashMultimap.<String, ValidationProjectReference>create;
 				validProjectRefs.get(it).forEach [
-					var refVendor = it.vendorId
-					//use vendor id of the refering project if not provided explicitly
-					if (refVendor === null)
-						refVendor = currentVendor
-					referencesByNameAndVendor.put(refVendor, it)
+					//use vendor id of the referring project if not provided explicitly
+					referencesByNameAndVendor.put(currentVendor, it)
 				]
 
 				referencesByNameAndVendor.keySet.forEach [
 					val mappedRefs = referencesByNameAndVendor.get(it);
 					if (mappedRefs.size > 1) {
 						mappedRefs 
-							.sortBy[NodeModelUtils.findActualNodeFor(it).offset]
+							.sortBy[NodeModelUtils.findActualNodeFor(it.astRepresentation).offset]
 							.tail
-							.forEach [ref | addDuplicateProjectReferenceIssue(ref, ref.projectId)];
+							.forEach [ ref | addDuplicateProjectReferenceIssue(ref.astRepresentation, ref.referencedProjectId)];
 					}
 				]
 			}
@@ -725,21 +803,19 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/** Checks if version constraint of the project reference is satisfied by any available project.*/
-	private def checkVersions(ProjectReference it, String id, Map<String, IN4JSProject> allProjects) {
-		if (it instanceof ProjectDependency) {
-			val desiredVersion = it.versionConstraint
-			if (desiredVersion !== null) {
-				val availableVersion = allProjects.get(id).version
-				val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro, availableVersion.qualifier);
-				val desiredLower = desiredVersion.lowerVersion
-				val desiredUpper = desiredVersion.upperVersion
-				if(desiredLower !==null){
-					if(desiredUpper !== null){
-						checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id)
-						checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id)
-					}else{
-						checkExactVersion(desiredLower, available, id)
-					}
+	private def checkVersions(ValidationProjectReference ref, String id, Map<String, IN4JSProject> allProjects) {
+		val desiredVersion = ref.versionConstraint
+		if (desiredVersion !== null) {
+			val availableVersion = allProjects.get(id).version
+			val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro, availableVersion.qualifier);
+			val desiredLower = desiredVersion.lowerVersion
+			val desiredUpper = desiredVersion.upperVersion
+			if(desiredLower !==null){
+				if(desiredUpper !== null){
+					checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id)
+					checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id)
+				}else{
+					checkExactVersion(desiredLower, available, id)
 				}
 			}
 		}
@@ -778,115 +854,46 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 	}
 
-	private def boolean checkFeature(ProjectDescription pd, Iterable<? extends EStructuralFeature> features, Predicate<ProjectType> supportedTypesPredicate) {
-
-		// Assuming completely broken AST.
-		if (null === pd || features.nullOrEmpty) {
-			return false;
-		}
-
-		// AST element does not exist at all.
-		val value = pd.eGet(features.head);
-		if (null === value) {
-			return false;
-		}
-		val pdNode = NodeModelUtils.findActualNodeFor(pd);
-		if (pdNode === null) {
-			return false;
-		}
-		val regionKwAndBlock = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(pdNode, features.head.name);
-		if (regionKwAndBlock === null) {
-			return false;
-		}
-
-		val rootAstElement = if (value instanceof EObject) value else pd;
-		val values = pd.getNestedValues(features);
-
-		if (supportedTypesPredicate.apply(pd.projectType)) {
-			if (values.empty) {
-				addIssue(getMessageForOBSOLETE_BLOCK(features.head.label), rootAstElement,
-					regionKwAndBlock.offset, regionKwAndBlock.length, OBSOLETE_BLOCK);
-			}
-		} else {
-			addIssue(getMessageForINVALID_FEATURE_FOR_PROJECT_TYPE(features.head.label.toFirstUpper, pd.projectType.label),
-				rootAstElement, regionKwAndBlock.offset, regionKwAndBlock.length, INVALID_FEATURE_FOR_PROJECT_TYPE
-			);
-			return false; // Interrupt any further validation.
-		}
-
-		return true;
-	}
-
-	private def getNestedValues(EObject it, Iterable<? extends EStructuralFeature> features) {
-		if (null === it || features.nullOrEmpty) {
-			return emptyList;
-		}
-		var obj = it as Object;
-		for (val itr = features.iterator; itr.hasNext; /*nothing*/) {
-			val feature = itr.next;
-			if (obj instanceof EObject) {
-				val value = obj.eGet(feature);
-				if (null === value) {
-					return emptyList;
-				}
-				obj = value;
-				if (!itr.hasNext) {
-					return if (value instanceof List<?>) value.filterNull.toList else singletonList(value);
-				}
-			}
-		}
-		return emptyList;
-	}
-
 	private def getLabel(ProjectType it) {
 		if (null === it) '''''' else it.toString.upperUnderscoreToHumanReadable
-	}
-
-	private def getLabel(EStructuralFeature it) {
-		return LOWER_CAMEL.to(UPPER_UNDERSCORE, name).upperUnderscoreToHumanReadable
 	}
 
 	private def upperUnderscoreToHumanReadable(String s) {
 		s.nullToEmpty.replaceAll('_', ' ').toLowerCase
 	}
 
-	private def addProjectReferencesItselfIssue(EObject eObject, EStructuralFeature feature, int index) {
-		addIssue(messageForPROJECT_REFERENCES_ITSELF, eObject, feature, index, PROJECT_REFERENCES_ITSELF);
+	private def addProjectReferencesItselfIssue(EObject target) {
+		addIssue(messageForPROJECT_REFERENCES_ITSELF, target, PROJECT_REFERENCES_ITSELF);
 	}
 
-	private def addInvalidProjectTypeIssue(EObject eObject, String projectId, ProjectType type, EStructuralFeature feature, int index) {
-		addIssue(getMessageForINVALID_PROJECT_TYPE_REF(projectId, type.label, feature.label),
-			eObject, feature, index, INVALID_PROJECT_TYPE_REF
-		);
+	private def addInvalidProjectTypeIssue(EObject target, String projectId, ProjectType type, String sectionLabel) {
+		addIssue(getMessageForINVALID_PROJECT_TYPE_REF(projectId, type.label, sectionLabel),
+			target, INVALID_PROJECT_TYPE_REF);
 	}
 
-	private def addDuplicateProjectReferenceIssue(EObject eObject, String name) {
-		addIssue(getMessageForDUPLICATE_PROJECT_REF(name), eObject, DUPLICATE_PROJECT_REF);
+	private def addDuplicateProjectReferenceIssue(EObject target, String name) {
+		addIssue(getMessageForDUPLICATE_PROJECT_REF(name), target, DUPLICATE_PROJECT_REF);
 	}
 	
-	private def addVersionMismatchIssue(EObject eObject, String name, String requiredVersion, String presentVersion) {
-		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), eObject, NO_MATCHING_VERSION)
+	private def addVersionMismatchIssue(EObject target, String name, String requiredVersion, String presentVersion) {
+		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), target, NO_MATCHING_VERSION)
 	}
+
+	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
 
 	/**
-	 * Returns a map between all available project IDs and their corresponding {@link IN4JSProject} representations.
+	 * Returns a map between all available project IDs and their corresponding 
+	 * {@link IN4JSProject} representations.
+	 *
+	 * The result of this method is cached in the validation context.
 	 */
 	private def Map<String, IN4JSProject> getAllExistingProjectIds() {
-		val Map<String, IN4JSProject> res = new HashMap
-		findAllProjects.filter[exists].forEach[p | res.put(p.projectId, p)]
-		return res
+		return contextMemoize(ALL_EXISTING_PROJECT_CACHE) [
+			val Map<String, IN4JSProject> res = new HashMap
+			findAllProjects.filter[exists].forEach[p | res.put(p.projectId, p)]
+			return res
+		]
 	}
-
-	private def getLibraryDependencies(IN4JSProject it) {
-		if (null === it || !exists) {
-			return emptyMap;
-		}
-		val map = <String, IN4JSProject>newHashMap();
-		allDirectDependencies.filter(IN4JSArchive).map[projectId -> getProject]
-			.forEach[map.put(key, value)];
-		return unmodifiableMap(map);
-	}
-
 
 	/** Transforms a {@link ProjectTypePredicate} into a predicate for {@link IN4JSProject}. */
 	private def Predicate<IN4JSProject> forN4jsProjects(ProjectTypePredicate predicate) {

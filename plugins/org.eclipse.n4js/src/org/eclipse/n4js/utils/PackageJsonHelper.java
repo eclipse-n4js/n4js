@@ -32,6 +32,7 @@ import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.n4mf.VersionConstraint;
 
 /**
  * A helper for extracting N4JS-specific information from generic {@link JSONPackage} model instances
@@ -179,16 +180,47 @@ public class PackageJsonHelper {
 				moduleLoaderStr);
 	}
 
+	/**
+	 * Parses a {@link VersionConstraint} from the given string representation.
+	 *
+	 * Returns {@code null} if {@code versionConstraintStr} is not a valid version constraint string representation.
+	 */
+	public VersionConstraint parseVersionConstraint(String versionConstraintStr) {
+		if (versionConstraintStr == null) {
+			return null;
+		}
+		VersionConstraint result = ProjectDescriptionUtils.parseVersionRange(versionConstraintStr);
+		if (result == null) {
+			System.err.println("WARNING: invalid or unsupported version constraint: " + versionConstraintStr);
+		}
+		return result;
+	}
+
+	/**
+	 * Parses a {@link SourceContainerType} from the given string representation.
+	 *
+	 * Returns {@code null} if {@code sourceContainerTypeStr} is not a valid source container type string
+	 * representation.
+	 */
+	public SourceContainerType parseSourceContainerType(String sourceContainerTypeStr) {
+		return parseEnumLiteral(N4mfPackage.eINSTANCE.getSourceContainerType(), SourceContainerType.class,
+				sourceContainerTypeStr);
+	}
+
+	/**
+	 * Returns the string representation of the given {@link SourceContainerType}.
+	 *
+	 * @throw {@link NullPointerException} if {@code type} is null.
+	 */
+	public String getSourceContainerTypeRepresentation(SourceContainerType type) {
+		return type.getLiteral().toLowerCase();
+	}
+
 	private ModuleFilterSpecifier createModuleFilterSpecifier(String sourcePath, String moduleSpecifierWithWildcard) {
 		final ModuleFilterSpecifier result = N4mfFactory.eINSTANCE.createModuleFilterSpecifier();
 		result.setSourcePath(sourcePath);
 		result.setModuleSpecifierWithWildcard(moduleSpecifierWithWildcard);
 		return result;
-	}
-
-	private SourceContainerType parseSourceContainerType(String sourceContainerTypeStr) {
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getSourceContainerType(), SourceContainerType.class,
-				sourceContainerTypeStr);
 	}
 
 	private <T extends Enumerator> T parseEnumLiteral(EEnum emfEnumType, Class<T> javaEnumType, String enumLiteralStr) {

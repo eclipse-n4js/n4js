@@ -421,7 +421,7 @@ public class ProjectDescriptionHelper {
 			String name = pair.getName();
 			JSONValue value = pair.getValue();
 			String valueStr = asStringOrNull(value);
-			VersionConstraint versionConstraint = parseVersionConstraint(valueStr);
+			VersionConstraint versionConstraint = packageJsonHelper.parseVersionConstraint(valueStr);
 			if (name != null && versionConstraint != null) {
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(name);
@@ -499,17 +499,6 @@ public class ProjectDescriptionHelper {
 		DeclaredVersion result = ProjectDescriptionUtils.parseVersion(versionStr);
 		if (result == null) {
 			System.err.println("WARNING: invalid or unsupported version: " + versionStr);
-		}
-		return result;
-	}
-
-	private VersionConstraint parseVersionConstraint(String versionConstraintStr) {
-		if (versionConstraintStr == null) {
-			return null;
-		}
-		VersionConstraint result = ProjectDescriptionUtils.parseVersionRange(versionConstraintStr);
-		if (result == null) {
-			System.err.println("WARNING: invalid or unsupported version constraint: " + versionConstraintStr);
 		}
 		return result;
 	}
