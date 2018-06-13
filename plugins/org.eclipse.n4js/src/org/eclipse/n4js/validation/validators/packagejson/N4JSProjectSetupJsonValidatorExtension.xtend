@@ -76,8 +76,15 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static extension com.google.common.base.Strings.nullToEmpty
 
 /**
- * A JSON validator extension that validates {@code package.json} resources 
- * with regard to the N4JS project setup they declare.
+ * A JSON validator extension that validates {@code package.json} resources in the context
+ * of higher-level concepts such as project references, the general project setup and feature restrictions.
+ * 
+ * Generally, this validator includes constraints that are implemented based on the converted {@link ProjectDescription}
+ * as it can be obtained from the {@link ProjectDescriptionHelper}. This especially includes non-local validation
+ * such as the resolution of referenced projects.
+ * 
+ * For lower-level, structural and local validations with regard to {@code package.json} 
+ * files , see {@link PackageJsonValidatorExtension}. 
  */
 @Singleton
 public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidatorExtension {
@@ -91,9 +98,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	/**
 	 * Key to store a converted ProjectDescription instance in the validation context for re-use across different check-methods
-	 * @See #get
+	 * @See {@link #getProjectDescription()} 
 	 */
 	private static final String PROJECT_DESCRIPTION_CACHE = "PROJECT_DESCRIPTION_CACHE";
+	
+	/**
+	 * Key to store a map of all available projects in the validation context for re-use across different check-methods.
+	 * @See {@link #getAllExistingProjectIds()} 
+	 */
+	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
 
 	@Inject
 	private extension IN4JSCore
@@ -120,21 +133,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/**
-	 * Returns the {@link ProjectDescription} that can be created based on the information
-	 * to be found in the currently validated {@link JSONDocument}.
-	 * 
-	 * @See {@link ProjectDescriptionHelper}
-	 */
-	protected def ProjectDescription getProjectDescription() {
-		return contextMemoize(PROJECT_DESCRIPTION_CACHE,
-			[projectDescriptionHelper.convertToProjectDescription(this.document)]);
-	}
-	
-	/**
 	 * According to IDESpec §§12.04 Polyfills at most one Polyfill can be provided for a class.
 	 * Here the consistency according to the given combination of runtime-environment and runtime-libraries of the
 	 * project definition will be checked.
-	 *
 	 */
 	@Check
 	def checkConsistentPolyfills(JSONDocument document) {
@@ -498,8 +499,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	/** Validates the 'dependencies' section of the {@code package.json}. */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
 	def checkDependencies(JSONValue dependenciesValue) {
-		// make sure 'dependencies' are allowed in combination with the current project type
-		if (!checkFeature("dependencies", dependenciesValue, not(RE_OR_RL_TYPE))) {
+		// make sure 'dependencies' feature is allowed in combination with the current project type
+		if (!checkFeatureRestrictions("dependencies", dependenciesValue, not(RE_OR_RL_TYPE))) {
 			return;
 		}
 		
@@ -519,7 +520,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
 	def checkDevDependencies(JSONValue devDependenciesValue) {
 		// make sure 'devDependencies' are allowed in combination with the current project type
-		if (!checkFeature("devDependencies", devDependenciesValue, not(RE_OR_RL_TYPE))) {
+		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_OR_RL_TYPE))) {
 			return;
 		}
 		
@@ -539,7 +540,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__EXTENDED_RUNTIME_ENVIRONMENT)
 	def checkExtendedRuntimeEnvironment(JSONValue extendedRuntimeEnvironmentValue) {
 		// make sure 'extendedRuntimeEnvironment' is allowed in combination with the current project type
-		if (!checkFeature("extended runtime environment", extendedRuntimeEnvironmentValue, RE_TYPE)) {
+		if (!checkFeatureRestrictions("extended runtime environment", extendedRuntimeEnvironmentValue, RE_TYPE)) {
 			return;
 		}
 
@@ -551,7 +552,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES)
 	def checkRequiredRuntimeLibraries(JSONValue requiredRuntimeLibrariesValue) {
 		// make sure 'requiredRuntimeLibraries' is allowed in combination with the current project type
-		if (!checkFeature("required runtime libraries", requiredRuntimeLibrariesValue, not(RE_TYPE))) {
+		if (!checkFeatureRestrictions("required runtime libraries", requiredRuntimeLibrariesValue, not(RE_TYPE))) {
 			return;
 		}
 		
@@ -563,7 +564,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__PROVIDED_RUNTIME_LIBRARIES)
 	def checkProvidedRuntimeLibraries(JSONValue providedRuntimeLibraries) {
 		// make sure 'requiredRuntimeLibraries' is allowed in combination with the current project type
-		if (!checkFeature("provided runtime libraries", providedRuntimeLibraries, RE_TYPE)) {
+		if (!checkFeatureRestrictions("provided runtime libraries", providedRuntimeLibraries, RE_TYPE)) {
 			return;
 		}
 		
@@ -575,7 +576,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__TESTED_PROJECTS)
 	def checkTestedProjects(JSONValue testedProjectsValue) {
 		// make sure 'testedProjects' is allowed in combination with the current project type
-		if (!checkFeature("tested projects", testedProjectsValue, TEST_TYPE)) {
+		if (!checkFeatureRestrictions("tested projects", testedProjectsValue, TEST_TYPE)) {
 			return;
 		}
 		
@@ -587,21 +588,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__INIT_MODULES)
 	def checkInitModules(JSONValue initModulesValue) {
 		// initModule usage restriction
-		checkFeature(ProjectDescriptionHelper.PROP__INIT_MODULES, initModulesValue, RE_OR_RL_TYPE);
+		checkFeatureRestrictions(ProjectDescriptionHelper.PROP__INIT_MODULES, initModulesValue, RE_OR_RL_TYPE);
 	}
 	
 	/** Checks the 'n4js.execModule' section. */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__EXEC_MODULE)
 	def checkExecModule(JSONValue execModuleValue) {
 		// execModule usage restriction
-		checkFeature(ProjectDescriptionHelper.PROP__EXEC_MODULE, execModuleValue, RE_OR_RL_TYPE);
+		checkFeatureRestrictions(ProjectDescriptionHelper.PROP__EXEC_MODULE, execModuleValue, RE_OR_RL_TYPE);
 	}
 	
 	/** Checks the 'n4js.implementationId' section. */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID)
 	def checkImplementationId(JSONValue implementationIdValue) {
 		// implemenationId usage restriction
-		checkFeature(ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID, implementationIdValue, 
+		checkFeatureRestrictions(ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID, implementationIdValue, 
 			not(or(RE_OR_RL_TYPE, TEST_TYPE)));
 	}
 	
@@ -609,7 +610,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS)
 	def checkImplementedProjects(JSONValue implementedProjectsValue) {
 		// implementedProjects usage restriction
-		if(checkFeature(ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, implementedProjectsValue, 
+		if(checkFeatureRestrictions(ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, implementedProjectsValue, 
 			not(or(RE_OR_RL_TYPE, TEST_TYPE)))) {
 		
 			val references = implementedProjectsValue.referencesFromJSONStringArray;
@@ -626,7 +627,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * @param featureDescription A textual user-facing description of the checked feature.
 	 * @param supportedTypesPredicate A predicate which indicates whether the feature may be used for a given project type.
 	 */
-	def boolean checkFeature(String featureDescription, JSONValue value, Predicate<ProjectType> supportedTypesPredicate) {
+	def boolean checkFeatureRestrictions(String featureDescription, JSONValue value, Predicate<ProjectType> supportedTypesPredicate) {
 		val type = getProjectDescription()?.projectType;
 		if (type === null) {
 			// cannot check feature if project type cannot be determined
@@ -664,6 +665,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		return Predicates.or(API_TYPE.forN4jsProjects, [LIBRARY_TYPE.apply(projectType) && !implementationId.present]);
 	}
 
+	/**
+	  * Intermediate validation-only representation of a project reference.
+	  * 
+	  * This may or may not include an {@link #versionConstraint}.
+	  * 
+	  * Holds a trace link {@link #astRepresentation} to its original AST element, so that
+	  * check methods can add issues to the actual elements. 
+	  */
 	@Data
 	private static class ValidationProjectReference {
 		String referencedProjectId;
@@ -854,6 +863,17 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 	}
 
+	/**
+	 * Returns the {@link ProjectDescription} that can be created based on the information
+	 * to be found in the currently validated {@link JSONDocument}.
+	 * 
+	 * @See {@link ProjectDescriptionHelper}
+	 */
+	protected def ProjectDescription getProjectDescription() {
+		return contextMemoize(PROJECT_DESCRIPTION_CACHE,
+			[projectDescriptionHelper.convertToProjectDescription(this.document)]);
+	}
+
 	private def getLabel(ProjectType it) {
 		if (null === it) '''''' else it.toString.upperUnderscoreToHumanReadable
 	}
@@ -878,8 +898,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private def addVersionMismatchIssue(EObject target, String name, String requiredVersion, String presentVersion) {
 		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), target, NO_MATCHING_VERSION)
 	}
-
-	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
 
 	/**
 	 * Returns a map between all available project IDs and their corresponding 

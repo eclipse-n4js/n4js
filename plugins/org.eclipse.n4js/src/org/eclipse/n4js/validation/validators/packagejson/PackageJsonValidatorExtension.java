@@ -45,6 +45,7 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.validation.extension.AbstractJSONValidatorExtension;
 import org.eclipse.n4js.json.validation.extension.CheckProperty;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
+import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -54,6 +55,7 @@ import org.eclipse.n4js.utils.PackageJsonHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator;
 import org.eclipse.xtext.validation.Check;
 
 import com.google.common.base.Optional;
@@ -64,7 +66,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * A JSON validator extension that adds custom validation to {@code package.json} resources.
+ * A JSON validator extension that includes lower-level, structural and local validations with regard to
+ * {@code package.json} resources.
+ *
+ * For a higher-level validation that is more based on the resulting {@link ProjectDescription} model, see
+ * {@link N4JSProjectSetupValidator}.
  */
 @Singleton
 public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtension {
@@ -542,19 +548,19 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final Set<String> sourceContainerPaths = getAllSourceContainerPaths();
 
 		// first, validate all declared filter specifiers
-		final List<ModuleFilterSpecifier> declaredFilterSpecifiers = specifierValues.stream()
+		final List<ValidationModuleFilterSpecifier> declaredFilterSpecifiers = specifierValues.stream()
 				.map(v -> getModuleFilterInformation(v, filterType)).collect(Collectors.toList());
 		declaredFilterSpecifiers.forEach(specifier -> checkModuleFilterSpecifier(specifier));
 
 		// determine the groups of duplicate module filter specifiers (same source container and same filter)
-		final Map<String, List<ModuleFilterSpecifier>> duplicateGroups = declaredFilterSpecifiers.stream()
+		final Map<String, List<ValidationModuleFilterSpecifier>> duplicateGroups = declaredFilterSpecifiers.stream()
 				.filter(i -> i != null)
 				.flatMap(i -> {
 					if (i.sourceContainerPath == null) {
 						// If no source container path has been declared, the filter applies to all declared
 						// source container paths.
 						return sourceContainerPaths.stream()
-								.map(sourceContainer -> new ModuleFilterSpecifier(i.filter, sourceContainer,
+								.map(sourceContainer -> new ValidationModuleFilterSpecifier(i.filter, sourceContainer,
 										i.filterType, i.astRepresentation));
 					} else {
 						// the module specifier filter only applies to the declared source container path
@@ -572,7 +578,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				.filter(e -> e.getValue().size() > 1)
 				.forEach(e -> {
 					// add an issue for each duplicate but its first occurrence
-					for (ModuleFilterSpecifier duplicate : e.getValue()) {
+					for (ValidationModuleFilterSpecifier duplicate : e.getValue()) {
 						duplicateASTElements.add(duplicate.astRepresentation);
 					}
 				});
@@ -584,14 +590,14 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		});
 	}
 
-	/** Validates the given {@link ModuleFilterSpecifier}. */
-	private void checkModuleFilterSpecifier(ModuleFilterSpecifier specifier) {
+	/** Validates the given {@link ValidationModuleFilterSpecifier}. */
+	private void checkModuleFilterSpecifier(ValidationModuleFilterSpecifier specifier) {
 		if (specifier != null && holdsIsValidModuleFilterSpecifier(specifier)) {
 			holdsModuleFilterSpecifierHasMatches(specifier);
 		}
 	}
 
-	private boolean holdsIsValidModuleFilterSpecifier(ModuleFilterSpecifier specifier) {
+	private boolean holdsIsValidModuleFilterSpecifier(ValidationModuleFilterSpecifier specifier) {
 		final Set<String> sourceContainerPaths = getAllSourceContainerPaths();
 
 		// make sure moduleFilterSpecifier.sourceContainerPath has been declared as source container
@@ -627,7 +633,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * Checks whether the given module filter {@code specifier} matches any existing modules/files and add an
 	 * appropriate issue otherwise.
 	 */
-	private boolean holdsModuleFilterSpecifierHasMatches(ModuleFilterSpecifier specifier) {
+	private boolean holdsModuleFilterSpecifierHasMatches(ValidationModuleFilterSpecifier specifier) {
 		final URI uri = specifier.astRepresentation.eResource().getURI();
 		final Path absoluteProjectPath = getAbsoluteProjectPath(uri);
 
@@ -666,10 +672,10 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
-	 * Adds an issue to the given {@link ModuleFilterSpecifier} which indicates that filters of such type must never
-	 * match N4JS modules/resources assuming they do in the validated project.
+	 * Adds an issue to the given {@link ValidationModuleFilterSpecifier} which indicates that filters of such type must
+	 * never match N4JS modules/resources assuming they do in the validated project.
 	 */
-	private void handleN4JSModuleMatchForModuleFilter(ModuleFilterSpecifier specifier) {
+	private void handleN4JSModuleMatchForModuleFilter(ValidationModuleFilterSpecifier specifier) {
 		addIssue(
 				IssueCodes.getMessageForPKGJ_FILTER_NO_N4JS_MATCH(
 						packageJsonHelper.getModuleFilterTypeRepresentation(specifier.filterType)),
@@ -678,9 +684,9 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
-	 * Intermediate representation of a module filter specifier.
+	 * Intermediate validatory-only representation of a module filter specifier.
 	 */
-	private static class ModuleFilterSpecifier {
+	private static class ValidationModuleFilterSpecifier {
 		final String filter;
 		final String sourceContainerPath;
 		final ModuleFilterType filterType;
@@ -688,7 +694,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final JSONValue astRepresentation;
 
 		/** Instantiates a new module filter specifier from the given values. */
-		public ModuleFilterSpecifier(String filter, String sourceContainerPath,
+		public ValidationModuleFilterSpecifier(String filter, String sourceContainerPath,
 				ModuleFilterType filterType, JSONValue astRepresentation) {
 			this.filter = filter;
 			this.sourceContainerPath = sourceContainerPath;
@@ -707,17 +713,18 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * Validates the structure of the given {@code value} as module filter specifier and returns the information that
 	 * can be extracted from it.
 	 *
-	 * Returns the module filter specifier information of {@code value} in terms of a {@link ModuleFilterSpecifier}.
+	 * Returns the module filter specifier information of {@code value} in terms of a
+	 * {@link ValidationModuleFilterSpecifier}.
 	 *
 	 * Returns {@code null} if the given {@code value} is not a valid representation of a module filter specifier.
 	 *
 	 * Similar to {@link PackageJsonHelper#getModuleFilterSpecifier(JSONValue)} but also validates the structure along
 	 * the way.
 	 */
-	private ModuleFilterSpecifier getModuleFilterInformation(JSONValue value, ModuleFilterType type) {
+	private ValidationModuleFilterSpecifier getModuleFilterInformation(JSONValue value, ModuleFilterType type) {
 		// 1st variant:
 		if (value instanceof JSONStringLiteral) {
-			return new ModuleFilterSpecifier(((JSONStringLiteral) value).getValue(), null, type, value);
+			return new ValidationModuleFilterSpecifier(((JSONStringLiteral) value).getValue(), null, type, value);
 		}
 		// 2nd variant:
 		if (value instanceof JSONArray) {
@@ -726,7 +733,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				final JSONValue sourceContainer = elements.get(0);
 				final JSONValue moduleFilter = elements.get(1);
 				if (sourceContainer instanceof JSONStringLiteral && moduleFilter instanceof JSONStringLiteral) {
-					return new ModuleFilterSpecifier(
+					return new ValidationModuleFilterSpecifier(
 							((JSONStringLiteral) moduleFilter).getValue(),
 							((JSONStringLiteral) sourceContainer).getValue(), type, value);
 				}
@@ -753,7 +760,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 						: null;
 				final String moduleFilter = ((JSONStringLiteral) moduleFilterPair.getValue()).getValue();
 
-				return new ModuleFilterSpecifier(moduleFilter, sourceContainer, type, value);
+				return new ValidationModuleFilterSpecifier(moduleFilter, sourceContainer, type, value);
 			}
 		}
 
