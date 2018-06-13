@@ -12,6 +12,8 @@
 set -e
 cd `dirname $0`
 
+npm install
+
 mkdir -p ./lib
 ./node_modules/.bin/pegjs -o ./src-gen/n4mf-parser.js ./pegjs/n4mf.pegjs
 
