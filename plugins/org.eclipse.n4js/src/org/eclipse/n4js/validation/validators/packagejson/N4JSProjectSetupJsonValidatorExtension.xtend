@@ -325,15 +325,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
 			val result = new SoureContainerAwareDependencyTraverser(project).result;
-			
 			if (result.hasCycle) {
-				// obtain all 'dependencies' and 'devDependencies' sections
-				val dependenciesSections = Iterables.concat(
-					getDocumentValues(ProjectDescriptionHelper.PROP__DEPENDENCIES),
-					getDocumentValues(ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
-				);
+				// add issue to 'name' property or alternatively to the whole document
+				val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);
 				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(result.prettyPrint([calculateName]));
-				addIssuePreferred(dependenciesSections, message, PROJECT_DEPENDENCY_CYCLE);
+				addIssuePreferred(#[nameValue], message, PROJECT_DEPENDENCY_CYCLE);
 			} else {
 				//for performance reasons following is not separate check
 				/*
@@ -834,6 +830,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	/** Checks if version constraint of the project reference is satisfied by any available project.*/
 	private def checkVersions(ValidationProjectReference ref, String id, Map<String, IN4JSProject> allProjects) {
 		val desiredVersion = ref.versionConstraint
+		
+		// determine ast representation of the version specifier
+		val refRepresentation = ref.astRepresentation;
+		val versionValue = if (refRepresentation instanceof NameValuePair) refRepresentation.value else refRepresentation; 
+		
 		if (desiredVersion !== null) {
 			val availableVersion = allProjects.get(id).version
 			val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro,
@@ -842,44 +843,44 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			val desiredUpper = desiredVersion.upperVersion
 			if (desiredLower !== null) {
 				if (desiredUpper !== null) {
-					checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id)
-					checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id)
+					checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id, versionValue)
+					checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id, versionValue)
 				} else {
-					checkExactVersion(desiredLower, available, id)
+					checkExactVersion(desiredLower, available, id, versionValue)
 				}
 			}
 		}
 	}
 
-	private def checkExactVersion(DeclaredVersion exactVersion, Version available, String id) {
+	private def checkExactVersion(DeclaredVersion exactVersion, Version available, String id, EObject astRepresentation) {
 		val lower = new Version(exactVersion.major, exactVersion.minor, exactVersion.micro, exactVersion.qualifier);
 		if (!lower.equals(Version.MISSING))
 			if (available.compareTo(lower) !== 0)
-				addVersionMismatchIssue(exactVersion, id, lower.toString, available.toString);
+				addVersionMismatchIssue(astRepresentation, id, lower.toString, available.toString);
 	}
 
-	private def checkLowerVersion(DeclaredVersion desiredLower, boolean exclusive, Version available, String id) {
+	private def checkLowerVersion(DeclaredVersion desiredLower, boolean exclusive, Version available, String id, EObject astRepresentation) {
 		val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
 		switch (available.compareTo(lower)) {
 			case 0: {
 				if (exclusive)
-					addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
+					addVersionMismatchIssue(astRepresentation, id, "higher than " + lower.toString, available.toString);
 			}
 			case -1: {
-				addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
+				addVersionMismatchIssue(astRepresentation, id, "higher than " + lower.toString, available.toString);
 			}
 		}
 	}
 
-	private def checkUpperVersion(DeclaredVersion desiredUpper, boolean exclusive, Version available, String id) {
+	private def checkUpperVersion(DeclaredVersion desiredUpper, boolean exclusive, Version available, String id, EObject astRepresentation) {
 		val upper = new Version(desiredUpper.major, desiredUpper.minor, desiredUpper.micro, desiredUpper.qualifier);
 		switch (available.compareTo(upper)) {
 			case 1: {
-				addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
+				addVersionMismatchIssue(astRepresentation, id, "lower than " + upper.toString, available.toString);
 			}
 			case 0: {
 				if (exclusive)
-					addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
+					addVersionMismatchIssue(astRepresentation, id, "lower than " + upper.toString, available.toString);
 			}
 		}
 	}
@@ -937,14 +938,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	/**
 	 * Adds an issue to each element in {@code preferredTargets}.
 	 *
-	 * If {@code preferredTargets} is empty, adds an issue to the {@code name} property 
-	 * of the {@code package.json} file. 
+	 * If {@code preferredTargets} is empty (or contains null entries only), adds an issue to 
+	 * the {@code name} property of the {@code package.json} file. 
 	 * 
 	 * If there is no {@code name} property, falls back to {@link #getDocument()}.
 	 */ 
 	private def void addIssuePreferred(Iterable<? extends EObject> preferredTargets, String message, String issueCode) {
-		if (!preferredTargets.empty) {
-			preferredTargets.forEach[t | addIssue(message, t, issueCode); ]
+		if (!preferredTargets.filterNull.empty) {
+			preferredTargets.filterNull
+				.forEach[t | addIssue(message, t, issueCode); ]
 			return;
 		}
 		// fall back to property 'name' 
