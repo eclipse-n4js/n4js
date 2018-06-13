@@ -5,6 +5,10 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 
 /**
  * An extension interface that allows to provide custom validation for {@link JSONDocument}s.
+ * 
+ * A registered {@link IJSONValidatorExtension} will be executed for all JSON resource in the workspace. In case a
+ * validator extension only applies to JSON files that meet certain criteria, the validator must check those conditions
+ * first.
  */
 public interface IJSONValidatorExtension {
 	/**
