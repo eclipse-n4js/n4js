@@ -165,7 +165,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	 * Returns the collection of {@link JSONValue} that have been associated with the given key-path (includes
 	 * duplicates).
 	 */
-	protected Collection<JSONValue> getDocumentValue(String keyPath) {
+	protected Collection<JSONValue> getDocumentValues(String keyPath) {
 		return getDocumentValues().get(keyPath);
 	}
 	

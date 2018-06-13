@@ -965,7 +965,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * source container paths.
 	 */
 	private Multimap<SourceContainerType, List<JSONStringLiteral>> doGetSourceContainers() {
-		final Collection<JSONValue> sourcesValues = getDocumentValue(
+		final Collection<JSONValue> sourcesValues = getDocumentValues(
 				ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES);
 
 		// first check whether n4js.sources section has been defined at all

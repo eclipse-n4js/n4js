@@ -31,7 +31,6 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
-import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.JSON.JSONValue
 import org.eclipse.n4js.json.JSON.NameValuePair
@@ -311,26 +310,28 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		return types;
 	}
 	
-	/** IDEBUG-266 issue error warning on cyclic dependencies*/
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
-	def checkCyclicDependencies(JSONValue dependenciesValue) {
-		val project = findProject(dependenciesValue.eResource.URI).orNull;
+	/** IDEBUG-266 issue error warning on cyclic dependencies. */
+	@Check
+	def checkCyclicDependencies(JSONDocument document) {
+		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
 			val result = new SoureContainerAwareDependencyTraverser(project).result;
+			
 			if (result.hasCycle) {
-				addIssue(
-					getMessageForPROJECT_DEPENDENCY_CYCLE(result.prettyPrint([calculateName])),
-					dependenciesValue.eContainer,
-					JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
-					PROJECT_DEPENDENCY_CYCLE
+				// obtain all 'dependencies' and 'devDependencies' sections
+				val dependenciesSections = Iterables.concat(
+					getDocumentValues(ProjectDescriptionHelper.PROP__DEPENDENCIES),
+					getDocumentValues(ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
 				);
+				val message = getMessageForPROJECT_DEPENDENCY_CYCLE(result.prettyPrint([calculateName]));
+				addIssuePreferred(dependenciesSections, message, PROJECT_DEPENDENCY_CYCLE);
 			} else {
 				//for performance reasons following is not separate check
 				/*
 				 * otherwise we would traverse all transitive dependencies multiple times,
 				 * and we would care for cycles
 				 */
-				project.holdsProjectWithTestFragmentDependsOnTestLibrary(dependenciesValue)
+				project.holdsProjectWithTestFragmentDependsOnTestLibrary()
 			}
 		}
 	}
@@ -340,7 +341,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Checks if a project containing {@link SourceContainerType#TEST} depends 
 	 * (directly or transitively) on a {@link ProjectType#RUNTIME_LIBRARY} test runtime library.
 	 */
-	private def holdsProjectWithTestFragmentDependsOnTestLibrary(IN4JSProject project, JSONValue dependenciesValue) {
+	private def holdsProjectWithTestFragmentDependsOnTestLibrary(IN4JSProject project) {
 
 		val JSONValue sourcesSection = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES, JSONValue);
 		val List<SourceContainerDescription> sourceContainers = packageJsonHelper.getSourceContainerDescriptions(sourcesSection);
@@ -354,14 +355,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if(!hasTestFragment){
 			return;
 		}
-
+		
 		if(!anyDependsOnTestLibrary(#[project])){
-			addIssue(
-					getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT),
-					dependenciesValue.eContainer,
-					JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
-					PROJECT_DEPENDENCY_CYCLE
-				);
+			addIssuePreferred(#[], getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT), PROJECT_DEPENDENCY_CYCLE); 
 		}
 	}
 	
@@ -898,6 +894,29 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private def addVersionMismatchIssue(EObject target, String name, String requiredVersion, String presentVersion) {
 		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), target, NO_MATCHING_VERSION)
 	}
+	
+	/**
+	 * Adds an issue to each element in {@code preferredTargets}.
+	 *
+	 * If {@code preferredTargets} is empty, adds an issue to the {@code name} property 
+	 * of the {@code package.json} file. 
+	 * 
+	 * If there is no {@code name} property, falls back to {@link #getDocument()}.
+	 */ 
+	private def void addIssuePreferred(Iterable<? extends EObject> preferredTargets, String message, String issueCode) {
+		if (!preferredTargets.empty) {
+			preferredTargets.forEach[t | addIssue(message, t, issueCode); ]
+			return;
+		}
+		// fall back to property 'name' 
+		val nameValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__NAME);
+		if (nameValue !== null) {
+			addIssue(message, nameValue, issueCode);
+			return;
+		}
+		// finally fall back to document
+		addIssue(message, document, issueCode)
+	}
 
 	/**
 	 * Returns a map between all available project IDs and their corresponding 
@@ -917,7 +936,4 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private def Predicate<IN4JSProject> forN4jsProjects(ProjectTypePredicate predicate) {
 		return [predicate.apply(projectType)];
 	}
-
-
-
 }

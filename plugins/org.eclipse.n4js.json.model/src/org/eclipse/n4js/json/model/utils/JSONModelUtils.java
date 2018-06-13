@@ -209,7 +209,7 @@ public class JSONModelUtils {
 	 * See {@link #setProperty(JSONObject, String, JSONValue)} and {@link #createStringLiteral(String)}
 	 */
 	public static JSONStringLiteral setProperty(JSONObject object, String name, String value) {
-		return addProperty(object, name, createStringLiteral(value));
+		return setProperty(object, name, createStringLiteral(value));
 	}
 
 	/**
