@@ -580,7 +580,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		val references =  testedProjectsValue.referencesFromJSONStringArray
-		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "tested projects");
+		checkReferencedProjects(references, not(TEST_TYPE).forN4jsProjects, "tested projects");
 	}
 	
 	/** Checks the 'n4js.initModules' section. */

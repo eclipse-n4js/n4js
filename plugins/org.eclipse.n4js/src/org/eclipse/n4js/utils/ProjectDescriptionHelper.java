@@ -364,7 +364,7 @@ public class ProjectDescriptionHelper {
 			switch (name) {
 			case PROP__PROJECT_TYPE:
 				// parseProjectType returns null if value is invalid, this will
-				// cause the setProjectType setter to use default value of ProjectType.
+				// cause the setProjectType setter to use the default value of ProjectType.
 				target.setProjectType(packageJsonHelper.parseProjectType(asStringOrNull(value)));
 				break;
 			case PROP__VENDOR_ID:

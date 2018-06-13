@@ -461,7 +461,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return;
 		}
 		// use normalized output path for validation
-		final String outputPath = FileUtils.normalize(((JSONStringLiteral) outputPathValue).getValue());
+		final String normalizedOutputPathValue = FileUtils.normalize(((JSONStringLiteral) outputPathValue).getValue());
+		final Path outputPath = new File(normalizedOutputPathValue).toPath();
 
 		// do not perform check for projects of type 'validation'
 		if (((getProjectType() == ProjectType.VALIDATION) || (outputPath == null))) {
@@ -474,7 +475,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			// iterate over all source container paths (in terms of string literals)
 			for (JSONStringLiteral sourceContainerSpecifier : sourceContainerType.getValue()) {
 				// use normalized source path for checks
-				final String sourcePath = FileUtils.normalize(sourceContainerSpecifier.getValue());
+				final String normalizedSourcePathValue = FileUtils.normalize(sourceContainerSpecifier.getValue());
+				final Path sourcePath = new File(normalizedSourcePathValue).toPath();
 
 				// obtain descriptive name of the source container type
 				final String srcFrgmtName = sourceContainerType.getKey().getLiteral().toLowerCase();
@@ -929,7 +931,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/**
 	 * Returns the project type as declared by the currently validated {@link JSONDocument}.
 	 *
-	 * Returns {@code null} if the project type cannot be determined.
+	 * Returns {@link ProjectType#VALIDATION} if the project type cannot be determined.
 	 */
 	private ProjectType getProjectType() {
 		final JSONValue projectTypeValue = getSingleDocumentValue(
@@ -937,7 +939,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (projectTypeValue instanceof JSONStringLiteral) {
 			return packageJsonHelper.getProjectType(projectTypeValue);
 		} else {
-			return null;
+			return ProjectType.get(0);
 		}
 	}
 
