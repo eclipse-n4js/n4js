@@ -4,6 +4,7 @@
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
   },
+  "private": true,
   "license": "EPL-1.0",
   "repository": {
     "type": "git",
