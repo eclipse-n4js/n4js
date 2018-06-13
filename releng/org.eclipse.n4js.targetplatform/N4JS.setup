@@ -406,7 +406,7 @@
         <repository
             url="http://download.eclipse.org/webtools/downloads/drops/R3.8.1/R-3.8.1-20160912100321/repository"/>
         <repository
-            url="http://download.eclipse.org/tm/updates/4.0/GA"/>
+            url="http://download.eclipse.org/tm/updates/OLD-STUFF/4.0/GA"/>
         <repository
             url="http://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952"/>
         <repository
