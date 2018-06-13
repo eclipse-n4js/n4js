@@ -320,6 +320,12 @@ public class ProjectDescriptionHelper {
 	private <T extends EObject> T loadXtextFile(URI uri, Class<T> expectedTypeOfRoot) {
 		try {
 			ResourceSet resourceSet = resourceSetProvider.get();
+
+			// check whether a file exists at the given URI
+			if (!exists(resourceSet, uri)) {
+				return null;
+			}
+
 			Resource resource = resourceSet.getResource(uri, true);
 			if (resource != null) {
 				List<EObject> contents = resource.getContents();
@@ -337,8 +343,20 @@ public class ProjectDescriptionHelper {
 			return null;
 		} catch (Exception e) {
 			// TODO Luca: I think this message is not valid anymore?
-			throw new WrappedException("unexpected Xtext file URI: " + uri, e);
+			throw new WrappedException("Failed to load project description resource at " + uri, e);
 		}
+	}
+
+	/**
+	 * Checks whether {@code uri} points to a resource that actually exists on the file system.
+	 *
+	 * @param resourceSet
+	 *            The resource set to use for the file system access.
+	 * @param uri
+	 *            The uri to check.
+	 */
+	private boolean exists(ResourceSet resourceSet, URI uri) {
+		return resourceSet.getURIConverter().exists(uri, null);
 	}
 
 	/**
