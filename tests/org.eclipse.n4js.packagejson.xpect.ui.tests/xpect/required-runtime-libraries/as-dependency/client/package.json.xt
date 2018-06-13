@@ -15,43 +15,37 @@
         JavaProject "client" {
             File "package.json" {from="../client/package.json.xt"}
         }
-        JavaProject "libA" {
-            File "package.json" {from="../libA/package.json"}
+        JavaProject "rl1" {
+            File "package.json" {from="../rl1/package.json"}
         }
-        JavaProject "libB" {
-            File "package.json" {from="../libB/package.json"}
+        JavaProject "rl2" {
+            File "package.json" {from="../rl2/package.json"}
         }
-        JavaProject "libC" {
-            File "package.json" {from="../libC/package.json"}
+        JavaProject "rl3" {
+            File "package.json" {from="../rl3/package.json"}
         }
     }
 
     END_SETUP
  */
- 
 {
 	"name": "client",
-	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		"libA": "*",
-		"libB": "*",
-		"libC": "*"
+		// XPECT noerrors
+		"rl1": "*"
+	},
+	"devDependencies": {
+		"rl3": "*"
 	},
 	"n4js": {
 		"projectType": "library",
-		"vendorId": "MyVendorID",
-		"vendorName": "My Vendor Name",
-		"output": "src-gen",
 		"requiredRuntimeLibraries": [
-			//XPECT noerrors --> "first occurance"
-			"libA",
-			//XPECT noerrors --> "first occurance"
-			"libB",
-			// XPECT errors -->"Duplicate project reference libA." at ""libA""
-			"libA",
-			// XPECT errors -->"Duplicate project reference libB." at ""libB""
-			"libB",
-			"libC"
+			// XPECT noerrors 
+			"rl1",
+			// XPECT errors --> "The project reference rl2 in required runtime libraries must also be declared as explicit project dependency in dependencies or devDependencies. " at ""rl2""
+			"rl2",
+			// XPECT noerrors
+			"rl3"
 		]
 	}
 }

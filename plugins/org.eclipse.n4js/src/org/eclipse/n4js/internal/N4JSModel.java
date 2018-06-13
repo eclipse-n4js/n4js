@@ -319,9 +319,7 @@ public class N4JSModel {
 		URI location = project.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			result.addAll(resolveProjectReferences(project, description.getRequiredRuntimeLibraries()));
 			result.addAll(resolveProjectReferences(project, description.getProjectDependencies()));
-			result.addAll(getTestedProjects(project));
 			if (includeApis) {
 				result.addAll(resolveProjectReferences(project, description.getImplementedProjects()));
 			}
