@@ -75,7 +75,7 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.rse.files.ui" version="3.2.200.201502052140"/>
       <unit id="org.eclipse.rse.subsystems.files.local" version="2.1.300.201403251512"/>
-      <repository location="http://download.eclipse.org/tm/updates/OLD-STUFF/4.0/?d"/>
+      <repository location="http://download.eclipse.org/tm/updates/OLD-STUFF/4.0/GA/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.gef" version="3.11.0.201606061308"/>
