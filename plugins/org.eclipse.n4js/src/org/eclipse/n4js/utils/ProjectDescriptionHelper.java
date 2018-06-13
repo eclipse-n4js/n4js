@@ -422,13 +422,14 @@ public class ProjectDescriptionHelper {
 			}
 		}
 		// set default values
+		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 		if (applyDefaultValues) {
 			applyDefaults(target, location);
 		}
 		// sanitize and set value of top-level property "main"
 		// (note: this makes use of the source containers, so it possibly relies on default values having been applied)
 		if (valueOfTopLevelPropertyMain != null) {
-			if (target.getMainModule() == null) { // only if no N4JS-specific "mainModule" property was given
+			if (!hasN4jsSpecificMainModule) { // only if no N4JS-specific "mainModule" property was given
 				List<String> sourceContainerPaths = target.getSourceContainers().stream()
 						.flatMap(scd -> scd.getPaths().stream())
 						.collect(Collectors.toList());
