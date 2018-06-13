@@ -25,29 +25,29 @@ class ProjectDescriptionUtilsTest {
 
 	@Test
 	def void testSanitizeMainModulePath() {
-		assertEquals("a/b/c/module", sanitizeMainModulePath("src/a/b/c/module.js", #["src"]));
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("src/a/b/c/module.js", #["src"]));
 
-		assertEquals("a/b/c/module", sanitizeMainModulePath("src/js/a/b/c/module.js", #["src/js"]));
-		assertEquals("a/b/c/module", sanitizeMainModulePath("src/js/a/b/c/module.js", #["./src/js"]));
-		assertEquals("a/b/c/module", sanitizeMainModulePath("./src/js/a/b/c/module.js", #["src/js"]));
-		assertEquals("a/b/c/module", sanitizeMainModulePath("src/./js/a/xxx/yyy/../zzz/../../b/c/module.js", #["src/js"]));
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("src/js/a/b/c/module.js", #["src/js"]));
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("src/js/a/b/c/module.js", #["./src/js"]));
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("./src/js/a/b/c/module.js", #["src/js"]));
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("src/./js//a/xxx/yyy///../zzz/..//../b/c/module.js", #["src/js"]));
 
-		assertEquals("a/b/c/module", sanitizeMainModulePath("src3/a/b/c/module.js", #["src1", "src2", "src3"]));
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("src3/a/b/c/module.js", #["src1", "src2", "src3"]));
 
-		assertEquals("a/b/c/module", sanitizeMainModulePath("a/b/c/module.js", #["."]));
-		assertEquals("a/b/c/module", sanitizeMainModulePath("a/b/c/module.js", #["./dummy2/.."]));
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("a/b/c/module.js", #["."]));
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("a/b/c/module.js", #["./dummy2/.."]));
 	}
 
 	@Test
 	def void testSanitizeMainModulePathInvalid() {
-		assertEquals(null, sanitizeMainModulePath("src/a/b/c/module.js", #[]));
-		assertEquals(null, sanitizeMainModulePath("src/a/b/c/module.js", #[""]));
-		assertEquals(null, sanitizeMainModulePath("src/a/b/c/module.js", #[null]));
-		assertEquals(null, sanitizeMainModulePath("src/a/b/c/module", #["src"])); // wrong file extension
-		assertEquals(null, sanitizeMainModulePath("src/a/b/c/module.n4js", #["src"])); // wrong file extension
-		assertEquals(null, sanitizeMainModulePath("some/where/else/a/b/c/module.js", #["src"]));
-		assertEquals(null, sanitizeMainModulePath("src/a/b/c/module.js", #["src1", "src2", "src3"]));
-		assertEquals(null, sanitizeMainModulePath("a/../../b/c/module.js", #["src"]));
+		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.js", #[]));
+		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.js", #[""]));
+		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.js", #[null]));
+		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module", #["src"])); // wrong file extension
+		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.n4js", #["src"])); // wrong file extension
+		assertEquals(null, convertMainPathToModuleSpecifier("some/where/else/a/b/c/module.js", #["src"]));
+		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.js", #["src1", "src2", "src3"]));
+		assertEquals(null, convertMainPathToModuleSpecifier("a/../../b/c/module.js", #["src"]));
 	}
 
 	@Test

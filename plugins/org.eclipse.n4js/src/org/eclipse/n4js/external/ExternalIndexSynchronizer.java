@@ -212,14 +212,18 @@ public abstract class ExternalIndexSynchronizer {
 
 		boolean isProjectDescriptionFile = true;
 		isProjectDescriptionFile &= resLocation.endsWith(IN4JSProject.PACKAGE_JSON);
-		isProjectDescriptionFile &= resLocation.substring(resLocation.length()).split(File.separator).length == 1;
+		isProjectDescriptionFile &= resLocation.substring(nodeModulesLocation.length())
+				.split(File.separator).length == 1;
 
 		if (isProjectDescriptionFile) {
 			Iterable<IEObjectDescription> pds = res.getExportedObjectsByType(JSONPackage.eINSTANCE.getJSONDocument());
 			IEObjectDescription pDescription = pds.iterator().next();
 			String nameFromPackageJSON = pDescription
 					.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_ID_KEY);
-			Preconditions.checkState(name.equals(nameFromPackageJSON));
+			if (!name.equals(nameFromPackageJSON)) {
+				throw new IllegalStateException(
+						"name mismatch: name=" + name + "; nameFromPackageJSON=" + nameFromPackageJSON);
+			}
 
 			version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
 		}
