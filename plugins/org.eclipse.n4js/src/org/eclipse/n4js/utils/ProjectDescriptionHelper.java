@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
@@ -147,21 +148,30 @@ public class ProjectDescriptionHelper {
 
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location}.
-	 *
+	 * <p>
 	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json and
 	 * manifest.n4mf file).
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
-		return loadProjectDescriptionAtLocation(location, packageJSON);
+		return loadProjectDescriptionAtLocation(location, packageJSON, true);
 	}
 
 	/**
 	 * Same as {@link #loadPackageJSONAtLocation(URI)}, but for cases in which the JSONDocument of the main package.json
 	 * file (but not the fragment) has already been loaded.
+	 *
+	 * @param mergeFragment
+	 *            if <code>true</code>, a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} will be loaded
+	 *            and merged into the given package.json document before conversion to {@link ProjectDescription} (given
+	 *            document will *not* be changed).
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
-		mergePackageJSONFragmentAtLocation(location, packageJSON);
+	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON,
+			boolean mergeFragment) {
+		if (mergeFragment) {
+			packageJSON = EcoreUtil.copy(packageJSON);
+			mergePackageJSONFragmentAtLocation(location, packageJSON);
+		}
 		adjustMainPathIfPointingToFolder(location, packageJSON);
 		ProjectDescription pdFromPackageJSON = packageJSON != null ? convertToProjectDescription(packageJSON) : null;
 		if (pdFromPackageJSON != null) {
@@ -260,6 +270,7 @@ public class ProjectDescriptionHelper {
 		return packageJSON;
 	}
 
+	/** Will change the given 'targetPackageJSON' document in place. */
 	private boolean mergePackageJSONFragmentAtLocation(URI location, JSONDocument targetPackageJSON) {
 		JSONDocument fragment = loadXtextFileAtLocation(location, N4JSGlobals.PACKAGE_FRAGMENT_JSON,
 				JSONDocument.class);
@@ -350,7 +361,7 @@ public class ProjectDescriptionHelper {
 	 * a file "index.js" in that folder will be used as main module (for details see
 	 * {@link ProjectDescriptionUtils#convertMainPathToModuleSpecifier(String, List)}).
 	 */
-	public ProjectDescription convertToProjectDescription(JSONDocument packageJSON) {
+	private ProjectDescription convertToProjectDescription(JSONDocument packageJSON) {
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();

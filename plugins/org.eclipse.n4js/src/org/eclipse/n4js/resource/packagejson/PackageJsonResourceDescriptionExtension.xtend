@@ -171,7 +171,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = projectDescriptionHelper.loadProjectDescriptionAtLocation(projectLocation, document);
+		val description = projectDescriptionHelper.loadProjectDescriptionAtLocation(projectLocation, document, true);
 		if(description === null) {
 			LOGGER.error("creation of EObjectDescriptions failed: cannot load project description at location: " + projectLocation);
 			return;

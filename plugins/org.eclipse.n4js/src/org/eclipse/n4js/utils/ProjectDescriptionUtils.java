@@ -34,7 +34,7 @@ public class ProjectDescriptionUtils {
 	 * Given a path to the main module of an NPM project as given by the "main" property in a package.json, this method
 	 * will return the corresponding N4JS module specifier. Returns <code>null</code> if given <code>null</code> or an
 	 * invalid path (e.g. absolute path).
-	 *
+	 * <p>
 	 * Note: this methods does not implement the package.json feature that a "main" path may point to a folder and then
 	 * a file "index.js" in that folder will be used as main module (reason: this method cannot access the file system);
 	 * to support this, the path given to this method must be adjusted *before* invoking this method (i.e. append
