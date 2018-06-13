@@ -27,6 +27,10 @@
 		"packages/org.eclipse.n4js.mangelhaft.assert",
 		"packages/org.eclipse.n4js.mangelhaft.reporter.ide",
 		"packages/org.eclipse.n4js.mangelhaft.runner.ide",
-		"packages/n4js-cli"
+		"packages/n4js-cli",
+		"packages/n4js-mangelhaft-cli",
+		"packages/n4mf-parser",
+		"packages/org.eclipse.n4js.mangelhaft.reporter.xunit",
+		"packages/org.eclipse.n4js.mangelhaft.reporter.console"
 	]
 }

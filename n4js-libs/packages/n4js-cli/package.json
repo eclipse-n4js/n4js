@@ -2,7 +2,7 @@
   "name": "n4js-cli",
   "author": "NumberFour AG <npm@numberfour.eu>",
   "license": "EPL-1.0",
-  "repository": "https://github.com/NumberFour/n4js-libs",
+  "repository": "https://github.com/eclipse/n4js",
   "description": "N4JS compiler and command line tools.",
   "bin": {
     "n4jsc": "./bin/n4jsc.js"
