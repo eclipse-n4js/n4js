@@ -635,12 +635,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			return false;
 		}
 		
-		// add obsolete-block-warning for empty arrays
-		if (value instanceof JSONArray && (value as JSONArray).elements.empty) {
-			addIssue(getMessageForOBSOLETE_BLOCK(featureDescription), issueTarget, OBSOLETE_BLOCK);
-			return false;
-		}
-		
 		return true;
 	}
 
