@@ -129,7 +129,9 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		println("    FROM: " + n4jsLibsRoot);
 		println("    TO  : " + actualTargetPath);
 		final File[] n4jsLibsSubfolders = n4jsLibsRoot
-				.listFiles(file -> file.isDirectory() && !file.getName().contains("n4js-cli"));
+				.listFiles(file -> file.isDirectory() && !file.getName().contains("n4js-cli")
+						&& !file.getName().contains("console") && !file.getName().contains("xunit")
+						&& !file.getName().contains("n4js-mangelhaft-cli") && !file.getName().contains("n4mf"));
 		copyN4jsLibsToShippedCodeFolder(n4jsLibsSubfolders, actualTargetPath);
 		// step 4: run "npm install" in project "n4js-node"
 		// TODO let HLC resolve missing dependencies
