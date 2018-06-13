@@ -1,5 +1,6 @@
 {
   "name": "n4js-runtime-fetch",
+  "version": "0.1.0",
   "author": {
     "name": "NumberFour AG",
     "email": "npm@numberfour.eu"
@@ -19,7 +20,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "n4js-runtime-es2015": "latest"
+    "n4js-runtime-es2015": "^0.1.0"
   },
   "n4js_manifest": {
     "ProjectId": "n4js-runtime-fetch",

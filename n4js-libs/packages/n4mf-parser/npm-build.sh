@@ -12,7 +12,7 @@
 set -e
 cd `dirname $0`
 
-mkdir -p ./lib
+mkdir -p ./src-gen
 ./node_modules/.bin/pegjs -o ./src-gen/n4mf-parser.js ./pegjs/n4mf.pegjs
 
 npm test
