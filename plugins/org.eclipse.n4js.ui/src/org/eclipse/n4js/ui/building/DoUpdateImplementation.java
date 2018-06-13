@@ -112,12 +112,9 @@ class DoUpdateImplementation {
 		try {
 			initLoadOperation();
 
-			int index = 0;
 			while (!queue.isEmpty()) {
 				progress.setWorkRemaining(queue.size() * 4 + 1);
-				int clusterIndex = doUpdateCluster(index);
-
-				index += clusterIndex;
+				int clusterIndex = doUpdateCluster();
 
 				installSourceLevelURIs();
 				initLoadOperation();
@@ -143,7 +140,7 @@ class DoUpdateImplementation {
 		allRemainingURIs = getRemainingURIs();
 	}
 
-	private int doUpdateCluster(int baseIndex) {
+	private int doUpdateCluster() {
 		int clusterIndex = 0;
 
 		final List<Delta> changedDeltas = Lists.newArrayList();
@@ -156,7 +153,6 @@ class DoUpdateImplementation {
 			Resource resource = null;
 			Delta newDelta = null;
 
-			// Stopwatch resourceWatch = Stopwatch.createUnstarted();
 			try {
 				// Load the resource and create a new resource description
 				LoadResult loadResult = loadOperation.next();
@@ -170,7 +166,6 @@ class DoUpdateImplementation {
 					break;
 				}
 
-				// resourceWatch.start();
 				buildLogger.log("Linking " + changedURI);
 				newDelta = resolveLinks(actualResourceURI, resource);
 			} catch (final WrappedException ex) {
@@ -199,8 +194,7 @@ class DoUpdateImplementation {
 					newDelta = createRemoveDelta(changedURI);
 				}
 			}
-			// long elapsedMillis = resourceWatch.elapsed(TimeUnit.MILLISECONDS);
-			// System.out.println("build|" + changedURI + "|" + elapsedMillis);
+
 			if (newDelta != null) {
 				clusterIndex++;
 				if (processNewDelta(newDelta)) {
@@ -217,9 +211,9 @@ class DoUpdateImplementation {
 		final IResourceDescription.Manager manager = state
 				.getResourceDescriptionManager(resource, actualResourceURI);
 		if (manager != null) {
-			// Resolve links here!
 			try {
 				reportProgress();
+				// Resolve links here!
 				EcoreUtil2.resolveLazyCrossReferences(resource, cancelMonitor);
 				final IResourceDescription description = manager.getResourceDescription(resource);
 				final IResourceDescription copiedDescription = BuilderStateUtil.create(description);

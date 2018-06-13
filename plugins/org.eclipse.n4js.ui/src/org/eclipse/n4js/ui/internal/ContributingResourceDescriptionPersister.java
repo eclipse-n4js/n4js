@@ -47,7 +47,6 @@ public class ContributingResourceDescriptionPersister extends EMFBasedPersister 
 	@Override
 	protected void scheduleRecoveryBuild() {
 		requiresRecoveryBuild.compareAndSet(false, true);
-		// super.scheduleRecoveryBuild();
 	}
 
 	/**

@@ -154,25 +154,13 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	@Inject
 	private void injectExternalLibraryWorkspace(ISharedStateContributionRegistry contributionRegistry) {
 		try {
+			// we are in the context of shared xtext injector
 			this.externalLibraryWorkspace = contributionRegistry
 					.getSingleContributedInstance(ExternalLibraryWorkspace.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * After the load phase, checks whether the underlying index content is empty or a recovery builder was scheduled,
-	 * if so, populates the index content with the external libraries as well.
-	 */
-	// @Override
-	// public synchronized void load() {
-	// super.load();
-	// // On the very first startup there will be recovery build.
-	// if (descriptionPersister.isRecoveryBuildRequired()) {
-	// descriptionPersister.scheduleRecoveryBuildOnContributions();
-	// }
-	// }
 
 	/**
 	 * {@inheritDoc}
@@ -379,12 +367,6 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 			}
 		}
 	}
-
-	// TODO IDE-2493 multiple languages topic
-	// we are in the context of shared xtext injector
-	// if we just inject IN4JSCore we get different @Singleton
-	// instance then the one obtained from N4Injector, which
-	// in turn gives us different state of workspace
 
 	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */
 	private IProject getProject(BuildData buildData) {

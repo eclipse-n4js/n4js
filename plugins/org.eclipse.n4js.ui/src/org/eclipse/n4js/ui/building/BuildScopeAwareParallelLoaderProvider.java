@@ -37,6 +37,7 @@ public class BuildScopeAwareParallelLoaderProvider extends AbstractResourceLoade
 	private static final int nrOfThreads;
 
 	static {
+		// default impl that is proven to work nicely and provide a good scale between i/o and parsing performance.
 		int nProcessors = Runtime.getRuntime().availableProcessors();
 		int nThreads = Math.max(2, Math.min(4, nProcessors));
 		nrOfThreads = nThreads;
