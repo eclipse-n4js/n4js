@@ -23,10 +23,6 @@ function echo_exec {
     $@
 }
 
-if [ -f .npmrc ]; then
-	rm .npmrc
-fi
-
 HOST_NAME=`hostname`
 
 # If publishing to local or staging, use the dist-tag 'test' otherwise 'latest'

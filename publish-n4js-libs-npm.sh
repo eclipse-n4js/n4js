@@ -37,9 +37,9 @@ yarn install
 # Build n4js-cli lib
 echo "=== Run lerna run build/test on n4js libs"
 lerna run build
-lerna run test
+#lerna run test
 
 # Run npm task script 'publish-canary' to publish n4js-libs and n4js-cli to NPM_REGISTRY
-yarn run publish-canary $DESTINATION $NPM_REGISTRY_PORT
+yarn run publish-canary $DESTINATION $NPM_REGISTRY
 
 echo "End publishing n4js-libs and n4js-cli"
