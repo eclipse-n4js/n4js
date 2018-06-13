@@ -682,31 +682,8 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private internalCheckModuleSpecifierHasFile(IN4JSProject project, Set<ModuleFilterSpecifier> filterSpecifiers) {
 		try {
-			Files.walkFileTree (project.locationPath, new SimpleFileVisitor<java.nio.file.Path>() {
-				override visitFile(java.nio.file.Path path, BasicFileAttributes attrs) throws IOException {
-					for (val iter = filterSpecifiers.iterator(); iter.hasNext();) {
-						val filterSpecifier = iter.next();
-						val specifier = filterSpecifier.moduleSpecifierWithWildcard;
-						val checkIt = isModuleSpecifier(specifier) && path.toFile.isFile || !isModuleSpecifier(specifier)
-
-						if (checkIt) {
-							val location = getFileInSources(project, filterSpecifier, path);
-							if (location !== null) {
-								val hasFile = wildcardHelper.isPathContainedByFilter(location, filterSpecifier);
-								if (hasFile) {
-									iter.remove();
-								}
-							}
-						}
-					}
-
-					if (filterSpecifiers.empty) {
-	    				return FileVisitResult.TERMINATE;
-					} else {
-		    			return FileVisitResult.CONTINUE;
-					}
-				}
-			});
+			val treeWalker = new ModuleSpecifierFileVisitor(wildcardHelper, project, filterSpecifiers);
+			Files.walkFileTree(project.locationPath, treeWalker);
 		} catch (Exception e) {}
 
 		for (ModuleFilterSpecifier filterSpecifier : filterSpecifiers) {
@@ -715,14 +692,50 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private URI getFileInSources(IN4JSProject project, ModuleFilterSpecifier filterSpecifier, java.nio.file.Path filePath) {
+	static class ModuleSpecifierFileVisitor extends SimpleFileVisitor<java.nio.file.Path> {
+		private final WildcardPathFilterHelper wildcardHelper;
+		private final IN4JSProject project;
+		private final Set<ModuleFilterSpecifier> filterSpecifiers;
+
+		new (WildcardPathFilterHelper wildcardHelper, IN4JSProject project, Set<ModuleFilterSpecifier> filterSpecifiers) {
+			this.wildcardHelper = wildcardHelper;
+			this.project = project;
+			this.filterSpecifiers = filterSpecifiers;
+		}
+
+		override visitFile(java.nio.file.Path path, BasicFileAttributes attrs) throws IOException {
+			for (val iter = filterSpecifiers.iterator(); iter.hasNext();) {
+				val filterSpecifier = iter.next();
+				val specifier = filterSpecifier.moduleSpecifierWithWildcard;
+				val checkIt = isModuleSpecifier(specifier) && path.toFile.isFile || !isModuleSpecifier(specifier)
+
+				if (checkIt) {
+					val location = getFileInSources(project, filterSpecifier, path);
+					if (location !== null) {
+						val hasFile = wildcardHelper.isPathContainedByFilter(location, filterSpecifier);
+						if (hasFile) {
+							iter.remove();
+						}
+					}
+				}
+			}
+
+			if (filterSpecifiers.empty) {
+				return FileVisitResult.TERMINATE;
+			} else {
+    			return FileVisitResult.CONTINUE;
+			}
+		}
+	}
+
+	def static private URI getFileInSources(IN4JSProject project, ModuleFilterSpecifier filterSpecifier, java.nio.file.Path filePath) {
 		val lPath = project.locationPath;
 		val filePathString = lPath.relativize(filePath).toString;
 		val uri = URI.createPlatformResourceURI(project.projectId + "/" + filePathString, true);
 		return uri;
 	}
 
-	def private boolean isModuleSpecifier(String fileSpecifier) {
+	def static private boolean isModuleSpecifier(String fileSpecifier) {
 		return fileSpecifier.endsWith(".n4js") || fileSpecifier.endsWith(".n4jsx")
 	}
 

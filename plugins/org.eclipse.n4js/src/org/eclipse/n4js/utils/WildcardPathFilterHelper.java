@@ -22,15 +22,12 @@ import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 
 /**
- *
+ * Utility methods for wildcards in project description e.g. in module filters
  */
 public class WildcardPathFilterHelper {
 
@@ -40,34 +37,24 @@ public class WildcardPathFilterHelper {
 	@Inject
 	private N4JSModel n4jsModel;
 
-	static private final DataCollector dcBuild = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Build");
-	static private final DataCollector dcIsNoValidate = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("isNoValidate", "Build");
-
-	/***/
+	/** @return true iff the given location is matched the given filter */
 	public boolean isPathContainedByFilter(URI location, ModuleFilter filter) {
-		try (ClosableMeasurement cm = dcIsNoValidate.getClosableMeasurement("isNoValidate");) {
-
-			for (ModuleFilterSpecifier spec : filter.getModuleSpecifiers()) {
-				String prjRelativeLocation = getProjectRelativeLocation(location, spec);
-				if (prjRelativeLocation != null) {
-					return locationMatchesGlobSpecifier(spec, prjRelativeLocation);
-				}
-			}
-			return false;
-		}
-	}
-
-	/** @return true iff the given location is matched the given specifier */
-	public boolean isPathContainedByFilter(URI location, ModuleFilterSpecifier spec) {
-		try (ClosableMeasurement cm = dcIsNoValidate.getClosableMeasurement("isNoValidate");) {
+		for (ModuleFilterSpecifier spec : filter.getModuleSpecifiers()) {
 			String prjRelativeLocation = getProjectRelativeLocation(location, spec);
 			if (prjRelativeLocation != null) {
 				return locationMatchesGlobSpecifier(spec, prjRelativeLocation);
 			}
-			return false;
 		}
+		return false;
+	}
+
+	/** @return true iff the given location is matched the given specifier */
+	public boolean isPathContainedByFilter(URI location, ModuleFilterSpecifier spec) {
+		String prjRelativeLocation = getProjectRelativeLocation(location, spec);
+		if (prjRelativeLocation != null) {
+			return locationMatchesGlobSpecifier(spec, prjRelativeLocation);
+		}
+		return false;
 	}
 
 	private String getProjectRelativeLocation(URI location, ModuleFilterSpecifier spec) {
