@@ -32,11 +32,12 @@ rm -rf node_modules
 
 # Install dependencies and prepare npm task scripts
 echo "=== Install dependencies and prepare npm task scripts"
-npm install
+yarn install
 
 # Build n4js-cli lib
-echo "=== Run lerna run build to build n4js-cli"
+echo "=== Run lerna run build/test on n4js libs"
 lerna run build
+lerna run test
 
 # Run npm task script 'publish-canary' to publish n4js-libs and n4js-cli to NPM_REGISTRY
 yarn run publish-canary $DESTINATION $NPM_REGISTRY_PORT

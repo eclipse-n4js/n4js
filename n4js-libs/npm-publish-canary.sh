@@ -50,7 +50,7 @@ DIRS=$(find ./packages/ -type d -mindepth 1 -maxdepth 1)
 for dir in $DIRS
 do
 	touch "$dir/.npmrc"
-	echo "//${NPM_REGISTRY_WITHOUT_PROTOCOL}/:_authToken=${NPM_TOKEN}" > "$dir/.npmrc"
+	echo -e "\n//${NPM_REGISTRY_WITHOUT_PROTOCOL}/:_authToken=\${NPM_TOKEN}" >> "$dir/.npmrc"
 done
 
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";

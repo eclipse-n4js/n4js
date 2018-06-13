@@ -1,6 +1,14 @@
 {
-  "license": "UNLICENSED",
-  "repository": "https://github.numberfour.eu/NumberFour/stdlib_n4js",
+  "version": "0.1.0",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse/n4js"
+  },
   "n4js": {
     "projectType": "runtimeLibrary",
     "vendorId": "eu.numberfour",
@@ -20,6 +28,6 @@
   "version": "0.1.0",
   "dependencies": {},
   "devDependencies": {
-    "n4js-runtime-fetch": "latest"
+    "n4js-runtime-fetch": "^0.1.0"
   }
 }
