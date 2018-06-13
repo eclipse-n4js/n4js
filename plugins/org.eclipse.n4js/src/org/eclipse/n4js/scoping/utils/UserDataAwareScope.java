@@ -18,9 +18,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.PolyfillAwareSelectableBasedScope;
+import org.eclipse.n4js.xtext.scoping.ForwardingEObjectDescription;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.AbstractEObjectDescription;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -42,27 +42,16 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 	 * proxy from the delegate.
 	 *
 	 */
-	public static class ResolvedDescription extends AbstractEObjectDescription {
+	public static class ResolvedDescription extends ForwardingEObjectDescription {
 
-		private final IEObjectDescription delegate;
 		private final EObject resolved;
 
 		ResolvedDescription(EObject resolved, IEObjectDescription delegate) {
+			super(delegate);
 			if (resolved == null) {
 				throw new NullPointerException("resolved instance may not be null");
 			}
 			this.resolved = resolved;
-			this.delegate = delegate;
-		}
-
-		@Override
-		public QualifiedName getName() {
-			return delegate.getName();
-		}
-
-		@Override
-		public QualifiedName getQualifiedName() {
-			return delegate.getQualifiedName();
 		}
 
 		@Override
@@ -70,28 +59,25 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			return resolved;
 		}
 
-		@Override
-		public URI getEObjectURI() {
-			return delegate.getEObjectURI();
+	}
+
+	/**
+	 * An EObject description that will look as if resolved when asked for EObjectOrProxy but does that only on demand.
+	 */
+	public class LazyResolvedDescription extends ForwardingEObjectDescription {
+
+		private EObject resolved;
+
+		LazyResolvedDescription(IEObjectDescription delegate) {
+			super(delegate);
 		}
 
 		@Override
-		public String getUserData(String name) {
-			return delegate.getUserData(name);
-		}
-
-		@Override
-		public String[] getUserDataKeys() {
-			return delegate.getUserDataKeys();
-		}
-
-		@Override
-		public EClass getEClass() {
-			return delegate.getEClass();
-		}
-
-		IEObjectDescription getAliasedEObjectDescription() {
-			return delegate;
+		public EObject getEObjectOrProxy() {
+			if (resolved == null) {
+				resolved = resolve(delegate()).getEObjectOrProxy();
+			}
+			return resolved;
 		}
 
 	}
@@ -153,7 +139,20 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 		return resolve(result);
 	}
 
+	private IEObjectDescription lazyResolve(IEObjectDescription original) {
+		if (original instanceof LazyResolvedDescription) {
+			return original;
+		}
+		if (original instanceof ResolvedDescription) {
+			return original;
+		}
+		return new LazyResolvedDescription(original);
+	}
+
 	private IEObjectDescription resolve(IEObjectDescription original) {
+		if (original instanceof ResolvedDescription) {
+			return original;
+		}
 		if (original != null && original.getEObjectOrProxy().eIsProxy()
 				&& EcoreUtil2.isAssignableFrom(type, original.getEClass())) {
 			final URI objectURI = original.getEObjectURI();
@@ -217,7 +216,7 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 		return Iterables.transform(parent, new Function<IEObjectDescription, IEObjectDescription>() {
 			@Override
 			public IEObjectDescription apply(IEObjectDescription input) {
-				return resolve(input);
+				return lazyResolve(input);
 			}
 		});
 	}
@@ -228,7 +227,7 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 		return Iterables.transform(parent, new Function<IEObjectDescription, IEObjectDescription>() {
 			@Override
 			public IEObjectDescription apply(IEObjectDescription input) {
-				return resolve(input);
+				return lazyResolve(input);
 			}
 		});
 	}

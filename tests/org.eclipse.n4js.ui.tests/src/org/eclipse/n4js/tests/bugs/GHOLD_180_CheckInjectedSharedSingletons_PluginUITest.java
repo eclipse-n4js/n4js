@@ -10,17 +10,18 @@
  */
 package org.eclipse.n4js.tests.bugs;
 
+import static org.junit.Assert.assertTrue;
+
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.N4JSGuiceUIPlugin;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.utils.N4JSGuiceUIPlugin;
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Class for checking whether singleton instances are shared among parent-child injectors.

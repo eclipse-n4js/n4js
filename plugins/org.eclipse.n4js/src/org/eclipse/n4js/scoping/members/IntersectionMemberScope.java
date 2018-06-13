@@ -42,7 +42,8 @@ public class IntersectionMemberScope extends ComposedMemberScope {
 		boolean allDescrWithError = true;
 		for (IScope currSubScope : subScopes) {
 			IEObjectDescription subDescription = currSubScope.getSingleElement(qn);
-			boolean descrWithError = subDescription == null || subDescription instanceof IEObjectDescriptionWithError;
+			boolean descrWithError = subDescription == null
+					|| IEObjectDescriptionWithError.isErrorDescription(subDescription);
 			allDescrWithError &= descrWithError;
 		}
 		if (allDescrWithError) {

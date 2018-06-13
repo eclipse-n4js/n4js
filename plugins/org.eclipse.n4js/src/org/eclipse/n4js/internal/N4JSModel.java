@@ -306,24 +306,29 @@ public class N4JSModel {
 		return result.build();
 	}
 
-	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project) {
-		return getDependencies(project, false);
+	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeAbsentProjects) {
+		return getDependencies(project, false, includeAbsentProjects);
 	}
 
-	public ImmutableList<? extends IN4JSProject> getDependenciesAndImplementedApis(N4JSProject project) {
-		return getDependencies(project, true);
+	public ImmutableList<? extends IN4JSProject> getDependenciesAndImplementedApis(N4JSProject project,
+			boolean includeAbsentProjects) {
+		return getDependencies(project, true, includeAbsentProjects);
 	}
 
-	private ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeApis) {
+	private ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeApis,
+			boolean includeAbsentProjects) {
 		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
 		URI location = project.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			result.addAll(resolveProjectReferences(project, description.getRequiredRuntimeLibraries()));
-			result.addAll(resolveProjectReferences(project, description.getProjectDependencies()));
+			result.addAll(resolveProjectReferences(project, description.getRequiredRuntimeLibraries(),
+					includeAbsentProjects));
+			result.addAll(
+					resolveProjectReferences(project, description.getProjectDependencies(), includeAbsentProjects));
 			result.addAll(getTestedProjects(project));
 			if (includeApis) {
-				result.addAll(resolveProjectReferences(project, description.getImplementedProjects()));
+				result.addAll(
+						resolveProjectReferences(project, description.getImplementedProjects(), includeAbsentProjects));
 			}
 		}
 		return result.build();
@@ -336,7 +341,7 @@ public class N4JSModel {
 			return absent();
 		}
 		final ProjectReference ref = description.getExtendedRuntimeEnvironment();
-		return resolveProjectReference(project, ref);
+		return resolveProjectReference(project, ref, false);
 	}
 
 	public ImmutableList<? extends IN4JSProject> getImplementedProjects(N4JSProject project) {
@@ -344,7 +349,7 @@ public class N4JSModel {
 		URI location = project.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			result.addAll(resolveProjectReferences(project, description.getImplementedProjects()));
+			result.addAll(resolveProjectReferences(project, description.getImplementedProjects(), false));
 		}
 		return result.build();
 	}
@@ -494,7 +499,7 @@ public class N4JSModel {
 	 *         {@code null}.
 	 */
 	public Optional<IN4JSProject> resolveProjectReference(final IN4JSProject project,
-			final ProjectReference reference) {
+			final ProjectReference reference, boolean includeAbsentProjects) {
 
 		if (null == project || null == reference) {
 			return absent();
@@ -514,8 +519,20 @@ public class N4JSModel {
 		if (null != dependencyLocation) {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}
+		if (includeAbsentProjects) {
+			return fromNullable(newAbsentProject(reference.getProjectId()));
+		}
 
 		return absent();
+	}
+
+	/**
+	 * Create a project handle for a project that does not exist. This is used to track unfulfilled dependencies to
+	 * to-be-created projects.
+	 */
+	protected IN4JSProject newAbsentProject(String projectId) {
+		final URI absent = URI.createFileURI(projectId);
+		return new N4JSProject(absent, false, this);
 	}
 
 	/**
@@ -530,7 +547,7 @@ public class N4JSModel {
 	 * @return a collection of resolved project references. Could be empty but never {@code null}.
 	 */
 	public Collection<IN4JSProject> resolveProjectReferences(final IN4JSProject project,
-			final Iterable<? extends ProjectReference> references) {
+			final Iterable<? extends ProjectReference> references, boolean includeAbsentProjects) {
 
 		if (null == project || null == references || isEmpty(references)) {
 			return emptyList();
@@ -538,7 +555,7 @@ public class N4JSModel {
 
 		LinkedList<IN4JSProject> resolvedReferences = new LinkedList<>();
 		for (ProjectReference ref : references) {
-			IN4JSProject projectReference = resolveProjectReference(project, ref).orNull();
+			IN4JSProject projectReference = resolveProjectReference(project, ref, includeAbsentProjects).orNull();
 			if (projectReference != null) {
 				resolvedReferences.add(projectReference);
 			}

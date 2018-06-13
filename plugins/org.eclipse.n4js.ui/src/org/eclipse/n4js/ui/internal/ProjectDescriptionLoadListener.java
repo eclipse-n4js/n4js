@@ -23,6 +23,9 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
@@ -88,7 +91,6 @@ public class ProjectDescriptionLoadListener implements IEagerContribution {
 	 *            the project to update in respect of its dynamic references.
 	 */
 	public void updateProjectReferencesIfNecessary(final IProject project) {
-
 		if (project instanceof ExternalProject) {
 			return; // No need to adjust any dynamic references.
 		}
@@ -101,20 +103,41 @@ public class ProjectDescriptionLoadListener implements IEagerContribution {
 			if (currentRequires.equals(newRequires)) {
 				return;
 			}
-			IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+			final IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 				@SuppressWarnings("deprecation")
 				@Override
 				public void run(IProgressMonitor monitor) throws CoreException {
 					IProjectDescription description = project.getDescription();
 					IProject[] array = newRequires.toArray(new IProject[newRequires.size()]);
-
 					description.setDynamicReferences(array);
 					project.setDescription(description, IResource.AVOID_NATURE_CONFIG, monitor);
 				}
 			};
-			internalWorkspace.getWorkspace().getWorkspace().run(runnable,
-					null /* cannot use a scheduling rule here since this is triggered lazily by the linker */,
-					IWorkspace.AVOID_UPDATE, null);
+			IWorkspace workspace = internalWorkspace.getWorkspace().getWorkspace();
+			if (workspace.isTreeLocked()) {
+				new Job("Update project description for " + project.getName()) {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						try {
+							workspace.run(runnable, null /*
+															 * cannot use a scheduling rule here since this is triggered
+															 * lazily by the linker
+															 */,
+									IWorkspace.AVOID_UPDATE, null);
+						} catch (CoreException e) {
+							return e.getStatus();
+						}
+						return Status.OK_STATUS;
+					}
+
+				}.schedule();
+			} else {
+				workspace.run(runnable, null /*
+												 * cannot use a scheduling rule here since this is triggered lazily by
+												 * the linker
+												 */,
+						IWorkspace.AVOID_UPDATE, null);
+			}
 		} catch (CoreException e) {
 			// ignore
 		}

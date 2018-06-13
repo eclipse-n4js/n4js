@@ -14,6 +14,7 @@ import static org.eclipse.n4js.tests.externalPackages.ExternalProjectsTestUtil.c
 import static org.eclipse.n4js.tests.externalPackages.ExternalWorkspaceTestUtils.removeExternalLibrariesPreferenceStoreLocations;
 import static org.eclipse.n4js.tests.externalPackages.ExternalWorkspaceTestUtils.setExternalLibrariesPreferenceStoreLocations;
 import static org.eclipse.n4js.tests.externalPackages.IndexableFilesDiscoveryUtil.collectIndexableFiles;
+import static org.junit.Assert.fail;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -25,19 +26,18 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.resource.IResourceDescription;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.builder.BuilderUtil;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.inject.Inject;
 
 /**
  */

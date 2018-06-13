@@ -19,6 +19,8 @@ import static org.eclipse.n4js.tests.bugs.AbstractIDEBUG_Test.WorkspaceInitializ
 import static org.eclipse.n4js.tests.util.ProjectTestsUtils.importProject;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.PrintWriter;

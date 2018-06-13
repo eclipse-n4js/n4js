@@ -17,6 +17,7 @@ import org.eclipse.xtext.util.Files
 import org.junit.Test
 
 import static org.eclipse.n4js.tests.staticpolyfill.SingleProject_Probands.*
+import static org.junit.Assert.*
 
 /**
  */

@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.eclipse.n4js.tests.builder;
 
-import static java.lang.Boolean.TRUE;
 import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.core.resources.IContainer.INCLUDE_HIDDEN;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
@@ -15,25 +14,27 @@ import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getBuilderState;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
-import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS;
-import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
-
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -42,7 +43,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescription.Event;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.testing.InjectWith;
@@ -50,41 +50,47 @@ import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
  * @author Sven Efftinge - Initial contribution and API
  */
+@SuppressWarnings("restriction")
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public abstract class AbstractBuilderTest extends Assert implements IResourceDescription.Event.Listener {
-
-	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
+public abstract class AbstractBuilderTest {
 
 	static {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}
 
-	/***/
-	public static final String F_EXT = ".n4js";
-	private volatile List<Event> events = Lists.newArrayList();
+	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
+
+	/** {@code .n4js} file extension */
+	public static final String F_EXT = "." + N4JSGlobals.N4JS_FILE_EXTENSION;
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	@Inject
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 	@Inject
-	private ExternalLibraryBuilder externalLibraryBuilderHelper;
+	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
+	@Inject
+	private CloseProjectTaskScheduler closedProjectTaskProcessor;
 
 	/***/
 	@Before
 	public void setUp() throws Exception {
+		IResourcesSetupUtil.cleanWorkspace();
+		IResourcesSetupUtil.cleanBuild();
+		waitForAutoBuild();
 		if (checkForCleanWorkspace()) {
 			if (root().getProjects().length != 0 && 0 != root().getProjects(INCLUDE_HIDDEN).length) {
 				StringBuilder error = new StringBuilder();
@@ -189,12 +195,12 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	public void tearDown() throws Exception {
 		// save the files as otherwise the projects cannot be deleted
 		closeAllEditorsForTearDown();
-		cleanWorkspace();
+		IResourcesSetupUtil.cleanWorkspace();
+		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
-		events.clear();
-		getBuilderState().removeListener(this);
-		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
 		assertEquals(0, root().getProjects().length);
+		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
+				countResourcesInIndex());
 	}
 
 	/***/
@@ -204,9 +210,19 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
+		waitForNotReallyBuildButHousekeepingJobs();
 		ProjectTestsUtils.waitForAutoBuild();
+		ProjectTestsUtils.waitForAllJobs();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
+	}
+
+	/**
+	 * Waits for the jobs that do the housekeeping after project close or removal.
+	 */
+	protected void waitForNotReallyBuildButHousekeepingJobs() {
+		closedProjectTaskProcessor.joinRemoveProjectJob();
+		externalLibraryBuildJobProvider.joinBuildJob();
 	}
 
 	/***/
@@ -215,7 +231,6 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	}
 
 	/***/
-	@SuppressWarnings("restriction")
 	protected IWorkbenchPage getActivePage() {
 		IWorkbenchPage page = null;
 		if (org.eclipse.ui.internal.Workbench.getInstance() != null) {
@@ -235,16 +250,6 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 			page.closeAllEditors(false);
 	}
 
-	@Override
-	public void descriptionsChanged(Event event) {
-		this.events.add(event);
-	}
-
-	/***/
-	public List<Event> getEvents() {
-		return events;
-	}
-
 	/***/
 	public <T> T getInstance(Class<T> type) {
 		Injector injector = N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
@@ -252,12 +257,21 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	}
 
 	/**
-	 * Returns the Xtext index, i.e. a new instance of {@link IResourceDescriptions}.
+	 * Returns the Xtext index, i.e. a new instance of {@link IResourceDescriptions}. Note similarity to
+	 * {@link IN4JSCore#getXtextIndex(ResourceSet)}
 	 */
 	protected IResourceDescriptions getXtextIndex() {
-		final ResourceSet resourceSet = resourceSetProvider.get(null);
-		resourceSet.getLoadOptions().put(PERSISTED_DESCRIPTIONS, TRUE);
+		final ResourceSet resourceSet = getResourceSet(null);
+		resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS, Boolean.TRUE);
 		return resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
+	}
+
+	/**
+	 * Return resource set for given project. Note similarity to
+	 * {@link IN4JSCore#createResourceSet(com.google.common.base.Optional)}
+	 */
+	protected ResourceSet getResourceSet(IProject project) {
+		return resourceSetProvider.get(project);
 	}
 
 	/**
@@ -266,7 +280,7 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	 */
 	protected void assertXtextIndexIsValid() {
 		// ensure no build is running while we examine the Xtext index
-		final ISchedulingRule rule = externalLibraryBuilderHelper.getRule();
+		final ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
 		try {
 			Job.getJobManager().beginRule(rule, null);
 			assertXtextIndexIsValidInternal();

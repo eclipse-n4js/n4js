@@ -29,6 +29,7 @@ import org.eclipse.xtext.resource.containers.FilterUriContainer;
 import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 
 /**
@@ -54,8 +55,15 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 	@Override
 	protected IScope getScope(IScope parent, Resource context, boolean ignoreCase, EClass type,
 			Predicate<IEObjectDescription> filter) {
-		IScope result = super.getScope(parent, context, ignoreCase, type, filter);
 
+		IScope result = null;
+		try {
+			result = super.getScope(parent, context, ignoreCase, type, filter);
+		} catch (IllegalStateException ise) {
+			String msg = "ERROR for " + context.getURI() + " ::\n" + Throwables.getStackTraceAsString(ise);
+			System.err.println(msg);
+			return IScope.NULLSCOPE;
+		}
 		if (isSubtypeOfType(type)) {
 			result = new VisibilityAwareTypeScope(result, typeVisibilityChecker, context);
 			return result;

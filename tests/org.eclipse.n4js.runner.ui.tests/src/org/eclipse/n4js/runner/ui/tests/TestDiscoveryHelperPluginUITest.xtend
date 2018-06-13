@@ -21,6 +21,8 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderTest
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Test
 
+import static org.junit.Assert.*
+
 import static extension com.google.common.base.Throwables.propagate
 
 /**
