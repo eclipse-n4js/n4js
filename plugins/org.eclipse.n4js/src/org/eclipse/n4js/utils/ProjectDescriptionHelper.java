@@ -173,9 +173,10 @@ public class ProjectDescriptionHelper {
 			mergePackageJSONFragmentAtLocation(location, packageJSON);
 		}
 		adjustMainPathIfPointingToFolder(location, packageJSON);
-		ProjectDescription pdFromPackageJSON = packageJSON != null ? convertToProjectDescription(packageJSON) : null;
+		ProjectDescription pdFromPackageJSON = packageJSON != null
+				? convertToProjectDescription(location, packageJSON, true)
+				: null;
 		if (pdFromPackageJSON != null) {
-			applyDefaults(pdFromPackageJSON, location);
 			return pdFromPackageJSON;
 		}
 		System.out.println("USING MANIFEST.N4MF: " + location);
@@ -194,7 +195,7 @@ public class ProjectDescriptionHelper {
 		JSONDocument packageJSON = JSONFactory.eINSTANCE.createJSONDocument();
 		if (mergePackageJSONFragmentAtLocation(location, packageJSON)) {
 			adjustMainPathIfPointingToFolder(location, packageJSON);
-			return convertToProjectDescription(packageJSON);
+			return convertToProjectDescription(location, packageJSON, false);
 		}
 		return null;
 	}
@@ -205,7 +206,7 @@ public class ProjectDescriptionHelper {
 	 */
 	private void adjustMainPathIfPointingToFolder(URI location, JSONDocument packageJSON) {
 		JSONValue content = packageJSON.getContent();
-		if (!(content instanceof JSONDocument))
+		if (!(content instanceof JSONObject))
 			return;
 		JSONObject contentCasted = (JSONObject) content;
 		String main = asStringOrNull(JSONModelUtils.getProperty(contentCasted, PROP__MAIN).orElse(null));
@@ -361,18 +362,20 @@ public class ProjectDescriptionHelper {
 	 * a file "index.js" in that folder will be used as main module (for details see
 	 * {@link ProjectDescriptionUtils#convertMainPathToModuleSpecifier(String, List)}).
 	 */
-	private ProjectDescription convertToProjectDescription(JSONDocument packageJSON) {
+	private ProjectDescription convertToProjectDescription(URI location, JSONDocument packageJSON,
+			boolean applyDefaultValues) {
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();
 			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
-			convertRootPairs(result, rootPairs);
+			convertRootPairs(location, result, rootPairs, applyDefaultValues);
 			return result;
 		}
 		return null;
 	}
 
-	private void convertRootPairs(ProjectDescription target, List<NameValuePair> rootPairs) {
+	private void convertRootPairs(URI location, ProjectDescription target, List<NameValuePair> rootPairs,
+			boolean applyDefaultValues) {
 		String valueOfTopLevelPropertyMain = null;
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
@@ -400,7 +403,12 @@ public class ProjectDescriptionHelper {
 				break;
 			}
 		}
+		// set default values
+		if (applyDefaultValues) {
+			applyDefaults(target, location);
+		}
 		// sanitize and set value of top-level property "main"
+		// (note: this makes use of the source containers, so it possibly relies on default values having been applied)
 		if (valueOfTopLevelPropertyMain != null) {
 			if (target.getMainModule() == null) { // only if no N4JS-specific "mainModule" property was given
 				List<String> sourceContainerPaths = target.getSourceContainers().stream()
