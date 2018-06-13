@@ -33,15 +33,18 @@ import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.n4mf.VersionConstraint;
+import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
+import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 
 /**
  * A helper for extracting N4JS-specific information from generic {@link JSONPackage} model instances
  *
  * The methods of this helper do not validate the structure of the given {@link JSONPackage} instances. Rather, they
  * will defensively abort and return {@code null} in case the given {@link JSONValue} is not a valid representation of
- * the {@link N4mfPackage} instance in question.
+ * the {@link N4mfPackage} instance in question (for validation see {@link PackageJsonValidatorExtension} and
+ * {@link N4JSProjectSetupJsonValidatorExtension}).
  *
- * Example: obtain source containers in terms of {@link SourceContainerDescription} from a given {@link JSONObject})
+ * Example: obtain source containers in terms of {@link SourceContainerDescription}s from a given {@link JSONObject})
  */
 public class PackageJsonHelper {
 

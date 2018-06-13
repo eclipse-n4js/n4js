@@ -28,10 +28,10 @@ public class JSONStandaloneSetup extends JSONStandaloneSetupGenerated {
 	 */
 	public static void doSetup() {
 		UnicodeStandaloneSetup.doSetup();
-		
+
 		new JSONStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}
-	
+
 	@Override
 	public Injector createInjectorAndDoEMFRegistration() {
 		// trigger class loading
@@ -40,7 +40,7 @@ public class JSONStandaloneSetup extends JSONStandaloneSetupGenerated {
 		EPackage.Registry.INSTANCE.put(JSONPackage.eNS_URI, JSONPackage.eINSTANCE);
 
 		UnicodeStandaloneSetup.doSetup();
-		
+
 		Injector injector = createInjector();
 		register(injector);
 		return injector;

@@ -9,7 +9,6 @@ import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.inject.Inject;
 
-
 /**
  * Provides qualified names for entities in the JSON data model, e.g. {@link JSONDocument}.
  */
@@ -20,9 +19,9 @@ public class JSONQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 
 	@Override
 	public QualifiedName getFullyQualifiedName(EObject obj) {
-		for(IJSONResourceDescriptionExtension ext : extensionRegistry.getResourceDescriptionExtensions()) {
+		for (IJSONResourceDescriptionExtension ext : extensionRegistry.getResourceDescriptionExtensions()) {
 			QualifiedName qn = ext.getFullyQualifiedName(obj);
-			if(qn !=null) {
+			if (qn != null) {
 				return qn;
 			}
 		}

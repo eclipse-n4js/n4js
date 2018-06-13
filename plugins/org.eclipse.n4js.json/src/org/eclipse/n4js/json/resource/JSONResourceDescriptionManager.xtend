@@ -17,7 +17,8 @@ class JSONResourceDescriptionManager extends DefaultResourceDescriptionManager {
 	private JSONExtensionRegistry extensionRegistry;
 
 	/** Delegates to registered resource description extensions. */
-	override boolean isAffected(Collection<Delta> deltas, IResourceDescription candidate, IResourceDescriptions context) {
+	override boolean isAffected(Collection<Delta> deltas, IResourceDescription candidate,
+		IResourceDescriptions context) {
 		for (ext : extensionRegistry.resourceDescriptionExtensions) {
 			if (ext.isAffected(deltas, candidate, context)) {
 				return true;

@@ -15,9 +15,9 @@ import org.eclipse.n4js.json.ui.editor.syntaxcoloring.JSONHighlightingConfigurat
 import org.eclipse.n4js.json.ui.editor.syntaxcoloring.JSONSemanticHighlightingCalculator;
 import org.eclipse.n4js.json.ui.editor.syntaxcoloring.JSONTokenToAttributeIdMapper;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 
 /**
@@ -28,23 +28,28 @@ public class JSONUiModule extends AbstractJSONUiModule {
 	public JSONUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
-	
+
 	@Override
 	public Class<? extends AbstractEditStrategyProvider> bindAbstractEditStrategyProvider() {
 		return JSONAutoEditStrategyProvider.class;
 	}
-	
+
 	/** Bind a JSON specific highlighting configuration */
 	public Class<? extends IHighlightingConfiguration> bindIHighlightingConfiguration() {
 		return JSONHighlightingConfiguration.class;
 	}
-	
-	/** Bind a JSON-specific ISemanticHighlightingCalculator for syntax highlighting*/
+
+	/**
+	 * Bind a JSON-specific ISemanticHighlightingCalculator for syntax highlighting
+	 */
 	public Class<? extends ISemanticHighlightingCalculator> bindISemanticHighlightingCalculator() {
 		return JSONSemanticHighlightingCalculator.class;
 	}
-	
-	/** Bind a JSON-specific AbstractAntlrTokenToAttributeIdMapper for syntax highlighting. */
+
+	/**
+	 * Bind a JSON-specific AbstractAntlrTokenToAttributeIdMapper for syntax
+	 * highlighting.
+	 */
 	public Class<? extends AbstractAntlrTokenToAttributeIdMapper> bindAbstractAntlrTokenToAttributeIdMapper() {
 		return JSONTokenToAttributeIdMapper.class;
 	}
