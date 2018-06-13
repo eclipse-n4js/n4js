@@ -35,6 +35,10 @@
 {
 	"name": "client",
 	"version": "0.0.1",
+	"dependencies": {
+		"lib1": "*",
+		"lib2": "*"
+	},
 	"n4js": {
 		"output": "src-gen",
 		"sources": {

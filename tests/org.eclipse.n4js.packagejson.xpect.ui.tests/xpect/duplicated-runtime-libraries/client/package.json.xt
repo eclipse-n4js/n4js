@@ -32,6 +32,11 @@
 {
 	"name": "client",
 	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"libA": "*",
+		"libB": "*",
+		"libC": "*"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "MyVendorID",

@@ -28,6 +28,10 @@
  */
 {
 	"name": "test-project",
+	"dependencies": {
+		"project.api": "*",
+		"project.library": "*"
+	},
 	"n4js": {
 		"projectType": "test",
 		"sources": {
