@@ -12,6 +12,8 @@ package org.eclipse.n4js.tests.bugs;
 
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 

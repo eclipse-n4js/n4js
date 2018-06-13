@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
@@ -55,6 +56,7 @@ public class ManifestAwareResourceValidator extends N4JSResourceValidator {
 			if (!isInSourceFolder(resource)) {
 				return Collections.emptyList();
 			}
+			RaceDetectionHelper.log("Validating: %s", resource.getURI());
 			List<Issue> res = super.validate(resource, mode, cancelIndicator);
 			return res;
 		}

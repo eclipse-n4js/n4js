@@ -10,12 +10,11 @@
  */
 package org.eclipse.n4js.tester.ui;
 
-import static org.eclipse.n4js.tester.ui.N4TesterUiModule.N4_TESTER_UI_MODULE_ID;
 import static org.eclipse.n4js.tester.ui.TesterUiActivator.PLUGIN_ID;
 
-import com.google.inject.Injector;
-
 import org.eclipse.n4js.utils.N4ExecutableExtensionFactory;
+
+import com.google.inject.Injector;
 
 /**
  * Executable extension factory for the N4 tester UI component.
@@ -29,7 +28,7 @@ public class N4TesterUiExecutableExtensionFactory extends N4ExecutableExtensionF
 
 	@Override
 	protected Injector getInjector() {
-		return N4TesterUiModule.getInjector(N4_TESTER_UI_MODULE_ID);
+		return TesterUiActivator.getInjector();
 	}
 
 	@Override

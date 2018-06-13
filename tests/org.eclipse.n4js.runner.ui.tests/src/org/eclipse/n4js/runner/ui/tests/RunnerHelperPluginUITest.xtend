@@ -20,6 +20,8 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Test
 
+import static org.junit.Assert.*
+
 /**
  * Contains basic plug-in UI tests for {@link RunnerHelper}.
  */

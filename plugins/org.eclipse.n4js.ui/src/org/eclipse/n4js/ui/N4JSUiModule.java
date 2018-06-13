@@ -74,7 +74,8 @@ import org.eclipse.n4js.ui.external.BuildOrderComputer;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.external.ExternalIndexUpdater;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuildJobProvider;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
@@ -83,6 +84,7 @@ import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
 import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
 import org.eclipse.n4js.ui.internal.ContributingModule;
+import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectCacheLoader;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
@@ -192,7 +194,14 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		N4jsUiLoggingInitializer.init();
 	}
 
-	/** Delegate to shared injector */
+	/** Delegate to shared injector and obtain an instance directly from the shared injector */
+	public Provider<ContributingResourceDescriptionPersister> providerContributingResourceDescriptionPersister() {
+		return Access.provider(ContributingResourceDescriptionPersister.class);
+	}
+
+	/**
+	 * Delegate to shared injector and obtain a contributed instance that is not a direct object in the shared injector
+	 */
 	public Provider<InternalN4JSWorkspace> provideInternalN4JSWorkspace() {
 		return Access.contributedProvider(InternalN4JSWorkspace.class);
 	}
@@ -243,8 +252,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<ExternalLibraryBuildJobProvider> provideExternalLibraryBuildJobProvider() {
-		return Access.contributedProvider(ExternalLibraryBuildJobProvider.class);
+	public Provider<ExternalLibraryBuildScheduler> provideExternalLibraryBuildJobProvider() {
+		return Access.contributedProvider(ExternalLibraryBuildScheduler.class);
+	}
+
+	/** Delegate to shared injector */
+	public Provider<ExternalLibraryBuildQueue> provideExternalLibraryBuildQueue() {
+		return Access.contributedProvider(ExternalLibraryBuildQueue.class);
 	}
 
 	/** Delegate to shared injector */
@@ -792,7 +806,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSEditorResourceAccess.class;
 	}
 
-	/** Workaround for the problem: file is refreshed when opened */
+	/** A document provider that will not cancel a build when opening a file. */
 	public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
 		return AvoidRefreshDocumentProvider.class;
 	}

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -35,6 +35,9 @@ import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.getCorrespondingTypeModelElement
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.newRuleEnvironment
+import org.eclipse.xtext.ui.editor.hover.html.XtextBrowserInformationControlInput
+import org.eclipse.jface.text.IRegion
+import org.eclipse.xtext.service.OperationCanceledManager
 
 /**
  */
@@ -48,13 +51,15 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	@Inject
 	private TypesHoverProvider typesHoverProvider;
-	
+
 	@Inject
+	private OperationCanceledManager cancelManager;
+
 	private N4JSDocletParser docletParser;
 
 	override protected getFirstLine(EObject o) {
 		if (o instanceof LiteralOrComputedPropertyName) {
-			return getFirstLine(o.eContainer); 
+			return getFirstLine(o.eContainer);
 		}
 		return composeFirstLine(o.keyword, o.label);
 	}
@@ -62,7 +67,7 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	override protected String getLabel(EObject o) {
 		sanitizeForHTML(doGetLabel(o));
 	}
-	
+
 	override protected getDocumentation(EObject o) {
 		try {
 			var String jsdocString = super.getDocumentation(o);
@@ -77,7 +82,7 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 			return "Error generating documentation:  " + ex;
 		}
 	}
-	
+
 	def private dispatch doGetLabel(EObject o) {
 		val tElem = o.getCorrespondingTypeModelElement;
 		return if (null === tElem) super.getLabel(o) else typesHoverProvider.getLabel(tElem);
@@ -99,22 +104,22 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	def private dispatch doGetLabel(FunctionExpression fe) {
 		fe.labelFromTypeSystem;
 	}
-	
+
 	def private dispatch doGetLabel(LiteralOrComputedPropertyName name) {
 		if (name.eContainer instanceof TypableElement) {
 			return (name.eContainer as TypableElement).labelFromTypeSystem;
 		}
-		return name.name; 
+		return name.name;
 	}
 
 	def private getLabelFromTypeSystem(TypableElement o) {
-		if (null ===  o || null === o.eResource) {
+		if (null === o || null === o.eResource) {
 			return null;
 		}
 		val typeRef = o.newRuleEnvironment.type(o).value;
 		return if (null === typeRef) null else '''«getName(o)»: «typeRef.typeRefAsString»''';
 	}
-	
+
 	def private dispatch getName(EObject o) {
 		'';
 	}
@@ -123,7 +128,6 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		''' «nameValuePair.name»''';
 	}
 
-	
 	override protected hasHover(EObject o) {
 		doHasHover(o);
 	}
@@ -148,13 +152,24 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	def private dispatch doHasHover(FunctionExpression fe) {
 		true;
 	}
-	
+
 	def private dispatch doHasHover(N4TypeDeclaration md) {
 		true;
 	}
-	
+
 	def private dispatch doHasHover(LiteralOrComputedPropertyName name) {
 		return name.eContainer instanceof N4MemberDeclaration
+	}
+
+	override protected getHoverInfo(EObject element, IRegion hoverRegion,
+		XtextBrowserInformationControlInput previous) {
+		try {
+			return super.getHoverInfo(element, hoverRegion, previous)
+		} catch (Throwable t) {
+			if (!cancelManager.isOperationCanceledException(t)) {
+				throw Exceptions.sneakyThrow(t);
+			}
+		}
 	}
 
 //
@@ -162,7 +177,6 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 // (but is not used yet because this would also be required in
 // TypesHoverProvider, but no access to the images from that class/bundle!)
 //
-
 // private String getImageTag(EObject obj) {
 // final URL url = getImageURL(obj);
 // if (url != null)
@@ -187,5 +201,4 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 // }
 // return null;
 // }
-
 }

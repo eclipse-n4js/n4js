@@ -15,13 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.collect.Iterables;
-
-import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 
 /**
  * A scope that is composed of other scopes. Erroneous descriptions are filtered out if (at least) one other scope
@@ -73,7 +72,7 @@ public class CompositeScope implements IScope {
 		for (IScope currScope : childScopes) {
 			final IEObjectDescription currResult = currScope.getSingleElement(name);
 			if (currResult != null) {
-				if (!(currResult instanceof IEObjectDescriptionWithError)) {
+				if (!(IEObjectDescriptionWithError.isErrorDescription(currResult))) {
 					return currResult; // no error, use scope order as precedence (first one wins) and return
 				}
 				if (result == null) {
@@ -91,7 +90,7 @@ public class CompositeScope implements IScope {
 		for (IScope currScope : childScopes) {
 			final IEObjectDescription currResult = currScope.getSingleElement(object);
 			if (currResult != null) {
-				if (!(currResult instanceof IEObjectDescriptionWithError)) {
+				if (!(IEObjectDescriptionWithError.isErrorDescription(currResult))) {
 					return currResult; // no error, use scope order as precedence (first one wins) and return
 				}
 				if (result == null) {

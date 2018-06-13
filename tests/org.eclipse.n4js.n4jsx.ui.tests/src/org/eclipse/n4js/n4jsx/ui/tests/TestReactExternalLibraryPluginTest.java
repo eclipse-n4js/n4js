@@ -13,6 +13,7 @@ package org.eclipse.n4js.n4jsx.ui.tests;
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 

@@ -38,8 +38,8 @@ public final class N4JSGlobals {
 	public static final String JSX_FILE_EXTENSION = "jsx";
 
 	/**
-	 * Files extension of N4JSX source files (<b>not</b> including the separator dot). TODO: This will be OK when JSX is
-	 * merged into N4JS.
+	 * Files extension of N4JSX source files (<b>not</b> including the separator dot). TODO: This will be OK when N4JSX
+	 * is merged into N4JS.
 	 */
 	public static final String N4JSX_FILE_EXTENSION = "n4jsx";
 

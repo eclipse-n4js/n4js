@@ -11,9 +11,9 @@
 package org.eclipse.n4js.ui.containers;
 
 import static com.google.common.collect.FluentIterable.from;
-import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
 import static org.eclipse.core.runtime.jobs.Job.INTERACTIVE;
+import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import static org.eclipse.xtext.validation.CheckMode.ALL;
@@ -31,6 +31,12 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
+import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.internal.OwnResourceValidatorAwareValidatingEditorCallback;
+import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -45,13 +51,6 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ui.internal.OwnResourceValidatorAwareValidatingEditorCallback;
-import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 
 /**
  * N4JSAllContainersState returns the visible elements for global scoping. The implementation is basically separated in
@@ -155,7 +154,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				final IFile manifest = delta.getResource().getProject().getFile(N4MF_MANIFEST);
 				final ResourceSet resourceSet = core.createResourceSet(Optional.of(project));
 				final Resource resource = resourceSet.getResource(manifestLocation, true);
-				final Job job = Job.create("", monitor -> {
+				final Job job = Job.create("Update validation markers for " + resource.getURI(), monitor -> {
 					validatorExtension.updateValidationMarkers(manifest, resource, ALL, monitor);
 					return OK_STATUS;
 				});

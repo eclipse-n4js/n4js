@@ -15,19 +15,22 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.impl.ImportNormalizer;
-import org.eclipse.xtext.scoping.impl.ImportedNamespaceAwareLocalScopeProvider;
-
-import com.google.common.base.Predicate;
-
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.ISelectable;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.impl.ImportNormalizer;
+import org.eclipse.xtext.scoping.impl.ImportScope;
+import org.eclipse.xtext.scoping.impl.ImportedNamespaceAwareLocalScopeProvider;
+
+import com.google.common.base.Predicate;
 
 /**
  * Adapts {@link ImportedNamespaceAwareLocalScopeProvider} to filter ArgumentsType & EnumBaseType from globalScobe,
@@ -53,8 +56,12 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 		// ||-- changed super-impl here:
 		// IDE-662 filtering ArgumentsType & EnumBaseType from globalScobe, since it is a VirtualBaseType.
 		Predicate<IEObjectDescription> filter = p -> {
-			String name = p.getName().toString();
-			return !("ArgumentsType".equals(name) || "EnumBaseType".equals(name));
+			QualifiedName name = p.getName();
+			if (name.getSegmentCount() == 1) {
+				String singleSegment = name.getFirstSegment();
+				return !("ArgumentsType".equals(singleSegment) || "EnumBaseType".equals(singleSegment));
+			}
+			return true;
 		};
 		IScope globalScope = getGlobalScope(res, reference, filter);
 		// -- done change --||
@@ -87,4 +94,9 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 		return result;
 	}
 
+	@Override
+	protected ImportScope createImportScope(IScope parent, List<ImportNormalizer> namespaceResolvers,
+			ISelectable importFrom, EClass type, boolean ignoreCase) {
+		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase);
+	}
 }

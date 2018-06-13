@@ -18,9 +18,14 @@ import java.io.File;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.n4js.tester.TesterModule;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import com.google.inject.Injector;
+import com.google.inject.util.Modules;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -72,6 +77,8 @@ public class TesterUiActivator extends AbstractUIPlugin {
 	// The shared instance
 	private static TesterUiActivator plugin;
 
+	private Injector injector;
+
 	/**
 	 * Sole constructor.
 	 */
@@ -82,10 +89,17 @@ public class TesterUiActivator extends AbstractUIPlugin {
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+
+		final Injector parentInjector = N4JSActivator.getInstance().getInjector(
+				N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
+		injector = parentInjector.createChildInjector(Modules.override(new TesterModule()).with(
+				new N4TesterUiModule()));
+
 	}
 
 	@Override
 	public void stop(final BundleContext context) throws Exception {
+		injector = null;
 		plugin = null;
 		super.stop(context);
 	}
@@ -149,5 +163,9 @@ public class TesterUiActivator extends AbstractUIPlugin {
 
 	public static final ImageDescriptor getImageDescriptor(String key) {
 		return getDefault().getImageRegistry().getDescriptor(key);
+	}
+
+	public static Injector getInjector() {
+		return getDefault().injector;
 	}
 }

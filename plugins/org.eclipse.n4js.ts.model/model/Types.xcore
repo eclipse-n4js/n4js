@@ -24,7 +24,6 @@
 	language="")
 package org.eclipse.n4js.ts.types
 
-import com.google.common.collect.Iterables
 import java.util.Collections
 import java.util.HashMap
 import java.util.List
@@ -1074,9 +1073,9 @@ class TClass extends TN4Classifier {
 	 */
 	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
 		if (getSuperClassRef !== null) {
-			return Iterables.concat(Collections.singleton(getSuperClassRef), implementedInterfaceRefs)
+			return Collections.singleton(getSuperClassRef) + implementedInterfaceRefs
 		}
-		return Iterables.concat(implementedInterfaceRefs)
+		return implementedInterfaceRefs
 	}
 
 	/**

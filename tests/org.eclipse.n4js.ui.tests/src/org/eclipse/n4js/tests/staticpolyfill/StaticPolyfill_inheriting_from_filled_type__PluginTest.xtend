@@ -15,6 +15,7 @@ import org.eclipse.xtext.util.Files
 import org.junit.Test
 
 import static org.eclipse.n4js.tests.staticpolyfill.StaticPolyfill_inheriting_from_filled_type__Probands.*
+import static org.junit.Assert.*
 
 /**
  * Testing more complex static polyfill situations, which are not reproducible with xpect.
