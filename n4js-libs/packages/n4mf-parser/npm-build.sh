@@ -14,5 +14,3 @@ cd `dirname $0`
 
 mkdir -p ./src-gen
 ./node_modules/.bin/pegjs -o ./src-gen/n4mf-parser.js ./pegjs/n4mf.pegjs
-
-npm test
