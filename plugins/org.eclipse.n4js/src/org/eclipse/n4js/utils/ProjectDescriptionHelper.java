@@ -154,6 +154,9 @@ public class ProjectDescriptionHelper {
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
+		if (packageJSON == null) {
+			return null;
+		}
 		return loadProjectDescriptionAtLocation(location, packageJSON, true);
 	}
 

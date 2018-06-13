@@ -73,6 +73,7 @@ import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.n4mf.ProjectDependency
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -106,6 +107,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * @See {@link #getAllExistingProjectIds()} 
 	 */
 	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
+	
+	/**
+	 * Key to store a map of all declared project dependencies in the validation context for re-use across different check-methods.
+	 * @See {@link #getDeclaredProjectDependencies()} 
+	 */
+	private static String DECLARED_DEPENDENCIES_CACHE = "DECLARED_DEPENDENCIES_CACHE";
 
 	@Inject
 	private extension IN4JSCore
@@ -141,10 +148,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		// Take the RTE and RTL's check for duplicate fillings.
 		// lookup of Names in n4mf &
 		val Map<String, JSONStringLiteral> mQName2rtDep = newHashMap()
-	
+
 		val description = getProjectDescription();
 		val projectName = description.projectId;
-		
+
 		// if the project name cannot be determined, exit early
 		if (projectName === null) {
 			return;
@@ -152,11 +159,13 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		// gather required runtime libraries in terms of JSONStringLiterals
 		val requiredRuntimeLibrariesValue = getSingleDocumentValue(
-			ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES, JSONArray);
+			ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__REQUIRED_RUNTIME_LIBRARIES,
+			JSONArray);
 		if (requiredRuntimeLibrariesValue === null) {
 			return;
 		}
-		var Iterable<? extends JSONStringLiteral> rteAndRtl = requiredRuntimeLibrariesValue.elements.filter(JSONStringLiteral);
+		var Iterable<? extends JSONStringLiteral> rteAndRtl = requiredRuntimeLibrariesValue.elements.filter(
+			JSONStringLiteral);
 
 		// Describing Self-Project as RuntimeDependency to handle clash with filled Members from current Project consistently.
 		val selfProject = JSONModelUtils.createStringLiteral(projectName);
@@ -185,10 +194,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				val srcCont = optSrcContainer.get;
 				val depQName = srcCont.project.projectId;
 				val dependency = mQName2rtDep.get(depQName);
-				if (dependency === null ) {
+				if (dependency === null) {
 					// TODO IDE-1735 typically a static Polyfill - can only be used inside of a single project
-				} else
-				if (dependency !== selfProject) {
+				} else if (dependency !== selfProject) {
 					exportedPolyfills_QN_to_PolyProvision.put(
 						ieoT.qualifiedName.toString,
 						new PolyFilledProvisionPackageJson(depQName, dependency, ieoT)
@@ -236,7 +244,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 						// register for error:
 						val keySet = newHashSet()
 						providers.forEach[keySet.add(it.libraryProjectReferenceLiteral)]
-						val filledTypeFQN = providers.head.descriptionStandard //or: polyExport_QN
+						val filledTypeFQN = providers.head.descriptionStandard // or: polyExport_QN
 						val message = filledTypeFQN + "#" + filledInMemberName
 						markerMapLibs2FilledName.put(keySet, message)
 					}
@@ -255,7 +263,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		for (Set<JSONStringLiteral> keyS : markerMapLibs2FilledName.keySet) {
 
 			val polyFilledMemberAsStrings = markerMapLibs2FilledName.get(keyS)
-			val libsString = keyS.toList.map [it.getValue].sort.join(", ")
+			val libsString = keyS.toList.map[it.getValue].sort.join(", ")
 
 			val userPresentablePolyFills = polyFilledMemberAsStrings.toList.map['"' + it + '"'].sort.join(", ")
 
@@ -303,6 +311,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		for (IEObjectDescription descr : visibleContainers.map[it.getExportedObjectsByType(TypesPackage.Literals.TYPE)].flatten) {
 			val polyFill = Boolean.valueOf(descr.getUserData(N4JSResourceDescriptionStrategy.POLYFILL_KEY))
 			val staticPolyFill = Boolean.valueOf(descr.getUserData(N4JSResourceDescriptionStrategy.STATIC_POLYFILL_KEY))
+
 			if (polyFill == Boolean.TRUE && staticPolyFill == Boolean.FALSE) {
 				types.add(descr);
 			}
@@ -500,16 +509,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			return;
 		}
 		
-		val projectType = getProjectDescription().projectType;
-		
-		val dependenciesPredicate = switch(projectType) {
-			case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
-			case API: createProjectPredicateForAPIs
-			default: not(or(RE_OR_RL_TYPE, TEST_TYPE)).forN4jsProjects
-		}
-
 		val references = getReferencesFromDependenciesObject(dependenciesValue);
-		checkReferencedProjects(references, dependenciesPredicate, "dependencies"); 
+		checkReferencedProjects(references, createDependenciesPredicate(), "dependencies", false); 
 	}
 	
 	/** Validates the 'devDependencies' section of the {@code package.json}. */
@@ -519,17 +520,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_OR_RL_TYPE))) {
 			return;
 		}
-		
-		val projectType = getProjectDescription().projectType;
-		
-		val dependenciesPredicate = switch(projectType) {
-			case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
-			case API: createProjectPredicateForAPIs
-			default: not(or(RE_OR_RL_TYPE, TEST_TYPE)).forN4jsProjects
-		}
 
 		val references = getReferencesFromDependenciesObject(devDependenciesValue);
-		checkReferencedProjects(references, dependenciesPredicate, "devDependencies"); 
+		checkReferencedProjects(references, createDependenciesPredicate(), "devDependencies", false); 
 	}
 
 	/** Checks the 'n4js.extendedRuntimeEnvironment' section. */
@@ -541,7 +534,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		val references =  extendedRuntimeEnvironmentValue.referencesFromJSONStringLiteral
-		checkReferencedProjects(references, RE_TYPE.forN4jsProjects, "extended runtime environment");
+		checkReferencedProjects(references, RE_TYPE.forN4jsProjects, "extended runtime environment", false);
 	}
 	
 	/** Checks the 'n4js.requiredRuntimeLibraries' section. */
@@ -553,7 +546,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		val references =  requiredRuntimeLibrariesValue.referencesFromJSONStringArray
-		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "required runtime libraries");
+		
+		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "required runtime libraries", true);
 	}
 	
 	/** Checks the 'n4js.providedRuntimeLibraries' section. */
@@ -565,7 +559,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		val references =  providedRuntimeLibraries.referencesFromJSONStringArray
-		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "provided runtime libraries");
+		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "provided runtime libraries", false);
 	}
 	
 	/** Checks the 'n4js.testedProjects' section. */
@@ -577,7 +571,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		val references =  testedProjectsValue.referencesFromJSONStringArray
-		checkReferencedProjects(references, not(TEST_TYPE).forN4jsProjects, "tested projects");
+		
+		checkReferencedProjects(references, not(TEST_TYPE).forN4jsProjects, "tested projects", true);
 	}
 	
 	/** Checks the 'n4js.initModules' section. */
@@ -610,7 +605,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			not(or(RE_OR_RL_TYPE, TEST_TYPE)))) {
 		
 			val references = implementedProjectsValue.referencesFromJSONStringArray;
-			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects");
+			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects", false);
 		}
 	}
 
@@ -657,8 +652,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * </ul>
 	 * Otherwise the predicate provides {@code false} value.
 	 */
-	private def createProjectPredicateForAPIs() {
+	private def Predicate<IN4JSProject> createProjectPredicateForAPIs() {
 		return Predicates.or(API_TYPE.forN4jsProjects, [LIBRARY_TYPE.apply(projectType) && !implementationId.present]);
+	}
+	
+	/**
+	 * Returns with a new predicate instance that specifies the type of projects
+	 * that may be declared as dependency to the currently validated project description.
+	 */
+	private def Predicate<IN4JSProject> createDependenciesPredicate() {
+		return switch(projectDescription.projectType) {
+			case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
+			case API: createProjectPredicateForAPIs
+			// otherwise, any project may be declared as dependency
+			default: Predicates.alwaysTrue.forN4jsProjects
+		}
 	}
 
 	/**
@@ -739,8 +747,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * @param references The list of project references to validate.
 	 * @param allProjects A map of all projects that are accessible in the workspace.
 	 * @param sectionLabel A user-facing description of which section of project references is currently validated (e.g. "tested projects").
+	 * @param enforceDependency Additionally enforces that all given references are also listed as explicit project dependencies 
 	 */
-	private def checkReferencedProjects(Iterable<ValidationProjectReference> references, Predicate<IN4JSProject> projectPredicate, String sectionLabel) {
+	private def checkReferencedProjects(Iterable<ValidationProjectReference> references, Predicate<IN4JSProject> projectPredicate, 
+		String sectionLabel, boolean enforceDependency) {
 
 		val description = getProjectDescription();
 		val currentProjectId = description.projectId;
@@ -779,6 +789,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		];
 
 		checkForDuplicateRuntimeLibraries(existentIds)
+		
+		// if specified, check that all references also occur in the dependencies sections
+		if (enforceDependency) {
+			checkDeclaredDependencies(existentIds.values, sectionLabel)
+		}
 	}
 
 	private def checkForDuplicateRuntimeLibraries(HashMultimap<String, ValidationProjectReference> validProjectRefs) {
@@ -806,20 +821,36 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			}
 		];
 	}
+	
+	/**
+	 * Checks that the given {@code reference}s are also declared as explicit project dependencies
+	 * under {@code dependencies} or {@code devDependencies}.
+	 */	
+	private def checkDeclaredDependencies(Iterable<ValidationProjectReference> references, String sectionLabel) {
+		val declaredDependencies = getDeclaredProjectDependencies();
+		
+		references.forEach[reference |
+			if (!declaredDependencies.containsKey(reference.referencedProjectId)) {
+				addIssue(IssueCodes.getMessageForPKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY(reference.referencedProjectId, sectionLabel),
+					reference.astRepresentation, IssueCodes.PKGJ_PROJECT_REFERENCE_MUST_BE_DEPENDENCY);
+			}
+		]
+	}
 
 	/** Checks if version constraint of the project reference is satisfied by any available project.*/
 	private def checkVersions(ValidationProjectReference ref, String id, Map<String, IN4JSProject> allProjects) {
 		val desiredVersion = ref.versionConstraint
 		if (desiredVersion !== null) {
 			val availableVersion = allProjects.get(id).version
-			val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro, availableVersion.qualifier);
+			val available = new Version(availableVersion.major, availableVersion.minor, availableVersion.micro,
+				availableVersion.qualifier);
 			val desiredLower = desiredVersion.lowerVersion
 			val desiredUpper = desiredVersion.upperVersion
-			if(desiredLower !==null){
-				if(desiredUpper !== null){
+			if (desiredLower !== null) {
+				if (desiredUpper !== null) {
 					checkLowerVersion(desiredLower, desiredVersion.exclLowerBound, available, id)
 					checkUpperVersion(desiredUpper, desiredVersion.exclUpperBound, available, id)
-				}else{
+				} else {
 					checkExactVersion(desiredLower, available, id)
 				}
 			}
@@ -827,35 +858,35 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	private def checkExactVersion(DeclaredVersion exactVersion, Version available, String id) {
-			val lower = new Version(exactVersion.major, exactVersion.minor, exactVersion.micro, exactVersion.qualifier);
-			if(!lower.equals(Version.MISSING))
-				if(available.compareTo(lower) !== 0) 
-					addVersionMismatchIssue(exactVersion, id, lower.toString, available.toString);
+		val lower = new Version(exactVersion.major, exactVersion.minor, exactVersion.micro, exactVersion.qualifier);
+		if (!lower.equals(Version.MISSING))
+			if (available.compareTo(lower) !== 0)
+				addVersionMismatchIssue(exactVersion, id, lower.toString, available.toString);
 	}
 
 	private def checkLowerVersion(DeclaredVersion desiredLower, boolean exclusive, Version available, String id) {
-			val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
-			switch (available.compareTo(lower)) {
-				case 0: {
-					if (exclusive)
-						addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
-				}
-				case -1: {
+		val lower = new Version(desiredLower.major, desiredLower.minor, desiredLower.micro, desiredLower.qualifier);
+		switch (available.compareTo(lower)) {
+			case 0: {
+				if (exclusive)
 					addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
-				}
+			}
+			case -1: {
+				addVersionMismatchIssue(desiredLower, id, "higher than " + lower.toString, available.toString);
+			}
 		}
 	}
 
 	private def checkUpperVersion(DeclaredVersion desiredUpper, boolean exclusive, Version available, String id) {
-			val upper = new Version(desiredUpper.major, desiredUpper.minor, desiredUpper.micro, desiredUpper.qualifier);
-			switch (available.compareTo(upper)) {
-				case 1: {
+		val upper = new Version(desiredUpper.major, desiredUpper.minor, desiredUpper.micro, desiredUpper.qualifier);
+		switch (available.compareTo(upper)) {
+			case 1: {
+				addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
+			}
+			case 0: {
+				if (exclusive)
 					addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
-				}
-				case 0: {
-					if (exclusive)
-						addVersionMismatchIssue(desiredUpper, id, "lower than " + upper.toString, available.toString);
-				}
+			}
 		}
 	}
 
@@ -869,6 +900,18 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
 			projectDescriptionHelper.loadProjectDescriptionAtLocation(doc.eResource.URI, doc, false);
+		]);
+	}
+	
+	/**
+	 * Returns a cached view on all declared project dependencies mapped to the dependency project ID.
+	 *
+	 * @See {@link #getProjectDescription()}. 
+	 */
+	protected def Map<String, ProjectDependency> getDeclaredProjectDependencies() {
+		return contextMemoize(DECLARED_DEPENDENCIES_CACHE, [
+			val description = getProjectDescription();
+			return description.projectDependencies.toMap[d | d.projectId];
 		]);
 	}
 
@@ -935,7 +978,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 
 	/** Transforms a {@link ProjectTypePredicate} into a predicate for {@link IN4JSProject}. */
-	private def Predicate<IN4JSProject> forN4jsProjects(ProjectTypePredicate predicate) {
+	private def Predicate<IN4JSProject> forN4jsProjects(Predicate<ProjectType> predicate) {
 		return [predicate.apply(projectType)];
 	}
 }
