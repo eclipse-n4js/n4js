@@ -194,13 +194,21 @@ public class JSONModelUtils {
 	}
 
 	/**
-	 *
 	 * Sets property {@code name} to a JSON representation of string {@code value}.
 	 *
 	 * See {@link #addProperty(JSONObject, String, JSONValue)} and {@link #createStringLiteral(String)}
 	 */
 	public static JSONStringLiteral addProperty(JSONObject object, String name, String value) {
 		return addProperty(object, name, createStringLiteral(value));
+	}
+
+	/**
+	 * Removes all {@link NameValuePair}s with the given name.
+	 *
+	 * @returns true iff any {@code NameValuePair}s were removed.
+	 */
+	public static boolean removeProperty(JSONObject object, String name) {
+		return object.getNameValuePairs().removeIf(pair -> name.equals(pair.getName()));
 	}
 
 	/**

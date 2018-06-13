@@ -488,7 +488,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				final String srcFrgmtName = sourceContainerType.getKey().getLiteral().toLowerCase();
 
 				// handle case that output path is nested within a source folder (or equal)
-				if (((".".equals(sourcePath) || sourcePath.equals(outputPath))
+				if (((".".equals(sourcePath.toString()) || sourcePath.equals(outputPath))
 						|| outputPath.startsWith(sourcePath))) {
 					final String containingFolder = "The output";
 					final String nestedFolder = ("a " + srcFrgmtName);
@@ -499,7 +499,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				}
 
 				// handle case that source container is nested within output directory (or equal)
-				if ((".".equals(outputPath) || sourcePath.startsWith(outputPath))) {
+				if ((".".equals(outputPath.toString()) || sourcePath.startsWith(outputPath))) {
 					final String containingFolder = ("A " + srcFrgmtName);
 					final String nestedFolder = "the output";
 					final String message = IssueCodes

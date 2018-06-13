@@ -153,7 +153,7 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 			projectId = uri.trimSegments(1).lastSegment;
 		}
 		// create qualified name from projectId
-		if (projectId !== null) {
+		if (projectId !== null && !projectId.isEmpty) {
 			val fqnBase = converter.toQualifiedName(projectId);
 			if (fqnBase !== null) {
 				return fqnBase.append(PACKAGE_JSON_SEGMENT)

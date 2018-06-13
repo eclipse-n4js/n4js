@@ -175,10 +175,12 @@ main ::
 Path relative to the component's root folder, pointing to a `.js` file
 located in a source container. This file then serves as the component's
 default entry point, i.e. project imports pointing to this component from
-other components will import from the file denoted by this property. If
-this property denotes a file other than a `.js` file, it will be ignored.
-In particular, it cannot be used for `.n4js` files; in that case, property
-"mainModule" has to be used (see below).
+other components will import from the file denoted by this property. In
+addition, this property may denote a folder and is then assumed to point
+to a file `index.js` located in that folder. If this property denotes a file
+other than a `.js` file, it will be ignored. In particular, it cannot be
+used for `.n4js` files; in that case, property "mainModule" has to be used
+(see below).
 
 In addition to the standard properties above, there is a single N4JS-specific
 top-level property called "n4js". The value of this property must always be

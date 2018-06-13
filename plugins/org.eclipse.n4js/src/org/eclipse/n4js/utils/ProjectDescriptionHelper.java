@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.CommonPlugin;
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
@@ -146,24 +148,35 @@ public class ProjectDescriptionHelper {
 
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location}.
-	 *
+	 * <p>
 	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json and
 	 * manifest.n4mf file).
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
-		return loadProjectDescriptionAtLocation(location, packageJSON);
+		return loadProjectDescriptionAtLocation(location, packageJSON, true);
 	}
 
 	/**
 	 * Same as {@link #loadPackageJSONAtLocation(URI)}, but for cases in which the JSONDocument of the main package.json
 	 * file (but not the fragment) has already been loaded.
+	 *
+	 * @param mergeFragment
+	 *            if <code>true</code>, a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} will be loaded
+	 *            and merged into the given package.json document before conversion to {@link ProjectDescription} (given
+	 *            document will *not* be changed).
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
-		mergePackageJSONFragmentAtLocation(location, packageJSON);
-		ProjectDescription pdFromPackageJSON = packageJSON != null ? convertToProjectDescription(packageJSON) : null;
+	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON,
+			boolean mergeFragment) {
+		if (mergeFragment) {
+			packageJSON = EcoreUtil.copy(packageJSON);
+			mergePackageJSONFragmentAtLocation(location, packageJSON);
+		}
+		adjustMainPathIfPointingToFolder(location, packageJSON);
+		ProjectDescription pdFromPackageJSON = packageJSON != null
+				? convertToProjectDescription(location, packageJSON, true)
+				: null;
 		if (pdFromPackageJSON != null) {
-			applyDefaults(pdFromPackageJSON, location);
 			return pdFromPackageJSON;
 		}
 		System.out.println("USING MANIFEST.N4MF: " + location);
@@ -181,9 +194,37 @@ public class ProjectDescriptionHelper {
 	public ProjectDescription loadProjectDescriptionFragmentAtLocation(URI location) {
 		JSONDocument packageJSON = JSONFactory.eINSTANCE.createJSONDocument();
 		if (mergePackageJSONFragmentAtLocation(location, packageJSON)) {
-			return convertToProjectDescription(packageJSON);
+			adjustMainPathIfPointingToFolder(location, packageJSON);
+			return convertToProjectDescription(location, packageJSON, false);
 		}
 		return null;
+	}
+
+	/**
+	 * If the path value of the "main" property of the given package.json document points to a folder, then this method
+	 * will append "/index.js" to that path value (in-place change of the given JSON document).
+	 */
+	private void adjustMainPathIfPointingToFolder(URI location, JSONDocument packageJSON) {
+		JSONValue content = packageJSON.getContent();
+		if (!(content instanceof JSONObject))
+			return;
+		JSONObject contentCasted = (JSONObject) content;
+		String main = asStringOrNull(JSONModelUtils.getProperty(contentCasted, PROP__MAIN).orElse(null));
+		if (main == null) {
+			return;
+		}
+		String pattern = File.separatorChar != '/'
+				? Pattern.quote(File.separator) + "|" + Pattern.quote("/")
+				: Pattern.quote("/");
+		String[] mainSegments = main.split(pattern, -1);
+		URI locationWithMain = location.appendSegments(mainSegments);
+		if (isDirectory(locationWithMain)) {
+			if (!(main.endsWith("/") || main.endsWith(File.separator))) {
+				main += "/";
+			}
+			main += "index.js";
+			JSONModelUtils.setProperty(contentCasted, PROP__MAIN, main);
+		}
 	}
 
 	private void applyDefaults(ProjectDescription pd, URI location) {
@@ -230,6 +271,7 @@ public class ProjectDescriptionHelper {
 		return packageJSON;
 	}
 
+	/** Will change the given 'targetPackageJSON' document in place. */
 	private boolean mergePackageJSONFragmentAtLocation(URI location, JSONDocument targetPackageJSON) {
 		JSONDocument fragment = loadXtextFileAtLocation(location, N4JSGlobals.PACKAGE_FRAGMENT_JSON,
 				JSONDocument.class);
@@ -237,6 +279,15 @@ public class ProjectDescriptionHelper {
 			return false;
 		}
 		if (fragment.getContent() instanceof JSONObject) {
+			// note: dependencies are special in that we not actually merge (i.e. add) those from the fragment but
+			// instead replace the dependencies in target. Rationale: the library manager is not interested in the
+			// dependencies of the original project, only in those defined in the fragment.
+			JSONValue targetContent = targetPackageJSON.getContent();
+			if (targetContent instanceof JSONObject) {
+				JSONModelUtils.removeProperty((JSONObject) targetContent, PROP__DEPENDENCIES);
+				JSONModelUtils.removeProperty((JSONObject) targetContent, PROP__DEV_DEPENDENCIES);
+			}
+			// merge properties from fragment into targetPackageJSON
 			JSONModelUtils.merge(targetPackageJSON, fragment, false, true);
 		}
 		return true;
@@ -297,25 +348,35 @@ public class ProjectDescriptionHelper {
 	}
 
 	/**
-	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescription} instance.
+	 * Same as {@link #exists(URI)}, but also checks if it is a directory.
 	 */
-	public ProjectDescription convertToProjectDescription(JSONDocument packageJSON) {
+	private boolean isDirectory(URI uri) {
+		final URI localURI = CommonPlugin.asLocalURI(uri);
+		return new File(localURI.toFileString()).isDirectory();
+	}
+
+	/**
+	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescription} instance.
+	 * <p>
+	 * Note: this methods does not implement the package.json feature that a "main" path may point to a folder and then
+	 * a file "index.js" in that folder will be used as main module (for details see
+	 * {@link ProjectDescriptionUtils#convertMainPathToModuleSpecifier(String, List)}).
+	 */
+	private ProjectDescription convertToProjectDescription(URI location, JSONDocument packageJSON,
+			boolean applyDefaultValues) {
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();
 			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
-			// if (!rootPairs.stream().map(p -> p.getName()).anyMatch(name -> PROP__N4JS.equals(name))) {
-			// // FIXME temporary: ignore all package.json that do not have an "n4js" property on top level
-			// return null;
-			// }
-			convertRootPairs(result, rootPairs);
+			convertRootPairs(location, result, rootPairs, applyDefaultValues);
 			return result;
 		}
 		return null;
 	}
 
-	private void convertRootPairs(ProjectDescription target, List<NameValuePair> rootPairs) {
-		String valueOfTopLevelMainProperty = null;
+	private void convertRootPairs(URI location, ProjectDescription target, List<NameValuePair> rootPairs,
+			boolean applyDefaultValues) {
+		String valueOfTopLevelPropertyMain = null;
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
 			JSONValue value = pair.getValue();
@@ -335,21 +396,26 @@ public class ProjectDescriptionHelper {
 				break;
 			case PROP__MAIN:
 				// need to handle this value later after all source containers have been read (see below)
-				valueOfTopLevelMainProperty = asStringOrNull(value);
+				valueOfTopLevelPropertyMain = asStringOrNull(value);
 				break;
 			case PROP__N4JS:
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
 				break;
 			}
 		}
+		// set default values
+		if (applyDefaultValues) {
+			applyDefaults(target, location);
+		}
 		// sanitize and set value of top-level property "main"
-		if (valueOfTopLevelMainProperty != null) {
-			if (target.getMainModule() == null) { // only if no "mainModule" property was given
+		// (note: this makes use of the source containers, so it possibly relies on default values having been applied)
+		if (valueOfTopLevelPropertyMain != null) {
+			if (target.getMainModule() == null) { // only if no N4JS-specific "mainModule" property was given
 				List<String> sourceContainerPaths = target.getSourceContainers().stream()
 						.flatMap(scd -> scd.getPaths().stream())
 						.collect(Collectors.toList());
-				String mainModulePath = ProjectDescriptionUtils.sanitizeMainModulePath(valueOfTopLevelMainProperty,
-						sourceContainerPaths);
+				String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
+						valueOfTopLevelPropertyMain, sourceContainerPaths);
 				if (mainModulePath != null) {
 					target.setMainModule(mainModulePath);
 				}

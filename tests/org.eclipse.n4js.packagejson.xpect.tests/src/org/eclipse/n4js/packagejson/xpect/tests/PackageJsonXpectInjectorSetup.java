@@ -58,8 +58,7 @@ public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 				.getInstance(N4JSProjectSetupJsonValidatorExtension.class);
 		
 		// obtain JSON validation extension registry
-		final JSONExtensionRegistry extensionRegistry = jsonInjector
-				.getInstance(JSONExtensionRegistry.class);
+		final JSONExtensionRegistry extensionRegistry = jsonInjector.getInstance(JSONExtensionRegistry.class);
 
 		// X!PECTs injector initialization causes an invalid state of the EValidator
 		// registry
