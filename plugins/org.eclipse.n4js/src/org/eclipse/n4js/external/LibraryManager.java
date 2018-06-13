@@ -25,9 +25,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -47,6 +49,7 @@ import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
+import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -99,6 +102,9 @@ public class LibraryManager {
 
 	@Inject
 	private ExternalIndexSynchronizer indexSynchronizer;
+
+	@Inject
+	private FileBasedExternalPackageManager filbasedPackageManger;
 
 	/**
 	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
@@ -199,12 +205,19 @@ public class LibraryManager {
 		}
 
 		try (ClosableMeasurement mes = dcLibMngr.getClosableMeasurement("installDependenciesInternal");) {
-
-			List<LibraryChange> actualChanges = installUninstallNPMs(monitor, status, versionedNPMs, emptyList());
+			Map<String, String> npmsToInstall = versionedNPMs;
+			Set<LibraryChange> actualChanges = new HashSet<>();
+			do {
+				List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
+				actualChanges.addAll(deltaChanges);
+				npmsToInstall = getDependenciesOfNPMs(deltaChanges);
+				if (!npmsToInstall.isEmpty()) {
+					msg = "Installing transitive dependencies: " + String.join(", ", npmsToInstall.keySet());
+					logger.logInfo(msg);
+				}
+			} while (!npmsToInstall.isEmpty());
 
 			indexSynchronizer.synchronizeNpms(monitor, actualChanges);
-
-			installDependenciesOfNPMs(monitor, actualChanges);
 
 			return status;
 
@@ -220,13 +233,12 @@ public class LibraryManager {
 	 * <p>
 	 * GH-862: Please remove this after GH-821 is solved
 	 */
-	private void installDependenciesOfNPMs(IProgressMonitor monitor, List<LibraryChange> actualChanges) {
+	private Map<String, String> getDependenciesOfNPMs(List<LibraryChange> actualChanges) {
 		Map<String, String> dependencies = new HashMap<>();
 		for (LibraryChange libChange : actualChanges) {
 			if (libChange.type == LibraryChangeType.Added) {
-				N4JSExternalProject addedPrj = externalLibraryWorkspace.getProject(libChange.name);
-				if (addedPrj != null) {
-					ProjectDescription pd = externalLibraryWorkspace.getProjectDescription(libChange.location);
+				ProjectDescription pd = filbasedPackageManger.loadManifestFromProjectRoot(libChange.location);
+				if (pd != null) {
 					for (ProjectDependency pDep : pd.getProjectDependencies()) {
 						String name = pDep.getProjectId();
 						String version = NO_VERSION;
@@ -238,11 +250,8 @@ public class LibraryManager {
 				}
 			}
 		}
-		if (!dependencies.isEmpty()) {
-			String msg = "Installing dependencies: " + String.join(", ", dependencies.keySet());
-			logger.logInfo(msg);
-			installNPMsInternal(dependencies, monitor);
-		}
+
+		return dependencies;
 	}
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,
