@@ -31,5 +31,6 @@
 		"packages/n4js-mangelhaft-cli",
 		"packages/n4mf-parser",
 		"packages/org.eclipse.n4js.mangelhaft.reporter.xunit",
+		"packages/org.eclipse.n4js.mangelhaft.reporter.console"
 	]
 }
