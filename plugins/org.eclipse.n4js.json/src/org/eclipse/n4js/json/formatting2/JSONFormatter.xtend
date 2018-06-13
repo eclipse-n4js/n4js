@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -32,32 +32,32 @@ class JSONFormatter extends AbstractFormatter2 {
 		jSONDocument.getContent.format;
 		jSONDocument.allSemanticRegions.forEach[it.append[indent]]
 	}
-	
+
 	/** Put both brackets and every element of a JSONArray on a separate line. */
 	def dispatch void format(JSONArray al, extension IFormattableDocument document) {
 		// avoid comma-only lines
 		al.configureCommas(document);
-		
-		val bracketPair = al.regionFor.keywordPairs("[","]").head;
+
+		val bracketPair = al.regionFor.keywordPairs("[", "]").head;
 		// indent array elements
 		bracketPair.interior[indent];
-		
+
 		// format empty arrays to be a bracket pair without space (nor newline) in between
 		if (al.elements.empty) {
 			bracketPair.key.append[noSpace]
 			bracketPair.value.prepend[noSpace]
 			return;
 		}
-		
+
 		// put every array element on a separate line
-		al.elements.forEach[it,num|prepend[newLine]];
+		al.elements.forEach[it, num|prepend[newLine]];
 		// recursively format each element
-		al.elements.forEach[it| format(it) ]
-		
+		al.elements.forEach[it|format(it)]
+
 		// put closing bracket on a separate line
 		bracketPair.value.prepend[newLine];
 	}
-	
+
 	/** On the direct level of an semantic Object enforce commas to ", " with autoWrap option. */
 	private def void configureCommas(EObject semEObject, extension IFormattableDocument document) {
 		semEObject.regionFor.keywords(",").forEach [
@@ -65,12 +65,12 @@ class JSONFormatter extends AbstractFormatter2 {
 			append[oneSpace; autowrap];
 		];
 	}
-	
+
 	/** Put both curly braces and every name-value-pair of a JSONObject on a separate line. */
 	def dispatch void format(JSONObject ol, extension IFormattableDocument document) {
 		ol.configureCommas(document);
 
-		val bracePair = ol.regionFor.keywordPairs("{","}").head;
+		val bracePair = ol.regionFor.keywordPairs("{", "}").head;
 		bracePair.interior[indent];
 
 		// format empty objects to be a brace pair without space (nor newline) in between
@@ -81,24 +81,24 @@ class JSONFormatter extends AbstractFormatter2 {
 		}
 
 		bracePair.value.prepend[newLine]; // format WS in front of closing brace
-		ol.nameValuePairs.forEach[it,num|prepend[newLine]];
-		
-		if( bracePair.key.nextSemanticRegion == bracePair.value ) {
+		ol.nameValuePairs.forEach[it, num|prepend[newLine]];
+
+		if (bracePair.key.nextSemanticRegion == bracePair.value) {
 			// empty multiline, trigger formatting:
 			bracePair.key.append[newLine];
 		}
-		
+
 		// recursively format each name-value pair
 		ol.nameValuePairs.forEach[format(it)];
 	}
-	
+
 	def dispatch void format(NameValuePair nameValuePair, extension IFormattableDocument document) {
 		val colon = nameValuePair.regionFor.keyword(":");
 		val value = nameValuePair.value;
 
 		colon.prepend[noSpace];
 		colon.append[oneSpace];
-		
+
 		format(value)
 	}
 }

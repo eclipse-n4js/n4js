@@ -98,7 +98,7 @@ public class JSONObjectImpl extends JSONValueImpl implements JSONObject {
 		};
 		String _join = IterableExtensions.join(XcoreEListExtensions.<NameValuePair, String>map(this.getNameValuePairs(), _function), ",\n");
 		String _plus = ("{\n" + _join);
-		return (_plus + "}");
+		return (_plus + "\n}");
 	}
 
 	/**

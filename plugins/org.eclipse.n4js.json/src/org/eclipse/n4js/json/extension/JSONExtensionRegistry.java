@@ -56,11 +56,12 @@ public class JSONExtensionRegistry {
 
 		// query the extension registry for JSON validator extensions and register them
 		createExecutableExtensions(JSON_VALIDATORS_EXTENSIONS_POINT_ID, IJSONValidatorExtension.class)
-			.forEach(this::register);
+				.forEach(this::register);
 
 		// query the extension registry for JSON resource description extensions and register them
-		createExecutableExtensions(JSON_RESOURCE_DESCRIPTION_EXTENSIONS_POINT_ID, IJSONResourceDescriptionExtension.class)
-			.forEach(this::register);
+		createExecutableExtensions(JSON_RESOURCE_DESCRIPTION_EXTENSIONS_POINT_ID,
+				IJSONResourceDescriptionExtension.class)
+						.forEach(this::register);
 	}
 
 	/**

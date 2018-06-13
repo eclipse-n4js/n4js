@@ -1,0 +1,15 @@
+ProjectId: Client
+ProjectVersion: 0.0.1
+Output: "src-gen"
+ProjectType: library
+
+Sources {
+    source {
+        "src"
+    }
+}
+
+RequiredRuntimeLibraries {
+    lib1,
+    lib2
+}

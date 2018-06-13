@@ -35,17 +35,17 @@ public class JSONLabelProvider extends DefaultEObjectLabelProvider {
 	public JSONLabelProvider(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
-	
+
 	/**
-	 * Display values of {@link NameValuePair}s as part of the description
-	 * if they are not of container nature (e.g. 'a : "value"').
+	 * Display values of {@link NameValuePair}s as part of the description if they
+	 * are not of container nature (e.g. 'a : "value"').
 	 * 
 	 * Only display the name of the value pair, if the value is an array or object.
 	 */
 	StyledString text(NameValuePair pair) {
 		final JSONValue value = pair.getValue();
 		final String nameDescription = String.format("%s", pair.getName());
-		
+
 		// if the name-value-pair has no children
 		if (!JSONUIModelUtils.isContainer(value)) {
 			// display its value in line
@@ -55,7 +55,7 @@ public class JSONLabelProvider extends DefaultEObjectLabelProvider {
 		}
 		return new StyledString(nameDescription);
 	}
-	
+
 	/**
 	 * Display "anonymous" objects as a grayed out {@code <object>}.
 	 * 
@@ -64,7 +64,7 @@ public class JSONLabelProvider extends DefaultEObjectLabelProvider {
 	StyledString text(JSONObject object) {
 		return new StyledString("<object>", StyledString.QUALIFIER_STYLER);
 	}
-	
+
 	/**
 	 * Display "anonymous" arrays as a grayed out {@code <object>}.
 	 * 
@@ -78,26 +78,26 @@ public class JSONLabelProvider extends DefaultEObjectLabelProvider {
 	String text(JSONNumericLiteral numericLiteral) {
 		return numericLiteral.getValue().toString();
 	}
-	
+
 	/** Display a double-quoted string representation of string literals. */
 	String text(JSONStringLiteral stringLiteral) {
 		return String.format("\"%s\"", stringLiteral.getValue());
 	}
-	
+
 	/** Display {@code true} or {@code false} for boolean literals. */
 	String text(JSONBooleanLiteral booleanLiteral) {
 		return booleanLiteral.isBooleanValue() ? "true" : "false";
 	}
-	
+
 	/** Display {@code null} for null literals. */
 	String text(JSONNullLiteral nullLiteral) {
 		return "null";
 	}
-	
+
 	ImageDescriptor image(JSONArray array) {
 		return JSONImageDescriptorCache.ImageRef.JSON_ARRAY.asImageDescriptor().get();
 	}
-	
+
 	ImageDescriptor image(JSONObject object) {
 		return JSONImageDescriptorCache.ImageRef.JSON_OBJECT.asImageDescriptor().get();
 	}
@@ -107,16 +107,17 @@ public class JSONLabelProvider extends DefaultEObjectLabelProvider {
 	public Object image(Object element) {
 		return JSONImageDescriptorCache.ImageRef.JSON_VALUE.asImageDescriptor().get();
 	}
-	
+
 	ImageDescriptor image(NameValuePair pair) {
 		final JSONValue value = pair.getValue();
-		// display an object/array icon for name-value pairs if their value are an array or object.
+		// display an object/array icon for name-value pairs if their value are an array
+		// or object.
 		if (value instanceof JSONArray) {
 			return this.image((JSONArray) value);
 		} else if (value instanceof JSONObject) {
 			return this.image((JSONObject) value);
 		}
-		
+
 		return JSONImageDescriptorCache.ImageRef.JSON_VALUE_PAIR.asImageDescriptor().get();
 	}
 }

@@ -22,12 +22,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.CommonPlugin;
-import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -48,13 +45,10 @@ import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
-import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.N4mfFactory;
-import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.n4mf.VersionConstraint;
@@ -147,6 +141,9 @@ public class ProjectDescriptionHelper {
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
+
+	@Inject
+	private PackageJsonHelper packageJsonHelper;
 
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location}.
@@ -346,7 +343,14 @@ public class ProjectDescriptionHelper {
 		return new File(localURI.toFileString()).isDirectory();
 	}
 
-	private ProjectDescription convertToProjectDescription(JSONDocument packageJSON) {
+	/**
+	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescription} instance.
+	 * <p>
+	 * Note: this methods does not implement the package.json feature that a "main" path may point to a folder and then
+	 * a file "index.js" in that folder will be used as main module (for details see
+	 * {@link ProjectDescriptionUtils#convertMainPathToModuleSpecifier(String, List)}).
+	 */
+	public ProjectDescription convertToProjectDescription(JSONDocument packageJSON) {
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
 			ProjectDescription result = N4mfFactory.eINSTANCE.createProjectDescription();
@@ -406,7 +410,9 @@ public class ProjectDescriptionHelper {
 			JSONValue value = pair.getValue();
 			switch (name) {
 			case PROP__PROJECT_TYPE:
-				target.setProjectType(parseProjectType(asStringOrNull(value)));
+				// parseProjectType returns null if value is invalid, this will
+				// cause the setProjectType setter to use the default value of ProjectType.
+				target.setProjectType(packageJsonHelper.parseProjectType(asStringOrNull(value)));
 				break;
 			case PROP__VENDOR_ID:
 				target.setVendorId(asStringOrNull(value));
@@ -418,7 +424,7 @@ public class ProjectDescriptionHelper {
 				target.setOutputPath(asStringOrNull(value));
 				break;
 			case PROP__SOURCES:
-				convertSourceContainers(target, asNameValuePairsOrEmpty(value));
+				convertSourceContainers(target, value);
 				break;
 			case PROP__MODULE_FILTERS:
 				convertModuleFilters(target, asNameValuePairsOrEmpty(value));
@@ -445,7 +451,7 @@ public class ProjectDescriptionHelper {
 				target.getRequiredRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
 			case PROP__MODULE_LOADER:
-				target.setModuleLoader(parseModuleLoader(asStringOrNull(value)));
+				target.setModuleLoader(packageJsonHelper.parseModuleLoader(asStringOrNull(value)));
 				break;
 			case PROP__INIT_MODULES:
 				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
@@ -462,7 +468,7 @@ public class ProjectDescriptionHelper {
 			String name = pair.getName();
 			JSONValue value = pair.getValue();
 			String valueStr = asStringOrNull(value);
-			VersionConstraint versionConstraint = parseVersionConstraint(valueStr);
+			VersionConstraint versionConstraint = packageJsonHelper.parseVersionConstraint(valueStr);
 			if (name != null && versionConstraint != null) {
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(name);
@@ -491,17 +497,11 @@ public class ProjectDescriptionHelper {
 	 * }
 	 * </pre>
 	 */
-	private void convertSourceContainers(ProjectDescription target, List<NameValuePair> sourceContainerPairs) {
-		for (NameValuePair pair : sourceContainerPairs) {
-			SourceContainerType type = parseSourceContainerType(pair.getName());
-			List<String> paths = asStringsInArrayOrEmpty(pair.getValue());
-			if (type != null && !paths.isEmpty()) {
-				SourceContainerDescription sourceContainerDescription = N4mfFactory.eINSTANCE
-						.createSourceContainerDescription();
-				sourceContainerDescription.setSourceContainerType(type);
-				sourceContainerDescription.getPathsRaw().addAll(paths);
-				target.getSourceContainers().add(sourceContainerDescription);
-			}
+	private void convertSourceContainers(ProjectDescription target, JSONValue sourcesSection) {
+		final List<SourceContainerDescription> sourceContainerDescriptions = packageJsonHelper
+				.getSourceContainerDescriptions(sourcesSection);
+		if (sourceContainerDescriptions != null) {
+			target.getSourceContainers().addAll(sourceContainerDescriptions);
 		}
 	}
 
@@ -526,7 +526,7 @@ public class ProjectDescriptionHelper {
 	 */
 	private void convertModuleFilters(ProjectDescription target, List<NameValuePair> moduleFilterPairs) {
 		for (NameValuePair pair : moduleFilterPairs) {
-			ModuleFilterType type = parseModuleFilterType(pair.getName());
+			ModuleFilterType type = packageJsonHelper.parseModuleFilterType(pair.getName());
 			if (type != null) {
 				List<ModuleFilterSpecifier> mspecs = asModuleFilterSpecifierInArrayOrEmpty(pair.getValue());
 				if (!mspecs.isEmpty()) {
@@ -550,55 +550,6 @@ public class ProjectDescriptionHelper {
 		return result;
 	}
 
-	private VersionConstraint parseVersionConstraint(String versionConstraintStr) {
-		if (versionConstraintStr == null) {
-			return null;
-		}
-		VersionConstraint result = ProjectDescriptionUtils.parseVersionRange(versionConstraintStr);
-		if (result == null) {
-			System.err.println("WARNING: invalid or unsupported version constraint: " + versionConstraintStr);
-		}
-		return result;
-	}
-
-	private ProjectType parseProjectType(String projectTypeStr) {
-		if ("runtimeEnvironment".equals(projectTypeStr))
-			return ProjectType.RUNTIME_ENVIRONMENT;
-		if ("runtimeLibrary".equals(projectTypeStr))
-			return ProjectType.RUNTIME_LIBRARY;
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getProjectType(), ProjectType.class,
-				projectTypeStr);
-	}
-
-	private ModuleLoader parseModuleLoader(String moduleLoaderStr) {
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getModuleLoader(), ModuleLoader.class,
-				moduleLoaderStr);
-	}
-
-	private SourceContainerType parseSourceContainerType(String sourceContainerTypeStr) {
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getSourceContainerType(), SourceContainerType.class,
-				sourceContainerTypeStr);
-	}
-
-	private ModuleFilterType parseModuleFilterType(String moduleFilterTypeStr) {
-		if ("noValidate".equals(moduleFilterTypeStr))
-			return ModuleFilterType.NO_VALIDATE;
-		if ("noModuleWrapping".equals(moduleFilterTypeStr))
-			return ModuleFilterType.NO_MODULE_WRAPPING;
-		return parseEnumLiteral(N4mfPackage.eINSTANCE.getModuleFilterType(), ModuleFilterType.class,
-				moduleFilterTypeStr);
-	}
-
-	private <T extends Enumerator> T parseEnumLiteral(EEnum emfEnumType, Class<T> javaEnumType, String enumLiteralStr) {
-		EEnumLiteral emfLit = enumLiteralStr != null ? emfEnumType.getELiterals().stream()
-				.filter(lit -> lit.getName().equalsIgnoreCase(enumLiteralStr))
-				.findFirst().orElse(null) : null;
-		Enumerator javaLit = emfLit != null ? emfLit.getInstance() : (Enumerator) emfEnumType.getDefaultValue();
-		@SuppressWarnings("unchecked")
-		T javaLitCasted = javaEnumType.isInstance(javaLit) ? (T) javaLit : null;
-		return javaLitCasted;
-	}
-
 	private String asStringOrNull(JSONValue jsonValue) {
 		return jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue() : null;
 	}
@@ -609,13 +560,6 @@ public class ProjectDescriptionHelper {
 
 	private List<NameValuePair> asNameValuePairsOrEmpty(JSONValue jsonValue) {
 		return jsonValue instanceof JSONObject ? ((JSONObject) jsonValue).getNameValuePairs() : Collections.emptyList();
-	}
-
-	private List<String> asStringsInArrayOrEmpty(JSONValue jsonValue) {
-		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(this::asStringOrNull)
-				.filter(pref -> pref != null)
-				.collect(Collectors.toList());
 	}
 
 	private ProjectReference asProjectReferenceOrNull(JSONValue jsonValue) {
@@ -660,61 +604,11 @@ public class ProjectDescriptionHelper {
 				.collect(Collectors.toList());
 	}
 
-	/**
-	 * The following variants are supported:
-	 *
-	 * <pre>
-	 * "abc*"
-	 *
-	 * ["src", "abc*"]
-	 *
-	 * {
-	 *     "sourceContainer": "src"
-	 *     "module": "abc*",
-	 * }
-	 * </pre>
-	 */
-	private ModuleFilterSpecifier asModuleFilterSpecifierOrNull(JSONValue jsonValue) {
-		// 1st variant:
-		String singleString = asStringOrNull(jsonValue);
-		if (singleString != null) {
-			return createModuleFilterSpecifier(null, singleString);
-		}
-		// 2nd variant:
-		List<JSONValue> elements = asArrayElementsOrEmpty(jsonValue);
-		if (elements.size() == 2) {
-			String elem0 = asStringOrNull(elements.get(0));
-			String elem1 = asStringOrNull(elements.get(1));
-			if (elem0 != null && elem1 != null) {
-				return createModuleFilterSpecifier(elem0, elem1);
-			}
-		}
-		// 3rd variant:
-		List<NameValuePair> pairs = asNameValuePairsOrEmpty(jsonValue);
-		NameValuePair pathNVP = pairs.stream().filter(p -> PROP__SOURCE_CONTAINER.equals(p.getName())).findFirst()
-				.orElse(null);
-		NameValuePair moduleNVP = pairs.stream().filter(p -> PROP__MODULE.equals(p.getName())).findFirst().orElse(null);
-		String pathStr = pathNVP != null ? asStringOrNull(pathNVP.getValue()) : null;
-		String moduleStr = moduleNVP != null ? asStringOrNull(moduleNVP.getValue()) : null;
-		if (moduleStr != null) { // pathStr may be null, i.e. "sourceContainer" is optional
-			return createModuleFilterSpecifier(pathStr, moduleStr);
-		}
-		return null;
-	}
-
 	private List<ModuleFilterSpecifier> asModuleFilterSpecifierInArrayOrEmpty(JSONValue jsonValue) {
 		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(this::asModuleFilterSpecifierOrNull)
+				.map(packageJsonHelper::getModuleFilterSpecifier)
 				.filter(mspec -> mspec != null)
 				.collect(Collectors.toList());
-	}
-
-	private ModuleFilterSpecifier createModuleFilterSpecifier(String sourcePath, String moduleSpecifierWithWildcard) {
-		final ModuleFilterSpecifier result = N4mfFactory.eINSTANCE.createModuleFilterSpecifier();
-		result.setSourcePath(sourcePath);
-		result.setModuleSpecifierWithWildcard(moduleSpecifierWithWildcard);
-		return result;
-
 	}
 
 	private List<ProjectDependency> toProjectDependencies(Collection<? extends ProjectReference> prefs) {

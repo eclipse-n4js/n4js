@@ -50,7 +50,7 @@ class JSONObject extends JSONValue {
 	contains NameValuePair[] nameValuePairs
 	
 	op String toString() {
-		return "{\n" + this.nameValuePairs.map[e | e.toString()].join(",\n") + "}";
+		return "{\n" + this.nameValuePairs.map[e | e.toString()].join(",\n") + "\n}";
 	}
 }
 
@@ -61,7 +61,7 @@ class JSONArray extends JSONValue {
 	contains JSONValue[] elements
 	
 	op String toString() {
-		return "[\n" + this.elements.map[e | e.toString()].join(",\n") + "]";
+		return "[\n" + this.elements.map[e | e.toString()].join(",\n") + "\n]";
 	}
 }
 
