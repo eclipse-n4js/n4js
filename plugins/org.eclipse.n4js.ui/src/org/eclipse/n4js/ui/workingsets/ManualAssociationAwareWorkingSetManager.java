@@ -74,14 +74,6 @@ public class ManualAssociationAwareWorkingSetManager extends WorkingSetManagerIm
 	@Inject
 	private ObjectMapper mapper;
 
-	/**
-	 * Registers itself to the Eclipse based {@link IWorkingSetManager working set manager} to keep the content of this
-	 * and that manager in sync.
-	 */
-	public void registerToPropertyChangeListener() {
-		getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
-	}
-
 	@Override
 	public String getLabel() {
 		return "Manual Association";
@@ -177,6 +169,10 @@ public class ManualAssociationAwareWorkingSetManager extends WorkingSetManagerIm
 
 	@Override
 	protected List<WorkingSet> initializeWorkingSets() {
+		// Registers itself to the Eclipse based {@link IWorkingSetManager working set manager} to keep the content of
+		// this and that manager in sync.
+		getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
+
 		checkState(projectAssociations.keySet().size() == orderedWorkingSetIds.size(),
 				"Expected same number of working set names as project associations."
 						+ "\nNames were: " + Iterables.toString(orderedWorkingSetIds)
