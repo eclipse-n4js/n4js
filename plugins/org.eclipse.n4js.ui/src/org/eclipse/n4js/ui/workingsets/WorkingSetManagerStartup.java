@@ -34,8 +34,13 @@ public class WorkingSetManagerStartup implements IStartup {
 	@Inject
 	private WorkingSetManagerBroker workingSetManagerBroker;
 
+	@Inject
+	private ManualAssociationAwareWorkingSetManager associationAwareWorkingSetManager;
+
 	@Override
 	public void earlyStartup() {
+		associationAwareWorkingSetManager.registerToPropertyChangeListener();
+
 		// This will automatically register the proper listeners to keep the different working set managers in sync.
 		workingSetManagerBroker.getWorkingSetManagers();
 
