@@ -213,7 +213,7 @@ public abstract class ExternalIndexSynchronizer {
 		boolean isProjectDescriptionFile = true;
 		isProjectDescriptionFile &= resLocation.endsWith(IN4JSProject.PACKAGE_JSON);
 		isProjectDescriptionFile &= resLocation.substring(nodeModulesLocation.length())
-				.split(File.separator).length == 1;
+				.split(File.separator).length == 2;
 
 		if (isProjectDescriptionFile) {
 			Iterable<IEObjectDescription> pds = res.getExportedObjectsByType(JSONPackage.eINSTANCE.getJSONDocument());
