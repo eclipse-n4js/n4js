@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.validation.helper;
+package org.eclipse.n4js.validation.validators.packagejson;
 
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.n4mf.ProjectReference;

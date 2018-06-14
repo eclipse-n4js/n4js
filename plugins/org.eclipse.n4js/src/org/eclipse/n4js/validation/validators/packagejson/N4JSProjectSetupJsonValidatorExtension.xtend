@@ -38,6 +38,7 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.json.validation.^extension.AbstractJSONValidatorExtension
 import org.eclipse.n4js.json.validation.^extension.CheckProperty
 import org.eclipse.n4js.n4mf.DeclaredVersion
+import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerDescription
@@ -56,7 +57,6 @@ import org.eclipse.n4js.utils.PackageJsonHelper
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.n4js.utils.Version
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.n4js.validation.helper.PolyFilledProvisionPackageJson
 import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -73,7 +73,7 @@ import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.n4mf.ProjectDependency
+import org.eclipse.n4js.json.JSON.JSONPackage
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -401,7 +401,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				val allProjects = getAllExistingProjectIds();
 				val head = projects.head;
 				val refProjectType = allProjects.get(head.projectId)?.projectType
-				if (projects.exists[testedProject | refProjectType != allProjects.get(testedProject.projectId)?.projectType]) {
+				
+				// check whether 'projects' contains a dependency to an existing project of different
+				// type than 'head'
+				if (projects.exists[testedProject | allProjects.containsKey(testedProject.projectId) &&
+					refProjectType != allProjects.get(testedProject.projectId)?.projectType
+				]) {
 					addIssue(
 						messageForMISMATCHING_TESTED_PROJECT_TYPES, 
 						testedProjectsValue,
@@ -600,8 +605,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if(checkFeatureRestrictions(ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, implementedProjectsValue, 
 			not(or(RE_OR_RL_TYPE, TEST_TYPE)))) {
 		
+			val description = getProjectDescription();
+		
 			val references = implementedProjectsValue.referencesFromJSONStringArray;
 			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects", false);
+			
+			if (description.implementationId === null && !references.isEmpty()) {
+				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_ID(), implementedProjectsValue.eContainer,
+					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_ID);
+			}
 		}
 	}
 
@@ -612,6 +624,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Adds INVALID_FEATURE_FOR_PROJECT_TYPE to {@code pair} otherwise.
 	 * 
 	 * @param featureDescription A textual user-facing description of the checked feature.
+	 * @param value The JSONValue that has been declared for the given feature.
 	 * @param supportedTypesPredicate A predicate which indicates whether the feature may be used for a given project type.
 	 */
 	def boolean checkFeatureRestrictions(String featureDescription, JSONValue value, Predicate<ProjectType> supportedTypesPredicate) {
@@ -619,6 +632,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (type === null) {
 			// cannot check feature if project type cannot be determined
 			return false;
+		}
+		
+		// empty values are always allowed
+		if (isEmptyValue(value)) {
+			return true;
 		}
 		
 		// if container is a NameValuePair use whole pair as issue target
@@ -632,6 +650,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		return true;
+	}
+	
+	/** Return {@code true} iff the given value is considered empty (empty array or empty object). */
+	private def isEmptyValue(JSONValue value) {
+		return ((value instanceof JSONArray) && ((value as JSONArray).elements.empty)) ||
+			((value instanceof JSONObject) && ((value as JSONObject).nameValuePairs.empty));
 	}
 
 	/**

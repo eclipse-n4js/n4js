@@ -65,8 +65,8 @@
 				"src"
 			]
 		},
-		// XPECT warnings --> "Provided runtime libraries cannot be specified for runtime library projects." at ""providedRuntimeLibraries": []"
-		"providedRuntimeLibraries": [],
+		// XPECT warnings --> "Provided runtime libraries cannot be specified for runtime library projects." at ""providedRuntimeLibraries": [""]"
+		"providedRuntimeLibraries": [""],
 		"requiredRuntimeLibraries": [
 			/* XPECT issues ---
 			"Project test.data.system.project.one type of library cannot be declared among the required runtime libraries." at ""test.data.system.project.one""

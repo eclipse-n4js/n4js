@@ -74,14 +74,14 @@
 			// XPECT errors --> "Duplicate project reference test.data.system.project.two." at ""test.data.system.project.two""
 			"test.data.system.project.two"
 		],
-		// XPECT warnings --> "ImplementedProjects cannot be specified for test projects." at ""implementedProjects": []"
-		"implementedProjects": [],
-		// XPECT warnings --> "InitModules cannot be specified for test projects." at ""initModules": []"
-		"initModules": [],
+		// XPECT warnings --> "ImplementedProjects cannot be specified for test projects." at ""implementedProjects": [""]"
+		"implementedProjects": [""],
+		// XPECT warnings --> "InitModules cannot be specified for test projects." at ""initModules": [""]"
+		"initModules": [""],
 		// XPECT warnings --> "ExecModule cannot be specified for test projects." at ""execModule": "some-execution-module""
 		"execModule": "some-execution-module",
-		// XPECT warnings --> "Provided runtime libraries cannot be specified for test projects." at ""providedRuntimeLibraries": []"
-		"providedRuntimeLibraries": [],
+		// XPECT warnings --> "Provided runtime libraries cannot be specified for test projects." at ""providedRuntimeLibraries": [""]"
+		"providedRuntimeLibraries": [""],
 		// XPECT noerrors
 		"requiredRuntimeLibraries": [] 
 	}

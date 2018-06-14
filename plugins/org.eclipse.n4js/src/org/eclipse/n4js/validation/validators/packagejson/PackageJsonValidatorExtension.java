@@ -413,10 +413,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS +
 			"." + ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS)
 	public void checkImplementedProjects(JSONValue value) {
-		// obtain implementationId, if present. null otherwise
-		final JSONStringLiteral implementationId = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS +
-				"." + ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID, JSONStringLiteral.class);
-
 		// check for correct types of implementedProjects
 		if (!checkIsType(value, JSONPackage.Literals.JSON_ARRAY, "as list of implemented projects")) {
 			return;
@@ -449,11 +445,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_REFLEXIVE(), implementedProjectLiteral,
 						IssueCodes.PKGJ_APIIMPL_REFLEXIVE);
 			}
-		}
-
-		if (implementationId == null && !implementedProjectLiterals.isEmpty()) {
-			addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_PROJECTS(), value.eContainer(),
-					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_PROJECTS);
 		}
 	}
 
