@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EAttribute;
@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.n4js.N4JSGlobals;
@@ -221,7 +222,10 @@ public class ProjectDescriptionHelper {
 				: Pattern.quote("/");
 		String[] mainSegments = main.split(pattern, -1);
 		URI locationWithMain = location.appendSegments(mainSegments);
-		if (isDirectory(locationWithMain)) {
+
+		final ResourceSet resourceSet = resourceSetProvider.get();
+
+		if (isDirectory(resourceSet, locationWithMain)) {
 			if (!(main.endsWith("/") || main.endsWith(File.separator))) {
 				main += "/";
 			}
@@ -315,47 +319,58 @@ public class ProjectDescriptionHelper {
 
 	private <T extends EObject> T loadXtextFile(URI uri, Class<T> expectedTypeOfRoot) {
 		try {
-			if (exists(uri)) {
-				ResourceSet resourceSet = resourceSetProvider.get();
-				Resource resource = resourceSet.getResource(uri, true);
-				if (resource != null) {
-					List<EObject> contents = resource.getContents();
+			ResourceSet resourceSet = resourceSetProvider.get();
 
-					if (!contents.isEmpty()) {
-						EObject root = contents.get(0);
-						if (expectedTypeOfRoot.isInstance(root)) {
-							@SuppressWarnings("unchecked")
-							final T rootCasted = (T) root;
-							contents.clear();
-							return rootCasted;
-						}
+			// check whether a file exists at the given URI
+			if (!exists(resourceSet, uri)) {
+				return null;
+			}
+
+			Resource resource = resourceSet.getResource(uri, true);
+			if (resource != null) {
+				List<EObject> contents = resource.getContents();
+
+				if (!contents.isEmpty()) {
+					EObject root = contents.get(0);
+					if (expectedTypeOfRoot.isInstance(root)) {
+						@SuppressWarnings("unchecked")
+						final T rootCasted = (T) root;
+						contents.clear();
+						return rootCasted;
 					}
 				}
 			}
 			return null;
 		} catch (Exception e) {
 			// TODO Luca: I think this message is not valid anymore?
-			throw new WrappedException("unexpected Xtext file URI: " + uri, e);
+			throw new WrappedException("Failed to load project description resource at " + uri, e);
 		}
 	}
 
 	/**
-	 * Checks whether the given {@link URI} exists on the file system.
+	 * Checks whether {@code uri} points to a resource that actually exists on the file system.
 	 *
-	 * This method can be used both for platform as well as file-based URIs.
+	 * @param resourceSet
+	 *            The resource set to use for the file system access.
+	 * @param uri
+	 *            The uri to check.
 	 */
-	private boolean exists(URI uri) {
-		// obtain file: based local URI
-		final URI localURI = CommonPlugin.asLocalURI(uri);
-		return new File(localURI.toFileString()).exists();
+	private boolean exists(ResourceSet resourceSet, URI uri) {
+		return resourceSet.getURIConverter().exists(uri, null);
 	}
 
 	/**
-	 * Same as {@link #exists(URI)}, but also checks if it is a directory.
+	 * Checks whether {@code uri} points to a directory on the file system.
+	 *
+	 * @param resourceSet
+	 *            The resource set to use for the file system access.
+	 * @param uri
+	 *            The uri to check.
 	 */
-	private boolean isDirectory(URI uri) {
-		final URI localURI = CommonPlugin.asLocalURI(uri);
-		return new File(localURI.toFileString()).isDirectory();
+	private boolean isDirectory(ResourceSet resourceSet, URI uri) {
+		final Map<String, ?> attributes = resourceSet.getURIConverter().getAttributes(uri, null);
+		final boolean isDirectory = Objects.equals(attributes.get(URIConverter.ATTRIBUTE_DIRECTORY), Boolean.TRUE);
+		return isDirectory;
 	}
 
 	/**
