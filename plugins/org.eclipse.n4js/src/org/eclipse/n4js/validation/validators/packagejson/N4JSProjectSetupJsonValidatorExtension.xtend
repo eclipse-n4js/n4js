@@ -501,7 +501,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
 	def checkDependencies(JSONValue dependenciesValue) {
 		// make sure 'dependencies' feature is allowed in combination with the current project type
-		if (!checkFeatureRestrictions("dependencies", dependenciesValue, not(RE_OR_RL_TYPE))) {
+		if (!checkFeatureRestrictions("dependencies", dependenciesValue, not(RE_TYPE))) {
 			return;
 		}
 		
@@ -513,7 +513,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
 	def checkDevDependencies(JSONValue devDependenciesValue) {
 		// make sure 'devDependencies' are allowed in combination with the current project type
-		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_OR_RL_TYPE))) {
+		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_TYPE))) {
 			return;
 		}
 
@@ -652,8 +652,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	private def Predicate<IN4JSProject> createDependenciesPredicate() {
 		return switch(projectDescription.projectType) {
-			case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
+			// TODO consider re-enabling this constraint (REs or RLs may appear under testedProjects,
+			// thus they may also appear in "dependencies"?
+			//case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
 			case API: createProjectPredicateForAPIs
+			// runtime libraries may only depend on other runtime libraries
+			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
 			// otherwise, any project may be declared as dependency
 			default: Predicates.alwaysTrue.forN4jsProjects
 		}
