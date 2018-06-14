@@ -24,11 +24,10 @@
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms1024m -Xmx2048m -Dorg.eclipse.swt.internal.carbon.smallFonts -Dorg.eclipse.n4js.includesBuiltInLibraries=true -Dosgi.requiredJavaVersion=1.8"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms1024m -Xmx4096m -Dorg.eclipse.swt.internal.carbon.smallFonts -Dorg.eclipse.n4js.includesBuiltInLibraries=true -Dosgi.requiredJavaVersion=1.8"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="org.eclipse.n4js.product.product"/>
 <setAttribute key="selected_features">
-<setEntry value="org.eclipse.n4js.sdk:default"/>
 <setEntry value="org.eclipse.e4.rcp:default"/>
 <setEntry value="org.eclipse.ecf.core.feature:default"/>
 <setEntry value="org.eclipse.ecf.core.ssl.feature:default"/>
@@ -39,6 +38,7 @@
 <setEntry value="org.eclipse.egit:default"/>
 <setEntry value="org.eclipse.emf.common:default"/>
 <setEntry value="org.eclipse.emf.ecore:default"/>
+<setEntry value="org.eclipse.epp.mpc:default"/>
 <setEntry value="org.eclipse.equinox.p2.core.feature:default"/>
 <setEntry value="org.eclipse.equinox.p2.extras.feature:default"/>
 <setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>
@@ -49,18 +49,18 @@
 <setEntry value="org.eclipse.n4js.n4mf.sdk:default"/>
 <setEntry value="org.eclipse.n4js.regex.sdk:default"/>
 <setEntry value="org.eclipse.n4js.runner.sdk:default"/>
+<setEntry value="org.eclipse.n4js.sdk:default"/>
 <setEntry value="org.eclipse.n4js.smith.sdk:default"/>
 <setEntry value="org.eclipse.n4js.ts.sdk:default"/>
 <setEntry value="org.eclipse.n4js.xpect.sdk:default"/>
 <setEntry value="org.eclipse.platform:default"/>
 <setEntry value="org.eclipse.rcp:default"/>
+<setEntry value="org.eclipse.userstorage:default"/>
 <setEntry value="org.eclipse.wst.common_core.feature:default"/>
 <setEntry value="org.eclipse.wst.common_ui.feature:default"/>
 <setEntry value="org.eclipse.wst.xml_core.feature:default"/>
 <setEntry value="org.eclipse.wst.xml_ui.feature:default"/>
 <setEntry value="org.eclipse.wst.xml_userdoc.feature:default"/>
-<setEntry value="org.eclipse.epp.mpc:default"/>
-<setEntry value="org.eclipse.userstorage:default"/>
 </setAttribute>
 <booleanAttribute key="show_selected_only" value="false"/>
 <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>

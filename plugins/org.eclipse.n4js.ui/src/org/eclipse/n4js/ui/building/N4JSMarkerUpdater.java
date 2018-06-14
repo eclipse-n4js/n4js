@@ -91,7 +91,7 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 		IN4JSProject prj = n4jsCore.findProject(uri).orNull();
 		CancelIndicator cancelIndicator = getCancelIndicator(monitor);
 
-		if (prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
+		if (prj != null && prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
 			List<Issue> list = validator.validate(resource, CheckMode.NORMAL_AND_FAST, cancelIndicator);
 			markerManager.setIssues(uri, list);
 		}
