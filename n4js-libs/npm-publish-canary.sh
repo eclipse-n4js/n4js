@@ -33,9 +33,15 @@ DIRS=$(find ./packages/ -type d -mindepth 1 -maxdepth 1)
 for dir in $DIRS
 do
 	touch "$dir/.npmrc"
-	echo -e "\n//${NPM_REGISTRY_WITHOUT_PROTOCOL}/:_authToken=\${NPM_TOKEN}" >> "$dir/.npmrc"
+	echo -e "\n//${NPM_REGISTRY_WITHOUT_PROTOCOL}/:_authToken=\${NPM_TOKEN}" > "$dir/.npmrc"
 done
 
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
+
+# Remove .npmrc for now
+for dir in $DIRS
+do
+	rm "$dir/.npmrc"
+done
