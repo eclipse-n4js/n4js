@@ -25,19 +25,6 @@ function echo_exec {
 
 HOST_NAME=`hostname`
 
-# If publishing to local or staging, use the dist-tag 'test' otherwise 'latest'
-NPM_TAG=test
-
-if [ "$DESTINATION" = "public" ]; then
-	if [ -z $NPM_TOKEN]; then
-		echo "Publishing to public requires the environment variable NPM_TOKEN to be set but it has not been set!"
-		exit 0;
-	fi
-	NPM_TAG=latest
-else
-	# Dummy token
-	NPM_TOKEN=dummy	
-fi;
 # Turn http://localhost:4873 -> localhost:4873
 NPM_REGISTRY_WITHOUT_PROTOCOL=$(echo ${NPM_REGISTRY} | awk -F"//" '{print $2}')
 
