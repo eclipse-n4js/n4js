@@ -71,7 +71,7 @@
 			"test.data.system.project.one",
 			// XPECT noerrors --> "error is reported on subsequent occurances"
 			"test.data.system.project.two",
-			// XPECT errors --> "Duplicate project reference org.eclipse.n4js:test.data.system.project.two." at "test.data.system.project.two"
+			// XPECT errors --> "Duplicate project reference test.data.system.project.two." at ""test.data.system.project.two""
 			"test.data.system.project.two"
 		],
 		// XPECT warnings --> "ImplementedProjects cannot be specified for test projects." at ""implementedProjects": []"
