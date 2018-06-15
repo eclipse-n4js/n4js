@@ -11,13 +11,7 @@
 package org.eclipse.n4js.tests.util;
 
 import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__N4JS;
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__NAME;
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__OUTPUT;
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__PROJECT_TYPE;
 import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__SOURCES;
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_ID;
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VENDOR_NAME;
-import static org.eclipse.n4js.utils.ProjectDescriptionHelper.PROP__VERSION;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +30,7 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerType;
+import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 
 /**
@@ -204,32 +199,18 @@ public class PackageJSONTestUtils {
 	 *
 	 * Defaults to project type {@link ProjectType#LIBRARY}, version {@code 0.0.1}, vendor name
 	 * {@code Eclipse N4JS Project} and vendor ID {@code org.eclipse.n4js}.
+	 *
 	 */
-	public static JSONObject createSimplePackageJSON(String projectId, String sourceFolder,
+	public static PackageJsonBuilder createSimplePackageJSON(String projectId, String sourceFolder,
 			String outputFolder) {
-		final JSONObject root = JSONFactory.eINSTANCE.createJSONObject();
-		final JSONObject n4jsRoot = JSONModelUtils.addProperty(root, PROP__N4JS,
-				JSONFactory.eINSTANCE.createJSONObject());
-
-		JSONModelUtils.addProperty(root, PROP__NAME, projectId);
-		JSONModelUtils.addProperty(root, PROP__VERSION, "0.0.1");
-
-		JSONModelUtils.addProperty(n4jsRoot, PROP__VENDOR_ID, "org.eclipse.n4js");
-		JSONModelUtils.addProperty(n4jsRoot, PROP__VENDOR_NAME, "Eclipse N4JS Project");
-		JSONModelUtils.addProperty(n4jsRoot, PROP__PROJECT_TYPE, ProjectType.LIBRARY.getLiteral().toLowerCase());
-		JSONModelUtils.addProperty(n4jsRoot, PROP__OUTPUT, outputFolder);
-
-		// add sources section
-		final JSONObject sourcesSection = JSONModelUtils.addProperty(n4jsRoot, PROP__SOURCES,
-				JSONFactory.eINSTANCE.createJSONObject());
-		// add source container type 'source'
-		final JSONArray sourceFoldersArray = JSONModelUtils.addProperty(sourcesSection,
-				SourceContainerType.SOURCE.getLiteral().toLowerCase(),
-				JSONFactory.eINSTANCE.createJSONArray());
-
-		sourceFoldersArray.getElements().add(JSONModelUtils.createStringLiteral(sourceFolder));
-
-		return root;
+		return PackageJsonBuilder.newBuilder()
+				.withName(projectId)
+				.withVersion("0.0.1")
+				.withVendorId("org.eclipse.n4js")
+				.withVendorName("Eclipse N4JS Project")
+				.withType(ProjectType.LIBRARY)
+				.withOutput(outputFolder)
+				.withSourceContainer(SourceContainerType.SOURCE, sourceFolder);
 	}
 
 }

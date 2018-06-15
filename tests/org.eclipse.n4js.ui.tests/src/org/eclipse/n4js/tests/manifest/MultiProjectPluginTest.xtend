@@ -278,8 +278,8 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	def void testDeleteExternalFolderValidateProjectDescriptionFileWithoutOpenedEditors() {
 
-		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [ JSONObject o |
-			PackageJSONTestUtils.setSourceContainerSpecifiers(o, SourceContainerType.EXTERNAL, #["ext"]);
+		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [ builder |
+			builder.withSourceContainer(SourceContainerType.EXTERNAL, "ext");
 		]);
 		configureProjectWithXtext(project);
 		waitForAutoBuild;

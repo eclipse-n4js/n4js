@@ -44,7 +44,6 @@ import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.tests.util.PackageJSONTestUtils;
 import org.eclipse.n4js.ui.navigator.internal.SelectWorkingSetDropDownAction;
 import org.eclipse.n4js.ui.navigator.internal.ShowHiddenWorkingSetsDropDownAction;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
@@ -601,7 +600,7 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 	@Override
 	protected IProject createN4JSProject(String projectName, ProjectType type) throws CoreException {
 		final IProject project = createJSProject(projectName, "src", "src-gen",
-				o -> PackageJSONTestUtils.setProjectType(o, type));
+				b -> b.withType(type));
 		configureProjectWithXtext(project);
 		// Don't waitForBuild here as there is no code to build
 		return project;

@@ -34,10 +34,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
-import org.eclipse.n4js.tests.util.PackageJSONTestUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -102,7 +101,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected IProject createJSProject(String projectName, String sourceFolder, String outputFolder,
-			Consumer<JSONObject> manifestAdjustments) throws CoreException {
+			Consumer<PackageJsonBuilder> manifestAdjustments) throws CoreException {
 		return ProjectTestsUtils.createJSProject(projectName, sourceFolder, outputFolder, manifestAdjustments);
 	}
 
@@ -121,7 +120,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	 */
 	protected IProject createN4JSProject(String projectName, ProjectType type) throws CoreException {
 		final IProject project = createJSProject(projectName, "src", "src-gen",
-				o -> PackageJSONTestUtils.setProjectType(o, type));
+				b -> b.withType(type));
 		configureProjectWithXtext(project);
 		waitForAutoBuild();
 		return project;

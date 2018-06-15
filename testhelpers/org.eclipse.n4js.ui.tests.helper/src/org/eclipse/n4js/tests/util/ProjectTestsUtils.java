@@ -46,8 +46,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
-import org.eclipse.n4js.json.JSON.JSONFactory;
-import org.eclipse.n4js.json.JSON.JSONObject;
+import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
@@ -185,7 +184,7 @@ public class ProjectTestsUtils {
 	 *            for details see method {@link #createProjectDescriptionFile(IProject, String, String, Consumer)}.
 	 */
 	public static IProject createJSProject(String projectName, String sourceFolder, String outputFolder,
-			Consumer<JSONObject> packageJSONAdjustments) throws CoreException {
+			Consumer<PackageJsonBuilder> packageJSONAdjustments) throws CoreException {
 		IProject result = createSimpleProject(projectName);
 		createSubFolder(result.getProject(), sourceFolder);
 		createSubFolder(result.getProject(), outputFolder);
@@ -199,30 +198,29 @@ public class ProjectTestsUtils {
 	}
 
 	/**
-	 * @param packageJSONAdjustments
-	 *            before saving the package.json file this procedure will be called to allow adjustments to the
-	 *            package.json's root {@link JSONObject} (the {@link JSONObject} object passed to the procedure will
-	 *            already contain all default values). May be <code>null</code> if no adjustments are required.
+	 * @param packageJSONBuilderAdjustments
+	 *            This procedure will be invoked with the {@link PackageJsonBuilder} instances that is used to create
+	 *            the project description {@link JSONDocument} instance. The builder instance will be pre-configured
+	 *            with default values (cf {@link PackageJSONTestUtils#createSimplePackageJSON}). May be
+	 *            <code>null</code> if no adjustments are required.
 	 */
 	public static void createProjectDescriptionFile(IProject project, String sourceFolder, String outputFolder,
-			Consumer<JSONObject> packageJSONAdjustments) throws CoreException {
+			Consumer<PackageJsonBuilder> packageJSONBuilderAdjustments) throws CoreException {
+
 		IFile projectDescriptionWorkspaceFile = project.getFile(N4JSGlobals.PACKAGE_JSON);
 		URI uri = URI.createPlatformResourceURI(projectDescriptionWorkspaceFile.getFullPath().toString(), true);
 
-		final JSONObject projectDescriptionObject = PackageJSONTestUtils.createSimplePackageJSON(project.getName(),
-				sourceFolder,
-				outputFolder);
+		final PackageJsonBuilder packageJsonBuilder = PackageJSONTestUtils
+				.createSimplePackageJSON(project.getName(), sourceFolder, outputFolder);
 
-		if (packageJSONAdjustments != null)
-			packageJSONAdjustments.accept(projectDescriptionObject);
+		if (packageJSONBuilderAdjustments != null)
+			packageJSONBuilderAdjustments.accept(packageJsonBuilder);
 
-		// create new JSON document with the project description JSON object as content
-		final JSONDocument jsonDocument = JSONFactory.eINSTANCE.createJSONDocument();
-		jsonDocument.setContent(projectDescriptionObject);
+		final JSONDocument document = packageJsonBuilder.buildModel();
 
 		final ResourceSet rs = createResourceSet(project);
 		final Resource projectDescriptionResource = rs.createResource(uri);
-		projectDescriptionResource.getContents().add(jsonDocument);
+		projectDescriptionResource.getContents().add(document);
 
 		try {
 			// save formatted package.json file to disk
