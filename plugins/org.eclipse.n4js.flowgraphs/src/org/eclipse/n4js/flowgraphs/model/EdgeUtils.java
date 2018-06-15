@@ -34,9 +34,14 @@ public class EdgeUtils {
 	/** Adds a {@link ControlFlowEdge} from n1 to n2 with the given {@link ControlFlowType}. */
 	static public ControlFlowEdge connectCF(Node n1, Node n2, ControlFlowType cfType) {
 		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2, cfType);
-		n1.addSuccessor(cfEdge);
-		n2.addPredecessor(cfEdge);
-		return cfEdge;
+		try {
+			n1.addSuccessor(cfEdge);
+			n2.addPredecessor(cfEdge);
+			return cfEdge;
+		} catch (IllegalStateException e) {
+			System.out.println("Edge details: " + cfEdge);
+			throw e;
+		}
 	}
 
 	/**
