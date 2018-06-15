@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4mf.ui.wizard;
+package org.eclipse.n4js.ui.wizard.project;
 
 import static org.eclipse.core.resources.IResource.DEPTH_INFINITE;
 import static org.eclipse.xtext.ui.XtextProjectHelper.BUILDER_ID;
@@ -33,10 +33,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.utils.N4MFConstants;
-import org.eclipse.n4js.ui.wizard.project.FileContentUtil;
-import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
-import org.eclipse.n4js.ui.wizard.project.N4MFProjectInfo;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.ui.util.ProjectFactory;
@@ -49,8 +46,8 @@ import com.google.inject.Provider;
 
 /**
  * Creates a Eclipse project with Xtext nature, a src and a src-gen folder and generating an example N4JS file inside
- * the src folder and a manifest.n4mf file in the project root. The name of the project as well as the contents of the
- * manifest.n4mf are derived from the project name given by the user in the new project wizard.
+ * the src folder and a package.json file in the project root. The name of the project as well as the contents of the
+ * package.json are derived from the project name given by the user in the new project wizard.
  */
 public class N4JSProjectCreator extends AbstractProjectCreator {
 
@@ -129,16 +126,16 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	public void setProjectInfo(IProjectInfo projectInfo) {
 		super.setProjectInfo(projectInfo);
 
-		if (projectInfo instanceof N4MFProjectInfo &&
-				ProjectType.TEST.equals(((N4MFProjectInfo) projectInfo).getProjectType())) {
-			configureTestProject((N4MFProjectInfo) projectInfo);
+		if (projectInfo instanceof N4JSProjectInfo &&
+				ProjectType.TEST.equals(((N4JSProjectInfo) projectInfo).getProjectType())) {
+			configureTestProject((N4JSProjectInfo) projectInfo);
 		}
 	}
 
 	/**
 	 * Configures the project creator to create a test project
 	 */
-	private void configureTestProject(N4MFProjectInfo projectInfo) {
+	private void configureTestProject(N4JSProjectInfo projectInfo) {
 		modelFolderName = TEST_SRC_ROOT;
 		allFolders.add(TEST_SRC_ROOT);
 
@@ -150,7 +147,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	@Override
 	protected ProjectFactory configureProjectFactory(final ProjectFactory factory) {
 		final ProjectFactory projectFactory = super.configureProjectFactory(factory);
-		final N4MFProjectInfo projectInfo = (N4MFProjectInfo) getProjectInfo();
+		final N4JSProjectInfo projectInfo = (N4JSProjectInfo) getProjectInfo();
 		if (null != projectInfo.getProjectLocation()) {
 			projectFactory.setLocation(projectInfo.getProjectLocation());
 		}
@@ -160,7 +157,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	@Override
 	protected void enhanceProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
 
-		final N4MFProjectInfo pi = (N4MFProjectInfo) getProjectInfo();
+		final N4JSProjectInfo pi = (N4JSProjectInfo) getProjectInfo();
 
 		if (pi.getOutputFolder() == null) {
 			// Set the default source output folder
@@ -194,13 +191,13 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 		// For test projects create a test project greeter if wanted
 		if (ProjectType.TEST.equals(pi.getProjectType()) && pi.getCreateGreeterFile()) {
 			pathContentMap.put(modelFolderName + "/" + "Test_" + safeProjectName + ".n4js",
-					NewN4JSProjectFileTemplates.getSourceFileWithTestGreeter(safeProjectName));
+					N4JSNewProjectFileTemplates.getSourceFileWithTestGreeter(safeProjectName));
 		}
 
 		// For other projects create the default greeter file
 		if (!ProjectType.TEST.equals(pi.getProjectType()) && pi.getCreateGreeterFile()) {
 			pathContentMap.put(modelFolderName + "/" + "GreeterModule_" + safeProjectName + ".n4js",
-					NewN4JSProjectFileTemplates.getSourceFileWithGreeterClass(projectName, safeProjectName));
+					N4JSNewProjectFileTemplates.getSourceFileWithGreeterClass(projectName, safeProjectName));
 		}
 
 		// create initial files
@@ -208,7 +205,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 			createIfNotExists(project, entry.getKey(), entry.getValue(), charset, monitor);
 		}
 
-		// prepare the manifest
+		// prepare the package.json contents
 		List<String> sources = pi.getSourceFolders();
 		List<String> tests = pi.getTestSourceFolders();
 
@@ -229,11 +226,11 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 			projectDependencies.addAll(MANGELHAFT_DEPENDENCIES);
 		}
 
-		// Generate manifest content
-		CharSequence manifestContent = NewN4JSProjectFileTemplates.getManifestContents(pi);
+		// Generate package.json content
+		CharSequence projectDescriptionContent = N4JSNewProjectFileTemplates.getProjectDescriptionContents(pi);
 
-		// create manifest
-		createIfNotExists(project, N4MFConstants.N4MF_MANIFEST, manifestContent, charset, monitor);
+		// create package.json file
+		createIfNotExists(project, IN4JSProject.PACKAGE_JSON, projectDescriptionContent, charset, monitor);
 
 		project.refreshLocal(DEPTH_INFINITE, monitor);
 	}

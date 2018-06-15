@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
+import org.eclipse.n4js.json.ui.internal.JsonActivator;
 import org.eclipse.n4js.regex.ui.internal.RegularExpressionActivator;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
@@ -103,8 +103,8 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 		injectors.putAll(InjectorCollector.getSharedInjectors());
 		injectors.put(new N4JSInjectorSupplier().get(),
 				"N4JS-Injector");
-		injectors.put(N4MFActivator.getInstance().getInjector(N4MFActivator.ORG_ECLIPSE_N4JS_N4MF_N4MF),
-				"N4MF-Injector");
+		injectors.put(JsonActivator.getInstance().getInjector(JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON),
+				"JSON-Injector");
 		injectors.put(RegularExpressionActivator.getInstance()
 				.getInjector(RegularExpressionActivator.ORG_ECLIPSE_N4JS_REGEX_REGULAREXPRESSION),
 				"Regex-Injector");

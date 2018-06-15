@@ -144,9 +144,6 @@ public class ProjectDescriptionHelper {
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
-	@Inject
-	private PackageJsonHelper packageJsonHelper;
-
 	/**
 	 * Loads the project description of the N4JS project at the given {@code location}.
 	 * <p>
@@ -450,7 +447,7 @@ public class ProjectDescriptionHelper {
 			case PROP__PROJECT_TYPE:
 				// parseProjectType returns null if value is invalid, this will
 				// cause the setProjectType setter to use the default value of ProjectType.
-				target.setProjectType(packageJsonHelper.parseProjectType(asStringOrNull(value)));
+				target.setProjectType(ProjectDescriptionUtils.parseProjectType(asStringOrNull(value)));
 				break;
 			case PROP__VENDOR_ID:
 				target.setVendorId(asStringOrNull(value));
@@ -489,7 +486,7 @@ public class ProjectDescriptionHelper {
 				target.getRequiredRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
 			case PROP__MODULE_LOADER:
-				target.setModuleLoader(packageJsonHelper.parseModuleLoader(asStringOrNull(value)));
+				target.setModuleLoader(ProjectDescriptionUtils.parseModuleLoader(asStringOrNull(value)));
 				break;
 			case PROP__INIT_MODULES:
 				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
@@ -506,7 +503,7 @@ public class ProjectDescriptionHelper {
 			String name = pair.getName();
 			JSONValue value = pair.getValue();
 			String valueStr = asStringOrNull(value);
-			VersionConstraint versionConstraint = packageJsonHelper.parseVersionConstraint(valueStr);
+			VersionConstraint versionConstraint = ProjectDescriptionUtils.parseVersionConstraint(valueStr);
 			if (name != null && versionConstraint != null) {
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(name);
@@ -536,7 +533,7 @@ public class ProjectDescriptionHelper {
 	 * </pre>
 	 */
 	private void convertSourceContainers(ProjectDescription target, JSONValue sourcesSection) {
-		final List<SourceContainerDescription> sourceContainerDescriptions = packageJsonHelper
+		final List<SourceContainerDescription> sourceContainerDescriptions = ProjectDescriptionUtils
 				.getSourceContainerDescriptions(sourcesSection);
 		if (sourceContainerDescriptions != null) {
 			target.getSourceContainers().addAll(sourceContainerDescriptions);
@@ -564,7 +561,7 @@ public class ProjectDescriptionHelper {
 	 */
 	private void convertModuleFilters(ProjectDescription target, List<NameValuePair> moduleFilterPairs) {
 		for (NameValuePair pair : moduleFilterPairs) {
-			ModuleFilterType type = packageJsonHelper.parseModuleFilterType(pair.getName());
+			ModuleFilterType type = ProjectDescriptionUtils.parseModuleFilterType(pair.getName());
 			if (type != null) {
 				List<ModuleFilterSpecifier> mspecs = asModuleFilterSpecifierInArrayOrEmpty(pair.getValue());
 				if (!mspecs.isEmpty()) {
@@ -644,7 +641,7 @@ public class ProjectDescriptionHelper {
 
 	private List<ModuleFilterSpecifier> asModuleFilterSpecifierInArrayOrEmpty(JSONValue jsonValue) {
 		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(packageJsonHelper::getModuleFilterSpecifier)
+				.map(ProjectDescriptionUtils::getModuleFilterSpecifier)
 				.filter(mspec -> mspec != null)
 				.collect(Collectors.toList());
 	}

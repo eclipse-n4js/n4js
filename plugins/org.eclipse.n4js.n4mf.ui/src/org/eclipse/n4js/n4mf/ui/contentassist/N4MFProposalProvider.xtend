@@ -24,7 +24,6 @@ import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess
-import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.xtext.Assignment
 import org.eclipse.xtext.EnumLiteralDeclaration
 import org.eclipse.xtext.Group
@@ -39,7 +38,7 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 import static java.util.Collections.singleton
 import static org.eclipse.n4js.n4mf.ProjectType.*
 import static org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionStrategy.*
-import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
+import static org.eclipse.n4js.n4mf.ui.contentassist.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
 import static extension com.google.common.base.Strings.repeat

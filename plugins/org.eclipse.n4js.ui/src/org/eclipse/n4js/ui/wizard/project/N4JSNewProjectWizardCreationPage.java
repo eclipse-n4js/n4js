@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4mf.ui.wizard;
+package org.eclipse.n4js.ui.wizard.project;
 
 import static com.google.common.base.CharMatcher.BREAKING_WHITESPACE;
 import static com.google.common.base.CharMatcher.JAVA_LETTER;
@@ -22,12 +22,11 @@ import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.n4mf.ProjectType.API;
 import static org.eclipse.n4js.n4mf.ProjectType.LIBRARY;
 import static org.eclipse.n4js.n4mf.ProjectType.TEST;
-import static org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionStrategy.getProjectId;
-import static org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionStrategy.getProjectType;
-import static org.eclipse.n4js.n4mf.ui.internal.N4MFActivator.ORG_ECLIPSE_N4JS_N4MF_N4MF;
-import static org.eclipse.n4js.ui.wizard.project.N4MFProjectInfo.IMPLEMENTATION_ID_PROP_NAME;
-import static org.eclipse.n4js.ui.wizard.project.N4MFProjectInfo.IMPLEMENTED_PROJECTS_PROP_NAME;
-import static org.eclipse.n4js.ui.wizard.project.N4MFProjectInfo.PROJECT_TYPE_PROP_NAME;
+import static org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.getProjectId;
+import static org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension.getProjectType;
+import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.IMPLEMENTATION_ID_PROP_NAME;
+import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.IMPLEMENTED_PROJECTS_PROP_NAME;
+import static org.eclipse.n4js.ui.wizard.project.N4JSProjectInfo.PROJECT_TYPE_PROP_NAME;
 import static org.eclipse.swt.SWT.BORDER;
 import static org.eclipse.swt.SWT.CHECK;
 import static org.eclipse.swt.SWT.FILL;
@@ -58,11 +57,10 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.n4js.n4mf.N4mfPackage;
+import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
-import org.eclipse.n4js.ui.wizard.project.N4MFProjectInfo;
-import org.eclipse.n4js.ui.wizard.project.N4MFWizardNewProjectCreationPage;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
@@ -81,9 +79,9 @@ import com.google.inject.Injector;
 /**
  * Wizard page for configuring a new N4JS project.
  */
-public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPage {
+public class N4JSNewProjectWizardCreationPage extends WizardNewProjectCreationPage {
 
-	private final N4MFProjectInfo projectInfo;
+	private final N4JSProjectInfo projectInfo;
 
 	// RegEx pattern for valid vendor IDs. See terminal ID rule in the N4MF grammar.
 	private static final Pattern VENDOR_ID_PATTERN = Pattern.compile("\\^?[A-Za-z\\_][A-Za-z_\\-\\.0-9]*");
@@ -94,8 +92,8 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	 * @param projectInfo
 	 *            the project info model that will be used to initialize the new N4JS project.
 	 */
-	public N4MFWizardNewProjectCreationPage(final N4MFProjectInfo projectInfo) {
-		super(N4MFWizardNewProjectCreationPage.class.getName());
+	public N4JSNewProjectWizardCreationPage(final N4JSProjectInfo projectInfo) {
+		super(N4JSNewProjectWizardCreationPage.class.getName());
 		this.projectInfo = projectInfo;
 		setTitle("N4JS Project");
 		setDescription("Create a new N4JS project.");
@@ -181,13 +179,13 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 		vendorIdText.setLayoutData(fillDefaults().align(FILL, FILL).grab(true, true).create());
 
 		projectInfo.addPropertyChangeListener(event -> {
-			if (event.getPropertyName().equals(N4MFProjectInfo.VENDOR_ID_PROP_NAME)) {
+			if (event.getPropertyName().equals(N4JSProjectInfo.VENDOR_ID_PROP_NAME)) {
 				setPageComplete(validatePage());
 			}
 		});
 
 		dbc.bindValue(WidgetProperties.text(Modify).observe(vendorIdText),
-				BeanProperties.value(N4MFProjectInfo.class, N4MFProjectInfo.VENDOR_ID_PROP_NAME).observe(projectInfo));
+				BeanProperties.value(N4JSProjectInfo.class, N4JSProjectInfo.VENDOR_ID_PROP_NAME).observe(projectInfo));
 
 	}
 
@@ -356,7 +354,7 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	private void initDefaultCreateGreeterBindings(DataBindingContext dbc, Button createGreeterFileButton) {
 		// Bind the "create greeter file"-checkbox
 		dbc.bindValue(WidgetProperties.selection().observe(createGreeterFileButton),
-				BeanProperties.value(N4MFProjectInfo.class, N4MFProjectInfo.CREATE_GREETER_FILE_PROP_NAME)
+				BeanProperties.value(N4JSProjectInfo.class, N4JSProjectInfo.CREATE_GREETER_FILE_PROP_NAME)
 						.observe(projectInfo));
 	}
 
@@ -365,32 +363,32 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 			Button createTestGreeterFileButton) {
 		// Bind the "normal source folder"-checkbox
 		dbc.bindValue(WidgetProperties.selection().observe(addNormalSourceFolderButton),
-				PojoProperties.value(N4MFProjectInfo.class, N4MFProjectInfo.ADDITIONAL_NORMAL_SOURCE_FOLDER_PROP_NAME)
+				PojoProperties.value(N4JSProjectInfo.class, N4JSProjectInfo.ADDITIONAL_NORMAL_SOURCE_FOLDER_PROP_NAME)
 						.observe(projectInfo));
 
 		// Bind the "Create greeter file"-checkbox
 		dbc.bindValue(WidgetProperties.selection().observe(createTestGreeterFileButton),
-				BeanProperties.value(N4MFProjectInfo.class, N4MFProjectInfo.CREATE_GREETER_FILE_PROP_NAME)
+				BeanProperties.value(N4JSProjectInfo.class, N4JSProjectInfo.CREATE_GREETER_FILE_PROP_NAME)
 						.observe(projectInfo));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void initProjectTypeBinding(final DataBindingContext dbc, final ComboViewer projectType) {
 		dbc.bindValue(observeSingleSelection(projectType),
-				PojoProperties.value(N4MFProjectInfo.class, PROJECT_TYPE_PROP_NAME).observe(projectInfo));
+				PojoProperties.value(N4JSProjectInfo.class, PROJECT_TYPE_PROP_NAME).observe(projectInfo));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void initImplementationIdBinding(final DataBindingContext dbc, final Text text) {
 		dbc.bindValue(WidgetProperties.text(Modify).observe(text),
-				PojoProperties.value(N4MFProjectInfo.class, IMPLEMENTATION_ID_PROP_NAME).observe(projectInfo));
+				PojoProperties.value(N4JSProjectInfo.class, IMPLEMENTATION_ID_PROP_NAME).observe(projectInfo));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void initApiViewerBinding(DataBindingContext dbc, ListViewer apiViewer) {
 		dbc.bindList(
 				ViewersObservables.observeMultiSelection(apiViewer),
-				PojoProperties.list(N4MFProjectInfo.class, IMPLEMENTED_PROJECTS_PROP_NAME).observe(projectInfo));
+				PojoProperties.list(N4JSProjectInfo.class, IMPLEMENTED_PROJECTS_PROP_NAME).observe(projectInfo));
 	}
 
 	/**
@@ -413,16 +411,16 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		boolean workspaceProjectExists = root.getProject(projectName).exists();
 
-		// check for an existing manifest
-		IPath manifestPath = projectLocation.append("manifest.n4mf");
-		File existingManifest = new File(manifestPath.toString());
+		// check for an existing project description file
+		IPath projectDescriptionPath = projectLocation.append(IN4JSProject.PACKAGE_JSON);
+		File existingProjectDescriptionFile = new File(projectDescriptionPath.toString());
 
 		// check for an existing file with the path of the project folder
 		File existingFileAtProjectDirectory = new File(projectLocation.toString());
 		boolean projectDirectoryIsExistingFile = existingFileAtProjectDirectory.exists()
 				&& existingFileAtProjectDirectory.isFile();
 
-		boolean isExistingNonWorkspaceProject = existingManifest.exists() && !workspaceProjectExists;
+		boolean isExistingNonWorkspaceProject = existingProjectDescriptionFile.exists() && !workspaceProjectExists;
 
 		if (projectDirectoryIsExistingFile) {
 			// set error message if there is already at the specified project location
@@ -441,7 +439,7 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 
 	private Collection<String> getAvailableApiProjectIds() {
 		final Collection<String> distinctIds = from(
-				getResourceDescriptions().getExportedObjectsByType(N4mfPackage.eINSTANCE.getProjectDescription()))
+				getResourceDescriptions().getExportedObjectsByType(JSONPackage.Literals.JSON_DOCUMENT))
 						.filter(desc -> API.equals(getProjectType(desc))).transform(desc -> getProjectId(desc))
 						.filter(id -> null != id).toSet();
 		final List<String> ids = newArrayList(distinctIds);
@@ -454,7 +452,7 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	}
 
 	private Injector getInjector() {
-		return N4MFActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4MF_N4MF);
+		return N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
 	}
 
 	/**

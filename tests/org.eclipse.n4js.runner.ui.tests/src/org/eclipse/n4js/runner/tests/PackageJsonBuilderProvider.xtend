@@ -13,6 +13,7 @@ package org.eclipse.n4js.runner.tests
 import com.google.inject.Inject
 import com.google.inject.Provider
 import com.google.inject.Singleton
+import org.eclipse.n4js.packagejson.PackageJsonBuilder
 
 import static org.eclipse.n4js.n4mf.ProjectType.*
 

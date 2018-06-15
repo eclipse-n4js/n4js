@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -49,7 +48,7 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	/**
 	 * The name of the manifest file
 	 */
-	public final static String N4MF_MANIFEST = N4MFConstants.N4MF_MANIFEST;
+	public final static String N4MF_MANIFEST = "manifest.n4mf";
 
 	/**
 	 * Returns the project type of the project or null, if type is not available

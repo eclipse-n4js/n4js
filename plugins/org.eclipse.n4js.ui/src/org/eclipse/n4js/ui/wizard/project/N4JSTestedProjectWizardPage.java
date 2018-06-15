@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4mf.ui.wizard;
+package org.eclipse.n4js.ui.wizard.project;
 
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -20,26 +20,24 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.n4js.n4mf.N4mfPackage;
+import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
-import org.eclipse.n4js.n4mf.N4mfPackage;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionStrategy;
-import org.eclipse.n4js.ui.wizard.project.N4MFProjectInfo;
-
 /**
  * This wizard page provides controls for tested projects selection.
  *
- * See {@link N4MFProjectInfo#getTestedProjects()}
+ * See {@link N4JSProjectInfo#getTestedProjects()}
  */
-public class N4MFWizardTestedProjectPage extends WizardPage {
+public class N4JSTestedProjectWizardPage extends WizardPage {
 
 	private final IResourceDescriptions resourceDescriptions;
-	private final N4MFProjectInfo projectInfo;
+	private final N4JSProjectInfo projectInfo;
 
 	/**
 	 * Create a new tested project wizard page.
@@ -49,7 +47,7 @@ public class N4MFWizardTestedProjectPage extends WizardPage {
 	 * @param resourceDescriptions
 	 *            A {@link IResourceDescriptions} implementation.
 	 */
-	public N4MFWizardTestedProjectPage(N4MFProjectInfo projectInfo, IResourceDescriptions resourceDescriptions) {
+	public N4JSTestedProjectWizardPage(N4JSProjectInfo projectInfo, IResourceDescriptions resourceDescriptions) {
 		super("Select projects to be tested");
 		this.resourceDescriptions = resourceDescriptions;
 		this.projectInfo = projectInfo;
@@ -73,7 +71,7 @@ public class N4MFWizardTestedProjectPage extends WizardPage {
 		parent.addDisposeListener(e -> databindingContext.dispose());
 
 		databindingContext.bindList(ViewersObservables.observeMultiSelection(projectListViewer),
-				PojoProperties.list(N4MFProjectInfo.class, N4MFProjectInfo.TESTED_PROJECT_PROP_NAME)
+				PojoProperties.list(N4JSProjectInfo.class, N4JSProjectInfo.TESTED_PROJECT_PROP_NAME)
 						.observe(projectInfo));
 
 		setControl(listComposite);
@@ -96,11 +94,11 @@ public class N4MFWizardTestedProjectPage extends WizardPage {
 		// Filter for non-test, non-external, non-null project descriptions and return their id
 		return projectDescriptions
 				.filter(desc -> {
-					ProjectType type = N4MFResourceDescriptionStrategy.getProjectType(desc);
+					ProjectType type = PackageJsonResourceDescriptionExtension.getProjectType(desc);
 					return type != null && !ProjectType.TEST.equals(type);
 				})
 				.filter(desc -> !isExternal(desc.getEObjectURI()))
-				.map(d -> N4MFResourceDescriptionStrategy.getProjectId(d))
+				.map(d -> PackageJsonResourceDescriptionExtension.getProjectId(d))
 				.sorted()
 				.toArray(String[]::new);
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4mf.utils;
+package org.eclipse.n4js.n4mf.ui.contentassist;
 
 import static com.google.common.base.Predicates.in;
 import static com.google.common.collect.Lists.asList;

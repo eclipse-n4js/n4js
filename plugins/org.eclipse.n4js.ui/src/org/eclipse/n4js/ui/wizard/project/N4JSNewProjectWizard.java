@@ -8,20 +8,18 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4mf.ui.wizard;
+package org.eclipse.n4js.ui.wizard.project;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
-import org.eclipse.n4js.ui.wizard.project.N4MFProjectInfo;
-import org.eclipse.n4js.ui.wizard.project.N4MFWizardNewProjectCreationPage;
-import org.eclipse.n4js.ui.wizard.project.N4MFWizardTestedProjectPage;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.ui.wizard.IProjectCreator;
 import org.eclipse.xtext.ui.wizard.IProjectInfo;
+import org.eclipse.xtext.ui.wizard.XtextNewProjectWizard;
 
 import com.google.inject.Inject;
 
@@ -30,7 +28,7 @@ import com.google.inject.Inject;
  *
  * Provides controls for project name, project type, optional additional project options and working set selection.
  */
-public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.XtextNewProjectWizard {
+public class N4JSNewProjectWizard extends XtextNewProjectWizard {
 
 	private static final ImageDescriptor NEW_PROJECT_WIZBAN_DESC = ImageRef.NEW_PROJECT_WIZBAN.asImageDescriptor()
 			.orNull();
@@ -39,12 +37,12 @@ public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.Xtex
 	private static final String CREATE_GREETER_SETTINGS_KEY = "createGreeterFile";
 	private static final String VENDOR_ID_SETTINGS_KEY = "vendorId";
 
-	private final N4MFProjectInfo projectInfo;
+	private final N4JSProjectInfo projectInfo;
 
 	@Inject
 	private IResourceDescriptions resourceDescriptions;
 
-	private N4MFWizardNewProjectCreationPage n4mfWizardNewProjectCreationPage;
+	private N4JSNewProjectWizardCreationPage n4mfWizardNewProjectCreationPage;
 
 	/**
 	 * Creates a new wizard container for creating and initializing a new N4JS project into the workspace.
@@ -53,15 +51,15 @@ public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.Xtex
 	 *            the project creation logic to be triggered when finishing this wizard.
 	 */
 	@Inject
-	public SimpleN4MFNewProjectWizard(final IProjectCreator projectCreator) {
+	public N4JSNewProjectWizard(final IProjectCreator projectCreator) {
 		super(projectCreator);
 		setWindowTitle("New N4JS Project");
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(NEW_PROJECT_WIZBAN_DESC);
-		projectInfo = new N4MFProjectInfo();
+		projectInfo = new N4JSProjectInfo();
 
 		// Setup the dialog settings
-		IDialogSettings workbenchDialogSettings = N4MFActivator.getInstance().getDialogSettings();
+		IDialogSettings workbenchDialogSettings = N4JSActivator.getInstance().getDialogSettings();
 
 		IDialogSettings projectWizardSettings = workbenchDialogSettings.getSection(DIALOG_SETTINGS_SECTION_KEY);
 		if (null == projectWizardSettings) {
@@ -86,9 +84,9 @@ public class SimpleN4MFNewProjectWizard extends org.eclipse.xtext.ui.wizard.Xtex
 
 	@Override
 	public void addPages() {
-		n4mfWizardNewProjectCreationPage = new N4MFWizardNewProjectCreationPage(projectInfo);
+		n4mfWizardNewProjectCreationPage = new N4JSNewProjectWizardCreationPage(projectInfo);
 		addPage(n4mfWizardNewProjectCreationPage);
-		addPage(new N4MFWizardTestedProjectPage(projectInfo, resourceDescriptions));
+		addPage(new N4JSTestedProjectWizardPage(projectInfo, resourceDescriptions));
 	}
 
 	@Override

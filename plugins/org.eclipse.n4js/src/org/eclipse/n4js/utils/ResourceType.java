@@ -14,7 +14,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 
 import com.google.common.base.Strings;
 
@@ -47,7 +46,7 @@ public enum ResourceType {
 	private final static String EXT_N4JS = N4JSGlobals.N4JS_FILE_EXTENSION;
 	private final static String EXT_N4JSX = N4JSGlobals.N4JSX_FILE_EXTENSION;
 	private final static String EXT_N4JSD = N4JSGlobals.N4JSD_FILE_EXTENSION;
-	private final static String EXT_N4MF = N4MFConstants.N4MF_FILE_EXTENSION;
+	private final static String EXT_N4MF = "n4mf";
 	private final static String EXT_XT = N4JSGlobals.XT_FILE_EXTENSION;
 	private final static String EXT_N4IDL = N4JSGlobals.N4IDL_FILE_EXTENSION;
 

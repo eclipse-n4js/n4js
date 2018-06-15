@@ -31,6 +31,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
+import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.JSON.JSONValue
 import org.eclipse.n4js.json.JSON.NameValuePair
@@ -44,7 +45,6 @@ import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerDescription
 import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.n4mf.VersionConstraint
-import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
@@ -53,7 +53,6 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.utils.PackageJsonHelper
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.n4js.utils.Version
 import org.eclipse.n4js.validation.IssueCodes
@@ -69,11 +68,11 @@ import org.eclipse.xtext.validation.Check
 
 import static com.google.common.base.Preconditions.checkState
 import static org.eclipse.n4js.n4mf.ProjectType.*
-import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
+import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.json.JSON.JSONPackage
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -125,9 +124,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
-	
-	@Inject
-	private PackageJsonHelper packageJsonHelper;
 	
 	@Inject
 	private ProjectDescriptionHelper projectDescriptionHelper;
@@ -349,7 +345,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private def holdsProjectWithTestFragmentDependsOnTestLibrary(IN4JSProject project) {
 
 		val JSONValue sourcesSection = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES, JSONValue);
-		val List<SourceContainerDescription> sourceContainers = packageJsonHelper.getSourceContainerDescriptions(sourcesSection);
+		val List<SourceContainerDescription> sourceContainers = ProjectDescriptionUtils.getSourceContainerDescriptions(sourcesSection);
 		
 		if (sourceContainers === null) {
 			return;
@@ -735,7 +731,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			.map[pair |
 				return new ValidationProjectReference(
 					pair.name, 
-					packageJsonHelper.parseVersionConstraint((pair.value as JSONStringLiteral).value),
+					ProjectDescriptionUtils.parseVersionConstraint((pair.value as JSONStringLiteral).value),
 					 pair
 				);
 			].toList
