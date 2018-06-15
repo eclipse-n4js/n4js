@@ -150,7 +150,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 	def void testVarAccessModifiers_03() {
 		val script = '''
 			export @Internal public const x = ""
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportedVariableStatement
@@ -161,7 +161,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 	def void testVarAccessModifiers_04() {
 		val script = '''
 			export project const x = ""
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportedVariableStatement

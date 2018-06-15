@@ -48,7 +48,7 @@ import junit.framework.AssertionFailedError;
 @XpectImport(ValidationTestModuleSetup.class)
 public class OrganizeImportXpectMethod {
 
-	static { // avoid Exceptions (mainly in IDE)
+	static {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}
 

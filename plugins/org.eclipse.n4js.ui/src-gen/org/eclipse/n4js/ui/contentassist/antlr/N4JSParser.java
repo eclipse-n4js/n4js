@@ -383,6 +383,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getRelationalExpressionAccess().getGroup(), "rule__RelationalExpression__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getRelationalExpressionAccess().getGroup_1(), "rule__RelationalExpression__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getRelationalExpressionAccess().getGroup_1_0(), "rule__RelationalExpression__Group_1_0__0");
+			nameMappingsBuilder.put(grammarAccess.getRelationalOperatorAccess().getGroup_1(), "rule__RelationalOperator__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getEqualityExpressionAccess().getGroup(), "rule__EqualityExpression__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getEqualityExpressionAccess().getGroup_1(), "rule__EqualityExpression__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getEqualityExpressionAccess().getGroup_1_0(), "rule__EqualityExpression__Group_1_0__0");

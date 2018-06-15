@@ -50,10 +50,7 @@ public class N4LanguageUtils {
 	 *      do I map between an EMF Resource and an Eclipse IFile?</a>
 	 */
 	public static <T> Optional<T> getServiceForContext(IFile iFile, Class<T> serviceType) {
-		Objects.requireNonNull(iFile);
-		Objects.requireNonNull(serviceType);
-		final URI uri = URI.createPlatformResourceURI(iFile.getFullPath().toString(), true);
-		return uri != null ? getServiceForContext(uri, serviceType) : Optional.empty();
+		return getServiceForContext((IResource) iFile, serviceType);
 	}
 
 	/**

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.externalPackages;
 
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
@@ -81,15 +82,15 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testMultipleExternalRefresh() throws Exception {
+		LOGGER.info("------------------------------------------------------------");
 		for (int i = 1; i <= ITERATION_COUNT; i++) {
-			LOGGER.info("------------------------------------------------------------");
 			LOGGER.info("| Iteration " + i + " of " + ITERATION_COUNT + ".");
-			LOGGER.info("------------------------------------------------------------");
 			setupWorkspace();
 			libManager.reloadAllExternalProjects(new NullProgressMonitor());
 			libManager.reloadAllExternalProjects(new NullProgressMonitor());
 			tearDown();
 		}
+		LOGGER.info("------------------------------------------------------------");
 	}
 
 }

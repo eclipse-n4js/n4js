@@ -17,26 +17,25 @@
   "engines": {
     "node": ">= 5.0.0"
   },
+  "n4js": {
+    "projectType": "library",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src/n4js"
+      ]
+    },
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-es2015"
+    ],
+    "moduleLoader": "n4js"
+  },
   "dependencies": {
     "n4js-node": "^0.1.0"
   },
   "devDependencies": {
     "n4js-runtime-es2015": "^0.1.0"
-  },
-  "n4js_manifest": {
-    "ProjectId": "n4js.lang",
-    "VendorId": "org.eclipse.n4js",
-    "VendorName": "Eclipse N4JS Project",
-    "ProjectType": "library",
-    "ProjectVersion": "0.3.1",
-    "Output": "src-gen",
-    "Sources": {
-      "source": [
-        "\"src/n4js\""
-      ]
-    },
-    "RequiredRuntimeLibraries": [
-      "n4js-runtime-es2015"
-    ]
   }
 }

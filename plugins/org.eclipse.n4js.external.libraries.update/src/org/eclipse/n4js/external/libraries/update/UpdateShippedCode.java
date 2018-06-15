@@ -246,9 +246,10 @@ public class UpdateShippedCode implements IWorkflowComponent {
 
 			ProcessBuilder pb = nodeProcessBuilder.getNpmInstallProcessBuilder(workingDirectory, "", true);
 			final Process p = pb.start();
-			int exitCode = p.waitFor();
+
+			final int exitCode = p.waitFor();
 			if (exitCode != 0) {
-				throw new RuntimeException("Running npm install caused exit code != 0, exit code = " + exitCode);
+				throw new IllegalStateException("npm exited with non-zero exit code: " + exitCode);
 			}
 			println(N4JSGlobals.NPM_INSTALL + " finished.");
 		} catch (Throwable th) {
@@ -256,7 +257,6 @@ public class UpdateShippedCode implements IWorkflowComponent {
 			th.printStackTrace();
 			throw new RuntimeException(th);
 		}
-
 	}
 
 	private static void cleanJsonFiles(File workingDirectory) {

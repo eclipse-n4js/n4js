@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.xpect.ui.methods;
 
+import static org.junit.Assert.fail;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -21,6 +23,9 @@ import org.antlr.runtime.Lexer;
 import org.antlr.runtime.Token;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
+import org.eclipse.n4js.tests.outline.AbstractOutlineWorkbenchTest;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.SyntheticCompositeNode;
@@ -33,12 +38,9 @@ import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 import com.google.common.collect.Lists;
 import com.google.inject.Provider;
 
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
-import org.eclipse.n4js.tests.outline.AbstractOutlineWorkbenchTest;
-
 /**
  */
+// TODO xpect method should not extend abstract test
 public class OutlineXpectMethod extends AbstractOutlineWorkbenchTest {
 
 	@SuppressWarnings("javadoc")

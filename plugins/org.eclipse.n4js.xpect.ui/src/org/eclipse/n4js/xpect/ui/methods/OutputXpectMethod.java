@@ -36,6 +36,9 @@ import com.google.inject.Inject;
 /**
  * Provides execution output xpect test methods. Provided resource compiled on the fly and executed, captured output is
  * compared against provided expectations.
+ *
+ * <p>
+ * NOTE: this method is also used in non UI context - i.e. where Eclipse platform is not running.
  */
 @SuppressWarnings("restriction")
 public class OutputXpectMethod {

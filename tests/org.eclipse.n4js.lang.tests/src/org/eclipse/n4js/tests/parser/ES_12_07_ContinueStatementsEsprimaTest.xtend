@@ -21,7 +21,7 @@ class ES_12_07_ContinueStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testContinue_Simple() {
-		val script = 'while (true) { continue; }'.parseSuccessfully
+		val script = 'while (true) { continue; }'.parseESSuccessfully
 		val statement = script.scriptElements.head as WhileStatement
 
 		val bool = statement.expression as BooleanLiteral
@@ -34,7 +34,7 @@ class ES_12_07_ContinueStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testContinue_SimpleASI() {
-		val script = 'while (true) { continue }'.parseSuccessfully
+		val script = 'while (true) { continue }'.parseESSuccessfully
 		val statement = script.scriptElements.head as WhileStatement
 
 		val bool = statement.expression as BooleanLiteral
@@ -47,7 +47,7 @@ class ES_12_07_ContinueStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testContinue_LabelASI() {
-		val script = 'done: while (true) { continue done }'.parseSuccessfully
+		val script = 'done: while (true) { continue done }'.parseESSuccessfully
 		val labeledStatement = script.scriptElements.head as LabelledStatement
 		val statement = labeledStatement.statement as WhileStatement
 
@@ -61,7 +61,7 @@ class ES_12_07_ContinueStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testContinue_Label() {
-		val script = 'done: while (true) { continue done; }'.parseSuccessfully
+		val script = 'done: while (true) { continue done; }'.parseESSuccessfully
 		val labeledStatement = script.scriptElements.head as LabelledStatement
 		val statement = labeledStatement.statement as WhileStatement
 
@@ -75,7 +75,7 @@ class ES_12_07_ContinueStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testContinue_LabelProto() {
-		val script = '__proto__: while (true) { continue __proto__; }'.parseSuccessfully
+		val script = '__proto__: while (true) { continue __proto__; }'.parseESSuccessfully
 		val labeledStatement = script.scriptElements.head as LabelledStatement
 		val statement = labeledStatement.statement as WhileStatement
 

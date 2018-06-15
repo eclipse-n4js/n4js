@@ -18,152 +18,152 @@ class ES_07_08_5_RegExLiteralEcmaScriptSuiteTest extends AbstractParserTest {
 
 	@Test
 	def void test_7_8_5_1() {
-		val script = 'var regExp = /\\\rn/;'.parseWithError
+		val script = 'var regExp = /\\\rn/;'.parseESWithError
 		val statement = script.scriptElements.head as VariableStatement
 		val regex = statement.varDecl.head.expression as RegularExpressionLiteral
 		assertEquals('/\\', regex.value)
 	}
 	@Test
 	def void test_7_8_5_1gs() {
-		'var re = //;'.parseWithError
+		'var re = //;'.parseESWithError
 	}
 	@Test
 	def void test_7_8_5_2gs() {
-		'var re = new RegExp("");'.parseSuccessfully
+		'var re = new RegExp("");'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_1_1() {
-		'/1/'.parseSuccessfully
+		'/1/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_1_2() {
-		'/a/'.parseSuccessfully
+		'/a/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_1_3() {
-		'/;/'.parseSuccessfully
+		'/;/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_1_4() {
-		'/ /'.parseSuccessfully
+		'/ /'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_1_5() {
-		'/\\u0041/'.parseSuccessfully
+		'/\\u0041/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_2_T1() {
-		'/*/'.parseWithError
+		'/*/'.parseESWithError
 	}
 	@Test
 	def void test_7_8_5_A1_2_T3() {
-		'///\n.source;'.parseWithError
+		'///\n.source;'.parseESWithError
 	}
 	@Test
 	def void test_7_8_5_A1_2_T4() {
-		'//\n.source;'.parseWithError
+		'//\n.source;'.parseESWithError
 	}
 	@Test
 	def void test_7_8_5_A1_3_T1() {
 		// this is parsed as two broken reg ex literals
-		'/\n/'.parseWithError
+		'/\n/'.parseESWithError
 	}
 	@Test
 	def void test_7_8_5_A1_3_T2() {
-		'/\\u000A/'.parseSuccessfully
+		'/\\u000A/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_3_T3() {
 		// this is parsed as two broken reg ex literals
-		'/\r/'.parseWithError
+		'/\r/'.parseESWithError
 	}
 	@Test
 	def void test_7_8_5_A1_3_T4() {
-		'/\\u000D/'.parseSuccessfully
+		'/\\u000D/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_3_T5() {
-		'/\\u2028/'.parseSuccessfully
+		'/\\u2028/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_3_T6() {
-		'/\\u2029/'.parseSuccessfully
+		'/\\u2029/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_4_T1_1() {
-		'/\\1/'.parseSuccessfully
+		'/\\1/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_4_T1_2() {
-		'/\\a/'.parseSuccessfully
+		'/\\a/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_4_T1_3() {
-		'/\\;/'.parseSuccessfully
+		'/\\;/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A1_4_T1_4() {
-		'/\\ /'.parseSuccessfully
+		'/\\ /'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A2_2_T1() {
-		'/a\\/'.parseWithError
+		'/a\\/'.parseESWithError
 	}
 	@Test
 	def void test_7_8_5_A2_2_T2() {
-		'/a//.source'.parseWithError
+		'/a//.source'.parseESWithError
 	}
 	@Test
 	def void test_7_8_5_A2_4_T1_1() {
-		'/a\\1/'.parseSuccessfully
+		'/a\\1/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A2_4_T1_2() {
-		'/a\\a/'.parseSuccessfully
+		'/a\\a/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A2_4_T1_3() {
-		'/,\\;/'.parseSuccessfully
+		'/,\\;/'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A2_4_T1_4() {
-		'/ \\ /'.parseSuccessfully
+		'/ \\ /'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T1() {
-		'/(?:)/g'.parseSuccessfully
+		'/(?:)/g'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T2() {
-		'/(?:)/i'.parseSuccessfully
+		'/(?:)/i'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T3() {
-		'/(?:)/m'.parseSuccessfully
+		'/(?:)/m'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T4() {
-		'/(?:)/gi'.parseSuccessfully
+		'/(?:)/gi'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T5() {
-		'/(?:)/mg'.parseSuccessfully
+		'/(?:)/mg'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T6() {
-		'/(?:)/mig'.parseSuccessfully
+		'/(?:)/mig'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T7() {
-		'/(?:)/\\u0067'.parseSuccessfully
+		'/(?:)/\\u0067'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T8() {
-		'/(?:)/\\u0069'.parseSuccessfully
+		'/(?:)/\\u0069'.parseESSuccessfully
 	}
 	@Test
 	def void test_7_8_5_A3_1_T9() {
-		'/(?:)/\\u006D'.parseSuccessfully
+		'/(?:)/\\u006D'.parseESSuccessfully
 	}
 
 }

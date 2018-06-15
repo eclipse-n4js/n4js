@@ -13,6 +13,8 @@ package org.eclipse.n4js.tests.bugs;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.function.Supplier;

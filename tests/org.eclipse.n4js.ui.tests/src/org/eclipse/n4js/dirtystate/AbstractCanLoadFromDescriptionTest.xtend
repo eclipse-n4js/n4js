@@ -21,6 +21,8 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
 
+import static org.junit.Assert.*
+
 /**
  * Base class for testing logic in {@link CanLoadFromDescriptionHelper}.
  */

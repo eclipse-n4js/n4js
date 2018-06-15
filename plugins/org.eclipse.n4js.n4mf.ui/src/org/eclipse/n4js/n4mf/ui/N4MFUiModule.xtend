@@ -10,20 +10,22 @@
  */
 package org.eclipse.n4js.n4mf.ui
 
+import com.google.inject.Binder
 import org.eclipse.n4js.n4mf.ui.editor.hyperlinking.N4MFHyperlinker
 import org.eclipse.n4js.n4mf.ui.internal.N4MFDirtyStateEditorSupport
 import org.eclipse.n4js.n4mf.ui.wizard.N4JSProjectCreator
+import org.eclipse.n4js.ui.quickfix.N4JSIssue
+import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator
 import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider
+import org.eclipse.ui.PlatformUI
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
 import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.ui.editor.hyperlinking.IHyperlinkHelper
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
-import org.eclipse.xtext.ui.wizard.IProjectCreator
 import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator
-import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator
 import org.eclipse.xtext.ui.util.IssueUtil
-import org.eclipse.n4js.ui.quickfix.N4JSIssue
+import org.eclipse.xtext.ui.wizard.IProjectCreator
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -64,8 +66,8 @@ class N4MFUiModule extends AbstractN4MFUiModule {
 		return AvoidRefreshDocumentProvider;
 	}
 
-	def configureMarkerResolutionGenerator(com.google.inject.Binder binder) {
-		if (org.eclipse.ui.PlatformUI.isWorkbenchRunning()) {
+	def configureMarkerResolutionGenerator(Binder binder) {
+		if (PlatformUI.isWorkbenchRunning()) {
 			binder.bind(MarkerResolutionGenerator).to(N4JSMarkerResolutionGenerator);
 		}
 	}

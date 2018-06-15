@@ -101,6 +101,14 @@ class ModuleNameComputer {
 
 	private def boolean uriStartsWith(URI resourceLocation, URI containerLocation) {
 		val maxSegments = containerLocation.segmentCount();
-		(resourceLocation.segmentCount() >= maxSegments) && !(0 ..< maxSegments).exists(j | !resourceLocation.segment(j).equals(containerLocation.segment(j)))
+		if (resourceLocation.segmentCount < maxSegments) {
+			return false;
+		}
+		for(var i = 0; i < maxSegments; i++) {
+			if (resourceLocation.segment(i) != containerLocation.segment(i)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -24,6 +24,11 @@ import static org.eclipse.n4js.ui.navigator.N4JSProjectExplorerProblemsDecorator
 import static org.eclipse.n4js.ui.navigator.N4JSProjectExplorerProblemsDecorator.NO_ADORNMENT;
 import static org.eclipse.n4js.ui.navigator.N4JSProjectExplorerProblemsDecorator.WARNING;
 import static org.eclipse.n4js.ui.workingsets.WorkingSet.OTHERS_WORKING_SET_ID;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;

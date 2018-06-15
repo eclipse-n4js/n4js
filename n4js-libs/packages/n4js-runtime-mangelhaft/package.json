@@ -18,14 +18,15 @@
   "engines": {
     "node": ">= 5.0.0"
   },
+  "n4js": {
+    "projectType": "runtimeLibrary",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {},
+    "moduleLoader": "n4js"
+  },
   "dependencies": {},
-  "devDependencies": {},
-  "n4js_manifest": {
-    "ProjectId": "n4js-runtime-mangelhaft",
-    "VendorId": "org.eclipse.n4js",
-    "VendorName": "Eclipse N4JS Project",
-    "ProjectType": "runtimeLibrary",
-    "ProjectVersion": "0.3.1",
-    "Output": "src-gen"
-  }
+  "devDependencies": {}
 }
+

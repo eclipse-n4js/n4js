@@ -15,14 +15,13 @@ import java.util.HashMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 
 /**
  * A scope implementation that annotates invisible types as such to flag them with errors immediately on access.
@@ -93,6 +92,16 @@ public class VisibilityAwareTypeScope extends FilterWithErrorMarkerScope {
 		}
 		return true;
 
+	}
+
+	@Override
+	protected boolean tryAcceptWithoutResolve(IEObjectDescription originalDescr) {
+		TypeVisibility typeVisibility = checker.isVisible(contextResource, originalDescr);
+		if (typeVisibility.visibility) {
+			accessModifierSuggestionStore.put(originalDescr.getEObjectURI().toString(),
+					typeVisibility.accessModifierSuggestion);
+		}
+		return typeVisibility.visibility;
 	}
 
 	@Override

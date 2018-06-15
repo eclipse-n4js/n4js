@@ -19,19 +19,19 @@
   "engines": {
     "node": ">= 5.0.0"
   },
-  "dependencies": {},
-  "devDependencies": {},
-  "n4js_manifest": {
-    "ProjectId": "n4js-runtime-es2015",
-    "VendorId": "org.eclipse.n4js",
-    "VendorName": "Eclipse N4JS Project",
-    "ProjectType": "runtimeLibrary",
-    "ProjectVersion": "0.3.2",
-    "Output": "src-gen",
-    "Sources": {
+  "n4js": {
+    "projectType": "runtimeLibrary",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
       "source": [
-        "\"src/n4js\""
+        "src/n4js"
       ]
-    }
-  }
+    },
+    "moduleLoader": "n4js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }
+

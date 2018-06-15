@@ -51,6 +51,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The eclipse specific implementation aspects of the N4JSModel.
  */
 @SuppressWarnings("javadoc")
 @Singleton
@@ -88,6 +89,12 @@ public class N4JSEclipseModel extends N4JSModel {
 		}
 
 		return doGetN4JSProject(project, location);
+	}
+
+	@Override
+	protected IN4JSProject newAbsentProject(String projectId) {
+		final URI absent = URI.createPlatformResourceURI(projectId, false);
+		return new N4JSEclipseProject(workspace.getProject(projectId), absent, this);
 	}
 
 	@Override
@@ -232,14 +239,17 @@ public class N4JSEclipseModel extends N4JSModel {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ImmutableList<? extends IN4JSEclipseProject> getDependencies(N4JSProject project) {
-		return (ImmutableList<? extends IN4JSEclipseProject>) super.getDependencies(project);
+	public ImmutableList<? extends IN4JSEclipseProject> getDependencies(N4JSProject project,
+			boolean includeAbsentProjects) {
+		return (ImmutableList<? extends IN4JSEclipseProject>) super.getDependencies(project, includeAbsentProjects);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ImmutableList<? extends IN4JSEclipseProject> getDependenciesAndImplementedApis(N4JSProject project) {
-		return (ImmutableList<? extends IN4JSEclipseProject>) super.getDependenciesAndImplementedApis(project);
+	public ImmutableList<? extends IN4JSEclipseProject> getDependenciesAndImplementedApis(N4JSProject project,
+			boolean includeAbsentProjects) {
+		return (ImmutableList<? extends IN4JSEclipseProject>) super.getDependenciesAndImplementedApis(project,
+				includeAbsentProjects);
 	}
 
 	@SuppressWarnings("unchecked")

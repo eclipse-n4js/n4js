@@ -21,6 +21,10 @@ Sources {
 	}
 }
 
+RequiredRuntimeLibraries {
+	n4js-runtime-node
+}
+
 ProjectDependencies {
     express 4.13.4
 }

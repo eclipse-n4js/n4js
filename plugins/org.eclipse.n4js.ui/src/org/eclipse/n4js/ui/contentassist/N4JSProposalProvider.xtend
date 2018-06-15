@@ -12,13 +12,14 @@ package org.eclipse.n4js.ui.contentassist
 
 import com.google.common.base.Predicate
 import com.google.inject.Inject
+import com.google.inject.Provider
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.jface.text.contentassist.ICompletionProposal
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4idl.N4IDLGlobals
-import org.eclipse.n4js.services.N4JSGrammarAccess
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -26,16 +27,21 @@ import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreato
 import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal
 import org.eclipse.swt.graphics.Image
 import org.eclipse.xtext.CrossReference
-import org.eclipse.xtext.GrammarUtil
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.RuleCall
+import org.eclipse.xtext.conversion.ValueConverterException
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider
+import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider.DefaultProposalCreator
+import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.eclipse.n4js.services.N4JSGrammarAccess
+import org.eclipse.xtext.GrammarUtil
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.n4JS.JSXElement
 
 /**
@@ -121,9 +127,41 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * @see AbstractJavaBasedContentProposalProvider
 	 */
 	override protected getProposalFactory(String ruleName, ContentAssistContext contentAssistContext) {
-		return new DefaultProposalCreator(contentAssistContext, ruleName,
-			new IQualifiedNameConverter.DefaultImpl() // provide a fake implementation using '.' as delimiter like Java
-		);
+		val myConverter = new IQualifiedNameConverter.DefaultImpl() // provide a fake implementation using '.' as delimiter like Java
+		return new DefaultProposalCreator(contentAssistContext, ruleName, myConverter) {
+			
+			override apply(IEObjectDescription candidate) {
+				if (candidate === null)
+					return null;
+				var ICompletionProposal result = null;
+				var String proposal = myConverter.toString(candidate.getName());
+				if (valueConverter !== null) {
+					try {
+						proposal = valueConverter.toString(proposal);
+					} catch (ValueConverterException e) {
+						return null;
+					}
+				} else if (ruleName !== null) {
+					try {
+						proposal = getValueConverter().toString(proposal, ruleName);
+					} catch (ValueConverterException e) {
+						return null;
+					}
+				}
+				val StyledString displayString = getStyledDisplayString(candidate);
+				val Image image = getImage(candidate);
+				result = createCompletionProposal(proposal, displayString, image, contentAssistContext);
+				if (result instanceof ConfigurableCompletionProposal) {
+					val Provider<EObject> provider = [candidate.getEObjectOrProxy()];
+					result.setProposalContextResource(contentAssistContext.getResource());
+					result.setAdditionalProposalInfo(provider);
+					result.setHover(hover);
+				}
+				getPriorityHelper().adjustCrossReferencePriority(result, contentAssistContext.getPrefix());
+				return result;
+			}
+			
+		}
 	}
 
 	/**
@@ -138,28 +176,55 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * respectively.
 	 *
 	 */
-	override protected getStyledDisplayString(EObject element, String qualifiedName, String shortName) {
-		val (QualifiedName, String)=>StyledString stringifier = [ it, name |
-			val result = new StyledString(name)
-			if (it.segmentCount > 1) {
-				if (it.lastSegment.endsWith(name)) {
-					result.append(getTypeVersionString(element) +' - ' + qualifiedNameConverter.toString(it.skipLast(1)), StyledString.QUALIFIER_STYLER)
-				} else {
-					// aliased - print the alias and the original name
-					result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)) + ' alias for ' + it.lastSegment + getTypeVersionString(element), StyledString.QUALIFIER_STYLER)
-				}
+	val (EObject, QualifiedName, String)=>StyledString stringifier = [ element, it, name |
+		val result = new StyledString(name)
+		if (it.segmentCount > 1) {
+			val dashName = ' - ' + qualifiedNameConverter.toString(it.skipLast(1));
+			if (it.lastSegment.endsWith(name)) {
+				result.append(getTypeVersionString(element) + dashName, StyledString.QUALIFIER_STYLER)
+			} else {
+				// aliased - print the alias and the original name
+				result.append(dashName + ' alias for ' + it.lastSegment + getTypeVersionString(element), StyledString.QUALIFIER_STYLER)
 			}
-			return result
-		]
+		}
+		return result
+	]
+	
+	override protected getStyledDisplayString(EObject element, String qualifiedName, String shortName) {
 		if (qualifiedName == shortName) {
 			val parsedQualifiedName = qualifiedNameConverter.toQualifiedName(qualifiedName)
 			if (parsedQualifiedName.segmentCount == 1) {
-				return tryGetDisplayString(element, stringifier, shortName) ?: stringifier.apply(parsedQualifiedName, shortName)
+				return tryGetDisplayString(element, shortName) ?: stringifier.apply(element, parsedQualifiedName, shortName)
 			}
-			return stringifier.apply(parsedQualifiedName, parsedQualifiedName.lastSegment)
+			return stringifier.apply(element, parsedQualifiedName, parsedQualifiedName.lastSegment)
 		}
-		return tryGetDisplayString(element, stringifier, shortName) ?: stringifier.apply(qualifiedNameConverter.toQualifiedName(qualifiedName), shortName)
+		return tryGetDisplayString(element, shortName) ?: stringifier.apply(element, qualifiedNameConverter.toQualifiedName(qualifiedName), shortName)
 	}
+
+	override protected getImage(IEObjectDescription description) {
+		val clazz = description.EClass
+		return super.getImage(EcoreUtil.create(clazz))
+	}
+
+	/**
+	 * Overridden to avoid calls to IEObjectDescription#getEObjectOrProxy
+	 *
+	 * Remove before merging to master!
+	 * Due to IDL, the proxy element is retrieved anyway, but used only if it is a TClassifier
+	 * /
+	override protected getStyledDisplayString(IEObjectDescription description) {
+		val element = description.getEObjectOrProxy();
+		val qualifiedName = description.qualifiedName;
+		val shortName = description.name;
+		if (qualifiedName == shortName) {
+			if (shortName.segmentCount >= 1) {
+				return stringifier.apply(element, qualifiedName, shortName.lastSegment)
+			} 
+		}
+		// don't recompute the qualified name again
+		return stringifier.apply(element, qualifiedName, qualifiedNameConverter.toString(shortName))
+	}
+	*/
 
 	/**
 	 * If the element is an instance of {@link TClassifier} this method
@@ -168,7 +233,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * Otherwise, this method returns an empty string.
 	 */
 	private def String getTypeVersionString(EObject element) {
-		if (element instanceof TClassifier &&
+		if (!element.eIsProxy && element instanceof TClassifier &&
 			(element as TClassifier).declaredVersion != 0) {
 			return N4IDLGlobals.VERSION_SEPARATOR + Integer.toString((element as TClassifier).declaredVersion)
 		}
@@ -178,11 +243,11 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	/**
 	 * Returns the display string for a non-proxy element, otherwise null.
 	 */
-	private def tryGetDisplayString(EObject element, (QualifiedName, String)=>StyledString stringifier, String shortName) {
+	private def tryGetDisplayString(EObject element, String shortName) {
 		if (!element.eIsProxy && element instanceof Type) {
 			val qualifiedTypeName = qualifiedNameProvider.getFullyQualifiedName(element)
 			if (qualifiedTypeName !== null) {
-				return stringifier.apply(qualifiedTypeName, shortName)
+				return stringifier.apply(element, qualifiedTypeName, shortName)
 			}
 		}
 		return null

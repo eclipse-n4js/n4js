@@ -20,6 +20,26 @@
   "engines": {
     "node": ">= 5.0.0"
   },
+  "n4js": {
+    "projectType": "test",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src/n4js"
+      ],
+      "test": [
+        "test/n4js"
+      ]
+    },
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-n4",
+      "n4js-runtime-es2015",
+      "n4js-runtime-mangelhaft"
+    ],
+    "moduleLoader": "n4js"
+  },
   "dependencies": {
     "n4js.lang": "^0.1.0",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
@@ -30,31 +50,5 @@
     "n4js-runtime-n4": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-mangelhaft": "^0.1.0"
-  },
-  "n4js_manifest": {
-    "ProjectId": "org.eclipse.n4js.mangelhaft.test",
-    "VendorId": "org.eclipse.n4js",
-    "VendorName": "Eclipse N4JS Project",
-    "ProjectType": "test",
-    "ProjectVersion": "0.3.0",
-    "Output": "src-gen",
-    "Sources": {
-      "source": [
-        "\"src/n4js\""
-      ],
-      "test": [
-        "\"test/n4js\""
-      ]
-    },
-    "RequiredRuntimeLibraries": [
-      "n4js-runtime-n4",
-      "n4js-runtime-es2015",
-      "n4js-runtime-mangelhaft"
-    ],
-    "ProjectDependencies": [
-      "n4js.lang",
-      "org.eclipse.n4js.mangelhaft",
-      "org.eclipse.n4js.mangelhaft.assert"
-    ]
   }
 }

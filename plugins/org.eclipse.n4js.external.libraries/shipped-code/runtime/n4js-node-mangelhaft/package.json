@@ -27,15 +27,23 @@
     "manifest.n4mf",
     "src-gen"
   ],
-  "devDependencies": {},
-  "n4js_manifest": {
-    "ProjectId": "n4js-node-mangelhaft",
-    "VendorId": "org.eclipse.n4js",
-    "VendorName": "Eclipse N4JS Project",
-    "ProjectType": "runtimeEnvironment",
-    "ProjectVersion": "0.3.2",
-    "ExtendedRuntimeEnvironment": "n4js-node",
-    "ProvidedRuntimeLibraries": [
+  "n4js": {
+    "projectType": "runtimeEnvironment",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "external": [
+        "src/js"
+      ]
+    },
+    "moduleFilters": {
+      "noModuleWrapping": [
+        "**"
+      ]
+    },
+    "extendedRuntimeEnvironment": "n4js-node",
+    "providedRuntimeLibraries": [
       "n4js-runtime-n4",
       "n4js-runtime-v8",
       "n4js-runtime-es2015",
@@ -48,17 +56,8 @@
       "org.eclipse.n4js.mangelhaft",
       "org.eclipse.n4js.mangelhaft.reporter.ide"
     ],
-    "Output": "src-gen",
-    "Sources": {
-      "external": [
-        "\"src/js\""
-      ]
-    },
-    "ExecModule": "n4js-mangelhaft-cli",
-    "ModuleFilters": {
-      "noModuleWrap": [
-        "\"**\""
-      ]
-    }
-  }
+    "moduleLoader": "n4js",
+    "execModule": "n4js-mangelhaft-cli"
+  },
+  "devDependencies": {}
 }

@@ -15,6 +15,8 @@ import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.difference;
 import static org.eclipse.n4js.resource.UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Set;
@@ -122,7 +124,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		// Make sure both test module and manifest get into the index.
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
-		assertMarkers("Expected exactly zero issues.", project, 0);
+		assertMarkers("Expected exactly 12 issues.", project, 12); // issues are in external libraries
 
 		final Resource resource = persister.createResource();
 		assertNotNull("Test resource was null.", resource);
@@ -164,7 +166,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		waitForAutoBuild();
 		resource.getContents().clear();
 
-		assertMarkers("Expected exactly zero issues.", project, 0);
+		assertMarkers("Expected exactly 12 issues.", project, 12); // issues are in external libraries
 
 		final Set<org.eclipse.emf.common.util.URI> afterCrashBuilderState = from(
 				builderState.getAllResourceDescriptions())

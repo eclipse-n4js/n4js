@@ -10,28 +10,19 @@
  */
 package org.eclipse.n4js.tester;
 
-import static java.lang.String.valueOf;
-import static java.util.UUID.randomUUID;
-
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.tester.domain.TestTree;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.tester.domain.ID;
-import org.eclipse.n4js.tester.domain.TestTree;
-import org.eclipse.n4js.utils.injector.InjectorBroker;
 
 /**
  * Service for supplying the the test catalog based on all tests available available in the ({@link IN4JSCore N4JS core}
  * based) workspace. The content of the provided test catalog depends on the built state of the workspace.
  */
 public class TestCatalogSupplier implements Supplier<String> {
-
-	private static final String N4JS_INJECTOR_ID = "org.eclipse.n4js.N4JS";
 
 	@Inject
 	private ObjectMapper objectMapper;
@@ -40,9 +31,6 @@ public class TestCatalogSupplier implements Supplier<String> {
 	private TestTreeTransformer treeTransformer;
 
 	@Inject
-	private InjectorBroker injectorBroker;
-
-	@Inject(optional = true)
 	private TestDiscoveryHelper testDiscoveryHelper;
 
 	/**
@@ -63,19 +51,8 @@ public class TestCatalogSupplier implements Supplier<String> {
 		}
 	}
 
-	private TestTree getTreeForAllTests() {
-		if (null == testDiscoveryHelper) {
-			this.testDiscoveryHelper = getTestDiscoveryHelper();
-		}
-		if (null == testDiscoveryHelper) {
-			return new TestTree(new ID(valueOf(randomUUID())));
-		}
+	/** @return the {@link TestTree} for all tests */
+	protected TestTree getTreeForAllTests() {
 		return testDiscoveryHelper.collectAllTestsFromWorkspace();
 	}
-
-	private TestDiscoveryHelper getTestDiscoveryHelper() {
-		final Injector injector = injectorBroker.getInjector(N4JS_INJECTOR_ID);
-		return null == injector ? null : injector.getInstance(TestDiscoveryHelper.class);
-	}
-
 }
