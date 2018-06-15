@@ -66,19 +66,29 @@ public class WildcardPathFilterHelper {
 			return null;
 		}
 
+		N4JSProject project = (N4JSProject) sourceContainer.getProject();
+		Path prjLocationPath = Paths.get(project.getLocation().toString());
 		Path locationPath = Paths.get(location.toString());
+		Preconditions.checkState(locationPath.startsWith(prjLocationPath));
+		Path prjRelativeLocationPath = prjLocationPath.relativize(locationPath);
+
 		String filterSrcCont = spec.getSourcePath();
-		if (filterSrcCont == null || filterSrcCont.equals(sourceContainer.getRelativeLocation())) {
-			N4JSProject project = (N4JSProject) sourceContainer.getProject();
-			Path prjLocationPath = Paths.get(project.getLocation().toString());
-			Preconditions.checkState(locationPath.startsWith(prjLocationPath));
-			Path prjRelativeLocationPath = prjLocationPath.relativize(locationPath);
+		if (filterSrcCont == null) {
+			// e.g. noValidate { "**/*" }
 			for (IN4JSSourceContainer srcCont : n4jsModel.getN4JSSourceContainers(project)) {
 				Path srcContLocationPath = Paths.get(srcCont.getRelativeLocation());
 				if (prjRelativeLocationPath.startsWith(srcContLocationPath)) {
 					Path srcRelativeLocationPath = srcContLocationPath.relativize(prjRelativeLocationPath);
 					return srcRelativeLocationPath.toString();
 				}
+			}
+		} else {
+			// e.g. noValidate { "**/*" in "src" }
+			if (filterSrcCont.equals(sourceContainer.getRelativeLocation())) {
+				Path srcContLocationPath = Paths.get(sourceContainer.getRelativeLocation());
+				Preconditions.checkState(prjRelativeLocationPath.startsWith(srcContLocationPath));
+				Path srcRelativeLocationPath = srcContLocationPath.relativize(prjRelativeLocationPath);
+				return srcRelativeLocationPath.toString();
 			}
 		}
 		return null;

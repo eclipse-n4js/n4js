@@ -728,7 +728,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		def private boolean isModuleSpecifier(String fileSpecifier) {
-			return fileSpecifier.endsWith(".n4js") || fileSpecifier.endsWith(".n4jsx")
+			return fileSpecifier.endsWith(".n4js") || fileSpecifier.endsWith(".n4jsx") || fileSpecifier.endsWith(".n4jsd");
 		}
 	}
 
