@@ -39,11 +39,13 @@ public class WildcardPathFilterHelper {
 
 	/** @return true iff the given location is matched the given filter */
 	public boolean isPathContainedByFilter(URI location, ModuleFilter filter) {
-
 		for (ModuleFilterSpecifier spec : filter.getModuleSpecifiers()) {
 			String prjRelativeLocation = getProjectRelativeLocation(location, spec);
 			if (prjRelativeLocation != null) {
-				return locationMatchesGlobSpecifier(spec, prjRelativeLocation);
+				boolean isContained = locationMatchesGlobSpecifier(spec, prjRelativeLocation);
+				if (isContained) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -85,6 +87,9 @@ public class WildcardPathFilterHelper {
 	/** @return true iff the given location is matched the given GLOB specifier */
 	private boolean locationMatchesGlobSpecifier(ModuleFilterSpecifier spec, String prjRelativeLocation) {
 		String pathsToFind = spec.getModuleSpecifierWithWildcard();
+		if (pathsToFind == null) {
+			return false;
+		}
 		boolean matches = prjRelativeLocation.startsWith(pathsToFind);
 		if (!matches) {
 			String syntaxAndPattern = "glob:" + pathsToFind;
