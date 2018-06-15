@@ -20,7 +20,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.n4js.n4mf.N4mfPackage;
+import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.swt.SWT;
@@ -89,7 +89,7 @@ public class N4JSTestedProjectWizardPage extends WizardPage {
 	private String[] getNonTestProjects() {
 
 		Stream<IEObjectDescription> projectDescriptions = StreamSupport.stream(resourceDescriptions
-				.getExportedObjectsByType(N4mfPackage.eINSTANCE.getProjectDescription()).spliterator(), false);
+				.getExportedObjectsByType(JSONPackage.Literals.JSON_DOCUMENT).spliterator(), false);
 
 		// Filter for non-test, non-external, non-null project descriptions and return their id
 		return projectDescriptions

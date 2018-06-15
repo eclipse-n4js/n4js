@@ -62,6 +62,7 @@ package class PackageJsonContentProvider {
 	 */
 	package static def JSONDocument getModel(
 		String projectId,
+		Optional<String> version,
 		ProjectType type,
 		Optional<String> vendorId,
 		Optional<String> vendorName,
@@ -78,7 +79,9 @@ package class PackageJsonContentProvider {
 		val JSONObject root = JSONFactory.eINSTANCE.createJSONObject();
 		
 		JSONModelUtils.addProperty(root, PROP__NAME, projectId);
-		JSONModelUtils.addProperty(root, PROP__VERSION, "0.0.1");
+		
+		if (version.present)
+			JSONModelUtils.addProperty(root, PROP__VERSION, version.get());
 
 		// add dependencies section
 		val JSONObject dependenciesSection = JSONFactory.eINSTANCE.createJSONObject();
@@ -145,6 +148,11 @@ package class PackageJsonContentProvider {
 		if (!implementedProjects.empty) {
 			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS,
 				JSONModelUtils.createStringArray(implementedProjects));
+		}
+		
+		if (!testedProjects.empty) {
+			JSONModelUtils.addProperty(n4jsRoot, ProjectDescriptionHelper.PROP__TESTED_PROJECTS,
+				JSONModelUtils.createStringArray(testedProjects));
 		}
 
 		// finally serialize as JSONDocument

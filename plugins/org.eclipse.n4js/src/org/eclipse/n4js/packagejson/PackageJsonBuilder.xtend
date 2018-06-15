@@ -39,6 +39,7 @@ public class PackageJsonBuilder {
 
 	private String projectName;
 	private ProjectType type;
+	private String version;
 
 	private Collection<String> dependencies;
 	
@@ -87,7 +88,8 @@ public class PackageJsonBuilder {
 	 */
 	def JSONDocument buildModel() {
 		return PackageJsonContentProvider.getModel(
-			checkNotNull(projectName), 
+			checkNotNull(projectName),
+			fromNullable(version),
 			checkNotNull(type),
 			fromNullable(vendorId),
 			fromNullable(vendorName),
@@ -112,6 +114,17 @@ public class PackageJsonBuilder {
 		this.projectName = checkNotNull(name)
 		return this;
 	}
+	
+	/**
+	 * Sets the project version and returns with the builder.
+	 * 
+	 * @param version The project version.
+	 * @return the builder.
+	 */
+	def PackageJsonBuilder withVersion(String version) {
+		this.version = checkNotNull(version)
+		return this;
+	}
 
 	/**
 	 * Sets the project type and returns with the builder.
@@ -123,7 +136,7 @@ public class PackageJsonBuilder {
 		this.type = checkNotNull(type)
 		return this;
 	}
-
+	
 	/**
 	 * Sets the vendorId and returns with the builder.
 	 * 
