@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Charsets;
@@ -81,9 +83,14 @@ public class SourceMap {
 	 */
 	final public List<String> names = new ArrayList<>();
 	/**
-	 * The mappings, the index of the mapping defines the zero-based line number.
+	 * The mappings, the index of the mapping defines the zero-based line number in the gen file.
 	 */
-	final List<LineMappings> mappings = new ArrayList<>();
+	final List<LineMappings.ByGen> genMappings = new ArrayList<>();
+
+	/**
+	 * Similar to mappings but based on src.
+	 */
+	final List<List<LineMappings.BySrc>> srcMappings = new ArrayList<>();
 
 	/**
 	 * set only in {@link #loadAndResolve(Path)}
@@ -102,26 +109,52 @@ public class SourceMap {
 	 * Adds a new mapping entry.
 	 */
 	public void addMappig(MappingEntry entry) {
-		LineMappings lineMapping = getOrCreateLineMapping(entry.genLine);
+		LineMappings.ByGen lineMapping = getOrCreateSrcLineMapping(entry.genLine);
 		lineMapping.add(entry);
+
+		getOrCreateSrcLineMapping(entry.srcIndex, entry.srcLine);
 	}
 
 	/**
 	 * Gets and creates on demand a new set of LineMappingEntries for the line identified by outStartPos
 	 */
-	private LineMappings getOrCreateLineMapping(int outputLine) {
-		LineMappings lineMappings;
-		if (outputLine < mappings.size()) {
-			lineMappings = mappings.get(outputLine);
-			if (lineMappings == null) {
-				lineMappings = new LineMappings();
-				mappings.set(outputLine, lineMappings);
+	private LineMappings.ByGen getOrCreateSrcLineMapping(int outputLine) {
+		return getOrCreateLineMapping(genMappings, outputLine, LineMappings.ByGen::new);
+	}
+
+	private LineMappings.BySrc getOrCreateSrcLineMapping(int srcIndex, int srcLine) {
+		List<LineMappings.BySrc> mappings = null;
+		if (srcIndex < srcMappings.size()) {
+			mappings = srcMappings.get(srcIndex);
+			if (mappings == null) {
+				mappings = new ArrayList<>();
+				srcMappings.set(srcIndex, mappings);
 			}
 		} else {
-			for (int i = mappings.size(); i < outputLine; i++) {
+			for (int i = srcMappings.size(); i < srcIndex; i++) {
+				srcMappings.add(null);
+			}
+			mappings = new ArrayList<>();
+			srcMappings.add(mappings);
+		}
+		return getOrCreateLineMapping(mappings, srcLine, LineMappings.BySrc::new);
+
+	}
+
+	private <T extends TreeSet<MappingEntry>> T getOrCreateLineMapping(List<T> mappings, int line,
+			Supplier<T> ctor) {
+		T lineMappings;
+		if (line < mappings.size()) {
+			lineMappings = mappings.get(line);
+			if (lineMappings == null) {
+				lineMappings = ctor.get();
+				mappings.set(line, lineMappings);
+			}
+		} else {
+			for (int i = mappings.size(); i < line; i++) {
 				mappings.add(null);
 			}
-			lineMappings = new LineMappings();
+			lineMappings = ctor.get();
 			mappings.add(lineMappings);
 		}
 		return lineMappings;
@@ -206,7 +239,7 @@ public class SourceMap {
 	private void writeMappings(Appendable out) throws IOException {
 		boolean bFirst = true;
 		MappingEntry.PreviousEntry prev = new MappingEntry.PreviousEntry();
-		for (LineMappings lineMappings : mappings) {
+		for (LineMappings.ByGen lineMappings : genMappings) {
 			if (bFirst) {
 				bFirst = false;
 			} else {
@@ -256,44 +289,67 @@ public class SourceMap {
 
 	/**
 	 * Find mapping entry at given generated (JavaScript) position.
-	 * 
+	 *
 	 * @return the closest entry or null, if no such entry was found.
 	 */
 	public MappingEntry findMappingForGenPosition(int genLine, int genColumns) {
-		if (genLine >= mappings.size()) {
+		if (genLine >= genMappings.size()) {
 			return null;
 		}
-		LineMappings lineMappings = mappings.get(genLine);
+		LineMappings.ByGen lineMappings = genMappings.get(genLine);
 		if (lineMappings == null) {
 			return null;
 		}
-		MappingEntry entry = lineMappings.findEntryByGenColumn(genColumns);
+		MappingEntry entry = lineMappings.findEntryByColumn(genColumns);
 		return entry;
 	}
 
 	/**
 	 * Find mapping entry at given source (N4JS) position.
-	 * 
+	 *
 	 * @return the closest entry or null, if no such entry was found.
 	 */
 	public MappingEntry findMappingForSrcPosition(int sourceIndex, int sourceLine, int sourceColumn) {
-		MappingEntry entry = null;
-		for (LineMappings lineMapping : mappings) {
-			for (MappingEntry e : lineMapping) {
-				if (e.srcLine == sourceLine
-						&& e.srcColumn <= sourceColumn
-						&& e.srcIndex == sourceIndex) {
-					if (entry == null
-							|| (sourceColumn - e.srcColumn < sourceColumn - entry.srcColumn)) {
-						entry = e;
-						if (entry.srcColumn == sourceColumn) {
-							break;
-						}
-					}
+		if (sourceIndex < 0 || sourceIndex >= srcMappings.size()) {
+			return null;
+		}
+		List<LineMappings.BySrc> mappings = srcMappings.get(sourceIndex);
+		LineMappings.BySrc lineMappings = mappings.get(sourceLine);
+		if (lineMappings == null) {
+			return null;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the length of the mapping in the generated code, that is the length either of the referenced name or the
+	 * length to the next mapping in the same line. Returns -1 if length cannot be computed.
+	 */
+	public int computeLength(MappingEntry entry) {
+		if (entry == null || entry.genLine < 0 || entry.genLine >= genMappings.size()) {
+			return -1;
+		}
+		if (entry.nameIndex >= 0 && entry.nameIndex < names.size()) {
+			return names.get(entry.nameIndex).length();
+		}
+
+		LineMappings.ByGen lineMappings = genMappings.get(entry.genLine);
+		boolean entryFound = false;
+		MappingEntry next = null;
+		for (MappingEntry e : lineMappings) {
+			if (e == entry) {
+				entryFound = true;
+			} else {
+				if (entryFound) {
+					next = e;
+					break;
 				}
 			}
 		}
-		return entry;
+		if (next == null) {
+			return -1;
+		}
+		return next.genColumn - entry.genColumn;
 	}
 
 }

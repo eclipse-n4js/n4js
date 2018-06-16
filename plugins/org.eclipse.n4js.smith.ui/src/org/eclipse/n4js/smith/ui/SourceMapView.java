@@ -342,8 +342,20 @@ public class SourceMapView extends ViewPart {
 				StyledText text = textOrgs.get(srcPath.normalize().toFile());
 				int delta = genColumn - entry.genColumn;
 				int srcOffset = text.getOffsetAtLine(entry.srcLine)
-						+ entry.srcColumn + delta;
-				text.setSelection(srcOffset, srcOffset + 1);
+						+ entry.srcColumn;
+				int srcOffsetEnd = srcOffset;
+				if (delta > 0) {
+					int length = sourceMap.computeLength(entry);
+					if (length >= 0) {
+						srcOffsetEnd += length;
+					} else {
+						srcOffsetEnd = text.getOffsetAtLine(entry.srcLine + 1) - 1;
+					}
+				}
+				text.setSelection(srcOffset, srcOffsetEnd);
+			} else {
+				StyledText text = (StyledText) tabsOrg.getSelection().getControl();
+				text.setSelection(0, 0);
 			}
 		}
 	}

@@ -56,9 +56,9 @@ public class SourceMapTest {
 	@Test
 	public void testParserMappings() {
 		SourceMap map = SourceMap.parse(sampleMap);
-		assertEquals("lines", lineMappings.length, map.mappings.size());
+		assertEquals("lines", lineMappings.length, map.genMappings.size());
 		for (int i = 0; i < lineMappings.length; i++) {
-			String actual = map.mappings.get(i).toString();
+			String actual = map.genMappings.get(i).toString();
 			String expected = lineMappings[i];
 			assertEquals(expected, actual);
 		}

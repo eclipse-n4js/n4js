@@ -65,7 +65,7 @@ public class Base64VLQTestMultipleNumbers {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.n4js.transpiler.sourcemap.Base64VLQ#decode(CharSequence)}.
+	 *
 	 */
 	@Test
 	public void testDecode() {
