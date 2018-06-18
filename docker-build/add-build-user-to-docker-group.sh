@@ -1,12 +1,9 @@
 #!/bin/sh
 set -e
 
-BUILDUSER="jenkins"
+BUILDUSER="build"
 
 DOCKER_GID=$(ls -aln /var/run/docker.sock  | awk '{print $4}')
-
-# TODO: can we also download the static docker client binary for the 
-#       docker server version?
 
 if ! getent group $DOCKER_GID; then
 	echo creating docker group $DOCKER_GID
