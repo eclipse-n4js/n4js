@@ -10,29 +10,31 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4MFXpectPluginUITest
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
 
     Workspace {
-        JavaProject "srcInOutput" {
-        	Folder "src" {
-        		Folder "inner" {}
-        	}
+        JavaProject "outputEqualsSrcTop" {
+        	Folder "src" {}
             ThisFile {}
         }
     }
 
     END_SETUP
  */
-
-ProjectId: srcInOutput
-ProjectType: validation
-ProjectVersion: 0.0.1-SNAPSHOT
-VendorId: MyVendorID
-VendorName: "My Vendor Name"
-Output: "src"
-Sources {
-	source {
+{
+	"name": "outputEqualsSrcTop",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "validation",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
 		// XPECT noerrors -->
-		"src/inner"
+		"output": ".",
+		"sources": {
+			"source": [
+				// XPECT noerrors -->
+				"."
+			]
+		}
 	}
 }

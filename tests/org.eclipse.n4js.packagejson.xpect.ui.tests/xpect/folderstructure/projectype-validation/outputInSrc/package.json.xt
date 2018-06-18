@@ -9,10 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4MFXpectPluginUITest
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
 
     Workspace {
-        JavaProject "outputEqualsSrc" {
+        JavaProject "outputInSrc" {
         	Folder "src" {}
             ThisFile {}
         }
@@ -20,17 +21,19 @@
 
     END_SETUP
  */
-
-ProjectId: outputEqualsSrc
-ProjectType: validation
-ProjectVersion: 0.0.1-SNAPSHOT
-VendorId: MyVendorID
-VendorName: "My Vendor Name"
-// XPECT noerrors -->
-Output: "src"
-Sources {
-	source {
+{
+	"name": "outputInSrc",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "validation",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
 		// XPECT noerrors -->
-		"src"
+		"output": "src/inner",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }
