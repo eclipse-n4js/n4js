@@ -27,8 +27,6 @@ Contributors:
 		<!-- Test helpers bundled for sdk. -->
 		<module>org.eclipse.n4js.tests.helper</module>
 		<module>org.eclipse.n4js.ui.tests.helper</module>
-		<module>org.eclipse.n4js.n4mf.tests.helper</module>
-		<module>org.eclipse.n4js.n4mf.ui.tests.helper</module>
 		<module>org.eclipse.n4js.regex.tests.helper</module>
 		<module>org.eclipse.n4js.regex.ui.tests.helper</module>
 		<module>org.eclipse.n4js.ts.tests.helper</module>
