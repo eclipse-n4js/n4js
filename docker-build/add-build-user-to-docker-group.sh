@@ -3,6 +3,8 @@ set -e
 
 BUILDUSER="build"
 
+ls /var/run/
+
 DOCKER_GID=$(ls -aln /var/run/docker.sock  | awk '{print $4}')
 
 if ! getent group $DOCKER_GID; then
