@@ -9,7 +9,23 @@
  *   NumberFour AG - Initial API and implementation
  */
 pipeline {
+
     agent {
+    	stages {
+	        stage('On Host') {
+	            steps {
+	                script {
+	                        sh """\
+	                        		whoami
+	                                id -u centos
+	                                ls -la /var/run/docker
+	                                id -G centos
+	                           """
+	                }
+	            }
+	        }
+		}
+
         dockerfile {
             dir 'docker-build/'
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
