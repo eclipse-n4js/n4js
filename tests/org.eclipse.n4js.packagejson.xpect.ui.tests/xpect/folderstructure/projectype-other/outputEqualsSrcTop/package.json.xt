@@ -10,7 +10,7 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4MFXpectPluginUITest
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
 
     Workspace {
         JavaProject "outputEqualsSrcTop" {
@@ -21,17 +21,20 @@
 
     END_SETUP
  */
-
-ProjectId: outputEqualsSrcTop
-ProjectType: library
-ProjectVersion: 0.0.1-SNAPSHOT
-VendorId: MyVendorID
-VendorName: "My Vendor Name"
-// XPECT errors --> "The output folder must not be located inside a SOURCE folder." at "".""
-Output: "."
-Sources {
-	source {
-		// XPECT errors --> "A SOURCE folder must not be located inside the output folder." at "".""
-		"."
+{
+	"name": "outputEqualsSrcTop",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		// XPECT errors --> "The output folder must not be located inside a source folder." at "".""
+		"output": ".",
+		"sources": {
+			"source": [
+				// XPECT errors --> "A source folder must not be located inside the output folder." at "".""
+				"."
+			]
+		}
 	}
 }
