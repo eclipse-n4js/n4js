@@ -28,6 +28,8 @@ ARG MAVEN_CENTRAL_URL=https://repo.maven.apache.org/maven2/
 RUN groupadd --gid 1000 build && \
     useradd --uid 1000 --gid build --shell /bin/bash --create-home build
 
+# Assign build user to group 994 (= docker group)
+RUN useradd --uid 1000 --gid 994
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
     curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
