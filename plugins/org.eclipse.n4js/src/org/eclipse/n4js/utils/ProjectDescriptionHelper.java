@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -253,16 +254,22 @@ public class ProjectDescriptionHelper {
 		if (pd.getOutputPathRaw() == null) {
 			pd.setOutputPathRaw(".");
 		}
-		SourceContainerDescription scd = pd.getSourceContainers().stream()
-				.filter(sc -> sc.getSourceContainerType() == SourceContainerType.SOURCE)
-				.findFirst().orElse(null);
-		if (scd == null) {
-			SourceContainerDescription scdNew = N4mfFactory.eINSTANCE.createSourceContainerDescription();
-			scdNew.setSourceContainerType(SourceContainerType.SOURCE);
-			scdNew.getPathsRaw().add(".");
-			pd.getSourceContainers().add(scdNew);
-		} else if (scd.getPathsRaw().isEmpty()) {
-			scd.getPathsRaw().add(".");
+		// if no source containers are defined (no matter what type),
+		// then add a default source container of type "source" with path "."
+		Iterator<String> sourceContainerPaths = pd.getSourceContainers().stream()
+				.flatMap(sc -> sc.getPathsRaw().stream()).iterator();
+		if (!sourceContainerPaths.hasNext()) {
+			SourceContainerDescription scd = pd.getSourceContainers().stream()
+					.filter(sc -> sc.getSourceContainerType() == SourceContainerType.SOURCE)
+					.findFirst().orElse(null);
+			if (scd == null) {
+				SourceContainerDescription scdNew = N4mfFactory.eINSTANCE.createSourceContainerDescription();
+				scdNew.setSourceContainerType(SourceContainerType.SOURCE);
+				scdNew.getPathsRaw().add(".");
+				pd.getSourceContainers().add(scdNew);
+			} else if (scd.getPathsRaw().isEmpty()) {
+				scd.getPathsRaw().add(".");
+			}
 		}
 	}
 
