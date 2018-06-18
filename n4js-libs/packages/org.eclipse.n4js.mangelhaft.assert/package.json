@@ -37,7 +37,7 @@
     "moduleLoader": "n4js"
   },
   "dependencies": {
-    "n4js-node": "latest"
+    "n4js-node": "^0.1.0"
   },
   "devDependencies": {
     "n4js-runtime-n4": "^0.1.0",

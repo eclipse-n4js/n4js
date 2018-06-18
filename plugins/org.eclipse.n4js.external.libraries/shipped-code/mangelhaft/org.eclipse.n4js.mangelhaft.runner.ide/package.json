@@ -40,7 +40,7 @@
     "n4js.lang": "^0.1.0",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.reporter.ide": "^0.1.0",
-    "n4js-node": "latest"
+    "n4js-node": "^0.1.0"
   },
   "devDependencies": {
     "n4js-runtime-n4": "^0.1.0",
