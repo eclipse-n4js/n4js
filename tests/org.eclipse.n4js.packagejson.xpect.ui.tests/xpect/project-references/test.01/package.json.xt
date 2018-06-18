@@ -82,8 +82,8 @@
 		// XPECT noerrors
 		"implementedProjects": [],
 		
-		// XPECT warnings --> "InitModules cannot be specified for library projects." at ""initModules": []"
-		"initModules": [],
+		// XPECT warnings --> "InitModules cannot be specified for library projects." at ""initModules": [""]"
+		"initModules": [""],
 		
 		// XPECT warnings --> "ExecModule cannot be specified for library projects." at ""execModule": "some-execution-module""
 		"execModule": "some-execution-module",
@@ -91,10 +91,10 @@
 		// XPECT noerrors
 		"requiredRuntimeLibraries" : [],
 		
-		// XPECT warnings --> "Provided runtime libraries cannot be specified for library projects." at ""providedRuntimeLibraries" : []"
-		"providedRuntimeLibraries" : [],
+		// XPECT warnings --> "Provided runtime libraries cannot be specified for library projects." at ""providedRuntimeLibraries" : [""]"
+		"providedRuntimeLibraries" : [""],
 		
-		// XPECT warnings --> "Tested projects cannot be specified for library projects." at ""testedProjects": []"
-		"testedProjects": []
+		// XPECT warnings --> "Tested projects cannot be specified for library projects." at ""testedProjects": [""]"
+		"testedProjects": [""]
 	}
 }

@@ -12,22 +12,9 @@ package org.eclipse.n4js.ui.wizard.generator
 
 import com.google.common.base.Optional
 import com.google.inject.Inject
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.ui.changes.ChangeManager
-import org.eclipse.n4js.ui.changes.IAtomicChange
-import org.eclipse.n4js.ui.changes.ManifestChangeProvider
-import org.eclipse.n4js.ui.organize.imports.Interaction
-import org.eclipse.n4js.ui.wizard.model.AccessModifier
-import org.eclipse.n4js.ui.wizard.model.ClassifierReference
-import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModel
 import java.io.IOException
 import java.io.UnsupportedEncodingException
-import java.util.ArrayList
 import java.util.Collection
-import java.util.HashSet
 import java.util.List
 import java.util.Map
 import org.eclipse.core.resources.IFile
@@ -39,13 +26,21 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jface.text.BadLocationException
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.ui.changes.ChangeManager
+import org.eclipse.n4js.ui.changes.IAtomicChange
+import org.eclipse.n4js.ui.organize.imports.Interaction
+import org.eclipse.n4js.ui.organize.imports.OrganizeImportsService
+import org.eclipse.n4js.ui.wizard.model.AccessModifier
+import org.eclipse.n4js.ui.wizard.model.ClassifierReference
+import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardModel
 import org.eclipse.ui.part.FileEditorInput
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
 import org.eclipse.xtext.util.Files
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
-import org.eclipse.n4js.ui.organize.imports.OrganizeImportsService
 
 /**
  * This class contains commonly used methods when writing wizard generators.
@@ -252,32 +247,35 @@ class WizardGeneratorHelper {
 	 * @returns A list of {@link IAtomicChange}s for the manifest resource.
 	 */
 	public def Collection<IAtomicChange> manifestChanges(Resource manifest, WorkspaceWizardModel model, Collection<IN4JSProject> referencedProjects, URI moduleURI) {
-		// Remove the containing project from the dependencies
-		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectId.equals(model.project.lastSegment) ];
-
-		//Remove duplicates
-		val referencedProjectsSet = new HashSet<IN4JSProject>();
-		referencedProjectsSet.addAll(referencedProjectsExceptContainer);
-
-		var List<IAtomicChange> manifestChanges = new ArrayList<IAtomicChange>();
-
-		val projectDescription = manifest.allContents.filter(ProjectDescription).head;
-
-		//Add project dependency changes
-		val dependencyChange = ManifestChangeProvider.insertProjectDependencies(manifest,
-																				referencedProjectsSet.filter[projectType != ProjectType.RUNTIME_LIBRARY].map[projectId].toList,
-																				projectDescription)
-		//Add required runtime library changes
-		val runtimeLibraryChange = ManifestChangeProvider.insertRequiredRuntimeLibraries(manifest,
-																				referencedProjectsSet.filter[projectType == ProjectType.RUNTIME_LIBRARY].map[projectId].toList,
-																				projectDescription)
-		if (dependencyChange !== null) {
-			manifestChanges.add(dependencyChange);
-		}
-		if (runtimeLibraryChange !== null) {
-			manifestChanges.add(runtimeLibraryChange);
-		}
-
-		return manifestChanges;
+		// TODO FIXME implement this function for package.json files
+		return emptyList;
+		
+//		// Remove the containing project from the dependencies
+//		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectId.equals(model.project.lastSegment) ];
+//
+//		//Remove duplicates
+//		val referencedProjectsSet = new HashSet<IN4JSProject>();
+//		referencedProjectsSet.addAll(referencedProjectsExceptContainer);
+//
+//		var List<IAtomicChange> manifestChanges = new ArrayList<IAtomicChange>();
+//
+//		val projectDescription = manifest.allContents.filter(ProjectDescription).head;
+//
+//		//Add project dependency changes
+//		val dependencyChange = ManifestChangeProvider.insertProjectDependencies(manifest,
+//																				referencedProjectsSet.filter[projectType != ProjectType.RUNTIME_LIBRARY].map[projectId].toList,
+//																				projectDescription)
+//		//Add required runtime library changes
+//		val runtimeLibraryChange = ManifestChangeProvider.insertRequiredRuntimeLibraries(manifest,
+//																				referencedProjectsSet.filter[projectType == ProjectType.RUNTIME_LIBRARY].map[projectId].toList,
+//																				projectDescription)
+//		if (dependencyChange !== null) {
+//			manifestChanges.add(dependencyChange);
+//		}
+//		if (runtimeLibraryChange !== null) {
+//			manifestChanges.add(runtimeLibraryChange);
+//		}
+//
+//		return manifestChanges;
 	}
 }

@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
@@ -73,7 +72,6 @@ public class N4JSStandaloneSetup implements ISetup {
 
 		RegularExpressionStandaloneSetup.doSetup();
 		TypesStandaloneSetup.doSetup();
-		N4MFStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
 		JSONStandaloneSetup.doSetup();
 

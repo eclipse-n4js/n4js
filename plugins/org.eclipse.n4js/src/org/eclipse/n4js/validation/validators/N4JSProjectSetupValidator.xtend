@@ -39,7 +39,6 @@ import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerDescription
 import org.eclipse.n4js.n4mf.SourceContainerType
-import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.n4js.projectModel.IN4JSArchive
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
@@ -56,6 +55,7 @@ import org.eclipse.n4js.validation.N4JSIssueSeverities
 import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider
 import org.eclipse.n4js.validation.helper.PolyFilledProvision
 import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
+import org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
 import org.eclipse.xtext.resource.IContainer.Manager
@@ -71,8 +71,8 @@ import static java.util.Collections.singletonList
 import static java.util.Collections.unmodifiableMap
 import static org.eclipse.n4js.n4mf.N4mfPackage.Literals.*
 import static org.eclipse.n4js.n4mf.ProjectType.*
-import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
+import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
 

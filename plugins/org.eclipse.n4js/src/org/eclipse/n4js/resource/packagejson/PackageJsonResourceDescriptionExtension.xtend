@@ -27,7 +27,6 @@ import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionStrategy
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
@@ -66,35 +65,35 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	/**
 	 * Key for storing the test project IDs.
 	 * If a project does not have any tested projects this key will be missing from the user data.
-	 * The values are separated with the {@link N4MFResourceDescriptionStrategy#SEPARATOR} character.
+	 * The values are separated with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} character.
 	 */
 	private static val TESTED_PROJECT_IDS_KEY = 'testedProjectIds';
 
 	/**
 	 * Key for storing the implemented project IDs.
 	 * If a project does not implement any projects this key will be missing from the user data.
-	 * The values are separated with the {@link N4MFResourceDescriptionStrategy#SEPARATOR} character.
+	 * The values are separated with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} character.
 	 */
 	private static val IMPLEMENTED_PROJECT_IDS_KEY = 'implementedProjectIds';
 
 	/**
 	 * Key for storing the project IDs of all direct dependencies.
 	 * If a project does not have any direct projects this key will be missing from the user data.
-	 * The values are separated with the {@link N4MFResourceDescriptionStrategy#SEPARATOR} character.
+	 * The values are separated with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} character.
 	 */
 	private static val PROJECT_DEPENDENCY_IDS_KEY = 'projectDependencyIds';
 
 	/**
 	 * Key for storing the IDs of all provided runtime libraries.
 	 * If the project does not provide any runtime libraries, then this value will be omitted form the user data.
-	 * Multiple values are separated with the {@link N4MFResourceDescriptionStrategy#SEPARATOR} character.
+	 * Multiple values are separated with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} character.
 	 */
 	private static val PROVIDED_RUNTIME_LIBRARY_IDS_KEY = 'providedRuntimeLibraryIds';
 
 	/**
 	 * Key for storing the project IDs of all required runtime libraries.
 	 * If the project does not have any runtime library requirement, this value will not be present in the user data.
-	 * Multiple values will be joined with the {@link N4MFResourceDescriptionStrategy#SEPARATOR} separator.
+	 * Multiple values will be joined with the {@link PackageJsonResourceDescriptionExtension#SEPARATOR} separator.
 	 */
 	private static val REQUIRED_RUNTIME_LIBRARY_IDS_KEY = 'requiredRuntimeLibraryIds';
 

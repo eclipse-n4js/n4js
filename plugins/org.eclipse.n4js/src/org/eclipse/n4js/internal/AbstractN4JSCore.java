@@ -21,12 +21,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
-import org.eclipse.n4js.n4mf.validation.WildcardPathFilter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.WildcardPathFilter;
 import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.base.Optional;

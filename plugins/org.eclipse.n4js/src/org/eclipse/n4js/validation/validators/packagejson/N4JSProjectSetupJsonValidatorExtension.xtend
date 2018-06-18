@@ -31,6 +31,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
+import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.JSON.JSONValue
 import org.eclipse.n4js.json.JSON.NameValuePair
@@ -38,12 +39,12 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.json.validation.^extension.AbstractJSONValidatorExtension
 import org.eclipse.n4js.json.validation.^extension.CheckProperty
 import org.eclipse.n4js.n4mf.DeclaredVersion
+import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerDescription
 import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.n4mf.VersionConstraint
-import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware
@@ -52,11 +53,9 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.utils.PackageJsonHelper
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.n4js.utils.Version
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.n4js.validation.helper.PolyFilledProvisionPackageJson
 import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -69,11 +68,11 @@ import org.eclipse.xtext.validation.Check
 
 import static com.google.common.base.Preconditions.checkState
 import static org.eclipse.n4js.n4mf.ProjectType.*
-import static org.eclipse.n4js.n4mf.utils.ProjectTypePredicate.*
 import static org.eclipse.n4js.validation.IssueCodes.*
+import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.n4mf.ProjectDependency
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -125,9 +124,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
-	
-	@Inject
-	private PackageJsonHelper packageJsonHelper;
 	
 	@Inject
 	private ProjectDescriptionHelper projectDescriptionHelper;
@@ -349,7 +345,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private def holdsProjectWithTestFragmentDependsOnTestLibrary(IN4JSProject project) {
 
 		val JSONValue sourcesSection = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES, JSONValue);
-		val List<SourceContainerDescription> sourceContainers = packageJsonHelper.getSourceContainerDescriptions(sourcesSection);
+		val List<SourceContainerDescription> sourceContainers = ProjectDescriptionUtils.getSourceContainerDescriptions(sourcesSection);
 		
 		if (sourceContainers === null) {
 			return;
@@ -401,7 +397,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				val allProjects = getAllExistingProjectIds();
 				val head = projects.head;
 				val refProjectType = allProjects.get(head.projectId)?.projectType
-				if (projects.exists[testedProject | refProjectType != allProjects.get(testedProject.projectId)?.projectType]) {
+				
+				// check whether 'projects' contains a dependency to an existing project of different
+				// type than 'head'
+				if (projects.exists[testedProject | allProjects.containsKey(testedProject.projectId) &&
+					refProjectType != allProjects.get(testedProject.projectId)?.projectType
+				]) {
 					addIssue(
 						messageForMISMATCHING_TESTED_PROJECT_TYPES, 
 						testedProjectsValue,
@@ -501,7 +502,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
 	def checkDependencies(JSONValue dependenciesValue) {
 		// make sure 'dependencies' feature is allowed in combination with the current project type
-		if (!checkFeatureRestrictions("dependencies", dependenciesValue, not(RE_OR_RL_TYPE))) {
+		if (!checkFeatureRestrictions("dependencies", dependenciesValue, not(RE_TYPE))) {
 			return;
 		}
 		
@@ -513,7 +514,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
 	def checkDevDependencies(JSONValue devDependenciesValue) {
 		// make sure 'devDependencies' are allowed in combination with the current project type
-		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_OR_RL_TYPE))) {
+		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_TYPE))) {
 			return;
 		}
 
@@ -600,8 +601,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if(checkFeatureRestrictions(ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, implementedProjectsValue, 
 			not(or(RE_OR_RL_TYPE, TEST_TYPE)))) {
 		
+			val description = getProjectDescription();
+		
 			val references = implementedProjectsValue.referencesFromJSONStringArray;
 			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects", false);
+			
+			if (description.implementationId === null && !references.isEmpty()) {
+				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_ID(), implementedProjectsValue.eContainer,
+					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_ID);
+			}
 		}
 	}
 
@@ -612,6 +620,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * Adds INVALID_FEATURE_FOR_PROJECT_TYPE to {@code pair} otherwise.
 	 * 
 	 * @param featureDescription A textual user-facing description of the checked feature.
+	 * @param value The JSONValue that has been declared for the given feature.
 	 * @param supportedTypesPredicate A predicate which indicates whether the feature may be used for a given project type.
 	 */
 	def boolean checkFeatureRestrictions(String featureDescription, JSONValue value, Predicate<ProjectType> supportedTypesPredicate) {
@@ -619,6 +628,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (type === null) {
 			// cannot check feature if project type cannot be determined
 			return false;
+		}
+		
+		// empty values are always allowed
+		if (isEmptyValue(value)) {
+			return true;
 		}
 		
 		// if container is a NameValuePair use whole pair as issue target
@@ -632,6 +646,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		return true;
+	}
+	
+	/** Return {@code true} iff the given value is considered empty (empty array or empty object). */
+	private def isEmptyValue(JSONValue value) {
+		return ((value instanceof JSONArray) && ((value as JSONArray).elements.empty)) ||
+			((value instanceof JSONObject) && ((value as JSONObject).nameValuePairs.empty));
 	}
 
 	/**
@@ -652,8 +672,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 */
 	private def Predicate<IN4JSProject> createDependenciesPredicate() {
 		return switch(projectDescription.projectType) {
-			case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
+			// TODO consider re-enabling this constraint (REs or RLs may appear under testedProjects,
+			// thus they may also appear in "dependencies"?
+			//case TEST: not(RE_OR_RL_TYPE).forN4jsProjects
 			case API: createProjectPredicateForAPIs
+			// runtime libraries may only depend on other runtime libraries
+			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
 			// otherwise, any project may be declared as dependency
 			default: Predicates.alwaysTrue.forN4jsProjects
 		}
@@ -707,7 +731,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			.map[pair |
 				return new ValidationProjectReference(
 					pair.name, 
-					packageJsonHelper.parseVersionConstraint((pair.value as JSONStringLiteral).value),
+					ProjectDescriptionUtils.parseVersionConstraint((pair.value as JSONStringLiteral).value),
 					 pair
 				);
 			].toList

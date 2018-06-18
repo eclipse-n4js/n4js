@@ -30,14 +30,13 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 
 /**
  */
 public class IndexableFilesDiscoveryUtil {
 	private static final Logger LOGGER = Logger.getLogger(IndexableFilesDiscoveryUtil.class);
 	private static List<String> INDEXABLE_FILTERS = Arrays.asList(N4JSGlobals.N4JS_FILE_EXTENSION,
-			N4JSGlobals.N4JSD_FILE_EXTENSION, N4MFConstants.N4MF_FILE_EXTENSION);
+			N4JSGlobals.N4JSD_FILE_EXTENSION);
 
 	/**
 	 * Scans given location for files that may end up in XtextIndex when given location is processed by the builder.

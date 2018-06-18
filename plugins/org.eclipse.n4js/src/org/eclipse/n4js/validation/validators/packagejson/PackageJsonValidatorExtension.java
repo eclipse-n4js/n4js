@@ -52,8 +52,8 @@ import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
-import org.eclipse.n4js.utils.PackageJsonHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator;
@@ -86,8 +86,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	private IN4JSCore n4jsCore;
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
-	@Inject
-	private PackageJsonHelper packageJsonHelper;
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
@@ -204,7 +202,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		for (NameValuePair entry : dependenciesObject.getNameValuePairs()) {
 			if (checkIsType(entry.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
 				final String constraintValue = ((JSONStringLiteral) entry.getValue()).getValue();
-				final VersionConstraint parsedConstraint = packageJsonHelper
+				final VersionConstraint parsedConstraint = ProjectDescriptionUtils
 						.parseVersionConstraint(constraintValue);
 				if (parsedConstraint == null) {
 					addIssue(IssueCodes.getMessageForPKGJ_INVALID_VERSION_CONSTRAINT(constraintValue),
@@ -262,7 +260,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		// check whether the given value represents a valid project type
 		final String projectTypeString = ((JSONStringLiteral) projectTypeValue).getValue();
-		if (packageJsonHelper.parseProjectType(projectTypeString) == null) {
+		if (ProjectDescriptionUtils.parseProjectType(projectTypeString) == null) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_TYPE(projectTypeString),
 					projectTypeValue, IssueCodes.PKGJ_INVALID_PROJECT_TYPE);
 		}
@@ -277,7 +275,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		// check whether the given value represents a valid project type
 		final String moduleLoaderString = ((JSONStringLiteral) moduleLoaderValue).getValue();
-		if (packageJsonHelper.parseModuleLoader(moduleLoaderString) == null) {
+		if (ProjectDescriptionUtils.parseModuleLoader(moduleLoaderString) == null) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_LOADER(moduleLoaderString),
 					moduleLoaderValue, IssueCodes.PKGJ_INVALID_MODULE_LOADER);
 		}
@@ -413,10 +411,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS +
 			"." + ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS)
 	public void checkImplementedProjects(JSONValue value) {
-		// obtain implementationId, if present. null otherwise
-		final JSONStringLiteral implementationId = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS +
-				"." + ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID, JSONStringLiteral.class);
-
 		// check for correct types of implementedProjects
 		if (!checkIsType(value, JSONPackage.Literals.JSON_ARRAY, "as list of implemented projects")) {
 			return;
@@ -449,11 +443,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_REFLEXIVE(), implementedProjectLiteral,
 						IssueCodes.PKGJ_APIIMPL_REFLEXIVE);
 			}
-		}
-
-		if (implementationId == null && !implementedProjectLiterals.isEmpty()) {
-			addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_PROJECTS(), value.eContainer(),
-					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_PROJECTS);
 		}
 	}
 
@@ -539,7 +528,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	/** Checks whether the given {@code moduleFilterPair} represents a valid module-filter section entry. */
 	private void checkModuleFilterType(NameValuePair moduleFilterPair) {
 		// obtain enum-representation of the validated module filter type
-		final ModuleFilterType filterType = packageJsonHelper.parseModuleFilterType(moduleFilterPair.getName());
+		final ModuleFilterType filterType = ProjectDescriptionUtils.parseModuleFilterType(moduleFilterPair.getName());
 
 		// make sure the module filter type could be parsed successfully
 		if (filterType == null) {
@@ -690,7 +679,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	private void handleN4JSModuleMatchForModuleFilter(ValidationModuleFilterSpecifier specifier) {
 		addIssue(
 				IssueCodes.getMessageForPKGJ_FILTER_NO_N4JS_MATCH(
-						packageJsonHelper.getModuleFilterTypeRepresentation(specifier.filterType)),
+						ProjectDescriptionUtils.getModuleFilterTypeRepresentation(specifier.filterType)),
 				specifier.astRepresentation,
 				IssueCodes.PKGJ_FILTER_NO_N4JS_MATCH);
 	}
@@ -730,8 +719,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 *
 	 * Returns {@code null} if the given {@code value} is not a valid representation of a module filter specifier.
 	 *
-	 * Similar to {@link PackageJsonHelper#getModuleFilterSpecifier(JSONValue)} but also validates the structure along
-	 * the way.
+	 * Similar to {@link ProjectDescriptionUtils#getModuleFilterSpecifier(JSONValue)} but also validates the structure
+	 * along the way.
 	 */
 	private ValidationModuleFilterSpecifier getModuleFilterInformation(JSONValue value, ModuleFilterType type) {
 		// 1st variant:
@@ -956,7 +945,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final JSONValue projectTypeValue = getSingleDocumentValue(
 				ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__PROJECT_TYPE);
 		if (projectTypeValue instanceof JSONStringLiteral) {
-			return packageJsonHelper.getProjectType(projectTypeValue);
+			return ProjectDescriptionUtils.getProjectType(projectTypeValue);
 		} else {
 			return ProjectType.get(0);
 		}

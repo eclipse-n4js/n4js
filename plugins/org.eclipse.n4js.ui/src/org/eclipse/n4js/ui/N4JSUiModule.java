@@ -110,6 +110,7 @@ import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
+import org.eclipse.n4js.ui.wizard.project.N4JSProjectCreator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
@@ -167,6 +168,7 @@ import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.util.IssueUtil;
 import org.eclipse.xtext.ui.validation.IResourceUIValidatorExtension;
+import org.eclipse.xtext.ui.wizard.IProjectCreator;
 import org.eclipse.xtext.validation.IResourceValidator;
 
 import com.google.inject.Binder;
@@ -844,5 +846,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Bind custom ReferenceSearchResultContentProvider. Workaround to fix GH-724. */
 	public Class<? extends ReferenceSearchResultContentProvider> bindReferenceSearchResultContentProvider() {
 		return MyReferenceSearchResultContentProvider.class;
+	}
+
+	/** Bind custom IProjectCreator for creating N4JS projects using the project wizard. */
+	public Class<? extends IProjectCreator> bindN4JSProjectCreator() {
+		return N4JSProjectCreator.class;
 	}
 }
