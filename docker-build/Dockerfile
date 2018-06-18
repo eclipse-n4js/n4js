@@ -10,7 +10,7 @@ ENV TZ=Europe/Berlin
 VOLUME /workspace
 WORKDIR /workspace
 
-#ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 #CMD ["mvn"]
 
 #
@@ -155,12 +155,3 @@ RUN apt-get update && \
 
 EXPOSE 4873
 EXPOSE 4874
-
-USER root
-
-COPY add-build-user-to-docker-group.sh /workspace/
-
-RUN chmod +x /workspace/add-build-user-to-docker-group.sh
-
-ENTRYPOINT ["/workspace/add-build-user-to-docker-group.sh"]
-
