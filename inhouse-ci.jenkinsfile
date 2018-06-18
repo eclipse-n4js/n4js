@@ -53,6 +53,7 @@ pipeline {
                                 pwd
                                 git status
                                 ls -la
+                                whoami
                            """
                 }
             }
