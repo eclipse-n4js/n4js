@@ -64,6 +64,10 @@ public class TesterModule extends AbstractModule {
 
 	private static final Logger LOGGER = getLogger(TesterModule.class);
 
+	public TesterModule() {
+		System.out.println("constructor TesterModule");
+	}
+
 	@Override
 	protected void configure() {
 		bind(TestFsm.class).to(TestFsmImpl.class);

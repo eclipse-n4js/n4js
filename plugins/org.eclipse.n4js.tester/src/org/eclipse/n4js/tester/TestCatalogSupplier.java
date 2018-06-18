@@ -13,6 +13,7 @@ package org.eclipse.n4js.tester;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.utils.CallTraceUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Supplier;
@@ -32,6 +33,13 @@ public class TestCatalogSupplier implements Supplier<String> {
 
 	@Inject
 	private TestDiscoveryHelper testDiscoveryHelper;
+
+	@Inject
+	private CallTraceUtil callTraceUtil;
+
+	public TestCatalogSupplier() {
+		System.out.println();
+	}
 
 	/**
 	 * Returns with the test catalog as a string representing all available tests in the workspace. This method may
@@ -54,5 +62,7 @@ public class TestCatalogSupplier implements Supplier<String> {
 	/** @return the {@link TestTree} for all tests */
 	protected TestTree getTreeForAllTests() {
 		return testDiscoveryHelper.collectAllTestsFromWorkspace();
+		// System.out.println(callTraceUtil.getCallerInfo());
+		// return new TestTree(new ID(String.valueOf(UUID.randomUUID())));
 	}
 }

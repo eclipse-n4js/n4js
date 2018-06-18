@@ -58,6 +58,7 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
@@ -84,12 +85,13 @@ public class JettyManager implements HttpServerManager {
 	private final int threadPoolCapacity;
 
 	@Inject
-	/* default */ JettyManager(final ServletHolderBuilder servletHolderBuilder,
+	/* default */ JettyManager(Injector injector, final ServletHolderBuilder servletHolderBuilder,
 			final @Named(DUMP_SERVER_ON_STOP_KEY) boolean dumpServerOnStop,
 			final @Named(MIN_THREAD_COUNT_KEY) int minThreadCount,
 			final @Named(MAX_THREAD_COUNT_KEY) int maxThreadCount,
 			final @Named(THREAD_POOL_BLOCKING_CAPACITY_KEY) int threadPoolCapacity) {
 
+		System.out.println("JettyManager " + injector.hashCode());
 		this.servletHolderBuilder = servletHolderBuilder;
 		this.dumpServerOnStop = dumpServerOnStop;
 		this.minThreadCount = minThreadCount;

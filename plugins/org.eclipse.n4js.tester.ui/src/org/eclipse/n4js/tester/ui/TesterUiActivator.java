@@ -25,6 +25,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
 /**
@@ -88,12 +89,19 @@ public class TesterUiActivator extends AbstractUIPlugin {
 	@Override
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
+		System.out.println("start Tester UI Activator");
 		plugin = this;
 
 		final Injector parentInjector = N4JSActivator.getInstance().getInjector(
 				N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
-		injector = parentInjector.createChildInjector(Modules.override(new TesterModule()).with(
-				new N4TesterUiModule()));
+
+		System.out.println("create TesterModule");
+		TesterModule testerModule = new TesterModule();
+		System.out.println("create TesterModule done");
+		Module overriddenModule = Modules.override(testerModule).with(new N4TesterUiModule());
+		injector = parentInjector.createChildInjector(testerModule);
+
+		System.out.println("Injector started: " + injector.hashCode());
 
 	}
 

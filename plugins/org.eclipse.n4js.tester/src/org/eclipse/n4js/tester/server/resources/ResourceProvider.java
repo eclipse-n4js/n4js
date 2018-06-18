@@ -11,9 +11,9 @@
 package org.eclipse.n4js.tester.server.resources;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.tester.internal.TesterActivator;
 
 import com.google.common.base.Throwables;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
@@ -22,9 +22,6 @@ import com.google.inject.Injector;
 public class ResourceProvider {
 
 	private static final Logger LOGGER = Logger.getLogger(ResourceProvider.class);
-
-	@Inject
-	private Injector injector;
 
 	/**
 	 * Creates a new resource instance given with the resource class.
@@ -35,7 +32,8 @@ public class ResourceProvider {
 	 */
 	public BaseResource createResource(final Class<? extends BaseResource> clazz) {
 		try {
-			final BaseResource resource = clazz.newInstance();
+			BaseResource resource = clazz.newInstance();
+			Injector injector = TesterActivator.getInjector();
 			injector.injectMembers(resource);
 			return resource;
 		} catch (final Exception e) {

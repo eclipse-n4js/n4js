@@ -14,8 +14,8 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.n4js.tester.internal.TesterActivator;
 
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
@@ -25,9 +25,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ServletHolderBuilder {
-
-	@Inject
-	private Injector injector;
 
 	/**
 	 * Creates a new Guice aware {@link ServletHolder servlet holder} instance.
@@ -40,7 +37,8 @@ public class ServletHolderBuilder {
 		return new ServletHolder(clazz) {
 			@Override
 			protected Servlet newInstance() throws ServletException, IllegalAccessException, InstantiationException {
-				final Servlet servlet = super.newInstance();
+				Servlet servlet = super.newInstance();
+				Injector injector = TesterActivator.getInjector();
 				injector.injectMembers(servlet);
 				return servlet;
 			}
