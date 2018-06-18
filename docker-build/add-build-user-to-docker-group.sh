@@ -25,3 +25,5 @@ if ! id -nG "$BUILDUSER" | grep -qw "$DOCKER_GROUP"; then
 	adduser $BUILDUSER $DOCKER_GROUP
 fi
 
+# else default to run whatever the user wanted like "bash" or "sh"
+exec "$@"
