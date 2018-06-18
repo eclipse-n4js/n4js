@@ -56,7 +56,6 @@ import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator;
 import org.eclipse.xtext.validation.Check;
 
 import com.google.common.base.Optional;
@@ -71,7 +70,7 @@ import com.google.inject.Singleton;
  * {@code package.json} resources.
  *
  * For a higher-level validation that is more based on the resulting {@link ProjectDescription} model, see
- * {@link N4JSProjectSetupValidator}.
+ * {@link N4JSProjectSetupJsonValidatorExtension}.
  */
 @Singleton
 public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtension {
