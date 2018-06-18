@@ -158,9 +158,9 @@ EXPOSE 4874
 
 USER root
 
-COPY add-build-user-to-docker-group.sh /
+COPY add-build-user-to-docker-group.sh /workspace/
 
-RUN chmod +x /add-build-user-to-docker-group.sh
+RUN chmod +x /workspace/add-build-user-to-docker-group.sh
 
-ENTRYPOINT ["/add-build-user-to-docker-group.sh"]
+ENTRYPOINT ["/workspace/add-build-user-to-docker-group.sh"]
 
