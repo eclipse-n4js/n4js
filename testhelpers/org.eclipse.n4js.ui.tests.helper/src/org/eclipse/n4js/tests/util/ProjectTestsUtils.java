@@ -231,7 +231,8 @@ public class ProjectTestsUtils {
 
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor());
 		waitForAutoBuild();
-		Assert.assertTrue("manifest.n4mf should have been created", projectDescriptionWorkspaceFile.exists());
+		Assert.assertTrue("project description file (package.json) should have been created",
+				projectDescriptionWorkspaceFile.exists());
 	}
 
 	// moved here from AbstractBuilderParticipantTest:

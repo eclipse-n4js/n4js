@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.^extension.IJSONResourceDescriptionExtension
-import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
@@ -38,6 +37,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.json.JSON.JSONPackage
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -133,7 +133,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 		// Collect all referenced project IDs of the candidate.
 		val referencedProjectIds = newLinkedList;
-		candidate.getExportedObjectsByType(N4mfPackage.eINSTANCE.projectDescription).forEach[
+		candidate.getExportedObjectsByType(JSONPackage.Literals.JSON_DOCUMENT).forEach[
 			referencedProjectIds.addAll(testedProjectIds);
 			referencedProjectIds.addAll(implementedProjectIds);
 			referencedProjectIds.addAll(projectDependencyIds);

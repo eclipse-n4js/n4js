@@ -81,7 +81,6 @@ public final class N4JSGlobals {
 	 * {@link #JSX_FILE_EXTENSION}.
 	 */
 	// TODO TODO IDE-2493 multiple languages topic
-	// Clarify usage and why N4MF is excluded
 	public static final Collection<String> ALL_N4_FILE_EXTENSIONS = unmodifiableCollection(newLinkedHashSet(asList(
 			N4JS_FILE_EXTENSION,
 			N4JSD_FILE_EXTENSION,
