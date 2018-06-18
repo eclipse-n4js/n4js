@@ -26,6 +26,7 @@ ARG MAVEN_CENTRAL_URL=https://repo.maven.apache.org/maven2/
 
 # Assigning build-user to 1000
 RUN groupadd --gid 1000 build && \
+	groupadd --gid 994 docker && \
     useradd --uid 1000 --gid build --shell /bin/bash --create-home build
 
 # Assign build user to group 994 (= docker group)
