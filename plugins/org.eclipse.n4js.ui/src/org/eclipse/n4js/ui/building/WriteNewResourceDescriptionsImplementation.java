@@ -144,6 +144,7 @@ class WriteNewResourceDescriptionsImplementation {
 		if (manager != null) {
 			final IResourceDescription description = manager.getResourceDescription(resource);
 			final IResourceDescription copiedDescription = new CopiedResourceDescription(description);
+			// uncomment following two lines to avoid additions to index
 			newState.register(manager.createDelta(oldState.getResourceDescription(uri), copiedDescription));
 			buildData.queueURI(uri);
 		}

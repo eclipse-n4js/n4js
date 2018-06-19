@@ -215,6 +215,9 @@ public abstract class ExternalIndexSynchronizer {
 			if (isNPM) {
 				addToIndex(npmsIndex, nodeModulesLocation, res, resLocation);
 			}
+			if (resLocation.endsWith(".json")) {
+				System.out.println("Indexing found: " + resLocation);
+			}
 		}
 
 		return npmsIndex;
