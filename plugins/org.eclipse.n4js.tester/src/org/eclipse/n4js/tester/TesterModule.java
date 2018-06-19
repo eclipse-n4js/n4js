@@ -72,7 +72,8 @@ import com.google.inject.Module;
 import com.google.inject.name.Names;
 
 /**
- * Defines bindings to N4JS instances in the ui case.
+ * Defines bindings. In case this module is used in the ui case, bindings are defined to N4JS instances. In case of the
+ * headless case, these bindings are not necessary since the headless injector is comprised of the N4JSModules, as well.
  */
 public class TesterModule implements Module {
 	private static final Logger LOGGER = getLogger(TesterModule.class);
