@@ -794,8 +794,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					} else if (!projectPredicate.apply(project)) {
 						addInvalidProjectTypeIssue(ref.astRepresentation, id, 
 							project.projectType, sectionLabel);
-					} else{
-						checkVersions(ref, id, allProjects)
+					} else {
+						if (!description.hasNestedNodeModulesFolder) {
+							checkVersions(ref, id, allProjects);
+						}
 					}
 					existentIds.put(id, ref);
 				}
@@ -918,7 +920,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	protected def ProjectDescription getProjectDescription() {
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
-			projectDescriptionHelper.loadProjectDescriptionAtLocation(doc.eResource.URI, doc, false);
+			projectDescriptionHelper.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc, false);
 		]);
 	}
 	

@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -174,11 +175,12 @@ public class ProjectDescriptionHelper {
 			packageJSON = EcoreUtil.copy(packageJSON);
 			mergePackageJSONFragmentAtLocation(location, packageJSON);
 		}
-		adjustMainPathIfPointingToFolder(location, packageJSON);
+		adjustMainPath(location, packageJSON);
 		ProjectDescription pdFromPackageJSON = packageJSON != null
 				? convertToProjectDescription(location, packageJSON, true)
 				: null;
 		if (pdFromPackageJSON != null) {
+			setInformationFromFileSystem(location, pdFromPackageJSON);
 			return pdFromPackageJSON;
 		}
 		System.out.println("USING MANIFEST.N4MF: " + location);
@@ -196,17 +198,24 @@ public class ProjectDescriptionHelper {
 	public ProjectDescription loadProjectDescriptionFragmentAtLocation(URI location) {
 		JSONDocument packageJSON = JSONFactory.eINSTANCE.createJSONDocument();
 		if (mergePackageJSONFragmentAtLocation(location, packageJSON)) {
-			adjustMainPathIfPointingToFolder(location, packageJSON);
-			return convertToProjectDescription(location, packageJSON, false);
+			adjustMainPath(location, packageJSON);
+			ProjectDescription pd = convertToProjectDescription(location, packageJSON, false);
+			setInformationFromFileSystem(location, pd);
+			return pd;
 		}
 		return null;
 	}
 
 	/**
-	 * If the path value of the "main" property of the given package.json document points to a folder, then this method
-	 * will append "/index.js" to that path value (in-place change of the given JSON document).
+	 * Adjust the path value of the "main" property of the given package.json document as follows (in-place change of
+	 * the given JSON document):
+	 * <ol>
+	 * <li>if the path points to a folder, then "/index.js" will be appended,
+	 * <li>if neither a folder nor a file exist at the location the path points to and the path does not end in ".js",
+	 * then ".js" will be appended.
+	 * </ol>
 	 */
-	private void adjustMainPathIfPointingToFolder(URI location, JSONDocument packageJSON) {
+	private void adjustMainPath(URI location, JSONDocument packageJSON) {
 		JSONValue content = packageJSON.getContent();
 		if (!(content instanceof JSONObject))
 			return;
@@ -223,13 +232,27 @@ public class ProjectDescriptionHelper {
 
 		final ResourceSet resourceSet = resourceSetProvider.get();
 
-		if (isDirectory(resourceSet, locationWithMain)) {
+		if (!main.endsWith(".js") && isFile(resourceSet, locationWithMain.appendFileExtension("js"))) {
+			main += ".js";
+			JSONModelUtils.setProperty(contentCasted, PROP__MAIN, main);
+		} else if (isDirectory(resourceSet, locationWithMain)) {
 			if (!(main.endsWith("/") || main.endsWith(File.separator))) {
 				main += "/";
 			}
 			main += "index.js";
 			JSONModelUtils.setProperty(contentCasted, PROP__MAIN, main);
 		}
+	}
+
+	/**
+	 * Store some ancillary information about the state of the file system at the location of the
+	 * <code>package.json</code> file in the given JSON document.
+	 */
+	private void setInformationFromFileSystem(URI location, ProjectDescription pd) {
+		final ResourceSet resourceSet = resourceSetProvider.get();
+		final boolean hasNestedNodeModulesFolder = exists(resourceSet,
+				location.appendSegment(N4JSGlobals.NODE_MODULES));
+		pd.setHasNestedNodeModulesFolder(hasNestedNodeModulesFolder);
 	}
 
 	private void applyDefaults(ProjectDescription pd, URI location) {
@@ -377,6 +400,10 @@ public class ProjectDescriptionHelper {
 		return isDirectory;
 	}
 
+	private boolean isFile(ResourceSet resourceSet, URI uri) {
+		return exists(resourceSet, uri) && !isDirectory(resourceSet, uri);
+	}
+
 	/**
 	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescription} instance.
 	 * <p>
@@ -444,6 +471,14 @@ public class ProjectDescriptionHelper {
 				}
 			}
 		}
+		// FIXME the following is a major hack!!!
+		// sanitize dependencies: remove implementation projects from dependencies if API projects also given
+		Set<String> projectIdsToRemove = target.getProjectDependencies().stream()
+				.map(pd -> pd.getProjectId())
+				.filter(id -> id.endsWith(".api"))
+				.map(id -> id.substring(0, id.length() - 4))
+				.collect(Collectors.toSet());
+		target.getProjectDependencies().removeIf(pd -> projectIdsToRemove.contains(pd.getProjectId()));
 	}
 
 	private void convertN4jsPairs(ProjectDescription target, List<NameValuePair> n4jsPairs) {

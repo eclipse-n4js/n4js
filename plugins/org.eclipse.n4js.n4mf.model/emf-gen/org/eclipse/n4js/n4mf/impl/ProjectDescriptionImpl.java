@@ -72,6 +72,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getTestedProjects <em>Tested Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getModuleLoader <em>Module Loader</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
  * </ul>
  *
  * @generated
@@ -366,6 +367,26 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected ModuleLoader moduleLoader = MODULE_LOADER_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isHasNestedNodeModulesFolder() <em>Has Nested Node Modules Folder</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isHasNestedNodeModulesFolder()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isHasNestedNodeModulesFolder() <em>Has Nested Node Modules Folder</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isHasNestedNodeModulesFolder()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean hasNestedNodeModulesFolder = HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -808,6 +829,27 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isHasNestedNodeModulesFolder() {
+		return hasNestedNodeModulesFolder;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setHasNestedNodeModulesFolder(boolean newHasNestedNodeModulesFolder) {
+		boolean oldHasNestedNodeModulesFolder = hasNestedNodeModulesFolder;
+		hasNestedNodeModulesFolder = newHasNestedNodeModulesFolder;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER, oldHasNestedNodeModulesFolder, hasNestedNodeModulesFolder));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getOutputPath() {
 		return FileUtils.normalizeDotWhenEmpty(this.getOutputPathRaw());
 	}
@@ -941,6 +983,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return getTestedProjects();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				return getModuleLoader();
+			case N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
+				return isHasNestedNodeModulesFolder();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -1027,6 +1071,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				setModuleLoader((ModuleLoader)newValue);
 				return;
+			case N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
+				setHasNestedNodeModulesFolder((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -1102,6 +1149,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				setModuleLoader(MODULE_LOADER_EDEFAULT);
 				return;
+			case N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
+				setHasNestedNodeModulesFolder(HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1156,6 +1206,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return testedProjects != null && !testedProjects.isEmpty();
 			case N4mfPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
 				return moduleLoader != MODULE_LOADER_EDEFAULT;
+			case N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
+				return hasNestedNodeModulesFolder != HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1211,6 +1263,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(resourcePathsRaw);
 		result.append(", moduleLoader: ");
 		result.append(moduleLoader);
+		result.append(", hasNestedNodeModulesFolder: ");
+		result.append(hasNestedNodeModulesFolder);
 		result.append(')');
 		return result.toString();
 	}

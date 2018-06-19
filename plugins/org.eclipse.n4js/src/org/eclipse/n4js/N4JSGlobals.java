@@ -114,6 +114,10 @@ public final class N4JSGlobals {
 	 */
 	public static final String NPM = "npm";
 	/**
+	 * Name of the npm "node_modules" folder.
+	 */
+	public static final String NODE_MODULES = "node_modules";
+	/**
 	 * The name of an npm install command.
 	 */
 	public static final String NPM_INSTALL = NPM + " install";
