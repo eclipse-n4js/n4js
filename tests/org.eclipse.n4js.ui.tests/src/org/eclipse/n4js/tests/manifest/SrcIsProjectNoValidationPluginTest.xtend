@@ -43,8 +43,7 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 		src_P = createFolder(src, "P");
 		src_P_Q = createFolder(src_P, "Q");
 		manifest = projectUnderTest.project.getFile("manifest.n4mf");
-		setProjectAsSource();
-		waitForAutoBuild
+		waitForAutoBuild();
 	}
 
 	@Test
@@ -55,18 +54,19 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 		val fileD = createTestFile(src_P, "D", fileContentsD);
 		val fileE = createTestFile(src_P_Q, "E", fileContentsE);
 		val fileF = createTestFile(src_P_Q, "F", fileContentsF);
-		assertMarkers("file A should have 3 markers", fileA, 3);
-		assertMarkers("file B should have 2 markers", fileB, 2);
+		assertMarkers("file A should have 5 markers", fileA, 5);
+		assertMarkers("file B should have 7 markers", fileB, 7);
 		assertMarkers("file C should have 2 markers", fileC, 2);
 		assertMarkers("file D should have 2 markers", fileD, 2);
-		assertMarkers("file E should have 6 markers", fileE, 6);
-		assertMarkers("file F should have 2 markers", fileF, 2);
-		assertMarkers("manifest should have 1 marker", manifest, 1);
+		assertMarkers("file E should have 7 markers", fileE, 7);
+		assertMarkers("file F should have 7 markers", fileF, 7);
+		assertMarkers("manifest should have 0 marker", manifest, 0);
 
-		addPathsToNoValidate("P/D" -> null, "P/Q/*" -> null)
+		addPathsToNoValidate("P/D" -> null, "P/Q/*" -> null);
+		assertMarkers("manifest should have 2 marker", manifest, 2);
 		assertMarkers("file D should have no markers", fileD, 0);
-		assertMarkers("file E should have no markers", fileE, 0);
-		assertMarkers("file F should have no markers", fileF, 0);
+		assertMarkers("file E should have 2 markers", fileE, 2); // Xtext markers still shown
+		assertMarkers("file F should have 3 markers", fileF, 3); // Xtext markers still shown
 	}
 
 	def void setProjectAsSource() {

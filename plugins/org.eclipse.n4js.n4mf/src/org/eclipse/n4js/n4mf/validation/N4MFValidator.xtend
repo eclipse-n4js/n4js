@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.ModuleFilterType
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.SourceContainerDescription
 import org.eclipse.n4js.n4mf.utils.IPathProvider
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.util.Exceptions
@@ -36,7 +37,6 @@ import org.eclipse.xtext.validation.Check
 import static org.eclipse.n4js.n4mf.N4mfPackage.Literals.*
 import static org.eclipse.n4js.n4mf.utils.N4MFUtils.*
 import static org.eclipse.n4js.n4mf.validation.IssueCodes.*
-import org.eclipse.n4js.n4mf.SourceContainerDescription
 
 class N4MFValidator extends AbstractN4MFValidator {
 
@@ -291,83 +291,6 @@ class N4MFValidator extends AbstractN4MFValidator {
 			addIssue(getMessageForDUPLICATE_MODULE_SPECIFIER, moduleSpec,
 				MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD, DUPLICATE_MODULE_SPECIFIER)
 		}
-
-		moduleFilter.moduleSpecifiers.forEach [
-			val valid = checkForValidWildcardModuleSpecifier(moduleSpecifierWithWildcard)
-			if (valid) {
-				checkForExistingWildcardModuleSpecifier(moduleSpecifierWithWildcard)
-			}
-		]
-	}
-
-	def private checkForValidWildcardModuleSpecifier(ModuleFilterSpecifier moduleFilterSpecifier,
-		String moduleFilterSpecifierWithWildcard) {
-		val wrongWildcardPattern = "***"
-		if (moduleFilterSpecifier?.moduleSpecifierWithWildcard !== null) {
-			if (moduleFilterSpecifier.moduleSpecifierWithWildcard.contains(wrongWildcardPattern)) {
-				addIssue(
-					getMessageForINVALID_WILDCARD(wrongWildcardPattern),
-					moduleFilterSpecifier,
-					MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
-					INVALID_WILDCARD
-				)
-				return false
-			}
-			val wrongRelativeNavigation = "../"
-			if (moduleFilterSpecifier.moduleSpecifierWithWildcard.contains(wrongRelativeNavigation)) {
-				addIssue(
-					getMessageForNO_RELATIVE_NAVIGATION,
-					moduleFilterSpecifier,
-					MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
-					NO_RELATIVE_NAVIGATION
-				)
-				return false
-			}
-		}
-		return true
-	}
-
-	def private checkForExistingWildcardModuleSpecifier(ModuleFilterSpecifier moduleFilterSpecifier,
-		String moduleFilterSpecifierWithWildcard) {
-		val sourcePaths = EcoreUtil2.getContainerOfType(moduleFilterSpecifier, ProjectDescription).sourceContainers.map [
-			paths
-		].flatten
-		val uri = moduleFilterSpecifier.eResource.URI
-		val absoluteProjectPath = pathProvider.getAbsoluteProjectPath(uri)
-		val hasIssue = !sourcePaths.filter [
-			var res = false
-			if (moduleFilterSpecifier.sourcePath !== null)
-				res = it == moduleFilterSpecifier.sourcePath
-			else
-				res = true
-			return res
-		].exists [
-			val basePathToCheck = absoluteProjectPath + "/" + it
-			val pathsToFind = "/" + moduleFilterSpecifier.moduleSpecifierWithWildcard
-			val foundFiles = WildcardPathFilter.collectPathsByWildcardPath(basePathToCheck, pathsToFind)
-			foundFiles.filter[endsWith(".n4js") || endsWith(".n4jsx")].forEach [
-				handleNoValidationForN4JSFiles(moduleFilterSpecifier, moduleFilterSpecifierWithWildcard)
-			]
-			return !foundFiles.empty
-		]
-
-		if (hasIssue) {
-			addIssue(getMessageForNON_EXISTING_MODULE_SPECIFIER(moduleFilterSpecifier.moduleSpecifierWithWildcard),
-				moduleFilterSpecifier, MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
-				NON_EXISTING_MODULE_SPECIFIER)
-		}
-	}
-
-	def private handleNoValidationForN4JSFiles(ModuleFilterSpecifier moduleFilterSpecifier,
-		String moduleFilterSpecifierWithWildcard) {
-		addIssue(
-			getMessageForDISALLOWED_NO_VALIDATE_FOR_N4JS(
-				(moduleFilterSpecifier.eContainer as ModuleFilter).moduleFilterType.getModuleFilterName
-			),
-			moduleFilterSpecifier,
-			MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
-			DISALLOWED_NO_VALIDATE_FOR_N4JS
-		)
 	}
 
 	def private checkForExistingPath(String path, SourceContainerDescription sourceFragment) {

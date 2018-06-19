@@ -9,7 +9,53 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4mf.tests.N4MFXpectValidationTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4MFXpectPluginUITest
+
+    Workspace {
+        Project "duplicates" {
+        	Folder "lib" {}
+        	Folder "lib2" {}
+        	Folder "resources" {
+				File "info.txt" {from="resources/info.txt"}
+        	}
+        	Folder "src" {
+	        	Folder "other" {
+	    			File "C.n4js" {from="src/other/C.n4js"}
+	        	}
+        		Folder "p" {
+	        		Folder "q" {
+	        			File "A.js" {from="src/p/q/A.js"}
+	        			File "B.js" {from="src/p/q/B.js"}
+	        		}
+        			File "A.js" {from="src/p/A.js"}
+        			File "B.js" {from="src/p/B.js"}
+        			File "O.js" {from="src/p/O.js"}
+        			File "P.js" {from="src/p/P.js"}
+        		}
+        	}
+        	Folder "src-external" {
+	        	Folder "p" {
+        			File "External.n4jsd" {from="src-external/p/External.n4jsd"}
+	        	}
+        	}
+        	Folder "src2" {
+	        	Folder "p" {
+	    			File "C.js" {from="src2/p/C.js"}
+	        	}
+        	}
+        	Folder "src3" {
+	        	Folder "p" {
+	    			File "D.js" {from="src3/p/D.js"}
+	        	}
+        	}
+			ThisFile "manifest.n4mf" {from="test1.n4mf.xt"}
+        }
+    }
+
+    END_SETUP
+ */
+
+
 // XPECT errors --> "There is no output folder defined, so compilation isn't possible." at "duplicates"
 ProjectId: duplicates
 ProjectType: library
@@ -22,10 +68,10 @@ Sources {
 		"src",
 // IDEBUG-339 XPECT warnings --> "Source path src_does_not_exist doesn't exist." at ""src_does_not_exist""
 		"src_does_not_exist",
-// XPECT errors --> "Wild card not allowed in this place." at ""src/p/juergensHacks/*.js""
-		"src/p/juergensHacks/*.js",
-// XPECT errors --> "Path src/p/myAlreadyAsModuleHack.js points to a file, but it should point to a folder." at ""src/p/myAlreadyAsModuleHack.js""
-		"src/p/myAlreadyAsModuleHack.js",
+// XPECT errors --> "Wild card not allowed in this place." at ""src/p/q/*.js""
+		"src/p/q/*.js",
+// XPECT errors --> "Path src/p/O.js points to a file, but it should point to a folder." at ""src/p/O.js""
+		"src/p/O.js",
 // XPECT warnings --> "Duplicate path, has been already defined in Libraries, Resources." at "\"lib\""
 		"lib",
 		"src2",
@@ -56,20 +102,18 @@ Resources {
 }
 ModuleFilters {
 	noValidate {
-// XPECT warnings --> "Module specifier p/wolfgangsUglyHack.js doesn't exist." at "\"p/wolfgangsUglyHack.js\""
-		"p/wolfgangsUglyHack.js",
-// XPECT warnings --> "Module specifier p/wolfgangsUglyHack.* doesn't exist." at "\"p/wolfgangsUglyHack.*\""
-		"p/wolfgangsUglyHack.*",
-		"p/wolfgangsUglyHack",
-		"p/juergensHacks/*",
-// XPECT errors --> "Duplicate module specifier." at "\"p/juergensHacks/*\""
-		"p/juergensHacks/*",
+		"p/P.js",
+		"p/P.*",
+		"p/P",
+		"p/q/*",
+// XPECT errors --> "Duplicate module specifier." at "\"p/q/*\""
+		"p/q/*",
 // XPECT warnings--> "Module specifier p/doesntexist/ doesn't exist." at "\"p/doesntexist/\""
 		"p/doesntexist/",
 // XPECT warnings --> "Module specifier **/External doesn't exist." at "\"**/External\""
 		"**/External" in "src",
 // External is available in src-external but not in src
-		"p/External" in "src-external",
+//		"p/External" in "src-external",
 // XPECT errors --> "\"***\" isn't a valid character sequence in a wild card." at "\"***/A\""
 		"***/A",
 // XPECT errors --> "Relative navigation isn't allowed in a module specifier." at "\"**/../p/A\""
@@ -84,21 +128,24 @@ ModuleFilters {
 		"p/A"
 	}
 	noModuleWrap {
-		"p/myAlreadyAsModuleHack",
+		"p/O",
 // XPECT errors --> "noModuleWrap paths shouldn't match n4js files." at "\"other/*\""
 		"other/*"
 	}
 }
 RequiredRuntimeLibraries {
+// XPECT errors --> "Project does not exist with project ID: libA." at "vendorA:libA"
 	vendorA:libA,
-// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+// XPECT errors --> "Project does not exist with project ID: libB." at "libB"
 	libB,
+// XPECT errors --> "Project does not exist with project ID: libA." at "vendorB:libA"
 	vendorB:libA,
-// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libA." at "libA"
+// XPECT errors --> "Project does not exist with project ID: libA." at "libA"
 	libA,
-// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libA." at "MyVendorID:libA"
+// XPECT errors --> "Project does not exist with project ID: libA." at "MyVendorID:libA"
 	MyVendorID:libA,
-// N4JS validation XPECT noerrors -->"Duplicate runtime library MyVendorID:libB." at "libB"
+// XPECT errors --> "Project does not exist with project ID: libB." at "libB"
 	libB,
+// XPECT errors --> "Project does not exist with project ID: libC." at "MyVendorID:libC"
 	MyVendorID:libC
 }

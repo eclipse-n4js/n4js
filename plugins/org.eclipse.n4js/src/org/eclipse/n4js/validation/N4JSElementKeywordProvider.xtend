@@ -39,6 +39,7 @@ import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.ContinueStatement
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.ReturnStatement
+import org.eclipse.n4js.n4mf.ModuleFilterType
 
 /**
  * Helper returning the keyword of a given AST or type element, e.g., "class" for a class declaration.
@@ -156,6 +157,18 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 
 	def dispatch String keyword(Void nullValue) {
 		""
+	}
+
+	def dispatch String keyword(ModuleFilterType moduleFilterType) {
+		switch (moduleFilterType) {
+			case NO_VALIDATE:
+				"noValidate"
+			case NO_MODULE_WRAPPING:
+				"noModuleWrap"
+			default: {
+				"unknown filter type"
+			}
+		}
 	}
 
 }
