@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tester.ui;
 
+import org.eclipse.n4js.tester.ui.resultsview.TestResultsView;
 import org.eclipse.n4js.ui.editor.EditorContentExtractor;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.xtext.ui.editor.IURIEditorOpener;
@@ -32,6 +33,8 @@ public class TesterUiModule implements Module {
 
 	@Override
 	public void configure(Binder binder) {
+		// binder.requireExplicitBindings();
+
 		// define all bindings to N4JS-UI here (ui packages)
 		binder.bind(XtextPresentationReconciler.class)
 				.toProvider(() -> n4jsInjector.getInstance(XtextPresentationReconciler.class));
@@ -41,6 +44,9 @@ public class TesterUiModule implements Module {
 				.toProvider(() -> n4jsInjector.getInstance(IN4JSEclipseCore.class));
 		binder.bind(IURIEditorOpener.class)
 				.toProvider(() -> n4jsInjector.getInstance(IURIEditorOpener.class));
+
+		binder.bind(TestResultsView.class);
+		binder.bind(TestConfigurationConverter.class);
 	}
 
 }

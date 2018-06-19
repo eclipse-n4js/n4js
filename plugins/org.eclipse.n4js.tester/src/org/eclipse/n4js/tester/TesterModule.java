@@ -45,6 +45,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
+import org.eclipse.n4js.runner.RunnerHelper;
+import org.eclipse.n4js.runner.extension.RunnerRegistry;
+import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.fsm.TestFsm;
 import org.eclipse.n4js.tester.fsm.TestFsmImpl;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
@@ -56,7 +59,10 @@ import org.eclipse.n4js.tester.internal.TesterFacadeImpl;
 import org.eclipse.n4js.tester.internal.Utf8UrlDecoderService;
 import org.eclipse.n4js.tester.server.HttpServerManager;
 import org.eclipse.n4js.tester.server.JettyManager;
+import org.eclipse.n4js.tester.server.resources.ResourceProvider;
+import org.eclipse.n4js.tester.server.resources.ServletHolderBuilder;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.N4ExecutableExtensionFactory;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,6 +92,8 @@ public class TesterModule implements Module {
 	@Override
 	public void configure(Binder binder) {
 		if (n4jsInjector != null) {
+			// binder.requireExplicitBindings();
+
 			// define all bindings to N4JS here (non-ui packages)
 			binder.bind(ObjectMapper.class)
 					.toProvider(() -> n4jsInjector.getInstance(ObjectMapper.class));
@@ -99,7 +107,23 @@ public class TesterModule implements Module {
 					.toProvider(() -> n4jsInjector.getInstance(ResourceNameComputer.class));
 			binder.bind(ContainerTypesHelper.class)
 					.toProvider(() -> n4jsInjector.getInstance(ContainerTypesHelper.class));
+			binder.bind(N4ExecutableExtensionFactory.class)
+					.toProvider(() -> n4jsInjector.getInstance(N4ExecutableExtensionFactory.class));
+			binder.bind(RunnerHelper.class)
+					.toProvider(() -> n4jsInjector.getInstance(RunnerHelper.class));
+			binder.bind(RunnerRegistry.class)
+					.toProvider(() -> n4jsInjector.getInstance(RunnerRegistry.class));
 		}
+
+		binder.bind(TesterRegistry.class);
+		binder.bind(TesterEventBus.class);
+		binder.bind(TesterFrontEnd.class);
+		binder.bind(ResourceProvider.class);
+		binder.bind(TestDiscoveryHelper.class);
+		binder.bind(TestCatalogSupplier.class);
+		binder.bind(ServletHolderBuilder.class);
+		binder.bind(DefaultTestTreeTransformer.class);
+		binder.bind(TesterFileBasedShippedCodeConfigurationHelper.class);
 
 		binder.bind(TestFsm.class).to(TestFsmImpl.class);
 		binder.bind(HttpServerManager.class).to(JettyManager.class);
