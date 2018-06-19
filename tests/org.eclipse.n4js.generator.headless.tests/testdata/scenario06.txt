@@ -28,7 +28,7 @@ export public class A {
 			]
 		},
 		"moduleFilters": {
-			"noModuleWrapping": [
+			"noModuleWrap": [
 				{
 					"module": "c/*",
 					"sourceContainer": "ext2"

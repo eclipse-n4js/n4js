@@ -13,6 +13,9 @@ export public class A {
 {
 	"name": "P1",
 	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"org.eclipse.n4js.mangelhaft": "*"
+	},
 	"n4js": {
 		"projectType": "application",
 		"vendorId": "org.eclipse.n4js",
@@ -39,7 +42,7 @@ export public class A {
 					"sourceContainer": "test2"
 				}
 			],
-			"noModuleWrapping": [
+			"noModuleWrap": [
 				{
 					"module": "c/*",
 					"sourceContainer": "ext2"
@@ -76,4 +79,14 @@ function Y(){
 
 # wsp1/P1/test2/t/T2.js
 function X*(){
+}
+
+
+# wsp1/org.eclipse.n4js.mangelhaft/package.json
+{
+	"name": "org.eclipse.n4js.mangelhaft",
+	"version": "0.0.1",
+	"n4js": {
+		"vendorId": "org.eclipse.n4js"
+	}
 }

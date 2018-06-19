@@ -291,8 +291,8 @@ public class ScenarioTest {
 		File root = new File(workspace, "scenario07");
 
 		List<File> toCompile = Arrays.asList(//
-				new File(root, "wsp1/P1") // requires nothing
-		);
+				new File(root, "wsp1/P1"),
+				new File(root, "wsp1/org.eclipse.n4js.mangelhaft"));
 
 		hlc.setCompileSourceCode(false);
 		hlc.setProcessTestCode(true);
@@ -320,8 +320,8 @@ public class ScenarioTest {
 		File root = new File(workspace, "scenario08");
 
 		List<File> toCompile = Arrays.asList(//
-				new File(root, "wsp1/P1") // requires nothing
-		);
+				new File(root, "wsp1/P1"),
+				new File(root, "wsp1/org.eclipse.n4js.mangelhaft"));
 
 		hlc.setCompileSourceCode(true);
 		hlc.setProcessTestCode(false);
