@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.realworld;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -91,7 +92,10 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 		Multimap<Class<?>, Injector> singletonInstances = HashMultimap.create();
 
 		Map<Injector, String> injectors = getAllInjectors();
-		for (Injector injector : injectors.keySet()) {
+		for (Map.Entry<Injector, String> injectorAndName : injectors.entrySet()) {
+			Injector injector = injectorAndName.getKey();
+			String name = injectorAndName.getValue();
+			assertTrue("Injector '" + name + "' is null.", injector != null);
 			getN4JSSingletonsOfInjector(injector, singletonInstances);
 		}
 
