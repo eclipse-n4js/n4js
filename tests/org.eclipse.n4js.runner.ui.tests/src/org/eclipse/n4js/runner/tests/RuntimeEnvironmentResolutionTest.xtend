@@ -44,6 +44,7 @@ import static org.hamcrest.core.IsCollectionContaining.*
 import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.*
 import org.eclipse.n4js.packagejson.PackageJsonBuilder
+import org.eclipse.n4js.n4mf.ProjectType
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -61,9 +62,6 @@ class RuntimeEnvironmentResolutionTest {
 
 	@Inject
 	private extension RunnerHelper
-
-	@Inject
-	private extension PackageJsonBuilderProvider
 
 	@Inject
 	private IN4JSCore core
@@ -121,7 +119,7 @@ class RuntimeEnvironmentResolutionTest {
 	def void testCannotResolveExecutionEnvironmentForRuntimeEnviroenmtnProjectType() {
 		newBuilderForRE.createProject(V8).findCompatibleRuntimeEnvironments;
 	}
-
+	
 	/**
 	 * Resolving execution environment throws exception when called on project of type RL.
 	 */
@@ -715,6 +713,27 @@ class RuntimeEnvironmentResolutionTest {
 	private def doDeleteOnExit(File file) {
 		file.deleteOnExit
 		file
+	}
+	
+	/** 
+	 * Convenience access to a pre-configured {@link PackageJsonBuilder} instances 
+	 * with project type {@link ProjectType#RUNTIME_ENVIRONMENT}.
+	 */
+	private def PackageJsonBuilder newBuilderForRE() {
+		return PackageJsonBuilder.newBuilder.withType(ProjectType.RUNTIME_ENVIRONMENT);
+	}
+	
+	/** 
+	 * Convenience access to a pre-configured {@link PackageJsonBuilder} instances 
+	 * with project type {@link ProjectType#RUNTIME_LIBRARY}.
+	 */
+	private def PackageJsonBuilder newBuilderForRL() {
+		return PackageJsonBuilder.newBuilder.withType(ProjectType.RUNTIME_LIBRARY);
+	}
+	
+	/** Convenience access to a plain {@link PackageJsonBuilder} instances. */
+	private def PackageJsonBuilder newBuilder() {
+		return PackageJsonBuilder.newBuilder;
 	}
 
 }

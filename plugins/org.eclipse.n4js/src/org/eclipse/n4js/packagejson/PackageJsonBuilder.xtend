@@ -36,7 +36,6 @@ public class PackageJsonBuilder {
 		return new PackageJsonBuilder();
 	}
 
-
 	private String projectName;
 	private ProjectType type;
 	private String version;
