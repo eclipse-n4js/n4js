@@ -277,13 +277,22 @@ public interface N4mfPackage extends EPackage {
 	int PROJECT_DESCRIPTION__MODULE_LOADER = 20;
 
 	/**
+	 * The feature id for the '<em><b>Has Nested Node Modules Folder</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER = 21;
+
+	/**
 	 * The number of structural features of the '<em>Project Description</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_FEATURE_COUNT = 21;
+	int PROJECT_DESCRIPTION_FEATURE_COUNT = 22;
 
 	/**
 	 * The operation id for the '<em>Get Output Path</em>' operation.
@@ -1108,6 +1117,17 @@ public interface N4mfPackage extends EPackage {
 	EAttribute getProjectDescription_ModuleLoader();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4mf.ProjectDescription#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Has Nested Node Modules Folder</em>'.
+	 * @see org.eclipse.n4js.n4mf.ProjectDescription#isHasNestedNodeModulesFolder()
+	 * @see #getProjectDescription()
+	 * @generated
+	 */
+	EAttribute getProjectDescription_HasNestedNodeModulesFolder();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4mf.ProjectDescription#getOutputPath() <em>Get Output Path</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1758,6 +1778,14 @@ public interface N4mfPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PROJECT_DESCRIPTION__MODULE_LOADER = eINSTANCE.getProjectDescription_ModuleLoader();
+
+		/**
+		 * The meta object literal for the '<em><b>Has Nested Node Modules Folder</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER = eINSTANCE.getProjectDescription_HasNestedNodeModulesFolder();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Output Path</b></em>' operation.

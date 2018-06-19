@@ -101,7 +101,7 @@ public class NodeEngineCommandBuilder {
 		// 1 generate fake node project
 		Path projectRootPath = workDir;
 		// 2 create 'node_modules' to the #1
-		final File node_modules = new File(projectRootPath.toFile(), "node_modules");
+		final File node_modules = new File(projectRootPath.toFile(), N4JSGlobals.NODE_MODULES);
 		node_modules.mkdirs();
 		addNodeModulesDeleteHook(node_modules);
 		// 3 generate elf script in #1

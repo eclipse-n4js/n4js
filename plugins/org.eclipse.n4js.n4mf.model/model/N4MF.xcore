@@ -49,6 +49,12 @@ class ProjectDescription {
 	contains ModuleFilter[] moduleFilters
 	contains ProjectDependency[] testedProjects
 	ModuleLoader moduleLoader
+	/* 
+	 * Tells if the project represented by this project description has a nested
+	 * "node_modules" folder, i.e. a folder named "node_modules" located right next
+	 * to the package.json file.
+	 */
+	boolean hasNestedNodeModulesFolder
 
 	op String getOutputPath() {
 		return FileUtils.normalizeDotWhenEmpty(outputPathRaw);

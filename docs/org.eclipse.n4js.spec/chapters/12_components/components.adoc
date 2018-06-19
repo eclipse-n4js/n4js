@@ -173,7 +173,8 @@ devDependencies ::
 List of components required at compile time only.
 main ::
 Path relative to the component's root folder, pointing to a `.js` file
-located in a source container. This file then serves as the component's
+located in a source container (the `.js` file extension is optional,
+i.e. may be omitted). This file then serves as the component's
 default entry point, i.e. project imports pointing to this component from
 other components will import from the file denoted by this property. In
 addition, this property may denote a folder and is then assumed to point

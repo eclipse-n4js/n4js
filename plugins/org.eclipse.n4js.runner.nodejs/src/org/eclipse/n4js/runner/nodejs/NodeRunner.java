@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.IExecutor;
@@ -127,7 +128,7 @@ public class NodeRunner implements IRunner {
 			if (runConfig.getAdditionalPath() != null && !runConfig.getAdditionalPath().isEmpty())
 				paths.add(runConfig.getAdditionalPath());
 
-			paths.add(workingDirectory.resolve("node_modules").toAbsolutePath().toString());
+			paths.add(workingDirectory.resolve(N4JSGlobals.NODE_MODULES).toAbsolutePath().toString());
 
 			String nodePaths = on(NODE_PATH_SEP).join(paths);
 

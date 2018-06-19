@@ -36,6 +36,22 @@ import com.google.common.base.Optional;
 public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Override
+	public int getDepthOfLocation(URI nestedLocation) {
+		// trim trailing empty segment (if any)
+		String lastSegment = nestedLocation.lastSegment();
+		if (lastSegment != null && lastSegment.isEmpty()) {
+			nestedLocation = nestedLocation.trimSegments(1);
+		}
+		// make sure we are in the root folder of an IN4JSProject
+		IN4JSProject containingProject = findProject(nestedLocation).orNull();
+		if (containingProject == null) {
+			return -1;
+		}
+		// compute and return depth
+		return nestedLocation.segmentCount() - containingProject.getLocation().segmentCount();
+	}
+
+	@Override
 	public boolean isInSameProject(URI nestedLocation1, URI nestedLocation2) {
 		final Optional<? extends IN4JSProject> project1 = findProject(nestedLocation1);
 		if (project1.isPresent()) {

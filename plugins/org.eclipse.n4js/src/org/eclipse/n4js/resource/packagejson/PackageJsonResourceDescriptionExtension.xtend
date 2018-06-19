@@ -22,10 +22,12 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
+import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.^extension.IJSONResourceDescriptionExtension
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
@@ -37,7 +39,6 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.json.JSON.JSONPackage
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -104,6 +105,9 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private static val EXTENDED_RUNTIME_ENVIRONMENT_ID_KEY = 'extendedRuntimeEnvironmentId';
 
 	@Inject
+	private IN4JSCore n4jsCore;
+
+	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
@@ -111,6 +115,14 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
 
+
+	override boolean isToBeBuilt(URI uri, Resource resource) {
+		if (!uri.isPackageJSON) {
+			return false; // not responsible
+		}
+		// make sure we are in the root folder of an IN4JSProject
+		return n4jsCore.getDepthOfLocation(uri) === 1;
+	}
 
 	override QualifiedName getFullyQualifiedName(EObject obj) {
 		if (!obj.isPackageJSON) {
