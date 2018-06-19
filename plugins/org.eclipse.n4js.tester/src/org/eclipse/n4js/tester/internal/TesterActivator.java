@@ -31,13 +31,19 @@ import com.google.inject.name.Names;
  * bundle policy.
  */
 public class TesterActivator implements BundleActivator {
-
 	private static BundleContext context;
 	private static TesterActivator instance;
 
 	private Injector injector;
 
-	/* default */static BundleContext getContext() {
+	/** effective server port after starting up. */
+	private int effectiveServerPort = -1;
+
+	private Integer configuredServerPort;
+
+	private HttpServerManager serverManager;
+
+	static BundleContext getContext() {
 		return context;
 	}
 
@@ -46,33 +52,15 @@ public class TesterActivator implements BundleActivator {
 		return instance;
 	}
 
-	/** effective server port after starting up. */
-	private int effectiveServerPort = -1;
-
-	// @Named(HTTP_SERVER_PORT_KEY)
-	// @Inject
-	private Integer configuredServerPort;
-
-	private HttpServerManager serverManager;
-
 	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
-		System.out.println("start TesterActivator");
 		TesterActivator.context = bundleContext;
 		instance = this;
-
-		// Injector parentInjector = N4JSActivator.getInstance().getInjector(
-		// N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
-
-		// injector = Guice.createInjector(new TesterModule());
-		// injector.injectMembers(this);
-		// this.effectiveServerPort = serverManager.startServer(singletonMap(HTTP_PORT, configuredServerPort));
 	}
 
-	public void startupWithInjector(Injector injector) {
-		System.out.println("startupWithInjector " + injector.hashCode());
-		this.injector = injector;
-		// injector.injectMembers(this);
+	/** Starts the Jetty server */
+	public void startupWithInjector(Injector uiInjector) {
+		this.injector = uiInjector;
 		this.serverManager = injector.getInstance(HttpServerManager.class);
 		this.configuredServerPort = injector.getInstance(Key.get(Integer.class, Names.named(HTTP_SERVER_PORT_KEY)));
 		Map<String, Object> portMap = singletonMap(HttpServerManager.HTTP_PORT, configuredServerPort);
@@ -81,7 +69,6 @@ public class TesterActivator implements BundleActivator {
 
 	@Override
 	public void stop(final BundleContext bundleContext) throws Exception {
-		System.out.println("STOP TesterActivator");
 		instance = null;
 		TesterActivator.context = null;
 		this.effectiveServerPort = -1;
@@ -100,7 +87,6 @@ public class TesterActivator implements BundleActivator {
 	 * @return the ui-independent tester injector
 	 */
 	public static Injector getInjector() {
-		System.out.println("TesterActivator#getInjector");
 		return getInstance().injector;
 	}
 

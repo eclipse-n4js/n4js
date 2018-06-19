@@ -24,9 +24,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.util.Modules;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -89,20 +88,12 @@ public class TesterUiActivator extends AbstractUIPlugin {
 	@Override
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
-		System.out.println("start Tester UI Activator");
 		plugin = this;
 
-		final Injector parentInjector = N4JSActivator.getInstance().getInjector(
-				N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
-
-		System.out.println("create TesterModule");
-		TesterModule testerModule = new TesterModule();
-		System.out.println("create TesterModule done");
-		Module overriddenModule = Modules.override(testerModule).with(new N4TesterUiModule());
-		injector = parentInjector.createChildInjector(testerModule);
-
-		System.out.println("Injector started: " + injector.hashCode());
-
+		Injector parentInjector = N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
+		TesterModule testerModule = new TesterModule(parentInjector);
+		TesterUiModule testerUiModule = new TesterUiModule(parentInjector);
+		injector = Guice.createInjector(testerModule, testerUiModule);
 	}
 
 	@Override

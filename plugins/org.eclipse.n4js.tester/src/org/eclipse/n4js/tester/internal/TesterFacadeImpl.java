@@ -39,7 +39,7 @@ public class TesterFacadeImpl implements TesterFacade {
 	@Inject
 	TesterFacadeImpl(final TestFsmRegistry fsmRegistry, final HttpServerManager serverManager,
 			final InternalTestTreeRegistry treeRegistry, @Named(HTTP_SERVER_PORT_KEY) final int port) {
-		System.out.println("TesterFacadeImpl");
+
 		this.fsmRegistry = fsmRegistry;
 		this.serverManager = serverManager;
 		this.treeRegistry = treeRegistry;

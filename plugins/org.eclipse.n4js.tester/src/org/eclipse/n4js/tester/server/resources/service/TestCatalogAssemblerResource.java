@@ -40,10 +40,6 @@ public class TestCatalogAssemblerResource extends BaseResource {
 	@Inject
 	private TestCatalogSupplier catalogSupplier;
 
-	public TestCatalogAssemblerResource() {
-		System.out.println("create TestCatalogAssemblerResource");
-	}
-
 	@Override
 	protected int doHandle(final String body, final String pathInfo) throws ServletException {
 		return SC_OK;

@@ -46,6 +46,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ThreadPool;
@@ -58,7 +59,6 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
@@ -85,13 +85,12 @@ public class JettyManager implements HttpServerManager {
 	private final int threadPoolCapacity;
 
 	@Inject
-	/* default */ JettyManager(Injector injector, final ServletHolderBuilder servletHolderBuilder,
+	/* default */ JettyManager(final ServletHolderBuilder servletHolderBuilder,
 			final @Named(DUMP_SERVER_ON_STOP_KEY) boolean dumpServerOnStop,
 			final @Named(MIN_THREAD_COUNT_KEY) int minThreadCount,
 			final @Named(MAX_THREAD_COUNT_KEY) int maxThreadCount,
 			final @Named(THREAD_POOL_BLOCKING_CAPACITY_KEY) int threadPoolCapacity) {
 
-		System.out.println("JettyManager " + injector.hashCode());
 		this.servletHolderBuilder = servletHolderBuilder;
 		this.dumpServerOnStop = dumpServerOnStop;
 		this.minThreadCount = minThreadCount;
@@ -113,7 +112,8 @@ public class JettyManager implements HttpServerManager {
 				server.setConnectors(new Connector[] { connector });
 				final ServletContextHandler contextHandler = new ServletContextHandler(server, CONTEXT_ROOT, true,
 						false);
-				contextHandler.addServlet(servletHolderBuilder.build(ResourceRouterServlet.class), CONTEXT_PATH + "*");
+				ServletHolder servlet = servletHolderBuilder.build(ResourceRouterServlet.class);
+				contextHandler.addServlet(servlet, CONTEXT_PATH + "*");
 				contextHandler.addFilter(configureCors(), CONTEXT_PATH + "*", of(REQUEST, ASYNC));
 				server.setDumpBeforeStop(dumpServerOnStop);
 				server.start();

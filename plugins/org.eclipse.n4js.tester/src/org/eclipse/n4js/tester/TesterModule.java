@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.tester;
 
-import static com.google.inject.name.Names.bindProperties;
 import static java.io.File.separator;
 import static java.lang.String.valueOf;
 import static org.apache.log4j.Logger.getLogger;
@@ -43,6 +42,9 @@ import java.security.ProtectionDomain;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.tester.fsm.TestFsm;
 import org.eclipse.n4js.tester.fsm.TestFsmImpl;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
@@ -54,31 +56,61 @@ import org.eclipse.n4js.tester.internal.TesterFacadeImpl;
 import org.eclipse.n4js.tester.internal.Utf8UrlDecoderService;
 import org.eclipse.n4js.tester.server.HttpServerManager;
 import org.eclipse.n4js.tester.server.JettyManager;
+import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.utils.ResourceNameComputer;
 
-import com.google.inject.AbstractModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Binder;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.name.Names;
 
 /**
- * Module for the N4 tester core component.
+ * Defines bindings to N4JS instances in the ui case.
  */
-public class TesterModule extends AbstractModule {
-
+public class TesterModule implements Module {
 	private static final Logger LOGGER = getLogger(TesterModule.class);
 
+	final private Injector n4jsInjector;
+
+	/** Called in the ui case */
+	public TesterModule(Injector n4jsInjector) {
+		this.n4jsInjector = n4jsInjector;
+	}
+
+	/** Called in the headless case */
 	public TesterModule() {
-		System.out.println("constructor TesterModule");
+		this.n4jsInjector = null;
 	}
 
 	@Override
-	protected void configure() {
-		bind(TestFsm.class).to(TestFsmImpl.class);
-		bind(HttpServerManager.class).to(JettyManager.class);
-		bind(TestFsmRegistry.class).to(TestFsmRegistryImpl.class);
-		bind(TesterFacade.class).to(TesterFacadeImpl.class);
-		bind(TestTreeRegistry.class).to(InternalTestTreeRegistry.class);
-		bind(InternalTestTreeRegistry.class).to(TestTreeRegistryImpl.class);
-		bind(TestTreeTransformer.class).to(DefaultTestTreeTransformer.class);
-		bind(UrlDecoderService.class).to(Utf8UrlDecoderService.class);
-		bindProperties(binder(), getProperties());
+	public void configure(Binder binder) {
+		if (n4jsInjector != null) {
+			// define all bindings to N4JS here (non-ui packages)
+			binder.bind(ObjectMapper.class)
+					.toProvider(() -> n4jsInjector.getInstance(ObjectMapper.class));
+			binder.bind(RunnerFrontEnd.class)
+					.toProvider(() -> n4jsInjector.getInstance(RunnerFrontEnd.class));
+			binder.bind(FileExtensionsRegistry.class)
+					.toProvider(() -> n4jsInjector.getInstance(FileExtensionsRegistry.class));
+			binder.bind(IN4JSCore.class)
+					.toProvider(() -> n4jsInjector.getInstance(IN4JSCore.class));
+			binder.bind(ResourceNameComputer.class)
+					.toProvider(() -> n4jsInjector.getInstance(ResourceNameComputer.class));
+			binder.bind(ContainerTypesHelper.class)
+					.toProvider(() -> n4jsInjector.getInstance(ContainerTypesHelper.class));
+		}
+
+		binder.bind(TestFsm.class).to(TestFsmImpl.class);
+		binder.bind(HttpServerManager.class).to(JettyManager.class);
+		binder.bind(TestFsmRegistry.class).to(TestFsmRegistryImpl.class);
+		binder.bind(TesterFacade.class).to(TesterFacadeImpl.class);
+		binder.bind(TestTreeRegistry.class).to(InternalTestTreeRegistry.class);
+		binder.bind(InternalTestTreeRegistry.class).to(TestTreeRegistryImpl.class);
+		binder.bind(TestTreeTransformer.class).to(DefaultTestTreeTransformer.class);
+		binder.bind(UrlDecoderService.class).to(Utf8UrlDecoderService.class);
+
+		Names.bindProperties(binder, getProperties());
 	}
 
 	private Properties getProperties() {

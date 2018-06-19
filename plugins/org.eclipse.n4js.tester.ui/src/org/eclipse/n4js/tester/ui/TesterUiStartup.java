@@ -21,7 +21,6 @@ public class TesterUiStartup implements IStartup {
 	@Override
 	public void earlyStartup() {
 		// this is just a hack to ensure embedded HTTP server is running when starting application.
-		System.out.println("TesterUiStartup#earlyStartup");
 		TesterActivator.getInstance().startupWithInjector(TesterUiActivator.getInjector());
 	}
 
