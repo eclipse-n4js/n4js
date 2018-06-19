@@ -517,7 +517,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_TYPE))) {
 			return;
 		}
-
+		// do not validate devDependencies in external projects, because these are note installed
+		// by npm for transitive dependencies
+		val project = findProject(devDependenciesValue.eResource.URI);
+		if (!project.present || project.get.external) {
+			return;
+		}
 		val references = getReferencesFromDependenciesObject(devDependenciesValue);
 		checkReferencedProjects(references, createDependenciesPredicate(), "devDependencies", false); 
 	}
