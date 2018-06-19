@@ -12,10 +12,9 @@ package org.eclipse.n4js.ui.projectModel;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.common.collect.ImmutableList;
-
-import org.eclipse.n4js.projectModel.IN4JSProject;
 
 /**
  * A N4JS project represents a view of a project resource in terms of n4js elements such as manifest, libraries and
@@ -49,6 +48,21 @@ public interface IN4JSEclipseProject extends IN4JSProject {
 	@Override
 	ImmutableList<? extends IN4JSEclipseProject> getDependencies();
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see #getDependenciesAndImplementedApis(boolean)
+	 */
 	@Override
 	ImmutableList<? extends IN4JSEclipseProject> getDependenciesAndImplementedApis();
+
+	/**
+	 * Returns the dependencies including the unresolved deps. This is used by the builder to keep track of pending
+	 * project dependencies.
+	 * 
+	 * @param includeAbsentProjects
+	 *            true if unresolved deps should be included.
+	 * @return the dependencies.
+	 */
+	ImmutableList<? extends IN4JSEclipseProject> getDependenciesAndImplementedApis(boolean includeAbsentProjects);
 }

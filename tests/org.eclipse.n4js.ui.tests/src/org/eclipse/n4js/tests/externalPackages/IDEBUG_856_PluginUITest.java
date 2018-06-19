@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.externalPackages;
 
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 

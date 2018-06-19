@@ -11,11 +11,8 @@
 package org.eclipse.n4js.ui.containers;
 
 import static com.google.common.collect.FluentIterable.from;
-import static org.eclipse.core.runtime.Status.OK_STATUS;
-import static org.eclipse.core.runtime.jobs.Job.INTERACTIVE;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
-import static org.eclipse.xtext.validation.CheckMode.ALL;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +23,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -35,6 +35,7 @@ import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
 import org.eclipse.n4js.ui.internal.OwnResourceValidatorAwareValidatingEditorCallback;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.swt.widgets.Display;
@@ -47,6 +48,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.xtext.ui.containers.AbstractAllContainersState;
 import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.validation.CheckMode;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -77,6 +79,9 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 
 	@Inject
 	private ResourceUIValidatorExtension validatorExtension;
+
+	@Inject
+	private ExternalLibraryBuilder builder;
 
 	@Override
 	protected String doInitHandle(URI uri) {
@@ -156,11 +161,18 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				final IFile packageJSON = delta.getResource().getProject().getFile(N4JSGlobals.PACKAGE_JSON);
 				final ResourceSet resourceSet = core.createResourceSet(Optional.of(project));
 				final Resource resource = resourceSet.getResource(projectDescriptionLocation, true);
-				final Job job = Job.create("", monitor -> {
-					validatorExtension.updateValidationMarkers(packageJSON, resource, ALL, monitor);
-					return OK_STATUS;
+				final Job job = Job.create("Update validation markers for " + resource.getURI(), monitor -> {
+					ISchedulingRule rule = builder.getRule();
+					try {
+						Job.getJobManager().beginRule(rule, monitor);
+						validatorExtension.updateValidationMarkers(packageJSON, resource, CheckMode.ALL,
+								new NullProgressMonitor());
+					} finally {
+						Job.getJobManager().endRule(rule);
+					}
+					return Status.OK_STATUS;
 				});
-				job.setPriority(INTERACTIVE);
+				job.setPriority(Job.INTERACTIVE);
 				job.schedule();
 			}
 		}
@@ -168,7 +180,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 
 	private void tryValidateProjectDescriptionInEditor(final IResourceDelta delta) {
 		if (isWorkbenchRunning()) {
-			Display.getDefault().asyncExec(() -> {
+			Runnable validateInEditorRunnable = () -> {
 				final IWorkbenchWindow window = getWorkbench().getActiveWorkbenchWindow();
 				if (null != window) {
 					final IWorkbenchPage page = window.getActivePage();
@@ -182,7 +194,9 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 						}
 					}
 				}
-			});
+			};
+
+			Display.getDefault().asyncExec(validateInEditorRunnable);
 		}
 	}
 

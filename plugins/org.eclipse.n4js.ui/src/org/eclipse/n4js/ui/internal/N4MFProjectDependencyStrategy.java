@@ -18,15 +18,15 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 
+import com.google.inject.Inject;
+
 /**
+ * Compute the project dependencies based on the content of the n4mf files.
  */
 public class N4MFProjectDependencyStrategy implements ProjectDescriptionLoadListener.Strategy {
 
@@ -37,13 +37,27 @@ public class N4MFProjectDependencyStrategy implements ProjectDescriptionLoadList
 		this.core = core;
 	}
 
+	/**
+	 * Returns the project dependencies without the unresolved deps.
+	 */
 	@Override
 	public List<IProject> getProjectDependencies(final IProject project) {
+		return getProjectDependencies(project, false);
+	}
+
+	/**
+	 * @param project
+	 *            the project
+	 * @param includeMissingOrClosedProjects
+	 *            true if declared but unresolved deps should be returned, too.
+	 * @return the required dependencies.
+	 */
+	public List<IProject> getProjectDependencies(final IProject project, boolean includeMissingOrClosedProjects) {
 		final IN4JSEclipseProject n4Project = core.create(project).orNull();
 		if (null != n4Project) {
 			// This covers project dependencies, tests (if any), required REs and required RLs and APIs.
 			final Collection<? extends IN4JSEclipseProject> dependencies = n4Project
-					.getDependenciesAndImplementedApis();
+					.getDependenciesAndImplementedApis(includeMissingOrClosedProjects);
 
 			// This is for the provided runtime libraries.
 			final Collection<IN4JSEclipseProject> providedRuntimeLibs = from(n4Project.getProvidedRuntimeLibraries())

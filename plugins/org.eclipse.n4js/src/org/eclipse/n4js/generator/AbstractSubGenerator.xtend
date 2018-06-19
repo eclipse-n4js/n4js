@@ -38,6 +38,7 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
+import org.eclipse.n4js.internal.RaceDetectionHelper
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -121,7 +122,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == input.URI.fileExtension.toLowerCase
 		val inputUri = input.URI
 
-		return (autobuildEnabled
+		val boolean result = (autobuildEnabled
 			&& isGenerateProjectType(inputUri)
 			&& hasOutput(inputUri)
 			&& isOutsideOfOutputFolder(inputUri)
@@ -134,6 +135,10 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			))
 			&& (!input.isStaticPolyfillingModule) // compile driven by filled type
 			&& hasNoPolyfillErrors(input,monitor)
+		if (!result) {
+			RaceDetectionHelper.log("Skip generation of artifacts from %s", input.URI)
+		}
+		return result
 	}
 
 	private def hasOutput(URI n4jsSourceURI){

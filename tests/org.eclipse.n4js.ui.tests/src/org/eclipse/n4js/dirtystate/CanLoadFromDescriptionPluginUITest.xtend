@@ -21,6 +21,8 @@ import org.junit.Ignore
 import org.junit.Test
 import org.eclipse.n4js.N4JSGlobals
 
+import static org.junit.Assert.*
+
 /**
  * 
  */

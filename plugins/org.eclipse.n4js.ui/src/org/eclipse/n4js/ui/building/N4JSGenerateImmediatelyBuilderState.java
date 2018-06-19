@@ -26,11 +26,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
@@ -38,9 +40,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
-import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -57,12 +57,12 @@ import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Produces the compiled js files immediately after the validation in order save CPU cycles, e.g. the file is already
@@ -134,7 +134,7 @@ import com.google.inject.Injector;
  * This class gets injected by {@link N4JSClusteringBuilderConfiguration}.
  */
 @SuppressWarnings("restriction")
-public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState {
+public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderState {
 	static private final DataCollector dcBuild = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Build");
 	static private final DataCollector dcValidations = DataCollectors.INSTANCE
@@ -146,22 +146,19 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 	private RegistryBuilderParticipant builderParticipant;
 
 	@Inject
-	private ContributingResourceDescriptionPersister descriptionPersister;
-
-	@Inject
 	@BuilderState
 	private IBuildLogger builderStateLogger;
 
-	/**
-	 * After the load phase, checks whether the underlying index content is empty or a recovery builder was scheduled,
-	 * if so, populates the index content with the external libraries as well.
-	 */
-	@Override
-	public synchronized void load() {
-		super.load();
-		// On the very first startup there will be recovery build.
-		if (descriptionPersister.isRecoveryBuildRequired()) {
-			descriptionPersister.scheduleRecoveryBuildOnContributions();
+	private ExternalLibraryWorkspace externalLibraryWorkspace;
+
+	@Inject
+	private void injectExternalLibraryWorkspace(ISharedStateContributionRegistry contributionRegistry) {
+		try {
+			// we are in the context of shared xtext injector
+			this.externalLibraryWorkspace = contributionRegistry
+					.getSingleContributedInstance(ExternalLibraryWorkspace.class);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -185,6 +182,7 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 			IProgressMonitor monitor) {
 
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() >>>");
+		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
 
 		IProject project = getProject(buildData);
@@ -234,6 +232,7 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 		try (ClosableMeasurement m = dcValidations.getClosableMeasurement("validation");) {
 			super.updateMarkers(delta, resourceSet, monitor);
 		}
@@ -246,13 +245,12 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 				throw new IllegalStateException();
 			}
 			try (ClosableMeasurement m = dcTranspilation.getClosableMeasurement("transpilation");) {
+				instruction.process(delta, resourceSet, subMonitor.split(1));
 
-				instruction.process(delta, resourceSet, monitor);
 			} catch (CoreException e) {
 				handleCoreException(e);
 			}
 		}
-
 	}
 
 	@Override
@@ -277,17 +275,12 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		throw new IllegalStateException();
 	}
 
-	// cannot be injected with annotation as there will be wrong injection context
-	// @Inject FileExtensionProvider fileExtensionProvider
-	// doesn't work neither
-	// FileExtensionProvider fileExtensionProvider =
-	// N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_IDE_N4JS_N4JS).getProvider(FileExtensionProvider.class).get();
-
 	/**
 	 * Check if given build participant is supporting given file type
 	 */
 	private boolean isParticipating(DeferredBuilderParticipant dbp) {
-		// TODO switch hardcoded extensions to FileExtensionProvider query
+		// TODO IDE-2493 multilanguage support
+		// @Inject FileExtensionProvider
 		for (String ext : N4JSGlobals.ALL_N4_FILE_EXTENSIONS) {
 			if (dbp.isParticipating(ext)) {
 				return true;
@@ -376,23 +369,21 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		}
 	}
 
-	static private IProject getProject(BuildData buildData) {
+	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */
+	private IProject getProject(BuildData buildData) {
 		String projectName = buildData.getProjectName();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		IProject project = root.getProject(projectName); // creates a project instance if not existing
 
 		if (null == project || !project.isAccessible()) {
-			final IProject externalProject = getExternalLibraryWorkspace().getProject(projectName);
+			final IProject externalProject = externalLibraryWorkspace.getProject(projectName);
 			if (null != externalProject && externalProject.exists()) {
 				project = externalProject;
 			}
 		}
+
 		return project;
 	}
 
-	static private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
-		final Injector injector = new N4JSInjectorSupplier().get();
-		return injector.getInstance(ExternalLibraryWorkspace.class);
-	}
 }

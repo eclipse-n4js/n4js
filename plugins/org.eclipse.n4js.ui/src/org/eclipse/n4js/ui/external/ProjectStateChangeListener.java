@@ -46,7 +46,7 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 	private ExternalProjectProvider projectProvider;
 
 	@Inject
-	private ExternalLibraryBuildJobProvider buildJobProvider;
+	private ExternalLibraryBuildScheduler buildJobProvider;
 
 	@Inject
 	private FileBasedExternalPackageManager packageManager;
@@ -70,7 +70,7 @@ public class ProjectStateChangeListener implements IResourceChangeListener {
 				logger.info("Opened projects: " + Iterables.toString(from(toClean).transform(p -> p.getName())));
 				logger.info("Closed projects: " + Iterables.toString(from(toBuild).transform(p -> p.getName())));
 
-				buildJobProvider.createBuildJob(toBuild, toClean).schedule();
+				buildJobProvider.scheduleBuildJob(toBuild, toClean);
 			}
 
 		} catch (final CoreException e) {

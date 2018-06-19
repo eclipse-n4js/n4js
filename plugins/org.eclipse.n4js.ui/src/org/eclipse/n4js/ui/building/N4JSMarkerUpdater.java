@@ -24,12 +24,12 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
-import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.xtext.builder.builderState.MarkerUpdaterImpl;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
+import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.validation.CheckMode;
@@ -37,7 +37,6 @@ import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  *
@@ -48,9 +47,18 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 	@Inject
 	private IStorage2UriMapper mapper;
 
-	private ExternalLibraryErrorMarkerManager getExternalLibraryErrorMarkerManager() {
-		Injector injector = new N4JSInjectorSupplier().get();
-		return injector.getInstance(ExternalLibraryErrorMarkerManager.class);
+	private ExternalLibraryErrorMarkerManager markerManager;
+
+	private IN4JSCore n4jsCore;
+
+	@Inject
+	private void injectISharedStateContributionRegistry(ISharedStateContributionRegistry registry) {
+		try {
+			this.n4jsCore = registry.getSingleContributedInstance(IN4JSCore.class);
+			this.markerManager = registry.getSingleContributedInstance(ExternalLibraryErrorMarkerManager.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -73,7 +81,6 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 	}
 
 	private void updateMarkersForExternalLibraries(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
-		IN4JSCore n4jsCore = getIN4JSCore();
 		URI uri = delta.getUri();
 		if (n4jsCore.isNoValidate(uri)) {
 			return;
@@ -84,9 +91,9 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 		IN4JSProject prj = n4jsCore.findProject(uri).orNull();
 		CancelIndicator cancelIndicator = getCancelIndicator(monitor);
 
-		if (prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
+		if (prj != null && prj.isExternal() && prj.exists() && prj instanceof N4JSEclipseProject) {
 			List<Issue> list = validator.validate(resource, CheckMode.NORMAL_AND_FAST, cancelIndicator);
-			getExternalLibraryErrorMarkerManager().setIssues(uri, list);
+			markerManager.setIssues(uri, list);
 		}
 	}
 
@@ -101,11 +108,6 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 	private <T> T getService(final Resource resource, final Class<T> clazz) {
 		final IResourceServiceProvider serviceProvider = ((XtextResource) resource).getResourceServiceProvider();
 		return serviceProvider.get(clazz);
-	}
-
-	static private IN4JSCore getIN4JSCore() {
-		final Injector injector = new N4JSInjectorSupplier().get();
-		return injector.getInstance(IN4JSCore.class);
 	}
 
 }

@@ -28,11 +28,13 @@ import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
+import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
-import org.eclipse.n4js.tests.util.ProjectTestsUtils
+
+import static org.junit.Assert.assertTrue
 
 /**
  */
@@ -182,8 +184,12 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// Import of D cannot be resolved.
 		assertMarkers("file should have four errors", c, 4);
 	}
+	
+//	@Rule
+//	public RepeatedTestRule rule = new RepeatedTestRule();
 
 	@Test
+//	@RepeatTest(times=20)
 	def void testTwoFilesProjectNewlyCreated() throws Exception {
 		addProjectToDependencies("thirdProject")
 		val c = createTestFile(
@@ -201,6 +207,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// waitForAutobuild may wait while the autobuild is also waiting to start
 		// thus we trigger the incremental build here
 		firstProjectUnderTest.project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+		waitForAutoBuild
 		assertMarkers("file should have no errors", c, 0, errorMarkerPredicate);
 	}
 
@@ -219,6 +226,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		createTestFile(src2, "D", "export public class D {}");
 		waitForAutoBuild
 		ProjectTestsUtils.createProjectDescriptionFile(firstProjectUnderTest)
+		waitForAutoBuild
 
 		// Couldn't resolve reference to IdentifiableElement 'D'.
 		// Couldn't resolve reference to TModule 'D'.

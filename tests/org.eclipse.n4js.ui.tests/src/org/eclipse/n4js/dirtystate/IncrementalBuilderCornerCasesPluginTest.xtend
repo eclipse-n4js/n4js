@@ -11,13 +11,13 @@
 package org.eclipse.n4js.dirtystate;
 
 import com.google.inject.Inject
-import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import java.util.Collections
 import java.util.Objects
 import org.eclipse.core.resources.IProject
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.IResourceDescription.Delta
 import org.eclipse.xtext.resource.IResourceDescriptions
@@ -25,6 +25,8 @@ import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta
 import org.eclipse.xtext.util.StringInputStream
 import org.junit.Test
 import org.eclipse.n4js.N4JSGlobals
+
+import static org.junit.Assert.*
 
 /**
  */

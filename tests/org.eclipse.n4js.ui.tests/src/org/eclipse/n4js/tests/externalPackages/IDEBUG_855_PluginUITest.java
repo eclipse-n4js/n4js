@@ -11,6 +11,8 @@
 package org.eclipse.n4js.tests.externalPackages;
 
 import static org.eclipse.n4js.N4JSGlobals.N4JS_FILE_EXTENSION;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URI;
