@@ -84,10 +84,13 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 	 * Finally, for every such singleton class all injectors are checked whether they created an instance of the
 	 * singleton class and whether these instances are the same.
 	 */
+	@SuppressWarnings("unused")
 	@Test
 	public void identifyMultipleSingletons() throws Exception {
 		ProjectTestsUtils.importProject(new File("probands"), "ListBase");
 		IResourcesSetupUtil.waitForBuild();
+
+		new TesterUiActivator(); // force the TesterUI and Tester bundles to start
 
 		Multimap<Class<?>, Injector> singletonInstances = HashMultimap.create();
 
