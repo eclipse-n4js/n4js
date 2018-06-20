@@ -12,13 +12,7 @@ package org.eclipse.n4js.tester.tests.server;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.google.inject.Inject;
-
+import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.tester.TesterFacade;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.domain.ID;
@@ -27,6 +21,14 @@ import org.eclipse.n4js.tester.server.HttpServerManager;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
 import org.eclipse.n4js.tester.tests.MockTesterModule;
+import org.eclipse.n4js.tester.tests.WithParentInjector;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /**
  * Class for testing the {@link TesterFacade} runtime behavior.
@@ -34,6 +36,12 @@ import org.eclipse.n4js.tester.tests.MockTesterModule;
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = { MockTesterModule.class })
 public class TesterFacadeTest {
+
+	/** Set the parent injector to provide N4JS related instances. */
+	@WithParentInjector
+	public static Injector getParentInjector() {
+		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
+	}
 
 	@Inject
 	private HttpServerManager serverManager;

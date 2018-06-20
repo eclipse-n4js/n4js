@@ -16,9 +16,9 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.asList;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.tester.domain.TestStatus.ERROR;
 import static java.lang.String.valueOf;
 import static java.util.UUID.randomUUID;
+import static org.eclipse.n4js.tester.domain.TestStatus.ERROR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -30,14 +30,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
-
+import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
@@ -47,6 +40,15 @@ import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
 import org.eclipse.n4js.tester.tests.MockTesterModule;
+import org.eclipse.n4js.tester.tests.WithParentInjector;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /**
  * Test class for testing the serialization, deserialization and cloning behavior of the domain objects.
@@ -54,6 +56,12 @@ import org.eclipse.n4js.tester.tests.MockTesterModule;
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = { MockTesterModule.class })
 public class TesterDomainTest {
+
+	/** Set the parent injector to provide N4JS related instances. */
+	@WithParentInjector
+	public static Injector getParentInjector() {
+		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
+	}
 
 	@Inject
 	private ObjectMapper mapper;

@@ -43,12 +43,21 @@ import static java.util.Collections.*
 import static java.util.UUID.randomUUID
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.tester.tests.TesterTestsConfiguration
+import com.google.inject.Injector
+import org.eclipse.n4js.tester.tests.WithParentInjector
+import org.eclipse.n4js.N4JSStandaloneSetup
 
 /**
  * Base class of all classes testing the behavior of the tester RESTful API.
  */
 abstract class BaseResourcesTest {
 
+	/** Set the parent injector to provide N4JS related instances. */
+	@WithParentInjector
+	def public static Injector getParentInjector() {
+		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
+	}
+	
 	@Inject
 	protected Provider<TestEventQueue> provider;
 

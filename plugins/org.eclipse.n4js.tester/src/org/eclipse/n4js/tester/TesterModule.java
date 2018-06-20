@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -69,7 +70,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Binder;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.matcher.Matcher;
 import com.google.inject.name.Names;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
 
 /**
  * Defines bindings. In case this module is used in the ui case, bindings are defined to N4JS instances. In case of the
@@ -116,6 +123,8 @@ public class TesterModule implements Module {
 					.toProvider(() -> n4jsInjector.getInstance(RunnerRegistry.class));
 		}
 
+		bindListenerForN4jsSingletons(binder);
+
 		binder.bind(TesterRegistry.class);
 		binder.bind(TesterEventBus.class);
 		binder.bind(TesterFrontEnd.class);
@@ -136,6 +145,49 @@ public class TesterModule implements Module {
 		binder.bind(UrlDecoderService.class).to(Utf8UrlDecoderService.class);
 
 		Names.bindProperties(binder, getProperties());
+	}
+
+	/** Binding listener */
+	private void bindListenerForN4jsSingletons(Binder binder) {
+		Matcher<TypeLiteral<?>> m = new AbstractMatcher<TypeLiteral<?>>() {
+			@Override
+			public boolean matches(TypeLiteral<?> t) {
+				checkAndThrowMissingBindingException(t);
+				return false;
+			}
+
+			private void checkAndThrowMissingBindingException(TypeLiteral<?> t) {
+				Type type = t.getType();
+				if (type instanceof Class) {
+					String name = t.toString();
+					Singleton singleton = null;
+					try {
+						singleton = ((Class<?>) type).getAnnotation(Singleton.class);
+					} catch (Exception e) {
+						LOGGER.warn("Could not check whether injected type is @Singleton", e);
+					}
+
+					if (singleton != null) {
+						boolean allowedPrefix = false;
+						allowedPrefix |= name.startsWith("org.eclipse.n4js.tester.");
+						allowedPrefix |= name.startsWith("org.eclipse.n4js.runner.");
+						allowedPrefix |= name.startsWith("org.eclipse.n4js.utils.");
+						if (!allowedPrefix) {
+							String msg = "All dependencies to @Singleton classes must be bound explicitly.";
+							throw new RuntimeException(msg);
+						}
+					}
+				}
+			}
+		};
+
+		TypeListener tl = new TypeListener() {
+			@Override
+			public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
+				return;
+			}
+		};
+		binder.bindListener(m, tl);
 	}
 
 	private Properties getProperties() {
