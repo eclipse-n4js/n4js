@@ -45,3 +45,6 @@ for dir in $DIRS
 do
 	rm "$dir/.npmrc"
 done
+
+# Remove all node_modules in n4js-libs
+rm -rf "$dir/*/node_modules"
