@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -120,8 +119,10 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 			// the next two variables store the navigation-prefix to get to the sources
 			final Path relativeNavigationToSrc = calculateNavigationFromOutputToSourcePath(fsa, getCompilerID(),
 					resourceCasted);
-			final Path explicitNavigationToSrc = Paths.get("/sources");
-			boolean useExplicitSourceRef = true; // true use explicitNavigationToSrc | false use relativeNavigationToSrc
+			// TODO what's that?
+			// final Path explicitNavigationToSrc = Paths.get("/sources");
+			boolean useExplicitSourceRef = false; // true use explicitNavigationToSrc | false use
+													// relativeNavigationToSrc
 
 			boolean createSourceMap = true;
 
@@ -140,7 +141,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 						sourceMapDataInstance.simpleCompiledFileName = simpleCompiledFileName;
 
 						sourceMapDataInstance.isExplicitSourceRef = useExplicitSourceRef;
-						sourceMapDataInstance.explicitNavigationToSrc = explicitNavigationToSrc;
+						// sourceMapDataInstance.explicitNavigationToSrc = explicitNavigationToSrc;
 
 						sourceMapDataInstance.n4jsFilePath = relativeNavigationToSrc
 								.resolve(resourceCasted.getURI().lastSegment()).toString();
