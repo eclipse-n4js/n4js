@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.WorkManager;
 import org.eclipse.core.resources.IProject;
@@ -25,6 +26,7 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -37,7 +39,7 @@ import com.google.inject.Inject;
 @SuppressWarnings("restriction")
 public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 
-	private static final Logger LOGGER = Logger.getLogger(IDEBUG_856_PluginUITest.class);
+	private static final Logger LOG = LogManager.getLogger(IDEBUG_856_PluginUITest.class);
 
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "IDEBUG_856";
@@ -54,8 +56,8 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 	/**
 	 * Updates the known external library locations with the {@code node_modules} folder.
 	 */
+	@Before
 	public void setupWorkspace() throws Exception {
-		super.setUp();
 		shippedCodeInitializeTestHelper.setupBuiltIns();
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 		ProjectTestsUtils.importProject(projectsRoot, PROJECT);
@@ -73,7 +75,6 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 		waitForAutoBuild();
 		shippedCodeInitializeTestHelper.teardowneBuiltIns();
 		waitForAutoBuild();
-		super.tearDown();
 	}
 
 	/**
@@ -82,15 +83,19 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testMultipleExternalRefresh() throws Exception {
-		LOGGER.info("------------------------------------------------------------");
+		// initial load to trigger cloning
+		libManager.reloadAllExternalProjects(new NullProgressMonitor());
+		waitForAutoBuild();
+		LOG.info("------------------------------------------------------------");
 		for (int i = 1; i <= ITERATION_COUNT; i++) {
-			LOGGER.info("| Iteration " + i + " of " + ITERATION_COUNT + ".");
-			setupWorkspace();
+			LOG.info("Iteration " + i + " of " + ITERATION_COUNT + ".");
 			libManager.reloadAllExternalProjects(new NullProgressMonitor());
+			// schedule second reload to see if they deadlock
 			libManager.reloadAllExternalProjects(new NullProgressMonitor());
-			tearDown();
+			LOG.info("waiting for build.");
+			waitForAutoBuild();
 		}
-		LOGGER.info("------------------------------------------------------------");
+		LOG.info("------------------------------------------------------------");
 	}
 
 }
