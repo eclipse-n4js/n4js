@@ -406,11 +406,11 @@ public class ProjectTestsUtils {
 		do {
 			try {
 				foundJobs = listJobsRunningWaiting();
-				if (!foundJobs.isEmpty()) {
+				foundJob = !foundJobs.isEmpty();
+				if (foundJob) {
 					if (LOGGER.isInfoEnabled())
 						LOGGER.info("Found " + foundJobs.size() + " after " + sw + ", going to sleep for a while.");
 
-					foundJob = true;
 					Thread.sleep(interval);
 				}
 				wasInterrupted = false;
