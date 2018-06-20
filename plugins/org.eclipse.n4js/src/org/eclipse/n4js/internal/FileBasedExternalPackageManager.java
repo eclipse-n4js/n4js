@@ -13,6 +13,7 @@ package org.eclipse.n4js.internal;
 import java.io.File;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryUtils;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IExternalPackageManager;
@@ -38,6 +39,14 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 		return false;
 	}
 
+	/**
+	 * Loads the project description from the given external library root location.
+	 *
+	 * For plain npm packages with {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON} this returns a project description that
+	 * represents the original {@code package.json} merged with the contents of the fragment.
+	 *
+	 * Returns {@code null} if no valid project description can be read from the given project location.
+	 */
 	@Override
 	public ProjectDescription loadProjectDescriptionFromProjectRoot(URI rootLocation) {
 		if (null != rootLocation && rootLocation.isFile()) {

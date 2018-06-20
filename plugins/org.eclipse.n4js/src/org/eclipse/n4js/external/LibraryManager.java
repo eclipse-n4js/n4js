@@ -47,13 +47,13 @@ import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.external.version.VersionConstraintFormatUtil;
+import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.smith.ClosableMeasurement;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.git.GitUtils;
@@ -102,7 +102,10 @@ public class LibraryManager {
 	private ExternalIndexSynchronizer indexSynchronizer;
 
 	@Inject
-	private ProjectDescriptionHelper projectDescriptionHelper;
+	private FileBasedExternalPackageManager filebasedPackageManger;
+
+	// @Inject
+	// private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/**
 	 * see {@link ExternalIndexSynchronizer#isProjectsSynchronized()}.
@@ -233,23 +236,24 @@ public class LibraryManager {
 	}
 
 	/**
-	 * This method will install all dependencies of the requested NPMs. Since it calls
-	 * {@link #installNPMsInternal(Map, IProgressMonitor)}, this method will install all transitive dependencies of the
-	 * requested NPMs.
+	 * This method returns all transitive dependencies that are implied by the given list of {@link LibraryChange}s.
+	 *
+	 * For non-N4JS npm packages, these are the dependencies of the corresponding type definitions (if present) and for
+	 * N4JS npm packages, these are all package dependencies.
 	 * <p>
-	 * GH-862: Please remove this after GH-821 is solved
+	 * GH-862: This must be revisited when solving GH-821
 	 */
 	private Map<String, String> getDependenciesOfNPMs(List<LibraryChange> actualChanges) {
 		Map<String, String> dependencies = new HashMap<>();
 		for (LibraryChange libChange : actualChanges) {
 			if (libChange.type == LibraryChangeType.Added) {
-				// load descriptions from package.json fragment only! (we are only interested in dependencies
-				// defined in the n4jsd repository, not in the original package.json file)
-				ProjectDescription pd = projectDescriptionHelper
-						.loadProjectDescriptionFragmentAtLocation(libChange.location);
-				// FIXME roll back to the following code:
-				// ProjectDescription pd =
-				// filbasedPackageManger.loadProjectDescriptionFromProjectRoot(libChange.location);
+				// In case we are dealing with a plain npm package with type definitions, the following will
+				// return a project description that considers the package-fragment.json. If a fragment is present
+				// the returned project description will only list the fragment dependencies (type definition
+				// dependencies).
+				// In case the project is an N4JS project, the description will list all project dependencies.
+				ProjectDescription pd = filebasedPackageManger
+						.loadProjectDescriptionFromProjectRoot(libChange.location);
 				if (pd != null) {
 					for (ProjectDependency pDep : pd.getProjectDependencies()) {
 						String name = pDep.getProjectId();

@@ -38,7 +38,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
-import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -189,21 +188,6 @@ public class ProjectDescriptionHelper {
 		// ProjectDescription fromManifest = loadManifestAtLocation(location);
 		// ProjectDescription merged = mergeProjectDescriptions(fromPackageJSON, fromManifest);
 		// return merged;
-	}
-
-	/**
-	 * Loads the project description defined in a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} at the
-	 * given location or <code>null</code> if no fragment is found at this location.
-	 */
-	public ProjectDescription loadProjectDescriptionFragmentAtLocation(URI location) {
-		JSONDocument packageJSON = JSONFactory.eINSTANCE.createJSONDocument();
-		if (mergePackageJSONFragmentAtLocation(location, packageJSON)) {
-			adjustMainPath(location, packageJSON);
-			ProjectDescription pd = convertToProjectDescription(location, packageJSON, false);
-			setInformationFromFileSystem(location, pd);
-			return pd;
-		}
-		return null;
 	}
 
 	/**
