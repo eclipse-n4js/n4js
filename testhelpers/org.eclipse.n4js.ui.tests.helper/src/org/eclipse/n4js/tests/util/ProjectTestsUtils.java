@@ -12,6 +12,8 @@ package org.eclipse.n4js.tests.util;
 
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.core.runtime.jobs.Job.getJobManager;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
@@ -19,6 +21,7 @@ import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSubFo
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
@@ -49,8 +52,8 @@ import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.N4mfFactory;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.SourceFragment;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.n4mf.SourceContainerDescription;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
@@ -123,25 +126,31 @@ public class ProjectTestsUtils {
 
 		IProgressMonitor monitor = new NullProgressMonitor();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-		IProjectDescription newProjectDescription = workspace.newProjectDescription(projectName);
 		IProject project = workspace.getRoot().getProject(projectName);
-		project.create(newProjectDescription, monitor);
-		project.open(monitor);
-		if (!project.getLocation().toFile().exists()) {
-			throw new IllegalArgumentException("test project correctly created in " + project.getLocation());
-		}
 
-		IOverwriteQuery overwriteQuery = new IOverwriteQuery() {
-			@Override
-			public String queryOverwrite(String file) {
-				return ALL;
+		workspace.run((mon) -> {
+			IProjectDescription newProjectDescription = workspace.newProjectDescription(projectName);
+			project.create(newProjectDescription, mon);
+			project.open(mon);
+			if (!project.getLocation().toFile().exists()) {
+				throw new IllegalArgumentException("test project correctly created in " + project.getLocation());
 			}
-		};
-		ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectSourceFolder,
-				FileSystemStructureProvider.INSTANCE, overwriteQuery);
-		importOperation.setCreateContainerStructure(false);
-		importOperation.run(monitor);
+
+			IOverwriteQuery overwriteQuery = new IOverwriteQuery() {
+				@Override
+				public String queryOverwrite(String file) {
+					return ALL;
+				}
+			};
+			ImportOperation importOperation = new ImportOperation(project.getFullPath(), projectSourceFolder,
+					FileSystemStructureProvider.INSTANCE, overwriteQuery);
+			importOperation.setCreateContainerStructure(false);
+			try {
+				importOperation.run(mon);
+			} catch (InvocationTargetException | InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}, monitor);
 
 		return project;
 	}
@@ -228,8 +237,7 @@ public class ProjectTestsUtils {
 		IFile config = project.getFile("manifest.n4mf");
 		URI uri = URI.createPlatformResourceURI(config.getFullPath().toString(), true);
 		ProjectDescription projectDesc = N4mfFactory.eINSTANCE.createProjectDescription();
-		projectDesc.setProjectDependencies(N4mfFactory.eINSTANCE.createProjectDependencies());
-		projectDesc.setDeclaredVendorId("org.eclipse.n4js");
+		projectDesc.setVendorId("org.eclipse.n4js");
 		projectDesc.setVendorName("Eclipse N4JS Project");
 		projectDesc.setProjectId(project.getName());
 		projectDesc.setProjectType(ProjectType.LIBRARY);
@@ -239,20 +247,15 @@ public class ProjectTestsUtils {
 		projectVersion.setMicro(1);
 		projectDesc.setProjectVersion(projectVersion);
 		projectDesc.setOutputPath(outputFolder);
-		SourceFragment sourceProjectPath = N4mfFactory.eINSTANCE.createSourceFragment();
-		sourceProjectPath.setSourceFragmentType(SourceFragmentType.SOURCE);
-		sourceProjectPath.getPaths().add(sourceFolder);
-		projectDesc.getSourceFragment().add(sourceProjectPath);
+		SourceContainerDescription sourceProjectPath = N4mfFactory.eINSTANCE.createSourceContainerDescription();
+		sourceProjectPath.setSourceContainerType(SourceContainerType.SOURCE);
+		sourceProjectPath.getPathsRaw().add(sourceFolder);
+		projectDesc.getSourceContainers().add(sourceProjectPath);
 		if (manifestAdjustments != null)
 			manifestAdjustments.accept(projectDesc);
 		ResourceSet rs = createResourceSet(project);
 		Resource res = rs.createResource(uri);
 		res.getContents().add(projectDesc);
-
-		// Workaround to avoid any unnecessary warnings due to empty project dependency block
-		if (projectDesc.getAllProjectDependencies().isEmpty()) {
-			projectDesc.setProjectDependencies(null);
-		}
 
 		try {
 			res.save(Collections.EMPTY_MAP);
@@ -288,35 +291,46 @@ public class ProjectTestsUtils {
 
 	/***/
 	public static void waitForAutoBuild() {
+		final int maxTry = 3;
+		int currentTry = 1;
 		int maxWait = 100 * 60 * 2;
 		long start = System.currentTimeMillis();
 		long end = start;
 		boolean wasInterrupted = false;
 		boolean foundJob = false;
 		do {
-			try {
-				Job[] foundJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
-				if (foundJobs.length > 0) {
-					foundJob = true;
-					Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
-							null);
+			do {
+				try {
+					Job[] foundJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
+					if (foundJobs.length > 0) {
+						foundJob = true;
+						Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+								null);
+					}
+					wasInterrupted = false;
+					end = System.currentTimeMillis();
+				} catch (OperationCanceledException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					wasInterrupted = true;
 				}
-				wasInterrupted = false;
-				end = System.currentTimeMillis();
-			} catch (OperationCanceledException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				wasInterrupted = true;
-			}
-		} while (wasInterrupted && (end - start) < maxWait);
-		if (!foundJob) {
-			if (LOGGER.isDebugEnabled()) {
+			} while (wasInterrupted && (end - start) < maxWait);
+			if (!foundJob) {
 				LOGGER.debug("Auto build job hasn't been found, but maybe already run.");
+
+				currentTry += 1;
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					LOGGER.debug("Couldn't sleep, abort waiting");
+					return;
+				}
+				LOGGER.debug("Try again, try " + currentTry + " of " + maxTry);
 			}
-		}
+		} while (!foundJob && currentTry < maxTry);
 	}
 
-	/***/
 	/**
 	 * Waits for N4JSDirtyStateEditorSupport job to be run
 	 */
@@ -344,6 +358,44 @@ public class ProjectTestsUtils {
 		if (!foundJob) {
 			LOGGER.warn("Update editor job hasn't been found, but maybe already run.");
 		}
+	}
+
+	/**
+	 * Waits for all the jobs that have status {@link Job#RUNNING} of {@link Job#WAITING}. Uses {@link Thread#sleep}, so
+	 * use with care.
+	 */
+	public static void waitForAllJobs() {
+		int maxWait = 100 * 60 * 2;
+		long start = System.currentTimeMillis();
+		long end = start;
+		boolean wasInterrupted = false;
+		boolean foundJob = false;
+		do {
+			try {
+				List<String> foundJobs = listJobsRunningWaiting();
+				if (!foundJobs.isEmpty()) {
+					foundJob = true;
+					// Job.getJobManager().join(null, null);
+					Thread.sleep(100L);
+				}
+				wasInterrupted = false;
+				end = System.currentTimeMillis();
+			} catch (OperationCanceledException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				wasInterrupted = true;
+			}
+		} while (wasInterrupted && (end - start) < maxWait);
+		if (!foundJob) {
+			LOGGER.debug("No running nor waiting jobs found, maybe all have already finished.");
+		}
+	}
+
+	private static List<String> listJobsRunningWaiting() {
+		return from(newArrayList(getJobManager().find(null)))
+				.filter(job -> job.getState() != Job.SLEEPING || job.getState() != Job.NONE)
+				.transform(job -> " - " + job.getName() + " : " + job.getState())
+				.toList();
 	}
 
 	/***/

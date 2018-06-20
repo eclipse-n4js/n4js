@@ -21,6 +21,12 @@ Sources {
 	}
 }
 
+RequiredRuntimeLibraries {
+	n4js-runtime-html5,
+	n4js-runtime-fetch,
+	n4js-runtime-es2015
+}
+
 ProjectDependencies {
     react 16.2.0,
     react-dom 16.2.0

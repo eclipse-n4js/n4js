@@ -11,12 +11,7 @@
 package org.eclipse.n4js.tests.manifest
 
 import com.google.common.base.Predicate
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.n4mf.N4mfFactory
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceFragmentType
+import java.util.concurrent.TimeUnit
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IMarker
@@ -24,10 +19,17 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IncrementalProjectBuilder
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.n4mf.N4mfFactory
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.junit.Before
-import org.junit.Test
-import java.util.concurrent.TimeUnit
 import org.junit.Ignore
+import org.junit.Test
+
+import static org.junit.Assert.assertTrue
 
 /**
  */
@@ -80,11 +82,8 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
 		val dependency = N4mfFactory.eINSTANCE.createProjectDependency
-		val otherProject = N4mfFactory.eINSTANCE.createSimpleProjectDescription
-		pd.projectDependencies = N4mfFactory.eINSTANCE.createProjectDependencies
-		otherProject.setProjectId(projectId)
-		dependency.setProject(otherProject)
-		pd.projectDependencies.projectDependencies.add(dependency)
+		dependency.setProjectId(projectId)
+		pd.projectDependencies.add(dependency)
 		resource.save(null)
 		waitForAutoBuild();
 	}
@@ -104,7 +103,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val resourceSet = getResourceSet(toChange);
 		val resource = resourceSet.getResource(uri, true);
 		val description = resource.contents.head as ProjectDescription;
-		description.projectDependencies = null;
+		description.projectDependencies.clear();
 		resource.save(null);
 		waitForAutoBuild;
 	}
@@ -114,7 +113,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		val rs = getResourceSet(firstProjectUnderTest.project);
 		val resource = rs.getResource(uri, true);
 		val ProjectDescription pd = resource.contents.head as ProjectDescription
-		pd.projectDependencies.projectDependencies.remove(pd.projectDependencies.projectDependencies.last)
+		pd.projectDependencies.remove(pd.projectDependencies.last)
 		resource.save(null)
 		waitForAutoBuild();
 	}
@@ -168,8 +167,12 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// Import of D cannot be resolved.
 		assertMarkers("file should have four errors", c, 4);
 	}
+	
+//	@Rule
+//	public RepeatedTestRule rule = new RepeatedTestRule();
 
 	@Test
+//	@RepeatTest(times=20)
 	def void testTwoFilesProjectNewlyCreated() throws Exception {
 		addProjectToDependencies("thirdProject")
 		val c = createTestFile(src, "C",
@@ -185,6 +188,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// waitForAutobuild may wait while the autobuild is also waiting to start
 		// thus we trigger the incremental build here
 		firstProjectUnderTest.project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+		waitForAutoBuild
 		assertMarkers("file should have no errors", c, 0, errorMarkerPredicate);
 	}
 
@@ -199,8 +203,8 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 				'''
 			);
 		createTestFile(src2, "D", "export public class D {}");
-		waitForAutoBuild
 		createManifestN4MFFile(firstProjectUnderTest)
+		waitForAutoBuild
 
 		// Couldn't resolve reference to IdentifiableElement 'D'.
 		// Couldn't resolve reference to TModule 'D'.
@@ -261,9 +265,9 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	def void testDeleteExternalFolderValidateManifestWithoutOpenedEditors() {
 
 		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [
-			it.sourceFragment += N4mfFactory.eINSTANCE.createSourceFragment => [
-				paths.addAll('ext');
-				sourceFragmentType = SourceFragmentType.EXTERNAL;
+			it.sourceContainers += N4mfFactory.eINSTANCE.createSourceContainerDescription => [
+				pathsRaw.addAll('ext');
+				sourceContainerType = SourceContainerType.EXTERNAL;
 			];
 		]);
 		configureProjectWithXtext(project);

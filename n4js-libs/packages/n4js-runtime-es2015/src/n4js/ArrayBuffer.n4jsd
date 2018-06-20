@@ -15,4 +15,3 @@
  */
 export public interface ~ArrayBuffer {}
 
-/* -*- mode: typescript;-*- */

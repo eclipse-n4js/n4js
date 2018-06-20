@@ -3,13 +3,13 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController',
-		'org.eclipse.n4js.mangelhaft.reporter.ide/src-gen/org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter',
 		'n4js.lang/src-gen/n4js/lang/N4Injector',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/Test',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController',
+		'org.eclipse.n4js.mangelhaft.reporter.ide/src-gen/org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter',
 		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestDIComponent'
 	], function($n4Export) {
-		var TestController, IDEReporter, N4Injector, FIXME1, FIXME2, IFIXME, IFIXME2, TestDIComponent, IDENodeTestRunner, TestBinder, Root, parentinj, root, main;
+		var N4Injector, FIXME1, FIXME2, IFIXME, IFIXME2, TestController, IDEReporter, TestDIComponent, IDENodeTestRunner, TestBinder, Root, parentinj, root, main;
 		IDENodeTestRunner = function IDENodeTestRunner() {
 			this.controller = undefined;
 			this.reporter = undefined;
@@ -20,14 +20,6 @@
 		};
 		return {
 			setters: [
-				function($exports) {
-					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController
-					TestController = $exports.TestController;
-				},
-				function($exports) {
-					// org.eclipse.n4js.mangelhaft.reporter.ide/src-gen/org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter
-					IDEReporter = $exports.IDEReporter;
-				},
 				function($exports) {
 					// n4js.lang/src-gen/n4js/lang/N4Injector
 					N4Injector = $exports.N4Injector;
@@ -40,6 +32,14 @@
 					IFIXME2 = $exports.IFIXME2;
 				},
 				function($exports) {
+					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController
+					TestController = $exports.TestController;
+				},
+				function($exports) {
+					// org.eclipse.n4js.mangelhaft.reporter.ide/src-gen/org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter
+					IDEReporter = $exports.IDEReporter;
+				},
+				function($exports) {
 					// org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestDIComponent
 					TestDIComponent = $exports.TestDIComponent;
 				}
@@ -49,27 +49,33 @@
 					run: {
 						value: async function run___n4() {
 							try {
-								let testCatalog, catalogDef = n4.runtimeOptions["test-catalog"];
-								if (typeof catalogDef === "string") {
-									let req = await fetch(catalogDef, {
-										headers: {
-											'Content-Type': "application/vnd.n4js.assemble_test_catalog_req.tm+json"
-										}
-									});
-									testCatalog = (await req.json());
-								} else {
-									testCatalog = catalogDef;
-								}
-								this.reporter.endpoint = testCatalog.endpoint;
+								let testInfos = await this.getTestCatalog();
+								this.reporter.endpoint = testInfos.endpoint;
 								this.controller.reporters = [
 									this.reporter
 								];
-								await this.controller.runGroups(testCatalog, 100, n4.runtimeOptions.testScope);
+								await this.controller.runGroups(testInfos, 100, n4.runtimeOptions.testScope);
 							} catch(err) {
-								let errObj = err;
-								console.error(err + "\nstack: " + errObj.stack.replace(/^Error:?\s*/, ""));
+								if ($instanceof(err, Error)) {
+									console.error(err + "\stack: " + (err).stack.replace(/^Error:?\s*/, ""));
+								}
 								throw err;
 							}
+						}
+					},
+					getTestCatalog: {
+						value: async function getTestCatalog___n4() {
+							let catalogDef = n4.runtimeOptions["test-catalog"];
+							let testCatalog = catalogDef;
+							if (typeof catalogDef === "string") {
+								let response = await fetch(catalogDef, {
+									headers: {
+										'Content-Type': "application/vnd.n4js.assemble_test_catalog_req.tm+json"
+									}
+								});
+								testCatalog = (await response.json());
+							}
+							return testCatalog;
 						}
 					},
 					controller: {
@@ -118,6 +124,12 @@
 										details: []
 									})
 								]
+							}),
+							new N4Method({
+								name: 'getTestCatalog',
+								isStatic: false,
+								jsFunction: instanceProto['getTestCatalog'],
+								annotations: []
 							})
 						],
 						consumedMembers: [],

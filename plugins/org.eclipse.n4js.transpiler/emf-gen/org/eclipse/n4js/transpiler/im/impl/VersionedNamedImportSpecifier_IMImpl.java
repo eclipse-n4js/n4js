@@ -19,9 +19,11 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl;
+
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
+
 import org.eclipse.n4js.ts.versions.VersionableUtils;
 
 /**

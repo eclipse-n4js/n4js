@@ -79,15 +79,21 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		return getModel().getDependencies(this);
+		return getModel().getDependencies(this, false);
 	}
 
 	@Override
 	public ImmutableList<? extends IN4JSEclipseProject> getDependenciesAndImplementedApis() {
+		return getDependenciesAndImplementedApis(false);
+	}
+
+	@Override
+	public ImmutableList<? extends IN4JSEclipseProject> getDependenciesAndImplementedApis(
+			boolean includeAbsentProjects) {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		return getModel().getDependenciesAndImplementedApis(this);
+		return getModel().getDependenciesAndImplementedApis(this, includeAbsentProjects);
 	}
 
 	@Override

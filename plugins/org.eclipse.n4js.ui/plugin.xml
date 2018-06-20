@@ -48,7 +48,7 @@ Contributors:
      <wizard
            category="org.eclipse.wizards"
            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.classes.N4JSNewClassWizard"
-           icon="icons/newclass_wiz.gif"
+           icon="icons/newclass_wiz.png"
            id="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard"
            name="N4JS Class"
            project="false">
@@ -59,7 +59,7 @@ Contributors:
       <wizard
            category="org.eclipse.wizards"
            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.interfaces.N4JSNewInterfaceWizard"
-           icon="icons/newint_wiz.gif"
+           icon="icons/newint_wiz.png"
            id="org.eclipse.n4js.ui.wizard.N4JSNewInterfaceWizard"
            name="N4JS Interface"
            project="false">
@@ -354,13 +354,13 @@ Contributors:
                   id="org.eclipse.n4js.ui.toolbar">
                <command
                      commandId="org.eclipse.n4js.ui.search.openTypeSelectionDialog"
-                     icon="icons/opentype.gif"
+                     icon="icons/opentype.png"
                      label="Open N4JS Type"
                      style="push">
                </command>
                <command
                      commandId="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences"
-                     icon="icons/native_lib_path_attrib.gif"
+                     icon="icons/native_lib_path_attrib.png"
                      label="Open Built-in Libraries Preferences"
                      style="push">
                </command>
@@ -373,7 +373,7 @@ Contributors:
                </command>
                <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newclass_wiz.gif"
+                     icon="icons/newclass_wiz.png"
                      label="New N4JS Class"
                      id="org.eclipse.toolbar.newN4JSElement"
                      tooltip="Creates a new N4JS Class"
@@ -392,7 +392,7 @@ Contributors:
          <menuContribution locationURI="menu:org.eclipse.toolbar.newN4JSElement">
             <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newclass_wiz.gif"
+                     icon="icons/newclass_wiz.png"
                      label="New N4JS Class"
                      id="org.eclipse.toolbar.newN4JSElement.newClassInModule"
                      style="push">
@@ -403,7 +403,7 @@ Contributors:
             </command>
             <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newclass_wiz.gif"
+                     icon="icons/newclass_wiz.png"
                      label="New N4JS Class in this module"
                      id="org.eclipse.toolbar.newN4JSElement.newClassInModule"
                      style="push">
@@ -421,7 +421,7 @@ Contributors:
             </command>
             <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newint_wiz.gif"
+                     icon="icons/newint_wiz.png"
                      label="New N4JS Interface"
                      id="org.eclipse.toolbar.newN4JSElement.newInterfaceInModule"
                      style="push">
@@ -432,7 +432,7 @@ Contributors:
             </command>
             <command
                      commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
-                     icon="icons/newint_wiz.gif"
+                     icon="icons/newint_wiz.png"
                      label="New N4JS Interface in this module"
                      id="org.eclipse.toolbar.newN4JSElement.newInterfaceInModule"
                      style="push">
@@ -657,6 +657,47 @@ Contributors:
        </type>
     </extension>
   <!-- Customized Error-Marker for Generator Errors -->
+
+  <!-- Customized Error-Marker for Workspace Errors -->
+  <extension
+          id="workspace.error"
+          name="N4JS Workspace Problem"
+          point="org.eclipse.core.resources.markers">
+      <persistent value="true"/>
+     <super
+           type="org.eclipse.xtext.ui.check.fast">
+     </super>
+  </extension>
+  <extension
+    point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+       annotationType="org.eclipse.n4js.ui.workspace.error"
+       contributesToHeader="true"
+       label="N4JS Workspace Error"
+       colorPreferenceKey="org.eclipse.n4js.workspace.error.color"
+       colorPreferenceValue="255,0,128"
+       highlightPreferenceKey="org.eclipse.n4js.workspace.error.highlight"
+       highlightPreferenceValue="true"
+       includeOnPreferencePage="true"
+       overviewRulerPreferenceKey="org.eclipse.n4js.workspace.error.overview"
+       overviewRulerPreferenceValue="true"
+       presentationLayer="0"
+       textPreferenceKey="org.eclipse.n4js.workspace.error.text"
+       textPreferenceValue="true"
+       textStylePreferenceValue="BOX"
+       verticalRulerPreferenceKey="org.eclipse.n4js.workspace.error.ruler"
+       verticalRulerPreferenceValue="true">
+      </specification>
+    </extension>
+    <extension
+          point="org.eclipse.ui.editors.annotationTypes">
+       <type
+            super="org.eclipse.xtext.ui.editor.error"
+            markerType="org.eclipse.n4js.ui.workspace.error"
+            name="org.eclipse.n4js.ui.workspace.error">
+       </type>
+    </extension>
+  <!-- Customized Error-Marker for Workspace Errors -->
 
 
    <extension
@@ -900,6 +941,14 @@ Contributors:
                 value="true">
             </attribute>
         </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.ui.workspace.error">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
     </extension>
        <!-- Rename Refactoring -->
     <extension point="org.eclipse.ui.handlers">
@@ -1063,12 +1112,6 @@ Contributors:
        </decorator>
     </extension>
         <extension
-              point="org.eclipse.n4js.utils.injectorSupplier">
-           <supplier
-                 class="org.eclipse.n4js.ui.utils.N4JSInjectorSupplier">
-           </supplier>
-        </extension>
-        <extension
               point="org.eclipse.ui.startup">
            <startup
                  class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.N4JSExternalLibraryStartup">
@@ -1080,16 +1123,9 @@ Contributors:
         <extension
               point="org.eclipse.n4js.ui.resourceDescriptionsPersisterContribution">
            <contribution
-                 class="org.eclipse.n4js.ui.internal.N4JSExternalLibraryResourceDescriptionsPersisterContribution">
+                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.internal.N4JSExternalLibraryResourceDescriptionsPersisterContribution">
            </contribution>
         </extension>
-        <extension
-              point="org.eclipse.n4js.utils.ui.quickfixProviderSupplier">
-           <supplier
-                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.quickfix.N4JSQuickfixProviderSupplier">
-           </supplier>
-        </extension>
-
         <extension
                 point="org.eclipse.ui.navigator.viewer">
             <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
@@ -1309,7 +1345,7 @@ Contributors:
             category="org.eclipse.wizards"
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             finalPerspective="org.eclipse.n4js.product.N4JSPerspective"
-            icon="icons/newprj_wiz.gif"
+            icon="icons/newprj_wiz.png"
             id="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             name="N4JS Tasks Example"
             project="true">
@@ -1322,7 +1358,7 @@ Contributors:
             category="org.eclipse.ui.Examples"
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             finalPerspective="org.eclipse.n4js.product.N4JSPerspective"
-            icon="icons/newprj_wiz.gif"
+            icon="icons/newprj_wiz.png"
             id="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
             name="N4JS Tasks Example">
          <description>

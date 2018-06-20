@@ -18,11 +18,19 @@ import com.google.common.collect.Iterables
 import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
+import java.io.IOException
+import java.nio.file.FileVisitResult
+import java.nio.file.Files
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
 import java.util.HashMap
+import java.util.HashSet
 import java.util.List
 import java.util.Map
 import java.util.Set
 import java.util.Stack
+import org.eclipse.core.runtime.Path
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EStructuralFeature
@@ -30,15 +38,16 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4mf.DeclaredVersion
+import org.eclipse.n4js.n4mf.ModuleFilter
+import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.n4mf.N4mfPackage
 import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.ProjectReference
 import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.RuntimeProjectDependency
-import org.eclipse.n4js.n4mf.SimpleProjectDescription
-import org.eclipse.n4js.n4mf.SourceFragmentType
+import org.eclipse.n4js.n4mf.SourceContainerDescription
+import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.n4mf.utils.ProjectTypePredicate
 import org.eclipse.n4js.projectModel.IN4JSArchive
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -49,6 +58,8 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.Version
+import org.eclipse.n4js.utils.WildcardPathFilterHelper
+import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSIssueSeverities
@@ -101,6 +112,9 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private N4JSIssueSeveritiesProvider issueSeveritiesProvider;
 
+	@Inject
+	private WildcardPathFilterHelper wildcardHelper;
+
 	/**
 	 * This is required to make sure that the {@link N4JSIssueSeverities} will not get registered
 	 * for objects belong to N4MF language to the underlying  context when validating the project
@@ -131,26 +145,24 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 		// Take the RTE and RTL's check for duplicate fillings.
 		// lookup of Names in n4mf &
-		val Map<String, RuntimeProjectDependency> mQName2rtDep = newHashMap()
+		val Map<String, ProjectReference> mQName2rtDep = newHashMap()
 
 		// Concatenate RTEnv and RTLibs to be processed in same loop:
-		var Iterable<? extends RuntimeProjectDependency> rteAndRtl = projectDescription.allRequiredRuntimeLibraries
+		var Iterable<? extends ProjectReference> rteAndRtl = projectDescription.requiredRuntimeLibraries
 		// Describing Self-Project as RuntimeDependency to handle clash with filled Members from current Project consistently.
-		val selfProject = N4mfFactory.eINSTANCE.createRequiredRuntimeLibraryDependency
-		selfProject.project = N4mfFactory.eINSTANCE.createSimpleProjectDescription
-		selfProject.project.projectId = projectDescription.projectId
-		selfProject.project.declaredVendorId = projectDescription.declaredVendorId
+		val selfProject = N4mfFactory.eINSTANCE.createProjectReference
+		selfProject.projectId = projectDescription.projectId
+		selfProject.declaredVendorId = projectDescription.vendorId
 		val Optional<? extends IN4JSProject> optOwnProject = findProject(projectDescription.eResource.URI)
 		if (optOwnProject.present) {
 			rteAndRtl = Iterables.concat(rteAndRtl, #{selfProject})
 		}
 
-		for (RuntimeProjectDependency lib : rteAndRtl) {
+		for (ProjectReference lib : rteAndRtl) {
 
 			// lib.scope // COMPILE or TEST, in both cases we generate errors.
-			val SimpleProjectDescription libProvidingProject = lib.project
-			if (null !== libProvidingProject) {
-				val String libPPqname = libProvidingProject.qname
+			if (null !== lib) {
+				val String libPPqname = lib.qname
 				mQName2rtDep.put(libPPqname, lib)
 			}
 		}
@@ -191,7 +203,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 		// Search for clashes in Polyfill:
 		// markermap: {lib1,lib2,...}->"filledname"
-		val Multimap<Set<RuntimeProjectDependency>, String> markerMapLibs2FilledName = LinkedListMultimap.create // Value is QualifiedName of polyfill_Element
+		val Multimap<Set<ProjectReference>, String> markerMapLibs2FilledName = LinkedListMultimap.create // Value is QualifiedName of polyfill_Element
 		for (String polyExport_QN : exportedPolyfills_QN_to_PolyProvision.keySet) {
 			val polyProvisions = exportedPolyfills_QN_to_PolyProvision.get(polyExport_QN);
 			if (polyProvisions.size > 1) {
@@ -225,7 +237,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 						// register for error:
 						val keySet = newHashSet()
-						providers.forEach[keySet.add(it.libProjectDescription)]
+						providers.forEach[keySet.add(it.libraryProjectReference)]
 						val filledTypeFQN = providers.head.descriptionStandard //or: polyExport_QN
 						val message = filledTypeFQN + "#" + filledInMemberName
 						markerMapLibs2FilledName.put(keySet, message)
@@ -242,11 +254,11 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		// obsolete: c) clash with multiple libraries and self --> something
 		// obsolete: d) clash with only one library and it is self --> we have errors
 		//
-		for (Set<RuntimeProjectDependency> keyS : markerMapLibs2FilledName.keySet) {
+		for (Set<ProjectReference> keyS : markerMapLibs2FilledName.keySet) {
 
 			val polyFilledMemberAsStrings = markerMapLibs2FilledName.get(keyS)
 			val libsString = keyS.toList.map [
-				it.project.projectId
+				it.projectId
 			].sort.join(", ")
 
 			val userPresentablePolyFills = polyFilledMemberAsStrings.toList.map['"' + it + '"'].sort.join(", ")
@@ -305,12 +317,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 	/** Calculate qualified name for ProjectReference */
 	def private static String qname(ProjectReference pref) {
-		return qname(pref.project)
-	}
-
-	/** Calculate qualified name for SimpleProjectDescription */
-	def private static String qname(SimpleProjectDescription pdesc) {
-		return qname(pdesc.vendorId, pdesc.projectId)
+		return qname(pref.vendorId, pref.projectId)
 	}
 
 	/** Calculate qualified name for vendor id and project id */
@@ -329,10 +336,10 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 				addIssue(
 					getMessageForPROJECT_DEPENDENCY_CYCLE(result.prettyPrint([calculateName])),
 					projectDescription,
-					SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID,
+					PROJECT_DESCRIPTION__PROJECT_ID,
 					PROJECT_DEPENDENCY_CYCLE
 				);
-			}else{
+			} else {
 			//for performance reasons following is not separate check
 			/*
 			 * otherwise we would traverse all transitive dependencies multiple times,
@@ -344,11 +351,11 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Checks if a project containing {@link SourceFragmentType#TEST}  requires (directly or transitively) on {@link ProjectType#RUNTIME_LIBRARY test runtime library}.
+	 * Checks if a project containing {@link SourceContainerType#TEST}  requires (directly or transitively) on {@link ProjectType#RUNTIME_LIBRARY test runtime library}.
 	 */
 	private def holdsProjectWithTestFragmentDependsOnTestLibrary(IN4JSProject project, ProjectDescription projectDescription) {
 
-		val hasTestFragment = projectDescription.sourceFragment.findFirst[sf| SourceFragmentType.TEST.equals(sf.sourceFragmentType)] !== null;
+		val hasTestFragment = projectDescription.sourceContainers.findFirst[sf| SourceContainerType.TEST.equals(sf.getSourceContainerType)] !== null;
 
 		if(!hasTestFragment){
 			return;
@@ -358,7 +365,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(
 					getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT),
 					projectDescription,
-					SIMPLE_PROJECT_DESCRIPTION__PROJECT_ID,
+					PROJECT_DESCRIPTION__PROJECT_ID,
 					PROJECT_DEPENDENCY_CYCLE
 				);
 		}
@@ -426,12 +433,12 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkTestedProjects(ProjectDescription it) {
 		if (TEST == projectType) {
-			val projects = testedProjects?.testedProjects;
+			val projects = it.testedProjects;
 			if (!projects.nullOrEmpty) {
-				val allProjects = existingProjectIds;
+				val allProjects = it.existingProjectIds;
 				val head = projects.head;
-				val refProjectType = allProjects.get(head.project.projectId)?.projectType
-				if (projects.exists[refProjectType != allProjects.get(project?.projectId)?.projectType]) {
+				val refProjectType = allProjects.get(head.projectId)?.projectType
+				if (projects.exists[testedProject | refProjectType != allProjects.get(testedProject.projectId)?.projectType]) {
 					addIssue(
 						messageForMISMATCHING_TESTED_PROJECT_TYPES,
 						it,
@@ -448,19 +455,19 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	 * depend on any other libraries that belong to any other implementation. In such cases, raises validation issue.
 	 */
 	@Check
-	def checkHasConsistenImplementationIdChain(ProjectDescription it) {
+	def checkHasConsistentImplementationIdChain(ProjectDescription it) {
 		if (LIBRARY == projectType && !implementationId.nullOrEmpty) {
 			val expectedImplementationId = implementationId;
-			val dependencies = projectDependencies?.projectDependencies;
+			val dependencies = it.projectDependencies;
 			if (!dependencies.nullOrEmpty) {
 				val allProjects = existingProjectIds;
 				dependencies.filterNull.forEach[
-					val actualImplementationId = allProjects.get(project?.projectId)?.implementationId?.orNull;
+					val actualImplementationId = allProjects.get(it.projectId)?.implementationId?.orNull;
 					if (!actualImplementationId.nullOrEmpty && actualImplementationId != expectedImplementationId) {
 						addIssue(
-							getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, project.projectId, actualImplementationId),
+							getMessageForMISMATCHING_IMPLEMENTATION_ID(expectedImplementationId, it.projectId, actualImplementationId),
 							it.eContainer,
-							PROJECT_DEPENDENCIES__PROJECT_DEPENDENCIES,
+							PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES,
 							dependencies.indexOf(it),
 							MISMATCHING_IMPLEMENTATION_ID
 						);
@@ -531,7 +538,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		val allProjects = existingProjectIds;
 
 		// Project dependencies feature check. Obsolete or not allowed.
-		val projectDescriptionFeatures = #[projectDescription_ProjectDependencies, projectDependencies_ProjectDependencies];
+		val projectDescriptionFeatures = #[projectDescription_ProjectDependencies];
 		if (checkFeature(
 			projectDescriptionFeatures,
 			not(RE_OR_RL_TYPE)
@@ -556,7 +563,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Required runtime library feature check. Obsolete or not allowed.
-		val requiredRLFeatures = #[projectDescription_RequiredRuntimeLibraries, requiredRuntimeLibraries_RequiredRuntimeLibraries];
+		val requiredRLFeatures = #[projectDescription_RequiredRuntimeLibraries];
 		if (checkFeature(
 			requiredRLFeatures,
 			not(RE_TYPE)
@@ -566,7 +573,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Provided RL feature check. Obsolete or not allowed.
-		val providedRLFeatures = #[projectDescription_ProvidedRuntimeLibraries, providedRuntimeLibraries_ProvidedRuntimeLibraries];
+		val providedRLFeatures = #[projectDescription_ProvidedRuntimeLibraries];
 		if (checkFeature(
 			providedRLFeatures,
 			RE_TYPE
@@ -576,7 +583,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Tested projects feature check. Obsolete or not allowed.
-		val testProjectsFeatures = #[projectDescription_TestedProjects, testedProjects_TestedProjects];
+		val testProjectsFeatures = #[projectDescription_TestedProjects];
 		if (checkFeature(
 			testProjectsFeatures,
 			TEST_TYPE
@@ -588,7 +595,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 		// Initializer module feature check for REs and RLs. Obsolete or not allowed.
 		if (checkFeature(
-			#[projectDescription_InitModules, initModules_InitModules],
+			#[projectDescription_InitModules],
 			RE_OR_RL_TYPE
 		)) {
 			//
@@ -611,13 +618,160 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// Implemented projects feature check for applications, libraries and processors. Obsolete or not allowed.
-		val implementedProjectsFeatures = #[projectDescription_ImplementedProjects, implementedProjects_ImplementedProjects];
+		val implementedProjectsFeatures = #[projectDescription_ImplementedProjects];
 		if (checkFeature(
 			implementedProjectsFeatures,
 			LIBRARY_TYPE
 		)) {
 			//
 			checkReferencedProjects(implementedProjectsFeatures, allProjects, API_TYPE.forN4jsProjects);
+		}
+	}
+
+
+	@Check
+	def checkForDuplicateModuleSpecifiers(ModuleFilter moduleFilter) {
+		val validFilterSpecifier = new HashSet<ModuleFilterSpecifier>();
+		for (ModuleFilterSpecifier filterSpecifier : moduleFilter.moduleSpecifiers) {
+			val valid = checkForValidWildcardModuleSpecifier(filterSpecifier);
+			if (valid) {
+				validFilterSpecifier.add(filterSpecifier);
+			}
+		}
+		val project = findProject(moduleFilter.eResource.URI).get;
+		internalCheckModuleSpecifierHasFile(project, validFilterSpecifier);
+	}
+
+	def private checkForValidWildcardModuleSpecifier(ModuleFilterSpecifier moduleFilterSpecifier) {
+		val wrongWildcardPattern = "***"
+		if (moduleFilterSpecifier?.moduleSpecifierWithWildcard !== null) {
+			if (moduleFilterSpecifier.moduleSpecifierWithWildcard.contains(wrongWildcardPattern)) {
+				addIssue(
+					getMessageForINVALID_WILDCARD(wrongWildcardPattern),
+					moduleFilterSpecifier,
+					MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
+					INVALID_WILDCARD
+				)
+				return false
+			}
+			val wrongRelativeNavigation = "../"
+			if (moduleFilterSpecifier.moduleSpecifierWithWildcard.contains(wrongRelativeNavigation)) {
+				addIssue(
+					getMessageForNO_RELATIVE_NAVIGATION,
+					moduleFilterSpecifier,
+					MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
+					NO_RELATIVE_NAVIGATION
+				)
+				return false
+			}
+		}
+		return true
+	}
+
+	def private internalCheckModuleSpecifierHasFile(IN4JSProject project, Set<ModuleFilterSpecifier> filterSpecifiers) {
+		try {
+			val treeWalker = new ModuleSpecifierFileVisitor(this, project, filterSpecifiers);
+			Files.walkFileTree(project.locationPath, treeWalker);
+		} catch (Exception e) {}
+
+		for (ModuleFilterSpecifier filterSpecifier : filterSpecifiers) {
+			val msg = getMessageForNON_EXISTING_MODULE_SPECIFIER(filterSpecifier.moduleSpecifierWithWildcard);
+			addIssue(msg, filterSpecifier, MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD, NON_EXISTING_MODULE_SPECIFIER)
+		}
+	}
+
+	static class ModuleSpecifierFileVisitor extends SimpleFileVisitor<java.nio.file.Path> {
+		private final N4JSProjectSetupValidator setupValidator;
+		private final IN4JSProject project;
+		private final Set<ModuleFilterSpecifier> filterSpecifiers;
+
+		new (N4JSProjectSetupValidator wildcardHelper, IN4JSProject project, Set<ModuleFilterSpecifier> filterSpecifiers) {
+			this.setupValidator = wildcardHelper;
+			this.project = project;
+			this.filterSpecifiers = filterSpecifiers;
+		}
+
+		override visitFile(java.nio.file.Path path, BasicFileAttributes attrs) throws IOException {
+			for (val iter = filterSpecifiers.iterator(); iter.hasNext();) {
+				val filterSpecifier = iter.next();
+				val specifier = filterSpecifier.moduleSpecifierWithWildcard;
+
+
+				val checkForMatches = isModuleSpecifier(specifier) && path.toFile.isFile || !isModuleSpecifier(specifier);
+				val location = getFileInSources(project, filterSpecifier, path);
+				if (checkForMatches && location !== null) {
+					val hasFile = setupValidator.wildcardHelper.isPathContainedByFilter(location, filterSpecifier);
+					if (hasFile) {
+						iter.remove();
+
+						val checkForNoValidate = isModuleSpecifier(path.toString());
+						if (checkForNoValidate) {
+							val moduleFilter = filterSpecifier.eContainer as ModuleFilter;
+							setupValidator.handleNoValidationForN4JSFiles(moduleFilter, filterSpecifier);
+						}
+					}
+				}
+			}
+
+			if (filterSpecifiers.empty) {
+				return FileVisitResult.TERMINATE;
+			} else {
+    			return FileVisitResult.CONTINUE;
+			}
+		}
+
+		def private URI getFileInSources(IN4JSProject project, ModuleFilterSpecifier filterSpecifier, java.nio.file.Path filePath) {
+			val lPath = project.locationPath;
+			val filePathString = lPath.relativize(filePath).toString;
+			val uri = URI.createPlatformResourceURI(project.projectId + "/" + filePathString, true);
+			return uri;
+		}
+
+		def private boolean isModuleSpecifier(String fileSpecifier) {
+			return fileSpecifier.endsWith(".n4js") || fileSpecifier.endsWith(".n4jsx") || fileSpecifier.endsWith(".n4jsd");
+		}
+	}
+
+	def private handleNoValidationForN4JSFiles(ModuleFilter moduleFilter, ModuleFilterSpecifier moduleFilterSpecifier) {
+		val moduleFilterName = keyword(moduleFilter.moduleFilterType);
+		addIssue(
+			getMessageForDISALLOWED_NO_VALIDATE_FOR_N4JS(moduleFilterName),
+			moduleFilterSpecifier,
+			MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
+			DISALLOWED_NO_VALIDATE_FOR_N4JS
+		)
+	}
+
+	@Check
+	def void checkOutputFolder(ProjectDescription projectDescription) {
+		val outputPathName = projectDescription.outputPath;
+		if (projectDescription.projectType === ProjectType.VALIDATION || outputPathName === null) {
+			return;
+		}
+
+		val outputPath = new Path(outputPathName);
+		val sourceTypes = projectDescription.sourceContainers;
+
+		for (SourceContainerDescription sourceFrgmt : sourceTypes) {
+			for (var i = 0; i < sourceFrgmt.paths.size; i++) {
+				val sourcePathStr = sourceFrgmt.paths.get(i);
+				val sourcePath = new Path(sourcePathStr);
+				val srcFrgmtName = sourceFrgmt.getSourceContainerType.getName().toString;
+
+				if (".".equals(sourcePathStr) || sourcePath.equals(outputPath) || sourcePath.isPrefixOf(outputPath)) {
+					val containingFolder = "The output";
+					val nestedFolder = "a " + srcFrgmtName;
+					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+					addIssue(message, projectDescription, PROJECT_DESCRIPTION__OUTPUT_PATH_RAW, OUTPUT_AND_SOURCES_FOLDER_NESTING);
+				}
+
+				if (".".equals(outputPathName) || outputPath.isPrefixOf(sourcePath)) {
+					val containingFolder = "A " + srcFrgmtName;
+					val nestedFolder = "the output";
+					val message = getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+					addIssue(message, sourceFrgmt, SOURCE_CONTAINER_DESCRIPTION__PATHS_RAW, i, OUTPUT_AND_SOURCES_FOLDER_NESTING);
+				}
+			}
 		}
 	}
 
@@ -646,7 +800,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		// Check project existence.
 		references.filter(ProjectReference).forEach[
 
-			val id = it?.project?.projectId;
+			val id = it?.projectId;
 			// Assuming completely broken AST.
 			if (null !== id) {
 
@@ -661,7 +815,11 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 				// Type cannot be resolved neither from index, hence project does not exist in workspace.
 				// Nor from used libraries of the current project.
 				if (null === project || null === project.projectType) {
-					addIssue(getMessageForNON_EXISTING_PROJECT(id), it, NON_EXISTING_PROJECT);
+					val manifestURI = it.eResource.URI;
+					val projectOfManifest = findProject(manifestURI).orNull;
+					if (!projectOfManifest.isExternal) { // in GH-821: remove this condition
+						addIssue(getMessageForNON_EXISTING_PROJECT(id), it, NON_EXISTING_PROJECT);
+					}
 				} else {
 					// Create only one single validation issue for a particular project reference.
 					if (desc?.projectId == id) {
@@ -688,7 +846,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 			if (validProjectRefs.get(it).size > 1) {
 				val referencesByNameAndVendor = HashMultimap.<String, ProjectReference>create;
 				validProjectRefs.get(it).forEach [
-					var refVendor = it.project.vendorId
+					var refVendor = it.vendorId
 					//use vendor id of the refering project if not provided explicitly
 					if (refVendor === null)
 						refVendor = currentVendor
@@ -762,29 +920,38 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	private def checkFeature(ProjectDescription it, Iterable<? extends EStructuralFeature> features, Predicate<ProjectType> supportedTypesPredicate) {
+	private def boolean checkFeature(ProjectDescription pd, Iterable<? extends EStructuralFeature> features, Predicate<ProjectType> supportedTypesPredicate) {
 
 		// Assuming completely broken AST.
-		if (null === it || features.nullOrEmpty) {
+		if (null === pd || features.nullOrEmpty) {
 			return false;
 		}
 
 		// AST element does not exist at all.
-		val value = eGet(features.head);
+		val value = pd.eGet(features.head);
 		if (null === value) {
 			return false;
 		}
+		val pdNode = NodeModelUtils.findActualNodeFor(pd);
+		if (pdNode === null) {
+			return false;
+		}
+		val regionKwAndBlock = NodeModelUtilsN4.findRegionOfKeywordWithOptionalBlock(pdNode, features.head.name);
+		if (regionKwAndBlock === null) {
+			return false;
+		}
 
-		val rootAstElement = if (value instanceof EObject) value else it;
-		val values = getNestedValues(features);
+		val rootAstElement = if (value instanceof EObject) value else pd;
+		val values = pd.getNestedValues(features);
 
-		if (supportedTypesPredicate.apply(projectType)) {
+		if (supportedTypesPredicate.apply(pd.projectType)) {
 			if (values.empty) {
-				addIssue(getMessageForOBSOLETE_BLOCK(features.head.label), rootAstElement, OBSOLETE_BLOCK);
+				addIssue(getMessageForOBSOLETE_BLOCK(features.head.label), rootAstElement,
+					regionKwAndBlock.offset, regionKwAndBlock.length, OBSOLETE_BLOCK);
 			}
 		} else {
-			addIssue(getMessageForINVALID_FEATURE_FOR_PROJECT_TYPE(features.head.label.toFirstUpper, projectType.label),
-				rootAstElement, INVALID_FEATURE_FOR_PROJECT_TYPE
+			addIssue(getMessageForINVALID_FEATURE_FOR_PROJECT_TYPE(features.head.label.toFirstUpper, pd.projectType.label),
+				rootAstElement, regionKwAndBlock.offset, regionKwAndBlock.length, INVALID_FEATURE_FOR_PROJECT_TYPE
 			);
 			return false; // Interrupt any further validation.
 		}
@@ -838,7 +1005,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	private def addDuplicateProjectReferenceIssue(EObject eObject, String name) {
 		addIssue(getMessageForDUPLICATE_PROJECT_REF(name), eObject, DUPLICATE_PROJECT_REF);
 	}
-	
+
 	private def addVersionMismatchIssue(EObject eObject, String name, String requiredVersion, String presentVersion) {
 		addIssue(getMessageForNO_MATCHING_VERSION(name, requiredVersion, presentVersion), eObject, NO_MATCHING_VERSION)
 	}

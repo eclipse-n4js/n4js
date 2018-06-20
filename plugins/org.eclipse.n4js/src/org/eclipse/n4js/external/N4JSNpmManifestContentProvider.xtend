@@ -25,10 +25,11 @@ class N4JSNpmManifestContentProvider {
 	 * @param outputFolder the name of the folder with js files
 	 * @param externalFolder the name of the folder with n4js and n4jsd files
 	 */
-	def String getContent(String projectId, String outputFolder, String externalFolder, String main, String version)
+	def String getContent(String projectId, String outputFolder, String sourceFolder, String main, String version)
 	'''
+		// Generated Manifest
 		ProjectId: «projectId»
-		ProjectType: library
+		ProjectType: validation
 		ProjectVersion: «IF version.isNullOrEmpty»0.0.1-SNAPSHOT«ELSE»«version»«ENDIF»
 		VendorId: npm
 		VendorName: "npm"
@@ -38,8 +39,8 @@ class N4JSNpmManifestContentProvider {
 		ENDIF»
 		ModuleLoader: commonjs
 		Sources {
-			external {
-				"«externalFolder»"
+			source {
+				"«sourceFolder»"
 			}
 		}
 	'''

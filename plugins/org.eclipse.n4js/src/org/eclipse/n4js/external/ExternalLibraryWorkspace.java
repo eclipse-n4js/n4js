@@ -23,7 +23,6 @@ import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 import com.google.inject.ImplementedBy;
 
@@ -156,7 +155,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the unique name of the project.
 	 * @return the project, or {@code null} if does not exist.
 	 */
-	public abstract ExternalProject getProject(final String projectName);
+	public abstract N4JSExternalProject getProject(final String projectName);
 
 	/**
 	 * Returns with the project with the given location. Or {@code null} if the project does not exist.
@@ -165,7 +164,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the location of the project.
 	 * @return the project, or {@code null} if does not exist.
 	 */
-	public abstract ExternalProject getProject(final URI projectLocation);
+	public abstract N4JSExternalProject getProject(final URI projectLocation);
 
 	/**
 	 * Returns with the file given with the file location URI argument. This method returns with {@code null} if the

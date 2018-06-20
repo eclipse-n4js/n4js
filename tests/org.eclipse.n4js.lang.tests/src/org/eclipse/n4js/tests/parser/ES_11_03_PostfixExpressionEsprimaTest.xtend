@@ -20,7 +20,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInc_01() {
-		val script = 'x++'.parseSuccessfully
+		val script = 'x++'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.INC, postfix.op)
@@ -30,7 +30,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInc_02() {
-		val script = 'eval++'.parseSuccessfully
+		val script = 'eval++'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.INC, postfix.op)
@@ -40,7 +40,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInc_03() {
-		val script = 'arguments++'.parseSuccessfully
+		val script = 'arguments++'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.INC, postfix.op)
@@ -48,7 +48,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDec_01() {
-		val script = 'x--'.parseSuccessfully
+		val script = 'x--'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.DEC, postfix.op)
@@ -56,7 +56,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDec_02() {
-		val script = 'eval--'.parseSuccessfully
+		val script = 'eval--'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.DEC, postfix.op)
@@ -64,7 +64,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDec_03() {
-		val script = 'arguments--'.parseSuccessfully
+		val script = 'arguments--'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.DEC, postfix.op)

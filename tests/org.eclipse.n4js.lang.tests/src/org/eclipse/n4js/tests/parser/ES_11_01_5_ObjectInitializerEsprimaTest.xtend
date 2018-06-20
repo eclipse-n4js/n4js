@@ -26,7 +26,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testEmpty_01() {
-		val script = 'x = {}'.parseSuccessfully
+		val script = 'x = {}'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -37,7 +37,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testEmpty_02() {
-		val script = 'x = { }'.parseSuccessfully
+		val script = 'x = { }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -48,7 +48,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSimplePropertyNameValuePair_01() {
-		val script = 'x = { answer: 42 }'.parseSuccessfully
+		val script = 'x = { answer: 42 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -62,7 +62,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSimplePropertyNameValuePair_01_TrailingComma() {
-		val script = 'x = { answer: 42, }'.parseSuccessfully
+		val script = 'x = { answer: 42, }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -75,12 +75,12 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSimplePropertyNameValuePair_01_TooManyTrailingCommas() {
-		'x = { answer: 42,, }'.parseWithError
+		'x = { answer: 42,, }'.parseESWithError
 	}
 
 	@Test
 	def void testSimplePropertyNameValuePair_02() {
-		val script = 'x = { get: 42 }'.parseSuccessfully
+		val script = 'x = { get: 42 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -93,7 +93,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSimplePropertyNameValuePair_03() {
-		val script = 'x = { set: 43 }'.parseSuccessfully
+		val script = 'x = { set: 43 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -107,7 +107,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSimplePropertyNameValuePair_04() {
-		val script = 'x = { __proto__: 2 }'.parseSuccessfully
+		val script = 'x = { __proto__: 2 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -120,7 +120,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNameIsKeyword_01() {
-		val script = 'x = { if: 42 }'.parseSuccessfully
+		val script = 'x = { if: 42 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -134,7 +134,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNameIsKeyword_02() {
-		val script = 'x = { true: 42 }'.parseSuccessfully
+		val script = 'x = { true: 42 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -148,7 +148,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNameIsKeyword_03() {
-		val script = 'x = { false: 42 }'.parseSuccessfully
+		val script = 'x = { false: 42 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -162,7 +162,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNameIsKeyword_04() {
-		val script = 'x = { null: 42 }'.parseSuccessfully
+		val script = 'x = { null: 42 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -176,7 +176,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNameIsString_01() {
-		val script = 'x = { "answer": 42 }'.parseSuccessfully
+		val script = 'x = { "answer": 42 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -190,7 +190,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testNameIsString_02() {
-		val script = 'x = { "__proto__": 2 }'.parseSuccessfully
+		val script = 'x = { "__proto__": 2 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -204,7 +204,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testTwoProperties() {
-		val script = 'x = { x: 1, x: 2 }'.parseSuccessfully
+		val script = 'x = { x: 1, x: 2 }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -220,7 +220,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetMethod_01() {
-		val script = 'x = { get width() { return m_width } }'.parseSuccessfully
+		val script = 'x = { get width() { return m_width } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -236,7 +236,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetMethod_02() {
-		val script = 'x = { get undef() {} }'.parseSuccessfully
+		val script = 'x = { get undef() {} }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -250,7 +250,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetMethodNameIsKeyword_01() {
-		val script = 'x = { get if() {} }'.parseSuccessfully
+		val script = 'x = { get if() {} }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -264,7 +264,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetMethodNameIsKeyword_02() {
-		val script = 'x = { get true() {} }'.parseSuccessfully
+		val script = 'x = { get true() {} }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -278,7 +278,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetMethodNameIsKeyword_03() {
-		val script = 'x = { get false() {} }'.parseSuccessfully
+		val script = 'x = { get false() {} }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -292,7 +292,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetMethodNameIsKeyword_04() {
-		val script = 'x = { get null() {} }'.parseSuccessfully
+		val script = 'x = { get null() {} }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -306,7 +306,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetMethodNameIsString_01() {
-		val script = 'x = { get "undef"() {} }'.parseSuccessfully
+		val script = 'x = { get "undef"() {} }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -320,7 +320,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetMethodNameIsIntLiteral_01() {
-		val script = 'x = { get 10() {} }'.parseSuccessfully
+		val script = 'x = { get 10() {} }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -335,7 +335,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSetMethod_01() {
-		val script = 'x = { set width(w) { m_width = w } }'.parseSuccessfully
+		val script = 'x = { set width(w) { m_width = w } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -353,7 +353,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSetMethodNameIsKeyword_01() {
-		val script = 'x = { set if(w) { m_if = w } }'.parseSuccessfully
+		val script = 'x = { set if(w) { m_if = w } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -371,7 +371,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSetMethodNameIsKeyword_02() {
-		val script = 'x = { set true(w) { m_true = w } }'.parseSuccessfully
+		val script = 'x = { set true(w) { m_true = w } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -389,7 +389,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSetMethodNameIsKeyword_03() {
-		val script = 'x = { set false(w) { m_false = w } }'.parseSuccessfully
+		val script = 'x = { set false(w) { m_false = w } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -407,7 +407,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSetMethodNameIsKeyword_04() {
-		val script = 'x = { set null(w) { m_null = w } }'.parseSuccessfully
+		val script = 'x = { set null(w) { m_null = w } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -425,7 +425,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSetMethodNameIsString() {
-		val script = 'x = { set "null"(w) { m_null = w } }'.parseSuccessfully
+		val script = 'x = { set "null"(w) { m_null = w } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -443,7 +443,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSetMethodNameIsIntValue() {
-		val script = 'x = { set 10(w) { m_null = w } }'.parseSuccessfully
+		val script = 'x = { set 10(w) { m_null = w } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -462,7 +462,7 @@ class ES_11_01_5_ObjectInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testGetAndSetMethodSameName() {
-		val script = 'x = { get width() { return m_width }, set width(width) { m_width = width; } }'.parseSuccessfully
+		val script = 'x = { get width() { return m_width }, set width(width) { m_width = width; } }'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef

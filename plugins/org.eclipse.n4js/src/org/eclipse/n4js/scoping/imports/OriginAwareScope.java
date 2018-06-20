@@ -182,7 +182,7 @@ public class OriginAwareScope implements IScope {
 		public void markAsUsed() {
 			super.markAsUsed();
 
-			ImportSpecifier plainImport = origins.get(this.getDelegate().getDelegate());
+			ImportSpecifier plainImport = origins.get(this.getDelegate().delegate());
 			if (plainImport != null)
 				markImportSpecifierAsUsed(plainImport);
 		}

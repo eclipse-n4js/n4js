@@ -96,6 +96,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.emf.common.util.URI
 
 /**
  * Intended for small, static utility methods that
@@ -884,7 +885,7 @@ class N4JSLanguageUtils {
 		val fileExt = fileExtensionCalculator.getXpectAwareFileExtension(tinf);
 		return TypeUtils.isBuiltIn(tinf) || tinf.providedByRuntime || (tinf.isExternal() && !hasN4JSAnnotation) || (isDefStructural && (fileExt == N4JSGlobals.N4JSD_FILE_EXTENSION));
 	}
-	
+
 	/**
 	 * Check if an optional field strategy is less restricted than or equal to another optional field strategy.
 	 *
@@ -912,6 +913,18 @@ class N4JSLanguageUtils {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Opaque resources are not post processed neither validated. The transpiler will only wrap opaque resources.
+	 *
+	 * @param resourceURI
+	 *            The URI of a resource
+	 * @return true if the given resource is opaque.
+	 */
+	def static boolean isOpaqueModule(URI resourceURI) {
+		val resourceType = ResourceType.getResourceType(resourceURI);
+		return (resourceType == ResourceType.JS || resourceType == ResourceType.JSX);
 	}
 
 	/**

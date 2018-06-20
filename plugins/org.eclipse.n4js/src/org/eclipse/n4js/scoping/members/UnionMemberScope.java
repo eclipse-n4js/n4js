@@ -42,7 +42,8 @@ public class UnionMemberScope extends ComposedMemberScope {
 		for (IScope currSubScope : subScopes) {
 			IEObjectDescription subDescription = currSubScope.getSingleElement(qn);
 
-			boolean descrWithError = subDescription == null || subDescription instanceof IEObjectDescriptionWithError;
+			boolean descrWithError = subDescription == null
+					|| IEObjectDescriptionWithError.isErrorDescription(subDescription);
 			if (descrWithError) {
 				return createComposedMemberDescriptionWithErrors(description);
 			}

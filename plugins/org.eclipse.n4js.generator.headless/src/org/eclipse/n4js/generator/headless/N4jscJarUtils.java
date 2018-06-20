@@ -11,7 +11,6 @@
 package org.eclipse.n4js.generator.headless;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.apache.log4j.Logger.getLogger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import com.google.common.base.Joiner;
  */
 public class N4jscJarUtils {
 
-	private static final Logger LOGGER = getLogger(N4jscJarUtils.class);
+	private static final Logger LOGGER = Logger.getLogger(N4jscJarUtils.class);
 
 	/**
 	 * Environment variable to pass in the location of the {@code n4jsc.jar}.
@@ -116,7 +115,6 @@ public class N4jscJarUtils {
 		cmdline.addAll(javaOpts);
 		cmdline.addAll(Arrays.asList(
 				"-jar", getAbsoluteRunnableN4jsc().getAbsolutePath(),
-				// "--debug", "-v", // generate more output
 				"--buildType", "allprojects"));
 		cmdline.addAll(n4jscOpts);
 		cmdline.add("--projectlocations");

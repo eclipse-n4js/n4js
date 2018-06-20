@@ -20,6 +20,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
@@ -37,6 +38,7 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
+import org.eclipse.n4js.internal.RaceDetectionHelper
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -120,8 +122,10 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == input.URI.fileExtension.toLowerCase
 		val inputUri = input.URI
 
-		return (autobuildEnabled
+		val boolean result = (autobuildEnabled
+			&& isGenerateProjectType(inputUri)
 			&& hasOutput(inputUri)
+			&& isOutsideOfOutputFolder(inputUri)
 			&& isSource(inputUri)
 			&& (isNoValidate(inputUri)
 				|| isExternal(inputUri)
@@ -131,6 +135,10 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			))
 			&& (!input.isStaticPolyfillingModule) // compile driven by filled type
 			&& hasNoPolyfillErrors(input,monitor)
+		if (!result) {
+			RaceDetectionHelper.log("Skip generation of artifacts from %s", input.URI)
+		}
+		return result
 	}
 
 	private def hasOutput(URI n4jsSourceURI){
@@ -194,6 +202,37 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		} else {
 			logger.warn(msg,exc)
 		}
+	}
+
+	/** @return true iff the current project has a project type that is supposed to generate code. */
+	def boolean isGenerateProjectType(URI n4jsSourceURI) {
+		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
+		if (project !== null) {
+			val projectType = project.getProjectType();
+			if (projectType == ProjectType.VALIDATION) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/** @return true iff the given resource does not lie within the output folder. */
+	def boolean isOutsideOfOutputFolder(URI n4jsSourceURI) {
+		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
+		if (project !== null) {
+			val outputPathName = project.getOutputPath();
+			if (outputPathName !== null) {
+				val resourceLocation = n4jsSourceURI.toString();
+				val pl = project.getLocation();
+				val prjRelOutputLocation = Paths.get(pl.toString(), outputPathName).toString();
+				val resourceInOutput = resourceLocation.startsWith(prjRelOutputLocation);
+				if (resourceInOutput) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**

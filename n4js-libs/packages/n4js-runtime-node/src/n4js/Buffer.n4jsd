@@ -74,4 +74,4 @@ export external public class Buffer implements Iterable<number>{
     public fill(value: any, offset: number=, end: number=): Buffer;
 }
 
-/* -*- mode: typescript;-*- */
+

@@ -103,6 +103,3 @@ export public class AssertionError extends Error {
     }
 }
 
-/*
--*- mode: typescript;-*-
-*/

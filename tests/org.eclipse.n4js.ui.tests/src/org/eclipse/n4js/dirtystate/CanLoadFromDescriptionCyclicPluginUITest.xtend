@@ -20,6 +20,8 @@ import org.eclipse.emf.common.util.URI
 import org.junit.Ignore
 import org.junit.Test
 
+import static org.junit.Assert.*
+
 /**
  * Test builder / editor behavior with multiple files and cyclic dependencies.
  */

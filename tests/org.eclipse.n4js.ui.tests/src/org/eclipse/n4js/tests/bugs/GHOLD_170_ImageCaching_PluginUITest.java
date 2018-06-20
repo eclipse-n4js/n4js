@@ -10,14 +10,15 @@
  */
 package org.eclipse.n4js.tests.bugs;
 
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 
 /**
  * Class for testing the {@link ImageDescriptor} and {@link Image} caching.

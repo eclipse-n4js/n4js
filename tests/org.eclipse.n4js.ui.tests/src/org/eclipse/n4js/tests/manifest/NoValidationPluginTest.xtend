@@ -10,17 +10,17 @@
  */
 package org.eclipse.n4js.tests.manifest
 
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.core.resources.IFile
+import org.eclipse.core.resources.IFolder
+import org.eclipse.core.resources.IProject
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.n4mf.ModuleFilter
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.ModuleFilterType
 import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.SourceFragmentType
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IFolder
-import org.eclipse.core.resources.IProject
-import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.junit.Before
 import org.junit.Test
 
@@ -30,10 +30,10 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 
 	IProject projectUnderTest
 	IFolder src
-	IFolder p
+	IFolder scr_P
 	IFolder src2
-	IFolder p2
-	IFolder pJuergensHacks
+	IFolder src2_P2
+	IFolder src_P_Q
 	IFolder src_external
 	IFile manifest
 
@@ -42,10 +42,10 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		super.setUp
 		projectUnderTest = createJSProject("IDE_754")
 		src = configureProjectWithXtext(projectUnderTest)
-		p = createFolder(src, "p");
-		pJuergensHacks = createFolder(p, "juergensHacks");
+		scr_P = createFolder(src, "p");
+		src_P_Q = createFolder(scr_P, "q");
 		src2 = createFolder(projectUnderTest.project, "src2");
-		p2 = createFolder(src2, "p2");
+		src2_P2 = createFolder(src2, "p2");
 		manifest = projectUnderTest.project.getFile("manifest.n4mf")
 		src_external = projectUnderTest.project.getFolder("src-external");
 		src_external.create(false, true, null)
@@ -55,25 +55,25 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testFileInSrc() throws Exception {
-		val fileAValidated = createTestFile(p, "A", fileA);
-		val fileAValidatedInSrc2 = createTestFile(p2, "A", fileA);
-		val fileBValidated = createTestFile(p, "B", fileB);
-		val fileMyAlreadyAsModuleHack = createTestFile(p, "myAlreadyAsModuleHack", fileMyAlreadyAsModuleHack);
-		val fileWolfgangsUglyHack = createTestFile(p, "wolfgangsUglyHack", fileWolfgangsUglyHack);
-		val fileJuergenA = createTestFile(pJuergensHacks, "A", fileJuergenA);
-		val fileJuergenB = createTestFile(pJuergensHacks, "B", fileJuergenB);
+		val fileAValidated = createTestFile(scr_P, "A", fileA);
+		val fileAValidatedInSrc2 = createTestFile(src2_P2, "A", fileA);
+		val fileBValidated = createTestFile(scr_P, "B", fileB);
+		val fileC = createTestFile(scr_P, "C", fileC);
+		val fileD = createTestFile(scr_P, "D", fileD);
+		val fileE = createTestFile(src_P_Q, "E", fileE);
+		val fileF = createTestFile(src_P_Q, "F", fileF);
 		assertMarkers("file A should have 3 markers", fileAValidated, 3);
 		assertMarkers("file AInSrc should have 3 markers", fileAValidatedInSrc2, 3);
 		assertMarkers("file B should have markers", fileBValidated, 2);
-		assertMarkers("file MyAlreadyAsModuleHack should have markers", fileMyAlreadyAsModuleHack, 2);
-		assertMarkers("file WolfgangsUglyHack should have markers", fileWolfgangsUglyHack, 2);
-		assertMarkers("file JuergenA should have markers", fileJuergenA, 6);
-		assertMarkers("file JuergenB should have markers", fileJuergenB, 2);
+		assertMarkers("file C should have markers", fileC, 2);
+		assertMarkers("file D should have markers", fileD, 2);
+		assertMarkers("file E should have markers", fileE, 6);
+		assertMarkers("file F should have markers", fileF, 2);
 
-		addPathsToNoValidate("p/wolfgangsUglyHack" -> null, "p/juergensHacks/*" -> null)
-		assertMarkers("file WolfgangsUglyHack should have no markers", fileWolfgangsUglyHack, 0);
-		assertMarkers("file JuergensA should have no markers", fileJuergenA, 0);
-		assertMarkers("file JuergenB should have no markers", fileJuergenB, 0);
+		addPathsToNoValidate("p/D" -> null, "p/q/*" -> null)
+		assertMarkers("file D should have no markers", fileD, 0);
+		assertMarkers("file E should have no markers", fileE, 0);
+		assertMarkers("file F should have no markers", fileF, 0);
 		assertMarkers("file AInSrc should have still 3 markers", fileAValidatedInSrc2, 3);
 		addPathsToNoValidate("p2/*" -> "src2")
 		assertMarkers("file AInSrc2 should have no markers", fileAValidatedInSrc2, 0);
@@ -81,7 +81,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 
 	def void addFolderAsSource(String folderName) {
 		val pd = getProjectDescription
-		pd.sourceFragment.filter[sourceFragmentType == SourceFragmentType.SOURCE].head.paths += folderName
+		pd.sourceContainers.filter[sourceContainerType == SourceContainerType.SOURCE].head.pathsRaw += folderName
 		pd.eResource.save(null)
 		waitForAutoBuild();
 	}
@@ -152,7 +152,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 			}
 		}
 
-		import * as JN from "p/juergensHacks/B"
+		import * as JN from "p/q/F"
 
 		export public class A {
 
@@ -164,7 +164,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 	'''
 
 	def fileB() '''
-		import { A } from "p/juergensHacks/A"
+		import { A } from "p/q/E"
 
 		{
 			function B() {
@@ -178,7 +178,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		}
 	'''
 
-	def fileMyAlreadyAsModuleHack() '''
+	def fileC() '''
 		{
 			function Module() {
 			}
@@ -191,7 +191,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		}
 	'''
 
-	def fileWolfgangsUglyHack() '''
+	def fileD() '''
 		{
 			function ugly() {
 			}
@@ -204,21 +204,21 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		}
 	'''
 
-	def fileJuergenA() '''
+	def fileE() '''
 		{
 			function funA() {
 			}
 		}
 
-		import { B } from "p/juergensHacks/B"
+		import { B } from "p/q/F"
 
 		export public class A {
 			$b : B;
 		}
 	'''
 
-	def fileJuergenB() '''
-		import { A } from "p/juergensHacks/A"
+	def fileF() '''
+		import { A } from "p/q/E"
 
 		{
 			function B() {

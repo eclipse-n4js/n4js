@@ -26,4 +26,3 @@ export external public class URL {
     public password?: string;
 }
 
-/* -*- mode: typescript;-*- */

@@ -27,7 +27,7 @@ class CallableCtorParserTest extends AbstractParserTest {
 				(param: string): void;
 				constructor(param: number);
 			}
-		'''.parseSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallableCtor;
 	}
 
 	@Test
@@ -38,7 +38,7 @@ class CallableCtorParserTest extends AbstractParserTest {
 				(param: string): void
 				constructor(param: number)
 			}
-		'''.parseSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallableCtor;
 	}
 
 	@Test
@@ -49,7 +49,7 @@ class CallableCtorParserTest extends AbstractParserTest {
 				()
 				constructor()
 			}
-		'''.parseSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallableCtor;
 	}
 
 	@Test
@@ -58,7 +58,7 @@ class CallableCtorParserTest extends AbstractParserTest {
 			export external public class C {
 				set s(value)()get g()
 			}
-		'''.parseSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallableCtor;
 	}
 
 	@Test
@@ -67,7 +67,7 @@ class CallableCtorParserTest extends AbstractParserTest {
 			export external public class C {
 				m1()()m2()
 			}
-		'''.parseSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallableCtor;
 	}
 
 	def private void assertCallableCtor(Script script) {

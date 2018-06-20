@@ -20,7 +20,7 @@ class ES_11_07_BitwiseShiftOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLeftShift() {
-		val program = 'x << y'.parseSuccessfully
+		val program = 'x << y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val shift = statement.expression as ShiftExpression
 		val op = shift.op
@@ -34,7 +34,7 @@ class ES_11_07_BitwiseShiftOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testRightShift() {
-		val program = 'x >> y'.parseSuccessfully
+		val program = 'x >> y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val shift = statement.expression as ShiftExpression
 		val op = shift.op
@@ -48,7 +48,7 @@ class ES_11_07_BitwiseShiftOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testUnsignedRightShift() {
-		val program = 'x >>> y'.parseSuccessfully
+		val program = 'x >>> y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val shift = statement.expression as ShiftExpression
 		val op = shift.op

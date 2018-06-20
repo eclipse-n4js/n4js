@@ -22,6 +22,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.GeneratorOption;
+import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -106,11 +107,13 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 
 		// if the transpile-conditions are all met, then transpile:
 		if (shouldBeCompiled(resource, monitor)) {
-
+			RaceDetectionHelper.log("About to compile %s", resource.getURI());
 			final String compiledFileExtension = getCompiledFileExtension(resource);
 			final String filename = getTargetFileName(resource, compiledFileExtension);
 			final String sourceMapFileExtension = getCompiledFileSourceMapExtension(resource);
 			final String sourceMapFileName = getTargetFileName(resource, sourceMapFileExtension);
+
+			RaceDetectionHelper.log("About to write %s", filename);
 
 			// used within the file-content to refer to sibling-file:
 			final String simpleSourceMapFileName = new File(sourceMapFileName).toPath().getFileName().toString();
@@ -129,7 +132,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 			if (filename != null) {
 				final EObject root = rootElement(resource);
 				if (root != null) {
-					final Writer buffCode = new StringWriter();
+					final StringWriter buffCode = new StringWriter();
 
 					Optional<SourceMapInfo> optSourceMapData = Optional.absent();
 
@@ -152,6 +155,9 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 					}
 
 					getTranspiler().transpile(resourceCasted, options, buffCode, optSourceMapData);
+
+					RaceDetectionHelper.log("About to write %d chars", buffCode.getBuffer().length());
+
 					fsa.generateFile(filename, COMPILER_ID, buffCode.toString());
 
 					if (createSourceMap) {

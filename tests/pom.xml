@@ -26,10 +26,10 @@ Contributors:
 	<modules>
 		<!-- ************************************** JUnit Tests -->
 
-        <!-- Test to ensure that shipped code is up-to-date (see /plugins/org.eclipse.n4js.external.libraries/shipped-code). -->
+       		<!-- Test to ensure that shipped code is up-to-date (see /plugins/org.eclipse.n4js.external.libraries/shipped-code). -->
 		<module>org.eclipse.n4js.external.libraries.update.tests</module>
 
-        <!-- Release Engineering Tools Tests -->
+ 	       <!-- Release Engineering Tools Tests -->
 		<module>org.eclipse.n4js.releng.utils.tests</module>
 
 		<!-- JSDoc tests -->
@@ -68,6 +68,9 @@ Contributors:
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
 
+		<!-- JSON tests -->
+		<module>org.eclipse.n4js.json.tests</module>
+		<module>org.eclipse.n4js.json.xpect.tests</module>
 
 		<!-- ************************************** JUnit Plugin Tests -->
 
@@ -85,6 +88,8 @@ Contributors:
 
 		<!-- Manifest tests -->
 		<module>org.eclipse.n4js.n4mf.xpect.ui.tests</module>
+		<!-- JSON tests -->
+		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
 		<!-- Runner tests -->
 		<module>org.eclipse.n4js.runner.ui.tests</module>
 
@@ -127,8 +132,7 @@ Contributors:
 
 	<properties>
 		<!-- jacoco (ECLEmma), code coverage -->
-		<jacoco-maven-plugin.version>0.7.1.201405082137</jacoco-maven-plugin.version>
-		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+		<jacoco-maven-plugin.version>0.8.1</jacoco-maven-plugin.version>
 		<ant-contrib.version>1.0b3</ant-contrib.version>
 		<ant-nodeps.version>1.8.1</ant-nodeps.version>
 

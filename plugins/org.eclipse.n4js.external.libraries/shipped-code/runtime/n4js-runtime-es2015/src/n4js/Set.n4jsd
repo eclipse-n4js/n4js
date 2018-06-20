@@ -10,8 +10,8 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {IteratorExt} from "Iterator"
 
+import {IteratorExt} from "Iterator";
 export external public class Set<ValueT> extends Object implements Iterable<ValueT> {
     public constructor(arg: Iterable<ValueT> =);
 
@@ -66,4 +66,3 @@ export external public class Set<ValueT> extends Object implements Iterable<Valu
     public values(): IteratorExt<ValueT>;
 }
 
-/* -*- mode: typescript;-*- */

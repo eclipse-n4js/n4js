@@ -8,8 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {num, inc} from "es-module-tests/ex13/A"
 
+import {num, inc} from "es-module-tests/ex13/A";
 console.log(num); //0
 inc();
 console.log(num); //1

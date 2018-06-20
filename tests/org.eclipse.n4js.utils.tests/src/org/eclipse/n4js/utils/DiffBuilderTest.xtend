@@ -14,13 +14,14 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtend.lib.annotations.EqualsHashCode
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
-import org.junit.Assert
 import org.junit.Test
+
+import static org.junit.Assert.*
 
 /**
  * Test for {@link DiffBuilder}.
  */
-class DiffBuilderTest extends Assert {
+class DiffBuilderTest {
 
 	@Test
 	def void testAddExistingExpectZeroAdded() {

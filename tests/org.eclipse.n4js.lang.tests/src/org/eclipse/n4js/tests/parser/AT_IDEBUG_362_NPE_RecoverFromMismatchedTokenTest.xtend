@@ -47,11 +47,11 @@ class AT_IDEBUG_362_NPE_RecoverFromMismatchedTokenTest {
 
 	}
 
-	def void parseWithErrors(CharSequence input) {
+	def void parseESWithErrors(CharSequence input) {
 		parser.getTokens(input)
 	}
 
-	def void parseSuccessfully(CharSequence input) {
+	def void parseESSuccessfully(CharSequence input) {
 		throwingParser.getTokens(input)
 	}
 
@@ -65,7 +65,7 @@ class AT_IDEBUG_362_NPE_RecoverFromMismatchedTokenTest {
 			}
 			callAll(): any { return null; }
 		}
-		'''.parseWithErrors
+		'''.parseESWithErrors
 	}
 
 	@Test
@@ -78,7 +78,7 @@ class AT_IDEBUG_362_NPE_RecoverFromMismatchedTokenTest {
 			}
 			callAll(): any { return null; }
 		}
-		'''.parseWithErrors
+		'''.parseESWithErrors
 	}
 
 	@Test
@@ -87,7 +87,7 @@ class AT_IDEBUG_362_NPE_RecoverFromMismatchedTokenTest {
 			(function(){
 				for (var k in null) {}
 			});
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 

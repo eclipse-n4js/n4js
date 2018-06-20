@@ -13,15 +13,16 @@ package org.eclipse.n4js.tests.compare
 import com.google.inject.Inject
 import java.io.File
 import org.eclipse.core.resources.IProject
+import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.n4js.ApiImplCompareTestHelper
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.compare.ProjectCompareHelper
-import org.eclipse.n4js.n4mf.N4mfFactory
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.ui.compare.ProjectCompareTreeHelper
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.XtextProjectHelper
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,6 +48,7 @@ class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
 
 	@BeforeClass
 	public static def void setupEclipseWorkspace() {
+		IResourcesSetupUtil.cleanWorkspace
 		importTestProject(PROJECT_ID_UTILS)
 		importTestProject(PROJECT_ID_API)
 		importTestProject(PROJECT_ID_IMPL)
@@ -83,18 +85,12 @@ class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
 		val clashIdApi = "org.eclipse.clash.api";
 		val IProject pApi = createJSProject(clashIdApi)
 		val IProject pImpl1 = ProjectTestsUtils.createJSProject("org.eclipse.clash.n4js","src","src-gen",[pd|
-			if (null === pd.implementedProjects) {
-				pd.implementedProjects = N4mfFactory.eINSTANCE.createImplementedProjects;
-			}
 			pd.implementationId = "impl.n4js"
-			pd.implementedProjects.implementedProjects += createProjectReference(clashIdApi)
+			pd.implementedProjects += createProjectReference(clashIdApi)
 		])
 		val IProject pImpl2 = ProjectTestsUtils.createJSProject("org.eclipse.clash.ios","src","src-gen",[pd|
-			if (null === pd.implementedProjects) {
-				pd.implementedProjects = N4mfFactory.eINSTANCE.createImplementedProjects;
-			}
 			pd.implementationId = "impl.n4js" // n.b.: same implementation id!
-			pd.implementedProjects.implementedProjects += createProjectReference(clashIdApi)
+			pd.implementedProjects += createProjectReference(clashIdApi)
 		])
 		pApi.configureProjectWithXtext
 		pImpl1.configureProjectWithXtext
@@ -118,6 +114,13 @@ class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
 		waitForAutoBuild
 	}
 
+	def private static void deleteProjects( IProject[] projects) {
+		for ( IProject project : projects) {
+			if (project.exists()) {
+					project.delete(true, true, new NullProgressMonitor());
+			}
+		}
+	}
 
 	/**
 	 * Imports a project from the probands/ApiImplCompare folder
@@ -125,7 +128,7 @@ class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
 	private static def IProject importTestProject(String name) {
 		val project = importProject(new File("probands/ApiImplCompare"), name);
 		addNature(project, XtextProjectHelper.NATURE_ID);
-		waitForAutoBuild
+		IResourcesSetupUtil.waitForBuild
 		assertMarkers("imported test project '"+name+"' should have no errors/warnings", project, 0)
 		return project;
 	}

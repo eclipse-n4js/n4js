@@ -9,5 +9,5 @@
  *   NumberFour AG - Initial API and implementation
  */
 //Import multiple members (w/ an alias)
-import {a, b as c} from "es-module-tests/ex02/A"
+import {a, b as c} from "es-module-tests/ex02/A";
 console.log(a, c);

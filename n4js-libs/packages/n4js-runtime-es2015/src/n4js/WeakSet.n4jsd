@@ -34,4 +34,3 @@ export external public class WeakSet<ValueT extends Object> extends Object {
     public has(value: ValueT): boolean;
 }
 
-/* -*- mode: typescript;-*- */

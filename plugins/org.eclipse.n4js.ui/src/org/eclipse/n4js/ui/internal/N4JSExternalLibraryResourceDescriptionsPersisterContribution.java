@@ -22,11 +22,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution;
-import org.eclipse.n4js.ui.utils.N4JSInjectorSupplier;
 import org.eclipse.n4js.utils.StatusHelper;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Resource description persister contribution to restore the state of the Xtext index for the external libraries on
@@ -85,11 +83,6 @@ public class N4JSExternalLibraryResourceDescriptionsPersisterContribution
 		job.setSystem(false);
 		job.schedule();
 
-	}
-
-	@Override
-	public Injector getInjector() {
-		return new N4JSInjectorSupplier().get();
 	}
 
 }

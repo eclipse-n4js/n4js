@@ -20,6 +20,7 @@ import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -49,6 +50,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	 * running it with Common JS.
 	 */
 	@Test
+	@Ignore // remove @Ignore when IDE-2988 is done
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
@@ -58,8 +60,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
-				// "--verbose",
-				// "--debug",
 				"--projectlocations", wsRoot,
 				"--buildType", BuildType.allprojects.toString()
 		};
@@ -80,6 +80,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	 * projects.
 	 */
 	@Test
+	@Ignore // remove @Ignore when IDE-2988 is done
 	public void testCompileAndRunWithExternalDependencies2() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
@@ -89,8 +90,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 				"--installMissingDependencies",
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				// "--verbose",
-				// "--debug",
 				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"
 		};
 		final String out = runAndCaptureOutput(args);

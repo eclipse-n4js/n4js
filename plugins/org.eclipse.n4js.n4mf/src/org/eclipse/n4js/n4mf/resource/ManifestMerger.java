@@ -15,18 +15,19 @@ import static com.google.common.collect.FluentIterable.from;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
+import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.utils.emf.EObjectFeatureMerger;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.utils.emf.EObjectFeatureMerger;
 
 /**
  * Singleton service class for merging the content of N4JS manifests.
@@ -64,6 +65,14 @@ public class ManifestMerger extends EObjectFeatureMerger {
 
 			final Resource from = fromResourceSet.getResource(fromLocation, true);
 			final Resource to = toResourceSet.getResource(toLocation, true);
+
+			EList<Diagnostic> errorsInManifest = to.getErrors();
+			if (!errorsInManifest.isEmpty()) {
+				String msg = "Existing Manifest.n4mf is broken. Source URI: " + to.getURI().toString() + ".";
+				LOGGER.error(msg);
+				return null;
+			}
+
 			return mergeContent(from, to);
 
 		} catch (final Exception e) {
@@ -120,9 +129,9 @@ public class ManifestMerger extends EObjectFeatureMerger {
 	@Override
 	protected boolean contains(final Collection<? extends Object> toManyValue, final Object fromElement) {
 		if (fromElement instanceof ProjectReference) {
-			final String id = ((ProjectReference) fromElement).getProject().getProjectId();
+			final String id = ((ProjectReference) fromElement).getProjectId();
 			return from(toManyValue).filter(ProjectReference.class)
-					.transform(ref -> ref.getProject().getProjectId())
+					.transform(ref -> ref.getProjectId())
 					.contains(id);
 		}
 		return super.contains(toManyValue, fromElement);

@@ -22,6 +22,11 @@ import org.eclipse.emf.common.util.URI;
  */
 public class URIUtils {
 
+	/** Workspace relative URI starts with this letter */
+	private static final String L = "L/";
+	/** Workspace relative URI starts with this letter */
+	private static final String P = "P/";
+
 	/**
 	 * Converts the given {@link IResource} to a {@link org.eclipse.emf.common.util.URI}. In case the given resource is
 	 * a workspace resource, a <i>platform resource URI</i> is returned. In case the given resource is a file based
@@ -38,7 +43,7 @@ public class URIUtils {
 		String fullPathString = iResource.getFullPath().toString();
 
 		org.eclipse.emf.common.util.URI uri;
-		if (projectPath.startsWith("P/")) {
+		if (projectPath.startsWith(P) || projectPath.startsWith(L)) {
 			uri = org.eclipse.emf.common.util.URI.createPlatformResourceURI(fullPathString, true);
 		} else {
 			uri = org.eclipse.emf.common.util.URI.createFileURI(fullPathString);
@@ -85,19 +90,27 @@ public class URIUtils {
 	 * @return true iff the given {@link URI}s are equal
 	 */
 	static public String toString(org.eclipse.emf.common.util.URI uri) {
+		String result = uri.toString();
+
 		if (uri.isFile()) {
 			String fileString = uri.toFileString();
 			File file = new File(fileString);
 			Path path = file.toPath();
 			try {
-				Path realPath = path.toRealPath();
-				return realPath.toString();
+				String newResult = path.toRealPath().toFile().toURI().toString();
+				if (newResult.endsWith("/"))
+					newResult = newResult.substring(0, newResult.length() - 1);
+				result = newResult;
 			} catch (IOException e) {
-				return fileString;
+				// conversion unsuccessful, return original
 			}
-		} else {
-			String string = uri.toString();
-			return string;
 		}
+
+		return result;
+	}
+
+	/** Creates new URI from the provided one, with symlinks resolved. */
+	static public org.eclipse.emf.common.util.URI normalize(org.eclipse.emf.common.util.URI uri) {
+		return URI.createURI(toString(uri));
 	}
 }

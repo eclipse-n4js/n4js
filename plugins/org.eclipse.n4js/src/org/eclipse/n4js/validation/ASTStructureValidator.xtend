@@ -99,6 +99,7 @@ import org.eclipse.n4js.n4JS.DestructureUtils
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
 import org.eclipse.n4js.n4JS.Annotation
+import org.eclipse.n4js.n4JS.BinaryLogicalExpression
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -1572,6 +1573,40 @@ class ASTStructureValidator {
 					new DiagnosticMessage(IssueCodes.getMessageForAST_REST_WITH_INITIALIZER,
 						IssueCodes.getDefaultSeverity(IssueCodes.AST_REST_WITH_INITIALIZER), IssueCodes.AST_REST_WITH_INITIALIZER))
 			}
+		}
+	}
+	
+	def private dispatch void validateASTStructure(
+		BinaryLogicalExpression model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		if (model.getLhs() === null) {
+			producer.node = NodeModelUtils.findActualNodeFor(model);
+			producer.addDiagnostic(
+				new DiagnosticMessage(
+					IssueCodes.getMessageForAST_BINARY_LOGICAL_EXPRESSION_MISSING_PART("left operand"),
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_BINARY_LOGICAL_EXPRESSION_MISSING_PART),
+					IssueCodes.AST_BINARY_LOGICAL_EXPRESSION_MISSING_PART))
+
+		}
+		if (model.getRhs() === null) {
+			producer.node = NodeModelUtils.findActualNodeFor(model);
+			producer.addDiagnostic(
+				new DiagnosticMessage(
+					IssueCodes.getMessageForAST_BINARY_LOGICAL_EXPRESSION_MISSING_PART("right operand"),
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_BINARY_LOGICAL_EXPRESSION_MISSING_PART),
+					IssueCodes.AST_BINARY_LOGICAL_EXPRESSION_MISSING_PART))
+
+		}
+		if (model.getOp() === null) {
+			producer.node = NodeModelUtils.findActualNodeFor(model);
+			producer.addDiagnostic(
+				new DiagnosticMessage(IssueCodes.getMessageForAST_BINARY_LOGICAL_EXPRESSION_MISSING_PART("operator"),
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_BINARY_LOGICAL_EXPRESSION_MISSING_PART),
+					IssueCodes.AST_BINARY_LOGICAL_EXPRESSION_MISSING_PART))
+
 		}
 	}
 }

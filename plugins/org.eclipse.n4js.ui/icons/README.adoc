@@ -11,9 +11,11 @@ Contributors:
 
 
 # icons
+
 ## annotations
-annotation_add.gif							- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/etool16/newannotation_wiz.png
-annotation_remove.gif						- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/obj16/annotation_alt_obj.png
+annotation_add.png							- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/etool16/newannotation_wiz.png
+annotation_remove.png						- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/obj16/annotation_alt_obj.png
+
 ## module
 submodule.gif 								- https://github.com/eclipse/photran/blob/master/org.eclipse.photran.cdtinterface/icons/model/submodule.gif
 ## class
@@ -110,6 +112,21 @@ show_hidden.gif                             - Composition of
 macrodef_obj.gif							- https://github.com/eclipse/eclipse.platform/blob/master/ant/org.eclipse.ant.ui/icons/full/obj16/macrodef_obj.png
 native_lib_path_attrib.gif					- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/obj16/native_lib_path_attrib.png
 
+## wizards
+
+newprj_wiz.png								- https://github.com/eclipse/eclipse.platform.ui/blob/master/bundles/org.eclipse.ui.ide/icons/full/etool16/newprj_wiz.png
+newprj_wizban.png							- https://github.com/eclipse/eclipse.platform.ui/blob/master/bundles/org.eclipse.ui.ide/icons/full/wizban/newprj_wiz.png
+
+newint_wiz.png								- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/etool16/newint_wiz.png
+newint_wizban.png							- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/wizban/newint_wiz.png
+
+newclass_wiz.png								- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/etool16/newclass_wiz.png
+newclass_wizban.png							- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/wizban/newclass_wiz.png
+
+newenum_wiz.png								- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/etool16/newenum_wiz.png
+newenum_wizban.png							- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/wizban/newenum_wiz.png
+
+opentype.png									- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/etool16/opentype.png
 
 app_project_type.png						- NumberFour AG
 lib_project_type.png						- NumberFour AG
@@ -117,3 +134,5 @@ test_project_type.png						- NumberFour AG
 re_project_type								- NumberFour AG
 rl_project_type.png							- NumberFour AG
 proc_project_type.png						- NumberFour AG
+n4js_function.png							- NumberFour AG
+n4js_module.png								- NumberFour AG

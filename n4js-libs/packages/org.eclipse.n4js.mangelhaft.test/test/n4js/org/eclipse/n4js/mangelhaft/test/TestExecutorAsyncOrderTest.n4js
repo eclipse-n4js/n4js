@@ -2,41 +2,148 @@ import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 
 const sleep = (ms: int): Promise<?, ?> => new Promise<any, any>(resolve => setTimeout(resolve, ms));
 
+const collected = [">>>>>>>>>>>>>>>>"];
 class BaseClass {
-    collected: [string] = [];
-    
+
     @BeforeAll
-    async baseBeforeAll(): void {
+    async baseBeforeAll50(): void {
+        await sleep(50);
+        collected.push("baseBeforeAll50");
+    }
+
+    @BeforeAll
+    async baseBeforeAll100(): void {
         await sleep(100);
-        this.collected.push("baseBeforeAll");
+        collected.push("baseBeforeAll100");
     }
+
     @Before
-    private async baseBefore(): void {
-        await sleep(5);
-        this.collected.push("baseBefore");
+    private async baseBefore100(): void {
+        await sleep(100);
+        collected.push("baseBefore100");
     }
+
+    @Before
+    private async baseBefore50(): void {
+        await sleep(50);
+        collected.push("baseBefore50");
+    }
+
+    @After
+    private async baseAfter100(): void {
+        await sleep(100);
+        collected.push("baseAfter100");
+    }
+
+    @After
+    private async baseAfter50(): void {
+        await sleep(50);
+        collected.push("baseAfter50");
+    }
+
+    @AfterAll
+    async baseAfterAll50(): void {
+        await sleep(50);
+        collected.push("baseAfterAll50");
+    }
+
+    @AfterAll
+    async baseAfterAll100(): void {
+        await sleep(100);
+        collected.push("baseAfterAll100");
+        collected.push("<<<<<<<<<<<<<<<");
+    }
+
 }
 
 export public class TestExecutorAsyncOrderTest extends BaseClass {
+
     @BeforeAll
-    async beforeAll(): void {
-        await sleep(10);
-        this.collected.push("beforeAll");
-    }
-    @Before
-    private async before(): void {
-        this.collected.push("before");
+    async beforeAll50(): void {
+        await sleep(50);
+        collected.push("beforeAll50");
     }
 
-    @Test @Fixme("GH-731")
+    @BeforeAll
+    async beforeAll100(): void {
+        await sleep(100);
+        collected.push("beforeAll100");
+    }
+
+    @Before
+    private async before50(): void {
+        collected.push("before50");
+    }
+
+    @Before
+    private async before100(): void {
+        collected.push("before100");
+    }
+
+    @Test
     test_before(): void {
-        Assert.deepEqual(this.collected, ["baseBeforeAll", "beforeAll" , "baseBefore", "before"], "should follow order");
+        // fake test just add marker to the array
+        collected.push("test_before");
+    }
+
+    @After
+    private async after100(): void {
+        await sleep(100);
+        collected.push("after100");
+    }
+
+    @After
+    private async after50(): void {
+        await sleep(50);
+        collected.push("after50");
+    }
+
+    @AfterAll
+    async afterAll50(): void {
+        await sleep(50);
+        collected.push("afterAll50");
+    }
+
+    @AfterAll
+    async afterAll100(): void {
+        await sleep(100);
+        collected.push("afterAll100");
     }
 }
-    
+
 export public class TestExecutorAsyncOrderTest_Sub extends TestExecutorAsyncOrderTest {
-    @Test @Fixme("GH-731")
+
+    @Test
     test_before_sub(): void {
-        super.test_before();
+        Assert.deepEqual(collected, [
+                ">>>>>>>>>>>>>>>>",
+                "baseBeforeAll50",
+                "baseBeforeAll100",
+                "beforeAll50",
+                "beforeAll100",
+                "baseBefore50",
+                "baseBefore100",
+                "before50",
+                "before100",
+                "test_before",
+                "after50",
+                "after100",
+                "baseAfter50",
+                "baseAfter100",
+                "afterAll50",
+                "afterAll100",
+                "baseAfterAll50",
+                "baseAfterAll100",
+                "<<<<<<<<<<<<<<<",
+                /* all next don't matter */
+                "baseBeforeAll50",
+                "baseBeforeAll100",
+                "beforeAll50",
+                "beforeAll100",
+                "baseBefore50",
+                "baseBefore100",
+                "before50",
+                "before100"
+            ], "should follow order");
     }
 }

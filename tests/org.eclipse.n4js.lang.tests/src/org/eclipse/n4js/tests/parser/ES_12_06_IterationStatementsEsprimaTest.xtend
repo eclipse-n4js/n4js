@@ -30,7 +30,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDoWhile_01() {
-		val script = 'do keep(); while (true)'.parseSuccessfully
+		val script = 'do keep(); while (true)'.parseESSuccessfully
 		val statement = script.scriptElements.head as DoStatement
 		val keepStatement = statement.statement as ExpressionStatement
 		val keep = keepStatement.expression as ParameterizedCallExpression
@@ -42,7 +42,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDoWhile_02() {
-		val script = 'do keep(); while (true);'.parseSuccessfully
+		val script = 'do keep(); while (true);'.parseESSuccessfully
 		val statement = script.scriptElements.head as DoStatement
 		val keepStatement = statement.statement as ExpressionStatement
 		val keep = keepStatement.expression as ParameterizedCallExpression
@@ -54,7 +54,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDoWhile_03() {
-		val script = 'do { x++; y--; } while (x < 10)'.parseSuccessfully
+		val script = 'do { x++; y--; } while (x < 10)'.parseESSuccessfully
 		val statement = script.scriptElements.head as DoStatement
 		val block = statement.statement as Block
 		assertEquals(2, block.statements.size)
@@ -62,7 +62,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDoWhileSemicolonInsertion_01() {
-		val script = '{ do { } while (false) false }'.parseSuccessfully
+		val script = '{ do { } while (false) false }'.parseESSuccessfully
 		val block = script.scriptElements.head as Block
 		val statement = block.statements.head as DoStatement
 		val innerBlock = statement.statement as Block
@@ -71,7 +71,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDoWhileSemicolonInsertion_02() {
-		val script = '{ do { } while (false)false }'.parseSuccessfully
+		val script = '{ do { } while (false)false }'.parseESSuccessfully
 		val block = script.scriptElements.head as Block
 		val statement = block.statements.head as DoStatement
 		val innerBlock = statement.statement as Block
@@ -80,7 +80,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testWhileStatement_01() {
-		val script = 'while (false) doSomething()'.parseSuccessfully
+		val script = 'while (false) doSomething()'.parseESSuccessfully
 		val statement = script.scriptElements.head as WhileStatement
 		val doSomethingStatement = statement.statement as ExpressionStatement
 		val doSomething = doSomethingStatement.expression as ParameterizedCallExpression
@@ -92,7 +92,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testWhileStatement_02() {
-		val script = 'while (x < 10) { x++; y--; }'.parseSuccessfully
+		val script = 'while (x < 10) { x++; y--; }'.parseESSuccessfully
 		val statement = script.scriptElements.head as WhileStatement
 		val block = statement.statement as Block
 		assertEquals(2, block.statements.size)
@@ -100,7 +100,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_01() {
-		val script = 'for(;;);'.parseSuccessfully
+		val script = 'for(;;);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val empty = statement.statement as EmptyStatement
 		assertNotNull(empty)
@@ -115,7 +115,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_02() {
-		val script = 'for(;;){}'.parseSuccessfully
+		val script = 'for(;;){}'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val block = statement.statement as Block
 		assertTrue(block.statements.empty)
@@ -130,7 +130,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_03() {
-		val script = 'for(x = 0;;);'.parseSuccessfully
+		val script = 'for(x = 0;;);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val empty = statement.statement as EmptyStatement
 		assertNotNull(empty)
@@ -149,7 +149,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_04() {
-		val script = 'for(var x = 0;;);'.parseSuccessfully
+		val script = 'for(var x = 0;;);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val empty = statement.statement as EmptyStatement
 		assertNotNull(empty)
@@ -166,7 +166,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_05() {
-		val script = 'for(let x = 0;;);'.parseSuccessfully
+		val script = 'for(let x = 0;;);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val empty = statement.statement as EmptyStatement
 		assertNotNull(empty)
@@ -179,7 +179,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_06() {
-		val script = 'for(var x = 0, y = 1;;);'.parseSuccessfully
+		val script = 'for(var x = 0, y = 1;;);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val empty = statement.statement as EmptyStatement
 		assertNotNull(empty)
@@ -200,7 +200,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_07() {
-		val script = 'for(x = 0; x < 42;);'.parseSuccessfully
+		val script = 'for(x = 0; x < 42;);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val empty = statement.statement as EmptyStatement
 		assertNotNull(empty)
@@ -221,7 +221,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_08() {
-		val script = 'for(x = 0; x < 42; x++);'.parseSuccessfully
+		val script = 'for(x = 0; x < 42; x++);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val empty = statement.statement as EmptyStatement
 		assertNotNull(empty)
@@ -238,7 +238,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_09() {
-		val script = 'for(x = 0; x < 42; x++) process(x);'.parseSuccessfully
+		val script = 'for(x = 0; x < 42; x++) process(x);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val body = statement.statement as ExpressionStatement
 		val process = body.expression as ParameterizedCallExpression
@@ -250,7 +250,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForLoop_typeDecl() {
-		val script = 'for(var x: any = 0; ;) {}'.parseSuccessfully
+		val script = 'for(var x: any = 0; ;) {}'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val x = statement.varDecl.head
 		assertNotNull(x.declaredTypeRef)
@@ -259,7 +259,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForInLoop_01() {
-		val script = 'for(x in list) process(x);'.parseSuccessfully
+		val script = 'for(x in list) process(x);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val body = statement.statement as ExpressionStatement
 		val process = body.expression as ParameterizedCallExpression
@@ -271,7 +271,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForInLoop_02() {
-		val script = 'for(var x in list) process(x);'.parseSuccessfully
+		val script = 'for(var x in list) process(x);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		assertTrue(statement.forIn)
 		assertFalse(statement.forOf)
@@ -280,7 +280,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForInLoop_03() {
-		val script = 'for(var x = 42 in list) process(x);'.parseSuccessfully
+		val script = 'for(var x = 42 in list) process(x);'.parseESWithError
 		val statement = script.scriptElements.head as ForStatement
 		assertTrue(statement.forIn)
 		assertFalse(statement.forOf)
@@ -289,7 +289,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForInLoop_04() {
-		val script = 'for(let x in list) process(x);'.parseSuccessfully
+		val script = 'for(let x in list) process(x);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		assertTrue(statement.forIn)
 		assertFalse(statement.forOf)
@@ -298,7 +298,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForInLoop_05() {
-		val script = 'for (var i = function() { return 10 in [] } in list) process(x);'.parseSuccessfully
+		val script = 'for (var i = function() { return 10 in [] } in list) process(x);'.parseESWithError
 		val statement = script.scriptElements.head as ForStatement
 		assertTrue(statement.forIn)
 		assertFalse(statement.forOf)
@@ -307,7 +307,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForInLoop_06() {
-		val script = 'for (var i = function() {} in list) process(x);'.parseSuccessfully
+		val script = 'for (var i = function() {} in list) process(x);'.parseESWithError
 		val statement = script.scriptElements.head as ForStatement
 		assertTrue(statement.forIn)
 		assertFalse(statement.forOf)
@@ -325,12 +325,12 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 			        return keys;
 			    }
 			;
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 	@Test
 	def void testForOfLoop_01() {
-		val script = 'for(x of list) process(x);'.parseSuccessfully
+		val script = 'for(x of list) process(x);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val body = statement.statement as ExpressionStatement
 		val process = body.expression as ParameterizedCallExpression
@@ -342,7 +342,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_02() {
-		val script = 'for(var x of list) process(x);'.parseSuccessfully
+		val script = 'for(var x of list) process(x);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
@@ -351,7 +351,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_03() {
-		val script = 'for(var x = 42 of list) process(x);'.parseSuccessfully
+		val script = 'for(var x = 42 of list) process(x);'.parseESWithError
 		val statement = script.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
@@ -360,7 +360,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_04() {
-		val script = 'for(let x of list) process(x);'.parseSuccessfully
+		val script = 'for(let x of list) process(x);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
@@ -368,7 +368,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_05() {
-		val script = 'for (var i = function() { return 10 in [] } of list) process(x);'.parseSuccessfully
+		val script = 'for (var i = function() { return 10 in [] } of list) process(x);'.parseESWithError
 		val statement = script.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
@@ -377,7 +377,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_06() {
-		val script = 'for (var i = function() {} of list) process(x);'.parseSuccessfully
+		val script = 'for (var i = function() {} of list) process(x);'.parseESWithError
 		val statement = script.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
@@ -386,7 +386,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_07() {
-		val script = 'for (var i = "" of ["a","b"]) process(x);'.parseSuccessfully
+		val script = 'for (var i = "" of ["a","b"]) process(x);'.parseESWithError
 		val statement = script.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
@@ -395,7 +395,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_08() {
-		val script = 'for (of of []) process(x);'.parseSuccessfully
+		val script = 'for (of of []) process(x);'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
@@ -406,7 +406,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_09() {
-		val statement = 'for (var of of []) process(x);'.parseSuccessfully.scriptElements.head as ForStatement
+		val statement = 'for (var of of []) process(x);'.parseESSuccessfully.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
@@ -415,7 +415,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_10() {
-		val statement = 'for (var of = "" of []) process(x);'.parseSuccessfully.scriptElements.head as ForStatement
+		val statement = 'for (var of = "" of []) process(x);'.parseESWithError.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
@@ -424,7 +424,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_11() {
-		val statement = 'for (let of of []) process(x);'.parseSuccessfully.scriptElements.head as ForStatement
+		val statement = 'for (let of of []) process(x);'.parseESSuccessfully.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
@@ -433,7 +433,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_12() {
-		val statement = 'for (let of = "" of []) process(x);'.parseSuccessfully.scriptElements.head as ForStatement
+		val statement = 'for (let of = "" of []) process(x);'.parseESWithError.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
@@ -442,7 +442,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_13() {
-		val statement = 'for (const of of []) process(x);'.parseSuccessfully.scriptElements.head as ForStatement
+		val statement = 'for (const of of []) process(x);'.parseESSuccessfully.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
@@ -451,7 +451,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_14() {
-		val statement = 'for (const of = "" of []) process(x);'.parseSuccessfully.scriptElements.head as ForStatement
+		val statement = 'for (const of = "" of []) process(x);'.parseESWithError.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
@@ -460,16 +460,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testForOfLoop_15() {
-		val statement = 'for(var v = new X() of list) {};'.parseSuccessfully.scriptElements.head as ForStatement
-		assertFalse(statement.forIn)
-		assertTrue(statement.forOf)
-		assertFalse(statement.forPlain)
-		assertEquals('v', statement.varDecl.head.name);
-	}
-
-	@Test
-	def void testForOfLoop_16() {
-		val statement = '"use strict"; for(var v = new X() of list) {}'.parseWithError.scriptElements.last as ForStatement
+		val statement = 'for(var v = new X() of list) {};'.parseESWithError.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
@@ -480,10 +471,20 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 	def void testForOfLoop_17() {
 		val statement = '''
 			for(var [a2,b2,c2] of arr2) {}
-		'''.parseSuccessfully.scriptElements.head as ForStatement
+		'''.parseESSuccessfully.scriptElements.head as ForStatement
 		assertFalse(statement.forIn)
 		assertTrue(statement.forOf)
 		assertFalse(statement.forPlain)
 		assertEquals('a2', statement.varDecl.head.name);
+	}
+
+	// NOTE: strict mode is validated in the validation, not in the parser
+	@Test
+	def void testForOfLoop_16() {
+		val statement = '"use strict"; for(var v = new X() of list) {}'.parseESWithError.scriptElements.last as ForStatement
+		assertFalse(statement.forIn)
+		assertTrue(statement.forOf)
+		assertFalse(statement.forPlain)
+		assertEquals('v', statement.varDecl.head.name);
 	}
 }

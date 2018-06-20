@@ -152,7 +152,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 			N4JSSourceContainerType expectedN4JSSourceContainerType) {
 
 		if (projectURI.segmentCount() >= DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) {
-			String expectedProjectName = projectReference.getProject().getProjectId();
+			String expectedProjectName = projectReference.getProjectId();
 			if (expectedProjectName != null && expectedProjectName.length() > 0) {
 				IProject existingProject = workspace.getProject(expectedProjectName);
 				if (existingProject.isAccessible()) {

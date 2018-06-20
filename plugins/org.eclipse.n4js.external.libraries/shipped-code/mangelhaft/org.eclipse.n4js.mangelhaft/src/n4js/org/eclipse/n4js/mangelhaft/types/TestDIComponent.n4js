@@ -9,6 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+/** Main DI component for Mangelhaft. Used by specific runners as parent. */
+/* TODO consider removing
+ * There is no custom binding for this controller, so it seems that it serves no purpose, other than 
+ * passing it as parent to other places. The only thing where it might make difference is some {@code @Singleton}
+ * caching when multiple child DI components are running at the same time sharing a parent. This has to be confirmed. 
+ */
 @GenerateInjector
-export public class TestDIComponent{}
- 
+export public class TestDIComponent {}

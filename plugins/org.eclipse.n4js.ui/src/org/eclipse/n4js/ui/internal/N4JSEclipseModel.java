@@ -35,8 +35,8 @@ import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.internal.N4JSSourceContainerType;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.SourceFragment;
-import org.eclipse.n4js.n4mf.SourceFragmentType;
+import org.eclipse.n4js.n4mf.SourceContainerDescription;
+import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
@@ -51,6 +51,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The eclipse specific implementation aspects of the N4JSModel.
  */
 @SuppressWarnings("javadoc")
 @Singleton
@@ -88,6 +89,12 @@ public class N4JSEclipseModel extends N4JSModel {
 
 		checkNotNull(project, "Project not found. URI: " + location);
 		return getN4JSProject(project);
+	}
+
+	@Override
+	protected IN4JSProject newAbsentProject(String projectId) {
+		final URI absent = URI.createPlatformResourceURI(projectId, false);
+		return new N4JSEclipseProject(workspace.getProject(projectId), absent, this);
 	}
 
 	@Override
@@ -203,7 +210,7 @@ public class N4JSEclipseModel extends N4JSModel {
 		ImmutableList.Builder<IN4JSEclipseArchive> result = ImmutableList.builder();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			List<ProjectDependency> dependencies = description.getAllProjectDependencies();
+			List<ProjectDependency> dependencies = description.getProjectDependencies();
 			for (ProjectDependency dependency : dependencies) {
 				URI dependencyLocation = getInternalWorkspace().getLocation(location, dependency,
 						N4JSSourceContainerType.ARCHIVE);
@@ -227,13 +234,13 @@ public class N4JSEclipseModel extends N4JSModel {
 		URI location = project.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
-			List<SourceFragment> sourceFragments = newArrayList(from(description.getSourceFragment()));
+			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
 			sourceFragments.sort((f1, f2) -> f1.compareByFragmentType(f2));
-			for (SourceFragment sourceFragment : sourceFragments) {
+			for (SourceContainerDescription sourceFragment : sourceFragments) {
 				List<String> paths = sourceFragment.getPaths();
 				for (String p : paths) {
 					IN4JSEclipseSourceContainer sourceContainer = createProjectN4JSSourceContainer(project,
-							sourceFragment.getSourceFragmentType(), p);
+							sourceFragment.getSourceContainerType(), p);
 					result.add(sourceContainer);
 				}
 			}
@@ -248,14 +255,17 @@ public class N4JSEclipseModel extends N4JSModel {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ImmutableList<? extends IN4JSEclipseProject> getDependencies(N4JSProject project) {
-		return (ImmutableList<? extends IN4JSEclipseProject>) super.getDependencies(project);
+	public ImmutableList<? extends IN4JSEclipseProject> getDependencies(N4JSProject project,
+			boolean includeAbsentProjects) {
+		return (ImmutableList<? extends IN4JSEclipseProject>) super.getDependencies(project, includeAbsentProjects);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ImmutableList<? extends IN4JSEclipseProject> getDependenciesAndImplementedApis(N4JSProject project) {
-		return (ImmutableList<? extends IN4JSEclipseProject>) super.getDependenciesAndImplementedApis(project);
+	public ImmutableList<? extends IN4JSEclipseProject> getDependenciesAndImplementedApis(N4JSProject project,
+			boolean includeAbsentProjects) {
+		return (ImmutableList<? extends IN4JSEclipseProject>) super.getDependenciesAndImplementedApis(project,
+				includeAbsentProjects);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -266,12 +276,14 @@ public class N4JSEclipseModel extends N4JSModel {
 
 	@Override
 	protected IN4JSEclipseSourceContainer createProjectN4JSSourceContainer(N4JSProject project,
-			SourceFragmentType type, String relativeLocation) {
+			SourceContainerType type, String relativeLocation) {
 
 		N4JSEclipseProject casted = (N4JSEclipseProject) project;
 		IProject eclipseProject = casted.getProject();
 		final IContainer container;
-		if (".".equals(relativeLocation)) {
+
+		String relPath = new Path(relativeLocation).toString();
+		if (relPath.isEmpty() || ".".equals(relPath)) {
 			container = eclipseProject;
 		} else {
 			container = eclipseProject.getFolder(relativeLocation);

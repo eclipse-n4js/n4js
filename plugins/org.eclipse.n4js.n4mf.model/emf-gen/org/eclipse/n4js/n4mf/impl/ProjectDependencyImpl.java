@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.n4mf.ProjectDependency;
 import org.eclipse.n4js.n4mf.ProjectDependencyScope;
-import org.eclipse.n4js.n4mf.SimpleProjectDependency;
+import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.n4mf.VersionConstraint;
 
 /**
@@ -42,7 +42,7 @@ import org.eclipse.n4js.n4mf.VersionConstraint;
  *
  * @generated
  */
-public class ProjectDependencyImpl extends SimpleProjectDependencyImpl implements ProjectDependency {
+public class ProjectDependencyImpl extends ProjectReferenceImpl implements ProjectDependency {
 	/**
 	 * The cached value of the '{@link #getVersionConstraint() <em>Version Constraint</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -261,9 +261,9 @@ public class ProjectDependencyImpl extends SimpleProjectDependencyImpl implement
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == SimpleProjectDependency.class) {
+		if (baseClass == ProjectReference.class) {
 			switch (baseOperationID) {
-				case N4mfPackage.SIMPLE_PROJECT_DEPENDENCY___GET_SCOPE: return N4mfPackage.PROJECT_DEPENDENCY___GET_SCOPE;
+				case N4mfPackage.PROJECT_REFERENCE___GET_SCOPE: return N4mfPackage.PROJECT_DEPENDENCY___GET_SCOPE;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}

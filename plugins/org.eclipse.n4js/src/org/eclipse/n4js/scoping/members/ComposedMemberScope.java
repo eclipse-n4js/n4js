@@ -32,11 +32,13 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypesFactory;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -44,8 +46,6 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.AbstractScope;
 
 import com.google.common.collect.Iterators;
-
-import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Scope implementation for ComposedTypeRefs, i.e. union types and intersection types.
@@ -100,7 +100,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	}
 
 	/**
-	 * Returns all elements of union. No erroneous descriptions (instances of IEObjectDescriptionWithError) will be
+	 * Returns all elements of union. No erroneous descriptions (see {@link IEObjectDescriptionWithError}) will be
 	 * considered here, as we assume this method to be called from content assist and we do not want to show wrong
 	 * elements. These descriptions will be returned by {@link #getSingleElement(QualifiedName)} though to show errors
 	 * in case of explicit references to these members.
@@ -114,7 +114,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			try {
 				for (IEObjectDescription currDesc : currSubScope.getAllElements()) {
 					// omit erroneous bindings (they will be provided in getSingleLocalElement... though)
-					if (!(currDesc instanceof IEObjectDescriptionWithError)) {
+					if (!(IEObjectDescriptionWithError.isErrorDescription(currDesc))) {
 						String name = currDesc.getName().getLastSegment();
 						names.add(name);
 					}
@@ -128,7 +128,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 		List<IEObjectDescription> descriptions = new ArrayList<>(names.size());
 		for (String name : names) {
 			IEObjectDescription description = getSingleLocalElementByName(QualifiedName.create(name));
-			if (description != null && !(description instanceof IEObjectDescriptionWithError)) {
+			if (description != null && !IEObjectDescriptionWithError.isErrorDescription(description)) {
 				descriptions.add(description);
 			}
 		}
@@ -176,8 +176,9 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			final Resource res = EcoreUtilN4.getResource(request.context, composedTypeRef);
 			final RuleEnvironment GwithSubstitutions = ts.createRuleEnvironmentForContext(typeRef, res);
 			final TMember member = findMemberInSubScope(subScope, memberName);
-			cmiBuilder.addMember(member, GwithSubstitutions);
-
+			final boolean structFieldInitMode = typeRef
+					.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+			cmiBuilder.addMember(member, GwithSubstitutions, structFieldInitMode);
 		}
 		// produce result
 		ComposedMemberInfo cmi = cmiBuilder.get();
