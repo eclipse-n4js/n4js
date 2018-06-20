@@ -64,10 +64,6 @@ import com.google.inject.Injector;
 @InjectWith(N4JSUiInjectorProvider.class)
 public abstract class AbstractBuilderTest {
 
-	static {
-		EclipseGracefulUIShutdownEnabler.enableOnce();
-	}
-
 	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
 
 	/** {@code .n4js} file extension */
@@ -85,7 +81,7 @@ public abstract class AbstractBuilderTest {
 	@Inject
 	private CloseProjectTaskScheduler closedProjectTaskProcessor;
 
-	/***/
+	/** Setups workspace by cleaning and waiting for auto builds, asserting index is clean. */
 	@Before
 	public void setUp() throws Exception {
 		IResourcesSetupUtil.cleanWorkspace();
@@ -190,7 +186,10 @@ public abstract class AbstractBuilderTest {
 		return true;
 	}
 
-	/***/
+	/**
+	 * Clean up by saving and closing editors, cleaning the workspace, waiting for auto builds and asserting clean
+	 * index.
+	 */
 	@After
 	public void tearDown() throws Exception {
 		// save the files as otherwise the projects cannot be deleted
