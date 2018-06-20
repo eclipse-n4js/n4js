@@ -4,6 +4,8 @@ set -e
 
 echo "Start publishing n4js-libs and n4js-cli"
 
+yarn cache clean
+
 function echo_exec {
     echo "$@"
     $@

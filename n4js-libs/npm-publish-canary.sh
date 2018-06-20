@@ -18,12 +18,29 @@ DIR_ROOT=`pwd`
 
 echo "We are currently in $PWD"
 
+# Create .npmrc with auth token in all npm projects
+DIRS=$(find ./packages/ -type d -mindepth 1 -maxdepth 1)
+
 function echo_exec {
     echo "$@"
     $@
 }
 
+cleanup() {
+	set +e
+	# Remove .npmrc and node_modules after publishing for now
+	for dir in $DIRS
+	do
+		rm "$dir/.npmrc"
+		rm -rf "$dir/node_modules"
+	done
+	rm -rf "${DIR_ROOT}/node_modules"
+	set -e
+}
+
 HOST_NAME=`hostname`
+
+cleanup
 
 # Turn http://localhost:4873 -> localhost:4873
 NPM_REGISTRY_WITHOUT_PROTOCOL=$(echo ${NPM_REGISTRY} | awk -F"//" '{print $2}')
@@ -37,14 +54,5 @@ do
 done
 
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
-
 lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
-
-# Remove .npmrc for now
-for dir in $DIRS
-do
-	rm "$dir/.npmrc"
-done
-
-# Remove all node_modules in n4js-libs
-rm -rf "$dir/*/node_modules"
+cleanup
