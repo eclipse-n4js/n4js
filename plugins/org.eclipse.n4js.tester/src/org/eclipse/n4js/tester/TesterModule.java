@@ -100,7 +100,8 @@ public class TesterModule implements Module {
 	@Override
 	public void configure(Binder binder) {
 		if (n4jsInjector != null) {
-			// binder.requireExplicitBindings();
+			// binder.requireExplicitBindings(); // instead of this call, the listener below is used to detect problems
+			bindListenerForN4jsSingletons(binder);
 
 			// define all bindings to N4JS here (non-ui packages)
 			binder.bind(ObjectMapper.class)
@@ -122,8 +123,6 @@ public class TesterModule implements Module {
 			binder.bind(RunnerRegistry.class)
 					.toProvider(() -> n4jsInjector.getInstance(RunnerRegistry.class));
 		}
-
-		bindListenerForN4jsSingletons(binder);
 
 		binder.bind(TesterRegistry.class);
 		binder.bind(TesterEventBus.class);
