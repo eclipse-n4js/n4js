@@ -16,7 +16,7 @@ pipeline {
             // Bind to host's docker sock to use host's docker daemon
             args '--group-add 994 --network=host -v n4js-m2-repository:/usr/share/maven/ref/repository/ -v /var/run/docker.sock:/var/run/docker.sock'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
-            label 'test-ec2-m5xlarge'
+            label 'm5xlarge'
         }
     }
     options {
