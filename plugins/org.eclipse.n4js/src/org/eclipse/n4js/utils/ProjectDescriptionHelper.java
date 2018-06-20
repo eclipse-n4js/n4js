@@ -38,6 +38,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -181,13 +182,30 @@ public class ProjectDescriptionHelper {
 		if (pdFromPackageJSON != null) {
 			setInformationFromFileSystem(location, pdFromPackageJSON);
 			return pdFromPackageJSON;
+		} else {
+			return null;
 		}
-		System.out.println("USING MANIFEST.N4MF: " + location);
-		return loadManifestAtLocation(location);
+		// System.out.println("USING MANIFEST.N4MF: " + location);
+		// return loadManifestAtLocation(location);
 		// ProjectDescription fromPackageJSON = loadPackageJSONAtLocation(location);
 		// ProjectDescription fromManifest = loadManifestAtLocation(location);
 		// ProjectDescription merged = mergeProjectDescriptions(fromPackageJSON, fromManifest);
 		// return merged;
+	}
+
+	/**
+	 * Loads the project description defined in a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON package.json fragment} at the
+	 * given location or <code>null</code> if no fragment is found at this location.
+	 */
+	public ProjectDescription loadProjectDescriptionFragmentAtLocation(URI location) {
+		JSONDocument packageJSON = JSONFactory.eINSTANCE.createJSONDocument();
+		if (mergePackageJSONFragmentAtLocation(location, packageJSON)) {
+			adjustMainPath(location, packageJSON);
+			ProjectDescription pd = convertToProjectDescription(location, packageJSON, false);
+			setInformationFromFileSystem(location, pd);
+			return pd;
+		}
+		return null;
 	}
 
 	/**
@@ -307,12 +325,9 @@ public class ProjectDescriptionHelper {
 			}
 			// merge properties from fragment into targetPackageJSON
 			JSONModelUtils.merge(targetPackageJSON, fragment, false, true);
+			return true;
 		}
-		return true;
-	}
-
-	private ProjectDescription loadManifestAtLocation(URI location) {
-		return loadXtextFileAtLocation(location, IN4JSProject.N4MF_MANIFEST, ProjectDescription.class);
+		return false;
 	}
 
 	private <T extends EObject> T loadXtextFileAtLocation(URI location, String name, Class<T> expectedTypeOfRoot) {
@@ -432,12 +447,16 @@ public class ProjectDescriptionHelper {
 				valueOfTopLevelPropertyMain = asStringOrNull(value);
 				break;
 			case PROP__N4JS:
+				// mark project with N4JS nature
+				target.setHasN4JSNature(true);
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
 				break;
 			}
 		}
-		// set default values
+		// store whether target has a declared mainModule before applying the default values
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
+
+		// set default values
 		if (applyDefaultValues) {
 			applyDefaults(target, location);
 		}

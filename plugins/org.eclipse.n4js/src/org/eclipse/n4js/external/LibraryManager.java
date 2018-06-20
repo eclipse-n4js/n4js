@@ -247,27 +247,57 @@ public class LibraryManager {
 		Map<String, String> dependencies = new HashMap<>();
 		for (LibraryChange libChange : actualChanges) {
 			if (libChange.type == LibraryChangeType.Added) {
-				// In case we are dealing with a plain npm package with type definitions, the following will
-				// return a project description that considers the package-fragment.json. If a fragment is present
-				// the returned project description will only list the fragment dependencies (type definition
-				// dependencies).
-				// In case the project is an N4JS project, the description will list all project dependencies.
-				ProjectDescription pd = filebasedPackageManger
-						.loadProjectDescriptionFromProjectRoot(libChange.location);
-				if (pd != null) {
-					for (ProjectDependency pDep : pd.getProjectDependencies()) {
-						String name = pDep.getProjectId();
-						String version = NO_VERSION;
-						if (pDep.getVersionConstraint() != null) {
-							version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
-						}
-						dependencies.put(name, version);
-					}
+				final org.eclipse.emf.common.util.URI npmLocation = libChange.location;
+
+				// We need to consider three different cases here (see 1, 2, 3):
+
+				// 1. The package has a package-fragment.json: Make sure to only collect
+				// transitive dependencies declared in the fragment (type definition dependencies)
+				if (filebasedPackageManger.isExternalProjectWithFragment(npmLocation)) {
+					ProjectDescription description = filebasedPackageManger
+							.loadFragmentProjectDescriptionFromProjectRoot(npmLocation);
+					collectDependencies(description, dependencies);
+					continue;
 				}
+
+				// obtain project description of the added project (package.json + fragment)
+				final ProjectDescription pd = filebasedPackageManger
+						.loadProjectDescriptionFromProjectRoot(npmLocation);
+
+				// 2. The package represents an actual N4JS project (with .n4js resources), which
+				// needs to be built. In that case we must install all of its dependencies, as declared
+				// in its package.json file.
+				if (pd.isHasN4JSNature()) {
+					collectDependencies(pd, dependencies);
+					continue;
+				}
+
+				// 3. The package is a plain npm package w/o fragment (type definitions): In this case we do not collect
+				// its dependencies transitively (no type definitions required)
 			}
 		}
 
 		return dependencies;
+	}
+
+	/**
+	 * Reads all dependencies from the given project {@code description} and puts them in {@code dependencies}.
+	 *
+	 * @param description
+	 *            The project description to collect dependencies from.
+	 * @param dependencies
+	 *            The map to store the collected dependencies in. Stores a mapping of the dependency name to the version
+	 *            constraint.
+	 */
+	private void collectDependencies(ProjectDescription description, Map<String, String> dependencies) {
+		for (ProjectDependency pDep : description.getProjectDependencies()) {
+			String name = pDep.getProjectId();
+			String version = NO_VERSION;
+			if (pDep.getVersionConstraint() != null) {
+				version = VersionConstraintFormatUtil.npmFormat(pDep.getVersionConstraint());
+			}
+			dependencies.put(name, version);
+		}
 	}
 
 	private List<LibraryChange> installUninstallNPMs(IProgressMonitor monitor, MultiStatus status,

@@ -40,6 +40,36 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 	}
 
 	/**
+	 * Returns {@code true} iff the given {@code rootLocation} refers to an external library project location that
+	 * contains a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON}.
+	 */
+	@Override
+	public boolean isExternalProjectWithFragment(URI rootLocation) {
+		if (null != rootLocation && rootLocation.isFile()) {
+			File projectRoot = new File(rootLocation.toFileString());
+			return new File(projectRoot, N4JSGlobals.PACKAGE_FRAGMENT_JSON).exists();
+		}
+		return false;
+	}
+
+	/**
+	 * Loads a project description from the given external library root location, purely based on the contents of the
+	 * {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON} file.
+	 *
+	 * Returns {@code null} if no fragment can be found at the given location.
+	 */
+	@Override
+	public ProjectDescription loadFragmentProjectDescriptionFromProjectRoot(URI rootLocation) {
+		if (null != rootLocation && rootLocation.isFile()) {
+			File projectRoot = new File(rootLocation.toFileString());
+			if (projectRoot.exists() && projectRoot.isDirectory()) {
+				return projectDescriptionHelper.loadProjectDescriptionAtLocation(rootLocation);
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Loads the project description from the given external library root location.
 	 *
 	 * For plain npm packages with {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON} this returns a project description that

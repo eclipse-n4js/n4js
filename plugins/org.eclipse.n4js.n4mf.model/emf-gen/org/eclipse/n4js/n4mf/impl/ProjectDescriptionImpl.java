@@ -73,6 +73,7 @@ import org.eclipse.n4js.utils.io.FileUtils;
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getTestedProjects <em>Tested Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#getModuleLoader <em>Module Loader</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.impl.ProjectDescriptionImpl#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
  * </ul>
  *
  * @generated
@@ -387,6 +388,26 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected boolean hasNestedNodeModulesFolder = HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isHasN4JSNature() <em>Has N4JS Nature</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isHasN4JSNature()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean HAS_N4JS_NATURE_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isHasN4JSNature() <em>Has N4JS Nature</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isHasN4JSNature()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean hasN4JSNature = HAS_N4JS_NATURE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -850,6 +871,27 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isHasN4JSNature() {
+		return hasN4JSNature;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setHasN4JSNature(boolean newHasN4JSNature) {
+		boolean oldHasN4JSNature = hasN4JSNature;
+		hasN4JSNature = newHasN4JSNature;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4mfPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE, oldHasN4JSNature, hasN4JSNature));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getOutputPath() {
 		return FileUtils.normalizeDotWhenEmpty(this.getOutputPathRaw());
 	}
@@ -985,6 +1027,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return getModuleLoader();
 			case N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
 				return isHasNestedNodeModulesFolder();
+			case N4mfPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
+				return isHasN4JSNature();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -1074,6 +1118,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
 				setHasNestedNodeModulesFolder((Boolean)newValue);
 				return;
+			case N4mfPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
+				setHasN4JSNature((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -1152,6 +1199,9 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
 				setHasNestedNodeModulesFolder(HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT);
 				return;
+			case N4mfPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
+				setHasN4JSNature(HAS_N4JS_NATURE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1208,6 +1258,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return moduleLoader != MODULE_LOADER_EDEFAULT;
 			case N4mfPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
 				return hasNestedNodeModulesFolder != HAS_NESTED_NODE_MODULES_FOLDER_EDEFAULT;
+			case N4mfPackage.PROJECT_DESCRIPTION__HAS_N4JS_NATURE:
+				return hasN4JSNature != HAS_N4JS_NATURE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1265,6 +1317,8 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(moduleLoader);
 		result.append(", hasNestedNodeModulesFolder: ");
 		result.append(hasNestedNodeModulesFolder);
+		result.append(", hasN4JSNature: ");
+		result.append(hasN4JSNature);
 		result.append(')');
 		return result.toString();
 	}

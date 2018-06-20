@@ -56,6 +56,12 @@ class ProjectDescription {
 	 */
 	boolean hasNestedNodeModulesFolder
 
+	/**
+	 * Indicates whether the underlying project description explicitly configured
+	 * the project to be an N4JS project (e.g. includes n4js section). 
+	 */
+	boolean hasN4JSNature
+
 	op String getOutputPath() {
 		return FileUtils.normalizeDotWhenEmpty(outputPathRaw);
 	}

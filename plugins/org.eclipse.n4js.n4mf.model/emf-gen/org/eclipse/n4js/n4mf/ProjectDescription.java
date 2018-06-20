@@ -45,6 +45,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getTestedProjects <em>Tested Projects</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#getModuleLoader <em>Module Loader</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4mf.ProjectDescription#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription()
@@ -530,6 +531,33 @@ public interface ProjectDescription extends EObject {
 	 * @generated
 	 */
 	void setHasNestedNodeModulesFolder(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Has N4JS Nature</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Indicates whether the underlying project description explicitly configured
+	 * the project to be an N4JS project (e.g. includes n4js section).
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Has N4JS Nature</em>' attribute.
+	 * @see #setHasN4JSNature(boolean)
+	 * @see org.eclipse.n4js.n4mf.N4mfPackage#getProjectDescription_HasN4JSNature()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isHasN4JSNature();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4mf.ProjectDescription#isHasN4JSNature <em>Has N4JS Nature</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Has N4JS Nature</em>' attribute.
+	 * @see #isHasN4JSNature()
+	 * @generated
+	 */
+	void setHasN4JSNature(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->
