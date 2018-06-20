@@ -36,7 +36,7 @@ rm -rf node_modules
 export NPM_TAG=test
 
 if [ "$DESTINATION" = "public" ]; then
-	if [ -z $NPM_TOKEN]; then
+	if [ -z $NPM_TOKEN ]; then
 		echo "Publishing to public requires the environment variable NPM_TOKEN to be set but it has not been set!"
 		exit 0;
 	fi
