@@ -12,7 +12,6 @@ package org.eclipse.n4js.tests.util;
 
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.core.runtime.jobs.Job.getJobManager;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
@@ -24,12 +23,17 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -56,6 +60,7 @@ import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.UIUtils.TimeoutRuntimeException;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -67,11 +72,17 @@ import org.junit.Assert;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.base.Stopwatch;
 
 /**
  * Utilities for for tests that setup / assert N4JS projects.
  */
 public class ProjectTestsUtils {
+
+	/** Default wait time used in waiting for jobs. */
+	public static final long MAX_WAIT_2_MINUTES = 100 * 60 * 2;
+	/** Default interval used to check state of jobs. */
+	public static final long CHECK_INTERVAL_100_MS = 100L;
 
 	private static Logger LOGGER = Logger.getLogger(ProjectTestsUtils.class);
 
@@ -293,7 +304,6 @@ public class ProjectTestsUtils {
 	public static void waitForAutoBuild() {
 		final int maxTry = 3;
 		int currentTry = 1;
-		int maxWait = 100 * 60 * 2;
 		long start = System.currentTimeMillis();
 		long end = start;
 		boolean wasInterrupted = false;
@@ -314,13 +324,13 @@ public class ProjectTestsUtils {
 				} catch (InterruptedException e) {
 					wasInterrupted = true;
 				}
-			} while (wasInterrupted && (end - start) < maxWait);
+			} while (wasInterrupted && (end - start) < MAX_WAIT_2_MINUTES);
 			if (!foundJob) {
 				LOGGER.debug("Auto build job hasn't been found, but maybe already run.");
 
 				currentTry += 1;
 				try {
-					Thread.sleep(100);
+					Thread.sleep(CHECK_INTERVAL_100_MS);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 					LOGGER.debug("Couldn't sleep, abort waiting");
@@ -361,41 +371,81 @@ public class ProjectTestsUtils {
 	}
 
 	/**
-	 * Waits for all the jobs that have status {@link Job#RUNNING} of {@link Job#WAITING}. Uses {@link Thread#sleep}, so
-	 * use with care.
+	 * Delegates to {@link #waitForAllJobs(long, long)} with default values {@link #MAX_WAIT_2_MINUTES} and
+	 * {@link #CHECK_INTERVAL_100_MS}.
 	 */
 	public static void waitForAllJobs() {
-		int maxWait = 100 * 60 * 2;
-		long start = System.currentTimeMillis();
-		long end = start;
+		waitForAllJobs(MAX_WAIT_2_MINUTES, CHECK_INTERVAL_100_MS);
+	}
+
+	/**
+	 * Waits for all the jobs that have status {@link Job#RUNNING} of {@link Job#WAITING}. Uses {@link Thread#sleep}, so
+	 * use with care.
+	 *
+	 * Intentionally throws runtime exception if there are still jobs running after given timeout. Don't catch it,
+	 * increase timeout in your tests.
+	 *
+	 * @param maxWait
+	 *            maximum wait time in {@link TimeUnit#MILLISECONDS}
+	 * @param interval
+	 *            interval of making checks, {@link TimeUnit#MILLISECONDS}
+	 */
+	public static void waitForAllJobs(final long maxWait, final long interval) {
+		if (maxWait < 1)
+			throw new IllegalArgumentException("Wait time needs to be > 0, was " + maxWait + ".");
+
+		List<String> foundJobs = listJobsRunningWaiting();
+		if (foundJobs.isEmpty()) {
+			LOGGER.info("No running nor waiting jobs found, maybe all have already finished.");
+			return;
+		}
 		boolean wasInterrupted = false;
+		boolean wasCancelled = false;
 		boolean foundJob = false;
+		Stopwatch sw = Stopwatch.createStarted();
 		do {
 			try {
-				List<String> foundJobs = listJobsRunningWaiting();
+				foundJobs = listJobsRunningWaiting();
 				if (!foundJobs.isEmpty()) {
+					if (LOGGER.isInfoEnabled())
+						LOGGER.info("Found " + foundJobs.size() + " after " + sw + ", going to sleep for a while.");
+
 					foundJob = true;
-					// Job.getJobManager().join(null, null);
-					Thread.sleep(100L);
+					Thread.sleep(interval);
 				}
 				wasInterrupted = false;
-				end = System.currentTimeMillis();
 			} catch (OperationCanceledException e) {
-				e.printStackTrace();
+				wasCancelled = true;
+				LOGGER.error("Waiting for jobs was cancelled after " + sw + ".", e);
 			} catch (InterruptedException e) {
 				wasInterrupted = true;
+				LOGGER.error("Waiting for jobs was interrupted after " + sw + ".", e);
 			}
-		} while (wasInterrupted && (end - start) < maxWait);
-		if (!foundJob) {
-			LOGGER.debug("No running nor waiting jobs found, maybe all have already finished.");
+		} while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWait && wasInterrupted == false && wasCancelled == false);
+		sw.stop();
+		if (foundJob) {
+			if (LOGGER.isInfoEnabled()) {
+				StringJoiner sj = new StringJoiner("\n");
+				sj.add("Expected no jobs, found " + foundJobs.size() + ".");
+				foundJobs.forEach(sj::add);
+				LOGGER.info(sj.toString());
+			}
+			if (!(wasCancelled == true || wasInterrupted == true))
+				throw new TimeoutRuntimeException("Expected no jobs, found " + foundJobs.size() + " after " + sw + ".");
 		}
 	}
 
-	private static List<String> listJobsRunningWaiting() {
-		return from(newArrayList(getJobManager().find(null)))
-				.filter(job -> job.getState() != Job.SLEEPING || job.getState() != Job.NONE)
-				.transform(job -> " - " + job.getName() + " : " + job.getState())
-				.toList();
+	static void log(String args) {
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.sss");
+		System.out.println(formatter.format(date) + " " + args);
+	}
+
+	/** @return list of running jobs descriptions */
+	public final static List<String> listJobsRunningWaiting() {
+		return Arrays.stream(getJobManager().find(null))
+				.filter(job -> !(job.getState() == Job.SLEEPING || job.getState() == Job.NONE))
+				.map(job -> " - " + job.getName() + " : " + job.getState()).collect(Collectors.toList());
 	}
 
 	/***/
