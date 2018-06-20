@@ -52,8 +52,6 @@ pipeline {
                                 pwd
                                 git status
                                 ls -la
-                                whoami
-                                ls -la /var/run/docker.sock
                            """
                 }
             }
