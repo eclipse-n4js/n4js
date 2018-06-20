@@ -12,6 +12,7 @@ package org.eclipse.n4js;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -55,6 +56,7 @@ public abstract class AbstractJSLibTest {
 	 */
 	protected AbstractJSLibTest(JSLibSingleTestConfig config) {
 		this.config = config;
+		N4JSLanguageUtils.OPAQUE_MODULE_SUPPORTED = false;
 	}
 
 	/**
