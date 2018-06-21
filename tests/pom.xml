@@ -374,11 +374,8 @@ Contributors:
 								<!-- useUIHarness=true ensures the workbench is started before the
 									tests are run. -->
 								<useUIHarness>true</useUIHarness>
-								<!-- running in the UI thread will cause eclipse being blocked every time we do 
-								something expensive, or we wait for some jobs to finish. We need to run in the 
-								background thread instead, and do things in UI thread on demand. -->
-								<useUIThread>false</useUIThread>
-								<!-- argLine needs to be one line, if you auto-format line break will break tests -->
+								<useUIThread>true</useUIThread>
+								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
 								<!-- -Dosgi.debug requires a .options file, looks in the module-root for it -->
 								<!-- Debug options to halt on each (!) call to PluginUI test and wait for "telnet localhost 1975" 
 									 where you can enter "exit" to continue: 
