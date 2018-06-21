@@ -23,7 +23,10 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.n4js.N4JSGlobals;
@@ -58,6 +61,9 @@ public abstract class AbstractN4jscTest {
 	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
+	/** npms in n4js-libs that should not be copied during test */
+	protected static final Set<String> blackList = new HashSet<>(
+			Arrays.asList("org.eclipse.n4js.mangelhaft.reporter.xunit", "n4js-cli", "n4js-mangelhaft-cli"));
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
@@ -117,6 +123,9 @@ public abstract class AbstractN4jscTest {
 		if (!Arrays2.isEmpty(n4jsLibraries)) {
 			for (final File n4jsLibrary : n4jsLibraries) {
 				if (n4jsLibrariesPredicate.apply(n4jsLibrary.getName())) {
+					if (blackList.contains(n4jsLibrary.getName())) {
+						continue;
+					}
 					System.out.println("Including N4JS library in workspace: '" + n4jsLibrary.getName() + "'.");
 					final File libFolder = new File(wsp, n4jsLibrary.getName());
 					libFolder.mkdir();
