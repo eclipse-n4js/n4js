@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.ui.IWorkbench;
 import org.junit.BeforeClass;
 
@@ -38,6 +39,7 @@ public abstract class AbstractPluginUITest extends AbstractIDEBUG_Test {
 	 */
 	protected void waitForIdleState() {
 		ProjectTestsUtils.waitForAllJobs(Long.MAX_VALUE);
+		UIUtils.waitForUiThread();
 	}
 
 	/**
