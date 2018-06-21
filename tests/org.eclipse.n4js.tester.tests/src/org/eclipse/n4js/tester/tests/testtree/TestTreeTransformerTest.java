@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.domain.ID;
@@ -29,9 +28,9 @@ import org.eclipse.n4js.tester.domain.TestCase;
 import org.eclipse.n4js.tester.domain.TestSuite;
 import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.internal.DefaultTestTreeTransformer;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
-import org.eclipse.n4js.tester.tests.WithParentInjector;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Test;
@@ -41,20 +40,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Class for testing the {@link DefaultTestTreeTransformer}.
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = { DefaultTestTreeTransformerModule.class })
-public class TestTreeTransformerTest {
-
-	/** Set the parent injector to provide N4JS related instances. */
-	@WithParentInjector
-	public static Injector getParentInjector() {
-		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
+public class TestTreeTransformerTest extends AbstractTestTreeTest {
 
 	@Inject
 	private ObjectMapper mapper;

@@ -33,8 +33,6 @@ public class TesterUiModule implements Module {
 
 	@Override
 	public void configure(Binder binder) {
-		// binder.requireExplicitBindings();
-
 		// define all bindings to N4JS-UI here (ui packages)
 		binder.bind(XtextPresentationReconciler.class)
 				.toProvider(() -> n4jsInjector.getInstance(XtextPresentationReconciler.class));

@@ -100,7 +100,6 @@ public class TesterModule implements Module {
 	@Override
 	public void configure(Binder binder) {
 		if (n4jsInjector != null) {
-			// binder.requireExplicitBindings(); // instead of this call, the listener below is used to detect problems
 			bindListenerForN4jsSingletons(binder);
 
 			// define all bindings to N4JS here (non-ui packages)
@@ -146,7 +145,10 @@ public class TesterModule implements Module {
 		Names.bindProperties(binder, getProperties());
 	}
 
-	/** Binding listener */
+	/**
+	 * This listener detects whether @Singletons from the non-tester context are bound by the Tester-Injector which
+	 * would be a problem.
+	 */
 	private void bindListenerForN4jsSingletons(Binder binder) {
 		Matcher<TypeLiteral<?>> m = new AbstractMatcher<TypeLiteral<?>>() {
 			@Override

@@ -19,17 +19,16 @@ import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
-import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.events.SessionFailedEvent;
 import org.eclipse.n4js.tester.events.SessionFinishedEvent;
 import org.eclipse.n4js.tester.fsm.TestFsm;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
 import org.eclipse.n4js.tester.tests.SyncMockTesterModule;
-import org.eclipse.n4js.tester.tests.WithParentInjector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,14 +39,13 @@ import org.junit.runner.RunWith;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Synchronously tests the FSM through the {@link TestFsmRegistry FSM registry}.
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = { SyncMockTesterModule.class })
-public class SynchronousTesterFsmTest {
+public class SynchronousTesterFsmTest extends AbstractTestTreeTest {
 
 	private static final Logger LOGGER = Logger.getLogger(SynchronousTesterFsmTest.class);
 
@@ -55,12 +53,6 @@ public class SynchronousTesterFsmTest {
 	private static final String TEST_ID_1 = "test_id_1";
 	private static final String TEST_ID_2 = "test_id_2";
 	private static final String TEST_ID_3 = "test_id_3";
-
-	/** Set the parent injector to provide N4JS related instances. */
-	@WithParentInjector
-	public static Injector getParentInjector() {
-		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
 
 	/** Used to access the test method's name for logging purposes. */
 	@Rule

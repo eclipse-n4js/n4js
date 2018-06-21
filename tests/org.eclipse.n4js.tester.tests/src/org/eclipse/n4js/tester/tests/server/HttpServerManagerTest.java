@@ -17,32 +17,24 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
-import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.server.HttpServerManager;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
 import org.eclipse.n4js.tester.tests.MockTesterModule;
 import org.eclipse.n4js.tester.tests.TesterTestsConfiguration;
-import org.eclipse.n4js.tester.tests.WithParentInjector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Test for checking the runtime behavior of the {@link HttpServerManager HTTP server manager}.
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = { MockTesterModule.class })
-public class HttpServerManagerTest {
-
-	/** Set the parent injector to provide N4JS related instances. */
-	@WithParentInjector
-	public static Injector getParentInjector() {
-		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
+public class HttpServerManagerTest extends AbstractTestTreeTest {
 
 	@Inject
 	private HttpServerManager manager;

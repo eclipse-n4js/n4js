@@ -12,7 +12,6 @@ package org.eclipse.n4js.tester.tests.helper;
 
 import static java.lang.Thread.sleep;
 
-import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.events.SessionEndedEvent;
@@ -21,16 +20,15 @@ import org.eclipse.n4js.tester.events.SessionStartedEvent;
 import org.eclipse.n4js.tester.events.TestEndedEvent;
 import org.eclipse.n4js.tester.events.TestPingedEvent;
 import org.eclipse.n4js.tester.events.TestStartedEvent;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
 import org.eclipse.n4js.tester.tests.MockResourceTesterModule;
-import org.eclipse.n4js.tester.tests.WithParentInjector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Provider;
 
 /**
@@ -38,13 +36,7 @@ import com.google.inject.Provider;
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = { MockResourceTesterModule.class })
-public class TestEventQueueTest {
-
-	/** Set the parent injector to provide N4JS related instances. */
-	@WithParentInjector
-	public static Injector getParentInjector() {
-		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
+public class TestEventQueueTest extends AbstractTestTreeTest {
 
 	@Inject
 	private Provider<TestEventQueue> provider;

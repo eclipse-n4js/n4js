@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.tester.TestTreeRegistry;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.domain.ID;
@@ -42,9 +41,9 @@ import org.eclipse.n4js.tester.domain.TestSuite;
 import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
 import org.eclipse.n4js.tester.internal.InternalTestTreeRegistry;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
-import org.eclipse.n4js.tester.tests.WithParentInjector;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,20 +51,13 @@ import org.junit.runner.RunWith;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Class for testing the {@link TestTreeRegistry test tree registry}.
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = {})
-public class TestTreeRegistryTest {
-
-	/** Set the parent injector to provide N4JS related instances. */
-	@WithParentInjector
-	public static Injector getParentInjector() {
-		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
+public class TestTreeRegistryTest extends AbstractTestTreeTest {
 
 	@Inject
 	private TestTreeRegistry treeRegistry;
