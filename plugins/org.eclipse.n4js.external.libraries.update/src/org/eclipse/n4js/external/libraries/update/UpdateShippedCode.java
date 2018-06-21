@@ -204,26 +204,16 @@ public class UpdateShippedCode implements IWorkflowComponent {
 			throw new RuntimeException(e);
 		}
 
-		// Collect all projects
-		List<File> allProjects = new ArrayList<>();
-
-		for (File foldersContainingProjectFolder : foldersContainingProjectFolders) {
-			allProjects.addAll(collectAllN4JSProjects(foldersContainingProjectFolder));
-		}
-
-		List<String> args = new ArrayList<>();
-		args.add("--buildType");
-		args.add("projects");
-		args.add("--debug");
-		args.add("--installMissingDependencies");
-		for (File project : allProjects) {
-			args.add(project.getAbsolutePath());
-		}
-		String[] argsArray = args.toArray(new String[args.size()]);
+		// Then compile the projects
+		final String[] args = {
+				"--buildType", "allprojects",
+				"--installMissingDependencies",
+				"--projectlocations", foldersContainingProjectsStr
+		};
 
 		try {
 			System.out.println("BLAH args = " + args);
-			new N4jscBase().doMain(argsArray);
+			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			println("ERROR: headless compiler threw ExitCodeException (probably code compiled with errors); "
 					+ "code: " + e.getExitCode() + ", "
