@@ -33,17 +33,6 @@ public class N4JSStandaloneTestsModule extends BaseTestModule {
 	/** Constructor enables JS support */
 	public N4JSStandaloneTestsModule() {
 		N4JSLanguageUtils.OPAQUE_MODULE_SUPPORTED = false;
-
-		// Following does not work
-		// String fieldName = "OPAQUE_MODULE_SUPPORTED"; try { Field field =
-		// N4JSLanguageUtils.class.getDeclaredField(fieldName);
-		//
-		// Field modifiersField = Field.class.getDeclaredField("modifiers"); modifiersField.setAccessible(true);
-		// modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-		//
-		// field.setAccessible(true); field.setBoolean(null, Boolean.FALSE); field.setAccessible(false);
-		// LOGGER.info("Set " + fieldName + " to " + N4JSLanguageUtils.OPAQUE_MODULE_SUPPORTED); } catch (Exception e) {
-		// e.printStackTrace(); LOGGER.error("Could not set " + fieldName + " to false", e); }
 	}
 
 	/** */
