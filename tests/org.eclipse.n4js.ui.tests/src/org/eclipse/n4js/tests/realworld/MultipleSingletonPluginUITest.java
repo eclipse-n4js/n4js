@@ -56,7 +56,7 @@ import com.google.inject.TypeLiteral;
  * Note also that singleton classes that are never bound explicitly (meaning in none of the modules), are not checked in
  * this test.
  */
-public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest {
+public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTest {
 
 	@Inject
 	ISharedStateContributionRegistry sharedRegistry;
