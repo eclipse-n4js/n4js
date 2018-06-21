@@ -423,7 +423,7 @@ public class ProjectTestsUtils {
 				LOGGER.error("Waiting for jobs was interrupted after " + sw + ".", e);
 			}
 		} while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWait
-				&& foundJob == false
+				&& foundJob == true
 				&& wasInterrupted == false
 				&& wasCancelled == false);
 		sw.stop();
