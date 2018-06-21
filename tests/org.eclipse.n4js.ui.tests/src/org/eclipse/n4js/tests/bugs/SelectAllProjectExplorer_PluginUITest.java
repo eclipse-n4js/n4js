@@ -154,6 +154,7 @@ public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest 
 	public void tearDown() throws Exception {
 		super.tearDown();
 		broker.resetState();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		final TreeItem[] treeItems = commonViewer.getTree().getItems();
