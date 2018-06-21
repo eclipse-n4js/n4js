@@ -23,10 +23,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -75,6 +73,7 @@ import org.junit.Assert;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 
 /**
  * Utilities for for tests that setup / assert N4JS projects.
@@ -372,12 +371,9 @@ public class ProjectTestsUtils {
 		}
 	}
 
-	/**
-	 * Delegates to {@link #waitForAllJobs(long, long)} with default values {@link #MAX_WAIT_2_MINUTES} and
-	 * {@link #CHECK_INTERVAL_100_MS}.
-	 */
+	/** Delegates to {@link #waitForAllJobs(long)} with default values {@link #MAX_WAIT_2_MINUTES}. */
 	public static void waitForAllJobs() {
-		waitForAllJobs(MAX_WAIT_2_MINUTES, CHECK_INTERVAL_100_MS);
+		waitForAllJobs(MAX_WAIT_2_MINUTES);
 	}
 
 	/**
@@ -389,15 +385,14 @@ public class ProjectTestsUtils {
 	 *
 	 * @param maxWait
 	 *            maximum wait time in {@link TimeUnit#MILLISECONDS}
-	 * @param interval
-	 *            interval of making checks, {@link TimeUnit#MILLISECONDS}
 	 */
-	public static void waitForAllJobs(final long maxWait, final long interval) {
-		if (runsInUI())
-			LOGGER.warn("Waiting for jobs runs in the UI thread which can lead to UI thread starvation.");
-
+	public static void waitForAllJobs(final long maxWait) {
 		if (maxWait < 1)
 			throw new IllegalArgumentException("Wait time needs to be > 0, was " + maxWait + ".");
+
+		final boolean runsInUI = runsInUIThread();
+		if (runsInUI)
+			LOGGER.warn("Waiting for jobs runs in the UI thread which can lead to UI thread starvation.");
 
 		List<String> foundJobs = listJobsRunningWaiting();
 		if (foundJobs.isEmpty()) {
@@ -416,9 +411,11 @@ public class ProjectTestsUtils {
 					if (LOGGER.isInfoEnabled())
 						LOGGER.info("Found " + foundJobs.size() + " after " + sw + ", going to sleep for a while.");
 
-					Thread.sleep(interval);
+					if (runsInUI)
+						UIUtils.waitForUiThread();
+					else
+						Thread.sleep(CHECK_INTERVAL_100_MS);
 				}
-				wasInterrupted = false;
 			} catch (OperationCanceledException e) {
 				wasCancelled = true;
 				LOGGER.error("Waiting for jobs was cancelled after " + sw + ".", e);
@@ -440,18 +437,13 @@ public class ProjectTestsUtils {
 		}
 	}
 
-	private static boolean runsInUI() {
+	/** Checks if it is called on the UI thread. */
+	public static boolean runsInUIThread() {
 		AtomicReference<Thread> refUIThread = new AtomicReference<>();
 		UIUtils.getDisplay().syncExec(() -> {
 			refUIThread.set(Thread.currentThread());
 		});
 		return Thread.currentThread().equals(refUIThread.get());
-	}
-
-	static void log(String args) {
-		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.sss");
-		System.out.println(formatter.format(date) + " " + args);
 	}
 
 	/** @return list of running jobs descriptions */
@@ -546,5 +538,38 @@ public class ProjectTestsUtils {
 	/***/
 	public static void deleteProject(IProject project) throws CoreException {
 		project.delete(true, true, new NullProgressMonitor());
+	}
+
+	/**
+	 * Returns with the {@link IProject project} from the {@link IWorkspace workspace} with the given project name.
+	 * Makes no assertions whether the project can be accessed or not.
+	 *
+	 * @param projectName
+	 *            the name of the desired project.
+	 * @return the project we are looking for. Could be non-{@link IProject#isAccessible() accessible} project.
+	 */
+	public static IProject getProjectByName(final String projectName) {
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+	}
+
+	/**
+	 * Returns with an array or project form the workspace. for the given subset of unique project names. Sugar for
+	 *
+	 * @param projectName
+	 *            the name of the project.
+	 * @param otherName
+	 *            the name of another project.
+	 * @param rest
+	 *            additional names of desired projects.
+	 * @return an array of projects, could contain non-accessible project.
+	 */
+	public static IProject[] getProjectsByName(final String projectName, final String otherName,
+			final String... rest) {
+		final List<String> projectNames = Lists.asList(projectName, otherName, rest);
+		final IProject[] projects = new IProject[projectNames.size()];
+		for (int i = 0; i < projects.length; i++) {
+			projects[i] = getProjectByName(projectNames.get(i));
+		}
+		return projects;
 	}
 }
