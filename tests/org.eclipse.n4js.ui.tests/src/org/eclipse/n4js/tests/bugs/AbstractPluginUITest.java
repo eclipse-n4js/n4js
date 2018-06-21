@@ -138,12 +138,12 @@ public abstract class AbstractPluginUITest extends AbstractIDEBUG_Test {
 	}
 
 	/** See {@link UIUtils#waitForValueFromUI(NonWaitingSupplier, Supplier)}. */
-	protected <T> T waitForValueFromUI(NonWaitingSupplier<T> nonWaitingSupplier, Supplier<String> valueDescSupplier) {
+	protected <T> T waitForValueFromUISW(NonWaitingSupplier<T> nonWaitingSupplier, Supplier<String> valueDescSupplier) {
 		return UIUtils.waitForValueFromUI(nonWaitingSupplier, valueDescSupplier);
 	}
 
 	/** See {@link UIUtils#waitForValueFromUI(NonWaitingSupplier, Supplier, long)}. */
-	protected <T> T waitForValueFromUI(NonWaitingSupplier<T> nonWaitingSupplier, Supplier<String> valueDescSupplier,
+	protected <T> T waitForValueFromUIS(NonWaitingSupplier<T> nonWaitingSupplier, Supplier<String> valueDescSupplier,
 			long timeout) {
 		return UIUtils.waitForValueFromUI(nonWaitingSupplier, valueDescSupplier, timeout);
 	}

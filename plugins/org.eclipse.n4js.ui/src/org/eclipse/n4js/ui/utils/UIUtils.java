@@ -14,7 +14,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import org.eclipse.jface.util.Geometry;
@@ -53,22 +52,6 @@ public abstract class UIUtils {
 		 * @return a result
 		 */
 		Optional<T> get();
-	}
-
-	/** Same purpose as {@link TimeoutException}, but as a runtime exception. */
-	public static final class TimeoutRuntimeException extends RuntimeException {
-		/** See {@link TimeoutRuntimeException}. */
-		public TimeoutRuntimeException(String message) {
-			super(message);
-		}
-	}
-
-	/** Same purpose as {@link InterruptedException}, but as a runtime exception. */
-	public static final class InterruptedRuntimeException extends RuntimeException {
-		/** See {@link InterruptedRuntimeException}. */
-		public InterruptedRuntimeException(String message) {
-			super(message);
-		}
 	}
 
 	/**
