@@ -1,6 +1,9 @@
 {
 	"name": "SysProjectA",
 	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"org.eclipse.n4js.mangelhaft": "*"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

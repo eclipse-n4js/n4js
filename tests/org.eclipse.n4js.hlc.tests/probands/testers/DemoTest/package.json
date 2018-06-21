@@ -2,7 +2,7 @@
 	"name": "DemoTest",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		"org.eclipse.n4js.mangelhaftt": "*",
+		"org.eclipse.n4js.mangelhaft": "*",
 		"org.eclipse.n4js.mangelhaft.assert": "*",
 		"Demo": "*"
 	},

@@ -1,6 +1,9 @@
 {
 	"name": "IMPLx",
 	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"n4js-runtime-es2015": "*"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

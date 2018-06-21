@@ -1,6 +1,9 @@
 {
 	"name": "PB",
 	"version": "0.3.1",
+	"dependencies": {
+		"PA": "*"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "eu.numberfour",

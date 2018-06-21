@@ -1,6 +1,9 @@
 {
 	"name": "PC",
 	"version": "0.3.0",
+	"dependencies": {
+		"PA": "*"
+	},
 	"n4js": {
 		"projectType": "runtimeLibrary",
 		"vendorId": "org.eclipse.n4js",

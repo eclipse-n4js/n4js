@@ -57,6 +57,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
+				"--projectlocations", wsRoot,
 				"--buildType", BuildType.singlefile.toString(),
 				fileToCompile
 		};

@@ -2,7 +2,8 @@
 	"name": "project.using.external.from.n4js",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		"express": "4.15.3"
+		"express": "4.15.3",
+		"n4js-runtime-node": "*"
 	},
 	"n4js": {
 		"projectType": "library",

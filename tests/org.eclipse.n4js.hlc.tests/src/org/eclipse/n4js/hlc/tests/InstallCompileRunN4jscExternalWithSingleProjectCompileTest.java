@@ -57,6 +57,7 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
+				"--projectlocations", wsRoot,
 				"--buildType", BuildType.projects.toString(),
 				projectToCompile
 		};

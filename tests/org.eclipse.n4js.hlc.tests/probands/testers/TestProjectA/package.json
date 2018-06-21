@@ -1,6 +1,9 @@
 {
 	"name": "TestProjectA",
 	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"org.eclipse.n4js.mangelhaft": "*"
+	},
 	"n4js": {
 		"projectType": "test",
 		"vendorId": "org.eclipse.n4js",
