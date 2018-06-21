@@ -549,12 +549,13 @@ public class ProjectDescriptionHelper {
 			JSONValue value = pair.getValue();
 			String valueStr = asStringOrNull(value);
 			VersionConstraint versionConstraint = ProjectDescriptionUtils.parseVersionConstraint(valueStr);
-			if (name != null && versionConstraint != null) {
+			if (name != null) {
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
 				dep.setProjectId(name);
 				if ("*".equals(valueStr) || "latest".equals(valueStr)) {
 					dep.setVersionConstraint(null); // FIXME
 				} else {
+					// 'versionConstraint' may also be null, then no constraint is set
 					dep.setVersionConstraint(versionConstraint);
 				}
 				target.getProjectDependencies().add(dep);
