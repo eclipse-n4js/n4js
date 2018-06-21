@@ -21,6 +21,7 @@ import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.tests.util.EclipseUIUtils
 
 /**
  * Test builder / editor behavior with multiple files and cyclic dependencies.
@@ -170,7 +171,7 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 	def void test_inEditor_simple() {
 		prepare("TestInEditorSimple")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA = openAndGetXtextEditor(fileA, page)
 		val errorsA = getEditorValidationErrors(editorA)
 		assertEquals("editor for file A should not have any errors", #[], errorsA)
@@ -194,7 +195,7 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 	def void test_inEditor_throughXY() {
 		prepare("TestInEditorThroughXY");
 		
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorA = openAndGetXtextEditor(fileA, page)
 		val errorsA = getEditorValidationErrors(editorA)
 		assertEquals("editor for file A should not have any errors", #[], errorsA)
@@ -319,7 +320,7 @@ class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescri
 	def void test_inEditor_changeP() {
 		prepare("TestInEditorChangeP")
 
-		val page = getActivePage()
+		val page = EclipseUIUtils.getActivePage()
 		val editorP = openAndGetXtextEditor(fileP, page)
 		val errorsP = getEditorValidationErrors(editorP)
 		assertEquals("editor for file P should not have any errors", #[], errorsP)

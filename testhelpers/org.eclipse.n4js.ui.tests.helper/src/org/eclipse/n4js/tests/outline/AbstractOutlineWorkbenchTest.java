@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
@@ -97,7 +98,7 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderPartic
 	// opens the Xtext editor for the N4JS file as defined by getProjectName() / getModuleFolder() / getFileName()
 	// retrieves the XtextDocument from that editor
 	private void openXtextDocument() {
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		editor = openAndGetXtextEditor(file, page);
 		List<?> errors = getEditorErrors(editor);
 		assertEquals("Editor of " + getFileName() + " should have no errors", 0, errors.size());

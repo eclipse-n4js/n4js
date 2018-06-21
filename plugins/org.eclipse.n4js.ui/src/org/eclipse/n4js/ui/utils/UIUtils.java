@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 import org.eclipse.jface.util.Geometry;
@@ -324,6 +325,15 @@ public abstract class UIUtils {
 			}
 		}
 		display.dispose();
+	}
+
+	/** Checks if it is called on the UI thread. */
+	public static boolean runsInUIThread() {
+		AtomicReference<Thread> refUIThread = new AtomicReference<>();
+		UIUtils.getDisplay().syncExec(() -> {
+			refUIThread.set(Thread.currentThread());
+		});
+		return Thread.currentThread().equals(refUIThread.get());
 	}
 
 }

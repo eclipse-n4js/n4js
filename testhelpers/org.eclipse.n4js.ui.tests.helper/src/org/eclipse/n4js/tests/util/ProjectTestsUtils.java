@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -390,7 +389,7 @@ public class ProjectTestsUtils {
 		if (maxWait < 1)
 			throw new IllegalArgumentException("Wait time needs to be > 0, was " + maxWait + ".");
 
-		final boolean runsInUI = runsInUIThread();
+		final boolean runsInUI = UIUtils.runsInUIThread();
 		if (runsInUI)
 			LOGGER.warn("Waiting for jobs runs in the UI thread which can lead to UI thread starvation.");
 
@@ -423,7 +422,10 @@ public class ProjectTestsUtils {
 				wasInterrupted = true;
 				LOGGER.error("Waiting for jobs was interrupted after " + sw + ".", e);
 			}
-		} while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWait && wasInterrupted == false && wasCancelled == false);
+		} while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWait
+				&& foundJob == false
+				&& wasInterrupted == false
+				&& wasCancelled == false);
 		sw.stop();
 		if (foundJob) {
 			if (LOGGER.isInfoEnabled()) {
@@ -435,15 +437,6 @@ public class ProjectTestsUtils {
 			if (!(wasCancelled == true || wasInterrupted == true))
 				throw new TimeoutRuntimeException("Expected no jobs, found " + foundJobs.size() + " after " + sw + ".");
 		}
-	}
-
-	/** Checks if it is called on the UI thread. */
-	public static boolean runsInUIThread() {
-		AtomicReference<Thread> refUIThread = new AtomicReference<>();
-		UIUtils.getDisplay().syncExec(() -> {
-			refUIThread.set(Thread.currentThread());
-		});
-		return Thread.currentThread().equals(refUIThread.get());
 	}
 
 	/** @return list of running jobs descriptions */

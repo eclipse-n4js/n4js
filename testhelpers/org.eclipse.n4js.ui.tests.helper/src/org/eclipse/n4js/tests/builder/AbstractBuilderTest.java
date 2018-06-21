@@ -227,13 +227,8 @@ public abstract class AbstractBuilderTest {
 		IResourcesSetupUtil.cleanBuild();
 	}
 
-	/***/
-	protected IWorkbenchPage getActivePage() {
-		return EclipseUIUtils.getActivePage();
-	}
-
 	private void closeAllEditorsForTearDown() {
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		if (page != null)
 			page.closeAllEditors(false);
 	}
