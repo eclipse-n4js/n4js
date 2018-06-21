@@ -40,8 +40,7 @@ var parsed2 = JSON.parse('{"1": 1, "2": 2,"3": {"4": 4, "5": {"6": 6}}}', functi
 
 console.log(parsed2)
 
-// disabled issues until GH-855 is solved
-/* X-PECT output ---
+/* XPECT output ---
 <==
 stdout:
 { p: 10 }

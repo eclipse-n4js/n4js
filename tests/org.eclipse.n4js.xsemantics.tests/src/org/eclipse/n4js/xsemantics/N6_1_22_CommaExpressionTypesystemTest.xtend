@@ -86,7 +86,7 @@ class N6_1_22_CommaExpressionTypesystemTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testValidateLoopWithCommas() {
-		val script = createScript(JavaScriptVariant.n4js, // GH-855: change to unrestricted
+		val script = createScript(JavaScriptVariant.unrestricted,
 			'''
 			var i,k;
 			for (i=0, k=0; i<10; i++, k+=10) {
@@ -99,7 +99,7 @@ class N6_1_22_CommaExpressionTypesystemTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testValidatePlusPlus() {
-		val script = createScript(JavaScriptVariant.n4js, // GH-855: change to unrestricted
+		val script = createScript(JavaScriptVariant.unrestricted,
 		'''
 			var i;
 			i++

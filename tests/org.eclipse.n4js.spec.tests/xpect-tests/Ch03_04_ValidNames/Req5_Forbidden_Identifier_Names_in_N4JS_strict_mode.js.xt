@@ -13,11 +13,9 @@
 "use strict"
 
 class A {
-	// disabled issues until GH-855 is solved
-	// X-PECT warnings --> "static is a reserved identifier." at "static"
+	// XPECT warnings --> "static is a reserved identifier." at "static"
 	private static() : void { }
 
-	// disabled issues until GH-855 is solved
-	// X-PECT errors --> "static is a reserved identifier." at "static"
+	// XPECT errors --> "static is a reserved identifier." at "static"
 	private f = function static() { };
 }

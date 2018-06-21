@@ -21,6 +21,5 @@ class A {
 }
 
 var a = new A();
-// disabled issues until GH-855 is solved
-// X-PECT errors --> "With statement not allowed." at "with"
+// XPECT errors --> "With statement not allowed." at "with"
 with (a) {}

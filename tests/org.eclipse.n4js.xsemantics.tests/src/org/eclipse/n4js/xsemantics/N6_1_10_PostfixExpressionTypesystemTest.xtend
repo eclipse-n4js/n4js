@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -21,7 +21,7 @@ import org.eclipse.n4js.validation.JavaScriptVariant
 
 /**
  * Test class for operator test (6.1.10- 6.1.18)
- *
+ * 
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProviderWithIssueSuppression)
@@ -39,9 +39,8 @@ class N6_1_10_PostfixExpressionTypesystemTest extends AbstractOperatorExpression
 
 	@Test
 	def void testExpectedTypeInPostfix() {
-		// GH-855: uncomment when solved
-		//	assertUnaryOperatorExpectedType(unrestricted, "any", "n1++");
-		//	assertUnaryOperatorExpectedType(strict, "any", "n1++");
+		assertUnaryOperatorExpectedType(unrestricted, "any", "n1++");
+		assertUnaryOperatorExpectedType(strict, "any", "n1++");
 		assertUnaryOperatorExpectedType(n4js, "number", "n1++");
 
 		assertOperatorSuccess(n4js, "n1++");
