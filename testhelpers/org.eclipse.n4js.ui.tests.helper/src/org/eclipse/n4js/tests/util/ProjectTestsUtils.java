@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,7 @@ import org.eclipse.n4js.n4mf.SourceContainerDescription;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.utils.UIUtils.TimeoutRuntimeException;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
@@ -391,6 +393,9 @@ public class ProjectTestsUtils {
 	 *            interval of making checks, {@link TimeUnit#MILLISECONDS}
 	 */
 	public static void waitForAllJobs(final long maxWait, final long interval) {
+		if (runsInUI())
+			LOGGER.warn("Waiting for jobs runs in the UI thread which can lead to UI thread starvation.");
+
 		if (maxWait < 1)
 			throw new IllegalArgumentException("Wait time needs to be > 0, was " + maxWait + ".");
 
@@ -433,6 +438,14 @@ public class ProjectTestsUtils {
 			if (!(wasCancelled == true || wasInterrupted == true))
 				throw new TimeoutRuntimeException("Expected no jobs, found " + foundJobs.size() + " after " + sw + ".");
 		}
+	}
+
+	private static boolean runsInUI() {
+		AtomicReference<Thread> refUIThread = new AtomicReference<>();
+		UIUtils.getDisplay().syncExec(() -> {
+			refUIThread.set(Thread.currentThread());
+		});
+		return Thread.currentThread().equals(refUIThread.get());
 	}
 
 	static void log(String args) {
