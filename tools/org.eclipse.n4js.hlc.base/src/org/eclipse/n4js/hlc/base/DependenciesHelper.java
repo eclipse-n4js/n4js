@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -79,10 +80,13 @@ class DependenciesHelper {
 		allProjectsRoots.addAll(discoveredProjectLocations);
 		allProjectsRoots.addAll(singleSourceProjectLocations);
 
-		Map<String, String> dependencies = new HashMap<>();
+		final Iterable<ProjectDescription> allProjectDescriptions = getAvailableProjectDescriptions(allProjectsRoots);
+		final Map<String, String> dependencies = new HashMap<>();
+		DependenciesCollectingUtil.updateMissingDependenciesMap(dependencies, allProjectDescriptions);
 
-		DependenciesCollectingUtil.updateMissingDependenciesMap(dependencies,
-				getAvailableProjectDescriptions(allProjectsRoots));
+		// Make sure all discovered projects are registered with the workspace.
+		// FIXME make sure projects are always only registered once
+		allProjectsRoots.forEach(root -> n4jsFileBasedWorkspace.registerProject(URI.createFileURI(root.getPath())));
 
 		return dependencies;
 	}

@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
@@ -103,6 +104,9 @@ public class LibraryManager {
 
 	@Inject
 	private FileBasedExternalPackageManager filebasedPackageManger;
+
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	// @Inject
 	// private ProjectDescriptionHelper projectDescriptionHelper;
@@ -212,14 +216,17 @@ public class LibraryManager {
 				List<LibraryChange> deltaChanges = installUninstallNPMs(monitor, status, npmsToInstall, emptyList());
 				actualChanges.addAll(deltaChanges);
 				npmsToInstall = getDependenciesOfNPMs(deltaChanges);
-				Set<String> installedProjectsIds = externalLibraryWorkspace.getProjects().stream()
-						.map(p -> p.getName())
-						.collect(Collectors.toSet());
-				// Note: need to make sure the projects in npmsToInstall are not installed yet; method
+
+				// obtain list of all available project IDs (external and workspace)
+				Set<String> allProjectsIds = StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
+						.map(p -> p.getProjectId()).collect(Collectors.toSet());
+
+				// Note: need to make sure the projects in npmsToInstall are not in the workspace yet; method
 				// #installUninstallNPMs() (which will be invoked in a moment) is doing this as well, but that method
 				// does not consider the shipped code. For example, without the next line, "n4js-runtime-node" would be
 				// installed even though it is already available via the shipped code.
-				npmsToInstall.keySet().removeAll(installedProjectsIds);
+				npmsToInstall.keySet().removeAll(allProjectsIds);
+
 				if (!npmsToInstall.isEmpty()) {
 					msg = "Installing transitive dependencies: " + String.join(", ", npmsToInstall.keySet());
 					logger.logInfo(msg);

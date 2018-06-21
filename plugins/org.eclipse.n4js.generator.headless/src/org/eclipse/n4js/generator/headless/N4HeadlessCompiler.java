@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.external.ExternalLibraryUtils;
 import org.eclipse.n4js.generator.GeneratorException;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
@@ -535,15 +536,33 @@ public class N4HeadlessCompiler {
 	}
 
 	/**
-	 * Returns a list of {@link N4JSProject} instances representing the projects at the given locations.
+	 * Returns a list of {@link N4JSProject} instances representing all N4JS projects at the given locations.
+	 *
+	 * Excludes projects that have been installed by the library manager which do not need to be built (cf.
+	 * {@link #isProjectToBeBuilt(IN4JSProject)}).
 	 *
 	 * @param projectURIs
 	 *            the URIs to process
 	 * @return a list of projects at the given URIs
 	 */
 	private List<N4JSProject> getN4JSProjects(List<URI> projectURIs) {
-		return projectURIs.stream().map(URIUtils::normalize).map(u -> n4jsModel.getN4JSProject(u))
+		return projectURIs.stream().map(URIUtils::normalize)
+				.map(u -> n4jsModel.getN4JSProject(u))
+				.filter(p -> isProjectToBeBuilt(p))
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Indicates whether the given {@code project} is to be built by the headless compiler.
+	 *
+	 * In particular, this excludes transitive non-N4JS dependencies that have been installed by npm.
+	 *
+	 */
+	private static boolean isProjectToBeBuilt(IN4JSProject project) {
+		if (project.isExternal()) {
+			return ExternalLibraryUtils.isExternalProjectDirectory(project.getLocationPath().toFile());
+		}
+		return true;
 	}
 
 	// TODO GH-793 processing broken projects causes exceptions
@@ -634,6 +653,13 @@ public class N4HeadlessCompiler {
 
 		// Set the mark
 		MarkedProject projectToMark = markables.get(markee);
+
+		if (projectToMark == null) {
+			// in this case we have discovered a dependency to an external non-N4JS project
+			// which does not need to be build
+			return;
+		}
+
 		projectToMark.markWith(marker);
 
 		// Recursively apply to all dependencies of the given markee
@@ -690,6 +716,15 @@ public class N4HeadlessCompiler {
 			return;
 
 		ImmutableList<? extends IN4JSProject> pendingProjects = project.getDependenciesAndImplementedApis();
+
+		// Do not process dependencies of projects that need not to be built (e.g. transitive non-N4JS npm dependencies).
+		// In the context of the headless compiler, we regard such projects as independent.
+		// TODO Revisit once GH-821 is started
+		if (!isProjectToBeBuilt(project)) {
+			independent.add(project);
+			return;
+		}
+
 		if (pendingProjects.isEmpty()) {
 			independent.add(project);
 		} else {
@@ -777,9 +812,13 @@ public class N4HeadlessCompiler {
 		// once all dependencies of the current project have been processed, we can add it to the build and
 		// process its children.
 		if (dependencies.get(project).isEmpty()) {
-			// The current project is ready to be processed.
-			result.add(markedProjects.get(project));
-
+			final MarkedProject markedProject = markedProjects.get(project);
+			
+			// only add marked projects to build order list
+			if (markedProject != null) {
+				// The current project is ready to be processed.
+				result.add(markedProject);
+			}
 			// Remove this project from the dependencies of all pending projects.
 			for (IN4JSProject dependentProject : pendencies.get(project)) {
 				dependencies.get(dependentProject).remove(project);
@@ -989,13 +1028,6 @@ public class N4HeadlessCompiler {
 					}
 				});
 			}
-		}
-
-		// obtain URI to file providing the project description
-		Optional<URI> projectDescriptionLocation = markedProject.project.getProjectDescriptionLocation();
-		if (projectDescriptionLocation.isPresent()) {
-			final Resource projectDescriptionResource = resourceSet.createResource(projectDescriptionLocation.get());
-			markedProject.resources.add(projectDescriptionResource);
 		}
 	}
 

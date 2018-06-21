@@ -105,7 +105,8 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		int maxSegments = nestedLocation.segmentCount();
 		OUTER: for (URI known : projectElementHandles.keySet()) {
 			if (known.segmentCount() <= maxSegments) {
-				final URI projectUri = tryFindProjectRecursivelyByManifest(nestedLocation, fromNullable(known));
+				final URI projectUri = tryFindProjectRecursivelyByProjectDescriptionFile(nestedLocation,
+						fromNullable(known));
 				if (null != projectUri) {
 					return projectUri;
 				}
@@ -117,10 +118,10 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 				return known;
 			}
 		}
-		return tryFindProjectRecursivelyByManifest(nestedLocation, Optional.absent());
+		return tryFindProjectRecursivelyByProjectDescriptionFile(nestedLocation, Optional.absent());
 	}
 
-	private URI tryFindProjectRecursivelyByManifest(URI location, Optional<URI> stopUri) {
+	private URI tryFindProjectRecursivelyByProjectDescriptionFile(URI location, Optional<URI> stopUri) {
 		URI nestedLocation = location;
 		int segmentCount = 0;
 		if (nestedLocation.isFile()) { // Here, unlike java.io.File, #isFile can mean directory as well.
@@ -130,8 +131,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 					break;
 				}
 				if (directory.isDirectory()) {
-					if (new File(directory, IN4JSProject.PACKAGE_JSON).exists() ||
-							new File(directory, IN4JSProject.PACKAGE_JSON + ".xt").exists()) {
+					if (hasPackageJson(directory)) {
 						URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
 						registerProject(projectLocation);
 						return projectLocation;
@@ -142,6 +142,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 			}
 		}
 		return null;
+	}
+
+	/** Returns <code>true</code> iff the given <code>directory</code> contains a package.json file. */
+	private boolean hasPackageJson(File directory) {
+		return new File(directory, IN4JSProject.PACKAGE_JSON).exists() ||
+				new File(directory, IN4JSProject.PACKAGE_JSON + ".xt").exists();
 	}
 
 	@Override

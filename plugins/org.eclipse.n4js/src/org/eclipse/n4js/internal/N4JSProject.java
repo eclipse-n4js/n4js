@@ -127,7 +127,6 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	private Optional<File> getProjectDescriptionFile() {
-		// absent() if package-n4js.json does not exist and external is true
 		final File locationAsFile = new File(java.net.URI.create(location.toString()));
 		if (locationAsFile.exists() && locationAsFile.isDirectory()) {
 			final File packageJSON = new File(locationAsFile, IN4JSProject.PACKAGE_JSON);
