@@ -132,6 +132,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 	public void tearDown() throws Exception {
 		super.tearDown();
 		broker.resetState();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		final TreeItem[] treeItems = commonViewer.getTree().getItems();
@@ -410,6 +411,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 
 		manager.updateState(diff);
 		broker.refreshNavigator();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		commonViewer.expandToLevel(2);
@@ -487,6 +489,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 
 		hideAction.run();
 		waitForIdleState();
+		commonViewer.refresh();
 
 		treeItems = commonViewer.getTree().getItems();
 		workingSets = from(asList(treeItems)).transform(item -> item.getData())
@@ -525,6 +528,8 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		menu.getItem(0).notifyListeners(SWT.Selection, null);
 		waitForIdleState();
 		workingSetsToHide.remove(0);
+		waitForIdleState();
+		commonViewer.refresh();
 
 		treeItems = commonViewer.getTree().getItems();
 		workingSets = from(asList(treeItems)).transform(item -> item.getData())
@@ -542,6 +547,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 
 		menu.getItem(menu.getItemCount() - 1).notifyListeners(SWT.Selection, null);
 		waitForIdleState();
+		commonViewer.refresh();
 
 		treeItems = commonViewer.getTree().getItems();
 		assertTrue("Expected exactly " + expectedItemCount + " items in the Project Explorer. Input was: "
@@ -627,6 +633,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		waitForIdleState();
 
 		broker.refreshNavigator();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		commonViewer.expandToLevel(2);
@@ -675,6 +682,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		waitForIdleState();
 
 		broker.refreshNavigator();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		commonViewer.expandToLevel(2);
@@ -710,6 +718,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		checkNotNull(manager, "Working set manager does not exist with ID: " + clazz);
 		broker.setActiveManager(manager);
 		broker.setWorkingSetTopLevel(true);
+		commonViewer.refresh();
 		waitForIdleState();
 		final IContributionItem dropDownContribution = getWorkingSetDropDownContribution();
 		assertNotNull(
