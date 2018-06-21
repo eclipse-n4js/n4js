@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
@@ -121,9 +120,13 @@ public class EclipseUIUtils {
 
 	/** Opens given file in a editor with given ID within given workbench page. Returns opened editor on null. */
 	public static IEditorPart openFileEditor(final IFile file, final IWorkbenchPage page, String editorId) {
+		checkNotNull(file, "Provided file was null.");
+		checkNotNull(page, "Provided page was null.");
+		checkNotNull(editorId, "Provided editor ID was null.");
+
 		AtomicReference<IEditorPart> refFileEditor = new AtomicReference<>();
 
-		Display.getCurrent().syncExec(new Runnable() {
+		UIUtils.getDisplay().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
