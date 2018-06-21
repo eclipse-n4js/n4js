@@ -18,7 +18,6 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -262,18 +261,6 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		}
 	}
 
-	private static List<File> collectAllN4JSProjects(File workingDirectory) {
-		println("Collecting all N4JS projects started...");
-		N4JSProjectsVisitor fileVisitor = new N4JSProjectsVisitor();
-		try {
-			Files.walkFileTree(workingDirectory.toPath(), fileVisitor);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		println("Collecting all N4JS projects finished.");
-		return fileVisitor.getProjects();
-	}
-
 	private static void cleanJsonFiles(File workingDirectory) {
 		println("Cleaning of Json file started...");
 		FileVisitor<Path> fileVisitor = new PackageJsonVisitor();
@@ -334,40 +321,6 @@ public class UpdateShippedCode implements IWorkflowComponent {
 			if (fileName.equals(N4JSGlobals.PACKAGE_JSON)) {
 				cleanJsonFile(file.toFile());
 				return FileVisitResult.SKIP_SUBTREE;
-			}
-			return FileVisitResult.CONTINUE;
-		}
-
-		@Override
-		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-			return FileVisitResult.CONTINUE;
-		}
-
-		@Override
-		public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-			return FileVisitResult.CONTINUE;
-		}
-	}
-
-	static class N4JSProjectsVisitor implements FileVisitor<Path> {
-		List<File> projects = new ArrayList<>();
-
-		@Override
-		public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-			return FileVisitResult.CONTINUE;
-		}
-
-		public List<File> getProjects() {
-			return projects;
-		}
-
-		@Override
-		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-			final String fileName = file.getFileName().toString();
-			if (fileName.equals("manifest.n4mf")) {
-				File f = file.toFile();
-				// Find manifest.n4mf, add the parent folder to the list of projects
-				projects.add(f.getParentFile());
 			}
 			return FileVisitResult.CONTINUE;
 		}
