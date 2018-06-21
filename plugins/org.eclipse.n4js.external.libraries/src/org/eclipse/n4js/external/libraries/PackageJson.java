@@ -15,13 +15,13 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Map;
 
+import org.eclipse.n4js.utils.JsonPrettyPrinterFactory;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
-import org.eclipse.n4js.utils.JsonPrettyPrinterFactory;
 
 /**
  * POJO for the {@code package.json} file.
@@ -86,8 +86,6 @@ public class PackageJson {
 	public Map<String, String> directories;
 
 	public Map<String, String> dist;
-
-	public Map<String, String> engines;
 
 	public Collection<String> files;
 
