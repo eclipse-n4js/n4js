@@ -10,15 +10,16 @@
  */
 package org.eclipse.n4js.resource;
 
-import static com.google.common.collect.Maps.newHashMap;
-
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -106,6 +107,18 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 */
 	public static final String EXPORTED_DEFAULT_KEY = "EXPORTED_DEFAULT";
 
+	/**
+	 * Version declared in {@link Versionable} types. Used by content assist to show version information. If this user
+	 * data is missing, no version information is shown.
+	 */
+	public static final String VERSIONABLE_VERSION = "VERSIONABLE_VERSION";
+
+	/**
+	 * Version declared in {@link Versionable} types. Used by content assist to show version information. If this user
+	 * data is missing, no version information is shown.
+	 */
+	public static final String TMODULE_TYPE = "TMODULE_TYPE";
+
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
 
@@ -130,29 +143,29 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	/**
 	 * Creates the additional user data map for elements of type {@link TClass}.
 	 *
-	 * @param immutableUserData
-	 *            Map with basic entries which should be used to initialize a new user data map. This map is immutable
-	 *            and can thus not be modified.
+	 * @param userData
+	 *            Map that will be populated with data.
 	 * @param tClass
 	 *            The {@link TClass} element to create user data for.
 	 * @returns An immutable user-data map
 	 */
-	private Map<String, String> createClassUserData(final Map<String, String> immutableUserData,
-			final TClass tClass) {
-		Map<String, String> userData = newHashMap(immutableUserData);
-		if (tClass.isExported()) {
-			userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClass.isExported()));
-		}
+	private void addClassUserData(final Map<String, String> userData, TClass tClass) {
+		userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClass.isExported()));
 		userData.put(ABSTRACT_KEY, Boolean.toString(tClass.isAbstract()));
 		userData.put(FINAL_KEY, Boolean.toString(tClass.isFinal()));
 		userData.put(POLYFILL_KEY, Boolean.toString(tClass.isPolyfill()));
 		userData.put(STATIC_POLYFILL_KEY, Boolean.toString(tClass.isStaticPolyfill()));
-		userData.put(
-				TEST_CLASS_KEY,
-				Boolean.toString(tClass.getOwnedMembers().stream()
-						.filter(m -> m instanceof TMethod)
-						.anyMatch(m -> AnnotationDefinition.TEST_METHOD.hasAnnotation(m))));
-		return userData;
+
+		boolean hasTestMethod = false;
+		for (TMember member : tClass.getOwnedMembers()) {
+			if (member instanceof TMethod) {
+				if (AnnotationDefinition.TEST_METHOD.hasAnnotation(member)) {
+					hasTestMethod = true;
+					break;
+				}
+			}
+		}
+		userData.put(TEST_CLASS_KEY, Boolean.toString(hasTestMethod));
 	}
 
 	private void internalCreateEObjectDescriptionForRoot(final TModule module,
@@ -208,16 +221,65 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	}
 
 	/**
-	 * Returns an unmodifiable map with the user data value for the access modifier.
+	 * Returns the version number stored on the given description or 0.
 	 */
-	protected Map<String, String> getAccessModifierUserData(TypeAccessModifier typeAccessModifier) {
-		// don't write public visibity to the index since it is treated as the default
-		if (TypeAccessModifier.PUBLIC == typeAccessModifier) {
-			return Collections.emptyMap();
+	public static int tryGetVersionableVersion(IEObjectDescription description) {
+		try {
+			String userData = description.getUserData(VERSIONABLE_VERSION);
+			if (userData == null) {
+				return 0;
+			}
+			return Integer.parseInt(userData);
+		} catch (NumberFormatException e) {
+			return 0;
 		}
-		return Collections.singletonMap(
-				ACCESS_MODIFIERY_KEY,
-				String.valueOf(typeAccessModifier.getValue()));
+	}
+
+	/**
+	 * Returns the version number stored on the given description or 0.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Class<? extends TClass> tryGetType(IEObjectDescription description) {
+		try {
+			String eClassName = description.getUserData(TMODULE_TYPE);
+			if (eClassName == null) {
+				return TClass.class;
+			}
+
+			Class<?> loadedClass = ClassLoader.getSystemClassLoader().loadClass(eClassName);
+			return (Class<? extends TClass>) loadedClass;
+		} catch (NumberFormatException e) {
+			return TClass.class;
+		} catch (ClassNotFoundException e) {
+			return TClass.class;
+		}
+	}
+
+	/**
+	 * Supplies the given userData map with the user data value for the access modifier.
+	 */
+	protected void addType(Map<String, String> userData, Type type) {
+		userData.put(TMODULE_TYPE, type.eClass().getInstanceClassName());
+	}
+
+	/**
+	 * Supplies the given userData map with the user data value for the access modifier.
+	 */
+	protected void addAccessModifierUserData(Map<String, String> userData, TypeAccessModifier typeAccessModifier) {
+		// don't write public visibity to the index since it is treated as the default
+		if (TypeAccessModifier.PUBLIC != typeAccessModifier) {
+			userData.put(ACCESS_MODIFIERY_KEY, String.valueOf(typeAccessModifier.getValue()));
+		}
+	}
+
+	/**
+	 * Supplies the given userData map with the user data value for the access modifier.
+	 */
+	protected void addVersionableVersion(Map<String, String> userData, Type type) {
+		int version = type.getVersion();
+		if (version != 0) {
+			userData.put(VERSIONABLE_VERSION, String.valueOf(version));
+		}
 	}
 
 	/**
@@ -230,17 +292,19 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (typeName != null && typeName.length() != 0) {
 			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
 			if (qualifiedName != null) { // e.g. non-exported declared functions will return null for FQN
-				Map<String, String> userData = getAccessModifierUserData(type.getTypeAccessModifier());
+				Map<String, String> userData = new HashMap<>();
+				addAccessModifierUserData(userData, type.getTypeAccessModifier());
+				addVersionableVersion(userData, type);
+				addType(userData, type);
 
 				// Add additional user data for descriptions representing a TClass
 				if (type instanceof TClass) {
 					final TClass tClass = (TClass) type;
-					userData = createClassUserData(userData, tClass);
+					addClassUserData(userData, tClass);
 					if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(tClass.getExportedName())) {
 						userData.put(EXPORTED_DEFAULT_KEY, "1");
 					}
 				} else if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(type.getExportedName())) {
-					userData = newHashMap(userData);
 					userData.put(EXPORTED_DEFAULT_KEY, "1");
 				}
 
@@ -257,8 +321,10 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	private void internalCreateEObjectDescription(TVariable type, IAcceptor<IEObjectDescription> acceptor) {
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
 		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
-			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type,
-					getAccessModifierUserData(type.getTypeAccessModifier()));
+			Map<String, String> userData = new HashMap<>();
+			addAccessModifierUserData(userData, type.getTypeAccessModifier());
+
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type, userData);
 			acceptor.accept(eod);
 		}
 	}

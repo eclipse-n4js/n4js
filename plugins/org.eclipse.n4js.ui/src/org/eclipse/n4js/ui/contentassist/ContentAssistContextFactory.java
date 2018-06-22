@@ -15,6 +15,9 @@ import java.util.Collection;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.Token;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.smith.ClosableMeasurement;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
@@ -66,8 +69,19 @@ public class ContentAssistContextFactory
 		doCreateContexts(lastCompleteNodeBeforeDatatype, datatypeNode, prefix, currentModel, followElements);
 	}
 
+	static private final DataCollector dcContentAssist = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Content Assist");
+	static private final DataCollector dcHandleLastCompleteNode = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("handleLastCompleteNode", "Content Assist");
+
 	@Override
 	protected void handleLastCompleteNodeIsAtEndOfDatatypeNode() {
+		try (ClosableMeasurement m = dcHandleLastCompleteNode.getClosableMeasurement("handleLastCompleteNode")) {
+			handleLastCompleteNodeIsAtEndOfDatatypeNodeInternal();
+		}
+	}
+
+	private void handleLastCompleteNodeIsAtEndOfDatatypeNodeInternal() {
 		String prefix = getPrefix(lastCompleteNode);
 		INode previousNode = getLastCompleteNodeByOffset(rootNode, lastCompleteNode.getOffset());
 		EObject previousModel = previousNode.getSemanticElement();
@@ -75,6 +89,7 @@ public class ContentAssistContextFactory
 		Collection<FollowElement> followElements = getParser().getFollowElements(rootNode, 0,
 				lastCompleteNode.getOffset(), true);
 		int prevSize = contextBuilders.size();
+
 		doCreateContexts(previousNode, currentDatatypeNode, prefix, previousModel, followElements);
 
 		if (lastCompleteNode instanceof ILeafNode && lastCompleteNode.getGrammarElement() == null
@@ -83,4 +98,5 @@ public class ContentAssistContextFactory
 					previousModel);
 		}
 	}
+
 }
