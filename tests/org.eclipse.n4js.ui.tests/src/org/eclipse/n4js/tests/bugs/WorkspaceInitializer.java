@@ -12,15 +12,14 @@ package org.eclipse.n4js.tests.bugs;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Suppliers.memoize;
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceDescription;
-import org.eclipse.core.runtime.CoreException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.eclipse.n4js.ui.utils.AutobuildUtils;
 
 import com.google.common.base.Supplier;
 
@@ -29,6 +28,8 @@ import com.google.common.base.Supplier;
  * auto build exactly once.
  */
 class WorkspaceInitializer {
+
+	private static final Logger LOG = LogManager.getLogger(WorkspaceInitializer.class);
 
 	private final Supplier<Void> callback;
 
@@ -47,40 +48,27 @@ class WorkspaceInitializer {
 			public Void get() {
 				assertTrue("This test requires a running workbench.", isWorkbenchRunning());
 				// Disable autobuild.
-				toggleAutobuild(false);
+				AutobuildUtils.set(false);
 				try {
-					AbstractIDEBUG_Test.LOGGER.info("Cleaning workspace...");
+					LOG.info("Cleaning workspace...");
 					cleanWorkspace();
-					AbstractIDEBUG_Test.LOGGER.info("Workspace cleaned.");
-					AbstractIDEBUG_Test.LOGGER.info("Resetting test data.");
-					AbstractIDEBUG_Test.LOGGER.info("Test data was reseted.");
-					AbstractIDEBUG_Test.LOGGER.info("Importing projects into workspace...");
+					LOG.info("Workspace cleaned.");
+					LOG.info("Resetting test data.");
+					LOG.info("Test data was reseted.");
+					LOG.info("Importing projects into workspace...");
 					importer.importProjects();
-					AbstractIDEBUG_Test.LOGGER.info("Projects were successfully imported into workspace.");
+					LOG.info("Projects were successfully imported into workspace.");
 				} catch (final Exception e) {
-					AbstractIDEBUG_Test.LOGGER.error("Error while initializing workspace for test.", e);
+					LOG.error("Error while initializing workspace for test.", e);
 					throw new RuntimeException("Error while initializing workspace for test.", e);
 				} finally {
 					// Re-enable after imports done.
-					toggleAutobuild(true);
+					AutobuildUtils.set(true);
 				}
 
 				return null;
 			}
 		});
-	}
-
-	private static void toggleAutobuild(final boolean enabled) {
-		final IWorkspace workspace = getWorkspace();
-		final IWorkspaceDescription description = workspace.getDescription();
-		description.setAutoBuilding(enabled);
-		try {
-			AbstractIDEBUG_Test.LOGGER.info("Turning auto-build " + (enabled ? "on" : "off") + "...");
-			workspace.setDescription(description);
-			AbstractIDEBUG_Test.LOGGER.info("Auto-build was successfully turned " + (enabled ? "on" : "off") + ".");
-		} catch (final CoreException e) {
-			throw new RuntimeException("Error while toggling auto-build", e);
-		}
 	}
 
 	private WorkspaceInitializer(Supplier<Void> callback) {

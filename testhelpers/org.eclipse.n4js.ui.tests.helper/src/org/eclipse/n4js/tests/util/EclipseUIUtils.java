@@ -99,8 +99,7 @@ public class EclipseUIUtils {
 		do {
 
 			editorIsActive = page.getActiveEditor() == editor;
-			if (!editorIsActive)
-
+			if (!editorIsActive) {
 				try {
 					if (runsInUI)
 						UIUtils.waitForUiThread();
@@ -110,7 +109,7 @@ public class EclipseUIUtils {
 					wasInterrupted = true;
 					LOGGER.error("Waiting for editor was interrupted after " + sw + ".", e);
 				}
-
+			}
 		} while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWait && editorIsActive == false && wasInterrupted == false);
 		sw.stop();
 		if (editorIsActive == false && wasInterrupted == false) {

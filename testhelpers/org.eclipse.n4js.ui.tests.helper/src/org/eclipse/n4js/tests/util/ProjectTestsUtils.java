@@ -407,7 +407,7 @@ public class ProjectTestsUtils {
 				foundJobs = listJobsRunningWaiting();
 				foundJob = !foundJobs.isEmpty();
 				if (foundJob) {
-					if (LOGGER.isInfoEnabled())
+					if (LOGGER.isInfoEnabled()) 
 						LOGGER.info("Found " + foundJobs.size() + " after " + sw + ", going to sleep for a while.");
 
 					if (runsInUI)

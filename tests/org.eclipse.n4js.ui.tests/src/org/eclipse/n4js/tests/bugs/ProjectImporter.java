@@ -18,6 +18,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.PrintWriter;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 
@@ -25,6 +27,8 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
  * Simple project importer implementation.
  */
 class ProjectImporter {
+
+	private static final Logger LOG = LogManager.getLogger(ProjectImporter.class);
 
 	/**
 	 * The NOOP importer. Does not import anything into the workspace.
@@ -58,7 +62,7 @@ class ProjectImporter {
 
 				if (!newHashSet(file.list()).contains("_project")) {
 					final String projectName = file.getName();
-					AbstractIDEBUG_Test.LOGGER.info("Project \'" + projectName
+					LOG.info("Project \'" + projectName
 							+ "\' does not have .project file. Creating a temporary one on the fly...");
 					final File dotProject = new File(file, "_project");
 					assertTrue("Error while trying to create " + dotProject + " file for \'" + projectName
@@ -67,22 +71,22 @@ class ProjectImporter {
 						pw.print(DotProjectContentProvider.getDotProjectContentForProject(projectName));
 					}
 					dotProject.deleteOnExit();
-					AbstractIDEBUG_Test.LOGGER
+					LOG
 							.info("Temporary .project file was successfully created for \'" + projectName
 									+ "\' project.");
 				}
 
-				AbstractIDEBUG_Test.LOGGER.info("Importing " + file.getName() + " into workspace...");
+				LOG.info("Importing " + file.getName() + " into workspace...");
 				importProject(rootFolder, file.getName());
-				AbstractIDEBUG_Test.LOGGER
+				LOG
 						.info("Project " + file.getName() + " was successfully imported into the workspace.");
 			} else {
-				AbstractIDEBUG_Test.LOGGER.warn("Skipped importing project from " + file + ".");
+				LOG.warn("Skipped importing project from " + file + ".");
 			}
 		}
-		AbstractIDEBUG_Test.LOGGER.info("Waiting for full-build to complete...");
+		LOG.info("Waiting for full-build to complete...");
 		IResourcesSetupUtil.cleanBuild(); // using full build after imports.
-		AbstractIDEBUG_Test.LOGGER.info("Auto-build successfully completed.");
+		LOG.info("Auto-build successfully completed.");
 	}
 
 }
