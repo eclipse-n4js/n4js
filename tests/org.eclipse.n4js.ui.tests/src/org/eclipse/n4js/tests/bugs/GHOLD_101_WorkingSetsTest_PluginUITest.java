@@ -50,9 +50,12 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.tests.util.EclipseUIUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerProblemsDecorator;
 import org.eclipse.n4js.ui.navigator.internal.SelectWorkingSetDropDownAction;
 import org.eclipse.n4js.ui.navigator.internal.ShowHiddenWorkingSetsDropDownAction;
+import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.workingsets.ManualAssociationAwareWorkingSetManager;
 import org.eclipse.n4js.ui.workingsets.ManualAssociationAwareWorkingSetManager.ManualAssociationWorkingSet;
 import org.eclipse.n4js.ui.workingsets.ProjectNameFilterAwareWorkingSetManager;
@@ -114,8 +117,8 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 	public void setUp() throws Exception {
 		super.setUp();
 		waitForIdleState();
-		projectExplorer = (ProjectExplorer) showView(ProjectExplorer.VIEW_ID);
-		waitForUiThread();
+		projectExplorer = (ProjectExplorer) EclipseUIUtils.showView(ProjectExplorer.VIEW_ID);
+		UIUtils.waitForUiThread();
 		assertNotNull("Cannot show Project Explorer.", projectExplorer);
 		commonViewer = projectExplorer.getCommonViewer();
 		assertFalse("Expected projects as top level elements in navigator.", broker.isWorkingSetTopLevel());
@@ -129,6 +132,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 	public void tearDown() throws Exception {
 		super.tearDown();
 		broker.resetState();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		final TreeItem[] treeItems = commonViewer.getTree().getItems();
@@ -407,6 +411,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 
 		manager.updateState(diff);
 		broker.refreshNavigator();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		commonViewer.expandToLevel(2);
@@ -484,6 +489,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 
 		hideAction.run();
 		waitForIdleState();
+		commonViewer.refresh();
 
 		treeItems = commonViewer.getTree().getItems();
 		workingSets = from(asList(treeItems)).transform(item -> item.getData())
@@ -522,6 +528,8 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		menu.getItem(0).notifyListeners(SWT.Selection, null);
 		waitForIdleState();
 		workingSetsToHide.remove(0);
+		waitForIdleState();
+		commonViewer.refresh();
 
 		treeItems = commonViewer.getTree().getItems();
 		workingSets = from(asList(treeItems)).transform(item -> item.getData())
@@ -539,6 +547,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 
 		menu.getItem(menu.getItemCount() - 1).notifyListeners(SWT.Selection, null);
 		waitForIdleState();
+		commonViewer.refresh();
 
 		treeItems = commonViewer.getTree().getItems();
 		assertTrue("Expected exactly " + expectedItemCount + " items in the Project Explorer. Input was: "
@@ -596,7 +605,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 				JavaProjectSetupUtil.createSimpleProject(projectName);
 				assertTrue(
 						"Project " + projectName + " is not accessible.",
-						getProjectByName(projectName).isAccessible());
+						ProjectTestsUtils.getProjectByName(projectName).isAccessible());
 			}
 		} finally {
 			workspaceDescription.setAutoBuilding(autoBuild);
@@ -624,6 +633,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		waitForIdleState();
 
 		broker.refreshNavigator();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		commonViewer.expandToLevel(2);
@@ -650,7 +660,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 			}
 		}
 
-		StructuredSelection selection = new StructuredSelection(getProjectsByName("A", "B", "C"));
+		StructuredSelection selection = new StructuredSelection(ProjectTestsUtils.getProjectsByName("A", "B", "C"));
 		commonViewer.setSelection(selection);
 		assertEquals(3, commonViewer.getTree().getSelection().length);
 
@@ -672,6 +682,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		waitForIdleState();
 
 		broker.refreshNavigator();
+		commonViewer.refresh();
 		waitForIdleState();
 
 		commonViewer.expandToLevel(2);
@@ -707,6 +718,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 		checkNotNull(manager, "Working set manager does not exist with ID: " + clazz);
 		broker.setActiveManager(manager);
 		broker.setWorkingSetTopLevel(true);
+		commonViewer.refresh();
 		waitForIdleState();
 		final IContributionItem dropDownContribution = getWorkingSetDropDownContribution();
 		assertNotNull(

@@ -36,14 +36,13 @@ import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.IDirtyStateManager;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -128,33 +127,11 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected XtextEditor openAndGetXtextEditor(final IFile file1, final IWorkbenchPage page) {
-		IEditorPart fileEditor = getFileEditor(file1, page);
+		IEditorPart fileEditor = EclipseUIUtils.openFileEditor(file1, page, getEditorId());
+		EclipseUIUtils.waitForEditorToBeActive(page, fileEditor);
 		assertTrue(fileEditor instanceof XtextEditor);
 		XtextEditor fileXtextEditor = (XtextEditor) fileEditor;
 		return fileXtextEditor;
-	}
-
-	private IEditorPart internalFileEditor = null;
-
-	private IEditorPart getFileEditor(final IFile file1, final IWorkbenchPage page) {
-		internalFileEditor = null;
-		Display.getCurrent().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					internalFileEditor = IDE.openEditor(page, file1, getEditorId(), true);
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		long start = System.currentTimeMillis();
-		long end = start;
-		do {
-			end = System.currentTimeMillis();
-		} while (page.getActiveEditor() != internalFileEditor && (end - start) < 5000);
-		return internalFileEditor;
 	}
 
 	/**
