@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.n4js.tester.ui.tests
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: %providerName
+Fragment-Host: org.eclipse.n4js.tester;bundle-version="0.0.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.n4js.tester.tests.helper,
+ org.eclipse.xtend.lib,
+ org.junit,
+ org.eclipse.n4js.hlc.base,
+ org.eclipse.xtext.ui.testing,
+ org.eclipse.n4js.ui.tests.helper
+Automatic-Module-Name: org.eclipse.n4js.tester.tests
