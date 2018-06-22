@@ -56,6 +56,10 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xsemantics.runtime" version="1.12.1.v20180219-1336"/>
       <repository location="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.rse.files.ui" version="3.2.200.201502052140"/>
+      <unit id="org.eclipse.rse.subsystems.files.local" version="2.1.300.201403251512"/>
+      <repository location="http://download.eclipse.org/tm/updates/4.0/GA"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201802191222"/>
@@ -71,11 +75,6 @@
       <unit id="org.eclipse.wst.html.ui.infopop" version="1.0.201.v201409111852"/>
       <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.8.0.v201608061842"/>
       <repository location="http://download.eclipse.org/webtools/downloads/drops/R3.8.1/R-3.8.1-20160912100321/repository"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.rse.files.ui" version="3.2.200.201502052140"/>
-      <unit id="org.eclipse.rse.subsystems.files.local" version="2.1.300.201403251512"/>
-      <repository location="http://download.eclipse.org/tm/updates/OLD-STUFF/4.0/GA/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.gef" version="3.11.0.201606061308"/>
