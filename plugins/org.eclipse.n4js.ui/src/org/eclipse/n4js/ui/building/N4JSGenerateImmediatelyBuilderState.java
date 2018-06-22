@@ -187,26 +187,27 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 
 		IProject project = getProject(buildData);
 		try (ClosableMeasurement m = dcBuild.getClosableMeasurement("build " + Instant.now());) {
+			try {
 
-			BuildType buildType = N4JSBuildTypeTracker.getBuildType(project);
-			IBuildParticipantInstruction instruction;
-			if (buildType == null) {
-				instruction = IBuildParticipantInstruction.NOOP;
-			} else {
-				instruction = findJSBuilderParticipant().prepareBuild(project, buildType);
+				BuildType buildType = N4JSBuildTypeTracker.getBuildType(project);
+				IBuildParticipantInstruction instruction;
+				if (buildType == null) {
+					instruction = IBuildParticipantInstruction.NOOP;
+				} else {
+					instruction = findJSBuilderParticipant().prepareBuild(project, buildType);
+				}
+				// removed after the build automatically;
+				// the resource set is discarded afterwards, anyway
+				buildData.getResourceSet().eAdapters().add(instruction);
+			} catch (CoreException e) {
+				handleCoreException(e);
 			}
-			// removed after the build automatically;
-			// the resource set is discarded afterwards, anyway
-			buildData.getResourceSet().eAdapters().add(instruction);
-		} catch (CoreException e) {
-			handleCoreException(e);
+			Collection<Delta> modifiedDeltas = super.doUpdate(buildData, newData, monitor);
+			logBuildData(buildData, " of after #doUpdate");
+			builderStateLogger.log("Modified deltas: " + modifiedDeltas);
+			builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");
+			return modifiedDeltas;
 		}
-		Collection<Delta> modifiedDeltas = super.doUpdate(buildData, newData, monitor);
-		logBuildData(buildData, " of after #doUpdate");
-		builderStateLogger.log("Modified deltas: " + modifiedDeltas);
-		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");
-
-		return modifiedDeltas;
 	}
 
 	private void logBuildData(BuildData buildData, String... tags) {
