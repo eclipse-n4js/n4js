@@ -27,7 +27,7 @@ import org.junit.Test;
  * Class for checking whether the order of the source containers influences the indexing order and the scoping for
  * imports.
  */
-public class IDEBUG_745_PluginUITest extends AbstractIDEBUG_Test {
+public class IDEBUG_745_PluginTest extends AbstractIDEBUG_Test {
 
 	/***/
 	@Test

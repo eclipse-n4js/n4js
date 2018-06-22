@@ -37,9 +37,9 @@ import com.google.inject.Inject;
  * job family.
  */
 @SuppressWarnings("restriction")
-public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
+public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 
-	private static final Logger LOG = LogManager.getLogger(IDEBUG_856_PluginUITest.class);
+	private static final Logger LOG = LogManager.getLogger(IDEBUG_856_PluginTest.class);
 
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "IDEBUG_856";

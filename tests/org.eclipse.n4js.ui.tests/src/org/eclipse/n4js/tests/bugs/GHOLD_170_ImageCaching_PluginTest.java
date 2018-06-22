@@ -23,7 +23,7 @@ import org.junit.Test;
 /**
  * Class for testing the {@link ImageDescriptor} and {@link Image} caching.
  */
-public class GHOLD_170_ImageCaching_PluginUITest extends AbstractIDEBUG_Test {
+public class GHOLD_170_ImageCaching_PluginTest extends AbstractIDEBUG_Test {
 
 	/**
 	 * Asserts the test setup, namely that the {@link IWorkbench workbench} is running.
