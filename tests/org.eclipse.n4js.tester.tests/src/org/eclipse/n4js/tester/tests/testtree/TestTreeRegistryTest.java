@@ -18,11 +18,11 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Range.closed;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.primitives.Ints.toArray;
-import static org.eclipse.n4js.tester.domain.TestStatus.PASSED;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.sort;
 import static java.util.Collections.singletonList;
 import static java.util.UUID.randomUUID;
+import static org.eclipse.n4js.tester.domain.TestStatus.PASSED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -32,13 +32,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.emf.common.util.URI;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.google.common.base.Function;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.tester.TestTreeRegistry;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.domain.ID;
@@ -48,16 +41,23 @@ import org.eclipse.n4js.tester.domain.TestSuite;
 import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
 import org.eclipse.n4js.tester.internal.InternalTestTreeRegistry;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
 import org.eclipse.n4js.utils.collections.Arrays2;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.google.common.base.Function;
+import com.google.inject.Inject;
 
 /**
  * Class for testing the {@link TestTreeRegistry test tree registry}.
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = {})
-public class TestTreeRegistryTest {
+public class TestTreeRegistryTest extends AbstractTestTreeTest {
 
 	@Inject
 	private TestTreeRegistry treeRegistry;

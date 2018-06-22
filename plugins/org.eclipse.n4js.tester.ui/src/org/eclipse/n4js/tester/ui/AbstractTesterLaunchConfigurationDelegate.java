@@ -16,12 +16,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.runner.ui.IDERunnerDelegate;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.utils.StatusHelper;
+
+import com.google.inject.Inject;
 
 /**
  * Base class for tester launch configuration delegates.
@@ -49,8 +48,9 @@ public abstract class AbstractTesterLaunchConfigurationDelegate extends IDERunne
 		}
 
 		try {
-			DebugPlugin.newProcess(launch, testerFrontEndUI.runInUI(testConfig),
-					launch.getLaunchConfiguration().getName());
+			String launchConfigName = launch.getLaunchConfiguration().getName();
+			Process process = testerFrontEndUI.runInUI(testConfig);
+			DebugPlugin.newProcess(launch, process, launchConfigName);
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while trying to execute module.", e);
 			if (e instanceof CoreException) {
