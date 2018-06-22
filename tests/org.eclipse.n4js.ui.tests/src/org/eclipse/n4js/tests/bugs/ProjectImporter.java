@@ -67,13 +67,15 @@ class ProjectImporter {
 						pw.print(DotProjectContentProvider.getDotProjectContentForProject(projectName));
 					}
 					dotProject.deleteOnExit();
-					AbstractIDEBUG_Test.LOGGER.info("Temporary .project file was successfully created for \'" + projectName
-							+ "\' project.");
+					AbstractIDEBUG_Test.LOGGER
+							.info("Temporary .project file was successfully created for \'" + projectName
+									+ "\' project.");
 				}
 
 				AbstractIDEBUG_Test.LOGGER.info("Importing " + file.getName() + " into workspace...");
 				importProject(rootFolder, file.getName());
-				AbstractIDEBUG_Test.LOGGER.info("Project " + file.getName() + " was successfully imported into the workspace.");
+				AbstractIDEBUG_Test.LOGGER
+						.info("Project " + file.getName() + " was successfully imported into the workspace.");
 			} else {
 				AbstractIDEBUG_Test.LOGGER.warn("Skipped importing project from " + file + ".");
 			}
