@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
 /**
  * Class for checking whether singleton instances are shared among parent-child injectors.
  */
-public class GHOLD_180_CheckInjectedSharedSingletons_PluginTest extends AbstractIDEBUG_Test {
+public class GHOLD_180_CheckInjectedSharedSingletons_PluginUITest extends AbstractIDEBUG_Test {
 
 	@Override
 	protected ProjectImporter getProjectImporter() {

@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * Test class for checking type system does not cause build failure when processing and traversing broken AST.
  */
-public class GHOLD_129_BrokenAstMustNotCauseBuildFailure_PluginTest extends AbstractIDEBUG_Test {
+public class GHOLD_129_BrokenAstMustNotCauseBuildFailure_PluginUITest extends AbstractIDEBUG_Test {
 
 	private static final String PROJECT_NAME = "GHOLD-129";
 

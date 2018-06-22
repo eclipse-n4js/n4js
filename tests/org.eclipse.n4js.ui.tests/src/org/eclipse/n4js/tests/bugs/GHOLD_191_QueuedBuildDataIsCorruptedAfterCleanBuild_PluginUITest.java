@@ -26,7 +26,7 @@ import com.google.inject.Inject;
  * Class for testing that the {@link QueuedBuildData} contains no queued resources after a full clean build.
  */
 @SuppressWarnings("restriction")
-public class GHOLD_191_QueuedBuildDataIsCorruptedAfterCleanBuild_PluginTest extends AbstractIDEBUG_Test {
+public class GHOLD_191_QueuedBuildDataIsCorruptedAfterCleanBuild_PluginUITest extends AbstractIDEBUG_Test {
 
 	private static final String PROJECT_NAME = "GHOLD-191";
 

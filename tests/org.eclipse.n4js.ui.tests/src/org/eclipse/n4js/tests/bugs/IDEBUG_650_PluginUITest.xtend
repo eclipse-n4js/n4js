@@ -27,7 +27,7 @@ import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild
  * Test for checking that the correctly polyfilled non-accessor members will not have auto-generated{@code API not implemented yet} stubs.
  */
 @SuppressWarnings("deprecation")
-class IDEBUG_650_PluginTest extends AbstractIDEBUG_Test {
+class IDEBUG_650_PluginUITest extends AbstractIDEBUG_Test {
 
 	static val PATTERN = Pattern.compile('''system:\s+[{]\s+value:\s+function\s+system«METHOD_STACKTRACE_SUFFIX»\s*[(][)]''');
 
