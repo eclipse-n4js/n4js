@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tester.ui;
 
+import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.ui.IStartup;
 
 /**
@@ -20,6 +21,7 @@ public class TesterUiStartup implements IStartup {
 	@Override
 	public void earlyStartup() {
 		// this is just a hack to ensure embedded HTTP server is running when starting application.
+		TesterActivator.getInstance().startupWithInjector(TesterUiActivator.getInjector());
 	}
 
 }

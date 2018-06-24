@@ -16,9 +16,9 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.asList;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.tester.domain.TestStatus.ERROR;
 import static java.lang.String.valueOf;
 import static java.util.UUID.randomUUID;
+import static org.eclipse.n4js.tester.domain.TestStatus.ERROR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -30,6 +30,16 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.tester.TesterModule;
+import org.eclipse.n4js.tester.domain.ID;
+import org.eclipse.n4js.tester.domain.TestCase;
+import org.eclipse.n4js.tester.domain.TestResult;
+import org.eclipse.n4js.tester.domain.TestSuite;
+import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
+import org.eclipse.n4js.tester.tests.InjectedModules;
+import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
+import org.eclipse.n4js.tester.tests.MockTesterModule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,22 +48,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.tester.TesterModule;
-import org.eclipse.n4js.tester.domain.ID;
-import org.eclipse.n4js.tester.domain.TestCase;
-import org.eclipse.n4js.tester.domain.TestResult;
-import org.eclipse.n4js.tester.domain.TestSuite;
-import org.eclipse.n4js.tester.domain.TestTree;
-import org.eclipse.n4js.tester.tests.InjectedModules;
-import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
-import org.eclipse.n4js.tester.tests.MockTesterModule;
-
 /**
  * Test class for testing the serialization, deserialization and cloning behavior of the domain objects.
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = { MockTesterModule.class })
-public class TesterDomainTest {
+public class TesterDomainTest extends AbstractTestTreeTest {
 
 	@Inject
 	private ObjectMapper mapper;

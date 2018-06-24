@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
@@ -37,9 +36,9 @@ import org.eclipse.n4js.tester.TestDiscoveryHelper;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.domain.TestSuite;
 import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
-import org.eclipse.n4js.tester.tests.WithParentInjector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,14 +47,13 @@ import org.junit.runner.RunWith;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * Class for testing the behavior of the {@link TestDiscoveryHelper} in headless mode.
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = {})
-public class HeadlessTestDiscoveryTest {
+public class HeadlessTestDiscoveryTest extends AbstractTestTreeTest {
 
 	private static final String FQN_DELIMITER = N4JSQualifiedNameConverter.DELIMITER;
 	private static final String RESOURCES_FOLDER = "resources";
@@ -80,12 +78,6 @@ public class HeadlessTestDiscoveryTest {
 
 	private static final String TEST_N4JSX_CLASS_3 = "TestClass_3";
 	private static final String TEST_N4JSX_CLASS_4 = "TestClass_4";
-
-	/***/
-	@WithParentInjector
-	public static Injector getParentInjector() {
-		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
 
 	@Inject
 	private TestDiscoveryHelper helper;

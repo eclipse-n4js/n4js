@@ -30,6 +30,8 @@ import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
+import org.eclipse.n4js.tests.util.EclipseUIUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.console.IConsole;
@@ -92,7 +94,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	@Ignore("IDE-2270")
 	@Test
 	public void testModuleWithIgnoredMethod() {
-		final IProject project = getProjectByName(PROJECT_NAME);
+		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
 		assertTrue("Project is not accessible.", project.isAccessible());
 		final IFile module = project.getFile("test/X1.n4js");
 		assertTrue("Module is not accessible.", module.isAccessible());
@@ -110,7 +112,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	 */
 	@Test
 	public void testModuleWithIgnoredClass() {
-		final IProject project = getProjectByName(PROJECT_NAME);
+		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
 		assertTrue("Project is not accessible.", project.isAccessible());
 		final IFile module = project.getFile("test/X2.n4js");
 		assertTrue("Module is not accessible.", module.isAccessible());
@@ -129,7 +131,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	@Ignore("IDE-2270")
 	@Test
 	public void testModuleWithoutSuperClass() {
-		final IProject project = getProjectByName(PROJECT_NAME);
+		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
 		assertTrue("Project is not accessible.", project.isAccessible());
 		final IFile module = project.getFile("test/A.n4js");
 		assertTrue("Module is not accessible.", module.isAccessible());
@@ -147,7 +149,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	 */
 	@Test
 	public void testIgnoredModuleWithSuperClass() {
-		final IProject project = getProjectByName(PROJECT_NAME);
+		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
 		assertTrue("Project is not accessible.", project.isAccessible());
 		final IFile module = project.getFile("test/B.n4js");
 		assertTrue("Module is not accessible.", module.isAccessible());
@@ -166,7 +168,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	 */
 	@Test
 	public void testModuleWithIgnoredInSuperClassChain() {
-		final IProject project = getProjectByName(PROJECT_NAME);
+		final IProject project = ProjectTestsUtils.getProjectByName(PROJECT_NAME);
 		assertTrue("Project is not accessible.", project.isAccessible());
 		final IFile module = project.getFile("test/C.n4js");
 		assertTrue("Module is not accessible.", module.isAccessible());
@@ -200,7 +202,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 
 	private String getConsoleContent() {
 		waitForIdleState();
-		final IViewPart viewPart = showView(CONSOLE_VIEW_ID);
+		final IViewPart viewPart = EclipseUIUtils.showView(CONSOLE_VIEW_ID);
 		final ConsoleView consoleView = assertInstanceOf(viewPart, ConsoleView.class);
 		final IConsole console = consoleView.getConsole();
 		// Can be null, if nothing was logged to the console yet. Such cases return with empty string instead.

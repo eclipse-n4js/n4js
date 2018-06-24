@@ -40,4 +40,3 @@ class CountPostChangeBroadcastChangeNotificationManager extends NotificationMana
 		return countPostChangeBroadcastTriggered;
 	}
 }
- 
