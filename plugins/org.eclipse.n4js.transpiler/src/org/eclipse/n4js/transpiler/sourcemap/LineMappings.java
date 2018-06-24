@@ -46,6 +46,9 @@ public abstract class LineMappings extends TreeSet<MappingEntry> {
 	 */
 	public abstract MappingEntry findEntryByColumn(int col);
 
+	/**
+	 * Organizes the mapping by position in the generated file.
+	 */
 	public static class ByGen extends LineMappings {
 
 		public ByGen() {
@@ -68,6 +71,9 @@ public abstract class LineMappings extends TreeSet<MappingEntry> {
 		}
 	}
 
+	/**
+	 * Organizes the mapping by position in the source file.
+	 */
 	public static class BySrc extends LineMappings {
 
 		public BySrc() {

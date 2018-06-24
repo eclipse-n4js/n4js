@@ -112,7 +112,8 @@ public class SourceMap {
 		LineMappings.ByGen lineMapping = getOrCreateSrcLineMapping(entry.genLine);
 		lineMapping.add(entry);
 
-		getOrCreateSrcLineMapping(entry.srcIndex, entry.srcLine);
+		LineMappings.BySrc lineSrcMapping = getOrCreateSrcLineMapping(entry.srcIndex, entry.srcLine);
+		lineSrcMapping.add(entry);
 	}
 
 	/**
@@ -293,7 +294,7 @@ public class SourceMap {
 	 * @return the closest entry or null, if no such entry was found.
 	 */
 	public MappingEntry findMappingForGenPosition(int genLine, int genColumns) {
-		if (genLine >= genMappings.size()) {
+		if (genLine < 0 || genColumns < 0 || genLine >= genMappings.size()) {
 			return null;
 		}
 		LineMappings.ByGen lineMappings = genMappings.get(genLine);
@@ -310,15 +311,19 @@ public class SourceMap {
 	 * @return the closest entry or null, if no such entry was found.
 	 */
 	public MappingEntry findMappingForSrcPosition(int sourceIndex, int sourceLine, int sourceColumn) {
-		if (sourceIndex < 0 || sourceIndex >= srcMappings.size()) {
+		if (sourceColumn < 0 || sourceLine < 0 || sourceIndex < 0 || sourceIndex >= srcMappings.size()) {
 			return null;
 		}
 		List<LineMappings.BySrc> mappings = srcMappings.get(sourceIndex);
+		if (sourceLine >= mappings.size()) {
+			return null;
+		}
 		LineMappings.BySrc lineMappings = mappings.get(sourceLine);
 		if (lineMappings == null) {
 			return null;
 		}
-		return null;
+		MappingEntry entry = lineMappings.findEntryByColumn(sourceColumn);
+		return entry;
 	}
 
 	/**

@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
@@ -59,14 +59,12 @@ import com.google.inject.Inject;
  */
 public class SourceMapView extends ViewPart {
 
-	private final String SOURCEMAP_INDICATOR = "sourceMappingURL=";
-
 	private final String GEN_EXT = "js";
 	private final String MAP_EXT = "map";
 	private final String N4JS_EXT = "n4js";
 
 	private CTabFolder tabsOrg;
-	private Map<File, StyledText> textOrgs;
+	private LinkedHashMap<File, StyledText> textOrgs;
 	private StyledText textGen;
 	private StyledText textMappings;
 	private StyledText textMapFile;
@@ -109,20 +107,28 @@ public class SourceMapView extends ViewPart {
 		textGen.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				int offset = textGen.getOffsetAtLocation(new Point(e.x, e.y));
-				int line = textGen.getLineAtOffset(offset);
-				int column = offset - textGen.getOffsetAtLine(line);
-				selectSrcByGenPos(line, column);
+				try {
+					if (textGen.isFocusControl()) {
+						int offset = textGen.getOffsetAtLocation(new Point(e.x, e.y));
+						int line = textGen.getLineAtOffset(offset);
+						int column = offset - textGen.getOffsetAtLine(line);
+						selectSrcByGenPos(line, column);
+					}
+				} catch (IllegalArgumentException ex) {
+					// we ignore exceptions due to wrong locations
+				}
 			}
 		});
 		textGen.addCaretListener(new CaretListener() {
 
 			@Override
 			public void caretMoved(CaretEvent event) {
-				int offset = event.caretOffset;
-				int line = textGen.getLineAtOffset(offset);
-				int column = offset - textGen.getOffsetAtLine(line);
-				selectSrcByGenPos(line, column);
+				if (textGen.isFocusControl()) {
+					int offset = event.caretOffset;
+					int line = textGen.getLineAtOffset(offset);
+					int column = offset - textGen.getOffsetAtLine(line);
+					selectSrcByGenPos(line, column);
+				}
 			}
 		});
 
@@ -312,12 +318,57 @@ public class SourceMapView extends ViewPart {
 			return;
 		}
 		CTabItem tabItem = new CTabItem(tabsOrg, SWT.NONE);
-		StyledText text = createText(tabsOrg, true);
+		final StyledText text = createText(tabsOrg, true);
 		text.setText(code);
 		tabItem.setControl(text);
 		tabItem.setText(file.getName());
 		textOrgs.put(canFile, text);
 		tabsOrg.setSelection(tabsOrg.getItemCount() - 1);
+
+		text.addCaretListener(new CaretListener() {
+
+			@Override
+			public void caretMoved(CaretEvent event) {
+				if (text.isFocusControl()) {
+					int offset = event.caretOffset;
+					int line = text.getLineAtOffset(offset);
+					int column = offset - text.getOffsetAtLine(line);
+
+					int index = 0;
+					for (Entry<File, StyledText> entry : textOrgs.entrySet()) {
+						if (entry.getValue() == text) {
+							selectGenBySrcPos(index, line, column);
+							break;
+						}
+						index++;
+					}
+				}
+			}
+		});
+
+		text.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				try {
+					if (text.isFocusControl()) {
+						int offset = text.getOffsetAtLocation(new Point(e.x, e.y));
+						int line = text.getLineAtOffset(offset);
+						int column = offset - text.getOffsetAtLine(line);
+
+						int index = 0;
+						for (Entry<File, StyledText> entry : textOrgs.entrySet()) {
+							if (entry.getValue() == text) {
+								selectGenBySrcPos(index, line, column);
+								break;
+							}
+							index++;
+						}
+					}
+				} catch (IllegalArgumentException ex) {
+					// we ignore exceptoins due to wrong mouse locations
+				}
+			}
+		});
 
 	}
 
@@ -356,6 +407,29 @@ public class SourceMapView extends ViewPart {
 			} else {
 				StyledText text = (StyledText) tabsOrg.getSelection().getControl();
 				text.setSelection(0, 0);
+			}
+		}
+	}
+
+	private void selectGenBySrcPos(int srcIndex, int srcLine, int srcColumn) {
+		if (sourceMap != null) {
+			MappingEntry entry = sourceMap.findMappingForSrcPosition(srcIndex, srcLine, srcColumn);
+			if (entry != null) {
+				int delta = srcColumn - entry.srcColumn;
+				int genOffset = textGen.getOffsetAtLine(entry.genLine)
+						+ entry.genColumn;
+				int genOffsetEnd = genOffset;
+				if (delta > 0) {
+					int length = sourceMap.computeLength(entry);
+					if (length >= 0) {
+						genOffsetEnd += length;
+					} else {
+						genOffsetEnd = textGen.getOffsetAtLine(entry.genLine + 1) - 1;
+					}
+				}
+				textGen.setSelection(genOffset, genOffsetEnd);
+			} else {
+				textGen.setSelection(0, 0);
 			}
 		}
 	}
