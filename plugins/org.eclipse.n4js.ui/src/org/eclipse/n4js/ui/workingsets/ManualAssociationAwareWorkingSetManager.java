@@ -13,10 +13,10 @@ package org.eclipse.n4js.ui.workingsets;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.ui.workingsets.WorkingSet.OTHERS_WORKING_SET_ID;
-import static org.eclipse.n4js.ui.workingsets.WorkingSetManagerModificationStrategy.RESOURCE_WORKING_SETS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.eclipse.n4js.ui.workingsets.WorkingSet.OTHERS_WORKING_SET_ID;
+import static org.eclipse.n4js.ui.workingsets.WorkingSetManagerModificationStrategy.RESOURCE_WORKING_SETS;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 
 import java.io.IOException;
@@ -32,6 +32,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
+import org.eclipse.n4js.utils.Diff;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkingSet;
@@ -45,9 +47,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
-import org.eclipse.n4js.utils.Diff;
 
 /**
  * Working set manager implementation for managing working sets that have been manually configured by picking and
@@ -65,14 +64,6 @@ public class ManualAssociationAwareWorkingSetManager extends WorkingSetManagerIm
 	 * Ordered map of working set and workspace project associations.
 	 */
 	private final ProjectAssociation projectAssociations = new ProjectAssociation();
-
-	/**
-	 * Creates a new instance of the this working set manager. Registers itself to the Eclipse based
-	 * {@link IWorkingSetManager working set manager} to keep the content of this and that manager in sync.
-	 */
-	public ManualAssociationAwareWorkingSetManager() {
-		getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
-	}
 
 	@Inject
 	private Provider<WorkingSetManualAssociationWizard> wizardProvider;
@@ -178,6 +169,10 @@ public class ManualAssociationAwareWorkingSetManager extends WorkingSetManagerIm
 
 	@Override
 	protected List<WorkingSet> initializeWorkingSets() {
+		// Registers itself to the Eclipse based {@link IWorkingSetManager working set manager} to keep the content of
+		// this and that manager in sync.
+		getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
+
 		checkState(projectAssociations.keySet().size() == orderedWorkingSetIds.size(),
 				"Expected same number of working set names as project associations."
 						+ "\nNames were: " + Iterables.toString(orderedWorkingSetIds)

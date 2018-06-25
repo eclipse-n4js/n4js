@@ -11,6 +11,7 @@
 package org.eclipse.n4js.regex.ui;
 
 import com.google.inject.Injector;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.regex.ui.internal.RegularExpressionActivator;
 import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
@@ -23,12 +24,13 @@ public class RegularExpressionExecutableExtensionFactory extends AbstractGuiceAw
 
 	@Override
 	protected Bundle getBundle() {
-		return RegularExpressionActivator.getInstance().getBundle();
+		return Platform.getBundle(RegularExpressionActivator.PLUGIN_ID);
 	}
 	
 	@Override
 	protected Injector getInjector() {
-		return RegularExpressionActivator.getInstance().getInjector(RegularExpressionActivator.ORG_ECLIPSE_N4JS_REGEX_REGULAREXPRESSION);
+		RegularExpressionActivator activator = RegularExpressionActivator.getInstance();
+		return activator != null ? activator.getInjector(RegularExpressionActivator.ORG_ECLIPSE_N4JS_REGEX_REGULAREXPRESSION) : null;
 	}
-	
+
 }

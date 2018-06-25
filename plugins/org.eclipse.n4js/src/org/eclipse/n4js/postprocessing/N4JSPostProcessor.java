@@ -45,6 +45,7 @@ import com.google.inject.Inject;
  * </ol>
  */
 public class N4JSPostProcessor implements PostProcessor {
+
 	@Inject
 	private ASTProcessor astProcessor;
 	@Inject

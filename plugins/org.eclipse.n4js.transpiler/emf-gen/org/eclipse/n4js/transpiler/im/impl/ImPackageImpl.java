@@ -41,11 +41,11 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
-
 import org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM;
 import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM;
+
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 import org.eclipse.n4js.ts.types.TypesPackage;

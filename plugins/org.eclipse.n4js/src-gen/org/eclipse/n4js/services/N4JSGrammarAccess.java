@@ -5882,40 +5882,44 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.RelationalOperator");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Keyword cLessThanSignKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
-		private final Keyword cGreaterThanSignKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Keyword cGreaterThanSignKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Keyword cLessThanSignEqualsSignKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
-		private final Keyword cGreaterThanSignEqualsSignKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
-		private final Keyword cInstanceofKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
-		private final Group cGroup_5 = (Group)cAlternatives.eContents().get(5);
-		private final Keyword cInKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Keyword cInstanceofKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
+		private final Keyword cInKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		
 		//RelationalOperator <In RelationalOperator:
-		//	'<' | '>' | '<=' | '>=' | 'instanceof' | <In> 'in';
+		//	'<' | '>' '='? | '<=' | 'instanceof' | <In> 'in';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'<' | '>' | '<=' | '>=' | 'instanceof' | <In> 'in'
+		//'<' | '>' '='? | '<=' | 'instanceof' | <In> 'in'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'<'
 		public Keyword getLessThanSignKeyword_0() { return cLessThanSignKeyword_0; }
 		
+		//'>' '='?
+		public Group getGroup_1() { return cGroup_1; }
+		
 		//'>'
-		public Keyword getGreaterThanSignKeyword_1() { return cGreaterThanSignKeyword_1; }
+		public Keyword getGreaterThanSignKeyword_1_0() { return cGreaterThanSignKeyword_1_0; }
+		
+		//'='?
+		public Keyword getEqualsSignKeyword_1_1() { return cEqualsSignKeyword_1_1; }
 		
 		//'<='
 		public Keyword getLessThanSignEqualsSignKeyword_2() { return cLessThanSignEqualsSignKeyword_2; }
 		
-		//'>='
-		public Keyword getGreaterThanSignEqualsSignKeyword_3() { return cGreaterThanSignEqualsSignKeyword_3; }
-		
 		//'instanceof'
-		public Keyword getInstanceofKeyword_4() { return cInstanceofKeyword_4; }
+		public Keyword getInstanceofKeyword_3() { return cInstanceofKeyword_3; }
 		
 		//<In> 'in'
-		public Group getGroup_5() { return cGroup_5; }
+		public Group getGroup_4() { return cGroup_4; }
 		
 		//'in'
-		public Keyword getInKeyword_5_0() { return cInKeyword_5_0; }
+		public Keyword getInKeyword_4_0() { return cInKeyword_4_0; }
 	}
 	public class EqualityExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.EqualityExpression");
@@ -6455,7 +6459,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_7 = (Group)cAlternatives.eContents().get(7);
 		private final Keyword cGreaterThanSignKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_7_1 = (Keyword)cGroup_7.eContents().get(1);
-		private final Keyword cGreaterThanSignEqualsSignKeyword_7_2 = (Keyword)cGroup_7.eContents().get(2);
+		private final Keyword cGreaterThanSignKeyword_7_2 = (Keyword)cGroup_7.eContents().get(2);
+		private final Keyword cEqualsSignKeyword_7_3 = (Keyword)cGroup_7.eContents().get(3);
 		private final Keyword cAmpersandEqualsSignKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
 		private final Keyword cCircumflexAccentEqualsSignKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
 		private final Keyword cVerticalLineEqualsSignKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
@@ -6463,11 +6468,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//AssignmentOperator AssignmentOperator:
 		//	'=' | '*=' | '/=' | '%=' | '+=' | '-='
 		//	| '<<='
-		//	| '>' '>'? '>='
+		//	| '>' '>' '>'? '='
 		//	| '&=' | '^=' | '|=';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>' '>'? '>=' | '&=' | '^=' | '|='
+		//'=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>' '>' '>'? '=' | '&=' | '^=' | '|='
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'='
@@ -6491,17 +6496,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'<<='
 		public Keyword getLessThanSignLessThanSignEqualsSignKeyword_6() { return cLessThanSignLessThanSignEqualsSignKeyword_6; }
 		
-		//'>' '>'? '>='
+		//'>' '>' '>'? '='
 		public Group getGroup_7() { return cGroup_7; }
 		
 		//'>'
 		public Keyword getGreaterThanSignKeyword_7_0() { return cGreaterThanSignKeyword_7_0; }
 		
-		//'>'?
+		//'>'
 		public Keyword getGreaterThanSignKeyword_7_1() { return cGreaterThanSignKeyword_7_1; }
 		
-		//'>='
-		public Keyword getGreaterThanSignEqualsSignKeyword_7_2() { return cGreaterThanSignEqualsSignKeyword_7_2; }
+		//'>'?
+		public Keyword getGreaterThanSignKeyword_7_2() { return cGreaterThanSignKeyword_7_2; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_7_3() { return cEqualsSignKeyword_7_3; }
 		
 		//'&='
 		public Keyword getAmpersandEqualsSignKeyword_8() { return cAmpersandEqualsSignKeyword_8; }
@@ -11895,7 +11903,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//RelationalOperator <In RelationalOperator:
-	//	'<' | '>' | '<=' | '>=' | 'instanceof' | <In> 'in';
+	//	'<' | '>' '='? | '<=' | 'instanceof' | <In> 'in';
 	public RelationalOperatorElements getRelationalOperatorAccess() {
 		return pRelationalOperator;
 	}
@@ -12073,7 +12081,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//AssignmentOperator AssignmentOperator:
 	//	'=' | '*=' | '/=' | '%=' | '+=' | '-='
 	//	| '<<='
-	//	| '>' '>'? '>='
+	//	| '>' '>' '>'? '='
 	//	| '&=' | '^=' | '|=';
 	public AssignmentOperatorElements getAssignmentOperatorAccess() {
 		return pAssignmentOperator;

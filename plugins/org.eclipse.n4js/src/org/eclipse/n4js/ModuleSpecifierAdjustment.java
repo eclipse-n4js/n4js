@@ -11,8 +11,8 @@
 package org.eclipse.n4js;
 
 /**
- * Data class for defining how the transpiler should adjust module specifiers depending on module loader supported
- * by the target module (i.e. the module imported from).
+ * Data class for defining how the transpiler should adjust module specifiers depending on module loader supported by
+ * the target module (i.e. the module imported from).
  */
 public final class ModuleSpecifierAdjustment {
 	/** Prefix to be added to the module specifier, e.g. "@node". */

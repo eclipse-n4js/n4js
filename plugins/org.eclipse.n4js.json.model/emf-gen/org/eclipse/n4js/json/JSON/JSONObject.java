@@ -38,10 +38,6 @@ public interface JSONObject extends JSONValue {
 	 * Returns the value of the '<em><b>Name Value Pairs</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.json.JSON.NameValuePair}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Name Value Pairs</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *

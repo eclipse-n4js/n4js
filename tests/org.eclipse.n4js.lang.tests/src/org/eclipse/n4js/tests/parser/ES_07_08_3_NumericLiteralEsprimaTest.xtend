@@ -24,7 +24,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testZero() {
-		val script = '0'.parseSuccessfully
+		val script = '0'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val zero = statement.expression as IntLiteral
 		assertEquals(0, zero.toInt)
@@ -32,7 +32,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFourtyTwo() {
-		val script = '42'.parseSuccessfully
+		val script = '42'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val fourtyTwo = statement.expression as IntLiteral
 		assertEquals(42, fourtyTwo.toInt)
@@ -40,7 +40,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testThree() {
-		val script = '3'.parseSuccessfully
+		val script = '3'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val three = statement.expression as IntLiteral
 		assertEquals(3, three.toInt)
@@ -48,7 +48,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFive() {
-		val script = '5'.parseSuccessfully
+		val script = '5'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val five = statement.expression as IntLiteral
 		assertEquals(5, five.toInt)
@@ -56,7 +56,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDot14() {
-		val script = '.14'.parseSuccessfully
+		val script = '.14'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as DoubleLiteral
 		assertEquals(0.14, number.toDouble, 0.00001)
@@ -64,7 +64,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testPi() {
-		val script = '3.14159'.parseSuccessfully
+		val script = '3.14159'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as DoubleLiteral
 		assertEquals(3.14159, number.toDouble, 0.00001)
@@ -72,7 +72,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLargeDecimal() {
-		val script = '6.02214179e+23'.parseSuccessfully
+		val script = '6.02214179e+23'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as DoubleLiteral
 		assertEquals(6.02214179e+23, number.toDouble, 1)
@@ -80,7 +80,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testSmallDecimal() {
-		val script = '1.492417830e-10'.parseSuccessfully
+		val script = '1.492417830e-10'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as DoubleLiteral
 		assertEquals(1.492417830e-10, number.toDouble, 1e-15)
@@ -88,7 +88,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testHexInteger_01() {
-		val script = '0x0'.parseSuccessfully
+		val script = '0x0'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as HexIntLiteral
 		assertEquals(0, number.toInt)
@@ -96,7 +96,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testHexInteger_02() {
-		val script = '0x0;'.parseSuccessfully
+		val script = '0x0;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as HexIntLiteral
 		assertEquals(0, number.toInt)
@@ -104,7 +104,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testScientificInteger() {
-		val script = '0e+100'.parseSuccessfully
+		val script = '0e+100'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as ScientificIntLiteral
 		assertEquals(0, number.toInt)
@@ -112,7 +112,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testHexAbc() {
-		val script = '0xabc;'.parseSuccessfully
+		val script = '0xabc;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as HexIntLiteral
 		assertEquals(0xabc, number.toInt)
@@ -120,7 +120,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testHexDef() {
-		val script = '0xdef;'.parseSuccessfully
+		val script = '0xdef;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as HexIntLiteral
 		assertEquals(0xdef, number.toInt)
@@ -128,7 +128,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testHex1A() {
-		val script = '0X1A;'.parseSuccessfully
+		val script = '0X1A;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as HexIntLiteral
 		assertEquals(0x1A, number.toInt)
@@ -136,7 +136,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testHex10() {
-		val script = '0x10;'.parseSuccessfully
+		val script = '0x10;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as HexIntLiteral
 		assertEquals(0x10, number.toInt)
@@ -144,7 +144,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testHex100() {
-		val script = '0x100;'.parseSuccessfully
+		val script = '0x100;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as HexIntLiteral
 		assertEquals(0x100, number.toInt)
@@ -152,7 +152,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testHex04() {
-		val script = '0X04;'.parseSuccessfully
+		val script = '0X04;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as HexIntLiteral
 		assertEquals(0x4, number.toInt)
@@ -160,7 +160,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctal02() {
-		val script = '0o2;'.parseSuccessfully
+		val script = '0o2;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as OctalIntLiteral
 		assertEquals(2, number.toInt)
@@ -168,7 +168,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctal012() {
-		val script = '0o12;'.parseSuccessfully
+		val script = '0o12;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as OctalIntLiteral
 		assertEquals(10, number.toInt)
@@ -176,7 +176,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctal0012() {
-		val script = '0o012;'.parseSuccessfully
+		val script = '0o012;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as OctalIntLiteral
 		assertEquals(10, number.toInt)
@@ -184,7 +184,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctal0129() {
-		val script = '0O127;'.parseSuccessfully
+		val script = '0O127;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as OctalIntLiteral
 		assertEquals(Integer.parseInt("127", 8), number.toInt)
@@ -192,7 +192,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOctal0() {
-		val script = '0O0'.parseSuccessfully
+		val script = '0O0'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as OctalIntLiteral
 		assertEquals(0, number.toInt)
@@ -200,7 +200,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLegacyOctal02() {
-		val script = '02;'.parseSuccessfully
+		val script = '02;'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as LegacyOctalIntLiteral
 		assertEquals(2, number.toInt)
@@ -208,7 +208,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLegacyOctal012() {
-		val script = '012;'.parseSuccessfully
+		val script = '012;'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as LegacyOctalIntLiteral
 		assertEquals(10, number.toInt)
@@ -216,7 +216,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLegacyOctal0012() {
-		val script = '0012;'.parseSuccessfully
+		val script = '0012;'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as LegacyOctalIntLiteral
 		assertEquals(10, number.toInt)
@@ -224,7 +224,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testLegacyOctal0129() {
-		val script = '0129;'.parseSuccessfully
+		val script = '0129;'.parseESWithError
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as LegacyOctalIntLiteral
 		assertEquals(129, number.toInt)
@@ -232,7 +232,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinary0() {
-		val script = '0b0;'.parseSuccessfully
+		val script = '0b0;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as BinaryIntLiteral
 		assertEquals(0, number.toInt)
@@ -240,7 +240,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinary1() {
-		val script = '0b1;'.parseSuccessfully
+		val script = '0b1;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as BinaryIntLiteral
 		assertEquals(1, number.toInt)
@@ -248,7 +248,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinary2() {
-		val script = '0b10;'.parseSuccessfully
+		val script = '0b10;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as BinaryIntLiteral
 		assertEquals(2, number.toInt)
@@ -256,7 +256,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinary3() {
-		val script = '0b11;'.parseSuccessfully
+		val script = '0b11;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as BinaryIntLiteral
 		assertEquals(3, number.toInt)
@@ -264,7 +264,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinary4() {
-		val script = '0b10000000000;'.parseSuccessfully
+		val script = '0b10000000000;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as BinaryIntLiteral
 		assertEquals(1024, number.toInt)
@@ -272,7 +272,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinary5() {
-		val script = '0b10000000000000000000000000000000;'.parseSuccessfully
+		val script = '0b10000000000000000000000000000000;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as BinaryIntLiteral
 		assertEquals(2147483648L, number.toLong)
@@ -280,7 +280,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinary6() {
-		val script = '0b01111111100000000000000000000000;'.parseSuccessfully
+		val script = '0b01111111100000000000000000000000;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as BinaryIntLiteral
 		assertEquals(2139095040L, number.toLong)
@@ -288,7 +288,7 @@ class ES_07_08_3_NumericLiteralEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testBinary7() {
-		val script = '0B00000000011111111111111111111111;'.parseSuccessfully
+		val script = '0B00000000011111111111111111111111;'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val number = statement.expression as BinaryIntLiteral
 		assertEquals(8388607, number.toLong)

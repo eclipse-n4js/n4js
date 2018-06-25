@@ -658,6 +658,47 @@ Contributors:
     </extension>
   <!-- Customized Error-Marker for Generator Errors -->
 
+  <!-- Customized Error-Marker for Workspace Errors -->
+  <extension
+          id="workspace.error"
+          name="N4JS Workspace Problem"
+          point="org.eclipse.core.resources.markers">
+      <persistent value="true"/>
+     <super
+           type="org.eclipse.xtext.ui.check.fast">
+     </super>
+  </extension>
+  <extension
+    point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+       annotationType="org.eclipse.n4js.ui.workspace.error"
+       contributesToHeader="true"
+       label="N4JS Workspace Error"
+       colorPreferenceKey="org.eclipse.n4js.workspace.error.color"
+       colorPreferenceValue="255,0,128"
+       highlightPreferenceKey="org.eclipse.n4js.workspace.error.highlight"
+       highlightPreferenceValue="true"
+       includeOnPreferencePage="true"
+       overviewRulerPreferenceKey="org.eclipse.n4js.workspace.error.overview"
+       overviewRulerPreferenceValue="true"
+       presentationLayer="0"
+       textPreferenceKey="org.eclipse.n4js.workspace.error.text"
+       textPreferenceValue="true"
+       textStylePreferenceValue="BOX"
+       verticalRulerPreferenceKey="org.eclipse.n4js.workspace.error.ruler"
+       verticalRulerPreferenceValue="true">
+      </specification>
+    </extension>
+    <extension
+          point="org.eclipse.ui.editors.annotationTypes">
+       <type
+            super="org.eclipse.xtext.ui.editor.error"
+            markerType="org.eclipse.n4js.ui.workspace.error"
+            name="org.eclipse.n4js.ui.workspace.error">
+       </type>
+    </extension>
+  <!-- Customized Error-Marker for Workspace Errors -->
+
 
    <extension
          point="org.eclipse.xtext.builder.participant">
@@ -900,6 +941,14 @@ Contributors:
                 value="true">
             </attribute>
         </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.ui.workspace.error">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
     </extension>
        <!-- Rename Refactoring -->
     <extension point="org.eclipse.ui.handlers">
@@ -1063,12 +1112,6 @@ Contributors:
        </decorator>
     </extension>
         <extension
-              point="org.eclipse.n4js.utils.injectorSupplier">
-           <supplier
-                 class="org.eclipse.n4js.ui.utils.N4JSInjectorSupplier">
-           </supplier>
-        </extension>
-        <extension
               point="org.eclipse.ui.startup">
            <startup
                  class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.N4JSExternalLibraryStartup">
@@ -1080,16 +1123,9 @@ Contributors:
         <extension
               point="org.eclipse.n4js.ui.resourceDescriptionsPersisterContribution">
            <contribution
-                 class="org.eclipse.n4js.ui.internal.N4JSExternalLibraryResourceDescriptionsPersisterContribution">
+                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.internal.N4JSExternalLibraryResourceDescriptionsPersisterContribution">
            </contribution>
         </extension>
-        <extension
-              point="org.eclipse.n4js.utils.ui.quickfixProviderSupplier">
-           <supplier
-                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.quickfix.N4JSQuickfixProviderSupplier">
-           </supplier>
-        </extension>
-
         <extension
                 point="org.eclipse.ui.navigator.viewer">
             <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">

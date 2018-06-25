@@ -13,6 +13,7 @@ package org.eclipse.n4js.tester.server.resources;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import com.google.inject.Inject;
@@ -25,9 +26,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ServletHolderBuilder {
+	private static final Logger LOGGER = Logger.getLogger(ServletHolderBuilder.class);
 
 	@Inject
-	private Injector injector;
+	private Injector injectedInjector;
 
 	/**
 	 * Creates a new Guice aware {@link ServletHolder servlet holder} instance.
@@ -37,14 +39,21 @@ public class ServletHolderBuilder {
 	 * @return the Guice aware servlet holder.
 	 */
 	public ServletHolder build(final Class<? extends Servlet> clazz) {
-		return new ServletHolder(clazz) {
+		ServletHolder servletHolder = new ServletHolder(clazz) {
 			@Override
 			protected Servlet newInstance() throws ServletException, IllegalAccessException, InstantiationException {
-				final Servlet servlet = super.newInstance();
-				injector.injectMembers(servlet);
-				return servlet;
+				try {
+					Servlet servlet = super.newInstance();
+					Injector injector = injectedInjector;
+					injector.injectMembers(servlet);
+					return servlet;
+				} catch (Exception e) {
+					LOGGER.error("Error while creating servlet for class: " + clazz + ";", e);
+					throw e;
+				}
 			}
 		};
+		return servletHolder;
 	}
 
 }

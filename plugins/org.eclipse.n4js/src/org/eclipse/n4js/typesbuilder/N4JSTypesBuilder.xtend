@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -35,6 +35,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
@@ -45,7 +46,6 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 
 /**
  * This class with its {@link N4JSTypesBuilder#createTModuleFromSource(DerivedStateAwareResource,boolean) createTModuleFromSource()}
@@ -75,7 +75,7 @@ public class N4JSTypesBuilder {
 	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesFromTypeRefBuilder
 	@Inject extension N4JSNamespaceImportTypesBuilder
-	
+
 	@Inject extension ModuleNameComputer
 	@Inject private IN4JSCore n4jscore
 	@Inject private IQualifiedNameConverter qualifiedNameConverter
@@ -110,7 +110,8 @@ public class N4JSTypesBuilder {
 
 			val astMD5New = N4JSASTUtils.md5Hex(resource);
 			if (astMD5New != module.astMD5) {
-				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " + resource.URI);
+				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " +
+					resource.URI);
 			}
 			module.reconciled = true;
 
@@ -118,7 +119,7 @@ public class N4JSTypesBuilder {
 
 			script.buildTypesFromTypeRefs(module, preLinkingPhase);
 
-			script.relinkTypes(module,preLinkingPhase);
+			script.relinkTypes(module, preLinkingPhase);
 
 			module.astElement = script;
 			script.module = module;
@@ -146,7 +147,6 @@ public class N4JSTypesBuilder {
 		if (parseResult !== null) {
 
 //			UtilN4.takeSnapshotInGraphView("TB start (preLinking=="+preLinkingPhase+")",resource.resourceSet);
-
 			val script = parseResult.rootASTElement as Script;
 
 			val TModule result = typesFactory.createTModule;
@@ -165,16 +165,17 @@ public class N4JSTypesBuilder {
 				result.vendorID = project.vendorID;
 				result.moduleLoader = project.moduleLoader?.literal;
 
-				//main module
+				// main module
 				val mainModuleSpec = project.mainModule;
 				if (mainModuleSpec !== null) {
-					result.mainModule = resource.qualifiedModuleName == specifierConverter.toQualifiedName(mainModuleSpec);
+					result.mainModule = resource.qualifiedModuleName ==
+						specifierConverter.toQualifiedName(mainModuleSpec);
 				}
 			}
 
 			result.copyAnnotations(script, preLinkingPhase);
 
-			script.buildNamespaceTypesFromModuleImports(result,preLinkingPhase);
+			script.buildNamespaceTypesFromModuleImports(result, preLinkingPhase);
 
 			result.n4jsdModule = jsVariantHelper.isExternalMode(script);
 
@@ -182,16 +183,14 @@ public class N4JSTypesBuilder {
 			result.staticPolyfillModule = result.isContainedInStaticPolyfillModule;
 			result.staticPolyfillAware = result.isContainedInStaticPolyfillAware;
 
-			script.buildTypesFromTypeRefs(result,preLinkingPhase);
+			script.buildTypesFromTypeRefs(result, preLinkingPhase);
 
-			script.buildTypes(result,preLinkingPhase);
+			script.buildTypes(result, preLinkingPhase);
 
 			result.astElement = script;
 			script.module = result;
 			(resource as N4JSResource).sneakyAddToContent(result);
-
 //			UtilN4.takeSnapshotInGraphView("TB end (preLinking=="+preLinkingPhase+")",resource.resourceSet);
-
 		} else {
 			throw new IllegalStateException(resource.URI + " has no parse result.");
 		}
@@ -202,12 +201,13 @@ public class N4JSTypesBuilder {
 	 * and adds them to the given {@code target} module's {@link TModule#internalTypes}.
 	 */
 	def private void buildNamespaceTypesFromModuleImports(Script script, TModule target, boolean preLinkingPhase) {
-		if(!preLinkingPhase) {
-			//process namespace imports
+		if (!preLinkingPhase) {
+			// process namespace imports
 			for (importDeclaration : script.scriptElements.filter(ImportDeclaration).toList) {
 				val namespaceImport = getNamespaceImportSpecifier(importDeclaration)
-				if(namespaceImport !== null) {
-					val importedModule = importDeclaration.eGet(N4JSPackage.eINSTANCE.importDeclaration_Module, false) as TModule
+				if (namespaceImport !== null) {
+					val importedModule = importDeclaration.eGet(N4JSPackage.eINSTANCE.importDeclaration_Module,
+						false) as TModule
 					target.internalTypes += createModuleNamespaceVirtualType(namespaceImport, importedModule);
 				}
 			}
@@ -222,14 +222,14 @@ public class N4JSTypesBuilder {
 	 * builder phase.
 	 */
 	def private void buildTypesFromTypeRefs(Script script, TModule target, boolean preLinkingPhase) {
-		if(!preLinkingPhase) {
+		if (!preLinkingPhase) {
 			// important to do the following in bottom-up order!
 			// The structural members of a higher-level StructuralTypeRef STR may contain another StructuralTypeRef STR';
 			// when the TStructuralType of STR is created, the structural members are copied, including contained TypeRefs;
 			// at that time the lower-level STR' must already have been prepared for copying!
 			// Example:
 			// var ~Object with {
-			//     ~Object with { number fieldOfField; } field;
+			// ~Object with { number fieldOfField; } field;
 			// } x;
 			for (tr : script.eAllContents.filter(TypeRef).toList.reverseView) {
 				switch tr {
@@ -258,15 +258,17 @@ public class N4JSTypesBuilder {
 	}
 
 	def protected dispatch int relinkType(TypeDefiningElement other, TModule target, boolean preLinkingPhase, int idx) {
-		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: "+other?.eClass.name);
+		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: " + other?.eClass.name);
 	}
 
-	def protected dispatch int relinkType(NamespaceImportSpecifier nsImpSpec, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(NamespaceImportSpecifier nsImpSpec, TModule target, boolean preLinkingPhase,
+		int idx) {
 		// already handled up-front in N4JSNamespaceImportTypesBuilder#relinkNamespaceTypes
 		return idx;
 	}
 
-	def protected dispatch int relinkType(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase,
+		int idx) {
 		if (n4Class.relinkTClass(target, preLinkingPhase, idx)) {
 			return idx + 1;
 		}
@@ -279,9 +281,10 @@ public class N4JSTypesBuilder {
 		return idx
 	}
 
-	def protected dispatch int relinkType(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase,
+		int idx) {
 		if (n4Interface.relinkTInterface(target, preLinkingPhase, idx)) {
-			return idx+1;
+			return idx + 1;
 		}
 		return idx;
 	}
@@ -293,17 +296,20 @@ public class N4JSTypesBuilder {
 		return idx;
 	}
 
-	def protected dispatch int relinkType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase,
+		int idx) {
 		objectLiteral.createObjectLiteral(target, preLinkingPhase)
 		return idx;
 	}
 
-	def protected dispatch int relinkType(MethodDeclaration n4MethodDecl, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(MethodDeclaration n4MethodDecl, TModule target, boolean preLinkingPhase,
+		int idx) {
 		// methods are handled in their containing class/interface -> ignore them here
 		return idx;
 	}
 
-	def protected dispatch int relinkType(FunctionDeclaration n4FunctionDecl, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(FunctionDeclaration n4FunctionDecl, TModule target, boolean preLinkingPhase,
+		int idx) {
 		if (n4FunctionDecl.relinkTFunction(target, preLinkingPhase, idx)) {
 			return idx + 1;
 		}
@@ -311,12 +317,14 @@ public class N4JSTypesBuilder {
 	}
 
 	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
-	def protected dispatch int relinkType(FunctionExpression n4FunctionExpr, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(FunctionExpression n4FunctionExpr, TModule target, boolean preLinkingPhase,
+		int idx) {
 		n4FunctionExpr.createTFunction(target, preLinkingPhase);
 		return idx;
 	}
 
-	def protected dispatch int relinkType(ExportedVariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(ExportedVariableStatement n4VariableStatement, TModule target,
+		boolean preLinkingPhase, int idx) {
 		return n4VariableStatement.relinkVariableTypes(target, preLinkingPhase, idx)
 	}
 
@@ -332,10 +340,11 @@ public class N4JSTypesBuilder {
 	}
 
 	def protected dispatch void createType(TypeDefiningElement other, TModule target, boolean preLinkingPhase) {
-		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: "+other?.eClass.name);
+		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: " + other?.eClass.name);
 	}
 
-	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, TModule target,
+		boolean preLinkingPhase) {
 		// already handled up-front in #buildNamespacesTypesFromModuleImports()
 	}
 
@@ -347,7 +356,8 @@ public class N4JSTypesBuilder {
 		n4Class.createTClass(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(N4InterfaceDeclaration n4Interface, TModule target,
+		boolean preLinkingPhase) {
 		n4Interface.createTInterface(target, preLinkingPhase)
 	}
 
@@ -363,7 +373,8 @@ public class N4JSTypesBuilder {
 		// methods are handled in their containing class/interface -> ignore them here
 	}
 
-	def protected dispatch void createType(FunctionDeclaration n4FunctionDecl, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(FunctionDeclaration n4FunctionDecl, TModule target,
+		boolean preLinkingPhase) {
 		n4FunctionDecl.createTFunction(target, preLinkingPhase)
 	}
 
@@ -372,7 +383,8 @@ public class N4JSTypesBuilder {
 		n4FunctionExpr.createTFunction(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, TModule target,
+		boolean preLinkingPhase) {
 		n4VariableStatement.createVariableTypes(target, preLinkingPhase)
 	}
 }

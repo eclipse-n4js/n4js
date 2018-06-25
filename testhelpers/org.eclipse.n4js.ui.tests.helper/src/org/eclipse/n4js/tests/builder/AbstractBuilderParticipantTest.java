@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.builder;
 
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -32,22 +33,19 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.IDirtyStateManager;
 import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.util.IssueUtil;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.StringInputStream;
@@ -60,12 +58,13 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
+import com.google.inject.Provider;
 
 /**
  */
 public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest {
-	private ResourceSet resourceSet = null;
+	@Inject
+	private Provider<IDirtyStateManager> DirtyStateManager;
 
 	@Inject
 	private ExternalLibrariesSetupHelper externalLibrariesSetupHelper;
@@ -82,12 +81,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		}
 		return true;
 	};
-
-	/***/
-	protected Injector getInjector() {
-		final Injector injector = N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
-		return injector;
-	}
 
 	/***/
 	protected IProject createJSProject(String projectName) throws CoreException {
@@ -133,42 +126,12 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/***/
-	protected ResourceSet getResourceSet(IProject project) {
-		if (resourceSet == null) {
-			resourceSet = getInjector().getInstance(IResourceSetProvider.class).get(project);
-		}
-		return resourceSet;
-	}
-
-	/***/
 	protected XtextEditor openAndGetXtextEditor(final IFile file1, final IWorkbenchPage page) {
-		IEditorPart fileEditor = getFileEditor(file1, page);
+		IEditorPart fileEditor = EclipseUIUtils.openFileEditor(file1, page, getEditorId());
+		EclipseUIUtils.waitForEditorToBeActive(page, fileEditor);
 		assertTrue(fileEditor instanceof XtextEditor);
 		XtextEditor fileXtextEditor = (XtextEditor) fileEditor;
 		return fileXtextEditor;
-	}
-
-	private IEditorPart internalFileEditor = null;
-
-	private IEditorPart getFileEditor(final IFile file1, final IWorkbenchPage page) {
-		internalFileEditor = null;
-		Display.getCurrent().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					internalFileEditor = IDE.openEditor(page, file1, getEditorId(), true);
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		long start = System.currentTimeMillis();
-		long end = start;
-		do {
-			end = System.currentTimeMillis();
-		} while (page.getActiveEditor() != internalFileEditor && (end - start) < 5000);
-		return internalFileEditor;
 	}
 
 	/**
@@ -329,7 +292,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void setDocumentContent(String context, IFile file, XtextEditor fileEditor, String newContent) {
-		IDirtyStateManager dirtyStateManager = getInjector().getInstance(IDirtyStateManager.class);
+		IDirtyStateManager dirtyStateManager = DirtyStateManager.get();
 
 		TestEventListener eventListener = new TestEventListener(context, file);
 		dirtyStateManager.addListener(eventListener);

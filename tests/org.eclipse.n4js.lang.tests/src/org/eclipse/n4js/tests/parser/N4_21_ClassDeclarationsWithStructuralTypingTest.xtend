@@ -135,7 +135,7 @@ class N4_21_ClassDeclarationsWithStructuralTypingTest extends AbstractParserTest
 	def void testBitwiseNot() {
 
 		// simple
-		val script = '~x'.parseSuccessfully
+		val script = '~x'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val unary = statement.expression as UnaryExpression
 		assertEquals(UnaryOperator.INV, unary.op)
@@ -147,7 +147,7 @@ class N4_21_ClassDeclarationsWithStructuralTypingTest extends AbstractParserTest
 	def void testBitwiseNotDouble() {
 
 		// double
-		val script = '~~x'.parseSuccessfully
+		val script = '~~x'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val unary = statement.expression as UnaryExpression
 		assertEquals(UnaryOperator.INV, unary.op)
@@ -162,7 +162,7 @@ class N4_21_ClassDeclarationsWithStructuralTypingTest extends AbstractParserTest
 		'''
 			class C{};
 			var c: ~~C, i = ~~1, i = ~~~1;
-		'''.parseSuccessfully
+		'''.parseESSuccessfully
 	}
 
 }

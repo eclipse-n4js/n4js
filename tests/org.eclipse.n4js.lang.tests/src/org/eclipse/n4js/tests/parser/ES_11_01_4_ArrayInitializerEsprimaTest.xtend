@@ -21,7 +21,7 @@ class ES_11_01_4_ArrayInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_01() {
-		val script = 'x = []'.parseSuccessfully
+		val script = 'x = []'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -32,7 +32,7 @@ class ES_11_01_4_ArrayInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_02() {
-		val script = 'x = [ ]'.parseSuccessfully
+		val script = 'x = [ ]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -43,7 +43,7 @@ class ES_11_01_4_ArrayInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_03() {
-		val script = 'x = [ 42 ]'.parseSuccessfully
+		val script = 'x = [ 42 ]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -55,7 +55,7 @@ class ES_11_01_4_ArrayInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_04() {
-		val script = 'x = [ 42, ]'.parseSuccessfully
+		val script = 'x = [ 42, ]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -68,7 +68,7 @@ class ES_11_01_4_ArrayInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_05() {
-		val script = 'x = [ ,, 42 ]'.parseSuccessfully
+		val script = 'x = [ ,, 42 ]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -85,7 +85,7 @@ class ES_11_01_4_ArrayInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_06() {
-		val script = 'x = [ 1, 2, 3, ]'.parseSuccessfully
+		val script = 'x = [ 1, 2, 3, ]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -100,7 +100,7 @@ class ES_11_01_4_ArrayInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_07() {
-		val script = 'x = [ 1, 2,, 3, ]'.parseSuccessfully
+		val script = 'x = [ 1, 2,, 3, ]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef
@@ -116,7 +116,7 @@ class ES_11_01_4_ArrayInitializerEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testArrayInitializer_08() {
-		val script = 'x = [ 1, 2,, 3,, ]'.parseSuccessfully
+		val script = 'x = [ 1, 2,, 3,, ]'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val assignment = statement.expression as AssignmentExpression
 		val identifier = assignment.lhs as IdentifierRef

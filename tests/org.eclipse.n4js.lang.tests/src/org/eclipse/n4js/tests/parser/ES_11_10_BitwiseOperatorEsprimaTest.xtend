@@ -20,7 +20,7 @@ class ES_11_10_BitwiseOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testAnd() {
-		val program = 'x & y'.parseSuccessfully
+		val program = 'x & y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as BinaryBitwiseExpression
 		assertNotNull(expression)
@@ -34,7 +34,7 @@ class ES_11_10_BitwiseOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testOr() {
-		val program = 'x | y'.parseSuccessfully
+		val program = 'x | y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as BinaryBitwiseExpression
 		assertNotNull(expression)
@@ -48,7 +48,7 @@ class ES_11_10_BitwiseOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testXOR() {
-		val program = 'x ^ y'.parseSuccessfully
+		val program = 'x ^ y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as BinaryBitwiseExpression
 		assertNotNull(expression)
@@ -62,7 +62,7 @@ class ES_11_10_BitwiseOperatorEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testXORWithoutSpace() {
-		val program = 'x^y'.parseSuccessfully
+		val program = 'x^y'.parseESSuccessfully
 		val statement = program.scriptElements.head as ExpressionStatement
 		val expression = statement.expression as BinaryBitwiseExpression
 		assertNotNull(expression)

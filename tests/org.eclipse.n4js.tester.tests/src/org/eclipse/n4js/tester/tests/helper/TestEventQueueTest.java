@@ -12,13 +12,6 @@ package org.eclipse.n4js.tester.tests.helper;
 
 import static java.lang.Thread.sleep;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.events.SessionEndedEvent;
@@ -27,16 +20,23 @@ import org.eclipse.n4js.tester.events.SessionStartedEvent;
 import org.eclipse.n4js.tester.events.TestEndedEvent;
 import org.eclipse.n4js.tester.events.TestPingedEvent;
 import org.eclipse.n4js.tester.events.TestStartedEvent;
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
 import org.eclipse.n4js.tester.tests.MockResourceTesterModule;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * Class for testing the {@link TestEventQueue test event queue} behavior.
  */
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = { MockResourceTesterModule.class })
-public class TestEventQueueTest {
+public class TestEventQueueTest extends AbstractTestTreeTest {
 
 	@Inject
 	private Provider<TestEventQueue> provider;
@@ -69,8 +69,7 @@ public class TestEventQueueTest {
 				"TestStartedEvent|SID:sessionId|TID:testId|",
 				"TestPingedEvent|SID:sessionId|TID:testId|",
 				"TestEndedEvent|SID:sessionId|TID:testId|",
-				"SessionEndedEvent|SID:sessionId|"
-				);
+				"SessionEndedEvent|SID:sessionId|");
 	}
 
 	/***/
@@ -81,13 +80,11 @@ public class TestEventQueueTest {
 		post(new SessionStartedEvent(sessionId));
 		queue.assertEquals(
 				sessionId,
-				"SessionStartedEvent|SID:sessionId|"
-				);
+				"SessionStartedEvent|SID:sessionId|");
 
 		queue.assertEquals(
 				sessionId,
-				"SessionStartedEvent|SID:sessionId|"
-				);
+				"SessionStartedEvent|SID:sessionId|");
 	}
 
 	/***/
@@ -106,8 +103,7 @@ public class TestEventQueueTest {
 		queue.assertEquals(
 				sessionId,
 				"SessionStartedEvent|SID:sessionId|",
-				"SessionStartedEvent|SID:sessionId|"
-				);
+				"SessionStartedEvent|SID:sessionId|");
 	}
 
 	/***/
@@ -119,8 +115,7 @@ public class TestEventQueueTest {
 		post(new SessionStartedEvent(sessionId));
 		queue.assertEquals(
 				sessionId,
-				"SessionStartedEvent|SID:sessionId|"
-				);
+				"SessionStartedEvent|SID:sessionId|");
 	}
 
 	/***/
@@ -131,8 +126,7 @@ public class TestEventQueueTest {
 		post(new SessionStartedEvent(sessionId));
 		queue.assertEquals(
 				sessionId,
-				"SessionEndedEvent|SID:sessionId|"
-				);
+				"SessionEndedEvent|SID:sessionId|");
 	}
 
 	/***/
@@ -143,8 +137,7 @@ public class TestEventQueueTest {
 		post(new SessionStartedEvent(sessionId));
 		queue.assertEquals(
 				sessionId,
-				(String) null
-				);
+				(String) null);
 	}
 
 	/***/

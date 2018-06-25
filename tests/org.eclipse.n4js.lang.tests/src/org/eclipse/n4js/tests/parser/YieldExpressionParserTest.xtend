@@ -26,7 +26,7 @@ class YieldExpressionParserTest extends AbstractParserTest {
 			        yield cur;
 			    }
 			};
-		'''.parseSuccessfully;
+		'''.parseESSuccessfully;
 	}
 
 }

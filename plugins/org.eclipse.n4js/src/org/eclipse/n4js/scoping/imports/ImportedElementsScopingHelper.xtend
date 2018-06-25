@@ -11,6 +11,7 @@
 package org.eclipse.n4js.scoping.imports
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import java.util.HashMap
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
@@ -42,8 +43,10 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
@@ -56,6 +59,7 @@ class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
  * {@link N4JSScopeProvider#scope_IdentifierRef_id(org.eclipse.n4js.n4JS.VariableEnvironmentElement) .scope_IdentifierRef_id()},
  * also used by helper {@link LocallyKnownTypesScopingHelper LocallyKnownTypesScopingHelper}.
  */
+@Singleton
 class ImportedElementsScopingHelper {
 
 	@Inject
@@ -63,6 +67,9 @@ class ImportedElementsScopingHelper {
 
 	@Inject
 	private TypeVisibilityChecker typeVisibilityChecker
+	
+	@Inject
+	private IQualifiedNameProvider qualifiedNameProvider
 
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker
@@ -369,12 +376,22 @@ class ImportedElementsScopingHelper {
 				}
 			}
 		} else if (issueCode === null) {
-			result.put(importedName,
-				ret = new InvisibleTypeOrVariableDescription(N4JSEObjectDescription.create(importedName, element)))
+			ret = createDescription(importedName, element)
+			ret = new InvisibleTypeOrVariableDescription(ret)
+			result.put(importedName, ret)
 		} else {
-			result.put(importedName, ret = N4JSEObjectDescription.create(importedName, element))
+			ret = createDescription(importedName, element)
+			result.put(importedName, ret)
 		}
 		return ret;
+	}
+	
+	private def IEObjectDescription createDescription(QualifiedName name, IdentifiableElement element) {
+		if (name.lastSegment != element.name) {
+			return new AliasedEObjectDescription(name, N4JSEObjectDescription.create(qualifiedNameProvider.getFullyQualifiedName(element), element))
+		} else {
+			return N4JSEObjectDescription.create(name, element)
+		}
 	}
 
 	/**

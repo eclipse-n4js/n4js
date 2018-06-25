@@ -12,6 +12,10 @@ package org.eclipse.n4js.tests.resource
 
 import com.google.common.base.Optional
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.core.resources.IFile
+import org.eclipse.core.resources.IProject
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
@@ -24,15 +28,13 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.impl.TypeImpl
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
-import java.util.List
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IProject
-import org.eclipse.emf.common.util.URI
 import org.eclipse.xtext.builder.builderState.AbstractBuilderState
 import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData
 import org.junit.Before
 import org.junit.Test
+
+import static org.junit.Assert.*
 
 /**
  * Tests resolution of module-to-module proxies, see {@link ProxyResolvingResource} and the special handling in

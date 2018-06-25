@@ -3050,7 +3050,6 @@ public interface ImPackage extends EPackage {
 	 */
 	int STRING_LITERAL_FOR_STE_OPERATION_COUNT = N4JSPackage.STRING_LITERAL_OPERATION_COUNT + 1;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl <em>Versioned Parameterized Type Ref IM</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -4053,7 +4052,6 @@ public interface ImPackage extends EPackage {
 	 */
 	int VERSIONED_IDENTIFIER_REF_IM_OPERATION_COUNT = IDENTIFIER_REF_IM_OPERATION_COUNT + 3;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedNamedImportSpecifier_IMImpl <em>Versioned Named Import Specifier IM</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -4144,6 +4142,7 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM_OPERATION_COUNT = N4JSPackage.NAMED_IMPORT_SPECIFIER_OPERATION_COUNT + 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.Script_IM <em>Script IM</em>}'.

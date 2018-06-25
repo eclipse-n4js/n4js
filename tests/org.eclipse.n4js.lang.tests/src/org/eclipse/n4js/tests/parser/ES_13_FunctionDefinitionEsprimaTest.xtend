@@ -24,7 +24,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinition() {
-		val script = 'function hello() { sayHi(); }'.parseSuccessfully
+		val script = 'function hello() { sayHi(); }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("hello", funcDecl.name)
@@ -39,7 +39,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionEval() {
-		val script = 'function eval() { }'.parseSuccessfully
+		val script = 'function eval() { }'.parseESWithError
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("eval", funcDecl.name)
@@ -50,7 +50,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionArguments() {
-		val script = 'function arguments() { }'.parseSuccessfully
+		val script = 'function arguments() { }'.parseESWithError
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("arguments", funcDecl.name)
@@ -61,7 +61,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionWithFpars() {
-		val script = 'function test(t, t) { }'.parseSuccessfully
+		val script = 'function test(t, t) { }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("test", funcDecl.name)
@@ -76,7 +76,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionExpressionWithFpars() {
-		val script = '(function test(t, t) { })'.parseSuccessfully
+		val script = '(function test(t, t) { })'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val parenExpr = (script.scriptElements.head as ExpressionStatement).expression as ParenExpression
 		val funcExpr = parenExpr.expression as FunctionExpression
@@ -92,7 +92,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionEvalWithInner() {
-		val script = 'function eval() { function inner() { "use strict" } }'.parseSuccessfully
+		val script = 'function eval() { function inner() { "use strict" } }'.parseESWithError
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("eval", funcDecl.name)
@@ -109,7 +109,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinition1() {
-		val script = 'function hello(a) { sayHi(); }'.parseSuccessfully
+		val script = 'function hello(a) { sayHi(); }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("hello", funcDecl.name)
@@ -127,7 +127,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinition2() {
-		val script = 'function hello(a, b) { sayHi(); }'.parseSuccessfully
+		val script = 'function hello(a, b) { sayHi(); }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("hello", funcDecl.name)
@@ -146,7 +146,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionVar() {
-		val script = 'var hi = function() { sayHi() };'.parseSuccessfully
+		val script = 'var hi = function() { sayHi() };'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val varDecl = (script.scriptElements.head as VariableStatement).varDecl.get(0)
 		assertEquals("hi", varDecl.name);
@@ -162,7 +162,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionVar2() {
-		val script = 'var hi = function eval() { };'.parseSuccessfully
+		val script = 'var hi = function eval() { };'.parseESWithError
 		assertEquals(1, script.scriptElements.size())
 		val varDecl = (script.scriptElements.head as VariableStatement).varDecl.get(0)
 		assertEquals("hi", varDecl.name);
@@ -175,7 +175,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionVar3() {
-		val script = 'var hi = function arguments() { };'.parseSuccessfully
+		val script = 'var hi = function arguments() { };'.parseESWithError
 		assertEquals(1, script.scriptElements.size())
 		val varDecl = (script.scriptElements.head as VariableStatement).varDecl.get(0)
 		assertEquals("hi", varDecl.name);
