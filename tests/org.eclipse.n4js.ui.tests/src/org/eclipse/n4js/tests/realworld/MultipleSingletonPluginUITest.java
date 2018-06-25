@@ -35,6 +35,7 @@ import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.HashMultimap;
@@ -86,6 +87,7 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	 */
 	@SuppressWarnings("unused")
 	@Test
+	@Ignore
 	public void identifyMultipleSingletons() throws Exception {
 		ProjectTestsUtils.importProject(new File("probands"), "ListBase");
 		IResourcesSetupUtil.waitForBuild();
