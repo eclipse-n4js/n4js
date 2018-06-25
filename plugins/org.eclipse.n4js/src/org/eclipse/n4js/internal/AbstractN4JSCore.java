@@ -12,6 +12,7 @@ package org.eclipse.n4js.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.CommonPlugin;
@@ -37,18 +38,21 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Override
 	public int getDepthOfLocation(URI nestedLocation) {
-		// trim trailing empty segment (if any)
-		String lastSegment = nestedLocation.lastSegment();
-		if (lastSegment != null && lastSegment.isEmpty()) {
-			nestedLocation = nestedLocation.trimSegments(1);
-		}
-		// make sure we are in the root folder of an IN4JSProject
+		// make sure we are in the root folder of an IN4JSProject and obtain its location
 		IN4JSProject containingProject = findProject(nestedLocation).orNull();
-		if (containingProject == null) {
+		if (containingProject == null || !containingProject.exists()) {
 			return -1;
 		}
+		URI containingProjectLocation = containingProject.getLocation();
+		// trim trailing empty segments in both location URIs (if any)
+		while (Objects.equals(nestedLocation.lastSegment(), "")) {
+			nestedLocation = nestedLocation.trimSegments(1);
+		}
+		while (Objects.equals(containingProjectLocation.lastSegment(), "")) {
+			containingProjectLocation = containingProjectLocation.trimSegments(1);
+		}
 		// compute and return depth
-		return nestedLocation.segmentCount() - containingProject.getLocation().segmentCount();
+		return nestedLocation.segmentCount() - containingProjectLocation.segmentCount();
 	}
 
 	@Override
