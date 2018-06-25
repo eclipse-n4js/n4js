@@ -75,7 +75,6 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		if (!projectElementHandles.containsKey(location)) {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location, false);
 			projectElementHandles.put(location, lazyDescriptionHandle);
-			System.out.println("Registered new project at " + location);
 		}
 	}
 
@@ -85,8 +84,9 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 	@Override
 	public URI findProjectWith(URI unsafeLocation) {
-		URI key = unsafeLocation;
+		URI key = URIUtils.normalize(unsafeLocation.trimFragment());
 
+		// determine longest registered project location, that is a prefix of key
 		while (key.segmentCount() > 0) {
 			LazyProjectDescriptionHandle match = this.projectElementHandles.get(key);
 			if (match != null) {

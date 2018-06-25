@@ -258,7 +258,7 @@ public class N4HeadlessCompiler {
 		// make absolute, since downstream URI conversion doesn't work if relative directory only.
 		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(searchPaths);
 
-		// Collect all projects in first Level.
+		// collect all projects on the first level.
 		List<File> projectPaths = headlessHelper.collectAllProjectPaths(absProjectPaths);
 
 		compileProjects(searchPaths, projectPaths, Collections.emptyList(), issueAcceptor);
