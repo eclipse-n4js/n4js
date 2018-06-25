@@ -51,8 +51,8 @@ class IDEBUG_650_PluginUITest extends AbstractIDEBUG_Test {
 		assertTrue('Expected exactly one occurrence of the generated member. Got ' + matchCount + ' instead.', 1 == matchCount);
 	}
 
-	override protected AbstractIDEBUG_Test.ProjectImporter getProjectImporter() {
-		return new AbstractIDEBUG_Test.ProjectImporter(new File(new File('probands/IDEBUG_650/').absolutePath));
+	override protected ProjectImporter getProjectImporter() {
+		return new ProjectImporter(new File(new File('probands/IDEBUG_650/').absolutePath));
 	}
 
 }

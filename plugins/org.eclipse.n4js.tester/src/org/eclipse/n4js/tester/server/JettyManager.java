@@ -46,6 +46,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ThreadPool;
@@ -111,7 +112,8 @@ public class JettyManager implements HttpServerManager {
 				server.setConnectors(new Connector[] { connector });
 				final ServletContextHandler contextHandler = new ServletContextHandler(server, CONTEXT_ROOT, true,
 						false);
-				contextHandler.addServlet(servletHolderBuilder.build(ResourceRouterServlet.class), CONTEXT_PATH + "*");
+				ServletHolder servlet = servletHolderBuilder.build(ResourceRouterServlet.class);
+				contextHandler.addServlet(servlet, CONTEXT_PATH + "*");
 				contextHandler.addFilter(configureCors(), CONTEXT_PATH + "*", of(REQUEST, ASYNC));
 				server.setDumpBeforeStop(dumpServerOnStop);
 				server.start();

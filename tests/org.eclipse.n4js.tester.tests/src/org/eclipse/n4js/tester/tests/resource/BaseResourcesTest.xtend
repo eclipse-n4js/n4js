@@ -15,6 +15,7 @@ import com.google.inject.Inject
 import com.google.inject.Provider
 import com.jayway.restassured.response.ValidatableResponse
 import com.jayway.restassured.specification.RequestSpecification
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.tester.domain.ID
 import org.eclipse.n4js.tester.domain.TestCase
 import org.eclipse.n4js.tester.domain.TestResult
@@ -28,6 +29,8 @@ import org.eclipse.n4js.tester.events.TestPingedEvent
 import org.eclipse.n4js.tester.events.TestStartedEvent
 import org.eclipse.n4js.tester.server.HttpServerManager
 import org.eclipse.n4js.tester.server.resources.ContentType
+import org.eclipse.n4js.tester.tests.AbstractTestTreeTest
+import org.eclipse.n4js.tester.tests.TesterTestsConfiguration
 import org.eclipse.n4js.tester.tests.helper.TestEventQueue
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
@@ -37,17 +40,15 @@ import org.junit.Before
 import static com.google.common.collect.ArrayListMultimap.create
 import static com.google.common.collect.Multimaps.synchronizedMultimap
 import static com.jayway.restassured.RestAssured.*
-import static org.eclipse.n4js.tester.domain.TestStatus.*
-import static org.eclipse.n4js.tester.server.resources.ContentType.*
 import static java.util.Collections.*
 import static java.util.UUID.randomUUID
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.tester.tests.TesterTestsConfiguration
+import static org.eclipse.n4js.tester.domain.TestStatus.*
+import static org.eclipse.n4js.tester.server.resources.ContentType.*
 
 /**
  * Base class of all classes testing the behavior of the tester RESTful API.
  */
-abstract class BaseResourcesTest {
+abstract class BaseResourcesTest extends AbstractTestTreeTest{
 
 	@Inject
 	protected Provider<TestEventQueue> provider;

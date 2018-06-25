@@ -27,6 +27,7 @@ import static org.eclipse.xtext.EcoreUtil2.getContainerOfType;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -73,8 +74,15 @@ public class TestDiscoveryHelper {
 
 	@Inject
 	private FileExtensionsRegistry fileExtensionRegistry;
+
 	@Inject
-	private IN4JSCore n4jscore;
+	private IN4JSCore n4jsCore;
+
+	@Inject
+	private ResourceNameComputer resourceNameComputer;
+
+	@Inject
+	private ContainerTypesHelper containerTypesHelper;
 
 	private static final EClass T_CLASS = TypesPackage.eINSTANCE.getTClass();
 
@@ -91,13 +99,6 @@ public class TestDiscoveryHelper {
 		}
 		return left.hashCode() - right.hashCode();
 	};
-
-	@Inject
-	private IN4JSCore n4jsCore;
-	@Inject
-	private ResourceNameComputer resourceNameComputer;
-	@Inject
-	private ContainerTypesHelper containerTypesHelper;
 
 	/**
 	 * Creates a new, globally unique ID for a test session (the ID value stored in a {@link TestTree}).
@@ -182,8 +183,15 @@ public class TestDiscoveryHelper {
 	 * @return a test tree representing all test cases in the workspace.
 	 */
 	public TestTree collectAllTestsFromWorkspace() {
-		return collectTests(from(n4jsCore.findAllProjects()).filter(p -> p.exists()).transform(p -> p.getLocation())
-				.filter(uri -> isTestable(uri)).toList());
+		List<URI> testableProjectURIs = new LinkedList<>();
+		for (IN4JSProject project : n4jsCore.findAllProjects()) {
+			URI location = project.getLocation();
+			if (project.exists() && isTestable(location)) {
+				testableProjectURIs.add(location);
+			}
+		}
+		TestTree collectedTests = collectTests(testableProjectURIs);
+		return collectedTests;
 	}
 
 	private ID createTestCaseId(final String testClassFqn, final TMethod testMethod) {
@@ -387,7 +395,7 @@ public class TestDiscoveryHelper {
 			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz);
 		}
 
-		IN4JSProject project = n4jscore.findProject(clazz.eResource().getURI()).orNull();
+		IN4JSProject project = n4jsCore.findProject(clazz.eResource().getURI()).orNull();
 		if (project != null) {
 			String output = project.getOutputPath();
 			if (Strings.isNullOrEmpty(output) == false && output != ".") {

@@ -38,6 +38,7 @@ Contributors:
 		
 		<!-- Tester tests -->
 		<module>org.eclipse.n4js.tester.tests</module>
+		<module>org.eclipse.n4js.tester.ui.tests</module>
 
 		<!-- Regex tests -->
 		<module>org.eclipse.n4js.regex.tests</module>

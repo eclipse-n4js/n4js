@@ -32,8 +32,7 @@ pipeline {
     }
 
     environment {
-        MAVEN_OPTS = '-XX:+UseConcMarkSweepGC '          +
-                     '-XX:+UnlockExperimentalVMOptions ' +
+        MAVEN_OPTS = '-XX:+UnlockExperimentalVMOptions ' +
                      '-XX:+UseCGroupMemoryLimitForHeap ' +
                      '-XX:MaxRAMFraction=2 '             +
                      '-XshowSettings:vm '
