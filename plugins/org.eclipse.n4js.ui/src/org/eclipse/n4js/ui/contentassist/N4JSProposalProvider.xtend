@@ -181,7 +181,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	}
 
 	override StyledString getStyledDisplayString(IEObjectDescription description) {
-		val version = N4JSResourceDescriptionStrategy.tryGetVersionableVersion(description);
+		val version = N4JSResourceDescriptionStrategy.getVersion(description);
 		var QualifiedName qName = description.getQualifiedName();
 		var QualifiedName name = description.getName();
 
@@ -193,8 +193,8 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		return sString;
 	}
 
-	override protected getStyledDisplayString(EObject element, String qualifiedNameString, String shortNameString) {
-		val version = getTypeVersionString(element);
+	override protected StyledString getStyledDisplayString(EObject element, String qualifiedNameString, String shortNameString) {
+		val version = getTypeVersion(element);
 		val qualifiedName = qualifiedNameConverter.toQualifiedName(qualifiedNameString);
 		val shortName = qualifiedNameConverter.toQualifiedName(shortNameString);
 		return getStyledDisplayString(qualifiedName, shortName, version);
@@ -236,7 +236,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * 
 	 * Otherwise, this method returns an empty string.
 	 */
-	private def int getTypeVersionString(EObject element) {
+	private def int getTypeVersion(EObject element) {
 		if (!element.eIsProxy && element instanceof TClassifier && (element as TClassifier).declaredVersion != 0) {
 			return (element as TClassifier).declaredVersion;
 		}

@@ -215,14 +215,15 @@ public class ImportsAwareReferenceProposalCreator {
 		// special handling for default imports:
 		if (inputQN.getLastSegment().equals(N4JSLanguageConstants.EXPORT_DEFAULT_NAME)) {
 			if (TExportableElement.class.isAssignableFrom(candidate.getEClass().getInstanceClass())) {
-				if (candidate.getUserData(N4JSResourceDescriptionStrategy.EXPORTED_DEFAULT_KEY) != null) {
+				if (N4JSResourceDescriptionStrategy.getExportDefault(candidate)) {
 					return new AliasedEObjectDescription(inputQN, candidate);
 				}
 			}
 			// not accessed via namespace
 			QualifiedName nameNoDefault = inputQN.skipLast(1);
 			QualifiedName moduleName = nameNoDefault.getSegmentCount() > 1
-					? QualifiedName.create(nameNoDefault.getLastSegment()) : nameNoDefault;
+					? QualifiedName.create(nameNoDefault.getLastSegment())
+					: nameNoDefault;
 			return new AliasedEObjectDescription(moduleName, candidate);
 		}
 		// no special handling, return original input

@@ -306,8 +306,8 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 
 		val types = newArrayList()
 		for (IEObjectDescription descr : visibleContainers.map[it.getExportedObjectsByType(TypesPackage.Literals.TYPE)].flatten) {
-			val polyFill = Boolean.valueOf(descr.getUserData(N4JSResourceDescriptionStrategy.POLYFILL_KEY))
-			val staticPolyFill = Boolean.valueOf(descr.getUserData(N4JSResourceDescriptionStrategy.STATIC_POLYFILL_KEY))
+			val polyFill = N4JSResourceDescriptionStrategy.getPolyfill(descr);
+			val staticPolyFill = N4JSResourceDescriptionStrategy.getStaticPolyfill(descr);
 			if (polyFill == Boolean.TRUE && staticPolyFill == Boolean.FALSE) {
 				types.add(descr);
 			}
