@@ -517,7 +517,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_TYPE))) {
 			return;
 		}
-		// do not validate devDependencies in external projects, because these are note installed
+		// do not validate devDependencies in external projects, because these are not installed
 		// by npm for transitive dependencies
 		val project = findProject(devDependenciesValue.eResource.URI);
 		if (!project.present || project.get.external) {
@@ -809,7 +809,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			}
 		];
 
-		checkForDuplicateRuntimeLibraries(existentIds)
+		checkForDuplicateProjectReferences(existentIds)
 		
 		// if specified, check that all references also occur in the dependencies sections
 		if (enforceDependency) {
@@ -817,7 +817,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 	}
 
-	private def checkForDuplicateRuntimeLibraries(HashMultimap<String, ValidationProjectReference> validProjectRefs) {
+	private def checkForDuplicateProjectReferences(HashMultimap<String, ValidationProjectReference> validProjectRefs) {
 		// obtain vendor ID of the currently validated project
 		val currentVendor = getProjectDescription().vendorId;
 		
