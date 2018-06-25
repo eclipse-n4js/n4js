@@ -36,6 +36,8 @@ import org.eclipse.xtext.ParserRule
 import org.eclipse.xtext.RuleCall
 import org.eclipse.xtext.conversion.ValueConverterException
 import org.eclipse.xtext.naming.IQualifiedNameConverter
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider
 import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider.DefaultProposalCreator
@@ -50,6 +52,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
 	ImportsAwareReferenceProposalCreator importAwareReferenceProposalCreator
+
+	@Inject
+	IQualifiedNameProvider qualifiedNameProvider
 
 	@Inject
 	IQualifiedNameConverter qualifiedNameConverter
@@ -177,33 +182,45 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	override StyledString getStyledDisplayString(IEObjectDescription description) {
 		val version = N4JSResourceDescriptionStrategy.tryGetVersionableVersion(description);
-		var String qName = qualifiedNameConverter.toString(description.getQualifiedName());
-		var String name = qualifiedNameConverter.toString(description.getQualifiedName());
+		var QualifiedName qName = description.getQualifiedName();
+		var QualifiedName name = description.getName();
 
+		if (qName == name) {
+			val eObj = description.getEObjectOrProxy(); // performance issue! TODO: remove it
+			qName = qualifiedNameProvider.getFullyQualifiedName(eObj);
+		}
 		var StyledString sString = getStyledDisplayString(qName, name, version);
 		return sString;
 	}
 
-	override protected getStyledDisplayString(EObject element, String qualifiedName, String shortName) {
+	override protected getStyledDisplayString(EObject element, String qualifiedNameString, String shortNameString) {
 		val version = getTypeVersionString(element);
+		val qualifiedName = qualifiedNameConverter.toQualifiedName(qualifiedNameString);
+		val shortName = qualifiedNameConverter.toQualifiedName(shortNameString);
 		return getStyledDisplayString(qualifiedName, shortName, version);
 	}
 
-	def protected getStyledDisplayString(String qualifiedName, String shortName, int version) {
+	def protected StyledString getStyledDisplayString(QualifiedName qualifiedName, QualifiedName shortName, int version) {
 		val result = new StyledString();
-		val parsedQualifiedName = qualifiedNameConverter.toQualifiedName(qualifiedName);
-		if (parsedQualifiedName.segmentCount > 1) {
-			val dashName = ' - ' + qualifiedNameConverter.toString(parsedQualifiedName.skipLast(1));
-			val lastSegment = parsedQualifiedName.lastSegment;
+		val shortNameString = shortName.toString();
+		if (qualifiedName.segmentCount > 1) {
+			val dashName = ' - ' + qualifiedNameConverter.toString(qualifiedName.skipLast(1));
+			val lastSegment = qualifiedName.lastSegment;
 			val typeVersion = if (version === 0) "" else N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
 
-			var String combinedLabel;
-			if (shortName.endsWith(lastSegment)) {
-				combinedLabel = lastSegment + typeVersion + dashName;
+			var String caption;
+			var String dashInfo;
+			if (shortNameString.endsWith(lastSegment)) {
+				caption = lastSegment + typeVersion;
+				dashInfo = dashName;
 			} else {
-				combinedLabel = shortName + dashName + " alias for " + lastSegment + typeVersion;
+				caption = shortNameString;
+				dashInfo = dashName + " alias for " + lastSegment + typeVersion;
 			}
-			result.append(combinedLabel, StyledString.QUALIFIER_STYLER);
+			result.append(caption);
+			result.append(dashInfo, StyledString.QUALIFIER_STYLER);
+		} else {
+			result.append(shortNameString);
 		}
 		return result;
 	}
