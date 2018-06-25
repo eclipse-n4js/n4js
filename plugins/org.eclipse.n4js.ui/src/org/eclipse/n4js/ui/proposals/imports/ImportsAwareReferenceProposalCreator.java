@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.proposals.imports;
 
-import java.util.Iterator;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -22,9 +20,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.smith.ClosableMeasurement;
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TExportableElement;
@@ -86,17 +81,6 @@ public class ImportsAwareReferenceProposalCreator {
 		this.valueConverter = converter;
 	}
 
-	static private final DataCollector dcContentAssist = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Content Assist");
-	static private final DataCollector dcLookupCrossReference = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("LookupCrossReference", "Content Assist");
-	static private final DataCollector dcHNSE = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("Has Next Scope Element", "Content Assist", "LookupCrossReference");
-	static private final DataCollector dcCA3 = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("CA3", "Content Assist", "LookupCrossReference");
-	static private final DataCollector dcCA4 = DataCollectors.INSTANCE
-			.getOrCreateDataCollector("CA4", "Content Assist", "LookupCrossReference");
-
 	/**
 	 * Retrieves possible reference targets from scope, including erroneous solutions (e.g., not visible targets). This
 	 * list is further filtered here. This is a general pattern: Do not change or modify scoping for special content
@@ -116,90 +100,53 @@ public class ImportsAwareReferenceProposalCreator {
 			ICompletionProposalAcceptor acceptor,
 			Predicate<IEObjectDescription> filter,
 			Function<IEObjectDescription, ICompletionProposal> proposalFactory) {
+		if (model != null) {
+			final IScope scope = ((IContentAssistScopeProvider) scopeProvider).getScopeForContentAssist(model,
+					reference);
 
-		if (model == null)
-			return;
+			// iterate over candidates, filter them, and create ICompletionProposals for them
+			final Iterable<IEObjectDescription> candidates = scope.getAllElements();
+			// don't use candidates.forEach since we want an early exit
+			for (IEObjectDescription candidate : candidates) {
+				if (!acceptor.canAcceptMoreProposals())
+					return;
+				if (filter.apply(candidate)) {
+					QualifiedName qfn = candidate.getQualifiedName();
+					String tmodule = null;
 
-		IScope scope = null;
-		Iterable<IEObjectDescription> candidates;
-		Iterator<IEObjectDescription> iter;
-		scope = ((IContentAssistScopeProvider) scopeProvider).getScopeForContentAssist(model, reference);
+					if (qfn.getSegmentCount() >= 2) {
+						tmodule = qfn.getSegment(qfn.getSegmentCount() - 2);
+					}
+					// In case of main module, adjust the qualified name, e.g. index.Element -> react.Element
+					IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+					QualifiedName candidateName;
+					if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
+						candidateName = QualifiedName.create(project.getProjectId(),
+								candidate.getQualifiedName().getLastSegment().toString());
+					} else {
+						candidateName = candidate.getQualifiedName();
+					}
 
-		// iterate over candidates, filter them, and create ICompletionProposals for them
-		candidates = scope.getAllElements();
-		iter = candidates.iterator();
-
-		// don't use candidates.forEach since we want an early exit
-		for (;;) {
-
-			IEObjectDescription candidate;
-			try (ClosableMeasurement m1 = dcHNSE.getClosableMeasurement("Has Next Scope Element")) {
-				if (!iter.hasNext()) {
-					break;
-				}
-				candidate = iter.next();
-			}
-
-			if (!acceptor.canAcceptMoreProposals())
-				return;
-			boolean filterApplyResult = filter.apply(candidate);
-
-			if (filterApplyResult) {
-				String tmodule = null;
-
-				QualifiedName qfn = candidate.getQualifiedName();
-
-				if (qfn.getSegmentCount() >= 2) {
-					tmodule = qfn.getSegment(qfn.getSegmentCount() - 2);
-				}
-
-				QualifiedName candidateName;
-				try (ClosableMeasurement m1 = dcCA3.getClosableMeasurement("dcCA3")) {
-					candidateName = doStep3(candidate, tmodule);
-				}
-
-				ICompletionProposal proposal;
-				try (ClosableMeasurement m1 = dcCA4.getClosableMeasurement("dcCA4")) {
-					proposal = doStep4(model, reference, context, filter, proposalFactory, scope, candidate,
-							candidateName);
-				}
-
-				if (proposal != null) {
+					final ICompletionProposal proposal = getProposal(candidate,
+							model,
+							scope,
+							reference,
+							context,
+							filter,
+							proposalFactory);
+					if (proposal instanceof ConfigurableCompletionProposal
+							&& candidate.getName().getSegmentCount() > 1) {
+						ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
+						castedProposal.setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME,
+								candidateName);
+						// Original qualified name is the qualified name before adjustment
+						castedProposal.setAdditionalData(FQNImporter.KEY_ORIGINAL_QUALIFIED_NAME,
+								candidate.getQualifiedName());
+					}
 					acceptor.accept(proposal);
 				}
 			}
 		}
-	}
-
-	private QualifiedName doStep3(IEObjectDescription candidate, String tmodule) {
-		QualifiedName candidateName;
-		// In case of main module, adjust the qualified name, e.g. index.Element -> react.Element
-		IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-		if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
-			candidateName = QualifiedName.create(project.getProjectId(),
-					candidate.getQualifiedName().getLastSegment().toString());
-		} else {
-			candidateName = candidate.getQualifiedName();
-		}
-		return candidateName;
-	}
-
-	private ICompletionProposal doStep4(EObject model, EReference reference, ContentAssistContext context,
-			Predicate<IEObjectDescription> filter, Function<IEObjectDescription, ICompletionProposal> proposalFactory,
-			IScope scope, IEObjectDescription candidate, QualifiedName candidateName) {
-
-		ICompletionProposal proposal = null;
-		if (candidate.getName().getSegmentCount() > 1) {
-
-			proposal = getProposal(candidate, model, scope, reference, context, filter, proposalFactory);
-			if (proposal instanceof ConfigurableCompletionProposal) {
-				ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
-				castedProposal.setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME, candidateName);
-				// Original qualified name is the qualified name before adjustment
-				castedProposal.setAdditionalData(FQNImporter.KEY_ORIGINAL_QUALIFIED_NAME, candidate.getQualifiedName());
-			}
-		}
-		return proposal;
 	}
 
 	/**
@@ -219,13 +166,11 @@ public class ImportsAwareReferenceProposalCreator {
 			Predicate<IEObjectDescription> filter,
 			Function<IEObjectDescription, ICompletionProposal> delegateProposalFactory) {
 
-		IEObjectDescription inputToUse;
-		ICompletionProposal result;
-		inputToUse = getAliasedDescription(candidate, reference, context);
-		result = delegateProposalFactory.apply(inputToUse);
+		final IEObjectDescription inputToUse = getAliasedDescription(candidate, reference, context);
+		final ICompletionProposal result = delegateProposalFactory.apply(inputToUse);
 
 		if (result instanceof ConfigurableCompletionProposal) {
-			FQNImporter importer = fqnImporterFactory.create(
+			final FQNImporter importer = fqnImporterFactory.create(
 					model.eResource(),
 					scope,
 					valueConverter,
@@ -277,8 +222,7 @@ public class ImportsAwareReferenceProposalCreator {
 			// not accessed via namespace
 			QualifiedName nameNoDefault = inputQN.skipLast(1);
 			QualifiedName moduleName = nameNoDefault.getSegmentCount() > 1
-					? QualifiedName.create(nameNoDefault.getLastSegment())
-					: nameNoDefault;
+					? QualifiedName.create(nameNoDefault.getLastSegment()) : nameNoDefault;
 			return new AliasedEObjectDescription(moduleName, candidate);
 		}
 		// no special handling, return original input

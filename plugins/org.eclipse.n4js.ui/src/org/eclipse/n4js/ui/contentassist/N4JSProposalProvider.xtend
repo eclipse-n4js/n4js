@@ -23,8 +23,6 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.services.N4JSGrammarAccess
-import org.eclipse.n4js.smith.DataCollector
-import org.eclipse.n4js.smith.DataCollectors
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -59,11 +57,6 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	@Inject
 	private N4JSGrammarAccess n4jsGrammarAccess;
 
-	static private final DataCollector dcContentAssist = DataCollectors.INSTANCE.
-		getOrCreateDataCollector("Content Assist");
-	static private final DataCollector dcLookupCrossReference = DataCollectors.INSTANCE.
-		getOrCreateDataCollector("LookupCrossReference", "Content Assist");
-
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
 		val calledRule = ruleCall.getRule();
@@ -74,12 +67,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	override protected lookupCrossReference(CrossReference crossReference, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
-		val m = dcLookupCrossReference.getMeasurement("LookupCrossReference");
-		try {
-			lookupCrossReference(crossReference, contentAssistContext, acceptor, new N4JSCandidateFilter());
-		} finally {
-			m.end();
-		}
+		lookupCrossReference(crossReference, contentAssistContext, acceptor, new N4JSCandidateFilter());
 	}
 
 	override protected void lookupCrossReference(CrossReference crossReference,
@@ -95,7 +83,6 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 			val String featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
 
 			if (featureName == TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType.name) {
-
 				lookupCrossReference(crossReference, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType,
 					contentAssistContext, acceptor, filter);
 			}
@@ -131,8 +118,6 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		}
 	}
 
-
-
 	/**
 	 * <b>TEMPORARY WORK-AROUND</b>
 	 * <p>
@@ -159,6 +144,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 			override apply(IEObjectDescription candidate) {
 				if (candidate === null)
 					return null;
+
 				var ICompletionProposal result = null;
 				var String proposal = myConverter.toString(candidate.getName());
 				if (valueConverter !== null) {
@@ -191,8 +177,8 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	override StyledString getStyledDisplayString(IEObjectDescription description) {
 		val version = N4JSResourceDescriptionStrategy.tryGetVersionableVersion(description);
-		var String qName  = qualifiedNameConverter.toString(description.getQualifiedName());
-		var String name  = qualifiedNameConverter.toString(description.getQualifiedName());
+		var String qName = qualifiedNameConverter.toString(description.getQualifiedName());
+		var String name = qualifiedNameConverter.toString(description.getQualifiedName());
 
 		var StyledString sString = getStyledDisplayString(qName, name, version);
 		return sString;
@@ -209,7 +195,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		if (parsedQualifiedName.segmentCount > 1) {
 			val dashName = ' - ' + qualifiedNameConverter.toString(parsedQualifiedName.skipLast(1));
 			val lastSegment = parsedQualifiedName.lastSegment;
-			val typeVersion = if(version === 0)  "" else N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
+			val typeVersion = if (version === 0) "" else N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
 
 			var String combinedLabel;
 			if (shortName.endsWith(lastSegment)) {
@@ -228,25 +214,6 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	}
 
 	/**
-	 * Overridden to avoid calls to IEObjectDescription#getEObjectOrProxy
-	 * 
-	 * Remove before merging to master!
-	 * Due to IDL, the proxy element is retrieved anyway, but used only if it is a TClassifier
-	 * /
-	 * override protected getStyledDisplayString(IEObjectDescription description) {
-	 * 	val element = description.getEObjectOrProxy();
-	 * 	val qualifiedName = description.qualifiedName;
-	 * 	val shortName = description.name;
-	 * 	if (qualifiedName == shortName) {
-	 * 		if (shortName.segmentCount >= 1) {
-	 * 			return stringifier.apply(element, qualifiedName, shortName.lastSegment)
-	 * 		} 
-	 * 	}
-	 * 	// don't recompute the qualified name again
-	 * 	return stringifier.apply(element, qualifiedName, qualifiedNameConverter.toString(shortName))
-	 * }
-	 */
-	/**
 	 * If the element is an instance of {@link TClassifier} this method
 	 * returns a user-faced string description of the version information.
 	 * 
@@ -258,7 +225,6 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		}
 		return 0;
 	}
-
 
 	/**
 	 * Is also used to filter out certain keywords, e.g., operators or (too) short keywords.
