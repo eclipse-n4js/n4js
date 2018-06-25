@@ -20,7 +20,7 @@ import static org.junit.Assert.*
  * Tests some corner-cases of compile-time expressions which require a PluginUI test. Most tests for compile-time
  * expressions do not require this and are thus located elsewhere.
  */
-class CompileTimeExpressionPluginUITest extends AbstractBuilderParticipantTest {
+class CompileTimeExpressionPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testReferenceToConstFieldInOtherFile() throws Exception {

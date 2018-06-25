@@ -31,15 +31,14 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
+import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -59,14 +58,9 @@ import com.google.inject.Injector;
 /**
  * @author Sven Efftinge - Initial contribution and API
  */
-@SuppressWarnings("restriction")
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public abstract class AbstractBuilderTest {
-
-	static {
-		EclipseGracefulUIShutdownEnabler.enableOnce();
-	}
 
 	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
 
@@ -85,7 +79,7 @@ public abstract class AbstractBuilderTest {
 	@Inject
 	private CloseProjectTaskScheduler closedProjectTaskProcessor;
 
-	/***/
+	/** Setups workspace by cleaning and waiting for auto builds, asserting index is clean. */
 	@Before
 	public void setUp() throws Exception {
 		IResourcesSetupUtil.cleanWorkspace();
@@ -190,7 +184,10 @@ public abstract class AbstractBuilderTest {
 		return true;
 	}
 
-	/***/
+	/**
+	 * Clean up by saving and closing editors, cleaning the workspace, waiting for auto builds and asserting clean
+	 * index.
+	 */
 	@After
 	public void tearDown() throws Exception {
 		// save the files as otherwise the projects cannot be deleted
@@ -230,22 +227,8 @@ public abstract class AbstractBuilderTest {
 		IResourcesSetupUtil.cleanBuild();
 	}
 
-	/***/
-	protected IWorkbenchPage getActivePage() {
-		IWorkbenchPage page = null;
-		if (org.eclipse.ui.internal.Workbench.getInstance() != null) {
-			IWorkbench wb = PlatformUI.getWorkbench();
-			IWorkbenchWindow window = wb.getActiveWorkbenchWindow();
-			// Could be null if using Timeout test rule and does not run on main thread.
-			if (null != window) {
-				page = window.getActivePage();
-			}
-		}
-		return page;
-	}
-
 	private void closeAllEditorsForTearDown() {
-		IWorkbenchPage page = getActivePage();
+		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		if (page != null)
 			page.closeAllEditors(false);
 	}
