@@ -3469,9 +3469,9 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-xmlbuilder@^0.1.0:
-  version "0.1.8"
-  resolved "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-0.1.8.tgz#f405ffefa83cb044124d93f014b688125d007be7"
+xmlbuilder@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-10.0.0.tgz#c64e52f8ae097fe5fd46d1c38adaade071ee1b55"
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.1"

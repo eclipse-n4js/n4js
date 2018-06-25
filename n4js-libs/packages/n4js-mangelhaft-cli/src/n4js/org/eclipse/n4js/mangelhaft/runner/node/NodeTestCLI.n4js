@@ -44,7 +44,7 @@ export default public class NodeTestCLI {
     }
 
     public static parseCommandLine(): NodeTestOptions {
-        return lib_nomnom.script("n4js-mangelhaft")
+        return lib_nomnom.script("n4js-mangelhaft-cli")
                          .help(nomnomHelp)
                          .options(nomnomOptions)
                          .parse() as NodeTestOptions;
@@ -193,5 +193,5 @@ const nomnomHelp = `Runs N4JS mangelhaft testing.
 By default n4js-mangelhaft will retrieve the test catalog from a running IDE and just runs the tests.
 On CI systems, you may want to compile and run the tests in one go:
 
-$ n4js-mangelhaft --compile --xunitReportFile ./jenkins/reports.xml --scan ./projects
+$ n4js-mangelhaft-cli --compile --xunitReportFile ./jenkins/reports.xml --scan ./projects
 `;
