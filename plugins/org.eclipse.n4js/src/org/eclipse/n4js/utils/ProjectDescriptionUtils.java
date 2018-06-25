@@ -407,6 +407,7 @@ public class ProjectDescriptionUtils {
 				DeclaredVersion lower = ver;
 				DeclaredVersion upper = EcoreUtil.copy(ver);
 				upper.setMajor(upper.getMajor() + 1);
+				upper.setQualifier(null);
 				result.setLowerVersion(lower);
 				result.setUpperVersion(upper);
 			} else if (ver.getMicro() == -1) {
@@ -416,6 +417,7 @@ public class ProjectDescriptionUtils {
 				DeclaredVersion lower = ver;
 				DeclaredVersion upper = EcoreUtil.copy(ver);
 				upper.setMinor(upper.getMinor() + 1);
+				upper.setQualifier(null);
 				result.setLowerVersion(lower);
 				result.setUpperVersion(upper);
 			} else {
@@ -425,6 +427,7 @@ public class ProjectDescriptionUtils {
 				DeclaredVersion upper = EcoreUtil.copy(ver);
 				upper.setMinor(upper.getMinor() + 1);
 				upper.setMicro(0);
+				upper.setQualifier(null);
 				result.setLowerVersion(lower);
 				result.setUpperVersion(upper);
 			}
@@ -457,6 +460,7 @@ public class ProjectDescriptionUtils {
 				upper.setMinor(0);
 				upper.setMicro(0);
 			}
+			upper.setQualifier(null);
 			result.setLowerVersion(lower);
 			result.setUpperVersion(upper);
 		} else {

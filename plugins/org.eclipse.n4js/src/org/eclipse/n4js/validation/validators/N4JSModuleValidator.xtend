@@ -78,6 +78,11 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 		val correctType = resType === ResourceType.N4JS || resType === ResourceType.N4JSD || resType === ResourceType.N4JSX;
 		val moduleQN = script.module.qualifiedName
 
+		// TODO GH-818 work-around: do not complain about file js.cookie.n4jsd:
+		if (moduleQN.equals("js.cookie") || moduleQN.endsWith("/js.cookie")) {
+			return;
+		}
+
 		if (correctType && moduleQN.contains(".")) {
 			val qualifiedName = qualifiedNameConverter.toQualifiedName(moduleQN);
 
