@@ -187,7 +187,8 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 		if (qName == name) {
 			val eObj = description.getEObjectOrProxy(); // performance issue! TODO: remove it
-			qName = qualifiedNameProvider.getFullyQualifiedName(eObj);
+			val qnOfEObject = qualifiedNameProvider.getFullyQualifiedName(eObj);
+			qName = qnOfEObject ?: qName;
 		}
 		var StyledString sString = getStyledDisplayString(qName, name, version);
 		return sString;

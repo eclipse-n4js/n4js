@@ -13,14 +13,9 @@ package org.eclipse.n4js.resource;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TMember;
@@ -126,12 +121,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 */
 	private static final String VERSION = "VERSION";
 	private static final int VERSION_DEFAULT = 0;
-
-	/**
-	 * Version declared in {@link Versionable} types. Used by content assist to show version information. If this user
-	 * data is missing, no version information is shown.
-	 */
-	private static final String TYPE = "TYPE";
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
@@ -252,15 +241,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		}
 	}
 
-	/** @return the version number of the given description. */
-	public static Type getType(IEObjectDescription description) {
-		String uriString = description.getUserData(TYPE);
-		InternalEObject astProxy = (InternalEObject) N4JSFactory.eINSTANCE.createScript();
-		astProxy.eSetProxyURI(URI.createURI(uriString));
-		Type eType = (Type) EcoreUtil.resolve(astProxy, (ResourceSet) null);
-		return eType;
-	}
-
 	private void internalCreateEObjectDescriptionForRoot(final TModule module,
 			IAcceptor<IEObjectDescription> acceptor) {
 		// user data: serialized representation
@@ -311,7 +291,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				Map<String, String> userData = new HashMap<>();
 				addAccessModifierUserData(userData, type.getTypeAccessModifier());
 				addVersionableVersion(userData, type);
-				addType(userData, type);
 
 				// Add additional user data for descriptions representing a TClass
 				if (type instanceof TClass) {
@@ -328,14 +307,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				acceptor.accept(eod);
 			}
 		}
-	}
-
-	/**
-	 * Supplies the given userData map with the user data value for the access modifier.
-	 */
-	protected void addType(Map<String, String> userData, Type type) {
-		URI typeURI = EcoreUtil.getURI(type.eClass());
-		userData.put(TYPE, typeURI.toString());
 	}
 
 	/**
