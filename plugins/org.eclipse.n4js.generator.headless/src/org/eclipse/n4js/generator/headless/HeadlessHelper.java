@@ -22,14 +22,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.external.ExternalLibraryUtils;
+import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
+import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.URIUtils;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -40,6 +45,32 @@ public class HeadlessHelper {
 
 	@Inject
 	private ProjectDescriptionHelper projectDescriptionHelper;
+
+	@Inject
+	private N4JSModel n4jsModel;
+
+	@Inject
+	private IHeadlessLogger logger;
+
+	@Inject
+	private TargetPlatformInstallLocationProvider targetPlatformInstallLocationProvider;
+
+	/**
+	 * Configure FileBasedWorkspace with all projects contained in {@code buildSet}.
+	 *
+	 * @param buildSet
+	 *            build set of projects
+	 * @param n4jsFileBasedWorkspace
+	 *            instance of FileBasedWorkspace to configure (in N4JS injector)
+	 * @throws N4JSCompileException
+	 *             in error Case.
+	 */
+	public void registerProjects(BuildSet buildSet, FileBasedWorkspace n4jsFileBasedWorkspace)
+			throws N4JSCompileException {
+		Iterable<URI> projectUris = Iterables.transform(buildSet.getAllProjects(), p -> p.getLocation());
+		// Register all projects with the file based workspace.
+		this.registerProjectsToFileBasedWorkspace(projectUris, n4jsFileBasedWorkspace);
+	}
 
 	/**
 	 * Configure FileBasedWorkspace with all projects found in sub-folders of {@code projectLocations}.
@@ -59,12 +90,12 @@ public class HeadlessHelper {
 		// Collect all Projects in first Level
 		List<URI> pUris = collectAllProjectUris(absProjectRoots);
 
-		registerProjectsToFileBasedWorkspace(pUris, n4jsFileBasedWorkspace, null);
+		registerProjectsToFileBasedWorkspace(pUris, n4jsFileBasedWorkspace);
 	}
 
 	/** Registers provided project uris in a given workspace. Logger (if provided) used to log errors. */
 	public void registerProjectsToFileBasedWorkspace(Iterable<URI> projectURIs,
-			FileBasedWorkspace n4jsFileBasedWorkspace, IHeadlessLogger logger)
+			FileBasedWorkspace n4jsFileBasedWorkspace)
 			throws N4JSCompileException {
 
 		// TODO GH-783 refactor FileBasedWorkspace, https://github.com/eclipse/n4js/issues/783
@@ -190,6 +221,49 @@ public class HeadlessHelper {
 	}
 
 	/**
+	 * Returns a list of {@link N4JSProject} instances representing all N4JS projects at the given locations.
+	 *
+	 * Excludes projects that have been installed by the library manager which do not need to be built (cf.
+	 * {@link #isProjectToBeBuilt(IN4JSProject)}).
+	 *
+	 * @param projectURIs
+	 *            the URIs to process
+	 * @return a list of projects at the given URIs
+	 */
+	public List<N4JSProject> getN4JSProjects(List<URI> projectURIs) {
+		return projectURIs.stream().map(URIUtils::normalize)
+				.map(u -> n4jsModel.getN4JSProject(u))
+				.filter(p -> isProjectToBeBuilt(p))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Indicates whether the given {@code project} is to be built by the headless compiler.
+	 *
+	 * In particular, this excludes transitive non-N4JS dependencies that have been installed by npm.
+	 *
+	 */
+	public boolean isProjectToBeBuilt(IN4JSProject project) {
+		if (project.isExternal()) {
+			return ExternalLibraryUtils.isExternalProjectDirectory(project.getLocationPath().toFile());
+		}
+		return true;
+	}
+
+	/**
+	 * Convert the given list of files to a list of URIs. Each file is converted to a URI by means of
+	 * {@link URI#createFileURI(String)}.
+	 *
+	 * @param files
+	 *            the files to convert
+	 * @return the list of URIs
+	 */
+	public List<URI> createFileURIs(List<File> files) {
+		return files.stream().map(f -> URI.createFileURI(f.toString())).map(URIUtils::normalize)
+				.collect(Collectors.toList());
+	}
+
+	/**
 	 * Utility for deciding if a given project location should be registered in the FileBasedWorkspace. Note that this
 	 * method has three "return values". {@code false} if provided project manifest describes new project that has to be
 	 * registered. {@code false} when project manifest describes already known project in the same location, in which
@@ -232,13 +306,18 @@ public class HeadlessHelper {
 
 	}
 
-	private static Stream<File> getProjectStream(List<File> absProjectRoots) {
+	private Stream<File> getProjectStream(List<File> absProjectRoots) {
+		final java.net.URI tpLocation = targetPlatformInstallLocationProvider
+				.getTargetPlatformInstallLocation();
+
 		return absProjectRoots.stream()
 				.filter(f -> f.exists())
 				// find all contained folders
 				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
 				// only those with package.json file
-				.filter(dir -> new File(dir, IN4JSProject.PACKAGE_JSON).isFile());
+				.filter(dir -> new File(dir, IN4JSProject.PACKAGE_JSON).isFile())
+				// do not include target platform install location as project
+				.filter(dir -> !dir.equals(new File(tpLocation)));
 	}
 
 	private static URI fileToURI(File file) {
