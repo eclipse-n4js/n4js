@@ -54,6 +54,7 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.Version
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser
@@ -72,7 +73,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -498,33 +498,29 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 	}
 
-	/** Validates the 'dependencies' section of the {@code package.json}. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEPENDENCIES)
-	def checkDependencies(JSONValue dependenciesValue) {
-		// make sure 'dependencies' feature is allowed in combination with the current project type
-		if (!checkFeatureRestrictions("dependencies", dependenciesValue, not(RE_TYPE))) {
-			return;
+	@Check
+	def void checkDependenciesAndDevDependencies(JSONDocument document) {
+		val references = newArrayList;
+		for (value : getDocumentValues(ProjectDescriptionHelper.PROP__DEPENDENCIES)) {
+			// make sure 'dependencies' feature is allowed in combination with the current project type
+			if (checkFeatureRestrictions("dependencies", value, not(RE_TYPE))) {
+				references += getReferencesFromDependenciesObject(value);
+			}
 		}
-		
-		val references = getReferencesFromDependenciesObject(dependenciesValue);
-		checkReferencedProjects(references, createDependenciesPredicate(), "dependencies", false); 
-	}
-	
-	/** Validates the 'devDependencies' section of the {@code package.json}. */
-	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)
-	def checkDevDependencies(JSONValue devDependenciesValue) {
-		// make sure 'devDependencies' are allowed in combination with the current project type
-		if (!checkFeatureRestrictions("devDependencies", devDependenciesValue, not(RE_TYPE))) {
-			return;
+		for (value : getDocumentValues(ProjectDescriptionHelper.PROP__DEV_DEPENDENCIES)) {
+			// make sure 'devDependencies' are allowed in combination with the current project type
+			if (checkFeatureRestrictions("devDependencies", value, not(RE_TYPE))) {
+				// do not validate devDependencies in external projects, because these are not installed
+				// by npm for transitive dependencies
+				val project = findProject(value.eResource.URI);
+				if (project.present && !project.get.external) {
+					references += getReferencesFromDependenciesObject(value);
+				}
+			}
 		}
-		// do not validate devDependencies in external projects, because these are not installed
-		// by npm for transitive dependencies
-		val project = findProject(devDependenciesValue.eResource.URI);
-		if (!project.present || project.get.external) {
-			return;
+		if (!references.empty) {
+			checkReferencedProjects(references, createDependenciesPredicate(), "dependencies or devDependencies", false); 
 		}
-		val references = getReferencesFromDependenciesObject(devDependenciesValue);
-		checkReferencedProjects(references, createDependenciesPredicate(), "devDependencies", false); 
 	}
 
 	/** Checks the 'n4js.extendedRuntimeEnvironment' section. */

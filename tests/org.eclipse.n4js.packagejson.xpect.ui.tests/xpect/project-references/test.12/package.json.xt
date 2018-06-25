@@ -38,7 +38,7 @@
 		"test.data.api.project.one": "*",
 		// XPECT nowarnings --> "Library project without implementation ID can be referenced in an API project."
 		"test.data.third.party.lib": "*",
-		// XPECT warnings --> "Project test.data.lib.project.two type of library cannot be declared among the dependencies." at ""test.data.lib.project.two": "*""
+		// XPECT warnings --> "Project test.data.lib.project.two type of library cannot be declared among the dependencies or devDependencies." at ""test.data.lib.project.two": "*""
 		"test.data.lib.project.two": "*"
 	},
 	"n4js": {
