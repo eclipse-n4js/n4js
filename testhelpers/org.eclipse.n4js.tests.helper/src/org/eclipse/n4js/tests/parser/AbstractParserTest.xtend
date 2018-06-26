@@ -44,11 +44,11 @@ public abstract class AbstractParserTest extends Assert {
 	}
 
 	protected def Script parseESSuccessfully(CharSequence js) {
-		return parseN4jsSuccessfully(js);
+		return parseJSSuccessfully(js);
 	}
 
 	protected def parseESWithError(CharSequence js) {
-		return parseN4jsWithError(js);
+		return parseJSWithError(js);
 	}
 
 	protected def Script parseN4jsSuccessfully(CharSequence js) {
