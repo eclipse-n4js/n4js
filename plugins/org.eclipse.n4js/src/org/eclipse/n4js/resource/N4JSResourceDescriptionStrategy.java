@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
-import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -57,13 +56,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 */
 	private static final String TYPE_ACCESS_MODIFIER_KEY = "TYPE_ACCESS_MODIFIER";
 	private static final TypeAccessModifier TYPE_ACCESS_MODIFIER_DEFAULT = TypeAccessModifier.PUBLIC;
-
-	/**
-	 * The user data key for the member access modifier - used to compute visibility without creating a resource just
-	 * from the proxy in the index.
-	 */
-	private static final String MEMBER_ACCESS_MODIFIER_KEY = "MEMBER_ACCESS_MODIFIER";
-	private static final MemberAccessModifier MEMBER_ACCESS_MODIFIER_DEFAULT = MemberAccessModifier.PUBLIC;
 
 	/**
 	 * User data to store the {@link TClass#isFinal() final} property of a {@link TClass} in the index without resolving
@@ -233,19 +225,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			return TypeAccessModifier.get(Integer.parseInt(userData));
 		} catch (NumberFormatException e) {
 			return TYPE_ACCESS_MODIFIER_DEFAULT;
-		}
-	}
-
-	/** @return the member access modifier of the given description. */
-	public static MemberAccessModifier getMemberAccessModifier(IEObjectDescription description) {
-		try {
-			String userData = description.getUserData(MEMBER_ACCESS_MODIFIER_KEY);
-			if (userData == null) {
-				return MEMBER_ACCESS_MODIFIER_DEFAULT;
-			}
-			return MemberAccessModifier.get(Integer.parseInt(userData));
-		} catch (NumberFormatException e) {
-			return MEMBER_ACCESS_MODIFIER_DEFAULT;
 		}
 	}
 

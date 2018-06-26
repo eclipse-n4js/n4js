@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.contentassist
 
 import com.google.common.base.Predicate
-import com.google.common.base.Stopwatch
 import com.google.inject.Inject
 import com.google.inject.Provider
 import org.eclipse.emf.ecore.EObject
@@ -30,6 +29,7 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
@@ -82,9 +82,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	override protected lookupCrossReference(CrossReference crossReference, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
-		val sw = Stopwatch.createStarted;
 		lookupCrossReference(crossReference, contentAssistContext, acceptor, new N4JSCandidateFilter());
-		println("time = " + sw.stop);
 	}
 
 	override protected void lookupCrossReference(CrossReference crossReference,
@@ -254,9 +252,15 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		if (type instanceof TFunction) {
 			type.declaredTypeAccessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(description);
 		}
-		if (type instanceof TMemberWithAccessModifier) {
-			type.declaredFinal = N4JSResourceDescriptionStrategy.getFinal(description);
-			type.declaredMemberAccessModifier = N4JSResourceDescriptionStrategy.getMemberAccessModifier(description);
+		if (type instanceof TMember) {
+			// The EObject if members was loaded already by the scope.
+			// Hence, loading it again has only little impact on the performance.
+			val member = description.getEObjectOrProxy() as TMember;
+			type.declaredFinal = member.isDeclaredFinal;
+
+			if (type instanceof TMemberWithAccessModifier) {
+				type.declaredMemberAccessModifier = member.memberAccessModifier;
+			}
 		}
 		val image = labelProvider.getImage(type);
 		return image;
