@@ -11,6 +11,9 @@
 package org.eclipse.n4js;
 
 import org.eclipse.n4js.N4JSInjectorProvider.BaseTestModule;
+import org.eclipse.n4js.internal.AutoDiscoveryFileBasedWorkspace;
+import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.xpect.setup.XpectGuiceModule;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
@@ -45,6 +48,18 @@ public class N4JSStandaloneTestsModule extends BaseTestModule {
 	}
 
 	/** */
+	@SingletonBinding
+	public Class<? extends InternalN4JSWorkspace> bindInternalN4JSWorkspace() {
+		return AutoDiscoveryFileBasedWorkspace.class;
+	}
+
+	/** */
+	@SingletonBinding
+	public Class<? extends FileBasedWorkspace> bindFileBasedWorkspace() {
+		return AutoDiscoveryFileBasedWorkspace.class;
+	}
+
+	/** */
 	public Class<? extends ParseHelper<Script>> bindParseHelperScript() {
 		return SmokeTestWriter.class;
 	}
@@ -54,5 +69,11 @@ public class N4JSStandaloneTestsModule extends BaseTestModule {
 	 */
 	public Class<? extends IAllContainersState.Provider> bindAllContainerState() {
 		return N4JSTestsAllContainerState.Provider.class;
+	}
+
+	/** */
+	@SingletonBinding(eager = true)
+	public Class<? extends N4JSStandloneRegistrationHelper> bindRegistrationHelper() {
+		return N4JSStandloneRegistrationHelper.class;
 	}
 }
