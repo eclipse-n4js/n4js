@@ -62,7 +62,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * the actual proxy. Used by N4JS type search. Note: Only {@link IEObjectDescription object description}s
 	 * representing a {@link TClass} has this user data.
 	 */
-	public static final String FINAL_KEY = "FINAL";
+	private static final String FINAL_KEY = "FINAL";
 	private static final boolean FINAL_DEFAULT = false;
 
 	/**
@@ -309,20 +309,16 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		}
 	}
 
-	/**
-	 * Supplies the given userData map with the user data value for the access modifier.
-	 */
-	protected void addAccessModifierUserData(Map<String, String> userData, TypeAccessModifier typeAccessModifier) {
+	/** Supplies the given userData map with the user data value for the access modifier. */
+	private void addAccessModifierUserData(Map<String, String> userData, TypeAccessModifier typeAccessModifier) {
 		// don't write public visibility to the index since it is treated as the default
 		if (TYPE_ACCESS_MODIFIER_DEFAULT != typeAccessModifier) {
 			userData.put(TYPE_ACCESS_MODIFIER_KEY, String.valueOf(typeAccessModifier.getValue()));
 		}
 	}
 
-	/**
-	 * Supplies the given userData map with the user data value for the access modifier.
-	 */
-	protected void addVersionableVersion(Map<String, String> userData, Type type) {
+	/** Supplies the given userData map with the user data value for the access modifier. */
+	private void addVersionableVersion(Map<String, String> userData, Type type) {
 		int version = type.getVersion();
 		if (version != VERSION_DEFAULT) {
 			userData.put(VERSION, String.valueOf(version));

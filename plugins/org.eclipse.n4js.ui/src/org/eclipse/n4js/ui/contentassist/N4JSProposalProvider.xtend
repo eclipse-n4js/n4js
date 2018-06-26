@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -88,12 +88,10 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	override protected void lookupCrossReference(CrossReference crossReference,
 		ContentAssistContext contentAssistContext, ICompletionProposalAcceptor acceptor,
 		Predicate<IEObjectDescription> filter) {
+
 		// because rule "TypeReference" in TypeExpressions.xtext (overridden in N4JS.xtext) is a wildcard fragment,
 		// the standard behavior of the super method would fail in the following case:
-		var ParserRule containingParserRule = null;
-
-		containingParserRule = GrammarUtil.containingParserRule(crossReference);
-
+		var ParserRule containingParserRule = GrammarUtil.containingParserRule(crossReference);
 		if (containingParserRule === n4jsGrammarAccess.typeReferenceRule) {
 			val String featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
 
@@ -149,7 +147,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * </p><p>
 	 * TODO IDE-2227 fix handling of qualified names in content assist or create follow-up task
 	 * </p>
-	 * 
+	 *
 	 * @see AbstractJavaBasedContentProposalProvider
 	 */
 	override protected getProposalFactory(String ruleName, ContentAssistContext contentAssistContext) {
@@ -204,14 +202,18 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		return sString;
 	}
 
-	override protected StyledString getStyledDisplayString(EObject element, String qualifiedNameString, String shortNameString) {
+	override protected StyledString getStyledDisplayString(EObject element, String qualifiedNameString,
+		String shortNameString) {
+
 		val version = getTypeVersion(element);
 		val qualifiedName = qualifiedNameConverter.toQualifiedName(qualifiedNameString);
 		val shortName = qualifiedNameConverter.toQualifiedName(shortNameString);
 		return getStyledDisplayString(qualifiedName, shortName, version);
 	}
 
-	def protected StyledString getStyledDisplayString(QualifiedName qualifiedName, QualifiedName shortName, int version) {
+	def protected StyledString getStyledDisplayString(QualifiedName qualifiedName, QualifiedName shortName,
+		int version) {
+
 		val result = new StyledString();
 		val shortNameString = shortName.toString();
 		if (qualifiedName.segmentCount > 1) {
@@ -253,8 +255,8 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 			type.declaredTypeAccessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(description);
 		}
 		if (type instanceof TMember) {
-			// The EObject if members was loaded already by the scope.
-			// Hence, loading it again has only little impact on the performance.
+			// The EObject of members was loaded already by the scope.
+			// Hence, getting it again has only little impact on the performance.
 			val member = description.getEObjectOrProxy() as TMember;
 			type.declaredFinal = member.isDeclaredFinal;
 
@@ -269,7 +271,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	/**
 	 * If the element is an instance of {@link TClassifier} this method
 	 * returns a user-faced string description of the version information.
-	 * 
+	 *
 	 * Otherwise, this method returns an empty string.
 	 */
 	private def int getTypeVersion(EObject element) {
