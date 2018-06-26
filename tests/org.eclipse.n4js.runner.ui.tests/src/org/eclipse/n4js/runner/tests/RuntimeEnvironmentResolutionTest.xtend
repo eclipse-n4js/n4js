@@ -45,6 +45,7 @@ import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.*
 import org.eclipse.n4js.packagejson.PackageJsonBuilder
 import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.internal.FileBasedWorkspace
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -65,6 +66,9 @@ class RuntimeEnvironmentResolutionTest {
 
 	@Inject
 	private IN4JSCore core
+	
+	@Inject
+	private FileBasedWorkspace workspace
 
 	private File workingDirectory
 
@@ -659,7 +663,7 @@ class RuntimeEnvironmentResolutionTest {
 		val uri = createProjectWithPackageJson(projectId, content)
 		val project = core.create(uri)
 		assertTrue(project.exists)
-		core.findProject(uri) // Registers the project.
+		workspace.registerProject(uri) // Registers the project.
 		assertTrue(core.findProject(project.getLocation).present)
 		return project
 	}
