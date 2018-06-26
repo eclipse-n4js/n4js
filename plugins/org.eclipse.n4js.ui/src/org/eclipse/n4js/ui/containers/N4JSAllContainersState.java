@@ -112,10 +112,6 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				clearProjectCache();
 				return true;
 			}
-			if (IN4JSProject.N4MF_MANIFEST.equals(delta.getFullPath().lastSegment())) {
-				clearProjectCache();
-				return true;
-			}
 			if (IN4JSArchive.NFAR_FILE_EXTENSION.equals(fileExtension)) {
 				clearProjectCache(delta);
 				return true;
@@ -143,7 +139,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 			}
 			return false;
 		}
-		if (n4mfFileHasBeenChanged(delta) || nfarHasBeenChanged(delta) || packageJSONFileHasBeenChanged(delta)) {
+		if (nfarHasBeenChanged(delta) || packageJSONFileHasBeenChanged(delta)) {
 			clearProjectCache(delta);
 			return true;
 		}
@@ -236,12 +232,6 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 		return delta.getKind() == IResourceDelta.CHANGED
 				&& delta.getResource().getType() == IResource.FILE
 				&& IN4JSArchive.NFAR_FILE_EXTENSION.equalsIgnoreCase(delta.getFullPath().getFileExtension());
-	}
-
-	private boolean n4mfFileHasBeenChanged(IResourceDelta delta) {
-		return delta.getKind() == IResourceDelta.CHANGED
-				&& delta.getResource().getType() == IResource.FILE
-				&& IN4JSProject.N4MF_MANIFEST.equalsIgnoreCase(delta.getFullPath().lastSegment());
 	}
 
 	private boolean packageJSONFileHasBeenChanged(IResourceDelta delta) {

@@ -108,8 +108,7 @@ public class N4JSToBeBuiltComputer implements IToBeBuiltComputerContribution {
 				knownEntries.put(key, cachedURIs);
 				toBeBuilt.getToBeUpdated().addAll(cachedURIs);
 				return true;
-			} else if (IN4JSProject.N4MF_MANIFEST.equals(file.getName()) ||
-					IN4JSProject.PACKAGE_JSON.equals(file.getName())) {
+			} else if (IN4JSProject.PACKAGE_JSON.equals(file.getName())) {
 				// changed project description resource - schedule all resources from source folders
 				final IN4JSEclipseProject project = eclipseCore.create(file.getProject()).orNull();
 				if (null != project && project.exists()) {
