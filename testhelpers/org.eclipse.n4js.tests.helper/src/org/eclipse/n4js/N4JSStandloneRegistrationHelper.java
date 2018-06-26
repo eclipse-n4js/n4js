@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.validation.N4JSValidator;
 import org.eclipse.xtext.service.SingletonBinding;
+import org.eclipse.xtext.validation.EValidatorRegistrar;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -29,6 +30,8 @@ import com.google.inject.Singleton;
  *
  * Make sure to bind this helper as eager singleton (cf. {@link SingletonBinding#eager()}) so that it is executed on
  * injector creation.
+ *
+ * This helper will unregister all languages services that were registered by other injectors.
  */
 @Singleton
 public class N4JSStandloneRegistrationHelper {
@@ -38,7 +41,12 @@ public class N4JSStandloneRegistrationHelper {
 		// register N4JS resource service providers
 		new N4JSStandaloneSetup().register(injector);
 
-		// make sure the N4JSValidator instance of the current injector is used for validating N4JS resources
-		EValidator.Registry.INSTANCE.put(N4JSPackage.eINSTANCE, injector.getInstance(N4JSValidator.class));
+		final N4JSValidator validator = injector.getInstance(N4JSValidator.class);
+		final EValidatorRegistrar registrar = injector.getInstance(EValidatorRegistrar.class);
+
+		// clear list of existing N4JS-package validators (removes obsolete validators originating from other injectors)
+		EValidator.Registry.INSTANCE.remove(N4JSPackage.eINSTANCE);
+		// re-register N4JSValidator
+		validator.register(registrar);
 	}
 }

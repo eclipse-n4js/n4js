@@ -31,6 +31,18 @@ import org.eclipse.xtext.validation.IDiagnosticConverter;
  */
 @XpectGuiceModule
 public class N4JSStandaloneTestsModule extends BaseTestModule {
+
+	/**
+	 * This bindings triggers a registration of the language services (validators, resource description managers, etc.)
+	 * provided by this module with the global EMF registry.
+	 *
+	 * Due to its eager-singleton binding, it will be executed at the time of injector creation.
+	 */
+	@SingletonBinding(eager = true)
+	public Class<? extends N4JSStandloneRegistrationHelper> bindRegistrationHelper() {
+		return N4JSStandloneRegistrationHelper.class;
+	}
+
 	/** */
 	public Class<? extends IDiagnosticConverter> bindDiagnosticConverter() {
 		return ExceptionAwareDiagnosticConverter.class;
@@ -69,11 +81,5 @@ public class N4JSStandaloneTestsModule extends BaseTestModule {
 	 */
 	public Class<? extends IAllContainersState.Provider> bindAllContainerState() {
 		return N4JSTestsAllContainerState.Provider.class;
-	}
-
-	/** */
-	@SingletonBinding(eager = true)
-	public Class<? extends N4JSStandloneRegistrationHelper> bindRegistrationHelper() {
-		return N4JSStandloneRegistrationHelper.class;
 	}
 }

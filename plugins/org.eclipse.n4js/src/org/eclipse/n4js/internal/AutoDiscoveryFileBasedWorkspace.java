@@ -45,6 +45,12 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 		return closestProjectLocation;
 	}
 
+	/**
+	 * Automatically discovery the closest project location based on the given {@code location}.
+	 *
+	 * Ascends the file hierarchy starting from {@code location}, until it finds a directory that contains a
+	 * {@link IN4JSProject#PACKAGE_JSON} file.
+	 */
 	private static URI findClosestProjectLocation(URI location) {
 		URI nestedLocation = location;
 		int segmentCount = 0;
