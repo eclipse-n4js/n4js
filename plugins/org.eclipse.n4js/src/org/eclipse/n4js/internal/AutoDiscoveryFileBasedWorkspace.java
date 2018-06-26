@@ -38,7 +38,8 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 		final URI closestProjectLocation = findClosestProjectLocation(unsafeLocation);
 		final URI knownProjectLocation = super.findProjectWith(unsafeLocation);
 
-		if (knownProjectLocation == null || !knownProjectLocation.equals(closestProjectLocation)) {
+		if (closestProjectLocation != null
+				&& (knownProjectLocation == null || !knownProjectLocation.equals(closestProjectLocation))) {
 			registerProject(closestProjectLocation);
 		}
 
