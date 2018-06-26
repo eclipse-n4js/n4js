@@ -21,7 +21,7 @@ import org.eclipse.n4js.n4mf.VersionConstraint;
  * Temporary SemVer version support. Maps SemVer version strings to the old {@link DeclaredVersion},
  * {@link VersionConstraint}, which has limitations.
  */
-public class ProjectDescriptionUtilsTEMP {
+/* package */ class ProjectDescriptionUtilsTEMP {
 
 	private static final Pattern PATTERN_DOT = Pattern.compile("\\.");
 
@@ -31,7 +31,7 @@ public class ProjectDescriptionUtilsTEMP {
 	 * Very simple, temporary implementation. For example, well-formedness of pre-release version and build meta-data
 	 * are not checked.
 	 */
-	public static DeclaredVersion parseVersion(String str) {
+	/* package */ static DeclaredVersion parseVersion(String str) {
 		DeclaredVersion result = parseVersionPartial(str);
 		if (result != null && result.getMinor() >= 0 && result.getMicro() >= 0) {
 			return result;
@@ -92,7 +92,7 @@ public class ProjectDescriptionUtilsTEMP {
 	 * Parses a small subset of SemVer version ranges as defined at https://docs.npmjs.com/misc/semver, Section
 	 * "Ranges".
 	 */
-	public static VersionConstraint parseVersionRange(String str) {
+	/* package */ static VersionConstraint parseVersionRange(String str) {
 		VersionConstraint result = N4mfFactory.eINSTANCE.createVersionConstraint();
 		result.setExclLowerBound(false);
 		result.setExclUpperBound(true);
