@@ -15,6 +15,7 @@ import java.io.File;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -53,7 +54,7 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 	 * {@link IN4JSProject#PACKAGE_JSON} file.
 	 */
 	private static URI findClosestProjectLocation(URI location) {
-		URI nestedLocation = location;
+		URI nestedLocation = URIUtils.normalize(location);
 		int segmentCount = 0;
 		if (nestedLocation.isFile()) { // Here, unlike java.io.File, #isFile can mean directory as well.
 			File directory = new File(nestedLocation.toFileString());
