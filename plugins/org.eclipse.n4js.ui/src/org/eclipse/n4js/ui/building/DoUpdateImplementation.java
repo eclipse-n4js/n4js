@@ -27,6 +27,9 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.builder.MonitorBasedCancelIndicator;
 import org.eclipse.xtext.builder.builderState.BuilderStateUtil;
@@ -56,6 +59,12 @@ import com.google.common.collect.Sets;
 class DoUpdateImplementation {
 	/** Intended for internal implementations to share logs. */
 	private static final Logger LOGGER = Logger.getLogger(N4JSGenerateImmediatelyBuilderState.class);
+
+	static private final DataCollector dcAstPostprocess;
+	static {
+		DataCollectors.INSTANCE.getOrCreateDataCollector("Build"); // ensure that collector 'Build' exists
+		dcAstPostprocess = DataCollectors.INSTANCE.getOrCreateDataCollector("AstPostprocess", "Build");
+	}
 
 	private final IResourceClusteringPolicy clusteringPolicy;
 	private final IResourceLoader crossLinkingResourceLoader;
@@ -208,13 +217,15 @@ class DoUpdateImplementation {
 	}
 
 	private Delta resolveLinks(URI actualResourceURI, Resource resource) {
-		final IResourceDescription.Manager manager = state
-				.getResourceDescriptionManager(resource, actualResourceURI);
+		final IResourceDescription.Manager manager = state.getResourceDescriptionManager(resource, actualResourceURI);
 		if (manager != null) {
 			try {
 				reportProgress();
 				// Resolve links here!
+				Measurement m = dcAstPostprocess.getMeasurement("AstPostprocess");
 				EcoreUtil2.resolveLazyCrossReferences(resource, cancelMonitor);
+				m.end();
+
 				final IResourceDescription description = manager.getResourceDescription(resource);
 				final IResourceDescription copiedDescription = BuilderStateUtil.create(description);
 				return manager.createDelta(state.getResourceDescription(actualResourceURI), copiedDescription);

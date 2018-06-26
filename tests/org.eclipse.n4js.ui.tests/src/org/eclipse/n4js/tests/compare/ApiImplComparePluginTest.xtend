@@ -36,7 +36,7 @@ import static extension org.eclipse.n4js.tests.util.ProjectTestsUtils.*
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-class ApiImplComparePluginUITest extends AbstractApiImplCompareTest {
+class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 
 	@Inject
 	private ProjectCompareHelper projectCompareHelper;

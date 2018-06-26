@@ -48,7 +48,7 @@ import com.google.inject.Inject;
  * the content with the number of elements in the index . Should be the same.
  */
 @SuppressWarnings("restriction")
-public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
+public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String EXT_LOC = "IDE_1977_ExternalLibs";
 	private static final String PROBANDS = "probands";

@@ -20,11 +20,10 @@ import com.google.inject.Injector;
  * Class for providing RESTful resource instances for their classes.
  */
 public class ResourceProvider {
-
 	private static final Logger LOGGER = Logger.getLogger(ResourceProvider.class);
 
 	@Inject
-	private Injector injector;
+	private Injector injectedInjector;
 
 	/**
 	 * Creates a new resource instance given with the resource class.
@@ -35,7 +34,8 @@ public class ResourceProvider {
 	 */
 	public BaseResource createResource(final Class<? extends BaseResource> clazz) {
 		try {
-			final BaseResource resource = clazz.newInstance();
+			BaseResource resource = clazz.newInstance();
+			Injector injector = injectedInjector;
 			injector.injectMembers(resource);
 			return resource;
 		} catch (final Exception e) {

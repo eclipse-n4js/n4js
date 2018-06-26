@@ -68,6 +68,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetProjectNameFilterWizard;
 import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.InjectorCollector;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.utils.process.OutputStreamPrinterThreadProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
@@ -135,6 +136,7 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSModel.class).to(N4JSEclipseModel.class);
 		binder.bind(N4JSEclipseModel.class);
 		binder.bind(MarkerCreator.class);
+		binder.bind(WildcardPathFilterHelper.class);
 
 		binder.bind(ExternalLibraryWorkspace.class).to(EclipseExternalLibraryWorkspace.class);
 		binder.bind(EclipseExternalLibraryWorkspace.class);
