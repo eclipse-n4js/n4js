@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.contentassist
 
 import com.google.common.base.Predicate
+import com.google.common.base.Stopwatch
 import com.google.inject.Inject
 import com.google.inject.Provider
 import org.eclipse.emf.ecore.EObject
@@ -24,8 +25,14 @@ import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
+import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TMemberWithAccessModifier
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator
 import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal
 import org.eclipse.swt.graphics.Image
@@ -51,16 +58,19 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
-	ImportsAwareReferenceProposalCreator importAwareReferenceProposalCreator
+	private ImportsAwareReferenceProposalCreator importAwareReferenceProposalCreator
 
 	@Inject
-	IQualifiedNameProvider qualifiedNameProvider
+	private IQualifiedNameProvider qualifiedNameProvider
 
 	@Inject
-	IQualifiedNameConverter qualifiedNameConverter
+	private IQualifiedNameConverter qualifiedNameConverter
 
 	@Inject
 	private N4JSGrammarAccess n4jsGrammarAccess;
+
+	@Inject
+	private N4JSLabelProvider labelProvider;
 
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
@@ -72,7 +82,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	override protected lookupCrossReference(CrossReference crossReference, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
+		val sw = Stopwatch.createStarted;
 		lookupCrossReference(crossReference, contentAssistContext, acceptor, new N4JSCandidateFilter());
+		println("time = " + sw.stop);
 	}
 
 	override protected void lookupCrossReference(CrossReference crossReference,
@@ -227,8 +239,27 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	}
 
 	override protected getImage(IEObjectDescription description) {
-		val clazz = description.EClass
-		return super.getImage(EcoreUtil.create(clazz))
+		val clazz = description.EClass;
+		val type = EcoreUtil.create(clazz);
+		if (type instanceof TClass) {
+			type.declaredFinal = N4JSResourceDescriptionStrategy.getFinal(description);
+			type.declaredAbstract = N4JSResourceDescriptionStrategy.getAbstract(description);
+		}
+		if (type instanceof TExportableElement) {
+			type.exportedName = if (N4JSResourceDescriptionStrategy.getExported(description)) " " else null;
+		}
+		if (type instanceof DeclaredTypeWithAccessModifier) {
+			type.declaredTypeAccessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(description);
+		}
+		if (type instanceof TFunction) {
+			type.declaredTypeAccessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(description);
+		}
+		if (type instanceof TMemberWithAccessModifier) {
+			type.declaredFinal = N4JSResourceDescriptionStrategy.getFinal(description);
+			type.declaredMemberAccessModifier = N4JSResourceDescriptionStrategy.getMemberAccessModifier(description);
+		}
+		val image = labelProvider.getImage(type);
+		return image;
 	}
 
 	/**

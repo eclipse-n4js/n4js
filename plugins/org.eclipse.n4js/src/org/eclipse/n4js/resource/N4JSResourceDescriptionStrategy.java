@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
+import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -47,55 +48,62 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * Main module has different shadowing rules in the scoping. Note: Only {@link IEObjectDescription object
 	 * descriptions} representing a {@link TModule} have this user data.
 	 */
-	public static final String MAIN_MODULE_KEY = "MAIN_MODULE_KEY";
-	private static final boolean MAIN_MODULE_KEY_DEFAULT = false;
+	public static final String MAIN_MODULE_KEY = "MAIN_MODULE";
+	private static final boolean MAIN_MODULE_DEFAULT = false;
 
 	/**
 	 * The user data key for the type access modifier - used to compute visibility without creating a resource just from
 	 * the proxy in the index.
 	 */
-	private static final String ACCESS_MODIFIER_KEY = "ACCESS_MODIFIER_KEY";
-	private static final TypeAccessModifier ACCESS_MODIFIER_KEY_DEFAULT = TypeAccessModifier.PUBLIC;
+	private static final String TYPE_ACCESS_MODIFIER_KEY = "TYPE_ACCESS_MODIFIER";
+	private static final TypeAccessModifier TYPE_ACCESS_MODIFIER_DEFAULT = TypeAccessModifier.PUBLIC;
+
+	/**
+	 * The user data key for the member access modifier - used to compute visibility without creating a resource just
+	 * from the proxy in the index.
+	 */
+	private static final String MEMBER_ACCESS_MODIFIER_KEY = "MEMBER_ACCESS_MODIFIER";
+	private static final MemberAccessModifier MEMBER_ACCESS_MODIFIER_DEFAULT = MemberAccessModifier.PUBLIC;
 
 	/**
 	 * User data to store the {@link TClass#isFinal() final} property of a {@link TClass} in the index without resolving
 	 * the actual proxy. Used by N4JS type search. Note: Only {@link IEObjectDescription object description}s
 	 * representing a {@link TClass} has this user data.
 	 */
-	public static final String FINAL_KEY = "FINAL_KEY";
-	private static final boolean FINAL_KEY_DEFAULT = false;
+	public static final String FINAL_KEY = "FINAL";
+	private static final boolean FINAL_DEFAULT = false;
 
 	/**
 	 * User data to store the {@link TClass#isAbstract() abstract} property of a {@link TClass} in the index without
 	 * resolving the actual proxy. Used by N4JS type search. Note: Only {@link IEObjectDescription object description}s
 	 * representing a {@link TClass} has this user data.
 	 */
-	private static final String ABSTRACT_KEY = "ABSTRACT_KEY";
-	private static final boolean ABSTRACT_KEY_DEFAULT = false;
+	private static final String ABSTRACT_KEY = "ABSTRACT";
+	private static final boolean ABSTRACT_DEFAULT = false;
 
 	/**
 	 * User data telling if a {@link TClass} in the index is a test class, i.e. contains one or more methods annotated
 	 * with &#64;Test, without resolving the actual proxy. Used by test discovery. Note: Only {@link IEObjectDescription
 	 * object description}s representing a {@link TClass} have this user data.
 	 */
-	private static final String TEST_CLASS_KEY = "TEST_CLASS_KEY";
-	private static final boolean TEST_CLASS_KEY_DEFAULT = false;
+	private static final String TEST_CLASS_KEY = "TEST_CLASS";
+	private static final boolean TEST_CLASS_DEFAULT = false;
 
 	/**
 	 * User data to store the {@link TClass#isPolyfill() polyfill} property of a {@link TClass} in the index without
 	 * resolving the actual proxy. Used by N4JS validation. Could also be used to show other icons. Note: Only
 	 * {@link IEObjectDescription object descriptions} representing a {@link TClass} have this user data.
 	 */
-	private static final String POLYFILL_KEY = "POLYFILL_KEY";
-	private static final boolean POLYFILL_KEY_DEFAULT = false;
+	private static final String POLYFILL_KEY = "POLYFILL";
+	private static final boolean POLYFILL_DEFAULT = false;
 
 	/**
 	 * Additional user data for storing the {@link TClass#isExported() exported} property in the index. Used by test
 	 * discovery helper. If the class is not exported this key could be missing, in other words, a class is marked as
 	 * exported if this key has an associated value and the value {@link Boolean#parseBoolean(String)} is {@code true}.
 	 */
-	private static final String EXPORTED_CLASS_KEY = "EXPORTED_CLASS_KEY";
-	private static final boolean EXPORTED_CLASS_KEY_DEFAULT = false;
+	private static final String EXPORTED_CLASS_KEY = "EXPORTED_CLASS";
+	private static final boolean EXPORTED_CLASS_DEFAULT = false;
 
 	/**
 	 * User data to store the {@link TClass#isStaticPolyfill() staticPolyfill} property of a {@link TClass} in the index
@@ -104,8 +112,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * validation. Could also be used to show other icons. Note: Only {@link IEObjectDescription object descriptions}
 	 * representing a {@link TClass} have this user data.
 	 */
-	private static final String STATIC_POLYFILL_KEY = "STATIC_POLYFILL_KEY";
-	private static final boolean STATIC_POLYFILL_KEY_DEFAULT = false;
+	private static final String STATIC_POLYFILL_KEY = "STATIC_POLYFILL";
+	private static final boolean STATIC_POLYFILL_DEFAULT = false;
 
 	/**
 	 * Additional user data for storing the {@link TClass#isExported() exported} property in the index. Used by test
@@ -113,7 +121,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * exported if this key has an associated value and the value {@link Boolean#parseBoolean(String)} is {@code true}.
 	 */
 	private static final String EXPORT_DEFAULT_KEY = "EXPORTED_DEFAULT";
-	private static final boolean EXPORT_DEFAULT_KEY_DEFAULT = false;
+	private static final boolean EXPORT_DEFAULT_DEFAULT = false;
 
 	/**
 	 * Version declared in {@link Versionable} types. Used by content assist to show version information. If this user
@@ -147,7 +155,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	public static boolean getMainModule(IEObjectDescription description) {
 		String userData = description.getUserData(MAIN_MODULE_KEY);
 		if (userData == null) {
-			return MAIN_MODULE_KEY_DEFAULT;
+			return MAIN_MODULE_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
@@ -156,7 +164,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	public static boolean getFinal(IEObjectDescription description) {
 		String userData = description.getUserData(FINAL_KEY);
 		if (userData == null) {
-			return FINAL_KEY_DEFAULT;
+			return FINAL_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
@@ -165,7 +173,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	public static boolean getAbstract(IEObjectDescription description) {
 		String userData = description.getUserData(ABSTRACT_KEY);
 		if (userData == null) {
-			return ABSTRACT_KEY_DEFAULT;
+			return ABSTRACT_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
@@ -174,7 +182,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	public static boolean getTestClass(IEObjectDescription description) {
 		String userData = description.getUserData(TEST_CLASS_KEY);
 		if (userData == null) {
-			return TEST_CLASS_KEY_DEFAULT;
+			return TEST_CLASS_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
@@ -183,7 +191,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	public static boolean getExported(IEObjectDescription description) {
 		String userData = description.getUserData(EXPORTED_CLASS_KEY);
 		if (userData == null) {
-			return EXPORTED_CLASS_KEY_DEFAULT;
+			return EXPORTED_CLASS_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
@@ -192,7 +200,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	public static boolean getPolyfill(IEObjectDescription description) {
 		String userData = description.getUserData(POLYFILL_KEY);
 		if (userData == null) {
-			return POLYFILL_KEY_DEFAULT;
+			return POLYFILL_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
@@ -201,30 +209,43 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	public static boolean getStaticPolyfill(IEObjectDescription description) {
 		String userData = description.getUserData(STATIC_POLYFILL_KEY);
 		if (userData == null) {
-			return STATIC_POLYFILL_KEY_DEFAULT;
+			return STATIC_POLYFILL_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
 
-	/** @return the export default modifier of the given description. */
+	/** @return the export default modifier of the given description. Default return is public. */
 	public static boolean getExportDefault(IEObjectDescription description) {
 		String userData = description.getUserData(EXPORT_DEFAULT_KEY);
 		if (userData == null) {
-			return EXPORT_DEFAULT_KEY_DEFAULT;
+			return EXPORT_DEFAULT_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
 
-	/** @return the access modifier of the given description. */
-	public static TypeAccessModifier getAccessModifier(IEObjectDescription description) {
+	/** @return the type access modifier of the given description. Default return is public. */
+	public static TypeAccessModifier getTypeAccessModifier(IEObjectDescription description) {
 		try {
-			String userData = description.getUserData(ACCESS_MODIFIER_KEY);
+			String userData = description.getUserData(TYPE_ACCESS_MODIFIER_KEY);
 			if (userData == null) {
-				return ACCESS_MODIFIER_KEY_DEFAULT;
+				return TYPE_ACCESS_MODIFIER_DEFAULT;
 			}
 			return TypeAccessModifier.get(Integer.parseInt(userData));
 		} catch (NumberFormatException e) {
-			return ACCESS_MODIFIER_KEY_DEFAULT;
+			return TYPE_ACCESS_MODIFIER_DEFAULT;
+		}
+	}
+
+	/** @return the member access modifier of the given description. */
+	public static MemberAccessModifier getMemberAccessModifier(IEObjectDescription description) {
+		try {
+			String userData = description.getUserData(MEMBER_ACCESS_MODIFIER_KEY);
+			if (userData == null) {
+				return MEMBER_ACCESS_MODIFIER_DEFAULT;
+			}
+			return MemberAccessModifier.get(Integer.parseInt(userData));
+		} catch (NumberFormatException e) {
+			return MEMBER_ACCESS_MODIFIER_DEFAULT;
 		}
 	}
 
@@ -314,8 +335,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 */
 	protected void addAccessModifierUserData(Map<String, String> userData, TypeAccessModifier typeAccessModifier) {
 		// don't write public visibility to the index since it is treated as the default
-		if (ACCESS_MODIFIER_KEY_DEFAULT != typeAccessModifier) {
-			userData.put(ACCESS_MODIFIER_KEY, String.valueOf(typeAccessModifier.getValue()));
+		if (TYPE_ACCESS_MODIFIER_DEFAULT != typeAccessModifier) {
+			userData.put(TYPE_ACCESS_MODIFIER_KEY, String.valueOf(typeAccessModifier.getValue()));
 		}
 	}
 
@@ -333,13 +354,13 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
 	 * of <code>null</code> (currently all non-exported variables) will be ignored.
 	 */
-	private void internalCreateEObjectDescription(TVariable type, IAcceptor<IEObjectDescription> acceptor) {
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
+	private void internalCreateEObjectDescription(TVariable variable, IAcceptor<IEObjectDescription> acceptor) {
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(variable);
 		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
 			Map<String, String> userData = new HashMap<>();
-			addAccessModifierUserData(userData, type.getTypeAccessModifier());
+			addAccessModifierUserData(userData, variable.getTypeAccessModifier());
 
-			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type, userData);
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, variable, userData);
 			acceptor.accept(eod);
 		}
 	}
@@ -354,19 +375,19 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * @returns An immutable user-data map
 	 */
 	private void addClassUserData(final Map<String, String> userData, TClass tClass) {
-		if (tClass.isExported() != EXPORTED_CLASS_KEY_DEFAULT) {
+		if (tClass.isExported() != EXPORTED_CLASS_DEFAULT) {
 			userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClass.isExported()));
 		}
-		if (tClass.isAbstract() != ABSTRACT_KEY_DEFAULT) {
+		if (tClass.isAbstract() != ABSTRACT_DEFAULT) {
 			userData.put(ABSTRACT_KEY, Boolean.toString(tClass.isAbstract()));
 		}
-		if (tClass.isFinal() != FINAL_KEY_DEFAULT) {
+		if (tClass.isFinal() != FINAL_DEFAULT) {
 			userData.put(FINAL_KEY, Boolean.toString(tClass.isFinal()));
 		}
-		if (tClass.isPolyfill() != POLYFILL_KEY_DEFAULT) {
+		if (tClass.isPolyfill() != POLYFILL_DEFAULT) {
 			userData.put(POLYFILL_KEY, Boolean.toString(tClass.isPolyfill()));
 		}
-		if (tClass.isStaticPolyfill() != STATIC_POLYFILL_KEY_DEFAULT) {
+		if (tClass.isStaticPolyfill() != STATIC_POLYFILL_DEFAULT) {
 			userData.put(STATIC_POLYFILL_KEY, Boolean.toString(tClass.isStaticPolyfill()));
 		}
 
@@ -379,7 +400,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				}
 			}
 		}
-		if (hasTestMethod != TEST_CLASS_KEY_DEFAULT) {
+		if (hasTestMethod != TEST_CLASS_DEFAULT) {
 			userData.put(TEST_CLASS_KEY, Boolean.toString(hasTestMethod));
 		}
 	}

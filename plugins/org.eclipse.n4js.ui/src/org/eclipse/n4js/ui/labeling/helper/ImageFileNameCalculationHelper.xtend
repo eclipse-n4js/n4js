@@ -209,7 +209,7 @@ class ImageFileNameCalculationHelper {
 	}
 
 	def private TypeAccessModifier tryGetAccessModifier(IEObjectDescription description) {
-		return N4JSResourceDescriptionStrategy.getAccessModifier(description);
+		return N4JSResourceDescriptionStrategy.getTypeAccessModifier(description);
 	}
 
 	// fallback
