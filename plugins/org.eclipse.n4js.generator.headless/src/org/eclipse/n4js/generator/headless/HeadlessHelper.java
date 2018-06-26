@@ -306,9 +306,15 @@ public class HeadlessHelper {
 
 	}
 
+	/**
+	 * Returns a stream of {@link File} handles for all N4JS project locations that can be found by scanning the given list
+	 * of {@code absProjectRoots}.
+	 *
+	 * Never includes the target platform install location (cf.
+	 * {@link TargetPlatformInstallLocationProvider#getTargetPlatformFileLocation()}).
+	 */
 	private Stream<File> getProjectStream(List<File> absProjectRoots) {
-		final java.net.URI tpLocation = targetPlatformInstallLocationProvider
-				.getTargetPlatformInstallLocation();
+		final File targetPlatformLocation = getTargetPlatformInstallLocation();
 
 		return absProjectRoots.stream()
 				.filter(f -> f.exists())
@@ -316,8 +322,21 @@ public class HeadlessHelper {
 				.flatMap(root -> Arrays.asList(root.listFiles(File::isDirectory)).stream())
 				// only those with package.json file
 				.filter(dir -> new File(dir, IN4JSProject.PACKAGE_JSON).isFile())
-				// do not include target platform install location as project
-				.filter(dir -> !dir.equals(new File(tpLocation)));
+				// do not include target platform install location as project (if install location is configured)
+				.filter(dir -> targetPlatformLocation == null || !dir.equals(targetPlatformLocation));
+	}
+
+	/**
+	 * Returns a {@link File} handle for the target platform install location or {@code null} if no such location is
+	 * configured.
+	 */
+	private File getTargetPlatformInstallLocation() {
+		final java.net.URI targetPlatformLocation = targetPlatformInstallLocationProvider
+				.getTargetPlatformInstallLocation();
+		if (null == targetPlatformLocation) {
+			return null;
+		}
+		return new File(targetPlatformLocation);
 	}
 
 	private static URI fileToURI(File file) {

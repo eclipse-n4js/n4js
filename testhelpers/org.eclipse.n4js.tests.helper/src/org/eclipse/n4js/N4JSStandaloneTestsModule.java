@@ -11,9 +11,6 @@
 package org.eclipse.n4js;
 
 import org.eclipse.n4js.N4JSInjectorProvider.BaseTestModule;
-import org.eclipse.n4js.internal.AutoDiscoveryFileBasedWorkspace;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.xpect.setup.XpectGuiceModule;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
@@ -57,18 +54,6 @@ public class N4JSStandaloneTestsModule extends BaseTestModule {
 	@SingletonBinding
 	public Class<? extends ResourceHelper> bindResourceHelper() {
 		return ResourceHelper.class;
-	}
-
-	/** */
-	@SingletonBinding
-	public Class<? extends InternalN4JSWorkspace> bindInternalN4JSWorkspace() {
-		return AutoDiscoveryFileBasedWorkspace.class;
-	}
-
-	/** */
-	@SingletonBinding
-	public Class<? extends FileBasedWorkspace> bindFileBasedWorkspace() {
-		return AutoDiscoveryFileBasedWorkspace.class;
 	}
 
 	/** */
