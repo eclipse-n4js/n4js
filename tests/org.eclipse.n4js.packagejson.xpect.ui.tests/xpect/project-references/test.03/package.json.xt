@@ -46,9 +46,9 @@
 	"name": "test.03",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		// XPECT warnings --> "Project test.data.re.project type of runtime environment cannot be declared among the dependencies." at ""test.data.re.project": "*""
+		// XPECT warnings --> "Project test.data.re.project type of runtime environment cannot be declared among the dependencies or devDependencies." at ""test.data.re.project": "*""
 		"test.data.re.project": "*",
-		// XPECT warnings --> "Project test.data.test.project.one type of test cannot be declared among the dependencies." at ""test.data.test.project.one": "*""
+		// XPECT warnings --> "Project test.data.test.project.one type of test cannot be declared among the dependencies or devDependencies." at ""test.data.test.project.one": "*""
 		"test.data.test.project.one": "*",
 		
 		"test.data.rl.project.two": "*",

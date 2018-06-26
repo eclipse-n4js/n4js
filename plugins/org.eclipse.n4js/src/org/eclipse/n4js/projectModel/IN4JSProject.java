@@ -46,11 +46,6 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	public final static String PACKAGE_JSON = "package.json";
 
 	/**
-	 * The name of the manifest file
-	 */
-	public final static String N4MF_MANIFEST = "manifest.n4mf";
-
-	/**
 	 * Returns the project type of the project or null, if type is not available
 	 */
 	ProjectType getProjectType();

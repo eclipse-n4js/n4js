@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.operation.ModalContext;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.ui.containers.NfarStorageMapper;
 import org.eclipse.n4js.ui.export.AbstractExportOperation;
 import org.eclipse.n4js.ui.export.N4ExportMessages;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
@@ -94,7 +94,7 @@ public class NFARExportOperation extends AbstractExportOperation {
 			}
 		}
 		// FIXME delete entire class
-		exportResource(project.getLocation().appendSegment(IN4JSProject.N4MF_MANIFEST), false);
+		exportResource(project.getLocation().appendSegment(NfarStorageMapper.N4MF_MANIFEST), false);
 	}
 
 	private void initialize() throws IOException {

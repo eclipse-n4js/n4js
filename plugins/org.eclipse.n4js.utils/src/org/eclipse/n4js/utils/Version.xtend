@@ -183,6 +183,11 @@ class Version implements Comparable<Version> {
 			return result;
 		}
 
+		result = nullSafeCompare(qualifier, o.qualifier);
+		if (0 !== result) {
+			return result;
+		}
+
 		return 0; // TODO consider qualifier once we support versions, see Precedence :: https://semver.org/#spec-item-11
 	}
 
@@ -193,4 +198,15 @@ class Version implements Comparable<Version> {
 		return '''«major».«minor».«micro»«IF !qualifier.nullOrEmpty»-«qualifier»«ENDIF»''';
 	}
 
+	def private int nullSafeCompare(String l, String r) {
+		return if (l !== null && r === null) {
+			-1
+		} else if (l === null && r !== null) {
+			1
+		} else if (l !== null && r !== null) {
+			l.compareTo(r)
+		} else {
+			0
+		};		
+	}
 }

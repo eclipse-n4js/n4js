@@ -436,11 +436,11 @@ public class ProjectDescriptionHelper {
 				target.setProjectVersion(parseVersion(asStringOrNull(value)));
 				break;
 			case PROP__DEPENDENCIES:
-				convertDependencies(target, asNameValuePairsOrEmpty(value));
+				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
 				break;
 			case PROP__DEV_DEPENDENCIES:
 				// TODO consider separating normal from dev deps internally
-				convertDependencies(target, asNameValuePairsOrEmpty(value));
+				convertDependencies(target, asNameValuePairsOrEmpty(value), true);
 				break;
 			case PROP__MAIN:
 				// need to handle this value later after all source containers have been read (see below)
@@ -543,15 +543,21 @@ public class ProjectDescriptionHelper {
 		}
 	}
 
-	private void convertDependencies(ProjectDescription target, List<NameValuePair> depPairs) {
+	private void convertDependencies(ProjectDescription target, List<NameValuePair> depPairs, boolean avoidDuplicates) {
+		Set<String> existingProjectIds = avoidDuplicates
+				? target.getProjectDependencies().stream().map(dep -> dep.getProjectId()).collect(Collectors.toSet())
+				: Collections.emptySet();
 		for (NameValuePair pair : depPairs) {
-			String name = pair.getName();
-			JSONValue value = pair.getValue();
-			String valueStr = asStringOrNull(value);
-			VersionConstraint versionConstraint = ProjectDescriptionUtils.parseVersionConstraint(valueStr);
-			if (name != null) {
+			String projectId = pair.getName();
+			if (projectId != null) {
+				if (avoidDuplicates && !existingProjectIds.add(projectId)) {
+					continue;
+				}
+				JSONValue value = pair.getValue();
+				String valueStr = asStringOrNull(value);
+				VersionConstraint versionConstraint = ProjectDescriptionUtils.parseVersionConstraint(valueStr);
 				ProjectDependency dep = N4mfFactory.eINSTANCE.createProjectDependency();
-				dep.setProjectId(name);
+				dep.setProjectId(projectId);
 				if ("*".equals(valueStr) || "latest".equals(valueStr)) {
 					dep.setVersionConstraint(null); // FIXME
 				} else {
