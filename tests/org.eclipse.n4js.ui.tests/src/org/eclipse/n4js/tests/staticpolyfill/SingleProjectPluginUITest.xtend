@@ -18,6 +18,7 @@ import org.junit.Test
 
 import static org.eclipse.n4js.tests.staticpolyfill.SingleProject_Probands.*
 import static org.junit.Assert.*
+import org.eclipse.n4js.tests.util.EclipseUIUtils
 
 /**
  */
@@ -58,7 +59,7 @@ class SingleProjectPluginUITest extends AbstractStaticPolyfillBuilderTest {
 		// 1. invalid code --> will remove compiled,
 
 		// open editors of test files
-		val IWorkbenchPage page = getActivePage();
+		val IWorkbenchPage page = EclipseUIUtils.getActivePage()
 		val XtextEditor fileCFillingXtextEditor = openAndGetXtextEditor(cFilling, page);
 
 		setDocumentContent("invalidating the filling", cFilling, fileCFillingXtextEditor,invalidContent_filling)

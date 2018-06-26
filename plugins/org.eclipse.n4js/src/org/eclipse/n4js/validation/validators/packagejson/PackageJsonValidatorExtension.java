@@ -592,95 +592,16 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 	/** Validates the given {@link ValidationModuleFilterSpecifier}. */
 	private void checkModuleFilterSpecifier(ValidationModuleFilterSpecifier specifier) {
-		if (specifier != null && holdsIsValidModuleFilterSpecifier(specifier)) {
-			holdsModuleFilterSpecifierHasMatches(specifier);
-		}
-	}
-
-	private boolean holdsIsValidModuleFilterSpecifier(ValidationModuleFilterSpecifier specifier) {
 		final Set<String> sourceContainerPaths = getAllSourceContainerPaths();
 
-		// make sure moduleFilterSpecifier.sourceContainerPath has been declared as source container
-		if (specifier.sourceContainerPath != null &&
-				!sourceContainerPaths.contains(specifier.sourceContainerPath)) {
-			addIssue(IssueCodes.getMessageForPKGJ_SRC_IN_IN_IS_NO_DECLARED_SOURCE(specifier.sourceContainerPath),
-					specifier.astRepresentation, IssueCodes.PKGJ_SRC_IN_IN_IS_NO_DECLARED_SOURCE);
-			return false;
-		}
-
-		// make sure moduleFilterSpecifier does not use invalid wildcard patterns
-		if (specifier.filter != null) {
-			final String wrongWildcardPattern = "***";
-			if (specifier.filter.contains(wrongWildcardPattern)) {
-				addIssue(IssueCodes.getMessageForPKGJ_INVALID_WILDCARD(wrongWildcardPattern),
-						specifier.astRepresentation,
-						IssueCodes.PKGJ_INVALID_WILDCARD);
-				return false;
-			}
-			final String wrongRelativeNavigation = "../";
-
-			if (specifier.filter.contains(wrongRelativeNavigation)) {
-				addIssue(IssueCodes.getMessageForPKGJ_NO_RELATIVE_NAVIGATION(),
-						specifier.astRepresentation,
-						IssueCodes.PKGJ_NO_RELATIVE_NAVIGATION);
-				return false;
+		if (specifier != null) {
+			// make sure moduleFilterSpecifier.sourceContainerPath has been declared as source container
+			if (specifier.sourceContainerPath != null &&
+					!sourceContainerPaths.contains(specifier.sourceContainerPath)) {
+				addIssue(IssueCodes.getMessageForPKGJ_SRC_IN_IN_IS_NO_DECLARED_SOURCE(specifier.sourceContainerPath),
+						specifier.astRepresentation, IssueCodes.PKGJ_SRC_IN_IN_IS_NO_DECLARED_SOURCE);
 			}
 		}
-		return true;
-	}
-
-	/**
-	 * Checks whether the given module filter {@code specifier} matches any existing modules/files and add an
-	 * appropriate issue otherwise.
-	 */
-	private boolean holdsModuleFilterSpecifierHasMatches(ValidationModuleFilterSpecifier specifier) {
-		final URI uri = specifier.astRepresentation.eResource().getURI();
-		final Path absoluteProjectPath = getAbsoluteProjectPath(uri);
-
-		// first determine the set of source container paths to resolve the filter against (e.g. all paths or a
-		// specifier path)
-		Collection<String> sourceContainerPathsToCheck;
-		if (specifier.sourceContainerPath != null) {
-			sourceContainerPathsToCheck = Arrays.asList(specifier.sourceContainerPath);
-		} else {
-			sourceContainerPathsToCheck = getAllSourceContainerPaths();
-		}
-
-		final boolean hasAnyMatches = !sourceContainerPathsToCheck.stream()
-				.filter(sourceContainerPath -> {
-					final String basePathToCheck = absoluteProjectPath.toString() + File.separator
-							+ sourceContainerPath;
-					final String pathsToFind = File.separator + specifier.filter;
-					final List<String> results = WildcardPathFilterUtils.collectPathsByWildcardPath(basePathToCheck,
-							pathsToFind);
-
-					// check whether this module filter matches N4JS modules/files
-					if (results.stream().filter(r -> r.endsWith(N4JSGlobals.N4JS_FILE_EXTENSION)
-							|| r.endsWith(N4JSGlobals.N4JS_FILE_EXTENSION)).findAny().isPresent()) {
-						handleN4JSModuleMatchForModuleFilter(specifier);
-					}
-					return !results.isEmpty();
-				}).findAny().isPresent();
-
-		if (hasAnyMatches) {
-			addIssue(IssueCodes.getMessageForPKGJ_MODULE_FILTER_DOES_NOT_MATCH(specifier.filter),
-					specifier.astRepresentation, IssueCodes.PKGJ_MODULE_FILTER_DOES_NOT_MATCH);
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Adds an issue to the given {@link ValidationModuleFilterSpecifier} which indicates that filters of such type must
-	 * never match N4JS modules/resources assuming they do in the validated project.
-	 */
-	private void handleN4JSModuleMatchForModuleFilter(ValidationModuleFilterSpecifier specifier) {
-		addIssue(
-				IssueCodes.getMessageForPKGJ_FILTER_NO_N4JS_MATCH(
-						ProjectDescriptionUtils.getModuleFilterTypeRepresentation(specifier.filterType)),
-				specifier.astRepresentation,
-				IssueCodes.PKGJ_FILTER_NO_N4JS_MATCH);
 	}
 
 	/**

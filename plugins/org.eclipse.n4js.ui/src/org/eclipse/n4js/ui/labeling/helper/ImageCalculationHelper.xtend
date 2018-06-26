@@ -10,8 +10,11 @@
  */
 package org.eclipse.n4js.ui.labeling.helper
 
-import com.google.common.base.Strings
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.jface.resource.ImageDescriptor
+import org.eclipse.jface.viewers.IDecoration
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -20,7 +23,7 @@ import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
-import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -28,22 +31,17 @@ import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
-import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.jface.viewers.IDecoration
+import org.eclipse.n4js.ui.labeling.EObjectWithContext
+import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
-
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.*
-import org.eclipse.jface.resource.ImageDescriptor
-import java.util.List
-import org.eclipse.n4js.ui.labeling.EObjectWithContext
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -303,10 +301,10 @@ class ImageCalculationHelper {
 				val imageDesc = createSimpleImageDescriptor(object.imageFileName)
 				if (TypesPackage.eINSTANCE.TClass === object.EClass) {
 					// an abstract class cannot be set to final (with annotation @Final)
-					if (tryGetAbstract(object)) {
+					if (N4JSResourceDescriptionStrategy.getAbstract(object)) {
 						return createDecorationOverlayIcon(imageDesc, createAbstractImageDecorator, IDecoration.TOP_RIGHT)
 					}
-					if (tryGetFinal(object)) {
+					if (N4JSResourceDescriptionStrategy.getFinal(object)) {
 						return createDecorationOverlayIcon(imageDesc, createFinalImageDecorator, IDecoration.TOP_RIGHT)
 					}
 				}
@@ -314,20 +312,6 @@ class ImageCalculationHelper {
 			}
 		}
 		return createValidationAwareImageDescriptor(object, getImageFileName(object))
-	}
-
-	def private boolean tryGetFinal(IEObjectDescription description) {
-		if (TypesPackage.eINSTANCE.TClass === description.EClass) {
-			return Boolean.parseBoolean(Strings.nullToEmpty(description.getUserData(FINAL_KEY)));
-		}
-		return false;
-	}
-
-	def private boolean tryGetAbstract(IEObjectDescription description) {
-		if (TypesPackage.eINSTANCE.TClass === description.EClass) {
-			return Boolean.parseBoolean(Strings.nullToEmpty(description.getUserData(ABSTRACT_KEY)));
-		}
-		return false;
 	}
 
 	// fallback

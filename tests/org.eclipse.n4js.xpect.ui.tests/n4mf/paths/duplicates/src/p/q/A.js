@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2016 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,18 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dirtystate;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+{
+	function funA() {
+	}
+}
 
-/**
- */
-@RunWith(Suite.class)
-@SuiteClasses({
-		BuilderParticipantPluginTest.class,
-		BuilderParticipantPluginUITest.class })
-public class AllTests {
-	// empty
+import B from "p/juergensHacks/B"
+
+export public class A {
+	B b;
 }

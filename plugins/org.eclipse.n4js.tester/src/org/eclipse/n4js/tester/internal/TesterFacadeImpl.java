@@ -10,19 +10,19 @@
  */
 package org.eclipse.n4js.tester.internal;
 
+import static java.util.Collections.singletonMap;
 import static org.eclipse.n4js.tester.TesterModuleDefaults.HTTP_SERVER_PORT_KEY;
 import static org.eclipse.n4js.tester.server.HttpServerManager.HTTP_PORT;
-import static java.util.Collections.singletonMap;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import org.eclipse.n4js.tester.TesterFacade;
 import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
 import org.eclipse.n4js.tester.server.HttpServerManager;
 import org.eclipse.n4js.tester.server.JettyManager;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /**
  * Facade implementation for setting up the infrastructure for a test session.

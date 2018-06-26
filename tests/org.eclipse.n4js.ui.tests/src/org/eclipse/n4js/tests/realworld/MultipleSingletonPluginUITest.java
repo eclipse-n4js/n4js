@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.realworld;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -55,7 +56,7 @@ import com.google.inject.TypeLiteral;
  * Note also that singleton classes that are never bound explicitly (meaning in none of the modules), are not checked in
  * this test.
  */
-public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest {
+public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTest {
 
 	@Inject
 	ISharedStateContributionRegistry sharedRegistry;
@@ -88,10 +89,16 @@ public class MultipleSingletonPluginTest extends AbstractBuilderParticipantTest 
 		ProjectTestsUtils.importProject(new File("probands"), "ListBase");
 		IResourcesSetupUtil.waitForBuild();
 
+		@SuppressWarnings("unused")
+		TesterUiActivator testerUiActivator = new TesterUiActivator(); // force the TesterUI and Tester bundles to start
+
 		Multimap<Class<?>, Injector> singletonInstances = HashMultimap.create();
 
 		Map<Injector, String> injectors = getAllInjectors();
-		for (Injector injector : injectors.keySet()) {
+		for (Map.Entry<Injector, String> injectorAndName : injectors.entrySet()) {
+			Injector injector = injectorAndName.getKey();
+			String name = injectorAndName.getValue();
+			assertTrue("Injector '" + name + "' is null.", injector != null);
 			getN4JSSingletonsOfInjector(injector, singletonInstances);
 		}
 
