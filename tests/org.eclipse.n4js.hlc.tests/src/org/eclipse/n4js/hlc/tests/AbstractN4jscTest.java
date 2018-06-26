@@ -39,7 +39,9 @@ import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.xtext.testing.GlobalRegistries;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -61,6 +63,17 @@ public abstract class AbstractN4jscTest {
 	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
+
+	/**
+	 * Clear global registers to avoid injection-issues (validators, resource factories, etc.)
+	 *
+	 * As a consequence, each test method is responsible for its own injection setup (e.g. directly invoking
+	 * {@link N4jscBase#doMain(String...)}.
+	 */
+	@Before
+	public void saveGlobalRegistries() {
+		GlobalRegistries.clearGlobalRegistries();
+	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.

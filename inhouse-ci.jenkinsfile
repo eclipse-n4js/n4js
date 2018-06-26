@@ -65,9 +65,8 @@ pipeline {
                         def options = '-Dmaven.test.redirectTestOutputToFile=true -Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
                         def profiles = [
                             'buildProduct',
-                            // TODO GH-809 enable tests
                             'execute-plugin-tests',
-                            // 'execute-plugin-ui-tests'
+                            'execute-plugin-ui-tests'
                         ].join(',')
 
                         sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --quiet --update-snapshots clean verify -P${profiles} ${options}"

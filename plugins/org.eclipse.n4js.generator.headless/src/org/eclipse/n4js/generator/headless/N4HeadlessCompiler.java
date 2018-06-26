@@ -27,17 +27,14 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.external.ExternalLibraryUtils;
 import org.eclipse.n4js.generator.GeneratorException;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
-import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -46,9 +43,8 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.utils.Lazy;
 import org.eclipse.n4js.utils.ResourceType;
-import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.collections.Collections2;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.n4js.utils.resources.IBuildSuppressingResourceDescriptionManager;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -70,7 +66,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -79,8 +74,8 @@ import com.google.inject.Provider;
  * Entry for headless compilation.
  *
  * This class has three ways of operation which all map down to a single algorithm implemented in
- * {@link #compileProjects(List, List, List, IssueAcceptor)}. All other compileXXXX methods call this algorithm
- * providing the correct content of the arguments.
+ * {@link #compileProjects(BuildSet, IssueAcceptor)}. All other compileXXXX methods call this algorithm providing the
+ * correct content of the arguments.
  *
  * <ol>
  * <li>compile "single file" takes a (list of) source-file(s) to compile and just compiles these if possible
@@ -109,9 +104,6 @@ public class N4HeadlessCompiler {
 	private FileBasedWorkspace n4jsFileBasedWorkspace;
 
 	@Inject
-	private N4JSModel n4jsModel;
-
-	@Inject
 	private IN4JSCore n4jsCore;
 
 	@Inject
@@ -129,6 +121,9 @@ public class N4HeadlessCompiler {
 
 	@Inject
 	private HeadlessHelper headlessHelper;
+
+	@Inject
+	private BuildSetComputer buildSetComputer;
 
 	/** if set to true should try to compile even if errors are in some projects */
 	private boolean keepOnCompiling = false;
@@ -263,7 +258,7 @@ public class N4HeadlessCompiler {
 		// make absolute, since downstream URI conversion doesn't work if relative directory only.
 		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(searchPaths);
 
-		// Collect all projects in first Level.
+		// collect all projects on the first level.
 		List<File> projectPaths = headlessHelper.collectAllProjectPaths(absProjectPaths);
 
 		compileProjects(searchPaths, projectPaths, Collections.emptyList(), issueAcceptor);
@@ -373,8 +368,8 @@ public class N4HeadlessCompiler {
 	public void cleanProjects(List<File> projectPaths)
 			throws N4JSCompileException {
 		List<URI> projectURIs = convertProjectPathsToProjectURIs(projectPaths);
-		headlessHelper.registerProjectsToFileBasedWorkspace(projectURIs, n4jsFileBasedWorkspace, logger);
-		List<N4JSProject> projectsToClean = getN4JSProjects(projectURIs);
+		headlessHelper.registerProjectsToFileBasedWorkspace(projectURIs, n4jsFileBasedWorkspace);
+		List<N4JSProject> projectsToClean = headlessHelper.getN4JSProjects(projectURIs);
 		projectsToClean.forEach(project -> {
 			cleanProject(project);
 		});
@@ -389,13 +384,12 @@ public class N4HeadlessCompiler {
 	private List<URI> convertProjectPathsToProjectURIs(List<File> projectPaths) throws N4JSCompileException {
 		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(projectPaths);
 		// Convert absolute locations to file URIs.
-		List<URI> projectURIs = createFileURIs(absProjectPaths);
+		List<URI> projectURIs = headlessHelper.createFileURIs(absProjectPaths);
 		return projectURIs;
 	}
 
 	/**
-	 * Compile a list of projects. This method controls the actual build process. All other <code>compile*</code>
-	 * methods are just convenience overloads that delegate to this method.
+	 * Compile a list of projects. This method controls the actual build process.
 	 *
 	 * @param searchPaths
 	 *            where to search for dependent projects.
@@ -414,11 +408,39 @@ public class N4HeadlessCompiler {
 
 		printCompileArguments(searchPaths, projectPaths, singleSourceFiles);
 
-		BuildSet buildSet = collectAndRegisterProjects(searchPaths, projectPaths, singleSourceFiles);
+		final BuildSet buildSet = buildSetComputer.createBuildSet(searchPaths, projectPaths, singleSourceFiles);
+		// register build set projects with workspace before compiling
+		headlessHelper.registerProjects(buildSet, n4jsFileBasedWorkspace);
 
-		List<N4JSProject> allProjects = Collections2.concatUnique(buildSet.discoveredProjects,
-				buildSet.requestedProjects);
-		List<N4JSProject> requestedProjects = buildSet.requestedProjects;
+		compileProjects(buildSet, issueAcceptor);
+	}
+
+	/**
+	 * Compile the given {@link BuildSet}.
+	 *
+	 * @param buildSet
+	 *            the build set to compile
+	 * @throws N4JSCompileException
+	 *             if one or multiple errors occur during compilation
+	 */
+	public void compileProjects(BuildSet buildSet) throws N4JSCompileException {
+		compileProjects(buildSet, new DismissingIssueAcceptor());
+	}
+
+	/**
+	 * Compile the given {@link BuildSet}. This method controls the actual build process. All other
+	 * <code>compile*</code> methods are just convenience overloads that delegate to this method.
+	 *
+	 * @param buildSet
+	 *            the build set to compile
+	 * @param issueAcceptor
+	 *            the issue acceptor that can be used to collect or evaluate the issues occurring during compilation
+	 * @throws N4JSCompileException
+	 *             if one or multiple errors occur during compilation
+	 */
+	public void compileProjects(BuildSet buildSet, IssueAcceptor issueAcceptor) throws N4JSCompileException {
+		Set<N4JSProject> allProjects = buildSet.getAllProjects();
+		Set<N4JSProject> requestedProjects = buildSet.requestedProjects;
 		Predicate<URI> singleSourceFilter = buildSet.resourceFilter;
 
 		configureResourceSetContainerState(allProjects);
@@ -437,136 +459,8 @@ public class N4HeadlessCompiler {
 	 * ===============================================================================================================
 	 */
 
-	/**
-	 * Collects the projects to compile and finds their dependencies in the given search paths and registers them with
-	 * the file-based workspace.
-	 *
-	 * @param searchPaths
-	 *            where to search for dependent projects.
-	 * @param projectPaths
-	 *            the projects to compile. the base folder of each project must be provided.
-	 * @param singleSourceFiles
-	 *            if non-empty limit compilation to the sources files listed here
-	 * @return an instance of {@link BuildSet} containing the collected projects and a filter to apply if single source
-	 *         files were requested to be compiled
-	 * @throws N4JSCompileException
-	 *             if an error occurs while registering the projects
-	 */
-	private BuildSet collectAndRegisterProjects(List<File> searchPaths, List<File> projectPaths,
-			List<File> singleSourceFiles) throws N4JSCompileException {
-
-		// Make absolute, since downstream URI conversion doesn't work if relative dir only.
-		List<File> absSearchPaths = headlessHelper.toAbsoluteFileList(searchPaths);
-		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(projectPaths);
-		List<File> absSingleSourceFiles = headlessHelper.toAbsoluteFileList(singleSourceFiles);
-
-		// Discover projects in search paths.
-		List<File> discoveredProjectLocations = headlessHelper.collectAllProjectPaths(absSearchPaths);
-
-		// Discover projects for single source files.
-		List<File> singleSourceProjectLocations = findProjectsForSingleFiles(absSingleSourceFiles);
-
-		// Register single-source projects as to be compiled as well.
-		List<File> absRequestedProjectLocations = Collections2.concatUnique(absProjectPaths,
-				singleSourceProjectLocations);
-
-		// Convert absolute locations to file URIs.
-		List<URI> requestedProjectURIs = createFileURIs(absRequestedProjectLocations);
-		List<URI> discoveredProjectURIs = createFileURIs(discoveredProjectLocations);
-
-		// Obtain the projects and store them.
-		List<N4JSProject> requestedProjects = getN4JSProjects(requestedProjectURIs);
-		List<N4JSProject> discoveredProjects = getN4JSProjects(discoveredProjectURIs);
-
-		// Register all projects with the file based workspace.
-		headlessHelper.registerProjectsToFileBasedWorkspace(
-				Iterables.concat(requestedProjectURIs, discoveredProjectURIs), n4jsFileBasedWorkspace, logger);
-
-		// Create a filter that applies only to the given single source files if any were requested to be compiled.
-		Predicate<URI> resourceFilter;
-		if (absSingleSourceFiles.isEmpty()) {
-			resourceFilter = u -> true;
-		} else {
-			Set<URI> singleSourceURIs = new HashSet<>(createFileURIs(absSingleSourceFiles));
-			resourceFilter = u -> singleSourceURIs.contains(u);
-		}
-
-		return new BuildSet(requestedProjects, discoveredProjects, resourceFilter);
-	}
-
-	/**
-	 * Collects the projects containing the given single source files.
-	 *
-	 * @param sourceFiles
-	 *            the list of single source files
-	 * @return list of N4JS project locations
-	 * @throws N4JSCompileException
-	 *             if no project cannot be found for one of the given files
-	 */
-	private List<File> findProjectsForSingleFiles(List<File> sourceFiles)
-			throws N4JSCompileException {
-
-		Set<URI> result = Sets.newLinkedHashSet();
-
-		for (File sourceFile : sourceFiles) {
-			URI sourceFileURI = URI.createFileURI(sourceFile.toString());
-			URI projectURI = n4jsFileBasedWorkspace.findProjectWith(sourceFileURI);
-			if (projectURI == null) {
-				throw new N4JSCompileException("No project for file '" + sourceFile.toString() + "' found.");
-			}
-			result.add(projectURI);
-		}
-
-		// convert back to Files:
-		return result.stream().map(URIUtils::normalize).map(u -> new File(u.toFileString()))
-				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Convert the given list of files to a list of URIs. Each file is converted to a URI by means of
-	 * {@link URI#createFileURI(String)}.
-	 *
-	 * @param files
-	 *            the files to convert
-	 * @return the list of URIs
-	 */
-	private List<URI> createFileURIs(List<File> files) {
-		return files.stream().map(f -> URI.createFileURI(f.toString())).map(URIUtils::normalize)
-				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Returns a list of {@link N4JSProject} instances representing all N4JS projects at the given locations.
-	 *
-	 * Excludes projects that have been installed by the library manager which do not need to be built (cf.
-	 * {@link #isProjectToBeBuilt(IN4JSProject)}).
-	 *
-	 * @param projectURIs
-	 *            the URIs to process
-	 * @return a list of projects at the given URIs
-	 */
-	private List<N4JSProject> getN4JSProjects(List<URI> projectURIs) {
-		return projectURIs.stream().map(URIUtils::normalize)
-				.map(u -> n4jsModel.getN4JSProject(u))
-				.filter(p -> isProjectToBeBuilt(p))
-				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Indicates whether the given {@code project} is to be built by the headless compiler.
-	 *
-	 * In particular, this excludes transitive non-N4JS dependencies that have been installed by npm.
-	 *
-	 */
-	private static boolean isProjectToBeBuilt(IN4JSProject project) {
-		if (project.isExternal()) {
-			return ExternalLibraryUtils.isExternalProjectDirectory(project.getLocationPath().toFile());
-		}
-		return true;
-	}
-
 	// TODO GH-793 processing broken projects causes exceptions
-	private void configureResourceSetContainerState(final List<N4JSProject> allProjects) {
+	private void configureResourceSetContainerState(final Set<N4JSProject> allProjects) {
 		// a container is a project.
 		List<String> containers = new LinkedList<>();
 		BiMap<String, N4JSProject> container2project = HashBiMap.create();
@@ -606,8 +500,8 @@ public class N4HeadlessCompiler {
 	 *            only the projects which were requested to be compiled
 	 * @return sorted projects: earlier projects don't depend on later
 	 */
-	private static List<MarkedProject> computeBuildOrder(List<? extends IN4JSProject> allProjectsToCompile,
-			List<? extends IN4JSProject> requestedProjects) {
+	private List<MarkedProject> computeBuildOrder(Collection<? extends IN4JSProject> allProjectsToCompile,
+			Collection<? extends IN4JSProject> requestedProjects) {
 
 		// This algorithm only operates on the following map of marked projects.
 		Map<IN4JSProject, MarkedProject> markedProjects = new HashMap<>();
@@ -679,7 +573,7 @@ public class N4HeadlessCompiler {
 	 * @param independent
 	 *            projects without dependencies
 	 */
-	private static void computeDependencyGraph(Set<IN4JSProject> projects,
+	private void computeDependencyGraph(Set<IN4JSProject> projects,
 			Multimap<IN4JSProject, IN4JSProject> pendencies,
 			Multimap<IN4JSProject, IN4JSProject> dependencies, Collection<IN4JSProject> independent) {
 
@@ -708,7 +602,7 @@ public class N4HeadlessCompiler {
 	 * @param independent
 	 *            projects without dependencies
 	 */
-	private static void computeDependencyGraph(IN4JSProject project, Set<IN4JSProject> visitedProjects,
+	private void computeDependencyGraph(IN4JSProject project, Set<IN4JSProject> visitedProjects,
 			Multimap<IN4JSProject, IN4JSProject> pendencies,
 			Multimap<IN4JSProject, IN4JSProject> dependencies, Collection<IN4JSProject> independent) {
 
@@ -717,10 +611,11 @@ public class N4HeadlessCompiler {
 
 		ImmutableList<? extends IN4JSProject> pendingProjects = project.getDependenciesAndImplementedApis();
 
-		// Do not process dependencies of projects that need not to be built (e.g. transitive non-N4JS npm dependencies).
+		// Do not process dependencies of projects that need not to be built (e.g. transitive non-N4JS npm
+		// dependencies).
 		// In the context of the headless compiler, we regard such projects as independent.
 		// TODO Revisit once GH-821 is started
-		if (!isProjectToBeBuilt(project)) {
+		if (!headlessHelper.isProjectToBeBuilt(project)) {
 			independent.add(project);
 			return;
 		}
@@ -813,7 +708,7 @@ public class N4HeadlessCompiler {
 		// process its children.
 		if (dependencies.get(project).isEmpty()) {
 			final MarkedProject markedProject = markedProjects.get(project);
-			
+
 			// only add marked projects to build order list
 			if (markedProject != null) {
 				// The current project is ready to be processed.
@@ -1160,6 +1055,14 @@ public class N4HeadlessCompiler {
 
 			IResourceDescription.Manager resourceDescriptionManager = serviceProvider.getResourceDescriptionManager();
 			IResourceDescription resourceDescription = resourceDescriptionManager.getResourceDescription(resource);
+
+			// first consult manager whether to built (index) 'resource'
+			if (resourceDescriptionManager instanceof IBuildSuppressingResourceDescriptionManager) {
+				if (!((IBuildSuppressingResourceDescriptionManager) resourceDescriptionManager).isToBeBuilt(uri,
+						resource)) {
+					return;
+				}
+			}
 
 			if (resourceDescription != null) {
 				index.addDescription(uri, resourceDescription);

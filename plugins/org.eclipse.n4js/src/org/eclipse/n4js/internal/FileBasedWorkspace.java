@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.internal;
 
-import static com.google.common.base.Optional.fromNullable;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,12 +29,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectReference;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
@@ -79,19 +75,6 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		if (!projectElementHandles.containsKey(location)) {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location, false);
 			projectElementHandles.put(location, lazyDescriptionHandle);
-			for (String libraryPath : lazyDescriptionHandle.resolve().getLibraryPaths()) {
-				URI libraryFolder = location.appendSegment(libraryPath);
-				File lib = new File(java.net.URI.create(libraryFolder.toString()));
-				if (lib.isDirectory()) {
-					for (File archive : lib.listFiles()) {
-						if (archive.getName().endsWith(IN4JSArchive.NFAR_FILE_EXTENSION_WITH_DOT)) {
-							URI archiveLocation = URI.createURI(archive.toURI().toString());
-							projectElementHandles.put(archiveLocation,
-									createLazyDescriptionHandle(archiveLocation, true));
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -101,53 +84,18 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 
 	@Override
 	public URI findProjectWith(URI unsafeLocation) {
-		URI nestedLocation = URIUtils.normalize(unsafeLocation);
-		int maxSegments = nestedLocation.segmentCount();
-		OUTER: for (URI known : projectElementHandles.keySet()) {
-			if (known.segmentCount() <= maxSegments) {
-				final URI projectUri = tryFindProjectRecursivelyByProjectDescriptionFile(nestedLocation,
-						fromNullable(known));
-				if (null != projectUri) {
-					return projectUri;
-				}
-				for (int i = 0; i < known.segmentCount(); i++) {
-					if (!known.segment(i).equals(nestedLocation.segment(i))) {
-						continue OUTER;
-					}
-				}
-				return known;
-			}
-		}
-		return tryFindProjectRecursivelyByProjectDescriptionFile(nestedLocation, Optional.absent());
-	}
+		URI key = URIUtils.normalize(unsafeLocation.trimFragment());
 
-	private URI tryFindProjectRecursivelyByProjectDescriptionFile(URI location, Optional<URI> stopUri) {
-		URI nestedLocation = location;
-		int segmentCount = 0;
-		if (nestedLocation.isFile()) { // Here, unlike java.io.File, #isFile can mean directory as well.
-			File directory = new File(nestedLocation.toFileString());
-			while (directory != null) {
-				if (stopUri.isPresent() && stopUri.get().equals(nestedLocation)) {
-					break;
-				}
-				if (directory.isDirectory()) {
-					if (hasPackageJson(directory)) {
-						URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
-						registerProject(projectLocation);
-						return projectLocation;
-					}
-				}
-				nestedLocation = nestedLocation.trimSegments(segmentCount++);
-				directory = directory.getParentFile();
+		// determine longest registered project location, that is a prefix of key
+		while (key.segmentCount() > 0) {
+			LazyProjectDescriptionHandle match = this.projectElementHandles.get(key);
+			if (match != null) {
+				return key;
 			}
+			key = key.trimSegments(1);
 		}
+
 		return null;
-	}
-
-	/** Returns <code>true</code> iff the given <code>directory</code> contains a package.json file. */
-	private boolean hasPackageJson(File directory) {
-		return new File(directory, IN4JSProject.PACKAGE_JSON).exists() ||
-				new File(directory, IN4JSProject.PACKAGE_JSON + ".xt").exists();
 	}
 
 	@Override
