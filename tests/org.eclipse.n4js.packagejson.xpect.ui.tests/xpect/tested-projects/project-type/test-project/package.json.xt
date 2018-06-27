@@ -34,6 +34,7 @@
 	},
 	"n4js": {
 		"projectType": "test",
+		"output": "src-gen",
 		"sources": {
 			"source": [
 				"src"

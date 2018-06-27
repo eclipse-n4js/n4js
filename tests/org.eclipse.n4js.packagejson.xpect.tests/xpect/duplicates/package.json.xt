@@ -19,16 +19,17 @@
 		"projectVersion": "0.0.1-SNAPSHOT",
 		"vendorId": "MyVendorID",
 		"vendorName": "My Vendor Name",
+		"output": "src-gen",
 		"sources": {
 			"source": [
 				// XPECT warnings --> "Duplicate path "src" has already been declared as source container in external." at "\"src\""
 				"src",
 				// IDEBUG-339 XPECT warnings --> "Source container path src_does_not_exist does not exist." at ""src_does_not_exist""
 				"src_does_not_exist",
-				// XPECT errors --> ""src/p/juergensHack/*.js" is not a valid path." at ""src/p/juergensHack/*.js""
-				"src/p/juergensHack/*.js",
-				// XPECT errors --> "Path "src/p/myAlreadyAsModuleHack.js" does not point to a directory." at ""src/p/myAlreadyAsModuleHack.js""
-				"src/p/myAlreadyAsModuleHack.js",
+				// XPECT errors --> ""src/p/q/*.js" is not a valid path." at ""src/p/q/*.js""
+				"src/p/q/*.js",
+				// XPECT errors --> "Path "src/p/O.js" does not point to a directory." at ""src/p/O.js""
+				"src/p/O.js",
 				"src2",
 				"src3"
 			],
@@ -40,21 +41,17 @@
 		},
 		"moduleFilters": {
 			"noValidate": [
-				// TODO re-enable the following assertions
-				// XPECT warnings --> "Module filter "p/wolfgangsUglyHack.js" does not match any modules." at ""p/wolfgangsUglyHack.js""
-				"p/wolfgangsUglyHack.js",
-				// XPECT warnings --> "Module filter "p/wolfgangsUglyHack.*" does not match any modules." at ""p/wolfgangsUglyHack.*""
-				"p/wolfgangsUglyHack.*",
-				"p/wolfgangsUglyHack",
-				// XPECT errors --> "Duplicate module filter specifier." at ""p/juergensHacks/*""
-				"p/juergensHacks/*",
-				// XPECT errors --> "Duplicate module filter specifier." at ""p/juergensHacks/*""
-				"p/juergensHacks/*",
+				"p/P.js",
+				"p/P.*",
+				"p/P",
+				"p/q/*",
+				// XPECT errors --> "Duplicate module filter specifier." at ""p/q/*""
+				"p/q/*",
 				// XPECT warnings --> "Module filter "p/doesntexist/" does not match any modules." at ""p/doesntexist/""
 				"p/doesntexist/",
 				// XPECT warnings --> "Module filter "**/External" does not match any modules." at "["src", "**/External"]"
 				["src", "**/External"],
-				// External is available in src-external but not in src XPECT noIssues
+				// External is available in src-external but not in src XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at "{"sourceContainer": "src-external", "module": "p/External"}"
 				{
 					"sourceContainer": "src-external",
 					"module": "p/External"
@@ -71,12 +68,12 @@
 				},
 				["src3", "**/*"]
 			],
-			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 42)." at "\"noValidate\""
+			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 43)." at "\"noValidate\""
 			"noValidate": [
 				"p/A"
 			],
 			"noModuleWrap": [
-				"p/myAlreadyAsModuleHack",
+				"p/O",
 				// XPECT errors --> "Module filters of type noModuleWrap must not match N4JS modules/files." at "\"other/*\""
 				"other/*"
 			]

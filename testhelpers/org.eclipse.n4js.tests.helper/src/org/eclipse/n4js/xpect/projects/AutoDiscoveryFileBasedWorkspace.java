@@ -8,11 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal;
+package org.eclipse.n4js.xpect.projects;
 
 import java.io.File;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.ClasspathPackageManager;
+import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.URIUtils;
@@ -59,11 +62,9 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 		if (nestedLocation.isFile()) { // Here, unlike java.io.File, #isFile can mean directory as well.
 			File directory = new File(nestedLocation.toFileString());
 			while (directory != null) {
-				if (directory.isDirectory()) {
-					if (new File(directory, IN4JSProject.PACKAGE_JSON).exists()) {
-						URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
-						return projectLocation;
-					}
+				if (isProjectDirectory(directory)) {
+					URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
+					return projectLocation;
 				}
 				nestedLocation = nestedLocation.trimSegments(segmentCount++);
 				directory = directory.getParentFile();
@@ -72,4 +73,8 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 		return null;
 	}
 
+	/** Determines whether {@code directory} may be regarded as valid N4JS project directory. */
+	private static boolean isProjectDirectory(File directory) {
+		return N4JSProject.isN4JSProjectDirectory(URI.createFileURI(directory.getPath()));
+	}
 }

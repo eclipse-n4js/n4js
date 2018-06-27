@@ -13,6 +13,7 @@
 
     Workspace {
         JavaProject "impl" {
+        	Folder "src" {}
             File "package.json" {from="../impl/package.json.xt"}
         }
         JavaProject "impl.dependency" {
@@ -34,9 +35,15 @@
 	},
 	"n4js": {
 		"projectType": "library",
+		"output": "src-gen",
 		"implementationId": "impl1",
 		"implementedProjects": [
 			"project.api"
-		]
+		],
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }

@@ -13,6 +13,7 @@
 
     Workspace {
         JavaProject "tests" {
+        	Folder "src" {}
             File "package.json" {from="../tests/package.json.xt"}
         }
         JavaProject "lib1" {
@@ -40,6 +41,12 @@
 			"lib2",
 			// XPECT errors --> "Project does not exist with project ID: does-not-exist." at ""does-not-exist""
 			"does-not-exist"
-		]
+		],
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }

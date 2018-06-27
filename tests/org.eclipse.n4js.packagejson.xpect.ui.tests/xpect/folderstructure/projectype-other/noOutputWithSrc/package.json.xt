@@ -9,33 +9,33 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
 
-	Workspace {
-		JavaProject "OtherProjectName" {
-			Folder "src" {}
-			ThisFile "package.json" {from="../projectName/package.json.xt"}
-		}
-	}
+    Workspace {
+        JavaProject "noOutputWithSrc" {
+	        	Folder "src" {
+	        		Folder "inner" {}
+	        	}
+            ThisFile {}
+        }
+    }
 
-	END_SETUP
+    END_SETUP
  */
 {
-	/** XPECT errors ---
-	   "The package name "MyProjectID" does not match project folder name "OtherProjectName" used on the file system." at ""MyProjectID""
-	   "The package name "MyProjectID" does not match project name "OtherProjectName" used in the Eclipse workspace." at ""MyProjectID""
-	   ---
-	 */
-	"name": "MyProjectID",
+	"name": "noOutputWithSrc",
 	"version": "0.0.1-SNAPSHOT",
 	"n4js": {
+		// XPECT errors --> "Projects of type library must always declare an output folder and at least one source container." at ""library""
 		"projectType": "library",
 		"vendorId": "MyVendorID",
 		"vendorName": "My Vendor Name",
-		"output": "src-gen",
+		// XPECT noerrors -->
 		"sources": {
 			"source": [
-				"src"
+				// XPECT errors --> "A source folder must not be located inside the default output folder "."." at ""src/inner""
+				"src/inner"
 			]
 		}
 	}

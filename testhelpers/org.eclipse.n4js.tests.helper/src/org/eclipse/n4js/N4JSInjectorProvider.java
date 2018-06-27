@@ -12,9 +12,9 @@ package org.eclipse.n4js;
 
 import java.util.Arrays;
 
-import org.eclipse.n4js.internal.AutoDiscoveryFileBasedWorkspace;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.xpect.projects.AutoDiscoveryFileBasedWorkspace;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.service.DefaultRuntimeModule;
 import org.eclipse.xtext.service.SingletonBinding;

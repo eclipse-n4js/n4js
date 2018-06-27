@@ -88,6 +88,9 @@ public class ProjectDescriptionHelper {
 
 	// root-level properties:
 
+	/** Default value for the property "output". */
+	public static final String DEFAULT_VALUE_OUTPUT = ".";
+
 	/** Key of package.json property "name". */
 	public static final String PROP__NAME = "name";
 	/** Key of package.json property "version". */
@@ -274,7 +277,7 @@ public class ProjectDescriptionHelper {
 			pd.setMainModule("index");
 		}
 		if (pd.getOutputPathRaw() == null) {
-			pd.setOutputPathRaw(".");
+			pd.setOutputPathRaw(DEFAULT_VALUE_OUTPUT);
 		}
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
@@ -287,10 +290,10 @@ public class ProjectDescriptionHelper {
 			if (scd == null) {
 				SourceContainerDescription scdNew = N4mfFactory.eINSTANCE.createSourceContainerDescription();
 				scdNew.setSourceContainerType(SourceContainerType.SOURCE);
-				scdNew.getPathsRaw().add(".");
+				scdNew.getPathsRaw().add(DEFAULT_VALUE_OUTPUT);
 				pd.getSourceContainers().add(scdNew);
 			} else if (scd.getPathsRaw().isEmpty()) {
-				scd.getPathsRaw().add(".");
+				scd.getPathsRaw().add(DEFAULT_VALUE_OUTPUT);
 			}
 		}
 	}
@@ -300,7 +303,7 @@ public class ProjectDescriptionHelper {
 
 		if (packageJSON == null) {
 			packageJSON = loadXtextFileAtLocation(location,
-					IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION,
+					IN4JSProject.PACKAGE_JSON + DEFAULT_VALUE_OUTPUT + N4JSGlobals.XT_FILE_EXTENSION,
 					JSONDocument.class);
 		}
 

@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
+import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.validation.JSONIssueCodes;
@@ -43,7 +44,7 @@ import com.google.common.collect.Multimap;
  */
 public abstract class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
 		implements IJSONValidatorExtension {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(AbstractJSONValidatorExtension.class);
 
 	private static final String JSON_DOCUMENT_VALUES = "JSON_DOCUMENT_VALUES";
@@ -64,7 +65,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 		// validate document itself
 		this.validate(JSONPackage.Literals.JSON_DOCUMENT, document, diagnosticChain, context);
-		
+
 		// validate all contents
 		document.eAllContents().forEachRemaining(child -> {
 			this.validate(child.eClass(), child, diagnosticChain, context);
@@ -95,7 +96,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 			final String keyPath = annotation.propertyPath();
 			final Collection<JSONValue> values = documentValues.get(keyPath);
-			
+
 			// check each value that has been specified for keyPath
 			for (JSONValue value : values) {
 				if (value != null) {
@@ -109,7 +110,8 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 					} catch (IllegalAccessException | IllegalArgumentException e) {
 						throw new IllegalStateException("Failed to invoke @CheckProperty method " + method + ": " + e);
 					} catch (InvocationTargetException e) {
-						LOGGER.error("Failed to invoke @CheckProperty method " + method + ": " + e.getTargetException());
+						LOGGER.error(
+								"Failed to invoke @CheckProperty method " + method + ": " + e.getTargetException());
 						e.getTargetException().printStackTrace();
 					}
 				}
@@ -135,7 +137,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 			return collectDocumentValues((JSONDocument) this.getContext().get(JSON_DOCUMENT));
 		});
 	}
-	
+
 	/**
 	 * Returns the currently validated {@link JSONDocument} instance.
 	 */
@@ -168,12 +170,12 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	protected Collection<JSONValue> getDocumentValues(String keyPath) {
 		return getDocumentValues().get(keyPath);
 	}
-	
+
 	/**
 	 * Returns one of the {@link JSONValue}s that have been associated with the given key-path (ignores duplicates).
 	 * 
-	 * The {@link JSONValue} at the given key-path must be of type {@code expectedClass}. If this is not the
-	 * case, this method returns {@code null}.
+	 * The {@link JSONValue} at the given key-path must be of type {@code expectedClass}. If this is not the case, this
+	 * method returns {@code null}.
 	 * 
 	 * Returns {@code null} if no value has been associated with the given {@code keyPath}.
 	 */
@@ -185,7 +187,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 		}
 		return expectedClass.cast(value);
 	}
-	
+
 	/**
 	 * Returns one of the {@link JSONValue}s that have been associated with the given key-path (ignores duplicates).
 	 * 
@@ -320,11 +322,26 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 		return true;
 	}
 
-	/** 
-	 * Returns {@code true} iff {@code method} is a valid {link CheckProperty} method. 
+	/**
+	 * Checks whether the given {@code stringLiteral} represents a {@link JSONStringLiteral} with non-empty string
+	 * value.
 	 * 
-	 * A valid {@link CheckProperty} is a valid without any or with only one parameter of type {@link JSONValue}. 
-	 * */
+	 * Returns {@code true} if the check is successful, {@code false} otherwise.
+	 */
+	protected boolean checkIsNonEmptyString(JSONStringLiteral stringLiteral, String propertyName) {
+		if (stringLiteral.getValue().isEmpty()) {
+			addIssue(JSONIssueCodes.getMessageForJSON_EMPTY_STRING(propertyName), stringLiteral,
+					JSONIssueCodes.JSON_EMPTY_STRING);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns {@code true} iff {@code method} is a valid {link CheckProperty} method.
+	 * 
+	 * A valid {@link CheckProperty} is a valid without any or with only one parameter of type {@link JSONValue}.
+	 */
 	private boolean isValidCheckKeyMethod(Method method) {
 		return method.getParameterTypes().length == 0 ||
 				(method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == JSONValue.class);

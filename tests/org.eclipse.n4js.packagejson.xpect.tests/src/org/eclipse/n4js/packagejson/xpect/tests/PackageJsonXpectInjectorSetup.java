@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.N4JSStandaloneSetup;
+import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.json.validation.JSONValidator;
@@ -34,7 +34,7 @@ import com.google.inject.Injector;
 @XpectReplace(InjectorSetup.class)
 public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 
-	private static Supplier<Injector> n4jsInjector = Suppliers.memoize(() -> N4JSStandaloneSetup.doSetup());
+	private static Supplier<Injector> n4jsInjector = Suppliers.memoize(() -> new N4JSInjectorProvider().getInjector());
 			
 	public PackageJsonXpectInjectorSetup(XpectJavaModel xjm, XpectFile file) {
 		super(xjm, file);

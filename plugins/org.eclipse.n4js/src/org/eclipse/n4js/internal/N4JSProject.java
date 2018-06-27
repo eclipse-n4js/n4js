@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
@@ -97,7 +98,7 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public Optional<URI> getProjectDescriptionLocation() {
-		final File projectDescriptionFile = getProjectDescriptionFile().orNull();
+		final File projectDescriptionFile = getProjectDescriptionFile(location).orNull();
 		if (null == projectDescriptionFile) {
 			return absent();
 		}
@@ -126,18 +127,8 @@ public class N4JSProject implements IN4JSProject {
 		}
 	}
 
-	private Optional<File> getProjectDescriptionFile() {
-		final File locationAsFile = new File(java.net.URI.create(location.toString()));
-		if (locationAsFile.exists() && locationAsFile.isDirectory()) {
-			final File packageJSON = new File(locationAsFile, IN4JSProject.PACKAGE_JSON);
-			return packageJSON.isFile() ? fromNullable(packageJSON) : absent();
-		}
-
-		return absent();
-	}
-
 	protected boolean checkExists() {
-		return getProjectDescriptionFile().isPresent();
+		return getProjectDescriptionFile(location).isPresent();
 	}
 
 	@Override
@@ -396,5 +387,32 @@ public class N4JSProject implements IN4JSProject {
 	@Override
 	public boolean isExternal() {
 		return external;
+	}
+
+	/**
+	 * Indicates whether {@code directory} may be regarded as valid N4JS project directory.
+	 */
+	public static boolean isN4JSProjectDirectory(URI location) {
+		return !getProjectDescriptionFile(location).isPresent();
+	}
+
+	private static Optional<File> getProjectDescriptionFile(URI projectLocation) {
+		final File locationAsFile = new File(java.net.URI.create(projectLocation.toString()));
+		if (locationAsFile.exists() && locationAsFile.isDirectory()) {
+			// first check for a 'package.json' file
+			final File packageJSON = new File(locationAsFile, IN4JSProject.PACKAGE_JSON);
+			if (packageJSON.isFile()) {
+				return fromNullable(packageJSON);
+			}
+			// next check for an XPECT 'package.json.xt' fiel
+			final File packageJSONXpect = new File(locationAsFile,
+					IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION);
+
+			if (packageJSONXpect.isFile()) {
+				return fromNullable(packageJSONXpect);
+			}
+		}
+
+		return absent();
 	}
 }

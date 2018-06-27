@@ -13,6 +13,7 @@
 
     Workspace {
         JavaProject "client" {
+        	Folder "src" {}
             File "package.json" {from="../client/package.json.xt"}
         }
         JavaProject "rl1" {
@@ -46,6 +47,12 @@
 			"rl2",
 			// XPECT noerrors
 			"rl3"
-		]
+		],
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }

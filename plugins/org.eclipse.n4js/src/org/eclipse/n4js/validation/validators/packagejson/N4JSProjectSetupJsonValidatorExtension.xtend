@@ -25,6 +25,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
+import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
 import java.util.Map
@@ -46,7 +47,6 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.json.validation.^extension.AbstractJSONValidatorExtension
 import org.eclipse.n4js.json.validation.^extension.CheckProperty
 import org.eclipse.n4js.n4mf.DeclaredVersion
-import org.eclipse.n4js.n4mf.ModuleFilter
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.n4mf.ProjectDescription
@@ -84,7 +84,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import java.util.ArrayList
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -632,6 +631,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 	}
 	
+	/**
+	 * Validates the declared module filters. 
+	 * 
+	 * For structural and duplicate validation see {@link PackageJsonValidatorExtension#checkModuleFilters}.
+	 * 
+	 * This includes limited syntactical validation of the wildcards as well as a check whether the filters
+	 * actually filter any resources or whether they are obsolete.
+	 */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__MODULE_FILTERS)
 	def checkModuleFilters(JSONValue moduleFiltersValue) {
 		val project = findProject(moduleFiltersValue.eResource.URI).get;
@@ -641,17 +648,19 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			return;
 		}
 
+		// collect all declared module filter specifiers
 		val nameValuePairs = collectObjectValues(moduleFiltersValue as JSONObject);
 		val filterSpecifierPairs = nameValuePairs.values
 			.filter(JSONArray)
 			.flatMap[elements]
+			.filterNull
 			.map[ProjectDescriptionUtils.getModuleFilterSpecifier(it)->it];
 
 		holdsValidModuleSpecifiers(filterSpecifierPairs, project);
 	}
 	
 	
-	def holdsValidModuleSpecifiers(Iterable<Pair<ModuleFilterSpecifier, JSONValue>> moduleFilterSpecifiers, IN4JSProject project) {
+	private def holdsValidModuleSpecifiers(Iterable<Pair<ModuleFilterSpecifier, JSONValue>> moduleFilterSpecifiers, IN4JSProject project) {
 		val validFilterSpecifier = new ArrayList<Pair<ModuleFilterSpecifier, JSONValue>>();
 		for (Pair<ModuleFilterSpecifier, JSONValue> filterSpecifierPair : moduleFilterSpecifiers) {
 			val valid = holdsValidWildcardModuleSpecifier(filterSpecifierPair);
@@ -663,23 +672,23 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		internalCheckModuleSpecifierHasFile(project, validFilterSpecifier);
 	}
 
-	def private holdsValidWildcardModuleSpecifier(Pair<ModuleFilterSpecifier, JSONValue> filterSpecifierPair) {
+	private def holdsValidWildcardModuleSpecifier(Pair<ModuleFilterSpecifier, JSONValue> filterSpecifierPair) {
 		val wrongWildcardPattern = "***"
 		if (filterSpecifierPair?.key?.moduleSpecifierWithWildcard !== null) {
 			if (filterSpecifierPair.key.moduleSpecifierWithWildcard.contains(wrongWildcardPattern)) {
 				addIssue(
-					getMessageForINVALID_WILDCARD(wrongWildcardPattern),
+					getMessageForPKGJ_INVALID_WILDCARD(wrongWildcardPattern),
 					filterSpecifierPair.value,
-					INVALID_WILDCARD
+					PKGJ_INVALID_WILDCARD
 				)
 				return false
 			}
 			val wrongRelativeNavigation = "../"
 			if (filterSpecifierPair.key.moduleSpecifierWithWildcard.contains(wrongRelativeNavigation)) {
 				addIssue(
-					getMessageForNO_RELATIVE_NAVIGATION,
+					getMessageForPKGJ_NO_RELATIVE_NAVIGATION,
 					filterSpecifierPair.value,
-					NO_RELATIVE_NAVIGATION
+					PKGJ_NO_RELATIVE_NAVIGATION
 				)
 				return false
 			}
@@ -687,19 +696,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		return true
 	}
 
-	def private internalCheckModuleSpecifierHasFile(IN4JSProject project, List<Pair<ModuleFilterSpecifier, JSONValue>> filterSpecifierPairs) {
+	private def internalCheckModuleSpecifierHasFile(IN4JSProject project, List<Pair<ModuleFilterSpecifier, JSONValue>> filterSpecifierPairs) {
 		try {
 			val treeWalker = new ModuleSpecifierFileVisitor(this, project, filterSpecifierPairs);
 			Files.walkFileTree(project.locationPath, treeWalker);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace;
+		}
 
 		for (Pair<ModuleFilterSpecifier, JSONValue> filterSpecifier : filterSpecifierPairs) {
-			val msg = getMessageForNON_EXISTING_MODULE_SPECIFIER(filterSpecifier.key.moduleSpecifierWithWildcard);
-			addIssue(msg, filterSpecifier.value, NON_EXISTING_MODULE_SPECIFIER);
+			val msg = getMessageForPKGJ_MODULE_FILTER_DOES_NOT_MATCH(filterSpecifier.key.moduleSpecifierWithWildcard);
+			addIssue(msg, filterSpecifier.value, PKGJ_MODULE_FILTER_DOES_NOT_MATCH);
 		}
 	}
 
-	static class ModuleSpecifierFileVisitor extends SimpleFileVisitor<Path> {
+	private static class ModuleSpecifierFileVisitor extends SimpleFileVisitor<Path> {
 		private final N4JSProjectSetupJsonValidatorExtension setupValidator;
 		private final IN4JSProject project;
 		private final List<Pair<ModuleFilterSpecifier, JSONValue>> filterSpecifierPairs;
@@ -711,6 +722,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		override visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+			println(path);
 			for (val iter = filterSpecifierPairs.iterator(); iter.hasNext();) {
 				val filterSpecifierPair = iter.next();
 				val specifier = filterSpecifierPair.key.moduleSpecifierWithWildcard;
@@ -724,8 +736,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 						val checkForNoValidate = isModuleSpecifier(path.toString());
 						if (checkForNoValidate) {
-							val moduleFilter = filterSpecifierPair.key.eContainer as ModuleFilter;
-							setupValidator.handleNoValidationForN4JSFiles(moduleFilter, filterSpecifierPair);
+							// determine name of the current filter type (e.g. noValidate)
+							val moduleFilter = (filterSpecifierPair.value.eContainer.eContainer as NameValuePair).name;
+							setupValidator.addNoValidationForN4JSFilesIssues(moduleFilter, filterSpecifierPair);
 						}
 					}
 				}
@@ -740,23 +753,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		def private URI getFileInSources(IN4JSProject project, ModuleFilterSpecifier filterSpecifier, Path filePath) {
 			val lPath = project.locationPath;
-			val filePathString = lPath.relativize(filePath).toString;
-			val uri = URI.createPlatformResourceURI(project.projectId + "/" + filePathString, true);
-			return uri;
+			val filePathString = lPath.relativize(filePath);
+			val projectRelativeURI = URI.createURI(filePathString.toString);
+			return project.location.appendSegments(projectRelativeURI.segments);
 		}
 
 		def private boolean isModuleSpecifier(String fileSpecifier) {
-			return fileSpecifier.endsWith(".n4js") || fileSpecifier.endsWith(".n4jsx") || fileSpecifier.endsWith(".n4jsd");
+			return fileSpecifier.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION) || 
+				fileSpecifier.endsWith("." + N4JSGlobals.N4JSX_FILE_EXTENSION) || 
+				fileSpecifier.endsWith("." + N4JSGlobals.N4JSD_FILE_EXTENSION);
 		}
 	}
 
-	def private handleNoValidationForN4JSFiles(ModuleFilter moduleFilter, Pair<ModuleFilterSpecifier, JSONValue> filterSpecifierPair) {
-		val moduleFilterName = keywordProvider.keyword(moduleFilter.moduleFilterType);
-		addIssue(
-			getMessageForDISALLOWED_NO_VALIDATE_FOR_N4JS(moduleFilterName),
-			filterSpecifierPair.value,
-			DISALLOWED_NO_VALIDATE_FOR_N4JS
-		)
+	private def addNoValidationForN4JSFilesIssues(String moduleFilterType, Pair<ModuleFilterSpecifier, JSONValue> filterSpecifierPair) {
+		addIssue(getMessageForPKGJ_FILTER_NO_N4JS_MATCH(moduleFilterType), filterSpecifierPair.value,
+			PKGJ_FILTER_NO_N4JS_MATCH);
 	}
 
 	/**

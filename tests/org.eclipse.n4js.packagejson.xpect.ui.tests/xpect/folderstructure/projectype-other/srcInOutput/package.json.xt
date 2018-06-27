@@ -12,16 +12,18 @@
 
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.ui.tests.PackageJsonXpectPluginTest
 
-    Workspace {
-        JavaProject "srcInOutput" {
-	        	Folder "src" {
-	        		Folder "inner" {}
-	        	}
-            ThisFile {}
-        }
-    }
+	Workspace {
+		JavaProject "srcInOutput" {
+			Folder "src" {
+				Folder "inner" {
+					Folder "p" {}
+				}
+			}
+			ThisFile {}
+		}
+	}
 
-    END_SETUP
+	END_SETUP
  */
 {
 	"name": "srcInOutput",
@@ -34,8 +36,8 @@
 		"output": "src",
 		"sources": {
 			"source": [
-				// XPECT errors --> "A source folder must not be located inside the output folder." at ""src/inner""
-				"src/inner"
+				// XPECT errors --> "A source folder must not be located inside the output folder." at ""src/inner/p""
+				"src/inner/p"
 			]
 		}
 	}

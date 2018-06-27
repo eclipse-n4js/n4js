@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -56,6 +57,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.validation.Check;
 
 import com.google.common.base.Optional;
@@ -85,6 +87,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	private IN4JSCore n4jsCore;
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
+	@Inject
+	private FolderContainmentHelper containmentHelper;
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
@@ -137,8 +141,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 		// in case the Platform is running (can be UI and headless)
 		if (Platform.isRunning()) {
-			// TODO consider external workspace case in which we are dealing with
-			// original package.json of npm packages
 			final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			final URI packageJsonUri = projectNameValue.eResource().getURI();
 
@@ -250,18 +252,35 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// }
 	}
 
-	/** Check the projectType value structure. */
+	/** Check the projectType value structure and limitations. */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "."
 			+ ProjectDescriptionHelper.PROP__PROJECT_TYPE)
-	public void checkProjectTypeStructure(JSONValue projectTypeValue) {
+	public void checkProjectType(JSONValue projectTypeValue) {
 		if (!checkIsType(projectTypeValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
 		}
 		// check whether the given value represents a valid project type
 		final String projectTypeString = ((JSONStringLiteral) projectTypeValue).getValue();
-		if (ProjectDescriptionUtils.parseProjectType(projectTypeString) == null) {
+		final ProjectType type = ProjectDescriptionUtils.parseProjectType(projectTypeString);
+
+		// check type can be parsed successfully
+		if (type == null) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_TYPE(projectTypeString),
 					projectTypeValue, IssueCodes.PKGJ_INVALID_PROJECT_TYPE);
+			return;
+		}
+
+		// check limitations of specific project types
+		if (type != ProjectType.VALIDATION) {
+			// make sure non-validation projects always declare an output and at least one source folder
+			final boolean hasSources = getSingleDocumentValue(
+					ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__SOURCES) != null;
+			final boolean hasOutput = getSingleDocumentValue(
+					ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__OUTPUT) != null;
+			if (!hasSources || !hasOutput) {
+				addIssue(IssueCodes.getMessageForPKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES(projectTypeString),
+						projectTypeValue, IssueCodes.PKGJ_PROJECT_TYPE_MANDATORY_OUTPUT_AND_SOURCES);
+			}
 		}
 	}
 
@@ -458,54 +477,101 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	/**
+	 * Converts the given {@code relativePath} to an absolute URI by resolving it based on the location of
+	 * {@code resource}.
+	 */
+	private URI getResourceRelativeURI(Resource resource, String relativePath) {
+		final String normalizedStringPath = FileUtils.normalize(relativePath);
+		final URI relativeLocation = URI.createURI(normalizedStringPath);
+		// obtain URI of resource container (including trailing slash)
+		final URI resourceContainerLocation = resource.getURI().trimSegments(1).appendSegment("");
+		return relativeLocation.resolve(resourceContainerLocation);
+	}
+
+	/**
 	 * Checks that the output folder and the declared source containers are not nested in way that can lead to conflicts
 	 * wrt. transpile loops and workspace clean operations (e.g. output folder is considered source folder).
+	 *
+	 * This check runs on the whole {@link JSONDocument}, since we must also validate in case of the implicit output
+	 * folder as given by {@link ProjectDescriptionHelper#DEFAULT_VALUE_OUTPUT}.
 	 */
-	@CheckProperty(propertyPath = ((ProjectDescriptionHelper.PROP__N4JS + ".") + ProjectDescriptionHelper.PROP__OUTPUT))
-	public void checkOutputFolder(final JSONValue outputPathValue) {
-		if ((!(outputPathValue instanceof JSONStringLiteral))) {
-			return;
+	@Check
+	public void checkOutputFolder(@SuppressWarnings("unused") JSONDocument document) {
+		final JSONValue outputPathValue = getSingleDocumentValue(
+				ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__OUTPUT);
+
+		// only check basic JSONValue constraints, when an explicit outputPathValue is present
+		if (outputPathValue != null) {
+			if ((!(outputPathValue instanceof JSONStringLiteral))) {
+				return;
+			}
+
+			// check value to be non-empty
+			if (!checkIsNonEmptyString((JSONStringLiteral) outputPathValue, "output")) {
+				return;
+			}
 		}
-		// use normalized output path for validation
-		final String normalizedOutputPathValue = FileUtils.normalize(((JSONStringLiteral) outputPathValue).getValue());
-		final Path outputPath = new File(normalizedOutputPathValue).toPath();
+
+		if (outputPathValue != null) {
+			// if available, run check with explictly declared output folder
+			internalCheckOutput(((JSONStringLiteral) outputPathValue).getValue(),
+					Optional.fromNullable(outputPathValue));
+		} else {
+			// otherwise, run check with default value for output folder
+			internalCheckOutput(ProjectDescriptionHelper.DEFAULT_VALUE_OUTPUT, Optional.absent());
+		}
+	}
+
+	/**
+	 * Checks the given {@code outputPath} for validity.
+	 *
+	 * @param astOutputValue
+	 *            If present, the ast representation. May be {@code null} if {@code outputPath} is a default value.
+	 */
+	private void internalCheckOutput(String outputPath, Optional<JSONValue> astOutputValue) {
+
+		final Resource resource = getDocument().eResource();
+		final URI absoluteOutputLocation = getResourceRelativeURI(resource, outputPath);
 
 		// do not perform check for projects of type 'validation'
-		if (((getProjectType() == ProjectType.VALIDATION) || (outputPath == null))) {
+		if (getProjectType() == ProjectType.VALIDATION) {
 			return;
 		}
 
-		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers();
+		final Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers();
 
 		for (Entry<SourceContainerType, List<JSONStringLiteral>> sourceContainerType : sourceContainers.entries()) {
 			// iterate over all source container paths (in terms of string literals)
 			for (JSONStringLiteral sourceContainerSpecifier : sourceContainerType.getValue()) {
-				// use normalized source path for checks
-				final String normalizedSourcePathValue = FileUtils.normalize(sourceContainerSpecifier.getValue());
-				final Path sourcePath = new File(normalizedSourcePathValue).toPath();
+				// compute absolute source container location
+				final URI absoluteSourceLocation = getResourceRelativeURI(resource,
+						sourceContainerSpecifier.getValue());
 
-				// obtain descriptive name of the source container type
+				// obtain descriptive name of the current source container type
 				final String srcFrgmtName = sourceContainerType.getKey().getLiteral().toLowerCase();
 
-				// handle case that output path is nested within a source folder (or equal)
-				if (((".".equals(sourcePath.toString()) || sourcePath.equals(outputPath))
-						|| outputPath.startsWith(sourcePath))) {
-					final String containingFolder = "The output";
-					final String nestedFolder = ("a " + srcFrgmtName);
-					final String message = IssueCodes
-							.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
-
-					addIssue(message, outputPathValue, IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING);
-				}
-
 				// handle case that source container is nested within output directory (or equal)
-				if ((".".equals(outputPath.toString()) || sourcePath.startsWith(outputPath))) {
-					final String containingFolder = ("A " + srcFrgmtName);
-					final String nestedFolder = "the output";
+				if (containmentHelper.isContained(absoluteSourceLocation, absoluteOutputLocation)) {
+					final String containingFolder = ("A " + srcFrgmtName + " folder");
+					final String nestedFolder = astOutputValue.isPresent() ? "the output folder"
+							: "the default output folder \"" + ProjectDescriptionHelper.DEFAULT_VALUE_OUTPUT + "\"";
 					final String message = IssueCodes
 							.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
 
 					addIssue(message, sourceContainerSpecifier, IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING);
+				}
+
+				// if "output" AST element is available (outputPath is not a default value)
+				if (astOutputValue.isPresent()) {
+					// handle case that output path is nested within a source folder (or equal)
+					if (containmentHelper.isContained(absoluteOutputLocation, absoluteSourceLocation)) {
+						final String containingFolder = "The output folder";
+						final String nestedFolder = ("a " + srcFrgmtName + " folder");
+						final String message = IssueCodes
+								.getMessageForOUTPUT_AND_SOURCES_FOLDER_NESTING(containingFolder, nestedFolder);
+
+						addIssue(message, astOutputValue.get(), IssueCodes.OUTPUT_AND_SOURCES_FOLDER_NESTING);
+					}
 				}
 			}
 		}
@@ -520,12 +586,17 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (!checkIsType(moduleFilterSection, JSONPackage.Literals.JSON_OBJECT, "as moduleFilters section")) {
 			return;
 		}
-		((JSONObject) moduleFilterSection).getNameValuePairs().stream()
-				.forEach(pair -> checkModuleFilterType(pair));
+
+		for (NameValuePair pair : ((JSONObject) moduleFilterSection).getNameValuePairs()) {
+			checkModuleFilterEntry(pair);
+		}
 	}
 
-	/** Checks whether the given {@code moduleFilterPair} represents a valid module-filter section entry. */
-	private void checkModuleFilterType(NameValuePair moduleFilterPair) {
+	/**
+	 * Checks whether the given {@code moduleFilterPair} represents a valid module-filter section entry (e.g. noValidate
+	 * section).
+	 */
+	private void checkModuleFilterEntry(NameValuePair moduleFilterPair) {
 		// obtain enum-representation of the validated module filter type
 		final ModuleFilterType filterType = ProjectDescriptionUtils.parseModuleFilterType(moduleFilterPair.getName());
 
@@ -569,25 +640,21 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				})
 				.collect(Collectors.groupingBy(s -> s.filter + ":" + s.sourceContainerPath));
 
-		// compute set of AST elements that declare duplicate module filters
-		final Set<JSONValue> duplicateASTElements = new HashSet<>();
+		// compute set of all duplicate module filter specifiers
+		final Set<JSONValue> duplicateFilterSpecifiers = new HashSet<>();
 
 		// add an issue for all duplicate module filter specifiers
 		duplicateGroups.entrySet().stream()
-				// filter actual duplicates
+				// filter actual duplicate groups (more than one entry)
 				.filter(e -> e.getValue().size() > 1)
-				.forEach(e -> {
-					// add an issue for each duplicate but its first occurrence
-					for (ValidationModuleFilterSpecifier duplicate : e.getValue()) {
-						duplicateASTElements.add(duplicate.astRepresentation);
-					}
-				});
+				// add an issue for all duplicates but their first occurrences
+				.flatMap(group -> group.getValue().stream().skip(1))
+				.forEach(duplicate -> duplicateFilterSpecifiers.add(duplicate.astRepresentation));
 
-		// finally add one issue per duplicate-defining AST element
-		duplicateASTElements.forEach(duplicateAstElement -> {
+		for (JSONValue duplicateFilterSpecifier : duplicateFilterSpecifiers) {
 			addIssue(IssueCodes.getMessageForPKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER(),
-					duplicateAstElement, IssueCodes.PKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER);
-		});
+					duplicateFilterSpecifier, IssueCodes.PKGJ_DUPLICATE_MODULE_FILTER_SPECIFIER);
+		}
 	}
 
 	/** Validates the given {@link ValidationModuleFilterSpecifier}. */
