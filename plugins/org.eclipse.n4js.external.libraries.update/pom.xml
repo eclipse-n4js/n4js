@@ -45,7 +45,7 @@ Contributors:
 				<executions>
 					<execution>
 						<id>mwe2-launcher</id>
-						<phase>test-compile</phase>
+						<phase>process-classes</phase>
 						<goals>
 							<goal>java</goal>
 						</goals>
