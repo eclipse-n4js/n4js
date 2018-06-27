@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.WrappedException
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.n4js.JSActivationUtil
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSParseHelper
 import org.eclipse.n4js.generator.GeneratorOption
@@ -40,7 +41,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.EcoreUtil2
@@ -49,7 +49,6 @@ import org.eclipse.xtext.testing.util.ResourceHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.eclipse.xtext.util.CancelIndicator
 
-import static org.eclipse.n4js.utils.N4JSLanguageUtils.*
 import static org.junit.Assert.*
 
 /**
@@ -69,7 +68,7 @@ abstract class AbstractTranspilerTest {
 	@Inject protected EcmaScriptSubGenerator esSubGen
 
 	new() {
-		N4JSLanguageUtils.OPAQUE_MODULE_SUPPORTED = false;
+		JSActivationUtil.enableJSSupport();
 	}
 
 

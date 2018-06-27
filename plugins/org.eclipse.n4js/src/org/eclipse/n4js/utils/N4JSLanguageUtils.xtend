@@ -119,7 +119,7 @@ public class N4JSLanguageUtils {
 	/**
 	 * Opaque modules have empty Script nodes in their AST. Other than that they behave normally.
 	 */
-	public static boolean OPAQUE_MODULE_SUPPORTED = true;
+	private static boolean OPAQUE_MODULE_SUPPORTED = true;
 
 	/**
 	 * If the given function definition is asynchronous, will wrap given return type into a Promise.
