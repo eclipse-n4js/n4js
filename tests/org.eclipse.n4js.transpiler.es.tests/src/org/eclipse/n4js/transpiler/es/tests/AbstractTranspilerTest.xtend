@@ -292,12 +292,12 @@ abstract class AbstractTranspilerTest {
 		return state
 	}
 
-	/* Helper method for transpiler checking */
+	/** Helper method for transpiler checking */
 	def assertCompileResult(Script scriptNode, String expectedTranspilerText ) throws AssertionError {
 		assertCompileResult(scriptNode, GENERATOR_OPTIONS, expectedTranspilerText);
 	}
 
-	/* Helper method for transpiler checking */
+	/** Helper method for transpiler checking */
 	def assertCompileResult(Script scriptNode, GeneratorOption[] options, String expectedTranspilerText ) throws AssertionError {
 
 		// As long as Pretty print is not here, we get a dump of the structure
@@ -307,12 +307,12 @@ abstract class AbstractTranspilerTest {
 		AbstractTranspilerTest.assertSameExceptWhiteSpace ( expectedTranspilerText, generatedResult );
 	}
 
-	/* ensures string-equality when all whitespaces are removed on {@code expected} and {@code actual} parameter*/
+	/** ensures string-equality when all whitespaces are removed on {@code expected} and {@code actual} parameter*/
 	static def assertSameExceptWhiteSpace( String expected, String actual) throws AssertionError {
 		assertSameExceptWhiteSpace(null,expected,actual);
 	}
 
-	/* ensures string-equality when all whitespaces are removed on {@code expected} and {@code actual} parameter*/
+	/** ensures string-equality when all whitespaces are removed on {@code expected} and {@code actual} parameter*/
 	static def assertSameExceptWhiteSpace(String /*nullable*/ msg,String expected, String actual) throws AssertionError {
 		try {
 			assertEquals( expected.stripWS, actual.stripWS )
@@ -327,7 +327,7 @@ abstract class AbstractTranspilerTest {
 	}
 
 
-	/* removes all whitespaces */
+	/** removes all whitespaces */
 	static def String stripWS(String withSpace) { withSpace.replaceAll("\\s",""); }
 
 
@@ -335,7 +335,7 @@ abstract class AbstractTranspilerTest {
 		EcoreUtil2.resolveLazyCrossReferences( script.eResource, CancelIndicator.NullImpl  )
 	}
 
-	/* installs common "src/ExportedStuff.n4js" used in _04 and downward.
+	/** installs common "src/ExportedStuff.n4js" used in _04 and downward.
 	 * Must be called as first resource to load,
 	 * returns the commmon ResourceSet to share.
 	 */
@@ -351,14 +351,20 @@ abstract class AbstractTranspilerTest {
 	}
 
 
-	/* Install the content as 'srcJsScript_01.js' */
+	/** Install the content as 'srcJsScript_01.js' */
 	def Resource installJSScript(String jsScript) throws Throwable {
    		val res = jsScript.resource(URI.createURI("src/JsScript_01."+N4JSGlobals.JS_FILE_EXTENSION));
 		return res;
 	}
 
+	/** Install the content as 'srcJsxScript_01.jsx' */
+	def Resource installJSXScript(String jsxScript) throws Throwable {
+   		val res = jsxScript.resource(URI.createURI("src/JsxScript_01."+N4JSGlobals.JSX_FILE_EXTENSION));
+		return res;
+	}
 
-	/* returns the i-th statement from a block without counting a potantial "var $captuer ..." statement at position 0 */
+
+	/** returns the i-th statement from a block without counting a potantial "var $captuer ..." statement at position 0 */
 	def Statement statementAt_skipArgsCapture_get(Block block, int i) {
 		if( block === null ) return null;
 		if( block.statements.isEmpty ) return null;

@@ -199,7 +199,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	 */
 	private boolean onlyWrapping(N4JSResource eResource) {
 		ResourceType resourceType = ResourceType.getResourceType(eResource);
-		return resourceType.equals(ResourceType.JS);
+		return resourceType.equals(ResourceType.JS) || resourceType.equals(ResourceType.JSX);
 	}
 
 }
