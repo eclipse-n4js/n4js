@@ -51,11 +51,6 @@ pipeline {
                                 pwd
                                 git status
                                 ls -la
-                                whoami
-                                id -u build
-                                groups build
-                                id -G build
-                                docker ps
                            """
                 }
             }
