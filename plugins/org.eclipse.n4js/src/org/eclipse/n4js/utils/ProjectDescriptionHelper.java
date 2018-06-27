@@ -88,6 +88,8 @@ public class ProjectDescriptionHelper {
 
 	// root-level properties:
 
+	/** Default value for the property "version". */
+	public static final String DEFAULT_VALUE_VERSION = "0.0.1";
 	/** Default value for the property "output". */
 	public static final String DEFAULT_VALUE_OUTPUT = ".";
 
@@ -268,7 +270,7 @@ public class ProjectDescriptionHelper {
 			pd.setProjectId(location.lastSegment()); // name of folder containing the package.json file
 		}
 		if (pd.getProjectVersion() == null) {
-			pd.setProjectVersion(parseVersion("0.0.1"));
+			pd.setProjectVersion(parseVersion(DEFAULT_VALUE_VERSION));
 		}
 		if (pd.getVendorId() == null) {
 			pd.setVendorId("vendor.default");
