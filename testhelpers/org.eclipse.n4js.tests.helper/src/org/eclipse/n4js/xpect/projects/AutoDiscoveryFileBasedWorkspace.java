@@ -75,6 +75,7 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 
 	/** Determines whether {@code directory} may be regarded as valid N4JS project directory. */
 	private static boolean isProjectDirectory(File directory) {
-		return N4JSProject.isN4JSProjectDirectory(URI.createFileURI(directory.getPath()));
+		return directory.toPath().isAbsolute() &&
+				N4JSProject.isN4JSProjectDirectory(URI.createFileURI(directory.getPath()));
 	}
 }
