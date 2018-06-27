@@ -51,6 +51,7 @@ pipeline {
                                 pwd
                                 git status
                                 ls -la
+                                docker ps
                            """
                 }
             }
