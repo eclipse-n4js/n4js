@@ -14,7 +14,7 @@ pipeline {
             dir 'docker-build/'
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
             // Bind to host's docker sock to use host's docker daemon to be able to use docker inside n4js docker container
-            args '-u 1000 --group-add 994 -v /var/run/docker.sock:/var/run/docker.sock -v n4js-m2-repository:/usr/share/maven/ref/repository/'
+            args ' --group-add 994 --network=host -v /var/run/docker.sock:/var/run/docker.sock -v n4js-m2-repository:/usr/share/maven/ref/repository/'
             additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
             label 'm5xlarge'
         }
