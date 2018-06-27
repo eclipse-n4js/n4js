@@ -15,16 +15,18 @@
 	"version": "0.0.1-SNAPSHOT",
 	"n4js": {
 		"output": "src-gen",
+		"projectType": "api",
 		// XPECT errors --> "When defining one or more implemented projects, you also have to define an implementation ID, using property ImplementationId." at ""implementedProjects""
 		"implementedProjects": [
 			// XPECT errors --> "Project does not exist with project ID: A." at ""A""
 			"A",
-			/* XPECT errors --- 
-				"An implementation project may not implement itself." at ""missing-implementation-id""
-				"Project does not exist with project ID: missing-implementation-id." at ""missing-implementation-id""
-			---
-			*/
+			// XPECT errors --> "An implementation project may not implement itself." at ""missing-implementation-id""
 			"missing-implementation-id"
-		]
+		],
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
 	}
 }

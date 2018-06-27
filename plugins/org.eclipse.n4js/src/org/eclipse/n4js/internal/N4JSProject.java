@@ -393,7 +393,7 @@ public class N4JSProject implements IN4JSProject {
 	 * Indicates whether {@code directory} may be regarded as valid N4JS project directory.
 	 */
 	public static boolean isN4JSProjectDirectory(URI location) {
-		return !getProjectDescriptionFile(location).isPresent();
+		return getProjectDescriptionFile(location).isPresent();
 	}
 
 	private static Optional<File> getProjectDescriptionFile(URI projectLocation) {

@@ -49,7 +49,7 @@
 				["src2", "filter"]
 			],
 			"noModuleWrap": [
-				// XPECT errors --> "Duplicate module filter specifier." at ""a-filter""
+				// first occurences has no issue XPECT noerrors --> "Duplicate module filter specifier." at ""a-filter""
 				"a-filter",
 				["src1", "b-filter"],
 				{
@@ -60,7 +60,7 @@
 				["src-not-declared", "b-filter"],
 				// XPECT errors --> "Duplicate module filter specifier." at "["src2", "a-filter"]"
 				["src2", "a-filter"],
-				// XPECT errors --> "Duplicate module filter specifier." at "{ 					"module": "c-filter" 				}"
+				// first occurences has no issue XPECT noerrors --> "Duplicate module filter specifier." at "{ "module": "c-filter" }"
 				{
 					"module": "c-filter"
 				},

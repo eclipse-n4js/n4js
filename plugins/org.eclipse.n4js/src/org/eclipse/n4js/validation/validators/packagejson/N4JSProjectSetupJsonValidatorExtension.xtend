@@ -536,7 +536,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			}
 		}
 		if (!references.empty) {
-			checkReferencedProjects(references, createDependenciesPredicate(), "dependencies or devDependencies", false); 
+			checkReferencedProjects(references, createDependenciesPredicate(), "dependencies or devDependencies", false, false); 
 		}
 	}
 
@@ -549,7 +549,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		val references =  extendedRuntimeEnvironmentValue.referencesFromJSONStringLiteral
-		checkReferencedProjects(references, RE_TYPE.forN4jsProjects, "extended runtime environment", false);
+		checkReferencedProjects(references, RE_TYPE.forN4jsProjects, "extended runtime environment", false, false);
 	}
 	
 	/** Checks the 'n4js.requiredRuntimeLibraries' section. */
@@ -562,7 +562,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		
 		val references =  requiredRuntimeLibrariesValue.referencesFromJSONStringArray
 		
-		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "required runtime libraries", true);
+		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "required runtime libraries", true, false);
 	}
 	
 	/** Checks the 'n4js.providedRuntimeLibraries' section. */
@@ -574,7 +574,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 		
 		val references =  providedRuntimeLibraries.referencesFromJSONStringArray
-		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "provided runtime libraries", false);
+		checkReferencedProjects(references, RL_TYPE.forN4jsProjects, "provided runtime libraries", false, false);
 	}
 	
 	/** Checks the 'n4js.testedProjects' section. */
@@ -587,7 +587,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		
 		val references =  testedProjectsValue.referencesFromJSONStringArray
 		
-		checkReferencedProjects(references, not(TEST_TYPE).forN4jsProjects, "tested projects", true);
+		checkReferencedProjects(references, not(TEST_TYPE).forN4jsProjects, "tested projects", true, false);
 	}
 	
 	/** Checks the 'n4js.initModules' section. */
@@ -622,7 +622,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			val description = getProjectDescription();
 		
 			val references = implementedProjectsValue.referencesFromJSONStringArray;
-			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects", false);
+			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects", false, true);
 			
 			if (description.implementationId === null && !references.isEmpty()) {
 				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_ID(), implementedProjectsValue.eContainer,
@@ -722,7 +722,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		override visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-			println(path);
 			for (val iter = filterSpecifierPairs.iterator(); iter.hasNext();) {
 				val filterSpecifierPair = iter.next();
 				val specifier = filterSpecifierPair.key.moduleSpecifierWithWildcard;
@@ -914,14 +913,21 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 * This includes checking whether the referenced project can be found and validating the given 
 	 * {@link ValidationProjectReference#versionConstraint} if specified.
 	 * 
-	 * @param currentProjectId The project name of the currently validated project.
-	 * @param references The list of project references to validate.
-	 * @param allProjects A map of all projects that are accessible in the workspace.
-	 * @param sectionLabel A user-facing description of which section of project references is currently validated (e.g. "tested projects").
-	 * @param enforceDependency Additionally enforces that all given references are also listed as explicit project dependencies 
+	 * @param currentProjectId 
+	 * 				The project name of the currently validated project.
+	 * @param references 
+	 * 				The list of project references to validate.
+	 * @param allProjects 
+	 * 				A map of all projects that are accessible in the workspace.
+	 * @param sectionLabel 
+	 * 				A user-facing description of which section of project references is currently validated (e.g. "tested projects").
+	 * @param enforceDependency 
+	 * 				Additionally enforces that all given references are also listed as explicit project dependencies
+	 * @param allowReflexive 
+	 * 				Specifies whether reflexive (self) references are allowed. 
 	 */
 	private def checkReferencedProjects(Iterable<ValidationProjectReference> references, Predicate<IN4JSProject> projectPredicate, 
-		String sectionLabel, boolean enforceDependency) {
+		String sectionLabel, boolean enforceDependency, boolean allowReflexive) {
 
 		val description = getProjectDescription();
 		val currentProjectId = description.projectId;
@@ -946,12 +952,16 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					}
 				} else {
 					// create only one single validation issue for a particular project reference.
-					if (currentProjectId == id) {
+					
+					if (currentProjectId == id && !allowReflexive) {
+						// reflexive self-references
 						addProjectReferencesItselfIssue(ref.astRepresentation);
 					} else if (!projectPredicate.apply(project)) {
+						// reference to project of invalid type
 						addInvalidProjectTypeIssue(ref.astRepresentation, id, 
 							project.projectType, sectionLabel);
 					} else {
+						// check version constraint if this project has no nested node_modules folder
 						if (!description.hasNestedNodeModulesFolder) {
 							checkVersions(ref, id, allProjects);
 						}
