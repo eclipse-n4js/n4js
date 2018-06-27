@@ -13,7 +13,6 @@ package org.eclipse.n4js.ui.wizard.project
 import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.packagejson.PackageJsonBuilder
-import org.eclipse.n4js.ui.wizard.dependencies.ProjectDependenciesHelper
 import org.eclipse.n4js.utils.ProjectDescriptionHelper
 
 /**
