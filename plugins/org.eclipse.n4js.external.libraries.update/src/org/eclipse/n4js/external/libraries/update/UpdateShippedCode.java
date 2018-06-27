@@ -211,7 +211,6 @@ public class UpdateShippedCode implements IWorkflowComponent {
 		};
 
 		try {
-			System.out.println("BLAH args = " + args);
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			println("ERROR: headless compiler threw ExitCodeException (probably code compiled with errors); "
@@ -248,7 +247,6 @@ public class UpdateShippedCode implements IWorkflowComponent {
 
 			ProcessBuilder pb = nodeProcessBuilder.getNpmInstallProcessBuilder(workingDirectory, "", true);
 			final Process p = pb.start();
-
 			final int exitCode = p.waitFor();
 			if (exitCode != 0) {
 				throw new IllegalStateException("npm exited with non-zero exit code: " + exitCode);

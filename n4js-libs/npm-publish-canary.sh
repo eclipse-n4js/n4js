@@ -39,12 +39,7 @@ cleanup() {
 }
 
 cleanup
-
-# Turn http://localhost:4873 -> localhost:4873
-NPM_REGISTRY_WITHOUT_PROTOCOL=$(echo ${NPM_REGISTRY} | awk -F"//" '{print $2}')
-
 export NPM_CONFIG_GLOBALCONFIG="DIR_ROOT"
-
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 lerna publish --loglevel silly --skip-git --registry="${NPM_REGISTRY}" --exact --canary --yes --sort --npm-tag="${NPM_TAG}"
 cleanup
