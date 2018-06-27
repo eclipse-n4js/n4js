@@ -52,6 +52,8 @@ pipeline {
                                 pwd
                                 git status
                                 ls -la
+                                // IDE-3069: Test calling docker, remove before merging to master!
+                                docker ps
                            """
                 }
             }
