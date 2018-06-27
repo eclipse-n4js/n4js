@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-// FIXME GH-809 remove this class?
+// FIXME GH-809 remove this class
 /**
  * POJO for the {@code package.json} file.
  */

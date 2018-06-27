@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
@@ -626,7 +627,7 @@ public class N4jscBase implements IApplication {
 		// generate n4tp file for libManager to use
 		PackageJson packageJson = TargetPlatformFactory.createN4Default();
 		java.net.URI platformLocation = locationProvider.getTargetPlatformInstallLocation();
-		File packageJsonFile = new File(new File(platformLocation), PackageJson.PACKAGE_JSON);
+		File packageJsonFile = new File(new File(platformLocation), N4JSGlobals.PACKAGE_JSON);
 		try {
 			if (!packageJsonFile.exists()) {
 				packageJsonFile.createNewFile();
@@ -766,8 +767,7 @@ public class N4jscBase implements IApplication {
 	}
 
 	/**
-	 * Creates the injector for the headless compiler and injects all 
-	 * fields with the initialized injector.
+	 * Creates the injector for the headless compiler and injects all fields with the initialized injector.
 	 *
 	 * @See {@link HeadlessStandloneSetup}.
 	 */

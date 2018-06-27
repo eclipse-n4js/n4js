@@ -18,7 +18,6 @@ import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Install;
 import static org.eclipse.n4js.external.LibraryChange.LibraryChangeType.Uninstall;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -534,11 +533,6 @@ public class LibraryManager {
 
 			return status;
 
-		} catch (IOException e) {
-			String message = "Error while refreshing npm type definitions for '" + packageName + "'.";
-			IStatus error = statusHelper.createError(message, e);
-			logger.logError(error);
-			return error;
 		} finally {
 			monitor.done();
 		}
