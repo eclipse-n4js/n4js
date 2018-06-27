@@ -105,7 +105,7 @@ public class NpmPackageToProjectAdapter {
 				if (n4jsdsFolder != null) {
 					addTypeDefinitions(packageRoot, n4jsdsFolder);
 				}
-				// create marker file to denote that his package was among "namesOfPackagesToAdapt"
+				// create marker file to denote that this package was among "namesOfPackagesToAdapt"
 				// (compare with: ExternalProjectLocationsProvider#isExternalProjectDirectory(File))
 				File markerFile = new File(packageRoot, N4JSGlobals.PACKAGE_MARKER);
 				Files.write(markerFile.toPath(), Collections.singletonList( // will overwrite existing file
