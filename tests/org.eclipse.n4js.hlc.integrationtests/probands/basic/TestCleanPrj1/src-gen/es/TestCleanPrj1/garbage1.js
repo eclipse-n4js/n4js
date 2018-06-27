@@ -1,1 +1,0 @@
-// I am a garbage file and my only use is to check if I am removed by the headless compiler when cleanBuild flag is on.
