@@ -40,6 +40,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.EcoreUtil2
@@ -48,6 +49,7 @@ import org.eclipse.xtext.testing.util.ResourceHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.eclipse.xtext.util.CancelIndicator
 
+import static org.eclipse.n4js.utils.N4JSLanguageUtils.*
 import static org.junit.Assert.*
 
 /**
@@ -56,19 +58,19 @@ abstract class AbstractTranspilerTest {
 
 	protected static final GeneratorOption[] GENERATOR_OPTIONS = #[ GeneratorOption.ES5plus ];
 
-	@Inject private Provider<XtextResourceSet> resourceSetProvider;
 	@Inject private extension ResourceHelper;
 	@Inject private extension N4JSParseHelper;
 	@Inject private extension ValidationTestHelper;
 
+	@Inject private Provider<XtextResourceSet> resourceSetProvider;
 	@Inject private PreparationStep preparationStep;
-
 	@Inject private EcmaScriptTranspiler esTranspiler;
-
+	@Inject	private TranspilerDebugUtils transpilerDebugUtils;
 	@Inject protected EcmaScriptSubGenerator esSubGen
 
-	@Inject
-	private TranspilerDebugUtils transpilerDebugUtils;
+	new() {
+		N4JSLanguageUtils.OPAQUE_MODULE_SUPPORTED = false;
+	}
 
 
 	/** Find first element of given type in original AST; throw assertion error if not found. */
