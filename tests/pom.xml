@@ -26,10 +26,7 @@ Contributors:
 		<modules>
 		<!-- ************************************** JUnit Tests -->
 
-       		<!-- Test to ensure that shipped code is up-to-date (see /plugins/org.eclipse.n4js.external.libraries/shipped-code). -->
-		<module>org.eclipse.n4js.external.libraries.update.tests</module>
-
- 	       <!-- Release Engineering Tools Tests -->
+		<!-- Release Engineering Tools Tests -->
 		<module>org.eclipse.n4js.releng.utils.tests</module>
 
 		<!-- JSDoc tests -->
