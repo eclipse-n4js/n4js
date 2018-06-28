@@ -8,19 +8,19 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.manifest
+package org.eclipse.n4js.tests.project
 
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.n4mf.ModuleFilter
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
+import org.eclipse.n4js.json.JSON.JSONDocument
+import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.n4mf.ModuleFilterType
-import org.eclipse.n4js.n4mf.N4mfFactory
-import org.eclipse.n4js.n4mf.ProjectDescription
 import org.eclipse.n4js.n4mf.SourceContainerType
+import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.junit.Before
 import org.junit.Test
 
@@ -35,7 +35,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 	IFolder src2_P2
 	IFolder src_P_Q
 	IFolder src_external
-	IFile manifest
+	IFile packageJson
 
 	@Before
 	override void setUp() {
@@ -46,7 +46,7 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		src_P_Q = createFolder(scr_P, "q");
 		src2 = createFolder(projectUnderTest.project, "src2");
 		src2_P2 = createFolder(src2, "p2");
-		manifest = projectUnderTest.project.getFile("manifest.n4mf")
+		packageJson = projectUnderTest.project.getFile(IN4JSProject.PACKAGE_JSON)
 		src_external = projectUnderTest.project.getFolder("src-external");
 		src_external.create(false, true, null)
 		addFolderAsSource(src2.name)
@@ -80,70 +80,44 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	def void addFolderAsSource(String folderName) {
-		val pd = getProjectDescription
-		pd.sourceContainers.filter[sourceContainerType == SourceContainerType.SOURCE].head.pathsRaw += folderName
-		pd.eResource.save(null)
+		val packageJson = getPackageJSONContent();
+		
+		PackageJSONTestUtils.addSourceContainerSpecifier(packageJson, SourceContainerType.SOURCE, folderName);
+		
+		packageJson.eResource.save(null)
 		waitForAutoBuild();
 	}
 
 	def void addPathsToNoValidate(Pair<String, String>... pathToSource) {
-		val pd = getProjectDescription
-		val noValidates = pd.getNoValidateProjectPath
-		pathToSource.forEach[
-			val filters = findFiltersWithPath(noValidates, it.key, it.value)
-			if(filters.empty) createNoValidatePath(pd, noValidates, it.key, it.value)
-			else throw new IllegalArgumentException(it + " was already there.")
+		val packageJson = getPackageJSONContent();
+
+		pathToSource.forEach[ filter | 
+			PackageJSONTestUtils.addModuleFilter(packageJson, ModuleFilterType.NO_VALIDATE, 
+				filter.key, filter.value);
 		]
-		pd.eResource.save(null)
+
+
+		packageJson.eResource.save(null)
 		waitForAutoBuild();
-	}
-
-	def createNoValidatePath(ProjectDescription projectDescription, Iterable<ModuleFilter> existingNoValidateFilters, String path, String sourceFolder) {
-		val moduleFilter = if(existingNoValidateFilters.empty) {
-			val mf = N4mfFactory.eINSTANCE.createModuleFilter => [
-				moduleFilterType = ModuleFilterType.NO_VALIDATE
-			]
-			projectDescription.moduleFilters += mf
-			mf
-		} else {
-			existingNoValidateFilters.head
-		}
-		moduleFilter.moduleSpecifiers += N4mfFactory.eINSTANCE.createModuleFilterSpecifier => [
-			moduleSpecifierWithWildcard = path
-			if(sourceFolder !== null) {
-				sourcePath = sourceFolder
-			}
-		]
-	}
-
-	def removeNoValidatePath(Iterable<ModuleFilter> existingNoValidateFilters, String path) {
-		existingNoValidateFilters.forEach[
-			val toBeRemoved = moduleSpecifiers.filter[moduleSpecifierWithWildcard == path]
-			moduleSpecifiers.removeAll(toBeRemoved)
-		]
-	}
-
-	def Iterable<ModuleFilterSpecifier> findFiltersWithPath(Iterable<ModuleFilter> noValidates, String path, String sourceFolder) {
-		noValidates.map[moduleSpecifiers].flatten.filter[moduleSpecifierWithWildcard == path && sourcePath == sourceFolder]
 	}
 
 	def void removePathsFromNoValidate(String... paths) {
-		val pd = getProjectDescription
-		val noValidates = pd.getNoValidateProjectPath
-		paths.forEach[removeNoValidatePath(noValidates, it)]
-		pd.eResource.save(null)
+		val packageJson = getPackageJSONContent();
+		
+		for (path : paths) {
+			PackageJSONTestUtils.removeModuleFilter(packageJson, ModuleFilterType.NO_VALIDATE, path);
+		}
+		
+		packageJson.eResource.save(null)
 		waitForAutoBuild();
 	}
 
-	def getNoValidateProjectPath(ProjectDescription pd) {
-		pd.moduleFilters.filter[moduleFilterType == ModuleFilterType.NO_VALIDATE]
-	}
-
-	def ProjectDescription getProjectDescription() {
-		val uri = URI.createPlatformResourceURI(manifest.fullPath.toString, true);
+	def JSONObject getPackageJSONContent() {
+		val uri = URI.createPlatformResourceURI(packageJson.fullPath.toString, true);
 		val rs = getResourceSet(projectUnderTest.project);
 		val resource = rs.getResource(uri, true);
-		resource.contents.head as ProjectDescription
+		val document = resource.contents.head as JSONDocument;
+		return document.content as JSONObject;
 	}
 
 	def fileA() '''
@@ -151,28 +125,28 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 			function funA() {
 			}
 		}
-
+		
 		import * as JN from "p/q/F"
-
+		
 		export public class A {
-
+		
 			$doIt() {
 				var classB : JN.ClassB;
-
+		
 			}
 		}
 	'''
 
 	def fileB() '''
 		import { A } from "p/q/E"
-
+		
 		{
 			function B() {
 				var a : A;
 				a.$b;
 			}
 		}
-
+		
 		export public class ClassB {
 			$a : A;
 		}
@@ -183,10 +157,10 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 			function Module() {
 			}
 		}
-
+		
 		export public class Hack {
 			$hack() {
-
+		
 			}
 		}
 	'''
@@ -196,10 +170,10 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 			function ugly() {
 			}
 		}
-
+		
 		export public class Hack {
 			$hack() {
-
+		
 			}
 		}
 	'''
@@ -209,9 +183,9 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 			function funA() {
 			}
 		}
-
+		
 		import { B } from "p/q/F"
-
+		
 		export public class A {
 			$b : B;
 		}
@@ -219,14 +193,14 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 
 	def fileF() '''
 		import { A } from "p/q/E"
-
+		
 		{
 			function B() {
 				var a : A;
 				a.$b;
 			}
 		}
-
+		
 		export public class ClassB {
 			$a : A;
 		}

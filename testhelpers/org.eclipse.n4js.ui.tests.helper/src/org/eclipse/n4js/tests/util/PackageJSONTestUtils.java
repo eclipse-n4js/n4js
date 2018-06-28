@@ -26,12 +26,14 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.n4mf.ModuleFilterType;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.n4mf.SourceContainerType;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.utils.ProjectDescriptionHelper;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 /**
  * Test utility methods for creating and modifying N4JS package.json files in terms of its {@link JSONPackage} model
@@ -91,6 +93,110 @@ public class PackageJSONTestUtils {
 		// create new entry for SourceContainerType and set it to the list of source container specifiers
 		JSONModelUtils.setProperty(sourcesSection, type.getLiteral().toLowerCase(),
 				JSONModelUtils.createStringArray(sourceContainerSpecifiers));
+	}
+
+	/**
+	 * Adds the given source container specifier (path) to the corresponding list of sources containers of {@code type}
+	 * in the {@code n4js.sources} section.
+	 */
+	public static void addSourceContainerSpecifier(JSONObject root, SourceContainerType type,
+			String specifier) {
+		JSONObject n4jsSection = getOrCreateN4JSSection(root);
+		// make sure n4js.sources section exists
+		JSONObject sourcesSection = (JSONObject) JSONModelUtils.getProperty(n4jsSection, PROP__SOURCES)
+				.orElseGet(() -> JSONModelUtils.addProperty(n4jsSection, PROP__SOURCES,
+						JSONFactory.eINSTANCE.createJSONObject()));
+
+		final String typeLabel = type.getLiteral().toLowerCase();
+
+		final JSONArray specifierList = (JSONArray) JSONModelUtils.getProperty(sourcesSection, typeLabel)
+				.orElseGet(() -> JSONModelUtils.addProperty(sourcesSection, typeLabel,
+						JSONFactory.eINSTANCE.createJSONArray()));
+
+		specifierList.getElements().add(JSONModelUtils.createStringLiteral(specifier));
+	}
+
+	/**
+	 * Adds a new module filter specifier of {@code type} to the package.json files represented by {@code root}.
+	 *
+	 * @param filterSpecifier
+	 *            The filter specifier to add.
+	 * @param sourceContainer
+	 *            The source container the filter should apply to. May be null if the filter applies to all source
+	 *            containers.
+	 */
+	public static void addModuleFilter(JSONObject root, ModuleFilterType type, String filterSpecifier,
+			String sourceContainer) {
+		final JSONObject n4jsSection = getOrCreateN4JSSection(root);
+		final JSONObject moduleFilterSection = getOrCreateObject(n4jsSection,
+				ProjectDescriptionHelper.PROP__MODULE_FILTERS);
+		final JSONArray filterTypeSection = getOrCreateArray(moduleFilterSection,
+				ProjectDescriptionUtils.getModuleFilterTypeRepresentation(type));
+
+		if (sourceContainer == null) {
+			filterTypeSection.getElements().add(JSONModelUtils.createStringLiteral(filterSpecifier));
+		} else {
+			final JSONObject filterObject = JSONFactory.eINSTANCE.createJSONObject();
+
+			final NameValuePair filterPair = JSONFactory.eINSTANCE.createNameValuePair();
+			filterPair.setName(ProjectDescriptionHelper.PROP__MODULE);
+			filterPair.setValue(JSONModelUtils.createStringLiteral(filterSpecifier));
+
+			final NameValuePair sourceContainerPair = JSONFactory.eINSTANCE.createNameValuePair();
+			sourceContainerPair.setName(ProjectDescriptionHelper.PROP__SOURCE_CONTAINER);
+			sourceContainerPair.setValue(JSONModelUtils.createStringLiteral(sourceContainer));
+
+			filterObject.getNameValuePairs().add(filterPair);
+			filterObject.getNameValuePairs().add(sourceContainerPair);
+
+			filterTypeSection.getElements().add(filterObject);
+		}
+	}
+
+	/**
+	 * Removes all declared module filters from the package.json represented by the given {@code root} that match the
+	 * given {@code filterSpecifierToRemove}.
+	 *
+	 * Only support the object and string-literal notation of module filters.
+	 *
+	 * @See {@link ProjectDescriptionUtils#getModuleFilterSpecifier(JSONValue)}
+	 */
+	public static void removeModuleFilter(JSONObject root, ModuleFilterType type, String filterSpecifierToRemove) {
+		final JSONObject n4jsSection = getOrCreateN4JSSection(root);
+		final JSONObject moduleFilterSection = getOrCreateObject(n4jsSection,
+				ProjectDescriptionHelper.PROP__MODULE_FILTERS);
+		final JSONArray filterTypeSection = getOrCreateArray(moduleFilterSection,
+				ProjectDescriptionUtils.getModuleFilterTypeRepresentation(type));
+
+		// remove all module filter that match 'filterSpecifierToRemove'
+		filterTypeSection.getElements().removeIf(e -> {
+			if (e instanceof JSONStringLiteral) { // check string literal value (syntax variant 1)
+				return ((JSONStringLiteral) e).getValue().equals(filterSpecifierToRemove);
+			} else if (e instanceof JSONObject) { // check 'module' property of the object syntax (syntax variant 2)
+				Optional<JSONValue> moduleValue = JSONModelUtils.getProperty(root,
+						ProjectDescriptionHelper.PROP__MODULE);
+				if (moduleValue.isPresent() && moduleValue.get() instanceof JSONStringLiteral) {
+					return ((JSONStringLiteral) moduleValue.get()).getValue().equals(filterSpecifierToRemove);
+				}
+			}
+			return false;
+		});
+	}
+
+	private static JSONArray getOrCreateArray(JSONObject root, String property) {
+		return (JSONArray) JSONModelUtils.getProperty(root, property).orElseGet(
+				() -> JSONModelUtils.addProperty(root, property,
+						JSONFactory.eINSTANCE.createJSONArray()));
+	}
+
+	private static JSONObject getOrCreateObject(JSONObject root, String property) {
+		return (JSONObject) JSONModelUtils.getProperty(root, property).orElseGet(
+				() -> JSONModelUtils.addProperty(root, property,
+						JSONFactory.eINSTANCE.createJSONObject()));
+	}
+
+	private static JSONObject getOrCreateN4JSSection(JSONObject root) {
+		return getOrCreateObject(root, PROP__N4JS);
 	}
 
 	/**

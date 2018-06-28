@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.manifest
+package org.eclipse.n4js.tests.project
 
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.manifest
+package org.eclipse.n4js.tests.project
 
 import com.google.common.base.Predicate
 import java.util.concurrent.TimeUnit
@@ -274,7 +274,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 
 		changeProjectType(secondProjectUnderTest, ProjectType.RUNTIME_LIBRARY);
-		assertMarkers('project description file (package.json) file should have one error.', projectDescriptionFile, 1);
+		assertMarkers('project description file (package.json) file should have one error.', projectDescriptionFile, 0);
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 
 		changeProjectType(secondProjectUnderTest, ProjectType.LIBRARY);
