@@ -15,16 +15,15 @@ import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.n4mf.ModuleFilter
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier
 import org.eclipse.n4js.n4mf.ModuleFilterType
-import org.eclipse.n4js.n4mf.SourceContainerType
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.junit.Before
 import org.junit.Test
-import org.eclipse.n4js.json.JSON.JSONDocument
 
 /**
  * Tests if the source folder can be set to {@code "."}
@@ -45,7 +44,6 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 		src_P = createFolder(src, "P");
 		src_P_Q = createFolder(src_P, "Q");
 		projectDescriptionFile = projectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON);
-		setProjectAsSource();
 		waitForAutoBuild();
 	}
 
@@ -71,16 +69,7 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 		assertMarkers("file E should have 2 markers", fileE, 2); // Xtext markers still shown
 		assertMarkers("file F should have 3 markers", fileF, 3); // Xtext markers still shown
 	}
-
-	def void setProjectAsSource() {
-		val pd = getPackageJSONContent;
-		
-		PackageJSONTestUtils.setSourceContainerSpecifiers(pd, SourceContainerType.SOURCE, #["."]);
-		
-		pd.eResource.save(null)
-		waitForAutoBuild();
-	}
-
+	
 	def void addPathsToNoValidate(String... filterSpecifiers) {
 		val packageJSON = getPackageJSONContent
 		
