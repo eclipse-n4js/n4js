@@ -1,0 +1,100 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+grammar org.eclipse.n4js.semver.SemanticVersioning
+	with org.eclipse.n4js.common.unicode.Unicode
+	hidden (WS, EOL)
+
+import "http://www.eclipse.org/n4js/SemanticVersioning"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+
+
+// This grammar is an adapted version of the BNF found at:
+//  https://docs.npmjs.com/misc/semver
+//
+//	range-set  ::= range ( logical-or range ) *
+//	logical-or ::= ( ' ' ) * '||' ( ' ' ) *
+//	range      ::= hyphen | simple ( ' ' simple ) * | ''
+//	hyphen     ::= partial ' - ' partial
+//	simple     ::= primitive | partial | tilde | caret
+//	primitive  ::= ( '<' | '>' | '>=' | '<=' | '=' | ) partial
+//	partial    ::= xr ( '.' xr ( '.' xr qualifier ? )? )?
+//	xr         ::= 'x' | 'X' | '*' | nr
+//	nr         ::= '0' | ['1'-'9'] ( ['0'-'9'] ) *
+//	tilde      ::= '~' partial
+//	caret      ::= '^' partial
+//	qualifier  ::= ( '-' pre )? ( '+' build )?
+//	pre        ::= parts
+//	build      ::= parts
+//	parts      ::= part ( '.' part ) *
+//	part       ::= nr | [-0-9A-Za-z]+
+
+
+
+VersionRangeSet:
+	ranges+=VersionRange? ('||' ranges+=VersionRange)*
+;
+
+VersionRange:
+	HyphenVersionRange | EnumeratedVersionRange
+;
+
+HyphenVersionRange returns VersionRange:
+	{HyphenVersionRange} from=VersionNumber '-' to=VersionNumber
+;
+
+EnumeratedVersionRange returns VersionRange:
+	{EnumeratedVersionRange} (simpleVersions+=SimpleVersion)+
+;
+
+SimpleVersion:
+	(comparator=VersionComparator)? hasTilde?='~' hasCaret?='^' number=VersionNumber
+;
+
+VersionNumber:
+	major=Xr ( '.' minor=Xr ( '.' path=Xr qualifier=Qualifier? )? )?
+;
+
+Xr:
+	'x' | 'X' | '*' // | NUMBER
+;
+
+Qualifier:
+	('-' preRelease=Parts) | ('+' buildMetadata=Parts)
+;
+
+Parts:
+	PART ( '.' PART )*
+;
+
+
+terminal PART:
+	'0' | ( ('1'..'9' | 'A'..'Z' | 'a'..'z') ('-' | '0'..'9' | 'A'..'Z' | 'a'..'z')* )
+;
+
+//terminal NUMBER:
+//	'0' | ('1'..'9') ( '0'..'9' )*
+//;
+
+terminal WS:
+	WHITESPACE_FRAGMENT+;
+
+terminal EOL:
+	LINE_TERMINATOR_SEQUENCE_FRAGMENT;
+
+enum VersionComparator:
+	Equals = '='
+|	Smaller = '<'
+|	SmallerEquals = '<='
+|	Greater = '>'
+|	GreaterEquals = '>='
+;

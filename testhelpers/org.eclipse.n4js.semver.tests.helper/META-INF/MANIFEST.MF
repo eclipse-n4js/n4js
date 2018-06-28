@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.n4js.semver.tests.helper
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: %providerName
+Require-Bundle: org.eclipse.n4js.semver,
+ org.eclipse.core.runtime,
+ org.junit,
+ org.eclipse.xtext.testing,
+ org.eclipse.xtend,
+ org.eclipse.xtext.xbase.lib
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.eclipse.n4js.semver,
+ org.eclipse.n4js.semver.tests
+Automatic-Module-Name: org.eclipse.n4js.semver.tests.helper

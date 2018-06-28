@@ -1,0 +1,69 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsURI="http://www.eclipse.org/n4js/SemanticVersioning")
+@GenModel(
+	modelDirectory="/org.eclipse.n4js.semver.model/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	literalsInterface="true",
+	loadInitialization="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	documentation="*\nCopyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n * Contributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+
+package org.eclipse.n4js.semver.SEMVER
+
+
+class VersionRangeSet {
+	contains VersionRange[] ranges
+}
+
+abstract class VersionRange {
+}
+
+class HyphenVersionRange extends VersionRange {
+	contains VersionNumber from
+	contains VersionNumber to
+}
+
+class EnumeratedVersionRange extends VersionRange {
+	contains SimpleVersion[] simpleVersions
+}
+
+class SimpleVersion {
+	contains VersionNumber number
+	VersionComparator comparator
+	boolean hasTilde
+	boolean hasCaret
+}
+
+class VersionNumber {
+	contains Qualifier qualifier
+	String major
+	String minor
+	String path
+}
+
+class Qualifier {
+	String preRelease
+	String buildMetadata
+}
+
+enum VersionComparator {
+	Equals = 0,
+	Smaller = 1,
+	SmallerEquals = 2,
+	Greater = 3,
+	GreaterEquals = 4
+}
