@@ -12,23 +12,22 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 
-// disabled until GH-855 solved
 
 
 var /* any+ */ o;
-// X-PECT noerrors --> "Indexed access allowed in JS-mode" at 'o["name"]'
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o["name"]'
 o["name"]="Hello";
-// X-PECT noerrors --> "Indexed access allowed in JS-mode" at 'o["hello"]'
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o["hello"]'
 o["hello"]=1;
-// X-PECT noerrors --> "Indexed access allowed in JS-mode" at 'o[5]'
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o[5]'
 o[5]="hello";
-// X-PECT noerrors --> "Indexed access allowed in JS-mode" at 'o[5]'
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'o[5]'
 o[5]=42;
 
 var ol = {
 	p1: "Hello",
 }
-// X-PECT noerrors --> "Indexed access allowed in JS-mode" at ol.p1
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at ol.p1
 ol.p1;
-// X-PECT noerrors --> "Indexed access allowed in JS-mode" at 'ol["p1"]'
+// XPECT noerrors --> "Indexed access allowed in JS-mode" at 'ol["p1"]'
 ol["p1"];

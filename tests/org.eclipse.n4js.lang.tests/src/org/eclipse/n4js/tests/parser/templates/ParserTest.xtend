@@ -18,14 +18,11 @@ import org.junit.Test
 import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 
-/**
- * GH-855: change all parse methods to use JS again.
- */
 class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testNoSubst() {
-		val script = '`noSubst`'.parseN4jsSuccessfully
+		val script = '`noSubst`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
@@ -35,7 +32,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testNoSubstBackslash() {
-		val script = '`\\\\`'.parseN4jsSuccessfully
+		val script = '`\\\\`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
@@ -46,7 +43,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testNoSubstQuote() {
-		val script = '`\\\'`'.parseN4jsSuccessfully
+		val script = '`\\\'`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
@@ -57,7 +54,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testNoSubstBackslashR() {
-		val script = '`\\r`'.parseN4jsSuccessfully
+		val script = '`\\r`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
@@ -68,7 +65,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testNoSubstSingleDollar() {
-		val script = '`$`'.parseN4jsSuccessfully
+		val script = '`$`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
@@ -78,7 +75,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testNoSubstDollars() {
-		val script = '`$$ $$`'.parseN4jsSuccessfully
+		val script = '`$$ $$`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
@@ -91,7 +88,7 @@ class ParserTest extends AbstractParserTest {
 		val script = '''
 			`no
 			 Subst`
-		'''.parseN4jsSuccessfully
+		'''.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
@@ -101,7 +98,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testEmptyExpression() {
-		val script = '`${}`'.parseN4jsSuccessfully
+		val script = '`${}`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(2, template.segments.size)
@@ -113,7 +110,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testEmptyExpressionWithText() {
-		val script = '`a${}b`'.parseN4jsSuccessfully
+		val script = '`a${}b`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(2, template.segments.size)
@@ -125,7 +122,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testEmptyExpressionsWithTextAndSpaces() {
-		val script = '` a ${} b ${} c `'.parseN4jsSuccessfully
+		val script = '` a ${} b ${} c `'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(3, template.segments.size)
@@ -139,7 +136,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testSubstDollars() {
-		val script = '`$${}`'.parseN4jsSuccessfully
+		val script = '`$${}`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(2, template.segments.size)
@@ -150,7 +147,7 @@ class ParserTest extends AbstractParserTest {
 	/* line delimiters are normalized \n */
 	@Test
 	def void testLineDelimiters() {
-		val script = '` \r ${} \r\n ${} \n `'.parseN4jsSuccessfully
+		val script = '` \r ${} \r\n ${} \n `'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(3, template.segments.size)
@@ -164,7 +161,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testExpression() {
-		val script = '`${true}`'.parseN4jsSuccessfully
+		val script = '`${true}`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(3, template.segments.size)
@@ -176,7 +173,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testNestedTemplates() {
-		val script = '`${`${`a`}`}`'.parseN4jsSuccessfully
+		val script = '`${`${`a`}`}`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(3, template.segments.size)
@@ -188,7 +185,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testObjectLiteral() {
-		val script = '`a${{}}b`'.parseN4jsSuccessfully
+		val script = '`a${{}}b`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(3, template.segments.size)
@@ -200,7 +197,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testTaggedTemplate_01() {
-		val script = 'tag `noSubst`'.parseN4jsSuccessfully
+		val script = 'tag `noSubst`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val tagged = statement.expression as TaggedTemplateString
 		val template = tagged.template
@@ -278,7 +275,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testContinuation_01() {
-		val script = '`\\\r\n`'.parseN4jsSuccessfully
+		val script = '`\\\r\n`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(1, template.segments.size)
@@ -288,7 +285,7 @@ class ParserTest extends AbstractParserTest {
 
 	@Test
 	def void testContinuation_02() {
-		val script = '`${}\\\n`'.parseN4jsSuccessfully
+		val script = '`${}\\\n`'.parseJSSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val template = statement.expression as TemplateLiteral
 		assertEquals(2, template.segments.size)

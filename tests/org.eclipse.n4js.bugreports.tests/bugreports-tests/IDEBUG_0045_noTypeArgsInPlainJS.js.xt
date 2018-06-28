@@ -9,6 +9,5 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-// disabled issues until GH-855 is solved
-// X-PECT noerrors --> "in plain JS, no type arguments are required"
+// XPECT noerrors --> "in plain JS, no type arguments are required"
 var /*Array<any+>*/ a = new Array/*<any+>*/();
