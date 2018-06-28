@@ -40,7 +40,7 @@
 			]
 		},
 		"testedProjects": [
-			// XPECT warnings --> "Project test.data.test.project.one type of test cannot be declared among the tested projects." at ""test.data.test.project.one""
+			// XPECT warnings --> "Project test.data.test.project.one of type test cannot be declared among the tested projects." at ""test.data.test.project.one""
 			"test.data.test.project.one"
 		]
 	}

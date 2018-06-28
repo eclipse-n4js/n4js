@@ -46,9 +46,9 @@
 	"name": "test.03",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
-		// XPECT warnings --> "Project test.data.re.project type of runtime environment cannot be declared among the dependencies or devDependencies." at ""test.data.re.project": "*""
+		// XPECT warnings --> "Project test.data.re.project of type runtime environment cannot be declared among the dependencies or devDependencies." at ""test.data.re.project": "*""
 		"test.data.re.project": "*",
-		// XPECT warnings --> "Project test.data.test.project.one type of test cannot be declared among the dependencies or devDependencies." at ""test.data.test.project.one": "*""
+		// XPECT warnings --> "Project test.data.test.project.one of type test cannot be declared among the dependencies or devDependencies." at ""test.data.test.project.one": "*""
 		"test.data.test.project.one": "*",
 		
 		"test.data.rl.project.two": "*",
@@ -69,18 +69,18 @@
 		"providedRuntimeLibraries": [""],
 		"requiredRuntimeLibraries": [
 			/* XPECT issues ---
-			"Project test.data.system.project.one type of library cannot be declared among the required runtime libraries." at ""test.data.system.project.one""
+			"Project test.data.system.project.one of type library cannot be declared among the required runtime libraries." at ""test.data.system.project.one""
 			"The project reference test.data.system.project.one in required runtime libraries must also be declared as explicit project dependency in dependencies or devDependencies." at ""test.data.system.project.one""
 			---
 			*/
 			"test.data.system.project.one",
-			// XPECT warnings --> "Project test.data.re.project type of runtime environment cannot be declared among the required runtime libraries." at ""test.data.re.project""
+			// XPECT warnings --> "Project test.data.re.project of type runtime environment cannot be declared among the required runtime libraries." at ""test.data.re.project""
 			"test.data.re.project",
 			// XPECT errors -->	"Project does not exist with project ID: xxx.yyy.zzz." at ""xxx.yyy.zzz""
 			"xxx.yyy.zzz",
 			// XPECT errors -->	"Project cannot reference itself." at ""test.03""
 			"test.03",
-			// XPECT warnings --> "Project test.data.test.project.one type of test cannot be declared among the required runtime libraries." at ""test.data.test.project.one""
+			// XPECT warnings --> "Project test.data.test.project.one of type test cannot be declared among the required runtime libraries." at ""test.data.test.project.one""
 			"test.data.test.project.one",
 			// XPECT noerrors -->
 			"test.data.rl.project.two"
