@@ -54,7 +54,6 @@ pipeline {
                                 ls -la
                                 docker --help
                                 ls -la /var/run/docker.sock
-                                // IDE-3069: Test calling docker, remove before merging to master!
                                 docker ps
                            """
                 }
