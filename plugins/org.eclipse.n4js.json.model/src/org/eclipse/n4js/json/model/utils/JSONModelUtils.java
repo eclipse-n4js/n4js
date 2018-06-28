@@ -35,6 +35,18 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 public class JSONModelUtils {
 
 	/**
+	 * Same as {@link #getPath(JSONObject, List)}, but accepts a {@link JSONDocument} with a {@link JSONObject} as
+	 * content.
+	 */
+	public static Optional<JSONValue> getPath(JSONDocument document, List<String> path) {
+		final JSONValue content = document.getContent();
+		if (content instanceof JSONObject) {
+			return getPath((JSONObject) content, path);
+		}
+		return Optional.empty();
+	}
+
+	/**
 	 * Returns the {@link JSONValue} that can be found under the given property path starting from the given
 	 * {@code object}.
 	 *
@@ -137,6 +149,18 @@ public class JSONModelUtils {
 					JSONFactory.eINSTANCE.createJSONObject());
 			return setPath(nextObject, currentPath.subList(1, pathLength), fullPath, value);
 		}
+	}
+
+	/**
+	 * Same as {@link #getProperty(JSONObject, String)}, but accepts a {@link JSONDocument} with a {@link JSONObject} as
+	 * content.
+	 */
+	public static Optional<JSONValue> getProperty(JSONDocument document, String property) {
+		final JSONValue content = document.getContent();
+		if (content instanceof JSONObject) {
+			return getProperty((JSONObject) content, property);
+		}
+		return Optional.empty();
 	}
 
 	/**

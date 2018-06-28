@@ -26,7 +26,7 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 /**
  * Simple project importer implementation.
  */
-class ProjectImporter {
+public class ProjectImporter {
 
 	private static final Logger LOG = LogManager.getLogger(ProjectImporter.class);
 

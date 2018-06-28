@@ -214,6 +214,19 @@ public class ProjectDescriptionHelper {
 	}
 
 	/**
+	 * Loads the project description of the N4JS project at the given {@code location} and returns the version string or
+	 * <code>null</code> if undefined or in case of error.
+	 */
+	public String loadVersionFromProjectDescriptionAtLocation(URI location) {
+		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
+		if (packageJSON == null) {
+			return null;
+		}
+		JSONValue versionValue = JSONModelUtils.getProperty(packageJSON, PROP__VERSION).orElse(null);
+		return asStringOrNull(versionValue);
+	}
+
+	/**
 	 * Adjust the path value of the "main" property of the given package.json document as follows (in-place change of
 	 * the given JSON document):
 	 * <ol>

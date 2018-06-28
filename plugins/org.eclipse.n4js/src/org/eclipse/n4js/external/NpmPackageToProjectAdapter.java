@@ -11,7 +11,6 @@
 package org.eclipse.n4js.external;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.external.libraries.PackageJson.PACKAGE_JSON;
 import static org.eclipse.xtext.util.Tuples.pair;
 
 import java.io.File;
@@ -28,8 +27,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.libraries.PackageJson;
+import org.eclipse.n4js.utils.ProjectDescriptionHelper;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.git.GitUtils;
@@ -58,6 +58,9 @@ public class NpmPackageToProjectAdapter {
 
 	@Inject
 	private GitCloneSupplier gitCloneSupplier;
+
+	@Inject
+	private ProjectDescriptionHelper projectDescriptionHelper;
 
 	/** Default filter for copying N4JSD project contents during adaptation */
 	private final static Predicate<Path> COPY_N4JSD_PREDICATE = new Predicate<Path>() {
@@ -105,7 +108,7 @@ public class NpmPackageToProjectAdapter {
 				if (n4jsdsFolder != null) {
 					addTypeDefinitions(packageRoot, n4jsdsFolder);
 				}
-				// create marker file to denote that his package was among "namesOfPackagesToAdapt"
+				// create marker file to denote that this package was among "namesOfPackagesToAdapt"
 				// (compare with: ExternalProjectLocationsProvider#isExternalProjectDirectory(File))
 				File markerFile = new File(packageRoot, N4JSGlobals.PACKAGE_MARKER);
 				Files.write(markerFile.toPath(), Collections.singletonList( // will overwrite existing file
@@ -118,28 +121,6 @@ public class NpmPackageToProjectAdapter {
 		}
 
 		return pair(status, Arrays.asList(packageRoots));
-	}
-
-	/**
-	 * Reads, parses and returns with the content of the {@code package.json} file as a POJO for the given npm package
-	 * root location.
-	 *
-	 * @param packageRoot
-	 *            the root location of the npm package.
-	 *
-	 * @return the POJO instance that represents the read, parsed content of the {@code package.json} file.
-	 *
-	 * @throws IOException
-	 *             if {@code package.json} file does not exists, hence the content cannot be read.
-	 */
-	PackageJson getPackageJson(File packageRoot) throws IOException {
-
-		final File packageJsonFile = new File(packageRoot, PACKAGE_JSON);
-		if (!packageJsonFile.isFile()) {
-			throw new IOException("Cannot read package.json content for package '" + packageRoot.getName()
-					+ "' at '" + packageJsonFile + "'.");
-		}
-		return PackageJson.readValue(packageJsonFile.toURI());
 	}
 
 	private static String NPM_DEFINITIONS_FOLDER_NAME = "npm";
@@ -190,7 +171,7 @@ public class NpmPackageToProjectAdapter {
 	 *
 	 * @return a status representing the outcome of performed the operation.
 	 */
-	IStatus addTypeDefinitions(File packageRoot, File definitionsFolder) throws IOException {
+	IStatus addTypeDefinitions(File packageRoot, File definitionsFolder) {
 
 		String packageName = packageRoot.getName();
 		File packageN4JSDsRoot = new File(definitionsFolder, packageName);
@@ -202,10 +183,15 @@ public class NpmPackageToProjectAdapter {
 			return statusHelper.OK();
 		}
 
-		PackageJson packageJson = getPackageJson(packageRoot);
-
-		String packageJsonVersion = packageJson.version;
+		String packageJsonVersion = projectDescriptionHelper.loadVersionFromProjectDescriptionAtLocation(
+				URI.createFileURI(packageRoot.getAbsolutePath()));
 		Version packageVersion = Version.createFromString(packageJsonVersion);
+		if (Version.MISSING.equals(packageVersion)) {
+			final String message = "Cannot read version from package.json of npm package '" + packageName + "'.";
+			logger.logInfo(message);
+			LOGGER.error(message);
+			return statusHelper.createError(message);
+		}
 		String[] list = packageN4JSDsRoot.list();
 		Set<Version> availableTypeDefinitionsVersions = new HashSet<>();
 		for (int i = 0; i < list.length; i++) {
@@ -237,8 +223,8 @@ public class NpmPackageToProjectAdapter {
 
 		File packageVersionedN4JSDProjectRoot = new File(packageN4JSDsRoot, closestMatchingVersion.toString());
 		if (!(packageVersionedN4JSDProjectRoot.exists() && packageVersionedN4JSDProjectRoot.isDirectory())) {
-			final String message = "Cannot find type definitions folder for '" + packageName
-					+ "' npm package for version '" + closestMatchingVersion + "'.";
+			final String message = "Cannot find type definitions folder for npm package '" + packageName
+					+ "' for version '" + closestMatchingVersion + "'.";
 			logger.logInfo(message);
 			LOGGER.error(message);
 			return statusHelper.createError(message);
