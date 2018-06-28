@@ -28,8 +28,9 @@
 
 // Testing cycle-detection IDEBUG-266
 
-// XPECT errors --> "The project configuration contains a dependency cycle of projects [B] -> A -> C -> [B]." at "B"
+
 {
+	// XPECT errors --> "The project configuration contains a dependency cycle of projects [B] -> A -> C -> [B]." at ""B""
 	"name": "B",
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {

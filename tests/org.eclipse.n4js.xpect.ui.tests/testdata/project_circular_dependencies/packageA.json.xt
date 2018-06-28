@@ -28,10 +28,13 @@
 
 // Testing cycle-detection IDEBUG-266
 
-// XPECT errors --> "The project configuration contains a dependency cycle of projects [A] -> C -> B -> [A]." at "A"
 {
+	// XPECT errors --> "The project configuration contains a dependency cycle of projects [A] -> C -> B -> [A]." at ""A""
 	"name": "A",
 	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"C": "*"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

@@ -37,10 +37,13 @@
    END_SETUP
  */
 
-// XPECT errors --> "The project configuration contains a dependency cycle of projects D -> [A] -> C -> B -> [A]." at "D"
 {
+	// XPECT errors --> "The project configuration contains a dependency cycle of projects D -> [A] -> C -> B -> [A]." at ""D""
 	"name": "D",
 	"version": "0.0.1-SNAPSHOT",
+	"dependencies": {
+		"A": "*"
+	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

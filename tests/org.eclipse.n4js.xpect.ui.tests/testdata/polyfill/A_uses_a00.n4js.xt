@@ -37,5 +37,5 @@ class A {
 // Usage of runtime-provided class XPECT noerrors -->
 var m : MObject = new MObject();
 
-// referncing runtime-provided method definition XPECT noerrors -->
+// referencing runtime-provided method definition XPECT noerrors -->
 var n : number = m.k(12);
