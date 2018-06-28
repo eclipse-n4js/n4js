@@ -201,6 +201,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 		final JSONObject dependenciesObject = (JSONObject) sectionValue;
 		for (NameValuePair entry : dependenciesObject.getNameValuePairs()) {
+			// check version
 			if (checkIsType(entry.getValue(), JSONPackage.Literals.JSON_STRING_LITERAL, "as version specifier")) {
 				final String constraintValue = ((JSONStringLiteral) entry.getValue()).getValue();
 				final VersionConstraint parsedConstraint = ProjectDescriptionUtils
@@ -245,11 +246,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		checkIsType(n4jsValues.get(ProjectDescriptionHelper.PROP__EXEC_MODULE),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as exec module");
 
-		// // special error message in case of a missing output property
-		// if (n4jsValues.get(ProjectDescriptionHelper.PROP__OUTPUT).isEmpty()) {
-		// addIssue(IssueCodes.getMessageForPKGJ_NO_OUTPUT_FOLDER(), n4jsSection.eContainer(),
-		// JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_NO_OUTPUT_FOLDER);
-		// }
+		// Check for empty strings
+		checkIsNonEmptyString(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_ID),
+				ProjectDescriptionHelper.PROP__VENDOR_ID);
+		checkIsNonEmptyString(n4jsValues.get(ProjectDescriptionHelper.PROP__VENDOR_NAME),
+				ProjectDescriptionHelper.PROP__VENDOR_NAME);
 	}
 
 	/** Check the projectType value structure and limitations. */
@@ -259,6 +260,10 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (!checkIsType(projectTypeValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
 		}
+		if (!checkIsNonEmptyString((JSONStringLiteral) projectTypeValue, ProjectDescriptionHelper.PROP__PROJECT_TYPE)) {
+			return;
+		}
+
 		// check whether the given value represents a valid project type
 		final String projectTypeString = ((JSONStringLiteral) projectTypeValue).getValue();
 		final ProjectType type = ProjectDescriptionUtils.parseProjectType(projectTypeString);
@@ -291,12 +296,34 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (!checkIsType(moduleLoaderValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
 			return;
 		}
+		if (!checkIsNonEmptyString((JSONStringLiteral) moduleLoaderValue,
+				ProjectDescriptionHelper.PROP__MODULE_LOADER)) {
+			return;
+		}
 		// check whether the given value represents a valid project type
 		final String moduleLoaderString = ((JSONStringLiteral) moduleLoaderValue).getValue();
 		if (ProjectDescriptionUtils.parseModuleLoader(moduleLoaderString) == null) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_LOADER(moduleLoaderString),
 					moduleLoaderValue, IssueCodes.PKGJ_INVALID_MODULE_LOADER);
 		}
+	}
+
+	/**
+	 * Checks all given {@code values} to be {@link JSONStringLiteral} with non-empty string value.
+	 *
+	 * Skips values of non {@link JSONStringLiteral} type.
+	 *
+	 * @See {@link #checkIsType(JSONValue, EClass, String)}
+	 * @See {@link #checkIsNonEmptyString(JSONStringLiteral, String)}
+	 */
+	private boolean checkIsNonEmptyString(Iterable<JSONValue> values, String locationClause) {
+		boolean overallResult = true;
+		for (JSONValue value : values) {
+			if (value instanceof JSONStringLiteral) {
+				overallResult &= checkIsNonEmptyString((JSONStringLiteral) value, locationClause);
+			}
+		}
+		return overallResult;
 	}
 
 	/**
@@ -344,19 +371,23 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// obtain source-container-related content of the section and validate its structure
 		Multimap<SourceContainerType, List<JSONStringLiteral>> sourceContainers = getSourceContainers();
 
-		// check each source container sub-section (e.g. sources, external, etc.)
-		for (Entry<SourceContainerType, List<JSONStringLiteral>> subSection : sourceContainers
-				.entries()) {
-			// check each specified source path to actually exist
-			for (JSONStringLiteral containerLiteral : subSection.getValue()) {
-				checkSourceContainerLiteral(containerLiteral);
-			}
-		}
-
 		final List<JSONStringLiteral> allDeclaredSourceContainers = sourceContainers.entries().stream()
 				// flat-map to a list of all source containers that are specified (for all types combined)
 				.flatMap(entry -> entry.getValue().stream())
 				.collect(Collectors.toList());
+
+		// check paths for empty strings
+		for (JSONStringLiteral containerLiteral : allDeclaredSourceContainers) {
+			if (containerLiteral.getValue().isEmpty()) {
+				addIssue(IssueCodes.getMessageForPKGJ_EMPTY_SOURCE_PATH(), containerLiteral,
+						IssueCodes.PKGJ_EMPTY_SOURCE_PATH);
+			}
+		}
+
+		// check each source container sub-section (e.g. sources, external, etc.)
+		for (JSONStringLiteral containerLiteral : allDeclaredSourceContainers) {
+			checkSourceContainerLiteral(containerLiteral);
+		}
 
 		// find all groups of duplicate paths
 		final List<List<JSONStringLiteral>> containerDuplicates = findPathDuplicates(allDeclaredSourceContainers);
@@ -407,8 +438,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final JSONArray implementedProjectsValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." +
 				ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, JSONArray.class);
 
-		// check for correct type of implementationId
+		// check basic constraints
 		if (!checkIsType(value, JSONPackage.Literals.JSON_STRING_LITERAL, "as implementation ID")) {
+			return;
+		}
+		if (!checkIsNonEmptyString((JSONStringLiteral) value, ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID)) {
 			return;
 		}
 
@@ -507,7 +541,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			}
 
 			// check value to be non-empty
-			if (!checkIsNonEmptyString((JSONStringLiteral) outputPathValue, "output")) {
+			if (!checkIsNonEmptyString((JSONStringLiteral) outputPathValue, ProjectDescriptionHelper.PROP__OUTPUT)) {
 				return;
 			}
 		}
@@ -588,7 +622,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 
 		for (NameValuePair pair : ((JSONObject) moduleFilterSection).getNameValuePairs()) {
-			checkModuleFilterEntry(pair);
+			internalCheckModuleFilterEntry(pair);
 		}
 	}
 
@@ -596,7 +630,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	 * Checks whether the given {@code moduleFilterPair} represents a valid module-filter section entry (e.g. noValidate
 	 * section).
 	 */
-	private void checkModuleFilterEntry(NameValuePair moduleFilterPair) {
+	private void internalCheckModuleFilterEntry(NameValuePair moduleFilterPair) {
 		// obtain enum-representation of the validated module filter type
 		final ModuleFilterType filterType = ProjectDescriptionUtils.parseModuleFilterType(moduleFilterPair.getName());
 
@@ -665,14 +699,15 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			// make sure moduleFilterSpecifier.sourceContainerPath has been declared as source container
 			if (specifier.sourceContainerPath != null &&
 					!sourceContainerPaths.contains(specifier.sourceContainerPath)) {
-				addIssue(IssueCodes.getMessageForPKGJ_SRC_IN_IN_IS_NO_DECLARED_SOURCE(specifier.sourceContainerPath),
-						specifier.astRepresentation, IssueCodes.PKGJ_SRC_IN_IN_IS_NO_DECLARED_SOURCE);
+				addIssue(
+						IssueCodes.getMessageForPKGJ_SRC_IN_FILTER_IS_NO_DECLARED_SOURCE(specifier.sourceContainerPath),
+						specifier.astRepresentation, IssueCodes.PKGJ_SRC_IN_FILTER_IS_NO_DECLARED_SOURCE);
 			}
 		}
 	}
 
 	/**
-	 * Intermediate validatory-only representation of a module filter specifier.
+	 * Intermediate validator-only representation of a module filter specifier.
 	 */
 	private static class ValidationModuleFilterSpecifier {
 		final String filter;
@@ -840,8 +875,8 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		final File file = new File(absoluteProjectPath.toString() + "/" + relativePath);
 
 		if (!file.exists()) {
-			addIssue(IssueCodes.getMessageForPKGJ_EXISTING_SOURCE_PATH(relativePath),
-					pathLiteral, IssueCodes.PKGJ_EXISTING_SOURCE_PATH);
+			addIssue(IssueCodes.getMessageForPKGJ_NON_EXISTING_SOURCE_PATH(relativePath),
+					pathLiteral, IssueCodes.PKGJ_NON_EXISTING_SOURCE_PATH);
 			return false;
 		}
 

@@ -16,7 +16,7 @@
 	"n4js": {
 		"output": "src-gen",
 		"projectType": "api",
-		// XPECT errors --> "When defining one or more implemented projects, you also have to define an implementation ID, using property ImplementationId." at ""implementedProjects""
+		// XPECT errors --> "When defining one or more implemented projects, you also have to define an implementation ID, using property "implementationId"." at ""implementedProjects""
 		"implementedProjects": [
 			// XPECT errors --> "Project does not exist with project ID: A." at ""A""
 			"A",

@@ -59,6 +59,7 @@ import org.eclipse.n4js.n4mf.VersionConstraint;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -567,7 +568,7 @@ public class ProjectDescriptionHelper {
 				: Collections.emptySet();
 		for (NameValuePair pair : depPairs) {
 			String projectId = pair.getName();
-			if (projectId != null) {
+			if (projectId != null && !projectId.isEmpty()) {
 				if (avoidDuplicates && !existingProjectIds.add(projectId)) {
 					continue;
 				}
@@ -656,7 +657,12 @@ public class ProjectDescriptionHelper {
 	}
 
 	private String asStringOrNull(JSONValue jsonValue) {
-		return jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue() : null;
+		final String strValue = jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue()
+				: null;
+		if (Strings.isNullOrEmpty(strValue)) {
+			return null;
+		}
+		return strValue;
 	}
 
 	private List<JSONValue> asArrayElementsOrEmpty(JSONValue jsonValue) {
@@ -669,7 +675,7 @@ public class ProjectDescriptionHelper {
 
 	private ProjectReference asProjectReferenceOrNull(JSONValue jsonValue) {
 		String valueStr = asStringOrNull(jsonValue);
-		if (valueStr != null) {
+		if (!Strings.isNullOrEmpty(valueStr)) {
 			final ProjectReference result = N4mfFactory.eINSTANCE.createProjectReference();
 			result.setProjectId(valueStr);
 			return result;
@@ -680,13 +686,13 @@ public class ProjectDescriptionHelper {
 	private List<ProjectReference> asProjectReferencesInArrayOrEmpty(JSONValue jsonValue) {
 		return asArrayElementsOrEmpty(jsonValue).stream()
 				.map(this::asProjectReferenceOrNull)
-				.filter(pref -> pref != null)
+				.filter(ref -> ref != null)
 				.collect(Collectors.toList());
 	}
 
 	private BootstrapModule asBootstrapModuleOrNull(JSONValue jsonValue) {
 		String valueStr = asStringOrNull(jsonValue);
-		if (valueStr != null) {
+		if (!Strings.isNullOrEmpty(valueStr)) {
 			final BootstrapModule result = N4mfFactory.eINSTANCE.createBootstrapModule();
 			result.setModuleSpecifierWithWildcard(valueStr);
 			return result;
@@ -705,7 +711,7 @@ public class ProjectDescriptionHelper {
 	private List<String> asStringLiteralsInArrayOrEmpty(JSONValue jsonValue) {
 		return asArrayElementsOrEmpty(jsonValue).stream()
 				.map(v -> (v instanceof JSONStringLiteral) ? ((JSONStringLiteral) v).getValue() : null)
-				.filter(pref -> pref != null)
+				.filter(str -> !Strings.isNullOrEmpty(str))
 				.collect(Collectors.toList());
 	}
 

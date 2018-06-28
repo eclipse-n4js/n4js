@@ -594,14 +594,29 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__INIT_MODULES)
 	def checkInitModules(JSONValue initModulesValue) {
 		// initModule usage restriction
-		checkFeatureRestrictions(ProjectDescriptionHelper.PROP__INIT_MODULES, initModulesValue, RE_OR_RL_TYPE);
+		if (checkFeatureRestrictions(ProjectDescriptionHelper.PROP__INIT_MODULES, initModulesValue, RE_OR_RL_TYPE)) {
+			if (initModulesValue instanceof JSONArray) {
+				// check all init module entries for empty strings
+				initModulesValue.elements.filter(JSONStringLiteral)
+					.filter[ l | l.value.empty ]
+					.forEach[ l |
+						addIssue(IssueCodes.getMessageForPKGJ_EMPTY_INIT_MODULE(), l, 
+							IssueCodes.PKGJ_EMPTY_INIT_MODULE)
+					]
+			}
+		}
 	}
 	
 	/** Checks the 'n4js.execModule' section. */
 	@CheckProperty(propertyPath = ProjectDescriptionHelper.PROP__N4JS + "." + ProjectDescriptionHelper.PROP__EXEC_MODULE)
 	def checkExecModule(JSONValue execModuleValue) {
 		// execModule usage restriction
-		checkFeatureRestrictions(ProjectDescriptionHelper.PROP__EXEC_MODULE, execModuleValue, RE_OR_RL_TYPE);
+		if (checkFeatureRestrictions(ProjectDescriptionHelper.PROP__EXEC_MODULE, execModuleValue, RE_OR_RL_TYPE)) {
+			// check for empty string
+			if (execModuleValue instanceof JSONStringLiteral) {
+				checkIsNonEmptyString(execModuleValue, ProjectDescriptionHelper.PROP__EXEC_MODULE);
+			}
+		}
 	}
 	
 	/** Checks the 'n4js.implementationId' section. */
@@ -619,12 +634,13 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		if(checkFeatureRestrictions(ProjectDescriptionHelper.PROP__IMPLEMENTED_PROJECTS, implementedProjectsValue, 
 			not(or(RE_OR_RL_TYPE, TEST_TYPE)))) {
 		
-			val description = getProjectDescription();
-		
 			val references = implementedProjectsValue.referencesFromJSONStringArray;
 			checkReferencedProjects(references, API_TYPE.forN4jsProjects, "implemented projects", false, true);
 			
-			if (description.implementationId === null && !references.isEmpty()) {
+			// make sure an implementationId has been declared
+			val JSONValue implementationIdValue = getSingleDocumentValue(ProjectDescriptionHelper.PROP__N4JS + "." + 
+				ProjectDescriptionHelper.PROP__IMPLEMENTATION_ID);
+			if (!references.isEmpty() && implementationIdValue === null ) {
 				addIssue(IssueCodes.getMessageForPKGJ_APIIMPL_MISSING_IMPL_ID(), implementedProjectsValue.eContainer,
 					JSONPackage.Literals.NAME_VALUE_PAIR__NAME, IssueCodes.PKGJ_APIIMPL_MISSING_IMPL_ID);
 			}
@@ -662,6 +678,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	
 	private def holdsValidModuleSpecifiers(Iterable<Pair<ModuleFilterSpecifier, JSONValue>> moduleFilterSpecifiers, IN4JSProject project) {
 		val validFilterSpecifier = new ArrayList<Pair<ModuleFilterSpecifier, JSONValue>>();
+		
 		for (Pair<ModuleFilterSpecifier, JSONValue> filterSpecifierPair : moduleFilterSpecifiers) {
 			val valid = holdsValidWildcardModuleSpecifier(filterSpecifierPair);
 			if (valid) {
@@ -674,7 +691,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 	private def holdsValidWildcardModuleSpecifier(Pair<ModuleFilterSpecifier, JSONValue> filterSpecifierPair) {
 		val wrongWildcardPattern = "***"
-		if (filterSpecifierPair?.key?.moduleSpecifierWithWildcard !== null) {
+		
+		val ModuleFilterSpecifier filterSpecifier = filterSpecifierPair?.key;
+		
+		// check for invalid character sequences within wildcard patterns
+		if (filterSpecifier?.moduleSpecifierWithWildcard !== null) {
 			if (filterSpecifierPair.key.moduleSpecifierWithWildcard.contains(wrongWildcardPattern)) {
 				addIssue(
 					getMessageForPKGJ_INVALID_WILDCARD(wrongWildcardPattern),
@@ -693,6 +714,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 				return false
 			}
 		}
+		
+		// check for empty filter or source container values
+		if (filterSpecifier?.moduleSpecifierWithWildcard.empty || 
+			(filterSpecifier?.sourcePath !== null && filterSpecifier?.sourcePath.empty)) {
+			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY(),
+					filterSpecifierPair.value, IssueCodes.PKGJ_INVALID_MODULE_FILTER_SPECIFIER_EMPTY);
+			return false;
+		}
+		
 		return true
 	}
 
@@ -940,6 +970,13 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			val id = ref.referencedProjectId;
 			// Assuming completely broken AST.
 			if (null !== id) {
+				// check for empty project ID
+				if (id.isEmpty) {
+					addIssue(IssueCodes.getMessageForPKGJ_EMPTY_PROJECT_REFERENCE(), ref.astRepresentation,
+						IssueCodes.PKGJ_EMPTY_PROJECT_REFERENCE)
+						return;
+				}
+				
 				// obtain corresponding IN4JSProject handle
 				var project = allProjects.get(id);
 
@@ -952,7 +989,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 					}
 				} else {
 					// create only one single validation issue for a particular project reference.
-					
 					if (currentProjectId == id && !allowReflexive) {
 						// reflexive self-references
 						addProjectReferencesItselfIssue(ref.astRepresentation);
