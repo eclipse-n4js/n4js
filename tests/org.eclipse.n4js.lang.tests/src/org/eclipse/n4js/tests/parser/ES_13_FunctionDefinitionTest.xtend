@@ -40,8 +40,8 @@ class ES_13_FunctionDefinitionTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDeclarationInToplevelBlock() {
-		val script = '{ function testcase() {} }'.parseESWithError;
-		assertFalse(script.eResource.errors.join('\n'), script.eResource.errors.isEmpty);
+		val script = '{ function testcase() {} }'.parseESSuccessfully;
+		assertTrue(script.eResource.errors.join('\n'), script.eResource.errors.isEmpty);
 
 		val seleHead = script.scriptElements.head;
 		assertTrue( seleHead instanceof Block);

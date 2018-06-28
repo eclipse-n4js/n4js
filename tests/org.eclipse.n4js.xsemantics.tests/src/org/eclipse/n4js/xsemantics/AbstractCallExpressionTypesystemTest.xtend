@@ -189,7 +189,6 @@ class FunctionCallTestConfig {
 		return this;
 	}
 
-	/* Disabled due to deprication warnings. see: GH-855
 	public def strict() {
 		javaScriptVariant = JavaScriptVariant.strict;
 	}
@@ -197,7 +196,6 @@ class FunctionCallTestConfig {
 	public def unrestricted() {
 		javaScriptVariant = JavaScriptVariant.unrestricted;
 	}
-	*/
 
 	public def n4js() {
 		javaScriptVariant = JavaScriptVariant.n4js;

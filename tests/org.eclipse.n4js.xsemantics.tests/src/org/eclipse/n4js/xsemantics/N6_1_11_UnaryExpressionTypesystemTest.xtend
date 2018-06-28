@@ -94,9 +94,8 @@ class N6_1_11_UnaryExpressionTypesystemTest extends AbstractOperatorExpressionTy
 
 	@Test
 	def void testExpectedTypeIn_PrefixInc() {
-		// GH-855: uncomment when solved
-		//	assertUnaryOperatorExpectedType(unrestricted, "any", "++n1");
-		//	assertUnaryOperatorExpectedType(strict, "any", "++n1");
+		assertUnaryOperatorExpectedType(unrestricted, "any", "++n1");
+		assertUnaryOperatorExpectedType(strict, "any", "++n1");
 		assertUnaryOperatorExpectedType(n4js, "number", "++n1");
 
 	}
@@ -111,9 +110,8 @@ class N6_1_11_UnaryExpressionTypesystemTest extends AbstractOperatorExpressionTy
 
 	@Test
 	def void testExpectedTypeIn_PrefixDec() {
-		// GH-855: uncomment when solved
-		//	assertUnaryOperatorExpectedType(unrestricted, "any", "--n1");
-		//	assertUnaryOperatorExpectedType(strict, "any", "--n1");
+		assertUnaryOperatorExpectedType(unrestricted, "any", "--n1");
+		assertUnaryOperatorExpectedType(strict, "any", "--n1");
 		assertUnaryOperatorExpectedType(n4js, "number", "--n1");
 	}
 
@@ -127,9 +125,8 @@ class N6_1_11_UnaryExpressionTypesystemTest extends AbstractOperatorExpressionTy
 
 	@Test
 	def void testExpectedTypeIn_PrefixPos() {
-		// GH-855: uncomment when solved
-		//	assertUnaryOperatorExpectedType(unrestricted, "any", "+n1");
-		//	assertUnaryOperatorExpectedType(strict, "any", "+n1");
+		assertUnaryOperatorExpectedType(unrestricted, "any", "+n1");
+		assertUnaryOperatorExpectedType(strict, "any", "+n1");
 		assertUnaryOperatorExpectedType(n4js, "number", "+n1");
 	}
 
@@ -143,9 +140,8 @@ class N6_1_11_UnaryExpressionTypesystemTest extends AbstractOperatorExpressionTy
 
 	@Test
 	def void testExpectedTypeIn_PrefixMinus() {
-		// GH-855: uncomment when solved
-		//	assertUnaryOperatorExpectedType(unrestricted, "any", "-n1");
-		//	assertUnaryOperatorExpectedType(strict, "any", "-n1");
+		assertUnaryOperatorExpectedType(unrestricted, "any", "-n1");
+		assertUnaryOperatorExpectedType(strict, "any", "-n1");
 		assertUnaryOperatorExpectedType(n4js, "number", "-n1");
 	}
 
@@ -159,9 +155,8 @@ class N6_1_11_UnaryExpressionTypesystemTest extends AbstractOperatorExpressionTy
 
 	@Test
 	def void testExpectedTypeIn_BitwiseNot() {
-		// GH-855: uncomment when solved
-		//	assertUnaryOperatorExpectedType(unrestricted, "any", "~n1");
-		//	assertUnaryOperatorExpectedType(strict, "any", "~n1");
+		assertUnaryOperatorExpectedType(unrestricted, "any", "~n1");
+		assertUnaryOperatorExpectedType(strict, "any", "~n1");
 		assertUnaryOperatorExpectedType(n4js, "number", "~n1");
 	}
 

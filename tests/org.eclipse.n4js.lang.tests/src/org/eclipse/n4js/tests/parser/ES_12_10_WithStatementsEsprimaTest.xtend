@@ -21,7 +21,7 @@ class ES_12_10_WithStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testWith_SimpleASI() {
-		val script = 'with (x) foo = bar'.parseESWithError
+		val script = 'with (x) foo = bar'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size)
 		val withStmt = script.scriptElements.head as WithStatement
 		val identifier = withStmt.expression as IdentifierRef
@@ -38,7 +38,7 @@ class ES_12_10_WithStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testWith_Simple() {
-		val script = 'with (x) foo = bar;'.parseESWithError
+		val script = 'with (x) foo = bar;'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size)
 		val withStmt = script.scriptElements.head as WithStatement
 		val identifier = withStmt.expression as IdentifierRef
@@ -55,7 +55,7 @@ class ES_12_10_WithStatementsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testWith_Block() {
-		val script = 'with (x) { foo = bar }'.parseESWithError
+		val script = 'with (x) { foo = bar }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size)
 		val withStmt = script.scriptElements.head as WithStatement
 		val identifier = withStmt.expression as IdentifierRef
