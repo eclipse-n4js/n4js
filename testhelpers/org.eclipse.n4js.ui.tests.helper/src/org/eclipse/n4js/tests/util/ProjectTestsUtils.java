@@ -221,8 +221,8 @@ public class ProjectTestsUtils {
 	 * @param packageJSONBuilderAdjustments
 	 *            This procedure will be invoked with the {@link PackageJsonBuilder} instances that is used to create
 	 *            the project description {@link JSONDocument} instance. The builder instance will be pre-configured
-	 *            with default values (cf {@link PackageJSONTestUtils#createSimplePackageJSON}). May be
-	 *            <code>null</code> if no adjustments are required.
+	 *            with default values (cf {@link PackageJSONTestUtils#defaultPackageJson}). May be <code>null</code> if
+	 *            no adjustments are required.
 	 */
 	public static void createProjectDescriptionFile(IProject project, String sourceFolder, String outputFolder,
 			Consumer<PackageJsonBuilder> packageJSONBuilderAdjustments) throws CoreException {
@@ -231,7 +231,7 @@ public class ProjectTestsUtils {
 		URI uri = URI.createPlatformResourceURI(projectDescriptionWorkspaceFile.getFullPath().toString(), true);
 
 		final PackageJsonBuilder packageJsonBuilder = PackageJSONTestUtils
-				.createSimplePackageJSON(project.getName(), sourceFolder, outputFolder);
+				.defaultPackageJson(project.getName(), sourceFolder, outputFolder);
 
 		if (packageJSONBuilderAdjustments != null)
 			packageJSONBuilderAdjustments.accept(packageJsonBuilder);
@@ -384,7 +384,7 @@ public class ProjectTestsUtils {
 				foundJobs = listJobsRunningWaiting();
 				foundJob = !foundJobs.isEmpty();
 				if (foundJob) {
-					if (LOGGER.isInfoEnabled()) 
+					if (LOGGER.isInfoEnabled())
 						LOGGER.info("Found " + foundJobs.size() + " after " + sw + ", going to sleep for a while.");
 
 					if (runsInUI)

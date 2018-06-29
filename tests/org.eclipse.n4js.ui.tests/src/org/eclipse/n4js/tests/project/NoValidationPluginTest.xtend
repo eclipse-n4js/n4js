@@ -101,17 +101,6 @@ class NoValidationPluginTest extends AbstractBuilderParticipantTest {
 		waitForAutoBuild();
 	}
 
-	def void removePathsFromNoValidate(String... paths) {
-		val packageJson = getPackageJSONContent();
-		
-		for (path : paths) {
-			PackageJSONTestUtils.removeModuleFilter(packageJson, ModuleFilterType.NO_VALIDATE, path);
-		}
-		
-		packageJson.eResource.save(null)
-		waitForAutoBuild();
-	}
-
 	def JSONObject getPackageJSONContent() {
 		val uri = URI.createPlatformResourceURI(packageJson.fullPath.toString, true);
 		val rs = getResourceSet(projectUnderTest.project);
