@@ -376,18 +376,9 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				.flatMap(entry -> entry.getValue().stream())
 				.collect(Collectors.toList());
 
-		// check paths for empty strings
-		for (JSONStringLiteral containerLiteral : allDeclaredSourceContainers) {
-			if (containerLiteral.getValue().isEmpty()) {
-				addIssue(IssueCodes.getMessageForPKGJ_EMPTY_SOURCE_PATH(), containerLiteral,
-						IssueCodes.PKGJ_EMPTY_SOURCE_PATH);
-			}
-		}
-
 		// check each source container sub-section (e.g. sources, external, etc.)
-		for (JSONStringLiteral containerLiteral : allDeclaredSourceContainers) {
-			checkSourceContainerLiteral(containerLiteral);
-		}
+		final List<JSONStringLiteral> validSourceContainerLiterals = allDeclaredSourceContainers.stream()
+				.filter(l -> internalCheckSourceContainerLiteral(l)).collect(Collectors.toList());
 
 		// find all groups of duplicate paths
 		final List<List<JSONStringLiteral>> containerDuplicates = findPathDuplicates(allDeclaredSourceContainers);
@@ -401,10 +392,64 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 						duplicate, IssueCodes.PKGJ_DUPLICATE_SOURCE_CONTAINER);
 			}
 		}
+
+		// check for nested source containers (within valid source container literals)
+		internalCheckNoNestedSourceContainers(validSourceContainerLiterals);
+	}
+
+	/**
+	 * Validates that the given list of declared source container paths do not declare source containers that are nested
+	 * within each other.
+	 *
+	 * This validation runs in O(n^2) wrt. the number of source containers.
+	 */
+	private void internalCheckNoNestedSourceContainers(final List<JSONStringLiteral> sourceContainers) {
+		// collect conflicting prefixes (containers) per offending source container path (string literal)
+		final Multimap<ASTTraceable<Path>, ASTTraceable<Path>> conflictingPrefixes = HashMultimap.create();
+
+		final List<ASTTraceable<Path>> containerPaths = sourceContainers.stream()
+				.map(ASTTraceable.map(l -> new File(l.getValue()).toPath().normalize()))
+				.collect(Collectors.toList());
+
+		// check paths that prefix each other
+		for (ASTTraceable<Path> path : containerPaths) {
+			for (ASTTraceable<Path> otherPaths : containerPaths) {
+				// do not check with itself
+				if (path == otherPaths) {
+					continue;
+				}
+				// skip exact matches, this is detected in duplicate validation
+				if (path.element.equals(otherPaths.element)) {
+					continue;
+				}
+				if (path.element.startsWith(otherPaths.element) || otherPaths.element.toString().isEmpty()) {
+					conflictingPrefixes.put(path, otherPaths);
+				}
+			}
+		}
+
+		// eventually, add issues for all offending source container literals
+		for (ASTTraceable<Path> path : conflictingPrefixes.keySet()) {
+			final Collection<ASTTraceable<Path>> containers = conflictingPrefixes.get(path);
+			final String containersDescription = containers.stream()
+					.map(c -> "\"" + ((JSONStringLiteral) c.astElement).getValue() + "\"")
+					.sorted((s1, s2) -> s1.length() - s2.length()) // sort by ascending length
+					.collect(Collectors.joining(", "));
+
+			addIssue(IssueCodes.getMessageForPKGJ_NESTED_SOURCE_CONTAINER(containersDescription), path.astElement,
+					IssueCodes.PKGJ_NESTED_SOURCE_CONTAINER);
+		}
 	}
 
 	/** Checks a single source container literal for validity. */
-	private boolean checkSourceContainerLiteral(JSONStringLiteral containerLiteral) {
+	private boolean internalCheckSourceContainerLiteral(JSONStringLiteral containerLiteral) {
+		// check path for empty strings
+		if (containerLiteral.getValue().isEmpty()) {
+			addIssue(IssueCodes.getMessageForPKGJ_EMPTY_SOURCE_PATH(), containerLiteral,
+					IssueCodes.PKGJ_EMPTY_SOURCE_PATH);
+			return false;
+		}
+
 		return holdsValidRelativePath(containerLiteral) && // check path for validity
 				holdsExistingDirectoryPath(containerLiteral); // check directory for existence
 	}

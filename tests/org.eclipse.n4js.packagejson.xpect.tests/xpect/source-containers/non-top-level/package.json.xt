@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXpectTest END_SETUP */
 {
-	"name": "source-containers",
+	"name": "non-top-level",
 	"version": "0.0.1-SNAPSHOT",
 	"n4js": {
 		"projectType": "library",
@@ -27,8 +27,8 @@
 				"src-does-not-exist",
 				// Use file as src XPECT errors --> " Path "src3" does not point to a directory." at ""src3""
 				"src3",
-				// nested source folder XPECT noIssues
-				"nested/nested-src1",
+				// non-top-level XPECT noIssues
+				"folder/src1",
 				// XPECT errors --> ""in*valid - path" is not a valid path." at ""in*valid - path""
 				"in*valid - path"
 			],
@@ -36,8 +36,8 @@
 				"src-ext",
 				// XPECT warnings --> "Duplicate path "src1" has already been declared as source container in source." at ""src1""
 				"src1",
-				// nested source folder XPECT noIssues
-				"nested/nested-src2",
+				// non-top-level source folder XPECT noIssues
+				"folder/src2",
 				// using absolute paths XPECT errors --> "Path "/Users/dummy/absolute/path" must not be absolute." at ""/Users/dummy/absolute/path""
 				"/Users/dummy/absolute/path"
 			]
