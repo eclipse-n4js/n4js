@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ModuleFilter;
@@ -43,7 +44,7 @@ public interface IN4JSProject extends IN4JSSourceContainerAware {
 	/**
 	 * The name of the package.json file.
 	 */
-	public final static String PACKAGE_JSON = "package.json";
+	public final static String PACKAGE_JSON = N4JSGlobals.PACKAGE_JSON;
 
 	/**
 	 * Returns the project type of the project or null, if type is not available
