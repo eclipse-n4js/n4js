@@ -10,14 +10,20 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
@@ -34,7 +40,8 @@ import org.eclipse.n4js.semver.SEMVER.VersionNumber;
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getQualifier <em>Qualifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getMajor <em>Major</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getMinor <em>Minor</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getPath <em>Path</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getPatch <em>Patch</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl#getExtended <em>Extended</em>}</li>
  * </ul>
  *
  * @generated
@@ -91,24 +98,34 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	protected String minor = MINOR_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
+	 * The default value of the '{@link #getPatch() <em>Patch</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPath()
+	 * @see #getPatch()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PATH_EDEFAULT = null;
+	protected static final String PATCH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
+	 * The cached value of the '{@link #getPatch() <em>Patch</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPath()
+	 * @see #getPatch()
 	 * @generated
 	 * @ordered
 	 */
-	protected String path = PATH_EDEFAULT;
+	protected String patch = PATCH_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getExtended() <em>Extended</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getExtended()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<String> extended;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -219,8 +236,8 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getPath() {
-		return path;
+	public String getPatch() {
+		return patch;
 	}
 
 	/**
@@ -228,11 +245,23 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setPath(String newPath) {
-		String oldPath = path;
-		path = newPath;
+	public void setPatch(String newPatch) {
+		String oldPatch = patch;
+		patch = newPatch;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__PATH, oldPath, path));
+			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.VERSION_NUMBER__PATCH, oldPatch, patch));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<String> getExtended() {
+		if (extended == null) {
+			extended = new EDataTypeEList<String>(String.class, this, SEMVERPackage.VERSION_NUMBER__EXTENDED);
+		}
+		return extended;
 	}
 
 	/**
@@ -263,8 +292,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 				return getMajor();
 			case SEMVERPackage.VERSION_NUMBER__MINOR:
 				return getMinor();
-			case SEMVERPackage.VERSION_NUMBER__PATH:
-				return getPath();
+			case SEMVERPackage.VERSION_NUMBER__PATCH:
+				return getPatch();
+			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
+				return getExtended();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -274,6 +305,7 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -286,8 +318,12 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 			case SEMVERPackage.VERSION_NUMBER__MINOR:
 				setMinor((String)newValue);
 				return;
-			case SEMVERPackage.VERSION_NUMBER__PATH:
-				setPath((String)newValue);
+			case SEMVERPackage.VERSION_NUMBER__PATCH:
+				setPatch((String)newValue);
+				return;
+			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
+				getExtended().clear();
+				getExtended().addAll((Collection<? extends String>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -310,8 +346,11 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 			case SEMVERPackage.VERSION_NUMBER__MINOR:
 				setMinor(MINOR_EDEFAULT);
 				return;
-			case SEMVERPackage.VERSION_NUMBER__PATH:
-				setPath(PATH_EDEFAULT);
+			case SEMVERPackage.VERSION_NUMBER__PATCH:
+				setPatch(PATCH_EDEFAULT);
+				return;
+			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
+				getExtended().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -331,8 +370,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 				return MAJOR_EDEFAULT == null ? major != null : !MAJOR_EDEFAULT.equals(major);
 			case SEMVERPackage.VERSION_NUMBER__MINOR:
 				return MINOR_EDEFAULT == null ? minor != null : !MINOR_EDEFAULT.equals(minor);
-			case SEMVERPackage.VERSION_NUMBER__PATH:
-				return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
+			case SEMVERPackage.VERSION_NUMBER__PATCH:
+				return PATCH_EDEFAULT == null ? patch != null : !PATCH_EDEFAULT.equals(patch);
+			case SEMVERPackage.VERSION_NUMBER__EXTENDED:
+				return extended != null && !extended.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -351,8 +392,10 @@ public class VersionNumberImpl extends MinimalEObjectImpl.Container implements V
 		result.append(major);
 		result.append(", minor: ");
 		result.append(minor);
-		result.append(", path: ");
-		result.append(path);
+		result.append(", patch: ");
+		result.append(patch);
+		result.append(", extended: ");
+		result.append(extended);
 		result.append(')');
 		return result.toString();
 	}

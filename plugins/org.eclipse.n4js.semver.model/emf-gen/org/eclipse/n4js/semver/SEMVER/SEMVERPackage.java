@@ -40,7 +40,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.semver.SEMVER.SEMVERFactory
  * @model kind="package"
- *        annotation="http://www.eclipse.org/emf/2002/GenModel modelDirectory='/org.eclipse.n4js.semver.model/emf-gen' forceOverwrite='true' updateClasspath='false' literalsInterface='true' loadInitialization='false' complianceLevel='8.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.semver'"
+ *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='semver' modelDirectory='/org.eclipse.n4js.semver.model/emf-gen' forceOverwrite='true' updateClasspath='false' literalsInterface='true' loadInitialization='false' complianceLevel='8.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.semver'"
  * @generated
  */
 public interface SEMVERPackage extends EPackage {
@@ -58,7 +58,7 @@ public interface SEMVERPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/n4js/SemanticVersioning";
+	String eNS_URI = "http://www.eclipse.org/n4js/SEMVER";
 
 	/**
 	 * The package namespace name.
@@ -188,43 +188,6 @@ public interface SEMVERPackage extends EPackage {
 	int HYPHEN_VERSION_RANGE_OPERATION_COUNT = VERSION_RANGE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.EnumeratedVersionRangeImpl <em>Enumerated Version Range</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.EnumeratedVersionRangeImpl
-	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getEnumeratedVersionRange()
-	 * @generated
-	 */
-	int ENUMERATED_VERSION_RANGE = 3;
-
-	/**
-	 * The feature id for the '<em><b>Simple Versions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_VERSION_RANGE__SIMPLE_VERSIONS = VERSION_RANGE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Enumerated Version Range</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_VERSION_RANGE_FEATURE_COUNT = VERSION_RANGE_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Enumerated Version Range</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENUMERATED_VERSION_RANGE_OPERATION_COUNT = VERSION_RANGE_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl <em>Simple Version</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -232,7 +195,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getSimpleVersion()
 	 * @generated
 	 */
-	int SIMPLE_VERSION = 4;
+	int SIMPLE_VERSION = 3;
 
 	/**
 	 * The feature id for the '<em><b>Number</b></em>' containment reference.
@@ -241,34 +204,16 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION__NUMBER = 0;
+	int SIMPLE_VERSION__NUMBER = VERSION_RANGE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Comparator</b></em>' attribute.
+	 * The feature id for the '<em><b>Comparators</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION__COMPARATOR = 1;
-
-	/**
-	 * The feature id for the '<em><b>Has Tilde</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_VERSION__HAS_TILDE = 2;
-
-	/**
-	 * The feature id for the '<em><b>Has Caret</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_VERSION__HAS_CARET = 3;
+	int SIMPLE_VERSION__COMPARATORS = VERSION_RANGE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Simple Version</em>' class.
@@ -277,7 +222,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION_FEATURE_COUNT = 4;
+	int SIMPLE_VERSION_FEATURE_COUNT = VERSION_RANGE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Simple Version</em>' class.
@@ -286,7 +231,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_VERSION_OPERATION_COUNT = 0;
+	int SIMPLE_VERSION_OPERATION_COUNT = VERSION_RANGE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl <em>Version Number</em>}' class.
@@ -296,7 +241,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionNumber()
 	 * @generated
 	 */
-	int VERSION_NUMBER = 5;
+	int VERSION_NUMBER = 4;
 
 	/**
 	 * The feature id for the '<em><b>Qualifier</b></em>' containment reference.
@@ -326,13 +271,22 @@ public interface SEMVERPackage extends EPackage {
 	int VERSION_NUMBER__MINOR = 2;
 
 	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
+	 * The feature id for the '<em><b>Patch</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER__PATH = 3;
+	int VERSION_NUMBER__PATCH = 3;
+
+	/**
+	 * The feature id for the '<em><b>Extended</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSION_NUMBER__EXTENDED = 4;
 
 	/**
 	 * The number of structural features of the '<em>Version Number</em>' class.
@@ -341,7 +295,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSION_NUMBER_FEATURE_COUNT = 4;
+	int VERSION_NUMBER_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Version Number</em>' class.
@@ -360,7 +314,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getQualifier()
 	 * @generated
 	 */
-	int QUALIFIER = 6;
+	int QUALIFIER = 5;
 
 	/**
 	 * The feature id for the '<em><b>Pre Release</b></em>' attribute.
@@ -406,7 +360,7 @@ public interface SEMVERPackage extends EPackage {
 	 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getVersionComparator()
 	 * @generated
 	 */
-	int VERSION_COMPARATOR = 7;
+	int VERSION_COMPARATOR = 6;
 
 
 	/**
@@ -473,27 +427,6 @@ public interface SEMVERPackage extends EPackage {
 	EReference getHyphenVersionRange_To();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.EnumeratedVersionRange <em>Enumerated Version Range</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Enumerated Version Range</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.EnumeratedVersionRange
-	 * @generated
-	 */
-	EClass getEnumeratedVersionRange();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.semver.SEMVER.EnumeratedVersionRange#getSimpleVersions <em>Simple Versions</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Simple Versions</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.EnumeratedVersionRange#getSimpleVersions()
-	 * @see #getEnumeratedVersionRange()
-	 * @generated
-	 */
-	EReference getEnumeratedVersionRange_SimpleVersions();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion <em>Simple Version</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -515,37 +448,15 @@ public interface SEMVERPackage extends EPackage {
 	EReference getSimpleVersion_Number();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#getComparator <em>Comparator</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#getComparators <em>Comparators</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Comparator</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.SimpleVersion#getComparator()
+	 * @return the meta object for the attribute list '<em>Comparators</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.SimpleVersion#getComparators()
 	 * @see #getSimpleVersion()
 	 * @generated
 	 */
-	EAttribute getSimpleVersion_Comparator();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#isHasTilde <em>Has Tilde</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Has Tilde</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.SimpleVersion#isHasTilde()
-	 * @see #getSimpleVersion()
-	 * @generated
-	 */
-	EAttribute getSimpleVersion_HasTilde();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#isHasCaret <em>Has Caret</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Has Caret</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.SimpleVersion#isHasCaret()
-	 * @see #getSimpleVersion()
-	 * @generated
-	 */
-	EAttribute getSimpleVersion_HasCaret();
+	EAttribute getSimpleVersion_Comparators();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber <em>Version Number</em>}'.
@@ -591,15 +502,26 @@ public interface SEMVERPackage extends EPackage {
 	EAttribute getVersionNumber_Minor();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPath <em>Path</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPatch <em>Patch</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see org.eclipse.n4js.semver.SEMVER.VersionNumber#getPath()
+	 * @return the meta object for the attribute '<em>Patch</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionNumber#getPatch()
 	 * @see #getVersionNumber()
 	 * @generated
 	 */
-	EAttribute getVersionNumber_Path();
+	EAttribute getVersionNumber_Patch();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getExtended <em>Extended</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Extended</em>'.
+	 * @see org.eclipse.n4js.semver.SEMVER.VersionNumber#getExtended()
+	 * @see #getVersionNumber()
+	 * @generated
+	 */
+	EAttribute getVersionNumber_Extended();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.semver.SEMVER.Qualifier <em>Qualifier</em>}'.
@@ -721,24 +643,6 @@ public interface SEMVERPackage extends EPackage {
 		EReference HYPHEN_VERSION_RANGE__TO = eINSTANCE.getHyphenVersionRange_To();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.EnumeratedVersionRangeImpl <em>Enumerated Version Range</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.EnumeratedVersionRangeImpl
-		 * @see org.eclipse.n4js.semver.SEMVER.impl.SEMVERPackageImpl#getEnumeratedVersionRange()
-		 * @generated
-		 */
-		EClass ENUMERATED_VERSION_RANGE = eINSTANCE.getEnumeratedVersionRange();
-
-		/**
-		 * The meta object literal for the '<em><b>Simple Versions</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ENUMERATED_VERSION_RANGE__SIMPLE_VERSIONS = eINSTANCE.getEnumeratedVersionRange_SimpleVersions();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl <em>Simple Version</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -757,28 +661,12 @@ public interface SEMVERPackage extends EPackage {
 		EReference SIMPLE_VERSION__NUMBER = eINSTANCE.getSimpleVersion_Number();
 
 		/**
-		 * The meta object literal for the '<em><b>Comparator</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Comparators</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SIMPLE_VERSION__COMPARATOR = eINSTANCE.getSimpleVersion_Comparator();
-
-		/**
-		 * The meta object literal for the '<em><b>Has Tilde</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute SIMPLE_VERSION__HAS_TILDE = eINSTANCE.getSimpleVersion_HasTilde();
-
-		/**
-		 * The meta object literal for the '<em><b>Has Caret</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute SIMPLE_VERSION__HAS_CARET = eINSTANCE.getSimpleVersion_HasCaret();
+		EAttribute SIMPLE_VERSION__COMPARATORS = eINSTANCE.getSimpleVersion_Comparators();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.VersionNumberImpl <em>Version Number</em>}' class.
@@ -815,12 +703,20 @@ public interface SEMVERPackage extends EPackage {
 		EAttribute VERSION_NUMBER__MINOR = eINSTANCE.getVersionNumber_Minor();
 
 		/**
-		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Patch</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute VERSION_NUMBER__PATH = eINSTANCE.getVersionNumber_Path();
+		EAttribute VERSION_NUMBER__PATCH = eINSTANCE.getVersionNumber_Patch();
+
+		/**
+		 * The meta object literal for the '<em><b>Extended</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute VERSION_NUMBER__EXTENDED = eINSTANCE.getVersionNumber_Extended();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.semver.SEMVER.impl.QualifierImpl <em>Qualifier</em>}' class.

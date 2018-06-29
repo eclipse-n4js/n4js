@@ -26,9 +26,9 @@ Contributors:
 
 	<properties>
 		<skip.mwe2>false</skip.mwe2>
-		<mwe2-file-location>/src/org/eclipse/n4js/semver/GenerateRegularExpression.mwe2</mwe2-file-location>
+		<mwe2-file-location>/src/org/eclipse/n4js/semver/GenerateSEMVER.mwe2</mwe2-file-location>
 		<!-- fornax: -->
-		<mwe2descriptor>org.eclipse.n4js.semver.GenerateRegularExpression</mwe2descriptor>
+		<mwe2descriptor>org.eclipse.n4js.semver.GenerateSEMVER</mwe2descriptor>
 	</properties>
 
 	<build>
@@ -49,8 +49,8 @@ Contributors:
 				<artifactId>fornax-oaw-m2-plugin</artifactId>
 				<version>${fornax-oaw-m2-plugin.version}</version>
 			</plugin>
- -->
-			
+ -->			
+		
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -68,12 +68,17 @@ Contributors:
 				<dependencies>
 					<dependency>
 						<groupId>org.eclipse.n4js</groupId>
-						<artifactId>org.eclipse.n4js.common.unicode</artifactId>
-						<version>[${project.version}]</version>
+						<artifactId>org.eclipse.n4js.semver.model</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.n4js</groupId>
+						<artifactId>org.eclipse.n4js.utils</artifactId>
+						<version>${project.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
-			
+		
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>

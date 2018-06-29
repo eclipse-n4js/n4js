@@ -26,9 +26,9 @@ Contributors:
 
 	<properties>
 		<skip.mwe2>false</skip.mwe2>
-		<mwe2-file-location>/src/org/eclipse/n4js/semver/model/GenerateSemanticVersioningModel.mwe2</mwe2-file-location>
+		<mwe2-file-location>/src/org/eclipse/n4js/semver/model/GenerateSEMVERModel.mwe2</mwe2-file-location>
 		<!-- fornax: -->
-		<mwe2descriptor>org.eclipse.semver.GenerateSemanticVersioningModel</mwe2descriptor>
+		<mwe2descriptor>org.eclipse.semver.GenerateSEMVERModel</mwe2descriptor>
 	</properties>
 
 

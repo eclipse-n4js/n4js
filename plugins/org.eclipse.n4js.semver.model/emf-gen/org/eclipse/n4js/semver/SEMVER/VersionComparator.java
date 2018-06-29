@@ -27,6 +27,16 @@ import org.eclipse.emf.common.util.Enumerator;
  */
 public enum VersionComparator implements Enumerator {
 	/**
+	 * The '<em><b>Version</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #VERSION_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	VERSION(0, "Version", "Version"),
+
+	/**
 	 * The '<em><b>Equals</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -34,7 +44,27 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	EQUALS(0, "Equals", "Equals"),
+	EQUALS(1, "Equals", "Equals"),
+
+	/**
+	 * The '<em><b>Tilde</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #TILDE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	TILDE(2, "Tilde", "Tilde"),
+
+	/**
+	 * The '<em><b>Caret</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #CARET_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	CARET(3, "Caret", "Caret"),
 
 	/**
 	 * The '<em><b>Smaller</b></em>' literal object.
@@ -44,7 +74,7 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	SMALLER(1, "Smaller", "Smaller"),
+	SMALLER(4, "Smaller", "Smaller"),
 
 	/**
 	 * The '<em><b>Smaller Equals</b></em>' literal object.
@@ -54,7 +84,7 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	SMALLER_EQUALS(2, "SmallerEquals", "SmallerEquals"),
+	SMALLER_EQUALS(5, "SmallerEquals", "SmallerEquals"),
 
 	/**
 	 * The '<em><b>Greater</b></em>' literal object.
@@ -64,7 +94,7 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	GREATER(3, "Greater", "Greater"),
+	GREATER(6, "Greater", "Greater"),
 
 	/**
 	 * The '<em><b>Greater Equals</b></em>' literal object.
@@ -74,7 +104,22 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	GREATER_EQUALS(4, "GreaterEquals", "GreaterEquals");
+	GREATER_EQUALS(7, "GreaterEquals", "GreaterEquals");
+
+	/**
+	 * The '<em><b>Version</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>Version</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #VERSION
+	 * @model name="Version"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int VERSION_VALUE = 0;
 
 	/**
 	 * The '<em><b>Equals</b></em>' literal value.
@@ -89,7 +134,37 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int EQUALS_VALUE = 0;
+	public static final int EQUALS_VALUE = 1;
+
+	/**
+	 * The '<em><b>Tilde</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>Tilde</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #TILDE
+	 * @model name="Tilde"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int TILDE_VALUE = 2;
+
+	/**
+	 * The '<em><b>Caret</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>Caret</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #CARET
+	 * @model name="Caret"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int CARET_VALUE = 3;
 
 	/**
 	 * The '<em><b>Smaller</b></em>' literal value.
@@ -104,7 +179,7 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int SMALLER_VALUE = 1;
+	public static final int SMALLER_VALUE = 4;
 
 	/**
 	 * The '<em><b>Smaller Equals</b></em>' literal value.
@@ -119,7 +194,7 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int SMALLER_EQUALS_VALUE = 2;
+	public static final int SMALLER_EQUALS_VALUE = 5;
 
 	/**
 	 * The '<em><b>Greater</b></em>' literal value.
@@ -134,7 +209,7 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int GREATER_VALUE = 3;
+	public static final int GREATER_VALUE = 6;
 
 	/**
 	 * The '<em><b>Greater Equals</b></em>' literal value.
@@ -149,7 +224,7 @@ public enum VersionComparator implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int GREATER_EQUALS_VALUE = 4;
+	public static final int GREATER_EQUALS_VALUE = 7;
 
 	/**
 	 * An array of all the '<em><b>Version Comparator</b></em>' enumerators.
@@ -159,7 +234,10 @@ public enum VersionComparator implements Enumerator {
 	 */
 	private static final VersionComparator[] VALUES_ARRAY =
 		new VersionComparator[] {
+			VERSION,
 			EQUALS,
+			TILDE,
+			CARET,
 			SMALLER,
 			SMALLER_EQUALS,
 			GREATER,
@@ -220,7 +298,10 @@ public enum VersionComparator implements Enumerator {
 	 */
 	public static VersionComparator get(int value) {
 		switch (value) {
+			case VERSION_VALUE: return VERSION;
 			case EQUALS_VALUE: return EQUALS;
+			case TILDE_VALUE: return TILDE;
+			case CARET_VALUE: return CARET;
 			case SMALLER_VALUE: return SMALLER;
 			case SMALLER_EQUALS_VALUE: return SMALLER_EQUALS;
 			case GREATER_VALUE: return GREATER;

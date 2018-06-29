@@ -13,12 +13,10 @@
 -->
 
 <plugin>
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated SemanticVersioning -->
-      <package
-            uri="http://www.eclipse.org/n4js/SemanticVersioning"
-            class="org.eclipse.n4js.semver.SEMVER.SEMVERPackage"
-            genModel="model/SemanticVersioning.xcore"/>
-   </extension>
-
+	<extension point="org.eclipse.emf.ecore.generated_package">
+		<package 
+			uri = "http://www.eclipse.org/n4js/SEMVER"
+			class = "org.eclipse.n4js.semver.SEMVER.SEMVERPackage"
+			genModel = "model/SEMVER.xcore" />
+	</extension>
 </plugin>

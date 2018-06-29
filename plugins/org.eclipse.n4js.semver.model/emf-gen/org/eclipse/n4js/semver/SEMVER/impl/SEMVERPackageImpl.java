@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
-import org.eclipse.n4js.semver.SEMVER.EnumeratedVersionRange;
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange;
 import org.eclipse.n4js.semver.SEMVER.Qualifier;
 import org.eclipse.n4js.semver.SEMVER.SEMVERFactory;
@@ -57,13 +56,6 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * @generated
 	 */
 	private EClass hyphenVersionRangeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass enumeratedVersionRangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -216,24 +208,6 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getEnumeratedVersionRange() {
-		return enumeratedVersionRangeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getEnumeratedVersionRange_SimpleVersions() {
-		return (EReference)enumeratedVersionRangeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getSimpleVersion() {
 		return simpleVersionEClass;
 	}
@@ -252,26 +226,8 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSimpleVersion_Comparator() {
+	public EAttribute getSimpleVersion_Comparators() {
 		return (EAttribute)simpleVersionEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSimpleVersion_HasTilde() {
-		return (EAttribute)simpleVersionEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSimpleVersion_HasCaret() {
-		return (EAttribute)simpleVersionEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -315,8 +271,17 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getVersionNumber_Path() {
+	public EAttribute getVersionNumber_Patch() {
 		return (EAttribute)versionNumberEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getVersionNumber_Extended() {
+		return (EAttribute)versionNumberEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -392,20 +357,16 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		createEReference(hyphenVersionRangeEClass, HYPHEN_VERSION_RANGE__FROM);
 		createEReference(hyphenVersionRangeEClass, HYPHEN_VERSION_RANGE__TO);
 
-		enumeratedVersionRangeEClass = createEClass(ENUMERATED_VERSION_RANGE);
-		createEReference(enumeratedVersionRangeEClass, ENUMERATED_VERSION_RANGE__SIMPLE_VERSIONS);
-
 		simpleVersionEClass = createEClass(SIMPLE_VERSION);
 		createEReference(simpleVersionEClass, SIMPLE_VERSION__NUMBER);
-		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__COMPARATOR);
-		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__HAS_TILDE);
-		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__HAS_CARET);
+		createEAttribute(simpleVersionEClass, SIMPLE_VERSION__COMPARATORS);
 
 		versionNumberEClass = createEClass(VERSION_NUMBER);
 		createEReference(versionNumberEClass, VERSION_NUMBER__QUALIFIER);
 		createEAttribute(versionNumberEClass, VERSION_NUMBER__MAJOR);
 		createEAttribute(versionNumberEClass, VERSION_NUMBER__MINOR);
-		createEAttribute(versionNumberEClass, VERSION_NUMBER__PATH);
+		createEAttribute(versionNumberEClass, VERSION_NUMBER__PATCH);
+		createEAttribute(versionNumberEClass, VERSION_NUMBER__EXTENDED);
 
 		qualifierEClass = createEClass(QUALIFIER);
 		createEAttribute(qualifierEClass, QUALIFIER__PRE_RELEASE);
@@ -447,7 +408,7 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		// Add supertypes to classes
 		hyphenVersionRangeEClass.getESuperTypes().add(this.getVersionRange());
-		enumeratedVersionRangeEClass.getESuperTypes().add(this.getVersionRange());
+		simpleVersionEClass.getESuperTypes().add(this.getVersionRange());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(versionRangeSetEClass, VersionRangeSet.class, "VersionRangeSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -459,20 +420,16 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 		initEReference(getHyphenVersionRange_From(), this.getVersionNumber(), null, "from", null, 0, 1, HyphenVersionRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getHyphenVersionRange_To(), this.getVersionNumber(), null, "to", null, 0, 1, HyphenVersionRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(enumeratedVersionRangeEClass, EnumeratedVersionRange.class, "EnumeratedVersionRange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getEnumeratedVersionRange_SimpleVersions(), this.getSimpleVersion(), null, "simpleVersions", null, 0, -1, EnumeratedVersionRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(simpleVersionEClass, SimpleVersion.class, "SimpleVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSimpleVersion_Number(), this.getVersionNumber(), null, "number", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSimpleVersion_Comparator(), this.getVersionComparator(), "comparator", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSimpleVersion_HasTilde(), theEcorePackage.getEBoolean(), "hasTilde", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSimpleVersion_HasCaret(), theEcorePackage.getEBoolean(), "hasCaret", null, 0, 1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSimpleVersion_Comparators(), this.getVersionComparator(), "comparators", null, 0, -1, SimpleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(versionNumberEClass, VersionNumber.class, "VersionNumber", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVersionNumber_Qualifier(), this.getQualifier(), null, "qualifier", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getVersionNumber_Major(), theEcorePackage.getEString(), "major", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getVersionNumber_Minor(), theEcorePackage.getEString(), "minor", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVersionNumber_Path(), theEcorePackage.getEString(), "path", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getVersionNumber_Patch(), theEcorePackage.getEString(), "patch", null, 0, 1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getVersionNumber_Extended(), theEcorePackage.getEString(), "extended", null, 0, -1, VersionNumber.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(qualifierEClass, Qualifier.class, "Qualifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getQualifier_PreRelease(), theEcorePackage.getEString(), "preRelease", null, 0, 1, Qualifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -480,7 +437,10 @@ public class SEMVERPackageImpl extends EPackageImpl implements SEMVERPackage {
 
 		// Initialize enums and add enum literals
 		initEEnum(versionComparatorEEnum, VersionComparator.class, "VersionComparator");
+		addEEnumLiteral(versionComparatorEEnum, VersionComparator.VERSION);
 		addEEnumLiteral(versionComparatorEEnum, VersionComparator.EQUALS);
+		addEEnumLiteral(versionComparatorEEnum, VersionComparator.TILDE);
+		addEEnumLiteral(versionComparatorEEnum, VersionComparator.CARET);
 		addEEnumLiteral(versionComparatorEEnum, VersionComparator.SMALLER);
 		addEEnumLiteral(versionComparatorEEnum, VersionComparator.SMALLER_EQUALS);
 		addEEnumLiteral(versionComparatorEEnum, VersionComparator.GREATER);

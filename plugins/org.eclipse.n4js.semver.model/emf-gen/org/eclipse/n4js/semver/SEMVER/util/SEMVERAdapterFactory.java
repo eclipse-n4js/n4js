@@ -88,10 +88,6 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 				return createHyphenVersionRangeAdapter();
 			}
 			@Override
-			public Adapter caseEnumeratedVersionRange(EnumeratedVersionRange object) {
-				return createEnumeratedVersionRangeAdapter();
-			}
-			@Override
 			public Adapter caseSimpleVersion(SimpleVersion object) {
 				return createSimpleVersionAdapter();
 			}
@@ -162,20 +158,6 @@ public class SEMVERAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createHyphenVersionRangeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.semver.SEMVER.EnumeratedVersionRange <em>Enumerated Version Range</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.semver.SEMVER.EnumeratedVersionRange
-	 * @generated
-	 */
-	public Adapter createEnumeratedVersionRangeAdapter() {
 		return null;
 	}
 

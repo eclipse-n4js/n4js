@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.semver.SEMVER;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,16 +22,14 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#getNumber <em>Number</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#getComparator <em>Comparator</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#isHasTilde <em>Has Tilde</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#isHasCaret <em>Has Caret</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#getComparators <em>Comparators</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getSimpleVersion()
  * @model
  * @generated
  */
-public interface SimpleVersion extends EObject {
+public interface SimpleVersion extends VersionRange {
 	/**
 	 * Returns the value of the '<em><b>Number</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -59,84 +57,21 @@ public interface SimpleVersion extends EObject {
 	void setNumber(VersionNumber value);
 
 	/**
-	 * Returns the value of the '<em><b>Comparator</b></em>' attribute.
+	 * Returns the value of the '<em><b>Comparators</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.n4js.semver.SEMVER.VersionComparator}.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.semver.SEMVER.VersionComparator}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Comparator</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Comparators</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Comparator</em>' attribute.
+	 * @return the value of the '<em>Comparators</em>' attribute list.
 	 * @see org.eclipse.n4js.semver.SEMVER.VersionComparator
-	 * @see #setComparator(VersionComparator)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getSimpleVersion_Comparator()
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getSimpleVersion_Comparators()
 	 * @model unique="false"
 	 * @generated
 	 */
-	VersionComparator getComparator();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#getComparator <em>Comparator</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Comparator</em>' attribute.
-	 * @see org.eclipse.n4js.semver.SEMVER.VersionComparator
-	 * @see #getComparator()
-	 * @generated
-	 */
-	void setComparator(VersionComparator value);
-
-	/**
-	 * Returns the value of the '<em><b>Has Tilde</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Has Tilde</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Has Tilde</em>' attribute.
-	 * @see #setHasTilde(boolean)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getSimpleVersion_HasTilde()
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean isHasTilde();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#isHasTilde <em>Has Tilde</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Has Tilde</em>' attribute.
-	 * @see #isHasTilde()
-	 * @generated
-	 */
-	void setHasTilde(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Has Caret</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Has Caret</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Has Caret</em>' attribute.
-	 * @see #setHasCaret(boolean)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getSimpleVersion_HasCaret()
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean isHasCaret();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.SimpleVersion#isHasCaret <em>Has Caret</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Has Caret</em>' attribute.
-	 * @see #isHasCaret()
-	 * @generated
-	 */
-	void setHasCaret(boolean value);
+	EList<VersionComparator> getComparators();
 
 } // SimpleVersion

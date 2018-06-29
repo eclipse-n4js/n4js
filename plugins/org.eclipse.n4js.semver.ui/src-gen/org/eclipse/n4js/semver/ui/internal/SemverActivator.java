@@ -17,8 +17,8 @@ import com.google.inject.Module;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.log4j.Logger;
-import org.eclipse.n4js.semver.SemanticVersioningRuntimeModule;
-import org.eclipse.n4js.semver.ui.SemanticVersioningUiModule;
+import org.eclipse.n4js.semver.SEMVERRuntimeModule;
+import org.eclipse.n4js.semver.ui.SEMVERUiModule;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ui.shared.SharedStateModule;
 import org.eclipse.xtext.util.Modules2;
@@ -31,7 +31,7 @@ import org.osgi.framework.BundleContext;
 public class SemverActivator extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.n4js.semver.ui";
-	public static final String ORG_ECLIPSE_N4JS_SEMVER_SEMANTICVERSIONING = "org.eclipse.n4js.semver.SemanticVersioning";
+	public static final String ORG_ECLIPSE_N4JS_SEMVER_SEMVER = "org.eclipse.n4js.semver.SEMVER";
 	
 	private static final Logger logger = Logger.getLogger(SemverActivator.class);
 	
@@ -81,15 +81,15 @@ public class SemverActivator extends AbstractUIPlugin {
 	}
 	
 	protected Module getRuntimeModule(String grammar) {
-		if (ORG_ECLIPSE_N4JS_SEMVER_SEMANTICVERSIONING.equals(grammar)) {
-			return new SemanticVersioningRuntimeModule();
+		if (ORG_ECLIPSE_N4JS_SEMVER_SEMVER.equals(grammar)) {
+			return new SEMVERRuntimeModule();
 		}
 		throw new IllegalArgumentException(grammar);
 	}
 	
 	protected Module getUiModule(String grammar) {
-		if (ORG_ECLIPSE_N4JS_SEMVER_SEMANTICVERSIONING.equals(grammar)) {
-			return new SemanticVersioningUiModule(this);
+		if (ORG_ECLIPSE_N4JS_SEMVER_SEMVER.equals(grammar)) {
+			return new SEMVERUiModule(this);
 		}
 		throw new IllegalArgumentException(grammar);
 	}

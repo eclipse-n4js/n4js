@@ -1,0 +1,132 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+grammar org.eclipse.n4js.semver.SEMVER
+	with org.eclipse.n4js.common.unicode.Unicode
+	hidden (WS, EOL)
+
+import "http://www.eclipse.org/n4js/SEMVER"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+
+
+// This grammar is an adapted version of the BNF found at:
+//  https://docs.npmjs.com/misc/semver
+//
+//	range-set  ::= range ( logical-or range ) *
+//	logical-or ::= ( ' ' ) * '||' ( ' ' ) *
+//	range      ::= hyphen | simple ( ' ' simple ) * | ''
+//	hyphen     ::= partial ' - ' partial
+//	simple     ::= primitive | partial | tilde | caret
+//	primitive  ::= ( '<' | '>' | '>=' | '<=' | '=' | ) partial
+//	partial    ::= xr ( '.' xr ( '.' xr qualifier ? )? )?
+//	xr         ::= 'x' | 'X' | '*' | nr
+//	nr         ::= '0' | ['1'-'9'] ( ['0'-'9'] ) *
+//	tilde      ::= '~' partial
+//	caret      ::= '^' partial
+//	qualifier  ::= ( '-' pre )? ( '+' build )?
+//	pre        ::= parts
+//	build      ::= parts
+//	parts      ::= part ( '.' part ) *
+//	part       ::= nr | [-0-9A-Za-z]+
+
+
+
+VersionRangeSet:
+	{VersionRangeSet} ranges+=VersionRange? ('||' ranges+=VersionRange)*
+;
+
+VersionRange:
+	SimpleVersion | HyphenVersionRange
+;
+
+HyphenVersionRange returns VersionRange:
+	{HyphenVersionRange} from=VersionNumber '-' to=VersionNumber
+;
+
+SimpleVersion returns VersionRange:
+	{SimpleVersion} (comparators+=VersionComparator)* number=VersionNumber
+;
+
+VersionNumber:
+	major=VERSION_PART
+	('.' minor=VERSION_PART
+		('.' patch=VERSION_PART
+			('.' extended+=VERSION_PART)*
+		)?
+	)?
+	(qualifier=Qualifier)?
+;
+
+Qualifier:
+		('-' preRelease=ALPHA_NUMERIC_CHARS)
+	|	('+' buildMetadata=ALPHA_NUMERIC_CHARS)
+	|	('-' preRelease=ALPHA_NUMERIC_CHARS '+' buildMetadata=ALPHA_NUMERIC_CHARS)
+;
+
+
+
+
+terminal VERSION_PART:
+	'x' | 'X' | '*' | NUMERIC_ID
+;
+
+
+terminal ALPHA_NUMERIC_CHARS:
+	ALPHA_NUMERIC_CHAR+
+;
+
+terminal ALPHA_NUMERIC_CHAR:
+	DIGIT | NON_DIGIT
+;
+
+
+
+
+terminal fragment NON_DIGIT:
+	"-" | LETTER
+;
+
+terminal fragment NUMERIC_ID:
+	"0" | (POSITIVE_DIGIT DIGIT*)
+;
+
+terminal fragment DIGIT:
+	"0" | POSITIVE_DIGIT
+;
+
+terminal fragment POSITIVE_DIGIT:
+	"1".."9"
+;
+
+terminal fragment LETTER :
+	"a".."z" | "A".."Z"
+;
+
+terminal WS:
+	WHITESPACE_FRAGMENT+;
+
+terminal EOL:
+	LINE_TERMINATOR_SEQUENCE_FRAGMENT;
+
+
+
+
+enum VersionComparator:
+	Version = 'v'
+|	Equals = '='
+|	Smaller = '<'
+|	Tilde = '~'
+|	Caret = '^'
+|	SmallerEquals = '<='
+|	Greater = '>'
+|	GreaterEquals = '>='
+;

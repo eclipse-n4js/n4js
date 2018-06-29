@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.semver.SEMVER;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -24,7 +26,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getQualifier <em>Qualifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getMajor <em>Major</em>}</li>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getMinor <em>Minor</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPath <em>Path</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPatch <em>Patch</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getExtended <em>Extended</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber()
@@ -111,29 +114,45 @@ public interface VersionNumber extends EObject {
 	void setMinor(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Path</b></em>' attribute.
+	 * Returns the value of the '<em><b>Patch</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Path</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Patch</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Path</em>' attribute.
-	 * @see #setPath(String)
-	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Path()
+	 * @return the value of the '<em>Patch</em>' attribute.
+	 * @see #setPatch(String)
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Patch()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getPath();
+	String getPatch();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPath <em>Path</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.semver.SEMVER.VersionNumber#getPatch <em>Patch</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Path</em>' attribute.
-	 * @see #getPath()
+	 * @param value the new value of the '<em>Patch</em>' attribute.
+	 * @see #getPatch()
 	 * @generated
 	 */
-	void setPath(String value);
+	void setPatch(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Extended</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Extended</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Extended</em>' attribute list.
+	 * @see org.eclipse.n4js.semver.SEMVER.SEMVERPackage#getVersionNumber_Extended()
+	 * @model unique="false"
+	 * @generated
+	 */
+	EList<String> getExtended();
 
 } // VersionNumber

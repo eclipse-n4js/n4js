@@ -48,15 +48,6 @@ public interface SEMVERFactory extends EFactory {
 	HyphenVersionRange createHyphenVersionRange();
 
 	/**
-	 * Returns a new object of class '<em>Enumerated Version Range</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Enumerated Version Range</em>'.
-	 * @generated
-	 */
-	EnumeratedVersionRange createEnumeratedVersionRange();
-
-	/**
 	 * Returns a new object of class '<em>Simple Version</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

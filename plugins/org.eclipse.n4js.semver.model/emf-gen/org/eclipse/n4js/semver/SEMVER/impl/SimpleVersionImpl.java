@@ -10,14 +10,19 @@
  */
 package org.eclipse.n4js.semver.SEMVER.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 import org.eclipse.n4js.semver.SEMVER.SEMVERPackage;
 import org.eclipse.n4js.semver.SEMVER.SimpleVersion;
@@ -33,14 +38,12 @@ import org.eclipse.n4js.semver.SEMVER.VersionNumber;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl#getNumber <em>Number</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl#getComparator <em>Comparator</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl#isHasTilde <em>Has Tilde</em>}</li>
- *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl#isHasCaret <em>Has Caret</em>}</li>
+ *   <li>{@link org.eclipse.n4js.semver.SEMVER.impl.SimpleVersionImpl#getComparators <em>Comparators</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements SimpleVersion {
+public class SimpleVersionImpl extends VersionRangeImpl implements SimpleVersion {
 	/**
 	 * The cached value of the '{@link #getNumber() <em>Number</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -52,64 +55,14 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 	protected VersionNumber number;
 
 	/**
-	 * The default value of the '{@link #getComparator() <em>Comparator</em>}' attribute.
+	 * The cached value of the '{@link #getComparators() <em>Comparators</em>}' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getComparator()
+	 * @see #getComparators()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final VersionComparator COMPARATOR_EDEFAULT = VersionComparator.EQUALS;
-
-	/**
-	 * The cached value of the '{@link #getComparator() <em>Comparator</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getComparator()
-	 * @generated
-	 * @ordered
-	 */
-	protected VersionComparator comparator = COMPARATOR_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #isHasTilde() <em>Has Tilde</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isHasTilde()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean HAS_TILDE_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isHasTilde() <em>Has Tilde</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isHasTilde()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean hasTilde = HAS_TILDE_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #isHasCaret() <em>Has Caret</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isHasCaret()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean HAS_CARET_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isHasCaret() <em>Has Caret</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isHasCaret()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean hasCaret = HAS_CARET_EDEFAULT;
+	protected EList<VersionComparator> comparators;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -178,62 +131,11 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VersionComparator getComparator() {
-		return comparator;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setComparator(VersionComparator newComparator) {
-		VersionComparator oldComparator = comparator;
-		comparator = newComparator == null ? COMPARATOR_EDEFAULT : newComparator;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.SIMPLE_VERSION__COMPARATOR, oldComparator, comparator));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isHasTilde() {
-		return hasTilde;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setHasTilde(boolean newHasTilde) {
-		boolean oldHasTilde = hasTilde;
-		hasTilde = newHasTilde;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.SIMPLE_VERSION__HAS_TILDE, oldHasTilde, hasTilde));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isHasCaret() {
-		return hasCaret;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setHasCaret(boolean newHasCaret) {
-		boolean oldHasCaret = hasCaret;
-		hasCaret = newHasCaret;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SEMVERPackage.SIMPLE_VERSION__HAS_CARET, oldHasCaret, hasCaret));
+	public EList<VersionComparator> getComparators() {
+		if (comparators == null) {
+			comparators = new EDataTypeEList<VersionComparator>(VersionComparator.class, this, SEMVERPackage.SIMPLE_VERSION__COMPARATORS);
+		}
+		return comparators;
 	}
 
 	/**
@@ -260,12 +162,8 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 		switch (featureID) {
 			case SEMVERPackage.SIMPLE_VERSION__NUMBER:
 				return getNumber();
-			case SEMVERPackage.SIMPLE_VERSION__COMPARATOR:
-				return getComparator();
-			case SEMVERPackage.SIMPLE_VERSION__HAS_TILDE:
-				return isHasTilde();
-			case SEMVERPackage.SIMPLE_VERSION__HAS_CARET:
-				return isHasCaret();
+			case SEMVERPackage.SIMPLE_VERSION__COMPARATORS:
+				return getComparators();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -275,20 +173,16 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case SEMVERPackage.SIMPLE_VERSION__NUMBER:
 				setNumber((VersionNumber)newValue);
 				return;
-			case SEMVERPackage.SIMPLE_VERSION__COMPARATOR:
-				setComparator((VersionComparator)newValue);
-				return;
-			case SEMVERPackage.SIMPLE_VERSION__HAS_TILDE:
-				setHasTilde((Boolean)newValue);
-				return;
-			case SEMVERPackage.SIMPLE_VERSION__HAS_CARET:
-				setHasCaret((Boolean)newValue);
+			case SEMVERPackage.SIMPLE_VERSION__COMPARATORS:
+				getComparators().clear();
+				getComparators().addAll((Collection<? extends VersionComparator>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -305,14 +199,8 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 			case SEMVERPackage.SIMPLE_VERSION__NUMBER:
 				setNumber((VersionNumber)null);
 				return;
-			case SEMVERPackage.SIMPLE_VERSION__COMPARATOR:
-				setComparator(COMPARATOR_EDEFAULT);
-				return;
-			case SEMVERPackage.SIMPLE_VERSION__HAS_TILDE:
-				setHasTilde(HAS_TILDE_EDEFAULT);
-				return;
-			case SEMVERPackage.SIMPLE_VERSION__HAS_CARET:
-				setHasCaret(HAS_CARET_EDEFAULT);
+			case SEMVERPackage.SIMPLE_VERSION__COMPARATORS:
+				getComparators().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -328,12 +216,8 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 		switch (featureID) {
 			case SEMVERPackage.SIMPLE_VERSION__NUMBER:
 				return number != null;
-			case SEMVERPackage.SIMPLE_VERSION__COMPARATOR:
-				return comparator != COMPARATOR_EDEFAULT;
-			case SEMVERPackage.SIMPLE_VERSION__HAS_TILDE:
-				return hasTilde != HAS_TILDE_EDEFAULT;
-			case SEMVERPackage.SIMPLE_VERSION__HAS_CARET:
-				return hasCaret != HAS_CARET_EDEFAULT;
+			case SEMVERPackage.SIMPLE_VERSION__COMPARATORS:
+				return comparators != null && !comparators.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -348,12 +232,8 @@ public class SimpleVersionImpl extends MinimalEObjectImpl.Container implements S
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comparator: ");
-		result.append(comparator);
-		result.append(", hasTilde: ");
-		result.append(hasTilde);
-		result.append(", hasCaret: ");
-		result.append(hasCaret);
+		result.append(" (comparators: ");
+		result.append(comparators);
 		result.append(')');
 		return result.toString();
 	}

@@ -67,7 +67,6 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 		switch (eClass.getClassifierID()) {
 			case SEMVERPackage.VERSION_RANGE_SET: return createVersionRangeSet();
 			case SEMVERPackage.HYPHEN_VERSION_RANGE: return createHyphenVersionRange();
-			case SEMVERPackage.ENUMERATED_VERSION_RANGE: return createEnumeratedVersionRange();
 			case SEMVERPackage.SIMPLE_VERSION: return createSimpleVersion();
 			case SEMVERPackage.VERSION_NUMBER: return createVersionNumber();
 			case SEMVERPackage.QUALIFIER: return createQualifier();
@@ -124,16 +123,6 @@ public class SEMVERFactoryImpl extends EFactoryImpl implements SEMVERFactory {
 	public HyphenVersionRange createHyphenVersionRange() {
 		HyphenVersionRangeImpl hyphenVersionRange = new HyphenVersionRangeImpl();
 		return hyphenVersionRange;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EnumeratedVersionRange createEnumeratedVersionRange() {
-		EnumeratedVersionRangeImpl enumeratedVersionRange = new EnumeratedVersionRangeImpl();
-		return enumeratedVersionRange;
 	}
 
 	/**
