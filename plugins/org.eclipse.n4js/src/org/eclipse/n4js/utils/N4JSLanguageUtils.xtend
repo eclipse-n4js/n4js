@@ -109,12 +109,17 @@ import org.eclipse.emf.common.util.URI
  * @see N4JSASTUtils
  * @see TypeUtils
  */
-class N4JSLanguageUtils {
+public class N4JSLanguageUtils {
 
 	/**
 	 * See {@link ComputedPropertyNameValueConverter#SYMBOL_IDENTIFIER_PREFIX}.
 	 */
 	public static final String SYMBOL_IDENTIFIER_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
+
+	/**
+	 * Opaque modules have empty Script nodes in their AST. Other than that they behave normally.
+	 */
+	private static boolean OPAQUE_MODULE_SUPPORTED = true;
 
 	/**
 	 * If the given function definition is asynchronous, will wrap given return type into a Promise.
@@ -924,7 +929,7 @@ class N4JSLanguageUtils {
 	 */
 	def static boolean isOpaqueModule(URI resourceURI) {
 		val resourceType = ResourceType.getResourceType(resourceURI);
-		return (resourceType == ResourceType.JS || resourceType == ResourceType.JSX);
+		return OPAQUE_MODULE_SUPPORTED && (resourceType == ResourceType.JS || resourceType == ResourceType.JSX);
 	}
 
 	/**

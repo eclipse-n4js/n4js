@@ -198,7 +198,7 @@ class N4JSScopingTest {
 				foo(): any {
 				}
 			}
-		'''.parse(URI.createURI("A.n4js"), rs) // GH-855: change extension to .js
+		'''.parse(URI.createURI("A.js"), rs)
 
 		// syntax ok?
 		assertTrue(program.eResource.errors.empty)
@@ -249,7 +249,7 @@ class N4JSScopingTest {
 		val typeClient = '''
 			import { Supplier } from "org.eclipse.n4js/tests/scoping/Supplier";
 			var a: Supplier;
-		'''.parse(URI.createURI("TypeClient.n4js"), rs) // GH-855: change extension to .js
+		'''.parse(URI.createURI("TypeClient.js"), rs)
 
 		// syntax ok?
 		assertTrue(typeClient.eResource.errors.empty)
@@ -282,7 +282,7 @@ class N4JSScopingTest {
 		val typeClient = '''
 			import { Supplier as MySupplier } from "org.eclipse.n4js/tests/scoping/Supplier";
 			var a: MySupplier;
-		'''.parse(URI.createURI("TypeClient.n4js"), rs) // GH-855: change extension to .js
+		'''.parse(URI.createURI("TypeClient.js"), rs)
 
 		// syntax ok?
 		assertTrue(typeClient.eResource.errors.empty)

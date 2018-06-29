@@ -142,7 +142,7 @@ public abstract class AbstractSmokeTester {
 	}
 
 	private Script completeScript(String string) throws Exception {
-		Resource resource = newResourceSet().createResource(URI.createURI("sample.n4js")); // GH-855: change to js
+		Resource resource = newResourceSet().createResource(URI.createURI("sample.js"));
 		StringInputStream stream = new StringInputStream(string);
 		try {
 			resource.load(stream, null);

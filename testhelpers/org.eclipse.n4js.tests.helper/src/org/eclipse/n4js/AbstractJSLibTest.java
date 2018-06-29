@@ -55,6 +55,7 @@ public abstract class AbstractJSLibTest {
 	 */
 	protected AbstractJSLibTest(JSLibSingleTestConfig config) {
 		this.config = config;
+		JSActivationUtil.enableJSSupport();
 	}
 
 	/**

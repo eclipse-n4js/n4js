@@ -42,7 +42,7 @@ import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.common.base.Optional;
@@ -153,7 +153,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Override
 	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
 			Optional<SourceMapInfo> optSourceMapInfo) {
-		if (noTranspile(resource)) {
+		if (onlyWrapping(resource)) {
 			doWrapAndWrite(resource, outCode);
 		} else {
 			super.transpile(resource, options, outCode, optSourceMapInfo);
@@ -197,8 +197,9 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	 *            N4JS-Resource to check.
 	 * @return true if the code should only be wrapped.
 	 */
-	private boolean noTranspile(N4JSResource eResource) {
-		return N4JSLanguageUtils.isOpaqueModule(eResource.getURI());
+	private boolean onlyWrapping(N4JSResource eResource) {
+		ResourceType resourceType = ResourceType.getResourceType(eResource);
+		return resourceType.equals(ResourceType.JS) || resourceType.equals(ResourceType.JSX);
 	}
 
 }

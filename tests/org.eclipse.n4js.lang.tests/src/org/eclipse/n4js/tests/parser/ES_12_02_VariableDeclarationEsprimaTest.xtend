@@ -72,7 +72,7 @@ class ES_12_02_VariableDeclarationEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testTwoInitializer() {
-		val script = 'var eval = 42, arguments = 23'.parseESWithError
+		val script = 'var eval = 42, arguments = 23'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		val first = statement.varDecl.head
 		assertEquals('eval', first.name)
@@ -105,7 +105,7 @@ class ES_12_02_VariableDeclarationEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testKeywordsAsIdentifier_01() {
-		val script = 'var implements, interface, package'.parseESWithError
+		val script = 'var implements, interface, package'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		assertEquals(3, statement.varDecl.size)
 		val first = statement.varDecl.head
@@ -118,7 +118,7 @@ class ES_12_02_VariableDeclarationEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testKeywordsAsIdentifier_02() {
-		val script = 'var private, protected, public, static'.parseESWithError
+		val script = 'var private, protected, public, static'.parseESSuccessfully
 		val statement = script.scriptElements.head as VariableStatement
 		assertEquals(4, statement.varDecl.size)
 		val first = statement.varDecl.head
