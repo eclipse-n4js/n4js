@@ -404,7 +404,7 @@
         <repository
             url="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
         <repository
-            url="http://download.eclipse.org/webtools/downloads/drops/R3.8.1/R-3.8.1-20160912100321/repository"/>
+            url="http://archive.eclipse.org/webtools/downloads/drops/R3.8/R3.8.1/R-3.8.1-20160912100321/repository"/>
         <repository
             url="http://download.eclipse.org/tm/updates/4.0/GA"/>
         <repository

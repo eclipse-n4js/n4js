@@ -16,13 +16,9 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.valueOf;
 import static java.util.UUID.randomUUID;
 import static org.eclipse.n4js.AnnotationDefinition.TEST_METHOD;
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.ABSTRACT_KEY;
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.EXPORTED_CLASS_KEY;
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.TEST_CLASS_KEY;
 import static org.eclipse.xtext.EcoreUtil2.getContainerOfType;
 
 import java.util.Comparator;
@@ -46,6 +42,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
 import org.eclipse.n4js.tester.domain.TestSuite;
@@ -463,12 +460,14 @@ public class TestDiscoveryHelper {
 	}
 
 	private static boolean isAbstractClass(final IEObjectDescription objDesc) {
-		return valueOf(TRUE).equalsIgnoreCase(objDesc.getUserData(ABSTRACT_KEY));
+		boolean isAbstract = N4JSResourceDescriptionStrategy.getAbstract(objDesc);
+		return isAbstract;
 	}
 
 	private static boolean isExportedTestClass(final IEObjectDescription objDesc) {
-		return valueOf(TRUE).equalsIgnoreCase(objDesc.getUserData(TEST_CLASS_KEY))
-				&& valueOf(TRUE).equalsIgnoreCase(objDesc.getUserData(EXPORTED_CLASS_KEY));
+		boolean isTestClass = N4JSResourceDescriptionStrategy.getTestClass(objDesc);
+		boolean isExported = N4JSResourceDescriptionStrategy.getExported(objDesc);
+		return isTestClass && isExported;
 	}
 
 	private boolean hasTestMethods(final ResourceSet resSet, final IEObjectDescription objDesc) {

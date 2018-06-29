@@ -30,7 +30,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInc_02() {
-		val script = 'eval++'.parseESWithError
+		val script = 'eval++'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.INC, postfix.op)
@@ -40,7 +40,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInc_03() {
-		val script = 'arguments++'.parseESWithError
+		val script = 'arguments++'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.INC, postfix.op)
@@ -56,7 +56,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDec_02() {
-		val script = 'eval--'.parseESWithError
+		val script = 'eval--'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.DEC, postfix.op)
@@ -64,7 +64,7 @@ class ES_11_03_PostfixExpressionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDec_03() {
-		val script = 'arguments--'.parseESWithError
+		val script = 'arguments--'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val postfix = statement.expression as PostfixExpression
 		assertEquals(PostfixOperator.DEC, postfix.op)

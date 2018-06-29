@@ -45,7 +45,7 @@ class N4KeywordsAsIdentifiersTest extends AbstractParserTest {
 			var undefined = "variable named undefined";
 			var union = "variable named union";
 			var This = "variable named This";
-		'''.parseESWithError;
+		'''.parseESSuccessfully;
 
 	}
 

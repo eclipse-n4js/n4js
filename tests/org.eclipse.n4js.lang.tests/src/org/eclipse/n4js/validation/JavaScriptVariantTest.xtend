@@ -46,7 +46,6 @@ class JavaScriptVariantTest {
 			}''');
 	}
 
-	/* // GH-855: uncomment when solved
 	@Test
 	def void testStrictRecognition() {
 		assertVariant(JavaScriptVariant.strict, "some/test.js", '''
@@ -94,7 +93,7 @@ class JavaScriptVariantTest {
 				"here"
 			}''');
 	}
-	*/
+	
 
 	/**
 	 * Asserts that a given position, marked by a string literal "here", is in expected variant.
@@ -109,10 +108,9 @@ class JavaScriptVariantTest {
 		switch (expectedVariant) {
 			case JavaScriptVariant.n4js: {
 				assertTrue(JavaScriptVariant.n4js.isActive(location));
-				// assertFalse(JavaScriptVariant.strict.isActive(location)); // GH-855: uncomment when solved
-				// assertFalse(JavaScriptVariant.unrestricted.isActive(location)); // GH-855: uncomment when solved
+				 assertFalse(JavaScriptVariant.strict.isActive(location));
+				 assertFalse(JavaScriptVariant.unrestricted.isActive(location));
 			}
-			/* // GH-855: uncomment when solved
 			case JavaScriptVariant.strict: {
 				assertFalse(JavaScriptVariant.n4js.isActive(location));
 				assertTrue(JavaScriptVariant.strict.isActive(location));
@@ -123,7 +121,7 @@ class JavaScriptVariantTest {
 				assertFalse(JavaScriptVariant.strict.isActive(location));
 				assertTrue(JavaScriptVariant.unrestricted.isActive(location));
 			}
-			*/
+
 			default: throw new IllegalArgumentException(expectedVariant.toString)
 		}
 	}

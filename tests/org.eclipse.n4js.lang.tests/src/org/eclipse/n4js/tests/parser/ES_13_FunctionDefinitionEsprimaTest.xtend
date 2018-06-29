@@ -39,7 +39,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionEval() {
-		val script = 'function eval() { }'.parseESWithError
+		val script = 'function eval() { }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("eval", funcDecl.name)
@@ -50,7 +50,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionArguments() {
-		val script = 'function arguments() { }'.parseESWithError
+		val script = 'function arguments() { }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("arguments", funcDecl.name)
@@ -92,7 +92,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionEvalWithInner() {
-		val script = 'function eval() { function inner() { "use strict" } }'.parseESWithError
+		val script = 'function eval() { function inner() { "use strict" } }'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val funcDecl = script.scriptElements.head as FunctionDeclaration
 		assertEquals("eval", funcDecl.name)
@@ -162,7 +162,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionVar2() {
-		val script = 'var hi = function eval() { };'.parseESWithError
+		val script = 'var hi = function eval() { };'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val varDecl = (script.scriptElements.head as VariableStatement).varDecl.get(0)
 		assertEquals("hi", varDecl.name);
@@ -175,7 +175,7 @@ class ES_13_FunctionDefinitionEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testFunctionDefinitionVar3() {
-		val script = 'var hi = function arguments() { };'.parseESWithError
+		val script = 'var hi = function arguments() { };'.parseESSuccessfully
 		assertEquals(1, script.scriptElements.size())
 		val varDecl = (script.scriptElements.head as VariableStatement).varDecl.get(0)
 		assertEquals("hi", varDecl.name);

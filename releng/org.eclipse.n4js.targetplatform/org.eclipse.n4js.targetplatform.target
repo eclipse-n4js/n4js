@@ -17,7 +17,7 @@
       <unit id="org.eclipse.wst.html.ui" version="1.0.1101.v201608060430"/>
       <unit id="org.eclipse.wst.html.ui.infopop" version="1.0.201.v201409111852"/>
       <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.8.0.v201608061842"/>
-      <repository location="http://download.eclipse.org/webtools/downloads/drops/R3.8.1/R-3.8.1-20160912100321/repository"/>
+      <repository location="http://archive.eclipse.org/webtools/downloads/drops/R3.8/R3.8.1/R-3.8.1-20160912100321/repository"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.egit.feature.group" version="4.8.0.201706111038-r"/>

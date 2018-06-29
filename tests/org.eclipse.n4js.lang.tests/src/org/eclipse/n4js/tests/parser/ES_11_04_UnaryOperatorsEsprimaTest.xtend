@@ -30,7 +30,7 @@ class ES_11_04_UnaryOperatorsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInc_02() {
-		val script = '++eval'.parseESWithError
+		val script = '++eval'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val unary = statement.expression as UnaryExpression
 		assertEquals(UnaryOperator.INC, unary.op)
@@ -40,7 +40,7 @@ class ES_11_04_UnaryOperatorsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testInc_03() {
-		val script = '++arguments'.parseESWithError
+		val script = '++arguments'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val unary = statement.expression as UnaryExpression
 		assertEquals(UnaryOperator.INC, unary.op)
@@ -60,7 +60,7 @@ class ES_11_04_UnaryOperatorsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDec_02() {
-		val script = '--eval'.parseESWithError
+		val script = '--eval'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val unary = statement.expression as UnaryExpression
 		assertEquals(UnaryOperator.DEC, unary.op)
@@ -70,7 +70,7 @@ class ES_11_04_UnaryOperatorsEsprimaTest extends AbstractParserTest {
 
 	@Test
 	def void testDec_03() {
-		val script = '--arguments'.parseESWithError
+		val script = '--arguments'.parseESSuccessfully
 		val statement = script.scriptElements.head as ExpressionStatement
 		val unary = statement.expression as UnaryExpression
 		assertEquals(UnaryOperator.DEC, unary.op)

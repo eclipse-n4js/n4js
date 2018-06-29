@@ -15,8 +15,7 @@ class A {
 	set a(v) {}
 }
 class B extends A {
-	// disabled issues until GH-855 is solved
-	/* X-PECT warnings ---
+	/* XPECT warnings ---
 	   "Setter B.a should not be declared without overriding the corresponding getter." at "a"
 	---
 	 */
