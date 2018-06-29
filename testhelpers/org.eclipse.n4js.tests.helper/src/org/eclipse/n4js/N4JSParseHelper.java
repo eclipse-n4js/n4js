@@ -37,7 +37,6 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 	 * Convenience method, delegates to {@link #parse(CharSequence, JavaScriptVariant) parse(CharSequence,
 	 * JavaScriptVariant.unrestricted)}.
 	 */
-	@SuppressWarnings("deprecation")
 	public Script parseUnrestricted(CharSequence text) throws Exception {
 		return parse(text, JavaScriptVariant.unrestricted);
 	}
@@ -46,7 +45,6 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 	 * Convenience method, delegates to {@link #parse(CharSequence, JavaScriptVariant) parse(CharSequence,
 	 * JavaScriptVariant.strict)}.
 	 */
-	@SuppressWarnings("deprecation")
 	public Script parseStrict(CharSequence text) throws Exception {
 		return parse(text, JavaScriptVariant.strict);
 	}
@@ -63,7 +61,6 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 	 * Preferred way of parsing a JavaScript of N4JS file, as it defines the correct mode in which the script is parsed.
 	 * This is important for tests checking for different validation and this-binginds.
 	 */
-	@SuppressWarnings("deprecation")
 	public Script parse(CharSequence text, JavaScriptVariant variant) throws Exception {
 		try {
 			switch (variant) {

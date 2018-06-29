@@ -11,10 +11,6 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
 
-// disabled until GH-855 solved
-
-
-
 //IDEBUG-192 allows following
 // item Elements defined in catch blocks can shadow elements defined in all parent catch blocks and the (indirectly) parent non-catch-block environment.
 
@@ -26,7 +22,7 @@ function fd1_1(){
 	try{
 		throw 3;
 	}catch (y){
-		// X-PECT noerrors --> "Variable x duplicates variable x (line 11)." at "x"
+		// XPECT noerrors --> "Variable x duplicates variable x (line 11)." at "x"
 		var x;
 	}
 }
@@ -35,7 +31,7 @@ function fd1_2(){
 	var x;
 	try{
 		throw 3;
-	// X-PECT noerrors --> "Catch variable x duplicates variable x (line 21)." at "x"
+	// XPECT noerrors --> "Catch variable x duplicates variable x (line 21)." at "x"
 	}catch (x){
 		var y;
 	}
@@ -46,8 +42,7 @@ function fd1_3(){
 	try{
 		throw 3;
 	}catch (x){
-	// disabled issues until GH-855 is solved
-	// X-PECT noerrors --> "Variable x duplicates catch variable x (line 44)." at "x"
+	// XPECT errors --> "Variable x duplicates catch variable x (line 44)." at "x"
 		var x;
 	}
 }
@@ -62,7 +57,7 @@ function fd2_1(){
 		try{
 			throw 3;
 		}catch (y2){
-			// X-PECT noerrors --> "Variable x duplicates variable x (line 43)." at "x"
+			// XPECT noerrors --> "Variable x duplicates variable x (line 43)." at "x"
 			var x;
 		}
 	}
@@ -76,7 +71,7 @@ function fd2(){
 		try{
 			throw 3;
 		}catch (y2){
-			// X-PECT noerrors --> "Variable y1 duplicates catch variable y1 (line 60)." at "y1"
+			// XPECT noerrors --> "Variable y1 duplicates catch variable y1 (line 60)." at "y1"
 			var y1;
 		}
 	}
@@ -89,7 +84,7 @@ function fd3(){
 	}catch (y1){
 		try{
 			throw 3;
-			// X-PECT nowarnings --> /*allowed in JS variant*/ "Catch variable y1 shadows catch variable y1 (line 73)." at "y1"
+			// XPECT nowarnings --> /*allowed in JS variant*/ "Catch variable y1 shadows catch variable y1 (line 73)." at "y1"
 		}catch (y1){
 		}
 	}
@@ -104,7 +99,7 @@ function fd4(){
 		try{
 			throw 3;
 		}catch (y2){
-			// X-PECT noerrors --> just shadowing
+			// XPECT noerrors --> just shadowing
 			var fd4X;
 		}
 	}

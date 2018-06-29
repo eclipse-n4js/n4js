@@ -11,10 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
 
-
-
-// disabled issues until GH-855 is solved
-/* X-PECT compileResult ---
+/* XPECT compileResult ---
 /\*
  * Copyright (c) 2016 NumberFour AG.
  * All rights reserved. This program and the accompanying materials

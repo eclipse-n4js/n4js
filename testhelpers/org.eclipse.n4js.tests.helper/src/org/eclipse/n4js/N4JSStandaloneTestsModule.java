@@ -29,6 +29,11 @@ import org.eclipse.xtext.validation.IDiagnosticConverter;
 @XpectGuiceModule
 public class N4JSStandaloneTestsModule extends BaseTestModule {
 
+	/** Constructor enables JS support */
+	public N4JSStandaloneTestsModule() {
+		JSActivationUtil.enableJSSupport();
+	}
+
 	/**
 	 * This bindings triggers a registration of the language services (validators, resource description managers, etc.)
 	 * provided by this module with the global EMF registry.

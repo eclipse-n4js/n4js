@@ -312,6 +312,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	/***/
 	protected static void waitForUpdateEditorJob() {
 		ProjectTestsUtils.waitForUpdateEditorJob();
+		ProjectTestsUtils.waitForAllJobs();
 	}
 
 	/***/
