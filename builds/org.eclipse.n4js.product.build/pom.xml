@@ -32,7 +32,7 @@ Contributors:
 			<id>stagingNpmRegistry</id>
 			<activation>
 				<property>
-					<name>stagingNpmRegistry</name>
+					<name>env.STAGING_NPM_REGISTRY</name>
 				</property>
 			</activation>
 			<build>
@@ -42,7 +42,7 @@ Contributors:
 						<artifactId>exec-maven-plugin</artifactId>
 						<version>${codehaus-exec-maven-plugin.version}</version>
 						<executions>
-							<!-- Publish n4js-libs to staging area when the parameter -DstagingNpmRegistry is set -->
+							<!-- Publish n4js-libs to staging area when the env variable STAGING_NPM_REGISTRY is set -->
 							<execution>
 								<id>publish-n4js-libs</id>
 								<phase>verify</phase>
@@ -54,7 +54,7 @@ Contributors:
 									<arguments>
 										<argument>${project.basedir}/../../publish-n4js-libs-npm.sh</argument>
 										<argument>bridge</argument>
-										<argument>${stagingNpmRegistry}</argument>
+										<argument>${env.STAGING_NPM_REGISTRY}</argument>
 									</arguments>
 								</configuration>
 							</execution>
