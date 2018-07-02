@@ -132,7 +132,8 @@ public class NodeProcessBuilder {
 	 * @param invokationPath
 	 *            location on which npm command should be invoked
 	 * @param packageName
-	 *            package passed as parameter to the command (might be space separated list of names)
+	 *            package passed as parameter to the command (might be space separated list of names). If packageName is
+	 *            null, it is assume to be the empty string.
 	 * @param save
 	 *            instructs npm to save command result to packages in package.json (if available)
 	 * @param simpleCommand

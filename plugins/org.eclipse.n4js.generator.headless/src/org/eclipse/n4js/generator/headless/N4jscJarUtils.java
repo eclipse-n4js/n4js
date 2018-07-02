@@ -174,6 +174,10 @@ public class N4jscJarUtils {
 			File workspaceRoot,
 			List<String> javaOpts,
 			List<String> n4jscOpts) {
+		Objects.requireNonNull(workspaceRoot);
+		Objects.requireNonNull(javaOpts);
+		Objects.requireNonNull(n4jscOpts);
+
 		// Install n4js-cli from npm registry -> node_modules folder
 		final ProcessResult result = commandFactory
 				.createInstallPackageCommand(workspaceRoot, "n4js-cli@test", false)
@@ -183,13 +187,8 @@ public class N4jscJarUtils {
 			LOGGER.error(msg);
 			throw new IllegalStateException(msg);
 		}
-		// assertEquals("Calling npm install n4js-cli@canary failed", 0, result.getExitCode());
 
 		// Call n4js-cli to build the workspace
-		Objects.requireNonNull(workspaceRoot);
-		Objects.requireNonNull(javaOpts);
-		Objects.requireNonNull(n4jscOpts);
-
 		final List<String> cmdline = new ArrayList<>();
 		cmdline.add(nodeJsBinary.getBinaryAbsolutePath());
 		Path n4jscliAbsolutePath = FileSystems.getDefault()
@@ -203,8 +202,6 @@ public class N4jscJarUtils {
 		cmdline.addAll(n4jscOpts);
 		cmdline.add("--projectlocations");
 		cmdline.add(workspaceRoot.getAbsolutePath());
-
-		// String cmdString = Joiner.on(" ").join(cmdline);
 
 		ProcessBuilder pb = new ProcessBuilder(cmdline);
 		pb.directory(null); // set to home of current process, which should be the module (mvn: ${project.basedir})

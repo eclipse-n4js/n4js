@@ -42,7 +42,9 @@ Contributors:
 						<artifactId>exec-maven-plugin</artifactId>
 						<version>${codehaus-exec-maven-plugin.version}</version>
 						<executions>
-							<!-- Publish n4js-libs to staging area when the env variable STAGING_NPM_REGISTRY is set -->
+							<!-- Publish n4js-libs to staging area if the env variable STAGING_NPM_REGISTRY is set.
+							The staging area is the place where we publish n4js-libs to, Other builds can retrieve n4js-lib npms from the staging area.
+							 -->
 							<execution>
 								<id>publish-n4js-libs</id>
 								<phase>verify</phase>
