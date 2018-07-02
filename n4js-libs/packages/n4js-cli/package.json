@@ -34,8 +34,5 @@
       "strict": "error",
       "no-trailing-spaces": "error"
     }
-  },
-  "dependencies": {
-    "npmlog": "^4.1.2"
   }
 }
