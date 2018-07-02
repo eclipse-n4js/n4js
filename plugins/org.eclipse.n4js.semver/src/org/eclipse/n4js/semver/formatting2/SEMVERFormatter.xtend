@@ -10,17 +10,13 @@
  */
 package org.eclipse.n4js.semver.formatting2
 
-import com.google.inject.Inject
 import org.eclipse.n4js.semver.SEMVER.HyphenVersionRange
 import org.eclipse.n4js.semver.SEMVER.VersionRange
 import org.eclipse.n4js.semver.SEMVER.VersionRangeSet
-import org.eclipse.n4js.semver.services.SEMVERGrammarAccess
-import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.formatting2.AbstractFormatter2
+import org.eclipse.xtext.formatting2.IFormattableDocument
 
 class SEMVERFormatter extends AbstractFormatter2 {
-	
-	@Inject extension SEMVERGrammarAccess
 
 	def dispatch void format(VersionRangeSet versionRangeSet, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
@@ -34,6 +30,6 @@ class SEMVERFormatter extends AbstractFormatter2 {
 		hyphenVersionRange.getFrom.format;
 		hyphenVersionRange.getTo.format;
 	}
-	
+
 	// TODO: implement for EnumeratedVersionRange, SimpleVersion, VersionNumber
 }

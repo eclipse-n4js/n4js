@@ -40,7 +40,7 @@ VersionRangeContraint returns VersionRange:
 ;
 
 SimpleVersion:
-	{SimpleVersion} (comparators+=VersionComparator)* number=VersionNumber
+	{SimpleVersion} (comparators+=VersionComparator WS*)* number=VersionNumber
 ;
 
 VersionNumber:

@@ -15,8 +15,10 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.ReplaceRegion;
 
+/** Serializes SEMVER elements */
 public class SEMVERSerializer implements ISerializer {
 
+	/** @return string representation of {@link VersionRangeSet} */
 	public String serialize(VersionRangeSet vrs) {
 		String str = "";
 		for (int i = 0; i < vrs.getRanges().size(); i++) {
@@ -28,11 +30,13 @@ public class SEMVERSerializer implements ISerializer {
 		return str;
 	}
 
+	/** @return string representation of {@link HyphenVersionRange} */
 	public String serialize(HyphenVersionRange hvr) {
 		String str = serialize(hvr.getFrom()) + " - " + serialize(hvr.getTo());
 		return str;
 	}
 
+	/** @return string representation of {@link VersionRangeConstraint} */
 	public String serialize(VersionRangeConstraint vrc) {
 		String str = "";
 		for (int i = 0; i < vrc.getVersionConstraints().size(); i++) {
@@ -44,6 +48,7 @@ public class SEMVERSerializer implements ISerializer {
 		return str;
 	}
 
+	/** @return string representation of {@link SimpleVersion} */
 	public String serialize(SimpleVersion sv) {
 		String str = "";
 		for (VersionComparator vc : sv.getComparators()) {
@@ -53,6 +58,7 @@ public class SEMVERSerializer implements ISerializer {
 		return str;
 	}
 
+	/** @return string representation of {@link VersionNumber} */
 	public String serialize(VersionNumber vn) {
 		String str = vn.getMajor();
 		if (vn.getMinor() != null && !vn.getMinor().isEmpty())
@@ -67,6 +73,7 @@ public class SEMVERSerializer implements ISerializer {
 		return str;
 	}
 
+	/** @return string representation of {@link Qualifier} */
 	public String serialize(Qualifier q) {
 		String str = "";
 		if (q.getPreRelease() != null && !q.getPreRelease().isEmpty())
@@ -76,6 +83,7 @@ public class SEMVERSerializer implements ISerializer {
 		return str;
 	}
 
+	/** @return string representation of {@link VersionComparator} */
 	public String serialize(VersionComparator vc) {
 		switch (vc) {
 		case VERSION:

@@ -199,26 +199,34 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.SEMVER.SimpleVersion");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cSimpleVersionAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cComparatorsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cComparatorsVersionComparatorEnumRuleCall_1_0 = (RuleCall)cComparatorsAssignment_1.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Assignment cComparatorsAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
+		private final RuleCall cComparatorsVersionComparatorEnumRuleCall_1_0_0 = (RuleCall)cComparatorsAssignment_1_0.eContents().get(0);
+		private final RuleCall cWSTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
 		private final Assignment cNumberAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cNumberVersionNumberParserRuleCall_2_0 = (RuleCall)cNumberAssignment_2.eContents().get(0);
 		
 		//SimpleVersion:
-		//	{SimpleVersion} comparators+=VersionComparator* number=VersionNumber;
+		//	{SimpleVersion} (comparators+=VersionComparator WS*)* number=VersionNumber;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{SimpleVersion} comparators+=VersionComparator* number=VersionNumber
+		//{SimpleVersion} (comparators+=VersionComparator WS*)* number=VersionNumber
 		public Group getGroup() { return cGroup; }
 		
 		//{SimpleVersion}
 		public Action getSimpleVersionAction_0() { return cSimpleVersionAction_0; }
 		
-		//comparators+=VersionComparator*
-		public Assignment getComparatorsAssignment_1() { return cComparatorsAssignment_1; }
+		//(comparators+=VersionComparator WS*)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//comparators+=VersionComparator
+		public Assignment getComparatorsAssignment_1_0() { return cComparatorsAssignment_1_0; }
 		
 		//VersionComparator
-		public RuleCall getComparatorsVersionComparatorEnumRuleCall_1_0() { return cComparatorsVersionComparatorEnumRuleCall_1_0; }
+		public RuleCall getComparatorsVersionComparatorEnumRuleCall_1_0_0() { return cComparatorsVersionComparatorEnumRuleCall_1_0_0; }
+		
+		//WS*
+		public RuleCall getWSTerminalRuleCall_1_1() { return cWSTerminalRuleCall_1_1; }
 		
 		//number=VersionNumber
 		public Assignment getNumberAssignment_2() { return cNumberAssignment_2; }
@@ -645,7 +653,7 @@ public class SEMVERGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//SimpleVersion:
-	//	{SimpleVersion} comparators+=VersionComparator* number=VersionNumber;
+	//	{SimpleVersion} (comparators+=VersionComparator WS*)* number=VersionNumber;
 	public SimpleVersionElements getSimpleVersionAccess() {
 		return pSimpleVersion;
 	}

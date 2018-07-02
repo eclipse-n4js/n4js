@@ -1113,9 +1113,9 @@ rule__SimpleVersion__Group__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getSimpleVersionAccess().getComparatorsAssignment_1()); }
-	(rule__SimpleVersion__ComparatorsAssignment_1)*
-	{ after(grammarAccess.getSimpleVersionAccess().getComparatorsAssignment_1()); }
+	{ before(grammarAccess.getSimpleVersionAccess().getGroup_1()); }
+	(rule__SimpleVersion__Group_1__0)*
+	{ after(grammarAccess.getSimpleVersionAccess().getGroup_1()); }
 )
 ;
 finally {
@@ -1142,6 +1142,60 @@ rule__SimpleVersion__Group__2__Impl
 	{ before(grammarAccess.getSimpleVersionAccess().getNumberAssignment_2()); }
 	(rule__SimpleVersion__NumberAssignment_2)
 	{ after(grammarAccess.getSimpleVersionAccess().getNumberAssignment_2()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+rule__SimpleVersion__Group_1__0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__SimpleVersion__Group_1__0__Impl
+	rule__SimpleVersion__Group_1__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__SimpleVersion__Group_1__0__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getSimpleVersionAccess().getComparatorsAssignment_1_0()); }
+	(rule__SimpleVersion__ComparatorsAssignment_1_0)
+	{ after(grammarAccess.getSimpleVersionAccess().getComparatorsAssignment_1_0()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__SimpleVersion__Group_1__1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__SimpleVersion__Group_1__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__SimpleVersion__Group_1__1__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_1_1()); }
+	(RULE_WS)*
+	{ after(grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_1_1()); }
 )
 ;
 finally {
@@ -1833,15 +1887,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__SimpleVersion__ComparatorsAssignment_1
+rule__SimpleVersion__ComparatorsAssignment_1_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_1_0()); }
+		{ before(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_1_0_0()); }
 		ruleVersionComparator
-		{ after(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_1_0()); }
+		{ after(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_1_0_0()); }
 	)
 ;
 finally {

@@ -17,6 +17,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class SEMVERUiModule extends AbstractSEMVERUiModule {
 
+	/** Constructor */
 	public SEMVERUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}

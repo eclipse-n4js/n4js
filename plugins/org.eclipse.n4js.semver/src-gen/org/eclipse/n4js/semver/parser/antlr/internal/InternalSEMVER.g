@@ -377,29 +377,37 @@ ruleSimpleVersion returns [EObject current=null]
 		)
 		(
 			(
-				{
-					newCompositeNode(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_1_0());
-				}
-				lv_comparators_1_0=ruleVersionComparator
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getSimpleVersionRule());
+				(
+					{
+						newCompositeNode(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_1_0_0());
 					}
-					add(
-						$current,
-						"comparators",
-						lv_comparators_1_0,
-						"org.eclipse.n4js.semver.SEMVER.VersionComparator");
-					afterParserOrEnumRuleCall();
-				}
+					lv_comparators_1_0=ruleVersionComparator
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getSimpleVersionRule());
+						}
+						add(
+							$current,
+							"comparators",
+							lv_comparators_1_0,
+							"org.eclipse.n4js.semver.SEMVER.VersionComparator");
+						afterParserOrEnumRuleCall();
+					}
+				)
 			)
+			(
+				this_WS_2=RULE_WS
+				{
+					newLeafNode(this_WS_2, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_1_1());
+				}
+			)*
 		)*
 		(
 			(
 				{
 					newCompositeNode(grammarAccess.getSimpleVersionAccess().getNumberVersionNumberParserRuleCall_2_0());
 				}
-				lv_number_2_0=ruleVersionNumber
+				lv_number_3_0=ruleVersionNumber
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getSimpleVersionRule());
@@ -407,7 +415,7 @@ ruleSimpleVersion returns [EObject current=null]
 					set(
 						$current,
 						"number",
-						lv_number_2_0,
+						lv_number_3_0,
 						"org.eclipse.n4js.semver.SEMVER.VersionNumber");
 					afterParserOrEnumRuleCall();
 				}

@@ -29,6 +29,7 @@ public class SEMVERSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected SEMVERGrammarAccess grammarAccess;
 	protected AbstractElementAlias match_HyphenVersionRange_WSTerminalRuleCall_2_p;
 	protected AbstractElementAlias match_HyphenVersionRange_WSTerminalRuleCall_4_p;
+	protected AbstractElementAlias match_SimpleVersion_WSTerminalRuleCall_1_1_a;
 	protected AbstractElementAlias match_VersionRangeContraint_WSTerminalRuleCall_2_0_p;
 	protected AbstractElementAlias match_VersionRangeSet_WSTerminalRuleCall_1_a;
 	protected AbstractElementAlias match_VersionRangeSet_WSTerminalRuleCall_2_1_0_a;
@@ -40,6 +41,7 @@ public class SEMVERSyntacticSequencer extends AbstractSyntacticSequencer {
 		grammarAccess = (SEMVERGrammarAccess) access;
 		match_HyphenVersionRange_WSTerminalRuleCall_2_p = new TokenAlias(true, false, grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_2());
 		match_HyphenVersionRange_WSTerminalRuleCall_4_p = new TokenAlias(true, false, grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_4());
+		match_SimpleVersion_WSTerminalRuleCall_1_1_a = new TokenAlias(true, true, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_1_1());
 		match_VersionRangeContraint_WSTerminalRuleCall_2_0_p = new TokenAlias(true, false, grammarAccess.getVersionRangeContraintAccess().getWSTerminalRuleCall_2_0());
 		match_VersionRangeSet_WSTerminalRuleCall_1_a = new TokenAlias(true, true, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_1());
 		match_VersionRangeSet_WSTerminalRuleCall_2_1_0_a = new TokenAlias(true, true, grammarAccess.getVersionRangeSetAccess().getWSTerminalRuleCall_2_1_0());
@@ -74,6 +76,8 @@ public class SEMVERSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_HyphenVersionRange_WSTerminalRuleCall_2_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_HyphenVersionRange_WSTerminalRuleCall_4_p.equals(syntax))
 				emit_HyphenVersionRange_WSTerminalRuleCall_4_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_SimpleVersion_WSTerminalRuleCall_1_1_a.equals(syntax))
+				emit_SimpleVersion_WSTerminalRuleCall_1_1_a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_VersionRangeContraint_WSTerminalRuleCall_2_0_p.equals(syntax))
 				emit_VersionRangeContraint_WSTerminalRuleCall_2_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_VersionRangeSet_WSTerminalRuleCall_1_a.equals(syntax))
@@ -107,6 +111,18 @@ public class SEMVERSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     from=VersionNumber WS+ '-' (ambiguity) to=VersionNumber
 	 */
 	protected void emit_HyphenVersionRange_WSTerminalRuleCall_4_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     WS*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     comparators+=VersionComparator (ambiguity) comparators+=VersionComparator
+	 *     comparators+=VersionComparator (ambiguity) number=VersionNumber
+	 */
+	protected void emit_SimpleVersion_WSTerminalRuleCall_1_1_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

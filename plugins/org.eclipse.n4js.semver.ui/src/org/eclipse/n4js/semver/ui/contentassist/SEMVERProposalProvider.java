@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.semver.ui.contentassist;
 
-
 /**
- * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#content-assist
- * on how to customize the content assistant.
+ * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#content-assist on how to customize the content
+ * assistant.
  */
 public class SEMVERProposalProvider extends AbstractSEMVERProposalProvider {
+	// empty
 }

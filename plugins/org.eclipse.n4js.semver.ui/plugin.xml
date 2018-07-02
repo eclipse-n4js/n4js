@@ -16,49 +16,49 @@ Contributors:
     <extension
             point="org.eclipse.ui.editors">
         <editor
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
             extensions="semver"
-            id="org.eclipse.n4js.semver.SemanticVersioning"
+            id="org.eclipse.n4js.semver.SEMVER"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
-            name="SemanticVersioning Editor">
+            name="SEMVER Editor">
         </editor>
     </extension>
     <extension
         point="org.eclipse.ui.handlers">
         <handler
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
             commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
             <activeWhen>
                 <reference
-                    definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+                    definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened">
                 </reference>
             </activeWhen>
         </handler>
         <handler
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
-            commandId="org.eclipse.n4js.semver.SemanticVersioning.validate">
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+            commandId="org.eclipse.n4js.semver.SEMVER.validate">
          <activeWhen>
             <reference
-                    definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+                    definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened">
             </reference>
          </activeWhen>
       	</handler>
       	<!-- copy qualified name -->
         <handler
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
             commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
             <activeWhen>
-				<reference definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened" />
+				<reference definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened" />
             </activeWhen>
         </handler>
         <handler
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
             commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
             <activeWhen>
             	<and>
-            		<reference definitionId="org.eclipse.n4js.semver.SemanticVersioning.XtextEditor.opened" />
+            		<reference definitionId="org.eclipse.n4js.semver.SEMVER.XtextEditor.opened" />
 	                <iterate>
 						<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 					</iterate>
@@ -67,22 +67,22 @@ Contributors:
         </handler>
     </extension>
     <extension point="org.eclipse.core.expressions.definitions">
-        <definition id="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+        <definition id="org.eclipse.n4js.semver.SEMVER.Editor.opened">
             <and>
                 <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
                 <with variable="activeEditor">
                     <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
-                        value="org.eclipse.n4js.semver.SemanticVersioning" 
+                        value="org.eclipse.n4js.semver.SEMVER" 
                         forcePluginActivation="true"/>
                 </with>        
             </and>
         </definition>
-        <definition id="org.eclipse.n4js.semver.SemanticVersioning.XtextEditor.opened">
+        <definition id="org.eclipse.n4js.semver.SEMVER.XtextEditor.opened">
             <and>
                 <reference definitionId="isXtextEditorActive"/>
                 <with variable="activeEditor">
                     <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
-                        value="org.eclipse.n4js.semver.SemanticVersioning" 
+                        value="org.eclipse.n4js.semver.SEMVER" 
                         forcePluginActivation="true"/>
                 </with>        
             </and>
@@ -91,33 +91,33 @@ Contributors:
     <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.eclipse.n4js.semver.SemanticVersioning"
-            name="SemanticVersioning">
-            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SemanticVersioning"/>
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.eclipse.n4js.semver.SEMVER"
+            name="SEMVER">
+            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SEMVER"/>
         </page>
         <page
-            category="org.eclipse.n4js.semver.SemanticVersioning"
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
-            id="org.eclipse.n4js.semver.SemanticVersioning.coloring"
+            category="org.eclipse.n4js.semver.SEMVER"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            id="org.eclipse.n4js.semver.SEMVER.coloring"
             name="Syntax Coloring">
-            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SemanticVersioning"/>
+            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SEMVER"/>
         </page>
         <page
-            category="org.eclipse.n4js.semver.SemanticVersioning"
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
-            id="org.eclipse.n4js.semver.SemanticVersioning.templates"
+            category="org.eclipse.n4js.semver.SEMVER"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+            id="org.eclipse.n4js.semver.SEMVER.templates"
             name="Templates">
-            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SemanticVersioning"/>
+            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SEMVER"/>
         </page>
     </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.eclipse.n4js.semver.SemanticVersioning"
-            name="SemanticVersioning">
-            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SemanticVersioning"/>
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.eclipse.n4js.semver.SEMVER"
+            name="SEMVER">
+            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SEMVER"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -127,14 +127,14 @@ Contributors:
     <extension
         point="org.eclipse.ui.keywords">
         <keyword
-            id="org.eclipse.n4js.semver.ui.keyword_SemanticVersioning"
-            label="SemanticVersioning"/>
+            id="org.eclipse.n4js.semver.ui.keyword_SEMVER"
+            label="SEMVER"/>
     </extension>
     <extension
          point="org.eclipse.ui.commands">
       <command
             description="Trigger expensive validation"
-            id="org.eclipse.n4js.semver.SemanticVersioning.validate"
+            id="org.eclipse.n4js.semver.SEMVER.validate"
             name="Validate">
       </command>
       <!-- copy qualified name -->
@@ -155,12 +155,12 @@ Contributors:
         <menuContribution
             locationURI="popup:#TextEditorContext?after=group.edit">
              <command
-                 commandId="org.eclipse.n4js.semver.SemanticVersioning.validate"
+                 commandId="org.eclipse.n4js.semver.SEMVER.validate"
                  style="push"
                  tooltip="Trigger expensive validation">
             <visibleWhen checkEnabled="false">
                 <reference
-                    definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+                    definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened">
                 </reference>
             </visibleWhen>
          </command>  
@@ -170,7 +170,7 @@ Contributors:
          	<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName" 
          		style="push" tooltip="Copy Qualified Name">
             	<visibleWhen checkEnabled="false">
-                	<reference definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened" />
+                	<reference definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened" />
             	</visibleWhen>
          	</command>  
          </menuContribution>
@@ -178,7 +178,7 @@ Contributors:
          	<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
             	style="push" tooltip="Copy Qualified Name">
             	<visibleWhen checkEnabled="false">
-                	<reference definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened" />
+                	<reference definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened" />
             	</visibleWhen>
          	</command>  
          </menuContribution>
@@ -187,7 +187,7 @@ Contributors:
 				style="push" tooltip="Copy Qualified Name">
          		<visibleWhen checkEnabled="false">
 	            	<and>
-	            		<reference definitionId="org.eclipse.n4js.semver.SemanticVersioning.XtextEditor.opened" />
+	            		<reference definitionId="org.eclipse.n4js.semver.SEMVER.XtextEditor.opened" />
 						<iterate>
 							<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 						</iterate>
@@ -200,7 +200,7 @@ Contributors:
 		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
 			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
 				<visibleWhen checkEnabled="false">
-                	<reference definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+                	<reference definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened">
                 	</reference>
             	</visibleWhen>
 			</command>
@@ -208,11 +208,11 @@ Contributors:
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 	    <handler
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
             commandId="org.eclipse.xtext.ui.editor.FindReferences">
             <activeWhen>
                 <reference
-                    definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+                    definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened">
                 </reference>
             </activeWhen>
         </handler>
@@ -223,36 +223,36 @@ Contributors:
 	<extension
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
-			class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
 			type="semver">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="semver">
         </resourceServiceProvider>
     </extension>
 
 
-	<!-- marker definitions for org.eclipse.n4js.semver.SemanticVersioning -->
+	<!-- marker definitions for org.eclipse.n4js.semver.SEMVER -->
 	<extension
-	        id="SemanticVersioning.check.fast"
-	        name="SemanticVersioning Problem"
+	        id="SEMVER.check.fast"
+	        name="SEMVER Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.fast"/>
 	    <persistent value="true"/>
 	</extension>
 	<extension
-	        id="SemanticVersioning.check.normal"
-	        name="SemanticVersioning Problem"
+	        id="SEMVER.check.normal"
+	        name="SEMVER Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.normal"/>
 	    <persistent value="true"/>
 	</extension>
 	<extension
-	        id="SemanticVersioning.check.expensive"
-	        name="SemanticVersioning Problem"
+	        id="SEMVER.check.expensive"
+	        name="SEMVER Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.expensive"/>
 	    <persistent value="true"/>
@@ -261,27 +261,27 @@ Contributors:
    <extension
          point="org.eclipse.xtext.builder.participant">
       <participant
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
       </participant>
    </extension>
    <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            category="org.eclipse.n4js.semver.SemanticVersioning"
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.eclipse.n4js.semver.SemanticVersioning.compiler.preferencePage"
+            category="org.eclipse.n4js.semver.SEMVER"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+            id="org.eclipse.n4js.semver.SEMVER.compiler.preferencePage"
             name="Compiler">
-            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SemanticVersioning"/>
+            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SEMVER"/>
         </page>
     </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            category="org.eclipse.n4js.semver.SemanticVersioning"
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.eclipse.n4js.semver.SemanticVersioning.compiler.propertyPage"
+            category="org.eclipse.n4js.semver.SEMVER"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+            id="org.eclipse.n4js.semver.SEMVER.compiler.propertyPage"
             name="Compiler">
-            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SemanticVersioning"/>
+            <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SEMVER"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -293,11 +293,11 @@ Contributors:
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler 
-			class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
 			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
 			<activeWhen>
 				<reference
-					definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+					definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -317,33 +317,33 @@ Contributors:
 				style="push"
 				tooltip="Open Quick Outline">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened"/>
+					<reference definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened"/>
 				</visibleWhen>
 			</command>
 		</menuContribution>
 	</extension>
-    <!-- quickfix marker resolution generator for org.eclipse.n4js.semver.SemanticVersioning -->
+    <!-- quickfix marker resolution generator for org.eclipse.n4js.semver.SEMVER -->
     <extension
             point="org.eclipse.ui.ide.markerResolution">
         <markerResolutionGenerator
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="org.eclipse.n4js.semver.ui.SemanticVersioning.check.fast">
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.semver.ui.SEMVER.check.fast">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
             </attribute>
         </markerResolutionGenerator>
         <markerResolutionGenerator
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="org.eclipse.n4js.semver.ui.SemanticVersioning.check.normal">
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.semver.ui.SEMVER.check.normal">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
             </attribute>
         </markerResolutionGenerator>
         <markerResolutionGenerator
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="org.eclipse.n4js.semver.ui.SemanticVersioning.check.expensive">
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.semver.ui.SEMVER.check.expensive">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
@@ -353,11 +353,11 @@ Contributors:
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
-			class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
 				<reference
-					definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+					definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -369,7 +369,7 @@ Contributors:
                style="push">
             <visibleWhen checkEnabled="false">
                <reference
-                     definitionId="org.eclipse.n4js.semver.SemanticVersioning.Editor.opened">
+                     definitionId="org.eclipse.n4js.semver.SEMVER.Editor.opened">
                </reference>
             </visibleWhen>
          </command>
@@ -377,29 +377,29 @@ Contributors:
    </extension>
    <extension point="org.eclipse.ui.preferencePages">
 	    <page
-	        category="org.eclipse.n4js.semver.SemanticVersioning"
-	        class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-	        id="org.eclipse.n4js.semver.SemanticVersioning.refactoring"
+	        category="org.eclipse.n4js.semver.SEMVER"
+	        class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+	        id="org.eclipse.n4js.semver.SEMVER.refactoring"
 	        name="Refactoring">
-	        <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SemanticVersioning"/>
+	        <keywordReference id="org.eclipse.n4js.semver.ui.keyword_SEMVER"/>
 	    </page>
 	</extension>
 
   <extension point="org.eclipse.compare.contentViewers">
-    <viewer id="org.eclipse.n4js.semver.SemanticVersioning.compare.contentViewers"
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+    <viewer id="org.eclipse.n4js.semver.SEMVER.compare.contentViewers"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
             extensions="semver">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
-    <viewer id="org.eclipse.n4js.semver.SemanticVersioning.compare.contentMergeViewers"
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="semver" label="SemanticVersioning Compare">
+    <viewer id="org.eclipse.n4js.semver.SEMVER.compare.contentMergeViewers"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="semver" label="SEMVER Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
-    <provider id="org.eclipse.n4js.semver.SemanticVersioning.editors.documentProviders"
-            class="org.eclipse.n4js.semver.ui.SemanticVersioningExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+    <provider id="org.eclipse.n4js.semver.SEMVER.editors.documentProviders"
+            class="org.eclipse.n4js.semver.ui.SEMVERExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
             extensions="semver">
     </provider>
   </extension>
